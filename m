@@ -2,95 +2,203 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807C7C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F9C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C42920721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE33B20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:00:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tANZdcNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbgBCL7d (ORCPT
+        id S1727537AbgBCMAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:59:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:57449 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgBCL7d (ORCPT
+        Mon, 3 Feb 2020 07:00:02 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:54921 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgBCMAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:59:33 -0500
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MqsGv-1jL3223BVR-00mrwx; Mon, 03 Feb 2020 12:59:31 +0100
-Received: by mail-qk1-f171.google.com with SMTP id j20so13855746qka.10;
-        Mon, 03 Feb 2020 03:59:31 -0800 (PST)
-X-Gm-Message-State: APjAAAWYk9mRNOlFBqvjXwj8P4Ny18UPbDanXSar3XKYSy8+eetK6vhX
-        UwdOkItCDPCVF0rrI2nFR5aTIx/7TAJ1jBiPDpk=
-X-Google-Smtp-Source: APXvYqyvsIiRUM+eJEFAIsaK7CjOU1YcjR9nHLh0/OBPGpCnh1WHcjpw3dP0kWUCKlcYs360p9M7EBVhR7QpHHhxL8A=
-X-Received: by 2002:a05:620a:16a7:: with SMTP id s7mr22539771qkj.3.1580731170570;
- Mon, 03 Feb 2020 03:59:30 -0800 (PST)
+        Mon, 3 Feb 2020 07:00:01 -0500
+Received: from [192.168.2.10] ([46.9.235.248])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id yaOQiSCJVn7E5yaOTi3b1s; Mon, 03 Feb 2020 12:59:58 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580731198; bh=qnhyVG0KBRfYCvUMy524atjha1LD1Pr5StfWLiE8f28=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=tANZdcNYK+ILFjz2PL+KoMamy6AbwTOV1Xm8tBiPqXR4vJ64nE9Vt3bQNWzXnkCcw
+         CTVoWzv0zbZpvU++6RmvjQHUcbKZWwSClJyGdWX+OoaiPvcLHY9Y0PQtouC8VwI68Q
+         roEjyCGQIn+wneGw6xclZGjoZaa/nbX2kzDGFDfJI3kqlJzGA/ab1KrF9LdwwFYBhE
+         G9/QH6NCqskfDT5NeJa+ZXD6wFiPthhCk6MkMyAdSeArMhptYYPYS4pV8jqLUFqLmy
+         hpki3IBtcAMXgbP1Rui9IGP2ZZfQ3nuw8Ff4Np5Skp0gE+tFgo5RHJm9FtKBsUvlw4
+         elVPyGCQsIn9w==
+Subject: Re: [PATCH] media: hantro: Support H264 profile control
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     Hirokazu Honda <hiroh@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191122051608.128717-1-hiroh@chromium.org>
+ <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
+ <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
+ <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
+ <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
+ <c88b2822-0dd2-8ea3-eb0b-262df5a30830@xs4all.nl>
+ <8b10414a1c198a6e3bd5e131a72bd6f68466bea5.camel@ndufresne.ca>
+ <CAAFQd5AZ1DTtz2myuO9YSwjMaxPme0BDNaOBo97tSHLbm4XWPg@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8a6a371d-17cd-eb32-779c-0669da5a8d5e@xs4all.nl>
+Date:   Mon, 3 Feb 2020 12:59:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <231ec2e1fd2470ef7a9b8b2c766ff8e4095b6dd3.1580399657.git.christophe.leroy@c-s.fr>
- <202002031426.QLrslGif%lkp@intel.com>
-In-Reply-To: <202002031426.QLrslGif%lkp@intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 3 Feb 2020 12:59:14 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2+Cq_-L662WaQeScTTX1W50wPAkqs1R=fqyrHrd74znw@mail.gmail.com>
-Message-ID: <CAK8P3a2+Cq_-L662WaQeScTTX1W50wPAkqs1R=fqyrHrd74znw@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] powerpc/vdso: Switch VDSO to generic C implementation.
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        kbuild-all@lists.01.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:exr7jEatqHimGfeEbSVzkkQ0+77/XmBz6EoH9xPXpmR3ELhpwDw
- z/+2sWA+nUvGg/qwyzGsOCfWo8RdUq2nX6AwHmnbtL+gRQja5IDq0V+d5fvXv16hxTx8i8+
- sDF6wLNznYIbQQ28u2WPr/EXKv3p9eI4ICqZyrwuclBRjSECv5X1aryBZp5OzGqfVB0qIbt
- hz7pMmL4tp/ZbAl76o8EA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:anjbaARBvdQ=:HgDi1T5v8CNtFsIQF7cg4P
- 3UsUgf/CNwDgYXQqfWJXgvZQY9uDmU009oolPVyEQfGICcFH2WZpjEhIQhxYztkX7ocuqPmkB
- ZNtrwx2dQGhNav3AqQrj3HTqLauPvxwVW28Hl61TVjm2RF1rfkijcVtMZEiiRbKAJHXb/6xng
- 2J/JE0sx/1wj8l9a1wt2OjtWqvFaPbifrUzWP7cG8PzpVnfpEKO2bUEGdCtzaXf7l3X3+MnLB
- TNAH2QuERGR4ZZKDtTdYSv6gA3Z3O6rjYItaXK7daGg7xqpY28V3yJMhTwB2NRZfVtbsYKkzp
- Wj6yTQ+1xRznrmgwSSRpqlAMLWwxb+4QrwQ5G82beYREsteekylPa5owXatCBTyjA77O+uJaW
- MRBQPNj7viD6hV+rCHQwNIQqJngvC8K9ygN2uj46JHvyp2q1Qd9sLhipEr3LqZmCTlWHnluNm
- 2sNMPyYauCGBKzewXtSKAtjO/JLY3INeuGo3woLRbGmALiZrwzj7VF4Mm6adlE7KPqcDgUWmS
- PTbKsNTP5oMVdlSf36boJchYR3nYcDFbKdG8XbiQeNohLWodBi9nKwhXJY+K32zb6DBh0eh6S
- 0wdD4DnmJm1heVYIKtpitwbRYs2gjg5bFGgrD7b5T8ys7vC0DR+n9ReBMgByz96jmSxXR/tjr
- vy/ADsYf0Koe1//BDwDSHKlsfaVTAoXJFk2ONryWPC6MLPtyujONRzv5Ukr+CZbOmBVklqRlt
- Z5C79A3DI4yi1RVwM+SeM5AGZKCEzIrJ4pMNE6DkMYcSZwqzZBLiODiJDWo5oiHbnJYUa6OFC
- CuJikN6gxyAcEeVl5GQfFSvtDYQ/fRR0ILTLbxtBZmjPq8q/3o=
+In-Reply-To: <CAAFQd5AZ1DTtz2myuO9YSwjMaxPme0BDNaOBo97tSHLbm4XWPg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfKgEIUyQM84B5b99RtJdse6y6Orwd9OgeSkGnakeLhCwcAUgr1MPdtJiFYnBf2Zi6QE7Z6h247QLPmFd+ZNdQVZ7rn3ea/rS7FwSmObtKVteDYSekFyT
+ s3SFvWME3qRxpJo0XVI39+GvZ+x8q16vcVGzvz20gBjqi3M1WO4KsFRvlGyhOGxoWt1yGREklKATntHKul98PHwU5vTQNVLXOk0rNJf3iLX+e8zr3jV72L1/
+ 6WN6s6/jOmrve0Wur9DBPS4Kr1ag0uEcy97+fMu7CizAXdHTIqo/Hk9D57rsyAig+vcgDfHtQxXfx7/S9vXidep0/i+VFBs9ErqPFbY3UcGkQu49Vfu/LZm8
+ paCU03WOaUhpP9MYFRnE5E/RKBWwi4m3UPnTo9EEIYELt9T2cS2AxDlITRpGhPQ9iWDbOMKvRSiPyDGmleJg5GnGxZZizcbCg9OWhDqxgXX5egUh5TA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 12:28 PM kbuild test robot <lkp@intel.com> wrote:
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
-> >> arch/powerpc/kernel/vdso32/vgettimeofday.c:26:1: error: unknown type name 'time_t'; did you mean 'ktime_t'?
->     time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
->     ^~~~~~
->     ktime_t
+On 2/3/20 12:13 PM, Tomasz Figa wrote:
+> On Sat, Jan 18, 2020 at 10:31 PM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>>
+>> Le vendredi 10 janvier 2020 à 13:31 +0100, Hans Verkuil a écrit :
+>>> On 11/29/19 1:16 AM, Tomasz Figa wrote:
+>>>> On Sat, Nov 23, 2019 at 1:52 AM Nicolas Dufresne <nicolas@ndufresne.ca>
+>>>> wrote:
+>>>>> Le samedi 23 novembre 2019 à 01:00 +0900, Tomasz Figa a écrit :
+>>>>>> On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca>
+>>>>>> wrote:
+>>>>>>> Le vendredi 22 novembre 2019 à 14:16 +0900, Hirokazu Honda a écrit :
+>>>>>>>> The Hantro G1 decoder supports H.264 profiles from Baseline to High,
+>>>>>>>> with
+>>>>>>>> the exception of the Extended profile.
+>>>>>>>>
+>>>>>>>> Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
+>>>>>>>> applications can query the driver for the list of supported
+>>>>>>>> profiles.
+>>>>>>>
+>>>>>>> Thanks for this patch. Do you think we could also add the LEVEL
+>>>>>>> control
+>>>>>>> so the profile/level enumeration becomes complete ?
+>>>>>>>
+>>>>>>> I'm thinking it would be nice if the v4l2 compliance test make sure
+>>>>>>> that codecs do implement these controls (both stateful and stateless),
+>>>>>>> it's essential for stack with software fallback, or multiple capable
+>>>>>>> codec hardware but with different capabilities.
+>>>>>>>
+>>>>>>
+>>>>>> Level is a difficult story, because it also specifies the number of
+>>>>>> macroblocks per second, but for decoders like this the number of
+>>>>>> macroblocks per second it can handle depends on things the driver
+>>>>>> might be not aware of - clock frequencies, DDR throughput, system
+>>>>>> load, etc.
+>>>>>>
+>>>>>> My take on this is that the decoder driver should advertise the
+>>>>>> highest resolution the decoder can handle due to hardware constraints.
+>>>>>> Performance related things depend on the integration details and
+>>>>>> should be managed elsewhere. For example Android and Chrome OS manage
+>>>>>> expected decoding performance in per-board configuration files.
+>>>>>
+>>>>> When you read datasheet, the HW is always rated to maximum level (and
+>>>>> it's a range) with the assumption of a single stream. It seems much
+>>>>> easier to expose this as-is, statically then to start doing some math
+>>>>> with data that isn't fully exposed to the user. This is about filtering
+>>>>> of multiple CODEC instances, it does not need to be rocket science,
+>>>>> specially that the amount of missing data is important (e.g. usage of
+>>>>> tiles, compression, IPP all have an impact on the final performance).
+>>>>> All we want to know in userspace is if this HW is even possibly capable
+>>>>> of LEVEL X, and if not, we'll look for another one.
+>>>>>
+>>>>
+>>>> Agreed, one could potentially define it this way, but would it be
+>>>> really useful for the userspace and the users? I guess it could enable
+>>>> slightly faster fallback to software decoding in the extreme case of
+>>>> the hardware not supporting the level at all, but I suspect that the
+>>>> majority of cases would be the hardware just being unusably slow.
+>>>>
+>>>> Also, as I mentioned before, we already return the range of supported
+>>>> resolutions, which in practice should map to the part of the level
+>>>> that may depend on hardware capabilities rather than performance, so
+>>>> exposing levels as well would add redundancy to the information
+>>>> exposed.
+>>>
+>>> There is a lot of discussion here, but it all revolves around a potential
+>>> LEVEL control.
+>>>
+>>> So I gather everyone is OK with merging this patch?
+>>
+>> I'm ok with this. For me, the level reflects the real time performance
+>> capability as define in the spec, while the width/height constraints usually
+>> represent an addressing capabicity, which may or may not operate real-time.
+>>
+> 
+> I'd like to see the level control documentation improved before we
+> start adding it to the drivers. I'll be okay with that then as long as
+> the values are exposed in a consistent and well defined way. :)
+> 
+> As for this patch, Hans, are you going to apply it?
 
+It's in a PR for 5.7. I had hoped it would go in for v5.6, but it was
+too late for that.
 
-time_t is no longer available in linux-next, so this has to use
-__kernel_old_time_t.
+Regards,
 
-      Arnd
+	Hans
+
+> 
+> Best regards,
+> Tomasz
+> 
+>>>
+>>> If not, let me know asap.
+>>>
+>>> Regards,
+>>>
+>>>       Hans
+>>>
+>>>>>>>> Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+>>>>>>>> ---
+>>>>>>>>  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
+>>>>>>>>  1 file changed, 10 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/staging/media/hantro/hantro_drv.c
+>>>>>>>> b/drivers/staging/media/hantro/hantro_drv.c
+>>>>>>>> index 6d9d41170832..9387619235d8 100644
+>>>>>>>> --- a/drivers/staging/media/hantro/hantro_drv.c
+>>>>>>>> +++ b/drivers/staging/media/hantro/hantro_drv.c
+>>>>>>>> @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] = {
+>>>>>>>>                       .def =
+>>>>>>>> V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>>>>>>>>                       .max =
+>>>>>>>> V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>>>>>>>>               },
+>>>>>>>> +     }, {
+>>>>>>>> +             .codec = HANTRO_H264_DECODER,
+>>>>>>>> +             .cfg = {
+>>>>>>>> +                     .id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+>>>>>>>> +                     .min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+>>>>>>>> +                     .max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+>>>>>>>> +                     .menu_skip_mask =
+>>>>>>>> +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+>>>>>>>> +                     .def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+>>>>>>>> +             }
+>>>>>>>>       }, {
+>>>>>>>>       },
+>>>>>>>>  };
+>>
+
