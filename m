@@ -2,34 +2,33 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4258C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44832C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D9A2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C21B20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="TjY2yDaJ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ihIKVH1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgBCNSX (ORCPT
+        id S1728275AbgBCNSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:18:23 -0500
-Received: from mail-eopbgr750077.outbound.protection.outlook.com ([40.107.75.77]:2478
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Mon, 3 Feb 2020 08:18:32 -0500
+Received: from mail-co1nam11on2044.outbound.protection.outlook.com ([40.107.220.44]:9920
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727358AbgBCNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727429AbgBCNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Feb 2020 08:18:21 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IhGBZMIZGOcl156g7T17ZYJ2kYQN/3XV/vR+AJJMAmx4Ew1XeAC8iXNyEkPJv5EFjcaDwOLLXfgN7fE4wAoWaeSyT1umXtQrHj6/6L2duqPYDX5JMRAu4B2NFfo3+rTyc5QRk1qcLkbz36uFK1JSn7Vto0m4A5sSg/HkUN2Nu4+Z6YsWpSkJOTeA4AFrLD3QCICon9L24J1moCs8iEpbVCh1tilgOLUs2DaaaLnjT3VYGTpeqjmTNBmQO0iuLsbIlsG9bPqByecgBoXoTlKX4euL6qrTpRMoTvi3VfCjT0q3kwZ+Qh0LNcOIQi+yVCI5Glgfvl202HkXaewMn8FmbQ==
+ b=KwBErCodGjXin8UFqOcHYfzm62Z+eCisJUiYpMPUl9dGRQ5z+DBKZslkqW2pAU/fhqM9wkn7igUeHZwp4lK7CB4D1m4/mCUTAQGuljNrY6xOd0fb+TF1USo0gJW+c4HkbMyFaPDLCss/+XkAJ3v9RUVrIsYupQIRvz9NJ2cVUtYmSV3BHlRWbuYRiV7Eyrc3uzbBGovdDVkDb59CLfDFdHAfMRbXVNtGfxhxO5rufgNFJjJD/Y8yXkIau4qdS60+sLNy0i5LqbPibXOUIUMMM8N7kaD1HiYHyLZPh2GHqjE0yjlIBBXc2GB1LvglTz92PLEA1IoRGIxlDcnmrNosog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P87ZOiQn4QqnpAITcE/bN7GI+tVlmise4JjWEaatQjI=;
- b=kplts0WvrfXHn/S8mCpMN2P0BUcsL8XpCBoWWnlJtC47u3Ymbq1o7GTOKyCiQLoFXCQ40wmHV4hyh21meKdgn9wD8n44JG3VzUp2p5KP/oKdZvP4ShmI24e4TAl33kViKqs0TUKfUn1W7z80Bc/pi3orIPwsF0hP3s8+otU9SYTiLWEt8iBqV7eoRc3LpXqHPdXWjceiEjGU8xMVj12YmhL7SGjzlJXNSetb04stCGcVuv2oIKWoS1oPEyUwpt4Au7xABPVEH1T1pq/AzZn+H+rOMZyhJy1sgP5UDOFeixs5BIETR7G0unDrnowNi7gYr87fMOFfJZFCSf64DAgFpw==
+ bh=ZUoOuWEFjbKdvPfh3uM4oMkbn2oyS/YWms6nxe2OUV8=;
+ b=fk6d4UBeM2NB+/U9QlZLo4W9qQMSwXo2lR+2TCW4KHXHSDcgXZRCODJMYfCU8RBWPNX7konSASwvZT+daav7QN8h0fhh1wY2sTV8RK6YloKg9F5HxhvXdFDrSA1F/zCIzqoCTcLmvfc6NuGLQTK78dsMP2G0EgpYNyyI97vTiDpCkH7Dy9iDzexpgFpBRqqTBoDr7yovz+l3SYKKAKcZRln6YaxTE/lLz2MqvR3Kbxw4WS1l6vwl3PIURdNCY4qMQLR/UhjaEIyrlxbj6dIZMKNsHQmGTein2ZrFa6MUysY/04h2RnloU0tLi7Be0tpgSoZXqjO/HGrNNEm5/ULzNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,17 +36,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P87ZOiQn4QqnpAITcE/bN7GI+tVlmise4JjWEaatQjI=;
- b=TjY2yDaJE3JZUhU9M5GVilz2ZWbg3+P+AImChrkQIhkr23kae3LLC8AW+apMe9geVrDViMXZeBOo7brc/29dZrlcQvVrg7FS/bY5asHw4imzEJZVzZbawUYciVXqOup/Gyk0Ksn5eABYVlLM8opfpdAVZ6cgrmFKIVpNCB9kT50=
-Received: from DM6PR02CA0101.namprd02.prod.outlook.com (2603:10b6:5:1f4::42)
- by BN6PR02MB3265.namprd02.prod.outlook.com (2603:10b6:405:62::39) with
+ bh=ZUoOuWEFjbKdvPfh3uM4oMkbn2oyS/YWms6nxe2OUV8=;
+ b=ihIKVH1VubzkSjmUL1xGBcYrKYOxoS9OcH14t71te4c0po7kxJh7c6aOwNMMJWx75A/HEB6jkkY0L+DPkEfLnTrpJ/ZqbB02E+tt9XLn77sTGq0B+i14dp23aUOIS06gVJ7k3MGgYBeUjqhRBCojWomD6zc3MxB0wc0kF6tEZiI=
+Received: from BL0PR02CA0131.namprd02.prod.outlook.com (2603:10b6:208:35::36)
+ by MWHPR02MB3341.namprd02.prod.outlook.com (2603:10b6:301:6c::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.29; Mon, 3 Feb
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.33; Mon, 3 Feb
  2020 13:18:19 +0000
-Received: from BL2NAM02FT043.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::203) by DM6PR02CA0101.outlook.office365.com
- (2603:10b6:5:1f4::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.32 via Frontend
+Received: from CY1NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::204) by BL0PR02CA0131.outlook.office365.com
+ (2603:10b6:208:35::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.33 via Frontend
  Transport; Mon, 3 Feb 2020 13:18:18 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
@@ -57,98 +56,86 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT043.mail.protection.outlook.com (10.152.77.95) with Microsoft SMTP
+ CY1NAM02FT064.mail.protection.outlook.com (10.152.74.64) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
  via Frontend Transport; Mon, 3 Feb 2020 13:18:18 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <harini.katakam@xilinx.com>)
-        id 1iybcI-0003Fg-0y; Mon, 03 Feb 2020 05:18:18 -0800
+        id 1iybcH-0003Ff-Ua; Mon, 03 Feb 2020 05:18:17 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <harini.katakam@xilinx.com>)
-        id 1iybcC-0002w8-T8; Mon, 03 Feb 2020 05:18:12 -0800
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 013DIBY8003814;
-        Mon, 3 Feb 2020 05:18:12 -0800
+        id 1iybcC-0002w8-QA; Mon, 03 Feb 2020 05:18:12 -0800
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 013DI6Xt003776;
+        Mon, 3 Feb 2020 05:18:06 -0800
 Received: from [10.140.6.13] (helo=xhdharinik40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <harini.katakam@xilinx.com>)
-        id 1iybcB-0002t1-Cz; Mon, 03 Feb 2020 05:18:11 -0800
+        id 1iybc5-0002t1-OQ; Mon, 03 Feb 2020 05:18:06 -0800
 From:   Harini Katakam <harini.katakam@xilinx.com>
 To:     nicolas.ferre@microchip.com, davem@davemloft.net,
         claudiu.beznea@microchip.com, kuba@kernel.org
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         michal.simek@xilinx.com, harinikatakamlinux@gmail.com,
         harini.katakam@xilinx.com
-Subject: [PATCH v2 2/2] net: macb: Limit maximum GEM TX length in TSO
-Date:   Mon,  3 Feb 2020 18:48:02 +0530
-Message-Id: <1580735882-7429-3-git-send-email-harini.katakam@xilinx.com>
+Subject: [PATCH v2 0/2] TSO bug fixes
+Date:   Mon,  3 Feb 2020 18:48:00 +0530
+Message-Id: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
-References: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(189003)(199004)(36756003)(6666004)(356004)(44832011)(426003)(2616005)(5660300002)(7696005)(336012)(70586007)(70206006)(186003)(26005)(4326008)(107886003)(316002)(2906002)(478600001)(8936002)(9786002)(8676002)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB3265;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(199004)(189003)(9786002)(107886003)(4326008)(81166006)(81156014)(8676002)(8936002)(44832011)(4744005)(36756003)(356004)(6666004)(2906002)(5660300002)(7696005)(478600001)(2616005)(426003)(70586007)(70206006)(186003)(336012)(316002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB3341;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4a1cf9ce-d2ec-4a8a-828a-08d7a8ab8909
-X-MS-TrafficTypeDiagnostic: BN6PR02MB3265:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB3265A2588F0E5CC9E932CBBEC9000@BN6PR02MB3265.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 29516843-2501-46d8-f9ed-08d7a8ab88e3
+X-MS-TrafficTypeDiagnostic: MWHPR02MB3341:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB3341F796997A347C867A2F01C9000@MWHPR02MB3341.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-Forefront-PRVS: 0302D4F392
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: deKy75hinOzLTttYd9v7+YX2dfFdrWGsLVF8bIaaZR/o88KU2w4CfaX1rFmTi3yNN+cJY5Zo0mhGfjwYzqf0JuL735xntg831O/ST5/RU2yrjyjKFngLxKZX4ja7FX2VH0QP971vN19ccJJwQpiFEBaSId3dLeoTqs6OL6kDwpqjF85ZExuQNE9Sag+cdF35olqGs1Zj4eX/L7WCy7mwsZ1weLVY7BdXueldJdzoWiKTP1Y+kQ+9aCZtZHNUi4jgY7lJR2bHZ6gGhoC6S7rlwFnX3jsCuCRzhYCQf/NV15cs/6GM2IAP3i8IGNLs6375qZD+77q3rBAfxIRFfkC9nBlg0wMimmy1+ERMFiTb/9WxFNBAW6kRqXHfebv2eZrNbWcyV94JhZEG55+mGZEoGD3qCr6yZ3b0hr6XqD53RljsZS5C+S2ukYp42Zon4IAW
+X-Microsoft-Antispam-Message-Info: tgcVO2gJSz2sDf2WMxTOQbNXiducNCOS4R62DDNv1XvoHSsgBg7Gxw8jdlRD+hYtcf0xLNOog5zBDqWbiwFe+0UBFaHQjHfJPqW5cJ6dGvwZIH44rH9Vi88CI1rEGxfXeqVuCAoxbamx4zgQXWSZenpt8SiQxvkOVoyGX/0zapVlkCoFQ/mFbH+GDHNRH0htV23poOgAK23Jz5Ncp3K0pJGK/gNvO0vOWj1DNbcaZHjFAS7S1DkDfm2Zp5NcLvPL3uTWMNoXePE9l80Ue5CxlNZCV4XvfqrwCuOyQjoTV+Y5P7RDP6OW3ObacuPRAskF/rr0z0972I2aeqCKkO8qdlxUKLJ4tmV/am+ewrgaMIa1G4dk2CSIycog+IqHR1DZyoRvuqhww+Q1NJUW22jVP8OUMgWvt3CRcPglF76+vxyNVvgnfMljdq+GCWIg+fAa
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 13:18:18.6418
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 13:18:18.4089
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a1cf9ce-d2ec-4a8a-828a-08d7a8ab8909
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29516843-2501-46d8-f9ed-08d7a8ab88e3
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB3265
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB3341
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GEM_MAX_TX_LEN currently resolves to 0x3FF8 for any IP version supporting
-TSO with full 14bits of length field in payload descriptor. But an IP
-errata causes false amba_error (bit 6 of ISR) when length in payload
-descriptors is specified above 16387. The error occurs because the DMA
-falsely concludes that there is not enough space in SRAM for incoming
-payload. These errors were observed continuously under stress of large
-packets using iperf on a version where SRAM was 16K for each queue. This
-errata will be documented shortly and affects all versions since TSO
-functionality was added. Hence limit the max length to 0x3FC0 (rounded).
+An IP errata was recently discovered when testing TSO enabled versions
+with perf test tools where a false amba error is reported by the IP.
+Some ways to reproduce would be to use iperf or applications with payload
+descriptor sizes very close to 16K. Once the error is observed TXERR (or
+bit 6 of ISR) will be constantly triggered leading to a series of tx path
+error handling and clean up. Workaround the same by limiting this size to
+0x3FC0 as recommended by Cadence. There was no performance impact on 1G
+system that I tested with.
 
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
----
-v2:
-Use 0x3FC0 by default
+Note on patch 1: The alignment code may be unused but leaving it there
+in case anyone is using UFO.
 
- drivers/net/ethernet/cadence/macb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Added Fixes tag to patch 1.
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 2e418b8..cca321c 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -73,7 +73,7 @@ struct sifive_fu540_macb_mgmt {
- /* Max length of transmit frame must be a multiple of 8 bytes */
- #define MACB_TX_LEN_ALIGN	8
- #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
--#define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
-+#define GEM_MAX_TX_LEN		(unsigned int)(0x3FC0)
- 
- #define GEM_MTU_MIN_SIZE	ETH_MIN_MTU
- #define MACB_NETIF_LSO		NETIF_F_TSO
+Harini Katakam (2):
+  net: macb: Remove unnecessary alignment check for TSO
+  net: macb: Limit maximum GEM TX length in TSO
+
+ drivers/net/ethernet/cadence/macb_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 -- 
 2.7.4
 
