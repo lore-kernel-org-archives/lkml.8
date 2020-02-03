@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C353C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ECAC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F3B21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36592087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747797;
-	bh=ttOpHtv7xndE090OhbMhp/CLgVcdCcJfkXoIqd/I0e4=;
+	s=default; t=1580747802;
+	bh=yEAfevoPi1el/pqANxzRHQriIoGQcHdz94DArp8nim0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0pqCGa98HDo6V1QBd/9lOoMwyRwjIMPWGEOCr2mXwFcILiy6n3CefUSqFtvEluA5U
-	 uqyMMPwqqHIMMnCuMUSs5idcp3sJrKE0+ZD1dnlicznc8luprNbFY3P+DNDlI+ijvb
-	 JrJmTktokAJPcjrdqrDTUz8UYepEpGnPnBIOwmpI=
+	b=W9yfll/PMrNYQ3gYBZpQI7VfiSGekJ0Xtn9fbumjrQVu3pC666g4qsDp295m345xa
+	 XppLx/3whTz4HI59XUzV2D5rV0rF8BVgYSMulGroKp53CjPo69HZG9b2Y0j+C/tY5G
+	 r2XBYky2hGHncrFEJCVCyjQUkwOhALCePAzMswWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgBCQgg (ORCPT
+        id S1730899AbgBCQgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51878 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731015AbgBCQgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:32 -0500
+        id S1731012AbgBCQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:37 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1197C20721;
-        Mon,  3 Feb 2020 16:36:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F8F20721;
+        Mon,  3 Feb 2020 16:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747792;
-        bh=ttOpHtv7xndE090OhbMhp/CLgVcdCcJfkXoIqd/I0e4=;
+        s=default; t=1580747797;
+        bh=yEAfevoPi1el/pqANxzRHQriIoGQcHdz94DArp8nim0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PPt7WOGfywNBjiXKi6a23W5kZbOhIZMjauNkY5Xd8xyc/c4SjTWDBXFSkWHT5+CnG
-         hHuXtx+GjfwQ6OxH9LjswOQbd8bhRTFB/QVt16JEZ6Kt95qMZuz8GEVzTSm+XOKJvg
-         250XUEez6gPidOO4730qQb2bMX9WFpyEMgoKEQlQ=
+        b=oGhjSnKv1NtBNI/MnNAEIRcJ7sUZy3DxITMpFKxp27eqQ3FEO+IwiEF+DbMes1LVh
+         7V5M5UyxXaAjhZHdOchuFyjCUXn4bphAaDrH+0eApKqW+Uerw21RU3vhX1Hhos5odA
+         AOwBSCrlojqXm+uhLy8jeAj0K2Pax0OmCbZy+lMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 73/90] led: max77650: add of_match table
-Date:   Mon,  3 Feb 2020 16:20:16 +0000
-Message-Id: <20200203161926.266715392@linuxfoundation.org>
+        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 75/90] r8152: get default setting of WOL before initializing
+Date:   Mon,  3 Feb 2020 16:20:18 +0000
+Message-Id: <20200203161926.483033307@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,41 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Hayes Wang <hayeswang@realtek.com>
 
-[ Upstream commit 2424415d25a765d4302ddfb4de75427e9294dc09 ]
+[ Upstream commit 9583a3638dc07cc1878f41265e85ed497f72efcb ]
 
-We need the of_match table if we want to use the compatible string in
-the pmic's child node and get the led driver loaded automatically.
+Initailization would reset runtime suspend by tp->saved_wolopts, so
+the tp->saved_wolopts should be set before initializing.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-max77650.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/usb/r8152.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
-index 4c2d0b3c6dadc..a0d4b725c9178 100644
---- a/drivers/leds/leds-max77650.c
-+++ b/drivers/leds/leds-max77650.c
-@@ -135,9 +135,16 @@ static int max77650_led_probe(struct platform_device *pdev)
- 	return rv;
- }
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 9e4b7a4002843..df993a1c60c0e 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5690,6 +5690,11 @@ static int rtl8152_probe(struct usb_interface *intf,
  
-+static const struct of_device_id max77650_led_of_match[] = {
-+	{ .compatible = "maxim,max77650-led" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max77650_led_of_match);
+ 	intf->needs_remote_wakeup = 1;
+ 
++	if (!rtl_can_wakeup(tp))
++		__rtl_set_wol(tp, 0);
++	else
++		tp->saved_wolopts = __rtl_get_wol(tp);
 +
- static struct platform_driver max77650_led_driver = {
- 	.driver = {
- 		.name = "max77650-led",
-+		.of_match_table = max77650_led_of_match,
- 	},
- 	.probe = max77650_led_probe,
- };
+ 	tp->rtl_ops.init(tp);
+ 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
+ 	set_ethernet_addr(tp);
+@@ -5703,10 +5708,6 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		goto out1;
+ 	}
+ 
+-	if (!rtl_can_wakeup(tp))
+-		__rtl_set_wol(tp, 0);
+-
+-	tp->saved_wolopts = __rtl_get_wol(tp);
+ 	if (tp->saved_wolopts)
+ 		device_set_wakeup_enable(&udev->dev, true);
+ 	else
 -- 
 2.20.1
 
