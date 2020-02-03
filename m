@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099D2C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF94C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3CE2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C7921741
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747612;
-	bh=aF/BTm/ry3ZPezd9ZAZKJhW2hopoqOnb4lMGR5HlmH0=;
+	s=default; t=1580747615;
+	bh=z8JvJ+ByIAn+lh5NmKZ61jSBglLW2Qni5MjImejmzhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0o2RKvputyOGxEAXakj5Fmd48p+/ihfmo2/At1tebNefI+2xYhaIh/FUFRX6GO1J
-	 GRwGYoTYij0o4yd3fchIsPMhL5k5VTIVRLP1/RuiuMSnzzcRoVGdB5eqPYYa3DdUvh
-	 q56sugjxDqLQ5b7NO8b5mDsUVtticQo7EBF6wrQM=
+	b=nFjidthpEPqYuau/CmHbvyCJZcFyo+LhlZ5NBP41V0ZjRfSPVwBPDzGJ406CpRR3e
+	 Vcck+1vwTdcYHICJYDDBMvpMVZeEGaaozzr5BLiIZUQY826XSmSu1FS29qE5Izlg+/
+	 F8Ht/reVixWiEwdDN45r4QE1/MLW6grSmYb5nfO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbgBCQdb (ORCPT
+        id S1730611AbgBCQde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47416 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgBCQd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:27 -0500
+        id S1730305AbgBCQd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:29 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8CFE2051A;
-        Mon,  3 Feb 2020 16:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406DC2082E;
+        Mon,  3 Feb 2020 16:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747606;
-        bh=aF/BTm/ry3ZPezd9ZAZKJhW2hopoqOnb4lMGR5HlmH0=;
+        s=default; t=1580747608;
+        bh=z8JvJ+ByIAn+lh5NmKZ61jSBglLW2Qni5MjImejmzhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SpzyfSPzyT+x3XvEyCxwlxspKpbi0SrfbQ67aEYTVXZJH4Zy8w7FSTiZvZ5Cka40r
-         9+48J0ZQFWLFXOYE+ZtI8Hgf5SqiMcOGjkW2nNbjc6EEnWgGGfu8JrXkxU/p8PbbLM
-         wXJLHhchvAyyxfLbg84wdo07cEn0kNhoOFOYnN34=
+        b=uBhlM69PWjJS2ChnNT/8iXtm/JbdUaC0cb+NO8i3ROQ+4QdTab0z1eGgbMtWFwmnd
+         vfhpoyByS+PhXNcyBUDKPDsdM0NOqcDyFb+EakBun6l6JTbgxodDJJz0gbmTw/8iCE
+         VxId3bSjViA52zijRZpZ8UkF5Yx/0mJltSta68ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 65/70] powerpc/fsl/dts: add fsl,erratum-a011043
-Date:   Mon,  3 Feb 2020 16:20:17 +0000
-Message-Id: <20200203161921.542255108@linuxfoundation.org>
+Subject: [PATCH 4.19 66/70] net/fsl: treat fsl,erratum-a011043
+Date:   Mon,  3 Feb 2020 16:20:18 +0000
+Message-Id: <20200203161921.708027679@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -62,9 +62,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-[ Upstream commit 73d527aef68f7644e59f22ce7f9ac75e7b533aea ]
+[ Upstream commit 1d3ca681b9d9575ccf696ebc2840a1ebb1fd4074 ]
 
-Add fsl,erratum-a011043 to internal MDIO buses.
+When fsl,erratum-a011043 is set, adjust for erratum A011043:
+MDIO reads to internal PCS registers may result in having
+the MDIO_CFG[MDIO_RD_ER] bit set, even when there is no
+error and read data (MDIO_DATA[MDIO_DATA]) is correct.
 Software may get false read error when reading internal
 PCS registers through MDIO. As a workaround, all internal
 MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
@@ -73,242 +76,41 @@ Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi             | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi             | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi             | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi             | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi              | 1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi              | 1 +
- 18 files changed, 18 insertions(+)
+ drivers/net/ethernet/freescale/xgmac_mdio.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-index e1a961f05dcd5..baa0c503e741b 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-@@ -63,6 +63,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe1000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
+diff --git a/drivers/net/ethernet/freescale/xgmac_mdio.c b/drivers/net/ethernet/freescale/xgmac_mdio.c
+index e03b30c60dcfd..c82c85ef5fb34 100644
+--- a/drivers/net/ethernet/freescale/xgmac_mdio.c
++++ b/drivers/net/ethernet/freescale/xgmac_mdio.c
+@@ -49,6 +49,7 @@ struct tgec_mdio_controller {
+ struct mdio_fsl_priv {
+ 	struct	tgec_mdio_controller __iomem *mdio_base;
+ 	bool	is_little_endian;
++	bool	has_a011043;
+ };
  
- 		pcsphy0: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-index c288f3c6c6378..93095600e8086 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-@@ -60,6 +60,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf1000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
+ static u32 xgmac_read32(void __iomem *regs,
+@@ -226,7 +227,8 @@ static int xgmac_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		return ret;
  
- 		pcsphy6: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-index 94f3e71750124..ff4bd38f06459 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-@@ -63,6 +63,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe3000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
+ 	/* Return all Fs if nothing was there */
+-	if (xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) {
++	if ((xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) &&
++	    !priv->has_a011043) {
+ 		dev_err(&bus->dev,
+ 			"Error while reading PHY%d reg at %d.%hhu\n",
+ 			phy_id, dev_addr, regnum);
+@@ -274,6 +276,9 @@ static int xgmac_mdio_probe(struct platform_device *pdev)
+ 	priv->is_little_endian = of_property_read_bool(pdev->dev.of_node,
+ 						       "little-endian");
  
- 		pcsphy1: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-index 94a76982d214b..1fa38ed6f59e2 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-@@ -60,6 +60,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf3000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy7: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-index b5ff5f71c6b8b..a8cc9780c0c42 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-@@ -59,6 +59,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe1000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy0: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-index ee44182c63485..8b8bd70c93823 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-@@ -59,6 +59,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe3000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy1: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-index f05f0d775039b..619c880b54d8d 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-@@ -59,6 +59,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe5000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy2: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-index a9114ec510759..d7ebb73a400d0 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-@@ -59,6 +59,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe7000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy3: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-index 44dd00ac7367f..b151d696a0699 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-@@ -59,6 +59,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe9000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy4: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-index 5b1b84b58602f..adc0ae0013a3c 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-@@ -59,6 +59,7 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xeb000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy5: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-index 0e1daaef9e74b..435047e0e250e 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-@@ -60,6 +60,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf1000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy14: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-index 68c5ef779266a..c098657cca0a7 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-@@ -60,6 +60,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf3000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy15: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-index 605363cc1117f..9d06824815f34 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-@@ -59,6 +59,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe1000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy8: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-index 1955dfa136348..70e947730c4ba 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-@@ -59,6 +59,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe3000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy9: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-index 2c1476454ee01..ad96e65295959 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-@@ -59,6 +59,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe5000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy10: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-index b8b541ff5fb03..034bc4b71f7a5 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-@@ -59,6 +59,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe7000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy11: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-index 4b2cfddd1b155..93ca23d82b39b 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-@@ -59,6 +59,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe9000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy12: ethernet-phy@0 {
- 			reg = <0x0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-index 0a52ddf7cc171..23b3117a2fd2a 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-@@ -59,6 +59,7 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xeb000 0x1000>;
-+		fsl,erratum-a011043; /* must ignore read errors */
- 
- 		pcsphy13: ethernet-phy@0 {
- 			reg = <0x0>;
++	priv->has_a011043 = of_property_read_bool(pdev->dev.of_node,
++						  "fsl,erratum-a011043");
++
+ 	ret = of_mdiobus_register(bus, np);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "cannot register MDIO bus\n");
 -- 
 2.20.1
 
