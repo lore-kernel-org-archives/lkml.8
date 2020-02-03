@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245A3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B3DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26F82087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B52E2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747965;
-	bh=TRgddOces3KCcjZiCU9InaohUeoG1Yx/UpbqoCBwJ7o=;
+	s=default; t=1580747967;
+	bh=1L0W+2zKUHOGjHafjKPkVteEIbrR9GouXU4BbuPV4pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=USC5KFUUJYfR2sfyzDbXOaHff54r7eIFvqRGYFyJuJ/IYzZe/auaVPvkIrADvDXvA
-	 gj6OkudjhW+un7JYB6Gkb0847QD8trAZoJ6Xk4jpjQnSXFHx9NqlzmBdrfJwEuUTmx
-	 MQqQLwwPrJoZZbaa688C6IaH6yohHhZTbiWGiBAM=
+	b=gFeicww4zSUN+n92oZJMlTxT7/BmgUkEC5bM+YK7HMFPRyvntpIax7Qz3Sw2TXNUa
+	 Np6yWGbN0Cb7DBO1CAYVCMtztrilGDMHJDRw39J98wH/H2E66Ve3eycYCX7Xp0JR0E
+	 N86gDFORhumlSmGgiypq9nBbn7NRm6Gqj4fZoWNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbgBCQjY (ORCPT
+        id S1731544AbgBCQjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:39:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53404 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:39:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731376AbgBCQho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:44 -0500
+        id S1731121AbgBCQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:47 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F492051A;
-        Mon,  3 Feb 2020 16:37:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 794AE2087E;
+        Mon,  3 Feb 2020 16:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747863;
-        bh=TRgddOces3KCcjZiCU9InaohUeoG1Yx/UpbqoCBwJ7o=;
+        s=default; t=1580747865;
+        bh=1L0W+2zKUHOGjHafjKPkVteEIbrR9GouXU4BbuPV4pU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCc8bg6NATVpbE6hnhhK51dUU7nQEl9/7Rr2aoGay/Nn8yhXuaprYNW2zodpeXDZc
-         ITSd2rurznucJQF7EtvyAl3ondeMJE1MtthqjnsgbUgq80uDSArcVDffmjJvesO1oy
-         pYYV1gJIjFPW7OD7Gfcx+jRTUt1evRb6mJDINc7M=
+        b=C+Fmc3hpn6H+hgJuG8GwfLgvSefPNu3HcDn5sihigDw79bETvzBwqnyGsNCxdAjRA
+         SzenvNghwQX77S2Mm8N809q5dN1pcQise6f4D/Lw3EA6VqUD1yzg9FHIMm0qOSL3jn
+         Y+eZDkfQpFBHE6y5rJgVLHDgzNyqAy3JdNUQQhUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.5 12/23] arm64: kbuild: remove compressed images on make ARCH=arm64 (dist)clean
-Date:   Mon,  3 Feb 2020 16:20:32 +0000
-Message-Id: <20200203161905.006724061@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 13/23] mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
+Date:   Mon,  3 Feb 2020 16:20:33 +0000
+Message-Id: <20200203161905.207969687@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -61,40 +67,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Behme <dirk.behme@de.bosch.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit d7bbd6c1b01cb5dd13c245d4586a83145c1d5f52 upstream.
+commit c7a91bc7c2e17e0a9c8b9745a2cb118891218fd1 upstream.
 
-Since v4.3-rc1 commit 0723c05fb75e44 ("arm64: enable more compressed
-Image formats"), it is possible to build Image.{bz2,lz4,lzma,lzo}
-AArch64 images. However, the commit missed adding support for removing
-those images on 'make ARCH=arm64 (dist)clean'.
+What we are trying to do is change the '=' character to a NUL terminator
+and then at the end of the function we restore it back to an '='.  The
+problem is there are two error paths where we jump to the end of the
+function before we have replaced the '=' with NUL.
 
-Fix this by adding them to the target list.
-Make sure to match the order of the recipes in the makefile.
+We end up putting the '=' in the wrong place (possibly one element
+before the start of the buffer).
 
-Cc: stable@vger.kernel.org # v4.3+
-Fixes: 0723c05fb75e44 ("arm64: enable more compressed Image formats")
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20200115055426.vdjwvry44nfug7yy@kili.mountain
+Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
+Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Dmitry Vyukov <dvyukov@google.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/mempolicy.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/boot/Makefile
-+++ b/arch/arm64/boot/Makefile
-@@ -16,7 +16,7 @@
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2821,6 +2821,9 @@ int mpol_parse_str(char *str, struct mem
+ 	char *flags = strchr(str, '=');
+ 	int err = 1, mode;
  
- OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
++	if (flags)
++		*flags++ = '\0';	/* terminate mode string */
++
+ 	if (nodelist) {
+ 		/* NUL-terminate mode or flags string */
+ 		*nodelist++ = '\0';
+@@ -2831,9 +2834,6 @@ int mpol_parse_str(char *str, struct mem
+ 	} else
+ 		nodes_clear(nodes);
  
--targets := Image Image.gz
-+targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
- 
- $(obj)/Image: vmlinux FORCE
- 	$(call if_changed,objcopy)
+-	if (flags)
+-		*flags++ = '\0';	/* terminate mode string */
+-
+ 	mode = match_string(policy_modes, MPOL_MAX, str);
+ 	if (mode < 0)
+ 		goto out;
 
 
