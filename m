@@ -2,126 +2,144 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F6DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DB6C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3530D20720
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E2C20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lil64nru"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FdjhlwgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgBCVfA (ORCPT
+        id S1727156AbgBCVfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:35:00 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15529 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgBCVe7 (ORCPT
+        Mon, 3 Feb 2020 16:35:41 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41693 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgBCVfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:34:59 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3891f40000>; Mon, 03 Feb 2020 13:34:44 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 13:34:59 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 13:34:59 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 21:34:58 +0000
-Subject: Re: [PATCH v3 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
- reporting
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-11-jhubbard@nvidia.com>
- <20200203135320.edujsfjwt5nvtiit@box>
- <0425e1e6-f172-91df-2251-7583fcfed3e6@nvidia.com>
- <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <0a81878a-1f7f-daec-0833-d5b91d197ddf@nvidia.com>
-Date:   Mon, 3 Feb 2020 13:34:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 3 Feb 2020 16:35:40 -0500
+Received: by mail-io1-f66.google.com with SMTP id m25so18477154ioo.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:35:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DPZ/wndNtGq4PmKFUPMXpdYlQfdeqHvXR9++rakqp3A=;
+        b=FdjhlwgAGOu66VUqqDLXL/KJ9ELUF1MwQk+agEJRVCH+pVTOmaxVnqrfmnSiAL2jF3
+         m4glQpP80GbA416FOt9gGXQSX3nz90a+WxXPQ4vg7axvkIaV/3lL+wTrl96W20VXfKQK
+         zLA2jtfrL1EaH0zwXKJ54PaSwVPDJ5rtDNQleh72twHKr6NkH0YIh0gW1j3FCasQtLXp
+         wco3tGaqgrbn8hIud5AqfK7lo8TjucAZoXqFPa9BaSsTn/K1RBr9qewCFwEx0hFMg2wC
+         GO13DPu3M52m9+In08KaiYGF7j004WQtZ+UcEsGh1R1YyFFrroz2FcFWNnL+tuDM9w9J
+         cXDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DPZ/wndNtGq4PmKFUPMXpdYlQfdeqHvXR9++rakqp3A=;
+        b=Xd00Rt2FyONJu4bbU9PkrEWwL+Y/naffZ9XVoUsYSFlNcqb0zTXo7Q3mwdxCSm9oRP
+         VCD73YAAIy+HsvKlWRSVQRIKjFQKaJ/OAJbaouUCfMBJ0Uq85q4zfnr15w2g54fQAnNy
+         YdZtXw/lFNnRIgT+zPZq4bNeYYRv0QE2DFjqlFaY+eYNP35CgdwVwqp0Q5CgxKUlVcB8
+         p3Cad+JqIHZ5gue2BtxLc9JZT5yeXiNzdJf/81FUlymCBC3Xi2XLK1UPvcPPY8olQ8YG
+         MHfs43SUr1/OxHub115kx4ZL8pAzU9L880mQfHYwu+G6ORaj7mMMK6MHQttJOWif8T9I
+         4VvA==
+X-Gm-Message-State: APjAAAU8NwAGVLfaYEes3Qpdhcn/KNmbc5A/B9FIa7kuyqem3hud6DDb
+        xi7TBQe2SEElaeTduULRox3OzZ18DPqIlJGqVaQ=
+X-Google-Smtp-Source: APXvYqwUlAlSkXDhGzdpb3CT3Dr8tzInYiyjPXabQUHDoDU3OamIjsMZNmeX+EFoBmOr9X9vyuCODQpV4q5MYdBIWRw=
+X-Received: by 2002:a02:ccea:: with SMTP id l10mr13626895jaq.114.1580765739722;
+ Mon, 03 Feb 2020 13:35:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580765684; bh=kGDtNYXBy0zFUD4iLnz+tUqVaKJvqr8r2bUfyaZ94Dw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lil64nrusY2x09d9REkLc9RTXIIE+yyHnKjfdLHxccFpRZiiYsQeNWUqRp3Ub1/4s
-         bd/LkFmhyJnXuYsE2GWCKaZUdA5vRG1GCoy6hIpxIFShc9Jucge2PdCO5n8odGUBV5
-         OadbuemDOVCzRFeeb9c0o7Q9QNsn3O2sD4WBb0svV4CWVsKr+5k4EUzpLxlVkV+qWo
-         fkSvdmSuXL2e2du7xqqB6MRTNYiEweYr1AaPqGJUl8Yl8f2Ekxsg429JjSTAVcmJGp
-         GLRup3JAq6cMc2eIcAufmW8QQOWX7XNyyVztw3larEWoHW51cML0Qh1qdWCk0ZUG+n
-         iMTXQTTIQDNYw==
+References: <20200113144035.10848-1-david@redhat.com> <20200113144035.10848-2-david@redhat.com>
+In-Reply-To: <20200113144035.10848-2-david@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 3 Feb 2020 13:35:29 -0800
+Message-ID: <CAKgT0UdFphMbS04NMRYU=VUmbnVi_purz4UA0cqA3dd7YW-pJA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] mm/page_alloc: fix and rework pfn handling in memmap_init_zone()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 1:30 PM, Kirill A. Shutemov wrote:
-> On Mon, Feb 03, 2020 at 01:04:04PM -0800, John Hubbard wrote:
->> On 2/3/20 5:53 AM, Kirill A. Shutemov wrote:
->>> On Fri, Jan 31, 2020 at 07:40:27PM -0800, John Hubbard wrote:
->>>> diff --git a/mm/gup.c b/mm/gup.c
->>>> index c10d0d051c5b..9fe61d15fc0e 100644
->>>> --- a/mm/gup.c
->>>> +++ b/mm/gup.c
->>>> @@ -29,6 +29,19 @@ struct follow_page_context {
->>>>  	unsigned int page_mask;
->>>>  };
->>>>  
->>>> +#ifdef CONFIG_DEBUG_VM
->>>
->>> Why under CONFIG_DEBUG_VM? There's nothing about this in the cover letter.
->>>
->>
->> Early on, gup_benchmark showed a really significant slowdown from using these 
->> counters. And I don't doubt that it's still the case.
->>
->> I'll re-measure and add a short summary and a few numbers to the patch commit
->> description, and to the v4 cover letter.
-> 
-> Looks like you'll show zeros for these counters if debug is off. It can be
-> confusing to the user. I think these counters should go away if you don't
-> count them.
-> 
+On Mon, Jan 13, 2020 at 6:40 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> Let's update the pfn manually whenever we continue the loop. This makes
+> the code easier to read but also less error prone (and we can directly
+> fix one issue).
+>
+> When overlap_memmap_init() returns true, pfn is updated to
+> "memblock_region_memory_end_pfn(r)". So it already points at the *next*
+> pfn to process. Incrementing the pfn another time is wrong, we might
+> leave one uninitialized. I spotted this by inspecting the code, so I have
+> no idea if this is relevant in practise (with kernelcore=mirror).
+>
+> Fixes: a9a9e77fbf27 ("mm: move mirrored memory specific code outside of memmap_init_zone")
+> Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/page_alloc.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index a41bd7341de1..a92791512077 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5905,18 +5905,20 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>         }
+>  #endif
+>
+> -       for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+> +       for (pfn = start_pfn; pfn < end_pfn; ) {
+>                 /*
+>                  * There can be holes in boot-time mem_map[]s handed to this
+>                  * function.  They do not exist on hotplugged memory.
+>                  */
+>                 if (context == MEMMAP_EARLY) {
+>                         if (!early_pfn_valid(pfn)) {
+> -                               pfn = next_pfn(pfn) - 1;
+> +                               pfn = next_pfn(pfn);
+>                                 continue;
+>                         }
+> -                       if (!early_pfn_in_nid(pfn, nid))
+> +                       if (!early_pfn_in_nid(pfn, nid)) {
+> +                               pfn++;
+>                                 continue;
+> +                       }
+>                         if (overlap_memmap_init(zone, &pfn))
+>                                 continue;
+>                         if (defer_init(nid, pfn, end_pfn))
 
-OK, that's a good point. (And in fact, the counters==0 situation already led me
-astray briefly while debugging with Leon R, even. heh.) I'll remove them entirely for
-the !CONFIG_DEBUG_VM case.
+I'm pretty sure this is a bit broken. The overlap_memmap_init is going
+to return memblock_region_memory_end_pfn instead of the start of the
+next region. I think that is going to stick you in a mirrored region
+without advancing in that case. You would also need to have that case
+do a pfn++ before the continue;
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+> @@ -5944,6 +5946,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>                         set_pageblock_migratetype(page, MIGRATE_MOVABLE);
+>                         cond_resched();
+>                 }
+> +               pfn++;
+>         }
+>  }
+>
+> --
+> 2.24.1
+>
+>
