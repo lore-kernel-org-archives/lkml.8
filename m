@@ -2,151 +2,91 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36148C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D176C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3AF2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:48:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kUu9P+c9"
+	by mail.kernel.org (Postfix) with ESMTP id 22F8F2080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580744909;
+	bh=vPlwjReqzKvrjk/TT05C2bdjSHhyHlPayJzDRaHd5N4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wWCnZ1tJ0dqtuKL0ZGya2XWzfWcsbKm0F3ncgGXzyIaeR8QzfElOAOScQrgN/sYia
+	 2KO9Br+Q6CDcFMaQOdMs8zxf9JHNQUiPxVdTyI4sBqaE+pvOjEpNVgMV7XwaxuH14S
+	 wMiw1Jdwc8nWSJ1OG7APHYEgMbgcmA5qhKHGTHUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgBCPsV (ORCPT
+        id S1728304AbgBCPs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:48:21 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45150 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgBCPsU (ORCPT
+        Mon, 3 Feb 2020 10:48:28 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37270 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgBCPs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:48:20 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d9so11730274qte.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:48:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YNMOJs1FPm/l462+AObUcJBpy8J/6Ie1z+BZTrXlP78=;
-        b=kUu9P+c9Xi/sRwQmUmgRczJtLr5gqK+yFzRIYgulkIKq53mKQTosQf2B1M6rGAi1Vz
-         zf6l65bkbMXSBdMvkcorvRBREKJsVTppzgxLeEe94RRQYYE5rTfTkBy5PLm4V1jr5ZQ2
-         8/TkMtxS7aFoHnfHuQCreV0p97LuOHmi4sH1PeQhHzRc+prSAziRCba+Efew+79NFeug
-         7sAupOPSdzNPuzEGx/PoF+bkDk7yc1blkxEFffDT9NhTb2wE5i6A49kcGqskeWYy690O
-         nI+R4iCW7RBwWJK/FMvjoUPLd2pEL4Dy23U+/NizYdlcaK8tA1r3cfCm2lrDynXLFW6Q
-         69MA==
+        Mon, 3 Feb 2020 10:48:28 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so17770144wmf.2;
+        Mon, 03 Feb 2020 07:48:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YNMOJs1FPm/l462+AObUcJBpy8J/6Ie1z+BZTrXlP78=;
-        b=ju2MkPx9q0YJAZpopOXfOrSnE2ptFiiNX1tGHkQszpD1jhq5k3+k5qqVVf9oXsomRK
-         XvxF+FT7MrjEt43ZtzV6m8mSlBa6x6WjbS3ub6QIP4oncQkeVweAz+M7y+fMt8avFFC3
-         TDqR+rsYVf9V6gz30rQtLjBecNyA5J7JUw9uta+1EfjoPFemIlXxFckdDwpBx84IWBni
-         aWpnYLuIzMbpfQSKdeV+5PZqMZ878fRBvt8XutX1z/rrF0RDbLhEgJJNlfafL7Ec+pWC
-         CgaDmM5UYpKgvlpbd2Ylv7BTAvjrZU9FAy4IQvNHh3TUtMon2YCgviuyK/+96BCYzfo8
-         UtyQ==
-X-Gm-Message-State: APjAAAXUpkr/tSYCUcZ6y2sLaBWNLmhqZ01GEJOyNv9MhcAWdO1vc3L4
-        YbuY2dwG1mJw6vi/bS46ZZSChg==
-X-Google-Smtp-Source: APXvYqzzoz8hW5WNsRr+QGAP5pmz1r20ujicRCSbC4RPyZEQg2Pm/930hS/RB0M0ITiwlO80rrs//A==
-X-Received: by 2002:ac8:7695:: with SMTP id g21mr22123082qtr.99.1580744899546;
-        Mon, 03 Feb 2020 07:48:19 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n132sm9814556qke.58.2020.02.03.07.48.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2020 07:48:18 -0800 (PST)
-Message-ID: <1580744894.7365.3.camel@lca.pw>
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-From:   Qian Cai <cai@lca.pw>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev <kasan-dev@googlegroups.com>
-Date:   Mon, 03 Feb 2020 10:48:14 -0500
-In-Reply-To: <8e94a073-4045-89aa-6a3b-24847ad7c858@c-s.fr>
-References: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
-         <2C4ADFAE-7BB4-42B7-8F54-F036EA7A4316@lca.pw>
-         <8e94a073-4045-89aa-6a3b-24847ad7c858@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=afJ9NnKQp7PyXqtyKvq2Ncapxl2sLhWMcC2ZgY83MY8=;
+        b=XB38GdCkM7EGajjhoOh1609yXvVEPq82LoOwMKU5TjfWqLqFozXx8KipU7ESbF5s0S
+         W6awMH7Pf3Yyo4zf9tBEAAFjHHiLsQSsmNjt1bKLCT0QkNqYaUDoVKoiiC2weB84miJ5
+         u/abRi0ilByshTvwPxM9pJEmidBmEoCQSQCg+5qn6jiSFPftMLkSAtcL/iZS+duPQahn
+         KnitJKHiDSNylQZ8+noV9Uy7TMKmHekD2jJf7B7HiuhDYrrBqUINS8gWeHR78Xvjyv6b
+         B5SmA2PlVM+rA4QBuee6RabXnnAIbxvuPCPX3R1DwtscaCHw7ljGcxEtNuFgmbdXaDxd
+         82cw==
+X-Gm-Message-State: APjAAAUnCLbeif9Na7/Yt63lx6J0Z5QSBaoFd+TjqYEWiPe1LFYlfJff
+        EG6ZR+AqOheYbWaxNBNKrQ==
+X-Google-Smtp-Source: APXvYqzGuCIWbWw2i8bVfM/fZQ+6hFFwHGkTtJjO/5XdTvktJ8cdRX/uWRtt25gET6gNabVAIGUlDg==
+X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr30832163wma.32.1580744905443;
+        Mon, 03 Feb 2020 07:48:25 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.163])
+        by smtp.gmail.com with ESMTPSA id b17sm26278098wrp.49.2020.02.03.07.48.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 07:48:24 -0800 (PST)
+Received: (nullmailer pid 21624 invoked by uid 1000);
+        Mon, 03 Feb 2020 15:48:23 -0000
+Date:   Mon, 3 Feb 2020 15:48:23 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     mripard@kernel.org, wens@csie.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com,
+        sboyd@kernel.org, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/8] media: dt-bindings: media: Add Allwinner A83T Rotate
+ driver
+Message-ID: <20200203154823.GA21568@bogus>
+References: <20200124232014.574989-1-jernej.skrabec@siol.net>
+ <20200124232014.574989-6-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124232014.574989-6-jernej.skrabec@siol.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 16:14 +0100, Christophe Leroy wrote:
+On Sat, 25 Jan 2020 00:20:11 +0100, Jernej Skrabec wrote:
 > 
-> Le 02/02/2020 à 12:26, Qian Cai a écrit :
-> > 
-> > 
-> > > On Jan 30, 2020, at 9:13 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> > > 
-> > > config DEBUG_VM_PGTABLE
-> > >     bool "Debug arch page table for semantics compliance" if ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
-> > >     depends on MMU
-> > >     default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
-> > >     default 'y' if DEBUG_VM
-> > 
-> > Does it really necessary to potentially force all bots to run this? Syzbot, kernel test robot etc? Does it ever pay off for all their machine times there?
-> > 
+> Some Allwinner SoCs like A83T and A64 contain rotate core which can
+> rotate and flip images.
 > 
-> Machine time ?
+> Add a binding for it.
 > 
-> On a 32 bits powerpc running at 132 MHz, the tests takes less than 10ms. 
-> Is it worth taking the risk of not detecting faults by not selecting it 
-> by default ?
-
-The risk is quite low as Catalin mentioned this thing is not to detect
-regressions but rather for arch/mm maintainers.
-
-I do appreciate the efforts to get everyone as possible to run this thing,
-so it get more notices once it is broken. However, DEBUG_VM seems like such
-a generic Kconfig those days that have even been enabled by default for
-Fedora Linux, so I would rather see a more sensitive default been taken
-even though the test runtime is fairly quickly on a small machine for now.
-
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  .../allwinner,sun8i-a83t-de2-rotate.yaml      | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun8i-a83t-de2-rotate.yaml
 > 
-> [    5.656916] debug_vm_pgtable: debug_vm_pgtable: Validating 
-> architecture page table helpers
-> [    5.665661] debug_vm_pgtable: debug_vm_pgtable: Validated 
-> architecture page table helpers
 
+Reviewed-by: Rob Herring <robh@kernel.org>
