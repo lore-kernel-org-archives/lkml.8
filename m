@@ -2,113 +2,84 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB9AC3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F29FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A3B2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YH9V1pSt"
+	by mail.kernel.org (Postfix) with ESMTP id 592F32084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgBCVJo (ORCPT
+        id S1727148AbgBCVKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:09:44 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13912 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgBCVJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:09:43 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e388c080000>; Mon, 03 Feb 2020 13:09:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 13:09:42 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 13:09:42 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 21:09:42 +0000
-Subject: Re: [PATCH v3 02/12] mm/gup: split get_user_pages_remote() into two
- routines
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-3-jhubbard@nvidia.com>
- <20200203142006.GD18591@quack2.suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <60244a5c-d9ce-3378-8b63-e375a8a826aa@nvidia.com>
-Date:   Mon, 3 Feb 2020 13:09:41 -0800
+        Mon, 3 Feb 2020 16:10:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:59412 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbgBCVKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 16:10:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47B17101E;
+        Mon,  3 Feb 2020 13:10:24 -0800 (PST)
+Received: from [192.168.122.164] (unknown [10.118.28.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D9543F68E;
+        Mon,  3 Feb 2020 13:10:24 -0800 (PST)
+Subject: Re: [PATCH 3/6] net: bcmgenet: enable automatic phy discovery
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, opendmb@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
+        hkallweit1@gmail.com
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-4-jeremy.linton@arm.com> <20200201152518.GI9639@lunn.ch>
+ <ad9bc142-c0a8-74af-09c6-7150ff4b854a@arm.com>
+ <20200203011528.GA30319@lunn.ch>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <b6505e78-9dbc-9c97-b4f8-1c9eac24b52e@arm.com>
+Date:   Mon, 3 Feb 2020 15:10:23 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200203142006.GD18591@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200203011528.GA30319@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580764168; bh=kpWnZhJDLnwzJeCQh1dwd9e6bKzAJzhKv9o/97r5OI0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YH9V1pSt2yGSRfcnvkLj5tT6FBzhIwJQJ56FUgxRc8hYBKm7TxhXdfMeU2lgH68TE
-         L288RKt6Lvjsk3MYx4/9ddBXeBvjPPiIwuTPerAMTh0E9xBfsQhQO5J4T0VabPLxjA
-         y/VEM91iMYIRrfptXsdahVvFZ+cZ9j5Rsw6QG6S9p7D5DRqkCa/1rUKVsEtuiMdBcw
-         E3U1uybj55n5poobVSezFD0PefdgdL00m4Yrq7M0h8IhdbLXakKlJulzehnzNs69pl
-         VdwvdRFerroSQ7fkU+rts89SoqCVTCnppCuPc3MlebvcMtELddwIUM/57fXykEZvye
-         CS78PTJYL5Pnw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 6:20 AM, Jan Kara wrote:
-> On Fri 31-01-20 19:40:19, John Hubbard wrote:
->> An upcoming patch requires reusing the implementation of
->> get_user_pages_remote(). Split up get_user_pages_remote() into an outer
->> routine that checks flags, and an implementation routine that will be
->> reused. This makes subsequent changes much easier to understand.
->>
->> There should be no change in behavior due to this patch.
->>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> Looks good to me. You can add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> 								Honza
+Hi,
 
-Thanks for reviewing this series (sort of again), Jan! 
+On 2/2/20 7:15 PM, Andrew Lunn wrote:
+>> I though I should clarify the direct question here about ACPI. ACPI does
+>> have the ability to do what you describe, but it a more rigorous way. If you
+>> look at the ACPI GenericSerialBus abstraction you will see how ACPI would
+>> likely handle this situation. I've been considering making a similar comment
+>> in that large fwnode patch set posted the other day.
 
+I should have been a lot more specific here, but I didn't want to write 
+a book.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+> 
+> I know ~0 about ACPI. But it does not seem unreasonable to describe an
+> MDIO bus in the same way as an i2c bus, or an spi bus. Each can have
+> devices on it, at specific addresses. Each needs common properties
+> like interrupts, and each needs bus specific properties like SPI
+> polarity. And you need pointers to these devices, so that other
+> subsystems can use them.
+> 
+> So maybe the correct way to describe this is to use ACPI
+> GenericSerialBus?
+
+AFAIK, not as the specification stands today.
+
+First its not defined for MDIO (see 6-240 in acpi 6.3) , and secondly 
+because its intended to be used from AML (one of the examples IIRC is to 
+read battery vendor info). That implies to me, that the ACPI standards 
+body's would also have to add some additional methods which configure 
+and return state about the phys. AKA some of the linux phy_() functions 
+would just redirect to AML equivalents the same way there are AML 
+battery functions for returning status/etc.
+
