@@ -2,100 +2,108 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E68C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C295C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62882086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580743383;
-	bh=rkn26MrpMFcSHnE5z5fUj/UAjI+2umNWmo/mhUQUu48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lXBvWOysHQaQodIa1LSfi71Xg29y57fGca1z/g4fe+hOEy/jVpTLhwdQwpr5l6Zgo
-	 d986xV/nkiOXswKQ2ZOONW9UI2t8FUwajHsLahEHDVsBF/2aitZ+qcIXEzlMmzqPll
-	 uo7kn34/PY5KSgoVak7ls/5BfMkMzJFa8q0BcDHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7BFE421775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgBCPXC (ORCPT
+        id S1728083AbgBCPYW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:23:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgBCPXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:23:00 -0500
-Received: from localhost (unknown [223.226.103.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C03B2086A;
-        Mon,  3 Feb 2020 15:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580743380;
-        bh=rkn26MrpMFcSHnE5z5fUj/UAjI+2umNWmo/mhUQUu48=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G0ePOciZ27Uh5SbHvFJ7/ESP+OTN9zC5mlignaJ1YY8NDoyOos0idjAxW4iL4ArHn
-         HETVSENpbZ6BQzXZyXf6MXPNeXUar/ODYXXS1YUSE0r1w4WCFrXUTeWDfaDpY75QV+
-         VytdIXNISJpgRTLL43fW9wzFYmgM5VlHYQnJFoJk=
-Date:   Mon, 3 Feb 2020 20:52:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: Fix build error for
- cpu-idle-cooling.rst and client.rst
-Message-ID: <20200203152255.GQ2841@vkoul-mobl>
-References: <20200203140223.10298-1-changbin.du@gmail.com>
+        Mon, 3 Feb 2020 10:24:22 -0500
+Received: from mail.fireflyinternet.com ([77.68.26.236]:50832 "EHLO
+        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727646AbgBCPYW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 10:24:22 -0500
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20101544-1500050 
+        for multiple; Mon, 03 Feb 2020 15:24:14 +0000
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203140223.10298-1-changbin.du@gmail.com>
+Content-Transfer-Encoding: 8BIT
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20200203151844.mmgcwzz3igo7h6wj@box>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@gentwo.org>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Steve Capper <steve.capper@linaro.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Jerome Marchand <jmarchan@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <1426784902-125149-1-git-send-email-kirill.shutemov@linux.intel.com>
+ <1426784902-125149-10-git-send-email-kirill.shutemov@linux.intel.com>
+ <158048425224.2430.4905670949721797624@skylake-alporthouse-com>
+ <20200203151844.mmgcwzz3igo7h6wj@box>
+Message-ID: <158074345183.25650.17229941243604183055@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH 09/16] page-flags: define PG_reserved behavior on compound pages
+Date:   Mon, 03 Feb 2020 15:24:11 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-02-20, 22:02, Changbin Du wrote:
-> This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
+Quoting Kirill A. Shutemov (2020-02-03 15:18:44)
+> On Fri, Jan 31, 2020 at 03:24:12PM +0000, Chris Wilson wrote:
+> > Quoting Kirill A. Shutemov (2015-03-19 17:08:15)
+> > > As far as I can see there's no users of PG_reserved on compound pages.
+> > > Let's use NO_COMPOUND here.
+> > 
+> > Much later than you would ever expect, but we just had a user update an
+> > ancient device and trip over this.
+> > https://gitlab.freedesktop.org/drm/intel/issues/1027
+> > 
+> > In drm_pci_alloc() we allocate a high-order page (for it to be physically
+> > contiguous) and mark each page as Reserved.
+> > 
+> >         dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size,
+> >                                          &dmah->busaddr,
+> >                                          GFP_KERNEL | __GFP_COMP);
+> > 
+> >         /* XXX - Is virt_to_page() legal for consistent mem? */
+> >         /* Reserve */
+> >         for (addr = (unsigned long)dmah->vaddr, sz = size;
+> >              sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+> >                 SetPageReserved(virt_to_page((void *)addr));
+> >         }
+> > 
+> > It's been doing that since
+> > 
+> > commit ddf19b973be5a96d77c8467f657fe5bd7d126e0f
+> > Author: Dave Airlie <airlied@linux.ie>
+> > Date:   Sun Mar 19 18:56:12 2006 +1100
+> > 
+> >     drm: fixup PCI DMA support
+> > 
+> > I haven't found anything to say if we are meant to be reserving the
+> > pages or not. So I bring it to your attention, asking for help.
 > 
-> Sphinx parallel build error:
-> docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
+> I don't see a real reason for these pages to be reserved. But I might be
+> wrong here.
 > 
-> Sphinx parallel build error:
-> docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
+> I tried to look around: other users (infiniband/ethernet) of
+> dma_alloc_coherent(__GFP_COMP) don't mess with PG_reserved.
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> 
-> ---
-> v2: rebase.
-> ---
->  Documentation/driver-api/dmaengine/client.rst | 14 +++++++---
->  .../driver-api/thermal/cpu-idle-cooling.rst   | 27 ++++++++++---------
->  Documentation/driver-api/thermal/index.rst    |  1 +
->  3 files changed, 26 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-> index a9a7a3c84c63..2104830a99ae 100644
-> --- a/Documentation/driver-api/dmaengine/client.rst
-> +++ b/Documentation/driver-api/dmaengine/client.rst
-> @@ -151,8 +151,8 @@ The details of these operations are:
->       Note that callbacks will always be invoked from the DMA
->       engines tasklet, never from interrupt context.
->  
-> -  Optional: per descriptor metadata
-> -  ---------------------------------
-> +  **Optional: per descriptor metadata**
+> Could you try to drop it from DRM?
 
-I have already fixed it up and it is linux-next (thru dmaengine tree)
-
-Can you please send rest of client.rst changes to me as well
-
-Thanks
--- 
-~Vinod
+That is the current plan. So long as there is nothing magical about
+either the __GFP_COMP or SetPageReserved, we should be able to drop them
+without any functional change. Only 2 very old bits of HW (r128, ancient
+i915) depend on this routine, and i915 seems, touch wood, quite happy
+with a plain dma_alloc_coherent().
+-Chris
