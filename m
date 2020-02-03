@@ -2,107 +2,148 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336C2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF0BC3524C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116EA2073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370E220838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkuwH2bu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgBCE7k (ORCPT
+        id S1726369AbgBCFDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 23:59:40 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726971AbgBCE7k (ORCPT
+        Mon, 3 Feb 2020 00:03:23 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33810 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgBCFDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 23:59:40 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0134t5r3019860
-        for <linux-kernel@vger.kernel.org>; Sun, 2 Feb 2020 23:59:38 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xx340umdv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 23:59:38 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Mon, 3 Feb 2020 04:54:36 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Feb 2020 04:54:32 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0134sVhY53412002
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Feb 2020 04:54:31 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4A0211C052;
-        Mon,  3 Feb 2020 04:54:31 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5462711C04C;
-        Mon,  3 Feb 2020 04:54:30 +0000 (GMT)
-Received: from [9.124.31.79] (unknown [9.124.31.79])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Feb 2020 04:54:30 +0000 (GMT)
-Subject: Re: [PATCH v2 1/6] perf annotate: Remove privsize from
- symbol__annotate() args
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, jolsa@redhat.com
-Cc:     namhyung@kernel.org, irogers@google.com, songliubraving@fb.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200124080432.8065-1-ravi.bangoria@linux.ibm.com>
- <20200124080432.8065-2-ravi.bangoria@linux.ibm.com>
- <20200130111653.GE3841@kernel.org>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Mon, 3 Feb 2020 10:24:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 00:03:23 -0500
+Received: by mail-qt1-f196.google.com with SMTP id h12so10520246qtu.1;
+        Sun, 02 Feb 2020 21:03:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PWETuN1Ct/aBktiJB2sFTwNGzVs9/Rhblhe4P3oaRJY=;
+        b=HkuwH2bub7iIvO57E0i9lDHUF3m+LwVNRVnbSdehpOMJ+PDBp0xVO3m0rG1ykfB5FU
+         B7K3kVzledfBK17Mz5U+DPvWX1uJ0XWN9QpePcYnui0zfLUz9kLPU8Qn+oraz1LtjgSU
+         AbfXOOxCFhifOISWKDh2xaQ0+qISmretXlYVTHbpVGksN8+2nsi7PFXtmsxWKaV2G927
+         ViaAZLe/Ogu1KTKFcdPiqwvuH1dCng+FdGSf/iBgWOog8c60qKymxzGADt9f5dEfbzzv
+         tDov8kA2Sb9hYLx/IMKWtJIeVRK10k76i3tioZX0JelH/PwsfBfNFkgdO9AaTgF0KfRQ
+         j1tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PWETuN1Ct/aBktiJB2sFTwNGzVs9/Rhblhe4P3oaRJY=;
+        b=LwHiaQSa65Vw6FW8TlpE9M4WGoVgAF64qLkRKc249kDC49JxRvTPOiySRqXQuq3qrz
+         6GWQPS7yprsKJZ8p7bBqgJNyCUqfGBMjpqG9tINyRr9x8+1TthTGJpf6J2KEJcce4VeM
+         Vo/Xc+fGYRkz9wlcztjFqZcyzAYMw+4coO6nyu0518mG9F5gSsxYY3DbV4FH3buL3fQp
+         n2ZPdC01NA1dhS/5sz4bDi1rC0uXezy1nqlvCMWXRl8j71p7B8TdwpQuBuMGhqUdH5c0
+         NKX9Yo6eoE23Ys9+QN3/sSwsBfhFDan51R2mf+UMY/9nX2XA84CB+C0z3z91hyDp3pjl
+         Jyxw==
+X-Gm-Message-State: APjAAAWTXRY04UihLQJSXg+vqC9oRGrhLQ4CTISvhGECXnGKR8/orVE/
+        sUeDYQVhilDk1pFfkBouh2A=
+X-Google-Smtp-Source: APXvYqx5jpsXp9AeJcxrEs21tUX1LfSm/Td+nyy+2Xg93XES6+FgF0WKPll2zf0C6SmJAwoxK/g+wA==
+X-Received: by 2002:ac8:108:: with SMTP id e8mr22244723qtg.101.1580706202246;
+        Sun, 02 Feb 2020 21:03:22 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id v2sm9435343qto.73.2020.02.02.21.03.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Feb 2020 21:03:21 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 54C3E21EC3;
+        Mon,  3 Feb 2020 00:03:18 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 03 Feb 2020 00:03:18 -0500
+X-ME-Sender: <xms:lKk3XnS7TAJMSrraTFkuhbT-Xmy7nggDlkHu41dzguP_BhJxkHmxdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeeigdejjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffoggfgsedtkeer
+    tdertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesgh
+    hmrghilhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphephedv
+    rdduheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithih
+    qdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrih
+    hlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:lKk3Xt8KCi63j6F2Q-uEdywfZMtbCYGspogt7A7kyJcxsh8a7SGNuw>
+    <xmx:lKk3XtOFZkqp6zCJmR4qgUpZUE0RJYje7Ha-ylVJLiSj5nvnwICY2w>
+    <xmx:lKk3XgHciIXfgh-o06VN2x4mhgIqpffW0PapUfy3hukGfyQGoj5zjA>
+    <xmx:lqk3XoXgRmlF_qzXVCzXkAVoNLIf1u3j_wDK2sABnOmyYXVNXgDx5DSmm2U>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5119D328005E;
+        Mon,  3 Feb 2020 00:03:16 -0500 (EST)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH v2 0/3] PCI: hv: Generify pci-hyperv.c
+Date:   Mon,  3 Feb 2020 13:03:10 +0800
+Message-Id: <20200203050313.69247-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200130111653.GE3841@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020304-0028-0000-0000-000003D6D8A8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020304-0029-0000-0000-0000249B2F01
-Message-Id: <ab9edd7d-04d1-f988-9f29-81d65a807250@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-02_09:2020-02-02,2020-02-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 suspectscore=0 impostorscore=0 adultscore=0 spamscore=0
- clxscore=1015 mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002030038
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+This is the first part for virtual PCI support of Hyper-V guest on
+ARM64. The whole patchset doesn't have any functional change, but only
+refactors the pci-hyperv.c code to make it more arch-independent.
 
-On 1/30/20 4:46 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jan 24, 2020 at 01:34:27PM +0530, Ravi Bangoria escreveu:
->> privsize is passed as 0 from all the symbol__annotate() callers.
->> Remove it from argument list.
-> 
-> Right, trying to figure out when was it that this became unnecessary to
-> see if this in fact is hiding some other problem...
-> 
-> It all starts in the following change, re-reading those patches...
-> 
-> - Arnaldo
-> 
+Previous version:
+v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
 
-Ok, I just had a quick look at:
-https://lore.kernel.org/lkml/20171011194323.GI3503@kernel.org/
+Changes since v1:
 
-This change was for python annotation support which, I guess, Jiri didn't posted
-the patches? Jiri, are you planning to post them?
+*	Reword the commit log and adjust the title as per Bjorn's
+	suggestion
 
--Ravi
+*	Split patch #2 into two patches (one for moving and one for
+	adding new structure) as per Bjorn's suggestion
+
+*	Remove unnecesarry #if guard as per Vitaly's suggestion.
+
+*	Add explanation for adding hv_set_msi_address_from_desc().
+
+I've done compile and boot test of this patchset, also done some tests
+with a pass-through NVMe device.
+
+Suggestions and comments are welcome!
+
+Regards,
+Boqun
+
+Boqun Feng (3):
+  PCI: hv: Move hypercall related definitions into tlfs header
+  PCI: hv: Move retarget related structures into tlfs header
+  PCI: hv: Introduce hv_msi_entry
+
+ arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+ arch/x86/include/asm/mshyperv.h     |  5 ++++
+ drivers/pci/controller/pci-hyperv.c | 44 +++--------------------------
+ 3 files changed, 50 insertions(+), 40 deletions(-)
+
+-- 
+2.24.1
 
