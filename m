@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D35C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE11C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2AD2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7936D2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748414;
-	bh=OYhRKsrZdpXPoMn4YGg/2jHoYhmW/8OmBmtQ7ugCHHE=;
+	s=default; t=1580748417;
+	bh=gZTojiRIa7PMDSQh+1NN3TajZTLFOjR4j7G0Y0vGmGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XPq1QdzrussyF6DbZuwsx1IdjVuDn5Om3E/TOv41RZjW73pPXH9j8Z8mPaZDRiZzg
-	 vWI0G/WuTIIJhKPXLBi07iy2utCcQTQDhK86CjlLcuGVwnbNe69EHlnruDOsI+wVNy
-	 fXHiAY6UDVxpVGTebC9HsnsxBOXtEUPAPe+AtOnI=
+	b=bJAGXmhwPAzi8HF+gxnek7bvqk2NSz1aLkAxrvAxYLqtdS7LwMIHGctenQDCj+bP6
+	 vOWK7HfgzvYctY7SU5PyIxS8rswYguiBYaqolj3FSytlGqHrKkyZe/ToikRiYqDKxR
+	 1/+v+BrNxL2+/gO8KW3VaBYrTkgVCCjmuGDRO2Vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbgBCQqy (ORCPT
+        id S1729522AbgBCQ2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:28:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729500AbgBCQ2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:10 -0500
+        id S1729489AbgBCQ1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:53 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F08A02080C;
-        Mon,  3 Feb 2020 16:28:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34F6E20838;
+        Mon,  3 Feb 2020 16:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747289;
-        bh=OYhRKsrZdpXPoMn4YGg/2jHoYhmW/8OmBmtQ7ugCHHE=;
+        s=default; t=1580747272;
+        bh=gZTojiRIa7PMDSQh+1NN3TajZTLFOjR4j7G0Y0vGmGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jtGvWVBOd0pFvPp1xu1VEIhc4zCdtKK8krN81rY1YcvoLoxU6q1TyKGd649KKfWZp
-         aaT53mqfNFBFstJTKVucnIgNEh+uLK2ZHqcEWV+aW0Rrb96Bpnw+YFRRJ5tSKUyilR
-         4Nr9n7Ht6pO6ukonmtXaO5FjbWhkqoGp3Iqw27QM=
+        b=bbSMYZ++BdWUZPe08CNSf22NEzPcQkXEZ09KK99csXI0pWM1PH3C6VrXoEfgcNmnM
+         HgsN2A8fPkrYUCXgLZ5L4b7W/oQzIVTfLqh5a29k6iyNXYsLZpM4ilg94M2nWkUJNw
+         0hPlBUTTsbc4Dy27YXNF82DTSC3HcCqTbSWfjiuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 04/89] USB: serial: ir-usb: fix link-speed handling
-Date:   Mon,  3 Feb 2020 16:18:49 +0000
-Message-Id: <20200203161917.426212020@linuxfoundation.org>
+        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 15/89] brcmfmac: fix interface sanity check
+Date:   Mon,  3 Feb 2020 16:19:00 +0000
+Message-Id: <20200203161918.894777019@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,100 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 17a0184ca17e288decdca8b2841531e34d49285f upstream.
+commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
 
-Commit e0d795e4f36c ("usb: irda: cleanup on ir-usb module") added a USB
-IrDA header with common defines, but mistakingly switched to using the
-class-descriptor baud-rate bitmask values for the outbound header.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-This broke link-speed handling for rates above 9600 baud, but a device
-would also be able to operate at the default 9600 baud until a
-link-speed request was issued (e.g. using the TCGETS ioctl).
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: e0d795e4f36c ("usb: irda: cleanup on ir-usb module")
-Cc: stable <stable@vger.kernel.org>     # 2.6.27
-Cc: Felipe Balbi <balbi@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Cc: Arend van Spriel <arend@broadcom.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ir-usb.c |   20 ++++++++++----------
- include/linux/usb/irda.h    |   13 ++++++++++++-
- 2 files changed, 22 insertions(+), 11 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/ir-usb.c
-+++ b/drivers/usb/serial/ir-usb.c
-@@ -339,34 +339,34 @@ static void ir_set_termios(struct tty_st
- 
- 	switch (baud) {
- 	case 2400:
--		ir_baud = USB_IRDA_BR_2400;
-+		ir_baud = USB_IRDA_LS_2400;
- 		break;
- 	case 9600:
--		ir_baud = USB_IRDA_BR_9600;
-+		ir_baud = USB_IRDA_LS_9600;
- 		break;
- 	case 19200:
--		ir_baud = USB_IRDA_BR_19200;
-+		ir_baud = USB_IRDA_LS_19200;
- 		break;
- 	case 38400:
--		ir_baud = USB_IRDA_BR_38400;
-+		ir_baud = USB_IRDA_LS_38400;
- 		break;
- 	case 57600:
--		ir_baud = USB_IRDA_BR_57600;
-+		ir_baud = USB_IRDA_LS_57600;
- 		break;
- 	case 115200:
--		ir_baud = USB_IRDA_BR_115200;
-+		ir_baud = USB_IRDA_LS_115200;
- 		break;
- 	case 576000:
--		ir_baud = USB_IRDA_BR_576000;
-+		ir_baud = USB_IRDA_LS_576000;
- 		break;
- 	case 1152000:
--		ir_baud = USB_IRDA_BR_1152000;
-+		ir_baud = USB_IRDA_LS_1152000;
- 		break;
- 	case 4000000:
--		ir_baud = USB_IRDA_BR_4000000;
-+		ir_baud = USB_IRDA_LS_4000000;
- 		break;
- 	default:
--		ir_baud = USB_IRDA_BR_9600;
-+		ir_baud = USB_IRDA_LS_9600;
- 		baud = 9600;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -1333,7 +1333,7 @@ brcmf_usb_probe(struct usb_interface *in
+ 		goto fail;
  	}
  
---- a/include/linux/usb/irda.h
-+++ b/include/linux/usb/irda.h
-@@ -119,11 +119,22 @@ struct usb_irda_cs_descriptor {
-  * 6 - 115200 bps
-  * 7 - 576000 bps
-  * 8 - 1.152 Mbps
-- * 9 - 5 mbps
-+ * 9 - 4 Mbps
-  * 10..15 - Reserved
-  */
- #define USB_IRDA_STATUS_LINK_SPEED	0x0f
+-	desc = &intf->altsetting[0].desc;
++	desc = &intf->cur_altsetting->desc;
+ 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
+ 	    (desc->bInterfaceSubClass != 2) ||
+ 	    (desc->bInterfaceProtocol != 0xff)) {
+@@ -1346,7 +1346,7 @@ brcmf_usb_probe(struct usb_interface *in
  
-+#define USB_IRDA_LS_NO_CHANGE		0
-+#define USB_IRDA_LS_2400		1
-+#define USB_IRDA_LS_9600		2
-+#define USB_IRDA_LS_19200		3
-+#define USB_IRDA_LS_38400		4
-+#define USB_IRDA_LS_57600		5
-+#define USB_IRDA_LS_115200		6
-+#define USB_IRDA_LS_576000		7
-+#define USB_IRDA_LS_1152000		8
-+#define USB_IRDA_LS_4000000		9
-+
- /* The following is a 4-bit value used only for
-  * outbound header:
-  *
+ 	num_of_eps = desc->bNumEndpoints;
+ 	for (ep = 0; ep < num_of_eps; ep++) {
+-		endpoint = &intf->altsetting[0].endpoint[ep].desc;
++		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
+ 		endpoint_num = usb_endpoint_num(endpoint);
+ 		if (!usb_endpoint_xfer_bulk(endpoint))
+ 			continue;
 
 
