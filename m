@@ -2,56 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B429C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78EDC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4510C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995F92080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747265;
-	bh=3g3AmL0smK5k2ro0GWmuOvyeISP09J/EW7MoapXOXvE=;
+	s=default; t=1580747271;
+	bh=528ZcrQJZQ4TUfVFsu6KSmmCu84dPYeWmgxcuBYdxTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkvFCO+MgKN/zkbFGnBaFSO6GqeohQIQ6Yp5yYUaO9KcCa62uUUnyME5EqfXz/5Ud
-	 05iHyyb9Uodxh4sdsXWj0Bz0RT2gfhff73YVvgz8Peb8s7pIgcTD/9OCa0gp8G5lP6
-	 zHaIbxLFvPtE8nDz8G/+vpJft8jxcjGiAlkP+M98=
+	b=OvpgM/HCrjI401BJhPWjY4uxbjs+3c1euHforoiURWS8w0nQXRFvF0zvoxHVCCdm1
+	 5hZ3fhOYLrBFoc5N4uafNdiJTqiethzDl1//BG9cSvz5sDevFIPtCHy7LE+FWIHNoZ
+	 URAeF8vIYUUfYyvn+aBQ5WzIVMatTt8nj2jRKYRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgBCQ1o (ORCPT
+        id S1729049AbgBCQ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729444AbgBCQ1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:36 -0500
+        id S1728887AbgBCQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:43 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9654D2051A;
-        Mon,  3 Feb 2020 16:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90ED12051A;
+        Mon,  3 Feb 2020 16:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747255;
-        bh=3g3AmL0smK5k2ro0GWmuOvyeISP09J/EW7MoapXOXvE=;
+        s=default; t=1580747263;
+        bh=528ZcrQJZQ4TUfVFsu6KSmmCu84dPYeWmgxcuBYdxTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X6ifdRWCyz0b0x/MFIBozXbqX05Lm52qPxI/LGh+gP2JMS3LYESbEdps3oB3z8dPS
-         2Xsv5kfZT/gykVVcu5dxAQEmwUPx2OGMhwWSMrP11Hm2yprvCTnrlA3sLcYoX9hcMF
-         CliWJ3+SdtjNGht14BMtfm2JNBC1z7K6sJo525Zw=
+        b=cTNAUF/wu5h4f9s/xvKI5IHUKhATYLI5yoxiAVBwsz5Cl21LlrCOIcsVcN16cEiN/
+         bVaxINiQl+fqCHrrfu/X0bz4XOofoF6Qw1qU4NHwuUsRloowhzNAn40X38kPeZ/Hlf
+         CxcZS50rXFqOC/ZOobbm3O9IfQw0pYcTE7Zehn4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 46/68] ixgbevf: Remove limit of 10 entries for unicast filter list
-Date:   Mon,  3 Feb 2020 16:19:42 +0000
-Message-Id: <20200203161912.538028097@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.14 11/89] staging: vt6656: Fix false Tx excessive retries reporting.
+Date:   Mon,  3 Feb 2020 16:18:56 +0000
+Message-Id: <20200203161918.372503759@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
-References: <20200203161904.705434837@linuxfoundation.org>
+In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
+References: <20200203161916.847439465@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,42 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
+commit 9dd631fa99dc0a0dfbd191173bf355ba30ea786a upstream.
 
-Currently, though the FDB entry is added to VF, it does not appear in
-RAR filters. VF driver only allows to add 10 entries. Attempting to add
-another causes an error. This patch removes limitation and allows use of
-all free RAR entries for the FDB if needed.
+The driver reporting  IEEE80211_TX_STAT_ACK is not being handled
+correctly. The driver should only report on TSR_TMO flag is not
+set indicating no transmission errors and when not IEEE80211_TX_CTL_NO_ACK
+is being requested.
 
-Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/340f1f7f-c310-dca5-476f-abc059b9cd97@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/staging/vt6656/int.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index 75607267e656f..7a763e85ff27e 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -1885,11 +1885,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	int count = 0;
+--- a/drivers/staging/vt6656/int.c
++++ b/drivers/staging/vt6656/int.c
+@@ -107,9 +107,11 @@ static int vnt_int_report_rate(struct vn
  
--	if ((netdev_uc_count(netdev)) > 10) {
--		pr_err("Too many unicast filters - No Space\n");
--		return -ENOSPC;
--	}
--
- 	if (!netdev_uc_empty(netdev)) {
- 		struct netdev_hw_addr *ha;
+ 	info->status.rates[0].count = tx_retry;
  
--- 
-2.20.1
-
+-	if (!(tsr & (TSR_TMO | TSR_RETRYTMO))) {
++	if (!(tsr & TSR_TMO)) {
+ 		info->status.rates[0].idx = idx;
+-		info->flags |= IEEE80211_TX_STAT_ACK;
++
++		if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
++			info->flags |= IEEE80211_TX_STAT_ACK;
+ 	}
+ 
+ 	ieee80211_tx_status_irqsafe(priv->hw, context->skb);
 
 
