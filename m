@@ -2,92 +2,93 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C52C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40062C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32DE20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B8C20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF3Cwe+s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOG4l/EJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgBCKQZ (ORCPT
+        id S1727877AbgBCKR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:16:25 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42121 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727797AbgBCKQZ (ORCPT
+        Mon, 3 Feb 2020 05:17:26 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42112 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgBCKRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:16:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so7319604pfz.9;
-        Mon, 03 Feb 2020 02:16:24 -0800 (PST)
+        Mon, 3 Feb 2020 05:17:25 -0500
+Received: by mail-pl1-f193.google.com with SMTP id e8so3058625plt.9;
+        Mon, 03 Feb 2020 02:17:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8nl2L3p+Ia4E1khnSMhXa3k44nb4cAKeLzB5j1ho5Q4=;
-        b=ZF3Cwe+sUYE/i8Qd+9liOcZE8JWFZGEMtPrwkoS1cGWyMawyyFgATWcYlWjBxAqEqq
-         tRDzgljJg8FGaiOrfG5tKK/V0wdjrc6M2I/P/8HTV9tVbb6VCwHEFipv+e5xBIr1oxah
-         xSYw4D2HCz/TnZpDHZgdhUi/PVnYEGD1lmOHdRdtTTGiriUGs3QyHv/iDBRK7DbZ/7Ct
-         TGJ5G/HsZGNhKmZk2X5cpqLRfhlxRoNFdx1dqnA0OQN+8TRW5d10ZKN68x3mNulewkrB
-         PX2dL/54OVKP0Wfyb7XGq7knytMTBazsqEsnWID/YCxW5RFcupMs+akZrLcirdB6Y0um
-         PbYg==
+        bh=BI5Btq2BdundVSKnBkH4i1TFYWWU2lOLfpEXkz2+34s=;
+        b=uOG4l/EJf8A41gc/jrWj8EHPHycM5dDbt4B75bhhTdoLLLwHOrRFYjwVJm7iW3MmaA
+         DjAAMXUI+hBR2vVQ9OXZ+9Xp7LhNCzKguyxX3oE8IjszizV/Jhr0sHESa/OLqKyBg9+x
+         t8TmgTUUwcdk0G6KVv3Xk13Q5kvka41iQXWwk7F50eyCTaaDYsJvXlfBYL8LzOrBWszR
+         xUgGSsWF5zfk823OiDIDtlAvxCQG+EhsAj7nnETA+Bp7Lq+rOzhVkfKaCBym1UEe/Ra5
+         9P0rRsLjziDh+71Bx9dKNnghPeXSy8yP0ToW30/pmaXLkYtlUJQ7rxDySWKKI/nEdzOB
+         k91Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8nl2L3p+Ia4E1khnSMhXa3k44nb4cAKeLzB5j1ho5Q4=;
-        b=jlpccHfOyPQO+naiQ1BE7WWr2x8x3QASoklvPnPr3JxHQeeIZgjA0CfcAE0mVgjE03
-         EEdMblLRRIg+dkhQIwaC0i36NR6evk2JLGXkI7w/KpNuzAcQG4wa1WHodSUpzc3YwNwn
-         7AZcHfJ4IeFdCbp0h7ZGIfSNddYGvyPhJTl1AyXpKt5mA6LZdFYYDEwS738W110PBkXh
-         2kVQXQSaUdChktx0iuPAUjGYZHvbeORXM0Sff3pQ1v++Q55HGPBnbh+EvoqHKc5C/Dr2
-         QUXwWU8iugoZwvLqLSxOzf/NDP3oemb0ka3O5tQrzLG3S/19N5ckMR+Exhof7VeJSQf7
-         Fr5g==
-X-Gm-Message-State: APjAAAWe93lhyYWvlONL2Go+AA2ozVjuqw5FZ1tZVef8h3ReSKIkzt8r
-        r2rSeks2yktdDnFOLMTIsC7pdtF/k3P1dOZW86Q=
-X-Google-Smtp-Source: APXvYqxWutW6pKCGPRKsawlK4lEy7F/4S4tpTZWWYsSKci14dTcyHaWg7CkfIalOcAc/wZQfNq+VazwrNRo8lQ+vWD8=
-X-Received: by 2002:a65:4685:: with SMTP id h5mr25618513pgr.203.1580724984426;
- Mon, 03 Feb 2020 02:16:24 -0800 (PST)
+        bh=BI5Btq2BdundVSKnBkH4i1TFYWWU2lOLfpEXkz2+34s=;
+        b=degCOYuNyiMDoRC67xhEgwMWLGIKZcEcQehePhdhcQQTWCdP+G2HvwFCHgbgF3AgTB
+         6ZTun9q9ontChwbYSv+CWJaHVBX1OLWZzVBvGygRAtKj/wPOvR7zkmHH1N0BCW3ot29b
+         +l7f0tcOzfnTN0ErFJIZuZCenlnWxnJ7nSOUA6Z20EidbPZj0n1d/1HMqq6sWendkc6+
+         PJVzJ8MuRcLAlghMQLASaMCkQFXE7NSNqpeVViyec0mtpBdE8hMyfZYSVwbI2eaygiz5
+         Rw0F3nE/9xovqyHhTz2p4bw9y52U4asLrxfhD4kIAb+iO9i+57AfJ4tgQmdZsIUuKTrq
+         NA0g==
+X-Gm-Message-State: APjAAAX5cFEEb+jqJJJhEoD3JVoaKBlFJ1SFM2lNWCoiuJS/fVxt1WRd
+        xGZuN5kOA2b4Tc6xxivMuVLZ9Om+SyNBjU7reQ0=
+X-Google-Smtp-Source: APXvYqzV9MbL08KEx9zQLN9PuY7RQZClzngiq85jd5w3xWNpSBewrq2tMS+iJnHE6y9/aOoQFGFajKLDEHBk7ulmy10=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr29209552pjq.132.1580725045200;
+ Mon, 03 Feb 2020 02:17:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org> <20200131135009.31477-14-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20200131135009.31477-14-manivannan.sadhasivam@linaro.org>
+References: <20200129084509.20371-1-beniamin.bia@analog.com> <20200129084509.20371-3-beniamin.bia@analog.com>
+In-Reply-To: <20200129084509.20371-3-beniamin.bia@analog.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:16:16 +0200
-Message-ID: <CAHp75Vc2Nf9N0cPBmrqb_xZQG-=eczd=gdZxsfXv6OtZ=ysP6w@mail.gmail.com>
-Subject: Re: [PATCH v2 13/16] MAINTAINERS: Add entry for MHI bus
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, smohanad@codeaurora.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 3 Feb 2020 12:17:17 +0200
+Message-ID: <CAHp75VfbhqvsigBDY_uYsTVwLRGVuBhr0eO1zqSu4ivjd7X-oQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: add entry for hmc425a driver.
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        biabeniamin@outlook.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 3:53 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Wed, Jan 29, 2020 at 10:45 AM Beniamin Bia <beniamin.bia@analog.com> wrote:
 >
-> Add MAINTAINERS entry for MHI bus.
+> Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
+> attenuator.
 
-> +MHI BUS
-> +M:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:     Hemant Kumar <hemantk@codeaurora.org>
-> +L:     linux-arm-msm@vger.kernel.org
-> +T:     git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
-> +S:     Maintained
-> +F:     drivers/bus/mhi/
-> +F:     include/linux/mhi.h
-> +F:     Documentation/mhi/
+> +ANALOG DEVICES INC HMC425A DRIVER
+> +M:     Beniamin Bia <beniamin.bia@analog.com>
+> +M:     Michael Hennerich <michael.hennerich@analog.com>
+> +L:     linux-iio@vger.kernel.org
+> +W:     http://ez.analog.com/community/linux-device-drivers
+> +S:     Supported
+> +F:     drivers/iio/amplifiers/hmc425a.c
+> +F:     Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
 
 Had you run parse-maintainers.pl afterwards to see if everything is okay?
 
