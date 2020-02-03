@@ -2,144 +2,126 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67073C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77483C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2932080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580731577;
-	bh=vnn82KcbotB7/xfbRr6QfN6dXQw+T6QofF8EKBGZlOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eHmPXinV8xz73Rc9Mo+8esY12RZ+SdKvWnNoM8IXfCwKvNpD1+0cvR+2hzy6mkXE6
-	 S4QfTgO+TzmYpby/bJo7N87lg/fZ2v4ecE2DFdb1ceXC9FJWszzW4bk1L57hB8a0gM
-	 Voyb7nmg5+mPB1hw1iwrthqY/PYyGgW9xNDn5lRY=
+	by mail.kernel.org (Postfix) with ESMTP id 42D7D2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:08:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVQMpnYU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgBCMGQ (ORCPT
+        id S1727837AbgBCMIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:06:16 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54353 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgBCMGQ (ORCPT
+        Mon, 3 Feb 2020 07:08:01 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35410 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727201AbgBCMIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:06:16 -0500
-Received: by mail-wm1-f68.google.com with SMTP id g1so15564413wmh.4;
-        Mon, 03 Feb 2020 04:06:14 -0800 (PST)
+        Mon, 3 Feb 2020 07:08:01 -0500
+Received: by mail-qt1-f195.google.com with SMTP id n17so10036694qtv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 04:08:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=L1c5lgLuw2ECGPDrXg4aSf9b2Bg+sntoPL3y7q3+QiE=;
+        b=sVQMpnYU0XjkIXuXQBSc1YysHsPZzRcW2ftSEBSS2QNq33O7fadqaPewYRPjgSqmYw
+         JW8RJg27uIVBILGRXzo/V5yW3crq4mplohNFUeBR9HGHmJBXRm7PHACZrlSKEbfOE6SB
+         f9fiEhB+ylxM6b2OI6foIKQKfsmYKI3jfXQyUf/pgJjRbEaMiF9WBFErOHXFo7ysxuVH
+         z943qXogIMZnJYJ/kIiwMb+dEXrthDny8TnOy2s0JjPeBtWigMRAX0Qv6uv2Vnr1ZaPo
+         LtBZWi7a/EMjgEuDOyS1N6ICYSypKrNfNMpBvCa79ikyqDo5GGDyfwQ6diBGTFsHWhTZ
+         jjIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qk2Jt3O1erIU7dk9h6hySa8WTi0Ubkco0XQalim8jms=;
-        b=CE7tCvhl/y7wecdqEHnmgytH9yeu3Ya1/fULl4Yx1GNjCeYENmrF5/32BF3NO4wLXR
-         4uyAyIVKH0grZyW4ccawak3YHuMON/5SHg9N16zG5G1CUlViI65YN6KNGyH9ciLAIy6z
-         gMsWPg1sMP8AJ3Xnvr8Xf1PtxDifN68+LEHkcDhTQLH39U0Ph4Tq1Zjg88fso5qq5zgY
-         YlkmJOmBYyUXotmMkrBHmQ7ZhOGEYL2Pp7HZqIcDx6Nh6jPqU5up/xsFJpVz0WSmY6Q8
-         uq9lfCEmepei9GqDRJDR8vhju4zivSviFY+p06jFTzB0ga2/z+PGKDigbSW+GV6TNC78
-         yyJQ==
-X-Gm-Message-State: APjAAAXrZCq/t1YbDqEhRiEVXD5Cj1rhO2S4EV+2WMs268aJYGNgNMi/
-        S2dsHVj4PeM00fGwdoNADg==
-X-Google-Smtp-Source: APXvYqx7nsm5FWekL3BKJELtK3DXarxIJmSasrulMuL/e1k/RgaRA6fRJdz1qpC/FrkmEVy7vvzz8A==
-X-Received: by 2002:a1c:9c52:: with SMTP id f79mr28804908wme.30.1580731573508;
-        Mon, 03 Feb 2020 04:06:13 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id b11sm9698643wrx.89.2020.02.03.04.06.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:06:12 -0800 (PST)
-Received: (nullmailer pid 28482 invoked by uid 1000);
-        Mon, 03 Feb 2020 12:06:10 -0000
-Date:   Mon, 3 Feb 2020 12:06:10 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-can@vger.kernel.org, catalin.marinas@arm.com,
-        mark.rutland@arm.com, davem@davemloft.net, mkl@pengutronix.de,
-        wg@grandegger.com, sriram.dash@samsung.com, nm@ti.com,
-        t-kristo@ti.com
-Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
- stb-gpios
-Message-ID: <20200203120610.GA9303@bogus>
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
- <20200122080310.24653-2-faiz_abbas@ti.com>
- <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
- <8fc7c343-267d-c91c-0381-60990cfc35e8@ti.com>
- <f834087b-da1c-88a0-93fe-bc72c8ac71ff@ti.com>
- <57baeedc-9f51-7b92-f190-c0bbd8525a16@ti.com>
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=L1c5lgLuw2ECGPDrXg4aSf9b2Bg+sntoPL3y7q3+QiE=;
+        b=S4O15/7/oGeKVpvV1fM/HmYq07wzhJvyishhmsUwU1dcHzgjLJbM5SNpLZasEjwse2
+         nnaVyKuGyzVElKYny6VVm83Nl81TtqHKkabDyCqmGxCk1WSun3hYdaLWoplN9nEclN+n
+         goWBx5kjf+iVmxYlAw7Hc2WXwJL5APH8hJBUrpvyr8o8ewftYSpX/aIYEsJzWtJxLOLg
+         eBmSuU2aZ4dc0qVGsYdpqSPJXezLeFWphOoy2xohgALisUN7U2DCU8LQ+YdLIuhyypR3
+         AdirL0ui4U33p8x0p2bGifpoWkQMQIFsPU3sOmj5CARB7o1TJhT4AcO6syAXH8e9io2Y
+         +zuA==
+X-Gm-Message-State: APjAAAXUTDwF+XyWwMGaFXv0UI+TBKLz6uhwUC8UxD6UeWXuBa0qWB2D
+        Q6J9N59R/m1tNxY2PsMllTjpKQ==
+X-Google-Smtp-Source: APXvYqxYIXxQRoZSysJQ80/1mXlNFamqZsrZgLUWv4O5zXdER2TYVQrwnByZR4NL1wd7wJX1Hu7rgA==
+X-Received: by 2002:ac8:4092:: with SMTP id p18mr23133342qtl.19.1580731679969;
+        Mon, 03 Feb 2020 04:07:59 -0800 (PST)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id m21sm9043990qka.117.2020.02.03.04.07.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Feb 2020 04:07:59 -0800 (PST)
+Subject: Re: [Patch v9 7/8] sched/fair: Enable tuning of decay period
+To:     Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com,
+        juri.lelli@redhat.com, corbet@lwn.net
+References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
+ <1580250967-4386-8-git-send-email-thara.gopinath@linaro.org>
+ <4eb10687-1a62-cee3-7285-3f50cc023071@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5E380D1D.7020500@linaro.org>
+Date:   Mon, 3 Feb 2020 07:07:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57baeedc-9f51-7b92-f190-c0bbd8525a16@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4eb10687-1a62-cee3-7285-3f50cc023071@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 01:09:41PM +0530, Faiz Abbas wrote:
+On 01/28/2020 06:56 PM, Randy Dunlap wrote:
 > Hi,
 > 
-> On 22/01/20 8:04 pm, Dan Murphy wrote:
-> > Sekhar
-> > 
-> > On 1/22/20 8:24 AM, Sekhar Nori wrote:
-> >> On 22/01/20 7:05 PM, Dan Murphy wrote:
-> >>> Faiz
-> >>>
-> >>> On 1/22/20 2:03 AM, Faiz Abbas wrote:
-> >>>> The CAN transceiver on some boards has an STB pin which is
-> >>>> used to control its standby mode. Add an optional property
-> >>>> stb-gpios to toggle the same.
-> >>>>
-> >>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> >>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> >>>> ---
-> >>>>    Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
-> >>>>    1 file changed, 2 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt
-> >>>> b/Documentation/devicetree/bindings/net/can/m_can.txt
-> >>>> index ed614383af9c..cc8ba3f7a2aa 100644
-> >>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
-> >>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> >>>> @@ -48,6 +48,8 @@ Optional Subnode:
-> >>>>                  that can be used for CAN/CAN-FD modes. See
-> >>>>                
-> >>>> Documentation/devicetree/bindings/net/can/can-transceiver.txt
-> >>>>                  for details.
-> >>>> +stb-gpios        : gpio node to toggle the STB (standby) signal on
-> >>>> the transceiver
-> >>>> +
-> >>> The m_can.txt is for the m_can framework.  If this is specific to the
-> >>> platform then it really does not belong here.
-> >>>
-> >>> If the platform has specific nodes then maybe we need a
-> >>> m_can_platform.txt binding for specific platform nodes.  But I leave
-> >>> that decision to Rob.
-> >> Since this is transceiver enable, should this not be in
-> >> Documentation/devicetree/bindings/net/can/can-transceiver.txt?
-> > 
+> On 1/28/20 2:36 PM, Thara Gopinath wrote:
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index e35b28e..be4147b 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -4376,6 +4376,11 @@
+>>  			incurs a small amount of overhead in the scheduler
+>>  			but is useful for debugging and performance tuning.
+>>  
+>> +	sched_thermal_decay_shift=
+>> +			[KNL, SMP] Set decay shift for thermal pressure signal.
+>> +			Format: integer between 0 and 10
+>> +			Default is 0.
+>> +
 > 
-> The transceiver node is just a node without an associated device. I had
-> tried to convert it to a phy implementation but that idea got shot down
-> here:
+> That tells an admin [or any reader] almost nothing about this kernel parameter
+> or what it does.  And nothing about what unit the value is in.
+> Does the value 0 disable this feature?
+
+Thanks for the review. 0 does not disable "thermal pressure" feature. 0
+means the default decay period for averaging PELT signals (which is
+usually 32 but configurable) will also be applied for thermal pressure
+signal. A shift will shift the default decay period.
+
+You are right. It needs more explanation here. I will fix it and send v10.
+
 > 
-> https://lore.kernel.org/patchwork/patch/1006238/
+>>  	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
+>>  			xtime_lock contention on larger systems, and/or RCU lock
+>>  			contention on all systems with CONFIG_MAXSMP set.
+> 
+> 
+> thanks.
+> 
 
-Nodes and drivers are not a 1-1 thing. Is the transceiver a separate h/w 
-device? If so, then it should be a separate node and properties of that 
-device go in its node. Also, nothing is stopping you from using the PHY 
-binding without using the kernel's PHY framework.
 
-As to whether it should be a separate phy driver, I think probably the 
-wrong decision was made. We always seem to start out with no PHY on 
-these things and the complexity just grows until we need one. 
-
-Rob
+-- 
+Warm Regards
+Thara
