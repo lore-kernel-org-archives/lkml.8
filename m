@@ -2,122 +2,79 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58ECC3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB93C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4222080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="va1Y23/D"
+	by mail.kernel.org (Postfix) with ESMTP id 0A8922087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgBCPps (ORCPT
+        id S1728034AbgBCPqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:45:48 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35238 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbgBCPpr (ORCPT
+        Mon, 3 Feb 2020 10:46:00 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:23486 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727267AbgBCPp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:45:47 -0500
-Received: by mail-pj1-f65.google.com with SMTP id q39so6598515pjc.0;
-        Mon, 03 Feb 2020 07:45:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JyS09fTXqCgfMqvRZ+BlVT4vb3SNbwWixmfuMn82Wus=;
-        b=va1Y23/Dt1OTf4zMwQrWKUzkv0ug+Eb1ELDUFXEXTXj1n1HfSL4Zl44YAcO9tpKmQw
-         n5RC15bY6uQwQMOtJjBe08PJY29sC3nk/jINiAbFVj/Tp926UWivuTBkVeKF+D7xJ3io
-         w92FdoVchAn0oI6Zu/BWWERnzqx0t03OS3n01EW1IpargCqCEFM0cunr00DJin/I+AMq
-         smXHUUKnBayba01JP9tn4QFq4nW7ykuCmq1uheTZw9UEKizGn5SYe4zOEMpFVupZoNVP
-         4ZKWbpb2xXRkIcE6ohpE+saMP23uSFVLv+CuYoEI6egEVGOA8Ey3s9Ze9266hTtL89Ym
-         m+0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JyS09fTXqCgfMqvRZ+BlVT4vb3SNbwWixmfuMn82Wus=;
-        b=r7sSEgvUL92VgQojWVtmUSczolMlLZcnfVE7icVKLaKll5qgXfBXVAJSwjcIqy6AaC
-         +MtjxQmQxHtKs4w7ZRwXNsMEtRxQ5gs/Bjo0EGOmbSfEG59BFj2n+Y7s3WTPjGLPCkem
-         gAzWdixzavJiS+ODGmlBS3mX1L4r0XNIZ49yXaHstt71WQ53DyH6xxmQjj2Ja7lKvdpz
-         wIi5wxbIj3LquYhaptf8bCDqqEBVkmSXFBKhs21wjm48RU75duObOtYn8sxHAbEYuC3g
-         3kgniKCUd9e2KoW6SxfnAcrskYt1vxoyxYxvSx/PR35Uwm1WAFKZE6I//ISvoZedo6dp
-         dK6g==
-X-Gm-Message-State: APjAAAUzh/zIgxg5MFulhBQc+D4NS5pfwiaOCmXbk6ZJvCA+uOENOjw3
-        GqRei2+rf4jCUWuXCEUuwYeQhjJZ
-X-Google-Smtp-Source: APXvYqydgJ4ZZc45ZDxrZOII/LQJHOId7HwH/4C+OHIif4mcfbgPMPOAZbUe/U0ppEahIKUrywq3NA==
-X-Received: by 2002:a17:90b:11d0:: with SMTP id gv16mr30407161pjb.109.1580744746520;
-        Mon, 03 Feb 2020 07:45:46 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id m71sm272290pje.0.2020.02.03.07.45.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Feb 2020 07:45:45 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH] cpufreq: make cpufreq_global_kobject static
-Date:   Mon,  3 Feb 2020 15:45:17 +0000
-Message-Id: <20200203154517.2347-1-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Feb 2020 10:45:59 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-129-Xl__pfi3PEif-i6vXDWtfg-1; Mon, 03 Feb 2020 15:45:55 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 15:45:54 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 3 Feb 2020 15:45:54 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Dumazet' <edumazet@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: RE: Confused about hlist_unhashed_lockless()
+Thread-Topic: Confused about hlist_unhashed_lockless()
+Thread-Index: AQHV2Geqe/OiaqtIVUysR/GygGVY2agJoQ4g
+Date:   Mon, 3 Feb 2020 15:45:54 +0000
+Message-ID: <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
+References: <20200131164308.GA5175@willie-the-truck>
+ <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+ <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+ <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
+ <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
+In-Reply-To: <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: Xl__pfi3PEif-i6vXDWtfg-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpufreq_global_kobject is only used internally by cpufreq.c
-after this:
-
-commit 2361be236662 ("cpufreq: Don't create empty
-/sys/devices/system/cpu/cpufreq directory")
-
-Make it static.
-
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/cpufreq/cpufreq.c | 4 +---
- include/linux/cpufreq.h   | 3 ---
- 2 files changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 4adac3a8c265..a0831d3d5ed1 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -105,6 +105,7 @@ bool have_governor_per_policy(void)
- }
- EXPORT_SYMBOL_GPL(have_governor_per_policy);
- 
-+static struct kobject *cpufreq_global_kobject;
- struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy)
- {
- 	if (have_governor_per_policy())
-@@ -2745,9 +2746,6 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
- }
- EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
- 
--struct kobject *cpufreq_global_kobject;
--EXPORT_SYMBOL(cpufreq_global_kobject);
--
- static int __init cpufreq_core_init(void)
- {
- 	if (cpufreq_disabled())
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 018dce868de6..0fb561d1b524 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -201,9 +201,6 @@ static inline bool policy_is_shared(struct cpufreq_policy *policy)
- 	return cpumask_weight(policy->cpus) > 1;
- }
- 
--/* /sys/devices/system/cpu/cpufreq: entry point for global variables */
--extern struct kobject *cpufreq_global_kobject;
--
- #ifdef CONFIG_CPU_FREQ
- unsigned int cpufreq_get(unsigned int cpu);
- unsigned int cpufreq_quick_get(unsigned int cpu);
--- 
-2.17.1
+RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDMxIEphbnVhcnkgMjAyMCAxODo1Mw0KPiANCj4g
+T24gRnJpLCBKYW4gMzEsIDIwMjAgYXQgMTA6NDggQU0gRXJpYyBEdW1hemV0IDxlZHVtYXpldEBn
+b29nbGUuY29tPiB3cm90ZToNCj4gPg0KPiANCj4gPiBUaGlzIGlzIG5pY2UsIG5vdyB3aXRoIGhh
+dmUgZGF0YV9yYWNlKCkNCj4gPg0KPiA+IFJlbWVtYmVyIHRoZXNlIHBhdGNoZXMgd2VyZSBzZW50
+IDIgbW9udGhzIGFnbywgYXQgYSB0aW1lIHdlIHdlcmUNCj4gPiB0cnlpbmcgdG8gc29ydCBvdXQg
+dGhpbmdzLg0KPiA+DQo+ID4gZGF0YV9yYWNlKCkgd2FzIG1lcmdlZCBhIGZldyBkYXlzIGFnby4N
+Cj4gDQo+IFdlbGwsIGFjdHVhbGx5IGRhdGFfcmFjZSgpIGlzIG5vdCB0aGVyZSB5ZXQgYW55d2F5
+Lg0KDQpTaG91bGRuJ3QgaXQgYmUgTk9fREFUQV9SQUNFKCkgPz8NCg0KCURhdmlkDQoNCi0NClJl
+Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
+b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
+Cg==
 
