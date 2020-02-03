@@ -2,99 +2,186 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B459CC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D869C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9372086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb2qXbEo"
+	by mail.kernel.org (Postfix) with ESMTP id EFAF52080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgBCMxf (ORCPT
+        id S1728094AbgBCMxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:53:35 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42260 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbgBCMxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:53:34 -0500
-Received: by mail-pl1-f195.google.com with SMTP id e8so3217447plt.9;
-        Mon, 03 Feb 2020 04:53:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
-        b=Rb2qXbEoBWs7d+Nii1uAAhEC5ATNVcKqnSsAQ57yKx/Nes3NssuIoBMh81ho9c+hyG
-         0clFIPoVcUMCnxRq1yLQHno2dmmwyzVwP04QJbj2T3EJKGSL6cJ5nfxCEhPtX2LX15WN
-         QIWF9Jtht9xDHrZ+2kVrCq+VmYKgRrRub1M5okBag25cbJrkPnfAFRAqiNHmXQurlAPq
-         /tO6OH9LHJZSL4iSvpFCW2i7ZwMf4GpkFBGP5NZT3HpH0Ok0a+4TkTYTIfU4AQweMBaF
-         3cIdB7btebTX7sANEqzlbAA2SqMC0f6Jww15MPqYq6RZJ5b9buhzaTk/0Re4h85dflhU
-         Of4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
-        b=oD6XY0WJ2d0sJFdOPZ73IFm1C+L1M+RzTIfDMirs6Ir1UFA13JXDjryczbhS9oqRch
-         2yj8cnD8hpkOyhoM3b3j6Tmg7j6Wuvekc/TzE348NIBgfCR9AwwGFCLd8nc2tX/LZCxT
-         gUsfyvsFJtfBuREm+8vzvXS83xy5s4Yl0ngqh0ZkCK9NkOuE8voxED61fs+nVFNOfU49
-         PVsezk2URLvtRrz6ut76nU30gveUKt2R+C7l0BccfFNDZAeCIoJVd/XlLkRnzbH/fYYE
-         oeXipfZjlChhwecFLfLC1Vc7xH6PiTVpxNZWJ01t38qtx+EmF6+wZlL5rwcuOBZpkD53
-         Wldg==
-X-Gm-Message-State: APjAAAVZWiiYQghmD52ZUEk/LuvkErNlHsZX8WNcPeOto7vqF3o5KdnN
-        Lab+aLPDfEFhCzhtnJNPitc=
-X-Google-Smtp-Source: APXvYqxxwozPvOlt7D3pUmlPv7ZHqnNAe5uYIAMEgCjobqoM7le5Sish89wfUBjG1egNCN7Cfc4bDA==
-X-Received: by 2002:a17:902:104:: with SMTP id 4mr1436768plb.24.1580734413877;
-        Mon, 03 Feb 2020 04:53:33 -0800 (PST)
-Received: from localhost.localdomain ([27.59.202.234])
-        by smtp.gmail.com with ESMTPSA id 26sm12723577pjk.3.2020.02.03.04.53.29
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Mon, 03 Feb 2020 04:53:32 -0800 (PST)
-From:   sachin agarwal <asachin591@gmail.com>
-X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-To:     linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        andy@kernel.org, asachin591@gmail.com
-Subject: [PATCH 5/6] gpio: ich: fixed a typo
-Date:   Mon,  3 Feb 2020 18:22:55 +0530
-Message-Id: <20200203125255.84705-1-sachinagarwal@sachins-MacBook-2.local>
-X-Mailer: git-send-email 2.24.1
+        Mon, 3 Feb 2020 07:53:51 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2352 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727715AbgBCMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:53:50 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 1DD08A477DD53B5A870A;
+        Mon,  3 Feb 2020 12:53:49 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 3 Feb 2020 12:53:48 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
+ 12:53:48 +0000
+Date:   Mon, 3 Feb 2020 12:53:46 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+CC:     <alastair@d-silva.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Keith Busch" <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rob Herring" <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        "=?ISO-8859-1?Q?C=E9dric?= Le Goater" <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        "Hari Bathini" <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Greg Kurz" <groug@kaod.org>, Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 08/27] ocxl: Save the device serial number in ocxl_fn
+Message-ID: <20200203125346.0000503f@Huawei.com>
+In-Reply-To: <20191203034655.51561-9-alastair@au1.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+        <20191203034655.51561-9-alastair@au1.ibm.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: sachin agarwal <asachin591@gmail.com>
+On Tue, 3 Dec 2019 14:46:36 +1100
+Alastair D'Silva <alastair@au1.ibm.com> wrote:
 
-we had written "Mangagment" rather than "Management".
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This patch retrieves the serial number of the card and makes it available
+> to consumers of the ocxl driver via the ocxl_fn struct.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+> ---
+>  drivers/misc/ocxl/config.c | 46 ++++++++++++++++++++++++++++++++++++++
+>  include/misc/ocxl.h        |  1 +
+>  2 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+> index fb0c3b6f8312..a9203c309365 100644
+> --- a/drivers/misc/ocxl/config.c
+> +++ b/drivers/misc/ocxl/config.c
+> @@ -71,6 +71,51 @@ static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
+>  	return 0;
+>  }
+>  
+> +/**
 
-Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
----
- drivers/gpio/gpio-ich.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Make sure anything you mark as kernel doc with /** is valid
+kernel-doc.
 
-diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
-index 2f086d0aa1f4..9960bb8b0f5b 100644
---- a/drivers/gpio/gpio-ich.c
-+++ b/drivers/gpio/gpio-ich.c
-@@ -89,7 +89,7 @@ static struct {
- 	struct device *dev;
- 	struct gpio_chip chip;
- 	struct resource *gpio_base;	/* GPIO IO base */
--	struct resource *pm_base;	/* Power Mangagment IO base */
-+	struct resource *pm_base;	/* Power Management IO base */
- 	struct ichx_desc *desc;	/* Pointer to chipset-specific description */
- 	u32 orig_gpio_ctrl;	/* Orig CTRL value, used to restore on exit */
- 	u8 use_gpio;		/* Which GPIO groups are usable */
--- 
-2.24.1
+> + * Find a related PCI device (function 0)
+> + * @device: PCI device to match
+> + *
+> + * Returns a pointer to the related device, or null if not found
+> + */
+> +static struct pci_dev *get_function_0(struct pci_dev *dev)
+> +{
+> +	unsigned int devfn = PCI_DEVFN(PCI_SLOT(dev->devfn), 0); // Look for function 0
+
+Not sure the trailing comment adds much.
+
+I'd personally not bother with this wrapper at all and just call
+the pci functions directly where needed.
+
+> +
+> +	return pci_get_domain_bus_and_slot(pci_domain_nr(dev->bus),
+> +					dev->bus->number, devfn);
+> +}
+> +
+> +static void read_serial(struct pci_dev *dev, struct ocxl_fn_config *fn)
+> +{
+> +	u32 low, high;
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DSN);
+> +	if (pos) {
+> +		pci_read_config_dword(dev, pos + 0x04, &low);
+> +		pci_read_config_dword(dev, pos + 0x08, &high);
+> +
+> +		fn->serial = low | ((u64)high) << 32;
+> +
+> +		return;
+> +	}
+> +
+> +	if (PCI_FUNC(dev->devfn) != 0) {
+> +		struct pci_dev *related = get_function_0(dev);
+> +
+> +		if (!related) {
+> +			fn->serial = 0;
+> +			return;
+> +		}
+> +
+> +		read_serial(related, fn);
+> +		pci_dev_put(related);
+> +		return;
+> +	}
+> +
+> +	fn->serial = 0;
+> +}
+> +
+>  static void read_pasid(struct pci_dev *dev, struct ocxl_fn_config *fn)
+>  {
+>  	u16 val;
+> @@ -208,6 +253,7 @@ int ocxl_config_read_function(struct pci_dev *dev, struct ocxl_fn_config *fn)
+>  	int rc;
+>  
+>  	read_pasid(dev, fn);
+> +	read_serial(dev, fn);
+>  
+>  	rc = read_dvsec_tl(dev, fn);
+>  	if (rc) {
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 6f7c02f0d5e3..9843051c3c5b 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -46,6 +46,7 @@ struct ocxl_fn_config {
+>  	int dvsec_afu_info_pos; /* offset of the AFU information DVSEC */
+>  	s8 max_pasid_log;
+>  	s8 max_afu_index;
+> +	u64 serial;
+>  };
+>  
+>  enum ocxl_endian {
+
 
