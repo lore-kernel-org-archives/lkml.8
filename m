@@ -2,110 +2,87 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54D8C3524A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08DBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BD520679
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EDD20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBCD30 convert rfc822-to-8bit (ORCPT
+        id S1727297AbgBCDns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 22:29:26 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2936 "EHLO huawei.com"
+        Sun, 2 Feb 2020 22:43:48 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10141 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727034AbgBCD30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 22:29:26 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id C98D5E13684D1791D165;
-        Mon,  3 Feb 2020 11:29:20 +0800 (CST)
-Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 3 Feb 2020 11:29:20 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 3 Feb 2020 11:29:20 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Mon, 3 Feb 2020 11:29:20 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-CC:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
- handle_invvpid() default case
-Thread-Topic: [PATCH] KVM: nVMX: set rflags to specify success in
- handle_invvpid() default case
-Thread-Index: AdXaOs5msQGrd2JlS/qT+AceqW9QkQ==
-Date:   Mon, 3 Feb 2020 03:29:19 +0000
-Message-ID: <668e0827d62c489cbf52b7bc5d27ba9b@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 8BIT
+        id S1727034AbgBCDns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 22:43:48 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7FFD99591DC88B011511;
+        Mon,  3 Feb 2020 11:43:44 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 3 Feb 2020 11:43:37 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
+Subject: [PATCH -next] drm/amdgpu: remove unnecessary conversion to bool
+Date:   Mon, 3 Feb 2020 11:38:05 +0800
+Message-ID: <20200203033805.183173-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> On Thu, Jan 23, 2020 at 10:22:24AM -0800, Jim Mattson wrote:
->>> On Thu, Jan 23, 2020 at 1:54 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>> >
->>> > On 23/01/20 10:45, Vitaly Kuznetsov wrote:
->>> > >>> SDM says that "If an
->>> > >>> unsupported INVVPID type is specified, the instruction fails." 
->>> > >>> and this is similar to INVEPT and I decided to check what 
->>> > >>> handle_invept() does. Well, it does BUG_ON().
->>> > >>>
->>> > >>> Are we doing the right thing in any of these cases?
->>> > >>
->>> > >> Yes, both INVEPT and INVVPID catch this earlier.
->>> > >>
->>> > >> So I'm leaning towards not applying Miaohe's patch.
->>> > >
->>> > > Well, we may at least want to converge on BUG_ON() for both 
->>> > > handle_invvpid()/handle_invept(), there's no need for them to differ.
->>> >
->>> > WARN_ON_ONCE + nested_vmx_failValid would probably be better, if we 
->>> > really want to change this.
->>> >
->>> > Paolo
->>> 
->>> In both cases, something is seriously wrong. The only plausible 
->>> explanations are compiler error or hardware failure. It would be nice 
->>> to handle *all* such failures with a KVM_INTERNAL_ERROR exit to 
->>> userspace. (I'm also thinking of situations like getting a VM-exit 
->> for
->>>> INIT.)
->>
->> Ya.  Vitaly and I had a similar discussion[*].  The idea we tossed 
->> around was to also mark the VM as having encountered a KVM/hardware 
->> bug so that the VM is effectively dead.  That would also allow 
->> gracefully handling bugs that are detected deep in the stack, i.e. 
->> can't simply return 0 to get out to userspace.
->
->Yea, I was thinking about introducing a big hammer which would stop the whole VM as soon as possible to make it easier to debug such situations. Something like (not really tested):
->
-Yea, please just ignore my origin patch and do what you want. :)
-I'm sorry for reply in such a big day. I'am just backing from a really hard festival. :(
+Fixes coccicheck warnings:
+
+./drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c:2198:40-45: WARNING:
+	conversion to bool not needed here
+./drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:2884:68-73: WARNING:
+	conversion to bool not needed here
+
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 8df7727..eb5e3f7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -2881,7 +2881,7 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+ 	INIT_WORK(&adev->xgmi_reset_work, amdgpu_device_xgmi_reset_func);
+ 
+ 	adev->gfx.gfx_off_req_count = 1;
+-	adev->pm.ac_power = power_supply_is_system_supplied() > 0 ? true : false;
++	adev->pm.ac_power = power_supply_is_system_supplied() > 0;
+ 
+ 	/* Registers mapping */
+ 	/* TODO: block userspace mapping of io register */
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+index 5d49253..9d479a0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+@@ -2195,7 +2195,7 @@ static int sdma_v4_0_set_powergating_state(void *handle,
+ 	switch (adev->asic_type) {
+ 	case CHIP_RAVEN:
+ 		sdma_v4_1_update_power_gating(adev,
+-				state == AMD_PG_STATE_GATE ? true : false);
++				state == AMD_PG_STATE_GATE);
+ 		break;
+ 	default:
+ 		break;
+-- 
+2.7.4
+
