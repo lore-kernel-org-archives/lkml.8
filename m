@@ -2,52 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A98C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEDEC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02492166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC692086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747130;
-	bh=nw/hVCP0XHwKDzSIO9/aKG8wnxIhazCth+jmXZt3mqE=;
+	s=default; t=1580747135;
+	bh=b6IVOamTvGku5jkgEhCb3/Ctk25jZQJJxSPkmWFjWbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=skELmGwvMtfGmwbfFzGDKnf3EhrL26f0onqX8ae3u691HxpSujDpoRGXxUZKXXNCn
-	 68YOyANDmUWY+hivbv79g5PlW7VI4hMD0rFHPk51ei8fEYQ+tW3N16MafqrFj6xdwa
-	 D/cI0QtR2/nEhPe4mEmrrdWoW5RAYFyaW17hVkok=
+	b=dOk2vjtSDbsh/eLyh6AoYuy9RiPIiJGal9YZOMg+6I7NANjVPkThKrS1KggbEA7F+
+	 Qkb5lA2eOJTE68v3g2O1Ikf9676y0x/RSk3Zibi8lpKHGWIUlnWcFAApSSG6tzpZdV
+	 eh8Ik7fOslfArKATPg8YZKVVpONHV48WxC37bSX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgBCQZ3 (ORCPT
+        id S1728508AbgBCQZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgBCQZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:27 -0500
+        id S1728369AbgBCQZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:31 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83CF2080C;
-        Mon,  3 Feb 2020 16:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 923952080C;
+        Mon,  3 Feb 2020 16:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747126;
-        bh=nw/hVCP0XHwKDzSIO9/aKG8wnxIhazCth+jmXZt3mqE=;
+        s=default; t=1580747131;
+        bh=b6IVOamTvGku5jkgEhCb3/Ctk25jZQJJxSPkmWFjWbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oZTHFTSbkPaWTrLiZ/VxWgus1AHnNT/0XCvoTxR/Zldxr+CrsvqMkHRk7eE6M3bkq
-         CvrzlD8WsF2lsVunHvLAmApaHgeF/WiNLo9ss85b0XD8XaVySrjgFJsIx8CriPyju5
-         zdK0kk7gdW3zNNOpNCG5XCExJxPyGtHf70BObvTY=
+        b=dj57FnYcFix05Qlyc+SL8ipakXkeCCEgQ2vagUXwYMvQ7sE0xSNuYYeGxHcKlU9fl
+         Lh+Jzzxcb0xyeZfn+2O67TS1zAG5Jpem435Y7SeYzeRUvp2EfEUv9v5kjrZwvBfMtI
+         GqeVgEV7auXXp7GLoYSMvkHVguRZAvrAEfsTjXTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 22/68] atm: eni: fix uninitialized variable warning
-Date:   Mon,  3 Feb 2020 16:19:18 +0000
-Message-Id: <20200203161908.764213941@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 24/68] net_sched: ematch: reject invalid TCF_EM_SIMPLE
+Date:   Mon,  3 Feb 2020 16:19:20 +0000
+Message-Id: <20200203161909.061635854@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,52 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 30780d086a83332adcd9362281201cee7c3d9d19 ]
+[ Upstream commit 55cd9f67f1e45de8517cdaab985fb8e56c0bc1d8 ]
 
-With -O3, gcc has found an actual unintialized variable stored
-into an mmio register in two instances:
+It is possible for malicious userspace to set TCF_EM_SIMPLE bit
+even for matches that should not have this bit set.
 
-drivers/atm/eni.c: In function 'discard':
-drivers/atm/eni.c:465:13: error: 'dma[1]' is used uninitialized in this function [-Werror=uninitialized]
-   writel(dma[i*2+1],eni_dev->rx_dma+dma_wr*8+4);
-             ^
-drivers/atm/eni.c:465:13: error: 'dma[3]' is used uninitialized in this function [-Werror=uninitialized]
+This can fool two places using tcf_em_is_simple()
 
-Change the code to always write zeroes instead.
+1) tcf_em_tree_destroy() -> memory leak of em->data
+   if ops->destroy() is NULL
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+2) tcf_em_tree_dump() wrongly report/leak 4 low-order bytes
+   of a kernel pointer.
+
+BUG: memory leak
+unreferenced object 0xffff888121850a40 (size 32):
+  comm "syz-executor927", pid 7193, jiffies 4294941655 (age 19.840s)
+  hex dump (first 32 bytes):
+    00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
+    [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
+    [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
+    [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
+    [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
+    [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
+    [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
+    [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
+    [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
+    [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
+    [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
+    [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
+    [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
+    [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+    [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
+    [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
+    [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+    [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+    [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+    [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
+    [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
+    [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/atm/eni.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sched/ematch.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/atm/eni.c b/drivers/atm/eni.c
-index 40c2d561417bd..88819409e0beb 100644
---- a/drivers/atm/eni.c
-+++ b/drivers/atm/eni.c
-@@ -372,7 +372,7 @@ static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
- 		here = (eni_vcc->descr+skip) & (eni_vcc->words-1);
- 		dma[j++] = (here << MID_DMA_COUNT_SHIFT) | (vcc->vci
- 		    << MID_DMA_VCI_SHIFT) | MID_DT_JK;
--		j++;
-+		dma[j++] = 0;
- 	}
- 	here = (eni_vcc->descr+size+skip) & (eni_vcc->words-1);
- 	if (!eff) size += skip;
-@@ -445,7 +445,7 @@ static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
- 	if (size != eff) {
- 		dma[j++] = (here << MID_DMA_COUNT_SHIFT) |
- 		    (vcc->vci << MID_DMA_VCI_SHIFT) | MID_DT_JK;
--		j++;
-+		dma[j++] = 0;
- 	}
- 	if (!j || j > 2*RX_DMA_BUF) {
- 		printk(KERN_CRIT DEV_LABEL "!j or j too big!!!\n");
--- 
-2.20.1
-
+--- a/net/sched/ematch.c
++++ b/net/sched/ematch.c
+@@ -242,6 +242,9 @@ static int tcf_em_validate(struct tcf_pr
+ 			goto errout;
+ 
+ 		if (em->ops->change) {
++			err = -EINVAL;
++			if (em_hdr->flags & TCF_EM_SIMPLE)
++				goto errout;
+ 			err = em->ops->change(net, data, data_len, em);
+ 			if (err < 0)
+ 				goto errout;
 
 
