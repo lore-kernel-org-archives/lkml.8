@@ -2,193 +2,122 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5CFC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58ECC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B7F20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580744747;
-	bh=F9PD/5RNRCAiZI4eLhMYS2sNrgM0OuBB8vFDHGnvn6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C/2G+204n49DaAdEhh4o79vphiagHpT/NmzFrRpoNvW5+rZLuJnwQGfFzu52kGYXy
-	 amG2UTI7psA1gh3G34fZff3gc7igLeUexT2zcpDJqws06HCs0wlJeSHiclAgCQz/Ng
-	 yuRnkhWXknJW+9N0NNBI2ZDa0rWh7hdR2in23Pz0=
+	by mail.kernel.org (Postfix) with ESMTP id 8C4222080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:45:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="va1Y23/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgBCPpq (ORCPT
+        id S1727958AbgBCPps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:45:46 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39034 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbgBCPpq (ORCPT
+        Mon, 3 Feb 2020 10:45:48 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35238 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbgBCPpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:45:46 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so17742716wme.4;
-        Mon, 03 Feb 2020 07:45:44 -0800 (PST)
+        Mon, 3 Feb 2020 10:45:47 -0500
+Received: by mail-pj1-f65.google.com with SMTP id q39so6598515pjc.0;
+        Mon, 03 Feb 2020 07:45:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JyS09fTXqCgfMqvRZ+BlVT4vb3SNbwWixmfuMn82Wus=;
+        b=va1Y23/Dt1OTf4zMwQrWKUzkv0ug+Eb1ELDUFXEXTXj1n1HfSL4Zl44YAcO9tpKmQw
+         n5RC15bY6uQwQMOtJjBe08PJY29sC3nk/jINiAbFVj/Tp926UWivuTBkVeKF+D7xJ3io
+         w92FdoVchAn0oI6Zu/BWWERnzqx0t03OS3n01EW1IpargCqCEFM0cunr00DJin/I+AMq
+         smXHUUKnBayba01JP9tn4QFq4nW7ykuCmq1uheTZw9UEKizGn5SYe4zOEMpFVupZoNVP
+         4ZKWbpb2xXRkIcE6ohpE+saMP23uSFVLv+CuYoEI6egEVGOA8Ey3s9Ze9266hTtL89Ym
+         m+0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i4K3Yw7s0/p2VRy7WZBsheWIHTlpjbUAlC7ufzYvY3E=;
-        b=IFt/XXLiqicBQoa2VVsY2BEXae2S3ppvHQGnwWW4zbDJUSmd6V7DJgTBJEcnc5Mx6D
-         k2AwTvXtNTSZda/ydjjw5pQuOutuFKPygg9vnn9V/UzlUjh2le7HmATnoMcHAxg/ytcM
-         8TOOapqWR1EyTXN9qHW2R0NANSL2WBt00LsGcEwP0AkA4O2fW4+zdk8eW0wGbwfAWbzd
-         jl0/fGqo1crLmzCpR5DfGT8/gMSgIKqfpEFKYwYzqS8xZQGIp331mYyMFrB4P8loTbwt
-         l/MqO8TC0D9t+MVeH2MQwt103geK0hinF+HnAiMmIBzOPVJCUQZJCv8Y3177NhOEdL9o
-         hcbA==
-X-Gm-Message-State: APjAAAVDDtVNyqCVZd3+xm5SK8CZfX/57XYOAvKdQLJOOKz2YcitW3BL
-        jtr/wdCfYTkFPdBQe5a5ng==
-X-Google-Smtp-Source: APXvYqzUC53KksT1fJG8MNOZOKWNr3IVl/W0eL/KQgTAaS4Tm5DvJl1BsknoQ94mvSkDJuxs3SUf1Q==
-X-Received: by 2002:a1c:5441:: with SMTP id p1mr31595887wmi.161.1580744744243;
-        Mon, 03 Feb 2020 07:45:44 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id f189sm25558921wmf.16.2020.02.03.07.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 07:45:43 -0800 (PST)
-Received: (nullmailer pid 17059 invoked by uid 1000);
-        Mon, 03 Feb 2020 15:45:42 -0000
-Date:   Mon, 3 Feb 2020 15:45:42 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        mark.rutland@arm.com, heiko@sntech.de,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        shawn.lin@rock-chips.com, yifeng.zhao@rock-chips.com
-Subject: Re: [RFC PATCH v2 01/10] dt-bindings: mtd: add rockchip nand
- controller bindings
-Message-ID: <20200203154542.GA27866@bogus>
-References: <20200124163001.28910-1-jbx6244@gmail.com>
- <20200124163001.28910-2-jbx6244@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124163001.28910-2-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JyS09fTXqCgfMqvRZ+BlVT4vb3SNbwWixmfuMn82Wus=;
+        b=r7sSEgvUL92VgQojWVtmUSczolMlLZcnfVE7icVKLaKll5qgXfBXVAJSwjcIqy6AaC
+         +MtjxQmQxHtKs4w7ZRwXNsMEtRxQ5gs/Bjo0EGOmbSfEG59BFj2n+Y7s3WTPjGLPCkem
+         gAzWdixzavJiS+ODGmlBS3mX1L4r0XNIZ49yXaHstt71WQ53DyH6xxmQjj2Ja7lKvdpz
+         wIi5wxbIj3LquYhaptf8bCDqqEBVkmSXFBKhs21wjm48RU75duObOtYn8sxHAbEYuC3g
+         3kgniKCUd9e2KoW6SxfnAcrskYt1vxoyxYxvSx/PR35Uwm1WAFKZE6I//ISvoZedo6dp
+         dK6g==
+X-Gm-Message-State: APjAAAUzh/zIgxg5MFulhBQc+D4NS5pfwiaOCmXbk6ZJvCA+uOENOjw3
+        GqRei2+rf4jCUWuXCEUuwYeQhjJZ
+X-Google-Smtp-Source: APXvYqydgJ4ZZc45ZDxrZOII/LQJHOId7HwH/4C+OHIif4mcfbgPMPOAZbUe/U0ppEahIKUrywq3NA==
+X-Received: by 2002:a17:90b:11d0:: with SMTP id gv16mr30407161pjb.109.1580744746520;
+        Mon, 03 Feb 2020 07:45:46 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id m71sm272290pje.0.2020.02.03.07.45.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Feb 2020 07:45:45 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] cpufreq: make cpufreq_global_kobject static
+Date:   Mon,  3 Feb 2020 15:45:17 +0000
+Message-Id: <20200203154517.2347-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 05:29:52PM +0100, Johan Jonker wrote:
-> Add the Rockchip NAND controller bindings.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../bindings/mtd/rockchip,nand-controller.yaml     | 92 ++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> new file mode 100644
-> index 000000000..5c725f972
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/rockchip,nand-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml#"
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,px30-nand-controller
-> +      - rockchip,rk3066-nand-controller
-> +      - rockchip,rk3228-nand-controller
-> +      - rockchip,rk3288-nand-controller
-> +      - rockchip,rk3308-nand-controller
-> +      - rockchip,rk3368-nand-controller
-> +      - rockchip,rv1108-nand-controller
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    items:
-> +      - const: hclk_nandc
-> +      - const: clk_nandc
-> +
-> +patternProperties:
-> +  "^nand@[a-f0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 3
-> +
-> +      nand-is-boot-medium: true
-> +
-> +      rockchip,idb-res-blk-num:
+The cpufreq_global_kobject is only used internally by cpufreq.c
+after this:
 
-What is idb? Rather than define, maybe just 'rockchip,boot-blks'?
+commit 2361be236662 ("cpufreq: Don't create empty
+/sys/devices/system/cpu/cpufreq directory")
 
-> +        minimum: 2
+Make it static.
 
-is there a max?
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/cpufreq/cpufreq.c | 4 +---
+ include/linux/cpufreq.h   | 3 ---
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-> +        default: 16
-> +        allOf:
-> +        - $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          For legacy devices where the bootrom can only handle 24 bit BCH/ECC.
-> +          If specified it indicates the number of erase blocks in use by
-> +          the bootloader that need a lower BCH/ECC setting.
-> +          Only used in combination with 'nand-is-boot-medium'.
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3188-cru-common.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    nandc: nand-controller@10500000 {
-> +      compatible = "rockchip,rk3066-nand-controller";
-> +      reg = <0x10500000 0x4000>;
-> +      interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru HCLK_NANDC0>;
-> +      clock-names = "hclk_nandc";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      nand@0 {
-> +        reg = <0>;
-> +        nand-is-boot-medium;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.11.0
-> 
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 4adac3a8c265..a0831d3d5ed1 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -105,6 +105,7 @@ bool have_governor_per_policy(void)
+ }
+ EXPORT_SYMBOL_GPL(have_governor_per_policy);
+ 
++static struct kobject *cpufreq_global_kobject;
+ struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy)
+ {
+ 	if (have_governor_per_policy())
+@@ -2745,9 +2746,6 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
+ }
+ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
+ 
+-struct kobject *cpufreq_global_kobject;
+-EXPORT_SYMBOL(cpufreq_global_kobject);
+-
+ static int __init cpufreq_core_init(void)
+ {
+ 	if (cpufreq_disabled())
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index 018dce868de6..0fb561d1b524 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -201,9 +201,6 @@ static inline bool policy_is_shared(struct cpufreq_policy *policy)
+ 	return cpumask_weight(policy->cpus) > 1;
+ }
+ 
+-/* /sys/devices/system/cpu/cpufreq: entry point for global variables */
+-extern struct kobject *cpufreq_global_kobject;
+-
+ #ifdef CONFIG_CPU_FREQ
+ unsigned int cpufreq_get(unsigned int cpu);
+ unsigned int cpufreq_quick_get(unsigned int cpu);
+-- 
+2.17.1
+
