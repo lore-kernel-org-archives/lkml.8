@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247C7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DBCC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F053820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9C62087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747829;
-	bh=PC4ZT9U2x9qg5fsi7hIoUtVwsFQ/+dxYmuyK9xgD0L4=;
+	s=default; t=1580747832;
+	bh=joIDY90KI70QcN/IczlCD1jWOmlxrA4AWRkYSh9Hf1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QXZWKa0XuPswjEMt0Qo1dpeNp/FTdbJ1MCoqTUrp5/euBFPMTJ7SZeWGAMUITiji/
-	 EvqwKzla/NLB04ozun4JQZoPHm/pJHLJPFruZ2+A8W+b6n01QRHr8TiY4PotmVix2U
-	 zqZ3sbyOYxvO4//Ap3uhuk/wla0NzYN/2kwwN4Vc=
+	b=zY+pnxEtoFppUiYgOEiXRZl+oSAOaRf8wNNtkgE5z8EdhXIsnnEkz45F1NkEAD1d8
+	 dNyp+oH/n2dKk7yPkOhNVmAX/69gm9XzVMbBMxDy1T1XADgWxTfbRmLMiyHZ0JA38a
+	 9N1jqU3EppM8BnNbzPFK9F5pGogIhQDmgKKGRVhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbgBCQhH (ORCPT
+        id S1730328AbgBCQhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:37:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730787AbgBCQhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:03 -0500
+        id S1731269AbgBCQhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:06 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF82A2051A;
-        Mon,  3 Feb 2020 16:37:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26EE620721;
+        Mon,  3 Feb 2020 16:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747823;
-        bh=PC4ZT9U2x9qg5fsi7hIoUtVwsFQ/+dxYmuyK9xgD0L4=;
+        s=default; t=1580747825;
+        bh=joIDY90KI70QcN/IczlCD1jWOmlxrA4AWRkYSh9Hf1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09Rzt56mpSxiZaXxxxPTR2UGq7C4KLKmWCxaw3m0+6R4XOAcDOvLFpbBIkzSpMQpY
-         r1L2GK9/oEYTyDJNlmNue3xlcvxJtTg1o1MmlYv3Z7xwv3biCEhQEZcjH8MOwAdN/+
-         wEoEUApCCKzwCgj51Ih+zzlQJ1CLg5GkSvdv70FI=
+        b=U1Vs2U32WHBJmferVjeFFGDCEhh6I2LYDqfhH5DMvC83TSiO4+xhOOREJYnRjXMED
+         DaAQtuE6ZMUveOvpZ6xbLi+n6QYEKmx+rdTn+2dcCVh5maEZbNwZjjoWoIlim3el8r
+         HZ05WD9z5PFHHy3I6NJkMu/OgQ2dDLxI2j7eR4pA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 85/90] net: fsl/fman: rename IF_MODE_XGMII to IF_MODE_10G
-Date:   Mon,  3 Feb 2020 16:20:28 +0000
-Message-Id: <20200203161927.430171780@linuxfoundation.org>
+Subject: [PATCH 5.4 86/90] seq_tab_next() should increase position index
+Date:   Mon,  3 Feb 2020 16:20:29 +0000
+Message-Id: <20200203161927.533931517@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,44 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 457bfc0a4bf531487ecc3cf82ec728a5e114fb1e ]
+[ Upstream commit 70a87287c821e9721b62463777f55ba588ac4623 ]
 
-As the only 10G PHY interface type defined at the moment the code
-was developed was XGMII, although the PHY interface mode used was
-not XGMII, XGMII was used in the code to denote 10G. This patch
-renames the 10G interface mode to remove the ambiguity.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman_memac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-index 41c6fa200e746..e1901874c19f0 100644
---- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-@@ -110,7 +110,7 @@ do {									\
- /* Interface Mode Register (IF_MODE) */
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index fb8ade9a05a97..2ce96cc1bad48 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -70,8 +70,7 @@ static void *seq_tab_start(struct seq_file *seq, loff_t *pos)
+ static void *seq_tab_next(struct seq_file *seq, void *v, loff_t *pos)
+ {
+ 	v = seq_tab_get_idx(seq->private, *pos + 1);
+-	if (v)
+-		++*pos;
++	++(*pos);
+ 	return v;
+ }
  
- #define IF_MODE_MASK		0x00000003 /* 30-31 Mask on i/f mode bits */
--#define IF_MODE_XGMII		0x00000000 /* 30-31 XGMII (10G) interface */
-+#define IF_MODE_10G		0x00000000 /* 30-31 10G interface */
- #define IF_MODE_GMII		0x00000002 /* 30-31 GMII (1G) interface */
- #define IF_MODE_RGMII		0x00000004
- #define IF_MODE_RGMII_AUTO	0x00008000
-@@ -440,7 +440,7 @@ static int init(struct memac_regs __iomem *regs, struct memac_cfg *cfg,
- 	tmp = 0;
- 	switch (phy_if) {
- 	case PHY_INTERFACE_MODE_XGMII:
--		tmp |= IF_MODE_XGMII;
-+		tmp |= IF_MODE_10G;
- 		break;
- 	default:
- 		tmp |= IF_MODE_GMII;
 -- 
 2.20.1
 
