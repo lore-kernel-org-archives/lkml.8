@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54726C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A76C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2753F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387A82080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746926;
-	bh=IIUnMaUqh3pkUmL/O720khsx3RBbmq2tEFSIgjjRU10=;
+	s=default; t=1580746931;
+	bh=PBpj83y6P2Oz1vGiFYaOARH393JtewVbCmCv5KbtJAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epJ4JUIFF/YaqXDJrV9X9J+a7JuCempEwVGOae+ob4jT9RX+oW9gS2KLj8YGKGFYK
-	 wT7Dta2TQ5O+Fjhky0K9bBpIzrB37St2+IFixF/0KqFYnPfC3RDmrLAnfLI3kFRkLn
-	 1cUlvvKe8hcRbxQDPsEyo2VstJQ/d5KxidpN7InI=
+	b=ndc8WeHywvAKBqv/ajiwlTu2ojfK2ISCwHxvgfwTRGZ3lxrde+JJ9EbpDJyC2LWeh
+	 Vy72axDfG3hBSp+CC+1XiEdDs4RH+6W5TDa1u1ZHy9hDa2QhGYaip2TCITv9Ies8ss
+	 /+WYBDBRxDGBQM3c9PDRXOXI+KZ13Hci5l1RqtOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgBCQWF (ORCPT
+        id S1729207AbgBCQVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:22:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgBCQV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:59 -0500
+        id S1729185AbgBCQVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:45 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A89912082E;
-        Mon,  3 Feb 2020 16:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 475912080C;
+        Mon,  3 Feb 2020 16:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746919;
-        bh=IIUnMaUqh3pkUmL/O720khsx3RBbmq2tEFSIgjjRU10=;
+        s=default; t=1580746904;
+        bh=PBpj83y6P2Oz1vGiFYaOARH393JtewVbCmCv5KbtJAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wY+vUmVhDybJvkkIuDJXctKbg0uY1gP90A9Jl/upD4FIRQe69rrdSdScRHdboUVtl
-         wCL8dA8kdIVSRadvF7EV4VedQo3YD2+tahTwC/I29D8tI24IxiwOdAPqkpPXOl1eTq
-         54AMjt8/oUxeqltiMhjeC35BQGXJ/idd9CacC2q4=
+        b=ulmZqgT54XZXxoZFDJDbasQSClbTqiomVHI/8opeOIJf8Cjq9K6FmvtPDY4E0LsGo
+         4C5sxl0Z0SKKQnnfX1tifVzPICi7XPSWonOZhXvMxs3VBojTRjljU0VENPHUhAgplN
+         jiySncwhSEntw3xzGXOlnqHx0IDi/SFcXFl5tf0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 35/53] ixgbevf: Remove limit of 10 entries for unicast filter list
-Date:   Mon,  3 Feb 2020 16:19:27 +0000
-Message-Id: <20200203161909.294400175@linuxfoundation.org>
+Subject: [PATCH 4.4 39/53] vti[6]: fix packet tx through bpf_redirect()
+Date:   Mon,  3 Feb 2020 16:19:31 +0000
+Message-Id: <20200203161909.898535885@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -61,40 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
+[ Upstream commit 95224166a9032ff5d08fca633d37113078ce7d01 ]
 
-Currently, though the FDB entry is added to VF, it does not appear in
-RAR filters. VF driver only allows to add 10 entries. Attempting to add
-another causes an error. This patch removes limitation and allows use of
-all free RAR entries for the FDB if needed.
+With an ebpf program that redirects packets through a vti[6] interface,
+the packets are dropped because no dst is attached.
 
-Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This could also be reproduced with an AF_PACKET socket, with the following
+python script (vti1 is an ip_vti interface):
+
+ import socket
+ send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
+ # scapy
+ # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
+ # raw(p)
+ req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
+ send_s.sendto(req, ('vti1', 0x800, 0, 0))
+
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
- 1 file changed, 5 deletions(-)
+ net/ipv4/ip_vti.c  | 13 +++++++++++--
+ net/ipv6/ip6_vti.c | 13 +++++++++++--
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index 723bda33472a7..0fa94ebf0411b 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -1861,11 +1861,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	int count = 0;
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index bbcbbc1cc2cc6..42dbd280dc9be 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -195,8 +195,17 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
+ 	int err;
  
--	if ((netdev_uc_count(netdev)) > 10) {
--		pr_err("Too many unicast filters - No Space\n");
--		return -ENOSPC;
--	}
--
- 	if (!netdev_uc_empty(netdev)) {
- 		struct netdev_hw_addr *ha;
+ 	if (!dst) {
+-		dev->stats.tx_carrier_errors++;
+-		goto tx_error_icmp;
++		struct rtable *rt;
++
++		fl->u.ip4.flowi4_oif = dev->ifindex;
++		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++		if (IS_ERR(rt)) {
++			dev->stats.tx_carrier_errors++;
++			goto tx_error_icmp;
++		}
++		dst = &rt->dst;
++		skb_dst_set(skb, dst);
+ 	}
  
+ 	dst_hold(dst);
+diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
+index 51da5987952ce..623963a2d8a68 100644
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -441,8 +441,17 @@ vti6_xmit(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
+ 	int err = -1;
+ 	int mtu;
+ 
+-	if (!dst)
+-		goto tx_err_link_failure;
++	if (!dst) {
++		fl->u.ip6.flowi6_oif = dev->ifindex;
++		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++		if (dst->error) {
++			dst_release(dst);
++			dst = NULL;
++			goto tx_err_link_failure;
++		}
++		skb_dst_set(skb, dst);
++	}
+ 
+ 	dst_hold(dst);
+ 	dst = xfrm_lookup(t->net, dst, fl, NULL, 0);
 -- 
 2.20.1
 
