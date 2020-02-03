@@ -2,122 +2,98 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9202C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818B3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D42020721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580752408;
-	bh=+F911pBIa8UlZE0vunHO6BITHlbAp/snKVv81Rwfgu4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v++LEGNqB3xRvDDv2lzxn7LYnsjHf7yZcAkLCli+AZfjtbGspLRF7K+aou8bE8el8
-	 2x1/FWpNfseFPrb3oHud3cGYGrnB4nX0PxNcf9FPaYbNjHiwgT5aiDuedoJmyXZJ/E
-	 erlmit1H/Igr1v7TVJ87b7W74jyeKF8fuF2mZGOw=
+	by mail.kernel.org (Postfix) with ESMTP id 584082166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="M+dBjUlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgBCRx2 (ORCPT
+        id S1728465AbgBCSAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:53:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727311AbgBCRx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:53:27 -0500
-Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4530B2087E;
-        Mon,  3 Feb 2020 17:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580752406;
-        bh=+F911pBIa8UlZE0vunHO6BITHlbAp/snKVv81Rwfgu4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yZNSUeOU9BuVDZG2NfZ2Cjbin6LdM35W5BRwsUTgG2fMGQpmbEIRG55wlqFO2Q1vb
-         KZ03OAq6Q/zN85eIgsgOpx1N/Aw2Rg4CgvUUg7goyX16hRidDcTC32/9skI+kg/PKA
-         XdgO+q/Pevl+hIOGqxPWBzNuO70YsRXXDwtYhRI8=
-Date:   Mon, 3 Feb 2020 09:53:25 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        DTML <devicetree@vger.kernel.org>,
-        Darren Stevens <darren@stevens-zone.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
-        mad skateman <madskateman@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
- ioctl for device
-Message-ID: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <9624aebf-edb9-a3b0-1a29-b61df6b7ba2f@xenosoft.de>
-References: <20200126115247.13402-1-mpe@ellerman.id.au>
-        <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
-        <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
-        <75aab3c9-1cb6-33bf-5de1-e05bbd98b6fb@c-s.fr>
-        <9624aebf-edb9-a3b0-1a29-b61df6b7ba2f@xenosoft.de>
+        Mon, 3 Feb 2020 13:00:31 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35130 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728097AbgBCSAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 13:00:31 -0500
+Received: by mail-qt1-f196.google.com with SMTP id n17so10998075qtv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:00:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wdj5tmwIO7fxCz8UnDnfa7K1klbEEPxhOInltF7ScW4=;
+        b=M+dBjUlDoBYWgPsybUxws18GQBpTHTdNOra53zF3nDvUJEJ5HUbulam9LVJHgVbq5J
+         SOfL6WOuY6N8nSuehf2NrL0HVUTlSNFwYGhVZBj6Fq6oueEXrGjBPVfgxNzP5FLpjLEM
+         f6fzKkkEUa8iQYaXAlgB38/l8rbaMCOLHJywbHx9XfmFpb/reI1xas3ENvRpcBFkBjnt
+         Tg/hlY1lYllF+rsc1W/WX/PPizv/Gypq9aiWpu3F9swdovbsqYkyl14eoSFft2H9KOoB
+         XJUoyh0lbbDSgrsWbpeJmWexEAVs5Kga5y/0pEM3yHwV1giVFM2LG3eKxwY40JOX9R4b
+         fUPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wdj5tmwIO7fxCz8UnDnfa7K1klbEEPxhOInltF7ScW4=;
+        b=aYPUBhFus36qwwJc6axs8LyaqTPBuwu9/LEGBy+8La7GO/fciW0LMSA439N6TDrrNi
+         T7nWaGFyml6I12gx7o6yOqeIFeEslFwb/toaw/RvftvUo1zzsvcJuCOesrVbjRDPpew9
+         Cxh4cw1id3PX/lnO5C7RfKb9ywFg3XSjTNPjtM3mqbTEQMUpr+3XiAmIiDXLgI0IaG2t
+         e08CYq+uAendus89mpo+PBtY8eL329OhXXznAzkmHYUhVDSsK5A4r+pEDZrEoQM+oOEt
+         vtCJCxZasjfsjRFoB1cWEJ2FaOCHeQ/iJy84pLlS8WgJJWAw6iATPRgFDKsxExRv5T3k
+         rn1A==
+X-Gm-Message-State: APjAAAXV1z0eQ00Fim9etgv5zMjCIxlqCzEdtjksIGkjWtYdnkdO3/YO
+        elDroLbHKcAvMaz4Mh7ciI5LQw==
+X-Google-Smtp-Source: APXvYqxc29YPvC+A7tQjkB+2R3KeT8ErIusoa6YKscpcxv4onRrfRMdtkYsTy9diLVt9VQBHhytyow==
+X-Received: by 2002:ac8:607:: with SMTP id d7mr24565557qth.271.1580752829730;
+        Mon, 03 Feb 2020 10:00:29 -0800 (PST)
+Received: from localhost ([163.114.130.128])
+        by smtp.gmail.com with ESMTPSA id k4sm9665676qki.35.2020.02.03.10.00.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 10:00:28 -0800 (PST)
+Date:   Mon, 3 Feb 2020 12:58:18 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 12/28] mm: vmstat: use s32 for vm_node_stat_diff in
+ struct per_cpu_nodestat
+Message-ID: <20200203175818.GF1697@cmpxchg.org>
+References: <20200127173453.2089565-1-guro@fb.com>
+ <20200127173453.2089565-13-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127173453.2089565-13-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Feb 2020 16:02:18 +0100, Christian Zigotzky wrote:
-> On 02 February 2020 at 09:19 am, Christophe Leroy wrote:
-> > Hello,
-> >
-> > Le 02/02/2020 =C3=A0 01:08, Christian Zigotzky a =C3=A9crit=C2=A0: =20
-> >> Hello,
-> >>
-> >> We regularly compile and test Linux kernels every day during the=20
-> >> merge window. Since Thuesday we have very high CPU loads because of=20
-> >> the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc).
-> >>
-> >> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for=20
-> >> device =20
-> >
-> > Do you know which ioctl, on which device ?
-> > Can you take a trace of running avahi-daemon with 'strace' ?
-> >
-> > Can you bisect ?
-> >
-> > Christophe =20
-> Hi Christophe,
-> Hi All,
->=20
-> I figured out that the avahi-daemon has a problem with the IPv6 address=20
-> of a network interface since the Git kernel from Thursday. (Log attached)
-> This generates high CPU usage because the avahi-daemon tries to access=20
-> the IPv6 address again and again and thereby it produces a lot of log=20
-> messages.
->=20
-> We figured out that the networking updates aren't responsible for this=20
-> issue because we created a test kernel on Wednesday. The issue is=20
-> somewhere in the commits from Wednesday night to Thursday (CET).
+On Mon, Jan 27, 2020 at 09:34:37AM -0800, Roman Gushchin wrote:
+> Currently s8 type is used for per-cpu caching of per-node statistics.
+> It works fine because the overfill threshold can't exceed 125.
+> 
+> But if some counters are in bytes (and the next commit in the series
+> will convert slab counters to bytes), it's not gonna work:
+> value in bytes can easily exceed s8 without exceeding the threshold
+> converted to bytes. So to avoid overfilling per-cpu caches and breaking
+> vmstats correctness, let's use s32 instead.
+> 
+> This doesn't affect per-zone statistics. There are no plans to use
+> zone-level byte-sized counters, so no reasons to change anything.
 
-FWIW Thursday is when the latest networking pull came in, so could well
-be networking related..
+Wait, is this still necessary? AFAIU, the node counters will account
+full slab pages, including free space, and only the memcg counters
+that track actual objects will be in bytes.
 
-> Please compile the latest Git kernel and test it with a desktop linux=20
-> distribution for example Ubuntu. In my point of view there are many=20
-> desktop machines affected. Many server systems don't use the avahi=20
-> daemon so they aren't affected.
->=20
-> It's possible to deactivate the access to the IPv6 address with the=20
-> following line in the file "/etc/avahi/avahi-daemon.conf":
->=20
-> use-ipv6=3Dno
->=20
-> After a reboot the CPU usage is normal again. This is only a temporary=20
-> solution.
->=20
-> Unfortunately I don't have the time for bisecting next week. I have a=20
-> lot of other work to do. In my point of view it is very important that=20
-> you also compile the latest Git kernels. Then you will see the issue and=
-=20
-> then you have a better possibility to fix the issue.
+Can you please elaborate?
