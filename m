@@ -2,151 +2,154 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37FBC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FBFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943F12087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D12020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i8my4THG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oVZNVkNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbgBCT4i (ORCPT
+        id S1727044AbgBCUDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:56:38 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42478 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbgBCT4h (ORCPT
+        Mon, 3 Feb 2020 15:03:51 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9932 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgBCUDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:56:37 -0500
-Received: by mail-pl1-f195.google.com with SMTP id e8so3652635plt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:56:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I9M9LmaClASV810rGLEc15NYOwGjgzBVPDmw7qIokss=;
-        b=i8my4THGhNGBApfbRpArFdahLO9sBtkHhFpuR70QqVUpG+FWx6DjxhgZFgtqUjPq66
-         0WjH3gKJsCUoMQ7ipT4Q6vIUrwvHLMZegZ57wQNOVbfSJw10ePd/SDUsGr8EfwLgdLes
-         O1I5F4wUR6GK7SPeit5DL2B1y2AggMl1HENdWpde9tuqtecoVfBt8So/j2u0G7u8EZfR
-         WYQYc36PsFqwUCzYk02g3sEuETt3YnBJz//qWShRmOEl+XNkJSTTaMuyvrqaQ9VzdhG4
-         G4T5lN2PKz67M00tNgzdZDVf/jY5dCXi1XUxh9mJ4TXXDeM4IET4KW97tkT7EWyzm5Xj
-         ceqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I9M9LmaClASV810rGLEc15NYOwGjgzBVPDmw7qIokss=;
-        b=tMZ54/FV5KIDXNbDLzmO15wb9BjcvHQq6bh6MXkrEA6ZJarfJJyRzJPL941FUtrqbb
-         eBtb7NzpX21IV3nri0XMYRsik2Np7r7VUcsaPvJQFIQeH+A9gD6kPw5eYccvwJ7g+OxR
-         K2ifFtWPEe/YzPlBXiEg6MDxQjjv3D5gxG3qgrIKwnCN6z0HK6VVKY9p4iLkd1useZNM
-         U7rhbR73R4HYVNv04ZluE6pWFMHQKsXOiBLjOWGit8zydbDKOdrxFwrbJu9nkKcszcTh
-         nvdH+Ulm3Ml1nhzYBQqFdJ7OMeUZuiLmKJZD09IXwpEArrcw8QlgIqYYzTKHVVNWWqhP
-         JMJw==
-X-Gm-Message-State: APjAAAXoU05ll44PNi/xmdVPtoJ6RYiM9TU4bVE2aoiHqjzS71U2cnCh
-        rM+ljf+hGA7gJVAoRNyIpkz7Dg==
-X-Google-Smtp-Source: APXvYqz5H17S9JQ02+kNOTj+0Wz6oywPwLIaMN2k+bOpSmvpM87PMUZNYn/QrD1GELPMKLvJrVCm/Q==
-X-Received: by 2002:a17:90b:941:: with SMTP id dw1mr784516pjb.21.1580759795145;
-        Mon, 03 Feb 2020 11:56:35 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o29sm21978029pfp.124.2020.02.03.11.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 11:56:34 -0800 (PST)
-Date:   Mon, 3 Feb 2020 11:56:32 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        robh@kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
-        yshavit@google.com
-Subject: Re: [PATCH v2 1/2] Bluetooth: hci_qca: Enable clocks required for BT
- SOC
-Message-ID: <20200203195632.GM3948@builder>
-References: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
+        Mon, 3 Feb 2020 15:03:51 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e387c980000>; Mon, 03 Feb 2020 12:03:36 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 12:03:50 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 03 Feb 2020 12:03:50 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 20:03:50 +0000
+Subject: Re: [PATCH v3 04/12] mm: introduce page_ref_sub_return()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-5-jhubbard@nvidia.com>
+ <20200203132329.oj32h4ryna4gmkwh@box>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c9f4bb05-457d-a7ea-f449-dfb399facb3c@nvidia.com>
+Date:   Mon, 3 Feb 2020 12:03:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200203132329.oj32h4ryna4gmkwh@box>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580760216; bh=slWoAOjCgnvUbCzYd3p0ud2KsXbx4UbZ3i/D9mUZD1g=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oVZNVkNOYc+kjHjL1ubbfOHYXpU03ACYQb+0iGYED3N00qAA3rTqLUI6W/FLL+/94
+         /0KeKWTUWnMIexwZe5JmSqXp+kb8hJtQy0qeXMnTlnzW+b9F2iWiGnPnnt9cE9x8i/
+         5STz78HwfzxwIVZPLujhbB4GRDXG5qsYqBngJ+h0QUog4ruNYP7jhqKRoTVJibYTtb
+         a5Zzlj4qk7geaex9f3KLWk/NEEPuHZInTpHE7rcDuc1a+AITXTK3Kr/YvNFR/r+NMN
+         W/eQjpACACV53Umd/t7HWidJT6UkHnNwf4WNStZTM+x7tku5YdYyA+1ka/W79nkeIP
+         FYwSgB6uujrlg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 30 Jan 23:38 PST 2020, Venkata Lakshmi Narayana Gubba wrote:
-
-> Instead of relying on other subsytem to turn ON clocks
-> required for BT SoC to operate, voting them from the driver.
+On 2/3/20 5:23 AM, Kirill A. Shutemov wrote:
+> On Fri, Jan 31, 2020 at 07:40:21PM -0800, John Hubbard wrote:
+>> An upcoming patch requires subtracting a large chunk of refcounts from
+>> a page, and checking what the resulting refcount is. This is a little
+>> different than the usual "check for zero refcount" that many of the
+>> page ref functions already do. However, it is similar to a few other
+>> routines that (like this one) are generally useful for things such as
+>> 1-based refcounting.
+>>
+>> Add page_ref_sub_return(), that subtracts a chunk of refcounts
+>> atomically, and returns an atomic snapshot of the result.
+>>
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>> ---
+>>  include/linux/page_ref.h | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
+>> index 14d14beb1f7f..b9cbe553d1e7 100644
+>> --- a/include/linux/page_ref.h
+>> +++ b/include/linux/page_ref.h
+>> @@ -102,6 +102,16 @@ static inline void page_ref_sub(struct page *page, int nr)
+>>  		__page_ref_mod(page, -nr);
+>>  }
+>>  
+>> +static inline int page_ref_sub_return(struct page *page, int nr)
+>> +{
+>> +	int ret = atomic_sub_return(nr, &page->_refcount);
+>> +
+>> +	if (page_ref_tracepoint_active(__tracepoint_page_ref_mod))
+>> +		__page_ref_mod(page, -nr);
 > 
-> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-> ---
-> v2:
->    * addressed forward declarations
->    * updated with devm_clk_get_optional()
->  
-> ---
->  drivers/bluetooth/hci_qca.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Shouldn't it be __page_ref_mod_and_return() and relevant tracepoint?
+
+
+Why yes, it should. I didn't even notice that that more precise function existed,
+thanks for catching that. I've changed it to this for the next version of the
+patchset:
+
+static inline int page_ref_sub_return(struct page *page, int nr)
+{
+	int ret = atomic_sub_return(nr, &page->_refcount);
+
+	if (page_ref_tracepoint_active(__tracepoint_page_ref_mod))
+		__page_ref_mod_and_return(page, -nr, ret);
+	return ret;
+}
+
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
 > 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index d6e0c99..73706f3 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1738,6 +1738,15 @@ static int qca_power_off(struct hci_dev *hdev)
->  	return 0;
->  }
->  
-> +static int qca_setup_clock(struct clk *clk, bool enable)
-> +{
-> +	if (enable)
-> +		return clk_prepare_enable(clk);
-> +
-> +	clk_disable_unprepare(clk);
-> +	return 0;
-> +}
-
-As Marcel requested, inline these.
-
-> +
->  static int qca_regulator_enable(struct qca_serdev *qcadev)
->  {
->  	struct qca_power *power = qcadev->bt_power;
-> @@ -1755,6 +1764,13 @@ static int qca_regulator_enable(struct qca_serdev *qcadev)
->  
->  	power->vregs_on = true;
->  
-> +	ret = qca_setup_clock(qcadev->susclk, true);
-> +	if (ret) {
-> +		/* Turn off regulators to overcome power leakage */
-
-You can omit this comment as well, as the name of the function you call
-is aptly named.
-
-> +		qca_regulator_disable(qcadev);
-> +		return ret;
-
-Just return ret below instead.
-
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1773,6 +1789,9 @@ static void qca_regulator_disable(struct qca_serdev *qcadev)
->  
->  	regulator_bulk_disable(power->num_vregs, power->vreg_bulk);
->  	power->vregs_on = false;
-> +
-> +	if (qcadev->susclk)
-
-In the enable path you (correctly) rely on passing NULL to the clock
-code, so do the same here.
-
-Regards,
-Bjorn
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static inline void page_ref_inc(struct page *page)
+>>  {
+>>  	atomic_inc(&page->_refcount);
+>> -- 
+>> 2.25.0
+>>
+> 
