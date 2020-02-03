@@ -2,69 +2,71 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9852FC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E9FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF032166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76A62086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lE8nW5EG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbgBCRqp (ORCPT
+        id S1728350AbgBCRsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:46:45 -0500
-Received: from verein.lst.de ([213.95.11.211]:57186 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgBCRqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:46:44 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 66CB768B20; Mon,  3 Feb 2020 18:46:41 +0100 (CET)
-Date:   Mon, 3 Feb 2020 18:46:41 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: RFC: hold i_rwsem until aio completes
-Message-ID: <20200203174641.GA20035@lst.de>
-References: <20200114161225.309792-1-hch@lst.de> <20200118092838.GB9407@dread.disaster.area>
+        Mon, 3 Feb 2020 12:48:35 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50236 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbgBCRse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:48:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qaNhAb2AuX/dDKlI2Nc6HqM1nu/HRABHcDrGh66UQSo=; b=lE8nW5EGQC3bFw6YfTWzEFDcER
+        Rnb+N2XhqFZSRYUeZuTz14Q+J0Ax6E8czMpT6tFvgPiKmEmHWBV2wDlio2LWhPkwPEdG1+iiTlYls
+        bfXjYeSFFWrZJa4SbIsS3yoIqTNZ2eGgdr6ClF59ihqJZcGmu8M6JiBaWu6i82Pq2+VTev9SEDOA5
+        N0aYadTGjbHJLieL6LtqXy44K6NYSN1pJcLJtXr+hhYdRXrrWtUO2nBVkJew/xYL3mRzZbKQN7z6e
+        PI7JCeNLC7YltU5MgoaL9ITb13mCbniHEz6c6GDFw8EJvZpQpmPmyD5QllEjaSqu1l5EvRNyYSIfs
+        JZz/27jA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyfpn-0004EU-Gp; Mon, 03 Feb 2020 17:48:31 +0000
+Date:   Mon, 3 Feb 2020 09:48:31 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, mingo@kernel.org,
+        will@kernel.org, oleg@redhat.com, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH -v2 5/7] locking/percpu-rwsem: Remove the embedded rwsem
+Message-ID: <20200203174831.GA9834@infradead.org>
+References: <20200131150703.194229898@infradead.org>
+ <20200131151540.155211856@infradead.org>
+ <20200203142050.GA28595@infradead.org>
+ <20200203150933.GJ14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200118092838.GB9407@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200203150933.GJ14914@hirez.programming.kicks-ass.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 08:28:38PM +1100, Dave Chinner wrote:
-> I think it's pretty gross, actually. It  makes the same mistake made
-> with locking in the old direct IO code - it encodes specific lock
-> operations via flags into random locations in the DIO path. This is
-> a very slippery slope, and IMO it is an layering violation to encode
-> specific filesystem locking smeantics into a layer that is supposed
-> to be generic and completely filesystem agnostic. i.e.  this
-> mechanism breaks if a filesystem moves to a different type of lock
-> (e.g. range locks), and history teaches us that we'll end up making
-> a horrible, unmaintainable mess to support different locking
-> mechanisms and contexts.
+On Mon, Feb 03, 2020 at 04:09:33PM +0100, Peter Zijlstra wrote:
+> > Can you split the removal of the non-owned resem support into a separate
+> > patch?  I still think keeping this one and moving aio to that scheme is
+> > a better idea than the current ad-hoc locking scheme that has all kinds
+> > of issues.
 > 
-> I think that we should be moving to a model where the filesystem
-> provides an unlock method in the iomap operations structure, and if
-> the method is present in iomap_dio_complete() it gets called for the
-> filesystem to unlock the inode at the appropriate point. This also
-> allows the filesystem to provide a different method for read or
-> write unlock, depending on what type of lock it held at submission.
-> This gets rid of the need for the iomap code to know what type of
-> lock the caller holds, too.
+> That's basically 2 lines of code and a comment, surely we can ressurect
+> that if/when it's needed again?
 
-I'd rather avoid yet another method.  But I think with a little
-tweaking we can move the unlock into the ->end_io method.
+Sure, I could.  But then you'd still need to update your commit log for
+this patch explaining why it includes unrelated changes to a different
+subsystem.  By splitting it you also document your changes much better.
