@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24799C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE54FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F096A21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7947C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747218;
-	bh=z8JvJ+ByIAn+lh5NmKZ61jSBglLW2Qni5MjImejmzhQ=;
+	s=default; t=1580747221;
+	bh=dIgn9BpgV/kckPUrTnXc0lNhAzQYi3gMrHXcc5KGI4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yU+8cmorPczSHbB6OoVZ49yEfI/ZPr70f9ve71GQXV3tPuCG/o02qca4CPXlKEaPE
-	 t/omr13p4GmZf3s1YWTCOo8qJip7kHokqKu0itO3aAwtDQzSkZfnGE3hBSm9Aw0bW8
-	 bI7I5jEpwb7cgjbd//QGe8Yg33TLFUZv0T/a1NKo=
+	b=CYJ56nmgla6tcDkOnTlyrR2v7ZXcH/O7izAjSXXytAdL+RDW0cr5/yHuRkIga+Hm5
+	 njh73SlU1UElkA9csBQFJi2FFKXjtUTPJM6BW7FGH/UlO773UaNKs1RTTxvtOB4it8
+	 mJRv7v9k9UxfbcINxQFi+MBSY7PO2C4QJRTBQ9Go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgBCQ04 (ORCPT
+        id S1729318AbgBCQ1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:26:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38054 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729014AbgBCQ0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:26:55 -0500
+        id S1728139AbgBCQ06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:26:58 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF6212086A;
-        Mon,  3 Feb 2020 16:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 410B22080C;
+        Mon,  3 Feb 2020 16:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747215;
-        bh=z8JvJ+ByIAn+lh5NmKZ61jSBglLW2Qni5MjImejmzhQ=;
+        s=default; t=1580747217;
+        bh=dIgn9BpgV/kckPUrTnXc0lNhAzQYi3gMrHXcc5KGI4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oX4cV4WnmDTupnxedxFLqfRiQgnHaVs2+F2ilJ42IBkZiK852zDGdV4sZBm0M4ugL
-         SjJKKx/VR0U7Zy3vgzo0ocFvkuPMe2fHjCqBghw6Wu1VbNxd68DbnL69IhRYZaR+hO
-         Vfw0WQreuveBW5CgXzd9ccASd5oqXXzlXxhW9JOI=
+        b=INzapQiZpuSqetS+d6Pf9XKi1SGPQyLfXFtGV9cyaVrEqimHtYdDwKVa0VN+63Eh2
+         U74Gd1mOUwrfytGibGm75CSXz9cNXXRoXUUiXr8iERoH19C8HtPeG/IhvuK5qJvIFy
+         YgzALU5gOc2RvIA9J3jbvOLsfQAyi/Bhb6opOiY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 60/68] net/fsl: treat fsl,erratum-a011043
-Date:   Mon,  3 Feb 2020 16:19:56 +0000
-Message-Id: <20200203161914.775636486@linuxfoundation.org>
+Subject: [PATCH 4.9 61/68] net: fsl/fman: rename IF_MODE_XGMII to IF_MODE_10G
+Date:   Mon,  3 Feb 2020 16:19:57 +0000
+Message-Id: <20200203161914.935592886@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -62,55 +62,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-[ Upstream commit 1d3ca681b9d9575ccf696ebc2840a1ebb1fd4074 ]
+[ Upstream commit 457bfc0a4bf531487ecc3cf82ec728a5e114fb1e ]
 
-When fsl,erratum-a011043 is set, adjust for erratum A011043:
-MDIO reads to internal PCS registers may result in having
-the MDIO_CFG[MDIO_RD_ER] bit set, even when there is no
-error and read data (MDIO_DATA[MDIO_DATA]) is correct.
-Software may get false read error when reading internal
-PCS registers through MDIO. As a workaround, all internal
-MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
+As the only 10G PHY interface type defined at the moment the code
+was developed was XGMII, although the PHY interface mode used was
+not XGMII, XGMII was used in the code to denote 10G. This patch
+renames the 10G interface mode to remove the ambiguity.
 
 Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/xgmac_mdio.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fman/fman_memac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/xgmac_mdio.c b/drivers/net/ethernet/freescale/xgmac_mdio.c
-index e03b30c60dcfd..c82c85ef5fb34 100644
---- a/drivers/net/ethernet/freescale/xgmac_mdio.c
-+++ b/drivers/net/ethernet/freescale/xgmac_mdio.c
-@@ -49,6 +49,7 @@ struct tgec_mdio_controller {
- struct mdio_fsl_priv {
- 	struct	tgec_mdio_controller __iomem *mdio_base;
- 	bool	is_little_endian;
-+	bool	has_a011043;
- };
+diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
+index 21dd5579130e6..c30994a09a7c2 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_memac.c
++++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
+@@ -109,7 +109,7 @@ do {									\
+ /* Interface Mode Register (IF_MODE) */
  
- static u32 xgmac_read32(void __iomem *regs,
-@@ -226,7 +227,8 @@ static int xgmac_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
- 		return ret;
- 
- 	/* Return all Fs if nothing was there */
--	if (xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) {
-+	if ((xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) &&
-+	    !priv->has_a011043) {
- 		dev_err(&bus->dev,
- 			"Error while reading PHY%d reg at %d.%hhu\n",
- 			phy_id, dev_addr, regnum);
-@@ -274,6 +276,9 @@ static int xgmac_mdio_probe(struct platform_device *pdev)
- 	priv->is_little_endian = of_property_read_bool(pdev->dev.of_node,
- 						       "little-endian");
- 
-+	priv->has_a011043 = of_property_read_bool(pdev->dev.of_node,
-+						  "fsl,erratum-a011043");
-+
- 	ret = of_mdiobus_register(bus, np);
- 	if (ret) {
- 		dev_err(&pdev->dev, "cannot register MDIO bus\n");
+ #define IF_MODE_MASK		0x00000003 /* 30-31 Mask on i/f mode bits */
+-#define IF_MODE_XGMII		0x00000000 /* 30-31 XGMII (10G) interface */
++#define IF_MODE_10G		0x00000000 /* 30-31 10G interface */
+ #define IF_MODE_GMII		0x00000002 /* 30-31 GMII (1G) interface */
+ #define IF_MODE_RGMII		0x00000004
+ #define IF_MODE_RGMII_AUTO	0x00008000
+@@ -438,7 +438,7 @@ static int init(struct memac_regs __iomem *regs, struct memac_cfg *cfg,
+ 	tmp = 0;
+ 	switch (phy_if) {
+ 	case PHY_INTERFACE_MODE_XGMII:
+-		tmp |= IF_MODE_XGMII;
++		tmp |= IF_MODE_10G;
+ 		break;
+ 	default:
+ 		tmp |= IF_MODE_GMII;
 -- 
 2.20.1
 
