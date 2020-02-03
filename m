@@ -2,50 +2,56 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3C5C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75316C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602132086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494D420CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747336;
-	bh=UmTtnumsIbudmB10u01PZpWIg9gxzUqeyXo+ysuvURw=;
+	s=default; t=1580747339;
+	bh=SCJEmv0iAHFTm4Tp6DgzuSw1c6tPFAGLtEas5RCywVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d1gU6m4muXbrPwVLfIELAhvZBfs/WHKdVmE2D2nilsrADRQ00t7BPlBSv9pvdcxO4
-	 B4T6F8x4aBlJ3JtldCJllE8qwJl1uYZEEmOwRufrmDoZpXZl7i0rM7gxeLonopo6FJ
-	 SFiGsmuJ0p3ij8nE8b2F5Qm7Epj7o2aAqhZHTePw=
+	b=tmo4tLaHnNvfOhyKpf2h7/tfRWX+J6oWl1sv3nfBD72ftbtBwZmDmQFODawICx1mg
+	 56oo8uOFw6MaCGtfvEY0kXKyF9Vb4tnlVFT4XPXNkFbQfx+t2pF4YqG5AxNVy2jMdL
+	 by4R7YdI31bSYytQ83vJBDUPtpyKn8ElwWLGm1Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgBCQ2z (ORCPT
+        id S1729162AbgBCQ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:28:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40548 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:28:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbgBCQ2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:50 -0500
+        id S1729678AbgBCQ2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:55 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DA720838;
-        Mon,  3 Feb 2020 16:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FB1A2051A;
+        Mon,  3 Feb 2020 16:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747330;
-        bh=UmTtnumsIbudmB10u01PZpWIg9gxzUqeyXo+ysuvURw=;
+        s=default; t=1580747334;
+        bh=SCJEmv0iAHFTm4Tp6DgzuSw1c6tPFAGLtEas5RCywVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cC4g++0J3O+cksqrT2I8DyXTUO/5+Hs7rwBoUqCFAH/DwKpEjltmpSxLiQrRiyVJJ
-         iaX13UeDCi8429P0s+rLNC7gRLT/V0UH25qIgtqFUj9d9R18d7UEypTlUYI44iikkX
-         dAv1tvaLjEr/C8QjBJppOGigc2b7J7pcb6D69O44=
+        b=0t/d0algb5UcwvjV2OaE7fXk6I4moDYFCcD7qE9VkGUnxLZ2rNpkr9Wt+6hZZQs2w
+         cDX5YliLGcd7L/TokJ4+ypx0Q0hdutzXWdS3+Lsc8V+cyx7jSLlPQ6WJUmRXUnoK9X
+         0SHyG8N9aRfXlcooQBJbCMnfqydP67z0YQu9k0bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4.14 39/89] PM / devfreq: Add new name attribute for sysfs
-Date:   Mon,  3 Feb 2020 16:19:24 +0000
-Message-Id: <20200203161922.221278903@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Chikunov <vt@altlinux.org>,
+        Dmitry Levin <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 40/89] tools lib: Fix builds when glibc contains strlcpy()
+Date:   Mon,  3 Feb 2020 16:19:25 +0000
+Message-Id: <20200203161922.349505858@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -58,66 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Vitaly Chikunov <vt@altlinux.org>
 
-commit 2fee1a7cc6b1ce6634bb0f025be2c94a58dfa34d upstream.
+commit 6c4798d3f08b81c2c52936b10e0fa872590c96ae upstream.
 
-The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
-sysfs") changed the node name to devfreq(x). After this commit, it is not
-possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
+Disable a couple of compilation warnings (which are treated as errors)
+on strlcpy() definition and declaration, allowing users to compile perf
+and kernel (objtool) when:
 
-Add new name attribute in order to get device name.
+1. glibc have strlcpy() (such as in ALT Linux since 2004) objtool and
+   perf build fails with this (in gcc):
 
+  In file included from exec-cmd.c:3:
+  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+
+2. clang ignores `-Wredundant-decls', but produces another warning when
+   building perf:
+
+    CC       util/string.o
+  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+  size_t __weak strlcpy(char *dest, const char *src, size_t size)
+  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
+  # define __weak                 __attribute__((weak))
+  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
+  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+
+Committer notes:
+
+The
+
+ #pragma GCC diagnostic
+
+directive was introduced in gcc 4.6, so check for that as well.
+
+Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Reviewed-by: Dmitry Levin <ldv@altlinux.org>
+Cc: Dmitry Levin <ldv@altlinux.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: kbuild test robot <lkp@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: stable@vger.kernel.org
-Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Link: http://lore.kernel.org/lkml/20191224172029.19690-1-vt@altlinux.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/ABI/testing/sysfs-class-devfreq |    7 +++++++
- drivers/devfreq/devfreq.c                     |    9 +++++++++
- 2 files changed, 16 insertions(+)
+ tools/include/linux/string.h |    8 ++++++++
+ tools/lib/string.c           |    7 +++++++
+ 2 files changed, 15 insertions(+)
 
---- a/Documentation/ABI/testing/sysfs-class-devfreq
-+++ b/Documentation/ABI/testing/sysfs-class-devfreq
-@@ -7,6 +7,13 @@ Description:
- 		The name of devfreq object denoted as ... is same as the
- 		name of device using devfreq.
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -14,7 +14,15 @@ int strtobool(const char *s, bool *res);
+  * However uClibc headers also define __GLIBC__ hence the hack below
+  */
+ #if defined(__GLIBC__) && !defined(__UCLIBC__)
++// pragma diagnostic was introduced in gcc 4.6
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wredundant-decls"
++#endif
+ extern size_t strlcpy(char *dest, const char *src, size_t size);
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic pop
++#endif
+ #endif
  
-+What:		/sys/class/devfreq/.../name
-+Date:		November 2019
-+Contact:	Chanwoo Choi <cw00.choi@samsung.com>
-+Description:
-+		The /sys/class/devfreq/.../name shows the name of device
-+		of the corresponding devfreq object.
-+
- What:		/sys/class/devfreq/.../governor
- Date:		September 2011
- Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -902,6 +902,14 @@ err_out:
- }
- EXPORT_SYMBOL(devfreq_remove_governor);
- 
-+static ssize_t name_show(struct device *dev,
-+			struct device_attribute *attr, char *buf)
-+{
-+	struct devfreq *devfreq = to_devfreq(dev);
-+	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
-+}
-+static DEVICE_ATTR_RO(name);
-+
- static ssize_t governor_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
+ char *str_error_r(int errnum, char *buf, size_t buflen);
+--- a/tools/lib/string.c
++++ b/tools/lib/string.c
+@@ -95,6 +95,10 @@ int strtobool(const char *s, bool *res)
+  * If libc has strlcpy() then that version will override this
+  * implementation:
+  */
++#ifdef __clang__
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wignored-attributes"
++#endif
+ size_t __weak strlcpy(char *dest, const char *src, size_t size)
  {
-@@ -1200,6 +1208,7 @@ static ssize_t trans_stat_show(struct de
- static DEVICE_ATTR_RO(trans_stat);
- 
- static struct attribute *devfreq_attrs[] = {
-+	&dev_attr_name.attr,
- 	&dev_attr_governor.attr,
- 	&dev_attr_available_governors.attr,
- 	&dev_attr_cur_freq.attr,
+ 	size_t ret = strlen(src);
+@@ -106,3 +110,6 @@ size_t __weak strlcpy(char *dest, const
+ 	}
+ 	return ret;
+ }
++#ifdef __clang__
++#pragma clang diagnostic pop
++#endif
 
 
