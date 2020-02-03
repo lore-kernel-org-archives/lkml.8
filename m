@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F40C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA39C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B29620CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F69F2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747229;
-	bh=RMVr5lbZNUQ5PLSw+ZOShgdvCLUUmzfmSdmzJ+42/WY=;
+	s=default; t=1580747233;
+	bh=NppVjnLV3r5GnbaYNatziiQxUUaV7EeySwWkXUouchg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlRrbk/hbHbIbWX4Dn3sUCBMIVsfpCoD/emUSpNl9W6LtszzzApgda+8v/yQxPmUB
-	 JWZag6Co2jKuGvy3Il3aMVyWEuFjdre5VrH5k0TtEsgAETVyIPCm+Kyry5cQnCRCEG
-	 r5f9LeRbG2AzcjsS/wOO3zVLkrNk4nPWSau3vWr0=
+	b=j3OJ/YrrK1WfLfO9LJKT1r2blWcOtmAx7SNKhQN17yHfhV+dt0ee08Vii9PHopHOt
+	 PvTsp59hF1/tj9d0nyEhrgLCGpPH4IqFhb1jXK9/JmNY26TZW1a+bDpWUgXCJQe2EP
+	 tKK5OUY7EjDgAkuTo/l/kOllsb3PSFaeeRr1NN5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgBCQ1I (ORCPT
+        id S1729356AbgBCQ1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbgBCQ1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:03 -0500
+        id S1729334AbgBCQ1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:08 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FBAD2080C;
-        Mon,  3 Feb 2020 16:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFA7020CC7;
+        Mon,  3 Feb 2020 16:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747222;
-        bh=RMVr5lbZNUQ5PLSw+ZOShgdvCLUUmzfmSdmzJ+42/WY=;
+        s=default; t=1580747227;
+        bh=NppVjnLV3r5GnbaYNatziiQxUUaV7EeySwWkXUouchg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fAdZLVaqokJzuy1cqmjh0IFKxzN+gIpLw1WcIV2xU0tXyf6gruiYOfH0gcigWQ/8A
-         HkzuJd4sUJ4ujVHFFGgKcUOVs1VKowDur0CYbB6gLGUzTytjhCp3wwXzmI6MOyAhz+
-         5TJJodzEkMw1zVPM41FUTqAqHEw0Zu1edK69xyXk=
+        b=rpmIqxoVMBn+4XbLmBhC3DMoBsz75NiKaq3e3KQYtatAdCthvkgu6KNFQBMFg7IZq
+         114ZvsPnCDgNx0v/F2TGd4OABVUjqiko0tqKKGak8c+gj8kOfi5M0wgJQNXEbZRhEY
+         uSpCDSR+Uc9X8aWjV2spwQulYIoe8OZlbMQQK0qY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Finn Thain <fthain@telegraphics.com.au>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 63/68] net/sonic: Use MMIO accessors
-Date:   Mon,  3 Feb 2020 16:19:59 +0000
-Message-Id: <20200203161915.228280155@linuxfoundation.org>
+Subject: [PATCH 4.9 65/68] net/sonic: Quiesce SONIC before re-initializing descriptor memory
+Date:   Mon,  3 Feb 2020 16:20:01 +0000
+Message-Id: <20200203161915.546551603@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -63,65 +63,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit e3885f576196ddfc670b3d53e745de96ffcb49ab ]
+[ Upstream commit 3f4b7e6a2be982fd8820a2b54d46dd9c351db899 ]
 
-The driver accesses descriptor memory which is simultaneously accessed by
-the chip, so the compiler must not be allowed to re-order CPU accesses.
-sonic_buf_get() used 'volatile' to prevent that. sonic_buf_put() should
-have done so too but was overlooked.
+Make sure the SONIC's DMA engine is idle before altering the transmit
+and receive descriptors. Add a helper for this as it will be needed
+again.
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 25 +++++++++++++++++++++++++
+ drivers/net/ethernet/natsemi/sonic.h |  3 +++
+ 2 files changed, 28 insertions(+)
 
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index b6599aa22504f..254e6dbc4c6aa 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -103,6 +103,24 @@ static int sonic_open(struct net_device *dev)
+ 	return 0;
+ }
+ 
++/* Wait for the SONIC to become idle. */
++static void sonic_quiesce(struct net_device *dev, u16 mask)
++{
++	struct sonic_local * __maybe_unused lp = netdev_priv(dev);
++	int i;
++	u16 bits;
++
++	for (i = 0; i < 1000; ++i) {
++		bits = SONIC_READ(SONIC_CMD) & mask;
++		if (!bits)
++			return;
++		if (irqs_disabled() || in_interrupt())
++			udelay(20);
++		else
++			usleep_range(100, 200);
++	}
++	WARN_ONCE(1, "command deadline expired! 0x%04x\n", bits);
++}
+ 
+ /*
+  * Close the SONIC device
+@@ -120,6 +138,9 @@ static int sonic_close(struct net_device *dev)
+ 	/*
+ 	 * stop the SONIC, disable interrupts
+ 	 */
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
++
+ 	SONIC_WRITE(SONIC_IMR, 0);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+@@ -159,6 +180,9 @@ static void sonic_tx_timeout(struct net_device *dev)
+ 	 * put the Sonic into software-reset mode and
+ 	 * disable all interrupts before releasing DMA buffers
+ 	 */
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
++
+ 	SONIC_WRITE(SONIC_IMR, 0);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+@@ -638,6 +662,7 @@ static int sonic_init(struct net_device *dev)
+ 	 */
+ 	SONIC_WRITE(SONIC_CMD, 0);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
+ 
+ 	/*
+ 	 * initialize the receive resource area
 diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index 1fd61d7f79bcb..a009a99c0e544 100644
+index d9f8ceb5353a4..7dcf913d7395a 100644
 --- a/drivers/net/ethernet/natsemi/sonic.h
 +++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -342,30 +342,30 @@ static void sonic_tx_timeout(struct net_device *dev);
-    as far as we can tell. */
- /* OpenBSD calls this "SWO".  I'd like to think that sonic_buf_put()
-    is a much better name. */
--static inline void sonic_buf_put(void* base, int bitmode,
-+static inline void sonic_buf_put(u16 *base, int bitmode,
- 				 int offset, __u16 val)
- {
- 	if (bitmode)
- #ifdef __BIG_ENDIAN
--		((__u16 *) base + (offset*2))[1] = val;
-+		__raw_writew(val, base + (offset * 2) + 1);
- #else
--		((__u16 *) base + (offset*2))[0] = val;
-+		__raw_writew(val, base + (offset * 2) + 0);
- #endif
- 	else
--	 	((__u16 *) base)[offset] = val;
-+		__raw_writew(val, base + (offset * 1) + 0);
- }
+@@ -109,6 +109,9 @@
+ #define SONIC_CR_TXP            0x0002
+ #define SONIC_CR_HTX            0x0001
  
--static inline __u16 sonic_buf_get(void* base, int bitmode,
-+static inline __u16 sonic_buf_get(u16 *base, int bitmode,
- 				  int offset)
- {
- 	if (bitmode)
- #ifdef __BIG_ENDIAN
--		return ((volatile __u16 *) base + (offset*2))[1];
-+		return __raw_readw(base + (offset * 2) + 1);
- #else
--		return ((volatile __u16 *) base + (offset*2))[0];
-+		return __raw_readw(base + (offset * 2) + 0);
- #endif
- 	else
--		return ((volatile __u16 *) base)[offset];
-+		return __raw_readw(base + (offset * 1) + 0);
- }
- 
- /* Inlines that you should actually use for reading/writing DMA buffers */
++#define SONIC_CR_ALL (SONIC_CR_LCAM | SONIC_CR_RRRA | \
++		      SONIC_CR_RXEN | SONIC_CR_TXP)
++
+ /*
+  * SONIC data configuration bits
+  */
 -- 
 2.20.1
 
