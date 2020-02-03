@@ -2,105 +2,138 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35B2C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651D3C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9592080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCA020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:23:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="FAiKXrOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgBCNV2 (ORCPT
+        id S1727320AbgBCNXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:21:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25682 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727864AbgBCNV2 (ORCPT
+        Mon, 3 Feb 2020 08:23:19 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46680 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgBCNXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:21:28 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013DI8qG127981
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2020 08:21:27 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxhf6p14a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 08:21:26 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 3 Feb 2020 13:21:25 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Feb 2020 13:21:21 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 013DLJwq57344220
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Feb 2020 13:21:19 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0F4752059;
-        Mon,  3 Feb 2020 13:21:19 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.207.146])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4449A52054;
-        Mon,  3 Feb 2020 13:21:18 +0000 (GMT)
-Subject: Re: [PATCH] security/integrity: Include __func__ in messages for
- easier debug
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Joe Perches <joe@perches.com>,
-        Shuah Khan <skhan@linuxfoundation.org>, jmorris@namei.org,
-        serge@hallyn.com, mpe@ellerman.id.au, erichte@linux.ibm.com,
-        nayna@linux.ibm.com, yuehaibing@huawei.com
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 03 Feb 2020 08:21:17 -0500
-In-Reply-To: <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
-References: <20200130020129.15328-1-skhan@linuxfoundation.org>
-         <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020313-0012-0000-0000-0000038342DD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020313-0013-0000-0000-000021BFA6B5
-Message-Id: <1580736077.5585.4.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_04:2020-02-02,2020-02-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- priorityscore=1501 clxscore=1015 mlxlogscore=999 spamscore=0
- malwarescore=0 phishscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002030099
+        Mon, 3 Feb 2020 08:23:19 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x14so14556039ljd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:23:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yciKij7aZ9IxqsUAs/104yOVBksVOCSAdlwEXkSdpoQ=;
+        b=FAiKXrOR692VWEgWF88bI0DjGDu/Sjr0t06eV884FO+vVgwg4SO1uh7Qjl5zLD2Mnt
+         6dIaQ6GUVYMIRRdp6Zr3N4HwWQyUE9FJgr/ot760UXFb9ieeuh0y5ihna9xcf2NmLfCx
+         ATq82Ac6zbqDRu4VKrwnxbU4xctjK9vueLdVmKNpS6KqzdJvtHV4CLOBxIiZkxMDg+qK
+         ecH96G8OHeFmWugtvDrmtXQeUcEyqBTxR9to5bv4yN3DtqJmP2+Xwq+RSXlRUoI+6ri4
+         AUdjBjhCj/vULhTNfShatAWSXcd57f3QFCfh0lIhgZ0VEybpMYi20qW77bNE0IKdYCKt
+         uSlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yciKij7aZ9IxqsUAs/104yOVBksVOCSAdlwEXkSdpoQ=;
+        b=PmtBNU+r32SKTbhryh+cj0H0d5c38cVWfhhOFF69ZyvEXVlty6flSThr55Z8cgUYDz
+         v4g04+GVSyf1TIwavhfBltpTg7eOstqsk1YRN33AwqTw/QjuUAts6Dxkzh+dUUxFdFbb
+         wasv+ShVrd/NFm/HU1zKSd/sCK9sBZf+iy9O5W9XKwK6Eo952Pa6AnivP1AM8VI3mvtL
+         5wHTbBtu88G81dSrUoaHyYl9qO2mgMyKKKBv5aopw6Z7rGK/KTMAtFdfUHkTnnfQ4qzc
+         JFdirWcwJI0w66KWljhM4DL+lZUVFAmdQYm5Cb1F7Jnyw+xrYDYpy21OUEbqfZWszcN7
+         vL0w==
+X-Gm-Message-State: APjAAAWRKj23rZN+PXs+ZwCXGybAA4pqOzX2TCA34A4P6y5TfbJ4dAXD
+        tfxOKVoW7IM/J9yfPfnyMRXpIg==
+X-Google-Smtp-Source: APXvYqz6+ASziVfzDtmIfqoBNJGqRDrKpccZCRWjuRMxtwAuDOff2v4nbarQjcGBTnjRDFxC1sKg0Q==
+X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr13425116ljl.56.1580736196893;
+        Mon, 03 Feb 2020 05:23:16 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id j7sm8959848lfh.25.2020.02.03.05.23.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 05:23:16 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 1306D100DC8; Mon,  3 Feb 2020 16:23:29 +0300 (+03)
+Date:   Mon, 3 Feb 2020 16:23:29 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 04/12] mm: introduce page_ref_sub_return()
+Message-ID: <20200203132329.oj32h4ryna4gmkwh@box>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-5-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201034029.4063170-5-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-29 at 19:08 -0800, Joe Perches wrote:
-> On Wed, 2020-01-29 at 19:01 -0700, Shuah Khan wrote:
-> > Change messages to messages to make it easier to debug. The following
-> > error message isn't informative enough to figure out what failed.
-> > Change messages to include function information.
-> > 
-> > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> > ---
-> >  .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
-> >  security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
-> >  2 files changed, 18 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
+On Fri, Jan 31, 2020 at 07:40:21PM -0800, John Hubbard wrote:
+> An upcoming patch requires subtracting a large chunk of refcounts from
+> a page, and checking what the resulting refcount is. This is a little
+> different than the usual "check for zero refcount" that many of the
+> page ref functions already do. However, it is similar to a few other
+> routines that (like this one) are generally useful for things such as
+> 1-based refcounting.
 > 
-> perhaps instead add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> so all the pr_<level> logging is more specific.
+> Add page_ref_sub_return(), that subtracts a chunk of refcounts
+> atomically, and returns an atomic snapshot of the result.
 > 
-> This would prefix all pr_<level> output with "integrity: "
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  include/linux/page_ref.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
+> index 14d14beb1f7f..b9cbe553d1e7 100644
+> --- a/include/linux/page_ref.h
+> +++ b/include/linux/page_ref.h
+> @@ -102,6 +102,16 @@ static inline void page_ref_sub(struct page *page, int nr)
+>  		__page_ref_mod(page, -nr);
+>  }
+>  
+> +static inline int page_ref_sub_return(struct page *page, int nr)
+> +{
+> +	int ret = atomic_sub_return(nr, &page->_refcount);
+> +
+> +	if (page_ref_tracepoint_active(__tracepoint_page_ref_mod))
+> +		__page_ref_mod(page, -nr);
 
-Agreed.  Joe, could you post a patch with a proper patch description
-for this?
+Shouldn't it be __page_ref_mod_and_return() and relevant tracepoint?
 
-thanks,
+> +
+> +	return ret;
+> +}
+> +
+>  static inline void page_ref_inc(struct page *page)
+>  {
+>  	atomic_inc(&page->_refcount);
+> -- 
+> 2.25.0
+> 
 
-Mimi
-
+-- 
+ Kirill A. Shutemov
