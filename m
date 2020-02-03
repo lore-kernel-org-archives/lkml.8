@@ -2,129 +2,103 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2FEC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02C3C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC042087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777122082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:14:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBnue5Xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgBCTKZ (ORCPT
+        id S1727249AbgBCTOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:10:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47770 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgBCTKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:10:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 056FFB061;
-        Mon,  3 Feb 2020 19:10:23 +0000 (UTC)
-Message-ID: <dfbe2c94dd52a31826be751f8dd9afc4ed08ec6d.camel@suse.de>
-Subject: Re: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, matthias.bgg@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        jslaby@suse.com
-Date:   Mon, 03 Feb 2020 20:10:21 +0100
-In-Reply-To: <20200131152414.73tgwsfhzgu4apkx@wunner.de>
-References: <20200128141958.vwbxoqglt5gw4xj5@wunner.de>
-         <C099APQHQAHB.3Q9UVYJYT98TN@linux-9qgx>
-         <20200131152414.73tgwsfhzgu4apkx@wunner.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rxZ/SqVaphyyjrFeqQty"
-User-Agent: Evolution 3.34.3 
+        Mon, 3 Feb 2020 14:14:54 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45738 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbgBCTOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 14:14:54 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b9so8285407pgk.12;
+        Mon, 03 Feb 2020 11:14:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=67RUo5VAnS1jBw3z4FN37Al3dch59aGvRyUe85Cv560=;
+        b=TBnue5Xkro016MiGvqjzc0hHNwZWXwY+MgkHMb3vOaVAfkNYCa5JhYLLleLaESeOCz
+         QQ083Bb3X1OLPoK/dBvnNvVx8QD3a/Rm+/xSguDzgQ2kYSa8cCb0KCLb2QVcoLl5IwYw
+         jf/S+OtHSwsrJHvykAWYBQNLXFbVOC0vd8XNaYhcXFGfBphFJjs9R3SKiFFNOd/68PBU
+         TpS3UcGnIKHuIE76P/Omr6GS2pkUdkzX6bLcBMyjL8HxmLpIarzZYwhs1LpucEmyEGhu
+         jsJjdchFuHKTPgn/mf/c4njdF/CdcHW056D8Ht4IRexYYhQGAOlPHEZdQnkjJ22Cqx/r
+         aG/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=67RUo5VAnS1jBw3z4FN37Al3dch59aGvRyUe85Cv560=;
+        b=oWcNZE5njVTdgGD6EP7FIEMcB+VQdkFzXQpnmX5es/4dnEQosWsd5HLdyE7gcmrM2A
+         HVeD81m1+ouhOnbWCMcW5gRcvyQtkFCtfkwmf+2JWgAtWv/f28FvwiVmyRVfO3rgdP1w
+         glO/inx2jDX6AZsUUaWlU/uoNkQYpHrdes7S2bmOyLZYUub6UBAtVtQmwzOhtEi1vSyt
+         /HYpyVZkUcWl2bb+GIV1wuQC7t5Ue9lNnatHYZEoxa7F5KKf9qUtNd78Vq20Hwv3p/iX
+         /O8qYdd3SHzzTnEhKWS01UFqG/it4NxfhHgquRxamWvg6NzsOHIfTbKkgpDQR+4SqmVj
+         MaMQ==
+X-Gm-Message-State: APjAAAWHqiq4KggHSj6qld8Xu60fcxdpJ4FjIKL7ALfs7f1WfzGNtc5w
+        4thgFf4NPrFFefRTXgDIzd8=
+X-Google-Smtp-Source: APXvYqzEPul7LL5SneMmOTU8FN7i4ZYHUNJ4hG6G22GrjI1FlxrIf7P50Kydlnzx8BmmP6zBK+y9aA==
+X-Received: by 2002:aa7:86c2:: with SMTP id h2mr7490957pfo.45.1580757293734;
+        Mon, 03 Feb 2020 11:14:53 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f3sm5820108pgs.36.2020.02.03.11.14.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Feb 2020 11:14:53 -0800 (PST)
+Date:   Mon, 3 Feb 2020 11:14:51 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 0/3] gpiolib: fix a regression introduced by
+ gpio_do_set_config()
+Message-ID: <20200203191451.GA19076@roeck-us.net>
+References: <20200203133026.22930-1-brgl@bgdev.pl>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203133026.22930-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 03, 2020 at 02:30:23PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> These three patches fix a regression introduced by commit d90f36851d65
+> ("gpiolib: have a single place of calling set_config()"). We first need
+> to revert patches that came on top of it, then apply the actual fix.
+> 
+> Bartosz Golaszewski (3):
+>   Revert "gpiolib: Remove duplicated function gpio_do_set_config()"
+>   Revert "gpiolib: remove set but not used variable 'config'"
+>   gpiolib: fix gpio_do_set_config()
+> 
 
---=-rxZ/SqVaphyyjrFeqQty
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+For the series:
 
-On Fri, 2020-01-31 at 16:24 +0100, Lukas Wunner wrote:
-> On Thu, Jan 30, 2020 at 05:11:55PM +0100, Nicolas Saenz Julienne wrote:
-> > BTW did you had the oportunity to have a go at the patch?
->=20
-> I've just performed a quick test and it doesn't work for me.
-> If I add stdout-path =3D "serial1:115200n8"; to the chosen node,
-> I only get a regular console with this patch, not an earlycon.
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-That's surprising, you're using u-boot isn't it? and the upstream device tr=
-ee?
-
-> > > The problem is that in mainline, bcm2835_defconfig contains:
-> > > CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE=3Dy
-> > >=20
-> > > Likewise in the Foundation's downstream tree, bcmrpi_defconfig as wel=
-l
-> > > as bcm2711_defconfig and bcm2709_defconfig contain:
-> > > CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE=3Dy
-> > >=20
-> > > In contrast to this, we set the following on Revolution Pi devices:
-> > > CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=3Dy
-> > >=20
-> > > Downclocking influences not only the uart1 baud rate but also the
-> > > spi0 clock. We attach Ethernet chips to spi0, throughput was
-> > > significantly worse with the ondemand governor (which is what we
-> > > used previously). We felt that maximum Ethernet performance
-> > > outweighs the relatively small powersaving gains.
-> >=20
-> > In that regard I suggest you use the upstream cpufreq driver which
-> > behaves properly in that regard. It disables GPU freq scaling, so as to
-> > change CPU frequencies without SPI/I2C/UART issues.
->=20
-> Okay, I'll take a look.  But the uart1 baudrate will still be wrong
-> if the firmware downclocks because of overheating, right?
-
-You're right, it might happen. The way I understand it you're bound to leav=
-e
-the GPU at it's lower frequency if you want to use those peripherals and fo=
-r
-them to be reliable. You could technically try to empirically fine tune the=
- CPU
-thermal trip point so as to make sure the upstream kernel cpufreq downclock
-always kicks in before videocore's one. I'd actually like to see someone tr=
-y
-that. However short of using an RT kernel It think you'll never be 100% sur=
-e it
-can never happen.
-
-Regards,
-Nicolas
-
-
---=-rxZ/SqVaphyyjrFeqQty
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl44cB0ACgkQlfZmHno8
-x/4OKwf+KvsKB8pRgfFS6tQGkcjn5+7rl7qXYEndk80sawqCUn4/ZHkxPdoqD5cO
-bU8iTyaNfFQQb9uq8RoWcJrFMKQJhxGe8sjDNkZNqvbTUr3oM8ltCrjVWX7D5wfG
-eDSxB7hZqwE+BkdJaK3G5kicCfPl21opnQwZUn7R/0e0bYIuzMu/hq1xk7XiRaLU
-hL30AwUY3DLZtOVEeNIeVW9TVuVdnbu219TXZjtwuD+iZ9u2xbkh83fne8s0nW7O
-79/Gejgu/e5PDH3CTnbheLNpl9Fws8fGiERnwXNbAD2XSj2kOfTitCVVNK2Efup5
-txMswkwfPEC1JsGHkHgANzz5Z5UOVQ==
-=AW10
------END PGP SIGNATURE-----
-
---=-rxZ/SqVaphyyjrFeqQty--
-
+>  drivers/gpio/gpiolib.c | 31 ++++++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
+> 
+> -- 
+> 2.23.0
+> 
