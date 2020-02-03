@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65681C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A48C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EDF21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DF92080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746884;
-	bh=FfBsWZw1sJedskaDXizxipvqH71jaH4qadEjwglJN0w=;
+	s=default; t=1580746887;
+	bh=3LwzmNm6X4itgSMvedQDaPLnD9C+5se1eBBOfqAuUsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqlN+QVnYv4AmQzb2wNhFpKpvgAJ6xKFPYIkuiLW57HjgeMkd3C1iJdpX8QtD5VeP
-	 itwhzXqxfG7IC7/7lKXi+jDKZ1krvIOS6JjZWCkXejkhAStcB0nI1lNw5F4juh91k0
-	 zny7HDjbsmil2No5fGjo3K6HxUHW5dcpR6Q4dnDM=
+	b=LNrq/AY9r8By4xXEvz116RIxBQLTPUVaKOaqvgq8CVU9rgpaJfrUBf9XG+bqkGiJn
+	 AV38DKMytSnw3u9yzYcsYup+1gSvyXNBpXdQc5NpXx1r9V07VxEvfxCZtH4F5GFyqK
+	 /w/d17TJ+z/PvErG6+iH6ocJ88c4nQB4RZd4xvOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgBCQVX (ORCPT
+        id S1728522AbgBCQV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:21:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgBCQVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:20 -0500
+        id S1727452AbgBCQVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:24 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 718AB20838;
-        Mon,  3 Feb 2020 16:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5572080D;
+        Mon,  3 Feb 2020 16:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746878;
-        bh=FfBsWZw1sJedskaDXizxipvqH71jaH4qadEjwglJN0w=;
+        s=default; t=1580746883;
+        bh=3LwzmNm6X4itgSMvedQDaPLnD9C+5se1eBBOfqAuUsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWqUhC7rXSeF9Qq4aoX94L7mhC5B/uWEsub0gNiIGC288DKMd54k+EaPvtOdESrWq
-         Yv6LdbiL8c2JmVWwjUE9+t5ArHjvU9aeLHfn6TkyVqsecvo/1zNQy6WfyAtRZIiUFw
-         l3MRc1cQGHow0qPRz86s5G3LmGahxOoVyP+uGx34=
+        b=myrUyANu9tAwQ8Bz4gkldf88fTs+vvaHgoXeWKy3F0Q08aBMfj5tVViu0xgt3tO/5
+         SpqOrXbW1Y4zaazmkunHOKd9JmoDCZEcAbYlHUTQ4JRK8uyzcFX0Hd9wMlXcqPPkyb
+         dhOWznZwNYYYBWdh3IajTE2gstO1R7TzSjp5okBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shahed Shaikh <shshaikh@marvell.com>,
-        Yonggen Xu <Yonggen.Xu@dell.com>,
-        Manish Chopra <manishc@marvell.com>,
+        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 45/53] qlcnic: Fix CPU soft lockup while collecting firmware dump
-Date:   Mon,  3 Feb 2020 16:19:37 +0000
-Message-Id: <20200203161910.807035095@linuxfoundation.org>
+Subject: [PATCH 4.4 47/53] net/sonic: Add mutual exclusion for accessing shared state
+Date:   Mon,  3 Feb 2020 16:19:39 +0000
+Message-Id: <20200203161911.160014666@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -62,60 +61,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 22e984493a41bf8081f13d9ed84def3ca8cfd427 ]
+[ Upstream commit 865ad2f2201dc18685ba2686f13217f8b3a9c52c ]
 
-Driver while collecting firmware dump takes longer time to
-collect/process some of the firmware dump entries/memories.
-Bigger capture masks makes it worse as it results in larger
-amount of data being collected and results in CPU soft lockup.
-Place cond_resched() in some of the driver flows that are
-expectedly time consuming to relinquish the CPU to avoid CPU
-soft lockup panic.
+The netif_stop_queue() call in sonic_send_packet() races with the
+netif_wake_queue() call in sonic_interrupt(). This causes issues
+like "NETDEV WATCHDOG: eth0 (macsonic): transmit queue 0 timed out".
+Fix this by disabling interrupts when accessing tx_skb[] and next_tx.
+Update a comment to clarify the synchronization properties.
 
-Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
-Tested-by: Yonggen Xu <Yonggen.Xu@dell.com>
-Signed-off-by: Manish Chopra <manishc@marvell.com>
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 1 +
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c  | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/net/ethernet/natsemi/sonic.c | 49 ++++++++++++++++++++--------
+ drivers/net/ethernet/natsemi/sonic.h |  1 +
+ 2 files changed, 36 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index bf892160dd5f0..26263a192a77e 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -2047,6 +2047,7 @@ static void qlcnic_83xx_exec_template_cmd(struct qlcnic_adapter *p_dev,
- 			break;
- 		}
- 		entry += p_hdr->size;
-+		cond_resched();
- 	}
- 	p_dev->ahw->reset.seq_index = index;
- }
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-index cda9e604a95f6..e5ea8e972b915 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-@@ -703,6 +703,7 @@ static u32 qlcnic_read_memory_test_agent(struct qlcnic_adapter *adapter,
- 		addr += 16;
- 		reg_read -= 16;
- 		ret += 16;
-+		cond_resched();
- 	}
- out:
- 	mutex_unlock(&adapter->ahw->mem_lock);
-@@ -1383,6 +1384,7 @@ int qlcnic_dump_fw(struct qlcnic_adapter *adapter)
- 		buf_offset += entry->hdr.cap_size;
- 		entry_offset += entry->hdr.offset;
- 		buffer = fw_dump->data + buf_offset;
-+		cond_resched();
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index 6679005782499..0374e834f865e 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -50,6 +50,8 @@ static int sonic_open(struct net_device *dev)
+ 	if (sonic_debug > 2)
+ 		printk("sonic_open: initializing sonic driver.\n");
+ 
++	spin_lock_init(&lp->lock);
++
+ 	for (i = 0; i < SONIC_NUM_RRS; i++) {
+ 		struct sk_buff *skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
+ 		if (skb == NULL) {
+@@ -194,8 +196,6 @@ static void sonic_tx_timeout(struct net_device *dev)
+  *   wake the tx queue
+  * Concurrently with all of this, the SONIC is potentially writing to
+  * the status flags of the TDs.
+- * Until some mutual exclusion is added, this code will not work with SMP. However,
+- * MIPS Jazz machines and m68k Macs were all uni-processor machines.
+  */
+ 
+ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+@@ -203,7 +203,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	dma_addr_t laddr;
+ 	int length;
+-	int entry = lp->next_tx;
++	int entry;
++	unsigned long flags;
+ 
+ 	if (sonic_debug > 2)
+ 		printk("sonic_send_packet: skb=%p, dev=%p\n", skb, dev);
+@@ -226,6 +227,10 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 		return NETDEV_TX_OK;
  	}
  
- 	fw_dump->clr = 1;
++	spin_lock_irqsave(&lp->lock, flags);
++
++	entry = lp->next_tx;
++
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+ 	sonic_tda_put(dev, entry, SONIC_TD_FRAG_COUNT, 1);   /* single fragment */
+ 	sonic_tda_put(dev, entry, SONIC_TD_PKTSIZE, length); /* length of packet */
+@@ -235,10 +240,6 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 	sonic_tda_put(dev, entry, SONIC_TD_LINK,
+ 		sonic_tda_get(dev, entry, SONIC_TD_LINK) | SONIC_EOL);
+ 
+-	/*
+-	 * Must set tx_skb[entry] only after clearing status, and
+-	 * before clearing EOL and before stopping queue
+-	 */
+ 	wmb();
+ 	lp->tx_len[entry] = length;
+ 	lp->tx_laddr[entry] = laddr;
+@@ -263,6 +264,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
+ 
++	spin_unlock_irqrestore(&lp->lock, flags);
++
+ 	return NETDEV_TX_OK;
+ }
+ 
+@@ -275,9 +278,21 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 	struct net_device *dev = dev_id;
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	int status;
++	unsigned long flags;
++
++	/* The lock has two purposes. Firstly, it synchronizes sonic_interrupt()
++	 * with sonic_send_packet() so that the two functions can share state.
++	 * Secondly, it makes sonic_interrupt() re-entrant, as that is required
++	 * by macsonic which must use two IRQs with different priority levels.
++	 */
++	spin_lock_irqsave(&lp->lock, flags);
++
++	status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
++	if (!status) {
++		spin_unlock_irqrestore(&lp->lock, flags);
+ 
+-	if (!(status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT))
+ 		return IRQ_NONE;
++	}
+ 
+ 	do {
+ 		if (status & SONIC_INT_PKTRX) {
+@@ -292,11 +307,12 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 			int td_status;
+ 			int freed_some = 0;
+ 
+-			/* At this point, cur_tx is the index of a TD that is one of:
+-			 *   unallocated/freed                          (status set   & tx_skb[entry] clear)
+-			 *   allocated and sent                         (status set   & tx_skb[entry] set  )
+-			 *   allocated and not yet sent                 (status clear & tx_skb[entry] set  )
+-			 *   still being allocated by sonic_send_packet (status clear & tx_skb[entry] clear)
++			/* The state of a Transmit Descriptor may be inferred
++			 * from { tx_skb[entry], td_status } as follows.
++			 * { clear, clear } => the TD has never been used
++			 * { set,   clear } => the TD was handed to SONIC
++			 * { set,   set   } => the TD was handed back
++			 * { clear, set   } => the TD is available for re-use
+ 			 */
+ 
+ 			if (sonic_debug > 2)
+@@ -398,7 +414,12 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 		/* load CAM done */
+ 		if (status & SONIC_INT_LCD)
+ 			SONIC_WRITE(SONIC_ISR, SONIC_INT_LCD); /* clear the interrupt */
+-	} while((status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT));
++
++		status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
++	} while (status);
++
++	spin_unlock_irqrestore(&lp->lock, flags);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index 07091dd27e5df..1fd61d7f79bcb 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -320,6 +320,7 @@ struct sonic_local {
+ 	unsigned int next_tx;          /* next free TD */
+ 	struct device *device;         /* generic device */
+ 	struct net_device_stats stats;
++	spinlock_t lock;
+ };
+ 
+ #define TX_TIMEOUT (3 * HZ)
 -- 
 2.20.1
 
