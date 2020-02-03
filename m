@@ -2,190 +2,120 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6913C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9561CC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EA22082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628DC2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUaaPrZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgBCOd2 (ORCPT
+        id S1728430AbgBCOfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:33:28 -0500
-Received: from relay.sw.ru ([185.231.240.75]:42134 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgBCOd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:33:27 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1iycmd-0006Ed-DN; Mon, 03 Feb 2020 17:33:03 +0300
-Subject: Re: [PATCH -v2 5/7] locking/percpu-rwsem: Remove the embedded rwsem
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, longman@redhat.com, dave@stgolabs.net,
-        jack@suse.com
-References: <20200131150703.194229898@infradead.org>
- <20200131151540.155211856@infradead.org>
- <7a876b46-b80c-1164-d139-6026adcb222c@virtuozzo.com>
- <20200203134441.GI14914@hirez.programming.kicks-ass.net>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <0b035f3f-35fe-542f-8120-b57d7b66eb36@virtuozzo.com>
-Date:   Mon, 3 Feb 2020 17:33:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 3 Feb 2020 09:35:12 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41394 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgBCOfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:35:12 -0500
+Received: by mail-il1-f196.google.com with SMTP id f10so12766212ils.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 06:35:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PeAE2050RUwA2PhxvSVJSMNprANdC/69hQV8eL+NY48=;
+        b=TUaaPrZnYM1tgevoqkuJWFXrJMpt7+22SMpJkevzbwT+vt6EMOU3Sxf5Ll8wF7cWhx
+         7wgPwHJBuaVxTxd2/kVnoxRg3aW8jdNZabM+0Z/6I40M8Hfubj7S1Z5RTdQgDwPFOlFX
+         OVICfMVZyyoNxzFIvNvbpQZVApef+W2nMB6qVASrRYzBY8X67KyEq3DacxVLhs9NYN9H
+         vqjOWSLE5mRse511pO6UqBzDcy18YqEX0PX3v8nMk5Y+GMUrUyHqK5xTkzftOzmp7jp5
+         zRsbdXlVnXf4+DzZwS5E3lmroWXUCCzizzdOG527hxV8gTth11yutKox7zlpOIfLMnZV
+         5aRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PeAE2050RUwA2PhxvSVJSMNprANdC/69hQV8eL+NY48=;
+        b=pZNVNy8C5a/zph3jWlknS9N0q9mF1Y4aJotodsG/kpEbwu471Hd48bF/k1OYLR1XDl
+         tGKkD4AQpYwpjnzZfW510CEqMCNa+SCuFLcKPhsIot7Vy4EzPgMZWDyXJ8gbLfWtg9aa
+         5Bt9dmg2nW5+u8xza0D7Dn5a/fxfTeXimCama8gRMpmreXGwn9l4nHq4/Nm5BKg2kTAn
+         R/uo6hAwQhYEmak3MI0WrxpB89zoe5Hh/dEBYwP9A0IOqHdMsbS7tDALfBN9utZYflJC
+         uOJye4HVd6Y78HWOj9f5co2C1Iz9++4tKzGTjPWKSqQBQOawZLpunzdxJV9sJCbDw6yG
+         s74A==
+X-Gm-Message-State: APjAAAXQ66OTGScAEjjzT1ENSSRiMrdkGN8rAoSL9702kc/gIGMxAvZr
+        85ZIjYn972MlmrczQRUIpr+Y3goW4+FTG5749DU=
+X-Google-Smtp-Source: APXvYqyHSJVh71XbyNxUrseBdDaOrgsCKYEgH80cZsvYCQFfhjuOIwCdgh9E8GWzYcLhFnLBPzjp7kW4MaZ05lXAWdg=
+X-Received: by 2002:a92:981b:: with SMTP id l27mr22497981ili.118.1580740511331;
+ Mon, 03 Feb 2020 06:35:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200203134441.GI14914@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200203140425.26579-1-erwan.leray@st.com>
+In-Reply-To: <20200203140425.26579-1-erwan.leray@st.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 3 Feb 2020 15:35:00 +0100
+Message-ID: <CAJiuCcfRuHXajo7+cDMpQ73vhGuerW3_ObrfG0YOEzogKaH-sA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] STM32 early console
+To:     Erwan Le Ray <erwan.leray@st.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Gerald Baeza <gerald.baeza@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.02.2020 16:44, Peter Zijlstra wrote:
-> Hi Kirill,
-> 
-> On Mon, Feb 03, 2020 at 02:45:16PM +0300, Kirill Tkhai wrote:
-> 
->> Maybe, this is not a subject of this patchset. But since this is a newborn function,
->> can we introduce it to save one unneeded wake_up of writer? This is a situation,
->> when writer becomes woken up just to write itself into sem->writer.task.
->>
->> Something like below:
->>
->> diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
->> index a136677543b4..e4f88bfd43ed 100644
->> --- a/kernel/locking/percpu-rwsem.c
->> +++ b/kernel/locking/percpu-rwsem.c
->> @@ -9,6 +9,8 @@
->>  #include <linux/sched/task.h>
->>  #include <linux/errno.h>
->>  
->> +static bool readers_active_check(struct percpu_rw_semaphore *sem);
->> +
->>  int __percpu_init_rwsem(struct percpu_rw_semaphore *sem,
->>  			const char *name, struct lock_class_key *key)
->>  {
->> @@ -101,6 +103,16 @@ static bool __percpu_rwsem_trylock(struct percpu_rw_semaphore *sem, bool reader)
->>  	return __percpu_down_write_trylock(sem);
->>  }
->>  
->> +static void queue_sem_writer(struct percpu_rw_semaphore *sem, struct task_struct *p)
->> +{
->> +	rcu_assign_pointer(sem->writer.task, p);
->> +	smp_mb();
->> +	if (readers_active_check(sem)) {
->> +		WRITE_ONCE(sem->writer.task, NULL);
->> +		wake_up_process(p);
->> +	}
->> +}
->> +
->>  /*
->>   * The return value of wait_queue_entry::func means:
->>   *
->> @@ -129,7 +141,11 @@ static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
->>  	list_del_init(&wq_entry->entry);
->>  	smp_store_release(&wq_entry->private, NULL);
->>  
->> -	wake_up_process(p);
->> +	if (reader || readers_active_check(sem))
->> +		wake_up_process(p);
->> +	else
->> +		queue_sem_writer(sem, p);
->> +
->>  	put_task_struct(p);
->>  
->>  	return !reader; /* wake (readers until) 1 writer */
->> @@ -247,8 +263,11 @@ void percpu_down_write(struct percpu_rw_semaphore *sem)
->>  	 * them.
->>  	 */
->>  
->> -	/* Wait for all active readers to complete. */
->> -	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
->> +	if (rcu_access_pointer(sem->writer.task))
->> +		WRITE_ONCE(sem->writer.task, NULL);
->> +	else
->> +		/* Wait for all active readers to complete. */
->> +		rcuwait_wait_event(&sem->writer, readers_active_check(sem));
->>  }
->>  EXPORT_SYMBOL_GPL(percpu_down_write);
->>  
->> Just an idea, completely untested.
-> 
-> Hurm,.. I think I see what you're proposing. I also think your immediate
-> patch is racy, consider for example what happens if your
-> queue_sem_writer() finds !readers_active_check(), such that we do in
-> fact need to wait. Then your percpu_down_write() will find
-> sem->writer.task and clear it -- no waiting.
+Hi Erwan,
 
-You mean, down_read() wakes up waiters unconditionally. So, optimization
-in percpu_down_write() will miss readers_active_check() check.
+On Mon, 3 Feb 2020 at 15:04, Erwan Le Ray <erwan.leray@st.com> wrote:
+>
+> Add UART instance configuration to STM32 F4 and F7 early console.
+> Add STM32 H7 and MP1 early console support.
+>
+> Changes in v3:
+> - fix a missing condition for STM32MP1
+>
+> Changes in v2:
+> - split "[PATCH] ARM: debug: stm32: add UART early console configuration"
+>   into separate patches as suggested by Clement into [1]
 
-You are sure. Then we have to modify this a little bit and to remove
-the optimization from percpu_down_write():
+Thanks for splitting the patch, the whole series looks fine to me.
 
-diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
-index a136677543b4..90647ab28804 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -9,6 +9,8 @@
- #include <linux/sched/task.h>
- #include <linux/errno.h>
- 
-+static bool readers_active_check(struct percpu_rw_semaphore *sem);
-+
- int __percpu_init_rwsem(struct percpu_rw_semaphore *sem,
- 			const char *name, struct lock_class_key *key)
- {
-@@ -101,6 +103,16 @@ static bool __percpu_rwsem_trylock(struct percpu_rw_semaphore *sem, bool reader)
- 	return __percpu_down_write_trylock(sem);
- }
- 
-+static void queue_sem_writer(struct percpu_rw_semaphore *sem, struct task_struct *p)
-+{
-+	rcu_assign_pointer(sem->writer.task, p);
-+	smp_mb();
-+	if (readers_active_check(sem)) {
-+		WRITE_ONCE(sem->writer.task, NULL);
-+		wake_up_process(p);
-+	}
-+}
-+
- /*
-  * The return value of wait_queue_entry::func means:
-  *
-@@ -129,7 +141,11 @@ static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
- 	list_del_init(&wq_entry->entry);
- 	smp_store_release(&wq_entry->private, NULL);
- 
--	wake_up_process(p);
-+	if (reader || readers_active_check(sem))
-+		wake_up_process(p);
-+	else
-+		queue_sem_writer(sem, p);
-+
- 	put_task_struct(p);
- 
- 	return !reader; /* wake (readers until) 1 writer */
-@@ -248,6 +264,7 @@ void percpu_down_write(struct percpu_rw_semaphore *sem)
- 	 */
- 
- 	/* Wait for all active readers to complete. */
-+	/* sem->writer is NULL or points to current */
- 	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
- }
- EXPORT_SYMBOL_GPL(percpu_down_write);
+Acked-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 
-> Also, I'm not going to hold up these patches for this, we can always do
-> this on top.
-> 
-> Still, let me consider this a little more.
+Cl=C3=A9ment
 
-No problem, this is just an idea.
+
+
+>
+> [1] https://lkml.org/lkml/2019/4/10/199
+>
+> Erwan Le Ray (4):
+>   ARM: debug: stm32: add UART early console configuration for STM32F4
+>   ARM: debug: stm32: add UART early console configuration for STM32F7
+>   ARM: debug: stm32: add UART early console support for STM32H7
+>   ARM: debug: stm32: add UART early console support for STM32MP1
+>
+>  arch/arm/Kconfig.debug         | 42 +++++++++++++++++++++++++++++-----
+>  arch/arm/include/debug/stm32.S |  9 ++++----
+>  2 files changed, 40 insertions(+), 11 deletions(-)
+>
+> --
+> 2.17.1
+>
