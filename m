@@ -2,177 +2,147 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5427C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48625C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9322086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C3A20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JZ+vJMdE"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="LktNJs6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBCTvN (ORCPT
+        id S1726653AbgBCTxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:51:13 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9009 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgBCTvN (ORCPT
+        Mon, 3 Feb 2020 14:53:34 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34601 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgBCTxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:51:13 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3879a10000>; Mon, 03 Feb 2020 11:50:57 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 11:51:12 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 11:51:12 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 19:51:11 +0000
-Subject: Re: [PATCH v3 01/12] mm: dump_page(): better diagnostics for compound
- pages
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-2-jhubbard@nvidia.com>
- <20200203131649.vptndo5emkzlaiew@box>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <a7dac2ef-8bcd-8733-538b-aaf8fd78afd0@nvidia.com>
-Date:   Mon, 3 Feb 2020 11:51:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 3 Feb 2020 14:53:34 -0500
+Received: by mail-qt1-f194.google.com with SMTP id h12so12477608qtu.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tg9AEPjwHF9SzQm7/+VD4BLr83zEfWvtOKbloqzkYR8=;
+        b=LktNJs6wHQ6rCBrdTj45rfZkoSxgswrqWizRzWa5zrzlBSsMuWAm9UIPkK6wGbq8aA
+         Jn9uM3xeWbvmYpEQGW2xJMYZzrlWaDEX+P1uApDUPcWujm8yhNDVNpSLYoGdK04556Lm
+         luz+sPx7H6fzR1i6EOJpjOdKmg5UkJD4CDL18KhiPPYEB1sJxsOct8eC+ovIXgHqSWun
+         JyzLth2dfq7lLeiSL0kODvo6U2J3CXls0jiHcS+knnRqf5rqX/B+guH44M7CXgzUXVPP
+         6i2QqnvE+/RcJHUPxFQW6y3uvjy0EpCAJ8RWxJbIsTkLbMfM4lR2JMJpVChPBL7VCYsU
+         zsGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tg9AEPjwHF9SzQm7/+VD4BLr83zEfWvtOKbloqzkYR8=;
+        b=DaNc9LlrJUeoyqya9TZRJLrKX6VYYLDpSH3RAxa6NHNAfgzGttHYBADo3EKMbiK5SF
+         M47nqbK7lUK/is84CsTstx72P5r0M6/cwwLKRPhNC4FCSKGFZvf1dF1s18vfx2tgKXtV
+         /ljge+LqFVXoaRXsIVr4yZS50vxziHKizWTQtZzNyJSP0yNTZ8A3aErJsSV3Ru0zZEFq
+         pqcNP+6wjWCGAVM3v3r1E2X8k7x61sD+24jCTw+R1A7lw/13/VUdwPgua2w2DA80+VkP
+         pBzL5plK5i+5MeCeL65wE9dQN4FfipNpCte+/COVAx+/dWuTFbF7QRtmHfoqr34/+NLV
+         A1lQ==
+X-Gm-Message-State: APjAAAWBjIdAsZpq+TYxLE11MIjxlX3ZSV2QFUAnMHHiLdUjQ3JYLYLA
+        2WwmwdCJeC6c9Yp9/JtC3xPZVQ==
+X-Google-Smtp-Source: APXvYqw4M2if1fYGbOJyF3RGiD+07i2yIoXnqs4pXRy5lRiylx/TmRICoQj3WNP7+zcwMoOWVlR7oA==
+X-Received: by 2002:ac8:390a:: with SMTP id s10mr24850033qtb.31.1580759613137;
+        Mon, 03 Feb 2020 11:53:33 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:6320])
+        by smtp.gmail.com with ESMTPSA id 201sm9950888qkf.10.2020.02.03.11.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 11:53:32 -0800 (PST)
+Date:   Mon, 3 Feb 2020 14:53:31 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 17/28] mm: memcg/slab: save obj_cgroup for non-root
+ slab objects
+Message-ID: <20200203195331.GB4396@cmpxchg.org>
+References: <20200127173453.2089565-1-guro@fb.com>
+ <20200127173453.2089565-18-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200203131649.vptndo5emkzlaiew@box>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580759458; bh=Om5ywZkbDxRtggdzaOXy9Ggbi/ijdQm1SzF2EbMQjvE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JZ+vJMdEOrhiJ6u+ixbDu+ykSCYgGe0zfRWhBa+YB16WJUMis+trY05H4GdDlg+X7
-         IVcaOD/Hm6olIcNqlHGSt/klZCFNQZJ0vkDvije+8iTli+gA/iWIUzL68oq7b0Azgc
-         kY8aza39yGcjUOMreZRuzLuUoqDterhy9Ls4Pp5KCFcPyCIecnv9U2Ul+x+SjlyFDX
-         /jSyXFu0Da4rCeoY5CoHR3oKYl1ekQw0eTAC95imMO8NKW+XHbYotdcPEwZZVHsg/d
-         jhfIGMZ5J+zgAgFDhfPoYt2D0JL6vSoanu1gNVdEVK1SqsZLfw6OKyenfQCvn/C27O
-         J1p8xF2UtjsxA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127173453.2089565-18-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 5:16 AM, Kirill A. Shutemov wrote:
-> On Fri, Jan 31, 2020 at 07:40:18PM -0800, John Hubbard wrote:
->> A compound page collects the refcount in the head page, while leaving
->> the refcount of each tail page at zero. Therefore, when debugging a
->> problem that involves compound pages, it's best to have diagnostics that
->> reflect that situation. However, dump_page() is oblivious to these
->> points.
->>
->> Change dump_page() as follows:
->>
->> 1) For tail pages, print relevant head page information: refcount, in
->>    particular. But only do this if the page is not corrupted so badly
->>    that the pointer to the head page is all wrong.
->>
->> 2) Do a separate check to catch any (rare) cases of the tail page's
->>    refcount being non-zero, and issue a separate, clear pr_warn() if
->>    that ever happens.
->>
->> Suggested-by: Matthew Wilcox <willy@infradead.org>
->> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+On Mon, Jan 27, 2020 at 09:34:42AM -0800, Roman Gushchin wrote:
+> Store the obj_cgroup pointer in the corresponding place of
+> page->obj_cgroups for each allocated non-root slab object.
+> Make sure that each allocated object holds a reference to obj_cgroup.
 > 
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-
-Thanks for looking through all of these!
-
+> Objcg pointer is obtained from the memcg->objcg dereferencing
+> in memcg_kmem_get_cache() and passed from pre_alloc_hook to
+> post_alloc_hook. Then in case of successful allocation(s) it's
+> getting stored in the page->obj_cgroups vector.
 > 
-> Few nit-picks below.
+> The objcg obtaining part look a bit bulky now, but it will be simplified
+> by next commits in the series.
 > 
->> ---
->>  mm/debug.c | 34 ++++++++++++++++++++++++++++------
->>  1 file changed, 28 insertions(+), 6 deletions(-)
->>
->> diff --git a/mm/debug.c b/mm/debug.c
->> index ecccd9f17801..beb1c59d784b 100644
->> --- a/mm/debug.c
->> +++ b/mm/debug.c
->> @@ -42,6 +42,32 @@ const struct trace_print_flags vmaflag_names[] = {
->>  	{0, NULL}
->>  };
->>  
->> +static void __dump_tail_page(struct page *page, int mapcount)
->> +{
->> +	struct page *head = compound_head(page);
->> +
->> +	if ((page < head) || (page >= head + MAX_ORDER_NR_PAGES)) {
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  include/linux/memcontrol.h |  3 +-
+>  mm/memcontrol.c            | 14 +++++++--
+>  mm/slab.c                  | 18 +++++++-----
+>  mm/slab.h                  | 60 ++++++++++++++++++++++++++++++++++----
+>  mm/slub.c                  | 14 +++++----
+>  5 files changed, 88 insertions(+), 21 deletions(-)
 > 
-> I'm not sure if we want to use compound_nr() here instead of
-> MAX_ORDER_NR_PAGES. Do you have any reasonaing about it?
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 30bbea3f85e2..54bfb26b5016 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -1431,7 +1431,8 @@ static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
+>  }
+>  #endif
+>  
+> -struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
+> +struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep,
+> +					struct obj_cgroup **objcgp);
+>  void memcg_kmem_put_cache(struct kmem_cache *cachep);
+>  
+>  #ifdef CONFIG_MEMCG_KMEM
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 94337ab1ebe9..0e9fe272e688 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2896,7 +2896,8 @@ static inline bool memcg_kmem_bypass(void)
+>   * done with it, memcg_kmem_put_cache() must be called to release the
+>   * reference.
+>   */
+> -struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
+> +struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep,
+> +					struct obj_cgroup **objcgp)
+>  {
+>  	struct mem_cgroup *memcg;
+>  	struct kmem_cache *memcg_cachep;
+> @@ -2952,8 +2953,17 @@ struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
+>  	 */
+>  	if (unlikely(!memcg_cachep))
+>  		memcg_schedule_kmem_cache_create(memcg, cachep);
+> -	else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt))
+> +	else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt)) {
+> +		struct obj_cgroup *objcg = rcu_dereference(memcg->objcg);
+> +
+> +		if (!objcg || !obj_cgroup_tryget(objcg)) {
+> +			percpu_ref_put(&memcg_cachep->memcg_params.refcnt);
+> +			goto out_unlock;
+> +		}
 
-
-Yes: compound_nr(page) reads from the struct page, whereas MAX_ORDER_NR_PAGES
-is an independent, immutable limit. When checking a struct page for corruption,
-it's ideal to avoid relying on data within the struct page, as compound_nr()
-would have to do.
-
-
-> 
->> +		/*
->> +		 * Page is hopelessly corrupted, so limit any reporting to
->> +		 * information about the page itself. Do not attempt to look at
->> +		 * the head page.
->> +		 */
->> +		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
->> +			"index:%#lx (corrupted tail page case)\n",
->> +			page, page_ref_count(page), mapcount, page->mapping,
->> +			page_to_pgoff(page));
->> +	} else {
->> +		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
->> +			"index:%#lx compound_mapcount:%d\n",
->> +			page, page_ref_count(head), mapcount, head->mapping,
->> +			page_to_pgoff(head), compound_mapcount(page));
->> +	}
->> +
->> +	if (page_ref_count(page) != 0)
->> +		pr_warn("page:%px PROBLEM: non-zero refcount (==%d) on this "
->> +			"tail page\n", page, page_ref_count(page));
-> 
-> Wrap into {}, please.
-
-
-Fixed, thanks.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+As per the reply to the previous patch: I don't understand why the
+objcg requires a pulse check here. As long as the memcg is alive and
+can be charged with memory, how can the objcg disappear?
