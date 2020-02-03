@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848FEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FFCC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5083620CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09FB20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747849;
-	bh=IPrmHewk90z2bfjgSVjIpJD4+5qHS7fePA67uDfcOFM=;
+	s=default; t=1580747856;
+	bh=Lcno1KbzFHCzHqKn9HtlxRgI1lCVBZUjrWPcoksga+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhgsKQhcPQ2ye31F+Y1W/y4GXVe8BrmcUO+iTj7ZnRZcF5Bcs6X+XhSpyXVMEoDJt
-	 V++ooaIlhrJfmomx0K17AVWtIGKD09pz7Dpw6o1SWBJiK589oGq2npFTqqVuE9OH4H
-	 spfI2cty/+P6oqeYkSaRdGRODVEkjgtbsdlYod+c=
+	b=zYz0US7/PYSTrSW7uodd4V9Hsn/LcmcdqnGxJTMp3YEEQD9CD9XwOoFmcaJrZ8agU
+	 iXbqPBJa2Fe9HL3d63fPdMN3Zkp4T1Q3ZMPcVqivG0rI0r8cF25dAkOnSEBy6LG8Za
+	 cpLzVdjl7H+R2MJoeoO7MTL+Z9OZaAofkTAXDlo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbgBCQh2 (ORCPT
+        id S1731341AbgBCQhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:37:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731303AbgBCQhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:15 -0500
+        id S1731311AbgBCQhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:20 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81B4220721;
-        Mon,  3 Feb 2020 16:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 448A62087E;
+        Mon,  3 Feb 2020 16:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747835;
-        bh=IPrmHewk90z2bfjgSVjIpJD4+5qHS7fePA67uDfcOFM=;
+        s=default; t=1580747839;
+        bh=Lcno1KbzFHCzHqKn9HtlxRgI1lCVBZUjrWPcoksga+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sl7KnGFB+eCIQtszti7s6S+byoex4LgWc0+dVZxGBaX+kFsHduGb06XmkTF0n1Mof
-         kT8e15wSrhDC65M2R7bSkAKLwKFV8FPT5fiYY/ESiFOpQpmdpPZkBrD4hA3EsxosSl
-         7RAwkKHD+y2eDHEXOkzBEhrLxJu4IARPK6fqjfCc=
+        b=Ui3L4Xog87WyjIneM0bHb4z6BPWG3dc2yC/9sr2TjIAJDNMFWP/kUTs4YqzuPeViN
+         pA2tOoXpLbU/wgPqkFVXSmMvKgQxTgiNNjzr51UBXpuAIt24dpIXBOs7xCA+IZn7hv
+         lwWsTPdJK5ZA7IkAE8SOqmMIgy2T9YmczBmTJmRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Stefan Sperling <stsp@stsp.name>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 89/90] netfilter: nf_tables_offload: fix check the chain offload flag
-Date:   Mon,  3 Feb 2020 16:20:32 +0000
-Message-Id: <20200203161927.827669434@linuxfoundation.org>
+Subject: [PATCH 5.4 61/90] iwlwifi: mvm: fix NVM check for 3168 devices
+Date:   Mon,  3 Feb 2020 16:20:04 +0000
+Message-Id: <20200203161925.037188062@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,34 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-[ Upstream commit c83de17dd6308fb74696923e5245de0e3c427206 ]
+[ Upstream commit b3f20e098293892388d6a0491d6bbb2efb46fbff ]
 
-In the nft_indr_block_cb the chain should check the flag with
-NFT_CHAIN_HW_OFFLOAD.
+We had a check on !NVM_EXT and then a check for NVM_SDP in the else
+block of this if.  The else block, obviously, could only be reached if
+using NVM_EXT, so it would never be NVM_SDP.
 
-Fixes: 9a32669fecfb ("netfilter: nf_tables_offload: support indr block call")
-Signed-off-by: wenxu <wenxu@ucloud.cn>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fix that by checking whether the nvm_type is IWL_NVM instead of
+checking for !IWL_NVM_EXT to solve this issue.
+
+Reported-by: Stefan Sperling <stsp@stsp.name>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_offload.c | 2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/nvm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_offload.c b/net/netfilter/nf_tables_offload.c
-index 96a64e7594a51..914cd0618d5a6 100644
---- a/net/netfilter/nf_tables_offload.c
-+++ b/net/netfilter/nf_tables_offload.c
-@@ -437,7 +437,7 @@ static void nft_indr_block_cb(struct net_device *dev,
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+index 945c1ea5cda86..493bcc54a8485 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+@@ -281,7 +281,7 @@ iwl_parse_nvm_sections(struct iwl_mvm *mvm)
+ 	int regulatory_type;
  
- 	mutex_lock(&net->nft.commit_mutex);
- 	chain = __nft_offload_get_chain(dev);
--	if (chain) {
-+	if (chain && chain->flags & NFT_CHAIN_HW_OFFLOAD) {
- 		struct nft_base_chain *basechain;
- 
- 		basechain = nft_base_chain(chain);
+ 	/* Checking for required sections */
+-	if (mvm->trans->cfg->nvm_type != IWL_NVM_EXT) {
++	if (mvm->trans->cfg->nvm_type == IWL_NVM) {
+ 		if (!mvm->nvm_sections[NVM_SECTION_TYPE_SW].data ||
+ 		    !mvm->nvm_sections[mvm->cfg->nvm_hw_section_num].data) {
+ 			IWL_ERR(mvm, "Can't parse empty OTP/NVM sections\n");
 -- 
 2.20.1
 
