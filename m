@@ -2,118 +2,156 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABA7C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220CFC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD6A2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E364520720
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="YcgGWmjx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UT/YLhMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgBCWO1 (ORCPT
+        id S1727150AbgBCWQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:14:27 -0500
-Received: from mail-co1nam11on2057.outbound.protection.outlook.com ([40.107.220.57]:11776
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726278AbgBCWOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:14:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SFhwPI8+SUvaUbZwzbhSK0I8nrjmr01kG0xfkQ26/j6Ffg8jJ6nZOp6ZucUT2xUWvTx8SlZwlCN5GgmDRzD7mVcnVxPBmmMOmwSB0KwTleKw2Ef8xWgWvLOkCPAkofisI9oYO2Ed7RL3/jTO2qbK3pVD3qxgyRwwuPBAyxX4BVE9jFR0kW01LaB5g4fTks0qBdhknBaXkbW0mcW+9Uk+qMxIxknJv82mgAb3wJLlcBL5Xut/Li5UsDwMwaHhRarYB+DUSkc/DI2bI9c7xEnVSTaYTQ8jttcrAY28lvz1l337GnF7CN1JWBw4dhvFue46FlIEOH2jYU+QDrILDyxUKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wNXRszWcBuO9G6o+j12hovMvqlVH3GOka9pfOpMOVRI=;
- b=FFBNp32pSFxDW8R51GpjnqbmpQUHplJ3VRcrL9XV7SUvlUyfH3rPH/82YMdm/EmMXTV/FDy3zRcxeNXA+5L/f4Am2RuwYqs/g3H4S/ijvFApgEnqK2NG0eme3udOMbe87lYTDtWQiEtS3pqpfQy+o02HvEoLZ83Dt7SWjtzgv9RlUW/HMP2O0qfHCs1q5+F3rH3Sd1Si7Kb6tniOYYYc5ya221l2OG/lHXvRnSz7dBF02QXUBGQ/MAcZ6i6Bdar17T3VbIsVLC8U19ip/Qtw8x10ub/gL3RqCIoCEQqUEVxOylbr69oKo2joN9rhQICzs0aWFm8zhIbOFagtdwOgNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wNXRszWcBuO9G6o+j12hovMvqlVH3GOka9pfOpMOVRI=;
- b=YcgGWmjxaucjd0YPKzHdmnLkhCE/W9WBs6eqdW8puN51iSmAVx1Ngy7N6/QcgP21xp+aPu96o8XOvKw7DGSyQOC72/uZ54bKmEj+gEKSEWNX2fh0S4Bei3XGbomxxzR8vGwCmtDqTai9w/xwFNjmnPWbPxZVpFu8ui1NNK9TtwY=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB4371.namprd08.prod.outlook.com (52.132.222.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.27; Mon, 3 Feb 2020 22:14:20 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2686.028; Mon, 3 Feb 2020
- 22:14:20 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH v5 3/8] scsi: ufs: Remove the check before call
- setup clock notify vops
-Thread-Topic: [EXT] [PATCH v5 3/8] scsi: ufs: Remove the check before call
- setup clock notify vops
-Thread-Index: AQHV2nLj8VkRi6xe0Ue1eptQ6PQ7ZqgKCX8w
-Date:   Mon, 3 Feb 2020 22:14:20 +0000
-Message-ID: <BN7PR08MB5684846EF1094E0A6B2F6108DB000@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
- <1580721472-10784-4-git-send-email-cang@codeaurora.org>
-In-Reply-To: <1580721472-10784-4-git-send-email-cang@codeaurora.org>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTg0YWQ1MDE4LTQ2ZDItMTFlYS04YjhhLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFw4NGFkNTAxYS00NmQyLTExZWEtOGI4YS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjIxMCIgdD0iMTMyMjUyNDE2NTgxNTU1MzIxIiBoPSJZSDVqSi8zRGdxRWhQMWNkY1E2SHEvZGpPL2c9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUI1MUFkSDM5clZBZE9uWmlTWnRJdW4wNmRtSkptMGk2Y0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQTRxMWltZ0FBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.86.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e6106905-9d9b-41e1-04e8-08d7a8f66b18
-x-ms-traffictypediagnostic: BN7PR08MB4371:|BN7PR08MB4371:|BN7PR08MB4371:
-x-microsoft-antispam-prvs: <BN7PR08MB43715E4BC4EC4AA970063265DB000@BN7PR08MB4371.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-forefront-prvs: 0302D4F392
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(189003)(199004)(66476007)(7416002)(33656002)(316002)(55016002)(9686003)(110136005)(54906003)(5660300002)(478600001)(64756008)(558084003)(52536014)(66446008)(8936002)(81166006)(81156014)(2906002)(8676002)(76116006)(66946007)(186003)(71200400001)(7696005)(66556008)(6506007)(55236004)(4326008)(86362001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4371;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dmAGZep2Progy8cfNcWhzX2Gz9uu6tXipFmC/amy7wZdOjirbRQHP9JoWntd2zaVo3CWYIFeAHZQnHoyti+4u5f+Zqq4U1emcEhrmL7v6KT+LR3883B9uaTcGOzs8H9HwkE32L+83F2fSXkyCK+MlmJB5upgy/ZHTQw57Ra8eBA7abr9izPwH9wuZCrReEhEmJRY+aSlz5TAnp+u6VdbdcrWyH8ygq1kBDSvaUUu/mJzFiA7fj8ib8UVIK1A0CRi92iJ78SOzTECJdup9kr0wjaAqxtRJKmZjoN4oFAV6P/Bsatr1y4p/FwQOCIME3L8Adk2uU2iEfPE4QPG1Qi0uhCtbYNirJDW3TrAQsvyaJVWoN7vCFoCSYh0EtbALf+6u29pznhPWridJoPCqsGMhCk2OZ1eMPq4XjpCdrKz4RALTb7bnXa52FTnWKldXGon
-x-ms-exchange-antispam-messagedata: 7i1wUN5h94CCOVyqtCu1W3owJOclKTiOi9zViN/z8WAxEVYlpRdWKvHYXoSScD9wFyJXnSaS7EbOks3RX+wrMUwJIbRWbipgS9SMicDoglDi7BoF4jyzgEYJhuxNPj3Qb6e/3w8/I41AaQC04lUsQg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Feb 2020 17:16:01 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33193 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgBCWQA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 17:16:00 -0500
+Received: by mail-il1-f193.google.com with SMTP id s18so14089375iln.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 14:15:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N18s231yY+8bRBxz6jlhKscwOcWQ7ObAnQtkJ/vjaq8=;
+        b=UT/YLhMNgCkg6m8MJUbzv2/FNS9NWOl8g+UoRsZlKp8VgBY9m8zq+rvatIR9qXvJsA
+         784jnT/62MmfoSkYBxWo8Kcm4imJwmk12n7gWzmkKfe4+f0cezZTgPiVZ+ni9glcjJi/
+         6pXl0NAwRHduY2KI6cXBzvPE6llyBVYk5dGgofKcIA2HvZhQ5OBlxjPs4zdlYJ9uLLBB
+         t8mw+8K1b10SDE2zkOD0sq81zKMKO5GUApEpT4lZ6OzdFFpfhQK67amA62oDy2ty6vVr
+         IYS6Hg69b3FUHJpSe+o+khHl4JucLZvOK067pZZC6/p/Orcmyqj3htAzwVE9cUsYkrFG
+         PL9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N18s231yY+8bRBxz6jlhKscwOcWQ7ObAnQtkJ/vjaq8=;
+        b=JFSurcea4FXaAMgnX1ohskAF9CGa0hTBAHf3+ybhQOxQOkKNOqoRm9KviRsejwdZc4
+         RKVV/cXldeuZGKyeN/DBu2dmufx/K9TtKWaqGd/za5mtJrnecCE7SEil3DXoftUG0Ei/
+         hBJHVeiYegGTh4xzwE/JxLAE7lUgHtqTkWIkIH+Li4aLjUE/VrbGWt3i26o4HZXlLXgM
+         TRYfiOnKsQ9At1wzpJURTwABpBhR49z9CQBn3JbGagcvPIjNlZ5WlSjqvSxxYsDaXFrr
+         vHt+CgNsFB8+kq5A4A0+7SocCnuQ/ogc5sFv+ooqZFHxKh5QIhhrrXyFDehWply6NYqf
+         X3IQ==
+X-Gm-Message-State: APjAAAWdJLWmcWLwtU08+bG8lcgM8Z7xSsX1jl3Yg4xmqv+SRj02WVfr
+        rF0Y1CeuqDdQ9qU751FygZuOQA==
+X-Google-Smtp-Source: APXvYqyj2dne19ab1rjfalZGoyo95xeVJVbOUcISZLU0CPvZuSl4lzRIXlRCEKqGWYzuYS/FRUGnUA==
+X-Received: by 2002:a92:4a0a:: with SMTP id m10mr17469494ilf.84.1580768159049;
+        Mon, 03 Feb 2020 14:15:59 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id a21sm6017650ioh.29.2020.02.03.14.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 14:15:58 -0800 (PST)
+Date:   Mon, 3 Feb 2020 15:15:56 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Mattias Nissler <mnissler@chromium.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        Raul Rangel <rrangel@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4] Add a "nosymfollow" mount option.
+Message-ID: <20200203221556.GA210383@google.com>
+References: <20200131002750.257358-1-zwisler@google.com>
+ <20200131004558.GA6699@bombadil.infradead.org>
+ <20200131015134.5ovxakcavk2x4diz@yavin.dot.cyphar.com>
+ <20200131212021.GA108613@google.com>
+ <20200201062744.fehlhq3jtetfcxuw@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6106905-9d9b-41e1-04e8-08d7a8f66b18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2020 22:14:20.8057
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NZNbBEn+Ppnj+Hjva/3THm2TwWuEFFnG5QKvOYvjEwADwNyQCnXUj4tmu7yoxs7ytAfCvmPY4/Y+YYMblrB7Cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4371
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201062744.fehlhq3jtetfcxuw@yavin.dot.cyphar.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+On Sat, Feb 01, 2020 at 05:27:44PM +1100, Aleksa Sarai wrote:
+> On 2020-01-31, Ross Zwisler <zwisler@google.com> wrote:
+<>
+> > On Fri, Jan 31, 2020 at 12:51:34PM +1100, Aleksa Sarai wrote:
+> > If noxdev would involve a pathname traversal to make sure you don't ever leave
+> > mounts with noxdev set, I think this could potentially cover the use cases I'm
+> > worried about.  This would restrict symlink traversal to files within the same
+> > filesystem, and would restrict traversal to both normal and bind mounts from
+> > within the restricted filesystem, correct?
+> 
+> Yes, but it would have to block all mountpoint crossings including
+> bind-mounts, because the obvious way of checking for mountpoint
+> crossings (vfsmount comparisons) results in bind-mounts being seen as
+> different mounts. This is how LOOKUP_NO_XDEV works. Would this be a
+> show-stopped for ChromeOS?
+>
+> I personally find "noxdev" to be a semantically clearer statement of
+> intention ("I don't want any lookup that reaches this mount-point to
+> leave") than "nosymfollow" (though to be fair, this is closer in
+> semantics to the other "no*" mount flags). But after looking at [1] and
+> thinking about it for a bit, I don't really have a problem with either
+> solution.
+
+For ChromeOS we want to protect data both on user-provided filesystems (i.e.
+USB attached drives and the like) as well as on our "stateful" partition.  
+
+The noxdev mount option would resolve our concerns for user-provided
+filesystems, but I don't think that we would be able to use it for stateful
+because symlinks on stateful that point elsewhere within stable are still a
+security risk.  There is more explanation on why this is the case in [1].
+Thank you for linking to that, by the way.
+
+I think our security concerns around both use cases, user-provided filesystems
+and the stateful partition, can be resolved in ChromeOS with the nosymfollow
+mount flag.  Based on that, my current preference is for the 'nosymfollow'
+mount flag.
+
+> The only problem is that "noxdev" would probably need to be settable on
+> bind-mounts, and from [2] it looks like the new mount API struggles with
+> configuring bind-mounts.
+> 
+> > > However, the underlying argument for "noxdev" was that you could use it
+> > > to constrain something like "tar -xf" inside a mountpoint (which could
+> > > -- in principle -- be a bind-mount). I'm not so sure that "nosymfollow"
+> > > has similar "obviously useful" applications (though I'd be happy to be
+> > > proven wrong).
+> > 
+> > In ChromeOS we use the LSM referenced in my patch to provide a blanket
+> > enforcement that symlinks aren't traversed at all on user-supplied
+> > filesystems, which are considered untrusted.  I'd essentially like to build on
+> > the protections offered by LOOKUP_NO_SYMLINKS and extend that protection to
+> > all accesses to user-supplied filesystems.
+> 
+> Yeah, after writing my mail I took a look at [1] and I agree that having
+> a solution which helps older programs would be helpful. With openat2 and
+> libpathrs[3] I'm hoping to lead the charge on a "rewrite userspace"
+> effort, but waiting around for that to be complete probably isn't a
+> workable solution. ;)
+
+Sounds great.  Here, I'll merge the nosymfollow patch forward with the current
+ToT which includes your openat2(2) changes, and we can go from there.
+
+Thanks for all the feedback.
+
+> [1]: https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
+> [2]: https://lwn.net/Articles/809125/
+> [3]: https://github.com/openSUSE/libpathrs
