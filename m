@@ -2,128 +2,147 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D779C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D798C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CA020838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TBfGDlMp"
+	by mail.kernel.org (Postfix) with ESMTP id 1DA1720838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgBCRQu (ORCPT
+        id S1729366AbgBCRRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:16:50 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:13247 "EHLO pegase1.c-s.fr"
+        Mon, 3 Feb 2020 12:17:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:56538 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgBCRQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:16:50 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48BDyM0Gd0z9vC0j;
-        Mon,  3 Feb 2020 18:16:43 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=TBfGDlMp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id L2EgvSc5tJns; Mon,  3 Feb 2020 18:16:42 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48BDyL5k3bz9vC0h;
-        Mon,  3 Feb 2020 18:16:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580750202; bh=CbGM+lhkMhDFeqH22kN9rGKdr+DO5kF57vrZYdUevkk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TBfGDlMpIs3iBnu1efmB/bvuM3U13ivka5Z4Mm2uZgaA1D0UVGDvJV0N5HTaaM+JN
-         QBGASI28LFCqKPYZ5HGxOyKfb42DgiIxn0G+TFQx9n9IR+CT9iaWKsVDl0y8lNiplc
-         pBDzIisDVtmnHs4n6EKOXL7Msf97rs+MltEXZ/wE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 21B988B7B5;
-        Mon,  3 Feb 2020 18:16:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ZylV4ap6PF-H; Mon,  3 Feb 2020 18:16:48 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A3BFA8B7AC;
-        Mon,  3 Feb 2020 18:16:47 +0100 (CET)
-Subject: Re: [PATCH] powerpc/32s: Slenderize _tlbia() for powerpc 603/603e
-To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <12f4f4f0ff89aeab3b937fc96c84fb35e1b2517e.1580748445.git.christophe.leroy@c-s.fr>
- <bfab6635148b83deed8ac9fcbb19dde8c32fb988.camel@infinera.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <5771d787-67f5-f29c-2a9e-0ea7194cffa1@c-s.fr>
-Date:   Mon, 3 Feb 2020 18:16:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1726192AbgBCRRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:17:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8348530E;
+        Mon,  3 Feb 2020 09:17:50 -0800 (PST)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 344413F52E;
+        Mon,  3 Feb 2020 09:17:49 -0800 (PST)
+Date:   Mon, 3 Feb 2020 17:17:46 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Pavan Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20200203171745.alba7aswajhnsocj@e107158-lin>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+ <20200131100629.GC27398@codeaurora.org>
+ <20200131153405.2ejp7fggqtg5dodx@e107158-lin.cambridge.arm.com>
+ <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
+ <20200203142712.a7yvlyo2y3le5cpn@e107158-lin>
+ <20200203111451.0d1da58f@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <bfab6635148b83deed8ac9fcbb19dde8c32fb988.camel@infinera.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200203111451.0d1da58f@oasis.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 03/02/2020 à 17:57, Joakim Tjernlund a écrit :
-> On Mon, 2020-02-03 at 16:47 +0000, Christophe Leroy wrote:
->> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
->>
->>
->> _tlbia() is a function used only on 603/603e core, ie on CPUs which
->> don't have a hash table.
->>
->> _tlbia() uses the tlbia macro which implements a loop of 1024 tlbie.
->>
->> On the 603/603e core, flushing the entire TLB requires no more than
->> 32 tlbie.
->>
->> Replace tlbia by a loop of 32 tlbie.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/mm/book3s32/hash_low.S | 13 ++++++++-----
->>   1 file changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
->> index c11b0a005196..a5039ad10429 100644
->> --- a/arch/powerpc/mm/book3s32/hash_low.S
->> +++ b/arch/powerpc/mm/book3s32/hash_low.S
->> @@ -696,18 +696,21 @@ _GLOBAL(_tlbia)
->>          bne-    10b
->>          stwcx.  r8,0,r9
->>          bne-    10b
->> +#endif /* CONFIG_SMP */
->> +       li      r5, 32
->> +       lis     r4, KERNELBASE@h
->> +       mtctr   r5
->>          sync
->> -       tlbia
->> +0:     tlbie   r4
->> +       addi    r4, r4, 0x1000
+On 02/03/20 11:14, Steven Rostedt wrote:
+> On Mon, 3 Feb 2020 14:27:14 +0000
+> Qais Yousef <qais.yousef@arm.com> wrote:
 > 
-> Is page size always 4096 here or does it not matter ?
+> > I don't see one right answer here. The current mechanism could certainly do
+> > better; but it's not clear what better means without delving into system
+> > specific details. I am open to any suggestions to improve it.
+> 
+> The way I see this is that if there's no big cores available but little
+> cores are, and the RT task has those cores in its affinity mask then
+> the task most definitely should consider moving to the little core. The
+> cpu_find() should return them!
 
-603 and its derivatives (G2, e300, ...) only support 4k pages.
+I almost agree. I think the cpupri_find() could certainly do better if the task
+is already running on a little core. It can fallback to the next best little
+core if no bigger core is available.
 
-And regardless, the reference manual says:
+I already started looking at pushing a patch to do that.
 
-The tlbia instruction is not implemented on the MPC603e and when its 
-opcode is encountered, an illegal instruction program exception is 
-generated. To invalidate all entries of both TLBs, 32 tlbie instructions 
-must be executed, incrementing the value in EA[15–19] by 1 each time
+I'm torn about pushing a task already on a big core to a little core if it says
+it wants it (down migration).
 
-Christophe
+I guess since most tasks are fifo by default then one will starve if the other
+one is a long running task (assuming same priority). But long running RT tasks
+are not the common case, hence I wanted to hear about what use case this logic
+hurts. I expect by default the big cores not to be over subscribed. Based on
+some profiles I did at least running real Android apps I didn't see the RT
+tasks were overwhelming the system.
+
+In my view, the performance dip of sharing the big core would be less than
+migrating the task to a little core momentarily then bring it back in to the
+big core.
+
+Because the following 2 big ifs must be satisfied first to starve an RT task:
+
+	1. We need all the big cores to be overloaded first.
+	2. The RT tasks on all the big cores are CPU hoggers (however we want
+	   to define this)
+
+And I think this needs more investigation.
+
+> 
+> But, what we can do is to mark the little core that's running an RT
+> task on a it that prefers bigger cores, as "rt-overloaded".  This will
+> add this core into the being looked at when another core schedules out
+> an RT task. When that happens, the RT task on the little core will get
+> pulled back to the big core.
+
+I didn't think of using the rt-overloaded flag in this way. That would be
+interesting to try.
+
+> 
+> Here's what I propose.
+> 
+> 1. Scheduling of an RT task that wants big cores, but has little cores
+> in its affinity.
+> 
+> 2. Calls cpu_find() which will look to place it first on a big core, if
+> there's a core that is running a task that is lower priority than
+> itself.
+> 
+> 3. If all the big cores have RT tasks it can not preempt, look to find
+> a little core.
+
+I agree with the above.
+
+> 
+> 4. If a little core is returned, and we schedule an RT task that
+> prefers big cores on it, we mark it overloaded.
+> 
+> 5. An RT task on a big core schedules out. Start looking at the RT
+> overloaded run queues.
+> 
+> 6. See that there's an RT task on the little core, and migrate it over.
+
+I think the above should depend on the fitness of the cpu we currently run on.
+I think we shouldn't down migrate, or at least investigate better down
+migration makes more sense than keeping tasks running on the correct CPU where
+they are.
+
+> Note, this will require a bit more logic as the overloaded code wasn't
+> designed for migration of running tasks, but that could be added.
+
+I'm wary of overloading the meaning of rt.overloaded. Maybe I can convert it to
+a bitmap so that we can encode the reason.
+
+Let me see how complicated to write something up.
+
+Thanks!
+
+--
+Qais Yousef
