@@ -2,150 +2,217 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C072EC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCCDC33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DABD2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:37:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qXuwCM2r"
+	by mail.kernel.org (Postfix) with ESMTP id 5747C20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580729911;
+	bh=+9imSw00cH4bOS20sbsqconX9KJhVciCKmNGbv8wX2c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OaFzRzVxVBeHA8UWk2oyQoxVOlZyOdevZTKHO4TYnyH8y9dsMgAkK2OEiTFsEwUao
+	 O4Hk7PEQUH2vQnZtjaZKoO59OpVlPfiYdR//PCk8HmeEYIqnZUBSqWJS3Fin3ggxi3
+	 EPyGmBZa7bpuWgz7v9Xa3u7c9fVaIf9s1QSbVhJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgBCLhv (ORCPT
+        id S1728062AbgBCLia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:37:51 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19133 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgBCLhu (ORCPT
+        Mon, 3 Feb 2020 06:38:30 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:55227 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgBCLia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:37:50 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3805ff0003>; Mon, 03 Feb 2020 03:37:35 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 03:37:50 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 03 Feb 2020 03:37:50 -0800
-Received: from [10.26.11.224] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 11:37:47 +0000
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
- <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
- <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
- <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
- <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
- <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
- <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
- <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <423eb28f-b5fc-c917-a7b2-72562183683f@nvidia.com>
-Date:   Mon, 3 Feb 2020 11:37:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 06:38:30 -0500
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 013BcLkM023532;
+        Mon, 3 Feb 2020 20:38:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 013BcLkM023532
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580729902;
+        bh=1PSKW49SzMn2cJ0cVLR8p8oQ9UmN07qckyWBVdYUJ2s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1D/m8iAi1vG02UMNdn/wCglI7KCU8cszFmIiN2r/H1+80+N6YxLJhOiVO7HXicfdR
+         o+4zsCFwTtgUM1T/iYq6Ih6l0AkXSfXDpHpQVPqX4HmZSMZesojH+2s7z53rqtDYTF
+         S30KblamGvRIvvhIEkTypTUzPD1nxXrh1HaY8aYD0EYEdizptwCD5LcQ1SPCaC4ClP
+         DASuAgVg0CyVTbmr9oaF9vQocPQW4v3wLAgrEERVvuil1E+fqviXqjp0EYVyAOqr3x
+         k2aNk8/pZNKwg2lXLII9LRQu5mziyXxSH+DyAEHrhumbDOy6UfrGi5VgOYVMN/AuJv
+         +9WyBW3LP0Nsw==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id i4so4006249vkc.3;
+        Mon, 03 Feb 2020 03:38:21 -0800 (PST)
+X-Gm-Message-State: APjAAAUVx0P3CO19ZYYNjrxjTSB9cJAe8tDvatxLv/QLEX0Oim97G3dR
+        3pVIYBni3/iD5jgHQYyXFCy7ju+JEB3nndx007A=
+X-Google-Smtp-Source: APXvYqzZEtJynZEbP+eisZbsUTSXn/m6/NYTRnhItnFRqJmqxS4xC3fEkqWJfaSVXhLlbMFJ0QZ5Jx46nFW7absrCJQ=
+X-Received: by 2002:a1f:bfc2:: with SMTP id p185mr13814951vkf.73.1580729900721;
+ Mon, 03 Feb 2020 03:38:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580729856; bh=ceXnFZ7jddmETXXwdfs4mGpj+O00W2KY/YQ322nXt4U=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qXuwCM2rJ8br+WfWyobe/MOBDj1SnQ+sqtC2P5uvgpRUccqPpupsIKKpULWJuCtQy
-         6+QbNlZX687vt/qhOmx92gy1Pw3v7rccOBTqUiXn8aSGPyXtGngyhgs/b4F70poRYT
-         HflYyjxCPZzn3obut9ctKGikXHbRtlIn2F/Gl9YHEdaZnc/fVJUbCCEc4t5ywtcCHT
-         tjAk/8johzjzyOG9rnIKLdMoqAyLTOAN1mgi0zhYljIfFsCZRsZVUwTW++WsiNqgAH
-         JiRUMU80FPLJEYHqhP2uynEgr2Gi/RKZazoeeDHl/eWOEztujVleq0XhrIEdFle+7g
-         v+rjTZC4ZZUpQ==
+References: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
+ <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
+ <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com> <CAMuHMdWerVTn-RvUOzHzGurY71NP9fNj+24EjnVkxnmp5g94jw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWerVTn-RvUOzHzGurY71NP9fNj+24EjnVkxnmp5g94jw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 3 Feb 2020 20:37:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQOJGnL62ADL76V_jMm356+1rGxqBRt=BBpvvy+iASniw@mail.gmail.com>
+Message-ID: <CAK7LNAQOJGnL62ADL76V_jMm356+1rGxqBRt=BBpvvy+iASniw@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Geert,
 
-On 01/02/2020 15:13, Dmitry Osipenko wrote:
-> 31.01.2020 17:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 31.01.2020 12:02, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>
->>> On 30/01/2020 20:04, Dmitry Osipenko wrote:
->>>
->>> ...
->>>
->>>>>> The tegra_dma_stop() should put RPM anyways, which is missed in your=
-s
->>>>>> sample. Please see handle_continuous_head_request().
->>>>>
->>>>> Yes and that is deliberate. The cyclic transfers the transfers *shoul=
-d*
->>>>> not stop until terminate_all is called. The tegra_dma_stop in
->>>>> handle_continuous_head_request() is an error condition and so I am no=
-t
->>>>> sure it is actually necessary to call pm_runtime_put() here.
->>>>
->>>> But then tegra_dma_stop() shouldn't unset the "busy" mark.
->>>
->>> True.
->>>
->>>>>> I'm also finding the explicit get/put a bit easier to follow in the
->>>>>> code, don't you think so?
->>>>>
->>>>> I can see that, but I was thinking that in the case of cyclic transfe=
-rs,
->>>>> it should only really be necessary to call the get/put at the beginni=
-ng
->>>>> and end. So in my mind there should only be two exit points which are
->>>>> the ISR handler for SG and terminate_all for SG and cyclic.
->>>>
->>>> Alright, I'll update this patch.
->>>
->>> Hmmm ... I am wondering if we should not mess with that and leave how
->>> you have it.
->>
->> I took another look and seems my current v6 should be more correct becau=
-se:
->>
->> 1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
->> there since tegra_dma_terminate_all() won't put RPM in this case:
->>
->> 	if (!tdc->busy)
->> 		goto skip_dma_stop;
->>
->> 2. We can't move the "busy" unsetting into the terminate because then
->> tegra_dma_stop() will be invoked twice. Although, one option could be to
->> remove the tegra_dma_stop() from the error paths of
->> handle_continuous_head_request(), but I'm not sure that this is correct
->> to do.
->=20
-> Jon, I realized that my v6 variant is wrong too because
-> tegra_dma_terminate_all() -> tdc->isr_handler() will put RPM, and thus,
-> the RPM enable-count will be wrecked in this case.
+On Mon, Feb 3, 2020 at 8:00 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Yamada-san,
+>
+> On Mon, Feb 3, 2020 at 2:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > On Sun, Feb 2, 2020 at 3:45 AM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > > On Fri, Jan 31, 2020 at 8:06 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > >
+> > > >  - simplify built-in initramfs creation
+> > >
+> > > Hmm.
+> > >
+> > > This may simplify it from a _technical_ angle, but it seems to be a
+> > > fairly annoying step backwards from a UI perspective.
+> > >
+> > > Now Kconfig asks a completely pointless question that most people have
+> > > absolutely zero interest in. The old situation was better, I feel.
+> > >
+> > > Basically, I feel that from a "get normal users to test development
+> > > kernels", our Kconfig pain ends up being the biggest hurdle by far.
+> > >
+> > > The kernel is easy to build and doesn't really require all that much
+> > > infrastructure, but generating the config - particularly when it
+> > > changes over time and you can't just say "just use the distro config"
+> > > - is a big step for people.
+> > >
+> > > So honestly, while I've pulled this, I feel that this kind of change
+> > > is going _exactly_ the wrong way when it asks people questions that
+> > > they don't care one whit about.
+> > >
+> > > If I as a kernel developer can't find it in myself to care and go "why
+> > > does it ask this new question", then that should tell you something.
+> > >
+> > > Why do we have this choice in the first place?
+> >
+> > Generally, initramfs is passed from a boot-loader,
+> > but some architectures embed initramfs into vmlinux
+> > (perhaps due to poor boot-loader support??)
+> >
+> > arch/arc/configs/tb10x_defconfig:CONFIG_INITRAMFS_SOURCE="../tb10x-rootfs.cpio"
+> > arch/unicore32/configs/defconfig:#CONFIG_INITRAMFS_SOURCE="arch/unicore/ramfs/ramfs_config"
+> > arch/xtensa/configs/cadence_csp_defconfig:CONFIG_INITRAMFS_SOURCE="$$KERNEL_INITRAMFS_SOURCE"
+>
+> Note that the above are examples that do not actually work, as the files
+> referred to are not present in mainline (read below[1] why I have just
+> checked that ;-).
+>
+> > So, data-compression is useful - that's is what I understand.
+>
+> Yes it is, depending on your config.
+>
+> > For major architectures, vmlinux embeds a tiny initramfs,
+> > which is generated based on usr/default_cpio_list.
+> >
+> > We do not need data-compression for such a small cpio,
+> > but handling it in a consistent way is sensible.
+> > This is annoying from the users' PoV, I admit.
+>
+> I was also confused by this question, as by default you have
+>     CONFIG_RD_GZIP=y
+>     CONFIG_RD_BZIP2=y
+>     CONFIG_RD_LZMA=y
+>     CONFIG_RD_XZ=y
+>     CONFIG_RD_LZO=y
+>     CONFIG_RD_LZ4=y
+> so the old 'default ".gz" if RD_GZIP' looked like it would use gzip.
+> However, the tiny default initramfs ended up being uncompressed anyway
+> before, as until commit ddd09bcc899fd374 ("initramfs: make compression
+> options not depend on INITRAMFS_SOURCE"), INITRAMFS_COMPRESSION wasn't
+> taken into account for the default tiny initramfs...
 
-Did you see my other suggestion to move the pm_runtime_put() outside of
-tegra_dma_stop? There are only a few call sites for tegra_dma_stop and
-so if we call pm_runtime_put() after calling tegra_dma_stop this should
-simplify matters.
 
-Jon
+Because there was a bug in old usr/Kconfig.
 
---=20
-nvpublic
+
+See the following dependency in the old code:
+
+config INITRAMFS_COMPRESSION
+        depends on INITRAMFS_SOURCE!=""
+
+
+In the default .config, INITRAMFS_SOURCE is "".
+Hence, CONFIG_INITRAMFS_COMPRESSION is undefined.
+So, suffix_y gets empty in usr/Makefile.
+
+That is why the cpio was not compressed
+even though CONFIG_RD_GZIP=y
+
+
+
+> So INITRAMFS_COMPRESSION_NONE is the right answer to retain the
+> old behavior?
+
+Yes, INITRAMFS_COMPRESSION_NONE retains the previous behavior.
+
+But, as far as he I understood what Linus said,
+"we do not care".
+
+
+> One might question why not to use gzip anyway, as
+> CONFIG_RD_GZIP=y is enabled by default, and would give a (small)
+> improvement of ca. 350 bytes ;-)
+> Hence there is some area for improvement...
+
+
+GZIP is not the only compression algorithm.
+
+Somebody may want to disable RD_GZIP,
+then enable RD_XZ.
+If we allow the data compression,
+Kconfig must ask "which compression algorithm".
+
+
+So, if Kconfig would siltently choose something
+as default, INITRAMFS_COMPRESSION_NONE would be the best.
+
+
+
+
+>
+> Thanks!
+>
+> [1] I'm still carrying a local patch for handling relative initramfs
+>     paths with O=, but it's been a while I actually used it.  Due to your
+>     recent changes, it no longer applies, and needs to be updated.
+>     But of course that is only useful if there are some real users...
+>     https://lore.kernel.org/lkml/1384467283-14806-1-git-send-email-geert@linux-m68k.org/
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
