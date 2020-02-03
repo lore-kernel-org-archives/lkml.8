@@ -2,57 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BA4C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A29DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632942087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6DB2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747518;
-	bh=Eks/9HFVArPyWzQM0TOyCpnfOGYzDbio/Tb3ivsQxGY=;
+	s=default; t=1580747522;
+	bh=0A0MSOrp+pl47c5s56Y330qZTvYb3EDdo2Lub+Iexiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5ypCmVFm8LXevusPLEZEAdb23XJu7P3V4JP7qrc/HgSAxfTSVygRsrJJcpc9WYzf
-	 xGfI6SCOTa/16k+vhif4kjJwfO49VW+rTw6WtLyKPbxPaCVtqVKbtRHU4fkoCie+GD
-	 scA/S+DairlgiZxpmilqdHS8IhTgziRNWMlYLy7E=
+	b=fJORbNmgD2X/Tuf8klMW6zbMNGz6NIikUmx/dQMHn1v8ooCEc5+eUpj4tXZ1Zp15G
+	 5qgkmKuWmgHc8kDXCHPJMOCL0MCe+vfdnAUMWETO4PFGV4AbJWlc6nRi2jncjET3Db
+	 7DOqa+PynxXy9I043yquCFsKF6b+HAaip1ZnsGhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbgBCQb5 (ORCPT
+        id S1730347AbgBCQcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:31:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730318AbgBCQby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:31:54 -0500
+        id S1730328AbgBCQb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:31:56 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A8D92082E;
-        Mon,  3 Feb 2020 16:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FC4C2051A;
+        Mon,  3 Feb 2020 16:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747513;
-        bh=Eks/9HFVArPyWzQM0TOyCpnfOGYzDbio/Tb3ivsQxGY=;
+        s=default; t=1580747516;
+        bh=0A0MSOrp+pl47c5s56Y330qZTvYb3EDdo2Lub+Iexiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1WNqvFPfZGSicvc8fjAsIh48nT5a5SBUdvQAx33yvPVTf4SJdPkiztnj8jqSNnFOY
-         rrsyFrIAbfeD6PGv4MdXxTqFwvWIyvntz478DMXpyJ+RpdUexZHwkNC5GJ8RmDBfS1
-         fawg4Q0QynqtgQmkkpKgExS+OZCEPMSAQe3bZtxw=
+        b=WvUi7rA2xojHm+e1ozcm/gpdGrynWIMptW/49TpNifMoLxujJxrkMcrrtopCLv9TL
+         KXurRmACDWxjBaxfnKYBFlMxFB9f5+AG5I6ijkNrO8G8fLrEmschT5X3SnoiklhxKg
+         TIX5yjlyxqRXGXAeNtawf4lio/YzafaG6da18EDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 08/70] perf c2c: Fix return type for histogram sorting comparision functions
-Date:   Mon,  3 Feb 2020 16:19:20 +0000
-Message-Id: <20200203161913.708583322@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 26/70] ARM: dts: am57xx-beagle-x15/am57xx-idk: Remove "gpios" for  endpoint dt nodes
+Date:   Mon,  3 Feb 2020 16:19:38 +0000
+Message-Id: <20200203161916.330745792@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -65,86 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Freund <andres@anarazel.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit c1c8013ec34d7163431d18367808ea40b2e305f8 upstream.
+[ Upstream commit 81cc0877840f72210e809bbedd6346d686560fc1 ]
 
-Commit 722ddfde366f ("perf tools: Fix time sorting") changed - correctly
-so - hist_entry__sort to return int64. Unfortunately several of the
-builtin-c2c.c comparison routines only happened to work due the cast
-caused by the wrong return type.
+PERST# line in the PCIE connector is driven by the host mode and not
+EP mode. The gpios property here is used for driving the PERST# line.
+Remove gpios property from all endpoint device tree nodes.
 
-This causes meaningless ordering of both the cacheline list, and the
-cacheline details page. E.g a simple:
-
-  perf c2c record -a sleep 3
-  perf c2c report
-
-will result in cacheline table like
-  =================================================
-             Shared Data Cache Line Table
-  =================================================
-  #
-  #        ------- Cacheline ----------    Total     Tot  - LLC Load Hitm -  - Store Reference -  - Load Dram -     LLC  Total  - Core Load Hit -  - LLC Load Hit -
-  # Index         Address  Node  PA cnt  records    Hitm  Total  Lcl    Rmt  Total  L1Hit  L1Miss     Lcl   Rmt  Ld Miss  Loads    FB    L1   L2     Llc      Rmt
-  # .....  ..............  ....  ......  .......  ......  .....  .....  ...  ....   .....  ......  ......  ....  ......   .....  .....  ..... ...  ....     .......
-
-        0  0x7f0d27ffba00   N/A       0       52   0.12%     13      6    7    12      12       0       0     7      14      40      4     16    0    0           0
-        1  0x7f0d27ff61c0   N/A       0     6353  14.04%   1475    801  674   779     779       0       0   718    1392    5574   1299   1967    0  115           0
-        2  0x7f0d26d3ec80   N/A       0       71   0.15%     16      4   12    13      13       0       0    12      24      58      1     20    0    9           0
-        3  0x7f0d26d3ec00   N/A       0       98   0.22%     23     17    6    19      19       0       0     6      12      79      0     40    0   10           0
-
-i.e. with the list not being ordered by Total Hitm.
-
-Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-Signed-off-by: Andres Freund <andres@anarazel.de>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20200109043030.233746-1-andres@anarazel.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-c2c.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/am571x-idk.dts                | 4 ----
+ arch/arm/boot/dts/am572x-idk-common.dtsi        | 4 ----
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ----
+ 3 files changed, 12 deletions(-)
 
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -586,8 +586,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __
- {
- 	struct c2c_hist_entry *c2c_left;
- 	struct c2c_hist_entry *c2c_right;
--	unsigned int tot_hitm_left;
--	unsigned int tot_hitm_right;
-+	uint64_t tot_hitm_left;
-+	uint64_t tot_hitm_right;
+diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
+index bf4163eb6b2ac..510f61d20b6d6 100644
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -93,10 +93,6 @@
+ 	gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
+ };
  
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
-@@ -620,7 +620,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __m
- 									\
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
--	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-+	return (uint64_t) c2c_left->stats.__f -				\
-+	       (uint64_t) c2c_right->stats.__f;				\
- }
+-&pcie1_ep {
+-	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+-};
+-
+ &mmc1 {
+ 	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
+diff --git a/arch/arm/boot/dts/am572x-idk-common.dtsi b/arch/arm/boot/dts/am572x-idk-common.dtsi
+index 784639ddf4513..8a7d34c8ae115 100644
+--- a/arch/arm/boot/dts/am572x-idk-common.dtsi
++++ b/arch/arm/boot/dts/am572x-idk-common.dtsi
+@@ -71,10 +71,6 @@
+ 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+ };
  
- #define STAT_FN(__f)		\
-@@ -673,7 +674,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+-&pcie1_ep {
+-	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+-};
+-
+ &mailbox5 {
+ 	status = "okay";
+ 	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index d53532b479475..872382bd043f8 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -550,10 +550,6 @@
+ 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
+ };
  
--	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-+	return (uint64_t) llc_miss(&c2c_left->stats) -
-+	       (uint64_t) llc_miss(&c2c_right->stats);
- }
- 
- static uint64_t total_records(struct c2c_stats *stats)
+-&pcie1_ep {
+-	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
+-};
+-
+ &mcasp3 {
+ 	#sound-dai-cells = <0>;
+ 	assigned-clocks = <&l4per_clkctrl DRA7_MCASP3_CLKCTRL 24>;
+-- 
+2.20.1
+
 
 
