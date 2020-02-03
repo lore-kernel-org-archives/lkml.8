@@ -2,90 +2,98 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D710CC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB15C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BB820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703562082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="SlBpQvhn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NMP4CvD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgBCOcd (ORCPT
+        id S1728447AbgBCOcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:32:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46236 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727649AbgBCOcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:32:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66D0AB213;
-        Mon,  3 Feb 2020 14:32:30 +0000 (UTC)
-Date:   Mon, 3 Feb 2020 15:32:28 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v5 5/6] clone3: allow spawning processes into cgroups
-Message-ID: <20200203143228.GC13360@blackbody.suse.cz>
-References: <20200121154844.411-1-christian.brauner@ubuntu.com>
- <20200121154844.411-6-christian.brauner@ubuntu.com>
- <20200129132719.GD11384@blackbody.suse.cz>
- <20200202093702.cdlyytywty7hk3rn@wittgenstein>
+        Mon, 3 Feb 2020 09:32:48 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:60243 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727787AbgBCOcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:32:48 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 029583F4;
+        Mon,  3 Feb 2020 09:32:46 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 03 Feb 2020 09:32:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=dVVz8f519a/6Wo8ts1nwJdClp2T
+        55/rafW7s+KHqhnk=; b=SlBpQvhnkwxNQA5GVKfPFpQWwmfTPrXfHNdEIHnAsZW
+        MtKJWd4jl8+GpHZ9UHOTUaTKxThh9mLda3lX64ofX0HmtqbYjTjoEDwBwtrNkMg7
+        FHgT+xL8BwI3FOQxFMTiYn13EB3vtZV78dfjbw8NbDJuwZk5tefF9yQyFCouuRab
+        adazfnEjP0k2+nhutWNM6OzdnlwnCaysFKxT5j/o5fgr3TcCCA6qJtphGJ9NHSW4
+        kPCctvGJnMH6x2PjoYZ5Vj3nDSDLWl6JVXIM1Fv43YfJuuf2Lk0CRiYnvFMR0OX2
+        n4eQermht+9JlBf+kIHfudvFrUMGiGjpjjbgnb/8f9w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=dVVz8f
+        519a/6Wo8ts1nwJdClp2T55/rafW7s+KHqhnk=; b=NMP4CvD2dEKlRVY61F0dj7
+        s+rS+cWGv64+D9GiMtiK/1nzLJ2EEsQVgDW8KEi58ThRygQV11QyxrW8DTKzK9t/
+        55+I0pSxX9AR0W0XffGtkq+oGPSN+DDxuLcRujkLjL8X3uRaKrA8Yhtl4d7ckGGv
+        5Y7H6rNz/T3pTl7Ib2mU8qg6+AfxAyKY+U4+y4/3aEysSH/8TbFXubKRnW03O83A
+        xrFjyasRy7+OvJYhTbgHM/apBCc/rTsRVZOHZmEXWyoGtTm6k+CBrsdnynghXiDs
+        h85BScVYvt7A9QAZH8F0KV1vKTjgWnWZjMb5T2uKhDoLHWuMbjffpsBZooBm08jg
+        ==
+X-ME-Sender: <xms:Di84XqpXYxZMELaRk04HUTZm9NHN_KOV8aBBX8CMmRuAVBKctR0KVg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeejgdeigecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppedutdegrddufedvrdeghedrle
+    elnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:Di84XjK3grCZy77gWAA6kdg6_1Ss_WliCBZWb9E_jht_IrnA_hIz3w>
+    <xmx:Di84XsKJfBy5uGKmA1wLtLu-K1tPTmjycah1esfDzv-IvY221vTnKQ>
+    <xmx:Di84Xsm6D1vgV6651xG1lgonpuB82Guy32jcgrBxL_0nRj8W8Xf6nQ>
+    <xmx:Di84XuYQxHkaQ7Cf3f8u6I4zZl4KF33PHopm_Mx9xK-f-GQJh51iVg>
+Received: from localhost (unknown [104.132.45.99])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3919D3060272;
+        Mon,  3 Feb 2020 09:32:46 -0500 (EST)
+Date:   Mon, 3 Feb 2020 14:32:45 +0000
+From:   Greg KH <greg@kroah.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] media: si470x-i2c: Move free() past last use of
+ 'radio'
+Message-ID: <20200203143245.GA3220000@kroah.com>
+References: <20200203132130.12748-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200202093702.cdlyytywty7hk3rn@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200203132130.12748-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 03, 2020 at 01:21:30PM +0000, Lee Jones wrote:
+> A pointer to 'struct si470x_device' is currently used after free:
+> 
+>   drivers/media/radio/si470x/radio-si470x-i2c.c:462:25-30: ERROR: reference
+>     preceded by free on line 460
+> 
+> Shift the call to free() down past its final use.
+> 
+> NB: Not sending to Mainline, since the problem does not exist there.
 
---iFRdW5/EC4oqxDHL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It doesn't exist there because of a bad merge?  What commit caused the
+problem?
 
-On Sun, Feb 02, 2020 at 10:37:02AM +0100, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> cgroup_post_fork() is called past the point of no return for fork and
-> cgroup_css_set_put_fork() is explicitly documented as only being
-> callable before forks point of no return:
-I missed this and somehow incorrectly assumed it's called at the end of
-fork too. I find the css_set refcounting correct now.
+thanks,
 
-BTW any reason why not to utilize cgroup_css_set_put_fork() for the
-regular cleanup in cgroup_post_fork() too?
-
-Thanks,
-Michal
-
---iFRdW5/EC4oqxDHL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl44LvcACgkQia1+riC5
-qSih0g//dEMA5UJIbc+0y7DXE9E+SiqXkYhkYbIoloeRHoNZZnwezyhercYrcOya
-1yJzJ0H9zz9i3gQ3A5VE/Aqp9/gqjRakmtpLg3HNFO7gEFv3l9Mn5YwP0HEWIa3v
-BOCCmdKlCFjMl41ZqsHjqnFYpNosVV/NP946BsTdN3zmDpRHLZLMTPz06CGrfvoB
-vxE1Rbwn155YhwSmTQc2jBEhswXCs1LR7Y992a4aTOcvtTDGJafX3B4hbEPjQsRs
-aIjE1nbF/WB0giyfyw6UjBt+VI/1DYh9+wHNrbctlCufSi+r+ideubGqH027vgnb
-UNynOqSoBOcTdbI7O7ON69Ir7eB9itrsEGp6H+SqBMqPrxt8ZaVTjA6EFKrX99ST
-ypg27IRkSSufIk9JMnIBCMOAXmU2SxlCJk5imkyS8ghOoZcI9VlnS4jDh5IHlSm+
-25L9thnO+QjtfGXYQhtddSPBYTa5tdN23/SigWvuvumWBOMEIpBqxndH4gv658Lz
-vo4OnmpAWuT400Tt/YZF1HX0gCDWLPlYz+nA9VXn7aMyzMPZdIVqjFAuY35OXZyF
-8mwQdWPdyKeOXjfbQoiSqbTsR/mEDGUCbbf5v+bxI2vvJsBz+otzUGT8MKqPEC6c
-lFvB9fnlI7rZ1x4lCoy+fqtIJfoLvuZq9pSx38U/O20H3siWH08=
-=Y692
------END PGP SIGNATURE-----
-
---iFRdW5/EC4oqxDHL--
+greg k-h
