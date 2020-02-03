@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CE9C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F82DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A480321582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF872080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747353;
-	bh=nbVpVw4p1VfuJ7QN8lurRGFg/BN8CBl5Bc8vLSaxQwY=;
+	s=default; t=1580747357;
+	bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wNK9gnFrMvQNHTuaAB6U1kPNIvWZmA6VolEWBwuDMeqNe/Ok5fgrmN+rxLU9Jux3z
-	 9ryuQVf8PsKhthQZcBg+hbIvttURtLTBpCUDlW0u1Hbj3Zg8dYUCUNRtIK+jALqLEr
-	 bja2oKAAmmg33IhX1jnOKoKXj6o9p3b0nd5dboug=
+	b=vJJc3S5yc4m/YqMfajdJHxiayVdZNo8O9N+Ki84e5yHCaR/GjbQtcGwrs9BIAhfwK
+	 cHTEfHwr9wgwrMPBUXpT6WTAwbC4R/vdB+AgW9Y04OytYu1Sgze8o8DW78MGQWH6wo
+	 D4h0oWGPGx0f0txJllqc/rmb7rZoy6vBuJ+jMVVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgBCQ3N (ORCPT
+        id S1729757AbgBCQ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41074 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729734AbgBCQ3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:11 -0500
+        id S1729734AbgBCQ3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:14 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA1D92080C;
-        Mon,  3 Feb 2020 16:29:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC2620838;
+        Mon,  3 Feb 2020 16:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747351;
-        bh=nbVpVw4p1VfuJ7QN8lurRGFg/BN8CBl5Bc8vLSaxQwY=;
+        s=default; t=1580747353;
+        bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rj9dmXNHPCVFpeP4h1Di+GXIZJdMa3u7R58PaWxYO78GDl+kRr/wod3MlTcY2bq0X
-         nJHISJ4RqOMQ4KwBtPZYhh0tgBC7HL2lJMaS9mdYSWAjM/nsdYrHTicYMTBMSr1jx0
-         ira56NUWOBSagGCgY6qrUVyPWQ70OVTuX310tY4Y=
+        b=LbsZqPZFD7sePRVKDmCVj6EPDDYTN0ii/idxC2450Nw3J1q9c7bvT5elaVgUPrUoz
+         Dts9mErRmO4Ue25gsXTyV+v09OGvAf5zurSvl+OmyowQWqcIIaeG5vEdTAjKRQBKRi
+         YKEmOYjuXtC2v8+8vV6/yLr1Nn+rKXwz4rm57BBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        syzbot+32310fc2aea76898d074@syzkaller.appspotmail.com,
-        syzbot+99706d6390be1ac542a2@syzkaller.appspotmail.com,
-        syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 47/89] media: gspca: zero usb_buf
-Date:   Mon,  3 Feb 2020 16:19:32 +0000
-Message-Id: <20200203161923.290659014@linuxfoundation.org>
+        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 48/89] media: dvb-usb/dvb-usb-urb.c: initialize actlen to 0
+Date:   Mon,  3 Feb 2020 16:19:33 +0000
+Message-Id: <20200203161923.396965402@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -64,40 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit de89d0864f66c2a1b75becfdd6bf3793c07ce870 upstream.
+commit 569bc8d6a6a50acb5fcf07fb10b8d2d461fdbf93 upstream.
 
-Allocate gspca_dev->usb_buf with kzalloc instead of kmalloc to
-ensure it is property zeroed. This fixes various syzbot errors
-about uninitialized data.
+This fixes a syzbot failure since actlen could be uninitialized,
+but it was still used.
 
-Syzbot links:
+Syzbot link:
 
-https://syzkaller.appspot.com/bug?extid=32310fc2aea76898d074
-https://syzkaller.appspot.com/bug?extid=99706d6390be1ac542a2
-https://syzkaller.appspot.com/bug?extid=64437af5c781a7f0e08e
+https://syzkaller.appspot.com/bug?extid=6bf9606ee955b646c0e1
 
-Reported-and-tested-by: syzbot+32310fc2aea76898d074@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+99706d6390be1ac542a2@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
 
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Acked-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/gspca.c |    2 +-
+ drivers/media/usb/dvb-usb/dvb-usb-urb.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/gspca/gspca.c
-+++ b/drivers/media/usb/gspca/gspca.c
-@@ -2038,7 +2038,7 @@ int gspca_dev_probe2(struct usb_interfac
- 		pr_err("couldn't kzalloc gspca struct\n");
- 		return -ENOMEM;
- 	}
--	gspca_dev->usb_buf = kmalloc(USB_BUF_SZ, GFP_KERNEL);
-+	gspca_dev->usb_buf = kzalloc(USB_BUF_SZ, GFP_KERNEL);
- 	if (!gspca_dev->usb_buf) {
- 		pr_err("out of memory\n");
- 		ret = -ENOMEM;
+--- a/drivers/media/usb/dvb-usb/dvb-usb-urb.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-urb.c
+@@ -12,7 +12,7 @@
+ int dvb_usb_generic_rw(struct dvb_usb_device *d, u8 *wbuf, u16 wlen, u8 *rbuf,
+ 	u16 rlen, int delay_ms)
+ {
+-	int actlen,ret = -ENOMEM;
++	int actlen = 0, ret = -ENOMEM;
+ 
+ 	if (!d || wbuf == NULL || wlen == 0)
+ 		return -EINVAL;
 
 
