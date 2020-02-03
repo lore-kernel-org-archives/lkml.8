@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FDDC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A042C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C12022B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C814F21741
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747532;
-	bh=LrvctqCs+jpeiY2nmFR4hY+AgvccpecI98ObAdzfOmU=;
+	s=default; t=1580747538;
+	bh=CslaSSQI+Lm9q11vj17D/LgMKJ+dG/2Gb2LaHCRJXVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+xjUdTxnwDRbNd3cXx+mPAwEF9ZOVmuTYckG5xzhGQPU6OWTOVLPMCAzz4RX5aFz
-	 RAuD/PxiqWhdVhFw4IatFhkiHcSLMUiCYy7bThvcVBv9dc+3+eZIhP02TyezliyYoN
-	 rgWm7PCdR47lWsumIQK4sNiP+QVoRL9yuhUv84rw=
+	b=S72kYQEERObVc0Van71ovJb/s6PxZ1gUCGfF1aH3QMyZiazcTBwNiFMbOiqE64fJy
+	 EieJQbLZlZ/WMJOBwufn4t/SvprOGy+3x9MB3by44+jKJhPz6e0t5qe5OkCBrUjMiA
+	 6tab1StIf9yfIIifpAWUJgzbnQbL0KKTsrfWoPCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgBCQcL (ORCPT
+        id S1730399AbgBCQcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbgBCQcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:08 -0500
+        id S1729860AbgBCQcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:13 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7465221927;
-        Mon,  3 Feb 2020 16:32:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F3C21744;
+        Mon,  3 Feb 2020 16:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747527;
-        bh=LrvctqCs+jpeiY2nmFR4hY+AgvccpecI98ObAdzfOmU=;
+        s=default; t=1580747532;
+        bh=CslaSSQI+Lm9q11vj17D/LgMKJ+dG/2Gb2LaHCRJXVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ESNN3nJx6HjSr94U/jhDTbM8Ir3LX2/vK6wGa7Z3mhZKa4cG6JVpZe/AIFgEdn0Y
-         O/v6P2+jtJHYcUzet0TEQXbVVV4NUWJn3xoxyaQGiwJV6np1JwjURrirn77B3qgtDg
-         JljRkYMASKDo9ZjiNTJAfasaOajkktpqqOE0MaFQ=
+        b=wLUv9+uCqVw6X9sGM6S+EyS9swUbECRKcl0x+EWYEEPtlt6/+PfcYTSO8hj25sePe
+         raf9u3Acm9/9slg9Ze7QjmSoYsFiEQHEuyCrzexS8kehEkXP2PXDz7uRvXQqONa9V/
+         s3z6bP9VUjxmp+WoRrik881ZabceqWy1wCaEmztM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/70] clk: sunxi-ng: h6-r: Fix AR100/R_APB2 parent order
-Date:   Mon,  3 Feb 2020 16:19:43 +0000
-Message-Id: <20200203161917.059862972@linuxfoundation.org>
+Subject: [PATCH 4.19 33/70] clk: mmp2: Fix the order of timer mux parents
+Date:   Mon,  3 Feb 2020 16:19:45 +0000
+Message-Id: <20200203161917.321882979@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,51 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 0c545240aebc2ccb8f661dc54283a14d64659804 ]
+[ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
 
-According to the BSP source code, both the AR100 and R_APB2 clocks have
-PLL_PERIPH0 as mux index 3, not 2 as it was on previous chips. The pre-
-divider used for PLL_PERIPH0 should be changed to index 3 to match.
+Determined empirically, no documentation is available.
 
-This was verified by running a rough benchmark on the AR100 with various
-clock settings:
+The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
+thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
+what is going on, ended up just dividing the rate as of
+commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
 
-        | mux | pre-divider | iterations/second | clock source |
-        |=====|=============|===================|==============|
-        |   0 |           0 |  19033   (stable) |       osc24M |
-        |   2 |           5 |  11466 (unstable) |  iosc/osc16M |
-        |   2 |          17 |  11422 (unstable) |  iosc/osc16M |
-        |   3 |           5 |  85338   (stable) |  pll-periph0 |
-        |   3 |          17 |  27167   (stable) |  pll-periph0 |
-
-The relative performance numbers all match up (with pll-periph0 running
-at its default 600MHz).
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/mmp/clk-of-mmp2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-index 8d05d4f1f8a1e..28b84c701a7d2 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-@@ -23,9 +23,9 @@
-  */
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index d083b860f0833..10689d8cd3867 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
+ static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
  
- static const char * const ar100_r_apb2_parents[] = { "osc24M", "osc32k",
--					     "pll-periph0", "iosc" };
-+						     "iosc", "pll-periph0" };
- static const struct ccu_mux_var_prediv ar100_r_apb2_predivs[] = {
--	{ .index = 2, .shift = 0, .width = 5 },
-+	{ .index = 3, .shift = 0, .width = 5 },
- };
+ static DEFINE_SPINLOCK(timer_lock);
+-static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
++static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
  
- static struct ccu_div ar100_clk = {
+ static DEFINE_SPINLOCK(reset_lock);
+ 
 -- 
 2.20.1
 
