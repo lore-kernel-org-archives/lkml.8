@@ -2,115 +2,342 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407DEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5A0C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED6B2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE36022464
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgBCRIN (ORCPT
+        id S1728467AbgBCRIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:08:13 -0500
-Received: from verein.lst.de ([213.95.11.211]:56981 "EHLO verein.lst.de"
+        Mon, 3 Feb 2020 12:08:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:56364 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727708AbgBCRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:08:13 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3F48368BFE; Mon,  3 Feb 2020 18:08:09 +0100 (CET)
-Date:   Mon, 3 Feb 2020 18:08:09 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Christoph Hellwig <hch@lst.de>, robh@kernel.org, vigneshr@ti.com,
-        konrad.wilk@oracle.com, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, rogerq@ti.com
-Subject: Re: [PoC] arm: dma-mapping: direct: Apply dma_pfn_offset only when
- it is valid
-Message-ID: <20200203170809.GA19293@lst.de>
-References: <8eb68140-97b2-62ce-3e06-3761984aa5b1@ti.com> <20200114164332.3164-1-peter.ujfalusi@ti.com> <f8121747-8840-e279-8c7c-75a9d4becce8@arm.com> <28ee3395-baed-8d59-8546-ab7765829cc8@ti.com> <4f0e307f-29a9-44cd-eeaa-3b999e03871c@arm.com> <75843c71-1718-8d61-5e3d-edba6e1b10bd@ti.com> <20200130075332.GA30735@lst.de> <b2b1cb21-3aae-2181-fd79-f63701f283c0@ti.com> <20200130164010.GA6472@lst.de> <c37b12e4-0e0c-afa2-a8e4-782ccd57542d@ti.com>
+        id S1727708AbgBCRIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:08:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDFF330E;
+        Mon,  3 Feb 2020 09:08:40 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE0763F52E;
+        Mon,  3 Feb 2020 09:08:38 -0800 (PST)
+Date:   Mon, 3 Feb 2020 17:08:32 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        Lorenzo.Pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        rjw@rjwysocki.net, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+Message-ID: <20200203170832.GA38466@bogus>
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c37b12e4-0e0c-afa2-a8e4-782ccd57542d@ti.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 04:00:20PM +0200, Peter Ujfalusi wrote:
-> I see. My PoC patch was not too off then ;)
-> So the plan is to have a generic implementation for all of the
-> architecture, right?
+On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
+> From: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> If the hierarchical CPU topology is used, but the OS initiated mode isn't
+> supported, we need to rely solely on the regular cpuidle framework to
+> manage the idle state selection, rather than using genpd and its
+> governor.
+>
+> For this reason, introduce a new PSCI DT helper function,
+> psci_dt_pm_domains_parse_states(), which parses and converts the
+> hierarchically described domain idle states from DT, into regular flattened
+> cpuidle states. The converted states are added to the existing cpuidle
+> driver's array of idle states, which make them available for cpuidle.
+>
 
-І don't know of a concrete plan, but that's defintively what I'd like
-to see.
+And what's the main motivation for this if OSI is not supported in the
+firmware ?
 
-> >> The dma_pfn_offset is _still_ applied to the mask we are trying to set
-> >> (and validate) via dma-direct.
-> > 
-> > And for the general case that is exactly the right thing to do, we
-> > just need to deal with really odd ZONE_DMA placements like yours.
-> 
-> I'm still not convinced, the point of the DMA mask, at least how I see
-> it, to check that the dma address can be handled by the device (DMA,
-> peripheral with built in DMA, etc), it is not against physical address.
-> Doing phys_to_dma() on the mask from the dma_set_mask() is just wrong.
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> [applied to new path, resolved conflicts]
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  drivers/cpuidle/cpuidle-psci-domain.c | 137 +++++++++++++++++++++++++++++-----
+>  drivers/cpuidle/cpuidle-psci.c        |  41 +++++-----
+>  drivers/cpuidle/cpuidle-psci.h        |  11 +++
+>  3 files changed, 153 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/cpuidle/cpuidle-psci-domain.c b/drivers/cpuidle/cpuidle-psci-domain.c
+> index 423f03b..3c417f7 100644
+> --- a/drivers/cpuidle/cpuidle-psci-domain.c
+> +++ b/drivers/cpuidle/cpuidle-psci-domain.c
+> @@ -26,13 +26,17 @@ struct psci_pd_provider {
+>  };
+>
+>  static LIST_HEAD(psci_pd_providers);
+> -static bool osi_mode_enabled __initdata;
+> +static bool osi_mode_enabled;
+>
+>  static int psci_pd_power_off(struct generic_pm_domain *pd)
+>  {
+>  	struct genpd_power_state *state = &pd->states[pd->state_idx];
+>  	u32 *pd_state;
+>
+> +	/* If we have failed to enable OSI mode, then abort power off. */
+> +	if ((psci_has_osi_support()) && !osi_mode_enabled)
+> +		return -EBUSY;
+> +
 
-We have a translation between the addresses that the device sees, and
-those that the CPU sees.  The device can address N bits of address space
-as seen from the device.  The addresses encoded in max_pfn,
-zone_dma_bits or the harcoded 32 in the zone dma 32 case are CPU address.
-So no, we can't blindly compare those.
+Why is this needed ? IIUC we don't create genpd domains if OSI is not
+enabled.
 
+>  	if (!state->data)
+>  		return 0;
+>
+> @@ -101,6 +105,105 @@ static void psci_pd_free_states(struct genpd_power_state *states,
+>  	kfree(states);
+>  }
+>
+> +static void psci_pd_convert_states(struct cpuidle_state *idle_state,
+> +			u32 *psci_state, struct genpd_power_state *state)
+> +{
+> +	u32 *state_data = state->data;
+> +	u64 target_residency_us = state->residency_ns;
+> +	u64 exit_latency_us = state->power_on_latency_ns +
+> +			state->power_off_latency_ns;
+> +
+> +	*psci_state = *state_data;
+> +	do_div(target_residency_us, 1000);
+> +	idle_state->target_residency = target_residency_us;
+> +	do_div(exit_latency_us, 1000);
+> +	idle_state->exit_latency = exit_latency_us;
+> +	idle_state->enter = &psci_enter_domain_idle_state;
+> +	idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> +
+> +	strncpy(idle_state->name, to_of_node(state->fwnode)->name,
+> +		CPUIDLE_NAME_LEN - 1);
+> +	strncpy(idle_state->desc, to_of_node(state->fwnode)->name,
+> +		CPUIDLE_NAME_LEN - 1);
+> +}
+> +
+> +static bool psci_pd_is_provider(struct device_node *np)
+> +{
+> +	struct psci_pd_provider *pd_prov, *it;
+> +
+> +	list_for_each_entry_safe(pd_prov, it, &psci_pd_providers, link) {
+> +		if (pd_prov->node == np)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +int __init psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
+> +			struct device_node *cpu_node, u32 *psci_states)
+> +{
+> +	struct genpd_power_state *pd_states;
+> +	struct of_phandle_args args;
+> +	int ret, pd_state_count, i, state_idx, psci_idx;
+> +	u32 cpu_psci_state = psci_states[drv->state_count - 1];
+> +	struct device_node *np = of_node_get(cpu_node);
+> +
+> +	/* Walk the CPU topology to find compatible domain idle states. */
+> +	while (np) {
+> +		ret = of_parse_phandle_with_args(np, "power-domains",
+> +					"#power-domain-cells", 0, &args);
+> +		of_node_put(np);
+> +		if (ret)
+> +			return 0;
+> +
+> +		np = args.np;
+> +
+> +		/* Verify that the node represents a psci pd provider. */
+> +		if (!psci_pd_is_provider(np)) {
+> +			of_node_put(np);
+> +			return 0;
+> +		}
+> +
+> +		/* Parse for compatible domain idle states. */
+> +		ret = psci_pd_parse_states(np, &pd_states, &pd_state_count);
+> +		if (ret) {
+> +			of_node_put(np);
+> +			return ret;
+> +		}
+> +
+> +		i = 0;
+> +		while (i < pd_state_count) {
+> +
+> +			state_idx = drv->state_count;
+> +			if (state_idx >= CPUIDLE_STATE_MAX) {
+> +				pr_warn("exceeding max cpuidle states\n");
+> +				of_node_put(np);
+> +				return 0;
+> +			}
+> +
+> +			psci_idx = state_idx + i;
+> +			psci_pd_convert_states(&drv->states[state_idx + i],
+> +					&psci_states[psci_idx], &pd_states[i]);
+> +
+> +			/*
+> +			 * In the hierarchical CPU topology the master PM domain
+> +			 * idle state's DT property, "arm,psci-suspend-param",
+> +			 * don't contain the bits for the idle state of the CPU,
+> +			 * let's add those here.
+> +			 */
+> +			psci_states[psci_idx] |= cpu_psci_state;
 
-> > But that will cause yet another regression in what we have just fixed
-> > with using the generic direct ops, at which points it turns into who
-> > screams louder.
-> 
-> Hehe, I see.
-> I genuinely curious why k2 platform worked just fine with LPAE (it needs
-> it), but guys had issues with LPAE on dra7/am5.
-> The fix for dra7/am5 broke k2.
-> As far as I can see the main (only) difference is that k2 have
-> dma_pfn_offset = 0x780000, while dra7/am5 have it 0 (really direct mapping).
+No we can't do that. Refer previous discussions around that.
 
-How much memory does the platform have?  Once you are above 32-bits worth
-of address space devices with a 32-bit DMA mask can't address all the
-memory.  Now if k2 for example only had less than 4G of memory, but at
-addresses over 4G, and the offset compensates for the offset of the DRAM
-it works without bounce buffering and thus didn't need swiotlb.  But any
-platform that has DRAM that is not addressable will need swiotlb.
+> +			pr_debug("psci-power-state %#x index %d\n",
+> +				psci_states[psci_idx], psci_idx);
+> +
+> +			drv->state_count++;
+> +			i++;
+> +		}
+> +		psci_pd_free_states(pd_states, pd_state_count);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init psci_pd_init(struct device_node *np)
+>  {
+>  	struct generic_pm_domain *pd;
+> @@ -125,11 +228,14 @@ static int __init psci_pd_init(struct device_node *np)
+>  	 * Parse the domain idle states and let genpd manage the state selection
+>  	 * for those being compatible with "domain-idle-state".
+>  	 */
+> -	ret = psci_pd_parse_states(np, &states, &state_count);
+> -	if (ret)
+> -		goto free_name;
+>
+> -	pd->free_states = psci_pd_free_states;
+> +	if (psci_has_osi_support()) {
+> +		ret = psci_pd_parse_states(np, &states, &state_count);
+> +		if (ret)
+> +			goto free_name;
+> +		pd->free_states = psci_pd_free_states;
+> +	}
+> +
+>  	pd->name = kbasename(pd->name);
+>  	pd->power_off = psci_pd_power_off;
+>  	pd->states = states;
+> @@ -236,10 +342,6 @@ static int __init psci_idle_init_domains(void)
+>  	if (!np)
+>  		return -ENODEV;
+>
+> -	/* Currently limit the hierarchical topology to be used in OSI mode. */
+> -	if (!psci_has_osi_support())
+> -		goto out;
+> -
+>  	/*
+>  	 * Parse child nodes for the "#power-domain-cells" property and
+>  	 * initialize a genpd/genpd-of-provider pair when it's found.
+> @@ -265,14 +367,16 @@ static int __init psci_idle_init_domains(void)
+>  		goto remove_pd;
+>
+>  	/* Try to enable OSI mode. */
+> -	ret = psci_set_osi_mode();
+> -	if (ret) {
+> -		pr_warn("failed to enable OSI mode: %d\n", ret);
+> -		psci_pd_remove_topology(np);
+> -		goto remove_pd;
+> +	if (psci_has_osi_support()) {
+> +		ret = psci_set_osi_mode();
+> +		if (ret) {
+> +			pr_warn("failed to enable OSI mode: %d\n", ret);
+> +			psci_pd_remove_topology(np);
+> +			goto remove_pd;
+> +		} else
+> +			osi_mode_enabled = true;
+>  	}
+>
+> -	osi_mode_enabled = true;
+>  	of_node_put(np);
+>  	pr_info("Initialized CPU PM domain topology\n");
+>  	return pd_count;
+> @@ -293,9 +397,6 @@ struct device __init *psci_dt_attach_cpu(int cpu)
+>  {
+>  	struct device *dev;
+>
+> -	if (!osi_mode_enabled)
+> -		return NULL;
+> -
+>  	dev = dev_pm_domain_attach_by_name(get_cpu_device(cpu), "psci");
+>  	if (IS_ERR_OR_NULL(dev))
+>  		return dev;
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index edd7a54..3fa2aee 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -49,7 +49,7 @@ static inline int psci_enter_state(int idx, u32 state)
+>  	return CPU_PM_CPU_IDLE_ENTER_PARAM(psci_cpu_suspend_enter, idx, state);
+>  }
+>
+> -static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
+> +int psci_enter_domain_idle_state(struct cpuidle_device *dev,
+>  					struct cpuidle_driver *drv, int idx)
+>  {
+>  	struct psci_cpuidle_data *data = this_cpu_ptr(&psci_cpuidle_data);
+> @@ -193,24 +193,29 @@ static int __init psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
+>  		goto free_mem;
+>  	}
+>
+> -	/* Currently limit the hierarchical topology to be used in OSI mode. */
+> -	if (psci_has_osi_support()) {
+> -		data->dev = psci_dt_attach_cpu(cpu);
+> -		if (IS_ERR(data->dev)) {
+> -			ret = PTR_ERR(data->dev);
+> +	if (!psci_has_osi_support()) {
+> +		ret = psci_dt_pm_domains_parse_states(drv, cpu_node,
+> +					      psci_states);
+> +		if (ret)
+>  			goto free_mem;
+> -		}
+> -
+> -		/*
+> -		 * Using the deepest state for the CPU to trigger a potential
+> -		 * selection of a shared state for the domain, assumes the
+> -		 * domain states are all deeper states.
+> -		 */
+> -		if (data->dev) {
+> -			drv->states[state_count - 1].enter =
+> -				psci_enter_domain_idle_state;
+> -			psci_cpuidle_use_cpuhp = true;
+> -		}
+> +	}
+> +
+> +	data->dev = psci_dt_attach_cpu(cpu);
+> +	if (IS_ERR(data->dev)) {
+> +		ret = PTR_ERR(data->dev);
+> +		goto free_mem;
+> +	}
+> +
+> +	/*
+> +	 * Using the deepest state for the CPU to trigger a potential
+> +	 * selection of a shared state for the domain, assumes the
+> +	 * domain states are all deeper states.
+> +	 */
+> +
+> +	if (data->dev) {
+> +		drv->states[state_count - 1].enter =
+> +			psci_enter_domain_idle_state;
+> +		psci_cpuidle_use_cpuhp = true;
+>  	}
+>
+>  	/* Idle states parsed correctly, store them in the per-cpu struct. */
 
-> >  	u64 min_mask;
-> >  
-> > +	if (mask >= DMA_BIT_MASK(32))
-> > +		return 1;
-> > +
-> 
-> Right, so skipping phys_to_dma() for the mask and believing that it will
-> work..
-> 
-> It does: audio and dmatest memcpy tests are just fine with this, MMC
-> also probed with ADMA enabled.
-> 
-> As far as I can tell it works as well as falling back to the old arm ops
-> in case of LPAE && dma_pfn_offset != 0
-> 
-> Fwiw:
-> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
-> Would you be comfortable to send this patch for mainline with
-> Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE
-> configs")
-
-That is the big question.  I don't feel overly comfortable as I've been
-trying to get this right, but so far it seems like the least bad option.
-I'll send out a proper patch with updated comments and will see what
-people think.
+--
+Regards,
+Sudeep
