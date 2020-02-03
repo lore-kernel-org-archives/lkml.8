@@ -2,131 +2,144 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AC0C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67073C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC10B20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2932080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580731464;
-	bh=l2FolLNsrlh79jFQWj3FW2azWnfnrgN1DwF/om8qIv8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MISxpLz8NfT4uIcbNQbQXGIvhtbQau6KvAxqTID2vpFNJmMxzKMs5AB1cxOZztphF
-	 TYJ9HFUilW5o8G66f/idggvnUZmKpqt8op4dOlYGVSkpR+yZgPtubMCNxsiVH8YNYN
-	 kO3mrc1XsBBIiJTvpmDMwWNFkolE3wYBUXsjhvG0=
+	s=default; t=1580731577;
+	bh=vnn82KcbotB7/xfbRr6QfN6dXQw+T6QofF8EKBGZlOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eHmPXinV8xz73Rc9Mo+8esY12RZ+SdKvWnNoM8IXfCwKvNpD1+0cvR+2hzy6mkXE6
+	 S4QfTgO+TzmYpby/bJo7N87lg/fZ2v4ecE2DFdb1ceXC9FJWszzW4bk1L57hB8a0gM
+	 Voyb7nmg5+mPB1hw1iwrthqY/PYyGgW9xNDn5lRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBCMEX (ORCPT
+        id S1727792AbgBCMGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:04:23 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:46919 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbgBCMEW (ORCPT
+        Mon, 3 Feb 2020 07:06:16 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54353 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbgBCMGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:04:22 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 013C4DAC003983;
-        Mon, 3 Feb 2020 21:04:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 013C4DAC003983
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580731454;
-        bh=HXRjoh3tOmENbndDq09lfWq2QoDEVUfSfWRoeiU288s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e8PBNT7o1EaIV1x6R3c1IE8A6VV9NkPXWPVNzS/JYRKWLbmSHR9q0vUiu75zrup1g
-         MCgm4kkmhlRSZcn+r3y3VXRFluNpLWYsVIEmW+dixJht3ks4ghMAkd3yjox3yi6Svm
-         wH6P4OVpHGO6E7hBQ7L+MJTVN6pRsSMVTW8ddmrnfqA59faoAyW+7+zncSueYlQKej
-         N2yueC0BhY0BlUDA0jzYcoRpWkHvTEFZZX7+RNgBfliTb3U+rW/um6LMpaSJKPxra1
-         tQVYKF9z7u7nG14BAivKMDuZVZN4wmUhdWEhwLtU90ciqugIC9AOUJESoRcRNpRs/w
-         knULWhzxRK7tg==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id r18so8726128vso.5;
-        Mon, 03 Feb 2020 04:04:13 -0800 (PST)
-X-Gm-Message-State: APjAAAVdpb2P8+X6k50iyl7KGhcSiatQSLxpew5JXLupjjzCtvqMp5+K
-        A1FhCLBnjhxLo9RA/tVGKn8p9RjWHNwiE/hl7ms=
-X-Google-Smtp-Source: APXvYqynB2Rt8g+qb3LtFb7NupXFI56oEbUDrTHHiNxSyMsveD8dUomebpR+eC7PVuv/cz22AzjrpSJAxu9V2G/jvpI=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr14543979vsq.215.1580731452812;
- Mon, 03 Feb 2020 04:04:12 -0800 (PST)
+        Mon, 3 Feb 2020 07:06:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g1so15564413wmh.4;
+        Mon, 03 Feb 2020 04:06:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qk2Jt3O1erIU7dk9h6hySa8WTi0Ubkco0XQalim8jms=;
+        b=CE7tCvhl/y7wecdqEHnmgytH9yeu3Ya1/fULl4Yx1GNjCeYENmrF5/32BF3NO4wLXR
+         4uyAyIVKH0grZyW4ccawak3YHuMON/5SHg9N16zG5G1CUlViI65YN6KNGyH9ciLAIy6z
+         gMsWPg1sMP8AJ3Xnvr8Xf1PtxDifN68+LEHkcDhTQLH39U0Ph4Tq1Zjg88fso5qq5zgY
+         YlkmJOmBYyUXotmMkrBHmQ7ZhOGEYL2Pp7HZqIcDx6Nh6jPqU5up/xsFJpVz0WSmY6Q8
+         uq9lfCEmepei9GqDRJDR8vhju4zivSviFY+p06jFTzB0ga2/z+PGKDigbSW+GV6TNC78
+         yyJQ==
+X-Gm-Message-State: APjAAAXrZCq/t1YbDqEhRiEVXD5Cj1rhO2S4EV+2WMs268aJYGNgNMi/
+        S2dsHVj4PeM00fGwdoNADg==
+X-Google-Smtp-Source: APXvYqx7nsm5FWekL3BKJELtK3DXarxIJmSasrulMuL/e1k/RgaRA6fRJdz1qpC/FrkmEVy7vvzz8A==
+X-Received: by 2002:a1c:9c52:: with SMTP id f79mr28804908wme.30.1580731573508;
+        Mon, 03 Feb 2020 04:06:13 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.163])
+        by smtp.gmail.com with ESMTPSA id b11sm9698643wrx.89.2020.02.03.04.06.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 04:06:12 -0800 (PST)
+Received: (nullmailer pid 28482 invoked by uid 1000);
+        Mon, 03 Feb 2020 12:06:10 -0000
+Date:   Mon, 3 Feb 2020 12:06:10 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org, catalin.marinas@arm.com,
+        mark.rutland@arm.com, davem@davemloft.net, mkl@pengutronix.de,
+        wg@grandegger.com, sriram.dash@samsung.com, nm@ti.com,
+        t-kristo@ti.com
+Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
+ stb-gpios
+Message-ID: <20200203120610.GA9303@bogus>
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+ <20200122080310.24653-2-faiz_abbas@ti.com>
+ <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
+ <8fc7c343-267d-c91c-0381-60990cfc35e8@ti.com>
+ <f834087b-da1c-88a0-93fe-bc72c8ac71ff@ti.com>
+ <57baeedc-9f51-7b92-f190-c0bbd8525a16@ti.com>
 MIME-Version: 1.0
-References: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
- <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
- <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com> <CAHk-=wi2=8tYULPzHNZXLcMYr-zPpMchfhy4nyTjLBpvH5yHhg@mail.gmail.com>
-In-Reply-To: <CAHk-=wi2=8tYULPzHNZXLcMYr-zPpMchfhy4nyTjLBpvH5yHhg@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 3 Feb 2020 21:03:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARA9GmCE3fr4JiHKNBMnQ_D0yik2UHtPHXq621J8_satQ@mail.gmail.com>
-Message-ID: <CAK7LNARA9GmCE3fr4JiHKNBMnQ_D0yik2UHtPHXq621J8_satQ@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <57baeedc-9f51-7b92-f190-c0bbd8525a16@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jan 23, 2020 at 01:09:41PM +0530, Faiz Abbas wrote:
+> Hi,
+> 
+> On 22/01/20 8:04 pm, Dan Murphy wrote:
+> > Sekhar
+> > 
+> > On 1/22/20 8:24 AM, Sekhar Nori wrote:
+> >> On 22/01/20 7:05 PM, Dan Murphy wrote:
+> >>> Faiz
+> >>>
+> >>> On 1/22/20 2:03 AM, Faiz Abbas wrote:
+> >>>> The CAN transceiver on some boards has an STB pin which is
+> >>>> used to control its standby mode. Add an optional property
+> >>>> stb-gpios to toggle the same.
+> >>>>
+> >>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> >>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> >>>> ---
+> >>>>    Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
+> >>>>    1 file changed, 2 insertions(+)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt
+> >>>> b/Documentation/devicetree/bindings/net/can/m_can.txt
+> >>>> index ed614383af9c..cc8ba3f7a2aa 100644
+> >>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+> >>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> >>>> @@ -48,6 +48,8 @@ Optional Subnode:
+> >>>>                  that can be used for CAN/CAN-FD modes. See
+> >>>>                
+> >>>> Documentation/devicetree/bindings/net/can/can-transceiver.txt
+> >>>>                  for details.
+> >>>> +stb-gpios        : gpio node to toggle the STB (standby) signal on
+> >>>> the transceiver
+> >>>> +
+> >>> The m_can.txt is for the m_can framework.  If this is specific to the
+> >>> platform then it really does not belong here.
+> >>>
+> >>> If the platform has specific nodes then maybe we need a
+> >>> m_can_platform.txt binding for specific platform nodes.  But I leave
+> >>> that decision to Rob.
+> >> Since this is transceiver enable, should this not be in
+> >> Documentation/devicetree/bindings/net/can/can-transceiver.txt?
+> > 
+> 
+> The transceiver node is just a node without an associated device. I had
+> tried to convert it to a phy implementation but that idea got shot down
+> here:
+> 
+> https://lore.kernel.org/patchwork/patch/1006238/
 
+Nodes and drivers are not a 1-1 thing. Is the transceiver a separate h/w 
+device? If so, then it should be a separate node and properties of that 
+device go in its node. Also, nothing is stopping you from using the PHY 
+binding without using the kernel's PHY framework.
 
-On Mon, Feb 3, 2020 at 8:07 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
->
->
-> On Mon, Feb 3, 2020, 01:16 Masahiro Yamada <masahiroy@kernel.org> wrote:
->>
->>
->> Generally, initramfs is passed from a boot-loader,
->> but some architectures embed initramfs into vmlinux
->> (perhaps due to poor boot-loader support??)
->
->
-> You didn't answer my real question.
->
-> Why do we give the user the choice, when it doesn't matter, and the user doesn't care?
+As to whether it should be a separate phy driver, I think probably the 
+wrong decision was made. We always seem to start out with no PHY on 
+these things and the complexity just grows until we need one. 
 
-I do not want that commit simply reverted.
-
-Please let me clarify what you want to see:
-
-[1] Remove this choice completely ?
-    The build system will choose the best one.
-    For example, CONFIG_RD_XZ  is enabled,
-    '.xz' is _always_ preferred choice over '.gz'
-
-
-[2] Hide this choice unless INITRAMFS_SOURCE!=""
-
-    As Geert mentioned, we still could save
-    a little more data size, but we assume
-    people would not care about hundreds bytes.
-
-
-Which one ?
-
-
-[2] was the previous behavior.
-I think you are complaining
-because you noticed a new prompt showed up.
-
-
-> The argument for the commit was "it's simpler".
->
-> But that is simply not *true*.
->
-> It's simpler only technically. It's more complexity for the only party that matters: the user.
->
-> So I'm likely going to just revert that commit as incorrect and misleading. It's not simpler at all. It's more complex.
->
-> The configuration code should care about the user interface more than it seems to do. Some complexity in order to make for less pointless questions is food m good.
->
->        Linus
-
-
-
---
-Best Regards
-Masahiro Yamada
+Rob
