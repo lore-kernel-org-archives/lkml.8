@@ -2,172 +2,139 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF51C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450BFC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7D0218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C45820838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arangodb.com header.i=@arangodb.com header.b="fl1ZYh0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgBCPPa (ORCPT
+        id S1728291AbgBCPQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:15:30 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729062AbgBCPP3 (ORCPT
+        Mon, 3 Feb 2020 10:16:57 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53508 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBCPQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:15:29 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013FCwGH029343;
-        Mon, 3 Feb 2020 10:15:09 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xxhfahuk8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 10:15:08 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 013FEtRo002103;
-        Mon, 3 Feb 2020 15:15:08 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 2xw0y6e89g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 15:15:07 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 013FF6wf45220128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Feb 2020 15:15:06 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F4216BE05A;
-        Mon,  3 Feb 2020 15:15:05 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F0DCBE05B;
-        Mon,  3 Feb 2020 15:15:04 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.115.135])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Feb 2020 15:15:04 +0000 (GMT)
-Subject: Re: [PATCH] security/integrity: Include __func__ in messages for
- easier debug
-To:     Joe Perches <joe@perches.com>,
-        Shuah Khan <skhan@linuxfoundation.org>, jmorris@namei.org,
-        serge@hallyn.com, mpe@ellerman.id.au, zohar@linux.ibm.com,
-        erichte@linux.ibm.com, nayna@linux.ibm.com, yuehaibing@huawei.com
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200130020129.15328-1-skhan@linuxfoundation.org>
- <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <79d7b969-9b7d-7853-356b-876e444d3390@linux.vnet.ibm.com>
-Date:   Mon, 3 Feb 2020 10:15:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 3 Feb 2020 10:16:55 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s10so16345390wmh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:16:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arangodb.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oDRH5we1LRYr69H/g74BFyb9GhUUuAeUSoG8mXyHu3Y=;
+        b=fl1ZYh0CUf3sMGtHtJIdJafqlYKLZsSI1uu6QurSiwRuCTiVJqh9V0cgqfAZkuYn2S
+         fXV9TTePcAwikD+BC5HR6ZHhzT00wtG+qlrpBQ2Wdn5vUqVy6Bx+g7R5fa+HziqZ6Odm
+         llpf1Jt1DT8yD9+pX8BwrZtNhPoh7hpgfOtBrMgiKpA8nf5H9XBIXmfw1qg0KprYgfSw
+         IBVnql47upOCp2D8yO/F4lG3svM0wg5RwmuIrl8ppeivODqmrlpuUvzvK5KqqjYbd3kW
+         26nq1Ky+W7oW6Mw2INas3fWVOddwxEeg3PyU7BuMHtzNm7TMmEejgAjkYnbaKw7H/oFC
+         q8Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oDRH5we1LRYr69H/g74BFyb9GhUUuAeUSoG8mXyHu3Y=;
+        b=WjjbYFSlHYi/mr9Vu8dQBSLvh+H9a6YcR1qFbYc/TIbQjj245+XdyefmXTfQ4AKTPR
+         gseGiMEO5g/pgLVtVZoRIaYpc3KhdDPMQOcN7h94Tnydk6GHOpuo0Eh5/mM3GD1mG+FV
+         dEtHZozg/qcLzXJCqgAnuoR1+L+gyLwGUJ8sns5nKLLwrrqnZZeIac4E++xH2xzFK5mK
+         jP11IPbpbTM1EgagLgD0zF2J1GiCeKQ6GF0rKtf4WAoNAI80MefFTSiTXTZb6iCbzoCv
+         x15qiIaeOEsy/n+/ZTo92LdlJ1s0cWZDC/SfvhRgLPYPd5392uWjbvwo6r5oRZ5+D30i
+         f2sw==
+X-Gm-Message-State: APjAAAVzchnbu1EwCwvvRe4Meh+kc80skLrNFIOG5TEco5bAFinjP5qX
+        0eAr8dn4aIoUiITX8c6jkBYg
+X-Google-Smtp-Source: APXvYqy9zJqEX1AE9F9FSyxmUYx5bGNX2475G5HyDwL44k6DUQVwT9KWcQDJJvYA7H0B4qM5xdkivw==
+X-Received: by 2002:a7b:c651:: with SMTP id q17mr31280131wmk.5.1580743013835;
+        Mon, 03 Feb 2020 07:16:53 -0800 (PST)
+Received: from localhost (static-85-197-33-87.netcologne.de. [85.197.33.87])
+        by smtp.gmail.com with ESMTPSA id z19sm22877844wmi.43.2020.02.03.07.16.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 07:16:53 -0800 (PST)
+Date:   Mon, 3 Feb 2020 16:15:36 +0100
+From:   Max Neunhoeffer <max@arangodb.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>
+Subject: Re: epoll_wait misses edge-triggered eventfd events: bug in Linux
+ 5.3 and 5.4
+Message-ID: <20200203151536.caf6n4b2ymvtssmh@tux>
+References: <20200131135730.ezwtgxddjpuczpwy@tux>
+ <20200201121647.62914697@cakuba.hsd1.ca.comcast.net>
 MIME-Version: 1.0
-In-Reply-To: <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_04:2020-02-02,2020-02-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- phishscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 clxscore=1011 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002030114
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201121647.62914697@cakuba.hsd1.ca.comcast.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dear Jakub and all,
 
-On 1/29/20 10:08 PM, Joe Perches wrote:
-> On Wed, 2020-01-29 at 19:01 -0700, Shuah Khan wrote:
->> Change messages to messages to make it easier to debug. The following
->> error message isn't informative enough to figure out what failed.
->> Change messages to include function information.
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
->>   security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
->>   2 files changed, 18 insertions(+), 13 deletions(-)
->>
->> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-> perhaps instead add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> so all the pr_<level> logging is more specific.
->
-> This would prefix all pr_<level> output with "integrity: "
->
-> 3integrity: Couldn't get size: 0x%lx
-> 3integrity: Error reading db var: 0x%lx
-> 3integrity: MODSIGN: Couldn't get UEFI db list
-> 3integrity: Couldn't parse db signatures: %d
-> 6integrity: Couldn't get UEFI MokListRT
-> 3integrity: Couldn't parse MokListRT signatures: %d
-> 6integrity: Couldn't get UEFI dbx list
-> 3integrity: Couldn't parse dbx signatures: %d
->
-> 5integrity: Platform Keyring initialized
-> 6integrity: Error adding keys to platform keyring %s
->
-> ---
->   security/integrity/platform_certs/load_powerpc.c     | 3 +++
->   security/integrity/platform_certs/load_uefi.c        | 2 ++
->   security/integrity/platform_certs/platform_keyring.c | 2 ++
->   3 files changed, 7 insertions(+)
->
-> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-> index a2900c..5cfbd0 100644
-> --- a/security/integrity/platform_certs/load_powerpc.c
-> +++ b/security/integrity/platform_certs/load_powerpc.c
-> @@ -5,6 +5,9 @@
->    *
->    *      - loads keys and hashes stored and controlled by the firmware.
->    */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
+I have done a git bisect and found that this commit introduced the epoll
+bug:
 
-Looks good. How about slight addition in it as below:
+https://github.com/torvalds/linux/commit/a218cc4914209ac14476cb32769b31a556355b22
 
-#define pr_fmt(fmt) KBUILD_MODNAME ": load_powerpc: " fmt
+I Cc the author of the commit.
 
+This makes sense, since the commit introduces a new rwlock to reduce
+contention in ep_poll_callback. I do not fully understand the details
+but this sounds all very close to this bug.
 
->   #include <linux/kernel.h>
->   #include <linux/sched.h>
->   #include <linux/cred.h>
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> index 111898a..480450a 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -1,5 +1,7 @@
->   // SPDX-License-Identifier: GPL-2.0
->   
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+I have also verified that the bug is still present in the latest master
+branch in Linus' repository.
 
-Similarly...
+Furthermore, Chris Kohlhoff has provided yet another reproducing program
+which is no longer using edge-triggered but standard level-triggered
+events and epoll_wait. This makes the bug all the more urgent, since
+potentially more programs could run into this problem and could end up
+with sleeping barbers.
 
-#define pr_fmt(fmt) KBUILD_MODNAME ": load_uefi: " fmt
+I have added all the details to the bugzilla bugreport:
 
-> +
->   #include <linux/kernel.h>
->   #include <linux/sched.h>
->   #include <linux/cred.h>
-> diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
-> index 7646e35..9bd2846 100644
-> --- a/security/integrity/platform_certs/platform_keyring.c
-> +++ b/security/integrity/platform_certs/platform_keyring.c
-> @@ -6,6 +6,8 @@
->    * Author(s): Nayna Jain <nayna@linux.ibm.com>
->    */
->   
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+  https://bugzilla.kernel.org/show_bug.cgi?id=205933
 
-Same here...
+Hopefully, we can resolve this now equipped with this amount of information.
 
-#define pr_fmt(fmt) KBUILD_MODNAME ": platform_keyring:  " fmt
+Best regards,
+  Max.
 
-Thanks & Regards,
-
-       - Nayna
-
+On 20/02/01 12:16, Jakub Kicinski wrote:
+> On Fri, 31 Jan 2020 14:57:30 +0100, Max Neunhoeffer wrote:
+> > Dear All,
+> > 
+> > I believe I have found a bug in Linux 5.3 and 5.4 in epoll_wait/epoll_ctl
+> > when an eventfd together with edge-triggered or the EPOLLONESHOT policy
+> > is used. If an epoll_ctl call to rearm the eventfd happens approximately
+> > at the same time as the epoll_wait goes to sleep, the event can be lost, 
+> > even though proper protection through a mutex is employed.
+> > 
+> > The details together with two programs showing the problem can be found
+> > here:
+> > 
+> >   https://bugzilla.kernel.org/show_bug.cgi?id=205933
+> > 
+> > Older kernels seem not to have this problem, although I did not test all
+> > versions. I know that 4.15 and 5.0 do not show the problem.
+> > 
+> > Note that this method of using epoll_wait/eventfd is used by
+> > boost::asio to wake up event loops in case a new completion handler
+> > is posted to an io_service, so this is probably relevant for many
+> > applications.
+> > 
+> > Any help with this would be appreciated.
+> 
+> Could be networking related but let's CC FS folks just in case.
+> 
+> Would you be able to perform bisection to narrow down the search 
+> for a buggy change?
