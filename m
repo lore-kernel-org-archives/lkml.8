@@ -2,91 +2,71 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95393C3524B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80783C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9AE205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6113A205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgBCBqI (ORCPT
+        id S1727205AbgBCBto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:46:08 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46746 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgBCBqI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:46:08 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 085A328BEFA
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v6 1/5] unicode: Add standard casefolded d_ops
-Organization: Collabora
-References: <20200128230328.183524-1-drosen@google.com>
-        <20200128230328.183524-2-drosen@google.com>
-Date:   Sun, 02 Feb 2020 20:45:59 -0500
-In-Reply-To: <20200128230328.183524-2-drosen@google.com> (Daniel Rosenberg's
-        message of "Tue, 28 Jan 2020 15:03:24 -0800")
-Message-ID: <85sgjsxx2g.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 2 Feb 2020 20:49:44 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9682 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbgBCBto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:49:44 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BE35A203AA8A78D46FA5;
+        Mon,  3 Feb 2020 09:49:40 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 3 Feb 2020 09:49:30 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yaohongbo@huawei.com>, <chenzhou10@huawei.com>
+Subject: [PATCH -next] nfsd: make nfsd_filecache_wq variable static
+Date:   Mon, 3 Feb 2020 09:43:57 +0800
+Message-ID: <20200203014357.114717-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Rosenberg <drosen@google.com> writes:
+Fix sparse warning:
 
-> diff --git a/include/linux/unicode.h b/include/linux/unicode.h
-> index 990aa97d80496..5de313abeaf98 100644
-> --- a/include/linux/unicode.h
-> +++ b/include/linux/unicode.h
-> @@ -4,6 +4,8 @@
->  
->  #include <linux/init.h>
->  #include <linux/dcache.h>
-> +#include <linux/fscrypt.h>
-> +#include <linux/fs.h>
->  
->  struct unicode_map {
->  	const char *charset;
-> @@ -30,4 +32,19 @@ int utf8_casefold(const struct unicode_map *um, const struct qstr *str,
->  struct unicode_map *utf8_load(const char *version);
->  void utf8_unload(struct unicode_map *um);
->  
-> +int utf8_ci_d_hash(const struct dentry *dentry, struct qstr *str);
-> +int utf8_ci_d_compare(const struct dentry *dentry, unsigned int len,
-> +			  const char *str, const struct qstr *name);
+fs/nfsd/filecache.c:55:25: warning:
+	symbol 'nfsd_filecache_wq' was not declared. Should it be static?
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ fs/nfsd/filecache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't think fs/unicode is the right place for these very specific
-filesystem functions, just because they happen to use unicode.  It is an
-encoding library, it doesn't care about dentries, nor should know how to
-handle them.  It exposes a simple api to manipulate and convert utf8 strings.
-
-I saw change was after the desire to not have these functions polluting
-the VFS hot path, but that has nothing to do with placing them here.
-
-Would libfs be better?  or a casefolding library in fs/casefold.c?
-
-
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 23c1fa5..22e77ed 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -52,7 +52,7 @@ struct nfsd_fcache_disposal {
+ 	struct rcu_head rcu;
+ };
+ 
+-struct workqueue_struct *nfsd_filecache_wq __read_mostly;
++static struct workqueue_struct *nfsd_filecache_wq __read_mostly;
+ 
+ static struct kmem_cache		*nfsd_file_slab;
+ static struct kmem_cache		*nfsd_file_mark_slab;
 -- 
-Gabriel Krisman Bertazi
+2.7.4
+
