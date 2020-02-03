@@ -2,145 +2,158 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE91C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9769C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866C72084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A042420674
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PS8sL4oe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BS2opUho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgBCXna (ORCPT
+        id S1727090AbgBCXpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:43:30 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3739 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgBCXna (ORCPT
+        Mon, 3 Feb 2020 18:45:13 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50243 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgBCXpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:43:30 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e38b0090000>; Mon, 03 Feb 2020 15:43:05 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 15:43:28 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 15:43:28 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 23:43:27 +0000
-Subject: Re: [PATCH v3 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
- reporting
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-11-jhubbard@nvidia.com>
- <20200203135320.edujsfjwt5nvtiit@box>
- <0425e1e6-f172-91df-2251-7583fcfed3e6@nvidia.com>
- <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
- <0a81878a-1f7f-daec-0833-d5b91d197ddf@nvidia.com>
- <aa33fc2c-956b-4197-e418-220198827ce6@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <633e9f2a-8c1c-3efa-517b-05fa521b46b1@nvidia.com>
-Date:   Mon, 3 Feb 2020 15:43:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 3 Feb 2020 18:45:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so508350pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:45:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G6Bxx9TbIG0iY9oRVMNU9c056800TubVW/1xZmxYimU=;
+        b=BS2opUho7qkDJYHP42XaqdEJFYhNQcO6Ijt3iC3262X2h0sS7oHTZDGcTL9gurt+Tx
+         1FUoMi3Em+Mlx04ikIRH2PtuMrayXZNUcYuY0VRxb32QixT6yOzYhP2LL+1KwsYZfyZA
+         mpFHLliKcZAohbuIhHVYk4RKmMNSUGDKZsl3IUAnTEB9b4g4K/JiYNMUljIQq1e8Zlxd
+         vsAVojJsK6FBXa9e+gAJrIXlX9CjlBUPEGecZg7pgfOS/R1XsUIoFcl5l/ptEIy5XQjR
+         mo8wJp+g9+puNFeSBZiOLSO7Yj0Gif/NBFvoUWLO1KACtvDjxqsnW8x/gJyTZ6ozpOea
+         iDfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G6Bxx9TbIG0iY9oRVMNU9c056800TubVW/1xZmxYimU=;
+        b=tPg7howV3CfO/6OWvQSni94iJRYAn4xO/qp951v8OelfJgkMqepBJzbbOWJRZzptya
+         5Zypr9UJuJsl3qqA2uDEEALZEmjJHii+hWB5nH16hIJGFBq0j+CWsKdxyQtnJo/sECP0
+         6jIycbPqvJMUvz0kXpc6pU0bSZjze+6UlQHqcISVEQm1o1oPtlOe0LUhNUkM48XlKMUy
+         8Ow9wPFrQ6JLiFgJvw7PXkk6yS2n+rp4slYEsD6uAbca74BJSs3UFAjCGWzK4kjH59iH
+         HYwUpAkJ+3X20fX4EP0Ttu8gGgqf3Ftge5tPPXxY+BlHlPdYONai9+W4+Z0uh9HnLDW6
+         Rq/g==
+X-Gm-Message-State: APjAAAV/Vgy0yv7q/LA4uUlPh5faK+eJb0afVTd8WNhAzRXq55nUxnAW
+        CUURxREc2or/k6Aaavrc+6aOXg==
+X-Google-Smtp-Source: APXvYqzR84D/Z5QnedxPsJ3+pJD7lDPLfohlOhX1hEdzsbf14l56KWV6lClbPw6RDzHJOgIpOYwHQQ==
+X-Received: by 2002:a17:902:a711:: with SMTP id w17mr8133895plq.152.1580773512589;
+        Mon, 03 Feb 2020 15:45:12 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m12sm21180648pfh.37.2020.02.03.15.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 15:45:11 -0800 (PST)
+Date:   Mon, 3 Feb 2020 15:45:09 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
+        seanpaul@chromium.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 0/9] drm/bridge: ti-sn65dsi86: Improve support for AUO
+ B116XAK01 + other DP
+Message-ID: <20200203234509.GJ311651@builder>
+References: <20191218223530.253106-1-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <aa33fc2c-956b-4197-e418-220198827ce6@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580773385; bh=MChMtAOB97wuw3SDkE4H/wY3+dt35Dw/om3+HvNa0aE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PS8sL4oeNdXk6NMZf0rjaximnIDvEzbbM3ydEc8YenlAP6Xb1EaghIfiTNusMC13o
-         LNhl3qgROKHw+lMkQkiOg+jtNP9jE+DKQjfhWkdceQI6MxwbRvWmPiH2JAkvHLMuBz
-         IaXe5PLRRHF1wQbFZWrZwuxTyqzWYRfIdTfVhXQoh7QeTiF9qJmQ/RXq7PkjrKLw7e
-         KluUq7Lx0S5H1/UuVCIKoRantn2FbhM5vlIuCw8mtvoZexQbV9ycpriQtDpGFc6PX4
-         fpFX/LsPjqRJ1dTDluzz7x+audWmbTFFekMrThs9McZkTGB8cPCFbTKRg/xtZZEgEs
-         K+V9iwIOjjS/w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218223530.253106-1-dianders@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 3:16 PM, John Hubbard wrote:
-> On 2/3/20 1:34 PM, John Hubbard wrote:
->> On 2/3/20 1:30 PM, Kirill A. Shutemov wrote:
->>> On Mon, Feb 03, 2020 at 01:04:04PM -0800, John Hubbard wrote:
->>>> On 2/3/20 5:53 AM, Kirill A. Shutemov wrote:
->>>>> On Fri, Jan 31, 2020 at 07:40:27PM -0800, John Hubbard wrote:
->>>>>> diff --git a/mm/gup.c b/mm/gup.c
->>>>>> index c10d0d051c5b..9fe61d15fc0e 100644
->>>>>> --- a/mm/gup.c
->>>>>> +++ b/mm/gup.c
->>>>>> @@ -29,6 +29,19 @@ struct follow_page_context {
->>>>>>  	unsigned int page_mask;
->>>>>>  };
->>>>>>  
->>>>>> +#ifdef CONFIG_DEBUG_VM
->>>>>
->>>>> Why under CONFIG_DEBUG_VM? There's nothing about this in the cover letter.
->>>>>
->>>>
->>>> Early on, gup_benchmark showed a really significant slowdown from using these 
->>>> counters. And I don't doubt that it's still the case.
->>>>
->>>> I'll re-measure and add a short summary and a few numbers to the patch commit
->>>> description, and to the v4 cover letter.
->>>
->>> Looks like you'll show zeros for these counters if debug is off. It can be
->>> confusing to the user. I think these counters should go away if you don't
->>> count them.
->>>
->>
->> OK, that's a good point. (And in fact, the counters==0 situation already led me
->> astray briefly while debugging with Leon R, even. heh.) I'll remove them entirely for
->> the !CONFIG_DEBUG_VM case.
->>
+On Wed 18 Dec 14:35 PST 2019, Douglas Anderson wrote:
+
+> This series contains a pile of patches that was created to support
+> hooking up the AUO B116XAK01 panel to the eDP side of the bridge.  In
+> general it should be useful for hooking up a wider variety of DP
+> panels to the bridge, especially those with lower resolution and lower
+> bits per pixel.
 > 
-> On second thought, let me do some more careful performance testing. I don't recall
-> now if I was just removing every possible perf slowdown item, when I made this decision.
-> It could be that the perf is not affected, and I could just leave this feature enabled
-> at all times, which would be nicer.
+> The overall result of this series:
+> * Allows panels with fewer than 4 DP lanes hooked up to work.
+> * Optimizes the link rate for panels with 6 bpp.
+> * Supports trying more than one link rate when training if the main
+>   link rate didn't work.
+> * Avoids invalid link rates.
 > 
-> And after all, these counters were designed for pretty hot-path items. I'll report back
-> with results...
+> It's not expected that this series will break any existing users but
+> testing is always good.
+> 
+> To support the AUO B116XAK01, we could actually stop at the ("Use
+> 18-bit DP if we can") patch since that causes the panel to run at a
+> link rate of 1.62 which works.  The patches to try more than one link
+> rate were all developed prior to realizing that I could just use
+> 18-bit mode and were validated with that patch reverted.
+> 
+> These patches were tested on sdm845-cheza atop mainline as of
+> 2019-12-13 and also on another board (the one with AUO B116XAK01) atop
+> a downstream kernel tree.
+> 
+> This patch series doesn't do anything to optimize the MIPI link and
+> only focuses on the DP link.  For instance, it's left as an exercise
+> to the reader to see if we can use the 666-packed mode on the MIPI
+> link and save some power (because we could lower the clock rate).
+> 
+> I am nowhere near a display expert and my knowledge of DP and MIPI is
+> pretty much zero.  If something about this patch series smells wrong,
+> it probably is.  Please let know and I'll try to fix it.
+> 
 
+Thanks for the patches Doug, this fixes the rate and DP lane-count
+issues I'm seeing on my Lenovo Yoga C630 with the current
+implementation.
 
-Sure enough, any perf effects are hidden in the noise. I'll just remove the CONFIG_DEBUG_VM
-checks. Glad you asked about this!
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+Regards,
+Bjorn
 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+> Changes in v3:
+> - Init rate_valid table, don't rely on stack being 0 (oops).
+> - Rename rate_times_200khz to rate_per_200khz.
+> - Loop over the ti_sn_bridge_dp_rate_lut table, making code smaller.
+> - Use 'true' instead of 1 for bools.
+> - Added note to commit message noting DP 1.4+ isn't well tested.
+> 
+> Changes in v2:
+> - Squash in maybe-uninitialized fix from Rob Clark.
+> - Patch ("Avoid invalid rates") replaces ("Skip non-standard DP rates")
+> 
+> Douglas Anderson (9):
+>   drm/bridge: ti-sn65dsi86: Split the setting of the dp and dsi rates
+>   drm/bridge: ti-sn65dsi86: zero is never greater than an unsigned int
+>   drm/bridge: ti-sn65dsi86: Don't use MIPI variables for DP link
+>   drm/bridge: ti-sn65dsi86: Config number of DP lanes Mo' Betta
+>   drm/bridge: ti-sn65dsi86: Read num lanes from the DP sink
+>   drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
+>   drm/bridge: ti-sn65dsi86: Group DP link training bits in a function
+>   drm/bridge: ti-sn65dsi86: Train at faster rates if slower ones fail
+>   drm/bridge: ti-sn65dsi86: Avoid invalid rates
+> 
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 259 +++++++++++++++++++++-----
+>  1 file changed, 216 insertions(+), 43 deletions(-)
+> 
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
