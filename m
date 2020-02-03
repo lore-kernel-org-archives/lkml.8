@@ -2,135 +2,103 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90A2C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C992E2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89092086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blwMci7m"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="D0HqVX8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgBCTmB (ORCPT
+        id S1726928AbgBCTuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:42:01 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51433 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgBCTmB (ORCPT
+        Mon, 3 Feb 2020 14:50:51 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:46299 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgBCTuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:42:01 -0500
-Received: by mail-pj1-f66.google.com with SMTP id fa20so207150pjb.1;
-        Mon, 03 Feb 2020 11:42:01 -0800 (PST)
+        Mon, 3 Feb 2020 14:50:51 -0500
+Received: by mail-qv1-f68.google.com with SMTP id y2so7375973qvu.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:50:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YGczli9kRu4G0EE9ppK/ZW7lnNhHOnn2KrgcFZjo3F4=;
-        b=blwMci7mz2N1tkDktCs7E8urYt8dkZzBulEzDjpsEAoBCH5Tr6zzMpRIR/HoARACOm
-         IG0wWVpsEohRwVOfHGozsf5HfwkcTNg1U37D+ur6vAtJCBa1auwM8OQMrWQk5nrBXUrC
-         9ynCssqpweEyHNU4HKfBZqZD+3jNIODCwtiEwXjMw8rU8I5UhSjWaUGQ1ZfCpPr52B/H
-         YoJCEDGrgrb/NHwfdEJuqBPnN6E/Q1W/1uvwyTkf5Arp4kxLo5djNwsXPjvzWaBlOza3
-         H8EetcxskLdns/GY62bKN9LDERXs/kWH8QxaNtKW9+4/XEYkYiGTQMyN85f0Eheb2cFg
-         Yrgw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JkD/cmKgVjvJlz/chODMXHldUAezWfjEz1crchIilbE=;
+        b=D0HqVX8rRbpc4IzpqW25Gk9bjTIyvGbGYetkvw/RwCmCIqfcOw8EVpr7YFX3GEFZcp
+         6ZS1B2GGkxKcJYrsn+Xq4k6aHTHS+HBr/qCyVhEaLF2AATpxfIJsee+0Nnv+NaAqxC4x
+         N7C9I2+16X32dpCYRt1mBSH53WEUVpouETToOgMfYUQ4UfI4cmiTg7rZEdF7Ao39uKN4
+         4Id4zIGnV7kRpHUY1N7/Bh9XPiy66Vn/GJdDeTicwg77mbZfCttn2TcL3A/sAyUJEDPA
+         yX576BqEXKqfp9KFDDKudOg1ZKdM4xjN6wSxswAZ3PdL6D4REh62T3oDqLyM8TQ22oEz
+         KThQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YGczli9kRu4G0EE9ppK/ZW7lnNhHOnn2KrgcFZjo3F4=;
-        b=CWzFbdeLf5EOdY+Py2HzNOWZ7KHO6zcRFBFErdRL+M1rHAqDvU0wPuYMAa2NJIT1ls
-         CvNIhzhGMAjDbFyjiPjm4J3Ybai+qvYueGDxHBeMAaBHUvln1xetmkbtLj/OAN2y14/A
-         Si5taOJ2MVNwCsx2eZxFnw7V+i//aqSw4/BDKAgi5H4kOtjBqfVt3+7M1CFgH5WbXORL
-         tzIzmxhjTtOXpSKh9tgpiZ0Brh+xwBw0EYaxFCnUf+uzMKaYaZD5yY2/sP/FKJ4b54aW
-         sGmnu+7H+YaIwQvPK15UN3jEl+0efPWAVXTjb+uk9W+AqfFxH4bTOGkQ2KH27UqA5Ycp
-         dn1Q==
-X-Gm-Message-State: APjAAAX3B5BvGXngky7IpzaRXK9w741hFfe/I6J2fnbzcSTXEMz4HPdD
-        1kp/k1Xeiiro4Cn79kGdjBH1Ts8p
-X-Google-Smtp-Source: APXvYqyHBg00+skHe0SQxFojfwHROIQ+ILJSjqjBWz4Bl8u6mjcuR+1vYWCWIwAOx63W1quZyKt4mg==
-X-Received: by 2002:a17:902:7d93:: with SMTP id a19mr24912115plm.283.1580758920688;
-        Mon, 03 Feb 2020 11:42:00 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id x21sm20686309pfn.164.2020.02.03.11.41.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 11:42:00 -0800 (PST)
-Subject: Re: [PATCH] skbuff: fix a data race in skb_queue_len()
-To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
-Cc:     kuba@kernel.org, elver@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580756190-3541-1-git-send-email-cai@lca.pw>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <648d6673-bbd8-6634-0174-f9b77194ecfd@gmail.com>
-Date:   Mon, 3 Feb 2020 11:41:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JkD/cmKgVjvJlz/chODMXHldUAezWfjEz1crchIilbE=;
+        b=INJp59WMypzftY30TnFyDUW2E9TTgKPsAXKkwFWd/ECO9wEZzNiuj3vonaVTBmseWc
+         2PpDyg+sZyPW3F2v3Pdl1sQ+P/91oA1W9KOx2nJ1KJxMrXx+wUo5WuZGC0GOYbIwUmkP
+         uTw759zTULsbVs4XXvz2jJ0d6aUYvtT3f+b7X/dHS1CIk6tOQAKNSqp3ErVtipefeg4S
+         k4bYL+W3r33UY+K5i5EuKxMoYzlAyvoF6fXw+7QVzIgJjd90/ieCzgzdX0PIs4/wpILb
+         RM8xz53U8AOYsLH5w+9uIOsBNAhRpoz6DWX4crvXFT3oakthLonpyLGwqp49qSnLe9Dv
+         BIKw==
+X-Gm-Message-State: APjAAAWi/3vyz6j9aSESe+7X8+dUp/lTqyfs4GMA1seQZLdZ0XUE4qCp
+        b3ZQ6UnvaZyrTkvsqWxwQXN4gA==
+X-Google-Smtp-Source: APXvYqwbuIXO8OPwibdyKO2L/CKGknuXkY8tzebGCWk45IElHKm9B5GgSBi2flYSqXhDle/vy6Y+eQ==
+X-Received: by 2002:a0c:f485:: with SMTP id i5mr24637963qvm.8.1580759450480;
+        Mon, 03 Feb 2020 11:50:50 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:6320])
+        by smtp.gmail.com with ESMTPSA id n4sm10348107qti.55.2020.02.03.11.50.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 11:50:49 -0800 (PST)
+Date:   Mon, 3 Feb 2020 14:50:48 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 21/28] mm: memcg/slab: use a single set of kmem_caches
+ for all memory cgroups
+Message-ID: <20200203195048.GA4396@cmpxchg.org>
+References: <20200127173453.2089565-1-guro@fb.com>
+ <20200127173453.2089565-22-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <1580756190-3541-1-git-send-email-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127173453.2089565-22-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/3/20 10:56 AM, Qian Cai wrote:
-> sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
+On Mon, Jan 27, 2020 at 09:34:46AM -0800, Roman Gushchin wrote:
+> This is fairly big but mostly red patch, which makes all non-root
+> slab allocations use a single set of kmem_caches instead of
+> creating a separate set for each memory cgroup.
 > 
->  BUG: KCSAN: data-race in __skb_try_recv_from_queue / unix_dgram_sendmsg
-> 
->  read to 0xffff8a1b1d8a81c0 of 4 bytes by task 5371 on cpu 96:
->   unix_dgram_sendmsg+0x9a9/0xb70 include/linux/skbuff.h:1821
-> 				 net/unix/af_unix.c:1761
->   ____sys_sendmsg+0x33e/0x370
->   ___sys_sendmsg+0xa6/0xf0
->   __sys_sendmsg+0x69/0xf0
->   __x64_sys_sendmsg+0x51/0x70
->   do_syscall_64+0x91/0xb47
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
->  write to 0xffff8a1b1d8a81c0 of 4 bytes by task 1 on cpu 99:
->   __skb_try_recv_from_queue+0x327/0x410 include/linux/skbuff.h:2029
->   __skb_try_recv_datagram+0xbe/0x220
->   unix_dgram_recvmsg+0xee/0x850
->   ____sys_recvmsg+0x1fb/0x210
->   ___sys_recvmsg+0xa2/0xf0
->   __sys_recvmsg+0x66/0xf0
->   __x64_sys_recvmsg+0x51/0x70
->   do_syscall_64+0x91/0xb47
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Since only the read is operating as lockless, it could introduce a logic
-> bug in unix_recvq_full() due to the load tearing. Fix it by adding
-> a READ_ONCE() there.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  include/linux/skbuff.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index 3d13a4b717e9..4b5157164f3e 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -1818,7 +1818,7 @@ static inline struct sk_buff *skb_peek_tail(const struct sk_buff_head *list_)
->   */
->  static inline __u32 skb_queue_len(const struct sk_buff_head *list_)
->  {
-> -	return list_->qlen;
-> +	return READ_ONCE(list_->qlen);
->  }
+> Because the number of non-root kmem_caches is now capped by the number
+> of root kmem_caches, there is no need to shrink or destroy them
+> prematurely. They can be perfectly destroyed together with their
+> root counterparts. This allows to dramatically simplify the
+> management of non-root kmem_caches and delete a ton of code.
 
-We do not want to add READ_ONCE() for all uses of skb_queue_len()
+This is definitely going in the right direction. But it doesn't quite
+explain why we still need two sets of kmem_caches?
 
-This could hide some real bugs, and could generate slightly less
-efficient code in the cases we have the lock held.
+In the old scheme, we had completely separate per-cgroup caches with
+separate slab pages. If a cgrouped process wanted to allocate a slab
+object, we'd go to the root cache and used the cgroup id to look up
+the right cgroup cache. On slab free we'd use page->slab_cache.
 
-
-
+Now we have slab pages that have a page->objcg array. Why can't all
+allocations go through a single set of kmem caches? If an allocation
+is coming from a cgroup and the slab page the allocator wants to use
+doesn't have an objcg array yet, we can allocate it on the fly, no?
