@@ -2,53 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6A5C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E184DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491502082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAB921927
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747732;
-	bh=wuY22ular1rKxKb63oVD+ukgP8kNjdEQM+Si4zVm7Y4=;
+	s=default; t=1580747734;
+	bh=pYJmhRfn9YOi7piJCSMO3M5A4Rv0EXDHpAb2QRyajSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wZ1tDg2lJwKkqW5doQ/Yr3R8c4kd2v3xdGOAsuVzogA8RKWCvFnaw6SdXzDj48Tn
-	 JDu6vSQXWrzUGq526P/zpJELr2DOsKEnLaAs2910v4Hmx0mhQ+yy6QtDlfFHFXV0La
-	 6rbwOaFvchCDMpFJoEc2VDGn/h8KG/qsZeENY9S8=
+	b=ml/kkmwi3GzqTuMGURH2sq5FEaUt5O824NwELmX4TPNWReXQMEjANY6+V68LjRU7L
+	 DQYIUzffBWnvfXihW388/VTCyes89wiOPlolxKf57pwQaAkua0rUO4KkSIDrLlKOCv
+	 g93itgFpCyszQ8E5WZClFl0gigdjflT772RF/WbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbgBCQfb (ORCPT
+        id S1730647AbgBCQfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50282 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:35:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731039AbgBCQf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:27 -0500
+        id S1730562AbgBCQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:25 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881B32051A;
-        Mon,  3 Feb 2020 16:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C0B92082E;
+        Mon,  3 Feb 2020 16:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747727;
-        bh=wuY22ular1rKxKb63oVD+ukgP8kNjdEQM+Si4zVm7Y4=;
+        s=default; t=1580747724;
+        bh=pYJmhRfn9YOi7piJCSMO3M5A4Rv0EXDHpAb2QRyajSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/RIkl8EJYAZt7xEuMGSlTaM9Lca5lbCta5uzhjMRDscun0I56cascWiAiB+ZtPmN
-         lozrikKroKUSUnBvLkEMFO0UCum4G3IYECh9UyPiiQnN5soSw1LHUitSavMngD+bCv
-         ZmyvR+Noh3vKJ9NNRTdycvtz7q/Pa8GvoDI4o5f4=
+        b=pty0At0YIaezgavdE6EF5bz3UcB90MB9v98frVDoSc0HCJEymx4LlYaZrojqKsbE1
+         RHZo/2M8OIh0FyyEDDF1GXwNAC1HF5ykoNRqP5shwABFuJJBXCY9rNCVNWZ/l4/hHE
+         aV9mLSk/FF4vX1MmoYp0TTe1ap94SWmNNrAwnMwY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ec869945d3dde5f33b43@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 17/90] media: vp7045: do not read uninitialized values if usb transfer fails
-Date:   Mon,  3 Feb 2020 16:19:20 +0000
-Message-Id: <20200203161919.993540310@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Anderson <jasona.594@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 43/90] platform/x86: GPD pocket fan: Allow somewhat lower/higher temperature limits
+Date:   Mon,  3 Feb 2020 16:19:46 +0000
+Message-Id: <20200203161923.329640270@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,64 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 26cff637121d8bb866ebd6515c430ac890e6ec80 upstream.
+[ Upstream commit 1f27dbd8265dbb379926c8f6a4453fe7fe26d7a3 ]
 
-It is not a fatal error if reading the mac address or the remote control
-decoder state fails.
+Allow the user to configure the fan to turn on / speed-up at lower
+thresholds then before (20 degrees Celcius as minimum instead of 40) and
+likewise also allow the user to delay the fan speeding-up till the
+temperature hits 90 degrees Celcius (was 70).
 
-Reported-by: syzbot+ec869945d3dde5f33b43@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Jason Anderson <jasona.594@gmail.com>
+Reported-by: Jason Anderson <jasona.594@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/vp7045.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/platform/x86/gpd-pocket-fan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/dvb-usb/vp7045.c
-+++ b/drivers/media/usb/dvb-usb/vp7045.c
-@@ -96,10 +96,14 @@ static int vp7045_power_ctrl(struct dvb_
+diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
+index 73eb1572b9662..b471b86c28fe8 100644
+--- a/drivers/platform/x86/gpd-pocket-fan.c
++++ b/drivers/platform/x86/gpd-pocket-fan.c
+@@ -127,7 +127,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
+ 	int i;
  
- static int vp7045_rc_query(struct dvb_usb_device *d)
- {
-+	int ret;
- 	u8 key;
--	vp7045_usb_op(d,RC_VAL_READ,NULL,0,&key,1,20);
- 
--	deb_rc("remote query key: %x %d\n",key,key);
-+	ret = vp7045_usb_op(d, RC_VAL_READ, NULL, 0, &key, 1, 20);
-+	if (ret)
-+		return ret;
-+
-+	deb_rc("remote query key: %x\n", key);
- 
- 	if (key != 0x44) {
- 		/*
-@@ -115,15 +119,18 @@ static int vp7045_rc_query(struct dvb_us
- 
- static int vp7045_read_eeprom(struct dvb_usb_device *d,u8 *buf, int len, int offset)
- {
--	int i = 0;
--	u8 v,br[2];
-+	int i, ret;
-+	u8 v, br[2];
- 	for (i=0; i < len; i++) {
- 		v = offset + i;
--		vp7045_usb_op(d,GET_EE_VALUE,&v,1,br,2,5);
-+		ret = vp7045_usb_op(d, GET_EE_VALUE, &v, 1, br, 2, 5);
-+		if (ret)
-+			return ret;
-+
- 		buf[i] = br[1];
- 	}
--	deb_info("VP7045 EEPROM read (offs: %d, len: %d) : ",offset, i);
--	debug_dump(buf,i,deb_info);
-+	deb_info("VP7045 EEPROM read (offs: %d, len: %d) : ", offset, i);
-+	debug_dump(buf, i, deb_info);
- 	return 0;
- }
- 
+ 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
+-		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
++		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+ 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
+ 				temp_limits[i]);
+ 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
+-- 
+2.20.1
+
 
 
