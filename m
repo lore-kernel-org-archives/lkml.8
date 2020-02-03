@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3078C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FF3C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18422082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3667B2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgBCOpd (ORCPT
+        id S1728553AbgBCOp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:45:33 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:44675 "EHLO
+        Mon, 3 Feb 2020 09:45:58 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:53412 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbgBCOpc (ORCPT
+        with ESMTP id S1727406AbgBCOp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:45:32 -0500
+        Mon, 3 Feb 2020 09:45:58 -0500
 Received: from [172.20.10.2] (x59cc8b15.dyn.telefonica.de [89.204.139.21])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 9041BCED19;
-        Mon,  3 Feb 2020 15:54:51 +0100 (CET)
+        by mail.holtmann.org (Postfix) with ESMTPSA id 494FDCED19;
+        Mon,  3 Feb 2020 15:55:17 +0100 (CET)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v3 1/2] Bluetooth: hci_qca: Enable clocks required for BT
- SOC
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip WCN3991
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
-Date:   Mon, 3 Feb 2020 15:45:29 +0100
+In-Reply-To: <1580726441-1100-2-git-send-email-gubbaven@codeaurora.org>
+Date:   Mon, 3 Feb 2020 15:45:55 +0100
 Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         Matthias Kaehlcke <mka@chromium.org>,
         linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
@@ -39,8 +39,9 @@ Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
         yshavit@google.com, devicetree@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-Message-Id: <FA485B40-588D-4C3F-814A-1B22ECB24853@holtmann.org>
+Message-Id: <38D4ADDE-D1EF-4F5E-B72C-5F5F713CD8BB@holtmann.org>
 References: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
+ <1580726441-1100-2-git-send-email-gubbaven@codeaurora.org>
 To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,19 +51,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Venkata,
 
-> Instead of relying on other subsytem to turn ON clocks
-> required for BT SoC to operate, voting them from the driver.
+> Add compatible string for the Qualcomm WCN3991 Bluetooth controller
 > 
 > Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 > ---
 > v3:
->  *Removed the function qca_setup_clock() 
->  *For enabling and disabling clocks, directly called the functions 
->   clk_prepare_enable and clk_disable_unprepare respectively. 
-> 
+>  *Updated clocks with <&rpmhcc RPMH_RF_CLK2>  
 > ---
-> drivers/bluetooth/hci_qca.c | 16 ++++++++++++++++
-> 1 file changed, 16 insertions(+)
+> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 3 +++
+> 1 file changed, 3 insertions(+)
 
 patch has been applied to bluetooth-next tree.
 
