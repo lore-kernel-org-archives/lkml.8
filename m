@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7EAC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D35C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ABD2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2AD2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748412;
-	bh=5+irEPlmqi6WCyY1yB5qmS3DAHsbtHGhPpk/PzwxTlQ=;
+	s=default; t=1580748414;
+	bh=OYhRKsrZdpXPoMn4YGg/2jHoYhmW/8OmBmtQ7ugCHHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lj/sUWnVn4aHgzV7no9GlDsIj3jGxOyt2bcgH0+8zZvNbjeerPGmbZfgDVN/oJe5V
-	 Iev/qHXaHLykpHRSCutKKU4i4UBTWM4WNXe+G86+wL77SNYrRStPixeu3mKcRrL6sD
-	 7an+1/KH6J3xdgVJnavvLkmDL8p1q2q/MQxHx9aA=
+	b=XPq1QdzrussyF6DbZuwsx1IdjVuDn5Om3E/TOv41RZjW73pPXH9j8Z8mPaZDRiZzg
+	 vWI0G/WuTIIJhKPXLBi07iy2utCcQTQDhK86CjlLcuGVwnbNe69EHlnruDOsI+wVNy
+	 fXHiAY6UDVxpVGTebC9HsnsxBOXtEUPAPe+AtOnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbgBCQqu (ORCPT
+        id S1731288AbgBCQqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:46:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:46:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbgBCQ2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:12 -0500
+        id S1729500AbgBCQ2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:10 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5812520CC7;
-        Mon,  3 Feb 2020 16:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F08A02080C;
+        Mon,  3 Feb 2020 16:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747291;
-        bh=5+irEPlmqi6WCyY1yB5qmS3DAHsbtHGhPpk/PzwxTlQ=;
+        s=default; t=1580747289;
+        bh=OYhRKsrZdpXPoMn4YGg/2jHoYhmW/8OmBmtQ7ugCHHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LO6Y/SplILWKu190fgZEWCZKMWU3LLO8Ic+BgbOM1Z2xYX9pZHnbrROXPqPEmJJds
-         xG8zuIK60VlL/ogkn84Wl7GLUCn3nmmmp6gNLlR3LKklvQpF2V2NVSBvtTyZnlYxr9
-         DIB2Hp+Jz8ATzfCc7tZ6igKUzN8IIo9MvXfMYYmo=
+        b=jtGvWVBOd0pFvPp1xu1VEIhc4zCdtKK8krN81rY1YcvoLoxU6q1TyKGd649KKfWZp
+         aaT53mqfNFBFstJTKVucnIgNEh+uLK2ZHqcEWV+aW0Rrb96Bpnw+YFRRJ5tSKUyilR
+         4Nr9n7Ht6pO6ukonmtXaO5FjbWhkqoGp3Iqw27QM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 05/89] USB: serial: ir-usb: fix IrLAP framing
-Date:   Mon,  3 Feb 2020 16:18:50 +0000
-Message-Id: <20200203161917.550343724@linuxfoundation.org>
+        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 04/89] USB: serial: ir-usb: fix link-speed handling
+Date:   Mon,  3 Feb 2020 16:18:49 +0000
+Message-Id: <20200203161917.426212020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,171 +61,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 38c0d5bdf4973f9f5a888166e9d3e9ed0d32057a upstream.
+commit 17a0184ca17e288decdca8b2841531e34d49285f upstream.
 
-Commit f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
-switched to using the generic write implementation which may combine
-multiple write requests into larger transfers. This can break the IrLAP
-protocol where end-of-frame is determined using the USB short packet
-mechanism, for example, if multiple frames are sent in rapid succession.
+Commit e0d795e4f36c ("usb: irda: cleanup on ir-usb module") added a USB
+IrDA header with common defines, but mistakingly switched to using the
+class-descriptor baud-rate bitmask values for the outbound header.
 
-Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
-Cc: stable <stable@vger.kernel.org>     # 2.6.35
+This broke link-speed handling for rates above 9600 baud, but a device
+would also be able to operate at the default 9600 baud until a
+link-speed request was issued (e.g. using the TCGETS ioctl).
+
+Fixes: e0d795e4f36c ("usb: irda: cleanup on ir-usb module")
+Cc: stable <stable@vger.kernel.org>     # 2.6.27
+Cc: Felipe Balbi <balbi@kernel.org>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ir-usb.c |  113 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 91 insertions(+), 22 deletions(-)
+ drivers/usb/serial/ir-usb.c |   20 ++++++++++----------
+ include/linux/usb/irda.h    |   13 ++++++++++++-
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
 --- a/drivers/usb/serial/ir-usb.c
 +++ b/drivers/usb/serial/ir-usb.c
-@@ -49,9 +49,10 @@ static int buffer_size;
- static int xbof = -1;
+@@ -339,34 +339,34 @@ static void ir_set_termios(struct tty_st
  
- static int  ir_startup (struct usb_serial *serial);
--static int  ir_open(struct tty_struct *tty, struct usb_serial_port *port);
--static int ir_prepare_write_buffer(struct usb_serial_port *port,
--						void *dest, size_t size);
-+static int ir_write(struct tty_struct *tty, struct usb_serial_port *port,
-+		const unsigned char *buf, int count);
-+static int ir_write_room(struct tty_struct *tty);
-+static void ir_write_bulk_callback(struct urb *urb);
- static void ir_process_read_urb(struct urb *urb);
- static void ir_set_termios(struct tty_struct *tty,
- 		struct usb_serial_port *port, struct ktermios *old_termios);
-@@ -81,8 +82,9 @@ static struct usb_serial_driver ir_devic
- 	.num_ports		= 1,
- 	.set_termios		= ir_set_termios,
- 	.attach			= ir_startup,
--	.open			= ir_open,
--	.prepare_write_buffer	= ir_prepare_write_buffer,
-+	.write			= ir_write,
-+	.write_room		= ir_write_room,
-+	.write_bulk_callback	= ir_write_bulk_callback,
- 	.process_read_urb	= ir_process_read_urb,
- };
+ 	switch (baud) {
+ 	case 2400:
+-		ir_baud = USB_IRDA_BR_2400;
++		ir_baud = USB_IRDA_LS_2400;
+ 		break;
+ 	case 9600:
+-		ir_baud = USB_IRDA_BR_9600;
++		ir_baud = USB_IRDA_LS_9600;
+ 		break;
+ 	case 19200:
+-		ir_baud = USB_IRDA_BR_19200;
++		ir_baud = USB_IRDA_LS_19200;
+ 		break;
+ 	case 38400:
+-		ir_baud = USB_IRDA_BR_38400;
++		ir_baud = USB_IRDA_LS_38400;
+ 		break;
+ 	case 57600:
+-		ir_baud = USB_IRDA_BR_57600;
++		ir_baud = USB_IRDA_LS_57600;
+ 		break;
+ 	case 115200:
+-		ir_baud = USB_IRDA_BR_115200;
++		ir_baud = USB_IRDA_LS_115200;
+ 		break;
+ 	case 576000:
+-		ir_baud = USB_IRDA_BR_576000;
++		ir_baud = USB_IRDA_LS_576000;
+ 		break;
+ 	case 1152000:
+-		ir_baud = USB_IRDA_BR_1152000;
++		ir_baud = USB_IRDA_LS_1152000;
+ 		break;
+ 	case 4000000:
+-		ir_baud = USB_IRDA_BR_4000000;
++		ir_baud = USB_IRDA_LS_4000000;
+ 		break;
+ 	default:
+-		ir_baud = USB_IRDA_BR_9600;
++		ir_baud = USB_IRDA_LS_9600;
+ 		baud = 9600;
+ 	}
  
-@@ -258,35 +260,102 @@ static int ir_startup(struct usb_serial
- 	return 0;
- }
+--- a/include/linux/usb/irda.h
++++ b/include/linux/usb/irda.h
+@@ -119,11 +119,22 @@ struct usb_irda_cs_descriptor {
+  * 6 - 115200 bps
+  * 7 - 576000 bps
+  * 8 - 1.152 Mbps
+- * 9 - 5 mbps
++ * 9 - 4 Mbps
+  * 10..15 - Reserved
+  */
+ #define USB_IRDA_STATUS_LINK_SPEED	0x0f
  
--static int ir_open(struct tty_struct *tty, struct usb_serial_port *port)
-+static int ir_write(struct tty_struct *tty, struct usb_serial_port *port,
-+		const unsigned char *buf, int count)
- {
--	int i;
-+	struct urb *urb = NULL;
-+	unsigned long flags;
-+	int ret;
- 
--	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i)
--		port->write_urbs[i]->transfer_flags = URB_ZERO_PACKET;
-+	if (port->bulk_out_size == 0)
-+		return -EINVAL;
- 
--	/* Start reading from the device */
--	return usb_serial_generic_open(tty, port);
--}
-+	if (count == 0)
-+		return 0;
- 
--static int ir_prepare_write_buffer(struct usb_serial_port *port,
--						void *dest, size_t size)
--{
--	unsigned char *buf = dest;
--	int count;
-+	count = min(count, port->bulk_out_size - 1);
++#define USB_IRDA_LS_NO_CHANGE		0
++#define USB_IRDA_LS_2400		1
++#define USB_IRDA_LS_9600		2
++#define USB_IRDA_LS_19200		3
++#define USB_IRDA_LS_38400		4
++#define USB_IRDA_LS_57600		5
++#define USB_IRDA_LS_115200		6
++#define USB_IRDA_LS_576000		7
++#define USB_IRDA_LS_1152000		8
++#define USB_IRDA_LS_4000000		9
 +
-+	spin_lock_irqsave(&port->lock, flags);
-+	if (__test_and_clear_bit(0, &port->write_urbs_free)) {
-+		urb = port->write_urbs[0];
-+		port->tx_bytes += count;
-+	}
-+	spin_unlock_irqrestore(&port->lock, flags);
-+
-+	if (!urb)
-+		return 0;
- 
- 	/*
- 	 * The first byte of the packet we send to the device contains an
--	 * inbound header which indicates an additional number of BOFs and
-+	 * outbound header which indicates an additional number of BOFs and
- 	 * a baud rate change.
- 	 *
- 	 * See section 5.4.2.2 of the USB IrDA spec.
- 	 */
--	*buf = ir_xbof | ir_baud;
-+	*(u8 *)urb->transfer_buffer = ir_xbof | ir_baud;
-+
-+	memcpy(urb->transfer_buffer + 1, buf, count);
-+
-+	urb->transfer_buffer_length = count + 1;
-+	urb->transfer_flags = URB_ZERO_PACKET;
-+
-+	ret = usb_submit_urb(urb, GFP_ATOMIC);
-+	if (ret) {
-+		dev_err(&port->dev, "failed to submit write urb: %d\n", ret);
-+
-+		spin_lock_irqsave(&port->lock, flags);
-+		__set_bit(0, &port->write_urbs_free);
-+		port->tx_bytes -= count;
-+		spin_unlock_irqrestore(&port->lock, flags);
-+
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static void ir_write_bulk_callback(struct urb *urb)
-+{
-+	struct usb_serial_port *port = urb->context;
-+	int status = urb->status;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+	__set_bit(0, &port->write_urbs_free);
-+	port->tx_bytes -= urb->transfer_buffer_length - 1;
-+	spin_unlock_irqrestore(&port->lock, flags);
-+
-+	switch (status) {
-+	case 0:
-+		break;
-+	case -ENOENT:
-+	case -ECONNRESET:
-+	case -ESHUTDOWN:
-+		dev_dbg(&port->dev, "write urb stopped: %d\n", status);
-+		return;
-+	case -EPIPE:
-+		dev_err(&port->dev, "write urb stopped: %d\n", status);
-+		return;
-+	default:
-+		dev_err(&port->dev, "nonzero write-urb status: %d\n", status);
-+		break;
-+	}
-+
-+	usb_serial_port_softint(port);
-+}
-+
-+static int ir_write_room(struct tty_struct *tty)
-+{
-+	struct usb_serial_port *port = tty->driver_data;
-+	int count = 0;
-+
-+	if (port->bulk_out_size == 0)
-+		return 0;
-+
-+	if (test_bit(0, &port->write_urbs_free))
-+		count = port->bulk_out_size - 1;
- 
--	count = kfifo_out_locked(&port->write_fifo, buf + 1, size - 1,
--								&port->lock);
--	return count + 1;
-+	return count;
- }
- 
- static void ir_process_read_urb(struct urb *urb)
+ /* The following is a 4-bit value used only for
+  * outbound header:
+  *
 
 
