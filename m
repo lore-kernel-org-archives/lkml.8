@@ -2,190 +2,240 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DE0C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCCFC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930FD2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110BB2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a60F4YUa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jc0bkPXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgBCSbx (ORCPT
+        id S1729825AbgBCScP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:31:53 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45083 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729682AbgBCSbw (ORCPT
+        Mon, 3 Feb 2020 13:32:15 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38818 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728539AbgBCScO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:31:52 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d9so12187968qte.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:31:51 -0800 (PST)
+        Mon, 3 Feb 2020 13:32:14 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so8003742pfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:32:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SlJt1RiO81e7P3yRWgqDnoTsmNPSDYYXglDd92vCpc0=;
-        b=a60F4YUaAujZToMiPj7ZBCWk1cMWXfRWoYpvpk8FMEotfXvsHLbET07JaHiUOMni7F
-         B4MHEjIc6yThMKWCm1WtSzGpUPIpaFq10iKz6c8w+23kq1d6dvF7OcoRqx+urX1iZ363
-         JO1f8r1dB0rrzN4AfxmwOTQ5bfyFlsR59Q+cY=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y3mIATAg+5LdFoD0uzm3jVblzLIA03DsoYz6n06M99I=;
+        b=Jc0bkPXu0q0TJFHgu0J0I3RK3fr/jvvfd9XIt0V72QkJ0/4yfkc9JDfEQcwEo/9jda
+         00eu2uEH8hLxxxsTQQoeuUXH4s4LCzG7PPrVQT/HaDeD9MXtRb0rBAkxe7njWA6Dm1yV
+         mkXvBw6cJF19/OOQqDfxYT5OCyYpzficnfaHg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SlJt1RiO81e7P3yRWgqDnoTsmNPSDYYXglDd92vCpc0=;
-        b=Di6pXZ1R4y+xqeY2yS/qNU5PC3Rl9AjtBCUzVGbEwq8EnfHkY4rMlftOyGrkGButeW
-         8vziTky6bdQcmUnlquRwEXq+f9VoJqa6yITISLWpdO15IBmd1MnjrNa7QvgXgSrR54kc
-         E2d+C0im+LT79fyT5heKfGYrp4bmHtGdBR3V5TwVolSKQ/dz/xgnvrM481tWI0LDhzGn
-         Oz+ZnTRc6Jtr84wc5UX46dJtLQmj5eaHh9y9BSm/Vunk2rV72bjpoMdh6gaYDXP+LxqH
-         16gpk3kSgq7ym1jEdiASY4CKBZyxsKfI9v969GDvSYqhwOgDIhKDqNa9mFinNOR20EVm
-         VM3g==
-X-Gm-Message-State: APjAAAWMyfQDt6p+6gSXl14bpFSgOgRyi6eDOvRnqUjQ/ENHK/MudyVs
-        deIGJ+j6zrJBWrvr9gSalzTG4WwVNNHABFoPxt88wQ==
-X-Google-Smtp-Source: APXvYqy2h6nEDah2MZvJC4JmmML6fPXzAxAdT0HN5eQTGblj5DPRfMD9eCGz4B2oy5GZa04ThR+ca0fJjWaYDQNGXro=
-X-Received: by 2002:ac8:140c:: with SMTP id k12mr24772228qtj.117.1580754711280;
- Mon, 03 Feb 2020 10:31:51 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y3mIATAg+5LdFoD0uzm3jVblzLIA03DsoYz6n06M99I=;
+        b=n5kuIDm6+HzKh3E2YlPikeCNVnvGx/Yi/aXpJIcVGoZ1/7QXK+7CKTmYesvi5MA17C
+         XRiG3xRPfItp9u0K/FVNCrtyiBeLbc9TE5aiL3NWZvLc4vrRnoEDwdiW8AVy/l05OZ00
+         ony/n/nlEMteMrEPSUvsMhmR2D0ra6UQ52WDF2V5KWYSz90/EHVHqSMOIEFHj3SkmJP3
+         w/KJ3LdwHhSTG5VhtMjAwBD3oDQdE/XEDIbX23G5cR/F0NzlfNphHegz1DzMrNZkEApR
+         RO7YRhOqqso2IwBQd5ROZOH1H3PK5fRKPdxnZn2Ta56WOyXvvW5PUJNUNlZkoivN4T2o
+         4WDw==
+X-Gm-Message-State: APjAAAXSu8M2RXk5NOTKIcJV4rDTkoSvwF4AOv+EYMTLOhcyvrkCyK5y
+        1jZMkLPN3VjTSeqXmQ31YuSZhQ==
+X-Google-Smtp-Source: APXvYqwbQrtlwxFZ4HRXRZxhqJZn4EN4SQWxd/AalIpnCgqHAzJYQavSHgOve0nJe/XDjgCBXLdCYg==
+X-Received: by 2002:a65:5ccc:: with SMTP id b12mr26278507pgt.124.1580754733211;
+        Mon, 03 Feb 2020 10:32:13 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 10:32:12 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>, jeffrey.l.hugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
+        devicetree@vger.kernel.org, mka@chromium.org,
+        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v4 00/15] clk: qcom: Fix parenting for dispcc/gpucc/videocc
+Date:   Mon,  3 Feb 2020 10:31:33 -0800
+Message-Id: <20200203183149.73842-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-References: <20200130203106.201894-1-pmalani@chromium.org> <20200130203106.201894-11-pmalani@chromium.org>
- <20200202094342.108849ab@archlinux>
-In-Reply-To: <20200202094342.108849ab@archlinux>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 3 Feb 2020 10:31:40 -0800
-Message-ID: <CACeCKacjecNRnQ=YRVZjtuZvZmvd_=wd7MGb22bmWyRm8+-0oA@mail.gmail.com>
-Subject: Re: [PATCH 10/17] iio: cros_ec: Use cros_ec_send_cmd_msg()
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan, Thanks for the comments. Please see responses inline.
+The aim of this series is to get the dispcc and gpucc in a workable
+shape upstream for sc7180.  I personally wasn't focusing on (and
+didn't test much) videocc but pulled it along for the ride.
 
-On Sun, Feb 2, 2020 at 1:43 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Thu, 30 Jan 2020 12:30:54 -0800
-> Prashant Malani <pmalani@chromium.org> wrote:
->
-> > Replace cros_ec_cmd_xfer_status() with cros_ec_send_cmd_msg()
-> > which does the message buffer setup and cleanup.
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
->
-> In a series like this, make sure that patch 1 with the actual code being
-> pulled out is sent to everyone.  Looking at what we have here, this
-> doesn't seem to fit well at all for one case, and I'm can't say the
-> other case shows much advantage either.
+Most of the work in this series deals with the fact that the parenting
+info for these clock controllers was in a bad shape.  It looks like it
+was half transitioned from the old way of doing things (relying on
+global names) to the new way of doing things (putting the linkage in
+the device tree).  This should fully transition us.
 
-Sorry about that. I'll be sure to add maintainers to Patch 1 in the
-next versions.
-I tried to follow : https://lwn.net/Articles/585782/ , but I think the
-script might not be suited to this use case.
->
-> Jonathan
->
-> > ---
-> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 43 +++++++++----------
-> >  1 file changed, 21 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > index 81a7f692de2f37..f92032e97a84d7 100644
-> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > @@ -31,24 +31,16 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> >                                            u16 cmd_offset, u16 cmd, u32 *mask)
-> >  {
-> >       int ret;
-> > -     struct {
-> > -             struct cros_ec_command msg;
-> > -             union {
-> > -                     struct ec_params_get_cmd_versions params;
-> > -                     struct ec_response_get_cmd_versions resp;
-> > -             };
-> > -     } __packed buf = {
-> > -             .msg = {
-> > -                     .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> > -                     .insize = sizeof(struct ec_response_get_cmd_versions),
-> > -                     .outsize = sizeof(struct ec_params_get_cmd_versions)
-> > -                     },
-> > -             .params = {.cmd = cmd}
-> > -     };
-> > -
-> > -     ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> > +     struct ec_params_get_cmd_versions params = {0};
-> > +     struct ec_response_get_cmd_versions resp = {0};
-> > +
-> > +     params.cmd = cmd;
-> Use c99 element setting to set this directly rather than zeroing
-> explicitly then setting the element.
->
-> Something like.
->
-> struct ec_params_get_cmde_versions params = {
->         .cmd = cmd;
-> };
-Noted.
->
-> > +     ret = cros_ec_send_cmd_msg(ec_dev, 0,
-> > +                                EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> > +                                &params, sizeof(params),
-> > +                                &resp, sizeof(resp));
-> >       if (ret >= 0)
-> > -             *mask = buf.resp.version_mask;
-> > +             *mask = resp.version_mask;
-> >       return ret;
-> >  }
-> >
-> > @@ -164,15 +156,22 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
-> >                                u16 opt_length)
-> >  {
-> >       int ret;
-> > +     struct cros_ec_command *msg = state->msg;
->
-> With this change the code becomes less readable and needs a comment to explain
-> why it is doing something odd.   Either you need to figure out how to
-> make this fit properly such that the comment is not needed, or leave
-> the code alone.
-Noted. Perhaps we can use cros_ec_cmd_xfer() instead of
-cros_ec_cmd_xfer_status(). That I think will
-keep readability the same and remove the need for comments.
->
-> >
-> >       if (opt_length)
-> > -             state->msg->insize = min(opt_length, state->ec->max_response);
-> > +             msg->insize = min(opt_length, state->ec->max_response);
-> >       else
-> > -             state->msg->insize = state->ec->max_response;
-> > +             msg->insize = state->ec->max_response;
-> >
-> > -     memcpy(state->msg->data, &state->param, sizeof(state->param));
-> > -
-> > -     ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
-> > +     /*
-> > +      * In order to not disrupt the usage of struct cros_ec_command *msg,
-> > +      * which is defined higher up in the call stack, we pass in its
-> > +      * members to cros_ec_send_cmd_msg, instead of removing it at all
-> > +      * calling locations.
-> > +      */
-> > +     ret = cros_ec_send_cmd_msg(state->ec, msg->version, msg->command,
-> > +                                &state->param, sizeof(state->param),
-> > +                                msg->data, msg->insize);
-> >       if (ret < 0)
-> >               return ret;
-> >
->
+As part of this transition I update the sdm845.dtsi file to specify
+the info as per the new way of doing things.  Although I've now put
+the linkage info in the sdm845.dtsi file, though, I haven't updated
+the sdm845 clock drivers in Linux so they still work via the global
+name matching.  It's left as an exercise to the reader to update the
+sdm845 clock drivers in Linux.
+
+This series passes these things for me on linux-next (next-20200129)
+after picking the recent gcc fix I posted [1]:
+
+  for f in \
+    Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml; do \
+        ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+    done
+
+  I also tried this:
+    # Delete broken yaml:
+    rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+    ARCH=arm64 make dt_binding_check | grep 'clock/qcom'
+  ...and that didn't seem to indicate problems.
+
+  I also tried this (make sure you don't run w/ -j64 or diff is hard):
+    # Delete broken yaml:
+    rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+    git checkout beforeMyCode
+    ARCH=arm64 make dt_binding_check > old.txt 2>&1
+    git checkout myCode
+    ARCH=arm64 make dt_binding_check > new.txt 2>&1
+    diff old.txt new.txt
+  ...and that didn't seem to indicate problems.
+
+I have confirmed that (with extra patches) the display/gpu come up on
+sc7180 and sdm845-cheza.  You can find the top of my downstream tree at:
+  https://crrev.com/c/2017976/4
+
+I have confirmed that sdm845-cheza display / GPU come up atop
+next-20200129, which is what this series is posted against.
+
+From v2 to v3, this series has quite a few changes.  Mostly it's:
+- Always split into multiple files (Stephen).
+- Use internal names, not purist names (Taniya).
+- I realized that I forgot to update the sc7180 video clock controller
+  driver in v2.
+- A few other misc cleanups / fixes, see each patch for details.
+
+From v3 to v4 this just removes the "bindings/" from the schema ID and
+adds Rob's tag to two of the bindings patches.  The third binding
+patch didn't get Rob's Ack because he suggested combining two files
+might be a good idea.  I'm assuming he'll be OK with leaving them
+split since Stephen prefers it that way, but if I have to do a v5 I
+can do that.
+
+It feels like with this many patches there's very little chance I
+didn't do something stupid like make a tpyo or a paste-o paste-o,
+though I tried to cross-check as much as I could.  I apologize in
+advance for the stupid things I did that I should have known better
+about.
+
+[1] https://lore.kernel.org/r/20200129152458.v2.1.I4452dc951d7556ede422835268742b25a18b356b@changeid
+
+Changes in v4:
+- (non-change): Didn't combine sdm845 & sc7180 gpucc as per Stephen.
+- Added Rob's review tag.
+- Fixed schema id to not have "bindings/" as per Rob.
+
+Changes in v3:
+- Add Matthias tag.
+- Added include file to description.
+- Added pointer to inlude file in description.
+- Added videocc include file.
+- Discovered / added new gcc input clock on sdm845.
+- Everyone but msm8998 now uses internal QC names.
+- Fixed typo grpahics => graphics
+- Newly discovered gcc_disp_gpll0_div_clk_src added.
+- Patch ("clk: qcom: Get rid of fallback...dispcc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...dispcc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...gpucc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...videocc-sc7180") new for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in dispcc-sc7180...") split out for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in gpucc-sc7180...") split out for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in videocc-sc7180...") new for v3.
+- Split bindings into 3 files.
+- Split sc7180 and sdm845 into two files.
+- Split videocc bindings into 2 files.
+- Switched names to internal QC names rather than logical ones.
+- Unlike in v2, use internal name instead of purist name.
+- Updated commit description.
+
+Changes in v2:
+- Added includes
+- Changed various parent names to match bindings / driver
+- Patch ("arm64: dts: qcom: sdm845: Add...dispcc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...gpucc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...videocc") new for v2.
+- Patch ("clk: qcom: rcg2: Don't crash...") new for v2.
+- Patch ("dt-bindings: clock: Cleanup qcom,videocc") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,gpucc...") new for v2.
+
+Douglas Anderson (14):
+  clk: qcom: rcg2: Don't crash if our parent can't be found; return an
+    error
+  dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
+  arm64: dts: qcom: sdm845: Add the missing clocks on the dispcc
+  clk: qcom: Get rid of fallback global names for dispcc-sc7180
+  clk: qcom: Get rid of the test clock for dispcc-sc7180
+  clk: qcom: Use ARRAY_SIZE in dispcc-sc7180 for parent clocks
+  dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998
+  arm64: dts: qcom: sdm845: Add missing clocks / fix names on the gpucc
+  clk: qcom: Get rid of the test clock for gpucc-sc7180
+  clk: qcom: Use ARRAY_SIZE in gpucc-sc7180 for parent clocks
+  dt-bindings: clock: Cleanup qcom,videocc bindings for sdm845/sc7180
+  clk: qcom: Get rid of the test clock for videocc-sc7180
+  clk: qcom: Use ARRAY_SIZE in videocc-sc7180 for parent clocks
+  arm64: dts: qcom: sdm845: Add the missing clock on the videocc
+
+Taniya Das (1):
+  arm64: dts: sc7180: Add clock controller nodes
+
+ .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
+ ...om,dispcc.yaml => qcom,msm8998-gpucc.yaml} | 33 +++----
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+ .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
+ .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
+ .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+ .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
+ ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
+ drivers/clk/qcom/clk-rcg2.c                   |  3 +
+ drivers/clk/qcom/dispcc-sc7180.c              | 45 +++------
+ drivers/clk/qcom/gpucc-sc7180.c               |  4 +-
+ drivers/clk/qcom/videocc-sc7180.c             |  4 +-
+ 14 files changed, 513 insertions(+), 140 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+ rename Documentation/devicetree/bindings/clock/{qcom,dispcc.yaml => qcom,msm8998-gpucc.yaml} (51%)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml
+ rename Documentation/devicetree/bindings/clock/{qcom,videocc.yaml => qcom,sdm845-videocc.yaml} (61%)
+
+-- 
+2.25.0.341.g760bfbb309-goog
+
