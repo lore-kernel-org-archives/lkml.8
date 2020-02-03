@@ -2,155 +2,113 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1FEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB9AC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D159E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580763894;
-	bh=X5R2fPv88/MdUsacl6Ua7UxiCyEmXq1mVd+QfsPUcfk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=vNpbBX2XHCB1GHjAdFaamww8KCW0PNWiYYQzFO6b20bR7FRMkvZMgHwh5LJLnSrxc
-	 FEtWALgOCcRhuvImHlSHUEHaVicvTb/9u9BRgr1kHkFsiT92rwJt3Pe/rBy0MP4geC
-	 Br5bd909KjTKCrgcc5Jc8wN84rC3SzvXQ5USH4eQ=
+	by mail.kernel.org (Postfix) with ESMTP id 04A3B2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:09:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YH9V1pSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgBCVEy (ORCPT
+        id S1727063AbgBCVJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:04:54 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40650 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgBCVEx (ORCPT
+        Mon, 3 Feb 2020 16:09:44 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13912 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgBCVJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:04:53 -0500
-Received: by mail-pl1-f195.google.com with SMTP id y1so6331134plp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:04:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vyNNYPWQk9h02ZhB6qKtVaaQp9UclxRqVnPIxFZJ0Xg=;
-        b=mIqS8qzHFI+s5woLN9YWR3D4KGS3todmG1mGvMlfrwG0O7Zvp5PBTCzdExV0OHamSv
-         Eowm1AbjDBeeZMHqhE2YiGWBDjI3rRJYOy7mdAsaSinj0IOmSjXfBjQUTPz+JxJoOm08
-         40GmMohHmDw71az8MMI/wcV5ib0aXdUrf9C1WJyBCPzxAtSYvBAu6NmNQc6/ODKh4rNo
-         t87K6J4tDMkGpLy1glEayeV+KM1Udt8acljIAwYvKzGpEYVJMxlyOQxirwerbnEjz06c
-         R9Y7cAUt1GLenF5+7pwkZRVutt3QqVlsr1fVMVdJ/hUNZfHQGJv0j88w+O4GKqFbDqvN
-         bx3A==
-X-Gm-Message-State: APjAAAXkDT3mPVHI/ij2fQiE2Ldx1StWfkGonQyysLVNk3w4zwravUWa
-        zfsgCH/om+6j9ORsRwqikPQ=
-X-Google-Smtp-Source: APXvYqxAc+JfYnIeiZ3l4QBGTk8ktRMRb0WhEJyp/cK6P4XpYNuXTMPbItEy0LRdFTU94m4K6dXnHQ==
-X-Received: by 2002:a17:90b:243:: with SMTP id fz3mr1196684pjb.29.1580763892984;
-        Mon, 03 Feb 2020 13:04:52 -0800 (PST)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:1a15])
-        by smtp.gmail.com with ESMTPSA id r28sm20736910pgk.39.2020.02.03.13.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 13:04:52 -0800 (PST)
-Date:   Mon, 3 Feb 2020 13:04:50 -0800
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] percpu changes for v5.6-rc1
-Message-ID: <20200203210450.GA25544@dennisz-mbp.dhcp.thefacebook.com>
+        Mon, 3 Feb 2020 16:09:43 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e388c080000>; Mon, 03 Feb 2020 13:09:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 13:09:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 13:09:42 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 21:09:42 +0000
+Subject: Re: [PATCH v3 02/12] mm/gup: split get_user_pages_remote() into two
+ routines
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-3-jhubbard@nvidia.com>
+ <20200203142006.GD18591@quack2.suse.cz>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <60244a5c-d9ce-3378-8b63-e375a8a826aa@nvidia.com>
+Date:   Mon, 3 Feb 2020 13:09:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200203142006.GD18591@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580764168; bh=kpWnZhJDLnwzJeCQh1dwd9e6bKzAJzhKv9o/97r5OI0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YH9V1pSt2yGSRfcnvkLj5tT6FBzhIwJQJ56FUgxRc8hYBKm7TxhXdfMeU2lgH68TE
+         L288RKt6Lvjsk3MYx4/9ddBXeBvjPPiIwuTPerAMTh0E9xBfsQhQO5J4T0VabPLxjA
+         y/VEM91iMYIRrfptXsdahVvFZ+cZ9j5Rsw6QG6S9p7D5DRqkCa/1rUKVsEtuiMdBcw
+         E3U1uybj55n5poobVSezFD0PefdgdL00m4Yrq7M0h8IhdbLXakKlJulzehnzNs69pl
+         VdwvdRFerroSQ7fkU+rts89SoqCVTCnppCuPc3MlebvcMtELddwIUM/57fXykEZvye
+         CS78PTJYL5Pnw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2/3/20 6:20 AM, Jan Kara wrote:
+> On Fri 31-01-20 19:40:19, John Hubbard wrote:
+>> An upcoming patch requires reusing the implementation of
+>> get_user_pages_remote(). Split up get_user_pages_remote() into an outer
+>> routine that checks flags, and an implementation routine that will be
+>> reused. This makes subsequent changes much easier to understand.
+>>
+>> There should be no change in behavior due to this patch.
+>>
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> 
+> Looks good to me. You can add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> 								Honza
 
-This pull request separates out variables that can be decrypted into
-their own page anytime encryption can be enabled and fixes __percpu
-annotations in asm-generic for sparse.
+Thanks for reviewing this series (sort of again), Jan! 
 
-Thanks,
-Dennis
 
-The following changes since commit aedc0650f9135f3b92b39cbed1a8fe98d8088825:
-
-  Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm (2019-12-04 11:08:30 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.6
-
-for you to fetch changes up to 264b0d2bee148073c117e7bbbde5be7125a53be1:
-
-  percpu: Separate decrypted varaibles anytime encryption can be enabled (2020-01-31 11:15:59 -0800)
-
-----------------------------------------------------------------
-Erdem Aktas (1):
-      percpu: Separate decrypted varaibles anytime encryption can be enabled
-
-Luc Van Oostenryck (1):
-      percpu: fix __percpu annotation in asm-generic
-
- include/asm-generic/percpu.h | 10 +++++-----
- include/linux/percpu-defs.h  |  3 +--
- 2 files changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/include/asm-generic/percpu.h b/include/asm-generic/percpu.h
-index c2de013b2cf4..35e4a53b83e6 100644
---- a/include/asm-generic/percpu.h
-+++ b/include/asm-generic/percpu.h
-@@ -74,7 +74,7 @@ do {									\
- 
- #define raw_cpu_generic_add_return(pcp, val)				\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
- 									\
- 	*__p += val;							\
- 	*__p;								\
-@@ -82,7 +82,7 @@ do {									\
- 
- #define raw_cpu_generic_xchg(pcp, nval)					\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
- 	typeof(pcp) __ret;						\
- 	__ret = *__p;							\
- 	*__p = nval;							\
-@@ -91,7 +91,7 @@ do {									\
- 
- #define raw_cpu_generic_cmpxchg(pcp, oval, nval)			\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
- 	typeof(pcp) __ret;						\
- 	__ret = *__p;							\
- 	if (__ret == (oval))						\
-@@ -101,8 +101,8 @@ do {									\
- 
- #define raw_cpu_generic_cmpxchg_double(pcp1, pcp2, oval1, oval2, nval1, nval2) \
- ({									\
--	typeof(&(pcp1)) __p1 = raw_cpu_ptr(&(pcp1));			\
--	typeof(&(pcp2)) __p2 = raw_cpu_ptr(&(pcp2));			\
-+	typeof(pcp1) *__p1 = raw_cpu_ptr(&(pcp1));			\
-+	typeof(pcp2) *__p2 = raw_cpu_ptr(&(pcp2));			\
- 	int __ret = 0;							\
- 	if (*__p1 == (oval1) && *__p2  == (oval2)) {			\
- 		*__p1 = nval1;						\
-diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
-index a6fabd865211..176bfbd52d97 100644
---- a/include/linux/percpu-defs.h
-+++ b/include/linux/percpu-defs.h
-@@ -175,8 +175,7 @@
-  * Declaration/definition used for per-CPU variables that should be accessed
-  * as decrypted when memory encryption is enabled in the guest.
-  */
--#if defined(CONFIG_VIRTUALIZATION) && defined(CONFIG_AMD_MEM_ENCRYPT)
--
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- #define DECLARE_PER_CPU_DECRYPTED(type, name)				\
- 	DECLARE_PER_CPU_SECTION(type, name, "..decrypted")
- 
+thanks,
+-- 
+John Hubbard
+NVIDIA
