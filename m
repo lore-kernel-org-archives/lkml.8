@@ -2,113 +2,107 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C14C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFBFC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB5B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38B120658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mSYK6W0X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNXtJhDN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbgBCKJw (ORCPT
+        id S1727838AbgBCKLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:09:52 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46360 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727511AbgBCKJv (ORCPT
+        Mon, 3 Feb 2020 05:11:22 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52922 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbgBCKLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:09:51 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0139vJGZ024556;
-        Mon, 3 Feb 2020 11:09:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Cy08n9iwXNQ8jtysqJnyDeB2lWb+64plHYMcvc8UE4I=;
- b=mSYK6W0Xxm4D02Y9MbKoVkRxz50WXPcD6oP2+HmsUfATSFBcu+XYRvXWJM1hD3rnkRdS
- zOnZmraLDCujTB2MThL1ZHr+aijse24P9GmJrKu3bsAKnxL7WmiZxjkSe1e+9hYHMELs
- 2jJspha6Yzs8tw/P2PmRTAoaR52AFYStoj5eW57E6Lv0keHwSzbXEXIBHkSyICfa11Yl
- z0saHjaWyiC3Ui/ugFkSYejoEt6vIufZVeZRHjrM3j+3PpHxantdNziqKdjwKgACtZu2
- VuSD+wQ/tJvjyVoKkRYhtnZhaDG5uk9j648LK3SnFHX9qb/1fUS+OqWx2x4gpR7yGHhd 4Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xw13ngdpr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 11:09:04 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EB809100039;
-        Mon,  3 Feb 2020 11:08:59 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E01D62BE22D;
-        Mon,  3 Feb 2020 11:08:59 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 11:08:59
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-CC:     Etienne Carriere <etienne.carriere@st.com>
-Subject: [PATCH 2/6] ASoC: stm32: spdifrx: manage error when getting reset controller
-Date:   Mon, 3 Feb 2020 11:08:10 +0100
-Message-ID: <20200203100814.22944-3-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200203100814.22944-1-olivier.moysan@st.com>
-References: <20200203100814.22944-1-olivier.moysan@st.com>
+        Mon, 3 Feb 2020 05:11:21 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ep11so6105811pjb.2;
+        Mon, 03 Feb 2020 02:11:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4dC5vZjnr8IWvufmlwLWuCfxRjV7yLvgDjVS1/z103Q=;
+        b=gNXtJhDNv08S4fJzniL6YYfHrPochu1S78UL6QYeJlnVpLV0vinCkGwH8B/gzyBZO5
+         QauncyeOmUrcZWzAcCxAxLmhc+gz/CJG3ii4UPaf55f6uCqNr4pFmaksaV/qOlR3mG2X
+         V5kfb6rS7WifHScLmVAKmVI3NqpIEADkgfjFxcaXCT784raeWl5jM2OFkuc9N3csCDxd
+         e4ywrFJnDdI8XhyHGMYiYFtUg0ZzdEGFKR5eiX8k2IFDiYwmTI/9rcDJvLCrv7KdfnyB
+         rdmCRsu/g7OQNvg7OSJHJfxbeRLnDKswIwnDFBgK8cRlJvSQhCNIk5iI7xrHex0RwEkp
+         GEHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4dC5vZjnr8IWvufmlwLWuCfxRjV7yLvgDjVS1/z103Q=;
+        b=RB433vD2Av/bjgcjNrA9hohzgzsELN7eGT75BVeeEanEU2qXmPVb9tig0z+l6IvIq5
+         KhsbLVn/r9+PMaexCso1bIBs/NtqqzM0BuIFu7+Ty7duAyz5SgxK6oMZpmVtnDv81GQE
+         oQmEfIUimYPlmDkcp64Cbq4QF09CsTokxiGqMvOjjGw1iBvRKm851aPlENVAKnFn2AQm
+         MWp4Ghr1tHPv2i/zk6T25s5hQ0WqYxeNlFGhyCzCosk+G7pb4UozpGoZ65Mam5Bla+yg
+         k263PHx1a5uJXCZtzB10TlMNE6u6yiwnxRTu2kWywFL6Rb+OQS2JmiJzNKIoR7V+j5v1
+         /Rcw==
+X-Gm-Message-State: APjAAAW83r6a4WGqTaIrSe1e7YHeIdwyAvD2Xu8LyIgEKdw2eW4R5DXC
+        01msxfnwcRefKgHjUl4heWsBu+85/BFeydWdlBU=
+X-Google-Smtp-Source: APXvYqwvSk3kyzFEkF16zgVr87wi9kTgBo74pIIZQvaZ95Y0VScXP+UxOQwValhzbgbSNpxG+b6SSg+VgL3Dcl7uSbE=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr28494608pjb.30.1580724681048;
+ Mon, 03 Feb 2020 02:11:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_02:2020-02-02,2020-02-03 signatures=0
+References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com> <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
+In-Reply-To: <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Feb 2020 12:11:13 +0200
+Message-ID: <CAHp75Vd4VYJD9kSgMU+iKOC5FOarPtMG4eG3Jbnf7OeebWuC7w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: add HG as cctrng maintainer
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return an error when the SPDIFRX driver fails to get a reset controller.
-Also add an error trace, except on probe defer status.
+On Sun, Feb 2, 2020 at 3:29 PM Hadar Gat <hadar.gat@arm.com> wrote:
+>
+> I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_spdifrx.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+> +CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
+> +M:     Hadar Gat <hadar.gat@arm.com>
+> +L:     linux-crypto@vger.kernel.org
+> +S:     Supported
+> +F:     drivers/char/hw_random/cctrng.c
+> +F:     drivers/char/hw_random/cctrng.h
+> +F:     Documentation/devicetree/bindings/rng/arm-cctrng.txt
+> +W:     https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
+> +
 
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index 3769d9ce5dbe..9f80ddf34443 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -978,12 +978,16 @@ static int stm32_spdifrx_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
--	if (!IS_ERR(rst)) {
--		reset_control_assert(rst);
--		udelay(2);
--		reset_control_deassert(rst);
-+	rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-+	if (IS_ERR(rst)) {
-+		if (PTR_ERR(rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Reset controller error %ld\n",
-+				PTR_ERR(rst));
-+		return PTR_ERR(rst);
- 	}
-+	reset_control_assert(rst);
-+	udelay(2);
-+	reset_control_deassert(rst);
- 
- 	ret = devm_snd_soc_register_component(&pdev->dev,
- 					      &stm32_spdifrx_component,
+Had you run parse-maintainers.pl afterwards to be sure everything is okay?
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
