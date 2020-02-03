@@ -2,111 +2,86 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA39AC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF32C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4152067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:28:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580693296;
-	bh=W0peBJrDi6x/1N6YOstYcNVeYP8M7k/WABnYabfP5CM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YFosSP4SaQS5GXYNlVwSw3ktqttmuTsuxbfaoghdtcbIPVfVCLapXDCxg285DG7Sd
-	 MqFRrKlLQQf4mB6LpR1WIAuWpfudD6dTBSjoMEcH9Sz8h21ltCEihIKa8UlkGySI4n
-	 EnKGL0tOvgbMzeo9FEi3GuoJREZtz7Kcn00SOCQk=
+	by mail.kernel.org (Postfix) with ESMTP id 39323205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:45:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeMIvx+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBCB2P (ORCPT
+        id S1727159AbgBCBps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgBCB2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:28:15 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE96F20661;
-        Mon,  3 Feb 2020 01:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580693294;
-        bh=W0peBJrDi6x/1N6YOstYcNVeYP8M7k/WABnYabfP5CM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uvZ/C2d1FMK5YyfCJvqaqy2sJ9zRxjWIu76YffAipKyFgniuU33gHbj4UVUzUwCZo
-         9k2Hrqc50r3+isR1lffpVOryBtg1NmHCI4tud0U79buOut1dlpEDh3RSC83nmwFF96
-         nSmo8o2kS2YmW4hWNZcMtDUUZ8MVRgtw/Z2TAbnY=
-Date:   Mon, 3 Feb 2020 10:28:09 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] kallsyms: fix type of kallsyms_token_table[]
-Message-Id: <20200203102809.7626e0bf9b83afc84c031f4c@kernel.org>
-In-Reply-To: <20200202050922.12402-3-masahiroy@kernel.org>
-References: <20200202050922.12402-1-masahiroy@kernel.org>
-        <20200202050922.12402-3-masahiroy@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 2 Feb 2020 20:45:48 -0500
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:33757 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgBCBpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:45:47 -0500
+Received: by mail-pl1-f170.google.com with SMTP id ay11so5200140plb.0;
+        Sun, 02 Feb 2020 17:45:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=biDSrCR1eP28JzHxJCCOBKezgQLDm4X9uqOfHfatW2Y=;
+        b=TeMIvx+iShPj2d3PyK/1BmMRWfjmaPWgS8OHGl+HEkJaAgYfueCeKcQUlCr6qzjScs
+         qjdKhZCu3EOCaKMTgTgGEFPdg/DjZbhsR9fN4GQFVORPdZ7zUSggRoANToJgJVMAVvve
+         WLBF1gxMsPqbJ8qv3ojZCLN4c92x77DPw0j73Qi56mQNomezV6VD7AGrn7OZhlLXvCbR
+         BJo83s0bLfAB4sKEq49ONZ/lB5Dig0QrbU675fp606k5SGKzUQVNSrhyPwoNLbDJZ2+x
+         TK7aHVU3nnVeb3GLbGJ092fm/OBT/l6vTDMr81BcGkfgJl/SDxTLYSwhJXO4IVAPbbuK
+         eoZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=biDSrCR1eP28JzHxJCCOBKezgQLDm4X9uqOfHfatW2Y=;
+        b=JD3on5X1SB0o8MKXNbQ/z23k9ITAvOFZEBO+afEFbN4wzg7H7/1JhHGDx7DZ8+muB1
+         2yfKm6fVWjrqnSHG1+lXkJmET86t84d5NzM1u6hoYxqyKrDkqzak6BXsxLFPPK5JQm11
+         d7i58huoU5S0shMjhZPEFVbOkFYQanjZS0HdVgpXnfwL/hehc7lLB8VfjLh5NDk8PpiM
+         DdT5ACn5NSJQ4yvJHUiq0NSWKOYFMfG7SYCNt/Ia7D6gDov7YEkFUT3s/jCkQso/IDTJ
+         HY4UoT6OXn59rdYZHv6UJ/HdMx5rR3YhHP1Vd6NpG2Nprf0692UmERtZjTG5HNVOF/xT
+         5JHQ==
+X-Gm-Message-State: APjAAAWoTqMuFEm4CsMWGgG8G/omfDvHcS8oyj+vG8a3HEJP2QXoRz/C
+        3MgVZlablYPfOvoE3b4weyY=
+X-Google-Smtp-Source: APXvYqwESnZ//QQxLHVoRT+umFDYhO4Iu673FVXCH2wzZBtnqX8dC+tZ8wNJsRkbuSCFlhpC7EAMDA==
+X-Received: by 2002:a17:90a:6:: with SMTP id 6mr27354639pja.71.1580694347066;
+        Sun, 02 Feb 2020 17:45:47 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id x25sm18440955pfp.30.2020.02.02.17.45.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 17:45:46 -0800 (PST)
+Date:   Sun, 2 Feb 2020 17:45:44 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Jacob Keller <jacob.e.keller@intel.com>
+Cc:     christopher.s.hall@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        mingo@redhat.com, x86@kernel.org, davem@davemloft.net,
+        sean.v.kelley@intel.com
+Subject: Re: [Intel PMC TGPIO Driver 1/5] drivers/ptp: Add Enhanced handling
+ of reserve fields
+Message-ID: <20200203014544.GA3516@localhost>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <20191211214852.26317-2-christopher.s.hall@intel.com>
+ <0f868a7e-5806-4976-80b5-0185a64b42a0@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f868a7e-5806-4976-80b5-0185a64b42a0@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  2 Feb 2020 14:09:22 +0900
-Masahiro Yamada <masahiroy@kernel.org> wrote:
-
-> kallsyms_token_table[] only contains ASCII characters. It should be
-> char instead of u8.
-
-Indeed.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you,
-
+On Fri, Jan 31, 2020 at 08:54:19AM -0800, Jacob Keller wrote:
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  kernel/kallsyms.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> index 136ce049c4ad..53f84f685841 100644
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -44,7 +44,7 @@ __attribute__((weak, section(".rodata")));
->  extern const unsigned long kallsyms_relative_base
->  __attribute__((weak, section(".rodata")));
->  
-> -extern const u8 kallsyms_token_table[] __weak;
-> +extern const char kallsyms_token_table[] __weak;
->  extern const u16 kallsyms_token_index[] __weak;
->  
->  extern const unsigned int kallsyms_markers[] __weak;
-> @@ -58,7 +58,8 @@ static unsigned int kallsyms_expand_symbol(unsigned int off,
->  					   char *result, size_t maxlen)
->  {
->  	int len, skipped_first = 0;
-> -	const u8 *tptr, *data;
-> +	const char *tptr;
-> +	const u8 *data;
->  
->  	/* Get the compressed symbol length from the first symbol byte. */
->  	data = &kallsyms_names[off];
-> -- 
-> 2.17.1
-> 
+> Not that it's a big deal, but I think this might read more clearly if
+> this was "cmd == PTP_PIN_GETFUNC2 && check_rsv_field(pd.rsv)"
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
++1
