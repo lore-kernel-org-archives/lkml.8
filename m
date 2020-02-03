@@ -2,107 +2,157 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD457C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2075C3524C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E6F20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HOtFjfzs"
+	by mail.kernel.org (Postfix) with ESMTP id A34982067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgBCBxM (ORCPT
+        id S1727304AbgBCBxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:53:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39112 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbgBCBxM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:53:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 84so6700072pfy.6
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 17:53:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2+2YWgBMeeryAAU9fYclXtNdUgS1YJs1/8RQuKlQaE8=;
-        b=HOtFjfzsqzJtNZK8kSGu8LnG5oJm+REHMExI1vFCBQR7p1YFxE3PiBeN2XMp8dM3mu
-         aAvEHJl8lXIqD2PguYF76B8wK9dK8rDxyZJh90JQku3rINQPzMEJkvmd4KrracreRGND
-         mVyYYSAfXdRUmlvhKjerkcLqwV1fZ0J7VOMKjUsL5mY79s5Zsou2lpGHkZqpUiNIijb3
-         DYlnTCldlG9XM7qlsOIGH4LNEn+qfAvadE5cKhuCe1y6Qw1KQXKnFefFcuNKb28dcO4S
-         vIgaWVZYfdZTeEbpyhKTjuwWhLP5Dho9CoZj7bp2urRRQMOHn4K+jJvoQS9yPunnTUua
-         KA/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2+2YWgBMeeryAAU9fYclXtNdUgS1YJs1/8RQuKlQaE8=;
-        b=Ap0NlQks+TBEQyYmk2PSYwx6kZStK46M9FTyzgocNNhdocDsz4m/eq3eGTKxFKs+30
-         2+FfyLKjhP23DxXSvl5qc3XlpLC71XJ9zd8QozJp17j7eEYR2+w+nrNP3vFCcReosgBU
-         /hoG1BrVDH6o0wJOkwuRnu39LDqdjYHACUdgk9L9JjXzSFpQf5NfZygtLQPj+xSKj4iF
-         GwRItiKmThkJ8akg/LnSJvA2hIjfEZmJQCB/6YO2rfNUB28UbSIfh+u3KbK7TNbv8/HT
-         j+E4gbwQGB/ZJgqSKnXoAX3jsZOIlRizD5YjmYv8pHo2xHGKRVjz59zYtEgnohuuUBQj
-         NrWA==
-X-Gm-Message-State: APjAAAUU0zWICd0K0210RQbAWKWoF2zmdc70ERYK8fBM263Bo/iFqsUU
-        FF7dfMp6yu9niuzWIpFH9pMcig==
-X-Google-Smtp-Source: APXvYqyAbgLqJ9Isw3Tp2wOvQehMh8mkseNeD3y6W7Gpa4NaE0cR6RhiKf7WDy1GXf+n7lrx2pGgkQ==
-X-Received: by 2002:a63:520a:: with SMTP id g10mr20966953pgb.298.1580694791834;
-        Sun, 02 Feb 2020 17:53:11 -0800 (PST)
-Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id y38sm17348308pgk.33.2020.02.02.17.53.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 17:53:11 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 5/5] perf cs-etm: Fix unsigned variable comparison to zero
-Date:   Mon,  3 Feb 2020 09:52:03 +0800
-Message-Id: <20200203015203.27882-6-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200203015203.27882-1-leo.yan@linaro.org>
-References: <20200203015203.27882-1-leo.yan@linaro.org>
+        Sun, 2 Feb 2020 20:53:32 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10138 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726494AbgBCBxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:53:32 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 105ED91C7133A3B85418;
+        Mon,  3 Feb 2020 09:53:30 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 3 Feb 2020
+ 09:53:20 +0800
+Subject: Re: [PATCH V4] brd: check and limit max_part par
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        <wubo40@huawei.comwubo>, Louhongxiang <louhongxiang@huawei.com>
+References: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
+Message-ID: <fe925c14-fe70-b237-b793-e6b865687c11@huawei.com>
+Date:   Mon, 3 Feb 2020 09:53:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable 'offset' in function cs_etm__sample() is u64 type, it's not
-appropriate to check it with 'while (offset > 0)'; this patch changes to
-'while (offset)'.
+Friendly ping...
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/cs-etm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index dbddf1eec2be..720108bd8dba 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -945,7 +945,7 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
- 	if (packet->isa == CS_ETM_ISA_T32) {
- 		u64 addr = packet->start_addr;
- 
--		while (offset > 0) {
-+		while (offset) {
- 			addr += cs_etm__t32_instr_size(etmq,
- 						       trace_chan_id, addr);
- 			offset--;
--- 
-2.17.1
+On 2020/1/21 12:04, Zhiqiang Liu wrote:
+> 
+> In brd_init func, rd_nr num of brd_device are firstly allocated
+> and add in brd_devices, then brd_devices are traversed to add each
+> brd_device by calling add_disk func. When allocating brd_device,
+> the disk->first_minor is set to i * max_part, if rd_nr * max_part
+> is larger than MINORMASK, two different brd_device may have the same
+> devt, then only one of them can be successfully added.
+> when rmmod brd.ko, it will cause oops when calling brd_exit.
+> 
+> Follow those steps:
+>   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+>   # rmmod brd
+> then, the oops will appear.
+> 
+> Oops log:
+> [  726.613722] Call trace:
+> [  726.614175]  kernfs_find_ns+0x24/0x130
+> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+> [  726.615749]  sysfs_remove_group+0x38/0xb0
+> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+> [  726.617320]  blk_unregister_queue+0x98/0x100
+> [  726.618105]  del_gendisk+0x144/0x2b8
+> [  726.618759]  brd_exit+0x68/0x560 [brd]
+> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+> [  726.620384]  el0_svc_common+0x78/0x130
+> [  726.621057]  el0_svc_handler+0x38/0x78
+> [  726.621738]  el0_svc+0x8/0xc
+> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+> 
+> Here, we add brd_check_and_reset_par func to check and limit max_part par.
+> 
+> --
+> V3->V4:(suggested by Ming Lei)
+>  - remove useless change
+>  - add one limit of max_part
+> 
+> V2->V3: (suggested by Ming Lei)
+>  - clear .minors when running out of consecutive minor space in brd_alloc
+>  - remove limit of rd_nr
+> 
+> V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
+> 
+> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> ---
+>  drivers/block/brd.c | 27 +++++++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+> index df8103dd40ac..4684f95e3369 100644
+> --- a/drivers/block/brd.c
+> +++ b/drivers/block/brd.c
+> @@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
+>  	 *  is harmless)
+>  	 */
+>  	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
+> -	disk = brd->brd_disk = alloc_disk(max_part);
+> +	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
+> +			0 : max_part);
+>  	if (!disk)
+>  		goto out_free_queue;
+>  	disk->major		= RAMDISK_MAJOR;
+> -	disk->first_minor	= i * max_part;
+> +	disk->first_minor	= i * disk->minors;
+>  	disk->fops		= &brd_fops;
+>  	disk->private_data	= brd;
+>  	disk->queue		= brd->brd_queue;
+> @@ -468,6 +469,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+>  	return kobj;
+>  }
+> 
+> +static inline void brd_check_and_reset_par(void)
+> +{
+> +	if (unlikely(!max_part))
+> +		max_part = 1;
+> +
+> +	if (max_part > DISK_MAX_PARTS) {
+> +		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
+> +			DISK_MAX_PARTS, DISK_MAX_PARTS);
+> +		max_part = DISK_MAX_PARTS;
+> +	}
+> +
+> +	/*
+> +	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
+> +	 * otherwise, it is possiable to get same dev_t when adding partitions.
+> +	 */
+> +	if ((1U << MINORBITS) % max_part != 0)
+> +		max_part = 1UL << fls(max_part);
+> +}
+> +
+>  static int __init brd_init(void)
+>  {
+>  	struct brd_device *brd, *next;
+> @@ -491,8 +511,7 @@ static int __init brd_init(void)
+>  	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+>  		return -EIO;
+> 
+> -	if (unlikely(!max_part))
+> -		max_part = 1;
+> +	brd_check_and_reset_par();
+> 
+>  	for (i = 0; i < rd_nr; i++) {
+>  		brd = brd_alloc(i);
+> 
 
