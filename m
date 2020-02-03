@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D149C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BCFC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A4721582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54DD521582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746898;
-	bh=wScm5YKGNaarcOFHKq6onNe035vienkBX63O9+T/m2k=;
+	s=default; t=1580746901;
+	bh=3rG+20NtMyCs9BGA6dOs95ajGnS5S83b8erPqzYOOH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebBLAA+3HOLB1uR3AFk8AuhqcRSYY5sO1jYtSxJFUYxtMn4RiDvVOISQi5X281ktQ
-	 nyw1RYdwi2FggCgen2bbUfI8K/A3uaAXHIprtDfHBXc9dsChLCImd2QMdovZ2sAaGH
-	 ca2SZCptVxqBerZNtrPf7ewpotBRj3uPQjuCyRvQ=
+	b=Uj8wteIrd+DdyDtSuscsj4zvM2aUOZ1QUlGQud8sety58BirjvSaBrmK/UiEGQJBa
+	 s9NbQiq0rlKqjnl3xqOamcklRk8oLZ9xlJ4WjxCQG6sqkeMQVaUhQwLMeOSI4lR9Gc
+	 Z3B00MFqqQyppCDI4ivGD+6ZXwYJDSjNRI2uW0DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgBCQVg (ORCPT
+        id S1728258AbgBCQVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:21:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727479AbgBCQVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:31 -0500
+        id S1728601AbgBCQVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:35 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5879A21582;
-        Mon,  3 Feb 2020 16:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F31DC2080C;
+        Mon,  3 Feb 2020 16:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746890;
-        bh=wScm5YKGNaarcOFHKq6onNe035vienkBX63O9+T/m2k=;
+        s=default; t=1580746895;
+        bh=3rG+20NtMyCs9BGA6dOs95ajGnS5S83b8erPqzYOOH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGOzOcteBK5Db6se2W8r4Z4pjgT9XAaWb8wGLYJsyOb5U+1Mw5oZrU/TG8X6vOvxk
-         jMtcwoDhyl4SLaj4kkvIKgIIYGPwTzFcESifHVGDMGL3f0YghB0Y2OsXAI3ZWqJrAf
-         PWLC7Vzr/cGCm9h+qskXjvJENyTq6D776jarcmKA=
+        b=gJGDA+ziSLJrvXt1G39msOkn8GGivOXCTBlmimqnnMi8rQAIPKdLraEYYTxsrHn2p
+         DSSEwZpPYPtl23hzXA7tI0N5gFeqfLT8KSY4iPmKnH5u5G5T6ksci4dZ2pI60sRhRr
+         nR/ZSut7Bq3kr2y+PprLz+wgbd2bFsYu1oy3Kyos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 50/53] net/sonic: Quiesce SONIC before re-initializing descriptor memory
-Date:   Mon,  3 Feb 2020 16:19:42 +0000
-Message-Id: <20200203161911.659587424@linuxfoundation.org>
+Subject: [PATCH 4.4 52/53] l2t_seq_next should increase position index
+Date:   Mon,  3 Feb 2020 16:19:44 +0000
+Message-Id: <20200203161911.947785659@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -61,95 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 3f4b7e6a2be982fd8820a2b54d46dd9c351db899 ]
+[ Upstream commit 66018a102f7756cf72db4d2704e1b93969d9d332 ]
 
-Make sure the SONIC's DMA engine is idle before altering the transmit
-and receive descriptors. Add a helper for this as it will be needed
-again.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 25 +++++++++++++++++++++++++
- drivers/net/ethernet/natsemi/sonic.h |  3 +++
- 2 files changed, 28 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 21766ec12ef20..712be59251f51 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -103,6 +103,24 @@ static int sonic_open(struct net_device *dev)
- 	return 0;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index ac27898c6ab0b..e7bdaad6ed0f7 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -604,8 +604,7 @@ static void *l2t_seq_start(struct seq_file *seq, loff_t *pos)
+ static void *l2t_seq_next(struct seq_file *seq, void *v, loff_t *pos)
+ {
+ 	v = l2t_get_idx(seq, *pos);
+-	if (v)
+-		++*pos;
++	++(*pos);
+ 	return v;
  }
  
-+/* Wait for the SONIC to become idle. */
-+static void sonic_quiesce(struct net_device *dev, u16 mask)
-+{
-+	struct sonic_local * __maybe_unused lp = netdev_priv(dev);
-+	int i;
-+	u16 bits;
-+
-+	for (i = 0; i < 1000; ++i) {
-+		bits = SONIC_READ(SONIC_CMD) & mask;
-+		if (!bits)
-+			return;
-+		if (irqs_disabled() || in_interrupt())
-+			udelay(20);
-+		else
-+			usleep_range(100, 200);
-+	}
-+	WARN_ONCE(1, "command deadline expired! 0x%04x\n", bits);
-+}
- 
- /*
-  * Close the SONIC device
-@@ -120,6 +138,9 @@ static int sonic_close(struct net_device *dev)
- 	/*
- 	 * stop the SONIC, disable interrupts
- 	 */
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	sonic_quiesce(dev, SONIC_CR_ALL);
-+
- 	SONIC_WRITE(SONIC_IMR, 0);
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
-@@ -159,6 +180,9 @@ static void sonic_tx_timeout(struct net_device *dev)
- 	 * put the Sonic into software-reset mode and
- 	 * disable all interrupts before releasing DMA buffers
- 	 */
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	sonic_quiesce(dev, SONIC_CR_ALL);
-+
- 	SONIC_WRITE(SONIC_IMR, 0);
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
-@@ -638,6 +662,7 @@ static int sonic_init(struct net_device *dev)
- 	 */
- 	SONIC_WRITE(SONIC_CMD, 0);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	sonic_quiesce(dev, SONIC_CR_ALL);
- 
- 	/*
- 	 * initialize the receive resource area
-diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index d9f8ceb5353a4..7dcf913d7395a 100644
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -109,6 +109,9 @@
- #define SONIC_CR_TXP            0x0002
- #define SONIC_CR_HTX            0x0001
- 
-+#define SONIC_CR_ALL (SONIC_CR_LCAM | SONIC_CR_RRRA | \
-+		      SONIC_CR_RXEN | SONIC_CR_TXP)
-+
- /*
-  * SONIC data configuration bits
-  */
 -- 
 2.20.1
 
