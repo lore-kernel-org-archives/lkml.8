@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47811C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C977C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0322051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB68D21775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747740;
-	bh=2dCeTe+htp6bYLj6TEvc7v6Uv3nrYBGHsJ2ytgCOJwM=;
+	s=default; t=1580747742;
+	bh=oeW6U2MkcM5rIUI9vPpzZNq4TO61iMRDiVW1cUgizZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTCMK7WLzy27rEOfXFkQTt5zSEFajqO5h0XV2PVsThIDh207fdPPOyMijqWHhpGEZ
-	 laGN589XTx9f7h0SloinndvtINL7OMuJcRa8TXoEDmsIQPH2cZkr3WiruLIIee6RYo
-	 1foLd5eF3hEIq2uPa1Pf0xzNcAhuKObLn2393KQE=
+	b=cdcYVSpxSrELX/fRyxVaFHjzR+8ZfLfn+cNIGqrIWZH/r9J21/n+GTyyFJ5AQusly
+	 4hq6owX2D7/RgvwZjEJhs2m3Ar1Mr+HEFTgMVRAFkWloLrGHmpaIDphj8SJY94ri5/
+	 mzeDo4tNhVcGeHIJl9KukbinMX2TJx5pkxsob25A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbgBCQfi (ORCPT
+        id S1731058AbgBCQfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:35:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730974AbgBCQfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:34 -0500
+        id S1730952AbgBCQfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:39 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD29A2051A;
-        Mon,  3 Feb 2020 16:35:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779C42082E;
+        Mon,  3 Feb 2020 16:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747734;
-        bh=2dCeTe+htp6bYLj6TEvc7v6Uv3nrYBGHsJ2ytgCOJwM=;
+        s=default; t=1580747738;
+        bh=oeW6U2MkcM5rIUI9vPpzZNq4TO61iMRDiVW1cUgizZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7x8RZCuj+2mg1GpYwwG5cTAfCGNRSvfBD4oB9nR/lyGd/nwu2UU+nN9seHRWkKEs
-         Yld1kmrnHD/IL/ZuzC091t8m0Lq8ZYSo3u1vAHv+mbIimnINJfd/izpv144ElWO9BI
-         UWMkWSI+ni2moaDXtF0mAgtlIDmuHvxciaNuEC7k=
+        b=QGMBc+xBSOKmk8c1nqJaCXJK6io5QAnI0dflsrlcbmAMY59ZFqje0SQqF+4ZjSkwI
+         RV3LmOu6LTxhpDzf6VZDznbXQRkzo/O62rZP7r1UUxGagSt3llmfALwjJvSU5dWiQJ
+         mLSvCa3L147HgLr+Ma62ws4Y4e78lJqwGobiSlKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        Kristian Evensen <kristian.evensen@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 46/90] ASoC: hdac_hda: Fix error in driver removal after failed probe
-Date:   Mon,  3 Feb 2020 16:19:49 +0000
-Message-Id: <20200203161923.638680544@linuxfoundation.org>
+Subject: [PATCH 5.4 48/90] qmi_wwan: Add support for Quectel RM500Q
+Date:   Mon,  3 Feb 2020 16:19:51 +0000
+Message-Id: <20200203161923.816526825@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,56 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Kristian Evensen <kristian.evensen@gmail.com>
 
-[ Upstream commit 552b1a85da9f63856e7e341b81c16e0e078204f1 ]
+[ Upstream commit a9ff44f0e61d074f29770413fef6a5452be7b83e ]
 
-In case system has multiple HDA codecs, and codec probe fails for
-at least one but not all codecs, driver will end up cancelling
-a non-initialized timer context upon driver removal.
+RM500Q is a 5G module from Quectel, supporting both standalone and
+non-standalone modes. The normal Quectel quirks apply (DTR and dynamic
+interface numbers).
 
-Call trace of typical case:
-
-[   60.593646] WARNING: CPU: 1 PID: 1147 at kernel/workqueue.c:3032
-__flush_work+0x18b/0x1a0
-[...]
-[   60.593670]  __cancel_work_timer+0x11f/0x1a0
-[   60.593673]  hdac_hda_dev_remove+0x25/0x30 [snd_soc_hdac_hda]
-[   60.593674]  device_release_driver_internal+0xe0/0x1c0
-[   60.593675]  bus_remove_device+0xd6/0x140
-[   60.593677]  device_del+0x175/0x3e0
-[   60.593679]  ? widget_tree_free.isra.7+0x90/0xb0 [snd_hda_core]
-[   60.593680]  snd_hdac_device_unregister+0x34/0x50 [snd_hda_core]
-[   60.593682]  snd_hdac_ext_bus_device_remove+0x2a/0x60 [snd_hda_ext_core]
-[   60.593684]  hda_dsp_remove+0x26/0x100 [snd_sof_intel_hda_common]
-[   60.593686]  snd_sof_device_remove+0x84/0xa0 [snd_sof]
-[   60.593687]  sof_pci_remove+0x10/0x30 [snd_sof_pci]
-[   60.593689]  pci_device_remove+0x36/0xb0
-
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200110235751.3404-9-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hda.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/hdac_hda.c b/sound/soc/codecs/hdac_hda.c
-index 4570f662fb48b..d78f4d856aaff 100644
---- a/sound/soc/codecs/hdac_hda.c
-+++ b/sound/soc/codecs/hdac_hda.c
-@@ -498,7 +498,9 @@ static int hdac_hda_dev_remove(struct hdac_device *hdev)
- 	struct hdac_hda_priv *hda_pvt;
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 4196c0e327403..9485c8d1de8a3 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1062,6 +1062,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
++	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
  
- 	hda_pvt = dev_get_drvdata(&hdev->dev);
--	cancel_delayed_work_sync(&hda_pvt->codec.jackpoll_work);
-+	if (hda_pvt && hda_pvt->codec.registered)
-+		cancel_delayed_work_sync(&hda_pvt->codec.jackpoll_work);
-+
- 	return 0;
- }
- 
+ 	/* 3. Combined interface devices matching on interface number */
+ 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
 -- 
 2.20.1
 
