@@ -2,52 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02448C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3271C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1D92051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0D120CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747765;
-	bh=2qIIlsh03rP1AYU4QfAbfoGND10GSohEUembRPw97q0=;
+	s=default; t=1580747768;
+	bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3XJxSfjTURxsnUCB2b/KRYr9zwD7r/7IPnvfP9XAlYJ0ifleTyXK54HBczq0L16m
-	 /rjA+bVLoKpMxpbjh9WCDViN6kDTWTSWgpJlcELsITnpJ8VIhmjlLUJOK8y8+zWE6F
-	 RTs3LS5i04AF0ihB4WL6E/Dzhj2SgCgJq+1OPJMM=
+	b=UfNanoA7tv9mswdJx/e9NZULxmaDPauFTdO7/+ZC74y8S5mxS20xF3iB4PZcdqlq9
+	 W/jgtZ7QoE+Mk02aAvQDYr4oU/LJhpdkyVSNOH0BIvdj+6PBTJ33IwtBQ7zaN3+N9A
+	 YQUitzM9Pr+KSym2d+1ldruhn/MIkXZ2GEWx1sMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgBCQgF (ORCPT
+        id S1731130AbgBCQgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbgBCQgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:00 -0500
+        id S1731115AbgBCQgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:02 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116062051A;
-        Mon,  3 Feb 2020 16:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69E9B2051A;
+        Mon,  3 Feb 2020 16:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747759;
-        bh=2qIIlsh03rP1AYU4QfAbfoGND10GSohEUembRPw97q0=;
+        s=default; t=1580747761;
+        bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MP+VBs54OoYEV8baqBRcIJ8e7zS4KZT18bJKH/VIz3CO3uYQLQp5xWB9QJqmWD9Sk
-         9cmKkHqjUX5zj6KKtI44oWAmsytMbiI051Casb7Y/kkiCEHcvMeTJWmDuFKCTJTb78
-         T8mX8VWu5ntUuOC7NgsV+4ap7KHZBxUpEn7Vc9Vk=
+        b=g/SfVMZK+7b9ypAowOcQsoBdr5S2H5YkCYZBYz9knzq2jN3qL2CAHbFX6dKLHE8Yg
+         yLvJB4lx2LEgbZBTrVndV3AFvsBM7//LOu2tpKVNuZsoM0pwWZi5o7doSFpoQsicaD
+         0v+SN4RhLe7p1YjZ6lrf/eaFqN/wIK/gPw7MzgDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 56/90] perf/x86/intel/uncore: Remove PCIe3 unit for SNR
-Date:   Mon,  3 Feb 2020 16:19:59 +0000
-Message-Id: <20200203161924.560277798@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 19/90] media: dvb-usb/dvb-usb-urb.c: initialize actlen to 0
+Date:   Mon,  3 Feb 2020 16:19:22 +0000
+Message-Id: <20200203161920.218827702@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,86 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 2167f1625c2f04a33145f325db0de285630f7bd1 ]
+commit 569bc8d6a6a50acb5fcf07fb10b8d2d461fdbf93 upstream.
 
-The PCIe Root Port driver for CPU Complex PCIe Root Ports are not
-loaded on SNR.
+This fixes a syzbot failure since actlen could be uninitialized,
+but it was still used.
 
-The device ID for SNR PCIe3 unit is used by both uncore driver and the
-PCIe Root Port driver. If uncore driver is loaded, the PCIe Root Port
-driver never be probed.
+Syzbot link:
 
-Remove the PCIe3 unit for SNR for now. The support for PCIe3 unit will
-be added later separately.
+https://syzkaller.appspot.com/bug?extid=6bf9606ee955b646c0e1
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200116200210.18937-2-kan.liang@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-and-tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Acked-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/events/intel/uncore_snbep.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ drivers/media/usb/dvb-usb/dvb-usb-urb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 011644802ce78..ad20220af303a 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -369,11 +369,6 @@
- #define SNR_M2M_PCI_PMON_BOX_CTL		0x438
- #define SNR_M2M_PCI_PMON_UMASK_EXT		0xff
+--- a/drivers/media/usb/dvb-usb/dvb-usb-urb.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-urb.c
+@@ -12,7 +12,7 @@
+ int dvb_usb_generic_rw(struct dvb_usb_device *d, u8 *wbuf, u16 wlen, u8 *rbuf,
+ 	u16 rlen, int delay_ms)
+ {
+-	int actlen,ret = -ENOMEM;
++	int actlen = 0, ret = -ENOMEM;
  
--/* SNR PCIE3 */
--#define SNR_PCIE3_PCI_PMON_CTL0			0x508
--#define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
--#define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
--
- /* SNR IMC */
- #define SNR_IMC_MMIO_PMON_FIXED_CTL		0x54
- #define SNR_IMC_MMIO_PMON_FIXED_CTR		0x38
-@@ -4328,27 +4323,12 @@ static struct intel_uncore_type snr_uncore_m2m = {
- 	.format_group	= &snr_m2m_uncore_format_group,
- };
- 
--static struct intel_uncore_type snr_uncore_pcie3 = {
--	.name		= "pcie3",
--	.num_counters	= 4,
--	.num_boxes	= 1,
--	.perf_ctr_bits	= 48,
--	.perf_ctr	= SNR_PCIE3_PCI_PMON_CTR0,
--	.event_ctl	= SNR_PCIE3_PCI_PMON_CTL0,
--	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
--	.box_ctl	= SNR_PCIE3_PCI_PMON_BOX_CTL,
--	.ops		= &ivbep_uncore_pci_ops,
--	.format_group	= &ivbep_uncore_format_group,
--};
--
- enum {
- 	SNR_PCI_UNCORE_M2M,
--	SNR_PCI_UNCORE_PCIE3,
- };
- 
- static struct intel_uncore_type *snr_pci_uncores[] = {
- 	[SNR_PCI_UNCORE_M2M]		= &snr_uncore_m2m,
--	[SNR_PCI_UNCORE_PCIE3]		= &snr_uncore_pcie3,
- 	NULL,
- };
- 
-@@ -4357,10 +4337,6 @@ static const struct pci_device_id snr_uncore_pci_ids[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
- 		.driver_data = UNCORE_PCI_DEV_FULL_DATA(12, 0, SNR_PCI_UNCORE_M2M, 0),
- 	},
--	{ /* PCIe3 */
--		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a),
--		.driver_data = UNCORE_PCI_DEV_FULL_DATA(4, 0, SNR_PCI_UNCORE_PCIE3, 0),
--	},
- 	{ /* end: all zeroes */ }
- };
- 
--- 
-2.20.1
-
+ 	if (!d || wbuf == NULL || wlen == 0)
+ 		return -EINVAL;
 
 
