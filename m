@@ -2,122 +2,80 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAA2C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75840C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C210E20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:29:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rkwAAsMu"
+	by mail.kernel.org (Postfix) with ESMTP id 2BA5320658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgBCJ3c (ORCPT
+        id S1727864AbgBCJbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:29:32 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:31453 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727509AbgBCJ3b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:29:31 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580722171; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=rVTQT/UDQokSpeOaMvofAY/Lfmv4L1fEaVGMooR99N0=;
- b=rkwAAsMuCfF9gbAAV5YpB/mjJVo/JP5JEhmi4kMZgUHBVgQMsu6Ohq4r3GTjZGTrcYG5un05
- GD3vW8m4y2P3AfAGNU790jqzZhufiR6fd0QHN/5UJ2koNfrVP97mYmIGD32U18kDVrhO+Qbf
- PrxhHxLWjdCczv87n58OHPeHbcc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e37e7fa.7f8e35731ab0-smtp-out-n01;
- Mon, 03 Feb 2020 09:29:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6FB93C447A2; Mon,  3 Feb 2020 09:29:29 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gubbaven)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B58EBC433CB;
-        Mon,  3 Feb 2020 09:29:28 +0000 (UTC)
+        Mon, 3 Feb 2020 04:31:32 -0500
+Received: from relay.sw.ru ([185.231.240.75]:58162 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbgBCJbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:31:32 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1iyY4Y-0003vv-U0; Mon, 03 Feb 2020 12:31:15 +0300
+Subject: Re: [PATCH v3] mm: Allocate shrinker_map on appropriate NUMA node
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        hannes@cmpxchg.org, shakeelb@google.com, vdavydov.dev@gmail.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
+ <ebe1c944-2e0f-136d-dd09-0bb37d500fe2@redhat.com>
+ <5f3fc9a9-9a22-ccc3-5971-9783b60807bc@virtuozzo.com>
+ <20200131154735.GA4520@dhcp22.suse.cz>
+ <a03cb815-8f80-03db-c1bd-39af960db601@virtuozzo.com>
+ <20200131160151.GB4520@dhcp22.suse.cz>
+ <fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com>
+ <20200131161814.GC4520@dhcp22.suse.cz>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <878c2752-9817-3c37-c9fc-ef46c3a9a256@virtuozzo.com>
+Date:   Mon, 3 Feb 2020 12:31:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200131161814.GC4520@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Feb 2020 14:59:28 +0530
-From:   gubbaven@codeaurora.org
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, robh@kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, tientzu@chromium.org,
-        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com
-Subject: Re: [PATCH v3] Bluetooth: hci_qca:Removed the function
- qca_setup_clock()
-In-Reply-To: <1580717149-7609-1-git-send-email-gubbaven@codeaurora.org>
-References: <1580717149-7609-1-git-send-email-gubbaven@codeaurora.org>
-Message-ID: <fb372af8420a7af076ffbb5f44542497@codeaurora.org>
-X-Sender: gubbaven@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please discard this.I will be sending another patch set.
+On 31.01.2020 19:18, Michal Hocko wrote:
+> On Fri 31-01-20 19:08:49, Kirill Tkhai wrote:
+>> mm: Allocate shrinker_map on appropriate NUMA node
+>>
+>> From: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>
+>> Despite shrinker_map may be touched from any cpu
+>> (e.g., a bit there may be set by a task running
+>> everywhere); kswapd is always bound to specific
+>> node. So, we will allocate shrinker_map from
+>> related NUMA node to respect its NUMA locality.
+>> Also, this follows generic way we use for allocation
+>> memcg's per-node data.
+> 
+> I would just drop the last sentence.
 
-Regards,
-Venkata.
+I mean we allocate memcg->nodeinfo from specific node,
+so shrinker_map also should follow this rule. Though,
+I have no objections to remove this on patch merge.
 
-On 2020-02-03 13:35, Venkata Lakshmi Narayana Gubba wrote:
-> For enabling and disabling clocks, directly called the functions
-> clk_prepare_enable() and clk_disable_unprepare() respectively.
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 > 
-> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 73706f3..eacc65b 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1738,15 +1738,6 @@ static int qca_power_off(struct hci_dev *hdev)
->  	return 0;
->  }
-> 
-> -static int qca_setup_clock(struct clk *clk, bool enable)
-> -{
-> -	if (enable)
-> -		return clk_prepare_enable(clk);
-> -
-> -	clk_disable_unprepare(clk);
-> -	return 0;
-> -}
-> -
->  static int qca_regulator_enable(struct qca_serdev *qcadev)
->  {
->  	struct qca_power *power = qcadev->bt_power;
-> @@ -1764,7 +1755,7 @@ static int qca_regulator_enable(struct qca_serdev 
-> *qcadev)
-> 
->  	power->vregs_on = true;
-> 
-> -	ret = qca_setup_clock(qcadev->susclk, true);
-> +	ret = clk_prepare_enable(qcadev->susclk);
->  	if (ret) {
->  		/* Turn off regulators to overcome power leakage */
->  		qca_regulator_disable(qcadev);
-> @@ -1791,7 +1782,7 @@ static void qca_regulator_disable(struct
-> qca_serdev *qcadev)
->  	power->vregs_on = false;
-> 
->  	if (qcadev->susclk)
-> -		qca_setup_clock(qcadev->susclk, false);
-> +		clk_disable_unprepare(qcadev->susclk);
->  }
-> 
->  static int qca_init_regulators(struct qca_power *qca,
+> Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks,
+Kirill.
+
+
