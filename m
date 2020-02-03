@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D0DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41FDC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5642051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8495D2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747345;
-	bh=qF4a9teJ9VsdKlTbjI7CLhaqbCFKwzOnJr0oTgDxSq8=;
+	s=default; t=1580747348;
+	bh=N5HNIYWrB8a4KH24nWBO+sCQSMVf9LazI3OcHILKQkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1bsTYY62by0CEcaW7v79opSsc891u3UdnopPe2kXed0Bzae9QiaMPHDq6+GH92v5
-	 +NN/sTecCsLn8KSLEqUV0FaR3uy0mWBhKgARm1dYZvTiq4icyKFJq8KCIRzXQlIcns
-	 JtKSjQjmPfRHvcPzNKojB2g4EFyJwIRY6qoTQc6s=
+	b=L4bIFYHXJmMdhpCuTjAX6/ebLvWvqzIuQGcoUTljvHBunAaUtUJjGJngZPqU5v2Jf
+	 5qqT6qNA6ZhkqPTebw/bY8sW4i3EZWFYrHoOU/9sSevcrGx2Mh9cPWbPZ/5jmDYOJT
+	 3OAZTjOUKDF9D149GJvQw0/2MXtV9y+u+CERAO4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgBCQ3E (ORCPT
+        id S1729718AbgBCQ3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40790 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729678AbgBCQ3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:00 -0500
+        id S1729700AbgBCQ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:02 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B00220838;
-        Mon,  3 Feb 2020 16:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B6902051A;
+        Mon,  3 Feb 2020 16:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747339;
-        bh=qF4a9teJ9VsdKlTbjI7CLhaqbCFKwzOnJr0oTgDxSq8=;
+        s=default; t=1580747341;
+        bh=N5HNIYWrB8a4KH24nWBO+sCQSMVf9LazI3OcHILKQkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zS0e7q5px57DQptpJTlB16AbYffr5hRZ7P9HrHTy3/iAVGmvrimrSLkGyPITaS3D4
-         LjwmDuw6G9SU+FMEepDWZkNBNojX5vDEg+OXunlaLV0BPJ6nz3jGLVtORBmKttxHWe
-         wb4n+GCkveoa1ByuUydsr4Od36s0mj5hkZ1VLqIQ=
+        b=SXBfoWEoAX6NObS50fL3euhCJOZ8060DhODIGKDE+ZRWyfHrfpBEQfx3DAc/aMNNa
+         1v3GzD00vltAtPkhkOODZG9tAN/GLQyXU9PitYuRCBn4tOXlFJdg/cKoaS4gYxzf2V
+         O3XrPoItK1DTk/RfrlAbLX41QLqwsQf+MoD8qNr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Theodore Tso <tytso@mit.edu>, Zubin Mithra <zsm@chromium.org>,
-        syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 42/89] ext4: validate the debug_want_extra_isize mount option at parse time
-Date:   Mon,  3 Feb 2020 16:19:27 +0000
-Message-Id: <20200203161922.617213813@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 43/89] mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
+Date:   Mon,  3 Feb 2020 16:19:28 +0000
+Message-Id: <20200203161922.761396204@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,195 +67,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 9803387c55f7d2ce69aa64340c5fdc6b3027dbc8 upstream.
+commit c7a91bc7c2e17e0a9c8b9745a2cb118891218fd1 upstream.
 
-Instead of setting s_want_extra_size and then making sure that it is a
-valid value afterwards, validate the field before we set it.  This
-avoids races and other problems when remounting the file system.
+What we are trying to do is change the '=' character to a NUL terminator
+and then at the end of the function we restore it back to an '='.  The
+problem is there are two error paths where we jump to the end of the
+function before we have replaced the '=' with NUL.
 
-Link: https://lore.kernel.org/r/20191215063020.GA11512@mit.edu
-Cc: stable@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reported-and-tested-by: syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
+We end up putting the '=' in the wrong place (possibly one element
+before the start of the buffer).
+
+Link: http://lkml.kernel.org/r/20200115055426.vdjwvry44nfug7yy@kili.mountain
+Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
+Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Dmitry Vyukov <dvyukov@google.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |  127 +++++++++++++++++++++++++++++---------------------------
- 1 file changed, 66 insertions(+), 61 deletions(-)
+ mm/mempolicy.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1782,6 +1782,13 @@ static int handle_mount_opt(struct super
- 			arg = JBD2_DEFAULT_MAX_COMMIT_AGE;
- 		sbi->s_commit_interval = HZ * arg;
- 	} else if (token == Opt_debug_want_extra_isize) {
-+		if ((arg & 1) ||
-+		    (arg < 4) ||
-+		    (arg > (sbi->s_inode_size - EXT4_GOOD_OLD_INODE_SIZE))) {
-+			ext4_msg(sb, KERN_ERR,
-+				 "Invalid want_extra_isize %d", arg);
-+			return -1;
-+		}
- 		sbi->s_want_extra_isize = arg;
- 	} else if (token == Opt_max_batch_time) {
- 		sbi->s_max_batch_time = arg;
-@@ -3454,40 +3461,6 @@ int ext4_calculate_overhead(struct super
- 	return 0;
- }
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2724,6 +2724,9 @@ int mpol_parse_str(char *str, struct mem
+ 	char *flags = strchr(str, '=');
+ 	int err = 1;
  
--static void ext4_clamp_want_extra_isize(struct super_block *sb)
--{
--	struct ext4_sb_info *sbi = EXT4_SB(sb);
--	struct ext4_super_block *es = sbi->s_es;
--	unsigned def_extra_isize = sizeof(struct ext4_inode) -
--						EXT4_GOOD_OLD_INODE_SIZE;
--
--	if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
--		sbi->s_want_extra_isize = 0;
--		return;
--	}
--	if (sbi->s_want_extra_isize < 4) {
--		sbi->s_want_extra_isize = def_extra_isize;
--		if (ext4_has_feature_extra_isize(sb)) {
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_want_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_want_extra_isize);
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_min_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_min_extra_isize);
--		}
--	}
--	/* Check if enough inode space is available */
--	if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
--	    (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
--							sbi->s_inode_size)) {
--		sbi->s_want_extra_isize = def_extra_isize;
--		ext4_msg(sb, KERN_INFO,
--			 "required extra inode space not available");
--	}
--}
--
- static void ext4_set_resv_clusters(struct super_block *sb)
- {
- 	ext4_fsblk_t resv_clusters;
-@@ -3695,6 +3668,65 @@ static int ext4_fill_super(struct super_
- 	 */
- 	sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
- 
-+	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
-+		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
-+		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
-+	} else {
-+		sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
-+		sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
-+		if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
-+			ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
-+				 sbi->s_first_ino);
-+			goto failed_mount;
-+		}
-+		if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
-+		    (!is_power_of_2(sbi->s_inode_size)) ||
-+		    (sbi->s_inode_size > blocksize)) {
-+			ext4_msg(sb, KERN_ERR,
-+			       "unsupported inode size: %d",
-+			       sbi->s_inode_size);
-+			goto failed_mount;
-+		}
-+		/*
-+		 * i_atime_extra is the last extra field available for
-+		 * [acm]times in struct ext4_inode. Checking for that
-+		 * field should suffice to ensure we have extra space
-+		 * for all three.
-+		 */
-+		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
-+			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
-+			sb->s_time_gran = 1;
-+		} else {
-+			sb->s_time_gran = NSEC_PER_SEC;
-+		}
-+	}
-+	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+			EXT4_GOOD_OLD_INODE_SIZE;
-+		if (ext4_has_feature_extra_isize(sb)) {
-+			unsigned v, max = (sbi->s_inode_size -
-+					   EXT4_GOOD_OLD_INODE_SIZE);
++	if (flags)
++		*flags++ = '\0';	/* terminate mode string */
 +
-+			v = le16_to_cpu(es->s_want_extra_isize);
-+			if (v > max) {
-+				ext4_msg(sb, KERN_ERR,
-+					 "bad s_want_extra_isize: %d", v);
-+				goto failed_mount;
-+			}
-+			if (sbi->s_want_extra_isize < v)
-+				sbi->s_want_extra_isize = v;
-+
-+			v = le16_to_cpu(es->s_min_extra_isize);
-+			if (v > max) {
-+				ext4_msg(sb, KERN_ERR,
-+					 "bad s_min_extra_isize: %d", v);
-+				goto failed_mount;
-+			}
-+			if (sbi->s_want_extra_isize < v)
-+				sbi->s_want_extra_isize = v;
-+		}
-+	}
-+
- 	if (sbi->s_es->s_mount_opts[0]) {
- 		char *s_mount_opts = kstrndup(sbi->s_es->s_mount_opts,
- 					      sizeof(sbi->s_es->s_mount_opts),
-@@ -3893,29 +3925,6 @@ static int ext4_fill_super(struct super_
- 						      has_huge_files);
- 	sb->s_maxbytes = ext4_max_size(sb->s_blocksize_bits, has_huge_files);
+ 	if (nodelist) {
+ 		/* NUL-terminate mode or flags string */
+ 		*nodelist++ = '\0';
+@@ -2734,9 +2737,6 @@ int mpol_parse_str(char *str, struct mem
+ 	} else
+ 		nodes_clear(nodes);
  
--	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
--		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
--		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
--	} else {
--		sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
--		sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
--		if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
--			ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
--				 sbi->s_first_ino);
--			goto failed_mount;
--		}
--		if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
--		    (!is_power_of_2(sbi->s_inode_size)) ||
--		    (sbi->s_inode_size > blocksize)) {
--			ext4_msg(sb, KERN_ERR,
--			       "unsupported inode size: %d",
--			       sbi->s_inode_size);
--			goto failed_mount;
--		}
--		if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE)
--			sb->s_time_gran = 1 << (EXT4_EPOCH_BITS - 2);
--	}
+-	if (flags)
+-		*flags++ = '\0';	/* terminate mode string */
 -
- 	sbi->s_desc_size = le16_to_cpu(es->s_desc_size);
- 	if (ext4_has_feature_64bit(sb)) {
- 		if (sbi->s_desc_size < EXT4_MIN_DESC_SIZE_64BIT ||
-@@ -4354,8 +4363,6 @@ no_journal:
- 	if (ext4_setup_super(sb, es, sb_rdonly(sb)))
- 		sb->s_flags |= MS_RDONLY;
- 
--	ext4_clamp_want_extra_isize(sb);
--
- 	ext4_set_resv_clusters(sb);
- 
- 	err = ext4_setup_system_zone(sb);
-@@ -5139,8 +5146,6 @@ static int ext4_remount(struct super_blo
- 		goto restore_opts;
- 	}
- 
--	ext4_clamp_want_extra_isize(sb);
--
- 	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
- 	    test_opt(sb, JOURNAL_CHECKSUM)) {
- 		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
+ 	for (mode = 0; mode < MPOL_MAX; mode++) {
+ 		if (!strcmp(str, policy_modes[mode])) {
+ 			break;
 
 
