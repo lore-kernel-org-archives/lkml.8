@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07C8C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69FDC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADC320838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAAC20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748320;
-	bh=uZnpqr58FAIQr5basJhVzbytWtXZYs6Nk1b4vihknk8=;
+	s=default; t=1580748325;
+	bh=w9WNDehsM1lFSFmPeMSuZhv8mPkdVYroQ9F1lrDU4GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLj/7z2WCDq8k2kcAfZaYVp57ONUKWPkaDKsqxTo6uW1tI3iuma2rZk4dUR13cOTd
-	 ttGFfnw5jnMUJP52FsJiBssCnK8SOFUwaFrrqpCNq/kB99fTj0UmqXIpBSTI+O/1HS
-	 6jiNNcfc4+Ae8PWMBvBXzy2LhlMp8q2H8ntHqyC4=
+	b=o2FBnaldKzLJ5aKZo53yWgJtRnWyOTKPYu73MOR7U1GVr2Nblq7y+3qQU0hsufC3d
+	 eolhd6xW7F4zeG5Sh0TLXVgifWGMHtMa88siiKBrzuxMB4Seew2SuobLbfV567lKHF
+	 9MXUe7D9i/fWcDL5av0DNPVI9yKDojbZZfGhGF/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbgBCQpT (ORCPT
+        id S1729974AbgBCQaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:45:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:30:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728423AbgBCQaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:23 -0500
+        id S1729944AbgBCQaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:14 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6DC20838;
-        Mon,  3 Feb 2020 16:30:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB0420838;
+        Mon,  3 Feb 2020 16:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747423;
-        bh=uZnpqr58FAIQr5basJhVzbytWtXZYs6Nk1b4vihknk8=;
+        s=default; t=1580747413;
+        bh=w9WNDehsM1lFSFmPeMSuZhv8mPkdVYroQ9F1lrDU4GQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIX67rs54LNIFDQPhY1gnmgpsWYycJ+vs2U19Bqyn2kdzq+7n7eF6g13axOl8OrPr
-         199goSdsDomqBseKii+NmAq3qdOa01e7FkE/SMyP+x7bzRjF1DBvqlcjYQsUVe9OMW
-         U6q06pD3sBRiRYF8P/kWqHUEsX6w5dVBltweKnO0=
+        b=u3cDfKRqufBrhZso6r1LvJKn6IQ3Oa+6mGNTV/KQNQmGqOEs8/5FXJcbnGei2qVEw
+         jqgg5WF4TGaqQJCLGJ4MFOOjxYSPgeIpdoJ3tb8y56A9Gs+WDGDcmxjvyZxQZalPmS
+         SlpGoiuNSyTTHFMMxGp+LQTQHDR0Ed5jxxxdm9RU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Steven Ellis <sellis@redhat.com>,
+        Pacho Ramos <pachoramos@gmail.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 78/89] r8152: get default setting of WOL before initializing
-Date:   Mon,  3 Feb 2020 16:20:03 +0000
-Message-Id: <20200203161926.425684713@linuxfoundation.org>
+Subject: [PATCH 4.14 29/89] usb-storage: Disable UAS on JMicron SATA enclosure
+Date:   Mon,  3 Feb 2020 16:19:14 +0000
+Message-Id: <20200203161920.710515184@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,47 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hayes Wang <hayeswang@realtek.com>
+From: Laura Abbott <labbott@fedoraproject.org>
 
-[ Upstream commit 9583a3638dc07cc1878f41265e85ed497f72efcb ]
+[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
 
-Initailization would reset runtime suspend by tp->saved_wolopts, so
-the tp->saved_wolopts should be set before initializing.
+Steve Ellis reported incorrect block sizes and alignement
+offsets with a SATA enclosure. Adding a quirk to disable
+UAS fixes the problems.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Steven Ellis <sellis@redhat.com>
+Cc: Pacho Ramos <pachoramos@gmail.com>
+Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/storage/unusual_uas.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 0083c60f5cdff..a7f9c1886bd4c 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -5244,6 +5244,11 @@ static int rtl8152_probe(struct usb_interface *intf,
+diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+index f15aa47c54a9d..0eb8c67ee1382 100644
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -163,12 +163,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_IGNORE_UAS),
  
- 	intf->needs_remote_wakeup = 1;
+-/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
++/*
++ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
++ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
++ */
+ UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
+ 		"JMicron",
+ 		"JMS566",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-		US_FL_NO_REPORT_OPCODES),
++		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
  
-+	if (!rtl_can_wakeup(tp))
-+		__rtl_set_wol(tp, 0);
-+	else
-+		tp->saved_wolopts = __rtl_get_wol(tp);
-+
- 	tp->rtl_ops.init(tp);
- 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
- 	set_ethernet_addr(tp);
-@@ -5257,10 +5262,6 @@ static int rtl8152_probe(struct usb_interface *intf,
- 		goto out1;
- 	}
- 
--	if (!rtl_can_wakeup(tp))
--		__rtl_set_wol(tp, 0);
--
--	tp->saved_wolopts = __rtl_get_wol(tp);
- 	if (tp->saved_wolopts)
- 		device_set_wakeup_enable(&udev->dev, true);
- 	else
+ /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
+ UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
 -- 
 2.20.1
 
