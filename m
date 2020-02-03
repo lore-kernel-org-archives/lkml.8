@@ -2,66 +2,112 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E012EC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C424C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E2920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32615207E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J9vyR4D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbgBCNg3 (ORCPT
+        id S1727756AbgBCNgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:36:29 -0500
-Received: from mga12.intel.com ([192.55.52.136]:26128 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgBCNg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:36:28 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 05:36:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="278740404"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Feb 2020 05:36:27 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iybts-0007Kf-VT; Mon, 03 Feb 2020 15:36:28 +0200
-Date:   Mon, 3 Feb 2020 15:36:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     sachin agarwal <asachin591@gmail.com>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andy@kernel.org
-Subject: Re: [PATCH 5/6] gpio: ich: fixed a typo
-Message-ID: <20200203133628.GD32742@smile.fi.intel.com>
-References: <20200203125255.84705-1-sachinagarwal@sachins-MacBook-2.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203125255.84705-1-sachinagarwal@sachins-MacBook-2.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 3 Feb 2020 08:36:54 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:59444 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726561AbgBCNgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 08:36:54 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580737013; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=TI7++YyK03sKgcFbSkBWtvsKpSvZvojFEGq67S9YhVg=; b=J9vyR4D/yZoaxcNiStmAxGmQTNv42Kt9vw5TRtqrWRxT87EcLMknc2L87cCkmWZdvrOxqqj7
+ 5hyq3NsFl0P/MkFov1mgnKWaA+HfbZWqeU9+jJurb4wbZOYsB0mIkAD67TPbqMYeEtUG0pBN
+ pKCNXc6JcLGb+gVgOV7XzEDkJgw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3821f1.7f666f5e3c00-smtp-out-n03;
+ Mon, 03 Feb 2020 13:36:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B81BFC447A0; Mon,  3 Feb 2020 13:36:49 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE292C433A2;
+        Mon,  3 Feb 2020 13:36:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AE292C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v3 0/7] Add RSC power domain support
+Date:   Mon,  3 Feb 2020 19:05:33 +0530
+Message-Id: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 06:22:55PM +0530, sachin agarwal wrote:
-> From: sachin agarwal <asachin591@gmail.com>
-> 
-> we had written "Mangagment" rather than "Management".
+Changes in v3:
+- Address Rob's comment on dt property value
+- Address Stephen's comments on rpmh-rsc driver change
+- Include sc7180 cpuidle low power mode changes from [1]
+- Include hierarchical domain idle states converter change from [2]
 
-we -> We.
+Changes in v2:
+- Add Stephen's Reviewed-By to the first three patches
+- Addressed Stephen's comments on fourth patch
+- Include changes to connect rpmh domain to cpuidle and genpds
 
-No need to send new version right now, consider to send v2 after merge window
-closed (starting from next week).
+Resource State Coordinator (RSC) is responsible for powering off/lowering
+the requirements from CPU subsystem for the associated hardware like buses,
+clocks, and regulators when all CPUs and cluster is powered down.
+
+RSC power domain uses last-man activities provided by genpd framework based on
+Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest idle
+states. As a part of domain poweroff, RSC can lower resource state requirements
+by flushing the cached sleep and wake state votes for resources.
+
+[1] https://patchwork.kernel.org/patch/11218965
+[2] https://patchwork.kernel.org/patch/10941671
+[3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+
+Maulik Shah (6):
+  drivers: qcom: rpmh: fix macro to accept NULL argument
+  drivers: qcom: rpmh: remove rpmh_flush export
+  dt-bindings: soc: qcom: Add RSC power domain specifier
+  drivers: qcom: rpmh-rsc: Add RSC power domain support
+  arm64: dts: qcom: sc7180: Add cpuidle low power states
+  arm64: dts: qcom: sc7180: Convert to the hierarchical CPU topology
+    layout
+
+Ulf Hansson (1):
+  drivers: firmware: psci: Add hierarchical domain idle states converter
+
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      |   9 ++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 133 ++++++++++++++++++++
+ drivers/cpuidle/cpuidle-psci-domain.c              | 137 ++++++++++++++++++---
+ drivers/cpuidle/cpuidle-psci.c                     |  41 +++---
+ drivers/cpuidle/cpuidle-psci.h                     |  11 ++
+ drivers/soc/qcom/rpmh-internal.h                   |   3 +
+ drivers/soc/qcom/rpmh-rsc.c                        |  81 ++++++++++++
+ drivers/soc/qcom/rpmh.c                            |  22 ++--
+ include/soc/qcom/rpmh.h                            |   5 -
+ 9 files changed, 389 insertions(+), 53 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
