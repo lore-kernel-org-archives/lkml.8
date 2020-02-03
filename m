@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00CC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D6DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAA52086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EF12051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748343;
-	bh=0uOWnKSh83fXudGqMAovmHVwNS2NZDD+nPINkoIHYG4=;
+	s=default; t=1580748352;
+	bh=hIFidir/OMlQLPIctoU56uJRNFBmd+9oySQCz1aKty4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DWm7nO1szI9LZjA5EU7q3LK9YnbvLyQsuvwnoEt5B73BQE5QoUEb+ZjGvcIWEpTko
-	 D0Yt6+dGxXitMI/sIQgGE8jMw6zDigEPh/ezLyOIaHr6E8IN1wUTKaij+WKYdmJrsQ
-	 R5q63sNo5c9gvg3wcREJUQVynlX/89moAP/28Pp4=
+	b=t9OC51PX+T9kFBWU6KiXRBXSokYjbYkJBADbaELgX30QO5FGKuecS+Hzj3EqK/dwC
+	 DWjASyLuyiFttCRXZh2KRL9cfbMtOS/F/ZwnfCpoUNrdpfSVGBOANIDLQoGGJw5O8v
+	 d6tVM6d66YQZSgTNGmWB0vYSnSFWKBrruU6YSmPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbgBCQpm (ORCPT
+        id S1730423AbgBCQpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:45:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:45:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbgBCQ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:50 -0500
+        id S1729527AbgBCQ3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:40 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FCDF2051A;
-        Mon,  3 Feb 2020 16:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6F442080C;
+        Mon,  3 Feb 2020 16:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747389;
-        bh=0uOWnKSh83fXudGqMAovmHVwNS2NZDD+nPINkoIHYG4=;
+        s=default; t=1580747380;
+        bh=hIFidir/OMlQLPIctoU56uJRNFBmd+9oySQCz1aKty4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IShc2UkybO58Erm5Y898OJYxpvYXx5pF8wB1ryzqKVWmh4oX8Itckm9H30p/An69D
-         vj00BCpPLDQHUqpTwWRctuI/mxeyhwWy24ozzmBgU16zNom0/XB+QiQcVug48ey21w
-         ikXe6Nm+BP54WmnvkPBvjAETcLThpPUS1A3RejpI=
+        b=DaTr4q6QH22rlnp52bBr/K6/cDAUAMf0nsO0CplwqRzFWw+wdAeNEQfMHYIzgg6dp
+         zrD4BvRT8/c6rodhkFFc3q1VEYfnyvMHvPeQwDQkRklTm5s6HZMZn3rim/lFIvwLBP
+         thHJsUAti4XVkaOijqWHC3Miu7G6rttkOFjG06+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 61/89] ASoC: sti: fix possible sleep-in-atomic
-Date:   Mon,  3 Feb 2020 16:19:46 +0000
-Message-Id: <20200203161924.620190422@linuxfoundation.org>
+Subject: [PATCH 4.14 58/89] ixgbevf: Remove limit of 10 entries for unicast filter list
+Date:   Mon,  3 Feb 2020 16:19:43 +0000
+Message-Id: <20200203161924.343681541@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,68 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit ce780a47c3c01e1e179d0792df6b853a913928f1 ]
+[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
 
-Change mutex and spinlock management to avoid sleep
-in atomic issue.
+Currently, though the FDB entry is added to VF, it does not appear in
+RAR filters. VF driver only allows to add 10 entries. Attempting to add
+another causes an error. This patch removes limitation and allows use of
+all free RAR entries for the FDB if needed.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Link: https://lore.kernel.org/r/20200113100400.30472-1-arnaud.pouliquen@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sti/uniperif_player.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
-index d8b6936e544e3..908f13623f8cd 100644
---- a/sound/soc/sti/uniperif_player.c
-+++ b/sound/soc/sti/uniperif_player.c
-@@ -226,7 +226,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
- 	 * sampling frequency. If no sample rate is already specified, then
- 	 * set one.
- 	 */
--	mutex_lock(&player->ctrl_lock);
- 	if (runtime) {
- 		switch (runtime->rate) {
- 		case 22050:
-@@ -303,7 +302,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
- 		player->stream_settings.iec958.status[3 + (n * 4)] << 24;
- 		SET_UNIPERIF_CHANNEL_STA_REGN(player, n, status);
- 	}
--	mutex_unlock(&player->ctrl_lock);
+diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+index e238f6e85ab66..a7708e14aa5ca 100644
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -1858,11 +1858,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	int count = 0;
  
- 	/* Update the channel status */
- 	if (player->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0)
-@@ -365,8 +363,10 @@ static int uni_player_prepare_iec958(struct uniperif *player,
- 
- 	SET_UNIPERIF_CTRL_ZERO_STUFF_HW(player);
- 
-+	mutex_lock(&player->ctrl_lock);
- 	/* Update the channel status */
- 	uni_player_set_channel_status(player, runtime);
-+	mutex_unlock(&player->ctrl_lock);
- 
- 	/* Clear the user validity user bits */
- 	SET_UNIPERIF_USER_VALIDITY_VALIDITY_LR(player, 0);
-@@ -598,7 +598,6 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 	iec958->status[1] = ucontrol->value.iec958.status[1];
- 	iec958->status[2] = ucontrol->value.iec958.status[2];
- 	iec958->status[3] = ucontrol->value.iec958.status[3];
--	mutex_unlock(&player->ctrl_lock);
- 
- 	spin_lock_irqsave(&player->irq_lock, flags);
- 	if (player->substream && player->substream->runtime)
-@@ -608,6 +607,8 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 		uni_player_set_channel_status(player, NULL);
- 
- 	spin_unlock_irqrestore(&player->irq_lock, flags);
-+	mutex_unlock(&player->ctrl_lock);
-+
- 	return 0;
- }
+-	if ((netdev_uc_count(netdev)) > 10) {
+-		pr_err("Too many unicast filters - No Space\n");
+-		return -ENOSPC;
+-	}
+-
+ 	if (!netdev_uc_empty(netdev)) {
+ 		struct netdev_hw_addr *ha;
  
 -- 
 2.20.1
