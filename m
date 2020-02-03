@@ -2,165 +2,148 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F71BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAECC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2D42080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Z/wsxvxc"
+	by mail.kernel.org (Postfix) with ESMTP id 9A92020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580758066;
+	bh=OeOjjlrDJsexINpj9LNgFIWpebvdSE75SdU8RInKyx0=;
+	h=In-Reply-To:References:From:To:Subject:Cc:Date:List-ID:From;
+	b=jE5ym5catcAKSxg9C725s71935J6y7Kqcqy9eKryt/tDqu+yPDwGf/OjXnNfhx7ZT
+	 wpsbyYBugJSHMgK1lGhQ9uTFZP/GemNQav6P5ko/42UYOhtwBSr3CwqCUQgZgnicsA
+	 mnqZ6ThEuDkEUirj7TeRPcpaA69trKeC8coTUyiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgBCTXN (ORCPT
+        id S1726928AbgBCT1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:23:13 -0500
-Received: from sonic304-28.consmr.mail.ne1.yahoo.com ([66.163.191.154]:36592
-        "EHLO sonic304-28.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726018AbgBCTXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:23:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1580757791; bh=m04hdUq0vSJYN7FwmXA5JyxorPmYXrpHS7EBKRIz/1o=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=Z/wsxvxcVHfdCwwhY2/JswytE96v3pjZdzgS6XOjqM4lXNsE/ysh6c+krCercFDtnuaJJUz96nzqpCVuX9L83YwNbxl2vOIcxekihl+2jBmR4GS4FHD4F41+4Y9m2YZ6U9nhSTYfj/lzqyzjO+zHlYSWKHA7t2wjlfzEdYxKu60e1R2rBpOMM7+PlrVG0iSiGf5b9uJNNGYfcBOwD+Zxr+06+nv1mMpUsihrTe0Yte7X38qG0Mc5mc3IwnRK4LF8O4gkoy8+WP2zQbC3rFEgiweikCy1qzcXm+Ydi7/hTmlZPjuRFOn19wjK2XDe0VuzavFkq63BKbaDfypXFDDqyQ==
-X-YMail-OSG: uaNPZ04VM1lsZadqFPrArJl99cVhgpDq1n7OwJJoOk8Mki8HUOPcvvRi8smDxGi
- ymzom1gHFem5PV3ZNP9FhY_bE.q6g4LlrqWVTxc4WL_BrpG.ZM4wcaqM2UER800C89IM1A6LCWI4
- by4MPaqqgRxf50PPvNq4KA6Llj42Tz1hdQpQT5GjTrWl3Z4mM7QXuzgLmm4EbMzwivtFw2ooSSkK
- ZKnL9XxDjlqp26UBuu0gv2RgCKZhOOGGzkSrqmFtHLvJQIUnesrcF6jbuQ6YVhL1OT4zkBK6S9T3
- Idxq77K7QkjpbBB9U28Fy29zCDYctb2dkyZ0ythqa2sTcI6LEWZiSHC6I3Awzux5fFwsXPBzDMsD
- P8kTtAPcHx.zhu19nwyQDBDR5gU20OWbePQj.hconGXSgTwwW7HNyKnNqu91JdOtbXxQV5pkto8V
- t8B0b19XT.kZLi69BP96Dxc7gx_pXlLlTXHCDaFZljxrKKrL5HsnAisaV.axw7qZVVvIVfixDUbs
- 8Ia8gPFI7nzjTiBZfkQON7VcHucUJQ1rB3MRuIPIj1mUTOsyssvja4BMX_kWOcPGgDckslnSuWhB
- CbfOAyirgUyIQI0JMSyez80DCkJ_vinZ7SE2m1q7.buy.ipTSbszbcw.R.e1NfiksUwZUMKMgey4
- EASka3pVitR9LKte8YhvkWr8bUoiADm6k6uOBuSMOx2hEU6lhxEp6B5TIkREfn9O4qOyWCILLZ2k
- X68PvSP4fWBoh2mk1fWayyAeP6s5wnirHQxb4F1i1oHXdbvbhjCdKCiRngeNSbEHHKeDYc06vW0Y
- jicjGbGnZDJYmWGDr0Z4nPHxTomlpFch.SSEwRN_jZ2t_rdAjAt3f6OYL_uhkFItlwWkb61D2_xu
- a5Bk1oR0Ikxqf6wxTUE0_EEKclZipY6lb6LO2AAbb4R722.Fza8evddPX_Dayi3MDRqM0l0v.ggv
- TsGbtveAGnAHVu2obHYAde8tvP1TW8BffF2bP_2FqnZoKKfRV6hcnf4Ycg09.yCyCFM1KjmpC7fP
- PQ1PQRAoWdwW9IsE65_gnqzxiwvjrZgp721ZzQ8gFh5oRtXtdt.SWG6Je.i1tgdr0pGV2nPYMqqX
- LLk4fMDGMS8debrWgbW.OYyouJT79kREDtpWbw9e2cj9SC9ynwfNmegM5omwRMZfq0U2Z40.YGh0
- Q.ZUKVN.fnOp8_.X4Cv2eCanneK4aWyW88tEiLQoXG1wqTZV.pIJAT5cVMDK1RRynSX3SJe5Tp8R
- aHKM59BH3oXAkd1PB6FMAOhtFJwf9PZnRl0YIGVfRrZVVA1FnKo84QrZTTyCH0q.ANmrvMsE1mYq
- 7Gx12JSCvP8NoouymnSC7sy.21jYTtvHJQX4w0ffkfReVBKvvmD0RzKijms0CygAu2J67ybrMgbn
- XDgE_4IAmxLVhTv8TkC3YNwdXMqWfjDVDq8k-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Mon, 3 Feb 2020 19:23:11 +0000
-Received: by smtp419.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 265c91e734f63aa88ea65da42a7b3d47;
-          Mon, 03 Feb 2020 19:23:09 +0000 (UTC)
-Subject: Re: [PATCH] security/integrity: Include __func__ in messages for
- easier debug
-To:     Joe Perches <joe@perches.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
-        serge@hallyn.com, mpe@ellerman.id.au, erichte@linux.ibm.com,
-        nayna@linux.ibm.com, yuehaibing@huawei.com
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200130020129.15328-1-skhan@linuxfoundation.org>
- <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
- <1580736077.5585.4.camel@linux.ibm.com>
- <475ab05c-300b-fdbe-5de0-6fce8d1a360d@linuxfoundation.org>
- <94cf0aee8fd8b78718e252488458cfea105c0469.camel@perches.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <e175a880-637c-20d4-e0dc-bff31287e0dc@schaufler-ca.com>
-Date:   Mon, 3 Feb 2020 11:23:09 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 3 Feb 2020 14:27:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbgBCT1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 14:27:45 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 701982080D;
+        Mon,  3 Feb 2020 19:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580758064;
+        bh=OeOjjlrDJsexINpj9LNgFIWpebvdSE75SdU8RInKyx0=;
+        h=In-Reply-To:References:From:To:Subject:Cc:Date:From;
+        b=Gw3vYtw+E0WcIktjLCFxFG63EPrDzg3u9RFnB9D0MIdWsQ0EkZ4EtFc9uzEVZAzQM
+         eXnnaH6gIAWYqvGv7A+yp1B3ZzaxipbTgXD3y26sQENWoJK46VwG7Fekm0MXNuDzI9
+         r1K0Def9526I2sD0eATq1cAg2wuKh7A0Svc08a1g=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <94cf0aee8fd8b78718e252488458cfea105c0469.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.15149 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200203094843.v3.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+References: <20200203094843.v3.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: clk: qcom: Fix self-validation, split, and clean cruft
+Cc:     tdas@codeaurora.org, anusharao@codeaurora.org,
+        sivaprak@codeaurora.org, sricharan@codeaurora.org,
+        jhugo@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Mon, 03 Feb 2020 11:27:43 -0800
+Message-Id: <20200203192744.701982080D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/2020 11:02 AM, Joe Perches wrote:
-> On Mon, 2020-02-03 at 11:55 -0700, Shuah Khan wrote:
->> On 2/3/20 6:21 AM, Mimi Zohar wrote:
->>> On Wed, 2020-01-29 at 19:08 -0800, Joe Perches wrote:
->>>> On Wed, 2020-01-29 at 19:01 -0700, Shuah Khan wrote:
->>>>> Change messages to messages to make it easier to debug. The following
->>>>> error message isn't informative enough to figure out what failed.
->>>>> Change messages to include function information.
->>>>>
->>>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->>>>> ---
->>>>>   .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
->>>>>   security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
->>>>>   2 files changed, 18 insertions(+), 13 deletions(-)
->>>>>
->>>>> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
->>>> perhaps instead add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>>> so all the pr_<level> logging is more specific.
->>>>
->>>> This would prefix all pr_<level> output with "integrity: "
->> Joe! Sorry for the delay in getting back to you.
->>
->>> Agreed.  Joe, could you post a patch with a proper patch description
->>> for this?
->>>
->> I have been looking into this a bit more and there is an opportunity
->> here to add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt to integrity.h
->> and get rid of duplicate defines.
-> That might work but:
->
-> $ git grep --name-only 'integrity\.h' security | xargs grep pr_fmt
-> security/integrity/digsig.c:#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> security/integrity/digsig_asymmetric.c:#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> security/integrity/evm/evm_main.c:#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> security/security.c:#define pr_fmt(fmt) "LSM: " fmt
->
-> Here security.c already uses "LSM: "
->
-> Does anyone care about the LSM: prefix?
+Quoting Douglas Anderson (2020-02-03 09:49:43)
+> The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
+> because it required a property to be either (3 entries big),
+> (3 entries big), or (7 entries big), but not more than one of those
+> things.  That didn't make a ton of sense.
+>=20
+> This patch splits all of the exceptional device trees (AKA those that
+> would have needed if/then/else rules) from qcom,gcc.yaml.  It also
+> cleans up some cruft found while doing that.
+>=20
+> After this lands, this worked for me atop clk-next with just the known
+> error about msm8998:
+>   for f in \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
+>       ARCH=3Darm64 make dtbs_check DT_SCHEMA_FILES=3D$f; \
+>   done
+>=20
+> I then picked this patch atop linux-next (next-20200129) and ran:
+>   # Delete broken yaml:
+>   rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>   ARCH=3Darm64 make dt_binding_check | grep 'clock/qcom'
+> ...and that didn't seem to indicate problems.
+>=20
+> Arbitrary decisions made (yell if you want changed):
+> - Left all the older devices (where clocks / clock-names weren't
+>   specified) in a single file.
+> - Didn't make clocks "required" for msm8996 but left them as listed.
+>   This seems a little weird but it matches the old binding.
+>=20
+> Misc cleanups as part of this patch:
+> - Fixed schema id to not have "bindings/" as per Rob [1].
+> - Listed include files as per Stephen.
+> - sm8150 was claimed to be same set of clocks as sc7180, but driver
+>   and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
+> - In "apq8064", "#thermal-sensor-cells" was missing the "#".
+> - Got rid of "|" at the end of top description since spacing doesn't
+>   matter.
+> - Changed indentation to consistently 2 spaces (it was 3 in some
+>   places).
+> - Added period at the end of protected-clocks description.
+> - No space before ":".
+> - Updated sc7180/sm8150 example to use the 'qcom,rpmh.h' include.
+> - Updated sc7180/sm8150 example to use larger address/size cells as
+>   per reality.
+> - Updated sc7180/sm8150 example to point to the sleep_clk rather than
+>   <0>.
+> - Made it so that gcc-ipq8074 didn't require #power-domain-cells since
+>   actual dts didn't have it and I got no hits from:
+>     git grep _GDSC include/dt-bindings/clock/qcom,gcc-ipq8074.h
+> - Made it so that gcc-qcs404 didn't require #power-domain-cells since
+>   actual dts didn't have it and I got no hits from:
+>     git grep _GDSC include/dt-bindings/clock/qcom,gcc-qcs404.h
+>=20
+> Noticed, but not done in this patch (volunteers needed):
+> - Add "aud_ref_clk" to sm8150 bindings / dts even though I found a
+>   reference to it in "gcc-sm8150.c".
+> - Fix node name in actual ipq8074 to be "clock-controller" (it's gcc).
+> - Since the example doesn't need phandes to exist, in msm8998 could
+>   just make up places providing some of the clocks currently bogused
+>   out with <0>.
+> - On msm8998 clocks are listed as required but current dts doesn't
+>   have them.
+>=20
+> [1] https://lore.kernel.org/r/CAL_Jsq+_2E-bAbP9F6VYkWRp0crEyRGa5peuwP58-P=
+ZniVny7w@mail.gmail.com
+>=20
+> Fixes: ab91f72e018a ("clk: qcom: gcc-msm8996: Fix parent for CLKREF clock=
+s")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
 
-Yes. 
+Applied to clk-next
 
