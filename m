@@ -2,59 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F0FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CA1C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA922086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A13E2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748202;
-	bh=Hg6fJc2xvd+sSX10VFGbOcYzB3+hADcjF6TvMXYAPXw=;
+	s=default; t=1580748206;
+	bh=UThbzfSf4Wwh3VgJmibCx6y+YMZQIWjX9JUof9n9J8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZI6Lb0/cDKL4IWxIcO/USMwDHE6V7Gdb6znOSAiAqtrkxfGltELEmeYg+6+gLxqP
-	 WiGL30w6NyUNe0qUI1mEvq5QXlYhMkAjwgKYfLGL41sIFQAg1N+0ckYH/yixhFIg2I
-	 ia36R1nmfPD5OaYt24cwDbeZzH0NCRr3XQgo57Oo=
+	b=xzzx/tayaNrDDYKAFaMLOWN5yEhl7qXVOsjozo49dvXg/xm9MoZ24ODHsvM3hL2wD
+	 knNGMdRLywY3s0zPlRpzIWoNItc2A6neMkb6eUaowncNAHE6aX+FJ7GSVn3RA2WYNN
+	 CyaNP2AmV3Hz2a9YUxq6M3zXdOgb9jtR09rz6Iws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgBCQdJ (ORCPT
+        id S1731147AbgBCQnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:43:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbgBCQdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:00 -0500
+        id S1730522AbgBCQdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:08 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8ECB2051A;
-        Mon,  3 Feb 2020 16:32:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5AF4218AC;
+        Mon,  3 Feb 2020 16:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747580;
-        bh=Hg6fJc2xvd+sSX10VFGbOcYzB3+hADcjF6TvMXYAPXw=;
+        s=default; t=1580747587;
+        bh=UThbzfSf4Wwh3VgJmibCx6y+YMZQIWjX9JUof9n9J8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=boywSbMRHY7UcZsBJBLiJonZFiuyFwbJnt+NYY5HMVOi6nw5CYYinvCNU4yMMaD0X
-         a35KC64wJF8hpzLZMd+WjkelLrFkenOWBGbOoeSWGxjjJY67TOrK2ACrk2RBYwQ6Ky
-         GZehBpgvCea+9Wf9oZBVyeDRT0NhTgQZmADYfP7c=
+        b=0tdVuNlFEOVA+zj/bi1qnmVBozCAD8IYWw+9CZ6BithrFmiqEDIPql+5wW6ntyC8R
+         D02BPZjdsW8hTInw6W/deOJvqtlMQgOJA6Rxbu+cvs5Ic0ljKG89QSKipervGRKNIt
+         ZYSP+C8klGuN1lFaPosIOEsd6T9NYLHROd8zhybU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Lee Schermerhorn <lee.schermerhorn@hp.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 13/70] mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
-Date:   Mon,  3 Feb 2020 16:19:25 +0000
-Message-Id: <20200203161914.503169429@linuxfoundation.org>
+        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 06/70] rsi: add hci detach for hibernation and poweroff
+Date:   Mon,  3 Feb 2020 16:19:18 +0000
+Message-Id: <20200203161913.332966143@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -67,59 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
 
-commit c7a91bc7c2e17e0a9c8b9745a2cb118891218fd1 upstream.
+[ Upstream commit cbde979b33fa16e06dadc2c81093699a2bc787db ]
 
-What we are trying to do is change the '=' character to a NUL terminator
-and then at the end of the function we restore it back to an '='.  The
-problem is there are two error paths where we jump to the end of the
-function before we have replaced the '=' with NUL.
+As we missed to detach HCI, while entering power off or hibernation,
+an extra hci interface gets created whenever system is woken up, to
+avoid this we added hci_detach() in rsi_disconnect(), rsi_freeze(),
+and rsi_shutdown() functions which are invoked for these tests.
+This patch fixes the issue
 
-We end up putting the '=' in the wrong place (possibly one element
-before the start of the buffer).
-
-Link: http://lkml.kernel.org/r/20200115055426.vdjwvry44nfug7yy@kili.mountain
-Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
-Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Dmitry Vyukov <dvyukov@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mempolicy.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 18 ++++++++++++++++++
+ drivers/net/wireless/rsi/rsi_91x_usb.c  |  7 +++++++
+ 2 files changed, 25 insertions(+)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2808,6 +2808,9 @@ int mpol_parse_str(char *str, struct mem
- 	char *flags = strchr(str, '=');
- 	int err = 1;
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index 5733e440ecaff..81cc1044532d1 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -1129,6 +1129,12 @@ static void rsi_disconnect(struct sdio_func *pfunction)
+ 	rsi_mac80211_detach(adapter);
+ 	mdelay(10);
  
-+	if (flags)
-+		*flags++ = '\0';	/* terminate mode string */
++	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
++	    adapter->priv->bt_adapter) {
++		rsi_bt_ops.detach(adapter->priv->bt_adapter);
++		adapter->priv->bt_adapter = NULL;
++	}
 +
- 	if (nodelist) {
- 		/* NUL-terminate mode or flags string */
- 		*nodelist++ = '\0';
-@@ -2818,9 +2821,6 @@ int mpol_parse_str(char *str, struct mem
- 	} else
- 		nodes_clear(nodes);
+ 	/* Reset Chip */
+ 	rsi_reset_chip(adapter);
  
--	if (flags)
--		*flags++ = '\0';	/* terminate mode string */
--
- 	for (mode = 0; mode < MPOL_MAX; mode++) {
- 		if (!strcmp(str, policy_modes[mode])) {
- 			break;
+@@ -1305,6 +1311,12 @@ static int rsi_freeze(struct device *dev)
+ 		rsi_dbg(ERR_ZONE,
+ 			"##### Device can not wake up through WLAN\n");
+ 
++	if (IS_ENABLED(CONFIG_RSI_COEX) && common->coex_mode > 1 &&
++	    common->bt_adapter) {
++		rsi_bt_ops.detach(common->bt_adapter);
++		common->bt_adapter = NULL;
++	}
++
+ 	ret = rsi_sdio_disable_interrupts(pfunction);
+ 
+ 	if (sdev->write_fail)
+@@ -1352,6 +1364,12 @@ static void rsi_shutdown(struct device *dev)
+ 	if (rsi_config_wowlan(adapter, wowlan))
+ 		rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
+ 
++	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
++	    adapter->priv->bt_adapter) {
++		rsi_bt_ops.detach(adapter->priv->bt_adapter);
++		adapter->priv->bt_adapter = NULL;
++	}
++
+ 	rsi_sdio_disable_interrupts(sdev->pfunction);
+ 
+ 	if (sdev->write_fail)
+diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+index 90eb749e2b616..c62e7e0f82f32 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -818,6 +818,13 @@ static void rsi_disconnect(struct usb_interface *pfunction)
+ 		return;
+ 
+ 	rsi_mac80211_detach(adapter);
++
++	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
++	    adapter->priv->bt_adapter) {
++		rsi_bt_ops.detach(adapter->priv->bt_adapter);
++		adapter->priv->bt_adapter = NULL;
++	}
++
+ 	rsi_reset_card(adapter);
+ 	rsi_deinit_usb_interface(adapter);
+ 	rsi_91x_deinit(adapter);
+-- 
+2.20.1
+
 
 
