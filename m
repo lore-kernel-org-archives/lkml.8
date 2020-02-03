@@ -2,236 +2,160 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E497C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4B9C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278B520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C1620721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FQhXxTwE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UKGNNJxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgBCK1q (ORCPT
+        id S1727578AbgBCKan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:27:46 -0500
-Received: from mx1.tq-group.com ([62.157.118.193]:51690 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBCK1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:27:45 -0500
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Feb 2020 05:27:44 EST
-IronPort-SDR: X1Gz/oUg2tDO+KeeBbID8o/+NyshHFoLcFqQjiUnk7LIik9RWLlCrmVbCuxrXzlqhUNlKcU8j8
- fOMDCDG9Baa5t/FsrZerhwXcnKhkMbldApDeC9NkW3ciEA28p8N2XSwbkhCgvhhAjaqVQVM6pe
- YAjnC9k5l5/Sqejrv647jV8/qivic2LjlZz2kS5D0H7BO/8j/jxb2G6bbyRnjgORpXQg3BJjgX
- YGMCP4Ds4PPwg/msfhNfy7msu81op68+57uzh22t/WXU7Dpx/hQ/maTVZvGYgdsgFWH/wygVm1
- gxc=
-X-IronPort-AV: E=Sophos;i="5.70,397,1574118000"; 
-   d="scan'208";a="10771158"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 03 Feb 2020 11:20:35 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 03 Feb 2020 11:20:35 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 03 Feb 2020 11:20:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1580725235; x=1612261235;
-  h=from:to:cc:subject:date:message-id;
-  bh=D1tHKRm9/T8SfmVVqmQjih0yc81AuYCA3oGPGsPn+YE=;
-  b=FQhXxTwE6Pt62rPMDxweje/LiYgCfSxl/rwALdTyNU9QRx5Gd0Bk2RRD
-   dZjpuU4DpKTjk1Rgd3Fib+kTGX3pcUKHHmCA7ZQSBsWG9KRauhzzd/Zjw
-   E7ph7iltbyu6860wgckYLbAV//ZsTaZlwZN6GHil+YPFk0d0HfcSxwZ+z
-   d5sgPhxwQjV3jSiAJEs2wGA5/Pxq9SnvP94udf0LKW9KEFLcl/5DWTR+A
-   hkke88G6HidkmoAuOi6pwTCPLQcH+c3ashYBpCvYpbawaMPlfjhMqRiYt
-   KUvEe4Y4U2Oin/QXY/o5pialF5z6kLNst9BzDbjOJGayCj9+LNu3R4sEJ
-   w==;
-IronPort-SDR: mim3VmcPh0LqA7R+lC6X8G4512MuGwfV4r/yUaOvfKLTPFOEOGzV7/ZblatpikgN6nwNl06Run
- qgvYCVUiF8ZjBm6dGi+F+rwgVQhensHMOQLG3LyAAEBdeddoEFeQk5CeLDvjL1znO3QXfgCAcs
- Gr+4nwxM6RdyqzB3jxAuzQiXWyEaaLfVDVkxsScoOMPtWSeR5vJkbMRFP3ATXFCH2x9ImX06sR
- fQyF4dZLtna4RrfQZ9Yhk6B5z4gXFKmYJjsfASK84Hp/mz2omlpcqmbB4MR1KKKTfyAUzogM+s
- si0=
-X-IronPort-AV: E=Sophos;i="5.70,397,1574118000"; 
-   d="scan'208";a="10771157"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 03 Feb 2020 11:20:35 +0100
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 5A659280065;
-        Mon,  3 Feb 2020 11:20:37 +0100 (CET)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     horia.geanta@nxp.com, aymen.sghaier@nxp.com
-Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [RFC] crypto: caam: re-init JR on resume
-Date:   Mon,  3 Feb 2020 11:18:50 +0100
-Message-Id: <20200203101850.22570-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Feb 2020 05:30:43 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55998 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgBCKan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 05:30:43 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so15182331wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 02:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dD9fba3D0HqXgOSqJlLFz2muhY16h6Gr+BwVuHnFIv4=;
+        b=UKGNNJxPihSVdDnyfCzDlB+1MVddilSdG2GMCVkiCGZL6D4AXhN/Byg8SWyWW/bnPv
+         ZhR3DWnYrfYRCjJom/Sh/JFBZ7Iwl4epixB/18DbnkFz7yPe8kl55ww3eOTntukb3ppn
+         DJMyUvrIU12QGoinWcbsJ/q0VJC88l8j9qeBE7MvLq2Yj6xHtWBYBAQYNNlPMKQf8Nd5
+         EqLLTWtOUfsnFNR7Kr+L3uZvlKVeimHI/QULdJTHLV8iEpdDqj4VDcz3s7vCA2nKdmiV
+         f+EQ9zpHVS6KalEcfPgv8DBDc6jw7fnqqMZlQjLHwj9n0GfXXn0NPvHjPnaM1pSMxGxT
+         XLKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dD9fba3D0HqXgOSqJlLFz2muhY16h6Gr+BwVuHnFIv4=;
+        b=E//25EmqGvSZshvoR8k91dQjBWYvNzKKQzw6/9sDk0nJy+jNWVfTcwvgGcHhezziKX
+         iDef3q4USOTRFnMn1IBsNpenINjpjNnrFPxeRnr4cSlKcxopXUut2TfXhpzQqROC2MUJ
+         1QliENmIyoDyH6sZ4+SclolNksRGKSeLm/WRnICMdMHUB2LYLJVc3N/WQ3nBWlGOIvWA
+         Gt+fxjzzG9DKcv9KzDC6b/GOCspqms5AxeubScuPz9gOz2tFrlWOOJGhOXM1NSFpmCPs
+         OwX0m8Y7gAvFtKafycEnlWs2NZT+ZPHMSlmADJoyfPXP2MwiePAW87EO3s0iZ7Kni8QH
+         2byQ==
+X-Gm-Message-State: APjAAAX+p4sWpzYQb7bZkof4JGNslxPwG9foN0kF1wBgPI0qHedWMsBt
+        jbPCGIzcRYhuVuPpkcFn7boNLiFAuBjQSTvF1uVYERCiTN8=
+X-Google-Smtp-Source: APXvYqxNx7Z0KIvo/FhK4eHPDW3mZ84bqAFnEzCbf8Hd0g8df+eNawGKBotlJvsxIVfVYaHjsPN4BUWk/DfxFPRlw6I=
+X-Received: by 2002:a1c:7907:: with SMTP id l7mr27326507wme.37.1580725840251;
+ Mon, 03 Feb 2020 02:30:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20200130064430.17198-1-walter-zh.wu@mediatek.com>
+ <CAG_fn=X_jSUJXD932z9oN5hBa--n3Qct4zrjzGaPtb2MwJye7A@mail.gmail.com>
+ <1580436306.11126.16.camel@mtksdccf07> <CAG_fn=X2V0nL=+s38bDbS3UXf2_i61tSevd8vzkV-ZKY=7MHvw@mail.gmail.com>
+ <1580695544.17006.7.camel@mtksdccf07>
+In-Reply-To: <1580695544.17006.7.camel@mtksdccf07>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 3 Feb 2020 11:30:28 +0100
+Message-ID: <CAG_fn=UHhZB-2JBdSBAbuNjBZwVwrzhqQvR1nHb+XOqUEvLMsw@mail.gmail.com>
+Subject: Re: [PATCH v3] lib/stackdepot: Fix global out-of-bounds in stackdepot
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The JR loses its configuration during suspend-to-RAM (at least on
-i.MX6UL). Re-initialize the hardware on resume.
+On Mon, Feb 3, 2020 at 3:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>
+> On Fri, 2020-01-31 at 19:11 +0100, Alexander Potapenko wrote:
+> > On Fri, Jan 31, 2020 at 3:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > >
+> > > On Thu, 2020-01-30 at 13:03 +0100, Alexander Potapenko wrote:
+> > > > On Thu, Jan 30, 2020 at 7:44 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > >
+> > > > Hi Walter,
+> > > >
+> > > > > If the depot_index = STACK_ALLOC_MAX_SLABS - 2 and next_slab_inited = 0,
+> > > > > then it will cause array out-of-bounds access, so that we should modify
+> > > > > the detection to avoid this array out-of-bounds bug.
+> > > > >
+> > > > > Assume depot_index = STACK_ALLOC_MAX_SLABS - 3
+> > > > > Consider following call flow sequence:
+> > > > >
+> > > > > stack_depot_save()
+> > > > >    depot_alloc_stack()
+> > > > >       if (unlikely(depot_index + 1 >= STACK_ALLOC_MAX_SLABS)) //pass
+> > > > >       depot_index++  //depot_index = STACK_ALLOC_MAX_SLABS - 2
+> > > > >       if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) //enter
+> > > > >          smp_store_release(&next_slab_inited, 0); //next_slab_inited = 0
+> > > > >       init_stack_slab()
+> > > > >          if (stack_slabs[depot_index] == NULL) //enter and exit
+> > > > >
+> > > > > stack_depot_save()
+> > > > >    depot_alloc_stack()
+> > > > >       if (unlikely(depot_index + 1 >= STACK_ALLOC_MAX_SLABS)) //pass
+> > > > >       depot_index++  //depot_index = STACK_ALLOC_MAX_SLABS - 1
+> > > > >       init_stack_slab(&prealloc)
+> > > > >          stack_slabs[depot_index + 1]  //here get global out-of-bounds
+> > > > >
+> > > > > Cc: Dmitry Vyukov <dvyukov@google.com>
+> > > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > > Cc: Alexander Potapenko <glider@google.com>
+> > > > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > > > Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> > > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > > ---
+> > > > > changes in v2:
+> > > > > modify call flow sequence and preconditon
+> > > > >
+> > > > > changes in v3:
+> > > > > add some reviewers
+> > > > > ---
+> > > > >  lib/stackdepot.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+> > > > > index ed717dd08ff3..7e8a15e41600 100644
+> > > > > --- a/lib/stackdepot.c
+> > > > > +++ b/lib/stackdepot.c
+> > > > > @@ -106,7 +106,7 @@ static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
+> > > > >         required_size = ALIGN(required_size, 1 << STACK_ALLOC_ALIGN);
+> > > > >
+> > > > >         if (unlikely(depot_offset + required_size > STACK_ALLOC_SIZE)) {
+> > > > > -               if (unlikely(depot_index + 1 >= STACK_ALLOC_MAX_SLABS)) {
+> > > > > +               if (unlikely(depot_index + 2 >= STACK_ALLOC_MAX_SLABS)) {
+> >
+> > This again means stack_slabs[STACK_ALLOC_MAX_SLABS - 2] gets
+> > initialized, but stack_slabs[STACK_ALLOC_MAX_SLABS - 1] doesn't,
+> > because we'll be bailing out from init_stack_slab() from now on.
+> > Does this patch actually fix the problem (do you have a reliable reproducer?)
+> We get it by reviewing code, because Kasan doesn't scan it and we catch
+> another bug internally, we found it unintentionally.
+>
+> > This addition of 2 is also counterintuitive, I don't think further
+> > readers will understand the logic behind it.
+> >
+> Yes
+>
+> > What if we just check that depot_index + 1 is a valid index before accessing it?
+> >
+> It should fix the problem, do you want to send this patch?
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
-
-I've come across the issue that the CAAM would not work anymore after
-deep sleep on i.MX6UL. It turned out that the CAAM loses its state
-during suspend-to-RAM, so all registers read as zero and need to be
-reinitialized.
-
-This patch is my first attempt at fixing the issue. It seems to work
-well enough, but I assume I'm missing some synchronization to prevent
-that some CAAM operation is currently under way when the suspend
-happens? I don't know the PM and crypto subsystems well enough to judge
-if this is possible, and if it is, how to prevent it.
-
-I've only compile-tested this version of the patch, as I had to port it
-from our board kernel, which is based on the heavily-modified NXP branch.
-
-
- drivers/crypto/caam/intern.h |  3 ++
- drivers/crypto/caam/jr.c     | 62 +++++++++++++++++++++++++-----------
- 2 files changed, 46 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-index c7c10c90464b..5d2e9091d5c2 100644
---- a/drivers/crypto/caam/intern.h
-+++ b/drivers/crypto/caam/intern.h
-@@ -47,6 +47,9 @@ struct caam_drv_private_jr {
- 	struct tasklet_struct irqtask;
- 	int irq;			/* One per queue */
- 
-+	dma_addr_t inpbusaddr;
-+	dma_addr_t outbusaddr;
-+
- 	/* Number of scatterlist crypt transforms active on the JobR */
- 	atomic_t tfm_count ____cacheline_aligned;
- 
-diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index fc97cde27059..2dabf5fd7818 100644
---- a/drivers/crypto/caam/jr.c
-+++ b/drivers/crypto/caam/jr.c
-@@ -418,13 +418,31 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
- }
- EXPORT_SYMBOL(caam_jr_enqueue);
- 
-+static void caam_jr_setup_rings(struct caam_drv_private_jr *jrp)
-+{
-+	jrp->out_ring_read_index = 0;
-+	jrp->head = 0;
-+	jrp->tail = 0;
-+
-+	wr_reg64(&jrp->rregs->inpring_base, jrp->inpbusaddr);
-+	wr_reg64(&jrp->rregs->outring_base, jrp->outbusaddr);
-+	wr_reg32(&jrp->rregs->inpring_size, JOBR_DEPTH);
-+	wr_reg32(&jrp->rregs->outring_size, JOBR_DEPTH);
-+
-+	jrp->inpring_avail = JOBR_DEPTH;
-+
-+	/* Select interrupt coalescing parameters */
-+	clrsetbits_32(&jrp->rregs->rconfig_lo, 0, JOBR_INTC |
-+		      (JOBR_INTC_COUNT_THLD << JRCFG_ICDCT_SHIFT) |
-+		      (JOBR_INTC_TIME_THLD << JRCFG_ICTT_SHIFT));
-+}
-+
- /*
-  * Init JobR independent of platform property detection
-  */
- static int caam_jr_init(struct device *dev)
- {
- 	struct caam_drv_private_jr *jrp;
--	dma_addr_t inpbusaddr, outbusaddr;
- 	int i, error;
- 
- 	jrp = dev_get_drvdata(dev);
-@@ -434,13 +452,13 @@ static int caam_jr_init(struct device *dev)
- 		return error;
- 
- 	jrp->inpring = dmam_alloc_coherent(dev, SIZEOF_JR_INPENTRY *
--					   JOBR_DEPTH, &inpbusaddr,
-+					   JOBR_DEPTH, &jrp->inpbusaddr,
- 					   GFP_KERNEL);
- 	if (!jrp->inpring)
- 		return -ENOMEM;
- 
- 	jrp->outring = dmam_alloc_coherent(dev, SIZEOF_JR_OUTENTRY *
--					   JOBR_DEPTH, &outbusaddr,
-+					   JOBR_DEPTH, &jrp->outbusaddr,
- 					   GFP_KERNEL);
- 	if (!jrp->outring)
- 		return -ENOMEM;
-@@ -453,24 +471,9 @@ static int caam_jr_init(struct device *dev)
- 	for (i = 0; i < JOBR_DEPTH; i++)
- 		jrp->entinfo[i].desc_addr_dma = !0;
- 
--	/* Setup rings */
--	jrp->out_ring_read_index = 0;
--	jrp->head = 0;
--	jrp->tail = 0;
--
--	wr_reg64(&jrp->rregs->inpring_base, inpbusaddr);
--	wr_reg64(&jrp->rregs->outring_base, outbusaddr);
--	wr_reg32(&jrp->rregs->inpring_size, JOBR_DEPTH);
--	wr_reg32(&jrp->rregs->outring_size, JOBR_DEPTH);
--
--	jrp->inpring_avail = JOBR_DEPTH;
--
- 	spin_lock_init(&jrp->inplock);
- 
--	/* Select interrupt coalescing parameters */
--	clrsetbits_32(&jrp->rregs->rconfig_lo, 0, JOBR_INTC |
--		      (JOBR_INTC_COUNT_THLD << JRCFG_ICDCT_SHIFT) |
--		      (JOBR_INTC_TIME_THLD << JRCFG_ICTT_SHIFT));
-+	caam_jr_setup_rings(jrp);
- 
- 	tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);
- 
-@@ -486,6 +489,20 @@ static int caam_jr_init(struct device *dev)
- 	return error;
- }
- 
-+static int caam_jr_reinit(struct device *dev)
-+{
-+	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
-+	int error;
-+
-+	error = caam_reset_hw_jr(dev);
-+	if (error)
-+		return error;
-+
-+	caam_jr_setup_rings(jrp);
-+
-+	return 0;
-+}
-+
- static void caam_jr_irq_dispose_mapping(void *data)
- {
- 	irq_dispose_mapping((unsigned long)data);
-@@ -578,10 +595,17 @@ static const struct of_device_id caam_jr_match[] = {
- };
- MODULE_DEVICE_TABLE(of, caam_jr_match);
- 
-+#ifdef CONFIG_PM
-+static SIMPLE_DEV_PM_OPS(caam_jr_pm_ops, caam_reset_hw_jr, caam_jr_reinit);
-+#endif
-+
- static struct platform_driver caam_jr_driver = {
- 	.driver = {
- 		.name = "caam_jr",
- 		.of_match_table = caam_jr_match,
-+#ifdef CONFIG_PM
-+		.pm = &caam_jr_pm_ops,
-+#endif
- 	},
- 	.probe       = caam_jr_probe,
- 	.remove      = caam_jr_remove,
--- 
-2.17.1
-
+I've sent the patch. Thanks for the report!
