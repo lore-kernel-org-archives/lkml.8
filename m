@@ -2,162 +2,71 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2CBC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3078C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD5C2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18422082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgBCOo4 (ORCPT
+        id S1728540AbgBCOpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:44:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54508 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727454AbgBCOoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:44:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D41F3ACA0;
-        Mon,  3 Feb 2020 14:44:48 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 52A011E0D5D; Mon,  3 Feb 2020 15:44:48 +0100 (CET)
-Date:   Mon, 3 Feb 2020 15:44:48 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/12] mm: dump_page(): better diagnostics for huge
- pinned pages
-Message-ID: <20200203144448.GG18591@quack2.suse.cz>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-10-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200201034029.4063170-10-jhubbard@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 3 Feb 2020 09:45:33 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:44675 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbgBCOpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:45:32 -0500
+Received: from [172.20.10.2] (x59cc8b15.dyn.telefonica.de [89.204.139.21])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 9041BCED19;
+        Mon,  3 Feb 2020 15:54:51 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v3 1/2] Bluetooth: hci_qca: Enable clocks required for BT
+ SOC
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
+Date:   Mon, 3 Feb 2020 15:45:29 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        robh@kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
+        yshavit@google.com, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <FA485B40-588D-4C3F-814A-1B22ECB24853@holtmann.org>
+References: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
+To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-01-20 19:40:26, John Hubbard wrote:
-> As part of pin_user_pages() and related API calls, pages are
-> "dma-pinned". For the case of compound pages of order > 1, the per-page
-> accounting of dma pins is accomplished via the 3rd struct page in the
-> compound page. In order to support debugging of any pin_user_pages()-
-> related problems, enhance dump_page() so as to report the pin count
-> in that case.
+Hi Venkata,
+
+> Instead of relying on other subsytem to turn ON clocks
+> required for BT SoC to operate, voting them from the driver.
 > 
-> Documentation/core-api/pin_user_pages.rst is also updated accordingly.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-
-Looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-									Honza
-
+> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 > ---
->  Documentation/core-api/pin_user_pages.rst |  7 +++++
->  mm/debug.c                                | 34 +++++++++++++++++------
->  2 files changed, 33 insertions(+), 8 deletions(-)
+> v3:
+>  *Removed the function qca_setup_clock() 
+>  *For enabling and disabling clocks, directly called the functions 
+>   clk_prepare_enable and clk_disable_unprepare respectively. 
 > 
-> diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
-> index 3f72b1ea1104..dd21ea140ef4 100644
-> --- a/Documentation/core-api/pin_user_pages.rst
-> +++ b/Documentation/core-api/pin_user_pages.rst
-> @@ -215,6 +215,13 @@ Those are both going to show zero, unless CONFIG_DEBUG_VM is set. This is
->  because there is a noticeable performance drop in unpin_user_page(), when they
->  are activated.
->  
-> +Other diagnostics
-> +=================
-> +
-> +dump_page() has been enhanced slightly, to handle these new counting fields, and
-> +to better report on compound pages in general. Specifically, for compound pages
-> +with order > 1, the exact (hpage_pinned_refcount) pincount is reported.
-> +
->  References
->  ==========
->  
-> diff --git a/mm/debug.c b/mm/debug.c
-> index beb1c59d784b..db81b11345be 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -57,10 +57,20 @@ static void __dump_tail_page(struct page *page, int mapcount)
->  			page, page_ref_count(page), mapcount, page->mapping,
->  			page_to_pgoff(page));
->  	} else {
-> -		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
-> -			"index:%#lx compound_mapcount:%d\n",
-> -			page, page_ref_count(head), mapcount, head->mapping,
-> -			page_to_pgoff(head), compound_mapcount(page));
-> +		if (hpage_pincount_available(page))
-> +			pr_warn("page:%px compound refcount:%d mapcount:%d "
-> +				"mapping:%px index:%#lx compound_mapcount:%d "
-> +				"compound_pincount:%d\n",
-> +				page, page_ref_count(head), mapcount,
-> +				head->mapping, page_to_pgoff(head),
-> +				compound_mapcount(page),
-> +				compound_pincount(page));
-> +		else
-> +			pr_warn("page:%px compound refcount:%d mapcount:%d "
-> +				"mapping:%px index:%#lx compound_mapcount:%d\n",
-> +				page, page_ref_count(head), mapcount,
-> +				head->mapping, page_to_pgoff(head),
-> +				compound_mapcount(page));
->  	}
->  
->  	if (page_ref_count(page) != 0)
-> @@ -103,10 +113,18 @@ void __dump_page(struct page *page, const char *reason)
->  
->  	if (PageTail(page))
->  		__dump_tail_page(page, mapcount);
-> -	else
-> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
-> -			page, page_ref_count(page), mapcount,
-> -			page->mapping, page_to_pgoff(page));
-> +	else {
-> +		if (hpage_pincount_available(page))
-> +			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
-> +				"index:%#lx compound pincount: %d\n",
-> +				page, page_ref_count(page), mapcount,
-> +				page->mapping, page_to_pgoff(page),
-> +				compound_pincount(page));
-> +		else
-> +			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
-> +				"index:%#lx\n", page, page_ref_count(page),
-> +				mapcount, page->mapping, page_to_pgoff(page));
-> +	}
->  	if (PageKsm(page))
->  		type = "ksm ";
->  	else if (PageAnon(page))
-> -- 
-> 2.25.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> ---
+> drivers/bluetooth/hci_qca.c | 16 ++++++++++++++++
+> 1 file changed, 16 insertions(+)
+
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
+
