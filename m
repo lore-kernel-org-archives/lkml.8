@@ -2,52 +2,57 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE39C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F88CC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDF32087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2921A21927
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747671;
-	bh=LES+YNt23SVFzitgeegj8ax90xxyBOX+vGMxfEd3OS4=;
+	s=default; t=1580747673;
+	bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkO+NCKutt6Cyzu4mTE3S7tWCzHEvc8rSGOR4xn8cdnKJ1l9T+urTxHaogx7CLQJ0
-	 zP6Q2JC1AvhOgur6WFYuHqo5YO70HFV6PUtkhYtRVSihvyryPtIHmbKWPEXrg2vB9Z
-	 8yiSHTl22kKX75laHhX/CEZ91o8qUIW8bwUUEA44=
+	b=0w28oPT0Z2Z0rPZSgGxRhQuA3emJ/qO1iqWYMsS5T1YklPtOM5EwRCIOpLeogbVPs
+	 3opyriYQiFqxg/IHF4lmwZ81295iMqKPGXE+qEWtfOjAsUgVPFfvwBPPF2cAlJBt5k
+	 6jyFho0IKQ6h7FnNWjaU1kBTYxfcm3r2KBmWGRMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgBCQea (ORCPT
+        id S1730812AbgBCQec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48786 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730786AbgBCQe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:26 -0500
+        id S1730800AbgBCQea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:30 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8F6C2051A;
-        Mon,  3 Feb 2020 16:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E92A2082E;
+        Mon,  3 Feb 2020 16:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747665;
-        bh=LES+YNt23SVFzitgeegj8ax90xxyBOX+vGMxfEd3OS4=;
+        s=default; t=1580747670;
+        bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n7+2AkSB1GCx6jgCu0/+74ckcvS+3pCaB6JvdkSUlz39675UwmXCnDDEQID8iDaCd
-         fvKKBf5ZCPtjTcwGzxklVBdMYlnnGix0hB09tBhvFh5wVC9zIQdvYjOF4C1rPCoJ/e
-         0elYgxfXNXZOGpm7vnyfpYuBTYRlCyFHHsmA4i58=
+        b=1H33yeBFh+gA9NjVz7RfEH58Ctcdjfxe6+kpg7YBR6VMX4JUKGQ1n8ta1sJm29sYX
+         1FrFqpag8pXeSkFfUV6IWQvk8qeLitde180YGQNGV02wJ1KOmrEM8uvG9U/Ytei/+2
+         Fc4BcxnbgjqIpdPcR8TZENd+a6aCso7kbdNdV2n8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 07/90] e1000e: Revert "e1000e: Make watchdog use delayed work"
-Date:   Mon,  3 Feb 2020 16:19:10 +0000
-Message-Id: <20200203161918.551273833@linuxfoundation.org>
+        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 09/90] perf c2c: Fix return type for histogram sorting comparision functions
+Date:   Mon,  3 Feb 2020 16:19:12 +0000
+Message-Id: <20200203161918.812118193@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,180 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+From: Andres Freund <andres@anarazel.de>
 
-[ Upstream commit d5ad7a6a7f3c87b278d7e4973b65682be4e588dd ]
+commit c1c8013ec34d7163431d18367808ea40b2e305f8 upstream.
 
-This reverts commit 59653e6497d16f7ac1d9db088f3959f57ee8c3db.
+Commit 722ddfde366f ("perf tools: Fix time sorting") changed - correctly
+so - hist_entry__sort to return int64. Unfortunately several of the
+builtin-c2c.c comparison routines only happened to work due the cast
+caused by the wrong return type.
 
-This is due to this commit causing driver crashes and connections to
-reset unexpectedly.
+This causes meaningless ordering of both the cacheline list, and the
+cacheline details page. E.g a simple:
 
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  perf c2c record -a sleep 3
+  perf c2c report
+
+will result in cacheline table like
+  =================================================
+             Shared Data Cache Line Table
+  =================================================
+  #
+  #        ------- Cacheline ----------    Total     Tot  - LLC Load Hitm -  - Store Reference -  - Load Dram -     LLC  Total  - Core Load Hit -  - LLC Load Hit -
+  # Index         Address  Node  PA cnt  records    Hitm  Total  Lcl    Rmt  Total  L1Hit  L1Miss     Lcl   Rmt  Ld Miss  Loads    FB    L1   L2     Llc      Rmt
+  # .....  ..............  ....  ......  .......  ......  .....  .....  ...  ....   .....  ......  ......  ....  ......   .....  .....  ..... ...  ....     .......
+
+        0  0x7f0d27ffba00   N/A       0       52   0.12%     13      6    7    12      12       0       0     7      14      40      4     16    0    0           0
+        1  0x7f0d27ff61c0   N/A       0     6353  14.04%   1475    801  674   779     779       0       0   718    1392    5574   1299   1967    0  115           0
+        2  0x7f0d26d3ec80   N/A       0       71   0.15%     16      4   12    13      13       0       0    12      24      58      1     20    0    9           0
+        3  0x7f0d26d3ec00   N/A       0       98   0.22%     23     17    6    19      19       0       0     6      12      79      0     40    0   10           0
+
+i.e. with the list not being ordered by Total Hitm.
+
+Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+Signed-off-by: Andres Freund <andres@anarazel.de>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20200109043030.233746-1-andres@anarazel.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/e1000e/e1000.h  |  5 +-
- drivers/net/ethernet/intel/e1000e/netdev.c | 54 ++++++++++------------
- 2 files changed, 27 insertions(+), 32 deletions(-)
+ tools/perf/builtin-c2c.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
-index 6c51b1bad8c42..37a2314d3e6b1 100644
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -185,13 +185,12 @@ struct e1000_phy_regs {
- 
- /* board specific private data structure */
- struct e1000_adapter {
-+	struct timer_list watchdog_timer;
- 	struct timer_list phy_info_timer;
- 	struct timer_list blink_timer;
- 
- 	struct work_struct reset_task;
--	struct delayed_work watchdog_task;
--
--	struct workqueue_struct *e1000_workqueue;
-+	struct work_struct watchdog_task;
- 
- 	const struct e1000_info *ei;
- 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index aa9fdda839148..c27ed7363768c 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -1780,8 +1780,7 @@ static irqreturn_t e1000_intr_msi(int __always_unused irq, void *data)
- 		}
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			mod_delayed_work(adapter->e1000_workqueue,
--					 &adapter->watchdog_task, HZ);
-+			mod_timer(&adapter->watchdog_timer, jiffies + 1);
- 	}
- 
- 	/* Reset on uncorrectable ECC error */
-@@ -1861,8 +1860,7 @@ static irqreturn_t e1000_intr(int __always_unused irq, void *data)
- 		}
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			mod_delayed_work(adapter->e1000_workqueue,
--					 &adapter->watchdog_task, HZ);
-+			mod_timer(&adapter->watchdog_timer, jiffies + 1);
- 	}
- 
- 	/* Reset on uncorrectable ECC error */
-@@ -1907,8 +1905,7 @@ static irqreturn_t e1000_msix_other(int __always_unused irq, void *data)
- 		hw->mac.get_link_status = true;
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			mod_delayed_work(adapter->e1000_workqueue,
--					 &adapter->watchdog_task, HZ);
-+			mod_timer(&adapter->watchdog_timer, jiffies + 1);
- 	}
- 
- 	if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -4281,6 +4278,7 @@ void e1000e_down(struct e1000_adapter *adapter, bool reset)
- 
- 	napi_synchronize(&adapter->napi);
- 
-+	del_timer_sync(&adapter->watchdog_timer);
- 	del_timer_sync(&adapter->phy_info_timer);
- 
- 	spin_lock(&adapter->stats64_lock);
-@@ -5152,11 +5150,25 @@ static void e1000e_check_82574_phy_workaround(struct e1000_adapter *adapter)
- 	}
- }
- 
-+/**
-+ * e1000_watchdog - Timer Call-back
-+ * @data: pointer to adapter cast into an unsigned long
-+ **/
-+static void e1000_watchdog(struct timer_list *t)
-+{
-+	struct e1000_adapter *adapter = from_timer(adapter, t, watchdog_timer);
-+
-+	/* Do the rest outside of interrupt context */
-+	schedule_work(&adapter->watchdog_task);
-+
-+	/* TODO: make this use queue_delayed_work() */
-+}
-+
- static void e1000_watchdog_task(struct work_struct *work)
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __
  {
- 	struct e1000_adapter *adapter = container_of(work,
- 						     struct e1000_adapter,
--						     watchdog_task.work);
-+						     watchdog_task);
- 	struct net_device *netdev = adapter->netdev;
- 	struct e1000_mac_info *mac = &adapter->hw.mac;
- 	struct e1000_phy_info *phy = &adapter->hw.phy;
-@@ -5404,9 +5416,8 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 	struct c2c_hist_entry *c2c_left;
+ 	struct c2c_hist_entry *c2c_right;
+-	unsigned int tot_hitm_left;
+-	unsigned int tot_hitm_right;
++	uint64_t tot_hitm_left;
++	uint64_t tot_hitm_right;
  
- 	/* Reset the timer */
- 	if (!test_bit(__E1000_DOWN, &adapter->state))
--		queue_delayed_work(adapter->e1000_workqueue,
--				   &adapter->watchdog_task,
--				   round_jiffies(2 * HZ));
-+		mod_timer(&adapter->watchdog_timer,
-+			  round_jiffies(jiffies + 2 * HZ));
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+@@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __m
+ 									\
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
+-	return c2c_left->stats.__f - c2c_right->stats.__f;		\
++	return (uint64_t) c2c_left->stats.__f -				\
++	       (uint64_t) c2c_right->stats.__f;				\
  }
  
- #define E1000_TX_FLAGS_CSUM		0x00000001
-@@ -7259,21 +7270,11 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_eeprom;
- 	}
+ #define STAT_FN(__f)		\
+@@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);
  
--	adapter->e1000_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
--						   e1000e_driver_name);
--
--	if (!adapter->e1000_workqueue) {
--		err = -ENOMEM;
--		goto err_workqueue;
--	}
--
--	INIT_DELAYED_WORK(&adapter->watchdog_task, e1000_watchdog_task);
--	queue_delayed_work(adapter->e1000_workqueue, &adapter->watchdog_task,
--			   0);
--
-+	timer_setup(&adapter->watchdog_timer, e1000_watchdog, 0);
- 	timer_setup(&adapter->phy_info_timer, e1000_update_phy_info, 0);
+-	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
++	return (uint64_t) llc_miss(&c2c_left->stats) -
++	       (uint64_t) llc_miss(&c2c_right->stats);
+ }
  
- 	INIT_WORK(&adapter->reset_task, e1000_reset_task);
-+	INIT_WORK(&adapter->watchdog_task, e1000_watchdog_task);
- 	INIT_WORK(&adapter->downshift_task, e1000e_downshift_workaround);
- 	INIT_WORK(&adapter->update_phy_task, e1000e_update_phy_task);
- 	INIT_WORK(&adapter->print_hang_task, e1000_print_hw_hang);
-@@ -7367,9 +7368,6 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return 0;
- 
- err_register:
--	flush_workqueue(adapter->e1000_workqueue);
--	destroy_workqueue(adapter->e1000_workqueue);
--err_workqueue:
- 	if (!(adapter->flags & FLAG_HAS_AMT))
- 		e1000e_release_hw_control(adapter);
- err_eeprom:
-@@ -7414,17 +7412,15 @@ static void e1000_remove(struct pci_dev *pdev)
- 	 * from being rescheduled.
- 	 */
- 	set_bit(__E1000_DOWN, &adapter->state);
-+	del_timer_sync(&adapter->watchdog_timer);
- 	del_timer_sync(&adapter->phy_info_timer);
- 
- 	cancel_work_sync(&adapter->reset_task);
-+	cancel_work_sync(&adapter->watchdog_task);
- 	cancel_work_sync(&adapter->downshift_task);
- 	cancel_work_sync(&adapter->update_phy_task);
- 	cancel_work_sync(&adapter->print_hang_task);
- 
--	cancel_delayed_work(&adapter->watchdog_task);
--	flush_workqueue(adapter->e1000_workqueue);
--	destroy_workqueue(adapter->e1000_workqueue);
--
- 	if (adapter->flags & FLAG_HAS_HW_TIMESTAMP) {
- 		cancel_work_sync(&adapter->tx_hwtstamp_work);
- 		if (adapter->tx_hwtstamp_skb) {
--- 
-2.20.1
-
+ static uint64_t total_records(struct c2c_stats *stats)
 
 
