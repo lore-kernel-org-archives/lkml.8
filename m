@@ -2,54 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5832DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB85C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2446921775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806B321775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747390;
-	bh=c+d813cZMCYf0vAj2pTZXXiLVWj7SVH0DsY+S6RlMds=;
+	s=default; t=1580747392;
+	bh=E0KfDQpncrdbMkcBNsr0lecI8NGoQG1IQc4zpwXf10E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQYZ4PBAzfl0YJyh6Q12kdFrjDHT9ZJvjs6fVjHtD5OhjeSz8whoibiUyByYrE7aR
-	 S1h2fgiapfdmSiivJ8EM0Q60xZgSC2x80UOY3TdHD6+qaCS2rQjLWTXrCCSoM68T4e
-	 gErZnHv4SFdlkradoAhlOZ9+W6qb2EtGPIoWjRCM=
+	b=kY0pPInv03A2iNSQFy9yAN0a9PUoq2TPcs+P3TABYUfOX5my51UZOAnwZ3km0NZGx
+	 2OScMNFeoZpUeoHMX9MjebZUel/ha9pVo7sZC1Nm3UKsvwrdAdiStEOwBNQ0pVV9Xg
+	 psUg9IX9XYUz6MugOHLAWaOIeDxdR/KjU4fV3BZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbgBCQ3t (ORCPT
+        id S1729859AbgBCQ3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41836 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbgBCQ3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:45 -0500
+        id S1729541AbgBCQ3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:43 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE9E20838;
-        Mon,  3 Feb 2020 16:29:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F662051A;
+        Mon,  3 Feb 2020 16:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747384;
-        bh=c+d813cZMCYf0vAj2pTZXXiLVWj7SVH0DsY+S6RlMds=;
+        s=default; t=1580747382;
+        bh=E0KfDQpncrdbMkcBNsr0lecI8NGoQG1IQc4zpwXf10E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3z1dP6A9kCFsm/oeTRsd1ASuhOeJ2eMUTFKmld2stU3bS0tOr2JcKBN+fUYgtLFd
-         FnEZlj9uQD8AAlYvsLrrvLBAB8JnPk731bWBKSvb5bCQIFn3o9pgE38VdRR88KhjYf
-         7QwYzB/NEFiqGzvM1F4OjZ4+ruT/LcYsvoFwIPPU=
+        b=oxqM9TWrTFghwLKUjyghGXU2wDfHCrxjz1ojjZOCp6+7RCQKb9srz9MfAP5qIr3qD
+         cWDVeQ42rfkzDTx6zfKDy5rD4tqnnZSY/BuH4LLnzCZxqUTkZcQJP92yJjs21OcCRZ
+         tvv+PW5nddbIo/K5Q+skaqFIWlsydMJtt4DLENCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Cambda Zhu <cambda@linux.alibaba.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/89] drivers/net/b44: Change to non-atomic bit operations on pwol_mask
-Date:   Mon,  3 Feb 2020 16:19:09 +0000
-Message-Id: <20200203161920.127855118@linuxfoundation.org>
+Subject: [PATCH 4.14 59/89] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
+Date:   Mon,  3 Feb 2020 16:19:44 +0000
+Message-Id: <20200203161924.436859082@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -62,64 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu <fenghua.yu@intel.com>
+From: Cambda Zhu <cambda@linux.alibaba.com>
 
-[ Upstream commit f11421ba4af706cb4f5703de34fa77fba8472776 ]
+[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
 
-Atomic operations that span cache lines are super-expensive on x86
-(not just to the current processor, but also to other processes as all
-memory operations are blocked until the operation completes). Upcoming
-x86 processors have a switch to cause such operations to generate a #AC
-trap. It is expected that some real time systems will enable this mode
-in BIOS.
+This patch fixes the calculation of queue when we restore flow director
+filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
+vf may be zero which makes the queue outside of the rx_ring array.
 
-In preparation for this, it is necessary to fix code that may execute
-atomic instructions with operands that cross cachelines because the #AC
-trap will crash the kernel.
+The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
 
-Since "pwol_mask" is local and never exposed to concurrency, there is
-no need to set bits in pwol_mask using atomic operations.
-
-Directly operate on the byte which contains the bit instead of using
-__set_bit() to avoid any big endian concern due to type cast to
-unsigned long in __set_bit().
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/b44.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-index a1125d10c8255..8b9a0ce1d29f5 100644
---- a/drivers/net/ethernet/broadcom/b44.c
-+++ b/drivers/net/ethernet/broadcom/b44.c
-@@ -1521,8 +1521,10 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 	int ethaddr_bytes = ETH_ALEN;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index e4c1e6345edd0..ba184287e11f3 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -5131,7 +5131,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
+-	u64 action;
++	u8 queue;
  
- 	memset(ppattern + offset, 0xff, magicsync);
--	for (j = 0; j < magicsync; j++)
--		set_bit(len++, (unsigned long *) pmask);
-+	for (j = 0; j < magicsync; j++) {
-+		pmask[len >> 3] |= BIT(len & 7);
-+		len++;
-+	}
+ 	spin_lock(&adapter->fdir_perfect_lock);
  
- 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
- 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
-@@ -1534,7 +1536,8 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 		for (k = 0; k< ethaddr_bytes; k++) {
- 			ppattern[offset + magicsync +
- 				(j * ETH_ALEN) + k] = macaddr[k];
--			set_bit(len++, (unsigned long *) pmask);
-+			pmask[len >> 3] |= BIT(len & 7);
-+			len++;
- 		}
+@@ -5140,17 +5140,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
+-		action = filter->action;
+-		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
+-			action =
+-			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
++			queue = IXGBE_FDIR_DROP_QUEUE;
++		} else {
++			u32 ring = ethtool_get_flow_spec_ring(filter->action);
++			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
++
++			if (!vf && (ring >= adapter->num_rx_queues)) {
++				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
++				      ring);
++				continue;
++			} else if (vf &&
++				   ((vf > adapter->num_vfs) ||
++				     ring >= adapter->num_rx_queues_per_pool)) {
++				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
++				      vf, ring);
++				continue;
++			}
++
++			/* Map the ring onto the absolute queue index */
++			if (!vf)
++				queue = adapter->rx_ring[ring]->reg_idx;
++			else
++				queue = ((vf - 1) *
++					adapter->num_rx_queues_per_pool) + ring;
++		}
+ 
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+-				&filter->filter,
+-				filter->sw_idx,
+-				(action == IXGBE_FDIR_DROP_QUEUE) ?
+-				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[action]->reg_idx);
++				&filter->filter, filter->sw_idx, queue);
  	}
- 	return len - 1;
+ 
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
