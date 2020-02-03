@@ -2,126 +2,113 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DB5C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC6EC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2636620721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA4D2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+hJJMEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgBCUVW (ORCPT
+        id S1726992AbgBCUZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 15:21:22 -0500
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:40917 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726224AbgBCUVW (ORCPT
+        Mon, 3 Feb 2020 15:25:07 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41136 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgBCUZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 15:21:22 -0500
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.85)
-          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1iyiDd-003u8p-Lv>; Mon, 03 Feb 2020 21:21:17 +0100
-Received: from p508832b6.dip0.t-ipconnect.de ([80.136.50.182] helo=[192.168.46.51])
-          by inpost2.zedat.fu-berlin.de (Exim 4.85)
-          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1iyiDd-001fSt-ET>; Mon, 03 Feb 2020 21:21:17 +0100
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
- dma_request_slave_chan()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
- <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com>
- <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
- <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
- <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
-Date:   Mon, 3 Feb 2020 21:21:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 15:25:06 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r27so14919587otc.8;
+        Mon, 03 Feb 2020 12:25:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=63jW789sY3VX7ra4EKkFoe9ytZPPkm7N/YVQQ2sxOY8=;
+        b=W+hJJMEvibBQG+2lpzi0dxIHmJ4geJ67wEvz/1FJ+pZdxfv+B5J+7vbjefvy9MNDyq
+         Ae/32M22wmqs8GKnWhcRLh95ObdACtQ3B/JZJqZV0yr/cl0O5F+G+Kt4zAmwA+h4AO34
+         wWX/7yQSfK5XjAE2C3Q/Esgl95vPdtAcegYIYluUMpLbuHoaxbtiIZyL0YT8mergG2wi
+         qejT/jl+CRmsDP+SipknbOnSEgL+bPpSVt00D95tVC5uCFfZ0BoZrLyDp/oLzrtY7Oe0
+         hRF6TQ7MeJ97OcgT7pHIIbUgzEbWa0MtT60OOhwxIpf2Xsv+AEnNVx8WY+gdhdWLHq7s
+         Jc+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=63jW789sY3VX7ra4EKkFoe9ytZPPkm7N/YVQQ2sxOY8=;
+        b=sa1RJdqzUbSpTzL9oah2RW1yf+N2ddLu3EuGxsMa8dBU7Trcg2/d5V2xTJGWlacUsC
+         JSqUgrEtY1hFdX7vx9luRapgsBO9ju0pJZHKNdhJyISjX2enGDQtLxy0wnxiUtY57z45
+         Lg4acjsDcgyQS6y6VnVrJFBYWtas2mtSYVwGQwGWzbDm/E5tlTqE9q1ETPe7W7jEtz4x
+         D3MHROexy4URTUpH95jOFJ63TGXbeNZr1xR4D0omnoSlEGsKCGBTy4edShfrU2hzOAyh
+         lJHIcJkKa0pu9FJBRdvs+cWSqiPQpN4eNyCVLJX7KHQJJNQXZgrgQAtSAvWcTeTNrHlS
+         nwvw==
+X-Gm-Message-State: APjAAAXzRIX+PIRG02YEARWzTIYP+UsQ1E8EnJjEFOReUUlp8IjnnW7k
+        QF/E2dTL9rPWigOK9/ha+1IDn4R7qAdk477KuPtVSnItYAA=
+X-Google-Smtp-Source: APXvYqz749Gp2eVOjp3OKWbBZmqTr1A+exIdvRSQ0Y1gXfDajC+2fhpFda8/gI0SnpoqPyiVEvpAg6Wc/t8gPPyZmBI=
+X-Received: by 2002:a9d:67cc:: with SMTP id c12mr13084936otn.319.1580761505743;
+ Mon, 03 Feb 2020 12:25:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: 80.136.50.182
+References: <20200203053650.8923-1-xiyou.wangcong@gmail.com> <20200203132638.5a37f2f2@oasis.local.home>
+In-Reply-To: <20200203132638.5a37f2f2@oasis.local.home>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 3 Feb 2020 12:24:54 -0800
+Message-ID: <CAM_iQpXz+O-GHqotZiGC4FgvgcvNHkFg4QFH8_t4j8pHgvAD2Q@mail.gmail.com>
+Subject: Re: [Patch v3] block: introduce block_rq_error tracepoint
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
-> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
+On Mon, Feb 3, 2020 at 10:26 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Sun,  2 Feb 2020 21:36:50 -0800
+> Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> > ---
+> >  block/blk-core.c             |  4 +++-
+> >  include/trace/events/block.h | 41 ++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/block/blk-core.c b/block/blk-core.c
+> > index 089e890ab208..0c7ad70d06be 100644
+> > --- a/block/blk-core.c
+> > +++ b/block/blk-core.c
+> > @@ -1450,8 +1450,10 @@ bool blk_update_request(struct request *req, blk_status_t error,
+> >  #endif
+> >
+> >       if (unlikely(error && !blk_rq_is_passthrough(req) &&
+> > -                  !(req->rq_flags & RQF_QUIET)))
+> > +                  !(req->rq_flags & RQF_QUIET))) {
+> > +             trace_block_rq_error(req, blk_status_to_errno(error), nr_bytes);
+>
+> I'm curious to why you don't just pass error into the trace event.
+> Looks like blk_status_to_errno() is a function call and that injects
+> code at the location of the call. Note, it is not a big deal as I
+> believe (haven't looked at the objdump of it), the call may be placed
+> in the nop portion of the code, and not hit when the trace point is not
+> enabled. But moving the blk_status_to_errno() call to the
+> TP_fast_assign() will move it to another section entirely.
+>
+> I did see trace_blk_rq_complete() does the same thing, so perhaps that
+> could just be a clean up change after this on both trace events.
 
-FWIW, there is a patch set by Yoshinori Sato to add device tree support
-for classical SuperH hardware. It was never merged, unfortunately :(.
+Yes, it is clearly another copy-n-paste of trace_blk_rq_complete().
+I trust the current code base as I believe it already passed
+your reviews when it was merged. It looks like not the case.
 
-> Anyone who cares for DMA on SuperH?
+Anyway, I am happy to address all of these in a followup patch.
 
-What is DMA used for on SuperH? Wouldn't dropping it cut support for
-essential hardware features?
-
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Thanks.
