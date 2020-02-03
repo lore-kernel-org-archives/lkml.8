@@ -2,52 +2,56 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362DCC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FB1C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC01421582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FCF20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747146;
-	bh=ec1kGG7zpDr102FKDa9SS42NmIToMcZX3w0XRmrtsDY=;
+	s=default; t=1580747149;
+	bh=LZAGAJaQ3n3fZVaLbEAb93zTGMspTgL5PM6oViMILNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SxG3g/ooau7WFYdsI2mQj0DO2cBpHNFE5WcRV3aGsRz2mLN1qhHyXhR2t5hY4x/TU
-	 IY+jZZCRlchVHBv6SSHINjcmCWS4gG5gN/8iqPmAMz46sFQJu6DDgvs2PLTBtizP4z
-	 pe4QB27gELB0yxMLH+Ruf6g2Ws5WyaFfAjmVIQyQ=
+	b=kkKoCJ+rdEHbanmLunD0i9Vlt9EbFali2q4+VZXTbVJj9SVdNMnXfNaWP0ue4T9KU
+	 ZaLk67jubm6Oagm1pSs4XERoZaVxXA+mEuhspeQQnQksGQc6ypzENGskh15NSVLFtD
+	 c+8Loj6UtqE5w3KnORNuIgDiokrDOyJGp2IXaR7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgBCQZp (ORCPT
+        id S1728715AbgBCQZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36426 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgBCQZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:41 -0500
+        id S1728627AbgBCQZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:46 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 217AA2086A;
-        Mon,  3 Feb 2020 16:25:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF1F2080C;
+        Mon,  3 Feb 2020 16:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747140;
-        bh=ec1kGG7zpDr102FKDa9SS42NmIToMcZX3w0XRmrtsDY=;
+        s=default; t=1580747145;
+        bh=LZAGAJaQ3n3fZVaLbEAb93zTGMspTgL5PM6oViMILNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zua7z6BpFlOqQ0CRDuVEdrOhbiiOk5c1g4PZgMfY46e1901zbOWsg4VGg3mIEKwFw
-         mU+Nnd9yR2I0Abx2l91M61X5u4dfIxnQ+K9tQDYxBmMoUKrTSO6sdZkoRF46aBcYCP
-         GDQCsufnbaBLQospKWv83tBKNrEGtGuCjzLRzL7A=
+        b=k05EFcoT8m4iKG7K45XoAEqHNEbdCn4D+dea3yFJyZ/GXjdPNMMFnMCq6hA81mp+l
+         oQmMhSKqsZBI1QFu//TJumb12TvVu6OGIgCXFbLy5QHLfZxeFPKIC5SL9GKDzZ5KmA
+         b8fbmW2nK6xfP3t8p2c6n8fhfsZkMlg6jbrDYZJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 28/68] iio: gyro: st_gyro: inline per-sensor data
-Date:   Mon,  3 Feb 2020 16:19:24 +0000
-Message-Id: <20200203161909.663307230@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Chikunov <vt@altlinux.org>,
+        Dmitry Levin <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.9 30/68] tools lib: Fix builds when glibc contains strlcpy()
+Date:   Mon,  3 Feb 2020 16:19:26 +0000
+Message-Id: <20200203161909.959158906@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,387 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Vitaly Chikunov <vt@altlinux.org>
 
-[ Upstream commit d8594fa22a3f7c294639d9aa2959d63e66d9437c ]
+commit 6c4798d3f08b81c2c52936b10e0fa872590c96ae upstream.
 
-We have #defines for all the individual sensor registers and
-value/mask pairs #defined at the top of the file and used at
-exactly one spot.
+Disable a couple of compilation warnings (which are treated as errors)
+on strlcpy() definition and declaration, allowing users to compile perf
+and kernel (objtool) when:
 
-This is usually good if the #defines give a meaning to the
-opaque magic numbers.
+1. glibc have strlcpy() (such as in ALT Linux since 2004) objtool and
+   perf build fails with this (in gcc):
 
-However in this case, the semantic meaning is inherent in the
-name of the C99-addressable fields, and that means duplication
-of information, and only makes the code hard to maintain since
-you every time have to add a new #define AND update the site
-where it is to be used.
+  In file included from exec-cmd.c:3:
+  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
 
-Get rid of the #defines and just open code the values into the
-appropriate struct elements. Make sure to explicitly address
-the .hz and .value fields in the st_sensor_odr_avl struct
-so that the meaning of all values is clear.
+2. clang ignores `-Wredundant-decls', but produces another warning when
+   building perf:
 
-This patch is purely syntactic should have no semantic effect.
+    CC       util/string.o
+  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+  size_t __weak strlcpy(char *dest, const char *src, size_t size)
+  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
+  # define __weak                 __attribute__((weak))
+  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
+  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jonathan Cameron <jic23@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Committer notes:
+
+The
+
+ #pragma GCC diagnostic
+
+directive was introduced in gcc 4.6, so check for that as well.
+
+Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Reviewed-by: Dmitry Levin <ldv@altlinux.org>
+Cc: Dmitry Levin <ldv@altlinux.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: kbuild test robot <lkp@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Link: http://lore.kernel.org/lkml/20191224172029.19690-1-vt@altlinux.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/gyro/st_gyro_core.c | 205 ++++++++++----------------------
- 1 file changed, 66 insertions(+), 139 deletions(-)
+ tools/include/linux/string.h |    8 ++++++++
+ tools/lib/string.c           |    7 +++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/iio/gyro/st_gyro_core.c b/drivers/iio/gyro/st_gyro_core.c
-index aea034d8fe0fb..2a42b3d583e85 100644
---- a/drivers/iio/gyro/st_gyro_core.c
-+++ b/drivers/iio/gyro/st_gyro_core.c
-@@ -39,79 +39,6 @@
- #define ST_GYRO_FS_AVL_500DPS			500
- #define ST_GYRO_FS_AVL_2000DPS			2000
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -13,7 +13,15 @@ int strtobool(const char *s, bool *res);
+  * However uClibc headers also define __GLIBC__ hence the hack below
+  */
+ #if defined(__GLIBC__) && !defined(__UCLIBC__)
++// pragma diagnostic was introduced in gcc 4.6
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wredundant-decls"
++#endif
+ extern size_t strlcpy(char *dest, const char *src, size_t size);
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic pop
++#endif
+ #endif
  
--/* CUSTOM VALUES FOR SENSOR 1 */
--#define ST_GYRO_1_WAI_EXP			0xd3
--#define ST_GYRO_1_ODR_ADDR			0x20
--#define ST_GYRO_1_ODR_MASK			0xc0
--#define ST_GYRO_1_ODR_AVL_100HZ_VAL		0x00
--#define ST_GYRO_1_ODR_AVL_200HZ_VAL		0x01
--#define ST_GYRO_1_ODR_AVL_400HZ_VAL		0x02
--#define ST_GYRO_1_ODR_AVL_800HZ_VAL		0x03
--#define ST_GYRO_1_PW_ADDR			0x20
--#define ST_GYRO_1_PW_MASK			0x08
--#define ST_GYRO_1_FS_ADDR			0x23
--#define ST_GYRO_1_FS_MASK			0x30
--#define ST_GYRO_1_FS_AVL_250_VAL		0x00
--#define ST_GYRO_1_FS_AVL_500_VAL		0x01
--#define ST_GYRO_1_FS_AVL_2000_VAL		0x02
--#define ST_GYRO_1_FS_AVL_250_GAIN		IIO_DEGREE_TO_RAD(8750)
--#define ST_GYRO_1_FS_AVL_500_GAIN		IIO_DEGREE_TO_RAD(17500)
--#define ST_GYRO_1_FS_AVL_2000_GAIN		IIO_DEGREE_TO_RAD(70000)
--#define ST_GYRO_1_BDU_ADDR			0x23
--#define ST_GYRO_1_BDU_MASK			0x80
--#define ST_GYRO_1_DRDY_IRQ_ADDR			0x22
--#define ST_GYRO_1_DRDY_IRQ_INT2_MASK		0x08
--#define ST_GYRO_1_MULTIREAD_BIT			true
--
--/* CUSTOM VALUES FOR SENSOR 2 */
--#define ST_GYRO_2_WAI_EXP			0xd4
--#define ST_GYRO_2_ODR_ADDR			0x20
--#define ST_GYRO_2_ODR_MASK			0xc0
--#define ST_GYRO_2_ODR_AVL_95HZ_VAL		0x00
--#define ST_GYRO_2_ODR_AVL_190HZ_VAL		0x01
--#define ST_GYRO_2_ODR_AVL_380HZ_VAL		0x02
--#define ST_GYRO_2_ODR_AVL_760HZ_VAL		0x03
--#define ST_GYRO_2_PW_ADDR			0x20
--#define ST_GYRO_2_PW_MASK			0x08
--#define ST_GYRO_2_FS_ADDR			0x23
--#define ST_GYRO_2_FS_MASK			0x30
--#define ST_GYRO_2_FS_AVL_250_VAL		0x00
--#define ST_GYRO_2_FS_AVL_500_VAL		0x01
--#define ST_GYRO_2_FS_AVL_2000_VAL		0x02
--#define ST_GYRO_2_FS_AVL_250_GAIN		IIO_DEGREE_TO_RAD(8750)
--#define ST_GYRO_2_FS_AVL_500_GAIN		IIO_DEGREE_TO_RAD(17500)
--#define ST_GYRO_2_FS_AVL_2000_GAIN		IIO_DEGREE_TO_RAD(70000)
--#define ST_GYRO_2_BDU_ADDR			0x23
--#define ST_GYRO_2_BDU_MASK			0x80
--#define ST_GYRO_2_DRDY_IRQ_ADDR			0x22
--#define ST_GYRO_2_DRDY_IRQ_INT2_MASK		0x08
--#define ST_GYRO_2_MULTIREAD_BIT			true
--
--/* CUSTOM VALUES FOR SENSOR 3 */
--#define ST_GYRO_3_WAI_EXP			0xd7
--#define ST_GYRO_3_ODR_ADDR			0x20
--#define ST_GYRO_3_ODR_MASK			0xc0
--#define ST_GYRO_3_ODR_AVL_95HZ_VAL		0x00
--#define ST_GYRO_3_ODR_AVL_190HZ_VAL		0x01
--#define ST_GYRO_3_ODR_AVL_380HZ_VAL		0x02
--#define ST_GYRO_3_ODR_AVL_760HZ_VAL		0x03
--#define ST_GYRO_3_PW_ADDR			0x20
--#define ST_GYRO_3_PW_MASK			0x08
--#define ST_GYRO_3_FS_ADDR			0x23
--#define ST_GYRO_3_FS_MASK			0x30
--#define ST_GYRO_3_FS_AVL_250_VAL		0x00
--#define ST_GYRO_3_FS_AVL_500_VAL		0x01
--#define ST_GYRO_3_FS_AVL_2000_VAL		0x02
--#define ST_GYRO_3_FS_AVL_250_GAIN		IIO_DEGREE_TO_RAD(8750)
--#define ST_GYRO_3_FS_AVL_500_GAIN		IIO_DEGREE_TO_RAD(17500)
--#define ST_GYRO_3_FS_AVL_2000_GAIN		IIO_DEGREE_TO_RAD(70000)
--#define ST_GYRO_3_BDU_ADDR			0x23
--#define ST_GYRO_3_BDU_MASK			0x80
--#define ST_GYRO_3_DRDY_IRQ_ADDR			0x22
--#define ST_GYRO_3_DRDY_IRQ_INT2_MASK		0x08
--#define ST_GYRO_3_MULTIREAD_BIT			true
--
--
- static const struct iio_chan_spec st_gyro_16bit_channels[] = {
- 	ST_SENSORS_LSM_CHANNELS(IIO_ANGL_VEL,
- 			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-@@ -130,7 +57,7 @@ static const struct iio_chan_spec st_gyro_16bit_channels[] = {
- 
- static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 	{
--		.wai = ST_GYRO_1_WAI_EXP,
-+		.wai = 0xd3,
- 		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
- 		.sensors_supported = {
- 			[0] = L3G4200D_GYRO_DEV_NAME,
-@@ -138,18 +65,18 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 		},
- 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
- 		.odr = {
--			.addr = ST_GYRO_1_ODR_ADDR,
--			.mask = ST_GYRO_1_ODR_MASK,
-+			.addr = 0x20,
-+			.mask = 0xc0,
- 			.odr_avl = {
--				{ 100, ST_GYRO_1_ODR_AVL_100HZ_VAL, },
--				{ 200, ST_GYRO_1_ODR_AVL_200HZ_VAL, },
--				{ 400, ST_GYRO_1_ODR_AVL_400HZ_VAL, },
--				{ 800, ST_GYRO_1_ODR_AVL_800HZ_VAL, },
-+				{ .hz = 100, .value = 0x00, },
-+				{ .hz = 200, .value = 0x01, },
-+				{ .hz = 400, .value = 0x02, },
-+				{ .hz = 800, .value = 0x03, },
- 			},
- 		},
- 		.pw = {
--			.addr = ST_GYRO_1_PW_ADDR,
--			.mask = ST_GYRO_1_PW_MASK,
-+			.addr = 0x20,
-+			.mask = 0x08,
- 			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
- 			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
- 		},
-@@ -158,33 +85,33 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
- 		},
- 		.fs = {
--			.addr = ST_GYRO_1_FS_ADDR,
--			.mask = ST_GYRO_1_FS_MASK,
-+			.addr = 0x23,
-+			.mask = 0x30,
- 			.fs_avl = {
- 				[0] = {
- 					.num = ST_GYRO_FS_AVL_250DPS,
--					.value = ST_GYRO_1_FS_AVL_250_VAL,
--					.gain = ST_GYRO_1_FS_AVL_250_GAIN,
-+					.value = 0x00,
-+					.gain = IIO_DEGREE_TO_RAD(8750),
- 				},
- 				[1] = {
- 					.num = ST_GYRO_FS_AVL_500DPS,
--					.value = ST_GYRO_1_FS_AVL_500_VAL,
--					.gain = ST_GYRO_1_FS_AVL_500_GAIN,
-+					.value = 0x01,
-+					.gain = IIO_DEGREE_TO_RAD(17500),
- 				},
- 				[2] = {
- 					.num = ST_GYRO_FS_AVL_2000DPS,
--					.value = ST_GYRO_1_FS_AVL_2000_VAL,
--					.gain = ST_GYRO_1_FS_AVL_2000_GAIN,
-+					.value = 0x02,
-+					.gain = IIO_DEGREE_TO_RAD(70000),
- 				},
- 			},
- 		},
- 		.bdu = {
--			.addr = ST_GYRO_1_BDU_ADDR,
--			.mask = ST_GYRO_1_BDU_MASK,
-+			.addr = 0x23,
-+			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = ST_GYRO_1_DRDY_IRQ_ADDR,
--			.mask_int2 = ST_GYRO_1_DRDY_IRQ_INT2_MASK,
-+			.addr = 0x22,
-+			.mask_int2 = 0x08,
- 			/*
- 			 * The sensor has IHL (active low) and open
- 			 * drain settings, but only for INT1 and not
-@@ -192,11 +119,11 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			 */
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
--		.multi_read_bit = ST_GYRO_1_MULTIREAD_BIT,
-+		.multi_read_bit = true,
- 		.bootime = 2,
- 	},
- 	{
--		.wai = ST_GYRO_2_WAI_EXP,
-+		.wai = 0xd4,
- 		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
- 		.sensors_supported = {
- 			[0] = L3GD20_GYRO_DEV_NAME,
-@@ -208,18 +135,18 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 		},
- 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
- 		.odr = {
--			.addr = ST_GYRO_2_ODR_ADDR,
--			.mask = ST_GYRO_2_ODR_MASK,
-+			.addr = 0x20,
-+			.mask = 0xc0,
- 			.odr_avl = {
--				{ 95, ST_GYRO_2_ODR_AVL_95HZ_VAL, },
--				{ 190, ST_GYRO_2_ODR_AVL_190HZ_VAL, },
--				{ 380, ST_GYRO_2_ODR_AVL_380HZ_VAL, },
--				{ 760, ST_GYRO_2_ODR_AVL_760HZ_VAL, },
-+				{ .hz = 95, .value = 0x00, },
-+				{ .hz = 190, .value = 0x01, },
-+				{ .hz = 380, .value = 0x02, },
-+				{ .hz = 760, .value = 0x03, },
- 			},
- 		},
- 		.pw = {
--			.addr = ST_GYRO_2_PW_ADDR,
--			.mask = ST_GYRO_2_PW_MASK,
-+			.addr = 0x20,
-+			.mask = 0x08,
- 			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
- 			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
- 		},
-@@ -228,33 +155,33 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
- 		},
- 		.fs = {
--			.addr = ST_GYRO_2_FS_ADDR,
--			.mask = ST_GYRO_2_FS_MASK,
-+			.addr = 0x23,
-+			.mask = 0x30,
- 			.fs_avl = {
- 				[0] = {
- 					.num = ST_GYRO_FS_AVL_250DPS,
--					.value = ST_GYRO_2_FS_AVL_250_VAL,
--					.gain = ST_GYRO_2_FS_AVL_250_GAIN,
-+					.value = 0x00,
-+					.gain = IIO_DEGREE_TO_RAD(8750),
- 				},
- 				[1] = {
- 					.num = ST_GYRO_FS_AVL_500DPS,
--					.value = ST_GYRO_2_FS_AVL_500_VAL,
--					.gain = ST_GYRO_2_FS_AVL_500_GAIN,
-+					.value = 0x01,
-+					.gain = IIO_DEGREE_TO_RAD(17500),
- 				},
- 				[2] = {
- 					.num = ST_GYRO_FS_AVL_2000DPS,
--					.value = ST_GYRO_2_FS_AVL_2000_VAL,
--					.gain = ST_GYRO_2_FS_AVL_2000_GAIN,
-+					.value = 0x02,
-+					.gain = IIO_DEGREE_TO_RAD(70000),
- 				},
- 			},
- 		},
- 		.bdu = {
--			.addr = ST_GYRO_2_BDU_ADDR,
--			.mask = ST_GYRO_2_BDU_MASK,
-+			.addr = 0x23,
-+			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = ST_GYRO_2_DRDY_IRQ_ADDR,
--			.mask_int2 = ST_GYRO_2_DRDY_IRQ_INT2_MASK,
-+			.addr = 0x22,
-+			.mask_int2 = 0x08,
- 			/*
- 			 * The sensor has IHL (active low) and open
- 			 * drain settings, but only for INT1 and not
-@@ -262,29 +189,29 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			 */
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
--		.multi_read_bit = ST_GYRO_2_MULTIREAD_BIT,
-+		.multi_read_bit = true,
- 		.bootime = 2,
- 	},
- 	{
--		.wai = ST_GYRO_3_WAI_EXP,
-+		.wai = 0xd7,
- 		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
- 		.sensors_supported = {
- 			[0] = L3GD20_GYRO_DEV_NAME,
- 		},
- 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
- 		.odr = {
--			.addr = ST_GYRO_3_ODR_ADDR,
--			.mask = ST_GYRO_3_ODR_MASK,
-+			.addr = 0x20,
-+			.mask = 0xc0,
- 			.odr_avl = {
--				{ 95, ST_GYRO_3_ODR_AVL_95HZ_VAL, },
--				{ 190, ST_GYRO_3_ODR_AVL_190HZ_VAL, },
--				{ 380, ST_GYRO_3_ODR_AVL_380HZ_VAL, },
--				{ 760, ST_GYRO_3_ODR_AVL_760HZ_VAL, },
-+				{ .hz = 95, .value = 0x00, },
-+				{ .hz = 190, .value = 0x01, },
-+				{ .hz = 380, .value = 0x02, },
-+				{ .hz = 760, .value = 0x03, },
- 			},
- 		},
- 		.pw = {
--			.addr = ST_GYRO_3_PW_ADDR,
--			.mask = ST_GYRO_3_PW_MASK,
-+			.addr = 0x20,
-+			.mask = 0x08,
- 			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
- 			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
- 		},
-@@ -293,33 +220,33 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
- 		},
- 		.fs = {
--			.addr = ST_GYRO_3_FS_ADDR,
--			.mask = ST_GYRO_3_FS_MASK,
-+			.addr = 0x23,
-+			.mask = 0x30,
- 			.fs_avl = {
- 				[0] = {
- 					.num = ST_GYRO_FS_AVL_250DPS,
--					.value = ST_GYRO_3_FS_AVL_250_VAL,
--					.gain = ST_GYRO_3_FS_AVL_250_GAIN,
-+					.value = 0x00,
-+					.gain = IIO_DEGREE_TO_RAD(8750),
- 				},
- 				[1] = {
- 					.num = ST_GYRO_FS_AVL_500DPS,
--					.value = ST_GYRO_3_FS_AVL_500_VAL,
--					.gain = ST_GYRO_3_FS_AVL_500_GAIN,
-+					.value = 0x01,
-+					.gain = IIO_DEGREE_TO_RAD(17500),
- 				},
- 				[2] = {
- 					.num = ST_GYRO_FS_AVL_2000DPS,
--					.value = ST_GYRO_3_FS_AVL_2000_VAL,
--					.gain = ST_GYRO_3_FS_AVL_2000_GAIN,
-+					.value = 0x02,
-+					.gain = IIO_DEGREE_TO_RAD(70000),
- 				},
- 			},
- 		},
- 		.bdu = {
--			.addr = ST_GYRO_3_BDU_ADDR,
--			.mask = ST_GYRO_3_BDU_MASK,
-+			.addr = 0x23,
-+			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = ST_GYRO_3_DRDY_IRQ_ADDR,
--			.mask_int2 = ST_GYRO_3_DRDY_IRQ_INT2_MASK,
-+			.addr = 0x22,
-+			.mask_int2 = 0x08,
- 			/*
- 			 * The sensor has IHL (active low) and open
- 			 * drain settings, but only for INT1 and not
-@@ -327,7 +254,7 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			 */
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
--		.multi_read_bit = ST_GYRO_3_MULTIREAD_BIT,
-+		.multi_read_bit = true,
- 		.bootime = 2,
- 	},
- };
--- 
-2.20.1
-
+ char *str_error_r(int errnum, char *buf, size_t buflen);
+--- a/tools/lib/string.c
++++ b/tools/lib/string.c
+@@ -76,6 +76,10 @@ int strtobool(const char *s, bool *res)
+  * If libc has strlcpy() then that version will override this
+  * implementation:
+  */
++#ifdef __clang__
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wignored-attributes"
++#endif
+ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+ {
+ 	size_t ret = strlen(src);
+@@ -87,3 +91,6 @@ size_t __weak strlcpy(char *dest, const
+ 	}
+ 	return ret;
+ }
++#ifdef __clang__
++#pragma clang diagnostic pop
++#endif
 
 
