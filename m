@@ -2,54 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAA0C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66E4C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A792051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC1A2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbgBCTiP (ORCPT
+        id S1727102AbgBCTiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 3 Feb 2020 14:38:15 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:46496 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgBCTiO (ORCPT
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54879 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgBCTiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Feb 2020 14:38:14 -0500
-Received: by mail-il1-f198.google.com with SMTP id a2so12910082ill.13
+Received: by mail-io1-f69.google.com with SMTP id r62so10088194ior.21
         for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:38:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ndasFXdu/GcMUz7FeOuI0D5JvGdHZK1Tuq1Ky4IlMOU=;
-        b=DeR8wS492N16WecQbSyFfRlYpY0Kh8loQeKcwtqcjCklLI2HSZH2d7BR+QSw/ALiU5
-         2ut+EG7XRyWk+2R6FITWo3lKWoJEo6mb/n6lFfs/LgJK5OoQSb9zquor2oTbFlKxf3Pk
-         yXrvHeJ+GxO3O1z7y/Z5G53pSsxY8i/ruGyXLglEcePiXMhhEKFb09h5i4l6e43riqtC
-         uUhNHvx+cbWlWS0BRiSZACNkrarl1kNfYjpjnlB6Slf+fNu8W+o/rua47qsWVuF2mbuS
-         97l02+diEFzzonAGBbYUjnfS9EY0ebzObNV8quvnCXOhzL2d1bY7yIWRCOq0iXjTkhKf
-         7jGA==
-X-Gm-Message-State: APjAAAVIy0hv9DRY2nMnKxB69HTbjV9fNgK6s4UzVAcOTXBmfeYMhw76
-        jPRkTArOiuFbmkQjvXHTFlNCI5rGJB0DsOC522e6zaN/2zU0
-X-Google-Smtp-Source: APXvYqw7lPTCZaD8PekpXIJcvCIF5HzjkqpNkME57xW73tNFX6e06P0q3xdwc+IJ47awmg4nNNWfmvcJZnpRzNXUuLMGsxWdobu/
+        bh=OUbMyT2tv3SkHPvgtbUj1+PdN7qNgygE1BDh4gUh5Jg=;
+        b=U3hd2w00wEP50rlq5vpBzFPenCp3IOBd9FxOJ5ZdIuur5GDYBoNsBwl5TS8NuccN0x
+         RLl0Nm97xeXiC+E+pGcVf5jp5VZFkQ/92ccYc4jkprjKoQINMepInPwuEZCNPZJsIbOO
+         BtTac8Wyo05JNWp9BOKvYHIOMn3w+L+8tQhsw7zZ1yVjCZw0KhK9oMjdhQHS1KJfqk5W
+         qgjaugVRmgkBSelmvtGFe0yG5iBYS7ZQL/Ne4/8Oy4UenpStFahuJDXYRXsEiFjYYozx
+         XiEqKGiFfT8MLVhwV1Qh5QKfkP9DoE/JFbehCZBG9S0mFEbPZPNalxHTFZVbMmWgRnUU
+         SnnQ==
+X-Gm-Message-State: APjAAAVcL8M4t++JW55bjm7Cznlvngdreqk9AaBINPSKO3MfQhgvt4s4
+        SiAE7mFBhk6Ol0apZ0spFdVjm1ortIM83Mx/5c21CnPWqIVD
+X-Google-Smtp-Source: APXvYqylYFhuHM2kQBP7nk7cVkKNgna9n2UqZVDWZ7LpOSGi6IPXsRZPGH4NC5hSeZ9tTO7qWkfrt1jwWqkk1ocHEuWbt1zLaqxz
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr21092079jas.37.1580758692430;
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr16097660ils.209.1580758692173;
  Mon, 03 Feb 2020 11:38:12 -0800 (PST)
 Date:   Mon, 03 Feb 2020 11:38:12 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000568bdd059db1107b@google.com>
-Subject: possible deadlock in proc_tgid_io_accounting
-From:   syzbot <syzbot+86a925872c5fba672f8c@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        christian@brauner.io, kent.overstreet@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
+Message-ID: <000000000000529cf4059db11032@google.com>
+Subject: linux-next test error: KASAN: use-after-free Read in l2cap_sock_release
+From:   syzbot <syzbot+c3c5bdea7863886115dc@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,208 +58,125 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    94f2630b Merge tag '5.6-rc-small-smb3-fix-for-stable' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11203a4ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6dda7ccc1e75a63f
-dashboard link: https://syzkaller.appspot.com/bug?extid=86a925872c5fba672f8c
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+HEAD commit:    cee5a428 Add linux-next specific files for 20200203
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=167acbf1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea1325a05ecd7b98
+dashboard link: https://syzkaller.appspot.com/bug?extid=c3c5bdea7863886115dc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+86a925872c5fba672f8c@syzkaller.appspotmail.com
+Reported-by: syzbot+c3c5bdea7863886115dc@syzkaller.appspotmail.com
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.4/2716 is trying to acquire lock:
-ffff888054af5d50 (&sig->cred_guard_mutex){+.+.}, at: do_io_accounting fs/proc/base.c:2864 [inline]
-ffff888054af5d50 (&sig->cred_guard_mutex){+.+.}, at: proc_tgid_io_accounting+0x16a/0x570 fs/proc/base.c:2913
+can: request_module (can-proto-0) failed.
+can: request_module (can-proto-0) failed.
+can: request_module (can-proto-0) failed.
+==================================================================
+BUG: KASAN: use-after-free in l2cap_sock_release+0x24c/0x290 net/bluetooth/l2cap_sock.c:1212
+Read of size 8 at addr ffff8880944904a0 by task syz-fuzzer/9751
 
-but task is already holding lock:
-ffff8880926c4be0 (&p->lock){+.+.}, at: seq_read+0x6b/0xdb0 fs/seq_file.c:161
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #4 (&p->lock){+.+.}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-       __mutex_lock kernel/locking/mutex.c:1103 [inline]
-       mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
-       seq_read+0x6b/0xdb0 fs/seq_file.c:161
-       proc_reg_read+0x1d5/0x2e0 fs/proc/inode.c:223
-       do_loop_readv_writev fs/read_write.c:714 [inline]
-       do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-       vfs_readv+0xc2/0x120 fs/read_write.c:997
-       kernel_readv fs/splice.c:365 [inline]
-       default_file_splice_read+0x579/0xa40 fs/splice.c:422
-       do_splice_to fs/splice.c:892 [inline]
-       splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
-       do_splice_direct+0x200/0x330 fs/splice.c:1080
-       do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
-       __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-       __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #3 (sb_writers#3){.+.+}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-       __sb_start_write+0x189/0x420 fs/super.c:1674
-       sb_start_write include/linux/fs.h:1650 [inline]
-       mnt_want_write+0x4a/0xa0 fs/namespace.c:354
-       ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
-       ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
-       ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
-       lookup_open fs/namei.c:3309 [inline]
-       do_last fs/namei.c:3401 [inline]
-       path_openat+0x230c/0x4380 fs/namei.c:3607
-       do_filp_open+0x192/0x3d0 fs/namei.c:3637
-       do_sys_openat2+0x42b/0x6f0 fs/open.c:1149
-       do_sys_open fs/open.c:1165 [inline]
-       ksys_open include/linux/syscalls.h:1386 [inline]
-       __do_sys_creat fs/open.c:1233 [inline]
-       __se_sys_creat fs/open.c:1231 [inline]
-       __x64_sys_creat+0xd5/0x100 fs/open.c:1231
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #2 (&ovl_i_mutex_dir_key[depth]){++++}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       down_read+0x39/0x50 kernel/locking/rwsem.c:1495
-       inode_lock_shared include/linux/fs.h:801 [inline]
-       lookup_slow fs/namei.c:1773 [inline]
-       lookup_one_len_unlocked+0xd2/0x1d0 fs/namei.c:2690
-       lookup_positive_unlocked+0x25/0xb0 fs/namei.c:2706
-       ovl_lookup_single+0x67/0x830 fs/overlayfs/namei.c:203
-       ovl_lookup_layer+0x3b1/0x470 fs/overlayfs/namei.c:287
-       ovl_lookup+0x843/0x1c60 fs/overlayfs/namei.c:902
-       lookup_open fs/namei.c:3288 [inline]
-       do_last fs/namei.c:3401 [inline]
-       path_openat+0x1b73/0x4380 fs/namei.c:3607
-       do_filp_open+0x192/0x3d0 fs/namei.c:3637
-       do_open_execat+0xff/0x620 fs/exec.c:860
-       __do_execve_file+0x758/0x1ca0 fs/exec.c:1765
-       do_execveat_common fs/exec.c:1871 [inline]
-       do_execve fs/exec.c:1888 [inline]
-       __do_sys_execve fs/exec.c:1964 [inline]
-       __se_sys_execve fs/exec.c:1959 [inline]
-       __x64_sys_execve+0x94/0xb0 fs/exec.c:1959
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (&ovl_i_mutex_dir_key[depth]#2){.+.+}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       down_read+0x39/0x50 kernel/locking/rwsem.c:1495
-       inode_lock_shared include/linux/fs.h:801 [inline]
-       do_last fs/namei.c:3400 [inline]
-       path_openat+0xbb7/0x4380 fs/namei.c:3607
-       do_filp_open+0x192/0x3d0 fs/namei.c:3637
-       do_open_execat+0xff/0x620 fs/exec.c:860
-       __do_execve_file+0x758/0x1ca0 fs/exec.c:1765
-       do_execveat_common fs/exec.c:1871 [inline]
-       do_execve fs/exec.c:1888 [inline]
-       __do_sys_execve fs/exec.c:1964 [inline]
-       __se_sys_execve fs/exec.c:1959 [inline]
-       __x64_sys_execve+0x94/0xb0 fs/exec.c:1959
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&sig->cred_guard_mutex){+.+.}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
-       __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-       __mutex_lock kernel/locking/mutex.c:1103 [inline]
-       mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
-       do_io_accounting fs/proc/base.c:2864 [inline]
-       proc_tgid_io_accounting+0x16a/0x570 fs/proc/base.c:2913
-       proc_single_show+0xe7/0x180 fs/proc/base.c:758
-       seq_read+0x4d8/0xdb0 fs/seq_file.c:229
-       do_loop_readv_writev fs/read_write.c:714 [inline]
-       do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-       vfs_readv+0xc2/0x120 fs/read_write.c:997
-       kernel_readv fs/splice.c:365 [inline]
-       default_file_splice_read+0x579/0xa40 fs/splice.c:422
-       do_splice_to fs/splice.c:892 [inline]
-       splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
-       do_splice_direct+0x200/0x330 fs/splice.c:1080
-       do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
-       __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-       __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-  &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&p->lock);
-                               lock(sb_writers#3);
-                               lock(&p->lock);
-  lock(&sig->cred_guard_mutex);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor.4/2716:
- #0: ffff8880926c4be0 (&p->lock){+.+.}, at: seq_read+0x6b/0xdb0 fs/seq_file.c:161
-
-stack backtrace:
-CPU: 1 PID: 2716 Comm: syz-executor.4 Not tainted 5.5.0-syzkaller #0
+CPU: 0 PID: 9751 Comm: syz-fuzzer Not tainted 5.5.0-next-20200203-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_circular_bug+0xc3f/0xe70 kernel/locking/lockdep.c:1684
- check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
- __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
- lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
- __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
- __mutex_lock kernel/locking/mutex.c:1103 [inline]
- mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
- do_io_accounting fs/proc/base.c:2864 [inline]
- proc_tgid_io_accounting+0x16a/0x570 fs/proc/base.c:2913
- proc_single_show+0xe7/0x180 fs/proc/base.c:758
- seq_read+0x4d8/0xdb0 fs/seq_file.c:229
- do_loop_readv_writev fs/read_write.c:714 [inline]
- do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
- vfs_readv+0xc2/0x120 fs/read_write.c:997
- kernel_readv fs/splice.c:365 [inline]
- default_file_splice_read+0x579/0xa40 fs/splice.c:422
- do_splice_to fs/splice.c:892 [inline]
- splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
- do_splice_direct+0x200/0x330 fs/splice.c:1080
- do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
- __do_sys_sendfile64 fs/read_write.c:1525 [inline]
- __se_sys_sendfile64 fs/read_write.c:1511 [inline]
- __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ l2cap_sock_release+0x24c/0x290 net/bluetooth/l2cap_sock.c:1212
+ __sock_release+0xce/0x280 net/socket.c:605
+ sock_close+0x1e/0x30 net/socket.c:1283
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45b399
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0c198b1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00007f0c198b26d4 RCX: 000000000045b399
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000010001ff R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000008ca R14: 00000000004ca24d R15: 000000000075bf2c
+RIP: 0033:0x4afb40
+Code: 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 49 c7 c2 00 00 00 00 49 c7 c0 00 00 00 00 49 c7 c1 00 00 00 00 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 28 ff ff ff ff 48 c7 44 24 30
+RSP: 002b:000000c00020b540 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 000000c00002e500 RCX: 00000000004afb40
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 000000c00020b580 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00000000000000cc
+R13: 00000000000000cb R14: 0000000000000200 R15: 0000000000000200
+
+Allocated by task 9751:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x163/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ sk_prot_alloc+0x23a/0x310 net/core/sock.c:1603
+ sk_alloc+0x39/0xfd0 net/core/sock.c:1657
+ l2cap_sock_alloc.constprop.0+0x37/0x230 net/bluetooth/l2cap_sock.c:1603
+ l2cap_sock_create+0x11e/0x1c0 net/bluetooth/l2cap_sock.c:1649
+ bt_sock_create+0x16a/0x2d0 net/bluetooth/af_bluetooth.c:130
+ __sock_create+0x3ce/0x730 net/socket.c:1433
+ sock_create net/socket.c:1484 [inline]
+ __sys_socket+0x103/0x220 net/socket.c:1526
+ __do_sys_socket net/socket.c:1535 [inline]
+ __se_sys_socket net/socket.c:1533 [inline]
+ __x64_sys_socket+0x73/0xb0 net/socket.c:1533
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9751:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ sk_prot_free net/core/sock.c:1640 [inline]
+ __sk_destruct+0x5d8/0x7f0 net/core/sock.c:1724
+ sk_destruct+0xd5/0x110 net/core/sock.c:1739
+ __sk_free+0xfb/0x3f0 net/core/sock.c:1750
+ sk_free+0x83/0xb0 net/core/sock.c:1761
+ sock_put include/net/sock.h:1719 [inline]
+ l2cap_sock_kill+0x160/0x190 net/bluetooth/l2cap_sock.c:1058
+ l2cap_sock_release+0x1c3/0x290 net/bluetooth/l2cap_sock.c:1210
+ __sock_release+0xce/0x280 net/socket.c:605
+ sock_close+0x1e/0x30 net/socket.c:1283
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888094490000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 1184 bytes inside of
+ 2048-byte region [ffff888094490000, ffff888094490800)
+The buggy address belongs to the page:
+page:ffffea0002512400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00025123c8 ffffea00021bf608 ffff8880aa400e00
+raw: 0000000000000000 ffff888094490000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888094490380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888094490400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888094490480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                               ^
+ ffff888094490500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888094490580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
 ---
