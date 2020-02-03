@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F881C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D67C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0C120838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4EE20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748187;
-	bh=BzlMyKwXv75wjNabzgbZkYoVsn31ZotCYKArAXaw3lU=;
+	s=default; t=1580748191;
+	bh=uIkKumRBHYw41z1WXD1gPbkheu9s+2Iypt+INQEIzzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZjZPHafH463Oxgm0MN4Xl+xcNtnQ/8rIOC545DdRusot6oqd/8MTkaZh7J6gA7F7
-	 0013ix8PrHZ/HarKit2/yT/8an8NTHnl2XhZmA07h7s6uZ1O4G5tN6dNzgZZB7l3aT
-	 lUXZacYoDIZGtCilk8ingyh4CDOv8ZLVc1rGhAEw=
+	b=amrjEABQf/QMsrUx6kFmQDTenGXWX36S6bxUeaDc8ObrRhtxm4OEQJPzzHVq7OqGM
+	 i+VyA+tFl2W0muxeGYbBSPSWV+uDHLEJZKpAdvrbzgIukJB03yInwckuZUa0S0sGCO
+	 QiTlzV2n1qBxxhUgx1+AWry7YK/U6582wl9Gty4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgBCQnG (ORCPT
+        id S1730554AbgBCQdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgBCQdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:21 -0500
+        id S1730552AbgBCQdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:15 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F48A2051A;
-        Mon,  3 Feb 2020 16:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C5B221744;
+        Mon,  3 Feb 2020 16:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747601;
-        bh=BzlMyKwXv75wjNabzgbZkYoVsn31ZotCYKArAXaw3lU=;
+        s=default; t=1580747594;
+        bh=uIkKumRBHYw41z1WXD1gPbkheu9s+2Iypt+INQEIzzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxQPMXyckgEVT/csYH9Ujl69a0GeCQwVNNhKEFZcp5/syIkDLe0hSbl4+F3pj+qPn
-         y5JzjctzpfizDd2P+wrMQ4BbtLKk91l6NbW6G/vDLc3yER0aIHR9kURDuhjKuy27s2
-         shR20o7O5kC4tIiyp9DUC97QD9kgt/7j+B9Og7oU=
+        b=mr1s1653z7x4THtQ1SEt/qY9TB6dY2Iwky0U7wY6OktO+1uxezXNdoxoayJHHjSe3
+         Xa9+eKSPfDZ6FFtHQRFd90DIA7geroKbc7N0VC5/QmeHwHhh6mM591CMbNRr1N0rdz
+         +h0Gcyd1diltJ/6zhkrLGSBR62qKF9QhyhnfWAr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raag Jadav <raagjadav@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 63/70] ARM: dts: am43x-epos-evm: set data pin directions for spi0 and spi1
-Date:   Mon,  3 Feb 2020 16:20:15 +0000
-Message-Id: <20200203161921.249600649@linuxfoundation.org>
+Subject: [PATCH 4.19 60/70] airo: Fix possible info leak in AIROOLDIOCTL/SIOCDEVPRIVATE
+Date:   Mon,  3 Feb 2020 16:20:12 +0000
+Message-Id: <20200203161920.857388193@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,39 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raag Jadav <raagjadav@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit b0b03951544534d6d9ad4aa2787eefec988fff20 ]
+[ Upstream commit d6bce2137f5d6bb1093e96d2f801479099b28094 ]
 
-Set d0 and d1 pin directions for spi0 and spi1 as per their pinmux.
+The driver for Cisco Aironet 4500 and 4800 series cards (airo.c),
+implements AIROOLDIOCTL/SIOCDEVPRIVATE in airo_ioctl().
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+The ioctl handler copies an aironet_ioctl struct from userspace, which
+includes a command and a length. Some of the commands are handled in
+readrids(), which kmalloc()'s a buffer of RIDSIZE (2048) bytes.
+
+That buffer is then passed to PC4500_readrid(), which has two cases.
+The else case does some setup and then reads up to RIDSIZE bytes from
+the hardware into the kmalloc()'ed buffer.
+
+Here len == RIDSIZE, pBuf is the kmalloc()'ed buffer:
+
+	// read the rid length field
+	bap_read(ai, pBuf, 2, BAP1);
+	// length for remaining part of rid
+	len = min(len, (int)le16_to_cpu(*(__le16*)pBuf)) - 2;
+	...
+	// read remainder of the rid
+	rc = bap_read(ai, ((__le16*)pBuf)+1, len, BAP1);
+
+PC4500_readrid() then returns to readrids() which does:
+
+	len = comp->len;
+	if (copy_to_user(comp->data, iobuf, min(len, (int)RIDSIZE))) {
+
+Where comp->len is the user controlled length field.
+
+So if the "rid length field" returned by the hardware is < 2048, and
+the user requests 2048 bytes in comp->len, we will leak the previous
+contents of the kmalloc()'ed buffer to userspace.
+
+Fix it by kzalloc()'ing the buffer.
+
+Found by Ilja by code inspection, not tested as I don't have the
+required hardware.
+
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/cisco/airo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 12735cf9674bb..b6950eee550b2 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -839,6 +839,7 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&spi0_pins_default>;
- 	pinctrl-1 = <&spi0_pins_sleep>;
-+	ti,pindir-d0-out-d1-in = <1>;
- };
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index 5512c7f73fce8..9344cf17d6b11 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -7809,7 +7809,7 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
+ 		return -EINVAL;
+ 	}
  
- &spi1 {
-@@ -846,6 +847,7 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&spi1_pins_default>;
- 	pinctrl-1 = <&spi1_pins_sleep>;
-+	ti,pindir-d0-out-d1-in = <1>;
- };
+-	if ((iobuf = kmalloc(RIDSIZE, GFP_KERNEL)) == NULL)
++	if ((iobuf = kzalloc(RIDSIZE, GFP_KERNEL)) == NULL)
+ 		return -ENOMEM;
  
- &usb2_phy1 {
+ 	PC4500_readrid(ai,ridcode,iobuf,RIDSIZE, 1);
 -- 
 2.20.1
 
