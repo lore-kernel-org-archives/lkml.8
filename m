@@ -1,105 +1,78 @@
 Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8744FC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A66C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511E82080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580726771;
-	bh=/paHcOi+xB86rjIjYyLdXCYTLMIaivBy8llnLyFh7pU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L5IdKBR/ADud1W115/kYT+EUeZ8NZ97PUgwGrvzb83HzdySlUn8hkaqqJo6ma2w5P
-	 URxN0fJE7YHQN4PyjEuXhcOglSaxU1hsz7/YaLwCBtswln+1su2yUf4/Vm/Yqzirxa
-	 3X5+cMVqr2sOBk4+6Ja22v/c1wtHvbSJPiSphgmM=
+	by mail.kernel.org (Postfix) with ESMTP id A4F1220661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrFFLbT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgBCKqK (ORCPT
+        id S1727435AbgBCKrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBCKqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:46:10 -0500
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81DC20661;
-        Mon,  3 Feb 2020 10:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580726769;
-        bh=/paHcOi+xB86rjIjYyLdXCYTLMIaivBy8llnLyFh7pU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P/T7npADd7+0nzPxCVf9hGGeVcTdpJBqO5uAxFzyN+utq6YrZCUAzwkhQMpNn9yNf
-         JoEMFQthG5Jp/5FPIEPkiIDIeh8uDXT1SUYfqp3ZiJ2Q0B8M6247UtJ//J42Un4ot8
-         dYtB7NuiAcXLTc9v3CxxskDU3lZ2VnpKE5h7fT2Q=
-Date:   Mon, 3 Feb 2020 10:46:07 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>,
-        devel@driverdev.osuosl.org,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Mori.Takahiro@ab.mitsubishielectric.co.jp,
-        linux-kernel@vger.kernel.org,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] staging: exfat: remove DOSNAMEs.
-Message-ID: <20200203104607.GA3130629@kroah.com>
-References: <20200203163118.31332-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
- <20200203080532.GF8731@bombadil.infradead.org>
- <20200203081559.GA3038628@kroah.com>
- <20200203082938.GG8731@bombadil.infradead.org>
- <20200203094601.GA3040887@kroah.com>
- <5f67af4339e0b9b56b43fb78ebab73e05009e307.camel@perches.com>
+        Mon, 3 Feb 2020 05:47:16 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44056 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgBCKrQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 05:47:16 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so17319193wrx.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 02:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T7d7soSR0gPW5ttjKX5i29rp97gN4GjRtPqKhyOovuE=;
+        b=DrFFLbT66Xa1xftRQkInvNrDUN+LmAymz5A8++pAxFDvF7wcmnH1nkoyR9ajAIwLhF
+         r3/nUqCY+KAjKoDO3zRUqVUP6zmz1yXq+4kvDCxd0B3+ikIHZkvOZD8gxwrnR3MWlDjk
+         4wApNq+7Z2HwMAlchY7GeG1ciu9d+Fmi4o/lBwt9O+CQPAEPB8nb8z0Jsz9p9ufLBsHB
+         xeKqX/vHYueEU+BMZE227DeHTod+OKeif4ODpE1RjJrMEnOrVUdJg5eUUkrZE/gVHY9W
+         yIrObBDPnQRGy0ITydr9j/Gtggtqp5FJU9+tijRT/4PXOwTAoFC0t0aq4mGxT8kY5fqE
+         vgpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T7d7soSR0gPW5ttjKX5i29rp97gN4GjRtPqKhyOovuE=;
+        b=l4VjUPjDCv7CUx5mSJO2/rUquob5PSsh08ihE+TZqGbnlt3Tw6+MEhgDifsWw7KWFD
+         Ox0lh7OTpmfyVyDsA222lqDmv702+VfUwdtXq4iCkH1uXF9LUcbnFK79YfESeuH6ICrW
+         Qa6XwUtQh6OlH8WvsWfEzwogwaohT+vYdFj9P5uDLeVr09e5bPKyM0xI11nyTDfST36D
+         vsd1RCEXHKCJc1ozPjNN92OJFp/MITFxOY2mObLr7T8z+6KHLJ4S+Lx2gAa2+SJUNw/N
+         eImxHc1tnWgJghbQcUFRjR2CFqCkhYWfevrUu8s0tMqsYCnW8iazmzfoEwj/rBi0EO7H
+         MaJQ==
+X-Gm-Message-State: APjAAAW7txPGSR4e8ZuXJSOR9TLnbB0O33Fs0sQFYUkj0on1I03ZdeXu
+        P6Acws5ki2M9O5IuIYFt2i2VAnHSJt7nBY1e8BnCMOOg29U=
+X-Google-Smtp-Source: APXvYqyw1koBeNuL/pBldr4cfKzqQca/OVBn2QudVj7bzXwhfLjN/2s333uYjnsLZBawsZoyr9pey+N6h9dcD27qaJU=
+X-Received: by 2002:a5d:6852:: with SMTP id o18mr15136167wrw.426.1580726835087;
+ Mon, 03 Feb 2020 02:47:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f67af4339e0b9b56b43fb78ebab73e05009e307.camel@perches.com>
+References: <20200203012702.GA8731@bombadil.infradead.org>
+In-Reply-To: <20200203012702.GA8731@bombadil.infradead.org>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Mon, 3 Feb 2020 18:47:03 +0800
+Message-ID: <CACVXFVPyW9+oSPAv7-+=hExzktLkmPG=gYUY5acR5UGeJzTh0Q@mail.gmail.com>
+Subject: Re: Current Linus tree protection fault in __kmalloc
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 02:40:43AM -0800, Joe Perches wrote:
-> On Mon, 2020-02-03 at 09:46 +0000, Greg Kroah-Hartman wrote:
-> > On Mon, Feb 03, 2020 at 12:29:38AM -0800, Matthew Wilcox wrote:
-> > > On Mon, Feb 03, 2020 at 08:15:59AM +0000, Greg Kroah-Hartman wrote:
-> > > > On Mon, Feb 03, 2020 at 12:05:32AM -0800, Matthew Wilcox wrote:
-> > > > > On Tue, Feb 04, 2020 at 01:31:17AM +0900, Tetsuhiro Kohada wrote:
-> > > > > > remove 'dos_name','ShortName' and related definitions.
-> > > > > > 
-> > > > > > 'dos_name' and 'ShortName' are definitions before VFAT.
-> > > > > > These are never used in exFAT.
-> > > > > 
-> > > > > Why are we still seeing patches for the exfat in staging?
-> > > > 
-> > > > Because people like doing cleanup patches :)
-> > > 
-> > > Sure, but I think people also like to believe that their cleanup patches
-> > > are making a difference.  In this case, they're just churning code that's
-> > > only weeks away from deletion.
-> > > 
-> > > > > Why are people not working on the Samsung code base?
-> > > > 
-> > > > They are, see the patches on the list, hopefully they get merged after
-> > > > -rc1 is out.
-> > > 
-> > > I meant the cleanup people.  Obviously _some_ people are working on the
-> > > Samsung codebase.
-> > 
-> > We can't tell people to work on :)
-> 
-> That's more an argument to remove exfat from staging
-> sooner than later.
+On Mon, Feb 3, 2020 at 9:29 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> Anyone else seeing this?  My poor laptop has little compile grunt.
 
-I will remove it when the other patchset is merged, let's not remove
-code that is being used, that's not how we do things, you all know
-this...
+It can be triggered in my VM every time, and has started git-bisect already.
 
-greg k-h
+Thanks,
+Ming
