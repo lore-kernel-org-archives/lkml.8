@@ -2,121 +2,120 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789AFC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2837EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502C12051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0168220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N95/11Ys"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="aSZjpZyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgBCRll (ORCPT
+        id S1728798AbgBCRmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:41:41 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49032 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBCRll (ORCPT
+        Mon, 3 Feb 2020 12:42:10 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33105 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbgBCRmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:41:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=m5X7HEtnOnQXbN/sddNWpeOVFq9PT+3WrfrbyQzTz3g=; b=N95/11YsOrwnHffWbeoB4BWA+u
-        hqp995pRji8gqPPrZYbqJL5zhdfvxVSic0OOcMqULsBeX6tGPtfU3KtjW1tRTB6XpRs+HyEBNJzD4
-        8DBu76kx5P4mUsBN6q0OMKp9Hg9WEI1xxxkaNSLQ3936nEYmpAicjUQiBHztOgAoUV1rEuzlnXfIO
-        jTnnMUjjtZbqJgcDBxZHgqP58s/4x1/ameMy2ZHWrRGmG5z7dBe2eKS0sB/OD2oPon2CmCEh3DeBx
-        9jRDnQwVxjGLB/f1Pg5JlX/gHdtK1CACCetBB7Q8XzvfBgg5HzV+bwT+rbaDYQK3/K43/9xHpN3kR
-        bMEJTLcg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyfj4-0002Pi-8T; Mon, 03 Feb 2020 17:41:34 +0000
-Date:   Mon, 3 Feb 2020 09:41:34 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        David Windsor <dave@nullcore.net>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-xfs@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>,
-        Jan Kara <jack@suse.cz>, Marc Zyngier <marc.zyngier@arm.com>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Kubecek <mkubecek@suse.cz>
-Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
- as usercopy caches
-Message-ID: <20200203174134.GC30011@infradead.org>
-References: <202001281457.FA11CC313A@keescook>
- <alpine.DEB.2.21.2001291640350.1546@www.lameter.com>
- <6844ea47-8e0e-4fb7-d86f-68046995a749@de.ibm.com>
- <20200129170939.GA4277@infradead.org>
- <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
- <202001300945.7D465B5F5@keescook>
- <CAG48ez1a4waGk9kB0WLaSbs4muSoK0AYAVk8=XYaKj4_+6e6Hg@mail.gmail.com>
- <202002010952.ACDA7A81@keescook>
- <CAG48ez2ms+TDEXQdDONuQ1GG0K20E69nV1r_yjKxxYjYKv1VCg@mail.gmail.com>
- <20200203074644.GD8731@bombadil.infradead.org>
+        Mon, 3 Feb 2020 12:42:09 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so12130099qto.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 09:42:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DnqDfzZOP8Wk1acgjZzz1PM0k7XDfNwpc8E6dw5Xd/A=;
+        b=aSZjpZyxvhUaYrerYRx7KTmQ+HXipJMmxMVJCuMZp0/ySh0wMOW3RcN4S5843cbgJ4
+         KXmvCMexX3j7dPqPK759dur6NCW66uaZpnz+mZN8hL3Nc/45XqCE4fgeOiUVTjJMfatU
+         +GhNJxHYApLaL4HU98JgJ2B+Sgy5OyPIGFhaQAz81ZZyGBTGRTGwuul0jEhZZ4ampBlg
+         zBPg3dFLHkdXvXM4VegKWWtVz0TgxCVfjQk82AoveKA7ImBJX6OaBLKENbZ3NQ3xM/46
+         gNCxhEfTnTq2er2cAibUoOL35v+elnwQW+37UDyIb8jArmjmQ1PMnLdjXLEn8cE6gDAV
+         kGug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DnqDfzZOP8Wk1acgjZzz1PM0k7XDfNwpc8E6dw5Xd/A=;
+        b=IlWqpJstF+toNYjLGeMCcstpvCqm9S0gar+eLDYY7VMKi/KbLL8cPua24riEzPUEK1
+         hVw2VRcXH88smS0yoQM45Q4MVARL4Z0NyvmNXhs6vGne6h/aRq7hmXr/bMnfTiHbeujG
+         X9BMhSNkdRRc9R4Zfx6NNQLWSygLdWZ2JI//qSykdL1W1A3Pm3WYUkqzHiHXLwVaMxDZ
+         e2waGLiXpcIgGGGmbVOhbbNNMA7EQd7sObxD6/fynInUifh+ICq8xzRmiVPnbfNHz5N1
+         4uTUOd0+shatJmnbDigT5IMtJ34adULxowXQTqsBp3eX99sU/OkerS/adJ/xMWW7V6MH
+         I2UA==
+X-Gm-Message-State: APjAAAVTz07raToWXg27fpXcaZZNtaZlgQ/TRQq1YD71DeZtpsqNpu06
+        q6TQFE9yqmeemYI07IPOuHUm3aB2Yt4=
+X-Google-Smtp-Source: APXvYqwl5D1MXNbncdMUPHKAVOZnY2rUJ0roHkqHVdSeIwO+B1VEe2ZgHLlLh6w/C4SMmNThe/Cnsg==
+X-Received: by 2002:ac8:47cc:: with SMTP id d12mr24999145qtr.246.1580751728806;
+        Mon, 03 Feb 2020 09:42:08 -0800 (PST)
+Received: from localhost ([163.114.130.128])
+        by smtp.gmail.com with ESMTPSA id o17sm10136378qtq.93.2020.02.03.09.42.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 09:42:08 -0800 (PST)
+Date:   Mon, 3 Feb 2020 12:39:58 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 10/28] mm: memcg: introduce mod_lruvec_memcg_state()
+Message-ID: <20200203173958.GD1697@cmpxchg.org>
+References: <20200127173453.2089565-1-guro@fb.com>
+ <20200127173453.2089565-11-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203074644.GD8731@bombadil.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200127173453.2089565-11-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 11:46:44PM -0800, Matthew Wilcox wrote:
-> > gives the hardware access to completely unrelated memory.) Instead,
-> > they get pages from the page allocator, and these pages may e.g. be
-> > allocated from the DMA, DMA32 or NORMAL zones depending on the
-> > restrictions imposed by hardware. So I think the usercopy restriction
-> > only affects a few oddball drivers (like this s390 stuff), which is
-> > why you're not seeing more bug reports caused by this.
+On Mon, Jan 27, 2020 at 09:34:35AM -0800, Roman Gushchin wrote:
+> To prepare for per-object accounting of slab objects, let's introduce
+> __mod_lruvec_memcg_state() and mod_lruvec_memcg_state() helpers,
+> which are similar to mod_lruvec_state(), but do not update global
+> node counters, only lruvec and per-cgroup.
 > 
-> Getting pages from the page allocator is true for dma_alloc_coherent()
-> and friends.
+> It's necessary because soon node slab counters will be used for
+> accounting of all memory used by slab pages, however on memcg level
+> only the actually used memory will be counted. The free space will be
+> shared between all cgroups, so it can't be accounted to any
+> specific cgroup.
 
-dma_alloc_coherent also has a few other memory sources than the page
-allocator..
+Makes perfect sense. However, I think the existing mod_lruvec_state()
+has a bad and misleading name, and adding to it in the same style
+makes things worse.
 
-> But it's not true for streaming DMA mappings (dma_map_*)
-> for which the memory usually comes from kmalloc().  If this is something
-> we want to fix (and I have an awful feeling we're going to regret it
-> if we say "no, we trust the hardware"), we're going to have to come up
-> with a new memory allocation API for these cases.  Or bounce bugger the
-> memory for devices we don't trust.
+Can we instead rename lruvec_state to node_memcg_state to capture that
+it changes all levels. And then do the following, clean API?
 
-There aren't too many places that use slab allocations for streaming
-mappings, and then do usercopies into them.  But I vaguely remember
-some usb code getting the annotations for that a while ago.
+- node_state for node only
 
-But if you don't trust your hardware you will need to use IOMMUs and
-page aligned memory, or IOMMUs plus bounce buffering for the kmalloc
-allocations (we've recently grown code to do that for the intel-iommu
-driver, which needs to be lifted into the generic IOMMU code).
+- memcg_state for memcg only
+
+- lruvec_state for lruvec only
+
+- node_memcg_state convenience wrapper to change node, memcg, lruvec counters
+
+You can then open-code the disjunct node and memcg+lruvec counters.
+
+[ Granted, lruvec counters are never modified on their own - always in
+  conjunction with the memcg counters. And frankly, the only memcg
+  counters that are modified *without* the lruvec counter-part are the
+  special-case MEMCG_ counters.
+
+  It would be nice to have 1) a completely separate API for the MEMCG_
+  counters; and then 2) the node API for node and 3) a cgroup API for
+  memcg+lruvec VM stat counters that allow you to easily do the
+  disjunct accounting for slab memory.
+
+  But I can't think of poignant names for these. At least nothing that
+  would be better than separate memcg_state and lruvec_state calls. ]
