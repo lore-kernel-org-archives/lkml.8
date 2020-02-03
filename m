@@ -2,108 +2,83 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EC0C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A560AC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E749D2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727C22080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580758230;
+	bh=WVrpNgtBccJgAHQHMCNpXyIN6qHMg2zVEYuX/XdefVk=;
+	h=In-Reply-To:References:From:To:Subject:Cc:Date:List-ID:From;
+	b=dvRo4Uit6PG8sAmmu6o5ABmM6Ili3e2Pu7BTtRpO/TXkeS+6tVj3xnAG58eK6i8/p
+	 IanWa+8EY0lIEusJ2RVEs1rt98l1JvacFU4UNGOvEC3NNLiPW7HHJghDGyVcQAxalo
+	 zo5D0Gxu5jK5rFqHpID56mbggwwsdSV80Hecag1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgBCTaW (ORCPT
+        id S1727093AbgBCTa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:30:22 -0500
-Received: from smtprelay0143.hostedemail.com ([216.40.44.143]:47824 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725372AbgBCTaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:30:22 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8241A180A5AE1;
-        Mon,  3 Feb 2020 19:30:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: beds50_1fd61791c2e56
-X-Filterd-Recvd-Size: 3632
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  3 Feb 2020 19:30:18 +0000 (UTC)
-Message-ID: <88c0ac459211a76d51ec12e13ab63d0aa87a5181.camel@perches.com>
-Subject: Re: [PATCH] security/integrity: Include __func__ in messages for
- easier debug
-From:   Joe Perches <joe@perches.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
-        serge@hallyn.com, mpe@ellerman.id.au, erichte@linux.ibm.com,
-        nayna@linux.ibm.com, yuehaibing@huawei.com
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 03 Feb 2020 11:29:08 -0800
-In-Reply-To: <e175a880-637c-20d4-e0dc-bff31287e0dc@schaufler-ca.com>
-References: <20200130020129.15328-1-skhan@linuxfoundation.org>
-         <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
-         <1580736077.5585.4.camel@linux.ibm.com>
-         <475ab05c-300b-fdbe-5de0-6fce8d1a360d@linuxfoundation.org>
-         <94cf0aee8fd8b78718e252488458cfea105c0469.camel@perches.com>
-         <e175a880-637c-20d4-e0dc-bff31287e0dc@schaufler-ca.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 3 Feb 2020 14:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbgBCTa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 14:30:28 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62BD22080D;
+        Mon,  3 Feb 2020 19:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580758227;
+        bh=WVrpNgtBccJgAHQHMCNpXyIN6qHMg2zVEYuX/XdefVk=;
+        h=In-Reply-To:References:From:To:Subject:Cc:Date:From;
+        b=wisaRaXZFT+CEDtwX5h85ZtfRRuqJZhOBPZdgRda43E1RlwiiAqJLZkXaDX3KCpEX
+         le14VV4STuAHkGKaVNNW0HNWkVQ3WIy7OhsR//Y3F8HIo/S7nhfHE2YA7SULiNVtI6
+         5V/V1Z2HkgyvGwHVmrizKcJzVTRfBWuBJ0XaaGm8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200203183149.73842-1-dianders@chromium.org>
+References: <20200203183149.73842-1-dianders@chromium.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 00/15] clk: qcom: Fix parenting for dispcc/gpucc/videocc
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>, jeffrey.l.hugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
+        devicetree@vger.kernel.org, mka@chromium.org,
+        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 03 Feb 2020 11:30:26 -0800
+Message-Id: <20200203193027.62BD22080D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 11:23 -0800, Casey Schaufler wrote:
-> On 2/3/2020 11:02 AM, Joe Perches wrote:
-> > On Mon, 2020-02-03 at 11:55 -0700, Shuah Khan wrote:
-> > > On 2/3/20 6:21 AM, Mimi Zohar wrote:
-> > > > On Wed, 2020-01-29 at 19:08 -0800, Joe Perches wrote:
-> > > > > On Wed, 2020-01-29 at 19:01 -0700, Shuah Khan wrote:
-> > > > > > Change messages to messages to make it easier to debug. The following
-> > > > > > error message isn't informative enough to figure out what failed.
-> > > > > > Change messages to include function information.
-> > > > > > 
-> > > > > > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> > > > > > ---
-> > > > > >   .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
-> > > > > >   security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
-> > > > > >   2 files changed, 18 insertions(+), 13 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-> > > > > perhaps instead add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > > > so all the pr_<level> logging is more specific.
-> > > > > 
-> > > > > This would prefix all pr_<level> output with "integrity: "
-> > > Joe! Sorry for the delay in getting back to you.
-> > > 
-> > > > Agreed.  Joe, could you post a patch with a proper patch description
-> > > > for this?
-> > > > 
-> > > I have been looking into this a bit more and there is an opportunity
-> > > here to add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt to integrity.h
-> > > and get rid of duplicate defines.
-> > That might work but:
-> > 
-> > $ git grep --name-only 'integrity\.h' security | xargs grep pr_fmt
-> > security/integrity/digsig.c:#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > security/integrity/digsig_asymmetric.c:#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > security/integrity/evm/evm_main.c:#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > security/security.c:#define pr_fmt(fmt) "LSM: " fmt
-> > 
-> > Here security.c already uses "LSM: "
-> > 
-> > Does anyone care about the LSM: prefix?
-> 
-> Yes. 
+Quoting Douglas Anderson (2020-02-03 10:31:33)
+>=20
+>  .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
+>  ...om,dispcc.yaml =3D> qcom,msm8998-gpucc.yaml} | 33 +++----
+>  .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+>  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
+>  .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
+>  .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+>  .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
+>  ...,videocc.yaml =3D> qcom,sdm845-videocc.yaml} | 27 ++---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
 
-No worries.  My mistake it wouldn't change.
-
-It was a bad grep as the integrity.h in security.c is #included
-from the linux/include path and not the integrity subdirectory.
-
-
+I don't want to take patches touching dts/qcom/. These aren't necessary
+to merge right now, correct? Or at least, they can go via arm-soc tree?
 
