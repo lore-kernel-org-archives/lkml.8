@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74841C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20957C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4767F2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD70A2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746847;
-	bh=eUbOBFqqIBVgH1Nw88aUmSR1LKDcDcKzFqzvUnLThQ0=;
+	s=default; t=1580746849;
+	bh=blro8WKHqirWAxDR/MgBABqkpB2q71gDN9yLScRLkCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=diiE4ZmhrsPzUKuh0ysyiGksycyxjQrOYQR6nRZEUeGiNO2ZLIPULcZTFFp6hI0XX
-	 LC5MNcq7ocAKeOpd7fhpbZSDFQowJf+D8zwFa8AiQg+ZPt9mmv8B9tMDFT2lmGa48P
-	 lt6/2HT9803izz+2pPs0rA0NbqsKHN7YX9/agt4A=
+	b=OG7yVVJjVq6XD0+Sr7u2XA3GyDamD1jBu2Z1ThwrvczXzLmn16z1sL2X2MQf8Wg5f
+	 FuKGX8xGDLE5HUalv1MoTvnEwOBBZxxBUMxY21FWBq7vkZeEn+lf9MwQ6fSLIXzifK
+	 yhNzvPROornYjjGMfUQmyrgxOeks9dQyKETYVvag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgBCQUq (ORCPT
+        id S1728969AbgBCQUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:20:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60552 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:20:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbgBCQUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:20:41 -0500
+        id S1728511AbgBCQUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:20:45 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD1B320838;
-        Mon,  3 Feb 2020 16:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B66720838;
+        Mon,  3 Feb 2020 16:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746840;
-        bh=eUbOBFqqIBVgH1Nw88aUmSR1LKDcDcKzFqzvUnLThQ0=;
+        s=default; t=1580746845;
+        bh=blro8WKHqirWAxDR/MgBABqkpB2q71gDN9yLScRLkCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CkawfK13K4r8zDEflBAJ2YsV9+lM2k6RuiY0twZOfi54U9vy4gecckrQHHK/Sg0un
-         1akqhc6LGV2vK8mWzF+0akxliZ2MkcY9fBRitQK033rIskb9COrqBCJjU0sgVj1zzY
-         E3B+PaKiE2SLpLHPD4oIYTEkgWag+4qpjAPEM+ks=
+        b=IuBYm6jtmKorJT7MekdBIpNW9hU7mkfaG70Y6vkULdo+mSCIp9Iodny8nMshOUwTE
+         0v0bmG6UikrO2ASMruGvwsQslIqv8aDOPr+PumD3XOkGgO7hqNYAF4zYi5utSdzVxP
+         dsY8kPz6N2s8eAqgU4WH28O6Yrlk13cY+q/YADKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.4 28/53] media: digitv: dont continue if remote control state cant be read
-Date:   Mon,  3 Feb 2020 16:19:20 +0000
-Message-Id: <20200203161908.197528888@linuxfoundation.org>
+        stable@vger.kernel.org, Fariya Fatima <fariyaf@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 03/53] rsi_91x_usb: fix interface sanity check
+Date:   Mon,  3 Feb 2020 16:18:55 +0000
+Message-Id: <20200203161903.650657231@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -61,48 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit eecc70d22ae51225de1ef629c1159f7116476b2e upstream.
+commit 3139b180906af43bc09bd3373fc2338a8271d9d9 upstream.
 
-This results in an uninitialized variable read.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+Cc: stable <stable@vger.kernel.org>     # 3.15
+Cc: Fariya Fatima <fariyaf@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/digitv.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/dvb-usb/digitv.c
-+++ b/drivers/media/usb/dvb-usb/digitv.c
-@@ -226,18 +226,22 @@ static struct rc_map_table rc_map_digitv
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -103,7 +103,7 @@ static int rsi_find_bulk_in_and_out_endp
+ 	__le16 buffer_size;
+ 	int ii, bep_found = 0;
  
- static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
- {
--	int i;
-+	int ret, i;
- 	u8 key[5];
- 	u8 b[4] = { 0 };
+-	iface_desc = &(interface->altsetting[0]);
++	iface_desc = interface->cur_altsetting;
  
- 	*event = 0;
- 	*state = REMOTE_NO_KEY_PRESSED;
- 
--	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
-+	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
-+	if (ret)
-+		return ret;
- 
- 	/* Tell the device we've read the remote. Not sure how necessary
- 	   this is, but the Nebula SDK does it. */
--	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
-+	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
-+	if (ret)
-+		return ret;
- 
- 	/* if something is inside the buffer, simulate key press */
- 	if (key[1] != 0)
+ 	for (ii = 0; ii < iface_desc->desc.bNumEndpoints; ++ii) {
+ 		endpoint = &(iface_desc->endpoint[ii].desc);
 
 
