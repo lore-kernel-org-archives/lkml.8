@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FCEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6C5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A98A21927
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9622087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747789;
-	bh=ss7Ch1X+1y2bjXhIPfs5CMbSa5TXR6pSfvlg/0M9wrE=;
+	s=default; t=1580747794;
+	bh=03nOJsG5gAi8b3YwU+bDlw1Bq9pJHxvGL0xnbTnVRt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Unk+t14bojKlr5iAGTCy4Pda2CbbyuQ6R5C5d5XsseZME0b24Km4+QAJDqVoSmTyY
-	 PGBIROPCNLz7QpuYtynKytPM16DAgo1oWBTwuZeBJJgXERE8EJ2uqWqJ3320KX+rCb
-	 sqNQ9huANJEPU/yki/sWd8qBBdX3/wdzqZn5m/Fk=
+	b=B4OhPsXZowCXW7XUauBEj4k9qXR+Y1g2v/3AoXHzr0XM2cAKKcT+tigk2vVycyqaR
+	 V5LafEhbG1bYggJGdFertl/ZMrRlGhzG/FBFf/DYP5QjjtVoVRksUGNNnOV6UkL4rZ
+	 rY63Se9UqHPS530IiHNSswIrwHO6qBmKpkbfR44c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbgBCQg2 (ORCPT
+        id S1731026AbgBCQgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729078AbgBCQgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:25 -0500
+        id S1731006AbgBCQga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:30 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0376A20CC7;
-        Mon,  3 Feb 2020 16:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0FE21744;
+        Mon,  3 Feb 2020 16:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747785;
-        bh=ss7Ch1X+1y2bjXhIPfs5CMbSa5TXR6pSfvlg/0M9wrE=;
+        s=default; t=1580747790;
+        bh=03nOJsG5gAi8b3YwU+bDlw1Bq9pJHxvGL0xnbTnVRt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3mT76CfbVjsf9iQPuM/oYn2/Ap5foFFIpnq/VpERa2fBQRCJyrmkrc+hmqccCbmb
-         1jOKQNmOQ89XxUh54bRpfmZddVtGAs7dP+uocygiRIjUchK7t12L5yZJlWGxY6512w
-         8gp9/0yXBLcUSHuzxyq0hHLHiyYGGvZq4f4od5xM=
+        b=TegnJfKBESBCRF9UW+kEKekM1TflCxU/hGPH0b4C/oUyp+noCppvwxvz8tvXNPZRe
+         j08v2vGsZdSE8Ba8X/MuCroCtDvmjWGfQH6KdOHhbOaTykC0jgaQci5W9nf5PQlSZr
+         OYQs1apLZiJjeH6U4Og+PvrbBcLpT5B7Ib44D8Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 70/90] Input: max77650-onkey - add of_match table
-Date:   Mon,  3 Feb 2020 16:20:13 +0000
-Message-Id: <20200203161925.971200751@linuxfoundation.org>
+Subject: [PATCH 5.4 72/90] ARM: 8955/1: virt: Relax arch timer version check during early boot
+Date:   Mon,  3 Feb 2020 16:20:15 +0000
+Message-Id: <20200203161926.170195650@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,41 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-[ Upstream commit ce535a2efb48d8d4c4e4b97e2764d7cee73d9b55 ]
+[ Upstream commit 6849b5eba1965ceb0cad3a75877ef4569dd3638e ]
 
-We need the of_match table if we want to use the compatible string in
-the pmic's child node and get the onkey driver loaded automatically.
+Updates to the Generic Timer architecture allow ID_PFR1.GenTimer to
+have values other than 0 or 1 while still preserving backward
+compatibility. At the moment, Linux is quite strict in the way it
+handles this field at early boot and will not configure arch timer if
+it doesn't find the value 1.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Since here use ubfx for arch timer version extraction (hyb-stub build
+with -march=armv7-a, so it is safe)
+
+To help backports (even though the code was correct at the time of writing)
+
+Fixes: 8ec58be9f3ff ("ARM: virt: arch_timers: enable access to physical timers")
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/max77650-onkey.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/kernel/hyp-stub.S | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/misc/max77650-onkey.c b/drivers/input/misc/max77650-onkey.c
-index 4d875f2ac13d6..ee55f22dbca54 100644
---- a/drivers/input/misc/max77650-onkey.c
-+++ b/drivers/input/misc/max77650-onkey.c
-@@ -108,9 +108,16 @@ static int max77650_onkey_probe(struct platform_device *pdev)
- 	return input_register_device(onkey->input);
- }
- 
-+static const struct of_device_id max77650_onkey_of_match[] = {
-+	{ .compatible = "maxim,max77650-onkey" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max77650_onkey_of_match);
-+
- static struct platform_driver max77650_onkey_driver = {
- 	.driver = {
- 		.name = "max77650-onkey",
-+		.of_match_table = max77650_onkey_of_match,
- 	},
- 	.probe = max77650_onkey_probe,
- };
+diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
+index ae5020302de49..6607fa817bba9 100644
+--- a/arch/arm/kernel/hyp-stub.S
++++ b/arch/arm/kernel/hyp-stub.S
+@@ -146,10 +146,9 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
+ #if !defined(ZIMAGE) && defined(CONFIG_ARM_ARCH_TIMER)
+ 	@ make CNTP_* and CNTPCT accessible from PL1
+ 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
+-	lsr	r7, #16
+-	and	r7, #0xf
+-	cmp	r7, #1
+-	bne	1f
++	ubfx	r7, r7, #16, #4
++	teq	r7, #0
++	beq	1f
+ 	mrc	p15, 4, r7, c14, c1, 0	@ CNTHCTL
+ 	orr	r7, r7, #3		@ PL1PCEN | PL1PCTEN
+ 	mcr	p15, 4, r7, c14, c1, 0	@ CNTHCTL
 -- 
 2.20.1
 
