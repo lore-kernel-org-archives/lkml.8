@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D70C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2993C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC76220838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE9320838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748059;
-	bh=Y5BE0zz7rfVgCd+kfgW/W0Mn6NUEnOOC+qIMHaMIPGY=;
+	s=default; t=1580748067;
+	bh=A/OInvNUnYl3sVuGtrPH4+JUTp1LNDxhwo2rpTolErQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfwC5Vz8mQ/rHkEzAGebWGXDdH9r5caY5TIXWajLghYgjXAck4g/dJFK3Xz631EFi
-	 D49ikuOZXRnAa1WhGAy02ym3U/OuYCFvb/kQ61PbDHJoIyKuHm+lk4Hw7zS+C5bSs3
-	 ErpZOVIMQ+Z8OfVMZpd0ggFQykx+DLUETr1NSPc0=
+	b=dgknJMtAScJcITavarRC0q050hZ2xyGejhMNga1w+hDRYVbRMVhK7q2/ZWGrI9jY9
+	 8D6Gy+SkLrNx1U2bKA4q0mDwI6CY4tNtDKpbB8MmPf6oEILCyfpQ5SbFuPIq1/g3dL
+	 C8DtjeSFqgq0nlnva6NUA2ZLRNtdYgcAOBQ4V8UM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgBCQk6 (ORCPT
+        id S1731472AbgBCQlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:40:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50502 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:41:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbgBCQfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:37 -0500
+        id S1730998AbgBCQfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:30 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C32D2051A;
-        Mon,  3 Feb 2020 16:35:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBAB32082E;
+        Mon,  3 Feb 2020 16:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747736;
-        bh=Y5BE0zz7rfVgCd+kfgW/W0Mn6NUEnOOC+qIMHaMIPGY=;
+        s=default; t=1580747729;
+        bh=A/OInvNUnYl3sVuGtrPH4+JUTp1LNDxhwo2rpTolErQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/yNfzJN7qSEqODACfzM2F9EaPqwYEtxjMVmqeehkjx2azt2tMlkNkI3P7W74x7Tb
-         F5UAoRXavP1a/Q+MBnbOzoGW3n6u4zoQ4EoPfzdPyYSnoPoicSlcD5RoLWbGhe92ol
-         Hmlx6AZMwRNeoA0QBVJR2OHakf0bdfo9Vgm/1Lwo=
+        b=YymrtlnITm362srKmyAzorZSzslxvrakTkXai984s3nk1pSxF6QTIbr3tjUGdb12G
+         6sUG/VFA8ofjFpDuMgWJrtIu5zgNbFb4t2vQUdNXVG62kt3LE6wChtP3j+c1v/YEd4
+         6ODHozwQY2hHQDDeOrVM6J3uppNty+D/zZp//xXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Harry Pan <harry.pan@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 47/90] ASoC: sti: fix possible sleep-in-atomic
-Date:   Mon,  3 Feb 2020 16:19:50 +0000
-Message-Id: <20200203161923.726179092@linuxfoundation.org>
+Subject: [PATCH 5.4 44/90] platform/x86: intel_pmc_core: update Comet Lake platform driver
+Date:   Mon,  3 Feb 2020 16:19:47 +0000
+Message-Id: <20200203161923.441970979@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,69 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+From: Harry Pan <harry.pan@intel.com>
 
-[ Upstream commit ce780a47c3c01e1e179d0792df6b853a913928f1 ]
+[ Upstream commit 515ff674bb9bf06186052e352c4587dab8defaf0 ]
 
-Change mutex and spinlock management to avoid sleep
-in atomic issue.
+Adding new CML CPU model ID into platform driver support list.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Link: https://lore.kernel.org/r/20200113100400.30472-1-arnaud.pouliquen@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sti/uniperif_player.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_pmc_core_pltdrv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
-index 48ea915b24ba2..2ed92c990b97c 100644
---- a/sound/soc/sti/uniperif_player.c
-+++ b/sound/soc/sti/uniperif_player.c
-@@ -226,7 +226,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
- 	 * sampling frequency. If no sample rate is already specified, then
- 	 * set one.
- 	 */
--	mutex_lock(&player->ctrl_lock);
- 	if (runtime) {
- 		switch (runtime->rate) {
- 		case 22050:
-@@ -303,7 +302,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
- 		player->stream_settings.iec958.status[3 + (n * 4)] << 24;
- 		SET_UNIPERIF_CHANNEL_STA_REGN(player, n, status);
- 	}
--	mutex_unlock(&player->ctrl_lock);
- 
- 	/* Update the channel status */
- 	if (player->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0)
-@@ -365,8 +363,10 @@ static int uni_player_prepare_iec958(struct uniperif *player,
- 
- 	SET_UNIPERIF_CTRL_ZERO_STUFF_HW(player);
- 
-+	mutex_lock(&player->ctrl_lock);
- 	/* Update the channel status */
- 	uni_player_set_channel_status(player, runtime);
-+	mutex_unlock(&player->ctrl_lock);
- 
- 	/* Clear the user validity user bits */
- 	SET_UNIPERIF_USER_VALIDITY_VALIDITY_LR(player, 0);
-@@ -598,7 +598,6 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 	iec958->status[1] = ucontrol->value.iec958.status[1];
- 	iec958->status[2] = ucontrol->value.iec958.status[2];
- 	iec958->status[3] = ucontrol->value.iec958.status[3];
--	mutex_unlock(&player->ctrl_lock);
- 
- 	spin_lock_irqsave(&player->irq_lock, flags);
- 	if (player->substream && player->substream->runtime)
-@@ -608,6 +607,8 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 		uni_player_set_channel_status(player, NULL);
- 
- 	spin_unlock_irqrestore(&player->irq_lock, flags);
-+	mutex_unlock(&player->ctrl_lock);
-+
- 	return 0;
- }
- 
+diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+index 6fe829f30997d..e1266f5c63593 100644
+--- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
++++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+@@ -44,6 +44,8 @@ static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
+ 	INTEL_CPU_FAM6(KABYLAKE, pmc_core_device),
+ 	INTEL_CPU_FAM6(CANNONLAKE_L, pmc_core_device),
+ 	INTEL_CPU_FAM6(ICELAKE_L, pmc_core_device),
++	INTEL_CPU_FAM6(COMETLAKE, pmc_core_device),
++	INTEL_CPU_FAM6(COMETLAKE_L, pmc_core_device),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
 -- 
 2.20.1
 
