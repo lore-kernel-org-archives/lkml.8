@@ -2,105 +2,109 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45A0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B8DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9032073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8792520679
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="jLEEj6Du";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DmuPSaKp"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VilCGki/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBCEJW (ORCPT
+        id S1727278AbgBCEND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 23:09:22 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:42353 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727327AbgBCEJV (ORCPT
+        Sun, 2 Feb 2020 23:13:03 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38546 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgBCEND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 23:09:21 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C156E6D27;
-        Sun,  2 Feb 2020 23:09:20 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 02 Feb 2020 23:09:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=RjS6hrJkvw6HKnule/qYTODmaAYp/hQ
-        FP4smKfPmKGQ=; b=jLEEj6DuOY9JFldgz6GzluSbsV/j8Jxqp+dWzKfNwmDCsKk
-        NP/mF1lEvBeknCTiyR4uzNfKGEiO3QDXQbc8/kaCqDMH7OqMNHWHqs0RXrXYMLZ0
-        bMH0krwIh9AUdzsI/6YuMa6EgbgrmwclYfUUEgaZwT2QFNQj3tT5cxrKcu41T2Xi
-        3NOXXV/ugy4b3jHye2tAfpgw5sSAMXIYrVGoedPkwAZ74WhvJuv1FqRtD+MNRQHS
-        7o1n5mWsHYu0XM961jK+M0LkZjt6d1gnBKL86rfmR0N1djBSWIS5cP/6/bPdlnNd
-        PX1bxHEsSj30BetS5LE01430WIHG9PWyr7oV5+A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=RjS6hr
-        Jkvw6HKnule/qYTODmaAYp/hQFP4smKfPmKGQ=; b=DmuPSaKpvAxsFkXQD2TjPV
-        457IBibzflOvIL/OIV3vx87Qo172/hR1rP41uWk/PS5DXGNAeuKnZWrVYiLIB2Po
-        tHFT7+Yyz0VlzOs+bcxOtK2rGtbFxrifqIxBMb97IOHud5xRNsoLA3jFgbrMna9K
-        ezAp2WRpmdoRJqOYWR+7OuToXToM8VJlnoT599ClS9KaEveGOd6Bk3Ix6EMO8gg3
-        NwjjuJCA9YylBi303dieFUYdkHeiWIf/f7/R0b4n1IxSNhgTWDT6MmhyNJX1OOXC
-        5rWc8qMmrRiJi0w8Ougj7k8sqzbA5QvAPc+JgtAtjSewhEjcc9TFgzDkyjONC6rw
-        ==
-X-ME-Sender: <xms:8Jw3Xr1SJOTNsngXqFBtuTDrEzdzuCTzo7B2CDSeJhBr414ExuothQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeeigdeiiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:8Jw3XrUkY22zjYfoyBETKyB-x-H9Zh5jGuEbV2mSyqYdBdkFyOr8JA>
-    <xmx:8Jw3XkVD1fVPMiiaKnDZgRUt8hkIBZgKTmm3s1FuLwEg8xNxAlmnJA>
-    <xmx:8Jw3XnCzSnKK85gkFNgd56lWmuj2Ao3jH1hxFZJidO6xNHF8TIgXmw>
-    <xmx:8Jw3XmszI8conWzhsZjiGRm5Lr_AzefRMi4d4IHNJknWRjABi4ymHA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 965ECE00A2; Sun,  2 Feb 2020 23:09:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
-Mime-Version: 1.0
-Message-Id: <42173df3-c060-4c62-a5b9-7f1deade21d1@www.fastmail.com>
-In-Reply-To: <f6beee98-360c-4239-ab01-86ba41629f9b@www.fastmail.com>
-References: <20200120150113.2565-1-linux@neuralgames.com>
- <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
- <4446ffb694c7742ca9492c7360856789@neuralgames.com>
- <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
- <136bbab84d13d8d56a5ac297e415975e@neuralgames.com>
- <b83f2a1f-e1be-433c-8dc8-c469cb38f423@www.fastmail.com>
- <27c5505acd8d09f70ec9cd12982b2e3e@neuralgames.com>
- <f6beee98-360c-4239-ab01-86ba41629f9b@www.fastmail.com>
-Date:   Mon, 03 Feb 2020 14:39:06 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Oscar A Perez" <linux@neuralgames.com>
-Cc:     "Joel Stanley" <joel@jms.id.au>, "Matt Mackall" <mpm@selenic.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
-Content-Type: text/plain
+        Sun, 2 Feb 2020 23:13:03 -0500
+Received: by mail-pl1-f196.google.com with SMTP id t6so5307567plj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 20:13:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dIrUPTnZvDwUp0R7l94JshTdtBhQRESPBxjrDmzBrdM=;
+        b=VilCGki/nsp0khzP7Z+TmtsWQMMqU+mbNC3ccbFitSDEf+1jKnXg4usCKBo++RDKFf
+         MDsgSLjPhqltMgm6sqDYd6xMwPuCS7WO+oixZ77xwfvOaE0NFCNiD3T2GXORqS1NmDT4
+         VKrBOz9qRANHpMIG2rlJutTaY9xi5eh7uwXORboNHOlMq7DZstA+qFek0wY6LlUNehLv
+         4tBxdPkwZ19YEOz23nNe6zEtYjxfiA9dzEne9XUBNaQAtalgcKyfeTKbwXLSNGD86GET
+         IzWR1/FPU36B6xicm4Z5KPfQ5zE4aLsKcx7NG4vNmK9RmECWGKfWNWpwhG1j28AvIZQe
+         1vkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dIrUPTnZvDwUp0R7l94JshTdtBhQRESPBxjrDmzBrdM=;
+        b=Be+CVvzeoWbr2PXqinqNOHKvNHpXjeH5m6Nk3y+oRu6nkzOc4HzpiK3YlRma7RnrJG
+         fumX5ujQuMswHYKboC74aNCJW+xCckh5xWjUZ2R2CPZ8ZZJ3bzzZQelxaBi6W6M1ras0
+         UF+5GbghVkNN8cQ3ULoDXOK1jnIsoGWYGJgBIquqAg7QOSXfWkq19xdgwn8azaJiR+cd
+         nfJhBP4I1J9BbmrpW0k3UXcrYr2swimQdfxQiJCTZss8gv1GTa2D4H4XY7RUyoEIP6MV
+         VAEVCdvUmDiHwpvo+UrtPLC2zuk2ILckKGlLhq7SsatQqM+w5A45TSVkwmqwMPJydDro
+         htMQ==
+X-Gm-Message-State: APjAAAUeR8mP0D1+G857oLNdLPAhbqrR147w4kpMpJdFURvy3aWJZfvh
+        xsRkesw4GC/HtEcwASyc1/vtosVP9Q8=
+X-Google-Smtp-Source: APXvYqxQZHCWlp5qmDphiuPsGQqccqa4TLIW+Tcop2vkbJNf3d28rxW0c3Fi9SkYBo50utQyV/WKGQ==
+X-Received: by 2002:a17:90a:178f:: with SMTP id q15mr27802458pja.132.1580703181309;
+        Sun, 02 Feb 2020 20:13:01 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id l37sm18338795pjb.15.2020.02.02.20.13.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2020 20:13:00 -0800 (PST)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200203110426.6ceca414@canb.auug.org.au>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <aa90c06f-c0bd-7a32-b35e-85d71ffe3bf9@kernel.dk>
+Date:   Sun, 2 Feb 2020 21:12:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200203110426.6ceca414@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 3 Feb 2020, at 14:37, Andrew Jeffery wrote:
+On 2/2/20 5:04 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I think we should leverage existing work where we can. Lets not make
-> more extra for ourselves :)
+> After merging the block tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> In file included from drivers/vhost/vhost.c:13:
+> include/linux/eventfd.h:43:22: error: unknown type name 'eventfd_wake_count'
+>    43 | DECLARE_PER_CPU(int, eventfd_wake_count);
+>       |                      ^~~~~~~~~~~~~~~~~~
+> include/linux/eventfd.h: In function 'eventfd_signal_count':
+> include/linux/eventfd.h:47:9: error: implicit declaration of function 'this_cpu_read' [-Werror=implicit-function-declaration]
+>    47 |  return this_cpu_read(eventfd_wake_count);
+>       |         ^~~~~~~~~~~~~
+> include/linux/eventfd.h:47:23: error: 'eventfd_wake_count' undeclared (first use in this function); did you mean 'eventfd_signal_count'?
+>    47 |  return this_cpu_read(eventfd_wake_count);
+>       |                       ^~~~~~~~~~~~~~~~~~
+>       |                       eventfd_signal_count
+> include/linux/eventfd.h:47:23: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> Caused by commit
+> 
+>   9a9f718763cf ("eventfd: track eventfd_signal() recursion depth")
+> 
+> I have used the block tree from next-20200131 for today.
 
-Dammit, replaced the wrong word there - the irony:
+Doh, missed include, didn't fail on x86-64. Fixed it up, should work
+tomorrow.
 
-"Lets not make _extra work_ for ourselves"
+-- 
+Jens Axboe
+
