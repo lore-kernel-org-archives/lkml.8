@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A20C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41128C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDC322B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168A620CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747717;
-	bh=aQOpUWDKW8nzsv57PXVUcVKwFvdSssAFFA6dAs6Vs6Q=;
+	s=default; t=1580747719;
+	bh=Pn9ScWTH0zprbEN/kgqNSjE7Dcize02YCTsDYoWUOAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ho8alKN2DWraFQrj6EgyHSCvap/lpsfWFNlAb3LePwwh58eNwJ3n5uslzyd5MEU8j
-	 5RD+n7+0DZkxPorfGPfeJdTBd6cgWJHJAu0xiFxq6l0T5v8JgFBo6v0hZWSXo1SB79
-	 +adj7cy2efPmv5miLOimZNOfi+/mw85IPbURXE68=
+	b=mDPExc0pc+OO9HWd8p+L5ZW0e5ly1KEXUAcznVuhoCO80yE6xpq3qzFPQDazpt/JB
+	 7HreC2dtFyo7ojqk6v+6ocAuJhqJHk+WgYqXcaHDl+QmBLmj5lec/B1mrvV7deEH7o
+	 EGX0Koa3B8PB69W6ld3HHWwbFSNcyxZRElQvZs4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgBCQfP (ORCPT
+        id S1730463AbgBCQfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:35:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730922AbgBCQfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:11 -0500
+        id S1730943AbgBCQfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:15 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B1F92087E;
-        Mon,  3 Feb 2020 16:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C89E821582;
+        Mon,  3 Feb 2020 16:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747710;
-        bh=aQOpUWDKW8nzsv57PXVUcVKwFvdSssAFFA6dAs6Vs6Q=;
+        s=default; t=1580747715;
+        bh=Pn9ScWTH0zprbEN/kgqNSjE7Dcize02YCTsDYoWUOAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mplHI/pZPj+Pi/Yu2F8ecdYfLuQLTZk9TmExbvzOH1lyv1olb6gAxtlV/1LB+vFkS
-         6Mpho68L9lK4TiczwrQZN55cIDwS2po2QfvIg/hHvnD/+O+LIjgal8YrNobjUURZm2
-         qdEpg5OcM87GI5jwYqQeAYDqM+azvfCudeP1tb64=
+        b=JCA9vYXmRtqxoo1N7EgUYqc02VaxQS5Wne8pRB/wcG0O5PbZo2mgfl1DErcXnO1vQ
+         Z7/JofESLvqKh8g/PSUVFN1xoS/7UXxyywH76c76e0Vku4kz3OR7RdELaaU3YNbZtp
+         ocLvQTydn6/XUPnIa6TKjuIGcgwLpmgsxU8f3GRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 37/90] s390/zcrypt: move ap device reset from bus to driver code
-Date:   Mon,  3 Feb 2020 16:19:40 +0000
-Message-Id: <20200203161922.565075558@linuxfoundation.org>
+Subject: [PATCH 5.4 39/90] ixgbevf: Remove limit of 10 entries for unicast filter list
+Date:   Mon,  3 Feb 2020 16:19:42 +0000
+Message-Id: <20200203161922.839994625@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,132 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit 0c874cd04292c7ee22d70eefc341fa2648f41f46 ]
+[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
 
-This patch moves the reset invocation of an ap device when
-fresh detected from the ap bus to the probe() function of
-the driver responsible for this device.
+Currently, though the FDB entry is added to VF, it does not appear in
+RAR filters. VF driver only allows to add 10 entries. Attempting to add
+another causes an error. This patch removes limitation and allows use of
+all free RAR entries for the FDB if needed.
 
-The virtualisation of ap devices makes it necessary to
-remove unconditioned resets on fresh appearing apqn devices.
-It may be that such a device is already enabled for guest
-usage. So there may be a race condition between host ap bus
-and guest ap bus doing the reset. This patch moves the
-reset from the ap bus to the zcrypt drivers. So if there
-is no zcrypt driver bound to an ap device - for example
-the ap device is bound to the vfio device driver - the
-ap device is untouched passed to the vfio device driver.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/ap_bus.c       | 2 --
- drivers/s390/crypto/ap_bus.h       | 2 +-
- drivers/s390/crypto/ap_queue.c     | 5 +++--
- drivers/s390/crypto/zcrypt_cex2a.c | 1 +
- drivers/s390/crypto/zcrypt_cex2c.c | 2 ++
- drivers/s390/crypto/zcrypt_cex4.c  | 1 +
- 6 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-index a1915061932eb..5256e3ce84e56 100644
---- a/drivers/s390/crypto/ap_bus.c
-+++ b/drivers/s390/crypto/ap_bus.c
-@@ -793,8 +793,6 @@ static int ap_device_probe(struct device *dev)
- 		drvres = ap_drv->flags & AP_DRIVER_FLAG_DEFAULT;
- 		if (!!devres != !!drvres)
- 			return -ENODEV;
--		/* (re-)init queue's state machine */
--		ap_queue_reinit_state(to_ap_queue(dev));
- 	}
+diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+index 076f2da36f278..64ec0e7c64b49 100644
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -2081,11 +2081,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	int count = 0;
  
- 	/* Add queue/card to list of active queues/cards */
-diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index 433b7b64368d6..bb35ba4a8d243 100644
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@ -261,7 +261,7 @@ void ap_queue_prepare_remove(struct ap_queue *aq);
- void ap_queue_remove(struct ap_queue *aq);
- void ap_queue_suspend(struct ap_device *ap_dev);
- void ap_queue_resume(struct ap_device *ap_dev);
--void ap_queue_reinit_state(struct ap_queue *aq);
-+void ap_queue_init_state(struct ap_queue *aq);
+-	if ((netdev_uc_count(netdev)) > 10) {
+-		pr_err("Too many unicast filters - No Space\n");
+-		return -ENOSPC;
+-	}
+-
+ 	if (!netdev_uc_empty(netdev)) {
+ 		struct netdev_hw_addr *ha;
  
- struct ap_card *ap_card_create(int id, int queue_depth, int raw_device_type,
- 			       int comp_device_type, unsigned int functions);
-diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
-index dad2be333d826..37c3bdc3642dc 100644
---- a/drivers/s390/crypto/ap_queue.c
-+++ b/drivers/s390/crypto/ap_queue.c
-@@ -638,7 +638,7 @@ struct ap_queue *ap_queue_create(ap_qid_t qid, int device_type)
- 	aq->ap_dev.device.type = &ap_queue_type;
- 	aq->ap_dev.device_type = device_type;
- 	aq->qid = qid;
--	aq->state = AP_STATE_RESET_START;
-+	aq->state = AP_STATE_UNBOUND;
- 	aq->interrupt = AP_INTR_DISABLED;
- 	spin_lock_init(&aq->lock);
- 	INIT_LIST_HEAD(&aq->list);
-@@ -771,10 +771,11 @@ void ap_queue_remove(struct ap_queue *aq)
- 	spin_unlock_bh(&aq->lock);
- }
- 
--void ap_queue_reinit_state(struct ap_queue *aq)
-+void ap_queue_init_state(struct ap_queue *aq)
- {
- 	spin_lock_bh(&aq->lock);
- 	aq->state = AP_STATE_RESET_START;
- 	ap_wait(ap_sm_event(aq, AP_EVENT_POLL));
- 	spin_unlock_bh(&aq->lock);
- }
-+EXPORT_SYMBOL(ap_queue_init_state);
-diff --git a/drivers/s390/crypto/zcrypt_cex2a.c b/drivers/s390/crypto/zcrypt_cex2a.c
-index c50f3e86cc748..7cbb384ec5352 100644
---- a/drivers/s390/crypto/zcrypt_cex2a.c
-+++ b/drivers/s390/crypto/zcrypt_cex2a.c
-@@ -175,6 +175,7 @@ static int zcrypt_cex2a_queue_probe(struct ap_device *ap_dev)
- 	zq->queue = aq;
- 	zq->online = 1;
- 	atomic_set(&zq->load, 0);
-+	ap_queue_init_state(aq);
- 	ap_queue_init_reply(aq, &zq->reply);
- 	aq->request_timeout = CEX2A_CLEANUP_TIME,
- 	aq->private = zq;
-diff --git a/drivers/s390/crypto/zcrypt_cex2c.c b/drivers/s390/crypto/zcrypt_cex2c.c
-index 35c7c6672713b..c78c0d119806f 100644
---- a/drivers/s390/crypto/zcrypt_cex2c.c
-+++ b/drivers/s390/crypto/zcrypt_cex2c.c
-@@ -220,6 +220,7 @@ static int zcrypt_cex2c_queue_probe(struct ap_device *ap_dev)
- 	zq->queue = aq;
- 	zq->online = 1;
- 	atomic_set(&zq->load, 0);
-+	ap_rapq(aq->qid);
- 	rc = zcrypt_cex2c_rng_supported(aq);
- 	if (rc < 0) {
- 		zcrypt_queue_free(zq);
-@@ -231,6 +232,7 @@ static int zcrypt_cex2c_queue_probe(struct ap_device *ap_dev)
- 	else
- 		zq->ops = zcrypt_msgtype(MSGTYPE06_NAME,
- 					 MSGTYPE06_VARIANT_NORNG);
-+	ap_queue_init_state(aq);
- 	ap_queue_init_reply(aq, &zq->reply);
- 	aq->request_timeout = CEX2C_CLEANUP_TIME;
- 	aq->private = zq;
-diff --git a/drivers/s390/crypto/zcrypt_cex4.c b/drivers/s390/crypto/zcrypt_cex4.c
-index 442e3d6162f76..6fabc906114c0 100644
---- a/drivers/s390/crypto/zcrypt_cex4.c
-+++ b/drivers/s390/crypto/zcrypt_cex4.c
-@@ -381,6 +381,7 @@ static int zcrypt_cex4_queue_probe(struct ap_device *ap_dev)
- 	zq->queue = aq;
- 	zq->online = 1;
- 	atomic_set(&zq->load, 0);
-+	ap_queue_init_state(aq);
- 	ap_queue_init_reply(aq, &zq->reply);
- 	aq->request_timeout = CEX4_CLEANUP_TIME,
- 	aq->private = zq;
 -- 
 2.20.1
 
