@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E03C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC026C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5802082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C6D20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747863;
-	bh=wdHGz14Yhup2AyWZJYu2P5/WKx7btL6hrN/8bDHJHig=;
+	s=default; t=1580747865;
+	bh=3n72pU4WVZkfE6e7Hsg0eDUU0ly95MhHTPzCc1hSGTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JYKgRqM/GeQV///futHlms7vW1lpFwtrtJMtDP6YfN1MAlIhaB5nWTZLFevqAs+Qp
-	 glaCHKK97iaBMZ9t8PSh0f9cd5hamUtHih/nKmeo5FXNjHx+ES4/k9i3+0Oe3JuZg7
-	 /cCOFmc5IHXqQHQbdB0Tx90zCrBDgNforKWyqM/k=
+	b=v56hKVAA/OTKX3JpcNthklxgWjJKPFiaxJNN3ordvlSqrArVFFiye1mplViA/Urua
+	 DKe24KcnyYZpGO3NZ0EBbDfPeEGNesp8p3sg8f9Ov+8vlSy61ZJ9fvBu/P/l8au7E8
+	 djOmy0iH1QsodpLoULmq71OeRvPjemQJBcgfZxxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbgBCQhn (ORCPT
+        id S1731382AbgBCQhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:37:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731338AbgBCQhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:32 -0500
+        id S1730890AbgBCQh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:29 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415F020721;
-        Mon,  3 Feb 2020 16:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E238F2087E;
+        Mon,  3 Feb 2020 16:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747851;
-        bh=wdHGz14Yhup2AyWZJYu2P5/WKx7btL6hrN/8bDHJHig=;
+        s=default; t=1580747849;
+        bh=3n72pU4WVZkfE6e7Hsg0eDUU0ly95MhHTPzCc1hSGTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xd9lCRWH0vBocD3M//mcCcHSyou9fbbSbf0z4lOKm9B2s0eVyJG+r20faqFyQI3w7
-         kYNQ7iohj/4D+HX5djH9CCe7/tbVq8jSiHriqCJEFWRM9c/mHndjuz7Rc4skxnr+w/
-         DHQ+5s17vDMDVCzaqf7/zdP8kFZUMJ4JQm6n7P7s=
+        b=EoIxNjq2WXpbRc5zyQZn/2CVV6gTtT8gm8a+u/fvbWV3q/pcwThslQyCtVPtcqhYf
+         zBfNPEkl6/lc39oq+CNueAuTH2LMDF89IEym4NcdFFLJr3lGbx5phAku77S1F8WQ4u
+         SY2V4z/kuQaPamfHCIOpP2DcVEXuh0O6QTF41Wa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 66/90] ARM: dts: am335x-boneblack-common: fix memory size
-Date:   Mon,  3 Feb 2020 16:20:09 +0000
-Message-Id: <20200203161925.567987747@linuxfoundation.org>
+Subject: [PATCH 5.4 65/90] Input: aiptek - use descriptors of current altsetting
+Date:   Mon,  3 Feb 2020 16:20:08 +0000
+Message-Id: <20200203161925.451117468@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,39 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matwey V. Kornilov <matwey@sai.msu.ru>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 5abd45ea0fc3060f7805e131753fdcbafd6c6618 ]
+[ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
 
-BeagleBone Black series is equipped with 512MB RAM
-whereas only 256MB is included from am335x-bone-common.dtsi
+Make sure to always use the descriptors of the current alternate setting
+to avoid future issues when accessing fields that may differ between
+settings.
 
-This leads to an issue with unusual setups when devicetree
-is loaded by GRUB2 directly.
-
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-boneblack-common.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/input/tablet/aiptek.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-index 7ad079861efd6..91f93bc89716d 100644
---- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-@@ -131,6 +131,11 @@
- };
+diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
+index 06d0ffef4a171..e08b0ef078e81 100644
+--- a/drivers/input/tablet/aiptek.c
++++ b/drivers/input/tablet/aiptek.c
+@@ -1713,7 +1713,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
  
- / {
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+
- 	clk_mcasp0_fixed: clk_mcasp0_fixed {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
+ 	aiptek->inputdev = inputdev;
+ 	aiptek->intf = intf;
+-	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
++	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
+ 	aiptek->inDelay = 0;
+ 	aiptek->endDelay = 0;
+ 	aiptek->previousJitterable = 0;
 -- 
 2.20.1
 
