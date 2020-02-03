@@ -2,188 +2,122 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F91AC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3612EC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B4720CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C02218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pYxJkcwp"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="SfWu8ptX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgBCNvW (ORCPT
+        id S1728300AbgBCNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:51:22 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11190 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728199AbgBCNvV (ORCPT
+        Mon, 3 Feb 2020 08:53:11 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35404 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgBCNxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:51:21 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013Dlotp027606;
-        Mon, 3 Feb 2020 14:51:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=2R3886/w6q71uZmE3lqE7gZfMtiidQ+pH7InOJfEqaA=;
- b=pYxJkcwpclhdj3teUM+ERViKiYiNKqnogvchmFlaycWKi5e1kEoEC7GZZ99ppL7rzGAC
- j/ppCsni1GqQbeo0ULFZJmH+tiTSnsP3ydim6TTkXLTXuGbpCjK1CCpIp8BUvblV3YUj
- +JtGCFDJZD9Uo2x/7r+uY6L72w2q2hkoxYlV8aAY2eY4Z19gyD3wxbkI/6v6tA4bEXKX
- vE0pXnUIAmhTORpTlt3m8fyePTDoGrAxB/AabbkUy3JvRz0rIcbOH9zAFSaGYatVX60Y
- SZLHk4jc/BEjotXDWTsCfVGqj5PZjTjW9yzbLvvtV6sx4Nn7tO65mF6zEqQE3UnmxQrZ TA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xvybdsmtv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 14:51:13 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E48E410002A;
-        Mon,  3 Feb 2020 14:51:08 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D8BA72BE228;
-        Mon,  3 Feb 2020 14:51:08 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb 2020 14:51:08
- +0100
-From:   <patrice.chotard@st.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <patrice.chotard@st.com>, <christophe.kerello@st.com>,
-        Lionel Debieve <lionel.debieve@st.com>,
-        Etienne Carriere <etienne.carriere@st.com>
-Subject: [PATCH 2/2] spi: stm32-qspi: properly manage probe errors
-Date:   Mon, 3 Feb 2020 14:50:48 +0100
-Message-ID: <20200203135048.1299-3-patrice.chotard@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200203135048.1299-1-patrice.chotard@st.com>
-References: <20200203135048.1299-1-patrice.chotard@st.com>
+        Mon, 3 Feb 2020 08:53:10 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z18so9777777lfe.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:53:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BzZMF6PZ0CInPvS+JZXdg2mkWs0iWkEH6sfExWwcsOM=;
+        b=SfWu8ptXcrqdLvVIL+9GNYbYTZM0c3Z4oRhn+03/fTLd35Qc+pNcEyJxhwF7lafzH0
+         d4srVxbs7KN6s0DICeR+xID9QEiL5Ej66kNXiGFzrPIy+dgRsWNigr9yFPOqIyzZR8Yb
+         ezgjxg7hzzAmGX6kvhZCjj1aEVb4gOrxjTbd3o1JoGMpP1dhE/N79lBbK3054K5SB+fF
+         sutl1znM5FUFndqKtQ2KHkt653qpODXWXb5b8k4kzpzBzqKQnCE7UTp+MxesWWLH9esw
+         gf66cdzuHedRhs58dFM9lmhZn7vMWU0idxfbqcAx5q1dYQlC2UcJeninpwCmf5bqLBhQ
+         tQpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BzZMF6PZ0CInPvS+JZXdg2mkWs0iWkEH6sfExWwcsOM=;
+        b=n2iztJxjdoVy/EVdGa6//kRtcFBsjC5QsyboTnIjZPY7/EjvuGwkMRc9x9Mii+q2EI
+         bT/n4LXQcLb3jsS4+pPuwJEnsUTtj8435cdO/pI7cBzhDxEgm6zh8W7l/29GmLCxQ4JY
+         WF3RNltBqx03D7V1qm8pbTlx62t/4kjkECQFvcowUcShXNvCS/j2AAa7IVN5fz4nDuMO
+         KFKY+WceYJaSDZt6UVvcEOBLmEo3WPrcwdAbzYGMyvktJHeYoQws7LVkeOnZLb096nGR
+         vjVGlihAoJxl8NxJesBZd7h34qjNIF0NscwrTtnsVrHDaCfMWAJpGYt2vnQpQhi5EKi2
+         uVqQ==
+X-Gm-Message-State: APjAAAXNKmCvU4lcPSvr44HMvPSWOjJA8RMuksx/zQUq4Wl7rJ95d0g8
+        909Xu6GwvbjOMJTt0zEZYatsVg==
+X-Google-Smtp-Source: APXvYqysggXpYEJxCI/09xpMW4ELlsRRYlF7cYLpGOA4E8c4YYLRqJg9/VEkldqlzmdwIjBILEU4cQ==
+X-Received: by 2002:ac2:4246:: with SMTP id m6mr12217244lfl.165.1580737988577;
+        Mon, 03 Feb 2020 05:53:08 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a12sm9743048ljk.48.2020.02.03.05.53.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 05:53:07 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id AD6E1100DC8; Mon,  3 Feb 2020 16:53:20 +0300 (+03)
+Date:   Mon, 3 Feb 2020 16:53:20 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+Message-ID: <20200203135320.edujsfjwt5nvtiit@box>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-11-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE3.st.com
- (10.75.127.18)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_04:2020-02-02,2020-02-03 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201034029.4063170-11-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lionel Debieve <lionel.debieve@st.com>
+On Fri, Jan 31, 2020 at 07:40:27PM -0800, John Hubbard wrote:
+> diff --git a/mm/gup.c b/mm/gup.c
+> index c10d0d051c5b..9fe61d15fc0e 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -29,6 +29,19 @@ struct follow_page_context {
+>  	unsigned int page_mask;
+>  };
+>  
+> +#ifdef CONFIG_DEBUG_VM
 
-Fix resource release issues when driver probe operation fails.
+Why under CONFIG_DEBUG_VM? There's nothing about this in the cover letter.
 
-Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- drivers/spi/spi-stm32-qspi.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 13bb64bf4c8f..d066f5144c3e 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -565,7 +565,7 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	qspi->io_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(qspi->io_base)) {
- 		ret = PTR_ERR(qspi->io_base);
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	qspi->phys_base = res->start;
-@@ -574,24 +574,26 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	qspi->mm_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(qspi->mm_base)) {
- 		ret = PTR_ERR(qspi->mm_base);
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	qspi->mm_size = resource_size(res);
- 	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ) {
- 		ret = -EINVAL;
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
-+	if (irq < 0) {
-+		ret = irq;
-+		goto err_master_put;
-+	}
- 
- 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
- 			       dev_name(dev), qspi);
- 	if (ret) {
- 		dev_err(dev, "failed to request irq\n");
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	init_completion(&qspi->data_completion);
-@@ -599,26 +601,26 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	qspi->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(qspi->clk)) {
- 		ret = PTR_ERR(qspi->clk);
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	qspi->clk_rate = clk_get_rate(qspi->clk);
- 	if (!qspi->clk_rate) {
- 		ret = -EINVAL;
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	ret = clk_prepare_enable(qspi->clk);
- 	if (ret) {
- 		dev_err(dev, "can not enable the clock\n");
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	rstc = devm_reset_control_get_exclusive(dev, NULL);
- 	if (IS_ERR(rstc)) {
- 		ret = PTR_ERR(rstc);
- 		if (ret == -EPROBE_DEFER)
--			goto err;
-+			goto err_qspi_release;
- 	} else {
- 		reset_control_assert(rstc);
- 		udelay(2);
-@@ -629,7 +631,7 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, qspi);
- 	ret = stm32_qspi_dma_setup(qspi);
- 	if (ret)
--		goto err;
-+		goto err_qspi_release;
- 
- 	mutex_init(&qspi->lock);
- 
-@@ -645,8 +647,9 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	if (!ret)
- 		return 0;
- 
--err:
-+err_qspi_release:
- 	stm32_qspi_release(qspi);
-+err_master_put:
- 	spi_master_put(qspi->ctrl);
- 
- 	return ret;
+> +static inline void __update_proc_vmstat(struct page *page,
+> +					enum node_stat_item item, int count)
+> +{
+> +	mod_node_page_state(page_pgdat(page), item, count);
+> +}
+> +#else
+> +static inline void __update_proc_vmstat(struct page *page,
+> +					enum node_stat_item item, int count)
+> +{
+> +}
+> +#endif
+> +
+>  static void hpage_pincount_add(struct page *page, int refs)
+>  {
+>  	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
 -- 
-2.17.1
-
+ Kirill A. Shutemov
