@@ -2,145 +2,145 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C443C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE12AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2A52086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954322084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDKbYV6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgBCMZr (ORCPT
+        id S1728120AbgBCM0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:25:47 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:56091 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgBCMZr (ORCPT
+        Mon, 3 Feb 2020 07:26:06 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44465 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgBCM0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:25:47 -0500
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N7yuz-1jdEvy0FiF-0150X2; Mon, 03 Feb 2020 13:25:45 +0100
-Received: by mail-qk1-f170.google.com with SMTP id u19so6277011qku.8;
-        Mon, 03 Feb 2020 04:25:44 -0800 (PST)
-X-Gm-Message-State: APjAAAVsig5ayJqpiKY25ChbkwKG8B2i4S8N2jQsFADPbXJ25qZZzHaR
-        qsMyO9bGFEhTUo73T6fu0YHDFqXxy7aA0wWLF+A=
-X-Google-Smtp-Source: APXvYqx0ocLgdidrznoQ8Enyx2eLL3hOdlL2MjBSkguYuLYfdkmdQylLrutBTZG2BNKne5lK1uCb3UnyrUHgc1yB+DQ=
-X-Received: by 2002:a05:620a:909:: with SMTP id v9mr10712027qkv.138.1580732743857;
- Mon, 03 Feb 2020 04:25:43 -0800 (PST)
+        Mon, 3 Feb 2020 07:26:05 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so13373704otj.11;
+        Mon, 03 Feb 2020 04:26:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FTCmDQysPO2gEhLvRlu7l+eCldmNVtgMTfK/8SOuiPM=;
+        b=nDKbYV6uLewDDeqqtQtLza9EvsovQ7dTpZoqlikdkjx+2dGD7U9IgOCA53Zt8jkjaW
+         B9335Rfk4p0quSJrTdgyNQBT8EtMnu9xPRwi99FO9QyAQuHgQlQChej3yMsYrkaiEjiG
+         mnaD39diqcN1X6vzeRZBB7NOnZGfwkQqHmpw3UUWPnvUab+9IOqhp2bUvV2QyA/kjRO7
+         QFFf35i7+dEJXW++VqEanbYTun9GkBbtPY9ABt7fgljTImboi3KtRwbEENoRdQ61Mm/h
+         I/c55CZ1poNhc26OU0x+oFq9P3o+oYSsZ5cZVsgD862BiaHoZiVYg45LsmdF2Cc8OqYB
+         37gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FTCmDQysPO2gEhLvRlu7l+eCldmNVtgMTfK/8SOuiPM=;
+        b=HUFlFUNY09PGvcSDTr5Q9/hhrPd2QvFaDo8LJri+7szZHnKYHXbH/5BLJbR4moH+bz
+         FBDVSrTU4Cy9Px4eCQKtuVGNTuSziKozIufc7CGvqf9s+CQOAaJ+WPy1Cbrti9l/TG9N
+         +i2VucUQzUVMuZhvFU6ATXUY/96iWEeHWl2F581Fzcbyo8oJ7FI4wOUmmkOg4Cq6cDyI
+         /2d0N23CZblLjkYjm2MFkUZof5yftKBvuz5+M4ZRotamI9NHBuC9i4Yzv+RSULulv7cW
+         p6mAVAJ/xpkV1p2ru3Zw6UKve7kr8smwkyC/5jBzSvAUo3rRKVkS+9BMhP3ON2uuX8P2
+         Nung==
+X-Gm-Message-State: APjAAAV1Y0HMFsQ7kEqza7a5Fo4H4Tt35AXlYFINDZQXnQkZ6Hqrof7H
+        /6p8WOtMPOC//xIs3uHQI1ossYPw/sO+XyMLcpU=
+X-Google-Smtp-Source: APXvYqwqNc7jOW4X1o9vw1ucUUo0i6FaeyP/isUi3gky2P0yJQVAdgjhhxeql3xNfsaov7xDKy9wb520FK9KJHBcdBk=
+X-Received: by 2002:a05:6830:1:: with SMTP id c1mr16142470otp.254.1580732764862;
+ Mon, 03 Feb 2020 04:26:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130195525.4525-1-krzk@kernel.org> <20200130195525.4525-2-krzk@kernel.org>
- <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com> <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
-In-Reply-To: <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 3 Feb 2020 13:25:27 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3VxqKuPyoparMZQYNNic6K2QsuzHE2mHskBt56cjny=g@mail.gmail.com>
-Message-ID: <CAK8P3a3VxqKuPyoparMZQYNNic6K2QsuzHE2mHskBt56cjny=g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: configs: Cleanup old Kconfig options
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        arm-soc <arm@kernel.org>, SoC Team <soc@kernel.org>
+References: <20200131155655.49812-1-cascardo@canonical.com>
+ <87wo94ng9d.fsf@vitty.brq.redhat.com> <20200203101514.GG40679@calabresa>
+In-Reply-To: <20200203101514.GG40679@calabresa>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 3 Feb 2020 20:25:53 +0800
+Message-ID: <CANRm+CyMmuBYjVh4dK4GQBw7iYu1KEHRMDBmnUn3jLKxzU2h+g@mail.gmail.com>
+Subject: Re: [PATCH] x86/kvm: do not setup pv tlb flush when not paravirtualized
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Z/o9hl+VbVFCd3JbFMrSX5q5pl1EGoe4TUEC+JYUrP0wfQufBCt
- x/tSoiBEU2+RFgpd5DRkEdhSBsimgXbMosZEhQwG00/NdJbNrh11Sbm/DeULFKlaCeVyeB5
- jcHDjtZgpX05iLKDnf4MAuciJQN3pjxGpydNJk2z7UPVXVle2k17FStyt0rJCs3NOo469iv
- ghOOcuDImLbuTdPVxsRQg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LTIDGvjRHmQ=:+Cq4IdjiThj/pyKdrz+aZ5
- NEPm6iOhe4dr/KngwTqUhDIgfOi1FdeUuxDeiR/8cIt3yVDDN6B3WACw4uqsMlUgY4c77b3iu
- gElD4y/8VkSsdXCM/pYed4MgPGHq5eCCyE5uK20EYRzL04ssTZskfnT2VrWa76ie0ynDCn8c8
- eeXPuY7MmtuKm4jY+KkX5kgvjMgBK8OtzZ2RLYgjZqPOOHcuXriVmkdvoCJZdZAq+MaofmJGy
- k+A0bj7Si1cTiru9eupfeADcU8FAI3LuVdHgeVC/ZQbVMrjhlXcGb8NyXnmGlbT9BeRiOXG3Z
- aiM+PlQQPqRp84D2hH62/SETV3NBmRrh7P21KIvYWxOA9eoMTT22Lyrftu78euEHg/oioRQYR
- PTOSBbXaaANOxfY89g3Sdpq6XHZJTqZWkrW6YeuH3Fd0kPmlH6vANXiOqZ/mWMO0MfHLKgIuR
- FAlEfkGEDe7FiZGyhTJbpPvlFQ10XsS4ulDUQGqH/sIBsxqPQgqShvHbQOr9q88dvyR76O7kn
- TsECwZ0M3dPWp34ZoIqMO0ZWnfMRa8E+2/k2O+iekVYOXFj1VYo/0MsMTjuvcKByqne5hwbaZ
- QFWGYFgehhGWiVd/4Ozl5hhrX5XKEe7+KLRBN/rlsOg7KoGMK/BiAVego8K3dcRFgeg0E3PL5
- WU5tWfKPlXFZ6/TUN+hLOZbVTl0xSlZle/9aGGcifhHP66TeWwWoNCwY5YyGEPzadfaGNYHua
- VmBedHg+ed2vKsUWz3amSLXqXPRYoq3PPw639aVAh6HXoVxoztZiTC/qREn3BLIicS5Gc76Zl
- 0RPWL2QF/raRe/ihJd7aLmKj/oJwKYEj8qNK6mnlBo1PwXiYpM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 12:53 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Mon, 3 Feb 2020 at 18:31, Thadeu Lima de Souza Cascardo
+<cascardo@canonical.com> wrote:
 >
-> On Thu, 30 Jan 2020 at 23:06, Joe Perches <joe@perches.com> wrote:
+> On Mon, Feb 03, 2020 at 10:59:10AM +0100, Vitaly Kuznetsov wrote:
+> > Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
 > >
-> > On Thu, 2020-01-30 at 20:55 +0100, Krzysztof Kozlowski wrote:
-> > > CONFIG_MMC_BLOCK_BOUNCE is gone since commit c3dccb74be28 ("mmc: core:
-> > > Delete bounce buffer Kconfig option").
+> > > kvm_setup_pv_tlb_flush will waste memory and print a misguiding message
+> > > when KVM paravirtualization is not available.
 > > >
-> > > CONFIG_LBDAF is gone since commit 72deb455b5ec ("block: remove
-> > > CONFIG_LBDAF").
+> > > Intel SDM says that the when cpuid is used with EAX higher than the
+> > > maximum supported value for basic of extended function, the data for the
+> > > highest supported basic function will be returned.
 > > >
-> > > CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
-> > > commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+> > > So, in some systems, kvm_arch_para_features will return bogus data,
+> > > causing kvm_setup_pv_tlb_flush to detect support for pv tlb flush.
 > > >
-> > > The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-> > > now enabled by default (along with MQ_IOSCHED_KYBER).
+> > > Testing for kvm_para_available will work as it checks for the hypervisor
+> > > signature.
 > > >
-> > > The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
-> > > previously choosing the latter.
+> > > Besides, when the "nopv" command line parameter is used, it should not
+> > > continue as well, as kvm_guest_init will no be called in that case.
 > > >
-> > > CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
-> > > CONFIG_CROSS_COMPILE support").
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-> > Hi Krzysztof.
+> > > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+> > > ---
+> > >  arch/x86/kernel/kvm.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > > index 81045aabb6f4..d817f255aed8 100644
+> > > --- a/arch/x86/kernel/kvm.c
+> > > +++ b/arch/x86/kernel/kvm.c
+> > > @@ -736,6 +736,9 @@ static __init int kvm_setup_pv_tlb_flush(void)
+> > >  {
+> > >     int cpu;
+> > >
+> > > +   if (!kvm_para_available() || nopv)
+> > > +           return 0;
+> > > +
+> > >     if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
+> > >         !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+> > >         kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
 > >
-> > There seems there are a lot more of these unused CONFIG_<foo>
-> > symbols in various defconfigs. (just for arm and treewide below)
+> > The patch will fix the immediate issue, but why kvm_setup_pv_tlb_flush()
+> > is just an arch_initcall() which will be executed regardless of the fact
+> > if we are running on KVM or not?
+> >
+> > In Hyper-V we setup PV TLB flush from ms_hyperv_init_platform() -- which
+> > only happens if Hyper-V platform was detected. Why don't we do it from
+> > kvm_init_platform() in KVM?
+> >
+> > --
+> > Vitaly
+> >
+>
+> Because we can't call the allocator that early.
+>
+> Also, see the thread where this was "decided", the v6 of the original patch:
+>
+> https://lore.kernel.org/kvm/20171129162118.GA10661@flask/
 
-Feel free to pick any of these symbols and send patches for those.
-No need to do it one symbol at a time, but please group them like
-Krzysztof has done.
+A little change to this function.
+https://lore.kernel.org/kvm/CANRm+CwK0Cg45mktda9Yz9fsjPCvtuB8O+fma5L3tV725ki1qw@mail.gmail.com
+Testing is a great appreciated. (Still in vacation)
 
-> Nice finding! The trickier point is to nicely remove them because:
-> 1. The easiest is 'savedefconfig' but then some valuable options might
-> disappear (like recently happened with DEBUG_FS),
-> 2. They could be removed in automated way with a script. However in
-> such case what about replacements? If some symbol was replaced with
-> other (or just renamed), maybe we should enable the other one to
-> restore the desired functionality?
-> 3. Or maybe let's don't care about keeping defconfigs stable and just
-> clean them up automatically.
-
-I don't see a good way to do it automatically. It would be good to check
-that we don't remove Kconfig symbols that are still used in defconfig
-files without changing those files as well. Cleaning up afterwards also
-works, but this always requires manual inspection for each symbol.
-
-     Arnd
+    Wanpeng
