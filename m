@@ -2,101 +2,116 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886FBC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9ADC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEF721D7E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F1920720
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580760586;
-	bh=znlkAqyHGE6UPoa/HZ68BRPZsU14gD2TcYQSc7T+WOI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=RmItbzZMa2KYqiZbhRj7FwJoSszPISdEt8UdBu6/jNB5UGW/z7lsPhRQ7YBEKrfHt
-	 Uf22+PjVm4diLBxSY9nIFIiSZ343jA8oH5uhWAsxuuFrwQ5qIiEqFY49/I7Djn+0fp
-	 OinkOr72ZcAulU42sLvH4+dzk6vdVKHl5gXuHP7M=
+	s=default; t=1580760651;
+	bh=iOvhO+hFgW/cYr15nBnXU0AFdbpgu7oZ1CIVrKriOns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Eu+cBtaFU+He5xBkX2wiIYYbzPrKGPVnW98C+zkJs4EJae4d5G1sD5JUDI1PdPvxX
+	 s8q2SHmWLrLyWCb8MUelutkcDwnk8gbTNga3OfFJ+6uoVKrM9zL6xbZBVoxLv9jS2l
+	 sZw63tpkcaLx/C2Tc2pgwa25pCvKx1zUvWKXHxpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgBCUJp (ORCPT
+        id S1727080AbgBCUKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 15:09:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgBCUJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 15:09:45 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ED6D2084E;
-        Mon,  3 Feb 2020 20:09:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580760584;
-        bh=znlkAqyHGE6UPoa/HZ68BRPZsU14gD2TcYQSc7T+WOI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pAY7gJar6we9UcfBlVoagB7aST3fxfZISNe4AQkVyOuE4lV4meMbzWQ+/H0ZqzCip
-         MHizLyruNaATOpRjl5zZolP690B7jWNkeQjTfkjMZIDUpN1yCwkp6WaOJpuCEMN5vJ
-         og9IHC5GnVAs1xKXQNLLdV45z0H1fGwbean2pmB8=
-Date:   Mon, 3 Feb 2020 14:09:42 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hch@lst.de
-Subject: Re: [PATCH] x86/PCI: ensure to_pci_sysdata usage is guarded by
- CONFIG_PCI
-Message-ID: <20200203200942.GA130652@google.com>
+        Mon, 3 Feb 2020 15:10:51 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:37437 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgBCUKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 15:10:50 -0500
+Received: by mail-qv1-f67.google.com with SMTP id m5so7457707qvv.4;
+        Mon, 03 Feb 2020 12:10:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nw70Z3f/pI3EKVI3TaFMheeJf5zaKvG6DNvjFq2WSWM=;
+        b=VC3UQ5VMOHxfKXSd9cayojQq0/bM75ayfIIv+3aainbhZ+JPegksxNwWExxkxyK4Ju
+         hTdI6mDcgJU56DJ5D2sR7QkdDLAruqQH2jSUenu1UZrMiprzGVQitJEZPy6soAsiQ9aI
+         7PjggS5OM0H5BT+cisrXTMoRxTJlOEQIEjhZjKVEZEd8mhO+cvxe1OyjcjA80AkoB/6F
+         oQtxFMPk/ssQfM534c/eLCLFEroTLoBpNHhR/Tx7F4cFoAfqzvzSDYBhsQHp7tN50PcK
+         +aGdPGAmpFtPuPP6xY7mO+Ow0GlLdhhXVha2bx5dXcvAKP7xnVdRyBWd2rzgkGP9Ucsd
+         TBJg==
+X-Gm-Message-State: APjAAAXvxuClm9TfC2Tqwr5P7xav2sfjTJaExLK2bcd+QpaqeQMh0Q4+
+        rXEz9Ox/O1RCnCjyI1J7mlo=
+X-Google-Smtp-Source: APXvYqwfoBFGGWY2U0kn8JnKUDX54sgTNGsVambpWvo4p8xxClwziHcr9axnaFqDeHx7yqP3lC+R/A==
+X-Received: by 2002:a05:6214:209:: with SMTP id i9mr24402119qvt.54.1580760649781;
+        Mon, 03 Feb 2020 12:10:49 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c45sm10921693qtd.43.2020.02.03.12.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 12:10:48 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 3CC7F404B0; Mon,  3 Feb 2020 20:10:47 +0000 (UTC)
+Date:   Mon, 3 Feb 2020 20:10:47 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jari Ruusu <jari.ruusu@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: Fix built-in early-load Intel microcode alignment
+Message-ID: <20200203201047.GL11244@42.do-not-panic.com>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203181906.78264-1-Jason@zx2c4.com>
+In-Reply-To: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 07:19:06PM +0100, Jason A. Donenfeld wrote:
-> Recently, the helper to_pci_sysdata was added inside of the CONFIG_PCI
-> guard, but it is used from inside of a CONFIG_PCI_MSI_IRQ_DOMAIN guard,
-> which does not require CONFIG_PCI.
-
-AFAICT, CONFIG_PCI_MSI_IRQ_DOMAIN *does* require CONFIG_PCI.
-
-Do you mean to_pci_sysdata() is used inside a *CONFIG_NUMA* guard by
-__pcibus_to_node()?
-
-The patch below makes __pcibus_to_node() available only when
-CONFIG_PCI, when previously it was always available.  Maybe that's
-fine, I dunno.
-
-Another possibility would be to move the to_pci_sysdata() definition
-outside of #ifdef CONFIG_PCI, just as the struct pci_sysdata is.  Then
-we wouldn't have to change the availability of __pcibus_to_node().
-
-> This breaks builds on !CONFIG_PCI
-> machines. This commit fixes the ifdef to require CONFIG_PCI.
+On Sun, Jan 12, 2020 at 03:00:53PM +0200, Jari Ruusu wrote:
+> Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+> "Note that the microcode update must be aligned on a 16-byte
+> boundary and the size of the microcode update must be 1-KByte
+> granular"
 > 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Fixes: aad6aa0cd674 ("x86/PCI: Add to_pci_sysdata() helper")
-> Cc: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/include/asm/pci.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> When early-load Intel microcode is loaded from initramfs,
+> userspace tool 'iucode_tool' has already 16-byte aligned those
+> microcode bits in that initramfs image. Image that was created
+> something like this:
 > 
-> diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-> index 40ac1330adb2..d8772b75236d 100644
-> --- a/arch/x86/include/asm/pci.h
-> +++ b/arch/x86/include/asm/pci.h
-> @@ -119,7 +119,7 @@ void native_restore_msi_irqs(struct pci_dev *dev);
->  /* generic pci stuff */
->  #include <asm-generic/pci.h>
->  
-> -#ifdef CONFIG_NUMA
-> +#if defined(CONFIG_NUMA) && defined(CONFIG_PCI)
->  /* Returns the node based on pci bus */
->  static inline int __pcibus_to_node(const struct pci_bus *bus)
->  {
+>  iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+> 
+> However, when early-load Intel microcode is loaded from built-in
+> firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option,
+> that 16-byte alignment is not guaranteed.
+> 
+> Fix this by forcing all built-in firmware BLOBs to 16-byte
+> alignment.
+> 
+> 
+> Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+> 
+> --- a/drivers/base/firmware_loader/builtin/Makefile
+> +++ b/drivers/base/firmware_loader/builtin/Makefile
+> @@ -17,7 +17,7 @@
+>  filechk_fwbin = \
+>  	echo "/* Generated by $(src)/Makefile */"		;\
+>  	echo "    .section .rodata"				;\
+> -	echo "    .p2align $(ASM_ALIGN)"			;\
+> +	echo "    .p2align 4"					;\
+
+Why not just keep ASM_ALIGN and define it to 4, with a nice
+comment explaining the ucode stuff. Now we have a raw 4 here
+and still use ASM_ALIGN which will depend on 64-bit or not.
+
+  Luis
+
+>  	echo "_fw_$(FWSTR)_bin:"				;\
+>  	echo "    .incbin \"$(fwdir)/$(FWNAME)\""		;\
+>  	echo "_fw_end:"						;\
+> 
 > -- 
-> 2.25.0
-> 
+> Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
