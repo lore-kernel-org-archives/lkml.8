@@ -2,136 +2,226 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E76CC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50570C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A402080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxMYDcZ4"
+	by mail.kernel.org (Postfix) with ESMTP id 22E102082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgBCOq3 (ORCPT
+        id S1728568AbgBCOrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:46:29 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39444 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbgBCOq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:46:28 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so18522150wrt.6;
-        Mon, 03 Feb 2020 06:46:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tMM4CAawPMR8gUufLoNQFgcc2EwWoDOVGHEyUpiGjGI=;
-        b=hxMYDcZ4kZYU2upuRV/2llW2C8uf47+n55DRT8mMYfIF/zL5CKn4ISpPHesWDynpvy
-         CHSDZuPhKTGEWzgydEKo6nN0wfpx3bBoHDx0Av2KYqNxrK5tx98NLOj6+NJ7ERCMgK6N
-         S9TMY9XBiVJyufWrm6gfprVg8JXfNqyyr4mDfDnnR+K2LhkF/5mIOrjxLz7kQ+tSAQUZ
-         dZmrN39IioT+QOTS5vzuacxyBphGgEZRQYqp5V2LEF1/p/CWpD/9DKX+Y7gtFEATWqCh
-         tnFu42q9Wb6NikCfrzjtuBKdjSW4Lulm19ZAXHodZYHDfvGvbDfrmUvkAH5K9EwjOEwj
-         ZTLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tMM4CAawPMR8gUufLoNQFgcc2EwWoDOVGHEyUpiGjGI=;
-        b=Szc7y3noyj7Pc8QCiVdGIrlkMcKbI268YpdDjmVUgfTnMfOgAITYD2yZJ47XDNme9m
-         /pX0PmiEdKDsyFeDwFpom7D4+hUuKpTW/wvGZROxsS09lAcYPY6OAVTnE9l0AykpZ4BO
-         nkxNe4gm3of2rH160G/52pe8KVdsLV4r3RimJ6xnEr114uvFk4DNomCdTBZrshTQICIN
-         Vl+zSVVKQytk2t8N4+4MO/wrOM4AqxEyn7zhNrRvaixc1FUfzh2xHi4ZOCqTFDia+xGc
-         SQ0XocO1hrfSI9OyN/nwmvFQFJyE5w+jA0wrB4q/5rcct2DuPHe7lufX8ZhfGp7FsiNg
-         mqOw==
-X-Gm-Message-State: APjAAAUQt2Uvdd8L8kWEPxYtg379oiWwNvPnCaLUoukjt9B2brvZglou
-        iRHQ4R7FtduABjuBeiVQqjGTxo7N/71J5OilKz8=
-X-Google-Smtp-Source: APXvYqy59RG2LpLeid+co/h0YICewTE95xyDO4W08Jab1qQ5XRFDXFtpakqe80Ycz50jrmMRM571xaQtTBO4NA6zFYE=
-X-Received: by 2002:a5d:4692:: with SMTP id u18mr16105157wrq.206.1580741185953;
- Mon, 03 Feb 2020 06:46:25 -0800 (PST)
+        Mon, 3 Feb 2020 09:47:05 -0500
+Received: from mga18.intel.com ([134.134.136.126]:29125 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgBCOrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:47:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 06:47:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="223959455"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 03 Feb 2020 06:47:02 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iyd0A-000ALw-BU; Mon, 03 Feb 2020 22:47:02 +0800
+Date:   Mon, 03 Feb 2020 22:46:08 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 05bd330a7fd8875c423fc07d8ddcad73c10e556e
+Message-ID: <5e383230.vP2VHsIbH7NaGbmo%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Jonas Gorski <jonas.gorski@gmail.com>
-Date:   Mon, 3 Feb 2020 15:46:59 +0100
-Message-ID: <CAOiHx==FfiQoFA9cESSni_izS=m+mm7G+gk_tei5XFnKrgurew@mail.gmail.com>
-Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: 05bd330a7fd8875c423fc07d8ddcad73c10e556e  x86/hyperv: Suspend/resume the hypercall page for hibernation
 
-On Thu, 16 Jan 2020 at 14:28, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-> driver can easily match various of mainboards.
->
-> In the SMBIOS reference specification, the table anchor string "_SM_" is
-> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-> but there exists a special case for Loongson platform, when call function
-> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-> it is reserved for SMBIOS and can be normally access in the BIOS.
->
-> This patch works fine on the Loongson 3A3000 platform which belongs to
-> MIPS architecture and has no influence on the other architectures such
-> as x86 and ARM.
->
-> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhc@lemote.com>
-> ---
->
-> v2:
->   - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
->   - refine definitions and Kconfig by Jiaxun
->
->  arch/mips/Kconfig           | 10 ++++++++++
->  arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
->  arch/mips/kernel/setup.c    |  2 ++
->  drivers/firmware/dmi_scan.c |  6 +++++-
->  4 files changed, 37 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/include/asm/dmi.h
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 4b83507..c097f78 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -2773,6 +2773,16 @@ config HW_PERF_EVENTS
->           Enable hardware performance counter support for perf events. If
->           disabled, perf events will use software events only.
->
-> +config DMI
-> +       default y if MACH_LOONGSON64
-> +       select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-> +       bool "Enable DMI scanning"
+elapsed time: 2885m
 
-Is this option harmless to enable for other MIPS platforms? What
-happens if it is enabled on devices where PHYS_OFFSET isn't 0, so
-0xF0000 is likely not backed by anything and accessing it might hang
-the system?
+configs tested: 163
+configs skipped: 1
 
-This probably should depend on MACH_LOONGSON64.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Regards
+arm                         at91_dt_defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm64                             allnoconfig
+arm64                               defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                          exynos_defconfig
+arm                        shmobile_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                             allyesconfig
+i386                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+ia64                             alldefconfig
+arm                              allmodconfig
+arm64                            allmodconfig
+xtensa                       common_defconfig
+openrisc                    or1ksim_defconfig
+nios2                         3c120_defconfig
+xtensa                          iss_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
+nios2                         10m50_defconfig
+openrisc                 simple_smp_defconfig
+nds32                               defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+m68k                          multi_defconfig
+m68k                       m5475evb_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                           sun3_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+powerpc                             defconfig
+microblaze                    nommu_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+arc                                 defconfig
+powerpc                           allnoconfig
+mips                             allmodconfig
+mips                           32r2_defconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                      fuloong2e_defconfig
+parisc                        c3000_defconfig
+parisc                         b180_defconfig
+parisc                              defconfig
+parisc                            allnoconfig
+i386                 randconfig-a003-20200201
+i386                 randconfig-a002-20200201
+x86_64               randconfig-a003-20200201
+x86_64               randconfig-a002-20200201
+i386                 randconfig-a001-20200201
+x86_64               randconfig-a001-20200201
+alpha                randconfig-a001-20200201
+parisc               randconfig-a001-20200201
+m68k                 randconfig-a001-20200201
+nds32                randconfig-a001-20200201
+mips                 randconfig-a001-20200201
+riscv                randconfig-a001-20200201
+h8300                randconfig-a001-20200201
+nios2                randconfig-a001-20200201
+sparc64              randconfig-a001-20200201
+microblaze           randconfig-a001-20200201
+c6x                  randconfig-a001-20200201
+sh                   randconfig-a001-20200201
+s390                 randconfig-a001-20200201
+csky                 randconfig-a001-20200201
+xtensa               randconfig-a001-20200201
+openrisc             randconfig-a001-20200201
+i386                 randconfig-b001-20200202
+x86_64               randconfig-b002-20200202
+i386                 randconfig-b002-20200202
+x86_64               randconfig-b001-20200202
+i386                 randconfig-b003-20200202
+x86_64               randconfig-b003-20200202
+x86_64               randconfig-c003-20200201
+i386                 randconfig-c002-20200201
+x86_64               randconfig-c002-20200201
+i386                 randconfig-c001-20200201
+x86_64               randconfig-c001-20200201
+i386                 randconfig-c003-20200201
+x86_64               randconfig-d003-20200202
+i386                 randconfig-d001-20200202
+x86_64               randconfig-d002-20200202
+x86_64               randconfig-d001-20200202
+i386                 randconfig-d003-20200202
+i386                 randconfig-d002-20200202
+i386                 randconfig-e003-20200201
+i386                 randconfig-e002-20200201
+x86_64               randconfig-e001-20200201
+x86_64               randconfig-e003-20200201
+i386                 randconfig-e001-20200201
+x86_64               randconfig-e002-20200201
+i386                 randconfig-f002-20200201
+i386                 randconfig-f003-20200201
+x86_64               randconfig-f002-20200201
+i386                 randconfig-f001-20200201
+x86_64               randconfig-f001-20200201
+x86_64               randconfig-f003-20200201
+x86_64               randconfig-g003-20200201
+x86_64               randconfig-g001-20200201
+i386                 randconfig-g001-20200201
+x86_64               randconfig-g002-20200201
+i386                 randconfig-g002-20200201
+i386                 randconfig-g003-20200201
+x86_64               randconfig-h001-20200201
+i386                 randconfig-h002-20200201
+x86_64               randconfig-h002-20200201
+i386                 randconfig-h003-20200201
+x86_64               randconfig-h003-20200201
+i386                 randconfig-h001-20200201
+arc                  randconfig-a001-20200201
+ia64                 randconfig-a001-20200201
+sparc                randconfig-a001-20200201
+arm64                randconfig-a001-20200201
+arm                  randconfig-a001-20200201
+riscv                          rv32_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                    nommu_virt_defconfig
+riscv                            allyesconfig
+s390                              allnoconfig
+s390                             alldefconfig
+s390                          debug_defconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
+sh                               allmodconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sh                            titan_defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                         rhel-7.2-clear
 
-Jonas
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
