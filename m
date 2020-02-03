@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94572C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85676C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6120521582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5865720721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748557;
-	bh=12c1Cba7k9vHIdxb59e3M30I8y9BZKq3PODOf2RGwDs=;
+	s=default; t=1580748564;
+	bh=0g42LAuj0tkgZiv0m+pSxZl1NoIyGCndGzp3CHEoVCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QC4P0IP2ZGqvuPNlBsz3oSsIUM/8oJIqdKfPrx43aUZg6I6iwWazfCeQlRRrWbXZ8
-	 MN0taXESbb558KVjiiYaALqsKBoi+V4rWatffZz3oVl3vNP8G9l4KCeHdAQoTjDsIk
-	 IzL0jkGhvPUqTw9llHP8ofANE1uDwniRgDR9i9i0=
+	b=Iad2SgjFj6OD2MReEnJBYUss6C/f2sV3Ld4iepzljcpWscVglDdrOrTIuhoPQywC+
+	 x6tTuEDDgLEgEF/6gk+MheCxlORejvFyn4QcXo3VWtKkatm6Q1c6RUbBEIwFxoI/Rg
+	 qHS+NSznaQHw9eNg0RjzGAzvitIgnYywXUPQBpzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgBCQZM (ORCPT
+        id S1729759AbgBCQtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35808 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:49:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbgBCQZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:10 -0500
+        id S1728074AbgBCQZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:07 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4581821582;
-        Mon,  3 Feb 2020 16:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF9982087E;
+        Mon,  3 Feb 2020 16:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747109;
-        bh=12c1Cba7k9vHIdxb59e3M30I8y9BZKq3PODOf2RGwDs=;
+        s=default; t=1580747107;
+        bh=0g42LAuj0tkgZiv0m+pSxZl1NoIyGCndGzp3CHEoVCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fX788b/kPduGmEJF6ECai68kcLZy9scUT73QCg3o0Gdfe9Q/H7p2ep2HizMD6AIHb
-         NVYT37f7TGL0fcfC2XA+F1fPVIWda/ZdLWvdkENl7EmR00p94S3vb9q1gnJeIJNxng
-         Fr5aOBn2ne45VNd7gTD5KXeHU1joFv7yDewSaPSo=
+        b=NQWGeA5UBnWrqdPRXDc2GRmBcQQbi08WgiDnl16dNTBKJb7fzDG/CEB5yyvPL5hH9
+         OOa6/WGVeCxAFgw85szYf4k+GJBmaJ3Yd2SLiX+eAF2sH75l4psMcSCntCzfKlKoOB
+         iu7sZdjXbgFSTVeacZBJhzqEwBsAFaB5dXaZHqkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Jes Sorensen <Jes.Sorensen@redhat.com>,
+        Johan Hovold <johan@kernel.org>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 16/68] zd1211rw: fix storage endpoint lookup
-Date:   Mon,  3 Feb 2020 16:19:12 +0000
-Message-Id: <20200203161907.738309609@linuxfoundation.org>
+Subject: [PATCH 4.9 15/68] rtl8xxxu: fix interface sanity check
+Date:   Mon,  3 Feb 2020 16:19:11 +0000
+Message-Id: <20200203161907.505766838@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -61,35 +62,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 2d68bb2687abb747558b933e80845ff31570a49c upstream.
+commit 39a4281c312f2d226c710bc656ce380c621a2b16 upstream.
 
 Make sure to use the current alternate setting when verifying the
-storage interface descriptors to avoid submitting an URB to an invalid
-endpoint.
+interface descriptors to avoid binding to an invalid interface.
 
 Failing to do so could cause the driver to misbehave or trigger a WARN()
 in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: a1030e92c150 ("[PATCH] zd1211rw: Convert installer CDROM device into WLAN device")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Cc: stable <stable@vger.kernel.org>     # 4.4
+Cc: Jes Sorensen <Jes.Sorensen@redhat.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c |    2 +-
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-@@ -1272,7 +1272,7 @@ static void print_id(struct usb_device *
- static int eject_installer(struct usb_interface *intf)
- {
- 	struct usb_device *udev = interface_to_usbdev(intf);
--	struct usb_host_interface *iface_desc = &intf->altsetting[0];
-+	struct usb_host_interface *iface_desc = intf->cur_altsetting;
- 	struct usb_endpoint_descriptor *endpoint;
- 	unsigned char *cmd;
- 	u8 bulk_out_ep;
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5890,7 +5890,7 @@ static int rtl8xxxu_parse_usb(struct rtl
+ 	u8 dir, xtype, num;
+ 	int ret = 0;
+ 
+-	host_interface = &interface->altsetting[0];
++	host_interface = interface->cur_altsetting;
+ 	interface_desc = &host_interface->desc;
+ 	endpoints = interface_desc->bNumEndpoints;
+ 
 
 
