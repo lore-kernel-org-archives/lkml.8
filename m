@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C91DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC65C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D882080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517312080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746942;
-	bh=FbqL9DxWWj8vs/OxbIAQM1UlvvUfqLzpDxKU81KI42M=;
+	s=default; t=1580746947;
+	bh=yIaFWaVMSt2y25mVFtAuWOnj2Pp75BFUPP6vIWIKgfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiDrNcQ72vMQqxmkAfbSVBMJgSOGgPGjFkK7TJHMS1vwEQQt7On9ljo5J2C9OvgVE
-	 KR9Ogf5hlyPA14jCPu+uTcIQoSXtcNS16Mv2I9VTYl1G3ETXb/DyoEUGktQpXmmksh
-	 5ddXOnLE2iy+6leZEdqR4gBDokE5R+XHhunIkBmI=
+	b=D1UIS7p3CVjRCvg7RFzhQ2xECEhVDtB6wfw7eXduv/yaiQt2TX9zo+KqJaAlOUNdd
+	 32j6jHP46FK2BOitkjtof3ignlCCOBvqw4EWpf8Eh1OWnWtQrSSeIG8VoioIRGP+iB
+	 V+LdBDrpDjwCYMHkol5V+YC2eN/NlXug6ZvJRwAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgBCQWV (ORCPT
+        id S1727526AbgBCQV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:22:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33694 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgBCQVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:41 -0500
+        id S1728543AbgBCQVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:21 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A24D52080C;
-        Mon,  3 Feb 2020 16:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77D821582;
+        Mon,  3 Feb 2020 16:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746900;
-        bh=FbqL9DxWWj8vs/OxbIAQM1UlvvUfqLzpDxKU81KI42M=;
+        s=default; t=1580746881;
+        bh=yIaFWaVMSt2y25mVFtAuWOnj2Pp75BFUPP6vIWIKgfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dEbWf8aAlK/UQeq35T8tr0boSLiq3hPk/RTkAx/g5NoIozbA+KT46NNcWHPGAtv7d
-         l+lLnExyY2oPmexWDt8tshTZAPeP+JZGmnSrDlukIm/Qy7mzzTxYDoHKmcwskIkOhy
-         MCiFa1s7IZGUmWrlLKtQtGg5G49MgumJU+MtHLFU=
+        b=SoSzqCv7UFueQTM0oEdMF7CFYqfdoR2jY5m2PUpJk0JfxoKTHFKHmmVDCVZ+9/SmT
+         6egURS54et1SobDlVGaOhe1UoDIXHbnwMbuvsB/fo8CIkT+3GTQRhkH9oB0i4emvIg
+         0+wqvieqDYTUbg1NI6IiirVU6IsGqb3MkduNmp9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 37/53] wireless: wext: avoid gcc -O3 warning
-Date:   Mon,  3 Feb 2020 16:19:29 +0000
-Message-Id: <20200203161909.602727646@linuxfoundation.org>
+Subject: [PATCH 4.4 46/53] net/fsl: treat fsl,erratum-a011043
+Date:   Mon,  3 Feb 2020 16:19:38 +0000
+Message-Id: <20200203161910.963995566@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -60,54 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-[ Upstream commit e16119655c9e6c4aa5767cd971baa9c491f41b13 ]
+[ Upstream commit 1d3ca681b9d9575ccf696ebc2840a1ebb1fd4074 ]
 
-After the introduction of CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3,
-the wext code produces a bogus warning:
+When fsl,erratum-a011043 is set, adjust for erratum A011043:
+MDIO reads to internal PCS registers may result in having
+the MDIO_CFG[MDIO_RD_ER] bit set, even when there is no
+error and read data (MDIO_DATA[MDIO_DATA]) is correct.
+Software may get false read error when reading internal
+PCS registers through MDIO. As a workaround, all internal
+MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
 
-In function 'iw_handler_get_iwstats',
-    inlined from 'ioctl_standard_call' at net/wireless/wext-core.c:1015:9,
-    inlined from 'wireless_process_ioctl' at net/wireless/wext-core.c:935:10,
-    inlined from 'wext_ioctl_dispatch.part.8' at net/wireless/wext-core.c:986:8,
-    inlined from 'wext_handle_ioctl':
-net/wireless/wext-core.c:671:3: error: argument 1 null where non-null expected [-Werror=nonnull]
-   memcpy(extra, stats, sizeof(struct iw_statistics));
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from arch/x86/include/asm/string.h:5,
-net/wireless/wext-core.c: In function 'wext_handle_ioctl':
-arch/x86/include/asm/string_64.h:14:14: note: in a call to function 'memcpy' declared here
-
-The problem is that ioctl_standard_call() sometimes calls the handler
-with a NULL argument that would cause a problem for iw_handler_get_iwstats.
-However, iw_handler_get_iwstats never actually gets called that way.
-
-Marking that function as noinline avoids the warning and leads
-to slightly smaller object code as well.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200107200741.3588770-1-arnd@arndb.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/wext-core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/xgmac_mdio.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/wext-core.c b/net/wireless/wext-core.c
-index b50ee5d622e14..843d2cf1e6a6c 100644
---- a/net/wireless/wext-core.c
-+++ b/net/wireless/wext-core.c
-@@ -656,7 +656,8 @@ struct iw_statistics *get_wireless_stats(struct net_device *dev)
- 	return NULL;
- }
+diff --git a/drivers/net/ethernet/freescale/xgmac_mdio.c b/drivers/net/ethernet/freescale/xgmac_mdio.c
+index 7b8fe866f6038..a15b4a97c172d 100644
+--- a/drivers/net/ethernet/freescale/xgmac_mdio.c
++++ b/drivers/net/ethernet/freescale/xgmac_mdio.c
+@@ -49,6 +49,7 @@ struct tgec_mdio_controller {
+ struct mdio_fsl_priv {
+ 	struct	tgec_mdio_controller __iomem *mdio_base;
+ 	bool	is_little_endian;
++	bool	has_a011043;
+ };
  
--static int iw_handler_get_iwstats(struct net_device *		dev,
-+/* noinline to avoid a bogus warning with -O3 */
-+static noinline int iw_handler_get_iwstats(struct net_device *	dev,
- 				  struct iw_request_info *	info,
- 				  union iwreq_data *		wrqu,
- 				  char *			extra)
+ static u32 xgmac_read32(void __iomem *regs,
+@@ -226,7 +227,8 @@ static int xgmac_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		return ret;
+ 
+ 	/* Return all Fs if nothing was there */
+-	if (xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) {
++	if ((xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) &&
++	    !priv->has_a011043) {
+ 		dev_err(&bus->dev,
+ 			"Error while reading PHY%d reg at %d.%hhu\n",
+ 			phy_id, dev_addr, regnum);
+@@ -277,6 +279,9 @@ static int xgmac_mdio_probe(struct platform_device *pdev)
+ 	else
+ 		priv->is_little_endian = false;
+ 
++	priv->has_a011043 = of_property_read_bool(pdev->dev.of_node,
++						  "fsl,erratum-a011043");
++
+ 	ret = of_mdiobus_register(bus, np);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "cannot register MDIO bus\n");
 -- 
 2.20.1
 
