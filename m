@@ -2,123 +2,347 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA516C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27343C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DD820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085B42082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbgBCO1T (ORCPT
+        id S1728432AbgBCO3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:27:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:53974 "EHLO foss.arm.com"
+        Mon, 3 Feb 2020 09:29:13 -0500
+Received: from mga17.intel.com ([192.55.52.151]:4372 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgBCO1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:27:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 808BB101E;
-        Mon,  3 Feb 2020 06:27:18 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2311A3F68E;
-        Mon,  3 Feb 2020 06:27:17 -0800 (PST)
-Date:   Mon, 3 Feb 2020 14:27:14 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20200203142712.a7yvlyo2y3le5cpn@e107158-lin>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
- <20200131100629.GC27398@codeaurora.org>
- <20200131153405.2ejp7fggqtg5dodx@e107158-lin.cambridge.arm.com>
- <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
+        id S1728212AbgBCO3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:29:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 06:29:11 -0800
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="337385490"
+Received: from montimix-mobl.gar.corp.intel.com ([10.251.72.214])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 06:29:08 -0800
+Message-ID: <f669f2682373bcd79995dcd518d3405fd62ec61f.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/4] SFH: Add maintainer list and documentation for
+ AMD SFH based on HID framework
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Sandeep Singh <Sandeep.Singh@amd.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, jic23@kernel.org,
+        linux-iio@vger.kernel.org
+Cc:     Shyam-sundar.S-k@amd.com,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+Date:   Mon, 03 Feb 2020 06:29:04 -0800
+In-Reply-To: <1580272046-32101-2-git-send-email-Sandeep.Singh@amd.com>
+References: <1580272046-32101-1-git-send-email-Sandeep.Singh@amd.com>
+         <1580272046-32101-2-git-send-email-Sandeep.Singh@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/01/20 07:08, Pavan Kondeti wrote:
-> Thanks for the results. I see that tasks are indeed spreading on to silver.
-> However it is not
-> clear to me from the code how tasks would get spread. Because cpupri_find()
-> never returns
-> little CPU in the lowest_mask because RT task does not fit on little CPU.
-> So from wake up
-> path, we place the task on the previous CPU or BIG CPU. The push logic also
-> has the
-> RT capacity checks, so an overloaded BIG CPU may not push tasks to an idle
-> (RT free) little CPU.
+On Wed, 2020-01-29 at 09:57 +0530, Sandeep Singh wrote:
+> From: Sandeep Singh <sandeep.singh@amd.com>
+> 
+> Add Maintainer list for AMD SFH
 
-Okay I see what you mean.
+SFH (SENSOR FUSION HUB)
 
-Sorry I had to cache this back in again as it's been a while.
+This way it will be clear what is SFH.
 
-So yes you're right we won't force move to the little CPUs, but if we were
-running there already we won't force overload the big CPU either. IIRC I didn't
-see more than 2 tasks packed on a big core. But maybe I needed to try more
-combination of things. The 2 tasks packed can be seen in my results. Which
-I don't think it's a necessarily bad thing.
+>  Solution and work flow
+> document.
+> 
+> Signed-off-by: Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+> Signed-off-by: Sandeep Singh <sandeep.singh@amd.com>
+> ---
+>  Documentation/hid/amd-sfh-hid.rst | 159
+> ++++++++++++++++++++++++++++++++++++++
+>  MAINTAINERS                       |   8 ++
+>  2 files changed, 167 insertions(+)
+>  create mode 100644 Documentation/hid/amd-sfh-hid.rst
+> 
+> diff --git a/Documentation/hid/amd-sfh-hid.rst
+> b/Documentation/hid/amd-sfh-hid.rst
+> new file mode 100644
+> index 0000000..1183350
+> --- /dev/null
+> +++ b/Documentation/hid/amd-sfh-hid.rst
+> @@ -0,0 +1,159 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +AMD Sensor Fusion Hub:-
+> +======================
+> +AMD sensor fushion Hub is part of a SOC starting from ryzon based
+> platforms.
+> +The solution is working well on windows OS in several
+> +OEM products. AMD SFH uses HID over PCIe bus. In terms of
+> architecture
+> +it is much more resmebles like ISH .However the major diffrence is
+> all
+> +The hid reports are generated as part of kernel driver.
+> +
+> +Block Diagram:-
+> +=============
+> +	-------------------------------
+> +	|  HID User Space Applications  |
+> +	-------------------------------
+> +---------------------------------------------
+> +	 ---------------------------------
+> +	|		HID Core          |
+> +	 ---------------------------------
+> +
+> +	 ---------------------------------
+> +	|     AMD HID Transport Driver    |
+> +	 ---------------------------------
+> +
+> +	 --------------------------------
+> +	|     AMD HID Client Driver      |
+> +	|	with HID Report Generator|
+> +	 --------------------------------
+> +
+> +	 --------------------------------
+> +	|     AMD MP2 PCIe Driver         |
+> +	 --------------------------------
+> +---------------------------------------------
+> +	  -------------------------------
+> +	|     SFH MP2 Processor         |
+> +	 --------------------------------
+> +
+> +
+> +AMD HID Transport Layer :-
+> +***************************
+> +AMD SFH transport is also implemented as a bus. Each client
+> application
+> +executing in the AMD MP2 is registered as a device on this bus.
+> +The driver, which binds each device (AMD SFH  HID driver) identifies
+> +the device type and registers with the hid core. Transport drivers
+> +attach a constant "struct hid_ll_driver" object with each device.
+> +Once a device is registered with HID core, the callbacks provided
+> via
+> +this struct are used by HID core to communicate with the device.
+> +AMD HID Transport driver implements the synchronous calls.
+> +
+> +AMD HID Client Driver:-
+> +**********************
+> +This driver is responsible to implement HID request and descriptors.
+> +As firmware is OS agnostic, HID client driver fills the HID request
+> +structure and descriptors. HID client driver is in complex in nature
+> +as it is interface between MP2 PCIe driver and HID. HID client
+> driver
+> +initialized the MP2 PCIe driver and holds the instance of MP2
+> driver.
+> +It identified the number of sensors connected using MP2- PCIe driver
+> and
+> +based on that allocate the DRAM address for each and every sensor
+> and
+> +pass it to MP2-PCIe driver.
+> +On enumeration of each sensor, client driver fills out the HID
+> Descriptor
+> +structure and HID input report structure. HID Feature report
+> structure can
+> +be optional.  The report descriptor structure varies sensor to
+> sensor.
+> +Now on enumeration client driver does two major things
+> +1.	Register the HID sensor client to virtual bus (Platform driver)
+> and bind it.
+> +2.	Probes the AMD HID transport driver. Which in turns register
+> device to the core.
+> +
+> +AMD MP2 PCIe Driver:-
+> +********************
+> +MP2 PCIe driver is responsible for making all transaction with the
+> firmware over
+> +PCIe.The connection establishment between firmware and MP2 PCIe
+> driver happens here.
+> +
+> +The communication between X86 and MP2 is spilt into three parts.
+> +1. Command Transfer => C2P Mailbox Register are used
+> +2. Data Transfer => DRAM
+> +
+> +Commands are sent to MP2 using C2P Mail Box registers. These
+> C2P  registers
+> +are mapped in PCIe address space.Writing into C2P Message register
+> generate
+> +interrupt to MP2.  The client driver allocates the physical memory
+> and send
+> +the same to MP2 for data transfer. MP2 firmware uses DRAM interface
+> registers
+> +to indirectly access DRAM memory. For Firmware always write minimum
+> 32 bytes
+> +into DRAM.So it is expected that driver shall allocate minimum 32
+> bytes DRAM space.
+> +
+> +Enumeration and Probing flow:-
+> +*****************************
+> +       HID             AMD            AMD                       AMD
+> -PCIe             MP2
+> +       Core         Transport      Client
+> Driver                 Driver               FW
+> +	|		|	       |                           |         
+>         |
+> +	|		|       on Boot Driver Loaded	  	   |         
+>         |
+> +	|		|	       |                           |         
+>         |
+> +	|		|	       |----MP2-PCIe Int--------->
+> |                 |
+> +	|		|              |			   |         
+>         |
+> +	|		|	       |---Get Number of sensors->
+> |                 |
+> +	|		|              |                       Read
+> P2C              |
+> +	|		|	       |			Register     
+>         |
+> +	|		|              |                           |         
+>         |
+> +	|               |              | Loop(for No of
+> Sensors)   |                 |
+> +	|		|	       |--------------------
+> --|    |                 |
+> +	|		|              | Create HID
+> Descriptor|    |                 |
+> +	|		|	       | Create Input  report
+> |    |                 |
+> +	|		|              |  Descriptor
+> Map      |    |                 |
+> +	|		|	       |  the MP2 FW Index to
+> |    |                 |
+> +	|		|              |   HID
+> Index          |    |                 |
+> +	|		|	       | Allocate the
+> DRAM    |  Enable              |
+> +        |		|	       |	address       |  Sensors     
+>         |
+> +	|		|              |--------------------
+> --|    |                 |
+> +	|		| HID
+> transport|                           |    Enable       |
+> +	|	        |<--Probe------|                           |---Sensor 
+> CMD--> |
+> +	|		| Create the   |			   |         
+>         |
+> +	|		| HID
+> device   |                           |                 |
+> +	|               |    (MFD)     |                           |   
+>               |
+> +	|		| by Populating|			   |         
+>         |
+> +        |               |  the
+> HID     |                           |                 |
+> +	|               |  ll_driver   |                           |   
+>               |
+> +	| HID           |	       |			   |         
+>         |
+> +	|  add          |              |                           |   
+>               |
+> +	|Device         |              |                           |   
+>               |
+> +	|<------------- |	       |			   |         
+>         |
+> +
+> +
+> +Data Flow from Application to the AMD SFH Driver:-
+> +*************************************************
+> +
+> +	|	       |              |	  	 	          |		
+>     |
+> +Get   	|	       |	      |			          |  
+>                |
+> +Input 	|	       |	      |			          |  
+>                |
+> +Report	|              |              |                        
+>    |                 |
+> +--->  	|              |              |                        
+>    |                 |
+> +	|HID_req       |              |                           |    
+>              |
+> +	|get_report    |              |                           |    
+>              |
+> +	|-------------
+> >|              |                           |                 |
+> +	|              |
+> HID_get_input|                           |                 |
+> +	|              |  report      |                           |    
+>              |
+> +	|              |------------->|----------------------
+> --|  |                 |
+> +	|              |              |  Read the DRAM data
+> for|  |                 |
+> +	|              |              |  requsted sensor
+> and   |  |                 |
+> +	|              |              |  create the HID
+> input  |  |                 |
+> +	|              |              |  report                |  |    
+>              |
+> +	|              |              |----------------------
+> --|  |                 |
+> +	|              |Data received
+> |                           |                 |
+> +	|              | in HID
+> report|                           |                 |
+> + To	|<-------------|<-------------
+> |                           |                 |
+> +Applications           |              |                           | 
+>                 |
+> +<-------
+> |              |              |                           |          
+>        |
+> +
+> +
+> +Data Flow from AMD SFH Driver to Application:-
+> +**********************************************
+> +      |		  |               |	            	     
+>      |		    |
+> +      |           |               |----------------------
+> --|      |                 |
+> +      |           |               |Periodically
+> Read       |      |                 |
+> +      |           |               |the data for
+> all        |      |                 |
+> +      |           |               |enumerated
+> sensors      |      |                 |
+> +      |           |               |from the dram and
+> create|      |                 |
+> +      |           |               | HID Input
+> reports      |      |                 |
+> +      |           |               |----------------------
+> --|      |                 |
+> +      |           |HID
+> Input      |                               |                 |
+> +      |           |Input
+> report   |                               |                 |
+> +   <----submit to Application-----
+> |                               |                 |
+> +      |           |               |                               | 
+>                 |
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 56765f5..7cfeb5a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -884,6 +884,14 @@ S:	Supported
+>  F:	drivers/net/ethernet/amd/xgbe/
+>  F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
+>  
+> +AMD SENSOR FUSION HUB DRIVER
+> +M:	Nehal Shah <nehal-bakulchandra.shah@amd.com>
+> +M:	Sandeep Singh <sandeep.singh@amd.com>
+> +L:	linux-input@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/hid/amd-sfh*
+> +F:	drivers/hid/amd-sfh-hid/
+> +
+>  ANALOG DEVICES INC AD5686 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+>  L:	linux-pm@vger.kernel.org
 
-I tried to call out that in overloaded case we don't give any guarantees. I'll
-expand below, but if a user asked for RT tasks to run on big cores more than
-available big cores, then there's very little we can do.
-
-If the tasks really want to be on a big core but the user is asking for more
-than what the system can get, then the end result isn't the best whether we
-pack or spread. Packing might end up good if the 2 tasks aren't intensive. Or
-could end up being bad if they are.
-
-Similarly if the 2 tasks aren't computationally intensive, then spreading to
-the little is bad. Most likely the request for running at a certain performance
-level, is to guarantee the predictability to finish execution within a certain
-window of time. But don't quote me on this :)
-
-I don't see one right answer here. The current mechanism could certainly do
-better; but it's not clear what better means without delving into system
-specific details. I am open to any suggestions to improve it.
-
-As it stands, it allows the admin to boost RT tasks and guarantee they end up
-running on the correct CPU. But it doesn't protect against bad RT planning.
-
-> Yes, we do search with in the affined CPUs. However in cpupri_find(), we
-> clear
-> the CPUs on which the task does not fit. so the lowest_mask always be empty
-> and we return -1. There is no fallback.
-
-The question here is: if a task has its uclamp_min set to 1024 but is affined
-to the wrong type of cpus, is it a user error or a kernel failure to deal with
-this case?
-
-The default p->uclamp_min = 1024 is not the right default to use in these
-systems. I am pushing for a patch [1] to allow modifying this default behavior
-at runtime. AFAIU Android has always disabled max RT boosting.
-
-The common use case that we are trying to cater for is that most of the tasks
-are happy to run anywhere, but there might be few that need to be boosted and
-this boost value can only be guaranteed by running on a set of CPUs, in that
-case we give this guarantee.
-
-Again I agree the logic could be improved, but I prefer to see a real use case
-first where this improvement helps.
-
-[1] https://lore.kernel.org/lkml/20191220164838.31619-1-qais.yousef@arm.com/
-
-Cheers
-
---
-Qais Yousef
