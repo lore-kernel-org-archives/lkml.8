@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F22BC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18991C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FB82086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8532086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748164;
-	bh=FGJN0gO2TBuNggdZwA7nnuBdLJL26KjsnjsQZvVTKJs=;
+	s=default; t=1580748170;
+	bh=AecKnrKC/Dm5pmNq8baFZPyx+g+kYbE6BtUDc3Tuugw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQXQ86rmYDwfV0VQnIUrR24RMtaBn5DII/dShNUVkUSUpPJ4ocOfm+zm6OHvHGzLa
-	 /nTA8yPWxNSxuEYUzV/5LADSusK4Ck1Gt5Aep93mC4yx7/VHoJJyPBKx/rVcl27904
-	 cHiFVl3UZ1Vv+shoSax3jDTli7z2eA/7ddCJ+3wc=
+	b=hu8NXiPGkJRsH+Ub2jZgJM2MLbdu5w5sg0HrkiHgY0PIFcgZaRwloxK4ND8dOA1hS
+	 Y9ZUrlfY4KyDA9NLavlL+h5irTYHDYGv/CAg1NLTyfr4Mnwc68o4eMqOXj9ZlxWY/b
+	 HRagqtHbW9LApLaTzCbQ+hayRuut0yW7oN0jQEkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgBCQdx (ORCPT
+        id S1730652AbgBCQdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47934 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730173AbgBCQdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:51 -0500
+        id S1730629AbgBCQdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:41 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7846521775;
-        Mon,  3 Feb 2020 16:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08DD721741;
+        Mon,  3 Feb 2020 16:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747629;
-        bh=FGJN0gO2TBuNggdZwA7nnuBdLJL26KjsnjsQZvVTKJs=;
+        s=default; t=1580747620;
+        bh=AecKnrKC/Dm5pmNq8baFZPyx+g+kYbE6BtUDc3Tuugw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZcSlloEw0k+J+vV1HXwJDLV/A7rCNGZ6gLDRT7XYALFVcOOybFyhZDJRv1udOddgz
-         FFcQluVpEs0uitNnMPcEcnPD3Srz4VCdl58LpOSuEgV38VpDzKPXm0BAyLJHmpC7QU
-         F+brz9wm/b97Iu/5hXBrmLIIz3bP9Tq1M8H6yWls=
+        b=gtTA36opSYr5/DB3ReflYWENDf5YnT7tiVlyWaDcDCFSYNl3OgEQvKT29MksXh5bo
+         jOoE9duYPDIojlEAh1NbcMPBnLSbDN+8jqQLqEpBJAV2KQvakqg7g9f2I95/Q5faiN
+         aTDyjWiV/HGkG2TZua9pxrZDGLC36WfEXbeG78WU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        Praveen Chaudhary <pchaudhary@linkedin.com>,
+        Zhenggen Xu <zxu@linkedin.com>,
+        Andy Stracner <astracner@linkedin.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/70] xfrm interface: fix packet tx through bpf_redirect()
-Date:   Mon,  3 Feb 2020 16:20:07 +0000
-Message-Id: <20200203161920.275797541@linuxfoundation.org>
+Subject: [PATCH 4.19 70/70] net: Fix skb->csum update in inet_proto_csum_replace16().
+Date:   Mon,  3 Feb 2020 16:20:22 +0000
+Message-Id: <20200203161922.147273020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,104 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Praveen Chaudhary <praveen5582@gmail.com>
 
-[ Upstream commit f042365dbffea98fb8148c98c700402e8d099f02 ]
+[ Upstream commit 189c9b1e94539b11c80636bc13e9cf47529e7bba ]
 
-With an ebpf program that redirects packets through a xfrm interface,
-packets are dropped because no dst is attached to skb.
+skb->csum is updated incorrectly, when manipulation for
+NF_NAT_MANIP_SRC\DST is done on IPV6 packet.
 
-This could also be reproduced with an AF_PACKET socket, with the following
-python script (xfrm1 is a xfrm interface):
+Fix:
+There is no need to update skb->csum in inet_proto_csum_replace16(),
+because update in two fields a.) IPv6 src/dst address and b.) L4 header
+checksum cancels each other for skb->csum calculation. Whereas
+inet_proto_csum_replace4 function needs to update skb->csum, because
+update in 3 fields a.) IPv4 src/dst address, b.) IPv4 Header checksum
+and c.) L4 header checksum results in same diff as L4 Header checksum
+for skb->csum calculation.
 
- import socket
- send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
- # scapy
- # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
- # raw(p)
- req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
- send_s.sendto(req, ('xfrm1', 0x800, 0, 0))
-
-It was also not possible to send an ip packet through an AF_PACKET socket
-because a LL header was expected. Let's remove those LL header constraints.
-
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+[ pablo@netfilter.org: a few comestic documentation edits ]
+Signed-off-by: Praveen Chaudhary <pchaudhary@linkedin.com>
+Signed-off-by: Zhenggen Xu <zxu@linkedin.com>
+Signed-off-by: Andy Stracner <astracner@linkedin.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_interface.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ net/core/utils.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index 4ee512622e93d..20565a4742112 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -268,9 +268,6 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
- 	int err = -1;
- 	int mtu;
+diff --git a/net/core/utils.c b/net/core/utils.c
+index 2a597ac7808e2..60045e9fea05b 100644
+--- a/net/core/utils.c
++++ b/net/core/utils.c
+@@ -442,6 +442,23 @@ void inet_proto_csum_replace4(__sum16 *sum, struct sk_buff *skb,
+ }
+ EXPORT_SYMBOL(inet_proto_csum_replace4);
  
--	if (!dst)
--		goto tx_err_link_failure;
--
- 	dst_hold(dst);
- 	dst = xfrm_lookup_with_ifid(xi->net, dst, fl, NULL, 0, xi->p.if_id);
- 	if (IS_ERR(dst)) {
-@@ -343,6 +340,7 @@ static netdev_tx_t xfrmi_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct xfrm_if *xi = netdev_priv(dev);
- 	struct net_device_stats *stats = &xi->dev->stats;
-+	struct dst_entry *dst = skb_dst(skb);
- 	struct flowi fl;
- 	int ret;
- 
-@@ -352,10 +350,33 @@ static netdev_tx_t xfrmi_xmit(struct sk_buff *skb, struct net_device *dev)
- 	case htons(ETH_P_IPV6):
- 		xfrm_decode_session(skb, &fl, AF_INET6);
- 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
-+		if (!dst) {
-+			fl.u.ip6.flowi6_oif = dev->ifindex;
-+			fl.u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl.u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				stats->tx_carrier_errors++;
-+				goto tx_err;
-+			}
-+			skb_dst_set(skb, dst);
-+		}
- 		break;
- 	case htons(ETH_P_IP):
- 		xfrm_decode_session(skb, &fl, AF_INET);
- 		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
-+		if (!dst) {
-+			struct rtable *rt;
-+
-+			fl.u.ip4.flowi4_oif = dev->ifindex;
-+			fl.u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl.u.ip4);
-+			if (IS_ERR(rt)) {
-+				stats->tx_carrier_errors++;
-+				goto tx_err;
-+			}
-+			skb_dst_set(skb, &rt->dst);
-+		}
- 		break;
- 	default:
- 		goto tx_err;
-@@ -566,12 +587,9 @@ static void xfrmi_dev_setup(struct net_device *dev)
- {
- 	dev->netdev_ops 	= &xfrmi_netdev_ops;
- 	dev->type		= ARPHRD_NONE;
--	dev->hard_header_len 	= ETH_HLEN;
--	dev->min_header_len	= ETH_HLEN;
- 	dev->mtu		= ETH_DATA_LEN;
- 	dev->min_mtu		= ETH_MIN_MTU;
--	dev->max_mtu		= ETH_DATA_LEN;
--	dev->addr_len		= ETH_ALEN;
-+	dev->max_mtu		= IP_MAX_MTU;
- 	dev->flags 		= IFF_NOARP;
- 	dev->needs_free_netdev	= true;
- 	dev->priv_destructor	= xfrmi_dev_free;
++/**
++ * inet_proto_csum_replace16 - update layer 4 header checksum field
++ * @sum: Layer 4 header checksum field
++ * @skb: sk_buff for the packet
++ * @from: old IPv6 address
++ * @to: new IPv6 address
++ * @pseudohdr: True if layer 4 header checksum includes pseudoheader
++ *
++ * Update layer 4 header as per the update in IPv6 src/dst address.
++ *
++ * There is no need to update skb->csum in this function, because update in two
++ * fields a.) IPv6 src/dst address and b.) L4 header checksum cancels each other
++ * for skb->csum calculation. Whereas inet_proto_csum_replace4 function needs to
++ * update skb->csum, because update in 3 fields a.) IPv4 src/dst address,
++ * b.) IPv4 Header checksum and c.) L4 header checksum results in same diff as
++ * L4 Header checksum for skb->csum calculation.
++ */
+ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+ 			       const __be32 *from, const __be32 *to,
+ 			       bool pseudohdr)
+@@ -453,9 +470,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+ 	if (skb->ip_summed != CHECKSUM_PARTIAL) {
+ 		*sum = csum_fold(csum_partial(diff, sizeof(diff),
+ 				 ~csum_unfold(*sum)));
+-		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
+-			skb->csum = ~csum_partial(diff, sizeof(diff),
+-						  ~skb->csum);
+ 	} else if (pseudohdr)
+ 		*sum = ~csum_fold(csum_partial(diff, sizeof(diff),
+ 				  csum_unfold(*sum)));
 -- 
 2.20.1
 
