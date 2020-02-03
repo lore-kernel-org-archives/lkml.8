@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB5EC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FCEC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7344420CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A98A21927
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747786;
-	bh=AN/2Wk5ei4lHntRqvI+/B3FiBbvhwqg4mqaEjApT5Ms=;
+	s=default; t=1580747789;
+	bh=ss7Ch1X+1y2bjXhIPfs5CMbSa5TXR6pSfvlg/0M9wrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J5XI2haaPtB9WGKJjLCA8YVOhPzXv6otr2Aj+Xlfoe37a80C9aJHA45zOuSrifcD/
-	 cH0cFoS6hfscLcNLavDuGJFS0QrkpRdL1CWS/qeQuUpDn8PXW1gXSqA8KiFL4b2d8k
-	 aREb+dQQcJ0yUbwbkG1/+WnlqZqlhIWp29HSsIaY=
+	b=Unk+t14bojKlr5iAGTCy4Pda2CbbyuQ6R5C5d5XsseZME0b24Km4+QAJDqVoSmTyY
+	 PGBIROPCNLz7QpuYtynKytPM16DAgo1oWBTwuZeBJJgXERE8EJ2uqWqJ3320KX+rCb
+	 sqNQ9huANJEPU/yki/sWd8qBBdX3/wdzqZn5m/Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbgBCQgZ (ORCPT
+        id S1731199AbgBCQg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51572 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731179AbgBCQgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:21 -0500
+        id S1729078AbgBCQgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:25 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CE12082E;
-        Mon,  3 Feb 2020 16:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0376A20CC7;
+        Mon,  3 Feb 2020 16:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747780;
-        bh=AN/2Wk5ei4lHntRqvI+/B3FiBbvhwqg4mqaEjApT5Ms=;
+        s=default; t=1580747785;
+        bh=ss7Ch1X+1y2bjXhIPfs5CMbSa5TXR6pSfvlg/0M9wrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBB0X4rIFdOjnx43WVQ+jBJ31yaMiZ6qqlH0nff+y4oWS7b74FMQD7QPUs6nYcONd
-         dJHG8+V+0nmaAXMz35RMn23DuEd8DH5vVV1wBX+8VI5fkwSoNhlsZFMlCWT+XmNqBk
-         lVESNAT7URHyjp43Q6HpoN6XMW24XzR3fQKPsveo=
+        b=m3mT76CfbVjsf9iQPuM/oYn2/Ap5foFFIpnq/VpERa2fBQRCJyrmkrc+hmqccCbmb
+         1jOKQNmOQ89XxUh54bRpfmZddVtGAs7dP+uocygiRIjUchK7t12L5yZJlWGxY6512w
+         8gp9/0yXBLcUSHuzxyq0hHLHiyYGGvZq4f4od5xM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 68/90] xfrm interface: fix packet tx through bpf_redirect()
-Date:   Mon,  3 Feb 2020 16:20:11 +0000
-Message-Id: <20200203161925.784093908@linuxfoundation.org>
+Subject: [PATCH 5.4 70/90] Input: max77650-onkey - add of_match table
+Date:   Mon,  3 Feb 2020 16:20:13 +0000
+Message-Id: <20200203161925.971200751@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,104 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit f042365dbffea98fb8148c98c700402e8d099f02 ]
+[ Upstream commit ce535a2efb48d8d4c4e4b97e2764d7cee73d9b55 ]
 
-With an ebpf program that redirects packets through a xfrm interface,
-packets are dropped because no dst is attached to skb.
+We need the of_match table if we want to use the compatible string in
+the pmic's child node and get the onkey driver loaded automatically.
 
-This could also be reproduced with an AF_PACKET socket, with the following
-python script (xfrm1 is a xfrm interface):
-
- import socket
- send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
- # scapy
- # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
- # raw(p)
- req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
- send_s.sendto(req, ('xfrm1', 0x800, 0, 0))
-
-It was also not possible to send an ip packet through an AF_PACKET socket
-because a LL header was expected. Let's remove those LL header constraints.
-
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_interface.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ drivers/input/misc/max77650-onkey.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index 0f5131bc3342d..a3db19d93fc5b 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -268,9 +268,6 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
- 	int err = -1;
- 	int mtu;
+diff --git a/drivers/input/misc/max77650-onkey.c b/drivers/input/misc/max77650-onkey.c
+index 4d875f2ac13d6..ee55f22dbca54 100644
+--- a/drivers/input/misc/max77650-onkey.c
++++ b/drivers/input/misc/max77650-onkey.c
+@@ -108,9 +108,16 @@ static int max77650_onkey_probe(struct platform_device *pdev)
+ 	return input_register_device(onkey->input);
+ }
  
--	if (!dst)
--		goto tx_err_link_failure;
--
- 	dst_hold(dst);
- 	dst = xfrm_lookup_with_ifid(xi->net, dst, fl, NULL, 0, xi->p.if_id);
- 	if (IS_ERR(dst)) {
-@@ -343,6 +340,7 @@ static netdev_tx_t xfrmi_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct xfrm_if *xi = netdev_priv(dev);
- 	struct net_device_stats *stats = &xi->dev->stats;
-+	struct dst_entry *dst = skb_dst(skb);
- 	struct flowi fl;
- 	int ret;
- 
-@@ -352,10 +350,33 @@ static netdev_tx_t xfrmi_xmit(struct sk_buff *skb, struct net_device *dev)
- 	case htons(ETH_P_IPV6):
- 		xfrm_decode_session(skb, &fl, AF_INET6);
- 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
-+		if (!dst) {
-+			fl.u.ip6.flowi6_oif = dev->ifindex;
-+			fl.u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl.u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				stats->tx_carrier_errors++;
-+				goto tx_err;
-+			}
-+			skb_dst_set(skb, dst);
-+		}
- 		break;
- 	case htons(ETH_P_IP):
- 		xfrm_decode_session(skb, &fl, AF_INET);
- 		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
-+		if (!dst) {
-+			struct rtable *rt;
++static const struct of_device_id max77650_onkey_of_match[] = {
++	{ .compatible = "maxim,max77650-onkey" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max77650_onkey_of_match);
 +
-+			fl.u.ip4.flowi4_oif = dev->ifindex;
-+			fl.u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl.u.ip4);
-+			if (IS_ERR(rt)) {
-+				stats->tx_carrier_errors++;
-+				goto tx_err;
-+			}
-+			skb_dst_set(skb, &rt->dst);
-+		}
- 		break;
- 	default:
- 		goto tx_err;
-@@ -563,12 +584,9 @@ static void xfrmi_dev_setup(struct net_device *dev)
- {
- 	dev->netdev_ops 	= &xfrmi_netdev_ops;
- 	dev->type		= ARPHRD_NONE;
--	dev->hard_header_len 	= ETH_HLEN;
--	dev->min_header_len	= ETH_HLEN;
- 	dev->mtu		= ETH_DATA_LEN;
- 	dev->min_mtu		= ETH_MIN_MTU;
--	dev->max_mtu		= ETH_DATA_LEN;
--	dev->addr_len		= ETH_ALEN;
-+	dev->max_mtu		= IP_MAX_MTU;
- 	dev->flags 		= IFF_NOARP;
- 	dev->needs_free_netdev	= true;
- 	dev->priv_destructor	= xfrmi_dev_free;
+ static struct platform_driver max77650_onkey_driver = {
+ 	.driver = {
+ 		.name = "max77650-onkey",
++		.of_match_table = max77650_onkey_of_match,
+ 	},
+ 	.probe = max77650_onkey_probe,
+ };
 -- 
 2.20.1
 
