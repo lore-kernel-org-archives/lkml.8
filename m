@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EFFC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA91C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC732086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3160B20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748233;
-	bh=0ef1BWJcFDjFGtlT09zlYGPAEVc9MTH5OEySSi1l4b4=;
+	s=default; t=1580748240;
+	bh=OHbEb95UQ/uDxKtaT7TWCgF3ujdAcFfh7VMwS96ofwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySWugIuA9S4bUEJyFs85wMXN0BlwWn17oiX5ipiWh7R+eRxMgEetVa7pGm3Whn9J9
-	 P34XzMP76vMvIardKO+cVuaeTq9KuMiW4LaX/iayjSxhX0Mzqtxe3WcBpgx+tYqvY+
-	 p51PCK7jskDvno/df+aN0dzr16Srh7b8jfUrhnUY=
+	b=JrOjW16cbVLK0oR7c3xY9niw3fbl+qK4bGl5KUcSirc9nfrU7cCLIiOEBnFOopip9
+	 DsPJwl4fXE/HGpLP2RMxyaUC/BGWGx9vMonWlXBp3IBhJ02lCLZdGT49UsMit4Gc/z
+	 dLISNf705H7Hp+FhdoNbq3cpkt4Zeq0l0GkuIJA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgBCQns (ORCPT
+        id S1730390AbgBCQcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:43:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730114AbgBCQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:34 -0500
+        id S1730372AbgBCQcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:10 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD0DC2051A;
-        Mon,  3 Feb 2020 16:32:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC71821741;
+        Mon,  3 Feb 2020 16:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747554;
-        bh=0ef1BWJcFDjFGtlT09zlYGPAEVc9MTH5OEySSi1l4b4=;
+        s=default; t=1580747530;
+        bh=OHbEb95UQ/uDxKtaT7TWCgF3ujdAcFfh7VMwS96ofwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEEiMfgQEjycfW/4i0ppC53zpbLSQQAKOkMAUtTj8I4z5st91DT2bgAT+7NBZFZar
-         ingpqRqH3TnQcj/Df6c7b/+efLM7teM62TSniuNoLpnt5+FUwcMfAJnLqUbGyIJ4Cm
-         vLa03ptqVu4nXmgnHYn/V/YcDehNaQ1bUzhy2BXM=
+        b=TjaB1yR40LEuyZ9hVhd/usXYsiEwaoLHXgUmZJxFASft6s5+Y1XYjkovC34Qv61XK
+         4Ya5gzN0lfRSbL4hVh9Pb6FfJskB6/t6++/6tl9RBJZK/aJpAFZCcVAkQR0Cl1QMUK
+         GyZLbLojEmEHBfLVbixABmp25CRcBiYynNa5wCUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/70] parisc: Use proper printk format for resource_size_t
-Date:   Mon,  3 Feb 2020 16:19:53 +0000
-Message-Id: <20200203161918.317663938@linuxfoundation.org>
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 32/70] mac80211: mesh: restrict airtime metric to peered established plinks
+Date:   Mon,  3 Feb 2020 16:19:44 +0000
+Message-Id: <20200203161917.195331532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -59,41 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit 4f80b70e1953cb846dbdd1ce72cb17333d4c8d11 ]
+[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
 
-resource_size_t should be printed with its own size-independent format
-to fix warnings when compiling on 64-bit platform (e.g. with
-COMPILE_TEST):
+The following warning is triggered every time an unestablished mesh peer
+gets dumped. Checks if a peer link is established before retrieving the
+airtime link metric.
 
-    arch/parisc/kernel/drivers.c: In function 'print_parisc_device':
-    arch/parisc/kernel/drivers.c:892:9: warning:
-        format '%p' expects argument of type 'void *',
-        but argument 4 has type 'resource_size_t {aka unsigned int}' [-Wformat=]
+[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
+               airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
+[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022838] Call Trace:
+[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
+[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
+[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
+[ 9563.023120]  netlink_dump+0x17b/0x370
+[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
+[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
+[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
+[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
+[ 9563.023210]  do_syscall_64+0x4e/0x140
+[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
+[rewrite commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/kernel/drivers.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mac80211/mesh_hwmp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/parisc/kernel/drivers.c b/arch/parisc/kernel/drivers.c
-index a1a5e4c59e6b2..4d5ad9cb0f692 100644
---- a/arch/parisc/kernel/drivers.c
-+++ b/arch/parisc/kernel/drivers.c
-@@ -868,8 +868,8 @@ static void print_parisc_device(struct parisc_device *dev)
- 	static int count;
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index 6950cd0bf5940..740dc9fa127cd 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -326,6 +326,9 @@ static u32 airtime_link_metric_get(struct ieee80211_local *local,
+ 	unsigned long fail_avg =
+ 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
  
- 	print_pa_hwpath(dev, hw_path);
--	pr_info("%d. %s at 0x%px [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
--		++count, dev->name, (void*) dev->hpa.start, hw_path, dev->id.hw_type,
-+	pr_info("%d. %s at %pap [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
-+		++count, dev->name, &(dev->hpa.start), hw_path, dev->id.hw_type,
- 		dev->id.hversion_rev, dev->id.hversion, dev->id.sversion);
- 
- 	if (dev->num_addrs) {
++	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
++		return MAX_METRIC;
++
+ 	/* Try to get rate based on HW/SW RC algorithm.
+ 	 * Rate is returned in units of Kbps, correct this
+ 	 * to comply with airtime calculation units
 -- 
 2.20.1
 
