@@ -2,239 +2,76 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE15C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240CAC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9607220679
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05AB20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HS1NO8GM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g+sbcjWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgBCBJ7 (ORCPT
+        id S1727084AbgBCBPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:09:59 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:63530 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbgBCBJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:09:59 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200203010956epoutp04d837eb2c2faded8c0b0c17bf75a919ac~vvy2Ii8fD1701017010epoutp04M
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2020 01:09:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200203010956epoutp04d837eb2c2faded8c0b0c17bf75a919ac~vvy2Ii8fD1701017010epoutp04M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580692196;
-        bh=BUMewYx5rWSJ6Wq1oWqSbYdedpvv2YPQrcYYGRikm7Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HS1NO8GMjAEp6KPKFzPW748rOkAQAGCrhNXOOsToLyjA6fPRL6kwzusHhqsRTXnlP
-         2+q2oxAd4Kl+PxIxdSUbnn5zOqg8Q6jw15qCMGNCHU89q+zEZFpQQSRb0/+hp8NPQK
-         mabKmK2+ufISfpxztLYP9Xv9YcV4f89Uuuwj5qHA=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200203010956epcas1p28f683e120bb91a48e24eee51aeadeb6d~vvy10Z2IH2741427414epcas1p2a;
-        Mon,  3 Feb 2020 01:09:56 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 489qVn3W9GzMqYkn; Mon,  3 Feb
-        2020 01:09:53 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A3.6A.52419.BD2773E5; Mon,  3 Feb 2020 10:09:47 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200203010946epcas1p1dcf58e3d8c638341a3410e813f68e59d~vvys6Shtc0038000380epcas1p1t;
-        Mon,  3 Feb 2020 01:09:46 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200203010946epsmtrp15e04d7202a358be7f2231f9237533ee2~vvys5tbGT1442914429epsmtrp1M;
-        Mon,  3 Feb 2020 01:09:46 +0000 (GMT)
-X-AuditID: b6c32a37-5b7ff7000001ccc3-54-5e3772db458a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        71.AE.06569.AD2773E5; Mon,  3 Feb 2020 10:09:46 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200203010946epsmtip247212d517c65435a46c3f1b659474acc~vvysvdZXi2247622476epsmtip2k;
-        Mon,  3 Feb 2020 01:09:46 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     cw00.choi@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        lukasz.luba@arm.com
-Subject: [PATCHv2 2/2] PM / devfreq: Change to DEVFREQ_GOV_UPDATE_INTERVAL
- event name
-Date:   Mon,  3 Feb 2020 10:17:33 +0900
-Message-Id: <20200203011733.7639-2-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200203011733.7639-1-cw00.choi@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEKsWRmVeSWpSXmKPExsWy7bCmge7tIvM4g+UP2C0m3rjCYnH9y3NW
-        i7NNb9gtLu+aw2bxufcIo8XCphZ2i9uNK9gc2D3WzFvD6LFpVSebR9+WVYwenzfJBbBEZdtk
-        pCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAF2gpFCWmFMK
-        FApILC5W0rezKcovLUlVyMgvLrFVSi1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjOuPr2
-        BnvBLrWKDf9/sDQw7lXoYuTkkBAwkdi65DIjiC0ksINRYtdx2y5GLiD7E6NEz8mbjBDON0aJ
-        72fvssB0/F21iBkisReoatdpKOcLo8SnredZQarYBLQk9r+4wQZiiwhYSZz+38EMYjMLVEp8
-        OXcUqIaDQ1ggXOL2LDkQk0VAVeJDRwJIBa+ApcTOtbNZIXbJS6zecACskxNoyt9T+9lBVkkI
-        zGCT2DipkR2kV0LAReL1IWuIemGJV8e3sEPYUhIv+9ug7GqJlSePsEH0djBKbNl/AWqBscT+
-        pZOZQOYwC2hKrN+lDxFWlNj5ey4jxMV8Eu++9rBCrOKV6GgTgihRlrj84C4ThC0psbi9kw3C
-        9pA4ufczEyREehklnjftZ5/AKDcLYcMCRsZVjGKpBcW56anFhgXGyPG1iRGcvrTMdzBuOOdz
-        iFGAg1GJh3fGQ7M4IdbEsuLK3EOMEhzMSiK8dVamcUK8KYmVValF+fFFpTmpxYcYTYEBOZFZ
-        SjQ5H5ha80riDU2NjI2NLUwMzUwNDZXEeR9GasYJCaQnlqRmp6YWpBbB9DFxcEo1MCY817qw
-        gE2IM+GgSpj35ZelBz83TissT5jxb+q5VWFKhsaTTyXfSUrztZx2MyA6+tb1o7o7FtxUzLlz
-        T7FwdZJm4+n1UYf4EhrWB0Quf1EdJM8sEPiS82hYwwcO/6qjenUWp1P2fVabEGRgV564UVF1
-        9eQX0t8Kvyren/7XT5rXYqJOcufJ40osxRmJhlrMRcWJAAyfaZZ1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDLMWRmVeSWpSXmKPExsWy7bCSvO6tIvM4g6UXFCwm3rjCYnH9y3NW
-        i7NNb9gtLu+aw2bxufcIo8XCphZ2i9uNK9gc2D3WzFvD6LFpVSebR9+WVYwenzfJBbBEcdmk
-        pOZklqUW6dslcGVcfXuDvWCXWsWG/z9YGhj3KnQxcnJICJhI/F21iBnEFhLYzShxcmo4RFxS
-        YtrFo0BxDiBbWOLw4eIuRi6gkk+MEu39qxhBatgEtCT2v7jBBmKLCNhI3F18jQXEZhaol2g7
-        s58dxBYWCJWYvLGHBWQOi4CqxIeOBJAwr4ClxM61s1khVslLrN5wAOwETgErib+nIFqFgGo2
-        r1nKNIGRbwEjwypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k/NxNjOAw09LawXjiRPwhRgEO
-        RiUe3hkPzeKEWBPLiitzDzFKcDArifDWWZnGCfGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8W
-        KSSQnliSmp2aWpBaBJNl4uCUamDMmqvbtP62fPi0iDytu846qpKvZUyeXjgm9G4f76KDs8oL
-        T8fr5VyV4TgcZ3LH0dLlJceJyMkv17aW1u09G/pxro51NtvWK2Lup3zzDTQk/P8o5vx7vKjK
-        6s8nraPGG1jXlu576holu1rTq9WP63RkGGfW1zILJoW1ErMmfTlznd/xzMxJqj+UWIozEg21
-        mIuKEwGRiD/4LwIAAA==
-X-CMS-MailID: 20200203010946epcas1p1dcf58e3d8c638341a3410e813f68e59d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200203010946epcas1p1dcf58e3d8c638341a3410e813f68e59d
-References: <20200203011733.7639-1-cw00.choi@samsung.com>
-        <CGME20200203010946epcas1p1dcf58e3d8c638341a3410e813f68e59d@epcas1p1.samsung.com>
+        Sun, 2 Feb 2020 20:15:36 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:33528 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgBCBPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:15:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=QBerq6LG2NxoRvig2/n4YtezyITokM6G5WarxJLcToo=; b=g+sbcjWpxpOoc58zXEAZTICQDj
+        fVOR1AHGwlsAwfWY5b9dA2pTEg8e+DuMqoqhz+OLgJ6J6KW/2Ei+aFjZVrIkaukBSevdcr3OvsRRy
+        iJohWO/tmUU+r2t1OafUWlpgJ9UC6h7GbtVhFbEsvd61uM/nhY+FYZBp1+iMHqOuiUHU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iyQKm-0007vg-Fx; Mon, 03 Feb 2020 02:15:28 +0100
+Date:   Mon, 3 Feb 2020 02:15:28 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     netdev@vger.kernel.org, opendmb@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH 3/6] net: bcmgenet: enable automatic phy discovery
+Message-ID: <20200203011528.GA30319@lunn.ch>
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-4-jeremy.linton@arm.com>
+ <20200201152518.GI9639@lunn.ch>
+ <ad9bc142-c0a8-74af-09c6-7150ff4b854a@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad9bc142-c0a8-74af-09c6-7150ff4b854a@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DEVFREQ_GOV_INTERVAL event indicates that update the interval
-for polling mode of devfreq device. But, this event name doesn't
-specify exactly what to do.
+> I though I should clarify the direct question here about ACPI. ACPI does
+> have the ability to do what you describe, but it a more rigorous way. If you
+> look at the ACPI GenericSerialBus abstraction you will see how ACPI would
+> likely handle this situation. I've been considering making a similar comment
+> in that large fwnode patch set posted the other day.
 
-Change DEVFREQ_GOV_INTERVAL event name to DEVFREQ_GOV_UPDATE_INTERVAL
-which specifies what to do by event name.
+I know ~0 about ACPI. But it does not seem unreasonable to describe an
+MDIO bus in the same way as an i2c bus, or an spi bus. Each can have
+devices on it, at specific addresses. Each needs common properties
+like interrupts, and each needs bus specific properties like SPI
+polarity. And you need pointers to these devices, so that other
+subsystems can use them.
 
-And modify the function name to DEVFREQ_GOV_UPDATE_INTERVAL
-with 'devfreq_' prefix + verb + object as following:
-- devfreq_interval_update -> devfreq_updatee_interval
+So maybe the correct way to describe this is to use ACPI
+GenericSerialBus?
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes from v1:
-- Add reviewed tag of Lukasz
-- Fix typo in patch description
+What the kernel community really seems to miss is a "Rob Herring" for
+ACPI.
 
- drivers/devfreq/devfreq.c                 | 10 +++++-----
- drivers/devfreq/governor.h                |  4 ++--
- drivers/devfreq/governor_simpleondemand.c |  4 ++--
- drivers/devfreq/tegra30-devfreq.c         |  4 ++--
- 4 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index cceee8bc3c2f..8494c5f05a73 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -550,14 +550,14 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
- EXPORT_SYMBOL(devfreq_monitor_resume);
- 
- /**
-- * devfreq_interval_update() - Update device devfreq monitoring interval
-+ * devfreq_update_interval() - Update device devfreq monitoring interval
-  * @devfreq:    the devfreq instance.
-  * @delay:      new polling interval to be set.
-  *
-  * Helper function to set new load monitoring polling interval. Function
-- * to be called from governor in response to DEVFREQ_GOV_INTERVAL event.
-+ * to be called from governor in response to DEVFREQ_GOV_UPDATE_INTERVAL event.
-  */
--void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
-+void devfreq_update_interval(struct devfreq *devfreq, unsigned int *delay)
- {
- 	unsigned int cur_delay = devfreq->profile->polling_ms;
- 	unsigned int new_delay = *delay;
-@@ -597,7 +597,7 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
- out:
- 	mutex_unlock(&devfreq->lock);
- }
--EXPORT_SYMBOL(devfreq_interval_update);
-+EXPORT_SYMBOL(devfreq_update_interval);
- 
- /**
-  * devfreq_notifier_call() - Notify that the device frequency requirements
-@@ -1426,7 +1426,7 @@ static ssize_t polling_interval_store(struct device *dev,
- 	if (ret != 1)
- 		return -EINVAL;
- 
--	df->governor->event_handler(df, DEVFREQ_GOV_INTERVAL, &value);
-+	df->governor->event_handler(df, DEVFREQ_GOV_UPDATE_INTERVAL, &value);
- 	ret = count;
- 
- 	return ret;
-diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
-index 5ba3e051b1d0..c07ce77c253d 100644
---- a/drivers/devfreq/governor.h
-+++ b/drivers/devfreq/governor.h
-@@ -18,7 +18,7 @@
- /* Devfreq events */
- #define DEVFREQ_GOV_START			0x1
- #define DEVFREQ_GOV_STOP			0x2
--#define DEVFREQ_GOV_INTERVAL			0x3
-+#define DEVFREQ_GOV_UPDATE_INTERVAL		0x3
- #define DEVFREQ_GOV_SUSPEND			0x4
- #define DEVFREQ_GOV_RESUME			0x5
- 
-@@ -61,7 +61,7 @@ void devfreq_monitor_start(struct devfreq *devfreq);
- void devfreq_monitor_stop(struct devfreq *devfreq);
- void devfreq_monitor_suspend(struct devfreq *devfreq);
- void devfreq_monitor_resume(struct devfreq *devfreq);
--void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay);
-+void devfreq_update_interval(struct devfreq *devfreq, unsigned int *delay);
- 
- int devfreq_add_governor(struct devfreq_governor *governor);
- int devfreq_remove_governor(struct devfreq_governor *governor);
-diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
-index 3d809f228619..1b314e1df028 100644
---- a/drivers/devfreq/governor_simpleondemand.c
-+++ b/drivers/devfreq/governor_simpleondemand.c
-@@ -96,8 +96,8 @@ static int devfreq_simple_ondemand_handler(struct devfreq *devfreq,
- 		devfreq_monitor_stop(devfreq);
- 		break;
- 
--	case DEVFREQ_GOV_INTERVAL:
--		devfreq_interval_update(devfreq, (unsigned int *)data);
-+	case DEVFREQ_GOV_UPDATE_INTERVAL:
-+		devfreq_update_interval(devfreq, (unsigned int *)data);
- 		break;
- 
- 	case DEVFREQ_GOV_SUSPEND:
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 0b65f89d74d5..28b2c7ca416e 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -734,7 +734,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
- 		devfreq_monitor_stop(devfreq);
- 		break;
- 
--	case DEVFREQ_GOV_INTERVAL:
-+	case DEVFREQ_GOV_UPDATE_INTERVAL:
- 		/*
- 		 * ACTMON hardware supports up to 256 milliseconds for the
- 		 * sampling period.
-@@ -745,7 +745,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
- 		}
- 
- 		tegra_actmon_pause(tegra);
--		devfreq_interval_update(devfreq, new_delay);
-+		devfreq_update_interval(devfreq, new_delay);
- 		ret = tegra_actmon_resume(tegra);
- 		break;
- 
--- 
-2.17.1
-
+     Andrew
