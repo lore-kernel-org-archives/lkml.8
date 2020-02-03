@@ -2,103 +2,133 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A891C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B142C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B74620721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zn/mb1y/"
+	by mail.kernel.org (Postfix) with ESMTP id F1AE92086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgBCP2u (ORCPT
+        id S1727930AbgBCPdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:28:50 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:50404 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgBCP2u (ORCPT
+        Mon, 3 Feb 2020 10:33:24 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53804 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgBCPdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:28:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3iiJ/JICrF5NTxzn7wuT2IsOPnz4+UqOFdlWvNO3Zf0=; b=Zn/mb1y/gxBCrOjQU5XbMBdH7K
-        sg9zPoWmdgz5bfyJTJQ3kuTg6J0Q+ZDJ9PG1Z1+nPInR+ImVYKmDOgR6XAvWkcjt5EEO1FuK6WKwo
-        tKEM/LAcge1kaNz5o+cCB3cMgFrArlxCmHJeAvR6aD3arfH/cJ96wBctqGpKG1JmAGEETundU3yXB
-        JU8m+Jc1MSNMszL8s0Pq65IfXUBSmQsSet6JBzvMY9yoPOCJetbODoSnfmOUEUVFMpCe62k8KnJKl
-        CXG0huLwJb0TKfjxJpLpuMJ+4URsDxnrE+fZbOkU2pO24olcalb1ehEZA0ALcGl99QNyN9q3RQsq3
-        wHx3OFSw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyddy-0006hm-VW; Mon, 03 Feb 2020 15:28:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC6913011E0;
-        Mon,  3 Feb 2020 16:26:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C4BA22B662F00; Mon,  3 Feb 2020 16:28:07 +0100 (CET)
-Date:   Mon, 3 Feb 2020 16:28:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20200203152807.GK14914@hirez.programming.kicks-ass.net>
-References: <20200124075235.GX14914@hirez.programming.kicks-ass.net>
- <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
- <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
- <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <20200125111931.GW11457@worktop.programming.kicks-ass.net>
- <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
- <20200203134540.GA14879@hirez.programming.kicks-ass.net>
- <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
+        Mon, 3 Feb 2020 10:33:23 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 9A0FC28F6C9
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 13/17] pwm: cros-ec: Remove cros_ec_cmd_xfer_status()
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
+References: <20200130203106.201894-1-pmalani@chromium.org>
+ <20200130203106.201894-14-pmalani@chromium.org>
+Message-ID: <5d7cbb93-dfa0-11d3-1374-2e4044ead524@collabora.com>
+Date:   Mon, 3 Feb 2020 16:33:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200130203106.201894-14-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 09:59:12AM -0500, Waiman Long wrote:
-> On 2/3/20 8:45 AM, Peter Zijlstra wrote:
 
-> > Presumably you have a workload where CNA is actually a win? That is,
-> > what inspired you to go down this road? Which actual kernel lock is so
-> > contended on NUMA machines that we need to do this?
+On 30/1/20 21:31, Prashant Malani wrote:
+> Convert one existing usage of cros_ec_cmd_xfer_status() to
+> cros_ec_send_cmd_msg(), which accomplishes the same thing but also does
+> the EC message struct setup,and is defined in platform/chrome and is
+> accessible by other modules.
 > 
-> Today, a 2-socket Rome server can have 128 cores and 256 threads. If we
-> scale up more, we could easily have more than 1000 threads in a system.
-> With that many logical cpus available, it is easy to envision some heavy
-> spinlock contention can happen fairly regularly. This patch can
-> alleviate the congestion and improve performance under that
-> circumstance. Of course, the specific locks that are contended will
-> depend on the workloads.
+> For the other usage, switch it to using cros_ec_cmd_xfer(), since the
+> calling functions rely on the result field of the struct cros_ec_command
+> struct that is used.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/pwm/pwm-cros-ec.c | 27 +++++++++------------------
+>  1 file changed, 9 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+> index 89497448d21775..8bf610a6529e7e 100644
+> --- a/drivers/pwm/pwm-cros-ec.c
+> +++ b/drivers/pwm/pwm-cros-ec.c
+> @@ -32,25 +32,14 @@ static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
+>  
+>  static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
+>  {
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		struct ec_params_pwm_set_duty params;
+> -	} __packed buf;
+> -	struct ec_params_pwm_set_duty *params = &buf.params;
+> -	struct cros_ec_command *msg = &buf.msg;
+> -
+> -	memset(&buf, 0, sizeof(buf));
+> +	struct ec_params_pwm_set_duty params = {0};
+>  
+> -	msg->version = 0;
+> -	msg->command = EC_CMD_PWM_SET_DUTY;
+> -	msg->insize = 0;
+> -	msg->outsize = sizeof(*params);
+> -
+> -	params->duty = duty;
+> -	params->pwm_type = EC_PWM_TYPE_GENERIC;
+> -	params->index = index;
+> +	params.duty = duty;
+> +	params.pwm_type = EC_PWM_TYPE_GENERIC;
+> +	params.index = index;
+>  
+> -	return cros_ec_cmd_xfer_status(ec, msg);
+> +	return cros_ec_send_cmd_msg(ec, 0, EC_CMD_PWM_SET_DUTY, &params,
+> +				    sizeof(params), NULL, 0);
+>  }
+>  
+>  static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
+> @@ -78,11 +67,13 @@ static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
+>  	params->pwm_type = EC_PWM_TYPE_GENERIC;
+>  	params->index = index;
+>  
+> -	ret = cros_ec_cmd_xfer_status(ec, msg);
+> +	ret = cros_ec_cmd_xfer(ec, msg);
 
-Not the point. If there isn't an issue today, we don't have anything to
-fix.
+Why? There is a good reason we introduced the cros_ec_cmd_xfer_status.
 
-Furthermore, we've always adressed specific issues by looking at the
-locking granularity, first.
+IMO the purpose of introduce the new wrapper only makes sense if we can cover
+_all_ the cases, so we can remove cros_ec_cmd_xfer_status and make
+cros_ec_cmd_xfer private to cros_ec_proto.
 
-So again, what specific lock inspired all these patches?
+Is not possible to use the new wrapper here?
+
+>  	if (result)
+>  		*result = msg->result;
+
+Hmm, I see, that's the problem ...
+
+This driver will need a bit of rework but I think could be possible to use the
+wrapper.
+
+>  	if (ret < 0)
+>  		return ret;
+> +	else if (msg->result != EC_RES_SUCCESS)
+> +		return -EPROTO;
+>  
+>  	return resp->duty;
+>  }
+> 
