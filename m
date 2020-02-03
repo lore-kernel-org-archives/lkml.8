@@ -2,97 +2,121 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D834FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D58C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB26A2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JzREuCGK"
+	by mail.kernel.org (Postfix) with ESMTP id 4C16C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580750990;
+	bh=Uspm0bN82l4q/CZvMckAs1J5CnCFjKdej6OTbP0zbts=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ErkhpDkCQjfHBXFw3hrHy9paZhJfUxn44zn9tZYSsk4q5aCJFRKeGTCYzrPANV28o
+	 NPTYbhWNvevGKRyykWrsUzsDml4DvLLSBXQcjEYz6bF0GSUAO8WMbxocw8RyLqz3Vr
+	 wSDxDMotLKP2ajUnL9mHNaltyjVwImch4aZSpYsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgBCR3g (ORCPT
+        id S1728478AbgBCR3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:29:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45916 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbgBCR3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:29:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gFDzfUt/zIrwKYXfbfbbfiYoV5dvTOmOKE3QH7upgwE=; b=JzREuCGKb6Jh0bEUWRoficKAvf
-        rdEsn/r/MyvDseFhxLc13AWyXPQfqAsNyWGRA5cpxBup+/+RNtoK6sQm6TD2NczVw6ckX7ecAGeaY
-        6gO12yzT+iNxkEyAo9zrI8htTxdFbqAvWDQOUYOoS0Nm8FvtoPPVm8zOcJojLnegnB5CgK1sSieoG
-        J0gn5SHn6oyKQ8GhtzlJaHaAe84StwMwMza0OSE4nm6EzDuCuViqxYvRh7bbIrQLhSeBbNVe88dWt
-        laFLQ5vB/ZBCz9P9Km7yXln1udx3NqZYnpxLPGzuV4Gm4/CGObPtB1anCUuPcXuwpC8GRmlJROanA
-        bNYYAcUw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyfX3-00063t-Fx; Mon, 03 Feb 2020 17:29:09 +0000
-Date:   Mon, 3 Feb 2020 09:29:09 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@gentwo.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Steve Capper <steve.capper@linaro.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Jerome Marchand <jmarchan@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 09/16] page-flags: define PG_reserved behavior on
- compound pages
-Message-ID: <20200203172909.GA22353@infradead.org>
-References: <1426784902-125149-1-git-send-email-kirill.shutemov@linux.intel.com>
- <1426784902-125149-10-git-send-email-kirill.shutemov@linux.intel.com>
- <158048425224.2430.4905670949721797624@skylake-alporthouse-com>
- <20200203151844.mmgcwzz3igo7h6wj@box>
+        Mon, 3 Feb 2020 12:29:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727150AbgBCR3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:29:48 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 099252051A;
+        Mon,  3 Feb 2020 17:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580750988;
+        bh=Uspm0bN82l4q/CZvMckAs1J5CnCFjKdej6OTbP0zbts=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fbpMA9Nue+S3d9Ba/+scCcAj5pEpzNJwzr+RoQG2ur7DAvrDIdKCpOhxRU+hQZYUC
+         aV5AYwSZ4M6Ypu5+tWqcOroXtYm8UP+gMi2yeRxmSBROrRqE8/Je+LMabuDFdewu+n
+         0HOCgBhB301RSRj/8I65l4ivCTXPJbCvxCiy/Q7Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D7BCB3522718; Mon,  3 Feb 2020 09:29:47 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:29:47 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        'Eric Dumazet' <edumazet@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: Re: Confused about hlist_unhashed_lockless()
+Message-ID: <20200203172947.GM2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200131164308.GA5175@willie-the-truck>
+ <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+ <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+ <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
+ <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
+ <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
+ <20200203155839.GK2935@paulmck-ThinkPad-P72>
+ <20200203160227.GA7274@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203151844.mmgcwzz3igo7h6wj@box>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200203160227.GA7274@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 06:18:44PM +0300, Kirill A. Shutemov wrote:
-> > Much later than you would ever expect, but we just had a user update an
-> > ancient device and trip over this.
-> > https://gitlab.freedesktop.org/drm/intel/issues/1027
+On Mon, Feb 03, 2020 at 04:02:28PM +0000, Will Deacon wrote:
+> On Mon, Feb 03, 2020 at 07:58:39AM -0800, Paul E. McKenney wrote:
+> > On Mon, Feb 03, 2020 at 03:45:54PM +0000, David Laight wrote:
+> > > From: Eric Dumazet
+> > > > Sent: 31 January 2020 18:53
+> > > > 
+> > > > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
+> > > > >
+> > > > 
+> > > > > This is nice, now with have data_race()
+> > > > >
+> > > > > Remember these patches were sent 2 months ago, at a time we were
+> > > > > trying to sort out things.
+> > > > >
+> > > > > data_race() was merged a few days ago.
+> > > > 
+> > > > Well, actually data_race() is not there yet anyway.
+> > > 
+> > > Shouldn't it be NO_DATA_RACE() ??
 > > 
-> > In drm_pci_alloc() we allocate a high-order page (for it to be physically
-> > contiguous) and mark each page as Reserved.
-> > 
-> >         dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size,
-> >                                          &dmah->busaddr,
-> >                                          GFP_KERNEL | __GFP_COMP);
-> > 
-> >         /* XXX - Is virt_to_page() legal for consistent mem? */
-> >         /* Reserve */
-> >         for (addr = (unsigned long)dmah->vaddr, sz = size;
-> >              sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
-> >                 SetPageReserved(virt_to_page((void *)addr));
-> >         }
-> > 
-> > It's been doing that since
+> > No, because you use data_race() when there really are data races, but you
+> > want KCSAN to ignore them.  For example, diagnostic code that doesn't
+> > participate in the actual concurrency design and that doesn't run all
+> > that often might use data_race().  For another example, if a developer
+> > knew that data races existed, but that the compiler could not reasonably
+> > do anything untoward with those data races, that developer might well
+> > choose to use data_race() instead of READ_ONCE().  Especially if the
+> > access in question was on a fastpath where helpful compiler optimizations
+> > would be prohibited by use of READ_ONCE().
+> 
+> Yes, and in this particular case I think we can remove some WRITE_ONCE()s
+> from the non-RCU hlist code too (similarly for hlist_nulls).
 
-This code is completely and utterly broken.  Drivers were never allowed
-to call virt_to_page() on the memory returned from dma_alloc_coherent
-(or pci_alloc_consistent before that), as many implementations return
-virtual addresses that are not in the kernel mapping.  So this code
-needs to go away and not papered over.
+Quite possibly, but we should take them case by case.  READ_ONCE()
+really does protect against some optimizations, while data_race() does
+not at all.
+
+But yes, in some cases you want to -avoid- using READ_ONCE() and
+WRITE_ONCE() so that KCSAN can do its job.  For example, given a per-CPU
+variable that is only supposed to be accessed from the corresponding CPU
+except for reads by diagnostic code, you should have the main algorithm
+use plain C-language reads and writes, and have the diagnostic code
+use data_race().  This allows KCSAN to correctly flag bugs that access
+this per-CPU variable off-CPU while leaving the diagnostic code alone.
+
+Seem reasonable?
+
+							Thanx, Paul
