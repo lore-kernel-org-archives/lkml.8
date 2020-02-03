@@ -2,146 +2,241 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D43AC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D8CC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6FF20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="W3DY1kzj"
+	by mail.kernel.org (Postfix) with ESMTP id 1722120658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgBCUex (ORCPT
+        id S1727067AbgBCUg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 15:34:53 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36316 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgBCUex (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 15:34:53 -0500
-Received: by mail-qk1-f195.google.com with SMTP id w25so15654991qki.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 12:34:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vD4OaD6/Gu08Tv/eWLm2QG4l2LOcwWo02bsHVNhYVEQ=;
-        b=W3DY1kzjGYRaQaDtq2ZYG1aZxLOR7ajyPdRtTamhizsDcB/cyjSjh5XRHFBA9iCHva
-         fsxvDp7ShuBRZnOMZmW7pA3Y5guojMO9S+oOh11qPvpAoNYgygM9Coy+EtHWbt+dzAxz
-         nymZW8joGe5Vj+WBlgcaHsMAM3enIIe825VxnEbtQcRXW5EVouOS4Qr4JOmbkQlV60RE
-         Br79AFZv5RgJC6JbD/B1lTVtsi/z9nsg6M9x3CPYeB2mwcg3SXWlu6HTlkzAZFx1wQOY
-         Qn8N0UCnOV3TeAMhET8najN9YueeVvnODYE1eWTz0KE1YdNHZIQPInFc2jjtl5XmQBl3
-         CHGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vD4OaD6/Gu08Tv/eWLm2QG4l2LOcwWo02bsHVNhYVEQ=;
-        b=B5uzzlxwnjLBikrRGxVwRW20/zstl6kZZd1DXn0zGwlPDWhFKJXfQnKqIaZrwAGpYn
-         pDTVs0rVFZumEH7zyjZ7pdjKcLxeNiRTgdqde/5TZ+vOmegWjIw8lwQcKUvM687ZCACs
-         3UXtftKbB6JhqYMwAu/TV8iFsf0LufZTw5AmwDoj+ZhJzX2bwmumbNiFscZEMn9DufDI
-         XYF+JLxMWunJ79ZlgOYuBijKkLZybm7t5cwCl1aI+pOmQZkWfDusOi7+WRvthLnPPbFS
-         6HtIJeQyILpREKmb9abnHW6geZGtLHUaHAAWqASNzGhrORYdsyTe1mKigoJuOlhtdHKx
-         +mog==
-X-Gm-Message-State: APjAAAVltKuUYNh6zRtWhnQn9AArkPr0r2AAmeYVEPL3ty6gIt+d5YrX
-        msz/GaBrdATX9S7IQT80Yg27vA==
-X-Google-Smtp-Source: APXvYqzyJpvTPAQNuO333DHFMTSybUxePPApluL4ereGDZzQa5rPBTdzb1jyqc/jIvL27oY7+5IubA==
-X-Received: by 2002:a05:620a:909:: with SMTP id v9mr12691741qkv.138.1580762092138;
-        Mon, 03 Feb 2020 12:34:52 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:6320])
-        by smtp.gmail.com with ESMTPSA id v4sm9703099qkj.64.2020.02.03.12.34.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 12:34:51 -0800 (PST)
-Date:   Mon, 3 Feb 2020 15:34:50 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 12/28] mm: vmstat: use s32 for vm_node_stat_diff in
- struct per_cpu_nodestat
-Message-ID: <20200203203450.GA6380@cmpxchg.org>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-13-guro@fb.com>
- <20200203175818.GF1697@cmpxchg.org>
- <20200203182506.GA3700@xps.dhcp.thefacebook.com>
+        Mon, 3 Feb 2020 15:36:28 -0500
+Received: from mga11.intel.com ([192.55.52.93]:46229 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgBCUg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 15:36:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 12:36:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="310830321"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 03 Feb 2020 12:36:27 -0800
+Date:   Mon, 3 Feb 2020 12:41:43 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 3/3] iommu/uapi: Add helper function for size lookup
+Message-ID: <20200203124143.05061d1e@jacob-builder>
+In-Reply-To: <20200203112708.14174ce2@w520.home>
+References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200129144046.3f91e4c1@w520.home>
+        <20200129151951.2e354e37@w520.home>
+        <20200131155125.53475a72@jacob-builder>
+        <20200203112708.14174ce2@w520.home>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203182506.GA3700@xps.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 10:25:06AM -0800, Roman Gushchin wrote:
-> On Mon, Feb 03, 2020 at 12:58:18PM -0500, Johannes Weiner wrote:
-> > On Mon, Jan 27, 2020 at 09:34:37AM -0800, Roman Gushchin wrote:
-> > > Currently s8 type is used for per-cpu caching of per-node statistics.
-> > > It works fine because the overfill threshold can't exceed 125.
-> > > 
-> > > But if some counters are in bytes (and the next commit in the series
-> > > will convert slab counters to bytes), it's not gonna work:
-> > > value in bytes can easily exceed s8 without exceeding the threshold
-> > > converted to bytes. So to avoid overfilling per-cpu caches and breaking
-> > > vmstats correctness, let's use s32 instead.
-> > > 
-> > > This doesn't affect per-zone statistics. There are no plans to use
-> > > zone-level byte-sized counters, so no reasons to change anything.
-> > 
-> > Wait, is this still necessary? AFAIU, the node counters will account
-> > full slab pages, including free space, and only the memcg counters
-> > that track actual objects will be in bytes.
-> > 
-> > Can you please elaborate?
+On Mon, 3 Feb 2020 11:27:08 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> On Fri, 31 Jan 2020 15:51:25 -0800
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 > 
-> It's weird to have a counter with the same name (e.g. NR_SLAB_RECLAIMABLE_B)
-> being in different units depending on the accounting scope.
-> So I do convert all slab counters: global, per-lruvec,
-> and per-memcg to bytes.
+> > Hi Alex,
+> > Sorry I missed this part in the previous reply. Comments below.
+> > 
+> > On Wed, 29 Jan 2020 15:19:51 -0700
+> > Alex Williamson <alex.williamson@redhat.com> wrote:
+> >   
+> > > Also, is the 12-bytes of padding in struct iommu_gpasid_bind_data
+> > > excessive with this new versioning scheme?  Per rule #2 I'm not
+> > > sure if we're allowed to repurpose those padding bytes,    
+> > We can still use the padding bytes as long as there is a new flag
+> > bit to indicate the validity of the new filed within the padding.
+> > I should have made it clear in rule #2 when mentioning the flags
+> > bits. Should define what extension constitutes.
+> > How about this?
+> > "
+> >  * 2. Data structures are open to extension but closed to
+> > modification.
+> >  *    Extension should leverage the padding bytes first where a new
+> >  *    flag bit is required to indicate the validity of each new
+> > member.
+> >  *    The above rule for padding bytes also applies to adding new
+> > union
+> >  *    members.
+> >  *    After padding bytes are exhausted, new fields must be added
+> > at the
+> >  *    end of each data structure with 64bit alignment. Flag bits
+> > can be
+> >  *    added without size change but existing ones cannot be altered.
+> >  *
+> > "
+> > So if we add new field by doing re-purpose of padding bytes, size
+> > lookup result will remain the same. New code would recognize the new
+> > flag, old code stays the same.
+> > 
+> > VFIO layer checks for UAPI compatibility and size to copy, version
+> > sanity check and flag usage are done in the IOMMU code.
+> >   
+> > > but if we add
+> > > fields to the end of the structure as the scheme suggests, we're
+> > > stuck with not being able to expand the union for new fields.    
+> > Good point, it does sound contradictory. I hope the rewritten rule
+> > #2 address that.
+> > Adding data after the union should be extremely rare. Do you see any
+> > issues with the example below?
+> >  
+> >  offsetofend() can still find the right size.
+> > e.g.
+> > V1
+> > struct iommu_gpasid_bind_data {
+> > 	__u32 version;
+> > #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> > 	__u32 format;
+> > #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
+> > 	__u64 flags;
+> > 	__u64 gpgd;
+> > 	__u64 hpasid;
+> > 	__u64 gpasid;
+> > 	__u32 addr_width;
+> > 	__u8  padding[12];
+> > 	/* Vendor specific data */
+> > 	union {
+> > 		struct iommu_gpasid_bind_data_vtd vtd;
+> > 	};
+> > };
+> > 
+> > const static int
+> > iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = { /*
+> > IOMMU_UAPI_BIND_GPASID */ {offsetofend(struct
+> > iommu_gpasid_bind_data, vtd)}, ...
+> > };
+> > 
+> > V2, Add new_member at the end (forget padding for now).
+> > struct iommu_gpasid_bind_data {
+> > 	__u32 version;
+> > #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> > 	__u32 format;
+> > #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
+> > #define IOMMU_NEW_MEMBER_VAL	(1 << 1) /* new member added */
+> > 	__u64 flags;
+> > 	__u64 gpgd;
+> > 	__u64 hpasid;
+> > 	__u64 gpasid;
+> > 	__u32 addr_width;
+> > 	__u8  padding[12];
+> > 	/* Vendor specific data */
+> > 	union {
+> > 		struct iommu_gpasid_bind_data_vtd vtd;
+> > 	};
+> > 	__u64 new_member;
+> > };
+> > const static int
+> > iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = { /*
+> > IOMMU_UAPI_BIND_GPASID */ 
+> > 	{offsetofend(struct iommu_gpasid_bind_data,
+> > 	vtd), offsetofend(struct
+> > iommu_gpasid_bind_data,new_member)},
+> > 
+> > };
+> > 
+> > V3, Add smmu to the union,larger than vtd
+> > 
+> > struct iommu_gpasid_bind_data {
+> > 	__u32 version;
+> > #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> > #define IOMMU_PASID_FORMAT_INTEL_SMMU	2
+> > 	__u32 format;
+> > #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
+> > #define IOMMU_NEW_MEMBER_VAL	(1 << 1) /* new member added */
+> > #define IOMMU_SVA_SMMU_SUPP	(1 << 2) /* SMMU data supported
+> > */ __u64 flags;
+> > 	__u64 gpgd;
+> > 	__u64 hpasid;
+> > 	__u64 gpasid;
+> > 	__u32 addr_width;
+> > 	__u8  padding[12];
+> > 	/* Vendor specific data */
+> > 	union {
+> > 		struct iommu_gpasid_bind_data_vtd vtd;
+> > 		struct iommu_gpasid_bind_data_smmu smmu;
+> > 	};
+> > 	__u64 new_member;
+> > };
+> > const static int
+> > iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = {
+> > 	/* IOMMU_UAPI_BIND_GPASID */
+> > 	{offsetofend(struct iommu_gpasid_bind_data,vtd),
+> > 	offsetofend(struct iommu_gpasid_bind_data, new_member),
+> > 	offsetofend(struct iommu_gpasid_bind_data, new_member)},
+> > ...
+> > };
+> >   
+> 
+> How are you not breaking rule #3, "Versions are backward compatible"
+> with this?  If the kernel is at version 3 and userspace is at version
+> 2 then new_member exists at different offsets of the structure.  The
+> kernels iommu_uapi_data_size for V2 changed between version 2 and 3.
+> Thanks,
+> 
+You are right. if we want to add new member to the end of the structure
+as well as expanding union, I think we have to fix the size of the
+union. Would this work? (just an example for one struct)
 
-Since the node counters tracks allocated slab pages and the memcg
-counter tracks allocated objects, arguably they shouldn't use the same
-name anyway.
 
-> Alternatively I can fork them, e.g. introduce per-memcg or per-lruvec
-> NR_SLAB_RECLAIMABLE_OBJ
-> NR_SLAB_UNRECLAIMABLE_OBJ
+@@ -344,6 +348,11 @@ struct iommu_gpasid_bind_data_vtd {
+  * @gpasid:    Process address space ID used for the guest mm in guest
+IOMMU
+  * @addr_width:        Guest virtual address width
+  * @padding:   Reserved for future use (should be zero)
++ * @dummy      Reserve space for vendor specific data in the union. New
++ *             members added to the union cannot exceed the size of
+dummy.
++ *             The fixed size union is needed to allow further
+expansion
++ *             after the end of the union while still maintain backward
++ *             compatibility.
+  * @vtd:       Intel VT-d specific data
+  *
+  * Guest to host PASID mapping can be an identity or non-identity,
+where guest @@ -365,6 +374,7 @@ struct iommu_gpasid_bind_data {
+        __u8  padding[12];
+        /* Vendor specific data */
+        union {
++               __u8 dummy[128];
+                struct iommu_gpasid_bind_data_vtd vtd;
+        };
+ };
 
-Can we alias them and reuse their slots?
+> Alex
+> 
 
-	/* Reuse the node slab page counters item for charged objects */
-	MEMCG_SLAB_RECLAIMABLE = NR_SLAB_RECLAIMABLE,
-	MEMCG_SLAB_UNRECLAIMABLE = NR_SLAB_UNRECLAIMABLE,
-
-> and keep global counters untouched. If going this way, I'd prefer to make
-> them per-memcg, because it will simplify things on charging paths:
-> now we do get task->mem_cgroup->obj_cgroup in the pre_alloc_hook(),
-> and then obj_cgroup->mem_cgroup in the post_alloc_hook() just to
-> bump per-lruvec counters.
-
-I don't quite follow. Don't you still have to update the global
-counters?
-
-> Btw, I wonder if we really need per-lruvec counters at all (at least
-> being enabled by default). For the significant amount of users who
-> have a single-node machine it doesn't bring anything except performance
-> overhead.
-
-Yeah, for single-node systems we should be able to redirect everything
-to the memcg counters, without allocating and tracking lruvec copies.
-
-> For those who have multiple nodes (and most likely many many
-> memory cgroups) it provides way too many data except for debugging
-> some weird mm issues.
-> I guess in the absolute majority of cases having global per-node + per-memcg
-> counters will be enough.
-
-Hm? Reclaim uses the lruvec counters.
+[Jacob Pan]
