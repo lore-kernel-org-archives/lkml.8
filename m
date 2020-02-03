@@ -2,113 +2,208 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BE7C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D67EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B092166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681B620658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="ezSYe3ZE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kieC8vJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgBCNJb (ORCPT
+        id S1728178AbgBCNLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:09:31 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34985 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgBCNJb (ORCPT
+        Mon, 3 Feb 2020 08:11:36 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:35714 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727267AbgBCNLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:09:31 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z18so9675838lfe.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:09:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qX9+IdrLD31YQlGzgAks4lbqLbuGK1+4/0ILCkggpL4=;
-        b=ezSYe3ZEhGKKa6bl/nq2SThBohBllo4QdKKCbOJNjEpL5bZ3OMGJrYPiQDo/g5DnMy
-         /C4WdkFAJ+X6GNj0G7Sfa+VSkus4CUEPWCOmpJ5mjgOWvntD0g+lgLs3+YQxcrHe5yJ1
-         A41twJP8CuBuCbro1S0ZJk27UeL4yhpFC6UrHrDv6Rf8feqyy7k+4hpH0+FkNQsVOpuQ
-         IWElYn3AaF9E6WYT70uca9rL0T4MxbIeowGjIk0sLseZ1TCZgrvpXhwVVAf2b1ZXs8aL
-         zSBhdupTvbIPfbWZu/xNG5BEhE8NafO7fKlpSJiG8LuWsIZlDEcNRUyOPrb2EhH3fyVg
-         K25Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qX9+IdrLD31YQlGzgAks4lbqLbuGK1+4/0ILCkggpL4=;
-        b=DyqDPlIqf4vknqmUQv8xOelj9Et7dXBsSMZoji52eEgCVodRuktiRvx9IOp+/IuKim
-         6cgl5xx8vqqkWYE/Bl0qHtNyoedy84bJqpU9fyYEbAla4nwNrHaavxd3f4rss4wkstlK
-         OQ98UdDIg1WtZOnAeS2elVStGZRkd+i126v+zizSBiOF2bzKWj7/QpPcG2+kNV1Xs+n5
-         qpOw7+D6NO3Rj0J/nYDDKdQssG8rpCYz7GzkeU/qhJ9AM+cJQ2jJHg5Hi1uw8Q2ZiMrK
-         jbzGrZi85NiCWrDFUzmulaSeCqsBXexALLSDXJtpD5MCjuO4RblPUzWAVZ4kNGxJUn0h
-         e0wQ==
-X-Gm-Message-State: APjAAAVmGI/+L9zyaIf8etQW4+V+fFIUgN+LULC/4Z2HKzo30Tszvut2
-        RdpwwNVyDjOKji4e84vsNnuX4A==
-X-Google-Smtp-Source: APXvYqxh3OZBPWowc6Fe84mkvkj5F/0u6eAEcPtl0SfxU4CoqAtQMEg1CcaKCPhc+kDjgLQ+RiLKhg==
-X-Received: by 2002:a19:740a:: with SMTP id v10mr11746781lfe.65.1580735368851;
-        Mon, 03 Feb 2020 05:09:28 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id e5sm3662660lfn.66.2020.02.03.05.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 05:09:27 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 331DB100DC8; Mon,  3 Feb 2020 16:09:40 +0300 (+03)
-Date:   Mon, 3 Feb 2020 16:09:40 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
-Subject: Re: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
-Message-ID: <20200203130940.enfvdsbn42hhoaki@box>
-References: <20200123014627.71720-1-bgeffon@google.com>
- <20200124190625.257659-1-bgeffon@google.com>
- <20200126220650.i4lwljpvohpgvsi2@box>
- <CADyq12xCK_3MhGi88Am5P6DVZvrW8vqtyJMHO0zjNhvhYegm1w@mail.gmail.com>
- <20200129104655.egvpavc2tzozlbqe@box>
- <CADyq12xgnVByYOkL=GcszYYKzDpg254QEOFoW8=e1y=bmOCcFQ@mail.gmail.com>
+        Mon, 3 Feb 2020 08:11:36 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580735495; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=vkyTdOaRH1ioFtJvRUXIFVkHYEEyCnAk8WaTMV+sKk4=; b=kieC8vJacnljFapjibpGYKaj7q9tU8iNY20Huze2ChLp6im2aZGQzy7nNg4weLjM76+dCns8
+ 3kWqtIq3JeXgp/6vHyBhEVfIx4UmG91E4PdTSeJo35AsRmHjRolh8iVmBgBkAhy01MUkLUsa
+ gynIwzxAYjjBSUFqvJEnvkHybkM=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e381c06.7fc5a7bc37d8-smtp-out-n02;
+ Mon, 03 Feb 2020 13:11:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39582C433CB; Mon,  3 Feb 2020 13:11:34 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3FB2C43383;
+        Mon,  3 Feb 2020 13:11:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3FB2C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 4/6] drivers: qcom: rpmh-rsc: Add RSC power domain
+ support
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org
+References: <20190823081703.17325-1-mkshah@codeaurora.org>
+ <20190823081703.17325-5-mkshah@codeaurora.org>
+ <5d7146be.1c69fb81.38760.7fb8@mx.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <d6ec3b9e-ed3c-3b6d-f313-1c5acbc786d1@codeaurora.org>
+Date:   Mon, 3 Feb 2020 18:41:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADyq12xgnVByYOkL=GcszYYKzDpg254QEOFoW8=e1y=bmOCcFQ@mail.gmail.com>
+In-Reply-To: <5d7146be.1c69fb81.38760.7fb8@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 05:17:53AM +0100, Brian Geffon wrote:
-> On Wed, Jan 29, 2020 at 11:46 AM Kirill A. Shutemov
-> <kirill@shutemov.name> wrote:
-> > Any better options for the flag name? (I have none)
-> 
-> The other option is that it's broken up into two new flags the first
-> MREMAP_MUSTMOVE which can be used regardless of whether or not you're
-> leaving the original mapping mapped. This would do exactly what it
-> describes: move the mapping to a new address with or without
-> MREMAP_FIXED, this keeps consistency with MAYMOVE.
-> 
-> The second flag would be the new MREMAP_DONTUNMAP flag which requires
-> MREMAP_MUSTMOVE, again with or without MREMAP_FIXED.
-> 
-> What are your thoughts on this?
 
-Sounds reasonable.
+On 9/5/2019 11:02 PM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2019-08-23 01:17:01)
+>> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+>> index e278fc11fe5c..884b39599e8f 100644
+>> --- a/drivers/soc/qcom/rpmh-rsc.c
+>> +++ b/drivers/soc/qcom/rpmh-rsc.c
+>> @@ -498,6 +498,32 @@ static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
+>>          return ret;
+>>   }
+>>   
+>> +/**
+>> + *  rpmh_rsc_ctrlr_is_idle: Check if any of the AMCs are busy.
+>> + *
+>> + *  @drv: The controller
+>> + *
+>> + *  Returns false if the TCSes are engaged in handling requests,
+> Please use kernel-doc style for returns here.
+Done.
+>> + *  True if controller is idle.
+>> + */
+>> +static bool rpmh_rsc_ctrlr_is_idle(struct rsc_drv *drv)
+>> +{
+>> +       int m;
+>> +       struct tcs_group *tcs = get_tcs_of_type(drv, ACTIVE_TCS);
+>> +       bool ret = true;
+>> +
+>> +       spin_lock(&drv->lock);
+> I think these need to be irqsave/restore still.
+Done.
+>> +       for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
+>> +               if (!tcs_is_free(drv, m)) {
+> This snippet is from tcs_invalidate(). Please collapse it into some sort
+> of function or macro like for_each_tcs().
+Keeping it as it is, the snippet is actually little different from 
+tcs_invalidate.
+>> +                       ret = false;
+>> +                       break;
+>> +               }
+>> +       }
+>> +       spin_unlock(&drv->lock);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>>   /**
+>>    * rpmh_rsc_write_ctrl_data: Write request to the controller
+>>    *
+>> @@ -521,6 +547,53 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+>>          return tcs_ctrl_write(drv, msg);
+>>   }
+>>   
+>> +static int rpmh_domain_power_off(struct generic_pm_domain *rsc_pd)
+>> +{
+>> +       struct rsc_drv *drv = container_of(rsc_pd, struct rsc_drv, rsc_pd);
+>> +
+>> +       /*
+>> +        * RPMh domain can not be powered off when there is pending ACK for
+>> +        * ACTIVE_TCS request. Exit when controller is busy.
+>> +        */
+>> +
+> Nitpick: Remove this extra newline.
+Done.
+>> +       if (!rpmh_rsc_ctrlr_is_idle(drv))
+>> +               return -EBUSY;
+>> +
+>> +       return rpmh_flush(&drv->client);
+>> +}
+>> +
+>> +static int rpmh_probe_power_domain(struct platform_device *pdev,
+>> +                                  struct rsc_drv *drv)
+>> +{
+>> +       int ret;
+>> +       struct generic_pm_domain *rsc_pd = &drv->rsc_pd;
+>> +       struct device_node *dn = pdev->dev.of_node;
+>> +
+>> +       rsc_pd->name = kasprintf(GFP_KERNEL, "%s", dn->name);
+> Maybe use devm_kasprintf?
+Done.
+>> +       if (!rsc_pd->name)
+>> +               return -ENOMEM;
+>> +
+>> +       rsc_pd->name = kbasename(rsc_pd->name);
+>> +       rsc_pd->power_off = rpmh_domain_power_off;
+>> +       rsc_pd->flags |= GENPD_FLAG_IRQ_SAFE;
+>> +
+>> +       ret = pm_genpd_init(rsc_pd, NULL, false);
+>> +       if (ret)
+>> +               goto free_name;
+>> +
+>> +       ret = of_genpd_add_provider_simple(dn, rsc_pd);
+>> +       if (ret)
+>> +               goto remove_pd;
+>> +
+>> +       return ret;
+>> +
+>> +remove_pd:
+>> +       pm_genpd_remove(rsc_pd);
+>> +free_name:
+>> +       kfree(rsc_pd->name);
+> And then drop this one?
+Done.
+>> +       return ret;
+>> +}
+>> +
+>>   static int rpmh_probe_tcs_config(struct platform_device *pdev,
+>>                                   struct rsc_drv *drv)
+>>   {
+>> @@ -650,6 +723,17 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
+>>          if (ret)
+>>                  return ret;
+>>   
+>> +       /*
+>> +        * Power domain is not required for controllers that support 'solver'
+>> +        * mode where they can be in autonomous mode executing low power mode
+>> +        * to power down.
+>> +        */
+>> +       if (of_property_read_bool(dn, "#power-domain-cells")) {
+>> +               ret = rpmh_probe_power_domain(pdev, drv);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+>> +
+>>          spin_lock_init(&drv->lock);
+>>          bitmap_zero(drv->tcs_in_use, MAX_TCS_NR);
+> What happens if it fails later on? The genpd provider is still sitting
+> around and needs to be removed on probe failure later on in this
+> function. It would be nicer if there wasn't another function to probe
+> the power domain and it was just inlined here actually. That way we
+> don't have to wonder about what's going on across two blocks of code.
 
-MREMAP_DONTUNMAP doesn't really convey that you move pages to the new
-mapping, but leave empty mapping behind. But I guess there's only so much
-you can encode into the name. (Patch to the man page should do the rest)
+Thanks for pointing this.  Moved it at the end of probe to avoid this.
 
+>
 -- 
- Kirill A. Shutemov
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
