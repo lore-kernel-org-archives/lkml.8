@@ -2,111 +2,97 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793CAC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBA5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523D520732
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED72C20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:34:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bFqSrV10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgBCWe0 (ORCPT
+        id S1727336AbgBCWej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:34:26 -0500
-Received: from outgoing3.flk.host-h.net ([188.40.0.89]:60667 "EHLO
-        outgoing3.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727276AbgBCWe0 (ORCPT
+        Mon, 3 Feb 2020 17:34:39 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:42341 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbgBCWei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:34:26 -0500
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam1-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1iykIP-0001v2-CU; Tue, 04 Feb 2020 00:34:23 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1iykIM-0000k9-VQ; Tue, 04 Feb 2020 00:34:19 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>
-Subject: [PATCH v4 0/3] Add rga to rk322x device tree
-Date:   Mon,  3 Feb 2020 22:30:28 +0000
-Message-Id: <cover.1580768038.git.justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0S9sfM/nP8gxoqs1zeWkeM2pSDasLI4SayDByyq9LIhVuTLiRoIJbWVM
- VDvK+OR4bkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
- qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSrK5j1T
- Po5/LpleUgQM5/MAHmDvzkMd4joYqrUfcPIQdUYI3fUXyt8g6v09xrG7vu/fdUS1M5thdxxsnOTC
- rRmvZNXA7urqkuRkjn1fyteVYP+HXs9CMbFn9vCz9Z+lGmDQvQDDheqH4lBQpR0ziVlLWDAC1vRC
- hq319+C3vxdCgsyStZRkQwmoMeUp+gQglixgZmTW6H0Uo/QzUeaLOBvNEC1g+U1SXfUhLsTk5wUY
- WaWokZC3JOaEfAcg3rPhhffuvzdjlhFBwXCgjBtoYe8eg5nlaTNYebWa2W6GbNvgwptlhJrsz+8j
- XuMdjIbLZhwoK/VzePATsXS/rFxRypFKMiPLyoQzvILSDO18VtgBXTa3ez3cHoqTWBKuYika623Y
- Ta6/LJzl4pg0ZC9q5gYH7EOMauBWC98ol0xUHcbfIJ9ZJ7PpnPxGejDS+HAMyOjpxOsB8gG0slV7
- ra6jI4BS3XLmxFz+88FWeB7miCnFrS+xkiYMmdOwRIKnLhTyDa49KiI6ApkBL1M2pjeIsNv0i2bz
- nHJ53CHS5fL+CC61pH+Mdi8KDLlrJjQEyoQkvVqjwoXSktopqY7X3mJE1vuavCrJPmnnTHzVkpyb
- MK7ZTZV8hN6hngxqNW/p6/rAjB3Bo9WPi4IE45J8SMIBWsA7tm+5pSj1YjV94R3x16NaT9yCB/zW
- LYsk4/ealtlYzK51KubfNuS9lgsouDG6gpp8iIlTfpXH3eJ/htNFsfRJILGw3FQKlZKPu21J/MuB
- 4XqWHsbQ5DjCOMluv3aOz8NW0bDnfSypVfNnD/ody8wcCN83CNy2/HP4CS/B6ymwJqdrYqktDHCy
- f2KOgPWiC6z4HnV1R/vfaN0C4C3KdSxIKbHYhXQwhXELIBZC+BuxdgK5cVvzDCtuQClUbi7eRJvI
- lX3taZxyfrmN0VTHLZteW2tmp/7PDtVuzmh0F4WifHSVhLwCLj5UzlqDZIb7xEp3klSpLYn5Sshm
- tRDo/ib6qUd+ON9Iwv3fqFcmzUrJkUoL/PyVSe2/DDFq5n7HBuKWYRb2mL6sFaAAW2m3yODQWZ6C
- UzN46xT2FnDD31r1QFs2yPRk3H1E4ANRdN1BlPI5cpunCmbc5xpJVMDSneyWOiQlotRPFwUdX67F
- 3JAjgow=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Mon, 3 Feb 2020 17:34:38 -0500
+Received: by mail-qv1-f65.google.com with SMTP id dc14so7625373qvb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 14:34:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=+fusxKQznfXe0AR6ZRaAM9DvgsEBwF2XHWrHEPkZkVI=;
+        b=bFqSrV10iRvDAZ/8wZkiP5LNSgydjiVDGxkvlnZFoX/IbXO6VLESkTO02xIQm5xh7D
+         nSmh3e4Z0JRFhX01lUM4VgAgpGan+2//aKG74o6//J5b9jZZ1Yuh0uPPU15XNVn3dP4H
+         7vseIj8E/cSfHt8TD5BP4QGLJhgRt8fhW87I77Ea9dgYkjzJPA4/szNGMr52n5tRelDQ
+         y0258cgv7p0vW8AaXnvfqC50e433ErrCVftsAvtuGeRNGCstDc+FC84hU0/vc4GFVy/n
+         y6yGaaVT7B1mk3VYmRUDoNIpg604j9lJGEImbRrILVb12ngo2/wXWGwgrm0ftr4RDhMt
+         1gRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=+fusxKQznfXe0AR6ZRaAM9DvgsEBwF2XHWrHEPkZkVI=;
+        b=ZDI9oKcuUpfEaFlJky0bwr03uIodiLN3zOgSQikTxsoZHtpAz90sFEoRw5oVJIN7co
+         ne+9MK8dVxcFTsNKeXzFSTao67sHyZ4zsxP9u6B5yB8zMmSPEfMHnzUPsElkBf292QdP
+         riOC7tUGao+zDdGc8PSwBGTHyEjQnjhdW1ZM/qqkUJAiLK5Jqsxo8+aRrZUFUEO5aThn
+         H4al0syHbZOYwLvakjjZp2wU5x6xzZGT5RZBkB0GEuGsVOynb5sgPHenqLGiKlKumJzj
+         gHHSt+VOZKq8m5Ch8ZgRF4NS9/vYcRVQGeiTn7+NgDwaZz6X2v9A3VAhP/jv8p0P6wYU
+         5d2g==
+X-Gm-Message-State: APjAAAVyoTj2gD59MCw3RmCm+HRcdRtBiWRGkJwwyinWIfZUqWH1IDSf
+        z7GogrhEIMppFTyrMQ4uKe07tA==
+X-Google-Smtp-Source: APXvYqzOQ5czIomE+ue1IlX3E1IxdYf4I/ww5gdtcv2hvPP7Xx1OOVLQNOuBUibenHi7fR/ywY23Wg==
+X-Received: by 2002:a0c:eacb:: with SMTP id y11mr25722163qvp.68.1580769276355;
+        Mon, 03 Feb 2020 14:34:36 -0800 (PST)
+Received: from ?IPv6:2600:1000:b048:97ac:a93a:b890:262:8b7b? ([2600:1000:b048:97ac:a93a:b890:262:8b7b])
+        by smtp.gmail.com with ESMTPSA id e3sm10786731qtb.65.2020.02.03.14.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2020 14:34:35 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] skbuff: fix a data race in skb_queue_len()
+Date:   Mon, 3 Feb 2020 17:34:34 -0500
+Message-Id: <A5748E52-90D8-4B5B-87BD-65F980D79A63@lca.pw>
+References: <126aa227-2383-efdd-742c-6ccf85ae7ba4@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, elver@google.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <126aa227-2383-efdd-742c-6ccf85ae7ba4@gmail.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset aims to enable use of Rockchip's RGA, a 2D raster
-graphic acceleration unit, on rk322x based devices.
 
-Changes in v4:
-  - Add a compatible value entry for the rk3228 to the rockchip-rga
-    device tree binding documentation.
 
-Changes in v3:
-  - Relocate rga node to the correct position in rk322x.dtsi, as
-    indicated by Johan Jonker.
+> On Feb 3, 2020, at 3:28 PM, Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>=20
+> We added recently skb_queue_empty_lockless() helper, to use in these conte=
+xts.
+>=20
+> The fact that we use READ_ONCE() is more of an implementation detail I thi=
+nk.
+>=20
 
-Changes in v2:
-  - Remove unnecessary "rockchip,rk3228-rga" device tree compatibility
-    string patch, as advised by Ezequiel Garcia.
+Make sense. I=E2=80=99ll use lockless in naming instead.
 
-  - Use both "rockchip,rk3228-rga" and "rockchip,rk3288-rga" in the
-    rga node's compatibility property, as suggested by Heiko Stuebner.
+> Also, addressing load-stearing issues without making sure the write side
+> is using WRITE_ONCE() might be not enough (even if KCSAN warnings disappea=
+r)
 
-Justin Swartz (3):
-  [media] dt-bindings: Add binding for rk3228 rga
-  ARM: dts: rockchip: add rga node for rk322x
-  ARM: dts: rockchip: enable rga for rk3229-xms6
+I suppose that could be a case. I=E2=80=99ll have,
 
- Documentation/devicetree/bindings/media/rockchip-rga.txt |  5 +++--
- arch/arm/boot/dts/rk3229-xms6.dts                        |  4 ++++
- arch/arm/boot/dts/rk322x.dtsi                            | 11 +++++++++++
- 3 files changed, 18 insertions(+), 2 deletions(-)
+WRITE_ONCE(list->qlen, list->qlen - 1);
 
--- 
-2.11.0
-
+in __skb_unlink() where it had already had a few WRITE_ONCE() for other vari=
+ables.=
