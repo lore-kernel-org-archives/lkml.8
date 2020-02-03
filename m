@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F82DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DA4C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF872080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A131520CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747357;
-	bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
+	s=default; t=1580747361;
+	bh=f6/Ccx65vDvsW4yhp/ZsExnlynZ3BNePDvYFyDnc58U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJJc3S5yc4m/YqMfajdJHxiayVdZNo8O9N+Ki84e5yHCaR/GjbQtcGwrs9BIAhfwK
-	 cHTEfHwr9wgwrMPBUXpT6WTAwbC4R/vdB+AgW9Y04OytYu1Sgze8o8DW78MGQWH6wo
-	 D4h0oWGPGx0f0txJllqc/rmb7rZoy6vBuJ+jMVVY=
+	b=EeATyIM8h6mzMnxlhqEffO7xQyrkjb7foUBKgTieRs/SjngYyUNgt0dVXadr7Cmg3
+	 QASKVFYt+c+Nwhh9sFCT2EM8LFbcxTz1s8peSrZjlvgak0bzey0iorS82pDyXMfcqE
+	 n9CbgJCB8/b0rXC9Zd1Pc+nGxvxV5csxTGa986DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgBCQ3R (ORCPT
+        id S1729767AbgBCQ3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729734AbgBCQ3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:14 -0500
+        id S1729755AbgBCQ3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:16 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC2620838;
-        Mon,  3 Feb 2020 16:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C5E20CC7;
+        Mon,  3 Feb 2020 16:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747353;
-        bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
+        s=default; t=1580747356;
+        bh=f6/Ccx65vDvsW4yhp/ZsExnlynZ3BNePDvYFyDnc58U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbsZqPZFD7sePRVKDmCVj6EPDDYTN0ii/idxC2450Nw3J1q9c7bvT5elaVgUPrUoz
-         Dts9mErRmO4Ue25gsXTyV+v09OGvAf5zurSvl+OmyowQWqcIIaeG5vEdTAjKRQBKRi
-         YKEmOYjuXtC2v8+8vV6/yLr1Nn+rKXwz4rm57BBo=
+        b=dRQHmDFo8bumOI4g6G2MXzzM5MWVQya3gthTUnwpi2L/mbasRVFYew6tW1QzFTUgX
+         quQoO4Q0T82uJxoc+lEidoix1yGVTQ8r8nKKR7qTMt+VlBSOkfUtfCLoqVjgeofGuD
+         GHKvNZJGX1yzKnbzUTck8XtAH7AMUz3X2a1jnr54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 48/89] media: dvb-usb/dvb-usb-urb.c: initialize actlen to 0
-Date:   Mon,  3 Feb 2020 16:19:33 +0000
-Message-Id: <20200203161923.396965402@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 49/89] ttyprintk: fix a potential deadlock in interrupt context issue
+Date:   Mon,  3 Feb 2020 16:19:34 +0000
+Message-Id: <20200203161923.502078294@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,38 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-commit 569bc8d6a6a50acb5fcf07fb10b8d2d461fdbf93 upstream.
+commit 9a655c77ff8fc65699a3f98e237db563b37c439b upstream.
 
-This fixes a syzbot failure since actlen could be uninitialized,
-but it was still used.
+tpk_write()/tpk_close() could be interrupted when holding a mutex, then
+in timer handler tpk_write() may be called again trying to acquire same
+mutex, lead to deadlock.
 
-Syzbot link:
+Google syzbot reported this issue with CONFIG_DEBUG_ATOMIC_SLEEP
+enabled:
 
-https://syzkaller.appspot.com/bug?extid=6bf9606ee955b646c0e1
+BUG: sleeping function called from invalid context at
+kernel/locking/mutex.c:938
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/1
+1 lock held by swapper/1/0:
+...
+Call Trace:
+  <IRQ>
+  dump_stack+0x197/0x210
+  ___might_sleep.cold+0x1fb/0x23e
+  __might_sleep+0x95/0x190
+  __mutex_lock+0xc5/0x13c0
+  mutex_lock_nested+0x16/0x20
+  tpk_write+0x5d/0x340
+  resync_tnc+0x1b6/0x320
+  call_timer_fn+0x1ac/0x780
+  run_timer_softirq+0x6c3/0x1790
+  __do_softirq+0x262/0x98c
+  irq_exit+0x19b/0x1e0
+  smp_apic_timer_interrupt+0x1a3/0x610
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
 
-Reported-and-tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+See link https://syzkaller.appspot.com/bug?extid=2eeef62ee31f9460ad65 for
+more details.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fix it by using spinlock in process context instead of mutex and having
+interrupt disabled in critical section.
+
+Reported-by: syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200113034842.435-1-zhenzhong.duan@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/dvb-usb-urb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/ttyprintk.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/media/usb/dvb-usb/dvb-usb-urb.c
-+++ b/drivers/media/usb/dvb-usb/dvb-usb-urb.c
-@@ -12,7 +12,7 @@
- int dvb_usb_generic_rw(struct dvb_usb_device *d, u8 *wbuf, u16 wlen, u8 *rbuf,
- 	u16 rlen, int delay_ms)
- {
--	int actlen,ret = -ENOMEM;
-+	int actlen = 0, ret = -ENOMEM;
+--- a/drivers/char/ttyprintk.c
++++ b/drivers/char/ttyprintk.c
+@@ -18,10 +18,11 @@
+ #include <linux/serial.h>
+ #include <linux/tty.h>
+ #include <linux/module.h>
++#include <linux/spinlock.h>
  
- 	if (!d || wbuf == NULL || wlen == 0)
- 		return -EINVAL;
+ struct ttyprintk_port {
+ 	struct tty_port port;
+-	struct mutex port_write_mutex;
++	spinlock_t spinlock;
+ };
+ 
+ static struct ttyprintk_port tpk_port;
+@@ -100,11 +101,12 @@ static int tpk_open(struct tty_struct *t
+ static void tpk_close(struct tty_struct *tty, struct file *filp)
+ {
+ 	struct ttyprintk_port *tpkp = tty->driver_data;
++	unsigned long flags;
+ 
+-	mutex_lock(&tpkp->port_write_mutex);
++	spin_lock_irqsave(&tpkp->spinlock, flags);
+ 	/* flush tpk_printk buffer */
+ 	tpk_printk(NULL, 0);
+-	mutex_unlock(&tpkp->port_write_mutex);
++	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+ 
+ 	tty_port_close(&tpkp->port, tty, filp);
+ }
+@@ -116,13 +118,14 @@ static int tpk_write(struct tty_struct *
+ 		const unsigned char *buf, int count)
+ {
+ 	struct ttyprintk_port *tpkp = tty->driver_data;
++	unsigned long flags;
+ 	int ret;
+ 
+ 
+ 	/* exclusive use of tpk_printk within this tty */
+-	mutex_lock(&tpkp->port_write_mutex);
++	spin_lock_irqsave(&tpkp->spinlock, flags);
+ 	ret = tpk_printk(buf, count);
+-	mutex_unlock(&tpkp->port_write_mutex);
++	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+ 
+ 	return ret;
+ }
+@@ -172,7 +175,7 @@ static int __init ttyprintk_init(void)
+ {
+ 	int ret = -ENOMEM;
+ 
+-	mutex_init(&tpk_port.port_write_mutex);
++	spin_lock_init(&tpk_port.spinlock);
+ 
+ 	ttyprintk_driver = tty_alloc_driver(1,
+ 			TTY_DRIVER_RESET_TERMIOS |
 
 
