@@ -2,299 +2,101 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE95BC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA72C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C2120674
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD3C21741
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="uMg77BV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBCNX5 (ORCPT
+        id S1727755AbgBCNYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:23:57 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2355 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726192AbgBCNX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:23:57 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 3971D3B08E4F640B95FD;
-        Mon,  3 Feb 2020 13:23:55 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 3 Feb 2020 13:23:54 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
- 13:23:53 +0000
-Date:   Mon, 3 Feb 2020 13:23:51 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-CC:     <alastair@d-silva.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 3 Feb 2020 08:24:31 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42394 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgBCNYb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 08:24:31 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d10so14577866ljl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:24:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Zkts+cGeEEtVuxNtWUSWiHH/b9CvDi3byTsQsBOoffc=;
+        b=uMg77BV0yqbAokDjCIsX7WMm2+rljZD30A9Pgzvg2whq0fdLlCKNcVner/6Vldy+Do
+         FJQe9cz1HwrRCTkHR76IWJkaU5PiNAe3jfkVCM41ucop+Vhsr3TE8nBD+OZBkeOwg1tK
+         tIwWZLieJoA/GglHEidrlbm6zzJlqI84LHEJYsB4i6yqavXKRSdIIRjV07xPQ9irUsii
+         fqWGRS0az2183mpkYJlDAldhbLf4FtoF5fIgpFJmgnWg+6SKmWS1oF6zqS+n4NWU8e0P
+         L1jvslaK69PxYYY/eLHnnLHG+RZYhMnLAKnh/UgEnV0qIGCLCEPbaD8fIfWosAQBpGkK
+         18JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Zkts+cGeEEtVuxNtWUSWiHH/b9CvDi3byTsQsBOoffc=;
+        b=JPVFqn4lVapvJKT+p2fcuwlfotaRqs4cP067PMFifCyX7x57BB0bPZfTWD5Gtxx3LU
+         V4TsbT6xFxLuEc/KI1V8gxIF8DbBONbtEtqVH6rRrp+By73ROybwG8FQXdaAFlnDX6fV
+         8Fg3ocZqBaVia3dQ+D190vsFGuszklLt6lox8s1suy2p0pgBiuo/vR6ae3X9MLtlHSQw
+         n1GQqBpnp2NrrSEgRD7EYkCE1SLsRCy3Q9MdzJLb6A0Rb0D/fQC2UsT9YeubkFQvRZRn
+         zCE0nksGaqPnpGcABsTXFyQ75dKVkEeOoin9XmebSVk9BGm4vzrZtakkkF5/xZh3H6na
+         th1g==
+X-Gm-Message-State: APjAAAV0PN5yqH+n5R0jFCHNZM4tMcMiydKOtu4MzIfLFPW9ZC9Oyvqm
+        wHlonyuS0Y2VWVLW5tlmIgk++w==
+X-Google-Smtp-Source: APXvYqxyrBwcLQLkKywdLgZRmnj/Xxrleln4eaTTDtgmBedmh/EgtmO52sB+qALEUQcISXFUYFMPnA==
+X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr13991181ljm.53.1580736269586;
+        Mon, 03 Feb 2020 05:24:29 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id n23sm8931924lfa.41.2020.02.03.05.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 05:24:28 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id B6499100DC8; Mon,  3 Feb 2020 16:24:41 +0300 (+03)
+Date:   Mon, 3 Feb 2020 16:24:41 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Keith Busch" <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob Herring" <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        "=?ISO-8859-1?Q?C=E9dric?= Le Goater" <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Hari Bathini" <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Greg Kurz" <groug@kaod.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 12/27] nvdimm/ocxl: Read the capability registers &
- wait for device ready
-Message-ID: <20200203132351.00005281@Huawei.com>
-In-Reply-To: <20191203034655.51561-13-alastair@au1.ibm.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-        <20191203034655.51561-13-alastair@au1.ibm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 05/12] mm/gup: pass gup flags to two more routines
+Message-ID: <20200203132441.ig7qihjvz5mfgcnc@box>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-6-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201034029.4063170-6-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 14:46:40 +1100
-Alastair D'Silva <alastair@au1.ibm.com> wrote:
-
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Fri, Jan 31, 2020 at 07:40:22PM -0800, John Hubbard wrote:
+> In preparation for an upcoming patch, send gup flags args to two more
+> routines: put_compound_head(), and undo_dev_pagemap().
 > 
-> This patch reads timeouts & firmware version from the controller, and
-> uses those timeouts to wait for the controller to report that it is ready
-> before handing the memory over to libnvdimm.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  drivers/nvdimm/ocxl/Makefile       |  2 +-
->  drivers/nvdimm/ocxl/scm.c          | 84 ++++++++++++++++++++++++++++++
->  drivers/nvdimm/ocxl/scm_internal.c | 19 +++++++
->  drivers/nvdimm/ocxl/scm_internal.h | 24 +++++++++
->  4 files changed, 128 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/nvdimm/ocxl/scm_internal.c
-> 
-> diff --git a/drivers/nvdimm/ocxl/Makefile b/drivers/nvdimm/ocxl/Makefile
-> index 74a1bd98848e..9b6e31f0eb3e 100644
-> --- a/drivers/nvdimm/ocxl/Makefile
-> +++ b/drivers/nvdimm/ocxl/Makefile
-> @@ -4,4 +4,4 @@ ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
->  
->  obj-$(CONFIG_OCXL_SCM) += ocxlscm.o
->  
-> -ocxlscm-y := scm.o
-> +ocxlscm-y := scm.o scm_internal.o
-> diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-> index 571058a9e7b8..8088f65c289e 100644
-> --- a/drivers/nvdimm/ocxl/scm.c
-> +++ b/drivers/nvdimm/ocxl/scm.c
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/module.h>
->  #include <misc/ocxl.h>
-> +#include <linux/delay.h>
->  #include <linux/ndctl.h>
->  #include <linux/mm_types.h>
->  #include <linux/memory_hotplug.h>
-> @@ -266,6 +267,30 @@ static int scm_register_lpc_mem(struct scm_data *scm_data)
->  	return 0;
->  }
->  
-> +/**
-> + * scm_is_usable() - Is a controller usable?
-> + * @scm_data: a pointer to the SCM device data
-> + * Return: true if the controller is usable
-> + */
-> +static bool scm_is_usable(const struct scm_data *scm_data)
-> +{
-> +	u64 chi = 0;
-> +	int rc = scm_chi(scm_data, &chi);
-> +
-> +	if (!(chi & GLOBAL_MMIO_CHI_CRDY)) {
-> +		dev_err(&scm_data->dev, "SCM controller is not ready.\n");
-> +		return false;
-> +	}
-> +
-> +	if (!(chi & GLOBAL_MMIO_CHI_MA)) {
-> +		dev_err(&scm_data->dev,
-> +			"SCM controller does not have memory available.\n");
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  /**
->   * allocate_scm_minor() - Allocate a minor number to use for an SCM device
->   * @scm_data: The SCM device to associate the minor with
-> @@ -380,6 +405,48 @@ static void scm_remove(struct pci_dev *pdev)
->  	}
->  }
->  
-> +/**
-> + * read_device_metadata() - Retrieve config information from the AFU and save it for future use
-> + * @scm_data: the SCM metadata
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int read_device_metadata(struct scm_data *scm_data)
-> +{
-> +	u64 val;
-> +	int rc;
-> +
-> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, GLOBAL_MMIO_CCAP0,
-> +				     OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	scm_data->scm_revision = val & 0xFFFF;
-> +	scm_data->read_latency = (val >> 32) & 0xFF;
-> +	scm_data->readiness_timeout = (val >> 48) & 0xff;
-> +	scm_data->memory_available_timeout = val >> 52;
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-This overlaps with the masked region for readiness_timeout.  I'll guess the maks
-on that should be 0xF.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-> +
-> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, GLOBAL_MMIO_CCAP1,
-> +				     OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	scm_data->max_controller_dump_size = val & 0xFFFFFFFF;
-> +
-> +	// Extract firmware version text
-> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, GLOBAL_MMIO_FWVER,
-> +				     OCXL_HOST_ENDIAN, (u64 *)scm_data->fw_version);
-> +	if (rc)
-> +		return rc;
-> +
-> +	scm_data->fw_version[8] = '\0';
-> +
-> +	dev_info(&scm_data->dev,
-> +		 "Firmware version '%s' SCM revision %d:%d\n", scm_data->fw_version,
-> +		 scm_data->scm_revision >> 4, scm_data->scm_revision & 0x0F);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * scm_probe_function_0 - Set up function 0 for an OpenCAPI Storage Class Memory device
->   * This is important as it enables templates higher than 0 across all other functions,
-> @@ -420,6 +487,8 @@ static int scm_probe_function_0(struct pci_dev *pdev)
->  static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  {
->  	struct scm_data *scm_data = NULL;
-> +	int elapsed;
-> +	u16 timeout;
->  
->  	if (PCI_FUNC(pdev->devfn) == 0)
->  		return scm_probe_function_0(pdev);
-> @@ -469,6 +538,21 @@ static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  		goto err;
->  	}
->  
-> +	if (read_device_metadata(scm_data)) {
-> +		dev_err(&pdev->dev, "Could not read SCM device metadata\n");
-> +		goto err;
-> +	}
-> +
-> +	elapsed = 0;
-> +	timeout = scm_data->readiness_timeout + scm_data->memory_available_timeout;
-> +	while (!scm_is_usable(scm_data)) {
-> +		if (elapsed++ > timeout) {
-> +			dev_warn(&scm_data->dev, "SCM ready timeout.\n");
-> +			goto err;
-> +		}
-> +
-> +		msleep(1000);
-> +	}
->  	if (scm_register_lpc_mem(scm_data)) {
->  		dev_err(&pdev->dev, "Could not register OCXL SCM memory with libnvdimm\n");
->  		goto err;
-> diff --git a/drivers/nvdimm/ocxl/scm_internal.c b/drivers/nvdimm/ocxl/scm_internal.c
-> new file mode 100644
-> index 000000000000..72d3c0e7d846
-> --- /dev/null
-> +++ b/drivers/nvdimm/ocxl/scm_internal.c
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright 2019 IBM Corp.
-> +
-> +#include <misc/ocxl.h>
-> +#include <linux/delay.h>
-> +#include "scm_internal.h"
-> +
-> +int scm_chi(const struct scm_data *scm_data, u64 *chi)
-> +{
-> +	u64 val;
-> +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, GLOBAL_MMIO_CHI,
-> +					 OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	*chi = val;
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
-> index d6ab361f5de9..584450f55e30 100644
-> --- a/drivers/nvdimm/ocxl/scm_internal.h
-> +++ b/drivers/nvdimm/ocxl/scm_internal.h
-> @@ -97,4 +97,28 @@ struct scm_data {
->  	void *metadata_addr;
->  	struct resource scm_res;
->  	struct nd_region *nd_region;
-> +	char fw_version[8+1];
-> +
-> +	u32 max_controller_dump_size;
-> +	u16 scm_revision; // major/minor
-> +	u8 readiness_timeout;  /* The worst case time (in seconds) that the host shall
-> +				* wait for the controller to become operational following a reset (CHI.CRDY).
-> +				*/
-> +	u8 memory_available_timeout;   /* The worst case time (in seconds) that the host shall
-> +					* wait for memory to become available following a reset (CHI.MA).
-> +					*/
-> +
-> +	u16 read_latency; /* The nominal measure of latency (in nanoseconds)
-> +			   * associated with an unassisted read of a memory block.
-> +			   * This represents the capability of the raw media technology without assistance
-> +			   */
->  };
-> +
-> +/**
-> + * scm_chi() - Get the value of the CHI register
-> + * @scm_data: The SCM metadata
-> + * @chi: returns the CHI value
-> + *
-> + * Returns 0 on success, negative on error
-> + */
-> +int scm_chi(const struct scm_data *scm_data, u64 *chi);
-
-
+-- 
+ Kirill A. Shutemov
