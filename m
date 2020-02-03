@@ -2,148 +2,220 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E8EC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B034C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7104420661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B07520661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:07:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KfUoiozT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqL05V7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgBCCFv (ORCPT
+        id S1727240AbgBCCHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 21:05:51 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10826 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727164AbgBCCFv (ORCPT
+        Sun, 2 Feb 2020 21:07:41 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51171 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgBCCHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 21:05:51 -0500
-X-UUID: 71469db80d4c4a238448bf648b9e4005-20200203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NWarxv3wt0FpySWansQ4rSsY2Q9gQTyzvXi1iyPbHi8=;
-        b=KfUoiozTl+xGCm0GvD2XneP2ZVmfO9bJxcTfBM2JruQjmJZ1UvKGiyqhkMYm+fkaIfIB0g/b5Cuza/pnklo4z2bfFbDmN8aPj2PCKlrwrrwwag+qhlrwN6PLt3xe+Qw07XnRaAGHXI6dV1VgoKw8s8Nrz4KWd0ipsaMxytotsBo=;
-X-UUID: 71469db80d4c4a238448bf648b9e4005-20200203
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1162479976; Mon, 03 Feb 2020 10:05:46 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 3 Feb 2020 10:05:06 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 3 Feb 2020 10:05:30 +0800
-Message-ID: <1580695544.17006.7.camel@mtksdccf07>
-Subject: Re: [PATCH v3] lib/stackdepot: Fix global out-of-bounds in
- stackdepot
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Alexander Potapenko <glider@google.com>
-CC:     Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Mon, 3 Feb 2020 10:05:44 +0800
-In-Reply-To: <CAG_fn=X2V0nL=+s38bDbS3UXf2_i61tSevd8vzkV-ZKY=7MHvw@mail.gmail.com>
-References: <20200130064430.17198-1-walter-zh.wu@mediatek.com>
-         <CAG_fn=X_jSUJXD932z9oN5hBa--n3Qct4zrjzGaPtb2MwJye7A@mail.gmail.com>
-         <1580436306.11126.16.camel@mtksdccf07>
-         <CAG_fn=X2V0nL=+s38bDbS3UXf2_i61tSevd8vzkV-ZKY=7MHvw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 2 Feb 2020 21:07:41 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so5602183pjb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 18:07:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=V88riAXlZ3Lt6WD4YILY+go/52mtOZTQuqZNCMK0kYU=;
+        b=vqL05V7yQvq4qRC5RXkSwh6yPq8Se34I62mBzvrI3p6MhB+pI+e87Vxv3xXDgKxhU3
+         RwgLrBs/IyyU+M7QxYJAH7hbnTuH9ubPf91GJzltl+06elPTA15+MvSMbtPaK/raDPxL
+         TfE8yfsGnbYnhCvx34N/DOFuwQ+NWr94y9chnaNkoqcuj2QSc2AMAMXUEoZRn2okfim+
+         UVCsim0CH7um58iLa719gOzEkue84HIghDJcXWqmSHkd9p5Dl2prj4GhWAtao9rwcK9a
+         ip3YQeEPiYIiDiVI/WIR6JBv9TdfIb4Y6r6ARIMVqALtYo5lGbZZtkcIpxM0aIXoHt+c
+         mT1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=V88riAXlZ3Lt6WD4YILY+go/52mtOZTQuqZNCMK0kYU=;
+        b=JnvIAvSWl1hoLgy2VyniMDeNsffge09Jx6NlJdRt6eU6iU9fmI71E2uy2AnlMQaNtK
+         UKbf1CidMADG7WGu+AaZ/PPI3pudWMSG2LX7u2z2xPMpekkaRJreq06biZ15+NIR585G
+         YaZccM5lSa9pjkRuuQo40DYeVJOSdNhr/WAOy6MbDFk+0OPD4YlmiUXxd4H8KOicxmjN
+         ZxFnjSMjFS5F3xUUiXWoEt4dLMNTmvjpQWWrD4VfO4Uva+5GHMfz6vtvkOntXaSLfg0l
+         U/tjXDnBoWfikrzFV2ukaC49Z4GuIP4qWOeoAYz86R/NdHRvDDgGFDM7pnNCKRbbmii2
+         XXTg==
+X-Gm-Message-State: APjAAAUJTfnqJKo720NbepUqzlSfKzrNDOQc65VYnUqNbWrMIAEJVbsX
+        P9OLuipCVQLDtUqGCRdG9wh0VA==
+X-Google-Smtp-Source: APXvYqxKANzDItRx7KBEyi76Jve2TRT9dCT7shgy2FwK9iO9bQSniDxoOgAkNPPHqn+9gEdxDVkihA==
+X-Received: by 2002:a17:90a:da04:: with SMTP id e4mr24960801pjv.26.1580695658796;
+        Sun, 02 Feb 2020 18:07:38 -0800 (PST)
+Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
+        by smtp.gmail.com with ESMTPSA id z29sm17521201pgc.21.2020.02.02.18.07.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 18:07:38 -0800 (PST)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v4 0/5] perf cs-etm: Support thread stack and callchain
+Date:   Mon,  3 Feb 2020 10:07:11 +0800
+Message-Id: <20200203020716.31832-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTMxIGF0IDE5OjExICswMTAwLCBBbGV4YW5kZXIgUG90YXBlbmtvIHdy
-b3RlOg0KPiBPbiBGcmksIEphbiAzMSwgMjAyMCBhdCAzOjA1IEFNIFdhbHRlciBXdSA8d2FsdGVy
-LXpoLnd1QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBUaHUsIDIwMjAtMDEtMzAg
-YXQgMTM6MDMgKzAxMDAsIEFsZXhhbmRlciBQb3RhcGVua28gd3JvdGU6DQo+ID4gPiBPbiBUaHUs
-IEphbiAzMCwgMjAyMCBhdCA3OjQ0IEFNIFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVr
-LmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gSGkgV2FsdGVyLA0KPiA+ID4NCj4gPiA+ID4gSWYg
-dGhlIGRlcG90X2luZGV4ID0gU1RBQ0tfQUxMT0NfTUFYX1NMQUJTIC0gMiBhbmQgbmV4dF9zbGFi
-X2luaXRlZCA9IDAsDQo+ID4gPiA+IHRoZW4gaXQgd2lsbCBjYXVzZSBhcnJheSBvdXQtb2YtYm91
-bmRzIGFjY2Vzcywgc28gdGhhdCB3ZSBzaG91bGQgbW9kaWZ5DQo+ID4gPiA+IHRoZSBkZXRlY3Rp
-b24gdG8gYXZvaWQgdGhpcyBhcnJheSBvdXQtb2YtYm91bmRzIGJ1Zy4NCj4gPiA+ID4NCj4gPiA+
-ID4gQXNzdW1lIGRlcG90X2luZGV4ID0gU1RBQ0tfQUxMT0NfTUFYX1NMQUJTIC0gMw0KPiA+ID4g
-PiBDb25zaWRlciBmb2xsb3dpbmcgY2FsbCBmbG93IHNlcXVlbmNlOg0KPiA+ID4gPg0KPiA+ID4g
-PiBzdGFja19kZXBvdF9zYXZlKCkNCj4gPiA+ID4gICAgZGVwb3RfYWxsb2Nfc3RhY2soKQ0KPiA+
-ID4gPiAgICAgICBpZiAodW5saWtlbHkoZGVwb3RfaW5kZXggKyAxID49IFNUQUNLX0FMTE9DX01B
-WF9TTEFCUykpIC8vcGFzcw0KPiA+ID4gPiAgICAgICBkZXBvdF9pbmRleCsrICAvL2RlcG90X2lu
-ZGV4ID0gU1RBQ0tfQUxMT0NfTUFYX1NMQUJTIC0gMg0KPiA+ID4gPiAgICAgICBpZiAoZGVwb3Rf
-aW5kZXggKyAxIDwgU1RBQ0tfQUxMT0NfTUFYX1NMQUJTKSAvL2VudGVyDQo+ID4gPiA+ICAgICAg
-ICAgIHNtcF9zdG9yZV9yZWxlYXNlKCZuZXh0X3NsYWJfaW5pdGVkLCAwKTsgLy9uZXh0X3NsYWJf
-aW5pdGVkID0gMA0KPiA+ID4gPiAgICAgICBpbml0X3N0YWNrX3NsYWIoKQ0KPiA+ID4gPiAgICAg
-ICAgICBpZiAoc3RhY2tfc2xhYnNbZGVwb3RfaW5kZXhdID09IE5VTEwpIC8vZW50ZXIgYW5kIGV4
-aXQNCj4gPiA+ID4NCj4gPiA+ID4gc3RhY2tfZGVwb3Rfc2F2ZSgpDQo+ID4gPiA+ICAgIGRlcG90
-X2FsbG9jX3N0YWNrKCkNCj4gPiA+ID4gICAgICAgaWYgKHVubGlrZWx5KGRlcG90X2luZGV4ICsg
-MSA+PSBTVEFDS19BTExPQ19NQVhfU0xBQlMpKSAvL3Bhc3MNCj4gPiA+ID4gICAgICAgZGVwb3Rf
-aW5kZXgrKyAgLy9kZXBvdF9pbmRleCA9IFNUQUNLX0FMTE9DX01BWF9TTEFCUyAtIDENCj4gPiA+
-ID4gICAgICAgaW5pdF9zdGFja19zbGFiKCZwcmVhbGxvYykNCj4gPiA+ID4gICAgICAgICAgc3Rh
-Y2tfc2xhYnNbZGVwb3RfaW5kZXggKyAxXSAgLy9oZXJlIGdldCBnbG9iYWwgb3V0LW9mLWJvdW5k
-cw0KPiA+ID4gPg0KPiA+ID4gPiBDYzogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29t
-Pg0KPiA+ID4gPiBDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4N
-Cj4gPiA+ID4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiA+ID4g
-PiBDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+DQo+ID4gPiA+IENj
-OiBKb3NoIFBvaW1ib2V1ZiA8anBvaW1ib2VAcmVkaGF0LmNvbT4NCj4gPiA+ID4gQ2M6IEthdGUg
-U3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gPiA+ID4gQ2M6IEdyZWcg
-S3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+ID4gPiA+IENjOiBL
-YXRlIFN0ZXdhcnQgPGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+ID4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4g
-LS0tDQo+ID4gPiA+IGNoYW5nZXMgaW4gdjI6DQo+ID4gPiA+IG1vZGlmeSBjYWxsIGZsb3cgc2Vx
-dWVuY2UgYW5kIHByZWNvbmRpdG9uDQo+ID4gPiA+DQo+ID4gPiA+IGNoYW5nZXMgaW4gdjM6DQo+
-ID4gPiA+IGFkZCBzb21lIHJldmlld2Vycw0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIGxpYi9zdGFj
-a2RlcG90LmMgfCAyICstDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDEgZGVsZXRpb24oLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2xpYi9zdGFja2Rl
-cG90LmMgYi9saWIvc3RhY2tkZXBvdC5jDQo+ID4gPiA+IGluZGV4IGVkNzE3ZGQwOGZmMy4uN2U4
-YTE1ZTQxNjAwIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9saWIvc3RhY2tkZXBvdC5jDQo+ID4gPiA+
-ICsrKyBiL2xpYi9zdGFja2RlcG90LmMNCj4gPiA+ID4gQEAgLTEwNiw3ICsxMDYsNyBAQCBzdGF0
-aWMgc3RydWN0IHN0YWNrX3JlY29yZCAqZGVwb3RfYWxsb2Nfc3RhY2sodW5zaWduZWQgbG9uZyAq
-ZW50cmllcywgaW50IHNpemUsDQo+ID4gPiA+ICAgICAgICAgcmVxdWlyZWRfc2l6ZSA9IEFMSUdO
-KHJlcXVpcmVkX3NpemUsIDEgPDwgU1RBQ0tfQUxMT0NfQUxJR04pOw0KPiA+ID4gPg0KPiA+ID4g
-PiAgICAgICAgIGlmICh1bmxpa2VseShkZXBvdF9vZmZzZXQgKyByZXF1aXJlZF9zaXplID4gU1RB
-Q0tfQUxMT0NfU0laRSkpIHsNCj4gPiA+ID4gLSAgICAgICAgICAgICAgIGlmICh1bmxpa2VseShk
-ZXBvdF9pbmRleCArIDEgPj0gU1RBQ0tfQUxMT0NfTUFYX1NMQUJTKSkgew0KPiA+ID4gPiArICAg
-ICAgICAgICAgICAgaWYgKHVubGlrZWx5KGRlcG90X2luZGV4ICsgMiA+PSBTVEFDS19BTExPQ19N
-QVhfU0xBQlMpKSB7DQo+IA0KPiBUaGlzIGFnYWluIG1lYW5zIHN0YWNrX3NsYWJzW1NUQUNLX0FM
-TE9DX01BWF9TTEFCUyAtIDJdIGdldHMNCj4gaW5pdGlhbGl6ZWQsIGJ1dCBzdGFja19zbGFic1tT
-VEFDS19BTExPQ19NQVhfU0xBQlMgLSAxXSBkb2Vzbid0LA0KPiBiZWNhdXNlIHdlJ2xsIGJlIGJh
-aWxpbmcgb3V0IGZyb20gaW5pdF9zdGFja19zbGFiKCkgZnJvbSBub3cgb24uDQo+IERvZXMgdGhp
-cyBwYXRjaCBhY3R1YWxseSBmaXggdGhlIHByb2JsZW0gKGRvIHlvdSBoYXZlIGEgcmVsaWFibGUg
-cmVwcm9kdWNlcj8pDQpXZSBnZXQgaXQgYnkgcmV2aWV3aW5nIGNvZGUsIGJlY2F1c2UgS2FzYW4g
-ZG9lc24ndCBzY2FuIGl0IGFuZCB3ZSBjYXRjaA0KYW5vdGhlciBidWcgaW50ZXJuYWxseSwgd2Ug
-Zm91bmQgaXQgdW5pbnRlbnRpb25hbGx5Lg0KDQo+IFRoaXMgYWRkaXRpb24gb2YgMiBpcyBhbHNv
-IGNvdW50ZXJpbnR1aXRpdmUsIEkgZG9uJ3QgdGhpbmsgZnVydGhlcg0KPiByZWFkZXJzIHdpbGwg
-dW5kZXJzdGFuZCB0aGUgbG9naWMgYmVoaW5kIGl0Lg0KPiANClllcw0KDQo+IFdoYXQgaWYgd2Ug
-anVzdCBjaGVjayB0aGF0IGRlcG90X2luZGV4ICsgMSBpcyBhIHZhbGlkIGluZGV4IGJlZm9yZSBh
-Y2Nlc3NpbmcgaXQ/DQo+IA0KSXQgc2hvdWxkIGZpeCB0aGUgcHJvYmxlbSwgZG8geW91IHdhbnQg
-dG8gc2VuZCB0aGlzIHBhdGNoPw0KDQo+IGRpZmYgLS1naXQgYS9saWIvc3RhY2tkZXBvdC5jIGIv
-bGliL3N0YWNrZGVwb3QuYw0KPiBpbmRleCAyZTdkMjIzMmVkM2MuLmMyZTZmZjE4ZDcxNiAxMDA2
-NDQNCj4gLS0tIGEvbGliL3N0YWNrZGVwb3QuYw0KPiArKysgYi9saWIvc3RhY2tkZXBvdC5jDQo+
-IEBAIC0xMDYsNyArMTA2LDkgQEAgc3RhdGljIGJvb2wgaW5pdF9zdGFja19zbGFiKHZvaWQgKipw
-cmVhbGxvYykNCj4gICAgICAgICBpZiAoc3RhY2tfc2xhYnNbZGVwb3RfaW5kZXhdID09IE5VTEwp
-IHsNCj4gICAgICAgICAgICAgICAgIHN0YWNrX3NsYWJzW2RlcG90X2luZGV4XSA9ICpwcmVhbGxv
-YzsNCj4gICAgICAgICB9IGVsc2Ugew0KPiAtICAgICAgICAgICAgICAgc3RhY2tfc2xhYnNbZGVw
-b3RfaW5kZXggKyAxXSA9ICpwcmVhbGxvYzsNCj4gKyAgICAgICAgICAgICAgIC8qIElmIHRoaXMg
-aXMgdGhlIGxhc3QgZGVwb3Qgc2xhYiwgZG8gbm90IHRvdWNoIHRoZSBuZXh0IG9uZS4gKi8NCj4g
-KyAgICAgICAgICAgICAgIGlmIChkZXBvdF9pbmRleCArIDEgPCBTVEFDS19BTExPQ19NQVhfU0xB
-QlMpDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0YWNrX3NsYWJzW2RlcG90X2luZGV4ICsg
-MV0gPSAqcHJlYWxsb2M7DQo+ICAgICAgICAgICAgICAgICAvKg0KPiAgICAgICAgICAgICAgICAg
-ICogVGhpcyBzbXBfc3RvcmVfcmVsZWFzZSBwYWlycyB3aXRoIHNtcF9sb2FkX2FjcXVpcmUoKSBm
-cm9tDQo+ICAgICAgICAgICAgICAgICAgKiB8bmV4dF9zbGFiX2luaXRlZHwgYWJvdmUgYW5kIGlu
-IHN0YWNrX2RlcG90X3NhdmUoKS4NCg0K
+This patch series adds support for thread stack and callchain; this is a
+sequential version from v3 [1] but reorgnized the patches, some changes
+have been refactored into the instruction sample fix patch set [2], and
+this patch set is only to focus on thread stack and callchain support.
+
+Patch 01 is to refactor the instruction size calculation; this patch is
+used by patch 02.
+
+Patch 02 is to add thread stack support, after applying this patch the
+option '-F,+callindent' can be used by perf script tool; patch 03 is to
+add branch filter thus the Perf tool can display branch samples only
+for function calls and returns after enable the call indentation or call
+chain related options.
+
+Patch 04 is to synthesize call chain for the instruction samples.
+
+Patch 05 allows the instruction sample can be handled synchronously with
+the thread stack, thus it fixes an error for the callchain generation.
+
+This patch set has been tested on Juno-r2 after applied on perf/core
+branch with latest commit 85fc95d75970 ("perf maps: Add missing unlock
+to maps__insert() error case"), and this patch set is dependent on the
+instruction sample fix patch set [2].
+
+
+Test for option '-F,+callindent':
+
+Before:
+
+  # perf script -F,+callindent
+            main   840          1          branches: main                                 ffffa2319d20 __libc_start_main+0xe0 (/usr/lib/aarch64-linux-gnu/libc-2.28.so)
+            main   840          1          branches:                                      aaaab94cb7d0 main+0xc (/root/coresight_test/main)
+            main   840          1          branches:                                      aaaab94cb808 main+0x44 (/root/coresight_test/main)
+            main   840          1          branches: lib_loop_test@plt                    aaaab94cb7dc main+0x18 (/root/coresight_test/main)
+            main   840          1          branches: lib_loop_test@plt                    aaaab94cb67c lib_loop_test@plt+0xc (/root/coresight_test/main)
+            main   840          1          branches: _init                                aaaab94cb650 _init+0x30 (/root/coresight_test/main)
+            main   840          1          branches: _dl_fixup                            ffffa24a5b44 _dl_runtime_resolve+0x40 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches: _dl_lookup_symbol_x                  ffffa24a0070 _dl_fixup+0xb8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+  [...]
+
+After:
+
+  # perf script -F,+callindent
+            main   840          1          branches:             main                                                     ffffa2319d20 __libc_start_main+0xe0 (/usr/lib/aarch64-linux-gnu/libc-2.28.so)
+            main   840          1          branches:                 lib_loop_test@plt                                    aaaab94cb7dc main+0x18 (/root/coresight_test/main)
+            main   840          1          branches:                     _dl_fixup                                        ffffa24a5b44 _dl_runtime_resolve+0x40 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                         _dl_lookup_symbol_x                          ffffa24a0070 _dl_fixup+0xb8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                             do_lookup_x                              ffffa249c4a4 _dl_lookup_symbol_x+0x104 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                 check_match                          ffffa249bbf8 do_lookup_x+0x238 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa249b890 check_match+0x70 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                 printf@plt                                           aaaab94cb7f0 main+0x2c (/root/coresight_test/main)
+            main   840          1          branches:                     _dl_fixup                                        ffffa24a5b44 _dl_runtime_resolve+0x40 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                         _dl_lookup_symbol_x                          ffffa24a0070 _dl_fixup+0xb8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                             do_lookup_x                              ffffa249c4a4 _dl_lookup_symbol_x+0x104 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                 _dl_name_match_p                     ffffa249baf8 do_lookup_x+0x138 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa24a17e8 _dl_name_match_p+0x18 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa24a180c _dl_name_match_p+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                 _dl_name_match_p                     ffffa249baf8 do_lookup_x+0x138 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa24a17e8 _dl_name_match_p+0x18 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa24a180c _dl_name_match_p+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                 check_match                          ffffa249bbf8 do_lookup_x+0x238 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa249b890 check_match+0x70 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+            main   840          1          branches:                                     strcmp                           ffffa249b968 check_match+0x148 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+  [...]
+
+
+Test for option '--itrace=g':
+
+Before:
+
+  # perf script --itrace=g16l64i100
+            main   840        100      instructions:  ffff8000102642c0 event_sched_in.isra.119+0x140 ([kernel.kallsyms])
+            main   840        100      instructions:  ffff800010264794 flexible_sched_in+0xe4 ([kernel.kallsyms])
+            main   840        100      instructions:  ffff800010263024 perf_pmu_disable+0x4 ([kernel.kallsyms])
+            main   840        100      instructions:  ffff80001026b0e0 perf_swevent_add+0xb8 ([kernel.kallsyms])
+            main   840        100      instructions:  ffff80001025b504 calc_timer_values+0x34 ([kernel.kallsyms])
+            main   840        100      instructions:  ffff80001019bd24 clocks_calc_mult_shift+0x3c ([kernel.kallsyms])
+            main   840        100      instructions:  ffff80001026556c perf_event_update_userpage+0xec ([kernel.kallsyms])
+            main   840        100      instructions:  ffff80001025c5e4 visit_groups_merge+0x194 ([kernel.kallsyms])
+
+  [...]
+
+After:
+
+  # perf script --itrace=g16l64i100
+
+  main   840        100      instructions: 
+  	ffff800010264794 flexible_sched_in+0xe4 ([kernel.kallsyms])
+  	ffff80001025c57c visit_groups_merge+0x12c ([kernel.kallsyms])
+
+  main   840        100      instructions: 
+  	ffff800010263024 perf_pmu_disable+0x4 ([kernel.kallsyms])
+  	ffff8000102641f0 event_sched_in.isra.119+0x70 ([kernel.kallsyms])
+  	ffff8000102643d8 group_sched_in+0x60 ([kernel.kallsyms])
+  	ffff8000102647b0 flexible_sched_in+0x100 ([kernel.kallsyms])
+  	ffff80001025c57c visit_groups_merge+0x12c ([kernel.kallsyms])
+
+  main   840        100      instructions: 
+  	ffff80001026b0e0 perf_swevent_add+0xb8 ([kernel.kallsyms])
+  	ffff80001026423c event_sched_in.isra.119+0xbc ([kernel.kallsyms])
+  	ffff8000102643d8 group_sched_in+0x60 ([kernel.kallsyms])
+  	ffff8000102647b0 flexible_sched_in+0x100 ([kernel.kallsyms])
+  	ffff80001025c57c visit_groups_merge+0x12c ([kernel.kallsyms])
+
+  [...]
+
+
+Changes from v3:
+* Splitted out separate patch set for instruction samples fixing.
+* Rebased on latest perf/core branch.
+
+Changes from v2:
+* Added patch 01 to fix the unsigned variable comparison to zero
+  (Suzuki).
+* Refined commit logs.
+
+Changes from v1:
+* Added comments for task thread handling (Mathieu).
+* Split patch 02 into two patches, one is for support thread stack and
+  another is for callchain support (Mathieu).
+* Added a new patch to support branch filter.
+
+[1] https://lkml.org/lkml/2019/10/5/51
+[2] https://lkml.org/lkml/2020/2/2/228
+
+
+Leo Yan (5):
+  perf cs-etm: Refactor instruction size handling
+  perf cs-etm: Support thread stack
+  perf cs-etm: Support branch filter
+  perf cs-etm: Support callchain for instruction sample
+  perf cs-etm: Synchronize instruction sample with the thread stack
+
+ tools/perf/util/cs-etm.c | 145 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 121 insertions(+), 24 deletions(-)
+
+-- 
+2.17.1
 
