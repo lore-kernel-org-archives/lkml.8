@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C50C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD6FC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FC320838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844BA21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748074;
-	bh=YXimIeVVabdHST4MA4fpnqw1T32CaDvKUYGappcD4SQ=;
+	s=default; t=1580748081;
+	bh=gITOntd6JjepyRqHUzvVgH4Fg1uLC6E0WP0cBUWuEUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QnApva4E+NiTNoyXuSTzm6sgA2iXlGJgl9lHaWaI1vhncbAejqu8AFOq3LsViIwfE
-	 Jt+5FosscmSOFqv8ZwPsRS+5n2DHOUBapfQgZ1OU9j1fuxVIF8cTIa3PYq5oAI/LR2
-	 xJr5yFLZoQ060K/xPIwseiMWbyeI1xe7z5wFaL0U=
+	b=KNyVGtWJ10q1FlWML3Kkae9JRiJJF+rSqsB3qubSoPVCYZ/tlmHPIQp6GO7t6KYiC
+	 nu55L/zTcy4NMBWM8v8MNooS9kVbhQ3unNOL161PKmAq8qRCieuimTiP+tYaMi7UcI
+	 iReIwvhvrTLYfkZNhT6Xsttrj122QWaQ4VB8d4G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731537AbgBCQlN (ORCPT
+        id S1731553AbgBCQlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:41:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:41:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730327AbgBCQfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:20 -0500
+        id S1730930AbgBCQfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:13 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E0D52082E;
-        Mon,  3 Feb 2020 16:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7610E21582;
+        Mon,  3 Feb 2020 16:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747720;
-        bh=YXimIeVVabdHST4MA4fpnqw1T32CaDvKUYGappcD4SQ=;
+        s=default; t=1580747712;
+        bh=gITOntd6JjepyRqHUzvVgH4Fg1uLC6E0WP0cBUWuEUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fe7h176/t1IH9Wuq+PyKh9l0LpW9ql3rAoDtvVuWnSlDLwAV94dv8VlUvRYfSqNad
-         6WNqGIHMb3DALD7iDHpiy3jlMr5ap2vp/UhkZlZUu7m1DH5bhtv/cSPP5xJcagFhRA
-         PzJYKgwvShz/uHiRZdoxK0MHFT04vf1FtHL/o6qI=
+        b=ge7Vr+z4dtjgLikgtphmnKQkFkgILyD6hMq29WTy8AvcZOMTGOVbrc3GaqTGYBblL
+         D8eGBQgfj1u5uGAVmqrzGZGrw/dhzYCJ75/eSthBuaZ3RO1dyGk3Fiya8xADm1UPY9
+         fZmSpCVWuAvW0jL7Yrv/JA8wif4x+r1u6beL4vB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
+        Arkady Gilinksky <arkady.gilinsky@harmonicinc.com>,
+        Brett Creeley <brett.creeley@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 41/90] igb: Fix SGMII SFP module discovery for 100FX/LX.
-Date:   Mon,  3 Feb 2020 16:19:44 +0000
-Message-Id: <20200203161923.099172116@linuxfoundation.org>
+Subject: [PATCH 5.4 38/90] i40e: Fix virtchnl_queue_select bitmap validation
+Date:   Mon,  3 Feb 2020 16:19:41 +0000
+Message-Id: <20200203161922.708588217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,71 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+From: Brett Creeley <brett.creeley@intel.com>
 
-[ Upstream commit 5365ec1aeff5b9f2962a9c9b31d63f9dad7e0e2d ]
+[ Upstream commit d9d6a9aed3f66f8ce5fa3ca6ca26007d75032296 ]
 
-Changing the link mode should also be done for 100BaseFX SGMII modules,
-otherwise they just don't work when the default link mode in CTRL_EXT
-coming from the EEPROM is SERDES.
+Currently in i40e_vc_disable_queues_msg() we are incorrectly
+validating the virtchnl queue select bitmaps. The
+virtchnl_queue_select rx_queues and tx_queue bitmap is being
+compared against ICE_MAX_VF_QUEUES, but the problem is that
+these bitmaps can have a value greater than I40E_MAX_VF_QUEUES.
+Fix this by comparing the bitmaps against BIT(I40E_MAX_VF_QUEUES).
 
-Additionally 100Base-LX SGMII SFP modules are also supported now, which
-was not the case before.
+Also, add the function i40e_vc_validate_vqs_bitmaps() that checks to see
+if both virtchnl_queue_select bitmaps are empty along with checking that
+the bitmaps only have valid bits set. This function can then be used in
+both the queue enable and disable flows.
 
-Tested with an i210 using Flexoptix S.1303.2M.G 100FX and
-S.1303.10.G 100LX SGMII SFP modules.
-
-Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Suggested-by: Arkady Gilinksky <arkady.gilinsky@harmonicinc.com>
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/e1000_82575.c | 8 ++------
- drivers/net/ethernet/intel/igb/igb_ethtool.c | 2 +-
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ .../ethernet/intel/i40e/i40e_virtchnl_pf.c    | 22 +++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
-index 8a6ef35141292..438b42ce2cd9a 100644
---- a/drivers/net/ethernet/intel/igb/e1000_82575.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
-@@ -530,7 +530,7 @@ static s32 igb_set_sfp_media_type_82575(struct e1000_hw *hw)
- 		dev_spec->module_plugged = true;
- 		if (eth_flags->e1000_base_lx || eth_flags->e1000_base_sx) {
- 			hw->phy.media_type = e1000_media_type_internal_serdes;
--		} else if (eth_flags->e100_base_fx) {
-+		} else if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
- 			dev_spec->sgmii_active = true;
- 			hw->phy.media_type = e1000_media_type_internal_serdes;
- 		} else if (eth_flags->e1000_base_t) {
-@@ -657,14 +657,10 @@ static s32 igb_get_invariants_82575(struct e1000_hw *hw)
- 			break;
- 		}
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 3d24408388226..3515ace0f0201 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2322,6 +2322,22 @@ static int i40e_ctrl_vf_rx_rings(struct i40e_vsi *vsi, unsigned long q_map,
+ 	return ret;
+ }
  
--		/* do not change link mode for 100BaseFX */
--		if (dev_spec->eth_flags.e100_base_fx)
--			break;
--
- 		/* change current link mode setting */
- 		ctrl_ext &= ~E1000_CTRL_EXT_LINK_MODE_MASK;
++/**
++ * i40e_vc_validate_vqs_bitmaps - validate Rx/Tx queue bitmaps from VIRTHCHNL
++ * @vqs: virtchnl_queue_select structure containing bitmaps to validate
++ *
++ * Returns true if validation was successful, else false.
++ */
++static bool i40e_vc_validate_vqs_bitmaps(struct virtchnl_queue_select *vqs)
++{
++	if ((!vqs->rx_queues && !vqs->tx_queues) ||
++	    vqs->rx_queues >= BIT(I40E_MAX_VF_QUEUES) ||
++	    vqs->tx_queues >= BIT(I40E_MAX_VF_QUEUES))
++		return false;
++
++	return true;
++}
++
+ /**
+  * i40e_vc_enable_queues_msg
+  * @vf: pointer to the VF info
+@@ -2347,7 +2363,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto error_param;
+ 	}
  
--		if (hw->phy.media_type == e1000_media_type_copper)
-+		if (dev_spec->sgmii_active)
- 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_SGMII;
- 		else
- 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_PCIE_SERDES;
-diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-index 3182b059bf55c..8959418776f67 100644
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -181,7 +181,7 @@ static int igb_get_link_ksettings(struct net_device *netdev,
- 				advertising &= ~ADVERTISED_1000baseKX_Full;
- 			}
- 		}
--		if (eth_flags->e100_base_fx) {
-+		if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
- 			supported |= SUPPORTED_100baseT_Full;
- 			advertising |= ADVERTISED_100baseT_Full;
- 		}
+-	if ((0 == vqs->rx_queues) && (0 == vqs->tx_queues)) {
++	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
+ 		aq_ret = I40E_ERR_PARAM;
+ 		goto error_param;
+ 	}
+@@ -2409,9 +2425,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto error_param;
+ 	}
+ 
+-	if ((vqs->rx_queues == 0 && vqs->tx_queues == 0) ||
+-	    vqs->rx_queues > I40E_MAX_VF_QUEUES ||
+-	    vqs->tx_queues > I40E_MAX_VF_QUEUES) {
++	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
+ 		aq_ret = I40E_ERR_PARAM;
+ 		goto error_param;
+ 	}
 -- 
 2.20.1
 
