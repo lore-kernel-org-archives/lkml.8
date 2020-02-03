@@ -2,173 +2,107 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC65C3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336C2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4AF2073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116EA2073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbgBCEu2 (ORCPT
+        id S1727315AbgBCE7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 23:50:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45170 "EHLO
+        Sun, 2 Feb 2020 23:59:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15968 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727317AbgBCEu2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726971AbgBCE7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 23:50:28 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0134oJmv129640;
-        Sun, 2 Feb 2020 23:50:19 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xx33wj8kj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 02 Feb 2020 23:50:19 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0134ixx3032356;
-        Mon, 3 Feb 2020 04:45:21 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02dal.us.ibm.com with ESMTP id 2xw0y69mt2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 04:45:21 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0134jJIx61276610
+        Sun, 2 Feb 2020 23:59:40 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0134t5r3019860
+        for <linux-kernel@vger.kernel.org>; Sun, 2 Feb 2020 23:59:38 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xx340umdv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 23:59:38 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Mon, 3 Feb 2020 04:54:36 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 3 Feb 2020 04:54:32 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0134sVhY53412002
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Feb 2020 04:45:19 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4D5E6A051;
-        Mon,  3 Feb 2020 04:45:19 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E69B6A047;
-        Mon,  3 Feb 2020 04:45:19 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.31.110])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Feb 2020 04:45:19 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 809902E2DB0; Mon,  3 Feb 2020 10:15:16 +0530 (IST)
-Date:   Mon, 3 Feb 2020 10:15:16 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 1/3] powerpc/pseries: Account for SPURR ticks on idle CPUs
-Message-ID: <20200203044516.GA13468@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
- <1574856072-30972-2-git-send-email-ego@linux.vnet.ibm.com>
- <87o8wnu3t7.fsf@linux.ibm.com>
+        Mon, 3 Feb 2020 04:54:31 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A4A0211C052;
+        Mon,  3 Feb 2020 04:54:31 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5462711C04C;
+        Mon,  3 Feb 2020 04:54:30 +0000 (GMT)
+Received: from [9.124.31.79] (unknown [9.124.31.79])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Feb 2020 04:54:30 +0000 (GMT)
+Subject: Re: [PATCH v2 1/6] perf annotate: Remove privsize from
+ symbol__annotate() args
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, jolsa@redhat.com
+Cc:     namhyung@kernel.org, irogers@google.com, songliubraving@fb.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200124080432.8065-1-ravi.bangoria@linux.ibm.com>
+ <20200124080432.8065-2-ravi.bangoria@linux.ibm.com>
+ <20200130111653.GE3841@kernel.org>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Mon, 3 Feb 2020 10:24:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8wnu3t7.fsf@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200130111653.GE3841@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
+x-cbid: 20020304-0028-0000-0000-000003D6D8A8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020304-0029-0000-0000-0000249B2F01
+Message-Id: <ab9edd7d-04d1-f988-9f29-81d65a807250@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-02_09:2020-02-02,2020-02-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002030037
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 impostorscore=0 adultscore=0 spamscore=0
+ clxscore=1015 mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2002030038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nathan,
 
-On Wed, Dec 04, 2019 at 04:24:52PM -0600, Nathan Lynch wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> > diff --git a/arch/powerpc/kernel/idle.c b/arch/powerpc/kernel/idle.c
-> > index a36fd05..708ec68 100644
-> > --- a/arch/powerpc/kernel/idle.c
-> > +++ b/arch/powerpc/kernel/idle.c
-> > @@ -33,6 +33,8 @@
-> >  unsigned long cpuidle_disable = IDLE_NO_OVERRIDE;
-> >  EXPORT_SYMBOL(cpuidle_disable);
-> >  
-> > +DEFINE_PER_CPU(u64, idle_spurr_cycles);
-> > +
+
+On 1/30/20 4:46 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jan 24, 2020 at 01:34:27PM +0530, Ravi Bangoria escreveu:
+>> privsize is passed as 0 from all the symbol__annotate() callers.
+>> Remove it from argument list.
 > 
-> Does idle_spurr_cycles need any special treatment for CPU
-> online/offline?
-
-If offline uses extended cede, then we need to take a snapshot of the
-idle_spurr_cycles before going offline and add the delta once we are
-back online. However, since the plan is to deprecate the use of
-extended cede for CPU-Offline and use only rtas-stop-self, we don't
-need any special handling there.
-
-
+> Right, trying to figure out when was it that this became unnecessary to
+> see if this in fact is hiding some other problem...
 > 
-> >  static int __init powersave_off(char *arg)
-> >  {
-> >  	ppc_md.power_save = NULL;
-> > diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-> > index 74c2479..45e2be4 100644
-> > --- a/drivers/cpuidle/cpuidle-pseries.c
-> > +++ b/drivers/cpuidle/cpuidle-pseries.c
-> > @@ -30,11 +30,14 @@ struct cpuidle_driver pseries_idle_driver = {
-> >  static struct cpuidle_state *cpuidle_state_table __read_mostly;
-> >  static u64 snooze_timeout __read_mostly;
-> >  static bool snooze_timeout_en __read_mostly;
-> > +DECLARE_PER_CPU(u64, idle_spurr_cycles);
+> It all starts in the following change, re-reading those patches...
 > 
-> This belongs in a header...
-
-Will move it to the header file.
-
+> - Arnaldo
 > 
-> 
-> > -static inline void idle_loop_prolog(unsigned long *in_purr)
-> > +static inline void idle_loop_prolog(unsigned long *in_purr,
-> > +				    unsigned long *in_spurr)
-> >  {
-> >  	ppc64_runlatch_off();
-> >  	*in_purr = mfspr(SPRN_PURR);
-> > +	*in_spurr = mfspr(SPRN_SPURR);
-> >  	/*
-> >  	 * Indicate to the HV that we are idle. Now would be
-> >  	 * a good time to find other work to dispatch.
-> > @@ -42,13 +45,16 @@ static inline void idle_loop_prolog(unsigned long *in_purr)
-> >  	get_lppaca()->idle = 1;
-> >  }
-> >  
-> > -static inline void idle_loop_epilog(unsigned long in_purr)
-> > +static inline void idle_loop_epilog(unsigned long in_purr,
-> > +				    unsigned long in_spurr)
-> >  {
-> >  	u64 wait_cycles;
-> > +	u64 *idle_spurr_cycles_ptr = this_cpu_ptr(&idle_spurr_cycles);
-> >  
-> >  	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
-> >  	wait_cycles += mfspr(SPRN_PURR) - in_purr;
-> >  	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-> > +	*idle_spurr_cycles_ptr += mfspr(SPRN_SPURR) - in_spurr;
-> 
-> ... and the sampling and increment logic probably should be further
-> encapsulated in accessor functions that can be used in both the cpuidle
-> driver and the default/generic idle implementation. Or is there some
-> reason this is specific to the pseries cpuidle driver?
 
-I am not sure if we use SPURR and PURR for performing accounting on
-Bare-Metal systems. IIUC, the patches proposed by Kamalesh is only to
-use idle_[s]purr and [s]purr on POWERVM LPARs. This is why I coded the
-sampling/increment logic in the pseries cpuidle driver. But you are
-right, in the absence of cpuidle, when we use the default idle
-implementation, we will still need to note the value of
-idle_purr/spurr.
+Ok, I just had a quick look at:
+https://lore.kernel.org/lkml/20171011194323.GI3503@kernel.org/
 
---
-Thanks and Regards
-gautham.
+This change was for python annotation support which, I guess, Jiri didn't posted
+the patches? Jiri, are you planning to post them?
 
+-Ravi
 
