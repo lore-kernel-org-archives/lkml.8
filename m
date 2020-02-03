@@ -2,107 +2,112 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772B7C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4144BC33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4414220658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WpgPJuW5"
+	by mail.kernel.org (Postfix) with ESMTP id 17F5F20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgBCLFL (ORCPT
+        id S1727870AbgBCLF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:05:11 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:46677 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgBCLFL (ORCPT
+        Mon, 3 Feb 2020 06:05:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34991 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbgBCLF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:05:11 -0500
-Received: by mail-qv1-f66.google.com with SMTP id y2so6537408qvu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 03:05:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OEJ+A4YOxXmg2doai7LuIU0V5wHQ//U/Mj3H+TVAh7c=;
-        b=WpgPJuW5nI3+4Rfo01VjSKn6FJqckk1o757wWJDFicvI916HMhqZyF7IBM881Jn9r3
-         ZlVLnmX3QUdGQxJWOE5TUldYoB4vfnvXnFbcdZ+cy1KhVd2mKDeSWluSRjHSmvoHjgoi
-         wIvQRbDI0reAW4dvZqzgw3TmFKeH/9nqnUkiu3kyP0Mzyah0qLxEkDV1rl2kjAq6pzu3
-         kFKOtL2ipKcSGe5AF7JCzJ8VklLxPsMpgAs/PchKxc3yAWhY1k/KWeZgDJWWJMVal572
-         mWzqhEYgl15mncWY7lzOzzTmVCnJ6Q4ZYSKp64Jvns8ygRzFqq86NzQ4BVvsidxR/tnp
-         EZkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OEJ+A4YOxXmg2doai7LuIU0V5wHQ//U/Mj3H+TVAh7c=;
-        b=Bpg/qtEUJ9Pm5uQe0Nek3SgA/tkkm2VKR614uBv8kvb/csEinNG7vp3DqSUs2v/hFI
-         dXqIqbzLEOq3hErrS/9SsRWPEf2DmVh28RZM/n6qWzyMsfuuqJehAkNdCOsNGNRJ2Miz
-         jbIJpr7U5f69UiYhtQjoFgsvxMNAYojQ9um435jndK1OPGBK2+RsEkm3DFafQuMvttXS
-         yimpvB/en5RiRpABLpJkIW/DlS4PVtMJYcXD0LjRauiJzV+sBG+U9525lMT3+rYz5UZ4
-         Yy3R/qVAO0ttngat1ZkJ0kYuubcO5IXvv5IzMURTWYZxZQfCSWheEplZvJvtWbzI5W5G
-         LVxQ==
-X-Gm-Message-State: APjAAAWduJTxikL+CUba3g5vtmXZuVk2QwttDcUk/4JMdtK5b1jJ3KPt
-        vEwPq6Ldr6rbvFE6UjgAjoQYV5MLAsepEbEfun58CQ==
-X-Google-Smtp-Source: APXvYqy6eCOVQtmeClQ9s6Ork9hSmBPuNbq/dE8XHtgI6t13zQY19ElP+2IDJ5qdx3sh2GvUzHF40upVwXeHyLkdQJU=
-X-Received: by 2002:a0c:f28f:: with SMTP id k15mr5153632qvl.76.1580727908949;
- Mon, 03 Feb 2020 03:05:08 -0800 (PST)
+        Mon, 3 Feb 2020 06:05:57 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iyZY5-00046n-Hb; Mon, 03 Feb 2020 12:05:49 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iyZY1-00028x-QW; Mon, 03 Feb 2020 12:05:45 +0100
+Date:   Mon, 3 Feb 2020 12:05:45 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
+Message-ID: <20200203110545.GB24291@pengutronix.de>
+References: <20200120100722.30359-1-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-3-brgl@bgdev.pl>
- <20200201195232.GA17364@roeck-us.net>
-In-Reply-To: <20200201195232.GA17364@roeck-us.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 3 Feb 2020 12:04:57 +0100
-Message-ID: <CAMpxmJU=wvONwure-MS9vb=0fuRgnf+wVshBQn2N=uwcZUG3Bw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling set_config()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120100722.30359-1-martin.kepplinger@puri.sm>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:57:57 up 157 days, 23:12, 161 users,  load average: 0.07, 0.17,
+ 0.15
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 1 lut 2020 o 20:52 Guenter Roeck <linux@roeck-us.net> napisa=C5=82(a)=
-:
->
-> On Tue, Dec 24, 2019 at 01:06:58PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Instead of calling the gpiochip's set_config() callback directly and
-> > checking its existence every time - just add a new routine that perform=
-s
-> > this check internally. Call it in gpio_set_config() and
-> > gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> > the check for chip->set() as it's irrelevant to this config option.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> This patch made it into mainline, even though a regression was reported
-> against it by Geert. Please note that it is not just a theoretic problem
-> but _does_ indeed cause regressions.
->
-> Guenter
->
+Hi Martin,
 
-Hi Guenter,
+On 20-01-20 11:07, Martin Kepplinger wrote:
+> The IMU chip on the librem5-devkit is not mounted at the "natural" place
+> that would match normal phone orientation (see the documentation for the
+> details about what that is).
+> 
+> Since the lsm9ds1 driver supports providing a mount matrix, we can describe
+> the orientation on the board in the dts:
 
-I'm sorry for this, I was still largely unavailable for the past two
-weeks. I'll address it today, this time for real.
+I didn't found the patch which adds the iio_read_mount_matrix()
+support. Appart of that your patch looks good so feel free to add my:
 
-Best regards,
-Bartosz Golaszewski
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de> 
+
+Regards,
+  Marco
+
+> Create a right-handed coordinate system (x * -1; see the datasheet for the
+> axis) and rotate 180 degrees around the y axis because the device sits on
+> the back side from the display.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+> 
+> tested on the librem5-devkit of course, finally fixing the orientation problem
+> for the accelerometer :)
+> 
+> thanks,
+> 
+>                             martin
+> 
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 703254282b96..6c8ab009081b 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -457,6 +457,9 @@
+>  		reg = <0x6a>;
+>  		vdd-supply = <&reg_3v3_p>;
+>  		vddio-supply = <&reg_3v3_p>;
+> +		mount-matrix =  "1",  "0",  "0",
+> +				"0",  "1",  "0",
+> +				"0",  "0", "-1";
+>  	};
+>  };
+>  
+> -- 
+> 2.20.1
