@@ -2,166 +2,74 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCCAC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933E7C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D7E2084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MWWeKH5B"
+	by mail.kernel.org (Postfix) with ESMTP id 70DDD20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgBCM0T (ORCPT
+        id S1728053AbgBCM2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:26:19 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50701 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727746AbgBCM0T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:26:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580732778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1G3DiOYC0S4Ba+SCWCudiO7SLYfZsEB+L93ae7aN88g=;
-        b=MWWeKH5BEDhzlifBHskqs7MNTqdhrdsducnkx6yPlyjFSgD6HVzI3X3zzm0cVZUdsuykuU
-        ZqlMQPGrX2Zntl9pRRaJnBmVJEHCmdQx29FenVcO4ErABnKkYNIW2i1f8CeRuscOFO2DLh
-        NPjddRlB89lQa91QZiVhJG/F68AqMIE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-hmNPL9KLPyeBBu-orpI8Qg-1; Mon, 03 Feb 2020 07:26:14 -0500
-X-MC-Unique: hmNPL9KLPyeBBu-orpI8Qg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07DA213E6;
-        Mon,  3 Feb 2020 12:26:13 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 03DE310841A3;
-        Mon,  3 Feb 2020 12:26:06 +0000 (UTC)
-Date:   Mon, 3 Feb 2020 20:26:02 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-Subject: Re: [PATCH V4] brd: check and limit max_part par
-Message-ID: <20200203122005.GB31450@ming.t460p>
-References: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
+        Mon, 3 Feb 2020 07:28:22 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:48566 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728012AbgBCM2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:28:22 -0500
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iyapr-0004kZ-FK; Mon, 03 Feb 2020 13:28:15 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: mp8859: add supply entry
+Date:   Mon, 03 Feb 2020 13:28:14 +0100
+Message-ID: <2041997.mfULgpQ279@diego>
+In-Reply-To: <20200203110034.1448-1-m.reichl@fivetechno.de>
+References: <20200203110034.1448-1-m.reichl@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:04:41PM +0800, Zhiqiang Liu wrote:
+Am Montag, 3. Februar 2020, 12:00:33 CET schrieb Markus Reichl:
+> Add vin_supply to the regulator description to support a nice
+> regulator tree.
 > 
-> In brd_init func, rd_nr num of brd_device are firstly allocated
-> and add in brd_devices, then brd_devices are traversed to add each
-> brd_device by calling add_disk func. When allocating brd_device,
-> the disk->first_minor is set to i * max_part, if rd_nr * max_part
-> is larger than MINORMASK, two different brd_device may have the same
-> devt, then only one of them can be successfully added.
-> when rmmod brd.ko, it will cause oops when calling brd_exit.
-> 
-> Follow those steps:
->   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
->   # rmmod brd
-> then, the oops will appear.
-> 
-> Oops log:
-> [  726.613722] Call trace:
-> [  726.614175]  kernfs_find_ns+0x24/0x130
-> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-> [  726.615749]  sysfs_remove_group+0x38/0xb0
-> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-> [  726.617320]  blk_unregister_queue+0x98/0x100
-> [  726.618105]  del_gendisk+0x144/0x2b8
-> [  726.618759]  brd_exit+0x68/0x560 [brd]
-> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-> [  726.620384]  el0_svc_common+0x78/0x130
-> [  726.621057]  el0_svc_handler+0x38/0x78
-> [  726.621738]  el0_svc+0x8/0xc
-> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
-> 
-> Here, we add brd_check_and_reset_par func to check and limit max_part par.
-> 
-> --
-> V3->V4:(suggested by Ming Lei)
->  - remove useless change
->  - add one limit of max_part
-> 
-> V2->V3: (suggested by Ming Lei)
->  - clear .minors when running out of consecutive minor space in brd_alloc
->  - remove limit of rd_nr
-> 
-> V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
-> 
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+
+double checked the datasheet for the supply name and all is correct, so
+
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
 > ---
->  drivers/block/brd.c | 27 +++++++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
+>  drivers/regulator/mp8859.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-> index df8103dd40ac..4684f95e3369 100644
-> --- a/drivers/block/brd.c
-> +++ b/drivers/block/brd.c
-> @@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
->  	 *  is harmless)
->  	 */
->  	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
-> -	disk = brd->brd_disk = alloc_disk(max_part);
-> +	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
-> +			0 : max_part);
->  	if (!disk)
->  		goto out_free_queue;
->  	disk->major		= RAMDISK_MAJOR;
-> -	disk->first_minor	= i * max_part;
-> +	disk->first_minor	= i * disk->minors;
-
-The above change isn't necessary.
-
->  	disk->fops		= &brd_fops;
->  	disk->private_data	= brd;
->  	disk->queue		= brd->brd_queue;
-> @@ -468,6 +469,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
->  	return kobj;
->  }
+> diff --git a/drivers/regulator/mp8859.c b/drivers/regulator/mp8859.c
+> index 1d26b506ee5b..6ed987648188 100644
+> --- a/drivers/regulator/mp8859.c
+> +++ b/drivers/regulator/mp8859.c
+> @@ -95,6 +95,7 @@ static const struct regulator_desc mp8859_regulators[] = {
+>  		.id = 0,
+>  		.type = REGULATOR_VOLTAGE,
+>  		.name = "mp8859_dcdc",
+> +		.supply_name = "vin",
+>  		.of_match = of_match_ptr("mp8859_dcdc"),
+>  		.n_voltages = VOL_MAX_IDX + 1,
+>  		.linear_ranges = mp8859_dcdc_ranges,
 > 
-> +static inline void brd_check_and_reset_par(void)
-> +{
-> +	if (unlikely(!max_part))
-> +		max_part = 1;
-> +
-> +	if (max_part > DISK_MAX_PARTS) {
-> +		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
-> +			DISK_MAX_PARTS, DISK_MAX_PARTS);
-> +		max_part = DISK_MAX_PARTS;
-> +	}
-> +
-> +	/*
-> +	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
-> +	 * otherwise, it is possiable to get same dev_t when adding partitions.
-> +	 */
-> +	if ((1U << MINORBITS) % max_part != 0)
-> +		max_part = 1UL << fls(max_part);
-> +}
-
-You should move the above change before capping it to DISK_MAX_PARTS
-since  1UL << fls() may increase 'max_part'.
 
 
-Thanks, 
-Ming
+
 
