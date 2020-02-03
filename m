@@ -2,51 +2,51 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A0DC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757C62051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F084E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748423;
-	bh=CiQeIRcGx1eIKU7i3VXIcuFBQVvaTX2mx9Zqf/l7cyA=;
+	s=default; t=1580748428;
+	bh=Nk9jNBcw53r9L6+tLhH7YjGpWnkMDQa7jjKGCG4czck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGOb9qZ95tHaukQIAmSckWTCZtWoY0CFeilR4OTB941fL+wBx0jT+JYjifGliTjov
-	 FPzXblfwhnmyeWs4j/Ls0NzwyhEk2UA7HTvU7kVOc+NEUnKQjVE9+ILog96eyLnpBl
-	 vXIEn5gZ6UMdwqlWEDIvbYkD5sKCMAiViEOc9I+s=
+	b=EggbMqA2XKJcdsDPEEHmM/L42Azd5ziajs3D42BGfI8L6MXA83sOILZZs/21Yj5N1
+	 n6smRTUr7ARWNLd/8L5+ukSNlzzHmqfTZ5WZHQJU3XXjKLB0RZb/liTu9qKDA+vK2Z
+	 JPUdaBPzcAMl5DckJZqmTUxGaz+5kZZKDUXO5eKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgBCQ2F (ORCPT
+        id S1730162AbgBCQrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:28:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39254 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgBCQ1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:50 -0500
+        id S1729511AbgBCQ2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:02 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C9220838;
-        Mon,  3 Feb 2020 16:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFBA921744;
+        Mon,  3 Feb 2020 16:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747270;
-        bh=CiQeIRcGx1eIKU7i3VXIcuFBQVvaTX2mx9Zqf/l7cyA=;
+        s=default; t=1580747282;
+        bh=Nk9jNBcw53r9L6+tLhH7YjGpWnkMDQa7jjKGCG4czck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l5gkyEFsvqyBUVmTLdSShThHn4Lr/fDG8ATAr4Te0eti/K1mlZ0zhVmb7TOgkZqd3
-         ajqzhfgU/uAbHxqPPQAvnS6HAABLifgxDrLo29qEuCL/RwqmhpEQgYZhpagWGtygXn
-         qQvqbvZ3DWmCpYRm0tfP4FotTE3KIhxkBgWgG4gg=
+        b=HFWltWhdYWEbw4P+pxRl9kP8yMHCjuYs3P5hhqxdcyoeXqAFBvUtH84868H33x3SZ
+         CQbw7GLOQFHpF5x+g0DWf0hu11u4YL/2s0T9OqOCs2v78RMlmSK46mcVOx3URTKGlh
+         IsArs2+ESQVhieMUCuKbBxqtSQWeech8xzQl102U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 14/89] ath9k: fix storage endpoint lookup
-Date:   Mon,  3 Feb 2020 16:18:59 +0000
-Message-Id: <20200203161918.759534226@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 19/89] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
+Date:   Mon,  3 Feb 2020 16:19:04 +0000
+Message-Id: <20200203161919.493054041@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -59,37 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
+[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
 
-Make sure to use the current alternate setting when verifying the
-storage interface descriptors to avoid submitting an URB to an invalid
-endpoint.
+The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
+which is connected to an ITE 8595 USB keyboard controller chip.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+This keyboard has the same quirk for its rfkill / airplane mode hotkey as
+other keyboards with the ITE 8595 chip, it only sends a single release
+event when pressed and released, it never sends a press event.
 
-Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
-Cc: stable <stable@vger.kernel.org>     # 2.6.39
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This commit adds this keyboards USB id to the hid-ite id-table, fixing
+the rfkill key not working on this keyboard.
 
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ids.h | 1 +
+ drivers/hid/hid-ite.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -1214,7 +1214,7 @@ err_fw:
- static int send_eject_command(struct usb_interface *interface)
- {
- 	struct usb_device *udev = interface_to_usbdev(interface);
--	struct usb_host_interface *iface_desc = &interface->altsetting[0];
-+	struct usb_host_interface *iface_desc = interface->cur_altsetting;
- 	struct usb_endpoint_descriptor *endpoint;
- 	unsigned char *cmd;
- 	u8 bulk_out_ep;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 1e2e6e58256ad..9d372fa7c298c 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1024,6 +1024,7 @@
+ #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
+ #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
+ #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
++#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
+ #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+ 
+ #define USB_VENDOR_ID_TEXAS_INSTRUMENTS	0x2047
+diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
+index 98b059d79bc89..2ce1eb0c92125 100644
+--- a/drivers/hid/hid-ite.c
++++ b/drivers/hid/hid-ite.c
+@@ -43,6 +43,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
+ static const struct hid_device_id ite_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
++	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
++			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, ite_devices);
+-- 
+2.20.1
+
 
 
