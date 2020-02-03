@@ -2,129 +2,130 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47F7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE3AC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8FF2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAA82082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JI6jEFfq"
+	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="Lk62Mgcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgBCQy2 (ORCPT
+        id S1728728AbgBCQ5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:54:28 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:47085 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbgBCQy1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:54:27 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y2so7083451qvu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 08:54:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hpGMGa/PI1PP+WC+wjiN2o66llJoPNYf7JDCErHl5Ac=;
-        b=JI6jEFfqL+Mii8G3HK+m8c/yOwojkSlxGF+ZSVvsh6ocJEzMXC/8aa8tCqebmJTs4r
-         UkagPADuzIUIIrCENIrmwNaij4j+5lZZDrzkciN7g4H/uVTzfu0OmpYXgKpUhP6hCpFk
-         UPKlFeVxRVVPRu4yxOJqOlFRpi0tMELj2XqEQgaH1+ImFI5UqrKNMOhVKxuiU5F9B8Xu
-         b4oxtjIaM6Sx2g+6ceHsTRkn1pYnbK10aqh2qMf8MRWGCK6Ofdud4W38ovt0p01DH4Dd
-         cZwXLfrQSUn24p/0M9EmT9fSa0wzGbmQl1qawvHeSxG41msutojlkNxjsKLozMyg9LHn
-         Xz4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hpGMGa/PI1PP+WC+wjiN2o66llJoPNYf7JDCErHl5Ac=;
-        b=CLfUXEdldAsOp3sh1sBFOKmcghv0dd8SNz+WsI73w1zueZ+9YDe6ngnIepUoCal3oF
-         XbMMIpgHTStv4k4/OCSXIt6jp8IwnLUPVYys3NCjoQvABUaeYLp97osuUjyuHyzJf+pY
-         zr/xm0ANGZIV/uJPwfsMETOZksNhnbaKNXhogZGUAr0bqTU94KwaWi3npp6sDM3Y+PTS
-         kQYtPGATvTysd1zLT1PkOI/k/5lqHtoDJKrAatKFYGqPh6AcHU2UwOnUlR5ouMgojk0e
-         LLkI+KxdHHZfrr0hRJYG4a6E+hg6eylSnI+QGUDUv1vBf9/bYavo5OMu9SLcDVAbmAiJ
-         4YrA==
-X-Gm-Message-State: APjAAAW3k9WuLXtESOw/U01WgZDRFnOkIRGIwsSEBM6ULojW3Qj5V4KY
-        kbpzoTQ32S64Br21lA6aGWUDv5j1
-X-Google-Smtp-Source: APXvYqxL7A5eltrnMc1mBAES9UGM0fxDjJmgzeXgFEfdU27GvIB9xwhBArcHc9vCAIWH/br0OF03ZQ==
-X-Received: by 2002:a0c:fac1:: with SMTP id p1mr23906169qvo.231.1580748866223;
-        Mon, 03 Feb 2020 08:54:26 -0800 (PST)
-Received: from gateway.troianet.com.br (ipv6.troianet.com.br. [2804:688:21:4::2])
-        by smtp.gmail.com with ESMTPSA id 65sm10362685qtf.95.2020.02.03.08.54.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 08:54:25 -0800 (PST)
-From:   Eneas U de Queiroz <cotequeiroz@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Eneas U de Queiroz <cotequeiroz@gmail.com>
-Subject: [PATCH 2/2] crypto: qce - use AES fallback when len <= 512
-Date:   Mon,  3 Feb 2020 13:53:34 -0300
-Message-Id: <20200203165334.6185-3-cotequeiroz@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200203165334.6185-1-cotequeiroz@gmail.com>
-References: <20200203165334.6185-1-cotequeiroz@gmail.com>
+        Mon, 3 Feb 2020 11:57:25 -0500
+Received: from mail-mw2nam10on2082.outbound.protection.outlook.com ([40.107.94.82]:25010
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727716AbgBCQ5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:57:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m9jRuk5x8vIIo/WmrUqLgorQOUwaPXWTMDgAWBwkMG50YgSi1njqS6sjDu7Zbcfz5kl70BYj7iEvxTiTDPGk4r/RHMafN80O1NZJcqQ5bd0cx8OsePUntLBUlnbdgGdOC2uk/iI9ucZap4ja+1wXh95OlTKXOvdPM1Z6YQP4fPhqNHxz988PUw3zfQ8VZZisq0oe3IlpOmZpkuaGcbSs1yaaSqWMM79uT8Vc+r9l5njIzA/5dgBae1IEURF/DZKqRVdXW+phi7pf91l/agIJLdCm9L4WEccAV7KaBSaA1/h/gom52AVJHaGi+poa19tXhzxJmbw/4j+PyUlgOx20ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2oG8EhnfJI/mtTvQpd7S/DQAPmeWwUzWs3Q+kAr3FOw=;
+ b=MGlkl43AkUFLeO1ougsCCnXvuVggIy/i3dC3sj9XHIj1UggjkuOD7QnI+2k9HVPGuYRY1aK+D2DyQepvUIMZDngu3V0gCmNP5e/l8Vjptxjcmv0tUSieeY9lATtI+uNyijF6e2u+pwi8PqiKR+KeuoCJT6+obT4i0XclBPBAiieKDkGoYztEiCwAYGTU8vINpnvAUv5kdUMtZq+agv7eQK9fALHpiLZYyMbnhBbghPCIP5wtuzQLNHtjQmNeguMr9/J+vEZNO6Cy5K/SFbarKH/y24QFiFcnZfhfCpwb7Yad22V30qOEK6YY2spn7SD7Gt4GB07kvDJyGUmzk1SvrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
+ dkim=pass header.d=infinera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2oG8EhnfJI/mtTvQpd7S/DQAPmeWwUzWs3Q+kAr3FOw=;
+ b=Lk62MgcntyyQT0p08lgXoJl0ynuwKEY1Zso9pVjhpPynqnd6ppxuwPHzu/snrwVOqhExU8EAU/5iMHJxXjBTTYQ02rfLbfgx3fYu/1ZZN8WHh0dXJizX6BXkitU+lT/0pPB8f0bSL6HRNRURETge/FgP4TQUTnp7Cslrnxkoi3c=
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.77.152) by
+ BN8PR10MB3122.namprd10.prod.outlook.com (20.179.136.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.30; Mon, 3 Feb 2020 16:57:19 +0000
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::6922:a072:d75e:74ef]) by BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::6922:a072:d75e:74ef%7]) with mapi id 15.20.2686.031; Mon, 3 Feb 2020
+ 16:57:19 +0000
+From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc/32s: Slenderize _tlbia() for powerpc 603/603e
+Thread-Topic: [PATCH] powerpc/32s: Slenderize _tlbia() for powerpc 603/603e
+Thread-Index: AQHV2rIGZrz+QhEtGU6AUzvbXw5RXKgJsJeA
+Date:   Mon, 3 Feb 2020 16:57:18 +0000
+Message-ID: <bfab6635148b83deed8ac9fcbb19dde8c32fb988.camel@infinera.com>
+References: <12f4f4f0ff89aeab3b937fc96c84fb35e1b2517e.1580748445.git.christophe.leroy@c-s.fr>
+In-Reply-To: <12f4f4f0ff89aeab3b937fc96c84fb35e1b2517e.1580748445.git.christophe.leroy@c-s.fr>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
+x-originating-ip: [88.131.87.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4f155cfb-76c1-4f58-ef69-08d7a8ca213d
+x-ms-traffictypediagnostic: BN8PR10MB3122:
+x-microsoft-antispam-prvs: <BN8PR10MB312290A6882919B4C066B363F4000@BN8PR10MB3122.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 0302D4F392
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(376002)(346002)(136003)(189003)(199004)(4326008)(71200400001)(81166006)(66946007)(66446008)(54906003)(186003)(81156014)(6486002)(36756003)(5660300002)(6512007)(86362001)(8936002)(2906002)(6506007)(2616005)(110136005)(478600001)(26005)(76116006)(91956017)(64756008)(66556008)(66476007)(316002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3122;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: infinera.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tX6bXyu0maiQa28Xs2liHjRK4uz5jjiQUAuVlEDs/8WQeILM2kK7a1m/ACjOmvwVADp209CZxb1Cimf3WYEVShHLh8cavYP8bUc1bFaxsedHJg9dR/FAivopjzHSy/n1P/NoHqDGSC8D9bQ/fHVaf3SSoNkXC1Vw5dLKkKYGgB+0QqyRSE4iB35A/5b/0fclomASIeY7z3Ucv1ZunwjxXGdh7R1LVoaogtIMt+ii+ooJneyXeFJLrrnZi1uSUtAHnUUyO7xN0CiGWWbjjewlIF/rNkY8Zj6+aj3Av80mlboflt8KaSjYoUlDcNu0PKWJUdfsVJtV40A7wfF1FA45MLOPcWn8o3MbPco79o0kzAN7dy54QQEPmsG24HjPI+zMGgqcwi28VGnVkJbTU1oSjKhx65+JuxxKMzRY1QPPHeoQxoW9YsRGDRb2IG9Wc+gt
+x-ms-exchange-antispam-messagedata: pjbDxDaUKy8E1YJg/+2i+4VKrhsZgQ3gJbm7U8C8rsHzrF5qRsbRS7onvZF5g/qB1bK7htgYpcPE2lv+ADHkWmkIeEcqWFzKjyx4TIeq2vsMeRvnNFo2967SC2ZtwZLhQmLH6u0jasCRDgjB8CKrPA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A4BAA88EE63DCB40B83010576C289562@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: infinera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f155cfb-76c1-4f58-ef69-08d7a8ca213d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2020 16:57:18.9292
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aKWz+LJ5lbVv3KApuDMyAlqA75HM1LdaOmJAu7nbk3bvvC2SIS2YKqiSV/dAaZMewezc9vdNO8XK4Dmmsp/Vnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Process small blocks using the fallback cipher, as a workaround for an
-observed failure (DMA-related, apparently) when computing the GCM ghash
-key.  This brings a speed gain as well, since it avoids the latency of
-using the hardware engine to process small blocks.
-
-Using software for all 16-byte requests would be enough to make GCM
-work, but to increase performance, a larger threshold would be better.
-Measuring the performance of supported ciphers with openssl speed,
-software matches hardware at around 768-1024 bytes.
-
-Considering the 256-bit ciphers, software is 2-3 times faster than qce
-at 256-bytes, 30% faster at 512, and about even at 768-bytes.  With
-128-bit keys, the break-even point would be around 1024-bytes.
-
-The threshold is being set a little lower, to 512 bytes, to balance the
-cost in CPU usage.
-
-Signed-off-by: Eneas U de Queiroz <cotequeiroz@gmail.com>
-
-diff --git a/drivers/crypto/qce/skcipher.c b/drivers/crypto/qce/skcipher.c
-index 63ae75809cb7..b1b090349a80 100644
---- a/drivers/crypto/qce/skcipher.c
-+++ b/drivers/crypto/qce/skcipher.c
-@@ -166,15 +166,10 @@ static int qce_skcipher_setkey(struct crypto_skcipher *ablk, const u8 *key,
- 	switch (IS_XTS(flags) ? keylen >> 1 : keylen) {
- 	case AES_KEYSIZE_128:
- 	case AES_KEYSIZE_256:
-+		memcpy(ctx->enc_key, key, keylen);
- 		break;
--	default:
--		goto fallback;
- 	}
- 
--	ctx->enc_keylen = keylen;
--	memcpy(ctx->enc_key, key, keylen);
--	return 0;
--fallback:
- 	ret = crypto_sync_skcipher_setkey(ctx->fallback, key, keylen);
- 	if (!ret)
- 		ctx->enc_keylen = keylen;
-@@ -224,8 +219,9 @@ static int qce_skcipher_crypt(struct skcipher_request *req, int encrypt)
- 	rctx->flags |= encrypt ? QCE_ENCRYPT : QCE_DECRYPT;
- 	keylen = IS_XTS(rctx->flags) ? ctx->enc_keylen >> 1 : ctx->enc_keylen;
- 
--	if (IS_AES(rctx->flags) && keylen != AES_KEYSIZE_128 &&
--	    keylen != AES_KEYSIZE_256) {
-+	if (IS_AES(rctx->flags) &&
-+	    ((keylen != AES_KEYSIZE_128 && keylen != AES_KEYSIZE_256)
-+	     || req->cryptlen <= 512)) {
- 		SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, ctx->fallback);
- 
- 		skcipher_request_set_sync_tfm(subreq, ctx->fallback);
+T24gTW9uLCAyMDIwLTAyLTAzIGF0IDE2OjQ3ICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
+Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
+cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
+cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
+Cj4gDQo+IA0KPiBfdGxiaWEoKSBpcyBhIGZ1bmN0aW9uIHVzZWQgb25seSBvbiA2MDMvNjAzZSBj
+b3JlLCBpZSBvbiBDUFVzIHdoaWNoDQo+IGRvbid0IGhhdmUgYSBoYXNoIHRhYmxlLg0KPiANCj4g
+X3RsYmlhKCkgdXNlcyB0aGUgdGxiaWEgbWFjcm8gd2hpY2ggaW1wbGVtZW50cyBhIGxvb3Agb2Yg
+MTAyNCB0bGJpZS4NCj4gDQo+IE9uIHRoZSA2MDMvNjAzZSBjb3JlLCBmbHVzaGluZyB0aGUgZW50
+aXJlIFRMQiByZXF1aXJlcyBubyBtb3JlIHRoYW4NCj4gMzIgdGxiaWUuDQo+IA0KPiBSZXBsYWNl
+IHRsYmlhIGJ5IGEgbG9vcCBvZiAzMiB0bGJpZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENocmlz
+dG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPg0KPiAtLS0NCj4gIGFyY2gvcG93
+ZXJwYy9tbS9ib29rM3MzMi9oYXNoX2xvdy5TIHwgMTMgKysrKysrKystLS0tLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9hcmNoL3Bvd2VycGMvbW0vYm9vazNzMzIvaGFzaF9sb3cuUyBiL2FyY2gvcG93ZXJwYy9t
+bS9ib29rM3MzMi9oYXNoX2xvdy5TDQo+IGluZGV4IGMxMWIwYTAwNTE5Ni4uYTUwMzlhZDEwNDI5
+IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvbW0vYm9vazNzMzIvaGFzaF9sb3cuUw0KPiAr
+KysgYi9hcmNoL3Bvd2VycGMvbW0vYm9vazNzMzIvaGFzaF9sb3cuUw0KPiBAQCAtNjk2LDE4ICs2
+OTYsMjEgQEAgX0dMT0JBTChfdGxiaWEpDQo+ICAgICAgICAgYm5lLSAgICAxMGINCj4gICAgICAg
+ICBzdHdjeC4gIHI4LDAscjkNCj4gICAgICAgICBibmUtICAgIDEwYg0KPiArI2VuZGlmIC8qIENP
+TkZJR19TTVAgKi8NCj4gKyAgICAgICBsaSAgICAgIHI1LCAzMg0KPiArICAgICAgIGxpcyAgICAg
+cjQsIEtFUk5FTEJBU0VAaA0KPiArICAgICAgIG10Y3RyICAgcjUNCj4gICAgICAgICBzeW5jDQo+
+IC0gICAgICAgdGxiaWENCj4gKzA6ICAgICB0bGJpZSAgIHI0DQo+ICsgICAgICAgYWRkaSAgICBy
+NCwgcjQsIDB4MTAwMA0KDQpJcyBwYWdlIHNpemUgYWx3YXlzIDQwOTYgaGVyZSBvciBkb2VzIGl0
+IG5vdCBtYXR0ZXIgPw0KDQo+ICsgICAgICAgYmRueiAgICAwYg0KPiAgICAgICAgIHN5bmMNCj4g
+KyNpZmRlZiBDT05GSUdfU01QDQo+ICAgICAgICAgVExCU1lOQw0KPiAgICAgICAgIGxpICAgICAg
+cjAsMA0KPiAgICAgICAgIHN0dyAgICAgcjAsMChyOSkgICAgICAgICAgICAgICAgLyogY2xlYXIg
+bW11X2hhc2hfbG9jayAqLw0KPiAgICAgICAgIG10bXNyICAgcjEwDQo+ICAgICAgICAgU1lOQ182
+MDENCj4gICAgICAgICBpc3luYw0KPiAtI2Vsc2UgLyogQ09ORklHX1NNUCAqLw0KPiAtICAgICAg
+IHN5bmMNCj4gLSAgICAgICB0bGJpYQ0KPiAtICAgICAgIHN5bmMNCj4gICNlbmRpZiAvKiBDT05G
+SUdfU01QICovDQo+ICAgICAgICAgYmxyDQo+IC0tDQo+IDIuMjUuMA0KPiANCg0K
