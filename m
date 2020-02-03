@@ -2,97 +2,142 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9D2C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBD6C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812292082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580724144;
-	bh=ahQQuLeVqRAeyXyZkeWfDPhMHbc2ezc3Vjb5QoYyF+k=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aZNnvFFAWieakrljHrIX4HxCMyShutnSiWQvepyEpduwbzWwQ+4lIObsvduNHViDw
-	 hu39KhcGhJYdfZ3DxQVQAVWbhKLl8fUD7tCuxzXpTDgNx5F1X90cZYBzNK6pdqHmFV
-	 E5JGoUxJvHcGX2eGcRWPM4ztT6TWUO2b8hbu18h0=
+	by mail.kernel.org (Postfix) with ESMTP id D71B720661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Ipert6Nc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbgBCKCX (ORCPT
+        id S1727569AbgBCKD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:02:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgBCKCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:02:23 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B537D20661;
-        Mon,  3 Feb 2020 10:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580724143;
-        bh=ahQQuLeVqRAeyXyZkeWfDPhMHbc2ezc3Vjb5QoYyF+k=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=Tfo8yOtgWCScFhAUIo507L4tR5sodkhhjKX+bgYWpvA0Xi32rVKt/i1vj5gUNRRO5
-         cr0vi1oixVnXC87JDZeTag6rAmtywF6govCz45tjSBUCpAmTqbZBiu1Whj/+Po/YV+
-         3R/bVh61Mh3QOuOMQK7mgAIhcXYal1VLM7H3+0mo=
-Date:   Mon, 3 Feb 2020 11:02:19 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Roderick Colenbrander <thunderbird2k@gmail.com>
-cc:     Martyn Welch <martyn@welchs.me.uk>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Conn O'Griofa <connogriofa@gmail.com>,
-        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
-Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
-In-Reply-To: <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.2002031100500.31058@cbobk.fhfr.pm>
-References: <20200126194513.6359-1-martyn@welchs.me.uk> <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com> <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk> <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 3 Feb 2020 05:03:56 -0500
+Received: from mail-eopbgr40084.outbound.protection.outlook.com ([40.107.4.84]:36998
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727027AbgBCKDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 05:03:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Oa/PQPr0e4amn4Oy3cOT2cHUDsmyHzJMrhYpAJKOTWmC9M1FnENRFBy85Amy0+cd9SJDtvdM7JDObb6fzHKAbaQ9HLuvUpdfgDw22FtqyFIE61dkNHsjQ8DtFXXUg/ysktyJAhyK4apzo3sSX5OU9Zm5fJ6Wlfxo2QbDDmJ+4Y43/IgqgFJ7vsq9spml2W4NWaC1nJZqzNIZLFlfc/TycNxnYyXIoQnkP/ro7RbowGSm7dNsw2GPIjPDZVjghM75eyNxUiqmWggnrxMtcMFdEIeZ5MxLNzkZo9IcqKBg9pbDYvaEru7bRBCCq42pHmRk1vmYzieFGSXc1dFoaWjleA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=akvO1PwgNzOSkqx2y1qAsOKvDi/y2JJkRSeKHdNNSUk=;
+ b=Us9aeevXCCVw0FTmKENClGV+Sn7Wr20JfGkvmnSqpMQsQuCNqnGL9oDLno5TEPGEu3rO0QnF5YG5wCShVmth9RAHhFWB3yxyEljVqbnwcUS7OkrXG+taqYyL/0ywvnx003//gVgvrZWuv7yER+2bPUD1vN9XihnA9OeNPqmuHjf0qSCCsSvIsYCSv6owhcZZsL90PawvslzOHPf3xf3qJvLkthKfHg6noF4V6T/W5QskFspoCZxAQLvJt/dT3IML7T1oXY0ULCwhF/0skQS1ROSlxgkn80t4wOUFuakIIkKbbz1TuwfqC0ELTT3bR/1Kv0p448AU4glVad6cMSKcrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=akvO1PwgNzOSkqx2y1qAsOKvDi/y2JJkRSeKHdNNSUk=;
+ b=Ipert6Nc2kIUWYekf+tvl49tl2sV5rVpv/23+oWPztYArs5lUWKu0xeO3cyrgfIP/Av3FFI/UgK849VYqeUGou1U4YzNHBFOe2tBUshQ8fenMMshlk2/0vR1K6smXVR81UvSLDkR5tjM2zj9PQ7gnj7EviGZpwKPlul8JAbi9/I=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=petrm@mellanox.com; 
+Received: from HE1PR05MB4746.eurprd05.prod.outlook.com (20.176.168.150) by
+ HE1PR05MB3193.eurprd05.prod.outlook.com (10.170.246.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.27; Mon, 3 Feb 2020 10:03:51 +0000
+Received: from HE1PR05MB4746.eurprd05.prod.outlook.com
+ ([fe80::c146:9acd:f4dc:4e32]) by HE1PR05MB4746.eurprd05.prod.outlook.com
+ ([fe80::c146:9acd:f4dc:4e32%7]) with mapi id 15.20.2686.031; Mon, 3 Feb 2020
+ 10:03:50 +0000
+References: <20200130232641.51095-1-natechancellor@gmail.com> <31537c12-8f17-660d-256d-e702d1121367@infradead.org> <20200131014816.GA54472@ubuntu-x2-xlarge-x86>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Petr Machata <petrm@mellanox.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mlxsw: spectrum_qdisc: Fix 64-bit division error in mlxsw_sp_qdisc_tbf_rate_kbps
+In-reply-to: <20200131014816.GA54472@ubuntu-x2-xlarge-x86>
+Date:   Mon, 03 Feb 2020 11:03:42 +0100
+Message-ID: <87wo94asxt.fsf@mellanox.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM4PR05CA0015.eurprd05.prod.outlook.com (2603:10a6:205::28)
+ To HE1PR05MB4746.eurprd05.prod.outlook.com (2603:10a6:7:a3::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from yaviefel (213.220.234.169) by AM4PR05CA0015.eurprd05.prod.outlook.com (2603:10a6:205::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.32 via Frontend Transport; Mon, 3 Feb 2020 10:03:50 +0000
+X-Originating-IP: [213.220.234.169]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0bba5a10-0903-442a-e8cb-08d7a8905e54
+X-MS-TrafficTypeDiagnostic: HE1PR05MB3193:|HE1PR05MB3193:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR05MB31933C21A031EFC9C3B5D763DB000@HE1PR05MB3193.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0302D4F392
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(189003)(199004)(956004)(2616005)(2906002)(52116002)(36756003)(6496006)(8936002)(6486002)(86362001)(6666004)(16526019)(186003)(6916009)(54906003)(478600001)(26005)(316002)(5660300002)(81166006)(4326008)(66476007)(53546011)(66946007)(66556008)(81156014)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR05MB3193;H:HE1PR05MB4746.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Dtf5QfWzrktG2GpnTy5DG2SfMWXsFnwdxoC+eK1PKR4Yu2MVKCn4LEfvyEJZwerBCd/yrsDVSx5F0ZHwsdlKhL1+WQSUv77Zl0bi834X6jnqCjPE+PU0RC7mrthNO6N5n/3jfBGAzz0b2dGcNGFpxkpVmDYD2hBmrx3yEbRDdDU4oL2K3phe+ueykpoNAENnr34YOC5YiNKVXjRz8x6Y40+v9OB/JH/BqUGl0ANehr0zof5dLwsY8Mt5RmaSlJ+on7xQ1jmFZC80OJ9Nl8H0Yu/nZ8xN69tCWyJTQ5u6c/FkP5prif5CoQh4wzTXCIcLL5Hh6bmDhahz1H964F1vSpGisleEEt+2DN8E3pSXv773QLBBv7GuEN908ZgJCbKglAlEjCceueq/Gc4zxQXpODcpmaZ4iMk/iU8ERTwtIRfXTlRSPWvp5f2aqrUn01vT
+X-MS-Exchange-AntiSpam-MessageData: iS/v6ga0Jis/Ta41Ik+Kjt+J8pGjPWMbbxH8vIY3IQOmcY8PsEvDKkeo4TP5Pmf/xAOjdRbtmkwALSKqQnWa3JfRz13/GKKuomaRlnH17GC1Ru8G0yCnsi49sWNbFM4HXsdb95ntrYTJwGLaH6rBlQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bba5a10-0903-442a-e8cb-08d7a8905e54
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 10:03:50.9353
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pEeVXOCo55WvtyDyqhjN/83UyJmjvA+bx2Q5R6Yx9SrRzoRM2SVJJXZoGGblqPJWxt0EEVxUX6xAvGdOIfq40Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR05MB3193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020, Roderick Colenbrander wrote:
 
-> Let me explain the situation a little bit better from our angle. These 
-> devices exist and from the Linux community perspective of course they 
-> should see some level of support. And as I said since this is PS3 
-> generation I don't have much of a concern.
-> 
-> Where it becomes tricky for any company in our situation is the support 
-> side. We don't know these devices and don't have access to datasheets or 
-> anything, but when such code is in our "official driver" it means we 
-> have to involve them in our QA process and support them in some manner 
-> (kind of legitimizing their existence as well). We now support this 
-> driver in a large capacity (pretty much all mobile devices will start 
-> shipping it) it puts challenges on our partners (not a big issue since 
-> just PS3 right now).
-> 
-> As you can see this creates an awkward situation. I'm sure there other 
-> such devices as well e.g. counterfeit Logitech keyboards, USB serial 
-> adapters and other periperhals with similar challenges. In an ideal 
-> world the support would live in another driver, but since in case of 
-> this "fake" PS3 controller it "share" our product / vendor ids it is 
-> tricky. At this point there is not a strong enough case yet to augment 
-> the "hid-quirks" to do so, but perhaps if it became a serious issue 
-> (e.g. for newer controllers) maybe we need to think of something.
+Nathan Chancellor <natechancellor@gmail.com> writes:
 
-If this is a big issue for you, one possible way around it would be 
-creating a module parameter which would tell the driver whether it should 
-those "fake" devices, and you can then turn it off in your products (or we 
-can of course start the "what should the default setting me" bikeshedding 
-:) ).
+> On Thu, Jan 30, 2020 at 05:43:56PM -0800, Randy Dunlap wrote:
+>> On 1/30/20 3:26 PM, Nathan Chancellor wrote:
+>> > When building arm32 allmodconfig:
+>> >
+>> > ERROR: "__aeabi_uldivmod"
+>> > [drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko] undefined!
+>> >
+>> > rate_bytes_ps has type u64, we need to use a 64-bit division helper to
+>> > avoid a build error.
+>> >
+>> > Fixes: a44f58c41bfb ("mlxsw: spectrum_qdisc: Support offloading of TBF Qdisc")
+>> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>> > ---
+>> >  drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+>> > index 79a2801d59f6..65e681ef01e8 100644
+>> > --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+>> > +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+>> > @@ -614,7 +614,7 @@ mlxsw_sp_qdisc_tbf_rate_kbps(struct tc_tbf_qopt_offload_replace_params *p)
+>> >  	/* TBF interface is in bytes/s, whereas Spectrum ASIC is configured in
+>> >  	 * Kbits/s.
+>> >  	 */
+>> > -	return p->rate.rate_bytes_ps / 1000 * 8;
+>> > +	return div_u64(p->rate.rate_bytes_ps, 1000 * 8);
+>>
+>> not quite right AFAICT.
+>>
+>> try either
+>> 	return div_u64(p->rate.rate_bytes_ps * 8, 1000);
+>> or
+>> 	return div_u64(p->rate.rate_bytes_ps, 1000) * 8;
+>>
+>
+> Gah, I swear I can math... Thank you for catching this, v2 incoming with
+> the later because I think it looks better.
 
-Thanks,
+Yes, that's the correct choice. Divide first, that way we can't
+overflow.
 
--- 
-Jiri Kosina
-SUSE Labs
-
+Thanks for taking care of this.
