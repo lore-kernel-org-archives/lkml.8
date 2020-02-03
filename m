@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7F2C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB9BC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A722051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DCE22314
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747161;
-	bh=FBjiEtGCtQUkVz8QK73eh6OPI6OZsUJp4HJ12lzYckk=;
+	s=default; t=1580747163;
+	bh=JBTtew/RrYoxRAEcziY3V8evveTYbaH5yr+lhRj1GTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4pSmwW+JQPhRNpnVkhckOWdrJp/OMSHT6D7fMPLI+Q8zBNsywIGjHxvbFEiIQhVA
-	 0bTL31BctOLyb7z+Gaunki+ec577TmhaIwONPqRhVdljy3nI1KuIxM0qm7iK7SqXY3
-	 wKOo8Se+Ivx9fATRhVNlrHGh9HyF1AsbP+wH/5lo=
+	b=tnXwm35q9FsCabCEgFjBltmNiObouEoDR6gX9jud8i3aZedZfwURnoJBf+ydBHfQZ
+	 RnDIQML6kn+HKjaDP/dOVZRKovMaJPDLuVWuxVWEAO7sOrq7UuWQJD27bEtKMl5g0x
+	 8PdAbN+j01mk/pGx5vl//uruqzZ7zUV7BjdtoQ/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgBCQ0A (ORCPT
+        id S1728883AbgBCQ0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:26:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36840 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:26:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbgBCQZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:57 -0500
+        id S1728853AbgBCQ0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:26:00 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA35D2086A;
-        Mon,  3 Feb 2020 16:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC872051A;
+        Mon,  3 Feb 2020 16:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747157;
-        bh=FBjiEtGCtQUkVz8QK73eh6OPI6OZsUJp4HJ12lzYckk=;
+        s=default; t=1580747159;
+        bh=JBTtew/RrYoxRAEcziY3V8evveTYbaH5yr+lhRj1GTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SG2RgqMRKk/LZl7VZLOaAJMkVfW9XypR2ChvHN5alpumw7dD9J0h1DW5C0PIjuiAb
-         cMBBwjE6mgKelv6Bopds0WMrTdXIg1IA6VTSh+DAuwwRSciJxeSqvwAXIxbfgZhThe
-         aJRjqHLRthmA6j6V0Ds0Qvqy4TJ3yeWjbIC6vdNo=
+        b=KWxsmXD6FBViDIF6ioNJNAF9s7cAfRhlVCaPgxyEgCc1OdtHdgqdgTaRNjPFY0G5G
+         +FFahNTIGyE4WPact8fJTa7F2piFGiD6WKvABRMQTs6YITq/znSIYdmyaJsEEdgXnq
+         tIgKV5MgvhOgjupGTKsk2yeab718reqpLOYXNYm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
+        syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com,
         Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.9 34/68] media: digitv: dont continue if remote control state cant be read
-Date:   Mon,  3 Feb 2020 16:19:30 +0000
-Message-Id: <20200203161910.546197790@linuxfoundation.org>
+Subject: [PATCH 4.9 35/68] media: af9005: uninitialized variable printked
+Date:   Mon,  3 Feb 2020 16:19:31 +0000
+Message-Id: <20200203161910.726194724@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -63,46 +63,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Young <sean@mess.org>
 
-commit eecc70d22ae51225de1ef629c1159f7116476b2e upstream.
+commit 51d0c99b391f0cac61ad7b827c26f549ee55672c upstream.
 
-This results in an uninitialized variable read.
+If usb_bulk_msg() fails, actual_length can be uninitialized.
 
-Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Reported-by: syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com
 Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/digitv.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/media/usb/dvb-usb/af9005.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/dvb-usb/digitv.c
-+++ b/drivers/media/usb/dvb-usb/digitv.c
-@@ -233,18 +233,22 @@ static struct rc_map_table rc_map_digitv
- 
- static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
+--- a/drivers/media/usb/dvb-usb/af9005.c
++++ b/drivers/media/usb/dvb-usb/af9005.c
+@@ -567,7 +567,7 @@ static int af9005_boot_packet(struct usb
+ 			      u8 *buf, int size)
  {
--	int i;
-+	int ret, i;
- 	u8 key[5];
- 	u8 b[4] = { 0 };
+ 	u16 checksum;
+-	int act_len, i, ret;
++	int act_len = 0, i, ret;
  
- 	*event = 0;
- 	*state = REMOTE_NO_KEY_PRESSED;
- 
--	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
-+	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
-+	if (ret)
-+		return ret;
- 
- 	/* Tell the device we've read the remote. Not sure how necessary
- 	   this is, but the Nebula SDK does it. */
--	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
-+	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
-+	if (ret)
-+		return ret;
- 
- 	/* if something is inside the buffer, simulate key press */
- 	if (key[1] != 0)
+ 	memset(buf, 0, size);
+ 	buf[0] = (u8) (FW_BULKOUT_SIZE & 0xff);
 
 
