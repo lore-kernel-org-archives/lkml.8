@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFC6C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FC3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC38B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33472080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746917;
-	bh=dJ99gQh3O/vojkuYbo/2Mnv1K1SLRfANzJC7ZNyQkx8=;
+	s=default; t=1580746922;
+	bh=dLIUR+VZmrm/gIu/yX/ujMq5lchU8vxchxD+Xk1gRUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4gsebEkcWqVKDauOoEKJnnwuRkwKZC+xFOAZyIlbWddijaQu9fK0eEq68XY8p4rw
-	 9ukeoB5KM6K6vKFW3sxikIqYCyS3kzYrTmu0tayTlXasCb95EtBr8otJzGGq2n1H4x
-	 A7fSCTWS0iBBixEE43UkZVPebcBZufkJA4kET/fs=
+	b=RrdJZf2EOs20eMVsqoeHfX6P+vkC3HCiUhNCjgmwEllzHbloVH8R/BW5DpX13NVRg
+	 qb/P23MhyUap+yIOWgqso0LVW9Wn5uNsnIaajwzbqnK/+4NMYPwsX05gSM1PmVWdS5
+	 txqMlzbuuO2VSCg04QNJ8sy1MdAOWaDKskMboe4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgBCQV4 (ORCPT
+        id S1729239AbgBCQWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:21:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:22:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgBCQVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:53 -0500
+        id S1729215AbgBCQV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:57 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 830632080C;
-        Mon,  3 Feb 2020 16:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B66E2080C;
+        Mon,  3 Feb 2020 16:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746912;
-        bh=dJ99gQh3O/vojkuYbo/2Mnv1K1SLRfANzJC7ZNyQkx8=;
+        s=default; t=1580746916;
+        bh=dLIUR+VZmrm/gIu/yX/ujMq5lchU8vxchxD+Xk1gRUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqqODzwRduX1BkNgnriu07IL1/3nvaDJ8FAXbe2dX++Gr5kEAgsUmxl/P+JnhVE3S
-         6mJz3g0K2ynvip9kt9zFv/vHYx8R5q75YGnGHSqGoOU3SbuGxG4YIEhQnFXjKxj3BR
-         K/lvduHwdgFH/F9oXxYROMF9x3muAez6iaiZJGrI=
+        b=vnC4ASfL/Wh5pezPh/pl7DwD75qYXHj3MsSGU5EK7qvvd5dPzKOdUia5UphX+wOnd
+         YXf0I0H1SKuJuDhSFaAcVTJ6d/ltzNE4LktkSLAVhVlEz4oGDSrK6T8LqaigjVnAUw
+         5dKx8OiGs76MLg76jVwnMUDFf/WtOnB92Dt6brt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 42/53] airo: Fix possible info leak in AIROOLDIOCTL/SIOCDEVPRIVATE
-Date:   Mon,  3 Feb 2020 16:19:34 +0000
-Message-Id: <20200203161910.324910174@linuxfoundation.org>
+Subject: [PATCH 4.4 44/53] r8152: get default setting of WOL before initializing
+Date:   Mon,  3 Feb 2020 16:19:36 +0000
+Message-Id: <20200203161910.635921752@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -62,68 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Hayes Wang <hayeswang@realtek.com>
 
-[ Upstream commit d6bce2137f5d6bb1093e96d2f801479099b28094 ]
+[ Upstream commit 9583a3638dc07cc1878f41265e85ed497f72efcb ]
 
-The driver for Cisco Aironet 4500 and 4800 series cards (airo.c),
-implements AIROOLDIOCTL/SIOCDEVPRIVATE in airo_ioctl().
+Initailization would reset runtime suspend by tp->saved_wolopts, so
+the tp->saved_wolopts should be set before initializing.
 
-The ioctl handler copies an aironet_ioctl struct from userspace, which
-includes a command and a length. Some of the commands are handled in
-readrids(), which kmalloc()'s a buffer of RIDSIZE (2048) bytes.
-
-That buffer is then passed to PC4500_readrid(), which has two cases.
-The else case does some setup and then reads up to RIDSIZE bytes from
-the hardware into the kmalloc()'ed buffer.
-
-Here len == RIDSIZE, pBuf is the kmalloc()'ed buffer:
-
-	// read the rid length field
-	bap_read(ai, pBuf, 2, BAP1);
-	// length for remaining part of rid
-	len = min(len, (int)le16_to_cpu(*(__le16*)pBuf)) - 2;
-	...
-	// read remainder of the rid
-	rc = bap_read(ai, ((__le16*)pBuf)+1, len, BAP1);
-
-PC4500_readrid() then returns to readrids() which does:
-
-	len = comp->len;
-	if (copy_to_user(comp->data, iobuf, min(len, (int)RIDSIZE))) {
-
-Where comp->len is the user controlled length field.
-
-So if the "rid length field" returned by the hardware is < 2048, and
-the user requests 2048 bytes in comp->len, we will leak the previous
-contents of the kmalloc()'ed buffer to userspace.
-
-Fix it by kzalloc()'ing the buffer.
-
-Found by Ilja by code inspection, not tested as I don't have the
-required hardware.
-
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/airo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/r8152.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/airo.c b/drivers/net/wireless/airo.c
-index 82d24f2b9c190..94df9ddfb7eb1 100644
---- a/drivers/net/wireless/airo.c
-+++ b/drivers/net/wireless/airo.c
-@@ -7831,7 +7831,7 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
- 		return -EINVAL;
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index db8b489b0513c..23e299c86b814 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -4313,6 +4313,11 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 
+ 	intf->needs_remote_wakeup = 1;
+ 
++	if (!rtl_can_wakeup(tp))
++		__rtl_set_wol(tp, 0);
++	else
++		tp->saved_wolopts = __rtl_get_wol(tp);
++
+ 	tp->rtl_ops.init(tp);
+ 	set_ethernet_addr(tp);
+ 
+@@ -4325,10 +4330,6 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		goto out1;
  	}
  
--	if ((iobuf = kmalloc(RIDSIZE, GFP_KERNEL)) == NULL)
-+	if ((iobuf = kzalloc(RIDSIZE, GFP_KERNEL)) == NULL)
- 		return -ENOMEM;
- 
- 	PC4500_readrid(ai,ridcode,iobuf,RIDSIZE, 1);
+-	if (!rtl_can_wakeup(tp))
+-		__rtl_set_wol(tp, 0);
+-
+-	tp->saved_wolopts = __rtl_get_wol(tp);
+ 	if (tp->saved_wolopts)
+ 		device_set_wakeup_enable(&udev->dev, true);
+ 	else
 -- 
 2.20.1
 
