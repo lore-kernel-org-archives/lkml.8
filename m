@@ -2,127 +2,170 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE22C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0F3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D6C2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A0D2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748506;
-	bh=5qn3J44Ornr8FlQUwjr282VdrCAuOLfDuKSzs4n6BZA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AE0TeHOy85L92QS9VYJv0pBDouhK36hLg9/liV9D+Y+TofTSyyEJseGC/ii7r6q27
-	 nRdpKFF96Q2QNokWuEB0bSIbAED7KEF0hfmtC+jhKfM2rNopn15UdQ1oKq3Fu4Zv2l
-	 Espxxcn+2seh+VCBHXQZYr9l6NuOLl9RKT6q/sT8=
+	s=default; t=1580748511;
+	bh=f6/Ccx65vDvsW4yhp/ZsExnlynZ3BNePDvYFyDnc58U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QGnBD3/myTTZ4DV/1hALSq1NgpGQZGpFFsPrGmOrcv4Lc1CUi09RgjjIR/cvvDujX
+	 zx/gMHnC+YnYe2QQ8udXkdeeTe78fjbggt4B+XcIoK6ozCfnOCudahwzwmOJPSCNGM
+	 Yup9X/NXZUpCzCpLnohWIcOsw78yVNxoG82o6/cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbgBCQsZ (ORCPT
+        id S1728973AbgBCQ0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:48:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:26:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728876AbgBCQsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:48:23 -0500
-Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
+        id S1728930AbgBCQ0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:26:07 -0500
+Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B302051A;
-        Mon,  3 Feb 2020 16:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5345F2080C;
+        Mon,  3 Feb 2020 16:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580748502;
-        bh=5qn3J44Ornr8FlQUwjr282VdrCAuOLfDuKSzs4n6BZA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jHHC5auk5GVPvV7ypPXeZw04FGKiNBJ4TFOPXdzcKyYknlfsJvLwQgdc9A/QIfX09
-         VURU2Aqzv1k22fJB4lScrZeeDeeD3ynEZ5rLwaMKNAafrDm1zvpuAoZXXS9e8YVEDt
-         Kw8PhzC38WjDhQfkT4dyHE+vmPCRbAFpr3Q2dKXw=
-Date:   Mon, 3 Feb 2020 08:48:21 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Max Neunhoeffer <max@arangodb.com>
-Cc:     netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>,
-        viro@zeniv.linux.org.uk
-Subject: Re: epoll_wait misses edge-triggered eventfd events: bug in Linux
- 5.3 and 5.4
-Message-ID: <20200203084821.7a672861@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <20200203151536.caf6n4b2ymvtssmh@tux>
-References: <20200131135730.ezwtgxddjpuczpwy@tux>
-        <20200201121647.62914697@cakuba.hsd1.ca.comcast.net>
-        <20200203151536.caf6n4b2ymvtssmh@tux>
+        s=default; t=1580747166;
+        bh=f6/Ccx65vDvsW4yhp/ZsExnlynZ3BNePDvYFyDnc58U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cwOvH7NvjboqvFevwRCM+BJq3LiiUYwW4hXJ4r9bXfglXilMO09MaqUSKSiZda120
+         8Y7Vve0i7Ey3bvOUQ/wkyiIkLgsKAG3u7y/KTNqIGlLnGvvJpvAZnifHp9Np0Io8+w
+         1g9TB5oBqoL4klt0rxI3aeBPcXDXMBcS3cmnaSdQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.9 38/68] ttyprintk: fix a potential deadlock in interrupt context issue
+Date:   Mon,  3 Feb 2020 16:19:34 +0000
+Message-Id: <20200203161911.229512565@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
+References: <20200203161904.705434837@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Feb 2020 16:15:36 +0100, Max Neunhoeffer wrote:
-> Dear Jakub and all,
-> 
-> I have done a git bisect and found that this commit introduced the epoll
-> bug:
-> 
-> https://github.com/torvalds/linux/commit/a218cc4914209ac14476cb32769b31a556355b22
-> 
-> I Cc the author of the commit.
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-Awesome, thanks a lot for doing that! Hopefully Roman can take a look
-soon. Breaking boost::asio seems like a pretty serious regression.
+commit 9a655c77ff8fc65699a3f98e237db563b37c439b upstream.
 
-> This makes sense, since the commit introduces a new rwlock to reduce
-> contention in ep_poll_callback. I do not fully understand the details
-> but this sounds all very close to this bug.
-> 
-> I have also verified that the bug is still present in the latest master
-> branch in Linus' repository.
-> 
-> Furthermore, Chris Kohlhoff has provided yet another reproducing program
-> which is no longer using edge-triggered but standard level-triggered
-> events and epoll_wait. This makes the bug all the more urgent, since
-> potentially more programs could run into this problem and could end up
-> with sleeping barbers.
-> 
-> I have added all the details to the bugzilla bugreport:
-> 
->   https://bugzilla.kernel.org/show_bug.cgi?id=205933
-> 
-> Hopefully, we can resolve this now equipped with this amount of information.
-> 
-> Best regards,
->   Max.
-> 
-> On 20/02/01 12:16, Jakub Kicinski wrote:
-> > On Fri, 31 Jan 2020 14:57:30 +0100, Max Neunhoeffer wrote:  
-> > > Dear All,
-> > > 
-> > > I believe I have found a bug in Linux 5.3 and 5.4 in epoll_wait/epoll_ctl
-> > > when an eventfd together with edge-triggered or the EPOLLONESHOT policy
-> > > is used. If an epoll_ctl call to rearm the eventfd happens approximately
-> > > at the same time as the epoll_wait goes to sleep, the event can be lost, 
-> > > even though proper protection through a mutex is employed.
-> > > 
-> > > The details together with two programs showing the problem can be found
-> > > here:
-> > > 
-> > >   https://bugzilla.kernel.org/show_bug.cgi?id=205933
-> > > 
-> > > Older kernels seem not to have this problem, although I did not test all
-> > > versions. I know that 4.15 and 5.0 do not show the problem.
-> > > 
-> > > Note that this method of using epoll_wait/eventfd is used by
-> > > boost::asio to wake up event loops in case a new completion handler
-> > > is posted to an io_service, so this is probably relevant for many
-> > > applications.
-> > > 
-> > > Any help with this would be appreciated.  
-> > 
-> > Could be networking related but let's CC FS folks just in case.
-> > 
-> > Would you be able to perform bisection to narrow down the search 
-> > for a buggy change?  
+tpk_write()/tpk_close() could be interrupted when holding a mutex, then
+in timer handler tpk_write() may be called again trying to acquire same
+mutex, lead to deadlock.
+
+Google syzbot reported this issue with CONFIG_DEBUG_ATOMIC_SLEEP
+enabled:
+
+BUG: sleeping function called from invalid context at
+kernel/locking/mutex.c:938
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/1
+1 lock held by swapper/1/0:
+...
+Call Trace:
+  <IRQ>
+  dump_stack+0x197/0x210
+  ___might_sleep.cold+0x1fb/0x23e
+  __might_sleep+0x95/0x190
+  __mutex_lock+0xc5/0x13c0
+  mutex_lock_nested+0x16/0x20
+  tpk_write+0x5d/0x340
+  resync_tnc+0x1b6/0x320
+  call_timer_fn+0x1ac/0x780
+  run_timer_softirq+0x6c3/0x1790
+  __do_softirq+0x262/0x98c
+  irq_exit+0x19b/0x1e0
+  smp_apic_timer_interrupt+0x1a3/0x610
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
+
+See link https://syzkaller.appspot.com/bug?extid=2eeef62ee31f9460ad65 for
+more details.
+
+Fix it by using spinlock in process context instead of mutex and having
+interrupt disabled in critical section.
+
+Reported-by: syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200113034842.435-1-zhenzhong.duan@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/char/ttyprintk.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+--- a/drivers/char/ttyprintk.c
++++ b/drivers/char/ttyprintk.c
+@@ -18,10 +18,11 @@
+ #include <linux/serial.h>
+ #include <linux/tty.h>
+ #include <linux/module.h>
++#include <linux/spinlock.h>
+ 
+ struct ttyprintk_port {
+ 	struct tty_port port;
+-	struct mutex port_write_mutex;
++	spinlock_t spinlock;
+ };
+ 
+ static struct ttyprintk_port tpk_port;
+@@ -100,11 +101,12 @@ static int tpk_open(struct tty_struct *t
+ static void tpk_close(struct tty_struct *tty, struct file *filp)
+ {
+ 	struct ttyprintk_port *tpkp = tty->driver_data;
++	unsigned long flags;
+ 
+-	mutex_lock(&tpkp->port_write_mutex);
++	spin_lock_irqsave(&tpkp->spinlock, flags);
+ 	/* flush tpk_printk buffer */
+ 	tpk_printk(NULL, 0);
+-	mutex_unlock(&tpkp->port_write_mutex);
++	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+ 
+ 	tty_port_close(&tpkp->port, tty, filp);
+ }
+@@ -116,13 +118,14 @@ static int tpk_write(struct tty_struct *
+ 		const unsigned char *buf, int count)
+ {
+ 	struct ttyprintk_port *tpkp = tty->driver_data;
++	unsigned long flags;
+ 	int ret;
+ 
+ 
+ 	/* exclusive use of tpk_printk within this tty */
+-	mutex_lock(&tpkp->port_write_mutex);
++	spin_lock_irqsave(&tpkp->spinlock, flags);
+ 	ret = tpk_printk(buf, count);
+-	mutex_unlock(&tpkp->port_write_mutex);
++	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+ 
+ 	return ret;
+ }
+@@ -172,7 +175,7 @@ static int __init ttyprintk_init(void)
+ {
+ 	int ret = -ENOMEM;
+ 
+-	mutex_init(&tpk_port.port_write_mutex);
++	spin_lock_init(&tpk_port.spinlock);
+ 
+ 	ttyprintk_driver = tty_alloc_driver(1,
+ 			TTY_DRIVER_RESET_TERMIOS |
+
 
