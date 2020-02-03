@@ -2,95 +2,86 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2752C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435F2C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E8E20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119742080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:10:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VEouXGI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgBCQFa (ORCPT
+        id S1728627AbgBCQKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:05:30 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:59674 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728293AbgBCQF3 (ORCPT
+        Mon, 3 Feb 2020 11:10:35 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56340 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbgBCQKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:05:29 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-142-hGwRv5yLP-WawD24haPXoA-1; Mon, 03 Feb 2020 16:05:26 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 16:05:25 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 3 Feb 2020 16:05:25 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Marco Elver' <elver@google.com>
-CC:     Eric Dumazet <edumazet@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: Confused about hlist_unhashed_lockless()
-Thread-Topic: Confused about hlist_unhashed_lockless()
-Thread-Index: AQHV2Geqe/OiaqtIVUysR/GygGVY2agJoQ4ggAACp4CAAAKCMA==
-Date:   Mon, 3 Feb 2020 16:05:25 +0000
-Message-ID: <154c51cc385544789c9fa0b233fc76e7@AcuMS.aculab.com>
-References: <20200131164308.GA5175@willie-the-truck>
- <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
- <20200131184322.GA11457@worktop.programming.kicks-ass.net>
- <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
- <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
- <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
- <CANpmjNNVstV4AJHtf0aht1xyj+_a-Kj4so4Mi1DpOWDPYN=-2Q@mail.gmail.com>
-In-Reply-To: <CANpmjNNVstV4AJHtf0aht1xyj+_a-Kj4so4Mi1DpOWDPYN=-2Q@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 3 Feb 2020 11:10:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=iQiWPAzdorVrbV0wQae916JQuzrnEd67qY6JDJtYWaw=; b=VEouXGI9u0eOThKqOvcmjEYx2r
+        Q3TKm7qc6jddQj9Af+39I1uHazC9qTqIxhEIpOmtPdiY4WTw38NIaYxt+DPa0x3vnLcJ+o2IqPB1T
+        HK3s99nnvFnx63QCcmR1pa5xO9vlj51ndvSDvgA7IZQz6cwvSvMDokagZdBUUTWXiyV+J3QChQP9c
+        xJbior5x2ywe6r9opBBY/oYfm0RUFjN3LZCZC8ns5tnN2tFMrMknVvWMx6NhOQA54pOWAcmh7FMf/
+        8WKUsLsgHsJ+S7rxW2LR3XUsTPf+aTOvMuR3bnS2mb3K6xdCJ5Veob4FtHRZQgj0BnddmR02dtADh
+        XdKjyFlg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyeIx-00031V-JY; Mon, 03 Feb 2020 16:10:31 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] watchdog: fix mtk_wdt.c RESET_CONTROLLER build error
+Message-ID: <77c1e557-4941-3806-2933-6c3583576390@infradead.org>
+Date:   Mon, 3 Feb 2020 08:10:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MC-Unique: hGwRv5yLP-WawD24haPXoA-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFyY28gRWx2ZXINCj4gU2VudDogMDMgRmVicnVhcnkgMjAyMCAxNTo1NQ0KPiANCj4g
-T24gTW9uLCAzIEZlYiAyMDIwIGF0IDE2OjQ1LCBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBh
-Y3VsYWIuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IEVyaWMgRHVtYXpldA0KPiA+ID4gU2Vu
-dDogMzEgSmFudWFyeSAyMDIwIDE4OjUzDQo+ID4gPg0KPiA+ID4gT24gRnJpLCBKYW4gMzEsIDIw
-MjAgYXQgMTA6NDggQU0gRXJpYyBEdW1hemV0IDxlZHVtYXpldEBnb29nbGUuY29tPiB3cm90ZToN
-Cj4gPiA+ID4NCj4gPiA+DQo+ID4gPiA+IFRoaXMgaXMgbmljZSwgbm93IHdpdGggaGF2ZSBkYXRh
-X3JhY2UoKQ0KPiA+ID4gPg0KPiA+ID4gPiBSZW1lbWJlciB0aGVzZSBwYXRjaGVzIHdlcmUgc2Vu
-dCAyIG1vbnRocyBhZ28sIGF0IGEgdGltZSB3ZSB3ZXJlDQo+ID4gPiA+IHRyeWluZyB0byBzb3J0
-IG91dCB0aGluZ3MuDQo+ID4gPiA+DQo+ID4gPiA+IGRhdGFfcmFjZSgpIHdhcyBtZXJnZWQgYSBm
-ZXcgZGF5cyBhZ28uDQo+ID4gPg0KPiA+ID4gV2VsbCwgYWN0dWFsbHkgZGF0YV9yYWNlKCkgaXMg
-bm90IHRoZXJlIHlldCBhbnl3YXkuDQo+ID4NCj4gPiBTaG91bGRuJ3QgaXQgYmUgTk9fREFUQV9S
-QUNFKCkgPz8NCj4gDQo+IFZhcmlvdXMgb3B0aW9ucyB3ZXJlIGNvbnNpZGVyZWQsIGFuZCBiYXNl
-ZCBvbiBmZWVkYmFjayBmcm9tIExpbnVzLA0KPiBkZWNpZGVkICdkYXRhX3JhY2UoLi4pJyBpcyB0
-aGUgYmVzdCBvcHRpb246DQo+ICAgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtZnNkZXZl
-bC9DQUhrLQ0KPiA9d2c1Q2tPRUY4RFRlejFRdTBYVEVGd19vSGh4Tjk4YkRuRnFiWTdITDVBQjJn
-QG1haWwuZ21haWwuY29tLw0KPiANCj4gSXQncyBtZWFudCB0byBiZSBhcyB1bm9idHJ1c2l2ZSBh
-cyBwb3NzaWJsZSwgYW5kIGFuIGFsbC1jYXBzIG1hY3JvIHdhcw0KPiBydWxlZCBvdXQuDQoNCkV4
-Y2VwdCB0aGF0IGl0IHRoZW4gbG9va3MgbGlrZSBzb21ldGhpbmcgdGhhdCBhY3R1YWxseSBkb2Vz
-IHNvbWV0aGluZy4NCg0KPiBTZWNvbmQsIHRoZSAiTk9fIiBwcmVmaXggd291bGQgYmUgaW5jb3Jy
-ZWN0LCBzaW5jZSBpdCdkIGJlIHRoZQ0KPiBvcHBvc2l0ZSBvZiB3aGF0IGl0IGlzLiBUaGUgbWFj
-cm8gaXMgbWVhbnQgdG8gZG9jdW1lbnQgYW5kIG1hcmsgYQ0KPiBkZWxpYmVyYXRlIGRhdGEgcmFj
-ZS4NCg0KSXQgc2hvdWxkIGJlIElHTk9SRV9EQVRBX1JBQ0UoKSB0aGVuLg0KDQoJRGF2aWQNCg0K
-LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
-IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
-bGVzKQ0K
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix build error when CONFIG_RESET_CONTROLLER is not set by
+selecting RESET_CONTROLLER.
+
+ld: drivers/watchdog/mtk_wdt.o: in function `mtk_wdt_probe':
+mtk_wdt.c:(.text+0x3ec): undefined reference to `devm_reset_controller_register'
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-watchdog@vger.kernel.org
+---
+ drivers/watchdog/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- linux-next-20200203.orig/drivers/watchdog/Kconfig
++++ linux-next-20200203/drivers/watchdog/Kconfig
+@@ -841,6 +841,7 @@ config MEDIATEK_WATCHDOG
+ 	tristate "Mediatek SoCs watchdog support"
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
+ 	select WATCHDOG_CORE
++	select RESET_CONTROLLER
+ 	help
+ 	  Say Y here to include support for the watchdog timer
+ 	  in Mediatek SoCs.
+
 
