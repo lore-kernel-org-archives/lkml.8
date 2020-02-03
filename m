@@ -2,183 +2,216 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EB6C3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96BAC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6E520658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AEF20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="NeBaOOmM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uRJSVjHM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haYQFwfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgBCIbz (ORCPT
+        id S1727802AbgBCIcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:31:55 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50399 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726410AbgBCIby (ORCPT
+        Mon, 3 Feb 2020 03:32:05 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41410 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbgBCIcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 03:31:54 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7F91B3AF2;
-        Mon,  3 Feb 2020 03:31:53 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 03 Feb 2020 03:31:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=OmLQiTU7CIJEgfH4BB0wpQ3U+xt
-        6/6j/9KiOYhlqIRI=; b=NeBaOOmMgJ9dMRzU9MQWb7FnVH2O1iR3oWG3dIkQNHr
-        0VR1nWZ+Kp0r4TW9ohHc0xfq0itNqE9ySjyuiTkB3UYvEs8bzblFdIkgGGM4xMs6
-        2iyaqjLIMf0+YnsDehiPvbTBMdO8wbQan0IJM8Ed6m46Eaf0u0901yKe3q/FWWHY
-        u5oo6mCjIiJetYEaFqaJFb/pHUbNtdAfLKdClmB+Q9d8kxhIopLQde2+Am3vTlPn
-        SKFxRjjiSWKaukgmqtDtuVNH2yDN/ak81PYJvdeXOGUx37pTHrFwkcsPKnlGYpUt
-        IaEQLlREdQh/Wvu+DbnNO6CR60T2oLkbYP6uddpg3XA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=OmLQiT
-        U7CIJEgfH4BB0wpQ3U+xt6/6j/9KiOYhlqIRI=; b=uRJSVjHMbnfxpTHFBeSXO6
-        /MM5JJ0f+DFb7XObhwADxy0P8yWHENTV7pjn2gw9ixtpARHAzb3YU+1nRGQcpZil
-        DvNbSJJFs5pXHKRuCJqyXS9rGHT5ihlWM704Y6Cn6CHgxXUAifYgZjvqIm/5kE1z
-        s3dkrFIP0x39LQqlBQrh0mv/3WqXSqt0gfwyNkThecc6IrGIDXkSp6JOjfoyshgO
-        MjM0ym3Uoo7rk55W3II5pTKTgcv6HyzG9URWd01t+Z3V0gl6pSnI1019IPI4azVL
-        ekVO73tGTyUYMlCbqRAHVsClnrtpTYEyctomSTUikkrfoi8sW8S62+sV6fp16GsQ
-        ==
-X-ME-Sender: <xms:eNo3XnYvH8QHn9S7Z_7jd3m1xpbcaOQ02zwQMGc9Eq50xSoakXKamw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeeigdduudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
-    lhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
-    estggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:eNo3XugKssXinG4YxJDa03RwjmEGDZYbLD3-vd0NB8kaFj-fMOdl9A>
-    <xmx:eNo3XpciFCpgMIo921RcMDgOEE12ZCl5HvVF-ROCj5LHK2p824V7Xg>
-    <xmx:eNo3XtniRCmBDq_aH8FLq89JKsot7iokNR-pB5mJoJ55Q0OZO7EMOA>
-    <xmx:edo3XhZ0wx7z1uH6IVv0Vf2cVJhJcRCc6o9xr7dEfGigKDfauvt7EA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6BBF1328005A;
-        Mon,  3 Feb 2020 03:31:52 -0500 (EST)
-Date:   Mon, 3 Feb 2020 09:31:51 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH 08/12] dt-bindings: arm: bcm: Convert BCM4708 to YAML
-Message-ID: <20200203083151.ghg57pgjlci4y7in@gilmour.lan>
-References: <20200202211827.27682-1-f.fainelli@gmail.com>
- <20200202211827.27682-9-f.fainelli@gmail.com>
+        Mon, 3 Feb 2020 03:32:05 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so13931481oie.8;
+        Mon, 03 Feb 2020 00:32:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vgFT7KCLvNSNXKaIMj+AMJeeoDZdmCntNB9bIaSyhR8=;
+        b=haYQFwferv5+ZHvfqKEEV/YUXLdSYxjZlN0P4WdvN1Okw1asRKqpj1d86PDYFJ0bNa
+         xbKaXhElGXZr/ely1gzZrQrCPFVTjVuXzwzXhE/ijyl7iQ3LoLSiswWk38Q253tqBw0q
+         1nw/VQSBppW6Lk0PvkCsBqDNGWtWJEcmhb1puBaNLNh9vBH58UgOLbDbbnoKpofIKRJj
+         xFnaM4t2BEeo3hEnz+THrNEobj8VkLSIs7bjRb1vExJYwtzyJwskDSjlgvULeWME5Iji
+         PYA4PfHdddbpHlCPtScYnFwV9mMQqUaPVWeQZt0ezObLlBgGIrTaE2+qmR9/nWgEykGc
+         BkIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vgFT7KCLvNSNXKaIMj+AMJeeoDZdmCntNB9bIaSyhR8=;
+        b=EOl0CDIIY2/7YIbcHUNkN5gnaBypwjCyFGvU86Uu46s6wkgGmj519FbjWDL+DS2q40
+         3Ca7h3uqEJEZ2ruWWBtw09wSrJh/Gn4U4faF294EiFqWaWK/xdIHgAZBic5aw9tOvGTA
+         vhf4Z5FSB0PNVPg64ki8I6FII0s98+zLfLr4wBhUAjXn8zMSw6MmLxBu/jACPdV3Px/b
+         qeaAL0dSSMq3x14QpFkLQMT8lTrx1+gyJAlAkkQ9ZKmTNObYT8nL1cDHX948f7rjr0Ra
+         C4OHxwB8Gz7r47QU3mZ9NDKrjuhcyQn/3Q1wfNkgVZAQoSI8sDV/qW35fz/GRnEJtnXx
+         m9fg==
+X-Gm-Message-State: APjAAAWrohb13bDmGVSO7xheuxlJuHxF7nURN9vpGywJmY9MvrOuIRkb
+        9fmM4zD6LN+yW/I4illpths/vCwcEPdSyFQ3mEQ=
+X-Google-Smtp-Source: APXvYqyqbOZhNxcsolX/qhng0QvUrm1rXnOtQGEwvMXjjoc299vee2VDlGRGcQcpGnKEBBQUOUw1WCNoUuIu5xhQjIE=
+X-Received: by 2002:aca:44d7:: with SMTP id r206mr5716393oia.33.1580718724066;
+ Mon, 03 Feb 2020 00:32:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200202211827.27682-9-f.fainelli@gmail.com>
+References: <20200127071602.11460-1-nick.desaulniers@gmail.com>
+In-Reply-To: <20200127071602.11460-1-nick.desaulniers@gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 3 Feb 2020 16:31:52 +0800
+Message-ID: <CANRm+CwK0Cg45mktda9Yz9fsjPCvtuB8O+fma5L3tV725ki1qw@mail.gmail.com>
+Subject: Re: [PATCH] dynamically allocate struct cpumask
+To:     Nick Desaulniers <nick.desaulniers@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, Feb 02, 2020 at 01:18:23PM -0800, Florian Fainelli wrote:
-> Update the Broadcom BCM4708 SoC family binding document for boards/SoCs
-> to use YAML. Verified with dt_binding_check and dtbs_check.
+Hi Nick,
+On Mon, 27 Jan 2020 at 15:16, Nick Desaulniers
+<nick.desaulniers@gmail.com> wrote:
 >
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/arm/bcm/brcm,bcm4708.txt         | 15 ----
->  .../bindings/arm/bcm/brcm,bcm4708.yaml        | 88 +++++++++++++++++++
->  2 files changed, 88 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
+> This helps avoid avoid a potentially large stack allocation.
 >
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> deleted file mode 100644
-> index 8608a776caa7..000000000000
-> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -Broadcom BCM4708 device tree bindings
-> --------------------------------------------
-> -
-> -Boards with the BCM4708 SoC shall have the following properties:
-> -
-> -Required root node property:
-> -
-> -bcm4708
-> -compatible = "brcm,bcm4708";
-> -
-> -bcm4709
-> -compatible = "brcm,bcm4709";
-> -
-> -bcm53012
-> -compatible = "brcm,bcm53012";
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-> new file mode 100644
-> index 000000000000..d48313c7ae45
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/bcm/brcm,bcm4708.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM4708 device tree bindings
-> +
-> +description:
-> +  Broadcom BCM4708/47081/4709/47094/53012 Wi-Fi/network SoCs based
-> +  on the iProc architecture (Northstar).
-> +
-> +maintainers:
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +  - Hauke Mehrtens <hauke@hauke-m.de>
-> +  - Rafal Milecki <zajec5@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: BCM4708 based boards
-> +        items:
-> +          - enum:
-> +              - asus,rt-ac56u
-> +              - asus,rt-ac68u
-> +              - buffalo,wzr-1750dhp
-> +              - linksys,ea6300-v1
-> +              - linksys,ea6500-v2
-> +              - luxul,xap-1510v1
-> +              - luxul,xwc-1000
-> +              - netgear,r6250v1
-> +              - netgear,r6300v2
-> +              - smartrg,sr400ac
-> +              - brcm,bcm94708
-> +          - const: brcm,bcm4708
+> When building with:
+> $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
+> The following warning is observed:
+> arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
+> function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
+> static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
+> vector)
+>             ^
+> Debugging with:
+> https://github.com/ClangBuiltLinux/frame-larger-than
+> via:
+> $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
+>   kvm_send_ipi_mask_allbutself
+> points to the stack allocated `struct cpumask newmask` in
+> `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
+> potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
+> the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
+> 8192, making a single instance of a `struct cpumask` 1024 B.
 
-I'm under the impression that while the SoC compatible description in
-your other bindings is obvious enough, if anything, you should have a
-description of the boards. But it's up to you :)
+Could you help test the below untested patch?
 
-Maxime
+From 867753e2fa27906f15df7902ba1bce7f9cef6ebe Mon Sep 17 00:00:00 2001
+From: Wanpeng Li <wanpengli@tencent.com>
+Date: Mon, 3 Feb 2020 16:26:35 +0800
+Subject: [PATCH] KVM: Pre-allocate 1 cpumask variable per cpu for both
+pv tlb and pv ipis
+
+Reported-by: Nick Desaulniers <nick.desaulniers@gmail.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 81045aab..b1e8efa 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -425,6 +425,8 @@ static void __init sev_map_percpu_data(void)
+     }
+ }
+
++static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
++
+ #ifdef CONFIG_SMP
+ #define KVM_IPI_CLUSTER_SIZE    (2 * BITS_PER_LONG)
+
+@@ -490,12 +492,12 @@ static void kvm_send_ipi_mask(const struct
+cpumask *mask, int vector)
+ static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
+int vector)
+ {
+     unsigned int this_cpu = smp_processor_id();
+-    struct cpumask new_mask;
++    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+     const struct cpumask *local_mask;
+
+-    cpumask_copy(&new_mask, mask);
+-    cpumask_clear_cpu(this_cpu, &new_mask);
+-    local_mask = &new_mask;
++    cpumask_copy(new_mask, mask);
++    cpumask_clear_cpu(this_cpu, new_mask);
++    local_mask = new_mask;
+     __send_ipi_mask(local_mask, vector);
+ }
+
+@@ -575,7 +577,6 @@ static void __init kvm_apf_trap_init(void)
+     update_intr_gate(X86_TRAP_PF, async_page_fault);
+ }
+
+-static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+
+ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+             const struct flush_tlb_info *info)
+@@ -583,7 +584,7 @@ static void kvm_flush_tlb_others(const struct
+cpumask *cpumask,
+     u8 state;
+     int cpu;
+     struct kvm_steal_time *src;
+-    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
++    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+
+     cpumask_copy(flushmask, cpumask);
+     /*
+@@ -624,6 +625,7 @@ static void __init kvm_guest_init(void)
+         kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+         pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+         pv_ops.mmu.tlb_remove_table = tlb_remove_table;
++        pr_info("KVM setup pv remote TLB flush\n");
+     }
+
+     if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+@@ -732,23 +734,30 @@ static __init int activate_jump_labels(void)
+ }
+ arch_initcall(activate_jump_labels);
+
+-static __init int kvm_setup_pv_tlb_flush(void)
++static __init int kvm_alloc_cpumask(void)
+ {
+     int cpu;
++    bool alloc = false;
+
+     if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
+         !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+-        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
++        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
++        alloc = true;
++
++#if defined(CONFIG_SMP)
++    if (!alloc && kvm_para_has_feature(KVM_FEATURE_PV_SEND_IPI))
++        alloc = true;
++#endif
++
++    if (alloc)
+         for_each_possible_cpu(cpu) {
+-            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
++            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+                 GFP_KERNEL, cpu_to_node(cpu));
+         }
+-        pr_info("KVM setup pv remote TLB flush\n");
+-    }
+
+     return 0;
+ }
+-arch_initcall(kvm_setup_pv_tlb_flush);
++arch_initcall(kvm_alloc_cpumask);
+
+ #ifdef CONFIG_PARAVIRT_SPINLOCKS
+
+--
+1.8.3.1
