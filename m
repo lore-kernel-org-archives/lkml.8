@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D251CC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB78C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D08F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E3B2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747450;
-	bh=eb1UltVrFvwiuZunsalF4EFcmZxE9toebsgbA/VaFy0=;
+	s=default; t=1580747452;
+	bh=FokpwCo7yq9QcNvC9K+1UdYma9BMD+zI5H/clmdOOyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOaxqKFcEUU70oX7GVqLFRhYOdLiNHzqCd4gxX6wXlWNmEUFyMgEC5hymYt4L9IGM
-	 zd0a8Yr414mvDoK8/B3vEsMJBf16Cxl/xXOZwK8h7UCa4l7nhlZYWePdaJaSCHBzoy
-	 4VaJcqN3GdPQT//nVR+dz/gYvXgCkDWslfw+tLrU=
+	b=IvKSWrHj5ZUnRWvEZZZuOwH/nnaGdYELVEYO8tPOMpvWNDagVld+2mPpDWOUEuFGl
+	 6T8MgfxafsuwK7yIG//s5Y1fyhyStrWKer8/Ah9NHYegf4L/e5/tUhzZ+kXt2JuuYS
+	 tiCrq2TFrO0AtqOZPXkXX9OXLWKZHrDE+JXQ8rTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgBCQas (ORCPT
+        id S1730097AbgBCQaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:30:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:30:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729543AbgBCQap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:45 -0500
+        id S1729324AbgBCQau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:50 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC7620838;
-        Mon,  3 Feb 2020 16:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E492080C;
+        Mon,  3 Feb 2020 16:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747444;
-        bh=eb1UltVrFvwiuZunsalF4EFcmZxE9toebsgbA/VaFy0=;
+        s=default; t=1580747449;
+        bh=FokpwCo7yq9QcNvC9K+1UdYma9BMD+zI5H/clmdOOyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cS9QQhyV93liM4J3ej31i1QDsGEQAWfwqEYN/qCDWsS7nb7sJ5b1K8B1cL0WNRinm
-         hJw99DwMQR21uh2ian+tmkqz694HGhwPas2/QFjSpRpWSM9GaPBPSPnfiHb9LBAvq5
-         5LeFq0lPE3pkA5+ENLj7vBRx6gXlPswG1wyIUepU=
+        b=LYQ9rWWTnFalH3MUS+eU+XG3LynLMN2DADDhMVOaYeC+dFab8K/tHU9hOzKOfoejQ
+         Pb+ISopidrvbASYxwva85FstKHjreiqH2BLrN16Nf3DKE+cWeFoCeWf9VTRIXGlLMj
+         fihAwcp4/QBcVX8HsuEcBi1xUt6ZFZ6UycuaGmbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Sperling <stsp@stsp.name>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 69/89] iwlwifi: mvm: fix NVM check for 3168 devices
-Date:   Mon,  3 Feb 2020 16:19:54 +0000
-Message-Id: <20200203161925.499127264@linuxfoundation.org>
+Subject: [PATCH 4.14 88/89] l2t_seq_next should increase position index
+Date:   Mon,  3 Feb 2020 16:20:13 +0000
+Message-Id: <20200203161927.408284554@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,37 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit b3f20e098293892388d6a0491d6bbb2efb46fbff ]
+[ Upstream commit 66018a102f7756cf72db4d2704e1b93969d9d332 ]
 
-We had a check on !NVM_EXT and then a check for NVM_SDP in the else
-block of this if.  The else block, obviously, could only be reached if
-using NVM_EXT, so it would never be NVM_SDP.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Fix that by checking whether the nvm_type is IWL_NVM instead of
-checking for !IWL_NVM_EXT to solve this issue.
-
-Reported-by: Stefan Sperling <stsp@stsp.name>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/nvm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
-index ca2d66ce84247..8f3032b7174d3 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
-@@ -298,7 +298,7 @@ iwl_parse_nvm_sections(struct iwl_mvm *mvm)
- 	int regulatory_type;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index f7ef8871dd0b0..67aa3c9974173 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -682,8 +682,7 @@ static void *l2t_seq_start(struct seq_file *seq, loff_t *pos)
+ static void *l2t_seq_next(struct seq_file *seq, void *v, loff_t *pos)
+ {
+ 	v = l2t_get_idx(seq, *pos);
+-	if (v)
+-		++*pos;
++	++(*pos);
+ 	return v;
+ }
  
- 	/* Checking for required sections */
--	if (mvm->trans->cfg->nvm_type != IWL_NVM_EXT) {
-+	if (mvm->trans->cfg->nvm_type == IWL_NVM) {
- 		if (!mvm->nvm_sections[NVM_SECTION_TYPE_SW].data ||
- 		    !mvm->nvm_sections[mvm->cfg->nvm_hw_section_num].data) {
- 			IWL_ERR(mvm, "Can't parse empty OTP/NVM sections\n");
 -- 
 2.20.1
 
