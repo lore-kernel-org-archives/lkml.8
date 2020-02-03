@@ -2,50 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41996C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B27C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CDF217BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E39021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747545;
-	bh=SYyVBxqOvd8PZBMYuPnTKpW3r9nD8zK15FsRGcjFJXA=;
+	s=default; t=1580747548;
+	bh=DxN8coZhDZX7wQFQzVq2wymNWBofR8Gq1Op8S0pVaGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJMWC64O6D4s0RCUymBVAERa7zJimlU/5tFzO8voU/gqExMT5o1ZaDTrzk+JH7R4q
-	 mRNnZivNu1IR6Gy+7OqZYNif2CkJklukKHoFix4ea9KFkMfUMMT3LoYeHRLuUk3gmS
-	 xNozMHDo842WWvmOnOFHYcqkb9dV49SQnw0MaUTU=
+	b=tuBHbR5Ys99H6a0++M0VGZPTWeYVVuVmCs0A3lxUTGqlWtEBbflR2VWHMAcvNirPX
+	 qR/nOBomtX+B3AC6kdT7J4tR8E3oTMfCd2MR6h/z972TMEGhFYM2rMs/JPPHKbcGJT
+	 GrBfAAOgL/3YldYZ2cGNz2uFKdQr86h7vHSL880Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgBCQcY (ORCPT
+        id S1730429AbgBCQc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbgBCQcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:20 -0500
+        id S1730413AbgBCQcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:23 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7153621744;
-        Mon,  3 Feb 2020 16:32:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF25421741;
+        Mon,  3 Feb 2020 16:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747539;
-        bh=SYyVBxqOvd8PZBMYuPnTKpW3r9nD8zK15FsRGcjFJXA=;
+        s=default; t=1580747542;
+        bh=DxN8coZhDZX7wQFQzVq2wymNWBofR8Gq1Op8S0pVaGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xobgM9GApQV47iI9SAZJBd/XSfcZ9F+mtbI9vjKKLM08R348eL7pWYm9oehvCSuwh
-         FPYn5Nui+YgBk2QN0dWYi/Mp3hEZT+D7C8Rx8Q8z+HbSfLcrL/AuylqJ5UdX12eKnz
-         pGZt/bYgjDUBbTcVXL6LD5TweG9KpPRWVORwRPFw=
+        b=VMU7/9YA7xZEPaz0uPseRMeocXLNfciJTvXJQqCzwvN1XoaTpgbZl1yYkEchuUV05
+         01b2b2Mxc8hFwS/ioQdYEDWMpD2RgCh7EgQcq9xOzPUsCQBax0dCJX4TuDI7rMXuMC
+         U8LN3qBi5A4dFYmuXw+zalpYBk7yzlxfoHavl6II=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4.19 09/70] PM / devfreq: Add new name attribute for sysfs
-Date:   Mon,  3 Feb 2020 16:19:21 +0000
-Message-Id: <20200203161913.849916643@linuxfoundation.org>
+        stable@vger.kernel.org, Cambda Zhu <cambda@linux.alibaba.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 36/70] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
+Date:   Mon,  3 Feb 2020 16:19:48 +0000
+Message-Id: <20200203161917.694078668@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -58,66 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Cambda Zhu <cambda@linux.alibaba.com>
 
-commit 2fee1a7cc6b1ce6634bb0f025be2c94a58dfa34d upstream.
+[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
 
-The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
-sysfs") changed the node name to devfreq(x). After this commit, it is not
-possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
+This patch fixes the calculation of queue when we restore flow director
+filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
+vf may be zero which makes the queue outside of the rx_ring array.
 
-Add new name attribute in order to get device name.
+The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
 
-Cc: stable@vger.kernel.org
-Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-class-devfreq |    7 +++++++
- drivers/devfreq/devfreq.c                     |    9 +++++++++
- 2 files changed, 16 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
---- a/Documentation/ABI/testing/sysfs-class-devfreq
-+++ b/Documentation/ABI/testing/sysfs-class-devfreq
-@@ -7,6 +7,13 @@ Description:
- 		The name of devfreq object denoted as ... is same as the
- 		name of device using devfreq.
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 51cd58fbab695..8177276500f5a 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -5189,7 +5189,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
+-	u64 action;
++	u8 queue;
  
-+What:		/sys/class/devfreq/.../name
-+Date:		November 2019
-+Contact:	Chanwoo Choi <cw00.choi@samsung.com>
-+Description:
-+		The /sys/class/devfreq/.../name shows the name of device
-+		of the corresponding devfreq object.
+ 	spin_lock(&adapter->fdir_perfect_lock);
+ 
+@@ -5198,17 +5198,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
+-		action = filter->action;
+-		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
+-			action =
+-			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
++			queue = IXGBE_FDIR_DROP_QUEUE;
++		} else {
++			u32 ring = ethtool_get_flow_spec_ring(filter->action);
++			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
 +
- What:		/sys/class/devfreq/.../governor
- Date:		September 2011
- Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -1014,6 +1014,14 @@ err_out:
- }
- EXPORT_SYMBOL(devfreq_remove_governor);
- 
-+static ssize_t name_show(struct device *dev,
-+			struct device_attribute *attr, char *buf)
-+{
-+	struct devfreq *devfreq = to_devfreq(dev);
-+	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
-+}
-+static DEVICE_ATTR_RO(name);
++			if (!vf && (ring >= adapter->num_rx_queues)) {
++				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
++				      ring);
++				continue;
++			} else if (vf &&
++				   ((vf > adapter->num_vfs) ||
++				     ring >= adapter->num_rx_queues_per_pool)) {
++				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
++				      vf, ring);
++				continue;
++			}
 +
- static ssize_t governor_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
- {
-@@ -1330,6 +1338,7 @@ static ssize_t trans_stat_show(struct de
- static DEVICE_ATTR_RO(trans_stat);
++			/* Map the ring onto the absolute queue index */
++			if (!vf)
++				queue = adapter->rx_ring[ring]->reg_idx;
++			else
++				queue = ((vf - 1) *
++					adapter->num_rx_queues_per_pool) + ring;
++		}
  
- static struct attribute *devfreq_attrs[] = {
-+	&dev_attr_name.attr,
- 	&dev_attr_governor.attr,
- 	&dev_attr_available_governors.attr,
- 	&dev_attr_cur_freq.attr,
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+-				&filter->filter,
+-				filter->sw_idx,
+-				(action == IXGBE_FDIR_DROP_QUEUE) ?
+-				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[action]->reg_idx);
++				&filter->filter, filter->sw_idx, queue);
+ 	}
+ 
+ 	spin_unlock(&adapter->fdir_perfect_lock);
+-- 
+2.20.1
+
 
 
