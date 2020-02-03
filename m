@@ -2,83 +2,84 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF0BC3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F4AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370E220838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140B72080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkuwH2bu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IrF2Yhev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgBCFDX (ORCPT
+        id S1726984AbgBCFDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 00:03:23 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33810 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgBCFDX (ORCPT
+        Mon, 3 Feb 2020 00:03:25 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40239 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgBCFDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 00:03:23 -0500
-Received: by mail-qt1-f196.google.com with SMTP id h12so10520246qtu.1;
-        Sun, 02 Feb 2020 21:03:22 -0800 (PST)
+        Mon, 3 Feb 2020 00:03:24 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v25so10480588qto.7;
+        Sun, 02 Feb 2020 21:03:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PWETuN1Ct/aBktiJB2sFTwNGzVs9/Rhblhe4P3oaRJY=;
-        b=HkuwH2bub7iIvO57E0i9lDHUF3m+LwVNRVnbSdehpOMJ+PDBp0xVO3m0rG1ykfB5FU
-         B7K3kVzledfBK17Mz5U+DPvWX1uJ0XWN9QpePcYnui0zfLUz9kLPU8Qn+oraz1LtjgSU
-         AbfXOOxCFhifOISWKDh2xaQ0+qISmretXlYVTHbpVGksN8+2nsi7PFXtmsxWKaV2G927
-         ViaAZLe/Ogu1KTKFcdPiqwvuH1dCng+FdGSf/iBgWOog8c60qKymxzGADt9f5dEfbzzv
-         tDov8kA2Sb9hYLx/IMKWtJIeVRK10k76i3tioZX0JelH/PwsfBfNFkgdO9AaTgF0KfRQ
-         j1tQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wYlLiIyZ6xtWSqRHGwj68GlwyY+LYYPTXp6jcsCn+f4=;
+        b=IrF2YhevpTkVJpyh9y4p2B/CLmvflLLrQnU0pce24ImrE6OdK3eSj6cpzNhLpjRf2G
+         uoBW7ahXPhYIokI+kUKf+oRdBvCUOjBCrOPeWaUuCwZXupGVDfeA4OHHmB3A/DQQZoTd
+         UWcI+LCOhWIjJEcCbRJN55mOq6tDb94gd4hwD/dbr2WJjJ0O6If6mO4iavPbMVEerk9v
+         0tKpECNgOFcqQfdmIgD2N1i3KDDPKFO7j0mIyaLF4JTg24ztcFrkQ+s7z0c9PeaQSB6c
+         mIgt+rf3lA7kUJZmDfp4MpROaIF7U7pjSeOtqxYsAhXP+v2eMNqVudyZ66yIAzNdVX0z
+         jSLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PWETuN1Ct/aBktiJB2sFTwNGzVs9/Rhblhe4P3oaRJY=;
-        b=LwHiaQSa65Vw6FW8TlpE9M4WGoVgAF64qLkRKc249kDC49JxRvTPOiySRqXQuq3qrz
-         6GWQPS7yprsKJZ8p7bBqgJNyCUqfGBMjpqG9tINyRr9x8+1TthTGJpf6J2KEJcce4VeM
-         Vo/Xc+fGYRkz9wlcztjFqZcyzAYMw+4coO6nyu0518mG9F5gSsxYY3DbV4FH3buL3fQp
-         n2ZPdC01NA1dhS/5sz4bDi1rC0uXezy1nqlvCMWXRl8j71p7B8TdwpQuBuMGhqUdH5c0
-         NKX9Yo6eoE23Ys9+QN3/sSwsBfhFDan51R2mf+UMY/9nX2XA84CB+C0z3z91hyDp3pjl
-         Jyxw==
-X-Gm-Message-State: APjAAAWTXRY04UihLQJSXg+vqC9oRGrhLQ4CTISvhGECXnGKR8/orVE/
-        sUeDYQVhilDk1pFfkBouh2A=
-X-Google-Smtp-Source: APXvYqx5jpsXp9AeJcxrEs21tUX1LfSm/Td+nyy+2Xg93XES6+FgF0WKPll2zf0C6SmJAwoxK/g+wA==
-X-Received: by 2002:ac8:108:: with SMTP id e8mr22244723qtg.101.1580706202246;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wYlLiIyZ6xtWSqRHGwj68GlwyY+LYYPTXp6jcsCn+f4=;
+        b=sNLu3dTVyLpebcQbcEBv6jC4shGuonbiZkidVP9G+Ze3HR29D5KRudVn40R5MRw1Nm
+         3U0jOFkJut1ImnQ2dGQOcb7PsOYoTv1Jgrl20euzxg4xrTqD6Oht3hBgRl/VOdvRM5Fo
+         7eoZB/6/PVUFfKESTbJ+sHG6e2elWYKYavWEGstTEYd+cAhoLKuR35guRYfClrHT5CNJ
+         KTo6AokJT6GlPoipKI+xGubbKFyCTSAk1PS50eBk+SXvtsdZdtqIkiej3/rrlYiuptmr
+         hwil+QltCPeGaHH/0CYNJO7f+qEXENdCjCPAKNCtM62nkl6YUz1IpTUMrRiWgtpzZY3b
+         00Rg==
+X-Gm-Message-State: APjAAAXf/XEtDlcYDVAXPVwDjYdXph1RHGy/CQSy6PbeqjLapaubdpZc
+        ylx/MOBJobMCKe2zLY3l3KQ=
+X-Google-Smtp-Source: APXvYqw/JSotvpKLRqau3UsOI7GqVAKcDFDEyfckUo5K3AA2BM1FkGqlALOh4m1g+OgHRDNXjnNEuQ==
+X-Received: by 2002:ac8:704:: with SMTP id g4mr22114298qth.197.1580706202773;
         Sun, 02 Feb 2020 21:03:22 -0800 (PST)
 Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id v2sm9435343qto.73.2020.02.02.21.03.20
+        by smtp.gmail.com with ESMTPSA id 135sm8837749qkl.68.2020.02.02.21.03.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Feb 2020 21:03:21 -0800 (PST)
+        Sun, 02 Feb 2020 21:03:22 -0800 (PST)
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 54C3E21EC3;
-        Mon,  3 Feb 2020 00:03:18 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 03 Feb 2020 00:03:18 -0500
-X-ME-Sender: <xms:lKk3XnS7TAJMSrraTFkuhbT-Xmy7nggDlkHu41dzguP_BhJxkHmxdQ>
+        by mailauth.nyi.internal (Postfix) with ESMTP id 8519F21F40;
+        Mon,  3 Feb 2020 00:03:21 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 03 Feb 2020 00:03:21 -0500
+X-ME-Sender: <xms:mak3XgcyHJ-FHN-KXqn1rRMZozZQhbcbhS4odZa_FiDy0dgtsuaagw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeeigdejjecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
-    fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffoggfgsedtkeer
-    tdertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesgh
-    hmrghilhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphephedv
-    rdduheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithih
-    qdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrih
-    hlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:lKk3Xt8KCi63j6F2Q-uEdywfZMtbCYGspogt7A7kyJcxsh8a7SGNuw>
-    <xmx:lKk3XtOFZkqp6zCJmR4qgUpZUE0RJYje7Ha-ylVJLiSj5nvnwICY2w>
-    <xmx:lKk3XgHciIXfgh-o06VN2x4mhgIqpffW0PapUfy3hukGfyQGoj5zjA>
-    <xmx:lqk3XoXgRmlF_qzXVCzXkAVoNLIf1u3j_wDK2sABnOmyYXVNXgDx5DSmm2U>
+    fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffojghfggfgsedt
+    keertdertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghngh
+    esghhmrghilhdrtghomheqnecuffhomhgrihhnpehmihgtrhhoshhofhhtrdgtohhmnecu
+    kfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:mak3XmeMjOUEtH951eeh_F7aXNvylSBWXjUOU5gqI2r8pK0wvZ2nuw>
+    <xmx:mak3Xsg-m4WVDsGDpSijgBbaG4zQ3DoVs2J40RPkF_zCBE1YTnuSLw>
+    <xmx:mak3XqR04Lzl0uXzimXsvU6X1YY1xvR01w_vDzkG0uc9GVT4xIbYUA>
+    <xmx:mak3XtmTvx3hcCSM359e_5-vI5d4QRCnq4OJ4FxpNJXjLJV9UQoIm6iEzFk>
 Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5119D328005E;
-        Mon,  3 Feb 2020 00:03:16 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 01AFD3060134;
+        Mon,  3 Feb 2020 00:03:20 -0500 (EST)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
@@ -94,10 +95,12 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH v2 0/3] PCI: hv: Generify pci-hyperv.c
-Date:   Mon,  3 Feb 2020 13:03:10 +0800
-Message-Id: <20200203050313.69247-1-boqun.feng@gmail.com>
+Subject: [PATCH v2 2/3] PCI: hv: Move retarget related structures into tlfs header
+Date:   Mon,  3 Feb 2020 13:03:12 +0800
+Message-Id: <20200203050313.69247-3-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200203050313.69247-1-boqun.feng@gmail.com>
+References: <20200203050313.69247-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -105,45 +108,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Currently, retarget_msi_interrupt and other structures it relys on are
+defined in pci-hyperv.c. However, those structures are actually defined
+in Hypervisor Top-Level Functional Specification [1] and may be
+different in sizes of fields or layout from architecture to
+architecture. Therefore, this patch moves those definitions into x86's
+tlfs header file to support virtual PCI on non-x86 architectures in the
+future.
 
-This is the first part for virtual PCI support of Hyper-V guest on
-ARM64. The whole patchset doesn't have any functional change, but only
-refactors the pci-hyperv.c code to make it more arch-independent.
+Besides, while I'm at it, rename retarget_msi_interrupt to
+hv_retarget_msi_interrupt for the consistent name convention, also
+mirroring the name in TLFS.
 
-Previous version:
-v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+[1]: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
 
-Changes since v1:
+Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+---
+ arch/x86/include/asm/hyperv-tlfs.h  | 31 ++++++++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv.c | 34 ++---------------------------
+ 2 files changed, 33 insertions(+), 32 deletions(-)
 
-*	Reword the commit log and adjust the title as per Bjorn's
-	suggestion
-
-*	Split patch #2 into two patches (one for moving and one for
-	adding new structure) as per Bjorn's suggestion
-
-*	Remove unnecesarry #if guard as per Vitaly's suggestion.
-
-*	Add explanation for adding hv_set_msi_address_from_desc().
-
-I've done compile and boot test of this patchset, also done some tests
-with a pass-through NVMe device.
-
-Suggestions and comments are welcome!
-
-Regards,
-Boqun
-
-Boqun Feng (3):
-  PCI: hv: Move hypercall related definitions into tlfs header
-  PCI: hv: Move retarget related structures into tlfs header
-  PCI: hv: Introduce hv_msi_entry
-
- arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
- arch/x86/include/asm/mshyperv.h     |  5 ++++
- drivers/pci/controller/pci-hyperv.c | 44 +++--------------------------
- 3 files changed, 50 insertions(+), 40 deletions(-)
-
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index 739bd89226a5..4a76e442481a 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -911,4 +911,35 @@ struct hv_tlb_flush_ex {
+ struct hv_partition_assist_pg {
+ 	u32 tlb_lock_count;
+ };
++
++struct hv_interrupt_entry {
++	u32 source;			/* 1 for MSI(-X) */
++	u32 reserved1;
++	u32 address;
++	u32 data;
++} __packed;
++
++/*
++ * flags for hv_device_interrupt_target.flags
++ */
++#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
++#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
++
++struct hv_device_interrupt_target {
++	u32 vector;
++	u32 flags;
++	union {
++		u64 vp_mask;
++		struct hv_vpset vp_set;
++	};
++} __packed;
++
++/* HvRetargetDeviceInterrupt hypercall */
++struct hv_retarget_device_interrupt {
++	u64 partition_id;
++	u64 device_id;
++	struct hv_interrupt_entry int_entry;
++	u64 reserved2;
++	struct hv_device_interrupt_target int_target;
++} __packed __aligned(8);
+ #endif
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index aacfcc90d929..0d9b74503577 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -406,36 +406,6 @@ struct pci_eject_response {
+ 
+ static int pci_ring_size = (4 * PAGE_SIZE);
+ 
+-struct hv_interrupt_entry {
+-	u32	source;			/* 1 for MSI(-X) */
+-	u32	reserved1;
+-	u32	address;
+-	u32	data;
+-};
+-
+-/*
+- * flags for hv_device_interrupt_target.flags
+- */
+-#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+-#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+-
+-struct hv_device_interrupt_target {
+-	u32	vector;
+-	u32	flags;
+-	union {
+-		u64		 vp_mask;
+-		struct hv_vpset vp_set;
+-	};
+-};
+-
+-struct retarget_msi_interrupt {
+-	u64	partition_id;		/* use "self" */
+-	u64	device_id;
+-	struct hv_interrupt_entry int_entry;
+-	u64	reserved2;
+-	struct hv_device_interrupt_target int_target;
+-} __packed __aligned(8);
+-
+ /*
+  * Driver specific state.
+  */
+@@ -482,7 +452,7 @@ struct hv_pcibus_device {
+ 	struct workqueue_struct *wq;
+ 
+ 	/* hypercall arg, must not cross page boundary */
+-	struct retarget_msi_interrupt retarget_msi_interrupt_params;
++	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+ 
+ 	/*
+ 	 * Don't put anything here: retarget_msi_interrupt_params must be last
+@@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
+ {
+ 	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+ 	struct irq_cfg *cfg = irqd_cfg(data);
+-	struct retarget_msi_interrupt *params;
++	struct hv_retarget_device_interrupt *params;
+ 	struct hv_pcibus_device *hbus;
+ 	struct cpumask *dest;
+ 	cpumask_var_t tmp;
 -- 
 2.24.1
 
