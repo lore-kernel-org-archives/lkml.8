@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A483BC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A423DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690B620720
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0DF20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qn+mnqQC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YouvTwzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgBCXdP (ORCPT
+        id S1727102AbgBCXeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:33:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35895 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgBCXdP (ORCPT
+        Mon, 3 Feb 2020 18:34:25 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36700 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgBCXeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:33:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so6466758plm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:33:14 -0800 (PST)
+        Mon, 3 Feb 2020 18:34:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 185so8441020pfv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:34:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=3aYiPA/gJeoBo48Ys9UapQ0Ubna55Q+Eek/KSnN7OTE=;
-        b=qn+mnqQCcbYJ1bVCJ8S5wTj0A3XX0kEYmXBHZW3Kgk5qO4J5y//6RudPCe7dXAu7Ib
-         hIhfJTwxvYvManjAqfpkaQD98RZLUOVNnKIDg+XAsu1sBG76SUtLqROV5wZ6zadciVIu
-         qv+l47h4wY6J1pdEE0/MHCZNwdp78fVhVd6VFqbuvxnj6EFGR41fISlFiJ3ODoZygnsr
-         1SMpiUb6uJvJAAgdqYakM+EBWXDsmTJNK7diOSh/ShytwskMDfdVkZEkNgDwQrD1m0WZ
-         C85QhxfahubgbydPcrjyJATx6LkFSjpB4yCP8BPnCxnKR2bi6FTGWNGNXx+qYtruHpKq
-         oRsg==
+        bh=CRRDli79xE8LIu9zwaoq3HKVinZzj5LHxKyaS7ghdP8=;
+        b=YouvTwznNYnoG+2f/OterSj77UFSEOFMw8fwMy4fgu8UlXX9NqGegRgyVlR03x50We
+         FP/q0O3sHzgvntfxYyBg/ek2TGSmWxioJoesvHnkq0JKFn00Lwb3xrAF1Um74dcW0EgL
+         wOwMYY/JFtoFnGQSVcOLgbGm66oB1jSHBDf9+DgaIuNbwSJuRWuBex24sA2ynzcZsKds
+         WZ9TknN93NjOzLZ5XZt/wf89dPpK/aO0ZgHtt/Q9hk+eYNtt3qX3moG3v9YoDr4+Yv3E
+         4fCoq9dbluTJDPuy/V7jfA332en3wkv7YA7UDdhKS4BxIYH8paUvjBRRIPsJX1rYy8Pq
+         2mbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3aYiPA/gJeoBo48Ys9UapQ0Ubna55Q+Eek/KSnN7OTE=;
-        b=acl56szVktAGspbt1s6bczMLjvc2J3eF7ug6GkC+cgdyokqvPka3f9J1P4X58W4vRr
-         tQKO470coBi3C/nOsqJvN1IZ0HnOZZgWlJJyAc8LwEd+wKvod2d8zpLhEf1QRPHPvvhn
-         JuSew0NDlf6sQ25dlJN2Ro9+2ijQB0At+jEvymsfhZf4zqZ1EO+tkE/yLIRJfBYljG66
-         FriiRky8cvtLGUm+rb9BZdkQIbkhCDsqz16Cu0gHpXUXrCHdBENNLQDJ5kI9hDG83LQy
-         bLX35lXVC42f53tktV7WV+YFLQYhVZ/l38MsKdBD1/xh+5JsmoI5tnwKUvIJ5lkAwrBj
-         0Qng==
-X-Gm-Message-State: APjAAAVFnbB49N9rymojFx69SHB7SZNx5m/gujh9rCt+D2q+zwq4W498
-        0Dl3TVAhdATSRmAsb4mJgSTHLQ==
-X-Google-Smtp-Source: APXvYqyYv/3WZZoQ1fH4Z0rd/mToMYgxMof6syF+b8Indkq9ll0Hb4RbBOj0ZiJq6oVriYm0cFF+Vw==
-X-Received: by 2002:a17:90a:b30b:: with SMTP id d11mr2003878pjr.22.1580772794291;
-        Mon, 03 Feb 2020 15:33:14 -0800 (PST)
+        bh=CRRDli79xE8LIu9zwaoq3HKVinZzj5LHxKyaS7ghdP8=;
+        b=Eu9wDrSRpd1RwoYWzwL6cOtIJgjQpUH2iLos+dk8FisI4hhvniMwnziQgRGwAnQqOA
+         pUfv6UODJTlzLuO6XsUnsi+QpS30hKufPAtCl5lTkCUbf8K+ZySlNMTHQuWcW5di04lt
+         wMbHCOcreacIL9lld99jVMmJBz+LTTMsTNyvURFpZaMqvmfZ1bperK6dN8xmWBikwm+e
+         jRGVtMKF7w0X+4fIqaVobUuzAtF8Ff+jOUy+I3q8IwlnYuNs65fq8rOJz7UGEhjkFI3p
+         fiCX4QBlLfz3F7BnAeP5D84fI8opWZzRhURnu/6Sb2Vy3LzNZmNq7Afb3qoFHLOTS+Ne
+         c/Tw==
+X-Gm-Message-State: APjAAAV+XCHev5xVrYXPMmUFHq+esT76dnfBiBg5De0LEfBubtDRN7gC
+        89mPKJfFimNyC5l4uMT89wkwGA==
+X-Google-Smtp-Source: APXvYqyD0yQtMSMVUy8QHav9nE32wkPgiPb4hwzH5mtiPqE1/LxdbmKtFgTTIVfpCqxgSMNoTDmxCw==
+X-Received: by 2002:aa7:9f5e:: with SMTP id h30mr3472249pfr.137.1580772864660;
+        Mon, 03 Feb 2020 15:34:24 -0800 (PST)
 Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q29sm9637390pgc.15.2020.02.03.15.33.12
+        by smtp.gmail.com with ESMTPSA id w131sm22329038pfc.16.2020.02.03.15.34.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 15:33:13 -0800 (PST)
-Date:   Mon, 3 Feb 2020 15:33:11 -0800
+        Mon, 03 Feb 2020 15:34:24 -0800 (PST)
+Date:   Mon, 3 Feb 2020 15:34:21 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Andrzej Hajda <a.hajda@samsung.com>,
@@ -69,15 +69,15 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 3/9] drm/bridge: ti-sn65dsi86: Don't use MIPI
- variables for DP link
-Message-ID: <20200203233311.GC311651@builder>
+Subject: Re: [PATCH v3 4/9] drm/bridge: ti-sn65dsi86: Config number of DP
+ lanes Mo' Betta
+Message-ID: <20200203233421.GD311651@builder>
 References: <20191218223530.253106-1-dianders@chromium.org>
- <20191218143416.v3.3.Ia6e05f4961adb0d4a0d32ba769dd7781ee8db431@changeid>
+ <20191218143416.v3.4.If3e2d0493e7b6e8b510ea90d8724ff760379b3ba@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218143416.v3.3.Ia6e05f4961adb0d4a0d32ba769dd7781ee8db431@changeid>
+In-Reply-To: <20191218143416.v3.4.If3e2d0493e7b6e8b510ea90d8724ff760379b3ba@changeid>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,18 +86,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed 18 Dec 14:35 PST 2019, Douglas Anderson wrote:
 
-> The ti-sn65dsi86 is a bridge from MIPI to DP and thus has two links:
-> the MIPI link and the DP link.  The two links do not need to have the
-> same format or number of lanes.  Stop using MIPI variables when
-> talking about the DP link.
+> The driver used to say that the value to program into bridge register
+> 0x93 was dp_lanes - 1.  Looking at the datasheet for the bridge, this
+> is wrong.  The data sheet says:
+> * 1 = 1 lane
+> * 2 = 2 lanes
+> * 3 = 4 lanes
 > 
-> This has zero functional change because:
-> * currently we are hardcoding the MIPI link as unpacked RGB888 which
->   requires 24 bits and currently we are not changing the DP link rate
->   from the bridge's default of 8 bits per pixel.
-> * currently we are hardcoding both the MIPI and DP as being 4 lanes.
+> A more proper way to express this encoding is min(dp_lanes, 3).
 > 
-> This is all in prep for fixing some of the above.
+> At the moment this change has zero effect because we've hardcoded the
+> number of DP lanes to 4.  ...and (4 - 1) == min(4, 3).  How fortunate!
+> ...but soon we'll stop hardcoding the number of lanes.
 > 
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > Tested-by: Rob Clark <robdclark@gmail.com>
@@ -110,58 +110,19 @@ Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Changes in v3: None
 > Changes in v2: None
 > 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 7b596af265e4..ab644baaf90c 100644
+> index ab644baaf90c..d55d19759796 100644
 > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
 > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -100,6 +100,7 @@ struct ti_sn_bridge {
->  	struct drm_panel		*panel;
->  	struct gpio_desc		*enable_gpio;
->  	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
-> +	int				dp_lanes;
->  };
->  
->  static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-> @@ -313,6 +314,7 @@ static int ti_sn_bridge_attach(struct drm_bridge *bridge)
->  	}
->  
->  	/* TODO: setting to 4 lanes always for now */
-> +	pdata->dp_lanes = 4;
->  	dsi->lanes = 4;
->  	dsi->format = MIPI_DSI_FMT_RGB888;
->  	dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
-> @@ -451,13 +453,17 @@ static void ti_sn_bridge_set_dp_rate(struct ti_sn_bridge *pdata)
->  	struct drm_display_mode *mode =
->  		&pdata->bridge.encoder->crtc->state->adjusted_mode;
->  
-> -	/* set DSIA clk frequency */
-> -	bit_rate_mhz = (mode->clock / 1000) *
-> -			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
-> +	/*
-> +	 * Calculate minimum bit rate based on our pixel clock.  At
-> +	 * the moment this driver never sets the DP_18BPP_EN bit in
-> +	 * register 0x5b so we hardcode 24bpp.
-> +	 */
-> +	bit_rate_mhz = (mode->clock / 1000) * 24;
->  
-> -	/* set DP data rate */
-> -	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
-> +	/* Calculate minimum DP data rate, taking 80% as per DP spec */
-> +	dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
->  							DP_CLK_FUDGE_DEN;
-> +
->  	for (i = 1; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
->  		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
->  			break;
-> @@ -517,7 +523,7 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+> @@ -523,7 +523,7 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
 >  			   CHA_DSI_LANES_MASK, val);
 >  
 >  	/* DP lane config */
-> -	val = DP_NUM_LANES(pdata->dsi->lanes - 1);
-> +	val = DP_NUM_LANES(pdata->dp_lanes - 1);
+> -	val = DP_NUM_LANES(pdata->dp_lanes - 1);
+> +	val = DP_NUM_LANES(min(pdata->dp_lanes, 3));
 >  	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
 >  			   val);
 >  
