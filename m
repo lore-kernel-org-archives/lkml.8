@@ -2,106 +2,148 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345ECC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4B6C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5792084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6744B20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="o5Ff7bts"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="WbIqUpHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgBCNRf (ORCPT
+        id S1728245AbgBCNSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:17:35 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42650 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbgBCNRf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:17:35 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d10so14553809ljl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:17:33 -0800 (PST)
+        Mon, 3 Feb 2020 08:18:21 -0500
+Received: from mail-mw2nam12on2069.outbound.protection.outlook.com ([40.107.244.69]:6272
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727427AbgBCNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 08:18:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OBZb1WYboyOTTCd4HWi7Xo2q8ag8RUX5eXLHBDRw5D0vjDKiwFZF+rxbk3eGHPRrQ8G67jmSvcS0CBRGTTWjX/Imo5wcpn0AfPzSgnVfRlKQ1i0SdIOlwDrWfqvF2AyGXLb+FM51DVBR3gr7GNNGBcth9XAczDvBQdvNn3vt989eT8+H3sJ07rNkrgeQs7VRyHrwTTAA3qgxKiGb3hRNqQf81/cO4tJ3FIJ0qnXToL9RgYZ1ju4RNM+3olsElwovvavtf0WPOzcKvUQzMhIh/d9iE3RtlYz0YNCfwhZgcKCwg9KqAU6W+YiTxUfm9/hVNvM9aouxFfjbBALiLZnn3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDemxcZHOJOz+vjA6VMVlH6ZW9U2oJaP76Z4u47iTGI=;
+ b=dTaLjngae3WVpVomkPJYI3ntvdOBinjBh/30DfQ4WJg+PKfJJeKdHywycnTWAaZXWXWZN+HplOaAwxOfW5Sn7kn0k7EmGrWTi3hDh5uv7hdJdiXGlajqVKWC2T0Woxun9DpMCwWefjKAahpA40wE2o6R6v6JNdSSeK3rPjHg9cTOwrbH9ufU8MkNzDqbHHMe+whyRfxJQrG7VM3sJCBS/YiynskKypMxlvUfmIrTqDemrQGQcmmhgdAdhlf2QeMghaQsyj7PeOzFIU4lk95slXPaK1HhK/WzAK0dkQ2VgZR3t3dGvdGbtkTzYJuw+MKwUiezcENY+fvX+Vgwhb1kCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vyFT4rLw7oKG03KTCLsTCkr74zWtEKjYEEOBftr+6P0=;
-        b=o5Ff7btsNGi9NOXnjubu+7cTXPZzjIguylFxg2meFJKfZpUujo4sDiBm4/PoClx4Kf
-         wAG+40lcRzRFD2Co4z/dCvXZkYHngCJJvQG6Ro/d5Jm8BkZvOVNgFHKyhYYFkEvWw0aa
-         4VwPcAc6uWQZ0Yd3ylaVtft2ryUHgm9OCWOQ5Hh6uzsALWd6gB3mINfr5rfMNTl765vG
-         uALlx7fVFek/4XK+QVXRG+jLYeMHLD4cZqm8RYCS6Mqdrfm8thosqdfb6bNYw5rBicmE
-         HJsg9ArBJmbt0pkJ1ndiDf0a6JSC2Os6yrRXqftoz+cbYoumzUNhzEWAGvRcPkk36K3w
-         IIeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vyFT4rLw7oKG03KTCLsTCkr74zWtEKjYEEOBftr+6P0=;
-        b=Hy9EAvsZRdyfm7V70SMyBkI7jNgm8HUPKXjqfGSFb2zvgO8gPIoiM9YzMzOHTV8+sv
-         oTP2MWctjcTNCo7Cs77xVLsue7CeUYuWA7SP+C041i3q7dVspKxYTme2VEpP1Z99h9Sf
-         XSgj3B/1Zhf5Jigaxm0pie0zqKSLZnoedtt5MKtcMvxgyVEwapHWVmxt98wWyLta7SIs
-         fyP2P4gQ0hJn3VPJQOyqnCVSyxtT9rTLJ3P41ff0uEoI+y/pU4Vl9GgmTftFSuz4oBOS
-         jHwXev17SeZBcXwF/dx4skaCQMwRPuU02NdWxNLpQCOOmGaBmC++MgGXw8L5R8WhBWeq
-         Rj5A==
-X-Gm-Message-State: APjAAAVeFaf1/DktT+9FNfUxkz7Nris4ny9ZgUd3CvNoCRjmIP9dkuD/
-        3Sfqfbyx0QbRl9c2dUE0pjoZMg==
-X-Google-Smtp-Source: APXvYqzNUL0o3i1b2tHehpWzfV/mFHtL+96xJ6zWYkW97kHAQ906cHrLM/Ge9Zfr+Ej7Vk691i4ZeQ==
-X-Received: by 2002:a2e:9a93:: with SMTP id p19mr13816964lji.177.1580735852643;
-        Mon, 03 Feb 2020 05:17:32 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id z8sm9754153ljk.13.2020.02.03.05.17.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 05:17:31 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 79B2B100DC8; Mon,  3 Feb 2020 16:17:44 +0300 (+03)
-Date:   Mon, 3 Feb 2020 16:17:44 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 02/12] mm/gup: split get_user_pages_remote() into two
- routines
-Message-ID: <20200203131744.6idhpu2ho3ajfu55@box>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-3-jhubbard@nvidia.com>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDemxcZHOJOz+vjA6VMVlH6ZW9U2oJaP76Z4u47iTGI=;
+ b=WbIqUpHa2qlcjoqvqTW3yy+iDq1J3y1gN+lRy/8icxKmy2pl56iYDWVFAEuY8mLqkoyBPwRJNc2Z7k5gHcBJv1FHFXbguNRpNLkV/41o6Jt1SywORwLkiQovSiQEejatGQdAqPQvEE7I/35KB06mrBKbzWIJMS36zqz0mEei3ac=
+Received: from BL0PR02CA0077.namprd02.prod.outlook.com (2603:10b6:208:51::18)
+ by CH2PR02MB7029.namprd02.prod.outlook.com (2603:10b6:610:85::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.33; Mon, 3 Feb
+ 2020 13:18:19 +0000
+Received: from CY1NAM02FT038.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::206) by BL0PR02CA0077.outlook.office365.com
+ (2603:10b6:208:51::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.29 via Frontend
+ Transport; Mon, 3 Feb 2020 13:18:18 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT038.mail.protection.outlook.com (10.152.74.217) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
+ via Frontend Transport; Mon, 3 Feb 2020 13:18:18 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1iybcI-0003Fh-2c; Mon, 03 Feb 2020 05:18:18 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1iybcC-0002w8-Uc; Mon, 03 Feb 2020 05:18:12 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 013DI9Ht003784;
+        Mon, 3 Feb 2020 05:18:09 -0800
+Received: from [10.140.6.13] (helo=xhdharinik40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1iybc8-0002t1-Im; Mon, 03 Feb 2020 05:18:09 -0800
+From:   Harini Katakam <harini.katakam@xilinx.com>
+To:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        claudiu.beznea@microchip.com, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, harinikatakamlinux@gmail.com,
+        harini.katakam@xilinx.com
+Subject: [PATCH v2 1/2] net: macb: Remove unnecessary alignment check for TSO
+Date:   Mon,  3 Feb 2020 18:48:01 +0530
+Message-Id: <1580735882-7429-2-git-send-email-harini.katakam@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
+References: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(39860400002)(346002)(199004)(189003)(2616005)(336012)(2906002)(426003)(26005)(186003)(6666004)(356004)(4744005)(70206006)(70586007)(5660300002)(36756003)(7696005)(316002)(8676002)(81156014)(8936002)(81166006)(9786002)(107886003)(4326008)(478600001)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB7029;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200201034029.4063170-3-jhubbard@nvidia.com>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8785c000-acb3-4885-21ea-08d7a8ab88ef
+X-MS-TrafficTypeDiagnostic: CH2PR02MB7029:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB70293536C971B5B7BEC662CCC9000@CH2PR02MB7029.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0302D4F392
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EhUvKUQSimajCHHKkJUbP9jgXxlhnk5aPQUIi3FbkzBvIUSKUjDqjurB5540w884jNv4jkVMK3BvFF2AAv1IsS/dpY68QNMPcwCFZ0zgdfmkIMycuVqJJ8xIA/hIwvWQfTs0TqZjFo+m8qtz4tuRnFnhN1jYqUfm/yAfuFee1QTLSTmjMV+Rrbc6M1jkO1Sscrx1LSKXMh1h/M1/kg4OT1QIlzd70pMrajMfEVUeKuDwyIsBQST+yIPPHxrWZWtxcZYUts1LMbxH7ovQj5RMd4kaASc4Fxkn//DCtIswmnr5wxslhLSDUzW/MGbHh1GJS+8idjYq520Z5UqvJUzOFPldxCxPkUGq7j+25wgs+fMhvU68khhWN8DW7SLEcxpzImCLO0JDdUBBMPaBpgf/QxECbLQR6BawuvFn1ltEcmEg2mRz9lllPAQjkZbJbTOG
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 13:18:18.5170
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8785c000-acb3-4885-21ea-08d7a8ab88ef
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB7029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 07:40:19PM -0800, John Hubbard wrote:
-> An upcoming patch requires reusing the implementation of
-> get_user_pages_remote(). Split up get_user_pages_remote() into an outer
-> routine that checks flags, and an implementation routine that will be
-> reused. This makes subsequent changes much easier to understand.
-> 
-> There should be no change in behavior due to this patch.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+The IP TSO implementation does NOT require the length to be a
+multiple of 8. That is only a requirement for UFO as per IP
+documentation.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Fixes: 1629dd4f763c ("cadence: Add LSO support.")
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+---
+v2:
+Added Fixes tag
 
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 7a2fe63..2e418b8 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -1792,7 +1792,7 @@ static netdev_features_t macb_features_check(struct sk_buff *skb,
+ 	/* Validate LSO compatibility */
+ 
+ 	/* there is only one buffer */
+-	if (!skb_is_nonlinear(skb))
++	if (!skb_is_nonlinear(skb) || (ip_hdr(skb)->protocol != IPPROTO_UDP))
+ 		return features;
+ 
+ 	/* length of header */
 -- 
- Kirill A. Shutemov
+2.7.4
+
