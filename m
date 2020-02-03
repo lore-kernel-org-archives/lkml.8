@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD6FC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F2EC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844BA21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8B52086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748081;
-	bh=gITOntd6JjepyRqHUzvVgH4Fg1uLC6E0WP0cBUWuEUc=;
+	s=default; t=1580748090;
+	bh=5Shb8Tk5ld6AXNX7FO+L8lYGIpZSgw9dqSshcT78Bqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNyVGtWJ10q1FlWML3Kkae9JRiJJF+rSqsB3qubSoPVCYZ/tlmHPIQp6GO7t6KYiC
-	 nu55L/zTcy4NMBWM8v8MNooS9kVbhQ3unNOL161PKmAq8qRCieuimTiP+tYaMi7UcI
-	 iReIwvhvrTLYfkZNhT6Xsttrj122QWaQ4VB8d4G8=
+	b=DBhoCBMAkC0PpJsoYDzJAtzMCyNAMPGEigqUlX+FhtXT8XYKZH9dgZrI0o/yqaAse
+	 SrEt0TtIcCzpG1tNvFU/7mX3bEa/xMPo68mBdBm69TNF8i5WDg3UVRup0Im0TQyt/c
+	 MZlHAuziyMKleUGfEcJR6u9bsJsOu+N1oIMO9LPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbgBCQlU (ORCPT
+        id S1731465AbgBCQl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:41:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730930AbgBCQfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:13 -0500
+        id S1730885AbgBCQe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:59 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7610E21582;
-        Mon,  3 Feb 2020 16:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3059F21744;
+        Mon,  3 Feb 2020 16:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747712;
-        bh=gITOntd6JjepyRqHUzvVgH4Fg1uLC6E0WP0cBUWuEUc=;
+        s=default; t=1580747698;
+        bh=5Shb8Tk5ld6AXNX7FO+L8lYGIpZSgw9dqSshcT78Bqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ge7Vr+z4dtjgLikgtphmnKQkFkgILyD6hMq29WTy8AvcZOMTGOVbrc3GaqTGYBblL
-         D8eGBQgfj1u5uGAVmqrzGZGrw/dhzYCJ75/eSthBuaZ3RO1dyGk3Fiya8xADm1UPY9
-         fZmSpCVWuAvW0jL7Yrv/JA8wif4x+r1u6beL4vB8=
+        b=bMTUB4L4QbcJk3CRiSnlV9ovor0YvrRm2LZfuseW+JUWW73fk0NEvzuw5mxAKfAV9
+         lqvxeIoHHBlmG5Gi+oPr7IZbj96x324A7uL2Kp9weqYKu5R+uKCJxwNENVwqoW4C/U
+         a4TT8I9+l5aGioZrn0gFLN6fHT8GIyHkmLyLsME8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arkady Gilinksky <arkady.gilinsky@harmonicinc.com>,
-        Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 38/90] i40e: Fix virtchnl_queue_select bitmap validation
-Date:   Mon,  3 Feb 2020 16:19:41 +0000
-Message-Id: <20200203161922.708588217@linuxfoundation.org>
+Subject: [PATCH 5.4 33/90] clk: sunxi-ng: h6-r: Fix AR100/R_APB2 parent order
+Date:   Mon,  3 Feb 2020 16:19:36 +0000
+Message-Id: <20200203161922.055743609@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -63,78 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Samuel Holland <samuel@sholland.org>
 
-[ Upstream commit d9d6a9aed3f66f8ce5fa3ca6ca26007d75032296 ]
+[ Upstream commit 0c545240aebc2ccb8f661dc54283a14d64659804 ]
 
-Currently in i40e_vc_disable_queues_msg() we are incorrectly
-validating the virtchnl queue select bitmaps. The
-virtchnl_queue_select rx_queues and tx_queue bitmap is being
-compared against ICE_MAX_VF_QUEUES, but the problem is that
-these bitmaps can have a value greater than I40E_MAX_VF_QUEUES.
-Fix this by comparing the bitmaps against BIT(I40E_MAX_VF_QUEUES).
+According to the BSP source code, both the AR100 and R_APB2 clocks have
+PLL_PERIPH0 as mux index 3, not 2 as it was on previous chips. The pre-
+divider used for PLL_PERIPH0 should be changed to index 3 to match.
 
-Also, add the function i40e_vc_validate_vqs_bitmaps() that checks to see
-if both virtchnl_queue_select bitmaps are empty along with checking that
-the bitmaps only have valid bits set. This function can then be used in
-both the queue enable and disable flows.
+This was verified by running a rough benchmark on the AR100 with various
+clock settings:
 
-Suggested-by: Arkady Gilinksky <arkady.gilinsky@harmonicinc.com>
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+        | mux | pre-divider | iterations/second | clock source |
+        |=====|=============|===================|==============|
+        |   0 |           0 |  19033   (stable) |       osc24M |
+        |   2 |           5 |  11466 (unstable) |  iosc/osc16M |
+        |   2 |          17 |  11422 (unstable) |  iosc/osc16M |
+        |   3 |           5 |  85338   (stable) |  pll-periph0 |
+        |   3 |          17 |  27167   (stable) |  pll-periph0 |
+
+The relative performance numbers all match up (with pll-periph0 running
+at its default 600MHz).
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/intel/i40e/i40e_virtchnl_pf.c    | 22 +++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 3d24408388226..3515ace0f0201 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -2322,6 +2322,22 @@ static int i40e_ctrl_vf_rx_rings(struct i40e_vsi *vsi, unsigned long q_map,
- 	return ret;
- }
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 45a1ed3fe6742..ab194143e06ce 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -23,9 +23,9 @@
+  */
  
-+/**
-+ * i40e_vc_validate_vqs_bitmaps - validate Rx/Tx queue bitmaps from VIRTHCHNL
-+ * @vqs: virtchnl_queue_select structure containing bitmaps to validate
-+ *
-+ * Returns true if validation was successful, else false.
-+ */
-+static bool i40e_vc_validate_vqs_bitmaps(struct virtchnl_queue_select *vqs)
-+{
-+	if ((!vqs->rx_queues && !vqs->tx_queues) ||
-+	    vqs->rx_queues >= BIT(I40E_MAX_VF_QUEUES) ||
-+	    vqs->tx_queues >= BIT(I40E_MAX_VF_QUEUES))
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  * i40e_vc_enable_queues_msg
-  * @vf: pointer to the VF info
-@@ -2347,7 +2363,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
+ static const char * const ar100_r_apb2_parents[] = { "osc24M", "osc32k",
+-					     "pll-periph0", "iosc" };
++						     "iosc", "pll-periph0" };
+ static const struct ccu_mux_var_prediv ar100_r_apb2_predivs[] = {
+-	{ .index = 2, .shift = 0, .width = 5 },
++	{ .index = 3, .shift = 0, .width = 5 },
+ };
  
--	if ((0 == vqs->rx_queues) && (0 == vqs->tx_queues)) {
-+	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
-@@ -2409,9 +2425,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
- 
--	if ((vqs->rx_queues == 0 && vqs->tx_queues == 0) ||
--	    vqs->rx_queues > I40E_MAX_VF_QUEUES ||
--	    vqs->tx_queues > I40E_MAX_VF_QUEUES) {
-+	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
+ static struct ccu_div ar100_clk = {
 -- 
 2.20.1
 
