@@ -2,93 +2,260 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BA1C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BB2C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C76B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F522082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hV44iUaC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frYgh3Mq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgBCOCz (ORCPT
+        id S1728334AbgBCODP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:02:55 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42387 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbgBCOCz (ORCPT
+        Mon, 3 Feb 2020 09:03:15 -0500
+Received: from mail-pj1-f45.google.com ([209.85.216.45]:50842 "EHLO
+        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgBCODP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:02:55 -0500
-Received: by mail-pg1-f193.google.com with SMTP id w21so2113064pgl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 06:02:53 -0800 (PST)
+        Mon, 3 Feb 2020 09:03:15 -0500
+Received: by mail-pj1-f45.google.com with SMTP id r67so6401982pjb.0;
+        Mon, 03 Feb 2020 06:03:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L5+nfCho9zYZEqsV3OpYlG574SchBNWWNZI1rOz3wd4=;
-        b=hV44iUaCu7cEtK9xsLbLB2Cy6zHap6Yt8rZPnYvoH/2bfa2bm1TRIA4xgu4lH4ZrxQ
-         eN1mV42bvupWusbanK5e1tCRKCiIx30Np6jx7MjR6N+dRYi8ihROf5G0qyAxseJUKkO3
-         59wsHJfHDfZCuREIzei4FnCmYzuPjuzcLkpg2MDeWd2EVVHDTpaubsM4U6oxxTBRVQrk
-         AejUa9b9I/tQzk67aJIvUbH2XdzXGLfR+q4Z0g2LzR7rAQHF6oq2z/omvizrMNmhxjFr
-         z1KRegZb8U1CDwQapRMF1UKSS2wLPpfH4JS+kgxFgCF3L7n6gv+KWpUwzl4/ajNDWfZn
-         ZKOA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=unX/aYRFmZLl9TJExjbDq92LTpqEHM348VjW5uFemjo=;
+        b=frYgh3Mq7FsPvvCa16FZ1jIAbWzdKWlnsl2Z3gspOwslyPekh/UT3BSMfQa1qobLVK
+         OFxkpQA5r2k/Onr9+Z+hWkhkzMdM5Q5yhGQlJtLHCEY0oDlosD70FOrNQ5tdobEULvnf
+         w5WMVodaRPi30HqFKxFaBEhVkCG4QtStkEwEFr2vh8oQrfxGyZ6oM2Ke6/24WH3EBBr9
+         /AbDM+CQDQybIQG0bEk2B+4ZfXwyegKhyBn5d/Qiupkfzme5zeAd5b31yh4wGH1h4fTX
+         VLvMRegtAFHBy/c9m93dT8V8l73jaF8oX4YS5OQ4C40BpR9MX9roXEyX/78BwepgenZ+
+         taWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=L5+nfCho9zYZEqsV3OpYlG574SchBNWWNZI1rOz3wd4=;
-        b=mnhjCTXBE9T1N5mKVHjapMrMeSbQzhT8Gjuh4AG4REHaGORTrBDz8Z6TFBonsyh72b
-         5PYvCKsJwELYnq9ia+OR9t1uBi7BXHiXijH92QmOHdq15XFRAk9h22xjHWDSsLgYE8vq
-         roJgVZyq1s6XpR4t0osz+qBZBnabZk7hSiJ6tpn+YKswPYOtUihS/YtKcl99U2OwuDtF
-         CLSUSFctCAfarqxfUAIA5ASiTfkJYRFaYwSt7FCuBBa5V1EmHxSSMRTWxVSMgxAAQxoF
-         B0S7WxbmP2uumBxZTrYollJrv5Lbu07pDgKR98JiPhx/4PpHH+1AOF5BffN1wdgLRbpP
-         Zsrg==
-X-Gm-Message-State: APjAAAVGgADHY9Y2eFrUjxXQ/3zPeidbpJk2ZemQRyB76vaHM+UTCbhl
-        z9kuT+FvveC2xcCHM8FGM6bcYQ==
-X-Google-Smtp-Source: APXvYqyV0/fiioJr3fMwalxfwNVtkTVpX9/0/CYpknqlLA3twkanpEzWyU9yEiPbTyEmMBKj89kPyQ==
-X-Received: by 2002:a63:484b:: with SMTP id x11mr25745966pgk.148.1580738573099;
-        Mon, 03 Feb 2020 06:02:53 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id z29sm20319400pgc.21.2020.02.03.06.02.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 06:02:52 -0800 (PST)
-Subject: Re: [PATCH BUGFIX V2 0/7] block, bfq: series of fixes, and not only,
- for some recently reported issues
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        patdung100@gmail.com, cevich@redhat.com
-References: <20200203104100.16965-1-paolo.valente@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f73edf7b-3b69-8f9e-a881-758582019421@kernel.dk>
-Date:   Mon, 3 Feb 2020 07:02:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=unX/aYRFmZLl9TJExjbDq92LTpqEHM348VjW5uFemjo=;
+        b=aGTceFNdBaujdTC3s0GCdD4ZQEXjmQf7c9qlNRn0vVEFU4OEFU7wlu2iBgk6Dp0okR
+         dgCiI0aEaYbnyDBXfUswJr0MYhJAH/vGaPu+ya3jnhm90QBDRHsUJ5mvEV2SRh1Ta6Eu
+         6I3fbqPhUIPKcREdNuf9B+gBEES3rstla709vhZb2Ac8GBEBgnu53sfrqOw0W+fuOLJh
+         kde3f6iCJIgKha2i6aXNJrm0T/pN4E8gxn6DlHaVs3vcln66Pt2a3BjcortFZobID1b5
+         6bxmxSX9qcyoLFUDyuSAvuEOb13CAsO/c13KIS5ABYYgTzzyalU0lxcz4LwvwyBhCeSi
+         1bmg==
+X-Gm-Message-State: APjAAAWizFgYHopTcg04nAu5EsDCFsvqteTU3Q+0uqp0buREi0o9Agei
+        ZDAdcoZUDkzgTHEeNy/W2Es=
+X-Google-Smtp-Source: APXvYqyo1Xml9XA4cyK1oIeaWfQsB1TF0ym6LOqzTMXH2Y4I63CZOJ/ySTkRagjTyZ3A3XXN4YGZ+Q==
+X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr28362331pjb.99.1580738592820;
+        Mon, 03 Feb 2020 06:03:12 -0800 (PST)
+Received: from localhost.localdomain ([2408:84e1:66:9abe:a0b7:8d02:f456:6577])
+        by smtp.gmail.com with ESMTPSA id 76sm21191077pfx.97.2020.02.03.06.02.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 06:03:12 -0800 (PST)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v2] Documentation: Fix build error for cpu-idle-cooling.rst and client.rst
+Date:   Mon,  3 Feb 2020 22:02:23 +0800
+Message-Id: <20200203140223.10298-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200203104100.16965-1-paolo.valente@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 3:40 AM, Paolo Valente wrote:
-> Hi Jens,
-> this the V2 of the series. The only change is the removal of ifdefs
-> from around gets and puts of bfq groups. As I wrote in my previous
-> cover letter, these patches are mostly fixes for the issues reported
-> in [1, 2]. All patches have been publicly tested in the dev version of
-> BFQ.
+This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
 
-I'll apply this one, at least the ifdef cleanup is nice and patch
-6/7 no longer makes your eyes burn!
+Sphinx parallel build error:
+docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
 
+Sphinx parallel build error:
+docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
+
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+
+---
+v2: rebase.
+---
+ Documentation/driver-api/dmaengine/client.rst | 14 +++++++---
+ .../driver-api/thermal/cpu-idle-cooling.rst   | 27 ++++++++++---------
+ Documentation/driver-api/thermal/index.rst    |  1 +
+ 3 files changed, 26 insertions(+), 16 deletions(-)
+
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index a9a7a3c84c63..2104830a99ae 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,8 +151,8 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
+-  Optional: per descriptor metadata
+-  ---------------------------------
++  **Optional: per descriptor metadata**
++
+   DMAengine provides two ways for metadata support.
+ 
+   DESC_METADATA_CLIENT
+@@ -199,12 +199,15 @@ The details of these operations are:
+   DESC_METADATA_CLIENT
+ 
+     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+          construct the metadata in the client's buffer
+       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+          descriptor
+       3. submit the transfer
++
+     - DMA_DEV_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+          descriptor
+@@ -215,6 +218,7 @@ The details of these operations are:
+   DESC_METADATA_ENGINE
+ 
+     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
+          engine's metadata area
+@@ -222,7 +226,9 @@ The details of these operations are:
+       4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
+          amount of data the client has placed into the metadata buffer
+       5. submit the transfer
++
+     - DMA_DEV_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. submit the transfer
+       3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get
+@@ -278,8 +284,8 @@ The details of these operations are:
+ 
+       void dma_async_issue_pending(struct dma_chan *chan);
+ 
+-Further APIs:
+--------------
++Further APIs
++------------
+ 
+ 1. Terminate APIs
+ 
+diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+index 9f0016ee4cfb..698fcadbecee 100644
+--- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
++++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+@@ -1,6 +1,9 @@
++================
++CPU Idle Cooling
++================
+ 
+-Situation:
+-----------
++Situation
++---------
+ 
+ Under certain circumstances a SoC can reach a critical temperature
+ limit and is unable to stabilize the temperature around a temperature
+@@ -24,8 +27,8 @@ with a power less than the requested power budget and the next OPP
+ exceeds the power budget. An intermediate OPP could have been used if
+ it were present.
+ 
+-Solutions:
+-----------
++Solutions
++---------
+ 
+ If we can remove the static and the dynamic leakage for a specific
+ duration in a controlled period, the SoC temperature will
+@@ -45,12 +48,12 @@ idle state target residency, we lead to dropping the static and the
+ dynamic leakage for this period (modulo the energy needed to enter
+ this state). So the sustainable power with idle cycles has a linear
+ relation with the OPP’s sustainable power and can be computed with a
+-coefficient similar to:
++coefficient similar to::
+ 
+ 	    Power(IdleCycle) = Coef x Power(OPP)
+ 
+-Idle Injection:
+----------------
++Idle Injection
++--------------
+ 
+ The base concept of the idle injection is to force the CPU to go to an
+ idle state for a specified time each control cycle, it provides
+@@ -136,7 +139,7 @@ Power considerations
+ --------------------
+ 
+ When we reach the thermal trip point, we have to sustain a specified
+-power for a specific temperature but at this time we consume:
++power for a specific temperature but at this time we consume::
+ 
+  Power = Capacitance x Voltage^2 x Frequency x Utilisation
+ 
+@@ -145,7 +148,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
+ fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
+ because we don’t want to change the OPP. We can group the
+ ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
+-‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
++‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
+ 
+  Pdyn = Cdyn x Voltage^2 x Frequency
+ 
+@@ -154,7 +157,7 @@ in order to target the sustainable power defined in the device
+ tree. So with the idle injection mechanism, we want an average power
+ (Ptarget) resulting in an amount of time running at full power on a
+ specific OPP and idle another amount of time. That could be put in a
+-equation:
++equation::
+ 
+  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
+ 			(Trunning + Tidle)
+@@ -165,7 +168,7 @@ equation:
+ 
+ At this point if we know the running period for the CPU, that gives us
+ the idle injection we need. Alternatively if we have the idle
+-injection duration, we can compute the running duration with:
++injection duration, we can compute the running duration with::
+ 
+  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
+ 
+@@ -188,7 +191,7 @@ However, in this demonstration we ignore three aspects:
+    target residency, otherwise we end up consuming more energy and
+    potentially invert the mitigation effect
+ 
+-So the final equation is:
++So the final equation is::
+ 
+  Trunning = (Tidle - Twakeup ) x
+ 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
+diff --git a/Documentation/driver-api/thermal/index.rst b/Documentation/driver-api/thermal/index.rst
+index 5ba61d19c6ae..4cb0b9b6bfb8 100644
+--- a/Documentation/driver-api/thermal/index.rst
++++ b/Documentation/driver-api/thermal/index.rst
+@@ -8,6 +8,7 @@ Thermal
+    :maxdepth: 1
+ 
+    cpu-cooling-api
++   cpu-idle-cooling
+    sysfs-api
+    power_allocator
+ 
 -- 
-Jens Axboe
+2.24.0
 
