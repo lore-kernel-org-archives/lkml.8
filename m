@@ -2,105 +2,128 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CCBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D10C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB1320721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3946720721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:18:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fza/D2YA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgBCIQw (ORCPT
+        id S1727570AbgBCISH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:16:52 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39146 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727540AbgBCIQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 03:16:51 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 71800479F7C0A6080A88;
-        Mon,  3 Feb 2020 16:16:48 +0800 (CST)
-Received: from [127.0.0.1] (10.57.71.8) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 3 Feb 2020
- 16:16:38 +0800
-Subject: Re: [PATCH -next] bpf: make btf_check_func_type_match() static
-To:     Yonghong Song <yhs@fb.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>
-CC:     <chenzhou10@huawei.com>, <kafai@fb.com>, <songliubraving@fb.com>,
-        <andriin@fb.com>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-References: <20200203020220.117152-1-yaohongbo@huawei.com>
- <a29bf101-81b0-68ef-356c-dfdc9c53d899@fb.com>
-From:   Yao HongBo <yaohongbo@huawei.com>
-Message-ID: <f82e64c5-9299-b1a2-41b6-0f3630793d2b@huawei.com>
-Date:   Mon, 3 Feb 2020 16:16:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Mon, 3 Feb 2020 03:18:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23015 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726884AbgBCISH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 03:18:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580717885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CrlD/wgdUBtVzwn2ikuTQOIVSG3OPC/dcn0ZKFc6/Gs=;
+        b=Fza/D2YAtP+yh4T8xquu9UMFcsBn7oeHirAg6/CNH2zBpfJKO7zwGtpCIouq7xr51Y4SRB
+        JoNfwVBoQR5e+V2MKvWwVP/by9+mN44vb6J9UYp2eFPtSVqzq0crZlG7ZG/x01qvWSWOQ+
+        JIFsFjL769hq1iQkItoUr6SGBpnEFFA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-me0_8LIYMoq5Rm8hSJKXIw-1; Mon, 03 Feb 2020 03:18:04 -0500
+X-MC-Unique: me0_8LIYMoq5Rm8hSJKXIw-1
+Received: by mail-wm1-f71.google.com with SMTP id p2so3715634wma.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 00:18:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CrlD/wgdUBtVzwn2ikuTQOIVSG3OPC/dcn0ZKFc6/Gs=;
+        b=LapdiKiBAt1dMAhV/snTkJEJXHFhITJBqe1uqQN7xv7msTYAOTaPpitz8l49mk4OMI
+         lwEHY5u9vPyl26T3X9tY3NygkGBFxl34TCuVLL9YsaLniR0Dyj8q704CjPDstlgZzK6n
+         Q84/AtMetJdS7VTRpdmEWlR9ICQbhidxsAPnYvWxYsTN3MPmsn6liXjjXUHYld3xrcwT
+         Go7zZvYG7BQ3stIU8KVZWQKEQzv8MRfUtfrl6Sd6uCq3Lsr+JkN9vXcJ5uADnUp2xinx
+         Nto8SIQ0MdQXWlUJ9eGsvu9Dje+KyLrpjkVztJJNixS69g0YYJnaF4DYIFjyDnRUXbkK
+         ce0g==
+X-Gm-Message-State: APjAAAXLZ19IIpIXjkzwRuFGvRSGo1ktjITo/VULuH1gdKs31ka3aVXg
+        ltkgRNoGDyVa0iS6RbWu+lIoiADGj/651bpquOunI86rEQxkVBpox6nfMYCQN3oheHS6HQNA9Ds
+        GA/vbw3Z81+SrrtQdarLpiD1d
+X-Received: by 2002:adf:f0c8:: with SMTP id x8mr3034917wro.359.1580717881767;
+        Mon, 03 Feb 2020 00:18:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx9FVGQu5t2tcyaJhvPoLSS22q7NWyktDP3a+A/plvQOaRTXOMjAlgdnv0obzO54kAOXWlZ3A==
+X-Received: by 2002:adf:f0c8:: with SMTP id x8mr3034870wro.359.1580717881333;
+        Mon, 03 Feb 2020 00:18:01 -0800 (PST)
+Received: from localhost.localdomain ([151.29.2.83])
+        by smtp.gmail.com with ESMTPSA id r3sm24850786wrn.34.2020.02.03.00.18.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 00:18:00 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:17:58 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Claudio Scordino <c.scordino@evidence.eu.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel IV edition (OSPM-summit 2020)
+Message-ID: <20200203081758.GI8582@localhost.localdomain>
+References: <20191219103500.GC13724@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <a29bf101-81b0-68ef-356c-dfdc9c53d899@fb.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.71.8]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219103500.GC13724@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 19/12/19 11:35, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) IV edition
+> 
+> May 11-13, 2020
+> Scuola Superiore Sant'Anna
+> Pisa, Italy
+> 
+> ---
 
-On 2/3/2020 2:20 PM, Yonghong Song wrote:
-> 
-> 
-> On 2/2/20 6:02 PM, Hongbo Yao wrote:
->> Fix sparse warning:
->> kernel/bpf/btf.c:4131:5: warning: symbol 'btf_check_func_type_match' was
->> not declared. Should it be static?
-> 
-> Yes, static is better since the function is only used in one file.
-> 
-> Please use the tag "[PATCH bpf-next]" instead of "[PATCH -next]".
-> Since this is to fix a sparse warning, I think it should be okay
-> to target bpf-next. Please resubmit after bpf-next reopens in
-> about a week.
+[...]
 
-OK.
-
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
->> ---
->>   kernel/bpf/btf.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
->> index 8c9d8f266bef..83d3d92023af 100644
->> --- a/kernel/bpf/btf.c
->> +++ b/kernel/bpf/btf.c
->> @@ -4144,7 +4144,7 @@ int btf_distill_func_proto(struct bpf_verifier_log *log,
->>    * EFAULT - verifier bug
->>    * 0 - 99% match. The last 1% is validated by the verifier.
->>    */
->> -int btf_check_func_type_match(struct bpf_verifier_log *log,
->> +static int btf_check_func_type_match(struct bpf_verifier_log *log,
->>                     struct btf *btf1, const struct btf_type *t1,
->>                     struct btf *btf2, const struct btf_type *t2)
+> .:: SUBMIT A TOPIC/PRESENTATION
 > 
-> Please also align
->   struct btf *btf1, const struct btf_type *t1,
->   struct btf *btf2, const struct btf_type *t2)
-> properly after you added 'static' before the function declaration.
-
-I'll fix it, thanks.
-
->>   {
->>
+> To submit a topic/presentation add its details to this list:
+> https://docs.google.com/spreadsheets/d/1pPU2ybHHoQjqicYLTaNanPz9H5fv6mQTtrzOqwP9uHs/edit?usp=sharing
 > 
-> .
+> Or, if you prefer, simply reply (only to me, please :) to this email
+> specifying:
 > 
+> - name/surname
+> - affiliation
+> - short bio
+> - email address
+> - title
+> - abstract
+> - 30min or 50min slot
+> 
+> Deadline for submitting topics/presentations is 10th of February 2020.
+> Notifications for accepted topics/presentations will be sent out on 24th
+> of February 2020.
+
+A quick one to remind that deadline for submitting topics is
+approaching.  Please take time to think about what you'd like to discuss
+at the summit and to add the topic to the list.
+
+Best,
+
+Juri
 
