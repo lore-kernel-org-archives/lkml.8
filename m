@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F2EC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA97C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8B52086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDF12086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748090;
-	bh=5Shb8Tk5ld6AXNX7FO+L8lYGIpZSgw9dqSshcT78Bqw=;
+	s=default; t=1580748095;
+	bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBhoCBMAkC0PpJsoYDzJAtzMCyNAMPGEigqUlX+FhtXT8XYKZH9dgZrI0o/yqaAse
-	 SrEt0TtIcCzpG1tNvFU/7mX3bEa/xMPo68mBdBm69TNF8i5WDg3UVRup0Im0TQyt/c
-	 MZlHAuziyMKleUGfEcJR6u9bsJsOu+N1oIMO9LPo=
+	b=M+lVIB9ByxAjT+I2Kj4JjqIYcaHRTWlgoqX3mgtoxiieGlQHQlfT0GLy+xFW6quuw
+	 bSshIKBcjGB9rZHT/C0sZ6TxO6dlWfUiINbQ2NsAEc//cJFp6f/66SHt6Zck42G4jM
+	 gm6ZX4MWHC1ps/GARy2Y9FAyrL28b6Vi0n5trzVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbgBCQl3 (ORCPT
+        id S1730874AbgBCQez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:41:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbgBCQe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:59 -0500
+        id S1730859AbgBCQeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:50 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3059F21744;
-        Mon,  3 Feb 2020 16:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B82120CC7;
+        Mon,  3 Feb 2020 16:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747698;
-        bh=5Shb8Tk5ld6AXNX7FO+L8lYGIpZSgw9dqSshcT78Bqw=;
+        s=default; t=1580747689;
+        bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bMTUB4L4QbcJk3CRiSnlV9ovor0YvrRm2LZfuseW+JUWW73fk0NEvzuw5mxAKfAV9
-         lqvxeIoHHBlmG5Gi+oPr7IZbj96x324A7uL2Kp9weqYKu5R+uKCJxwNENVwqoW4C/U
-         a4TT8I9+l5aGioZrn0gFLN6fHT8GIyHkmLyLsME8=
+        b=0kEZ++spOmYn25tzEzKOh/AFYbmtyKRXmouJBQLHULhaDUgaCus1bxsj2cqsNC24v
+         mNHqUFBk3vThGikdpJU8gfXpRyp98zbH50ndQ/XXg7GQ5ZDgWHLTVSY/GxxJM/isqE
+         sYZzlPUsOKMeCWCpu0WYrqX/4qtiNFEDz3YjUTAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 33/90] clk: sunxi-ng: h6-r: Fix AR100/R_APB2 parent order
-Date:   Mon,  3 Feb 2020 16:19:36 +0000
-Message-Id: <20200203161922.055743609@linuxfoundation.org>
+Subject: [PATCH 5.4 29/90] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
+Date:   Mon,  3 Feb 2020 16:19:32 +0000
+Message-Id: <20200203161921.600701756@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,51 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Dave Gerlach <d-gerlach@ti.com>
 
-[ Upstream commit 0c545240aebc2ccb8f661dc54283a14d64659804 ]
+[ Upstream commit 03729cfa0d543bc996bf959e762ec999afc8f3d2 ]
 
-According to the BSP source code, both the AR100 and R_APB2 clocks have
-PLL_PERIPH0 as mux index 3, not 2 as it was on previous chips. The pre-
-divider used for PLL_PERIPH0 should be changed to index 3 to match.
+Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
+checks the value of the static variable m3_ipc_state to see if the
+wkup_m3 is ready. Currently this is populated during probe before
+rproc_boot has been called, meaning there is a window of time that
+wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
+ready, leading to invalid IPC calls to the wkup_m3 and system
+instability.
 
-This was verified by running a rough benchmark on the AR100 with various
-clock settings:
+To avoid this, move the population of the m3_ipc_state variable until
+after rproc_boot has succeeded to guarantee a valid and usable handle
+is always returned.
 
-        | mux | pre-divider | iterations/second | clock source |
-        |=====|=============|===================|==============|
-        |   0 |           0 |  19033   (stable) |       osc24M |
-        |   2 |           5 |  11466 (unstable) |  iosc/osc16M |
-        |   2 |          17 |  11422 (unstable) |  iosc/osc16M |
-        |   3 |           5 |  85338   (stable) |  pll-periph0 |
-        |   3 |          17 |  27167   (stable) |  pll-periph0 |
-
-The relative performance numbers all match up (with pll-periph0 running
-at its default 600MHz).
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 4 ++--
+ drivers/soc/ti/wkup_m3_ipc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-index 45a1ed3fe6742..ab194143e06ce 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-@@ -23,9 +23,9 @@
-  */
+diff --git a/drivers/soc/ti/wkup_m3_ipc.c b/drivers/soc/ti/wkup_m3_ipc.c
+index 378369d9364ae..e9ece45d7a333 100644
+--- a/drivers/soc/ti/wkup_m3_ipc.c
++++ b/drivers/soc/ti/wkup_m3_ipc.c
+@@ -419,6 +419,8 @@ static void wkup_m3_rproc_boot_thread(struct wkup_m3_ipc *m3_ipc)
+ 	ret = rproc_boot(m3_ipc->rproc);
+ 	if (ret)
+ 		dev_err(dev, "rproc_boot failed\n");
++	else
++		m3_ipc_state = m3_ipc;
  
- static const char * const ar100_r_apb2_parents[] = { "osc24M", "osc32k",
--					     "pll-periph0", "iosc" };
-+						     "iosc", "pll-periph0" };
- static const struct ccu_mux_var_prediv ar100_r_apb2_predivs[] = {
--	{ .index = 2, .shift = 0, .width = 5 },
-+	{ .index = 3, .shift = 0, .width = 5 },
- };
+ 	do_exit(0);
+ }
+@@ -505,8 +507,6 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
+ 		goto err_put_rproc;
+ 	}
  
- static struct ccu_div ar100_clk = {
+-	m3_ipc_state = m3_ipc;
+-
+ 	return 0;
+ 
+ err_put_rproc:
 -- 
 2.20.1
 
