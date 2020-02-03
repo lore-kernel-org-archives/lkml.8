@@ -2,117 +2,117 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AA2C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D4C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DD32080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:07:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="YcN4RdPm"
+	by mail.kernel.org (Postfix) with ESMTP id B92842080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580742487;
+	bh=K/wRk9Mo7taae+TxofgZMKUL4Bw+cp1ibWYgzzyd8Fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F7eil/MqlB9iJXsL1QKTO8nSLfFzj+P9JeyUW0F9fqF9VUxunsOEgHqxM/zsgTekg
+	 uptOPueSlIjNU8ySt1OsE5dgkLQazmnOERsr7Lwqz2Elzqsvkd7SIfBgmu2IYmWMPI
+	 b6KWkMjONLpW83Pg80m2I4ZLAlJj9O1V8iYhl1xM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgBCPHG (ORCPT
+        id S1728194AbgBCPIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:07:06 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:58882 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbgBCPHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:07:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1580742426;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=VJnsOBv+HbyyQwVNpnxzDWPoec7REoI1chc1vV9mKGk=;
-  b=YcN4RdPme1m4woSo/C0xLjd95G+jOP/bruXmrtVfOCf8TRqL2W1qamyL
-   Js7evR2M69mWDpf2OAjLqiTFbMS8kX4rkXJ8S+91NRYGuRBOSVV7iRpFT
-   aBi7svoVCOjVqlBcsyUaAOqYP/X82RzPatx6lhHKqriHTlleLyF1NiLR6
-   A=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  igor.druzhinin@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  igor.druzhinin@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: n3OuRVe8G9eYufmHAZT/P2q6Wa0Z7PfSRehb4qvjsUHNrmDY7kTjv5xRnF+nprqvB4gH049Amu
- 8trAFQQCmgcbK/5Ib1odEq2crfCL+oWZO136igJoPR4+WxBZod7RUdE0tweEhCv3hpEq5JJ3q0
- lM0PQ+W3voIT6R378+qVbizA3ZQK1vpZiIzChRAgzMCM6SB+FQdw5japO6k7ZoRbmttWJgi/L7
- EnhslDdgNFtvrDX39N+oOXaxxbj9hPFNMV2PgVzWqiQ2S8iarz6d01XhFHeKwCWlNVQi8n8d/r
- xHk=
-X-SBRS: 2.7
-X-MesageID: 11848962
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,398,1574139600"; 
-   d="scan'208";a="11848962"
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-To:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <intel-gvt-dev@lists.freedesktop.org>
-CC:     <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
-        <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        "Igor Druzhinin" <igor.druzhinin@citrix.com>
-Subject: [PATCH] drm/i915/gvt: more locking for ppgtt mm LRU list
-Date:   Mon, 3 Feb 2020 15:07:01 +0000
-Message-ID: <1580742421-25194-1-git-send-email-igor.druzhinin@citrix.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 3 Feb 2020 10:08:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgBCPIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 10:08:06 -0500
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 119DE2080C;
+        Mon,  3 Feb 2020 15:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580742485;
+        bh=K/wRk9Mo7taae+TxofgZMKUL4Bw+cp1ibWYgzzyd8Fs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O8Y3pFun9CYr1EuITEo0Wiqc6BetFwqCj5c8zjSOf4rsF23OEmhDpiN8sIMsJJtG5
+         oDt5jGaqgrR29x5KDUiUzABMD792Z1nm4ErXaHLcwxLftyoqMh+oZZu5+xmLUz/I1/
+         c1nbSHkYvfFo0A/jy3iMRYqpyVR6ZyKxy3SLBKas=
+Date:   Mon, 3 Feb 2020 17:08:00 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Andrea Mayer <andrea.mayer@uniroma2.it>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org,
+        Paolo Lungaroni <paolo.lungaroni@cnit.it>
+Subject: Re: [net-next] seg6: add support for optional attributes during
+ behavior construction
+Message-ID: <20200203150800.GQ414821@unreal>
+References: <20200203143658.1561-1-andrea.mayer@uniroma2.it>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203143658.1561-1-andrea.mayer@uniroma2.it>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the lock was introduced in 72aabfb862e40 ("drm/i915/gvt: Add mutual
-lock for ppgtt mm LRU list") one place got lost.
+On Mon, Feb 03, 2020 at 03:36:58PM +0100, Andrea Mayer wrote:
+> before this patch, each SRv6 behavior specifies a set of required
+> attributes that must be provided by the userspace application when the
+> behavior is created. If an attribute is not supplied, the creation
+> operation fails.
+> As a workaround, if an attribute is not needed by a behavior, it requires
+> to be set by the userspace application to a conventional skip-value. The
+> kernel side, that processes the creation request of a behavior, reads the
+> supplied attribute values and checks if it has been set to the
+> conventional skip-value or not. Hence, each optional attribute must have a
+> conventional skip-value which is known a priori and shared between
+> userspace applications and kernel.
+>
+> Messy code and complicated tricks may arise from this approach.
+> On the other hand, this patch explicitly differentiates the required
+> mandatory attributes from the optional ones. Now, each behavior can declare
+> a set of required attributes and a set of optional ones. The behavior
+> creation fails in case a required attribute is missing, while it goes on
+> without generating any issue if an optional attribute is not supplied by
+> the userspace application.
+>
+> To properly combine the required and optional attributes, a new callback
+> function called destroy() is used for releasing resources that have been
+> acquired, during the parse() operation, by a given attribute.
+> However, the destroy() function is optional and if an attribute does not
+> require resources that have to be later released, the callback can be
+> omitted.
+>
+> Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+> ---
+>  net/ipv6/seg6_local.c | 226 ++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 198 insertions(+), 28 deletions(-)
+>
+> diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+> index 85a5447a3e8d..480f1ab35221 100644
+> --- a/net/ipv6/seg6_local.c
+> +++ b/net/ipv6/seg6_local.c
+> @@ -7,6 +7,13 @@
+>   *  eBPF support: Mathieu Xhonneux <m.xhonneux@gmail.com>
+>   */
+>
+> +/* Changes:
+> + *
+> + * Andrea Mayer <andrea.mayer@uniroma2.it>
+> + *	add support for optional attributes during behavior construction
+> + *
+> + */
 
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
----
- drivers/gpu/drm/i915/gvt/gtt.c | 4 ++++
- 1 file changed, 4 insertions(+)
+The lines above look strange in 2020 when all of us are using git.
 
-diff --git a/drivers/gpu/drm/i915/gvt/gtt.c b/drivers/gpu/drm/i915/gvt/gtt.c
-index 34cb404..4a48280 100644
---- a/drivers/gpu/drm/i915/gvt/gtt.c
-+++ b/drivers/gpu/drm/i915/gvt/gtt.c
-@@ -1956,7 +1956,11 @@ void _intel_vgpu_mm_release(struct kref *mm_ref)
- 
- 	if (mm->type == INTEL_GVT_MM_PPGTT) {
- 		list_del(&mm->ppgtt_mm.list);
-+
-+		mutex_lock(&mm->vgpu->gvt->gtt.ppgtt_mm_lock);
- 		list_del(&mm->ppgtt_mm.lru_list);
-+		mutex_unlock(&mm->vgpu->gvt->gtt.ppgtt_mm_lock);
-+
- 		invalidate_ppgtt_mm(mm);
- 	} else {
- 		vfree(mm->ggtt_mm.virtual_ggtt);
--- 
-2.7.4
-
+Thanks
