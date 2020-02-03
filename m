@@ -2,186 +2,141 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D869C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B4C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFAF52080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08F92080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:55:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIokP/4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgBCMxv (ORCPT
+        id S1727948AbgBCMzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:53:51 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2352 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727715AbgBCMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:53:50 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 1DD08A477DD53B5A870A;
-        Mon,  3 Feb 2020 12:53:49 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 3 Feb 2020 12:53:48 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
- 12:53:48 +0000
-Date:   Mon, 3 Feb 2020 12:53:46 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-CC:     <alastair@d-silva.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Keith Busch" <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob Herring" <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        "=?ISO-8859-1?Q?C=E9dric?= Le Goater" <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Hari Bathini" <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Greg Kurz" <groug@kaod.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 08/27] ocxl: Save the device serial number in ocxl_fn
-Message-ID: <20200203125346.0000503f@Huawei.com>
-In-Reply-To: <20191203034655.51561-9-alastair@au1.ibm.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-        <20191203034655.51561-9-alastair@au1.ibm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 3 Feb 2020 07:55:46 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60390 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727363AbgBCMzp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:55:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580734545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PKYTrZ2l9XDKCKxWTKQUHgKqQscinAEepYElS6s2GdY=;
+        b=SIokP/4k8YXaNP8VfOxcFfjIMETcnAGsfTLJHR7TeG1WdbDc42mDD/xk7g6sNJkBaH4DR/
+        1bSoryeOklpH/TRqBBLUcCca9akNtZAQaPOh5PVZSX2wsG2TflarnYaEKg0inciOmQGn90
+        n2mUy6ob38ikgkKDqNPbN8qwYbVaWNI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-6oJMEh-NPLyBdjksCiTeFw-1; Mon, 03 Feb 2020 07:55:43 -0500
+X-MC-Unique: 6oJMEh-NPLyBdjksCiTeFw-1
+Received: by mail-wm1-f70.google.com with SMTP id l11so4890076wmi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 04:55:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PKYTrZ2l9XDKCKxWTKQUHgKqQscinAEepYElS6s2GdY=;
+        b=U0F1uQy8yjoZx4OLQMFx5bgSuyxEaGqI5PB3q8mPrPjSLUaq6T2A0ZExWZBfCBvgq5
+         mnF/lVcjoNArthaw4L90gpgBMJ+KWNQ46AnaKGWx2mH36DnBQ7PBxs9CkhwFeRcgkAiW
+         LdFOHE9EwPUHiA6B270/ZestBogxVO9I7OF0lHniqtPsPtsfyXYrWTXl9d+pDYZ8UPCm
+         Z3YnBqNQkQoFkRSEOAr1AIgVzSK8We92+J3eeE8hoWkXD/QWQzvdnLg+/rpZQNnsog0w
+         +7M1XACsQjPvn3ib/QTyxnCr0DzGrz/G/3TxDE3Mv4Nt/N5vJaFmNVZEngtEBhtu/pIo
+         oXvQ==
+X-Gm-Message-State: APjAAAXovKSg8k+YnTRB0PdZ65OkeaBc+8nE0INYGOcAiE+Zj6zqRJSM
+        sMxbkX0Av9zbljxMx45oVDr5y8SoLCJVAotbTylggOl+dLWL6uJHSYabtvK4B9NdaB9cqR/jvXP
+        r87JzHnk3jfiNMtIo3nYJW0xA
+X-Received: by 2002:adf:fd8d:: with SMTP id d13mr15561241wrr.208.1580734541934;
+        Mon, 03 Feb 2020 04:55:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzuXwumKXy69ZvsnWkYM1n/3TsEHbX5cfQn3xjEJOebm44QI5GW+cGW67maRdHtBrct5bZLYg==
+X-Received: by 2002:adf:fd8d:: with SMTP id d13mr15561190wrr.208.1580734541492;
+        Mon, 03 Feb 2020 04:55:41 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id r5sm25434161wrt.43.2020.02.03.04.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 04:55:40 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 01/61] KVM: x86: Return -E2BIG when KVM_GET_SUPPORTED_CPUID hits max entries
+In-Reply-To: <20200201185218.24473-2-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-2-sean.j.christopherson@intel.com>
+Date:   Mon, 03 Feb 2020 13:55:40 +0100
+Message-ID: <87mu9zomnn.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 14:46:36 +1100
-Alastair D'Silva <alastair@au1.ibm.com> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch retrieves the serial number of the card and makes it available
-> to consumers of the ocxl driver via the ocxl_fn struct.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+> Fix a long-standing bug that causes KVM to return 0 instead of -E2BIG
+> when userspace's array is insufficiently sized.
+>
+> Note, while the Fixes: tag is accurate with respect to the immediate
+> bug, it's likely that similar bugs in KVM_GET_SUPPORTED_CPUID existed
+> prior to the refactoring, e.g. Qemu contains a workaround for the broken
+> KVM_GET_SUPPORTED_CPUID behavior that predates the buggy commit by over
+> two years.  The Qemu workaround is also likely the main reason the bug
+> has gone unreported for so long.
+>
+> Qemu hack:
+>   commit 76ae317f7c16aec6b469604b1764094870a75470
+>   Author: Mark McLoughlin <markmc@redhat.com>
+>   Date:   Tue May 19 18:55:21 2009 +0100
+>
+>     kvm: work around supported cpuid ioctl() brokenness
+>
+>     KVM_GET_SUPPORTED_CPUID has been known to fail to return -E2BIG
+>     when it runs out of entries. Detect this by always trying again
+>     with a bigger table if the ioctl() fills the table.
+>
+> Fixes: 831bf664e9c1f ("KVM: Refactor and simplify kvm_dev_ioctl_get_supported_cpuid")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  drivers/misc/ocxl/config.c | 46 ++++++++++++++++++++++++++++++++++++++
->  include/misc/ocxl.h        |  1 +
->  2 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index fb0c3b6f8312..a9203c309365 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -71,6 +71,51 @@ static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
->  	return 0;
->  }
+>  arch/x86/kvm/cpuid.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b1c469446b07..47ce04762c20 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -908,9 +908,14 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+>  			goto out_free;
 >  
-> +/**
-
-Make sure anything you mark as kernel doc with /** is valid
-kernel-doc.
-
-> + * Find a related PCI device (function 0)
-> + * @device: PCI device to match
-> + *
-> + * Returns a pointer to the related device, or null if not found
-> + */
-> +static struct pci_dev *get_function_0(struct pci_dev *dev)
-> +{
-> +	unsigned int devfn = PCI_DEVFN(PCI_SLOT(dev->devfn), 0); // Look for function 0
-
-Not sure the trailing comment adds much.
-
-I'd personally not bother with this wrapper at all and just call
-the pci functions directly where needed.
-
-> +
-> +	return pci_get_domain_bus_and_slot(pci_domain_nr(dev->bus),
-> +					dev->bus->number, devfn);
-> +}
-> +
-> +static void read_serial(struct pci_dev *dev, struct ocxl_fn_config *fn)
-> +{
-> +	u32 low, high;
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DSN);
-> +	if (pos) {
-> +		pci_read_config_dword(dev, pos + 0x04, &low);
-> +		pci_read_config_dword(dev, pos + 0x08, &high);
-> +
-> +		fn->serial = low | ((u64)high) << 32;
-> +
-> +		return;
-> +	}
-> +
-> +	if (PCI_FUNC(dev->devfn) != 0) {
-> +		struct pci_dev *related = get_function_0(dev);
-> +
-> +		if (!related) {
-> +			fn->serial = 0;
-> +			return;
+>  		limit = cpuid_entries[nent - 1].eax;
+> -		for (func = ent->func + 1; func <= limit && nent < cpuid->nent && r == 0; ++func)
+> +		for (func = ent->func + 1; func <= limit && r == 0; ++func) {
+> +			if (nent >= cpuid->nent) {
+> +				r = -E2BIG;
+> +				goto out_free;
+> +			}
+>  			r = do_cpuid_func(&cpuid_entries[nent], func,
+>  				          &nent, cpuid->nent, type);
 > +		}
-> +
-> +		read_serial(related, fn);
-> +		pci_dev_put(related);
-> +		return;
-> +	}
-> +
-> +	fn->serial = 0;
-> +}
-> +
->  static void read_pasid(struct pci_dev *dev, struct ocxl_fn_config *fn)
->  {
->  	u16 val;
-> @@ -208,6 +253,7 @@ int ocxl_config_read_function(struct pci_dev *dev, struct ocxl_fn_config *fn)
->  	int rc;
 >  
->  	read_pasid(dev, fn);
-> +	read_serial(dev, fn);
->  
->  	rc = read_dvsec_tl(dev, fn);
->  	if (rc) {
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 6f7c02f0d5e3..9843051c3c5b 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -46,6 +46,7 @@ struct ocxl_fn_config {
->  	int dvsec_afu_info_pos; /* offset of the AFU information DVSEC */
->  	s8 max_pasid_log;
->  	s8 max_afu_index;
-> +	u64 serial;
->  };
->  
->  enum ocxl_endian {
+>  		if (r)
+>  			goto out_free;
 
+Is fixing a bug a valid reason for breaking buggy userspace? :-)
+Personally, I think so. In particular, here the change is both the
+return value and the fact that we don't do copy_to_user() anymore so I
+think it's possible to meet a userspace which is going to get broken by
+the change.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
 
