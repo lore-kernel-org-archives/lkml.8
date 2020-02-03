@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91168C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC26C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5996C20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B582086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748285;
-	bh=l2qtxbwG21AWKLUFUMXqPMXfxUgLx7Rl/bW6KpVZbh8=;
+	s=default; t=1580748291;
+	bh=B9JCGm51siuIgX7EcU2ySapCcDCJW8dAc+m2KJEWRyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oy7oL+cRlBg7Fbd6Cb9eU9ItGv+ZUKbmgfn2/eIysLqBLIJFbH/R7msfEvll3spnW
-	 SSa+piz6Wb1/QmfPoirR3G02w4D3SXb6VbBjRlWrsdi18TsNYmFNTUlJe5uNPCnhNo
-	 iWTn4BknMPNMWGHv9L0JOALxM4n4l3jsxE0ClwUs=
+	b=xMVgFpLZt41vTkRuXjg5WqwKBzjsZFqBLoy+SUgvfMSP5TmCDB+lZYUIlMGmcP+It
+	 jJmuifxanCB+MYk0qTkzyNtuRMtfmutNHeo4Ry0mjOJmaJN/TwYvjEF5s616ejK0Di
+	 4rMmsx2C2/1h7cQhjBCYb7FwhAUBXO5MwlfrVuGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbgBCQoo (ORCPT
+        id S1730126AbgBCQbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:44:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730163AbgBCQbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:31:11 -0500
+        id S1729275AbgBCQa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:57 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77995218AC;
-        Mon,  3 Feb 2020 16:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3189A2080C;
+        Mon,  3 Feb 2020 16:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747470;
-        bh=l2qtxbwG21AWKLUFUMXqPMXfxUgLx7Rl/bW6KpVZbh8=;
+        s=default; t=1580747456;
+        bh=B9JCGm51siuIgX7EcU2ySapCcDCJW8dAc+m2KJEWRyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IE5X2x42eJgBb4bUxMq4rYh/PhFeU0DP2aw8hR3qcBzy+aMc+9N8GQDxhKp/VHZ58
-         pvSgpMEtdLms6MqSuCvtIAzV8X3mD3BTJNbLLrvCi4lpg1HtisNZ3Y4BEGbfz8thTH
-         bC6snRNGkDeV9M0wdMd4Sw91Vl62cWdqO7wTx1l4=
+        b=xgJJSv2Fmq6Zcr/+XRhvVxnDvbu9eyAgGYr7M+fnwU5ID2LSphK6zj5wXo/V/fUyo
+         8QgA3loiNcGbZaUEKgQhex6FCP7YwlLp5+hCise+iKdT5R9luw19yBHofapel5vqNx
+         fHYUBd5Rd4QUP6ElOmT7ARKZjoFf71dZGbeyIwBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 67/89] net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec
-Date:   Mon,  3 Feb 2020 16:19:52 +0000
-Message-Id: <20200203161925.294554396@linuxfoundation.org>
+Subject: [PATCH 4.14 71/89] ARM: dts: am335x-boneblack-common: fix memory size
+Date:   Mon,  3 Feb 2020 16:19:56 +0000
+Message-Id: <20200203161925.711697365@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Matwey V. Kornilov <matwey@sai.msu.ru>
 
-[ Upstream commit 8f1880cbe8d0d49ebb7e9ae409b3b96676e5aa97 ]
+[ Upstream commit 5abd45ea0fc3060f7805e131753fdcbafd6c6618 ]
 
-With the implementation of the system reset controller we lost a setting
-that is currently applied by the bootloader and which configures the IMP
-port for 2Gb/sec, the default is 1Gb/sec. This is needed given the
-number of ports and applications we expect to run so bring back that
-setting.
+BeagleBone Black series is equipped with 512MB RAM
+whereas only 256MB is included from am335x-bone-common.dtsi
 
-Fixes: 01b0ac07589e ("net: dsa: bcm_sf2: Add support for optional reset controller line")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This leads to an issue with unusual setups when devicetree
+is loaded by GRUB2 directly.
+
+Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/am335x-boneblack-common.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 94ad2fdd6ef0d..05440b7272615 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -137,7 +137,7 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
+diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+index 325daae40278a..485c27f039f59 100644
+--- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
++++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+@@ -131,6 +131,11 @@
+ };
  
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
--		reg |= (MII_SW_OR | LINK_STS);
-+		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
- 		core_writel(priv, reg, offset);
- 
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+ / {
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>; /* 512 MB */
++	};
++
+ 	clk_mcasp0_fixed: clk_mcasp0_fixed {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
 -- 
 2.20.1
 
