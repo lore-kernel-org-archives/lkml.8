@@ -2,53 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202FBC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B871FC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7232086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856272086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748211;
-	bh=FBjiEtGCtQUkVz8QK73eh6OPI6OZsUJp4HJ12lzYckk=;
+	s=default; t=1580748213;
+	bh=juo3GS7boxFKexj+JW88vhjeX/iXSAXwaH0be0zL5jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1bzRy+xUGgPQKegyt00gLDstPMlpLWNKguhpIXH7oQGRhDcyRzmZpt6EqM0uXCsn
-	 xTShHIV+tB9Ws7JYzJivxxsWbnfdvD06qCA2EnJ1/YUTE9yNlH0F2Oen2DEVNt9B2r
-	 TprYi4kGm0m8iqKfngkkTYfl298wQVjIYxJSBQ/M=
+	b=kDJW2uLpc+DLueYRkZe1+Cc1GFW6E2r+oQUKwBmoalg4562Shto+wN/C5+OWdsOHq
+	 fUEm7M1frk4qjDW8lVT3xLBFpBMlxpYXAL0kGWtSwFXkVHPZ/ezZxCbjXfWSp9is5p
+	 dDhx7DUkcXtlaRK0jdK4WqvaRiLtKp9/wa4/ZUNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbgBCQn3 (ORCPT
+        id S1730489AbgBCQcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:43:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730509AbgBCQdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:06 -0500
+        id S1730000AbgBCQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:49 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 834342082E;
-        Mon,  3 Feb 2020 16:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06B842051A;
+        Mon,  3 Feb 2020 16:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747585;
-        bh=FBjiEtGCtQUkVz8QK73eh6OPI6OZsUJp4HJ12lzYckk=;
+        s=default; t=1580747568;
+        bh=juo3GS7boxFKexj+JW88vhjeX/iXSAXwaH0be0zL5jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtUlEJxfyxp8Gb8/hz/0oabVo47xg29twVW08BcR+syCI0omhLYwXuwbyDDXbCfAP
-         yeSMN+z1madRgI0eXK9D63XKDk9K4sAfBSMm0F6hnY0F/mGLVN+7S+/Jg3judyFaMG
-         97RUVburVTnZQs9S3PDB0ZL6j0bEVWUSY8M347/E=
+        b=EMj54UC/i//QYoMYrWc0esgmBvqwE2O0QpUGFB7EIhPTNi71YUX80bQnezohCrI3i
+         q8+/flvyv2a2MOH9gCznUeCEPwdlYn017w4+IQrjVtVKa/X2YFfZFvb/Qc1YvhfH13
+         SSXQKvWR8Z/0DtMTJEiqxhe0atqD99JyO1xEy2gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 15/70] media: digitv: dont continue if remote control state cant be read
-Date:   Mon,  3 Feb 2020 16:19:27 +0000
-Message-Id: <20200203161914.805392984@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 46/70] netfilter: nft_tunnel: ERSPAN_VERSION must not be null
+Date:   Mon,  3 Feb 2020 16:19:58 +0000
+Message-Id: <20200203161918.995823026@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,48 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Florian Westphal <fw@strlen.de>
 
-commit eecc70d22ae51225de1ef629c1159f7116476b2e upstream.
+[ Upstream commit 9ec22d7c6c69146180577f3ad5fdf504beeaee62 ]
 
-This results in an uninitialized variable read.
-
-Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: af308b94a2a4a5 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/digitv.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/netfilter/nft_tunnel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/usb/dvb-usb/digitv.c
-+++ b/drivers/media/usb/dvb-usb/digitv.c
-@@ -233,18 +233,22 @@ static struct rc_map_table rc_map_digitv
+diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
+index 09441bbb0166f..e5444f3ff43fc 100644
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -235,6 +235,9 @@ static int nft_tunnel_obj_erspan_init(const struct nlattr *attr,
+ 	if (err < 0)
+ 		return err;
  
- static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
- {
--	int i;
-+	int ret, i;
- 	u8 key[5];
- 	u8 b[4] = { 0 };
- 
- 	*event = 0;
- 	*state = REMOTE_NO_KEY_PRESSED;
- 
--	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
-+	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
-+	if (ret)
-+		return ret;
- 
- 	/* Tell the device we've read the remote. Not sure how necessary
- 	   this is, but the Nebula SDK does it. */
--	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
-+	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
-+	if (ret)
-+		return ret;
- 
- 	/* if something is inside the buffer, simulate key press */
- 	if (key[1] != 0)
++	if (!tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION])
++		 return -EINVAL;
++
+ 	version = ntohl(nla_get_be32(tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION]));
+ 	switch (version) {
+ 	case ERSPAN_VERSION:
+-- 
+2.20.1
+
 
 
