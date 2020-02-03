@@ -2,241 +2,210 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCE3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E94DC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF4F2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381802082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN4jrTsY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CjCO1Dah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgBCOf5 (ORCPT
+        id S1728489AbgBCOiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:35:57 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39481 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728090AbgBCOfz (ORCPT
+        Mon, 3 Feb 2020 09:38:09 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:59906 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727454AbgBCOiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:35:55 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y8so6882741qvk.6;
-        Mon, 03 Feb 2020 06:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pHZXEZfxcArrJOwFLOO5B25gH5Nf7M6GMePV8H95wz8=;
-        b=AN4jrTsY0Be0qFeBI9ikRLgxslO22TK9D1lt7ekoGyu3ID/zgEWhSNVupxjTkfAwxZ
-         RyklxvFtDIJzsnMWV9zv2YBMZWMtNgNTSG0RhwM7waizdUZJv4Yolq1UseGtKmfN4AlG
-         523oxjEUuqbaxJghOAZ2wLYFOObEbNB8BYnW43sb7bdgk+n6zPYYiiGZrSiXYaZAJF5U
-         D4dnArJCuHz5mLrlCfrFE5sAmPQcA6ikoOOc/SmeiOyF6oLimoxK+FiVMdIY1FjMIbbp
-         0XLFnJjUPmrI4YCpuDOGG2azN0IBRGLHF7Ee7qkkwezHahQF5sj8HAx2FTsGIQDMI92c
-         qHFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pHZXEZfxcArrJOwFLOO5B25gH5Nf7M6GMePV8H95wz8=;
-        b=Qj4R9ps0BbKwstnXV53H/CEEx9XMMpxoLxXjXK4g2U1mMuMKxkYXQYmwB6ErziT2iV
-         L4KnFG12bTN+Rj8OBTICLdtfoOwSbd76r2F8CETQ4l7SWV7r1vROkkITKOWDmMUv/OLn
-         OgYGoqadk/WIl/ppftN3FTCwc/zA8bqSp/1OYcQob/Kl5dYEtVejNIzq6QmyuM0H5RCc
-         ahpnaTAvnIhaxt81rqeEoG2iKmdFnWEK4y7A381Cy2XIelDCJe/KI36XXXV/zg32NrkX
-         Wh/FfdfE1zO7/gMsRmMHMKujAr9/ve0e9nVdc4+PBmpxwUUtTQBYTzYnnwNWkWp5jvI6
-         MEjg==
-X-Gm-Message-State: APjAAAUZIqXn/OnYtzF8R+yPMXpceN7WMd+mNjsQQAbnaBt59ReJsFOR
-        Gdv6gZr75mB/KEo/zSVGjzY=
-X-Google-Smtp-Source: APXvYqz2HVVFSAa8uHQTrlSI3OhLdRF470sd06dYwwzRxF3/fPsupj9vDFDZEBqMNubVa0aYJMX5hg==
-X-Received: by 2002:ad4:4b08:: with SMTP id r8mr23469453qvw.250.1580740554339;
-        Mon, 03 Feb 2020 06:35:54 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id y26sm10320882qtc.94.2020.02.03.06.35.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2020 06:35:53 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id F307E22076;
-        Mon,  3 Feb 2020 09:35:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 03 Feb 2020 09:35:53 -0500
-X-ME-Sender: <xms:xy84XttKeqh-gEQBxwPA7O1wcftgh5R6j1HrJc4iCNBRU1xMSuoZGg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeejgdeihecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
-    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:xy84XrUwqTqDlXrEOy3a-4hDTr1RqwBGNrCO4l3nOYY4diUTEohGaw>
-    <xmx:xy84XmrxUVgY6rxtgT_eM73yjc8rIyKzW2JEtf46MXyzuQgJjmNCLA>
-    <xmx:xy84XmrMHXee9CTrkoNKbXcfj7xPp4QGXyZGcdYPkESWy6NUGo3-aA>
-    <xmx:yC84XrVUQM4PYFvQRz9qqQmG05aMITRnwhR3rbkEWU1bcpyLopjULeXBLiQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BFF233060272;
-        Mon,  3 Feb 2020 09:35:50 -0500 (EST)
-Date:   Mon, 3 Feb 2020 22:35:49 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/3] PCI: hv: Introduce hv_msi_entry
-Message-ID: <20200203143549.GG83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-4-boqun.feng@gmail.com>
- <20200203095140.GE20189@big-machine>
+        Mon, 3 Feb 2020 09:38:09 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013EWqFM006280;
+        Mon, 3 Feb 2020 15:37:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=vkT46fYRd5ByDiimEUbRN90OK24egsZjfCTxnkU75vQ=;
+ b=CjCO1DahFjtwffpzmc0k8WQ3KetOTOXq/3by+bl2LwoWc1yyR9gg3e0UojI5kQi1sWvL
+ 2iQCuVeM620vUqJ37d3R/mMb+fALWQqRjEmZj+OGs/3XU+0hqSEuvOxqh51E9h/uWBq2
+ +5tEDQbrv5eZYZY+qv+RagPuNyUm7TT5EisNY7Qa51jUR00OSr6FBEoMUJZuOsMLeQwn
+ kVIVZpLkEqRnMSz3j1vKe5ii+2FaP9FiLVyE2XKNtUcN8QuWWJBbCcULLi/RC6K94zzk
+ Sv+91JljgDMLR8S1diCZmup3ajxlJQFj0JQ8uylJ+xSHPIrLFNzfg+vJ/ahPjR/BXdiq NA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xvyp5sp21-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Feb 2020 15:37:50 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 981DA100034;
+        Mon,  3 Feb 2020 15:37:49 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 806052AC3E6;
+        Mon,  3 Feb 2020 15:37:49 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 15:37:49 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 3 Feb 2020 15:37:49 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "wg@grandegger.com" <wg@grandegger.com>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "sriram.dash@samsung.com" <sriram.dash@samsung.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: net: can: Convert M_CAN to json-schema
+Thread-Topic: [PATCH] dt-bindings: net: can: Convert M_CAN to json-schema
+Thread-Index: AQHV0s68+wzkWnIiYky0zieiiSv6LKgJhXOAgAADLgA=
+Date:   Mon, 3 Feb 2020 14:37:49 +0000
+Message-ID: <2bb33763-62be-3336-5706-fdc47a61de50@st.com>
+References: <20200124155542.2053-1-benjamin.gaignard@st.com>
+ <20200203142625.GA19020@bogus>
+In-Reply-To: <20200203142625.GA19020@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7A3D62F6D887984D891530B7EF01F1FA@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203095140.GE20189@big-machine>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-03_04:2020-02-02,2020-02-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 09:51:40AM +0000, Andrew Murray wrote:
-> On Mon, Feb 03, 2020 at 01:03:13PM +0800, Boqun Feng wrote:
-> > Add a new structure (hv_msi_entry), which is also defined int tlfs, to
-> 
-> s/int/in the/ ?
-> 
-
-Good catch, will fix.
-
-> > describe the msi entry for HVCALL_RETARGET_INTERRUPT. The structure is
-> > needed because its layout may be different from architecture to
-> > architecture.
-> > 
-> > Also add a new generic interface hv_set_msi_address_from_desc() to allow
-> > different archs to set the msi address from msi_desc.
-> > 
-> > No functional change, only preparation for the future support of virtual
-> > PCI on non-x86 architectures.
-> > 
-> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> > ---
-> >  arch/x86/include/asm/hyperv-tlfs.h  | 11 +++++++++--
-> >  arch/x86/include/asm/mshyperv.h     |  5 +++++
-> >  drivers/pci/controller/pci-hyperv.c |  4 ++--
-> >  3 files changed, 16 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> > index 4a76e442481a..953b3ad38746 100644
-> > --- a/arch/x86/include/asm/hyperv-tlfs.h
-> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> > @@ -912,11 +912,18 @@ struct hv_partition_assist_pg {
-> >  	u32 tlb_lock_count;
-> >  };
-> >  
-> > +union hv_msi_entry {
-> > +	u64 as_uint64;
-> > +	struct {
-> > +		u32 address;
-> > +		u32 data;
-> > +	} __packed;
-> > +};
-> > +
-> >  struct hv_interrupt_entry {
-> >  	u32 source;			/* 1 for MSI(-X) */
-> >  	u32 reserved1;
-> > -	u32 address;
-> > -	u32 data;
-> > +	union hv_msi_entry msi_entry;
-> >  } __packed;
-> >  
-> >  /*
-> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> > index 6b79515abb82..3bdaa3b6e68f 100644
-> > --- a/arch/x86/include/asm/mshyperv.h
-> > +++ b/arch/x86/include/asm/mshyperv.h
-> > @@ -240,6 +240,11 @@ bool hv_vcpu_is_preempted(int vcpu);
-> >  static inline void hv_apic_init(void) {}
-> >  #endif
-> >  
-> > +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
-> > +do {								\
-> > +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
-> > +} while (0)
-> 
-> Given that this is a single statement, is there really a need for the do ; while(0) ?
-> 
-
-I choose to use do ; while (0) because I don't want code like the
-following to be able to compile:
-
-	hv_set_msi_address_from_desc(...) /* semicolon is missing */
-	a = b;
-
-But now think more about this, I think it's probably better to define
-this as a function..
-
-> 
-> > +
-> >  #else /* CONFIG_HYPERV */
-> >  static inline void hyperv_init(void) {}
-> >  static inline void hyperv_setup_mmu_ops(void) {}
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index 0d9b74503577..2240f2b3643e 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -1170,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
-> >  	memset(params, 0, sizeof(*params));
-> >  	params->partition_id = HV_PARTITION_ID_SELF;
-> >  	params->int_entry.source = 1; /* MSI(-X) */
-> > -	params->int_entry.address = msi_desc->msg.address_lo;
-> > -	params->int_entry.data = msi_desc->msg.data;
-> > +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
-> > +	params->int_entry.msi_entry.data = msi_desc->msg.data;
-> 
-> If the layout may differ, then don't we also need a wrapper for data?
-> 
-
-On x86 hv_msi_entry is:
-
-	{
-		u32 address;
-		u32 data;
-	}
-
-and on ARM64 it is:
-
-	{
-		u64 address;
-		u32 data;
-		u32 reserved;
-	}
-
-So currently, setting msi_entry.data doesn't need a wrapper for
-different archs. But now you mention it, probably a better way is to
-provide a wrapper hv_set_msi_entry_from_desc(), which sets both address
-and data instead of hv_set_msi_address_from_desc().
-
-Thanks for looking into the whole patchset!
-
-Regards,
-Boqun
-
-> Thanks,
-> 
-> Andrew Murray
-> 
-> >  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
-> >  			   (hbus->hdev->dev_instance.b[4] << 16) |
-> >  			   (hbus->hdev->dev_instance.b[7] << 8) |
-> > -- 
-> > 2.24.1
-> > 
+DQpPbiAyLzMvMjAgMzoyNiBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIEZyaSwgSmFuIDI0
+LCAyMDIwIGF0IDA0OjU1OjQyUE0gKzAxMDAsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPj4g
+Q29udmVydCBNX0NBTiBiaW5kaW5ncyB0byBqc29uLXNjaGVtYQ0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+PiAtLS0N
+Cj4+ICAgLi4uL2JpbmRpbmdzL25ldC9jYW4vY2FuLXRyYW5zY2VpdmVyLnR4dCAgICAgICAgICAg
+fCAgMjQgLS0tLQ0KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL21fY2FuLnR4
+dCAgICAgICAgICB8ICA3NSAtLS0tLS0tLS0tDQo+PiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L25ldC9jYW4vbV9jYW4ueWFtbCAgICAgICAgIHwgMTUxICsrKysrKysrKysrKysrKysrKysrKw0K
+Pj4gICAzIGZpbGVzIGNoYW5nZWQsIDE1MSBpbnNlcnRpb25zKCspLCA5OSBkZWxldGlvbnMoLSkN
+Cj4+ICAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9uZXQvY2FuL2Nhbi10cmFuc2NlaXZlci50eHQNCj4gTm8gY2hhbmNlIG90aGVyIGNvbnRyb2xs
+ZXJzIGFyZW4ndCBnb2luZyB0byBoYXZlIGEgdHJhbnNjZWl2ZXI/DQoNClRoZXkgY291bGQgLi4u
+IEkgbWFkZSBhIHNob3J0IGN1dCBzaW5jZSBib3NoLG1fY2FuIHdhcyB0aGUgb25seSBvbmUgDQpy
+ZWZlcmVuY2luZyB0aGlzIHByb3BlcnR5IGFuZCB0aGUgZmlsZS4NCg0KSSB3aWxsIGZpdCB0aGF0
+IGluIHYyLiBTYW1lIGZvciB0aGUgY29tbWVudHMgeW91IGhhdmUgZG9uZSBiZWxvdy4NCg0KVGhh
+bmtzLA0KDQpCZW5qYW1pbg0KDQo+DQo+PiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Nhbi9tX2Nhbi50eHQNCj4+ICAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL21fY2Fu
+LnlhbWwNCj4gYm9zY2gsbV9jYW4ueWFtbA0KPg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL21fY2FuLnlhbWwgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Nhbi9tX2Nhbi55YW1sDQo+PiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5lZmRiZWQ4MWFmMjkNCj4+IC0tLSAvZGV2
+L251bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2Fu
+L21fY2FuLnlhbWwNCj4+IEBAIC0wLDAgKzEsMTUxIEBADQo+PiArIyBTUERYLUxpY2Vuc2UtSWRl
+bnRpZmllcjogR1BMLTIuMA0KPj4gKyVZQU1MIDEuMg0KPj4gKy0tLQ0KPj4gKyRpZDogaHR0cDov
+L2RldmljZXRyZWUub3JnL3NjaGVtYXMvbmV0L2Nhbi9tX2Nhbi55YW1sIw0KPj4gKyRzY2hlbWE6
+IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPj4gKw0KPj4g
+K3RpdGxlOiBCb3NjaCBNQ0FOIGNvbnRyb2xsZXIgQmluZGluZ3MNCj4+ICsNCj4+ICtkZXNjcmlw
+dGlvbjogQm9zY2ggTUNBTiBjb250cm9sbGVyIGZvciBDQU4gYnVzDQo+PiArDQo+PiArbWFpbnRh
+aW5lcnM6DQo+PiArICAtICBTcmlyYW0gRGFzaCA8c3JpcmFtLmRhc2hAc2Ftc3VuZy5jb20+DQo+
+PiArDQo+PiArcHJvcGVydGllczoNCj4+ICsgIGNvbXBhdGlibGU6DQo+PiArICAgIGNvbnN0OiBi
+b3NjaCxtX2Nhbg0KPj4gKw0KPj4gKyAgcmVnOg0KPj4gKyAgICBpdGVtczoNCj4+ICsgICAgICAt
+IGRlc2NyaXB0aW9uOiBNX0NBTiByZWdpc3RlcnMgbWFwDQo+PiArICAgICAgLSBkZXNjcmlwdGlv
+bjogbWVzc2FnZSBSQU0NCj4+ICsNCj4+ICsgIHJlZy1uYW1lczoNCj4+ICsgICAgaXRlbXM6DQo+
+PiArICAgICAgLSBjb25zdDogbV9jYW4NCj4+ICsgICAgICAtIGNvbnN0OiBtZXNzYWdlX3JhbQ0K
+Pj4gKw0KPj4gKyAgaW50ZXJydXB0czoNCj4+ICsgICAgaXRlbXM6DQo+PiArICAgICAgLSBkZXNj
+cmlwdGlvbjogaW50ZXJydXB0IGxpbmUwDQo+PiArICAgICAgLSBkZXNjcmlwdGlvbjogaW50ZXJy
+dXB0IGxpbmUxDQo+PiArICAgIG1pbkl0ZW1zOiAxDQo+PiArICAgIG1heEl0ZW1zOiAyDQo+PiAr
+DQo+PiArICBpbnRlcnJ1cHQtbmFtZXM6DQo+PiArICAgIGl0ZW1zOg0KPj4gKyAgICAgIC0gY29u
+c3Q6IGludDANCj4+ICsgICAgICAtIGNvbnN0OiBpbnQxDQo+PiArICAgIG1pbkl0ZW1zOiAxDQo+
+PiArICAgIG1heEl0ZW1zOiAyDQo+PiArDQo+PiArICBjbG9ja3M6DQo+PiArICAgIGl0ZW1zOg0K
+Pj4gKyAgICAgIC0gZGVzY3JpcHRpb246IHBlcmlwaGVyYWwgY2xvY2sNCj4+ICsgICAgICAtIGRl
+c2NyaXB0aW9uOiBidXMgY2xvY2sNCj4+ICsNCj4+ICsgIGNsb2NrLW5hbWVzOg0KPj4gKyAgICBp
+dGVtczoNCj4+ICsgICAgICAtIGNvbnN0OiBoY2xrDQo+PiArICAgICAgLSBjb25zdDogY2Nsaw0K
+Pj4gKw0KPj4gKyAgYm9zY2gsbXJhbS1jZmc6DQo+PiArICAgIGRlc2NyaXB0aW9uOiB8DQo+PiAr
+ICAgICAgICAgICAgICAgICBNZXNzYWdlIFJBTSBjb25maWd1cmF0aW9uIGRhdGEuDQo+PiArICAg
+ICAgICAgICAgICAgICBNdWx0aXBsZSBNX0NBTiBpbnN0YW5jZXMgY2FuIHNoYXJlIHRoZSBzYW1l
+IE1lc3NhZ2UgUkFNDQo+PiArICAgICAgICAgICAgICAgICBhbmQgZWFjaCBlbGVtZW50KGUuZyBS
+eCBGSUZPIG9yIFR4IEJ1ZmZlciBhbmQgZXRjKSBudW1iZXINCj4+ICsgICAgICAgICAgICAgICAg
+IGluIE1lc3NhZ2UgUkFNIGlzIGFsc28gY29uZmlndXJhYmxlLCBzbyB0aGlzIHByb3BlcnR5IGlz
+DQo+PiArICAgICAgICAgICAgICAgICB0ZWxsaW5nIGRyaXZlciBob3cgdGhlIHNoYXJlZCBvciBw
+cml2YXRlIE1lc3NhZ2UgUkFNIGFyZQ0KPj4gKyAgICAgICAgICAgICAgICAgdXNlZCBieSB0aGlz
+IE1fQ0FOIGNvbnRyb2xsZXIuDQo+PiArDQo+PiArICAgICAgICAgICAgICAgICBUaGUgZm9ybWF0
+IHNob3VsZCBiZSBhcyBmb2xsb3dzOg0KPj4gKyAgICAgICAgICAgICAgICAgPG9mZnNldCBzaWRm
+X2VsZW1zIHhpZGZfZWxlbXMgcnhmMF9lbGVtcyByeGYxX2VsZW1zIHJ4Yl9lbGVtcyB0eGVfZWxl
+bXMgdHhiX2VsZW1zPg0KPj4gKyAgICAgICAgICAgICAgICAgVGhlICdvZmZzZXQnIGlzIGFuIGFk
+ZHJlc3Mgb2Zmc2V0IG9mIHRoZSBNZXNzYWdlIFJBTSB3aGVyZQ0KPj4gKyAgICAgICAgICAgICAg
+ICAgdGhlIGZvbGxvd2luZyBlbGVtZW50cyBzdGFydCBmcm9tLiBUaGlzIGlzIHVzdWFsbHkgc2V0
+IHRvDQo+PiArICAgICAgICAgICAgICAgICAweDAgaWYgeW91J3JlIHVzaW5nIGEgcHJpdmF0ZSBN
+ZXNzYWdlIFJBTS4gVGhlIHJlbWFpbiBjZWxscw0KPj4gKyAgICAgICAgICAgICAgICAgYXJlIHVz
+ZWQgdG8gc3BlY2lmeSBob3cgbWFueSBlbGVtZW50cyBhcmUgdXNlZCBmb3IgZWFjaCBGSUZPL0J1
+ZmZlci4NCj4+ICsNCj4+ICsgICAgICAgICAgICAgICAgIE1fQ0FOIGluY2x1ZGVzIHRoZSBmb2xs
+b3dpbmcgZWxlbWVudHMgYWNjb3JkaW5nIHRvIHVzZXIgbWFudWFsOg0KPj4gKyAgICAgICAgICAg
+ICAgICAgMTEtYml0IEZpbHRlcgkwLTEyOCBlbGVtZW50cyAvIDAtMTI4IHdvcmRzDQo+PiArICAg
+ICAgICAgICAgICAgICAyOS1iaXQgRmlsdGVyCTAtNjQgZWxlbWVudHMgLyAwLTEyOCB3b3Jkcw0K
+Pj4gKyAgICAgICAgICAgICAgICAgUnggRklGTyAwCTAtNjQgZWxlbWVudHMgLyAwLTExNTIgd29y
+ZHMNCj4+ICsgICAgICAgICAgICAgICAgIFJ4IEZJRk8gMQkwLTY0IGVsZW1lbnRzIC8gMC0xMTUy
+IHdvcmRzDQo+PiArICAgICAgICAgICAgICAgICBSeCBCdWZmZXJzCTAtNjQgZWxlbWVudHMgLyAw
+LTExNTIgd29yZHMNCj4+ICsgICAgICAgICAgICAgICAgIFR4IEV2ZW50IEZJRk8JMC0zMiBlbGVt
+ZW50cyAvIDAtNjQgd29yZHMNCj4+ICsgICAgICAgICAgICAgICAgIFR4IEJ1ZmZlcnMJMC0zMiBl
+bGVtZW50cyAvIDAtNTc2IHdvcmRzDQo+PiArDQo+PiArICAgICAgICAgICAgICAgICBQbGVhc2Ug
+cmVmZXIgdG8gMi40LjEgTWVzc2FnZSBSQU0gQ29uZmlndXJhdGlvbiBpbiBCb3NjaA0KPj4gKyAg
+ICAgICAgICAgICAgICAgTV9DQU4gdXNlciBtYW51YWwgZm9yIGRldGFpbHMuDQo+PiArICAgIGFs
+bE9mOg0KPj4gKyAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMv
+aW50MzItbWF0cml4DQo+IExvb2tzIGxpa2UgdWludDMyLWFycmF5IGJhc2VkIG9uIHRoZSBjb25z
+dHJhaW50cy4NCj4NCj4+ICsgICAgICAtIGl0ZW1zOg0KPj4gKyAgICAgICAgIGl0ZW1zOg0KPj4g
+KyAgICAgICAgICAgLSBkZXNjcmlwdGlvbjogVGhlICdvZmZzZXQnIGlzIGFuIGFkZHJlc3Mgb2Zm
+c2V0IG9mIHRoZSBNZXNzYWdlIFJBTQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgd2hl
+cmUgdGhlIGZvbGxvd2luZyBlbGVtZW50cyBzdGFydCBmcm9tLiBUaGlzIGlzIHVzdWFsbHkNCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIHNldCB0byAweDAgaWYgeW91J3JlIHVzaW5nIGEg
+cHJpdmF0ZSBNZXNzYWdlIFJBTS4NCj4+ICsgICAgICAgICAgICAgZGVmYXVsdDogMA0KPj4gKyAg
+ICAgICAgICAgLSBkZXNjcmlwdGlvbjogMTEtYml0IEZpbHRlciAwLTEyOCBlbGVtZW50cyAvIDAt
+MTI4IHdvcmRzDQo+PiArICAgICAgICAgICAgIG1pbmltdW06IDANCj4+ICsgICAgICAgICAgICAg
+bWF4aW11bTogMTI4DQo+PiArICAgICAgICAgICAtIGRlc2NyaXB0aW9uOiAyOS1iaXQgRmlsdGVy
+IDAtNjQgZWxlbWVudHMgLyAwLTEyOCB3b3Jkcw0KPj4gKyAgICAgICAgICAgICBtaW5pbXVtOiAw
+DQo+PiArICAgICAgICAgICAgIG1heGltdW06IDY0DQo+PiArICAgICAgICAgICAtIGRlc2NyaXB0
+aW9uOiBSeCBGSUZPIDAgMC02NCBlbGVtZW50cyAvIDAtMTE1MiB3b3Jkcw0KPj4gKyAgICAgICAg
+ICAgICBtaW5pbXVtOiAwDQo+PiArICAgICAgICAgICAgIG1heGltdW06IDY0DQo+PiArICAgICAg
+ICAgICAtIGRlc2NyaXB0aW9uOiBSeCBGSUZPIDEgMC02NCBlbGVtZW50cyAvIDAtMTE1MiB3b3Jk
+cw0KPj4gKyAgICAgICAgICAgICBtaW5pbXVtOiAwDQo+PiArICAgICAgICAgICAgIG1heGltdW06
+IDY0DQo+PiArICAgICAgICAgICAtIGRlc2NyaXB0aW9uOiBSeCBCdWZmZXJzIDAtNjQgZWxlbWVu
+dHMgLyAwLTExNTIgd29yZHMNCj4+ICsgICAgICAgICAgICAgbWluaW11bTogMA0KPj4gKyAgICAg
+ICAgICAgICBtYXhpbXVtOiA2NA0KPj4gKyAgICAgICAgICAgLSBkZXNjcmlwdGlvbjogVHggRXZl
+bnQgRklGTyAwLTMyIGVsZW1lbnRzIC8gMC02NCB3b3Jkcw0KPj4gKyAgICAgICAgICAgICBtaW5p
+bXVtOiAwDQo+PiArICAgICAgICAgICAgIG1heGltdW06IDMyDQo+PiArICAgICAgICAgICAtIGRl
+c2NyaXB0aW9uOiBUeCBCdWZmZXJzIDAtMzIgZWxlbWVudHMgLyAwLTU3NiB3b3Jkcw0KPj4gKyAg
+ICAgICAgICAgICBtaW5pbXVtOiAwDQo+PiArICAgICAgICAgICAgIG1heGltdW06IDMyDQo+PiAr
+ICAgICAgICBtYXhJdGVtczogMQ0KPj4gKw0KPj4gKyAgY2FuLXRyYW5zY2VpdmVyOg0KPj4gKyAg
+ICB0eXBlOiBvYmplY3QNCj4+ICsNCj4+ICsgICAgcHJvcGVydGllczoNCj4+ICsgICAgICBtYXgt
+Yml0cmF0ZToNCj4+ICsgICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRp
+b25zL3VpbnQzMg0KPj4gKyAgICAgICAgZGVzY3JpcHRpb246IGEgcG9zaXRpdmUgbm9uIDAgdmFs
+dWUgdGhhdCBkZXRlcm1pbmVzIHRoZSBtYXggc3BlZWQgdGhhdA0KPj4gKyAgICAgICAgICAgICAg
+ICAgICAgIENBTi9DQU4tRkQgY2FuIHJ1bi4NCj4+ICsgICAgICAgIG1pbmltdW06IDENCj4+ICsN
+Cj4+ICtyZXF1aXJlZDoNCj4+ICsgIC0gY29tcGF0aWJsZQ0KPj4gKyAgLSByZWcNCj4+ICsgIC0g
+cmVnLW5hbWVzDQo+PiArICAtIGludGVycnVwdHMNCj4+ICsgIC0gaW50ZXJydXB0LW5hbWVzDQo+
+PiArICAtIGNsb2Nrcw0KPj4gKyAgLSBjbG9jay1uYW1lcw0KPj4gKyAgLSBib3NjaCxtcmFtLWNm
+Zw0KPj4gKw0KPj4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK2V4YW1w
+bGVzOg0KPj4gKyAgLSB8DQo+PiArICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9pbXg2
+c3gtY2xvY2suaD4NCj4+ICsgICAgY2FuQDIwZTgwMDAgew0KPj4gKyAgICAgIGNvbXBhdGlibGUg
+PSAiYm9zY2gsbV9jYW4iOw0KPj4gKyAgICAgIHJlZyA9IDwweDAyMGU4MDAwIDB4NDAwMD4sIDww
+eDAyMjk4MDAwIDB4NDAwMD47DQo+PiArICAgICAgcmVnLW5hbWVzID0gIm1fY2FuIiwgIm1lc3Nh
+Z2VfcmFtIjsNCj4+ICsgICAgICBpbnRlcnJ1cHRzID0gPDAgMTE0IDB4MDQ+LCA8MCAxMTQgMHgw
+ND47DQo+PiArICAgICAgaW50ZXJydXB0LW5hbWVzID0gImludDAiLCAiaW50MSI7DQo+PiArICAg
+ICAgY2xvY2tzID0gPCZjbGtzIElNWDZTWF9DTEtfQ0FORkQ+LA0KPj4gKyAgICAgICAgICAgICAg
+IDwmY2xrcyBJTVg2U1hfQ0xLX0NBTkZEPjsNCj4+ICsgICAgICBjbG9jay1uYW1lcyA9ICJoY2xr
+IiwgImNjbGsiOw0KPj4gKyAgICAgIGJvc2NoLG1yYW0tY2ZnID0gPDB4MCAwIDAgMzIgMCAwIDAg
+MT47DQo+PiArDQo+PiArICAgICAgY2FuLXRyYW5zY2VpdmVyIHsNCj4+ICsgICAgICAgIG1heC1i
+aXRyYXRlID0gPDUwMDAwMDA+Ow0KPj4gKyAgICAgIH07DQo+PiArICAgIH07DQo+PiArDQo+PiAr
+Li4uDQo+PiAtLSANCj4+IDIuMTUuMA0KPj4=
