@@ -2,169 +2,201 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24802C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFE4C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AD32087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ASUufhoB"
+	by mail.kernel.org (Postfix) with ESMTP id 12C942087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgBCS2A (ORCPT
+        id S1729796AbgBCS2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:28:00 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:32830 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729630AbgBCS17 (ORCPT
+        Mon, 3 Feb 2020 13:28:13 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:49280 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727934AbgBCS2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:27:59 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d5so12254054qto.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:27:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=45arIOagvyiMcACXk6TG313wTzmAuQ92wsNv5LJ1hc8=;
-        b=ASUufhoBL/L9gjOgIkVl+X/+1iojQplgBD0VuNH7dJxHS53U51nj9lk6T+XrOx1bGB
-         6FhwaIcWUq0m6oUsuoVUcq65SfGZGdkhEvUttST4cN9lGnIAU0ScWVV9D5UZTMHFF+9t
-         3ZZE+J67I0F2c5PI42St3dgAE1nhiLcm+xY79T2NG5ydHt5a4n4sG0k72KHVRHrB9Ftv
-         0VQhKUFhkklTI9/w4Fn6i9IokhCQmdMv6jXf3uRgmxp4O8LOPyncxuDrK0leF2VLWRBK
-         updFD+lT5yCKK4RoOSfXt463oLuxlKB+5fW8Uz6zGwRAXzmbCjBT+q0/OL/O8UEQ0gTx
-         xYZg==
+        Mon, 3 Feb 2020 13:28:12 -0500
+Received: by mail-il1-f198.google.com with SMTP id p67so12668812ill.16
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:28:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=45arIOagvyiMcACXk6TG313wTzmAuQ92wsNv5LJ1hc8=;
-        b=oMHqt2l1gEiBgMR7pafIjswzT6M/rE3AGb1D77g3jnv4V9ewjXKBoKyip9PYaBFSgc
-         qI5Hn4qJkulESuUrwX2vWYFaYXy2Eqxa0jXOCt7wDMXj/DzYlPso4CtZdAw3+ELmh6dw
-         +aamzT9PPOgVPppxG85jxOo03tzwhcgZXcmskNq+80jDk6R+fyzOtSFUHDSZG5FaEy1e
-         IV5VEKs0zoKQD894Me0IUmQUfDX/bJPFYjIkc7Qk/Lb1fPIJwRGfCfYU/I3FMFDRHNLc
-         m8zipGOjwx4+ugkVJmQfusV8SdV/9XbKMl+CSx91sAe1HtG+OSrYharKAEhEEdK6MDqw
-         9DLw==
-X-Gm-Message-State: APjAAAVfR40UkAxFNSPoQELHQNf2EM4QcnPp9jSPmJI/R/3HWNBPUF66
-        T9aJ0/EKHgmP/qtKadTyG9Gp5A==
-X-Google-Smtp-Source: APXvYqxFjnYIl31gVkLL/LJxKmRjaPwN+bZfw8A2uqCAXnaZuB/fPi6DZWJzl2D6CFC1+LLJendSew==
-X-Received: by 2002:aed:25a4:: with SMTP id x33mr25400876qtc.165.1580754478425;
-        Mon, 03 Feb 2020 10:27:58 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::e256])
-        by smtp.gmail.com with ESMTPSA id v10sm10134764qtq.58.2020.02.03.10.27.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:27:57 -0800 (PST)
-Date:   Mon, 3 Feb 2020 13:27:56 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 16/28] mm: memcg/slab: allocate obj_cgroups for
- non-root slab pages
-Message-ID: <20200203182756.GG1697@cmpxchg.org>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-17-guro@fb.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=fNirEIjUZWmHl3fUAVYFWGTvsAYsyyMxP84IDuD55uU=;
+        b=Bz77Ny7Lt+krS6cf0ZKDE60k76X86IVUrK1TPLHoSxcxOxgG0OJJniMspo/O8Ej09D
+         bF/0ZZrSMmTZ2LZ3ZC6GId1FgTh05S/NN9yD6MFKdfxQyTbsCHnwJQRAVFJKmCxDIqD2
+         aTjZawCDQcq3PEdYuNeqs3WUwcMFnbNrhP1dDyaT4cHdhruWp/cfHCQqsCNOgbzWzh+2
+         pDsoprAEYVKIUZAutA0pzZgdRw32RijeSJMeGKOeV0RWR9jrNE2stWhG/UC+MibvzMaL
+         QhnmOeQ4eZ4YYuRdCCzeiVbrOj4MhT+nzu12PwP1BFNp34yA8ys6dnp3x0dQSEElfBgP
+         gD2Q==
+X-Gm-Message-State: APjAAAUPQ0s1ny3PqujqT0TnoXiFrP7Kf19/lJJEN5oI8Mpowwq+mDSe
+        zWZD1/7O8iGDlbuWHXnOVL/XSmsjr6D6yqcXKwq4IwnEZJUG
+X-Google-Smtp-Source: APXvYqxAnqBewG1iFwpsyVzj92urVpUN607Q5R7WgBJZrs7tq87ZBAeAdxyr34hRFZHw5wcrwspswcSloprUWaKraiBImuLSxIpZ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127173453.2089565-17-guro@fb.com>
+X-Received: by 2002:a02:c906:: with SMTP id t6mr20831421jao.75.1580754491979;
+ Mon, 03 Feb 2020 10:28:11 -0800 (PST)
+Date:   Mon, 03 Feb 2020 10:28:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8bfe8059db01519@google.com>
+Subject: possible deadlock in wg_noise_handshake_create_initiation
+From:   syzbot <syzbot+d5bc560aaa1cedefffd5@syzkaller.appspotmail.com>
+To:     Jason@zx2c4.com, davem@davemloft.net, jason@zx2c4.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:34:41AM -0800, Roman Gushchin wrote:
-> Allocate and release memory to store obj_cgroup pointers for each
-> non-root slab page. Reuse page->mem_cgroup pointer to store a pointer
-> to the allocated space.
-> 
-> To distinguish between obj_cgroups and memcg pointers in case
-> when it's not obvious which one is used (as in page_cgroup_ino()),
-> let's always set the lowest bit in the obj_cgroup case.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  include/linux/mm.h       | 25 ++++++++++++++++++--
->  include/linux/mm_types.h |  5 +++-
->  mm/memcontrol.c          |  5 ++--
->  mm/slab.c                |  3 ++-
->  mm/slab.h                | 51 +++++++++++++++++++++++++++++++++++++++-
->  mm/slub.c                |  2 +-
->  6 files changed, 83 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 080f8ac8bfb7..65224becc4ca 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1264,12 +1264,33 @@ static inline void set_page_links(struct page *page, enum zone_type zone,
->  #ifdef CONFIG_MEMCG
->  static inline struct mem_cgroup *page_memcg(struct page *page)
->  {
-> -	return page->mem_cgroup;
-> +	struct mem_cgroup *memcg = page->mem_cgroup;
-> +
-> +	/*
-> +	 * The lowest bit set means that memcg isn't a valid memcg pointer,
-> +	 * but a obj_cgroups pointer. In this case the page is shared and
-> +	 * isn't charged to any specific memory cgroup. Return NULL.
-> +	 */
-> +	if ((unsigned long) memcg & 0x1UL)
-> +		memcg = NULL;
-> +
-> +	return memcg;
+Hello,
 
-That should really WARN instead of silently returning NULL. Which
-callsite optimistically asks a page's cgroup when it has no idea
-whether that page is actually a userpage or not?
+syzbot found the following crash on:
 
->  static inline struct mem_cgroup *page_memcg_rcu(struct page *page)
->  {
-> +	struct mem_cgroup *memcg = READ_ONCE(page->mem_cgroup);
-> +
->  	WARN_ON_ONCE(!rcu_read_lock_held());
-> -	return READ_ONCE(page->mem_cgroup);
-> +
-> +	/*
-> +	 * The lowest bit set means that memcg isn't a valid memcg pointer,
-> +	 * but a obj_cgroups pointer. In this case the page is shared and
-> +	 * isn't charged to any specific memory cgroup. Return NULL.
-> +	 */
-> +	if ((unsigned long) memcg & 0x1UL)
-> +		memcg = NULL;
-> +
-> +	return memcg;
+HEAD commit:    ccaaaf6f Merge tag 'mpx-for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16034a79e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3373595e41752b95
+dashboard link: https://syzkaller.appspot.com/bug?extid=d5bc560aaa1cedefffd5
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103868b5e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16dd064ee00000
 
-Same here.
+The bug was bisected to:
 
->  }
->  #else
->  static inline struct mem_cgroup *page_memcg(struct page *page)
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 270aa8fd2800..5102f00f3336 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -198,7 +198,10 @@ struct page {
->  	atomic_t _refcount;
->  
->  #ifdef CONFIG_MEMCG
-> -	struct mem_cgroup *mem_cgroup;
-> +	union {
-> +		struct mem_cgroup *mem_cgroup;
-> +		struct obj_cgroup **obj_cgroups;
-> +	};
+commit e7096c131e5161fa3b8e52a650d7719d2857adfd
+Author: Jason A. Donenfeld <Jason@zx2c4.com>
+Date:   Sun Dec 8 23:27:34 2019 +0000
 
-Since you need the casts in both cases anyway, it's safer (and
-simpler) to do
+    net: WireGuard secure network tunnel
 
-	unsigned long mem_cgroup;
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14440195e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16440195e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12440195e00000
 
-to prevent accidental direct derefs in future code.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d5bc560aaa1cedefffd5@syzkaller.appspotmail.com
+Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
 
-Otherwise, this patch looks good to me!
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-syzkaller #0 Not tainted
+------------------------------------------------------
+kworker/u4:4/509 is trying to acquire lock:
+ffff888097a30e80 (&wg->static_identity.lock){++++}, at: wg_noise_handshake_create_initiation+0x6a/0x15c0 drivers/net/wireguard/noise.c:499
+
+but task is already holding lock:
+ffffc90002157d78 ((work_completion)(&peer->transmit_handshake_work)){+.+.}, at: process_one_work+0x7a5/0x10f0 kernel/workqueue.c:2239
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 ((work_completion)(&peer->transmit_handshake_work)){+.+.}:
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       process_one_work+0x7c8/0x10f0 kernel/workqueue.c:2240
+       worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+       kthread+0x332/0x350 kernel/kthread.c:255
+       ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+-> #1 ((wq_completion)wg-kex-wireguard0){+.+.}:
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       flush_workqueue+0x10a/0x1820 kernel/workqueue.c:2775
+       peer_remove_after_dead+0x125/0x280 drivers/net/wireguard/peer.c:141
+       wg_peer_remove+0x211/0x270 drivers/net/wireguard/peer.c:176
+       wg_set_device+0xb6a/0x2010 drivers/net/wireguard/netlink.c:575
+       genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
+       genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
+       genl_rcv_msg+0xf15/0x13e0 net/netlink/genetlink.c:734
+       netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+       genl_rcv+0x28/0x40 net/netlink/genetlink.c:745
+       netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+       netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
+       netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg net/socket.c:672 [inline]
+       ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
+       ___sys_sendmsg net/socket.c:2397 [inline]
+       __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
+       __do_sys_sendmsg net/socket.c:2439 [inline]
+       __se_sys_sendmsg net/socket.c:2437 [inline]
+       __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
+       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&wg->static_identity.lock){++++}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
+       __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       down_read+0x39/0x50 kernel/locking/rwsem.c:1495
+       wg_noise_handshake_create_initiation+0x6a/0x15c0 drivers/net/wireguard/noise.c:499
+       wg_packet_send_handshake_initiation drivers/net/wireguard/send.c:34 [inline]
+       wg_packet_handshake_send_worker+0xe5/0x1a0 drivers/net/wireguard/send.c:51
+       process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+       worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+       kthread+0x332/0x350 kernel/kthread.c:255
+       ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+other info that might help us debug this:
+
+Chain exists of:
+  &wg->static_identity.lock --> (wq_completion)wg-kex-wireguard0 --> (work_completion)(&peer->transmit_handshake_work)
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock((work_completion)(&peer->transmit_handshake_work));
+                               lock((wq_completion)wg-kex-wireguard0);
+                               lock((work_completion)(&peer->transmit_handshake_work));
+  lock(&wg->static_identity.lock);
+
+ *** DEADLOCK ***
+
+2 locks held by kworker/u4:4/509:
+ #0: ffff88809ec44128 ((wq_completion)wg-kex-wireguard0){+.+.}, at: spin_unlock_irq include/linux/spinlock.h:388 [inline]
+ #0: ffff88809ec44128 ((wq_completion)wg-kex-wireguard0){+.+.}, at: process_one_work+0x763/0x10f0 kernel/workqueue.c:2237
+ #1: ffffc90002157d78 ((work_completion)(&peer->transmit_handshake_work)){+.+.}, at: process_one_work+0x7a5/0x10f0 kernel/workqueue.c:2239
+
+stack backtrace:
+CPU: 1 PID: 509 Comm: kworker/u4:4 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: wg-kex-wireguard0 wg_packet_handshake_send_worker
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_circular_bug+0xc3f/0xe70 kernel/locking/lockdep.c:1684
+ check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
+ __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
+ lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+ down_read+0x39/0x50 kernel/locking/rwsem.c:1495
+ wg_noise_handshake_create_initiation+0x6a/0x15c0 drivers/net/wireguard/noise.c:499
+ wg_packet_send_handshake_initiation drivers/net/wireguard/send.c:34 [inline]
+ wg_packet_handshake_send_worker+0xe5/0x1a0 drivers/net/wireguard/send.c:51
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
