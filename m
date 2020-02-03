@@ -2,58 +2,59 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B034C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E13C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B07520661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E49206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqL05V7y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LgQSPSm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgBCCHl (ORCPT
+        id S1727286AbgBCCHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 21:07:41 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51171 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgBCCHl (ORCPT
+        Sun, 2 Feb 2020 21:07:48 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42426 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgBCCHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 21:07:41 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so5602183pjb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 18:07:39 -0800 (PST)
+        Sun, 2 Feb 2020 21:07:47 -0500
+Received: by mail-pl1-f195.google.com with SMTP id e8so2592402plt.9
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 18:07:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=V88riAXlZ3Lt6WD4YILY+go/52mtOZTQuqZNCMK0kYU=;
-        b=vqL05V7yQvq4qRC5RXkSwh6yPq8Se34I62mBzvrI3p6MhB+pI+e87Vxv3xXDgKxhU3
-         RwgLrBs/IyyU+M7QxYJAH7hbnTuH9ubPf91GJzltl+06elPTA15+MvSMbtPaK/raDPxL
-         TfE8yfsGnbYnhCvx34N/DOFuwQ+NWr94y9chnaNkoqcuj2QSc2AMAMXUEoZRn2okfim+
-         UVCsim0CH7um58iLa719gOzEkue84HIghDJcXWqmSHkd9p5Dl2prj4GhWAtao9rwcK9a
-         ip3YQeEPiYIiDiVI/WIR6JBv9TdfIb4Y6r6ARIMVqALtYo5lGbZZtkcIpxM0aIXoHt+c
-         mT1g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0dvPytXJSrMRsfo04SBdUfjJdiPgt8LyFDxEpmk5VQM=;
+        b=LgQSPSm8xD41YyMhV/kmpwWl8wf3WsOqLeZJdYT2DNy/R5BQKfdA2baKU1+GP1G4mg
+         bYgvniW2Fs6jLybrVJCEEW/4Vf9sYJd78wkVFycv/ulCJ2TwqJvP3HM5biZ5aZj0PmuQ
+         4ROmVfi0rKOcCcl7axf4M7lIb+36sezchU860j3D2UCzcOrgsAbQo4SbiQdSIzyu2JJ2
+         4TAyZ5UuU3j/rBEzSJ1LcayeRPtx8rCMYVyVDdJlfm329UA7MupRi12mAWXxW0YGHi5R
+         APJmVVi5IsS6X45T5jCrTasH0G6DKII799A8b3Mf+WldUt0PvktPkyMnEmWnmp2f6S0d
+         rmuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=V88riAXlZ3Lt6WD4YILY+go/52mtOZTQuqZNCMK0kYU=;
-        b=JnvIAvSWl1hoLgy2VyniMDeNsffge09Jx6NlJdRt6eU6iU9fmI71E2uy2AnlMQaNtK
-         UKbf1CidMADG7WGu+AaZ/PPI3pudWMSG2LX7u2z2xPMpekkaRJreq06biZ15+NIR585G
-         YaZccM5lSa9pjkRuuQo40DYeVJOSdNhr/WAOy6MbDFk+0OPD4YlmiUXxd4H8KOicxmjN
-         ZxFnjSMjFS5F3xUUiXWoEt4dLMNTmvjpQWWrD4VfO4Uva+5GHMfz6vtvkOntXaSLfg0l
-         U/tjXDnBoWfikrzFV2ukaC49Z4GuIP4qWOeoAYz86R/NdHRvDDgGFDM7pnNCKRbbmii2
-         XXTg==
-X-Gm-Message-State: APjAAAUJTfnqJKo720NbepUqzlSfKzrNDOQc65VYnUqNbWrMIAEJVbsX
-        P9OLuipCVQLDtUqGCRdG9wh0VA==
-X-Google-Smtp-Source: APXvYqxKANzDItRx7KBEyi76Jve2TRT9dCT7shgy2FwK9iO9bQSniDxoOgAkNPPHqn+9gEdxDVkihA==
-X-Received: by 2002:a17:90a:da04:: with SMTP id e4mr24960801pjv.26.1580695658796;
-        Sun, 02 Feb 2020 18:07:38 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0dvPytXJSrMRsfo04SBdUfjJdiPgt8LyFDxEpmk5VQM=;
+        b=pQ0W4bgY4xdxc4L0VzLwwzs8xqagG/NQPZddJHCQOpDU6CciyP3getACGxH7KaWRfR
+         SAHc9yyB2HCWDBbkPfXS0Ml4OhLp00xV8HCg92ih/GfdWekQQfImbi2Vk61L6Qf7L1K4
+         pQhM7uBvyzkbDN/nogqd/jNCLdcMu45piGcJneU4A6eHRes1CpNFpBw0V90GENZaWkKq
+         dV4qoCF7wZCxB0HyeqHpGlpLqiYEplDN/nLLz9y+nqSDUgnKRvzTWxXrehnFBxABQX/M
+         XRBCb4L0Dp60sa5Bm0NKt3d4vdFCFucT46IlBFJmtYuIVwR/auf7nrzAXhiL22y+HI33
+         uzZg==
+X-Gm-Message-State: APjAAAWDxbqwQsVowGJ1c6Os/sp0fV8J6SgKhAbyFKBbV7LMcqQ7b67I
+        Wfv9ZlS8sIaZCKsAI4fojp9Bgg==
+X-Google-Smtp-Source: APXvYqyz0+2AuaA9hd6WscvD6V3lb9cm/CSKMRryBXAPHaPGt3Dp5pXwKuPEVelgEaumOMIGwi3sfg==
+X-Received: by 2002:a17:902:5a44:: with SMTP id f4mr15550715plm.328.1580695666435;
+        Sun, 02 Feb 2020 18:07:46 -0800 (PST)
 Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id z29sm17521201pgc.21.2020.02.02.18.07.31
+        by smtp.gmail.com with ESMTPSA id z29sm17521201pgc.21.2020.02.02.18.07.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 18:07:38 -0800 (PST)
+        Sun, 02 Feb 2020 18:07:46 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -69,153 +70,117 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Robert Walker <robert.walker@arm.com>,
         Coresight ML <coresight@lists.linaro.org>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 0/5] perf cs-etm: Support thread stack and callchain
-Date:   Mon,  3 Feb 2020 10:07:11 +0800
-Message-Id: <20200203020716.31832-1-leo.yan@linaro.org>
+Subject: [PATCH v4 1/5] perf cs-etm: Refactor instruction size handling
+Date:   Mon,  3 Feb 2020 10:07:12 +0800
+Message-Id: <20200203020716.31832-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200203020716.31832-1-leo.yan@linaro.org>
+References: <20200203020716.31832-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for thread stack and callchain; this is a
-sequential version from v3 [1] but reorgnized the patches, some changes
-have been refactored into the instruction sample fix patch set [2], and
-this patch set is only to focus on thread stack and callchain support.
+cs-etm.c has several functions which need to know instruction size
+based on address, e.g. cs_etm__instr_addr() and cs_etm__copy_insn()
+two functions both calculate the instruction size separately with its
+duplicated code.  Furthermore, adding new features later which might
+require to calculate instruction size as well.
 
-Patch 01 is to refactor the instruction size calculation; this patch is
-used by patch 02.
+For this reason, this patch refactors the code to introduce a new
+function cs_etm__instr_size(), this function is central place to
+calculate the instruction size based on ISA type and instruction
+address.
 
-Patch 02 is to add thread stack support, after applying this patch the
-option '-F,+callindent' can be used by perf script tool; patch 03 is to
-add branch filter thus the Perf tool can display branch samples only
-for function calls and returns after enable the call indentation or call
-chain related options.
+For a neat implementation, cs_etm__instr_addr() will always execute the
+loop without checking ISA type, this allows cs_etm__instr_size() and
+cs_etm__instr_addr() have no any duplicate code with each other and both
+functions are independent and can be changed separately without breaking
+anything.  As a side effect, cs_etm__instr_addr() will do a few more
+iterations for A32/A64 instructions, this would be fine if consider perf
+is a tool running in the user space.
 
-Patch 04 is to synthesize call chain for the instruction samples.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/cs-etm.c | 48 +++++++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-Patch 05 allows the instruction sample can be handled synchronously with
-the thread stack, thus it fixes an error for the callchain generation.
-
-This patch set has been tested on Juno-r2 after applied on perf/core
-branch with latest commit 85fc95d75970 ("perf maps: Add missing unlock
-to maps__insert() error case"), and this patch set is dependent on the
-instruction sample fix patch set [2].
-
-
-Test for option '-F,+callindent':
-
-Before:
-
-  # perf script -F,+callindent
-            main   840          1          branches: main                                 ffffa2319d20 __libc_start_main+0xe0 (/usr/lib/aarch64-linux-gnu/libc-2.28.so)
-            main   840          1          branches:                                      aaaab94cb7d0 main+0xc (/root/coresight_test/main)
-            main   840          1          branches:                                      aaaab94cb808 main+0x44 (/root/coresight_test/main)
-            main   840          1          branches: lib_loop_test@plt                    aaaab94cb7dc main+0x18 (/root/coresight_test/main)
-            main   840          1          branches: lib_loop_test@plt                    aaaab94cb67c lib_loop_test@plt+0xc (/root/coresight_test/main)
-            main   840          1          branches: _init                                aaaab94cb650 _init+0x30 (/root/coresight_test/main)
-            main   840          1          branches: _dl_fixup                            ffffa24a5b44 _dl_runtime_resolve+0x40 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches: _dl_lookup_symbol_x                  ffffa24a0070 _dl_fixup+0xb8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-
-  [...]
-
-After:
-
-  # perf script -F,+callindent
-            main   840          1          branches:             main                                                     ffffa2319d20 __libc_start_main+0xe0 (/usr/lib/aarch64-linux-gnu/libc-2.28.so)
-            main   840          1          branches:                 lib_loop_test@plt                                    aaaab94cb7dc main+0x18 (/root/coresight_test/main)
-            main   840          1          branches:                     _dl_fixup                                        ffffa24a5b44 _dl_runtime_resolve+0x40 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                         _dl_lookup_symbol_x                          ffffa24a0070 _dl_fixup+0xb8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                             do_lookup_x                              ffffa249c4a4 _dl_lookup_symbol_x+0x104 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                 check_match                          ffffa249bbf8 do_lookup_x+0x238 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa249b890 check_match+0x70 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                 printf@plt                                           aaaab94cb7f0 main+0x2c (/root/coresight_test/main)
-            main   840          1          branches:                     _dl_fixup                                        ffffa24a5b44 _dl_runtime_resolve+0x40 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                         _dl_lookup_symbol_x                          ffffa24a0070 _dl_fixup+0xb8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                             do_lookup_x                              ffffa249c4a4 _dl_lookup_symbol_x+0x104 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                 _dl_name_match_p                     ffffa249baf8 do_lookup_x+0x138 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa24a17e8 _dl_name_match_p+0x18 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa24a180c _dl_name_match_p+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                 _dl_name_match_p                     ffffa249baf8 do_lookup_x+0x138 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa24a17e8 _dl_name_match_p+0x18 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa24a180c _dl_name_match_p+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                 check_match                          ffffa249bbf8 do_lookup_x+0x238 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa249b890 check_match+0x70 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-            main   840          1          branches:                                     strcmp                           ffffa249b968 check_match+0x148 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-
-  [...]
-
-
-Test for option '--itrace=g':
-
-Before:
-
-  # perf script --itrace=g16l64i100
-            main   840        100      instructions:  ffff8000102642c0 event_sched_in.isra.119+0x140 ([kernel.kallsyms])
-            main   840        100      instructions:  ffff800010264794 flexible_sched_in+0xe4 ([kernel.kallsyms])
-            main   840        100      instructions:  ffff800010263024 perf_pmu_disable+0x4 ([kernel.kallsyms])
-            main   840        100      instructions:  ffff80001026b0e0 perf_swevent_add+0xb8 ([kernel.kallsyms])
-            main   840        100      instructions:  ffff80001025b504 calc_timer_values+0x34 ([kernel.kallsyms])
-            main   840        100      instructions:  ffff80001019bd24 clocks_calc_mult_shift+0x3c ([kernel.kallsyms])
-            main   840        100      instructions:  ffff80001026556c perf_event_update_userpage+0xec ([kernel.kallsyms])
-            main   840        100      instructions:  ffff80001025c5e4 visit_groups_merge+0x194 ([kernel.kallsyms])
-
-  [...]
-
-After:
-
-  # perf script --itrace=g16l64i100
-
-  main   840        100      instructions: 
-  	ffff800010264794 flexible_sched_in+0xe4 ([kernel.kallsyms])
-  	ffff80001025c57c visit_groups_merge+0x12c ([kernel.kallsyms])
-
-  main   840        100      instructions: 
-  	ffff800010263024 perf_pmu_disable+0x4 ([kernel.kallsyms])
-  	ffff8000102641f0 event_sched_in.isra.119+0x70 ([kernel.kallsyms])
-  	ffff8000102643d8 group_sched_in+0x60 ([kernel.kallsyms])
-  	ffff8000102647b0 flexible_sched_in+0x100 ([kernel.kallsyms])
-  	ffff80001025c57c visit_groups_merge+0x12c ([kernel.kallsyms])
-
-  main   840        100      instructions: 
-  	ffff80001026b0e0 perf_swevent_add+0xb8 ([kernel.kallsyms])
-  	ffff80001026423c event_sched_in.isra.119+0xbc ([kernel.kallsyms])
-  	ffff8000102643d8 group_sched_in+0x60 ([kernel.kallsyms])
-  	ffff8000102647b0 flexible_sched_in+0x100 ([kernel.kallsyms])
-  	ffff80001025c57c visit_groups_merge+0x12c ([kernel.kallsyms])
-
-  [...]
-
-
-Changes from v3:
-* Splitted out separate patch set for instruction samples fixing.
-* Rebased on latest perf/core branch.
-
-Changes from v2:
-* Added patch 01 to fix the unsigned variable comparison to zero
-  (Suzuki).
-* Refined commit logs.
-
-Changes from v1:
-* Added comments for task thread handling (Mathieu).
-* Split patch 02 into two patches, one is for support thread stack and
-  another is for callchain support (Mathieu).
-* Added a new patch to support branch filter.
-
-[1] https://lkml.org/lkml/2019/10/5/51
-[2] https://lkml.org/lkml/2020/2/2/228
-
-
-Leo Yan (5):
-  perf cs-etm: Refactor instruction size handling
-  perf cs-etm: Support thread stack
-  perf cs-etm: Support branch filter
-  perf cs-etm: Support callchain for instruction sample
-  perf cs-etm: Synchronize instruction sample with the thread stack
-
- tools/perf/util/cs-etm.c | 145 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 121 insertions(+), 24 deletions(-)
-
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 720108bd8dba..cb6fcc2acca0 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -918,6 +918,26 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
+ 	return ((instrBytes[1] & 0xF8) >= 0xE8) ? 4 : 2;
+ }
+ 
++static inline int cs_etm__instr_size(struct cs_etm_queue *etmq,
++				     u8 trace_chan_id,
++				     enum cs_etm_isa isa,
++				     u64 addr)
++{
++	int insn_len;
++
++	/*
++	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
++	 * cs_etm__t32_instr_size().
++	 */
++	if (isa == CS_ETM_ISA_T32)
++		insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id, addr);
++	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
++	else
++		insn_len = 4;
++
++	return insn_len;
++}
++
+ static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
+ {
+ 	/* Returns 0 for the CS_ETM_DISCONTINUITY packet */
+@@ -942,19 +962,15 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+ 				     const struct cs_etm_packet *packet,
+ 				     u64 offset)
+ {
+-	if (packet->isa == CS_ETM_ISA_T32) {
+-		u64 addr = packet->start_addr;
++	u64 addr = packet->start_addr;
+ 
+-		while (offset) {
+-			addr += cs_etm__t32_instr_size(etmq,
+-						       trace_chan_id, addr);
+-			offset--;
+-		}
+-		return addr;
++	while (offset) {
++		addr += cs_etm__instr_size(etmq, trace_chan_id,
++					   packet->isa, addr);
++		offset--;
+ 	}
+ 
+-	/* Assume a 4 byte instruction size (A32/A64) */
+-	return packet->start_addr + offset * 4;
++	return addr;
+ }
+ 
+ static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
+@@ -1094,16 +1110,8 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
+ 		return;
+ 	}
+ 
+-	/*
+-	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
+-	 * cs_etm__t32_instr_size().
+-	 */
+-	if (packet->isa == CS_ETM_ISA_T32)
+-		sample->insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
+-							  sample->ip);
+-	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
+-	else
+-		sample->insn_len = 4;
++	sample->insn_len = cs_etm__instr_size(etmq, trace_chan_id,
++					      packet->isa, sample->ip);
+ 
+ 	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
+ 			   sample->insn_len, (void *)sample->insn);
 -- 
 2.17.1
 
