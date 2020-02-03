@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CBFC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65681C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97F6218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EDF21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746881;
-	bh=9Pslydd++Su5YjiyttsW3x0kNiUqThyZmeBUxpt8J3I=;
+	s=default; t=1580746884;
+	bh=FfBsWZw1sJedskaDXizxipvqH71jaH4qadEjwglJN0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqR0REPB9luDnDtwCabY5cs0foPZZzbM47FZWLrt/Uwq3XRzG4AOllMd2raWDRc4l
-	 RmLKYHWLqQuSb6Dr1wfkFM5j/F7E1J0yot+MjCWGFdBa8M2mNh3i3f7bFvf3eQBNbr
-	 U+qublcPWYs9t6MsvfMGzRybDACQZNC6Opok++xE=
+	b=zqlN+QVnYv4AmQzb2wNhFpKpvgAJ6xKFPYIkuiLW57HjgeMkd3C1iJdpX8QtD5VeP
+	 itwhzXqxfG7IC7/7lKXi+jDKZ1krvIOS6JjZWCkXejkhAStcB0nI1lNw5F4juh91k0
+	 zny7HDjbsmil2No5fGjo3K6HxUHW5dcpR6Q4dnDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgBCQVU (ORCPT
+        id S1729152AbgBCQVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:21:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbgBCQVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:17 -0500
+        id S1728245AbgBCQVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:20 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157F82080D;
-        Mon,  3 Feb 2020 16:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718AB20838;
+        Mon,  3 Feb 2020 16:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746876;
-        bh=9Pslydd++Su5YjiyttsW3x0kNiUqThyZmeBUxpt8J3I=;
+        s=default; t=1580746878;
+        bh=FfBsWZw1sJedskaDXizxipvqH71jaH4qadEjwglJN0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zgcb/V7saLTM3/qfONlnfnT9xoTZT4ZVDxPlerkNEuhClBPbhW5M+6l3FKHCOUIf+
-         /i4QHZEccb96C0IevF1t9ETeS1OsEbjBZrTA8ZY4sK0bAjDw1pv0+75+ivNFKKzc5I
-         MKxvmwRO0rpLpdFVcZ4c8GP5hMXDVk8O7zjLjIAc=
+        b=gWqUhC7rXSeF9Qq4aoX94L7mhC5B/uWEsub0gNiIGC288DKMd54k+EaPvtOdESrWq
+         Yv6LdbiL8c2JmVWwjUE9+t5ArHjvU9aeLHfn6TkyVqsecvo/1zNQy6WfyAtRZIiUFw
+         l3MRc1cQGHow0qPRz86s5G3LmGahxOoVyP+uGx34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cambda Zhu <cambda@linux.alibaba.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Shahed Shaikh <shshaikh@marvell.com>,
+        Yonggen Xu <Yonggen.Xu@dell.com>,
+        Manish Chopra <manishc@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 36/53] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
-Date:   Mon,  3 Feb 2020 16:19:28 +0000
-Message-Id: <20200203161909.447872854@linuxfoundation.org>
+Subject: [PATCH 4.4 45/53] qlcnic: Fix CPU soft lockup while collecting firmware dump
+Date:   Mon,  3 Feb 2020 16:19:37 +0000
+Message-Id: <20200203161910.807035095@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -61,81 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cambda Zhu <cambda@linux.alibaba.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
+[ Upstream commit 22e984493a41bf8081f13d9ed84def3ca8cfd427 ]
 
-This patch fixes the calculation of queue when we restore flow director
-filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
-vf may be zero which makes the queue outside of the rx_ring array.
+Driver while collecting firmware dump takes longer time to
+collect/process some of the firmware dump entries/memories.
+Bigger capture masks makes it worse as it results in larger
+amount of data being collected and results in CPU soft lockup.
+Place cond_resched() in some of the driver flows that are
+expectedly time consuming to relinquish the CPU to avoid CPU
+soft lockup panic.
 
-The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
-
-Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
+Tested-by: Yonggen Xu <Yonggen.Xu@dell.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 1 +
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c  | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 4521181aa0ed9..23fb344f9e1cf 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -4532,7 +4532,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	struct hlist_node *node2;
- 	struct ixgbe_fdir_filter *filter;
--	u64 action;
-+	u8 queue;
- 
- 	spin_lock(&adapter->fdir_perfect_lock);
- 
-@@ -4541,17 +4541,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 
- 	hlist_for_each_entry_safe(filter, node2,
- 				  &adapter->fdir_filter_list, fdir_node) {
--		action = filter->action;
--		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
--			action =
--			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
-+		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
-+			queue = IXGBE_FDIR_DROP_QUEUE;
-+		} else {
-+			u32 ring = ethtool_get_flow_spec_ring(filter->action);
-+			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
-+
-+			if (!vf && (ring >= adapter->num_rx_queues)) {
-+				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
-+				      ring);
-+				continue;
-+			} else if (vf &&
-+				   ((vf > adapter->num_vfs) ||
-+				     ring >= adapter->num_rx_queues_per_pool)) {
-+				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
-+				      vf, ring);
-+				continue;
-+			}
-+
-+			/* Map the ring onto the absolute queue index */
-+			if (!vf)
-+				queue = adapter->rx_ring[ring]->reg_idx;
-+			else
-+				queue = ((vf - 1) *
-+					adapter->num_rx_queues_per_pool) + ring;
-+		}
- 
- 		ixgbe_fdir_write_perfect_filter_82599(hw,
--				&filter->filter,
--				filter->sw_idx,
--				(action == IXGBE_FDIR_DROP_QUEUE) ?
--				IXGBE_FDIR_DROP_QUEUE :
--				adapter->rx_ring[action]->reg_idx);
-+				&filter->filter, filter->sw_idx, queue);
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+index bf892160dd5f0..26263a192a77e 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+@@ -2047,6 +2047,7 @@ static void qlcnic_83xx_exec_template_cmd(struct qlcnic_adapter *p_dev,
+ 			break;
+ 		}
+ 		entry += p_hdr->size;
++		cond_resched();
+ 	}
+ 	p_dev->ahw->reset.seq_index = index;
+ }
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
+index cda9e604a95f6..e5ea8e972b915 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
+@@ -703,6 +703,7 @@ static u32 qlcnic_read_memory_test_agent(struct qlcnic_adapter *adapter,
+ 		addr += 16;
+ 		reg_read -= 16;
+ 		ret += 16;
++		cond_resched();
+ 	}
+ out:
+ 	mutex_unlock(&adapter->ahw->mem_lock);
+@@ -1383,6 +1384,7 @@ int qlcnic_dump_fw(struct qlcnic_adapter *adapter)
+ 		buf_offset += entry->hdr.cap_size;
+ 		entry_offset += entry->hdr.offset;
+ 		buffer = fw_dump->data + buf_offset;
++		cond_resched();
  	}
  
- 	spin_unlock(&adapter->fdir_perfect_lock);
+ 	fw_dump->clr = 1;
 -- 
 2.20.1
 
