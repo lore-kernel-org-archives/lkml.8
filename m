@@ -2,102 +2,91 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E3EC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B05C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C797D2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D52E2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:09:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vCJnleBg"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GHPTUpU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgBCKJa (ORCPT
+        id S1727669AbgBCKJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:09:30 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45648 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgBCKJ3 (ORCPT
+        Mon, 3 Feb 2020 05:09:46 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16558 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727511AbgBCKJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:09:29 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 013A9KwI034849;
-        Mon, 3 Feb 2020 04:09:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580724560;
-        bh=2hUUozdIkXgPq4UCQpd7JyChjZz/QfVlLVWE+xS6/ek=;
-        h=From:To:CC:Subject:Date;
-        b=vCJnleBgkmlugF98liU5HWSItdoPV4r3aHSsVKgVzCaIK+5/u/EjF2/ZCiMF35h/y
-         Iifj9ALiB37FXTVKXUNlCyIa0LdxAHjDfIxJ4eD4WrNEa7p1C0Uqh6fYmIEoDYXOdV
-         pYimNP+Liq1PLp3awnLZSr5HBs9WarHjFRzeOcAU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 013A9JU2025522
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Feb 2020 04:09:20 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 3 Feb
- 2020 04:09:19 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 3 Feb 2020 04:09:19 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 013A9H5l002834;
-        Mon, 3 Feb 2020 04:09:17 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <grygorii.strashko@ti.com>, <ssantosh@kernel.org>,
-        <santosh.shilimkar@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dan.carpenter@oracle.com>,
-        <t-kristo@ti.com>
-Subject: [PATCH] soc: ti: k3-ringacc: Fix dereference before NULL check in k3_ringacc_ring_cfg()
-Date:   Mon, 3 Feb 2020 12:09:16 +0200
-Message-ID: <20200203100916.19057-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 3 Feb 2020 05:09:46 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013A7laG019683;
+        Mon, 3 Feb 2020 11:08:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=+4sb3dxn9Wm1UXCadNBKjHSse+85wiCwWOp50/uIgYk=;
+ b=GHPTUpU7vWN8TA0QE+qyk7CUOKxWDYcSA1qrfaYorG8q4wKKfYPX90r8nJiV7zrwUBwF
+ fSC1ATigccIeEonEyDk51oKNrCsqjZKM2aSr6t3cIDYSWTKtHab9VPjkAUcvr4R/aTPv
+ WfKLrhVp7yVrUJvdVFKJWXixmVqk3m8V86WfldlJScUizvxUK68Uy9mII67LbER2Lii9
+ EPtas/rc+SVGKFuwppF2G0cJPi8LIPkC37Jr10WbJI/L3b7bvRDKACpVkuoQoHSRm2T/
+ 6CLWZF8YKAhcWC612OdeNsEJRP1YICChZsgl+gHCSeF8IY/d6csRg0buL+gXnh9Oq30i MA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xvybdrs6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Feb 2020 11:08:52 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0BA6D10002A;
+        Mon,  3 Feb 2020 11:08:48 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A28A92BE22D;
+        Mon,  3 Feb 2020 11:08:48 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 11:08:47
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH 0/6] ASoC: stm32: improve error management on probe
+Date:   Mon, 3 Feb 2020 11:08:08 +0100
+Message-ID: <20200203100814.22944-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-03_02:2020-02-02,2020-02-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only dereference ring->parent after we have checked that ring is not NULL.
+Improve management of error on probe for STM32 SAI, SPDIFRX and I2S drivers.
+- Handle errors when the driver fails to get a reset controller.
+- Do not print an error trace when deferring probe.
 
-Fixes: 3277e8aa2504 ("soc: ti: k3: add navss ringacc driver")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/soc/ti/k3-ringacc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Olivier Moysan (6):
+  ASoC: stm32: sai: manage error when getting reset controller
+  ASoC: stm32: spdifrx: manage error when getting reset controller
+  ASoC: stm32: i2s: manage error when getting reset controller
+  ASoC: stm32: sai: improve error management on probe deferral
+  ASoC: stm32: spdifrx: improve error management on probe deferral
+  ASoC: stm32: i2s: improve error management on probe deferral
 
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 5fb2ee2ac978..8f90cc56d44d 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -556,11 +556,13 @@ static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
- 
- int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
- {
--	struct k3_ringacc *ringacc = ring->parent;
-+	struct k3_ringacc *ringacc;
- 	int ret = 0;
- 
- 	if (!ring || !cfg)
- 		return -EINVAL;
-+
-+	ringacc = ring->parent;
- 	if (cfg->elm_size > K3_RINGACC_RING_ELSIZE_256 ||
- 	    cfg->mode >= K3_RINGACC_RING_MODE_INVALID ||
- 	    cfg->size & ~K3_RINGACC_CFG_RING_SIZE_ELCNT_MASK ||
+ sound/soc/stm/stm32_i2s.c     | 39 +++++++++++++++++++++++++----------
+ sound/soc/stm/stm32_sai.c     | 26 ++++++++++++++++-------
+ sound/soc/stm/stm32_sai_sub.c | 11 +++++++---
+ sound/soc/stm/stm32_spdifrx.c | 29 ++++++++++++++++++--------
+ 4 files changed, 74 insertions(+), 31 deletions(-)
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
