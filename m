@@ -2,98 +2,95 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7601C3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80F3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A930A20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F50D2073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muo9tv8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgBCDsO (ORCPT
+        id S1727306AbgBCEAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 22:48:14 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42673 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgBCDsN (ORCPT
+        Sun, 2 Feb 2020 23:00:55 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42930 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgBCEAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 22:48:13 -0500
-Received: by mail-yw1-f68.google.com with SMTP id b81so12418618ywe.9;
-        Sun, 02 Feb 2020 19:48:11 -0800 (PST)
+        Sun, 2 Feb 2020 23:00:55 -0500
+Received: by mail-pg1-f194.google.com with SMTP id w21so1303650pgl.9;
+        Sun, 02 Feb 2020 20:00:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rr8HCvzHGy43zP4xWeCYuUUUoHY3g639VB8x/Nydnlg=;
+        b=muo9tv8kjF11m+vSPjqfEII/CZlpoxWRQgX5XYoLk1hjHyL+cVNJGj4bmkAYXzizak
+         Y4i91wtr2ujHX07+XLbFejWyoqTSv9vJBLIpTyKRb9d2bWbxgac+OpiTZqfkDLOzB7ee
+         zyR/RQPUwhb4SNboWPaHLBVcZBtRPCKQpbO835cOLmDYEmFQ2rtA5UHQZKuX5ZiXjwhV
+         kJw6cotpt3LtfSjgPsn7vEKpBHzoc837OBa7+G+RusS0dcQ2LjjphwWSyj2EzPtlzSi/
+         5WlfbkzwXfeqZXAT1Zgh7qAb2k1Y5ZkoS70bn2iQi6O2jZQU3S3gNwmX0zv6STsIxsBQ
+         fzbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EDNDiSp9nE38dUK7CV4IKdLOvyiMIvgC3Y25Ged3MrI=;
-        b=cAdGB1BmMN5dF9RpwuFWPYm8V3WgUMgc5TgcchJsw66BmXCoQoLCeLpUHh/Qo6/iAC
-         rBTBwOKwjiHPTWbCL80wAH70siLp/qcD5p1b+VFHUlKbe9x3W5aicuXQLtwnqda6yYIl
-         FdPUShkbkQHu218tDSVBxicCUIlh/qqkLSshefJKxoqIhBfZZJykHcnwNsmpoKKQfPJO
-         bIsOqlTKaDyX/83dfqiK57X1fnAuQrzhTSsyAT5oX0aDWKcI4kN7ziACe2ZbdTcf1p10
-         7QZ1UqOJRP/DId1U7w50AXHt2g/IyRus6iKocHtQZG37m7R+kEhVmiP/P3SXaFetL7tg
-         qHhg==
-X-Gm-Message-State: APjAAAWbeZJbXQvjbZd+ed4Jix836tcQR285EJQvDRL92uxZKc5Zx8/I
-        j/BiPNue0/NGWDL/llARyp8=
-X-Google-Smtp-Source: APXvYqxKRHzfpXdA0Xnd+3xuvzZMhwrsKhK7ZNEQmiOWjvZoYZtm+fGz9gUtVhYCfZ3h9s6eLYtdsQ==
-X-Received: by 2002:a0d:d1c6:: with SMTP id t189mr16533075ywd.393.1580701691171;
-        Sun, 02 Feb 2020 19:48:11 -0800 (PST)
-Received: from localhost.localdomain (h198-137-20-41.xnet.uga.edu. [198.137.20.41])
-        by smtp.gmail.com with ESMTPSA id m137sm8004823ywd.108.2020.02.02.19.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 19:48:10 -0800 (PST)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org (open list:NFS, SUNRPC, AND LOCKD CLIENTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] NFS: Fix memory leaks
-Date:   Mon,  3 Feb 2020 03:47:53 +0000
-Message-Id: <20200203034753.20527-1-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rr8HCvzHGy43zP4xWeCYuUUUoHY3g639VB8x/Nydnlg=;
+        b=ocnf1lXuXBMZ4AJHhSXwQa5lq9er7rO0JtS/nCvWYbqTmx5sfvGlx1Cyc9MmfN+O+1
+         RmTKD9UuiICbTEa60anSMfbSbB0mbSRVXD128BpTj8Ps5fvhsKnmIhePBa6d/pms7ftJ
+         vKGfwL9o5I+kNA8kp/t3XVdKI6MziAk4XhK0F6Jut6BASX+jyUQiyrOfUD59//1nBnv0
+         dby6Ch0vWr7GYiwHiM5xfZWeQn0VlK1v/QWa5EUVyF0pTfIBK0tSv6fYJpOCqhoNhaPo
+         d/RDvQoGa1Uz5qPlbFHBRd9bjxomGT8vwpem8liFOo/hCjr6VTgWkq9CeWH6eVWzVEKc
+         /osg==
+X-Gm-Message-State: APjAAAW//l1x9ElfNy7TQ+0Jw87cdsEUzRgbkyGMAyBF7sMeLyBykqDO
+        n48HtHZJa2elj2nPRulF+J0=
+X-Google-Smtp-Source: APXvYqw6sOBM5hkQdEcY93EBISXIcWxUa5iFOJ0ybi1o8lz/TCOyKmjVlPeCcfdTU561dRtnIHT7cA==
+X-Received: by 2002:a62:e80a:: with SMTP id c10mr22435421pfi.129.1580702454450;
+        Sun, 02 Feb 2020 20:00:54 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id 28sm14213294pgl.42.2020.02.02.20.00.53
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 02 Feb 2020 20:00:53 -0800 (PST)
+Date:   Mon, 3 Feb 2020 12:00:51 +0800
+From:   chenqiwu <qiwuchen55@gmail.com>
+To:     Bernd Schubert <bernd.schubert@fastmail.fm>
+Cc:     miklos@szeredi.hu, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH] fuse: Allow parallel DIO reads and check NOWAIT case for
+ DIO writes
+Message-ID: <20200203040051.GB11846@cqw-OptiPlex-7050>
+References: <1580614487-1341-1-git-send-email-qiwuchen55@gmail.com>
+ <07d333db-9ed3-2628-673e-cb614c31f29e@fastmail.fm>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07d333db-9ed3-2628-673e-cb614c31f29e@fastmail.fm>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In _nfs42_proc_copy(), 'res->commit_res.verf' is allocated through
-kzalloc() if 'args->sync' is true. In the following code, if
-'res->synchronous' is false, handle_async_copy() will be invoked. If an
-error occurs during the invocation, the following code will not be executed
-and the error will be returned . However, the allocated
-'res->commit_res.verf' is not deallocated, leading to a memory leak. This
-is also true if the invocation of process_copy_commit() returns an error.
-
-To fix the above leaks, redirect the execution to the 'out' label if an
-error is encountered.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- fs/nfs/nfs42proc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 1fe83e0f663e..231204720580 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -334,14 +334,14 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 		status = handle_async_copy(res, dst_server, src_server, src,
- 				dst, &args->src_stateid, restart);
- 		if (status)
--			return status;
-+			goto out;
- 	}
- 
- 	if ((!res->synchronous || !args->sync) &&
- 			res->write_res.verifier.committed != NFS_FILE_SYNC) {
- 		status = process_copy_commit(dst, pos_dst, res);
- 		if (status)
--			return status;
-+			goto out;
- 	}
- 
- 	truncate_pagecache_range(dst_inode, pos_dst,
--- 
-2.17.1
-
+On Sun, Feb 02, 2020 at 10:25:43PM +0100, Bernd Schubert wrote:
+> 
+> 
+> > @@ -1518,6 +1525,9 @@ static ssize_t fuse_direct_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> >  
+> >  		res = __fuse_direct_read(&io, to, &iocb->ki_pos);
+> >  	}
+> > +	inode_unlock_shared(inode);
+> > +
+> > +	file_accessed(iocb->ki_filp);
+> 
+> 
+> Shouldn't the file_accessed() in different patch, with a description? It
+> looks totally unrelated to locking?
+>
+Thanks for your remind! file_accessed() is used to update atime for
+every direct read, it's totally unrelated to locking. I will separate
+it to another patch.
