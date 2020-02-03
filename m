@@ -2,50 +2,51 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487C0C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CCBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194712070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB1320721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgBCIQ2 (ORCPT
+        id S1727801AbgBCIQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:16:28 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:49894 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727240AbgBCIQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 03:16:28 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tp19xdv_1580717712;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tp19xdv_1580717712)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 03 Feb 2020 16:15:12 +0800
-Subject: Re: [PATCH] ocfs2: fix the oops problem when write cloned file
-To:     Gang He <GHe@suse.com>, "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "gechangwei@live.cn" <gechangwei@live.cn>,
-        Shuning Zhang <sunny.s.zhang@oracle.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-References: <20200121050153.13290-1-ghe@suse.com>
- <CH2PR18MB3206F418382332EB25130477CF000@CH2PR18MB3206.namprd18.prod.outlook.com>
- <de23176f-5b84-a785-80a2-0bdc8e3a0fab@linux.alibaba.com>
- <CH2PR18MB3206844EE94EC90A2CBFF85CCF000@CH2PR18MB3206.namprd18.prod.outlook.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <9dfcde60-f8da-6458-4992-ae1d5dcc1ec1@linux.alibaba.com>
-Date:   Mon, 3 Feb 2020 16:15:12 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Mon, 3 Feb 2020 03:16:52 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39146 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727540AbgBCIQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 03:16:51 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 71800479F7C0A6080A88;
+        Mon,  3 Feb 2020 16:16:48 +0800 (CST)
+Received: from [127.0.0.1] (10.57.71.8) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 3 Feb 2020
+ 16:16:38 +0800
+Subject: Re: [PATCH -next] bpf: make btf_check_func_type_match() static
+To:     Yonghong Song <yhs@fb.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>
+CC:     <chenzhou10@huawei.com>, <kafai@fb.com>, <songliubraving@fb.com>,
+        <andriin@fb.com>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <clang-built-linux@googlegroups.com>
+References: <20200203020220.117152-1-yaohongbo@huawei.com>
+ <a29bf101-81b0-68ef-356c-dfdc9c53d899@fb.com>
+From:   Yao HongBo <yaohongbo@huawei.com>
+Message-ID: <f82e64c5-9299-b1a2-41b6-0f3630793d2b@huawei.com>
+Date:   Mon, 3 Feb 2020 16:16:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-In-Reply-To: <CH2PR18MB3206844EE94EC90A2CBFF85CCF000@CH2PR18MB3206.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <a29bf101-81b0-68ef-356c-dfdc9c53d899@fb.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.57.71.8]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,43 +54,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 20/2/3 13:32, Gang He wrote:
-> Hi Joseph,
+On 2/3/2020 2:20 PM, Yonghong Song wrote:
 > 
-> before calling ocfs2_refcount_cow() in the function ocfs2_prepare_inode_for_write(), we do not use inode buffer_head.
-> So, we can let buffer_head is NULL.
-> But, when we invoke ocfs2_refcount_cow() function, we have to pass inode buffer_head without NULL pointer.
-> That is why writing clone file will cause oops and kill the user-space process.
 > 
-Okay, so before commit e74540b28556, we will always get a valid buffer
-head in ocfs2_prepare_inode_for_refcount().
-You can feel free to add:
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> On 2/2/20 6:02 PM, Hongbo Yao wrote:
+>> Fix sparse warning:
+>> kernel/bpf/btf.c:4131:5: warning: symbol 'btf_check_func_type_match' was
+>> not declared. Should it be static?
+> 
+> Yes, static is better since the function is only used in one file.
+> 
+> Please use the tag "[PATCH bpf-next]" instead of "[PATCH -next]".
+> Since this is to fix a sparse warning, I think it should be okay
+> to target bpf-next. Please resubmit after bpf-next reopens in
+> about a week.
 
-BTW, you'd better resend the patch in a single thread, for the
-convenience of merging by akpm.
+OK.
 
-> 
-> ________________________________________
-> From: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Sent: Monday, February 3, 2020 1:15 PM
-> To: Gang He; mark@fasheh.com; jlbec@evilplan.org; gechangwei@live.cn; Shuning Zhang
-> Cc: linux-kernel@vger.kernel.org; ocfs2-devel@oss.oracle.com; akpm@linux-foundation.org
-> Subject: Re: [PATCH] ocfs2: fix the oops problem when write cloned file
-> 
-> 
-> 
-> On 20/2/3 10:17, Gang He wrote:
->> Hello Joseph, Changwei, Sunny and all,
 >>
->> Could you help to review this patch?
->> This patch will fix the oops problem caused by write ocfs2 clone files.
->> The root cause is inode buffer head is NULL when calling ocfs2_refcount_cow.
->> Secondly, we should use EX meta lock when calling ocfs2_refcount_cow.
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+>> ---
+>>   kernel/bpf/btf.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
-> Before commit e74540b28556, we may also use NULL buffer head in case of
-> overwrite, so why there is no such issue before?
+>> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+>> index 8c9d8f266bef..83d3d92023af 100644
+>> --- a/kernel/bpf/btf.c
+>> +++ b/kernel/bpf/btf.c
+>> @@ -4144,7 +4144,7 @@ int btf_distill_func_proto(struct bpf_verifier_log *log,
+>>    * EFAULT - verifier bug
+>>    * 0 - 99% match. The last 1% is validated by the verifier.
+>>    */
+>> -int btf_check_func_type_match(struct bpf_verifier_log *log,
+>> +static int btf_check_func_type_match(struct bpf_verifier_log *log,
+>>                     struct btf *btf1, const struct btf_type *t1,
+>>                     struct btf *btf2, const struct btf_type *t2)
 > 
-> Thanks,
-> Joseph
+> Please also align
+>   struct btf *btf1, const struct btf_type *t1,
+>   struct btf *btf2, const struct btf_type *t2)
+> properly after you added 'static' before the function declaration.
+
+I'll fix it, thanks.
+
+>>   {
+>>
 > 
+> .
+> 
+
