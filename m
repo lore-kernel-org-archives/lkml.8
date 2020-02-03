@@ -2,53 +2,50 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D9CC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41996C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF7321741
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CDF217BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747541;
-	bh=M3igxGJbPwWLFddQF1W+xeYwC2g5LtR0ImoWkxG7tLg=;
+	s=default; t=1580747545;
+	bh=SYyVBxqOvd8PZBMYuPnTKpW3r9nD8zK15FsRGcjFJXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAcqcvfUcvO7SKwrTAvU4iZDcKjJtBEv7dXyOmX3hSlaVUaU+KW+QJEECZTQnnrMV
-	 IO89Fg/xOcACuSwUyzheavsCfAeAk1D/3RFCcYEr1jGOnI3Fgaf/48YSlI0blyjuSH
-	 Hni1IPFrQHnGLKsa0FWB0XcJBzM0KXVg6+o++pmU=
+	b=bJMWC64O6D4s0RCUymBVAERa7zJimlU/5tFzO8voU/gqExMT5o1ZaDTrzk+JH7R4q
+	 mRNnZivNu1IR6Gy+7OqZYNif2CkJklukKHoFix4ea9KFkMfUMMT3LoYeHRLuUk3gmS
+	 xNozMHDo842WWvmOnOFHYcqkb9dV49SQnw0MaUTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgBCQcU (ORCPT
+        id S1730419AbgBCQcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbgBCQcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:18 -0500
+        id S1730407AbgBCQcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:20 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 017E421582;
-        Mon,  3 Feb 2020 16:32:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7153621744;
+        Mon,  3 Feb 2020 16:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747537;
-        bh=M3igxGJbPwWLFddQF1W+xeYwC2g5LtR0ImoWkxG7tLg=;
+        s=default; t=1580747539;
+        bh=SYyVBxqOvd8PZBMYuPnTKpW3r9nD8zK15FsRGcjFJXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+11jaCr1itH753tvxH3G9Fce6yaFQmRzJqq6EtJizraCDBZ5kr3IkX5aLRJei7wV
-         OKC3u3gV0MYA89QHPtbFOI+H8p3U6PIko6qlz4srblQCuYzU6Iq3riU0M7XH0IZi3/
-         QwuV+iEJ2cjoNOy7KOdrUvVkNCkxdFT5KAmT/PIc=
+        b=xobgM9GApQV47iI9SAZJBd/XSfcZ9F+mtbI9vjKKLM08R348eL7pWYm9oehvCSuwh
+         FPYn5Nui+YgBk2QN0dWYi/Mp3hEZT+D7C8Rx8Q8z+HbSfLcrL/AuylqJ5UdX12eKnz
+         pGZt/bYgjDUBbTcVXL6LD5TweG9KpPRWVORwRPFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/70] ixgbevf: Remove limit of 10 entries for unicast filter list
-Date:   Mon,  3 Feb 2020 16:19:47 +0000
-Message-Id: <20200203161917.584823767@linuxfoundation.org>
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 4.19 09/70] PM / devfreq: Add new name attribute for sysfs
+Date:   Mon,  3 Feb 2020 16:19:21 +0000
+Message-Id: <20200203161913.849916643@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,42 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
 
-[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
+commit 2fee1a7cc6b1ce6634bb0f025be2c94a58dfa34d upstream.
 
-Currently, though the FDB entry is added to VF, it does not appear in
-RAR filters. VF driver only allows to add 10 entries. Attempting to add
-another causes an error. This patch removes limitation and allows use of
-all free RAR entries for the FDB if needed.
+The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
+sysfs") changed the node name to devfreq(x). After this commit, it is not
+possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
 
-Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add new name attribute in order to get device name.
+
+Cc: stable@vger.kernel.org
+Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
- 1 file changed, 5 deletions(-)
+ Documentation/ABI/testing/sysfs-class-devfreq |    7 +++++++
+ drivers/devfreq/devfreq.c                     |    9 +++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index 4093a9c52c182..a10756f0b0d8b 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -2066,11 +2066,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	int count = 0;
+--- a/Documentation/ABI/testing/sysfs-class-devfreq
++++ b/Documentation/ABI/testing/sysfs-class-devfreq
+@@ -7,6 +7,13 @@ Description:
+ 		The name of devfreq object denoted as ... is same as the
+ 		name of device using devfreq.
  
--	if ((netdev_uc_count(netdev)) > 10) {
--		pr_err("Too many unicast filters - No Space\n");
--		return -ENOSPC;
--	}
--
- 	if (!netdev_uc_empty(netdev)) {
- 		struct netdev_hw_addr *ha;
++What:		/sys/class/devfreq/.../name
++Date:		November 2019
++Contact:	Chanwoo Choi <cw00.choi@samsung.com>
++Description:
++		The /sys/class/devfreq/.../name shows the name of device
++		of the corresponding devfreq object.
++
+ What:		/sys/class/devfreq/.../governor
+ Date:		September 2011
+ Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1014,6 +1014,14 @@ err_out:
+ }
+ EXPORT_SYMBOL(devfreq_remove_governor);
  
--- 
-2.20.1
-
++static ssize_t name_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct devfreq *devfreq = to_devfreq(dev);
++	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
++}
++static DEVICE_ATTR_RO(name);
++
+ static ssize_t governor_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buf)
+ {
+@@ -1330,6 +1338,7 @@ static ssize_t trans_stat_show(struct de
+ static DEVICE_ATTR_RO(trans_stat);
+ 
+ static struct attribute *devfreq_attrs[] = {
++	&dev_attr_name.attr,
+ 	&dev_attr_governor.attr,
+ 	&dev_attr_available_governors.attr,
+ 	&dev_attr_cur_freq.attr,
 
 
