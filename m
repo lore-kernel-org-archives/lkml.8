@@ -2,129 +2,96 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0259DC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9417CC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EEF21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GHKe7K8s"
+	by mail.kernel.org (Postfix) with ESMTP id 605B12086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580748158;
+	bh=KCRqnPrC1zoA3FxXCtQkGkNTNDI8yiqkX4GiR5ndBRc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HvLsFPFBAVRcMKaw3vUTGn06ZBjK6F1Cwz4j7ke2FYDT9qxUAqawt6LxYwMWgBlHj
+	 cdDvjwWGt2wa73UhrALaodjDtw4ogPOZ1ZCe84wsaAs5zjX3+1CYnGSs/F+hgR74EA
+	 zFlls2cKL7x1QyXn9OALAx1e+x5lk1XQZ+Ra4zSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbgBCQm2 (ORCPT
+        id S1730718AbgBCQeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:42:28 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35634 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731124AbgBCQmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:42:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580748130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=9VWvQGPBU27LRODQE2DAzJDJigt9+M/hKMjwHQzqBmo=;
-        b=GHKe7K8sBu+oI2QraYwK2qk3P2AoWVoT/Lnp8YHxsksWgCEnzagV1FTmbIyYyiWp5RvZ3v
-        drXs3IX7jkza2JUFqe+T1g7VoB0AzH0M/KBjpNRNX2xTnlLFn0LY5aOtYdQutfoTUsc4UV
-        BJjNk7I9mQh21DKPCgvAduOu2m3a6u4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-vsiP23bRPAiOaPkuxqgK3A-1; Mon, 03 Feb 2020 11:42:06 -0500
-X-MC-Unique: vsiP23bRPAiOaPkuxqgK3A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 3 Feb 2020 11:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730394AbgBCQd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:59 -0500
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 155C9100726A;
-        Mon,  3 Feb 2020 16:42:05 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E03510013A7;
-        Mon,  3 Feb 2020 16:42:04 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v5 7/7] locking/lockdep: Add a fast path for chain_hlocks allocation
-Date:   Mon,  3 Feb 2020 11:41:47 -0500
-Message-Id: <20200203164147.17990-8-longman@redhat.com>
-In-Reply-To: <20200203164147.17990-1-longman@redhat.com>
-References: <20200203164147.17990-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by mail.kernel.org (Postfix) with ESMTPSA id E682221744;
+        Mon,  3 Feb 2020 16:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580747639;
+        bh=KCRqnPrC1zoA3FxXCtQkGkNTNDI8yiqkX4GiR5ndBRc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YgPzNomLEL9faHqAyhPoX1llSEwIw3LBAI0ZpgGoIp51fzD7eQ4QD4igsQQWc59P1
+         brRSvrHzjhGUEFINOm8SPNKeAnfphbeqFtNLTQYvL7qwiZq83D1/aamb2yO4DYwrxh
+         F85JTyfas73J03BDXVGxy+S5H7EqhTG2dJoQkVJ8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 49/70] riscv: delete temporary files
+Date:   Mon,  3 Feb 2020 16:20:01 +0000
+Message-Id: <20200203161919.439647477@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
+References: <20200203161912.158976871@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When alloc_chain_hlocks() is called, the most likely scenario is
-to allocate from the primordial chain block which holds the whole
-chain_hlocks[] array initially. It is the primordial chain block if its
-size is bigger than MAX_LOCK_DEPTH. As long as the number of entries left
-after splitting is still bigger than MAX_CHAIN_BUCKETS it will remain
-in bucket 0. By splitting out a sub-block at the end, we only need to
-adjust the size without changing any of the existing linkage information.
-This optimized fast path can reduce the latency of allocation requests.
+From: Ilie Halip <ilie.halip@gmail.com>
 
-This patch does change the order by which chain_hlocks entries are
-allocated. The original code allocates entries from the beginning of
-the array. Now it will be allocated from the end of the array backward.
+[ Upstream commit 95f4d9cced96afa9c69b3da8e79e96102c84fc60 ]
 
-Signed-off-by: Waiman Long <longman@redhat.com>
+Temporary files used in the VDSO build process linger on even after make
+mrproper: vdso-dummy.o.tmp, vdso.so.dbg.tmp.
+
+Delete them once they're no longer needed.
+
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ arch/riscv/kernel/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 70288bb2331d..d05799872882 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2701,15 +2701,19 @@ static inline int chain_block_size(int offset)
- 	return (chain_hlocks[offset + 2] << 16) | chain_hlocks[offset + 3];
- }
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index eed1c137f6183..87f71a6cd3ef8 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -55,7 +55,8 @@ quiet_cmd_vdsold = VDSOLD  $@
+       cmd_vdsold = $(CC) $(KBUILD_CFLAGS) $(call cc-option, -no-pie) -nostdlib -nostartfiles $(SYSCFLAGS_$(@F)) \
+                            -Wl,-T,$(filter-out FORCE,$^) -o $@.tmp && \
+                    $(CROSS_COMPILE)objcopy \
+-                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@
++                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@ && \
++                   rm $@.tmp
  
-+static inline void init_chain_block_size(int offset, int size)
-+{
-+	chain_hlocks[offset + 2] = size >> 16;
-+	chain_hlocks[offset + 3] = (u16)size;
-+}
-+
- static inline void init_chain_block(int offset, int next, int bucket, int size)
- {
- 	chain_hlocks[offset] = (next >> 16) | CHAIN_BLK_FLAG;
- 	chain_hlocks[offset + 1] = (u16)next;
- 
--	if (bucket == 0) {
--		chain_hlocks[offset + 2] = size >> 16;
--		chain_hlocks[offset + 3] = (u16)size;
--	}
-+	if (bucket == 0)
-+		init_chain_block_size(offset, size);
- }
- 
- static inline void add_chain_block(int offset, int size)
-@@ -2809,6 +2813,18 @@ static int alloc_chain_hlocks(int req)
- 			return curr;
- 		}
- 
-+		/*
-+		 * Fast path: splitting out a sub-block at the end of the
-+		 * primordial chain block.
-+		 */
-+		if (likely((size > MAX_LOCK_DEPTH) &&
-+			   (size - req > MAX_CHAIN_BUCKETS))) {
-+			size -= req;
-+			nr_free_chain_hlocks -= req;
-+			init_chain_block_size(curr, size);
-+			return curr + size;
-+		}
-+
- 		if (size > max_size) {
- 			max_prev = prev;
- 			max_curr = curr;
+ # install commands for the unstripped file
+ quiet_cmd_vdso_install = INSTALL $@
 -- 
-2.18.1
+2.20.1
+
+
 
