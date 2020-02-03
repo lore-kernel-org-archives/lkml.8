@@ -2,53 +2,55 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577A9C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18D6C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2B22192A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D07720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747954;
-	bh=arkCkF1UEbJgqIxSxjBDGOgeiZF1m899vWxR5mhEmjs=;
+	s=default; t=1580747957;
+	bh=rEzypx3orKL+EW6WN2sORbNCtEDt/8oE3s4kjLObZcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFP+y25W3gMnmwOS6T0tcVuhz8Hokxx0ys+/ApCY9kngMLUVyIt3Yuus8EEmGKjMn
-	 gg/aNh+wcfRQ63BxvrDiTn7EsToyxzMavsKDsWFf9PXJ853CIi6BxdSubwiKfBFPKl
-	 7VpAuuZzLd07ZQReL9L08fwGmWvxd5irM4BdHEzs=
+	b=M30ApKR0jTDKSt4PiiLzzAv7m+Ve2seA/tOjtx+w67jm7KUMUPPjyE/a1zEsXF7Dh
+	 QTP9OtDdaOjQKPKysjTyLPDhlwnqSWaIAIrd4WJg8Fe07PeT4NyBuaWO4vzfI/IfDM
+	 F3EOYCDZTbhDBmrFWI8G2E41go/PrtSXM9ecWh3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbgBCQhy (ORCPT
+        id S1731388AbgBCQhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:37:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbgBCQhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:39 -0500
+        id S1731349AbgBCQhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:34 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF652087E;
-        Mon,  3 Feb 2020 16:37:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F80C2082E;
+        Mon,  3 Feb 2020 16:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747858;
-        bh=arkCkF1UEbJgqIxSxjBDGOgeiZF1m899vWxR5mhEmjs=;
+        s=default; t=1580747854;
+        bh=rEzypx3orKL+EW6WN2sORbNCtEDt/8oE3s4kjLObZcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B+U5i5fo9EU+UQ7/L5eJIi8WiTj67/q4K2rbp4ApQEwIC2CN6zPda0SzQjfgEHSR2
-         tKsCcLkZGcFOoecE+vgagYb22U2o/xz5NR3VCxZfHgC8b/xf4uHw3mkW59wITU7bT0
-         OGCGEWGfYYTWOS41cMkEfVgPB8kqbSfGdCFF+mL8=
+        b=kg0NlrdlztPI5sE2fHoqn/S1AKy+q4zVrdrhpzWdVyurFTzYvz5wCVJiTgwi5Moi9
+         /UKT2y9++DhLXu55LexEfOC/PIYrFoCC7s15co/Tqc7SlKZqV260LcBX3B5zzp3i7H
+         NoACdA7dkVkDp1DrzthCAA2+4Ebe/asLeki+hz+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 5.5 10/23] PM / devfreq: Add new name attribute for sysfs
-Date:   Mon,  3 Feb 2020 16:20:30 +0000
-Message-Id: <20200203161904.709880157@linuxfoundation.org>
+        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 57/90] riscv: delete temporary files
+Date:   Mon,  3 Feb 2020 16:20:00 +0000
+Message-Id: <20200203161924.646965399@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
-References: <20200203161902.288335885@linuxfoundation.org>
+In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
+References: <20200203161917.612554987@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,66 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Ilie Halip <ilie.halip@gmail.com>
 
-commit 2fee1a7cc6b1ce6634bb0f025be2c94a58dfa34d upstream.
+[ Upstream commit 95f4d9cced96afa9c69b3da8e79e96102c84fc60 ]
 
-The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
-sysfs") changed the node name to devfreq(x). After this commit, it is not
-possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
+Temporary files used in the VDSO build process linger on even after make
+mrproper: vdso-dummy.o.tmp, vdso.so.dbg.tmp.
 
-Add new name attribute in order to get device name.
+Delete them once they're no longer needed.
 
-Cc: stable@vger.kernel.org
-Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-class-devfreq |    7 +++++++
- drivers/devfreq/devfreq.c                     |    9 +++++++++
- 2 files changed, 16 insertions(+)
+ arch/riscv/kernel/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/Documentation/ABI/testing/sysfs-class-devfreq
-+++ b/Documentation/ABI/testing/sysfs-class-devfreq
-@@ -7,6 +7,13 @@ Description:
- 		The name of devfreq object denoted as ... is same as the
- 		name of device using devfreq.
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 49a5852fd07dd..33b16f4212f7a 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -58,7 +58,8 @@ quiet_cmd_vdsold = VDSOLD  $@
+       cmd_vdsold = $(CC) $(KBUILD_CFLAGS) $(call cc-option, -no-pie) -nostdlib -nostartfiles $(SYSCFLAGS_$(@F)) \
+                            -Wl,-T,$(filter-out FORCE,$^) -o $@.tmp && \
+                    $(CROSS_COMPILE)objcopy \
+-                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@
++                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@ && \
++                   rm $@.tmp
  
-+What:		/sys/class/devfreq/.../name
-+Date:		November 2019
-+Contact:	Chanwoo Choi <cw00.choi@samsung.com>
-+Description:
-+		The /sys/class/devfreq/.../name shows the name of device
-+		of the corresponding devfreq object.
-+
- What:		/sys/class/devfreq/.../governor
- Date:		September 2011
- Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -1259,6 +1259,14 @@ err_out:
- }
- EXPORT_SYMBOL(devfreq_remove_governor);
- 
-+static ssize_t name_show(struct device *dev,
-+			struct device_attribute *attr, char *buf)
-+{
-+	struct devfreq *devfreq = to_devfreq(dev);
-+	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
-+}
-+static DEVICE_ATTR_RO(name);
-+
- static ssize_t governor_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
- {
-@@ -1592,6 +1600,7 @@ static ssize_t trans_stat_show(struct de
- static DEVICE_ATTR_RO(trans_stat);
- 
- static struct attribute *devfreq_attrs[] = {
-+	&dev_attr_name.attr,
- 	&dev_attr_governor.attr,
- 	&dev_attr_available_governors.attr,
- 	&dev_attr_cur_freq.attr,
+ # install commands for the unstripped file
+ quiet_cmd_vdso_install = INSTALL $@
+-- 
+2.20.1
+
 
 
