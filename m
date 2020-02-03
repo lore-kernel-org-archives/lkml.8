@@ -2,119 +2,98 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D43C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DDCC33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4319A2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649992082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="akmyOYhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBCMO2 (ORCPT
+        id S1727898AbgBCMQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:14:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33590 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727201AbgBCMO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:14:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4A2C5AD12;
-        Mon,  3 Feb 2020 12:14:25 +0000 (UTC)
-Date:   Mon, 3 Feb 2020 13:14:22 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
-Message-ID: <20200203131422.384cd168@endymion>
-In-Reply-To: <a267161f-c8b3-a11c-7416-3ab9ba19aa82@loongson.cn>
-References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
-        <a267161f-c8b3-a11c-7416-3ab9ba19aa82@loongson.cn>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 3 Feb 2020 07:16:40 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20008 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727783AbgBCMQk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:16:40 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013CEBua002580;
+        Mon, 3 Feb 2020 13:16:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=tRyeAl3e8NEmD+QHaO3MeWwtme06WG9UkinpQDoXHFY=;
+ b=akmyOYhff2JPsD+A4MYUaTNr2KbkzIN6jXi1sosouRRZ95+9bOe3dbjslwDFLmtQlDFB
+ 85N1wiklXjjzt3dz0XRXbdbTApB2YlgEQ0cave8rHnXKc26LvNVre7mVuqGpq4RjymPL
+ opFQSBJVMteuXrBsJ3T1sj07/OKd05Fv0Qyu+kph713O/SR6e0wT/7HZJUY0zgR85og5
+ 0xikAz9HEC6DluG3xKruepWI3Pwe1OV5hxKfchTw5kmtz2dzT0lCfGoRi0ItJIRMa71e
+ XxCPUnWI3oNRoY4xgzOxiWoucu7I+yVsvcePYg1FYns3BLdttyzn7971ZuwEoT2aMMJG xA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xvybds9qv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Feb 2020 13:16:27 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A713C100034;
+        Mon,  3 Feb 2020 13:16:22 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 72D072125DA;
+        Mon,  3 Feb 2020 13:16:22 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 13:16:21
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <lyude@redhat.com>, <jani.nikula@linux.intel.com>
+Subject: [PATCH] drm/dp_mst: Check crc4 value while building sideband message
+Date:   Mon, 3 Feb 2020 13:16:20 +0100
+Message-ID: <20200203121620.9002-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-03_03:2020-02-02,2020-02-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tiezhun,
+Check that computed crc value is matching the one encoded in the message.
 
-On Mon, 3 Feb 2020 16:32:03 +0800, Tiezhu Yang wrote:
-> On 1/16/20 9:26 PM, Tiezhu Yang wrote:
-> > Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-> > (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-> > information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-> > driver can easily match various of mainboards.
-> >
-> > In the SMBIOS reference specification, the table anchor string "_SM_" is
-> > present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-> > but there exists a special case for Loongson platform, when call function
-> > dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-> > it is reserved for SMBIOS and can be normally access in the BIOS.
-> >
-> > This patch works fine on the Loongson 3A3000 platform which belongs to
-> > MIPS architecture and has no influence on the other architectures such
-> > as x86 and ARM.
-> >
-> > Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-> > Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-> > [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > Reviewed-by: Huacai Chen <chenhc@lemote.com>
-> > ---
-> >
-> > v2:
-> >    - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
-> >    - refine definitions and Kconfig by Jiaxun
-> >
-> >   arch/mips/Kconfig           | 10 ++++++++++
-> >   arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
-> >   arch/mips/kernel/setup.c    |  2 ++
-> >   drivers/firmware/dmi_scan.c |  6 +++++-
-> >   4 files changed, 37 insertions(+), 1 deletion(-)
-> >   create mode 100644 arch/mips/include/asm/dmi.h  
-> 
-> 
-> Hi Paul and Jean,
-> 
-> How do you think this patch?
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+CC: lyude@redhat.com
+CC: airlied@linux.ie
+CC: jani.nikula@linux.intel.com
+ drivers/gpu/drm/drm_dp_mst_topology.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Looks good to me and you can add:
-
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-
-for the dmi subsystem part.
-
-> 
-> Should I split it into the following two patches?
-> [PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
-> [PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
-> 
-> The first patch is only related with the common dmi code
-> drivers/firmware/dmi_scan.c, the other patch is only related
-> with the mips code under arch/mips.
-> 
-> If you have any questions or suggestions, please let me know.
-> I am looking forward to your early reply.
-
-I'm fine either way. I you do not split it, as most changes are in the
-mips arch files and I do not expect any conflict in the dmi subsystem
-part, I believe that the patch should be merged by the mips arch
-maintainer.
-
-Thanks,
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 822d2f177f90..eee899d6742b 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -736,6 +736,10 @@ static bool drm_dp_sideband_msg_build(struct drm_dp_sideband_msg_rx *msg,
+ 	if (msg->curchunk_idx >= msg->curchunk_len) {
+ 		/* do CRC */
+ 		crc4 = drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
++		if (crc4 != msg->chunk[msg->curchunk_len - 1])
++			print_hex_dump(KERN_DEBUG, "wrong crc",
++				       DUMP_PREFIX_NONE, 16, 1,
++				       msg->chunk,  msg->curchunk_len, false);
+ 		/* copy chunk into bigger msg */
+ 		memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_len - 1);
+ 		msg->curlen += msg->curchunk_len - 1;
 -- 
-Jean Delvare
-SUSE L3 Support
+2.15.0
+
