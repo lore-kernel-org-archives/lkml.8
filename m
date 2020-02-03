@@ -2,66 +2,76 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DE0C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB5C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295B420721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C987A20732
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgBCXK3 (ORCPT
+        id S1727080AbgBCXOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:10:29 -0500
-Received: from www62.your-server.de ([213.133.104.62]:40660 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgBCXK3 (ORCPT
+        Mon, 3 Feb 2020 18:14:36 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63218 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCXOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:10:29 -0500
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iykrK-0002ZK-R6; Tue, 04 Feb 2020 00:10:26 +0100
-Received: from [178.197.249.21] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iykrK-000T5X-Gc; Tue, 04 Feb 2020 00:10:26 +0100
-Subject: Re: [PATCH bpf] bpftool: Remove redundant "HAVE" prefix from the
- large INSN limit check
-To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200202110200.31024-1-mrostecki@opensuse.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <66fc14f9-5147-7075-8b6c-99939fd68f79@iogearbox.net>
-Date:   Tue, 4 Feb 2020 00:10:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 3 Feb 2020 18:14:36 -0500
+Received: from 79.184.253.222.ipv4.supernova.orange.pl (79.184.253.222) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 200205067b441903; Tue, 4 Feb 2020 00:14:33 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] cpuidle: Documentation: Clean up PM QoS description
+Date:   Tue, 04 Feb 2020 00:14:33 +0100
+Message-ID: <2508205.dfSqNlTTCn@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20200202110200.31024-1-mrostecki@opensuse.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25715/Mon Feb  3 12:37:20 2020)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/2/20 12:02 PM, Michal Rostecki wrote:
-> "HAVE" prefix is already applied by default to feature macros and before
-> this change, the large INSN limit macro had the incorrect name with
-> double "HAVE".
-> 
-> Fixes: 2faef64aa6b3 ("bpftool: Add misc section and probe for large INSN limit")
-> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Applied, thanks!
+Clean up the language in one paragraph in the PM QoS description in
+Documentation/admin-guide/pm/cpuidle.rst.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ Documentation/admin-guide/pm/cpuidle.rst |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+Index: linux-pm/Documentation/admin-guide/pm/cpuidle.rst
+===================================================================
+--- linux-pm.orig/Documentation/admin-guide/pm/cpuidle.rst
++++ linux-pm/Documentation/admin-guide/pm/cpuidle.rst
+@@ -632,16 +632,16 @@ class priority list and destroyed.  If t
+ will be used, again, to determine the new effective value for the whole list
+ and that value will become the new real constraint.
+ 
+-In turn, for each CPU there is only one resume latency PM QoS request
+-associated with the :file:`power/pm_qos_resume_latency_us` file under
++In turn, for each CPU there is one resume latency PM QoS request associated with
++the :file:`power/pm_qos_resume_latency_us` file under
+ :file:`/sys/devices/system/cpu/cpu<N>/` in ``sysfs`` and writing to it causes
+ this single PM QoS request to be updated regardless of which user space
+ process does that.  In other words, this PM QoS request is shared by the entire
+ user space, so access to the file associated with it needs to be arbitrated
+ to avoid confusion.  [Arguably, the only legitimate use of this mechanism in
+ practice is to pin a process to the CPU in question and let it use the
+-``sysfs`` interface to control the resume latency constraint for it.]  It
+-still only is a request, however.  It is a member of a priority list used to
++``sysfs`` interface to control the resume latency constraint for it.]  It is
++still only a request, however.  It is an entry in a priority list used to
+ determine the effective value to be set as the resume latency constraint for the
+ CPU in question every time the list of requests is updated this way or another
+ (there may be other requests coming from kernel code in that list).
+
+
+
