@@ -2,52 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617D6C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247C2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CA121744
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC77322527
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747779;
-	bh=f2TNS1cJv4uSFQ7VapAKb7Sb5+qrgmmBWsgN10lGess=;
+	s=default; t=1580747781;
+	bh=jHcyarDWnbqM933FxFt04dQFZkiJ+aPj6+SmsWhOmmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CcpoFK0U9P3mdcYuPrBhlVx6sbWr7ufU/KHw/Lkdj9qohsJ9W4xcoWjV+7f5D8GuX
-	 hdcM9gpDDb/vmURyuMXPITetF46bTOXLE6xLA4MmEmumDVGoTZHfz7vVrbekP7/s53
-	 sq0VK+1EMMaW2LOO1O/iYanaIDeFiyZGhMsfJvsM=
+	b=EVcnZSURX9F43sbW9kpX2MftxulYVHOjgCvRUCG3RGgSEmZd1Q3alZAi4t37pmike
+	 WsLx5pL8/39xWI4nRUqy/lhzscIZt9u6XrkpzXC04YR1MZK0M5UCmMt8MK9gE9vVl3
+	 UbCIrQ1zS8qdpJxmrvjGOEf0UIdPpC78WOYa62O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbgBCQgS (ORCPT
+        id S1730373AbgBCQgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51394 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731155AbgBCQgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:14 -0500
+        id S1731162AbgBCQgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:16 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 371BD20CC7;
-        Mon,  3 Feb 2020 16:36:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9968E2051A;
+        Mon,  3 Feb 2020 16:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747773;
-        bh=f2TNS1cJv4uSFQ7VapAKb7Sb5+qrgmmBWsgN10lGess=;
+        s=default; t=1580747776;
+        bh=jHcyarDWnbqM933FxFt04dQFZkiJ+aPj6+SmsWhOmmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wbhaw12yk1dcwDTU50PlYwee/w9DTFd6HIi7NVCxL5v+ARCfJ+a8j8ZNayTdT5/AR
-         pG+sMwbo5KSp1MJP/YT809jPUvcUcVpdE61UfpazokYZnkc9whBUhbmMDF7toJZSY9
-         2sqd5wKCQ93Vype8853qiMBKbN7c10J/f54HNnrg=
+        b=15ggu6GDSHYO48a4oR9/zA8Eu3RGjoooKKcpMDsK9myZ5fDa7vOQoy+DzQlXTPi02
+         0AynKCSHVcG4fZqEUAPtY96it3FC7ZtGCT2m9Aoi9hu9P/233PRhweLZv/pnw5f/DZ
+         kirrVfPPejaEHbPRkDcn73Xo2xHDscKlmfq3BI2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+1c6756baf4b16b94d2a6@syzkaller.appspotmail.com,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.4 14/90] reiserfs: Fix memory leak of journal device string
-Date:   Mon,  3 Feb 2020 16:19:17 +0000
-Message-Id: <20200203161919.541691207@linuxfoundation.org>
+        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 58/90] riscv: Less inefficient gcc tishift helpers (and export their symbols)
+Date:   Mon,  3 Feb 2020 16:20:01 +0000
+Message-Id: <20200203161924.732994819@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,41 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Olof Johansson <olof@lixom.net>
 
-commit 5474ca7da6f34fa95e82edc747d5faa19cbdfb5c upstream.
+[ Upstream commit fc585d4a5cf614727f64d86550b794bcad29d5c3 ]
 
-When a filesystem is mounted with jdev mount option, we store the
-journal device name in an allocated string in superblock. However we
-fail to ever free that string. Fix it.
+The existing __lshrti3 was really inefficient, and the other two helpers
+are also needed to compile some modules.
 
-Reported-by: syzbot+1c6756baf4b16b94d2a6@syzkaller.appspotmail.com
-Fixes: c3aa077648e1 ("reiserfs: Properly display mount options in /proc/mounts")
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add the missing versions, and export all of the symbols like arm64
+already does.
 
+This code is based on the assembly generated by libgcc builds.
+
+This fixes a build break triggered by ubsan:
+
+riscv64-unknown-linux-gnu-ld: lib/ubsan.o: in function `.L2':
+ubsan.c:(.text.unlikely+0x38): undefined reference to `__ashlti3'
+riscv64-unknown-linux-gnu-ld: ubsan.c:(.text.unlikely+0x42): undefined reference to `__ashrti3'
+
+Signed-off-by: Olof Johansson <olof@lixom.net>
+[paul.walmsley@sifive.com: use SYM_FUNC_{START,END} instead of
+ ENTRY/ENDPROC; note libgcc origin]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/super.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/riscv/include/asm/asm-prototypes.h |  4 ++
+ arch/riscv/lib/tishift.S                | 75 +++++++++++++++++++------
+ 2 files changed, 61 insertions(+), 18 deletions(-)
 
---- a/fs/reiserfs/super.c
-+++ b/fs/reiserfs/super.c
-@@ -629,6 +629,7 @@ static void reiserfs_put_super(struct su
- 	reiserfs_write_unlock(s);
- 	mutex_destroy(&REISERFS_SB(s)->lock);
- 	destroy_workqueue(REISERFS_SB(s)->commit_wq);
-+	kfree(REISERFS_SB(s)->s_jdev);
- 	kfree(s->s_fs_info);
- 	s->s_fs_info = NULL;
- }
-@@ -2240,6 +2241,7 @@ error_unlocked:
- 			kfree(qf_names[j]);
- 	}
- #endif
-+	kfree(sbi->s_jdev);
- 	kfree(sbi);
+diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
+index c9fecd120d187..8ae9708a8eee8 100644
+--- a/arch/riscv/include/asm/asm-prototypes.h
++++ b/arch/riscv/include/asm/asm-prototypes.h
+@@ -4,4 +4,8 @@
+ #include <linux/ftrace.h>
+ #include <asm-generic/asm-prototypes.h>
  
- 	s->s_fs_info = NULL;
++long long __lshrti3(long long a, int b);
++long long __ashrti3(long long a, int b);
++long long __ashlti3(long long a, int b);
++
+ #endif /* _ASM_RISCV_PROTOTYPES_H */
+diff --git a/arch/riscv/lib/tishift.S b/arch/riscv/lib/tishift.S
+index 15f9d54c7db63..ef90075c4b0a9 100644
+--- a/arch/riscv/lib/tishift.S
++++ b/arch/riscv/lib/tishift.S
+@@ -4,34 +4,73 @@
+  */
+ 
+ #include <linux/linkage.h>
++#include <asm-generic/export.h>
+ 
+-ENTRY(__lshrti3)
++SYM_FUNC_START(__lshrti3)
+ 	beqz	a2, .L1
+ 	li	a5,64
+ 	sub	a5,a5,a2
+-	addi	sp,sp,-16
+ 	sext.w	a4,a5
+ 	blez	a5, .L2
+ 	sext.w	a2,a2
+-	sll	a4,a1,a4
+ 	srl	a0,a0,a2
+-	srl	a1,a1,a2
++	sll	a4,a1,a4
++	srl	a2,a1,a2
+ 	or	a0,a0,a4
+-	sd	a1,8(sp)
+-	sd	a0,0(sp)
+-	ld	a0,0(sp)
+-	ld	a1,8(sp)
+-	addi	sp,sp,16
+-	ret
++	mv	a1,a2
+ .L1:
+ 	ret
+ .L2:
+-	negw	a4,a4
+-	srl	a1,a1,a4
+-	sd	a1,0(sp)
+-	sd	zero,8(sp)
+-	ld	a0,0(sp)
+-	ld	a1,8(sp)
+-	addi	sp,sp,16
++	negw	a0,a4
++	li	a2,0
++	srl	a0,a1,a0
++	mv	a1,a2
++	ret
++SYM_FUNC_END(__lshrti3)
++EXPORT_SYMBOL(__lshrti3)
++
++SYM_FUNC_START(__ashrti3)
++	beqz	a2, .L3
++	li	a5,64
++	sub	a5,a5,a2
++	sext.w	a4,a5
++	blez	a5, .L4
++	sext.w	a2,a2
++	srl	a0,a0,a2
++	sll	a4,a1,a4
++	sra	a2,a1,a2
++	or	a0,a0,a4
++	mv	a1,a2
++.L3:
++	ret
++.L4:
++	negw	a0,a4
++	srai	a2,a1,0x3f
++	sra	a0,a1,a0
++	mv	a1,a2
++	ret
++SYM_FUNC_END(__ashrti3)
++EXPORT_SYMBOL(__ashrti3)
++
++SYM_FUNC_START(__ashlti3)
++	beqz	a2, .L5
++	li	a5,64
++	sub	a5,a5,a2
++	sext.w	a4,a5
++	blez	a5, .L6
++	sext.w	a2,a2
++	sll	a1,a1,a2
++	srl	a4,a0,a4
++	sll	a2,a0,a2
++	or	a1,a1,a4
++	mv	a0,a2
++.L5:
++	ret
++.L6:
++	negw	a1,a4
++	li	a2,0
++	sll	a1,a0,a1
++	mv	a0,a2
+ 	ret
+-ENDPROC(__lshrti3)
++SYM_FUNC_END(__ashlti3)
++EXPORT_SYMBOL(__ashlti3)
+-- 
+2.20.1
+
 
 
