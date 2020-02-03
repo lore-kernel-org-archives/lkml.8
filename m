@@ -2,57 +2,60 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A39C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6FDC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E252253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C972082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747641;
-	bh=cVb0S88UCjPdrHSeJvHEcWnD2n4qSAj8xxjn56lrqBA=;
+	s=default; t=1580747645;
+	bh=PJK013SBG7u4wYHSiXwoaNEf38vYPFURs3nH2OH3sig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zLVn+SzNWvanUtIweeLwKXPzvgZEeVG2ffMR7bYKSh5+9PR3SswfAM9HJ/6tPWHtO
-	 FFnXNeJdt0WncmKuc3pdhTGnwo+r2BHydeGdvB0/UChfvGPRvLhnIAo6QNjnN09K1v
-	 V8VJmSCo5HIDoAr5Wh9SPxQSD6j4erfhI86ddCKw=
+	b=iPqGwHYvpbLkGQA3y0lYB8djYeF8LNAH6DGhroROt0uKld1ibcFKjuLqKEgZqad/s
+	 IsGDKEQ97ARvpl3VH4n6cX5uxnHT66J5/Su/g8lswU0ybakptgJlr/Pj0GE2etpo24
+	 yrAHkq3K9ci3V6DPyQ+2g13AqcFwk5fNqNplH8yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgBCQeA (ORCPT
+        id S1730728AbgBCQeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48088 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730696AbgBCQd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:57 -0500
+        id S1730713AbgBCQeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:02 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8166D2087E;
-        Mon,  3 Feb 2020 16:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57ED121775;
+        Mon,  3 Feb 2020 16:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747637;
-        bh=cVb0S88UCjPdrHSeJvHEcWnD2n4qSAj8xxjn56lrqBA=;
+        s=default; t=1580747641;
+        bh=PJK013SBG7u4wYHSiXwoaNEf38vYPFURs3nH2OH3sig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVcHCEP2S6GunQI+Pp0BNeuGSV+MSZ75Lcszrlw4rlG+pfFnNx7iJ2nwcico/R/dk
-         QAPhalRpo/hZ+Y3wTNN6Uae7UNZ/GwOLI2Royc4ZIIgkwkjkf1mMw8ai1pMaZvPPzv
-         ewFJQODQzBVPWLOO8x2zZuP040OESWwys0WCUH/U=
+        b=u0GGpJkdILJgPjKygiuTzQYqJ2oQVvMFabqZKyDtcx+7qnb8ZT/aGTCpgNcQjDysP
+         PHsAFQ9LJ3ucaqJbDArid0D5l4xgFBTTUqiwaRVojIsZA5ZJ9hr0k9XCZE48mm80/g
+         BZbTfSCXzgFEBvxWm9ljLjf06bWCSfNkriblH4+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/70] ARM: 8955/1: virt: Relax arch timer version check during early boot
-Date:   Mon,  3 Feb 2020 16:20:10 +0000
-Message-Id: <20200203161920.632026854@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
+        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
+        stable@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 01/90] vfs: fix do_last() regression
+Date:   Mon,  3 Feb 2020 16:19:04 +0000
+Message-Id: <20200203161917.784791200@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
-References: <20200203161912.158976871@linuxfoundation.org>
+In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
+References: <20200203161917.612554987@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,50 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 6849b5eba1965ceb0cad3a75877ef4569dd3638e ]
+commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
 
-Updates to the Generic Timer architecture allow ID_PFR1.GenTimer to
-have values other than 0 or 1 while still preserving backward
-compatibility. At the moment, Linux is quite strict in the way it
-handles this field at early boot and will not configure arch timer if
-it doesn't find the value 1.
+Brown paperbag time: fetching ->i_uid/->i_mode really should've been
+done from nd->inode.  I even suggested that, but the reason for that has
+slipped through the cracks and I went for dir->d_inode instead - made
+for more "obvious" patch.
 
-Since here use ubfx for arch timer version extraction (hyb-stub build
-with -march=armv7-a, so it is safe)
+Analysis:
 
-To help backports (even though the code was correct at the time of writing)
+ - at the entry into do_last() and all the way to step_into(): dir (aka
+   nd->path.dentry) is known not to have been freed; so's nd->inode and
+   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
+   inode of the file to get opened is not known.
 
-Fixes: 8ec58be9f3ff ("ARM: virt: arch_timers: enable access to physical timers")
-Acked-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ - after step_into(): inode of the file to get opened is known; dir
+   might be pointing to freed memory/be negative/etc.
+
+ - at the call of may_create_in_sticky(): guaranteed to be out of RCU
+   mode; inode of the file to get opened is known and pinned; dir might
+   be garbage.
+
+The last was the reason for the original patch.  Except that at the
+do_last() entry we can be in RCU mode and it is possible that
+nd->path.dentry->d_inode has already changed under us.
+
+In that case we are going to fail with -ECHILD, but we need to be
+careful; nd->inode is pointing to valid struct inode and it's the same
+as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
+should use that.
+
+Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@kernel.org
+Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/kernel/hyp-stub.S | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/namei.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
-index 82a942894fc04..83e463c05dcdb 100644
---- a/arch/arm/kernel/hyp-stub.S
-+++ b/arch/arm/kernel/hyp-stub.S
-@@ -159,10 +159,9 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
- #if !defined(ZIMAGE) && defined(CONFIG_ARM_ARCH_TIMER)
- 	@ make CNTP_* and CNTPCT accessible from PL1
- 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
--	lsr	r7, #16
--	and	r7, #0xf
--	cmp	r7, #1
--	bne	1f
-+	ubfx	r7, r7, #16, #4
-+	teq	r7, #0
-+	beq	1f
- 	mrc	p15, 4, r7, c14, c1, 0	@ CNTHCTL
- 	orr	r7, r7, #3		@ PL1PCEN | PL1PCTEN
- 	mcr	p15, 4, r7, c14, c1, 0	@ CNTHCTL
--- 
-2.20.1
-
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3249,8 +3249,8 @@ static int do_last(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
+ 	struct dentry *dir = nd->path.dentry;
+-	kuid_t dir_uid = dir->d_inode->i_uid;
+-	umode_t dir_mode = dir->d_inode->i_mode;
++	kuid_t dir_uid = nd->inode->i_uid;
++	umode_t dir_mode = nd->inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool will_truncate = (open_flag & O_TRUNC) != 0;
+ 	bool got_write = false;
 
 
