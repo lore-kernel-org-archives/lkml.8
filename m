@@ -2,146 +2,165 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83020C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493EBC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AC920721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B372084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bf2k9Iu0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FW8oF/xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgBCMmZ (ORCPT
+        id S1727723AbgBCMsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:42:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47197 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727335AbgBCMmY (ORCPT
+        Mon, 3 Feb 2020 07:48:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35697 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgBCMsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580733742;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TYmvaWdfWIY2CO2m0YyjXtoTDOMMJedRMMAbCyAuU5U=;
-        b=Bf2k9Iu0CICu5AAYKJ9DyPpablKXQu/9OvhfQ7qJi4BpsMQfy6/VMZ9P7nEweUX4k0C3Fy
-        UuKC3q6JsruQR+OGnSBYTUE4Z05sN3mi1TVZ8Bne/BgQ91MOQWcWKQGHC+7UeMhGL7z7Of
-        tdWa0pgw5Q3er9dY5xKi6bnICpiIcoA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-Yoyz9xG1O5OjUo-xJH3mtA-1; Mon, 03 Feb 2020 07:42:17 -0500
-X-MC-Unique: Yoyz9xG1O5OjUo-xJH3mtA-1
-Received: by mail-wm1-f71.google.com with SMTP id 7so4739083wmf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 04:42:17 -0800 (PST)
+        Mon, 3 Feb 2020 07:48:10 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y73so7544426pfg.2;
+        Mon, 03 Feb 2020 04:48:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p07v49PtEWK6UbUh2LVFZtqDumji1911rjb5hk+Uiv8=;
+        b=FW8oF/xj1ohlIFDmU/3cnFQw7i6XkGAidGdY2LclPV+mM8kOY4j2FYA64zdHvx8NcW
+         VTx4yXbaIPoc36DmnxaKm9jZx5DZ5SFN/Jv3Y5tL2EIrZxa5jJiiSgUpMy1xpfMZXLYG
+         8Y9bmsuU2cDM8gvQV4wS/a2HIHUDYIWbi/T+N1bR7lESdkyDuReASwtEQQkw5w3YGpJY
+         VdCy4xj55dBfjezgKykdEho38aVGNlv0NTPoJqmiJpuR3uzlfGJcf+vJntNSgHF3pWib
+         AFMXnyluL9priAHPJ4biXf63ObZutZ2IJ/zD25wUXyEiR+WeuL5tkivPVRIGxvEKuZmt
+         izXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=TYmvaWdfWIY2CO2m0YyjXtoTDOMMJedRMMAbCyAuU5U=;
-        b=NNPEB50nDjVhR/Z6N+CVnw/ilpVR/uBuh/C0eQzRuX5VTHk6b+1ai10f+ibG+eGge3
-         +lmmrvDChAyqI6qlnscunS1H3491IIoMCfgOU++J1wNTN4ySw31LpjR7Ea85XnD6d5ZY
-         86WlxjxCCawnjQj/r+tSEhjv6V7zIlsEwxWq9vfrrFJYV31tT3YAGLjkQeRXIKi2EZDv
-         5wXYx9+Q+bMCx7+gyCLYQ5GGXjgUk5ndEPHtTGZT6AAlpzUSRhKeVwB3r08UE+eeUU4K
-         oBAOJgH6SPQYy5JGDOk6SsAIXW8Ab/PIrPXnzJVHHg73ZksV6JWT4r4ABnDNAKFnv81k
-         ob/Q==
-X-Gm-Message-State: APjAAAVgfLj1xL2fAYtn1E2ox95+Y+jSeSFc7tjlkii0rDTsSNH8m3O6
-        /dXSkI4x46Mg5+DRg3YuFMWYBXOrSDiRBmIhAx31gp8ucRw7PyetlN1n34kOAu/JXLnm1j0yzsU
-        w4WTy5i9SG4Ey3SKzo81HKdPk
-X-Received: by 2002:a7b:c0d9:: with SMTP id s25mr4276782wmh.98.1580733736475;
-        Mon, 03 Feb 2020 04:42:16 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwdm4k8EedzgClLA+MN0ll3YAa2bCfhF2w/sjiLgqXACvp+q6FVH7riajO76FmIcSp3p77YNw==
-X-Received: by 2002:a7b:c0d9:: with SMTP id s25mr4276733wmh.98.1580733736187;
-        Mon, 03 Feb 2020 04:42:16 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n3sm23352349wmc.27.2020.02.03.04.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:42:15 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/kvm: do not setup pv tlb flush when not paravirtualized
-In-Reply-To: <20200203101514.GG40679@calabresa>
-References: <20200131155655.49812-1-cascardo@canonical.com> <87wo94ng9d.fsf@vitty.brq.redhat.com> <20200203101514.GG40679@calabresa>
-Date:   Mon, 03 Feb 2020 13:42:14 +0100
-Message-ID: <87r1zbona1.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p07v49PtEWK6UbUh2LVFZtqDumji1911rjb5hk+Uiv8=;
+        b=Ig7LAE8OyJFwSZdOzPLtSzevSTp89MGmoxzMHKh0OuYT/vrljaG8YUB4D87qaYhHjP
+         lwJqmx1xVDvVxjuELxzeSXyoj3f8D/qIfuk4Ni31aPYlq7M3dGabVzuQdCeokq9KGaN4
+         3CYIPyqzXNX77FIVk7xQd9t3Q4S1+3QNwdLVXoAn85iFTDs4XTTe1Vm25yEUb8Gxgjjv
+         tQYO1HMgtNMZ98gJWlkASdqFrV2M2KUiTs6YCKfhT8XZIA5Yu1Q7rIQZb8WlvVbsYBmN
+         RXKyGWHz0VU+ZNpf7i2tVM3X1JYhA9+DXVC6L9AWaXXw87/42L9B6rPXuTGeay8nJsdH
+         U0MA==
+X-Gm-Message-State: APjAAAVVmb4Vz12v5HZLuuyjdUvfC93DAqqmgiXG8job/XcZ6lmeDFU9
+        mcRjBspjFWvoqTKCFF6UuwYLQqts8j8BgqVOF1w=
+X-Google-Smtp-Source: APXvYqzXjtZD005c7kSgyTqpXbdo1LkMDVDE4IVAG/gS70JK5QFhv/RGiKtjjxPKuaO/fi+gSgpJzGkDplJhwVZ5fS0=
+X-Received: by 2002:a63:5a23:: with SMTP id o35mr24793753pgb.4.1580734089554;
+ Mon, 03 Feb 2020 04:48:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com> <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
+ <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+In-Reply-To: <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Feb 2020 14:48:01 +0200
+Message-ID: <CAHp75VcnxUj88Vb=Fn1WKoiM0h2e8cMvG+e16h8RyerfB6WN6w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
+On Mon, Feb 3, 2020 at 2:09 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 03/02/2020 13.16, Andy Shevchenko wrote:
+> > On Mon, Feb 3, 2020 at 12:59 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >> On 03/02/2020 12.37, Andy Shevchenko wrote:
+> >>> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >
+> >>>> Advise users of dma_request_slave_channel() and
+> >>>> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+> >>>
+> >>> How? There are legacy ARM boards you have to care / remove before.
+> >>> DMAengine subsystem makes a p*s off decisions
+> >>
+> >> The dma_slave_map support is added few years back for the legacy ARM
+> >> boards, because we do care.
+> >> daVinci, OMAP1, pxa, s3cx4xx and even m68k/coldfire moved over.
+> >
+> > Then why simple not to convert (start converting) those few drivers to
+> > new API and simple remove the old one?
+>
+> _if_ the dma_request_slave_channel_compat() is really falling back after
+> dma_request_chan() - this is what it calls first, then it is not a
+> simple convert to a new API.
+> 1. The arch needs to define the dma_slave_map for the SoC.
+> 2. The dma driver needs few lines to add it to DMAengine core (+pdata
+> change).
+> After this the _compat() can be replaced with dma_request_chan()
+>
 
-> On Mon, Feb 03, 2020 at 10:59:10AM +0100, Vitaly Kuznetsov wrote:
->> Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
->> 
->> > kvm_setup_pv_tlb_flush will waste memory and print a misguiding message
->> > when KVM paravirtualization is not available.
->> >
->> > Intel SDM says that the when cpuid is used with EAX higher than the
->> > maximum supported value for basic of extended function, the data for the
->> > highest supported basic function will be returned.
->> >
->> > So, in some systems, kvm_arch_para_features will return bogus data,
->> > causing kvm_setup_pv_tlb_flush to detect support for pv tlb flush.
->> >
->> > Testing for kvm_para_available will work as it checks for the hypervisor
->> > signature.
->> >
->> > Besides, when the "nopv" command line parameter is used, it should not
->> > continue as well, as kvm_guest_init will no be called in that case.
->> >
->> > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
->> > ---
->> >  arch/x86/kernel/kvm.c | 3 +++
->> >  1 file changed, 3 insertions(+)
->> >
->> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->> > index 81045aabb6f4..d817f255aed8 100644
->> > --- a/arch/x86/kernel/kvm.c
->> > +++ b/arch/x86/kernel/kvm.c
->> > @@ -736,6 +736,9 @@ static __init int kvm_setup_pv_tlb_flush(void)
->> >  {
->> >  	int cpu;
->> >  
->> > +	if (!kvm_para_available() || nopv)
->> > +		return 0;
->> > +
->> >  	if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
->> >  	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
->> >  	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
->> 
->> The patch will fix the immediate issue, but why kvm_setup_pv_tlb_flush()
->> is just an arch_initcall() which will be executed regardless of the fact
->> if we are running on KVM or not?
->> 
->> In Hyper-V we setup PV TLB flush from ms_hyperv_init_platform() -- which
->> only happens if Hyper-V platform was detected. Why don't we do it from
->> kvm_init_platform() in KVM?
->> 
->> -- 
->> Vitaly
->> 
->
-> Because we can't call the allocator that early.
->
-> Also, see the thread where this was "decided", the v6 of the original patch:
->
-> https://lore.kernel.org/kvm/20171129162118.GA10661@flask/
+> In most cases I do not have access to documentation and boards to test.
 
-Ok, I see, it's basically about what we prioritize: shorter boot time vs
-smaller memory footprint. I'd personally vote for the former but the
-opposite opinion is equally valid. Let's preserve the status quo.
+So, why everyone with the boards outside of your scope has to suffer?
+
+...
+
+> >> Imho it is confusing to have 4+ APIs to do the same thing, but in a
+> >> slightly different way.
+> >
+> > It was always an excuse by authors "that too many drivers to convert..."
+>
+> Sure, but before you accuse anyone with neglect, can you check the git
+> log for 'dma_request_slave_channel' in the commit messages?
+
+It's good people, and you, are taking care of it, but make user suffer
+because somebody wants to call for *developers* is a bad idea. And it
+happened not first time in the DMA engine subsystem.
+
+...
+
+> > No, it's a reason when you first take care of existing users and
+> > decide to obsolete an API followed by removal few releases later.
+>
+> I'm fine to drop the pr_info()
+
+Yes, please do.
+
+> and the __deprecated mark for
+> dma_request_slave_channel.
+
+This OTOH is for *developers* and its scope won't scary people. So,
+it's more or less fine.
+
+> > But
+> > I see no reason to keep such APIs at all, so, instead of this
+> > *wonderful* messages perhaps somebody should do better work?
+>
+> To touch the _compat() variant one needs to have access to the
+> documentation of the SoC on which the code falls back. It is not a
+> matter of sloppy/poor/ignorant/etc work attitude.
+> I have kept clear on touching those few drivers using it [1] as I don't
+> have documentation.
+>
+> >> New drivers should not use the old API i new code and developers tend to
+> >> pick the API they use after a quick 'git grep dma_request_' and see what
+> >> the majority is using.
+> >
+> > Isn't it a point to do better review rather than scary end users?
+>
+> Sure, but we rarely CCd on new client drivers for DMAengine API usage.
+
+Linux Next allows people to `git grep -n dma_slave_DO_NOT_CALL` and
+tell developers. Isn't it the job good maintainer can do?
+
+> [1] fwiw, there are drivers using dma_request_channel() and by the look
+> their use is either _compat() or the dma_request_chan_by_mask() style
+> and some even have a twist here and there...
+
+Bottom line, if you need to tell *developers* about something, please
+don't bother *end users*.
 
 -- 
-Vitaly
-
+With Best Regards,
+Andy Shevchenko
