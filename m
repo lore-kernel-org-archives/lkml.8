@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD5AC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31C5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2751C21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974D421582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747682;
-	bh=WYbTuLuNxFsPNJfXjUbDq6+/+krcm/RTvzoJb9T8RR8=;
+	s=default; t=1580747685;
+	bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGWSAAJrGPig8jGyZUyVIJXPt+gM27kkenkaoaMqSR870pQLcSesJ5gTqMCTkjTya
-	 gVpSnlsMHj3hwc7Y70FaTi5AwOQiPBXsPS5odMtLDpOGdXuoN+Gl8r+iLOokAK543u
-	 HBAufcRbH6QlbZgyGnW0PsYaCmY6E9NyqXW8X9oM=
+	b=eZOhIY59fDEEswtWH5sayfbARhzCinoloDvR001DxuFpFaTGTV3xepZUmftbh+1/+
+	 3Q9BlOG18DN0DxI7TknPAIBjU2eeWKG2qO8Mu607VeOPfxGQaPuIpSsMEJSg6F5KvD
+	 H2vhQ0VPImjRS7XI3SaX4CfnTnWgnvbzEIsdWmxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbgBCQel (ORCPT
+        id S1730845AbgBCQeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49030 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730820AbgBCQei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:38 -0500
+        id S1730815AbgBCQek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:40 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B73272051A;
-        Mon,  3 Feb 2020 16:34:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2142F20CC7;
+        Mon,  3 Feb 2020 16:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747677;
-        bh=WYbTuLuNxFsPNJfXjUbDq6+/+krcm/RTvzoJb9T8RR8=;
+        s=default; t=1580747679;
+        bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aK9tCDZz6kpHnkXntbx9NdfmFqVLCpwycbxgNnUleZpfiODE3AVTugARTDZ2u/pz3
-         L3mkCPL++XfyY0E7uaWdDe+9pVJSwecsf/VRO7KoDMgYWXoYycjFzVAAAWwx6ZSMmm
-         I+eI9iBKYpYK7kMrw4KG35blCgif0dEVSiVIveB8=
+        b=bPuSEoKFYbDuHrRmRZGVwxoGkvyRoyYI78CPa7lCS3KXBcMlpakPvoFSUTzaCULEW
+         nj5iDy1dY0oXc030FQHl5LjgzCf9F1aBu3HeTDPWkAsnXEaNZtmP08MMUEA3zsbwx3
+         i12q0BKHiOiaBQzBRjFKaZYgI1MtoksVr2stV14Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunhao Tian <18373444@buaa.edu.cn>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Guillaume La Roque <glaroque@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 24/90] clk: sunxi-ng: v3s: Fix incorrect number of hw_clks.
-Date:   Mon,  3 Feb 2020 16:19:27 +0000
-Message-Id: <20200203161920.818308603@linuxfoundation.org>
+Subject: [PATCH 5.4 25/90] arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
+Date:   Mon,  3 Feb 2020 16:19:28 +0000
+Message-Id: <20200203161920.928315872@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,59 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhao Tian <18373444@buaa.edu.cn>
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-[ Upstream commit 4ff40d140e2a2060ef6051800a4a9eab07624f42 ]
+[ Upstream commit 30388cc075720aa0af4f2cb5933afa1f8f39d313 ]
 
-The hws field of sun8i_v3s_hw_clks has only 74
-members. However, the number specified by CLK_NUMBER
-is 77 (= CLK_I2S0 + 1). This leads to runtime segmentation
-fault that is not always reproducible.
+add gpio irq to support interrupt trigger mode.
 
-This patch fixes the problem by specifying correct clock number.
-
-Signed-off-by: Yunhao Tian <18373444@buaa.edu.cn>
-[Maxime: Also remove the CLK_NUMBER definition]
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 4 ++--
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.h | 2 --
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index 5c779eec454b6..0e36ca3bf3d52 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -618,7 +618,7 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
- 		[CLK_MBUS]		= &mbus_clk.common.hw,
- 		[CLK_MIPI_CSI]		= &mipi_csi_clk.common.hw,
- 	},
--	.num	= CLK_NUMBER,
-+	.num	= CLK_PLL_DDR1 + 1,
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+index 3435aaa4e8db5..5d6a8dafe8dc0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+@@ -361,6 +361,8 @@
  
- static struct clk_hw_onecell_data sun8i_v3_hw_clks = {
-@@ -700,7 +700,7 @@ static struct clk_hw_onecell_data sun8i_v3_hw_clks = {
- 		[CLK_MBUS]		= &mbus_clk.common.hw,
- 		[CLK_MIPI_CSI]		= &mipi_csi_clk.common.hw,
- 	},
--	.num	= CLK_NUMBER,
-+	.num	= CLK_I2S0 + 1,
- };
- 
- static struct ccu_reset_map sun8i_v3s_ccu_resets[] = {
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-index b0160d305a677..108eeeedcbf76 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-@@ -51,6 +51,4 @@
- 
- #define CLK_PLL_DDR1		74
- 
--#define CLK_NUMBER		(CLK_I2S0 + 1)
--
- #endif /* _CCU_SUN8I_H3_H_ */
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
++		interrupt-parent = <&gpio_intc>;
++		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+ 		max-speed = <2000000>;
+ 		clocks = <&wifi32k>;
 -- 
 2.20.1
 
