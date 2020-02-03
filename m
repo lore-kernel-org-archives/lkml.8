@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E839C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D4BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022F52087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8356421744
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747709;
-	bh=qVSo41/s7T8HG9ndWY0t08ZWXbSoREZ6+XJRms8b+Lw=;
+	s=default; t=1580747712;
+	bh=9ty3tMdqE5fKLEoeDFTtG79USBsuNwJvzjucfUNDR0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XF9JeBPfbarPMfBaKi+NpHQvkDACrcWTrr16oIiyMNOvn3lEruCUA3btfsjCguGXY
-	 lkBXmt5ugRJ4iQhcQcgHafDMxjwuKffMdsWKoHXFnR2LzzHB9nKiVuqJ4klXfiMJsn
-	 attOW+hUZQ1bV/QX2qtwIYukhS4zsbGooAwlJ55Y=
+	b=wH13QEG3Mda4ehq8Sc8q8lKezE5fz5gmd7gUPuuBdUglCIdNF0dF4P2lLkd9Y5ZeS
+	 C9PYM1acaKID2BZvTuToAK2lR94Is0nhDVeGwtqDXYDRj3BvEwiratxJo3VtbQmP1f
+	 yrfI86Hpk+0LngLm5d+aisg5GxOLI2ZTmmVNuJsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgBCQfH (ORCPT
+        id S1730605AbgBCQfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49662 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:35:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbgBCQfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:04 -0500
+        id S1730901AbgBCQfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:08 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F382C2087E;
-        Mon,  3 Feb 2020 16:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82B42087E;
+        Mon,  3 Feb 2020 16:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747703;
-        bh=qVSo41/s7T8HG9ndWY0t08ZWXbSoREZ6+XJRms8b+Lw=;
+        s=default; t=1580747708;
+        bh=9ty3tMdqE5fKLEoeDFTtG79USBsuNwJvzjucfUNDR0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koubNpJ3fmbGmG/lxaTGCYC5QNmpee7hK3OcqkMPWI5oMpqr9cAk1CJEsirojbn1b
-         0rWzf9tt4rwZdxv34UHi7nsLhC8XeDODLap1CVkfQdIApXXrKavANtIcqCAJafhhFe
-         t5Aayyc8mj4K0RG0nfzCoHsqD/RYdBOQ61S/6SWw=
+        b=C6kd/Lcj4Y+37CyYYv76a1g7AReUEujwnsUnXXcwxZhUI/bJsO/cnlyXBcB9iqkL4
+         r81lV/R3FcckIuLUun1ThEWvnOWRsQXoBhv7CgQ+wA2qkQTZ6b7pECwhUPY9g0yROJ
+         Ev8OhPcvv8Euej7gWrSEoN9+NjCG0IZpHBOFH0xA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 34/90] mac80211: mesh: restrict airtime metric to peered established plinks
-Date:   Mon,  3 Feb 2020 16:19:37 +0000
-Message-Id: <20200203161922.190564249@linuxfoundation.org>
+Subject: [PATCH 5.4 36/90] ASoC: rt5640: Fix NULL dereference on module unload
+Date:   Mon,  3 Feb 2020 16:19:39 +0000
+Message-Id: <20200203161922.450876464@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,53 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
+[ Upstream commit 89b71b3f02d8ae5a08a1dd6f4a2098b7b868d498 ]
 
-The following warning is triggered every time an unestablished mesh peer
-gets dumped. Checks if a peer link is established before retrieving the
-airtime link metric.
+The rt5640->jack is NULL if jack is already disabled at the time of
+driver's module unloading.
 
-[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
-               airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
-[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022838] Call Trace:
-[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
-[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
-[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
-[ 9563.023120]  netlink_dump+0x17b/0x370
-[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
-[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
-[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
-[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
-[ 9563.023210]  do_syscall_64+0x4e/0x140
-[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
-[rewrite commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200106014707.11378-1-digetx@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/codecs/rt5640.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index 68af623063858..d699833703819 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -328,6 +328,9 @@ u32 airtime_link_metric_get(struct ieee80211_local *local,
- 	unsigned long fail_avg =
- 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
+diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
+index adbae1f36a8af..747ca248bf10c 100644
+--- a/sound/soc/codecs/rt5640.c
++++ b/sound/soc/codecs/rt5640.c
+@@ -2432,6 +2432,13 @@ static void rt5640_disable_jack_detect(struct snd_soc_component *component)
+ {
+ 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
  
-+	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
-+		return MAX_METRIC;
++	/*
++	 * soc_remove_component() force-disables jack and thus rt5640->jack
++	 * could be NULL at the time of driver's module unloading.
++	 */
++	if (!rt5640->jack)
++		return;
 +
- 	/* Try to get rate based on HW/SW RC algorithm.
- 	 * Rate is returned in units of Kbps, correct this
- 	 * to comply with airtime calculation units
+ 	disable_irq(rt5640->irq);
+ 	rt5640_cancel_work(rt5640);
+ 
 -- 
 2.20.1
 
