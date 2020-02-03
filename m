@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8542C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8AAC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD8C2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C502087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747570;
-	bh=3X1PU6uQea7BRgZqf4K6xrZwu/6yQq6UNJ+3wSZR3WY=;
+	s=default; t=1580747575;
+	bh=LhOqOE5Kws2Soqj4/HwGuQ0Mpx90Ny6cQYVhR9F1lZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIEZ9HJMB3IsjQbiGM3oquQskIjVsh5aLlkY+O1Es76bLLsaLv/PZ3rQp26VJhyYy
-	 zKk1cbhxn5qq15j0UJXNVNFSUqERfCg2dWHIxv2I1N3scytem3d3m7epPe6Sfpl18z
-	 yBflfhxUwnIIQSYbCiBuXpdNZpkL2A+jBP+dFhzg=
+	b=MyoHIPIVo5Y/UI0NDxEcRrWiT7KzuXO6de2BVY71pwFFBNXi0WFNm13Ak62aaySi3
+	 3c5yBWXAs674jbPGnrVqgWb28fImsmDDZ4efClamCZ1e1DEDOP9bNpmIWzhuLwM/nI
+	 PaxsKJcabL9tpoCW4QzDZo4BSJhZtMY5lvQkG0wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgBCQcu (ORCPT
+        id S1729219AbgBCQcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730467AbgBCQco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:44 -0500
+        id S1730482AbgBCQcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:51 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B972082E;
-        Mon,  3 Feb 2020 16:32:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68B8E2082E;
+        Mon,  3 Feb 2020 16:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747563;
-        bh=3X1PU6uQea7BRgZqf4K6xrZwu/6yQq6UNJ+3wSZR3WY=;
+        s=default; t=1580747570;
+        bh=LhOqOE5Kws2Soqj4/HwGuQ0Mpx90Ny6cQYVhR9F1lZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEFk3Jh2AWdCeDcbcttWcbDy3qqHyA3PizqQOxdBLbry7HvM34C1JIiE4iXYG6aM5
-         b/631mWC0Lu0/tCv2bFmf3WeBxlyaDDTFoKk02NvAu+WtxTtkcFn2BGnonUSk3qf4k
-         Yr1h1CSq4QjsKEFd1nYZNlWIpAEZrOgJy9tER+xI=
+        b=xiH79BnaynXuf7ztsgWke4o4LI1kZwWUKHY1QQ/lTSnWBAEq1RQ52rNwW+862fm6a
+         WHjBHVqFqAQjLABfG6a4GVXTx1pGj6mHK+8NA4Fic0MkgyfpRFXczLC547ZbchRNJJ
+         qkruYb4KLO5cPmr2Snp/6DG7uVoOPFdCqAt2qmKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/70] wireless: wext: avoid gcc -O3 warning
-Date:   Mon,  3 Feb 2020 16:19:57 +0000
-Message-Id: <20200203161918.866439075@linuxfoundation.org>
+Subject: [PATCH 4.19 47/70] net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec
+Date:   Mon,  3 Feb 2020 16:19:59 +0000
+Message-Id: <20200203161919.146287783@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,54 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit e16119655c9e6c4aa5767cd971baa9c491f41b13 ]
+[ Upstream commit 8f1880cbe8d0d49ebb7e9ae409b3b96676e5aa97 ]
 
-After the introduction of CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3,
-the wext code produces a bogus warning:
+With the implementation of the system reset controller we lost a setting
+that is currently applied by the bootloader and which configures the IMP
+port for 2Gb/sec, the default is 1Gb/sec. This is needed given the
+number of ports and applications we expect to run so bring back that
+setting.
 
-In function 'iw_handler_get_iwstats',
-    inlined from 'ioctl_standard_call' at net/wireless/wext-core.c:1015:9,
-    inlined from 'wireless_process_ioctl' at net/wireless/wext-core.c:935:10,
-    inlined from 'wext_ioctl_dispatch.part.8' at net/wireless/wext-core.c:986:8,
-    inlined from 'wext_handle_ioctl':
-net/wireless/wext-core.c:671:3: error: argument 1 null where non-null expected [-Werror=nonnull]
-   memcpy(extra, stats, sizeof(struct iw_statistics));
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from arch/x86/include/asm/string.h:5,
-net/wireless/wext-core.c: In function 'wext_handle_ioctl':
-arch/x86/include/asm/string_64.h:14:14: note: in a call to function 'memcpy' declared here
-
-The problem is that ioctl_standard_call() sometimes calls the handler
-with a NULL argument that would cause a problem for iw_handler_get_iwstats.
-However, iw_handler_get_iwstats never actually gets called that way.
-
-Marking that function as noinline avoids the warning and leads
-to slightly smaller object code as well.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200107200741.3588770-1-arnd@arndb.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 01b0ac07589e ("net: dsa: bcm_sf2: Add support for optional reset controller line")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/wext-core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/wireless/wext-core.c b/net/wireless/wext-core.c
-index 5e677dac2a0ce..69102fda9ebd4 100644
---- a/net/wireless/wext-core.c
-+++ b/net/wireless/wext-core.c
-@@ -657,7 +657,8 @@ struct iw_statistics *get_wireless_stats(struct net_device *dev)
- 	return NULL;
- }
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 02a4187d81bd0..c936090076706 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -72,7 +72,7 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
  
--static int iw_handler_get_iwstats(struct net_device *		dev,
-+/* noinline to avoid a bogus warning with -O3 */
-+static noinline int iw_handler_get_iwstats(struct net_device *	dev,
- 				  struct iw_request_info *	info,
- 				  union iwreq_data *		wrqu,
- 				  char *			extra)
+ 		/* Force link status for IMP port */
+ 		reg = core_readl(priv, offset);
+-		reg |= (MII_SW_OR | LINK_STS);
++		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
+ 		core_writel(priv, reg, offset);
+ 
+ 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 -- 
 2.20.1
 
