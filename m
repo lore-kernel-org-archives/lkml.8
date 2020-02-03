@@ -2,115 +2,139 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1985C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8CDC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2CE20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAA92084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PuWaEsvT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bvGYZeEZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgBCXQe (ORCPT
+        id S1727177AbgBCXQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:16:34 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37622 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgBCXQe (ORCPT
+        Mon, 3 Feb 2020 18:16:55 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5715 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgBCXQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:16:34 -0500
-Received: by mail-ot1-f67.google.com with SMTP id d3so15375203otp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gsc+LSdKFmfEHsLu/PX4b/f2W5uTYqD7V4ZzUh0Ir80=;
-        b=PuWaEsvTmioKz64Q7uPVIOp/N9rPTq6akD7fqQtuRHWmOto7GXFjEFiiaZpfiF2Oxm
-         iiczLvMdxA7gX9/mjBZ8ZtnwN2sHqrC4OBRhqMuKo/g8CFJUF+GRekmD2R+YG1Iv8ntP
-         fvondbVEOz76kPzh9Un/lXTwJbkoWs/H0ReXrgjISGWRnNPuEoN9WDxUbtR5u29xfZkT
-         oAskXk7P2RCKYytwQ3FeJKx5ywr9hbBBXemLv/eTKuTK7Wqc8IrNS1TLr78w9ZSqkxGE
-         M2MJ58f6NMmbvet66LP8q6Ze6KZ4eCoAqPGksDNrj2NLgtH1atGYQqMO7zviLvsOv0oa
-         pnWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gsc+LSdKFmfEHsLu/PX4b/f2W5uTYqD7V4ZzUh0Ir80=;
-        b=ifG6SA9BsdfQA1YK7T8ZChpx9sSrYHHM+EP+lKUFxPmIovRhQioFgbjv2Xxiv1gF2F
-         0qM4Y5SyeSFHrMR6jrLbsdJ0R1FRdaPTJd2xOk9AORDPd35G8kZEg8pvkLxTy7QLyBTO
-         Rv0+C4TFckcm8xmO2R87AOMKP5LYGjHqv8Vx9EKiRHPGBokKEtEEvSbQ8IL/Xw7EWdBH
-         ROGdiP41rAfBwDW+nTYTmKvSqnWI6R0g8aairGh3cVhwGOwpB8bTMHux22WqRjKVzEJ5
-         yiPlgo9Jvp3VceI/vPaLHXbGrN8sodrSsdW58GrcIDKGYbBWGyDMEqDfHZ9TuY2kxabL
-         or4A==
-X-Gm-Message-State: APjAAAW5QKChKT37Zj71ieAzgDoYlVHyCV7cBC1+N4pJsSr6sMDgVumO
-        n0ncck50bAtIgShNCxBRhla/xT8pdXoK4Mr/M+svXQ==
-X-Google-Smtp-Source: APXvYqxks0BGaZknNqKFAhn+gbM4R5qvozx7t1UrbqkSMA2wJouCmnamEYFBah6ouIgs/03HiorFYLE+SdLRPuvskdA=
-X-Received: by 2002:a9d:518b:: with SMTP id y11mr18610845otg.349.1580771791890;
- Mon, 03 Feb 2020 15:16:31 -0800 (PST)
+        Mon, 3 Feb 2020 18:16:54 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e38a9ac0002>; Mon, 03 Feb 2020 15:15:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 15:16:52 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 15:16:52 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 23:16:52 +0000
+Subject: Re: [PATCH v3 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-11-jhubbard@nvidia.com>
+ <20200203135320.edujsfjwt5nvtiit@box>
+ <0425e1e6-f172-91df-2251-7583fcfed3e6@nvidia.com>
+ <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
+ <0a81878a-1f7f-daec-0833-d5b91d197ddf@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <aa33fc2c-956b-4197-e418-220198827ce6@nvidia.com>
+Date:   Mon, 3 Feb 2020 15:16:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200115012651.228058-1-almasrymina@google.com> <alpine.DEB.2.21.2001291303230.175731@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.21.2001291303230.175731@chino.kir.corp.google.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Mon, 3 Feb 2020 15:16:21 -0800
-Message-ID: <CAHS8izNq17U6i-RzHZ6tCOVQza_CGngJc0X2ZmqPHTH7y4kfdg@mail.gmail.com>
-Subject: Re: [PATCH v10 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
-To:     David Rientjes <rientjes@google.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0a81878a-1f7f-daec-0833-d5b91d197ddf@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580771756; bh=gvY+g+j4Cj7DxqzAg/mvEPWkOwg/CtLtNejZlwoZKR0=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bvGYZeEZhdzmUm7/dYb8FIKdGpgeZzC3J0CrzLhhHGHjYXMti9hHN9MSqVzHFcNo0
+         oNMt21uHiUzvprhIl/oMCokx6Bbcmizhamb59Yb6eSD8v4BqKb/x0DEXedh45mcmhN
+         hGr850FTLsQiwe3uEaxwRtsJ1WVB3xWH1EEgMpDLQuZheUBgU/jZxNtRAM1oTcHFV6
+         om2FUKOUPW2PMVRq9cYZUwhHTtlezrfRAzh+rXyVycb+FA00v6cYHjU2y9iFdSSWOb
+         VgzH+jvJzuWzEmJfzcVK8YTKu5LLf4ZhsaIwz8fQvZgCZ8G0ftJVPMd+dd8BCjyMz8
+         CBGwBZbi5Qp0g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Proposed Solution:
-> > A new page counter named
-> > 'hugetlb.xMB.reservation_[limit|usage|max_usage]_in_bytes'. This counter has
-> > slightly different semantics than
-> > 'hugetlb.xMB.[limit|usage|max_usage]_in_bytes':
-> >
->
-> Changelog looks like it needs to be updated with the new resv naming.
->
+On 2/3/20 1:34 PM, John Hubbard wrote:
+> On 2/3/20 1:30 PM, Kirill A. Shutemov wrote:
+>> On Mon, Feb 03, 2020 at 01:04:04PM -0800, John Hubbard wrote:
+>>> On 2/3/20 5:53 AM, Kirill A. Shutemov wrote:
+>>>> On Fri, Jan 31, 2020 at 07:40:27PM -0800, John Hubbard wrote:
+>>>>> diff --git a/mm/gup.c b/mm/gup.c
+>>>>> index c10d0d051c5b..9fe61d15fc0e 100644
+>>>>> --- a/mm/gup.c
+>>>>> +++ b/mm/gup.c
+>>>>> @@ -29,6 +29,19 @@ struct follow_page_context {
+>>>>>  	unsigned int page_mask;
+>>>>>  };
+>>>>>  
+>>>>> +#ifdef CONFIG_DEBUG_VM
+>>>>
+>>>> Why under CONFIG_DEBUG_VM? There's nothing about this in the cover letter.
+>>>>
+>>>
+>>> Early on, gup_benchmark showed a really significant slowdown from using these 
+>>> counters. And I don't doubt that it's still the case.
+>>>
+>>> I'll re-measure and add a short summary and a few numbers to the patch commit
+>>> description, and to the v4 cover letter.
+>>
+>> Looks like you'll show zeros for these counters if debug is off. It can be
+>> confusing to the user. I think these counters should go away if you don't
+>> count them.
+>>
+> 
+> OK, that's a good point. (And in fact, the counters==0 situation already led me
+> astray briefly while debugging with Leon R, even. heh.) I'll remove them entirely for
+> the !CONFIG_DEBUG_VM case.
+> 
 
-I updated to the rsvd naming, which you suggested earlier and Mike
-agreed was better.
+On second thought, let me do some more careful performance testing. I don't recall
+now if I was just removing every possible perf slowdown item, when I made this decision.
+It could be that the perf is not affected, and I could just leave this feature enabled
+at all times, which would be nicer.
 
-> > +
-> >  static inline
-> >  struct hugetlb_cgroup *hugetlb_cgroup_from_css(struct cgroup_subsys_state *s)
-> >  {
->
-> Small nit: hugetlb_cgroup_get_counter(), to me, implies incrementing a
-> reference count, perhaps a better name would be in order.  No strong
-> preference.
->
+And after all, these counters were designed for pretty hot-path items. I'll report back
+with results...
 
-Changed
-> >       /* Add the events file */
-> > -     cft = &h->cgroup_files_dfl[2];
-> > +     cft = &h->cgroup_files_dfl[4];
-> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events", buf);
-> >       cft->private = MEMFILE_PRIVATE(idx, 0);
-> >       cft->seq_show = hugetlb_events_show;
->
-> Any cleanup to __hugetlb_cgroup_file_dfl_init() and
-> __hugetlb_cgroup_file_legacy_init() that is possible would be great in a
-> follow-up patch :)
->
 
-Will do!
+thanks,
+-- 
+John Hubbard
+NVIDIA
 
-> Other than that, this looks very straight forward.
->
-> Acked-by: David Rientjes <rientjes@google.com>
