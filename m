@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6423C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00CC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB4D20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAA52086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748335;
-	bh=lJLO9iFZFVO//ewKajxcoDFThhXyNMmZq7PozIZ+tVg=;
+	s=default; t=1580748343;
+	bh=0uOWnKSh83fXudGqMAovmHVwNS2NZDD+nPINkoIHYG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGfhKBdKy+BQ+czALPHY7radW4XRe97Ee8vnzqipxR4tG3AtyRV1/yBkcic3QM71U
-	 kbjuCAnEB9l3T6t1ls5ctYiQs3DKPcogpEzO3IY/PGyYJb2JfoQy16giDj6Hjm2kNw
-	 7sJuapioQ7/u2sJIpOtwr0ZumpTdtCri7Um3EbR8=
+	b=DWm7nO1szI9LZjA5EU7q3LK9YnbvLyQsuvwnoEt5B73BQE5QoUEb+ZjGvcIWEpTko
+	 D0Yt6+dGxXitMI/sIQgGE8jMw6zDigEPh/ezLyOIaHr6E8IN1wUTKaij+WKYdmJrsQ
+	 R5q63sNo5c9gvg3wcREJUQVynlX/89moAP/28Pp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgBCQpe (ORCPT
+        id S1730024AbgBCQpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:45:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:45:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729894AbgBCQ35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:57 -0500
+        id S1729847AbgBCQ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:50 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6092080C;
-        Mon,  3 Feb 2020 16:29:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCDF2051A;
+        Mon,  3 Feb 2020 16:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747397;
-        bh=lJLO9iFZFVO//ewKajxcoDFThhXyNMmZq7PozIZ+tVg=;
+        s=default; t=1580747389;
+        bh=0uOWnKSh83fXudGqMAovmHVwNS2NZDD+nPINkoIHYG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxdeVlMc0d3kF5i11932WG9blFv9bnFlPhsHRfuWtCI4edYrUyQclZ5d/VtYmpFP/
-         RKQFrtGu1r7mFAszd9mY6PCmG9wGN9FBXJcrSs+bxDnJABm5RN59IJhWzz48B3/mxL
-         SgSC49P5DMkr8GjhHvsK9G6Hvnbsjb7gQUjPf4Xo=
+        b=IShc2UkybO58Erm5Y898OJYxpvYXx5pF8wB1ryzqKVWmh4oX8Itckm9H30p/An69D
+         vj00BCpPLDQHUqpTwWRctuI/mxeyhwWy24ozzmBgU16zNom0/XB+QiQcVug48ey21w
+         ikXe6Nm+BP54WmnvkPBvjAETcLThpPUS1A3RejpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Orr Mazor <Orr.Mazor@tandemg.com>,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 64/89] cfg80211: Fix radar event during another phy CAC
-Date:   Mon,  3 Feb 2020 16:19:49 +0000
-Message-Id: <20200203161924.906269435@linuxfoundation.org>
+Subject: [PATCH 4.14 61/89] ASoC: sti: fix possible sleep-in-atomic
+Date:   Mon,  3 Feb 2020 16:19:46 +0000
+Message-Id: <20200203161924.620190422@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,184 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Orr Mazor <orr.mazor@tandemg.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-[ Upstream commit 26ec17a1dc5ecdd8d91aba63ead6f8b5ad5dea0d ]
+[ Upstream commit ce780a47c3c01e1e179d0792df6b853a913928f1 ]
 
-In case a radar event of CAC_FINISHED or RADAR_DETECTED
-happens during another phy is during CAC we might need
-to cancel that CAC.
+Change mutex and spinlock management to avoid sleep
+in atomic issue.
 
-If we got a radar in a channel that another phy is now
-doing CAC on then the CAC should be canceled there.
-
-If, for example, 2 phys doing CAC on the same channels,
-or on comptable channels, once on of them will finish his
-CAC the other might need to cancel his CAC, since it is no
-longer relevant.
-
-To fix that the commit adds an callback and implement it in
-mac80211 to end CAC.
-This commit also adds a call to said callback if after a radar
-event we see the CAC is no longer relevant
-
-Signed-off-by: Orr Mazor <Orr.Mazor@tandemg.com>
-Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20191222145449.15792-1-Orr.Mazor@tandemg.com
-[slightly reformat/reword commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Link: https://lore.kernel.org/r/20200113100400.30472-1-arnaud.pouliquen@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/cfg80211.h  |  5 +++++
- net/mac80211/cfg.c      | 23 +++++++++++++++++++++++
- net/wireless/rdev-ops.h | 10 ++++++++++
- net/wireless/reg.c      | 23 ++++++++++++++++++++++-
- net/wireless/trace.h    |  5 +++++
- 5 files changed, 65 insertions(+), 1 deletion(-)
+ sound/soc/sti/uniperif_player.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index a4c8e9d7dd063..030eea38f2581 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -2843,6 +2843,9 @@ struct cfg80211_pmk_conf {
-  *
-  * @start_radar_detection: Start radar detection in the driver.
-  *
-+ * @end_cac: End running CAC, probably because a related CAC
-+ *	was finished on another phy.
-+ *
-  * @update_ft_ies: Provide updated Fast BSS Transition information to the
-  *	driver. If the SME is in the driver/firmware, this information can be
-  *	used in building Authentication and Reassociation Request frames.
-@@ -3148,6 +3151,8 @@ struct cfg80211_ops {
- 					 struct net_device *dev,
- 					 struct cfg80211_chan_def *chandef,
- 					 u32 cac_time_ms);
-+	void	(*end_cac)(struct wiphy *wiphy,
-+				struct net_device *dev);
- 	int	(*update_ft_ies)(struct wiphy *wiphy, struct net_device *dev,
- 				 struct cfg80211_update_ft_ies_params *ftie);
- 	int	(*crit_proto_start)(struct wiphy *wiphy,
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index d437007b15bb2..b1484b8316e87 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -2800,6 +2800,28 @@ static int ieee80211_start_radar_detection(struct wiphy *wiphy,
- 	return err;
- }
- 
-+static void ieee80211_end_cac(struct wiphy *wiphy,
-+			      struct net_device *dev)
-+{
-+	struct ieee80211_sub_if_data *sdata = IEEE80211_DEV_TO_SUB_IF(dev);
-+	struct ieee80211_local *local = sdata->local;
-+
-+	mutex_lock(&local->mtx);
-+	list_for_each_entry(sdata, &local->interfaces, list) {
-+		/* it might be waiting for the local->mtx, but then
-+		 * by the time it gets it, sdata->wdev.cac_started
-+		 * will no longer be true
-+		 */
-+		cancel_delayed_work(&sdata->dfs_cac_timer_work);
-+
-+		if (sdata->wdev.cac_started) {
-+			ieee80211_vif_release_channel(sdata);
-+			sdata->wdev.cac_started = false;
-+		}
-+	}
-+	mutex_unlock(&local->mtx);
-+}
-+
- static struct cfg80211_beacon_data *
- cfg80211_beacon_dup(struct cfg80211_beacon_data *beacon)
- {
-@@ -3730,6 +3752,7 @@ const struct cfg80211_ops mac80211_config_ops = {
- #endif
- 	.get_channel = ieee80211_cfg_get_channel,
- 	.start_radar_detection = ieee80211_start_radar_detection,
-+	.end_cac = ieee80211_end_cac,
- 	.channel_switch = ieee80211_channel_switch,
- 	.set_qos_map = ieee80211_set_qos_map,
- 	.set_ap_chanwidth = ieee80211_set_ap_chanwidth,
-diff --git a/net/wireless/rdev-ops.h b/net/wireless/rdev-ops.h
-index 249919bdfc64e..4077bb3af440c 100644
---- a/net/wireless/rdev-ops.h
-+++ b/net/wireless/rdev-ops.h
-@@ -1143,6 +1143,16 @@ rdev_start_radar_detection(struct cfg80211_registered_device *rdev,
- 	return ret;
- }
- 
-+static inline void
-+rdev_end_cac(struct cfg80211_registered_device *rdev,
-+	     struct net_device *dev)
-+{
-+	trace_rdev_end_cac(&rdev->wiphy, dev);
-+	if (rdev->ops->end_cac)
-+		rdev->ops->end_cac(&rdev->wiphy, dev);
-+	trace_rdev_return_void(&rdev->wiphy);
-+}
-+
- static inline int
- rdev_set_mcast_rate(struct cfg80211_registered_device *rdev,
- 		    struct net_device *dev,
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index e60a7dedfbf1b..a520f433d4765 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -3303,6 +3303,25 @@ bool regulatory_pre_cac_allowed(struct wiphy *wiphy)
- 	return pre_cac_allowed;
- }
- 
-+static void cfg80211_check_and_end_cac(struct cfg80211_registered_device *rdev)
-+{
-+	struct wireless_dev *wdev;
-+	/* If we finished CAC or received radar, we should end any
-+	 * CAC running on the same channels.
-+	 * the check !cfg80211_chandef_dfs_usable contain 2 options:
-+	 * either all channels are available - those the CAC_FINISHED
-+	 * event has effected another wdev state, or there is a channel
-+	 * in unavailable state in wdev chandef - those the RADAR_DETECTED
-+	 * event has effected another wdev state.
-+	 * In both cases we should end the CAC on the wdev.
-+	 */
-+	list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
-+		if (wdev->cac_started &&
-+		    !cfg80211_chandef_dfs_usable(&rdev->wiphy, &wdev->chandef))
-+			rdev_end_cac(rdev, wdev->netdev);
-+	}
-+}
-+
- void regulatory_propagate_dfs_state(struct wiphy *wiphy,
- 				    struct cfg80211_chan_def *chandef,
- 				    enum nl80211_dfs_state dfs_state,
-@@ -3329,8 +3348,10 @@ void regulatory_propagate_dfs_state(struct wiphy *wiphy,
- 		cfg80211_set_dfs_state(&rdev->wiphy, chandef, dfs_state);
- 
- 		if (event == NL80211_RADAR_DETECTED ||
--		    event == NL80211_RADAR_CAC_FINISHED)
-+		    event == NL80211_RADAR_CAC_FINISHED) {
- 			cfg80211_sched_dfs_chan_update(rdev);
-+			cfg80211_check_and_end_cac(rdev);
-+		}
- 
- 		nl80211_radar_notify(rdev, chandef, event, NULL, GFP_KERNEL);
+diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
+index d8b6936e544e3..908f13623f8cd 100644
+--- a/sound/soc/sti/uniperif_player.c
++++ b/sound/soc/sti/uniperif_player.c
+@@ -226,7 +226,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
+ 	 * sampling frequency. If no sample rate is already specified, then
+ 	 * set one.
+ 	 */
+-	mutex_lock(&player->ctrl_lock);
+ 	if (runtime) {
+ 		switch (runtime->rate) {
+ 		case 22050:
+@@ -303,7 +302,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
+ 		player->stream_settings.iec958.status[3 + (n * 4)] << 24;
+ 		SET_UNIPERIF_CHANNEL_STA_REGN(player, n, status);
  	}
-diff --git a/net/wireless/trace.h b/net/wireless/trace.h
-index f3353fe5b35b8..cd0a1c7c185d4 100644
---- a/net/wireless/trace.h
-+++ b/net/wireless/trace.h
-@@ -607,6 +607,11 @@ DEFINE_EVENT(wiphy_netdev_evt, rdev_flush_pmksa,
- 	TP_ARGS(wiphy, netdev)
- );
+-	mutex_unlock(&player->ctrl_lock);
  
-+DEFINE_EVENT(wiphy_netdev_evt, rdev_end_cac,
-+	     TP_PROTO(struct wiphy *wiphy, struct net_device *netdev),
-+	     TP_ARGS(wiphy, netdev)
-+);
+ 	/* Update the channel status */
+ 	if (player->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0)
+@@ -365,8 +363,10 @@ static int uni_player_prepare_iec958(struct uniperif *player,
+ 
+ 	SET_UNIPERIF_CTRL_ZERO_STUFF_HW(player);
+ 
++	mutex_lock(&player->ctrl_lock);
+ 	/* Update the channel status */
+ 	uni_player_set_channel_status(player, runtime);
++	mutex_unlock(&player->ctrl_lock);
+ 
+ 	/* Clear the user validity user bits */
+ 	SET_UNIPERIF_USER_VALIDITY_VALIDITY_LR(player, 0);
+@@ -598,7 +598,6 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 	iec958->status[1] = ucontrol->value.iec958.status[1];
+ 	iec958->status[2] = ucontrol->value.iec958.status[2];
+ 	iec958->status[3] = ucontrol->value.iec958.status[3];
+-	mutex_unlock(&player->ctrl_lock);
+ 
+ 	spin_lock_irqsave(&player->irq_lock, flags);
+ 	if (player->substream && player->substream->runtime)
+@@ -608,6 +607,8 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 		uni_player_set_channel_status(player, NULL);
+ 
+ 	spin_unlock_irqrestore(&player->irq_lock, flags);
++	mutex_unlock(&player->ctrl_lock);
 +
- DECLARE_EVENT_CLASS(station_add_change,
- 	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev, u8 *mac,
- 		 struct station_parameters *params),
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
