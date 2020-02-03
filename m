@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DB3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED30C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778062086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47792086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748316;
-	bh=Li8LrGSYb/x5zKMQjBqf/caqYNBfuICQvy7Z9Uro0Mo=;
+	s=default; t=1580748318;
+	bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WK7NQvv+2R54JG7nqgZ5XRbnQvOhuRbluz16U1BhZ8gEH6nZ20aaFbH0gZVLHV3pQ
-	 suuvDpmzwFzSFutSX4w6PV+tJNrVLB/iQ9BVQrQPR9j7hZwQ6hbN+TL2UCyedXzBb8
-	 CdgrxlACtv+PS1WBh1+jb5RznH4BSwe0jokv9AAQ=
+	b=PXxlUtQCVf0dZr6jk9K9jDQ4JumWmZnf3fXzq/4dxcSpruc71BMTIPIEID3JAWBpO
+	 3YC7X40znrE1nuw3zyf32HOUdROVWcR/yPNtk28E8kjHXaGynYTYSdTvWqT72V3Vnq
+	 2WoBx/HUUe/F8oD9fvg+D4etyqSZtr5FEkIupqdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgBCQaY (ORCPT
+        id S1729997AbgBCQaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:30:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:30:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729966AbgBCQaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:18 -0500
+        id S1729956AbgBCQaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:17 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1300E20838;
-        Mon,  3 Feb 2020 16:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4D382051A;
+        Mon,  3 Feb 2020 16:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747418;
-        bh=Li8LrGSYb/x5zKMQjBqf/caqYNBfuICQvy7Z9Uro0Mo=;
+        s=default; t=1580747416;
+        bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMdLdac1IzlqYOKH24soGxd26INqG5bOnaD5QYdeZw4wPBIgGg1JyTtm/oHDgGm9W
-         OQ37Fbo2Q7NJhQQQ60qaCQ8cI7HXp7KeMpqLtTZfUqEdD/9nlXKY4LBNJ8yceYmyan
-         plYr75LAuRA93uF1EZpIOPKlo8V/Z2zSk4CAHde8=
+        b=d6mU7zjjrPCJ5OwhmeVCqlumck2aQfcg2jnS8EjAGesMqbC4wpbFFIuieh9kHE5p3
+         FqMQl3bRZxp0CBaTkW/xaiM0tkAYBNJQWw3gGr/L/oc/nuFAMu+HfoynmPqJZlVWl9
+         iisFUFLcZoeXrrMsEn61Lmum6l9jqy0ukX/kMXwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 68/89] bnxt_en: Fix ipv6 RFS filter matching logic.
-Date:   Mon,  3 Feb 2020 16:19:53 +0000
-Message-Id: <20200203161925.390427879@linuxfoundation.org>
+Subject: [PATCH 4.14 20/89] phy: cpcap-usb: Prevent USB line glitches from waking up modem
+Date:   Mon,  3 Feb 2020 16:19:05 +0000
+Message-Id: <20200203161919.622920947@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,55 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 6fc7caa84e713f7627e171ab1e7c4b5be0dc9b3d ]
+[ Upstream commit 63078b6ba09e842f09df052c5728857389fddcd2 ]
 
-Fix bnxt_fltr_match() to match ipv6 source and destination addresses.
-The function currently only checks ipv4 addresses and will not work
-corrently on ipv6 filters.
+The micro-USB connector on Motorola Mapphone devices can be muxed between
+the SoC and the mdm6600 modem. But even when used for the SoC, configuring
+the PHY with ID pin grounded will wake up the modem from idle state. Looks
+like the issue is probably caused by line glitches.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We can prevent the glitches by using a previously unknown mode of the
+GPIO mux to prevent the USB lines from being connected to the moden while
+configuring the USB PHY, and enable the USB lines after configuring the
+PHY.
+
+Note that this only prevents waking up mdm6600 as regular USB A-host mode,
+and does not help when connected to a lapdock. The lapdock specific issue
+still needs to be debugged separately.
+
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/phy/motorola/phy-cpcap-usb.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 38ee7692132c5..7461e7b9eaae5 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7402,11 +7402,23 @@ static bool bnxt_fltr_match(struct bnxt_ntuple_filter *f1,
- 	struct flow_keys *keys1 = &f1->fkeys;
- 	struct flow_keys *keys2 = &f2->fkeys;
+diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
+index 4ba3634009afc..593c77dbde2eb 100644
+--- a/drivers/phy/motorola/phy-cpcap-usb.c
++++ b/drivers/phy/motorola/phy-cpcap-usb.c
+@@ -115,7 +115,7 @@ struct cpcap_usb_ints_state {
+ enum cpcap_gpio_mode {
+ 	CPCAP_DM_DP,
+ 	CPCAP_MDM_RX_TX,
+-	CPCAP_UNKNOWN,
++	CPCAP_UNKNOWN_DISABLED,	/* Seems to disable USB lines */
+ 	CPCAP_OTG_DM_DP,
+ };
  
--	if (keys1->addrs.v4addrs.src == keys2->addrs.v4addrs.src &&
--	    keys1->addrs.v4addrs.dst == keys2->addrs.v4addrs.dst &&
--	    keys1->ports.ports == keys2->ports.ports &&
--	    keys1->basic.ip_proto == keys2->basic.ip_proto &&
--	    keys1->basic.n_proto == keys2->basic.n_proto &&
-+	if (keys1->basic.n_proto != keys2->basic.n_proto ||
-+	    keys1->basic.ip_proto != keys2->basic.ip_proto)
-+		return false;
+@@ -379,7 +379,8 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
+ {
+ 	int error;
+ 
+-	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
++	/* Disable lines to prevent glitches from waking up mdm6600 */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
+ 	if (error)
+ 		goto out_err;
+ 
+@@ -406,6 +407,11 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
+ 	if (error)
+ 		goto out_err;
+ 
++	/* Enable UART mode */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
++	if (error)
++		goto out_err;
 +
-+	if (keys1->basic.n_proto == htons(ETH_P_IP)) {
-+		if (keys1->addrs.v4addrs.src != keys2->addrs.v4addrs.src ||
-+		    keys1->addrs.v4addrs.dst != keys2->addrs.v4addrs.dst)
-+			return false;
-+	} else {
-+		if (memcmp(&keys1->addrs.v6addrs.src, &keys2->addrs.v6addrs.src,
-+			   sizeof(keys1->addrs.v6addrs.src)) ||
-+		    memcmp(&keys1->addrs.v6addrs.dst, &keys2->addrs.v6addrs.dst,
-+			   sizeof(keys1->addrs.v6addrs.dst)))
-+			return false;
-+	}
+ 	return 0;
+ 
+ out_err:
+@@ -418,7 +424,8 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
+ {
+ 	int error;
+ 
+-	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
++	/* Disable lines to prevent glitches from waking up mdm6600 */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
+ 	if (error)
+ 		return error;
+ 
+@@ -458,6 +465,11 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
+ 	if (error)
+ 		goto out_err;
+ 
++	/* Enable USB mode */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
++	if (error)
++		goto out_err;
 +
-+	if (keys1->ports.ports == keys2->ports.ports &&
- 	    keys1->control.flags == keys2->control.flags &&
- 	    ether_addr_equal(f1->src_mac_addr, f2->src_mac_addr) &&
- 	    ether_addr_equal(f1->dst_mac_addr, f2->dst_mac_addr))
+ 	return 0;
+ 
+ out_err:
 -- 
 2.20.1
 
