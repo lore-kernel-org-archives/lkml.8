@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CA8C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DF0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F062051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556FC2080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747398;
-	bh=ribteiezUfZyuKykqN1aymityXPgyL1l+MDbwRkuauM=;
+	s=default; t=1580747401;
+	bh=IJCDwsZ4sqrojp7q6Ut5B996TTxXGw4vFPVQ02U1p58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qqfqwxbz1Mj8jRAjRvs6wf+eTXJ2i18Zcf8rPlc7UfHVVoxHI5QEfzRfpyyPC2qyH
-	 CI/u+9h5/KvqUOiprzejIZo/cmIGrx7aR9Y40xb7XHlKSl7IcHunWrDeY1Bvqh8w9c
-	 z+c64dXGgECovtC99n321ier3EHVuNVpfIhNyKNM=
+	b=Zm3FfK/JXNh0H+7NTNDyNZPZlJ5Vs09xL5+lCay5L3I98sPyc5J5dUYv7zo9K1mJ0
+	 qzo6324PZcx36ImO+UQtLhmrTW9PJgB19NrEtV7Z4UUBk6lTGnA5zbVy+6IESYqu4r
+	 n+yNKoVLzFtM776Aw7O0MqqbAW6BCF4lENOOj0yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbgBCQ35 (ORCPT
+        id S1729905AbgBCQ37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729872AbgBCQ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:52 -0500
+        id S1729880AbgBCQ3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:55 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE72B20838;
-        Mon,  3 Feb 2020 16:29:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 261622051A;
+        Mon,  3 Feb 2020 16:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747392;
-        bh=ribteiezUfZyuKykqN1aymityXPgyL1l+MDbwRkuauM=;
+        s=default; t=1580747394;
+        bh=IJCDwsZ4sqrojp7q6Ut5B996TTxXGw4vFPVQ02U1p58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpjwZujf+Ays431B6L/xXPPs6jxj+BiyFcu+tHWjuIEpHhj0NZs/nNVE0EYLd+fh/
-         KslN6k4hOrv9fjozkAYvUVqRGD9pQWFxGrrS9DVqbrQ77ztNNdagUYj0glb4crI1xh
-         zTftpD9miNH0x1//7SLfXRNDInZBGJCBQDywgxiE=
+        b=tn7vajGC79Hw0u19HgiYyCySunxTi89aEkfVr8XyLFvdIYn3SIKtG+QBTs1eDzBvV
+         zeY1TRgMxtP9mkk+nZhUKLp+QZ3b/81zZh2E2TH/dUEq4W7650SQCwFEFH4csj1MAw
+         ufrrmM+E1OI+OFqe1XRoOaoYWAhm7OA2f2SUkXGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Cathy Luo <xiaohua.luo@nxp.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 62/89] qmi_wwan: Add support for Quectel RM500Q
-Date:   Mon,  3 Feb 2020 16:19:47 +0000
-Message-Id: <20200203161924.708944557@linuxfoundation.org>
+Subject: [PATCH 4.14 63/89] wireless: fix enabling channel 12 for custom regulatory domain
+Date:   Mon,  3 Feb 2020 16:19:48 +0000
+Message-Id: <20200203161924.801752220@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -62,34 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Evensen <kristian.evensen@gmail.com>
+From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-[ Upstream commit a9ff44f0e61d074f29770413fef6a5452be7b83e ]
+[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
 
-RM500Q is a 5G module from Quectel, supporting both standalone and
-non-standalone modes. The normal Quectel quirks apply (DTR and dynamic
-interface numbers).
+Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
+default when checking usable channels"") fixed a broken
+regulatory (leaving channel 12 open for AP where not permitted).
+Apply a similar fix to custom regulatory domain processing.
 
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
+Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
+[reword commit message, fix coding style, add a comment]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/reg.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 4a984b76a60ec..db70d4c5778a6 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -999,6 +999,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
- 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
- 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 804eac073b6b9..e60a7dedfbf1b 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1718,14 +1718,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
  
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
+ static void handle_channel_custom(struct wiphy *wiphy,
+ 				  struct ieee80211_channel *chan,
+-				  const struct ieee80211_regdomain *regd)
++				  const struct ieee80211_regdomain *regd,
++				  u32 min_bw)
+ {
+ 	u32 bw_flags = 0;
+ 	const struct ieee80211_reg_rule *reg_rule = NULL;
+ 	const struct ieee80211_power_rule *power_rule = NULL;
+ 	u32 bw;
+ 
+-	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
++	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
+ 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
+ 					      regd, bw);
+ 		if (!IS_ERR(reg_rule))
+@@ -1781,8 +1782,14 @@ static void handle_band_custom(struct wiphy *wiphy,
+ 	if (!sband)
+ 		return;
+ 
++	/*
++	 * We currently assume that you always want at least 20 MHz,
++	 * otherwise channel 12 might get enabled if this rule is
++	 * compatible to US, which permits 2402 - 2472 MHz.
++	 */
+ 	for (i = 0; i < sband->n_channels; i++)
+-		handle_channel_custom(wiphy, &sband->channels[i], regd);
++		handle_channel_custom(wiphy, &sband->channels[i], regd,
++				      MHZ_TO_KHZ(20));
+ }
+ 
+ /* Used by drivers prior to wiphy registration */
 -- 
 2.20.1
 
