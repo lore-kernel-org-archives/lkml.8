@@ -2,205 +2,111 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4C0C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793CAC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEABA20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523D520732
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgBCWco (ORCPT
+        id S1727304AbgBCWe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:32:44 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42053 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgBCWcn (ORCPT
+        Mon, 3 Feb 2020 17:34:26 -0500
+Received: from outgoing3.flk.host-h.net ([188.40.0.89]:60667 "EHLO
+        outgoing3.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727276AbgBCWe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:32:43 -0500
-X-Originating-IP: 90.65.92.102
-Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B1EACFF802;
-        Mon,  3 Feb 2020 22:32:40 +0000 (UTC)
-Date:   Mon, 3 Feb 2020 23:32:40 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 5.6
-Message-ID: <20200203223240.GA63964@piout.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Mon, 3 Feb 2020 17:34:26 -0500
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam1-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1iykIP-0001v2-CU; Tue, 04 Feb 2020 00:34:23 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1iykIM-0000k9-VQ; Tue, 04 Feb 2020 00:34:19 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>
+Subject: [PATCH v4 0/3] Add rga to rk322x device tree
+Date:   Mon,  3 Feb 2020 22:30:28 +0000
+Message-Id: <cover.1580768038.git.justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0S9sfM/nP8gxoqs1zeWkeM2pSDasLI4SayDByyq9LIhVuTLiRoIJbWVM
+ VDvK+OR4bkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
+ qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSrK5j1T
+ Po5/LpleUgQM5/MAHmDvzkMd4joYqrUfcPIQdUYI3fUXyt8g6v09xrG7vu/fdUS1M5thdxxsnOTC
+ rRmvZNXA7urqkuRkjn1fyteVYP+HXs9CMbFn9vCz9Z+lGmDQvQDDheqH4lBQpR0ziVlLWDAC1vRC
+ hq319+C3vxdCgsyStZRkQwmoMeUp+gQglixgZmTW6H0Uo/QzUeaLOBvNEC1g+U1SXfUhLsTk5wUY
+ WaWokZC3JOaEfAcg3rPhhffuvzdjlhFBwXCgjBtoYe8eg5nlaTNYebWa2W6GbNvgwptlhJrsz+8j
+ XuMdjIbLZhwoK/VzePATsXS/rFxRypFKMiPLyoQzvILSDO18VtgBXTa3ez3cHoqTWBKuYika623Y
+ Ta6/LJzl4pg0ZC9q5gYH7EOMauBWC98ol0xUHcbfIJ9ZJ7PpnPxGejDS+HAMyOjpxOsB8gG0slV7
+ ra6jI4BS3XLmxFz+88FWeB7miCnFrS+xkiYMmdOwRIKnLhTyDa49KiI6ApkBL1M2pjeIsNv0i2bz
+ nHJ53CHS5fL+CC61pH+Mdi8KDLlrJjQEyoQkvVqjwoXSktopqY7X3mJE1vuavCrJPmnnTHzVkpyb
+ MK7ZTZV8hN6hngxqNW/p6/rAjB3Bo9WPi4IE45J8SMIBWsA7tm+5pSj1YjV94R3x16NaT9yCB/zW
+ LYsk4/ealtlYzK51KubfNuS9lgsouDG6gpp8iIlTfpXH3eJ/htNFsfRJILGw3FQKlZKPu21J/MuB
+ 4XqWHsbQ5DjCOMluv3aOz8NW0bDnfSypVfNnD/ody8wcCN83CNy2/HP4CS/B6ymwJqdrYqktDHCy
+ f2KOgPWiC6z4HnV1R/vfaN0C4C3KdSxIKbHYhXQwhXELIBZC+BuxdgK5cVvzDCtuQClUbi7eRJvI
+ lX3taZxyfrmN0VTHLZteW2tmp/7PDtVuzmh0F4WifHSVhLwCLj5UzlqDZIb7xEp3klSpLYn5Sshm
+ tRDo/ib6qUd+ON9Iwv3fqFcmzUrJkUoL/PyVSe2/DDFq5n7HBuKWYRb2mL6sFaAAW2m3yODQWZ6C
+ UzN46xT2FnDD31r1QFs2yPRk3H1E4ANRdN1BlPI5cpunCmbc5xpJVMDSneyWOiQlotRPFwUdX67F
+ 3JAjgow=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+This patchset aims to enable use of Rockchip's RGA, a 2D raster
+graphic acceleration unit, on rk322x based devices.
 
-Here is the pull-request for the RTC subsystem for 5.6.
+Changes in v4:
+  - Add a compatible value entry for the rk3228 to the rockchip-rga
+    device tree binding documentation.
 
-The VL_READ and VL_CLR ioctls have been reworked to be more useful. This
-will not break userspace as there are very few users and they are using
-the integer value as a boolean.
-Apart from that, two drivers were reworked and a few fixes here and
-there for a net reduction of number of lines.
+Changes in v3:
+  - Relocate rga node to the correct position in rk322x.dtsi, as
+    indicated by Johan Jonker.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+Changes in v2:
+  - Remove unnecessary "rockchip,rk3228-rga" device tree compatibility
+    string patch, as advised by Ezequiel Garcia.
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+  - Use both "rockchip,rk3228-rga" and "rockchip,rk3288-rga" in the
+    rga node's compatibility property, as suggested by Heiko Stuebner.
 
-are available in the Git repository at:
+Justin Swartz (3):
+  [media] dt-bindings: Add binding for rk3228 rga
+  ARM: dts: rockchip: add rga node for rk322x
+  ARM: dts: rockchip: enable rga for rk3229-xms6
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.6
-
-for you to fetch changes up to f45719240700398b63a165f6b7f3fbab04f0b052:
-
-  dt-bindings: rtc: at91rm9200: document clocks property (2020-01-28 22:48:34 +0100)
-
-----------------------------------------------------------------
-RTC for 5.6
-
-Subsystem:
- - the VL_READ and VL_CLR ioctls are now documented and their behavior is
-   unified across all the drivers.
- - RTC_I2C_AND_SPI Kconfig option rework to avoid selecting both REGMAP_I2C and
-   REGMAP_SPI unecessarily.
-
-Drivers:
- - at91rm9200: remove deprecated procfs, add sam9x60, sama5d4 and sama5d2
-   compatibles.
- - cmos: solve lost interrupts issue on MS Surface 3
- - hym8563: return proper errno when time is invalid
- - rv3029: many fixes, nvram support
-
-----------------------------------------------------------------
-Alexandre Belloni (44):
-      mailmap: Update email address for Alexandre Belloni
-      rtc: define RTC_VL_READ values
-      rtc: Document RTC_VL_READ and RTC_VL_CLR ioctls
-      rtc: abx80x: return meaningful value for RTC_VL_READ
-      rtc: pcf2127: return meaningful value for RTC_VL_READ
-      rtc: pcf8523: return meaningful value for RTC_VL_READ
-      rtc: pcf8563: remove RTC_VL_CLR handling
-      rtc: pcf8563: remove conditional compilation
-      rtc: pcf8563: stop caching voltage_low
-      rtc: pcf8563: return meaningful value for RTC_VL_READ
-      rtc: pcf85063: remove RTC_VL_CLR handling
-      rtc: pcf85063: return meaningful value for RTC_VL_READ
-      rtc: rv3028: remove RTC_VL_CLR handling
-      rtc: rv3028: return meaningful value for RTC_VL_READ
-      rtc: rv8803: avoid clearing RV8803_FLAG_V2F in RTC_VL_CLR
-      rtc: rv8803: return meaningful value for RTC_VL_READ
-      rtc: rx8010: remove RTC_VL_CLR handling
-      rtc: rx8010: return meaningful value for RTC_VL_READ
-      rtc: rv3029: use proper name for the driver
-      rtc: rv3029: let regmap validate the register ranges
-      rtc: rv3029: remove open coded regmap_update_bits
-      rtc: rv3029: remove race condition when update STATUS
-      rtc: rv3029: avoid reading the status register uselessly
-      rtc: rv3029: get rid of rv3029_get_sr
-      rtc: rv3029: simplify rv3029_alarm_irq_enable
-      rtc: rv3029: simplify rv3029_set_alarm
-      rtc: rv3029: drop rv3029_read_regs and rv3029_write_regs
-      rtc: rv3029: add RTC_VL_READ and RTC_VL_CLEAR support
-      rtc: rv3029: correctly handle PON and VLOW2
-      rtc: rv3029: convert to devm_rtc_allocate_device
-      rtc: rv3029: let the core handle rtc range
-      rtc: rv3029: add nvram support
-      rtc: rv3029: drop deprecated compatbiles
-      rtc: rv3029: annotate init and exit functions
-      rtc: rv3029: remove useless error messages
-      rtc: at91rm9200: remove procfs information
-      dt-bindings: rtc: at91rm9200: convert bindings to json-schema
-      rtc: at91rm9200: add sama5d4 and sama5d2 compatibles
-      rtc: at91rm9200: move register definitions to C file
-      rtc: at91rm9200: avoid time readout in at91_rtc_setalarm
-      rtc: at91rm9200: use FIELD_PREP/FIELD_GET
-      rtc: Kconfig: properly indent sd3078 entry
-      rtc: Kconfig: select REGMAP_I2C when necessary
-      dt-bindings: rtc: at91rm9200: document clocks property
-
-Andy Shevchenko (3):
-      rtc: cmos: Stop using shared IRQ
-      rtc: cmos: Use predefined value for RTC IRQ on legacy x86
-      rtc: cmos: Refactor code by using the new dmi_get_bios_year() helper
-
-Chuhong Yuan (2):
-      rtc: stm32: add missed clk_disable_unprepare in error path of resume
-      rtc: asm9260: add the missed check for devm_clk_get
-
-Claudiu Beznea (1):
-      dt-bindings: atmel, at91rm9200-rtc: add microchip, sam9x60-rtc
-
-Dmitry Osipenko (1):
-      rtc: tps6586x: Use IRQ_NOAUTOEN flag
-
-Geert Uytterhoeven (1):
-      rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
-
-Jean-Francois Dagenais (1):
-      rtc: zynqmp: re-use rtc_time64_to_tm operation
-
-Linus Walleij (1):
-      rtc: ds1343: Do not hardcode SPI mode flags
-
-Nobuhiro Iwamatsu (5):
-      rtc: rx8010: Fix return code for rx8010_probe
-      rtc: rx8025: Remove struct i2c_client from struct rx8025_data
-      rtc: ds1343: Remove unused struct spi_device in struct ds1343_priv
-      rtc: moxart: Convert to SPDX identifier
-      rtc: pcf8563: Use BIT
-
-Paul Kocialkowski (2):
-      rtc: hym8563: Return -EINVAL if the time is known to be invalid
-      rtc: hym8563: Read the valid flag directly instead of caching it
-
-Wei Yongjun (1):
-      rtc: mt6397: drop free_irq of devm_ allocated irq
-
-zhengbin (1):
-      rtc: omap: Remove unneeded semicolon
-
- .mailmap                                           |   1 +
- Documentation/ABI/testing/rtc-cdev                 |   8 +
- .../bindings/rtc/atmel,at91rm9200-rtc.txt          |  17 -
- .../bindings/rtc/atmel,at91rm9200-rtc.yaml         |  49 +++
- drivers/rtc/Kconfig                                |  24 +-
- drivers/rtc/rtc-abx80x.c                           |   7 +-
- drivers/rtc/rtc-asm9260.c                          |   3 +
- drivers/rtc/rtc-at91rm9200.c                       | 119 +++---
- drivers/rtc/rtc-at91rm9200.h                       |  71 ----
- drivers/rtc/rtc-cmos.c                             |  12 +-
- drivers/rtc/rtc-ds1343.c                           |  10 +-
- drivers/rtc/rtc-hym8563.c                          |  19 +-
- drivers/rtc/rtc-moxart.c                           |   5 +-
- drivers/rtc/rtc-mt6397.c                           |  10 +-
- drivers/rtc/rtc-omap.c                             |   2 +-
- drivers/rtc/rtc-pcf2127.c                          |   6 +-
- drivers/rtc/rtc-pcf85063.c                         |  16 +-
- drivers/rtc/rtc-pcf8523.c                          |   6 +-
- drivers/rtc/rtc-pcf8563.c                          |  40 +-
- drivers/rtc/rtc-rv3028.c                           |  17 +-
- drivers/rtc/rtc-rv3029c2.c                         | 442 +++++++++------------
- drivers/rtc/rtc-rv8803.c                           |  16 +-
- drivers/rtc/rtc-rx8010.c                           |  25 +-
- drivers/rtc/rtc-rx8025.c                           |  27 +-
- drivers/rtc/rtc-stm32.c                            |   5 +-
- drivers/rtc/rtc-tps6586x.c                         |   4 +-
- drivers/rtc/rtc-zynqmp.c                           |   4 +-
- include/linux/rtc.h                                |   1 +
- include/uapi/linux/rtc.h                           |   7 +-
- 29 files changed, 415 insertions(+), 558 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
- delete mode 100644 drivers/rtc/rtc-at91rm9200.h
+ Documentation/devicetree/bindings/media/rockchip-rga.txt |  5 +++--
+ arch/arm/boot/dts/rk3229-xms6.dts                        |  4 ++++
+ arch/arm/boot/dts/rk322x.dtsi                            | 11 +++++++++++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.11.0
+
