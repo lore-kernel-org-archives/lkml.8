@@ -2,131 +2,129 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D20C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E2FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BE92082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1552A2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:00:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sq2FjV21"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nO/0iFLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgBCO7X (ORCPT
+        id S1728591AbgBCPAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:59:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39780 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727201AbgBCO7X (ORCPT
+        Mon, 3 Feb 2020 10:00:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52908 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727201AbgBCPAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:59:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580741962;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9bj1VW0D0sqI3fU0UHoqSbGmPMpku6KBJ1NMQqD1DEE=;
-        b=Sq2FjV21w3Y6chLmti0T/xwE/5kWuLQD6YgbT8cCOBq6iCwpWFsku6DDdo9C/kMqOaopIQ
-        /wWS3vur5Hx/6JMTy63d7UGiGZ824OBz6Dah4SsxlYKGBqj3D7Zt5jcNw0raei3zmDSVm/
-        EuTWQyJ2ulWRs2LEKaxlGA3d94MwxII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-AQ28BhP9OMiZy0cL1mIydQ-1; Mon, 03 Feb 2020 09:59:18 -0500
-X-MC-Unique: AQ28BhP9OMiZy0cL1mIydQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81DD71800D41;
-        Mon,  3 Feb 2020 14:59:15 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E429219C58;
-        Mon,  3 Feb 2020 14:59:12 +0000 (UTC)
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-References: <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
- <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
- <20200124075235.GX14914@hirez.programming.kicks-ass.net>
- <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
- <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
- <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <20200125111931.GW11457@worktop.programming.kicks-ass.net>
- <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
- <20200203134540.GA14879@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
-Date:   Mon, 3 Feb 2020 09:59:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 3 Feb 2020 10:00:34 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so16291719wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:00:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=8k+vdwDiy/I9apMvVObpyzznnzplSbwF4INXo8Gvzbg=;
+        b=nO/0iFLnChABOmCMm+xrIgWBq4M1n2xdXVAS2q3NE0W+nA86o5v6zG5++vNHqbFfKO
+         AkG2U/+OE8IBHMIwlvCtVJ8r3vm0cag2DU38TgESZU97kYukp8tVaGAByGDxAA75SHa5
+         ODj/TjF+eR8h5ABFdWcVGmo0cAX+AXfNbQ8M3nvgTWpUSakakjPh+qubEWm4IQ/b5xiN
+         7YYRvoJjgT+71HSTsPWFzdOocx/c3mK2oY/tX0fnngDwUbBwXAnQg2xTdF5/TiX1sQan
+         cg8h8jCQR1cUXNHJ3pEeujAZ0HlptiO6yW9Enp2UihtNIb6J1L9fZDWK1STJCTwwr/Iu
+         QzTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=8k+vdwDiy/I9apMvVObpyzznnzplSbwF4INXo8Gvzbg=;
+        b=nb9eBZUX69wejbtkIO1Yz6siYKpklHaPz+xAWwFSMHFZ/hFuf1QPJnQXyaEPo9EHpV
+         6HTNNy85jmSBE+8cEFk+M1b9TxPP10Anchmvcxpq6HHMGU5CHbxhei7wpwm09O7MGPH2
+         pjWSm3N6QQsEeNZTeMYmUnRFgn3P8h9bgeS4jA8cMwljHRCa6B01Zi+zSVnUQd+0JJ2F
+         wf7861eaDn5Fg9Fsa1cua+4U/axwYDw1kd5wC1ZUSOJP3qVlyqe/70GplqaM3H4VNi4T
+         q41vUYr761moFTNXtL6XNriE+ERQjMj/k7Q7rkybBAb548PZaB5TEeee+FVOiOUS9JOE
+         hUOg==
+X-Gm-Message-State: APjAAAXddERGRBHOnWVpIkKAh3grvEoq5/Rosl2gTX/z0FZsNuKjeoLn
+        QrC1V5BdK5R7vqtmpCI0ckyboQ==
+X-Google-Smtp-Source: APXvYqzqKMDimEMI1+Fx1wdkqzXtI2qebL2Qe5BAMKgy9ef6P7VwrBLjGqlORskaER+Fyumjo01RgQ==
+X-Received: by 2002:a1c:1b4d:: with SMTP id b74mr30353863wmb.33.1580742031742;
+        Mon, 03 Feb 2020 07:00:31 -0800 (PST)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id n13sm23730639wmd.21.2020.02.03.07.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 07:00:31 -0800 (PST)
+Date:   Mon, 3 Feb 2020 15:00:29 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: [GIT PULL] kgdb changes v5.6-rc1
+Message-ID: <20200203150029.ogdtk5ep7fd3m3hg@holly.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200203134540.GA14879@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 8:45 AM, Peter Zijlstra wrote:
-> On Thu, Jan 30, 2020 at 05:05:28PM -0500, Alex Kogan wrote:
->>> On Jan 25, 2020, at 6:19 AM, Peter Zijlstra <peterz@infradead.org> wr=
-ote:
->>>
->>> On Fri, Jan 24, 2020 at 01:19:05PM -0500, Alex Kogan wrote:
->>>
->>>> Is there a lightweight way to identify such a =E2=80=9Cprioritized=E2=
-=80=9D thread?
->>> No; people might for instance care about tail latencies between their
->>> identically spec'ed worker tasks.
->> I would argue that those users need to tune/reduce the intra-node hand=
-off
->> threshold for their needs. Or disable CNA altogether.
-> I really don't like boot time arguments (or tunables in generic) for a
-> machine to work as it should.
->
-> The default really should 'just work'.
-That will be the ideal case. In reality, it usually takes a while for
-the code to mature enough to do some kind of self tuning. In the mean
-time, having some configuration options available allows us to have more
-time to figure what the best configuration options to be.
->> In general, Peter, seems like you are not on board with the way Longma=
-n
->> suggested to handle prioritized threads. Am I right?
-> Right.
->
-> Presumably you have a workload where CNA is actually a win? That is,
-> what inspired you to go down this road? Which actual kernel lock is so
-> contended on NUMA machines that we need to do this?
+The following changes since commit def9d2780727cec3313ed3522d0123158d87224d:
 
-Today, a 2-socket Rome server can have 128 cores and 256 threads. If we
-scale up more, we could easily have more than 1000 threads in a system.
-With that many logical cpus available, it is easy to envision some heavy
-spinlock contention can happen fairly regularly. This patch can
-alleviate the congestion and improve performance under that
-circumstance. Of course, the specific locks that are contended will
-depend on the workloads.
+  Linux 5.5-rc7 (2020-01-19 16:02:49 -0800)
 
-Cheers,
-Longman
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.6-rc1
+
+for you to fetch changes up to dc2c733e65848b1df8d55c83eea79fc4a868c800:
+
+  kdb: Use for_each_console() helper (2020-01-31 17:34:54 +0000)
+
+----------------------------------------------------------------
+kgdb patches for 5.6-rc1
+
+Everything for kgdb this time around is either simplifications or clean
+ups.
+
+In particular Douglas Anderson's modifications to the backtrace machine
+in the *last* dev cycle have enabled Doug to tidy up some MIPS specific
+backtrace code and stop sharing certain data structures across the
+kernel.  Note that The MIPS folks were on Cc: for the MIPS patch and
+reacted positively (but without an explicit Acked-by).
+
+Doug also got rid of the implicit switching between tasks and register
+sets during some but not of kdb's backtrace actions (because the
+implicit switching was either confusing for users, pointless or both).
+
+Finally there is a coverity fix and patch to replace open coded console
+traversal with the proper helper function.
+
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      kdb: Use for_each_console() helper
+
+Colin Ian King (1):
+      kdb: remove redundant assignment to pointer bp
+
+Douglas Anderson (5):
+      MIPS: kdb: Remove old workaround for backtracing on other CPUs
+      kdb: kdb_current_regs should be private
+      kdb: kdb_current_task shouldn't be exported
+      kdb: Gid rid of implicit setting of the current task / regs
+      kdb: Get rid of confusing diag msg from "rd" if current task has no regs
+
+ arch/mips/kernel/traps.c       |  5 -----
+ include/linux/kdb.h            |  2 --
+ kernel/debug/kdb/kdb_bp.c      |  1 -
+ kernel/debug/kdb/kdb_bt.c      |  8 +-------
+ kernel/debug/kdb/kdb_io.c      |  9 +++------
+ kernel/debug/kdb/kdb_main.c    | 31 ++++++++++++++-----------------
+ kernel/debug/kdb/kdb_private.h |  2 +-
+ 7 files changed, 19 insertions(+), 39 deletions(-)
