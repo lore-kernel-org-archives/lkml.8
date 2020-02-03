@@ -2,135 +2,617 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87DFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D61C33CB2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBB82080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AB320838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 05:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgBCFdP convert rfc822-to-8bit (ORCPT
+        id S1727482AbgBCFeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 00:33:15 -0500
-Received: from m4a0072g.houston.softwaregrp.com ([15.124.2.130]:54082 "EHLO
-        m4a0072g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbgBCFdP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 00:33:15 -0500
-Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.146) BY m4a0072g.houston.softwaregrp.com WITH ESMTP;
- Mon,  3 Feb 2020 05:31:46 +0000
-Received: from M4W0335.microfocus.com (2002:f78:1193::f78:1193) by
- M4W0334.microfocus.com (2002:f78:1192::f78:1192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 3 Feb 2020 05:32:31 +0000
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (15.124.8.14) by
- M4W0335.microfocus.com (15.120.17.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Mon, 3 Feb 2020 05:32:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RWxxuN8mUcI11Nt/WuKKNEQKuEcdAGh+Je+FiveiD9vg95CzHlyFpMR6FJHI2tSPxeGBwZrrdhc1y0nC1xT8I49Gha+WjcjxYfWySvyJWmIvptBum3/e3QFyIaiZohNXVS2z9ZCRDdPRn8azXaYl9Z0kr5/UG7OMVPVr4D0eigA+AIaAh95mfRLrtL06W16nTaZneN8lwcSwBYEO7e/l5t0LshIBefMSuNkuL3WLmfFnroWnXzu7CyQQvlr6Dr7NCTL2D4JEG5EItYjtohBUDYXzGbQzRx+BuGtUgn0WWRWReKLJLO2sgF5PBw/zNw6eK53NbTx9VDXWxw3nzoJ50Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vQbtFPVmX6aih0baSkoK/XN9nQXmOmjWqmOvTE024zc=;
- b=cvjzuwZYFBo8ZFZ8yLatcJdyNPTLMUpg07DeyMIqRoRLhvdczK2o5jzTSQav6xqzQSKYv7/sk40jdYYrdnAZbyaubXpt9XM0bxAR9UJn7ok7Wkx5uIA/9BK1Fcf0ydkFvewIL9Vei3W7GJaY0r2bS37t09WYthixJSjin3N+eMg2JV1o6MnuuUj1keefI/J1gh1FI4d1Bv3cg3Fii5HYlf4In5nYyvCmIxRvjonZ2C7thM9dmG6q/OiCZR4XDaJi757JojLlQGMcXt+UZZw9jiYOCUvtY6+DNkO3dYy270EBBmURhcjSgkfVmTAemAY/YxmYYH2Jo0APWDfuyBH9ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from CH2PR18MB3206.namprd18.prod.outlook.com (52.132.247.79) by
- CH2PR18MB3334.namprd18.prod.outlook.com (52.132.247.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.27; Mon, 3 Feb 2020 05:32:29 +0000
-Received: from CH2PR18MB3206.namprd18.prod.outlook.com
- ([fe80::1138:c9b7:e776:5c77]) by CH2PR18MB3206.namprd18.prod.outlook.com
- ([fe80::1138:c9b7:e776:5c77%3]) with mapi id 15.20.2686.031; Mon, 3 Feb 2020
- 05:32:28 +0000
-From:   Gang He <GHe@suse.com>
-To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "gechangwei@live.cn" <gechangwei@live.cn>,
-        Shuning Zhang <sunny.s.zhang@oracle.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH] ocfs2: fix the oops problem when write cloned file
-Thread-Topic: [PATCH] ocfs2: fix the oops problem when write cloned file
-Thread-Index: AQHV0Bf49UeZZZUyKki8pGxA20UtZKgIy58+gAA2GACAAAMu6A==
-Date:   Mon, 3 Feb 2020 05:32:28 +0000
-Message-ID: <CH2PR18MB3206844EE94EC90A2CBFF85CCF000@CH2PR18MB3206.namprd18.prod.outlook.com>
-References: <20200121050153.13290-1-ghe@suse.com>
- <CH2PR18MB3206F418382332EB25130477CF000@CH2PR18MB3206.namprd18.prod.outlook.com>,<de23176f-5b84-a785-80a2-0bdc8e3a0fab@linux.alibaba.com>
-In-Reply-To: <de23176f-5b84-a785-80a2-0bdc8e3a0fab@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=GHe@suse.com; 
-x-originating-ip: [124.205.104.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8275a9a7-bcb0-4ab5-acd2-08d7a86a759a
-x-ms-traffictypediagnostic: CH2PR18MB3334:
-x-microsoft-antispam-prvs: <CH2PR18MB3334FB897EBC655625DC972ECF000@CH2PR18MB3334.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:913;
-x-forefront-prvs: 0302D4F392
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(189003)(199004)(478600001)(86362001)(7696005)(33656002)(5660300002)(52536014)(66556008)(66476007)(76116006)(81156014)(71200400001)(66946007)(91956017)(316002)(110136005)(8936002)(6506007)(8676002)(54906003)(81166006)(66446008)(64756008)(53546011)(9686003)(2906002)(186003)(55016002)(26005)(4326008)(55236004);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR18MB3334;H:CH2PR18MB3206.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oIqJt9Z5HIum0FUV5G05PEtJYCmZxwHgv6rInT5gR4f7N2lGEfBjCjDs7ScliPcc2qvGiiSvPx7GF9uUfLran2qvp/aya0KIcVCmbp1cA5uF1lmb+m0N2C2WtqfWnZI7QaJMQioWKstn+IjVAYw5d2zcS7+Z1sVTbZAbLLBjWhxl7LEhrkfa+tT5p9r5XyeGbk4WI/Bvl3Sj9riSZOqadtpnqkjPKHmEF2BR2+yjNiRIUcYBp8AI06ya7mUxxfOmHk+B/LkjjESMJud3PQQS00L2y7QqMapA9GbA+5nQb8Oy2B7866MLxC4g7rhZeT0IwLFKCcqT9gp/Pn0/0G2gKEYc3EAUev/svpg1Xo/zgg/GyicEq9iByF8dkb7r/4orDCJtroEU39exN5cQE2vXVOiMdfmR/1Uh1I6i/kGF0wX+2ME6ePYjSsY2JDTWYzK9
-x-ms-exchange-antispam-messagedata: M74xk+XaFWJAv17HUcfSZYhHz+O+cqWruNCrqnbflcXRw9fQzOPZqcsprtL0u1iGkhji61mBCe9OxKGQ7NB8wAOT4A8pITJ6qq9qBjm7L3X0yrz51L76eeCWwnn0DN24wJLwZa9zp3CSg9t8nHLYJw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 3 Feb 2020 00:34:46 -0500
+Received: from mga02.intel.com ([134.134.136.20]:2368 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727210AbgBCFeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 00:34:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Feb 2020 21:34:45 -0800
+X-IronPort-AV: E=Sophos;i="5.70,396,1574150400"; 
+   d="scan'208";a="223817963"
+Received: from dishasha-mobl.gar.corp.intel.com ([10.252.169.219])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Feb 2020 21:34:41 -0800
+Message-ID: <f7f507a0831abda54de73d0ed70e84a6ef60f175.camel@linux.intel.com>
+Subject: Re: [PATCH v2 2/4] SFH: PCI driver to add support of AMD sensor
+ fusion Hub using HID framework
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     "Shah, Nehal-bakulchandra" <nbshah@amd.com>,
+        Sandeep Singh <Sandeep.Singh@amd.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, jic23@kernel.org,
+        linux-iio@vger.kernel.org
+Cc:     Shyam-sundar.S-k@amd.com,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+Date:   Sun, 02 Feb 2020 21:34:37 -0800
+In-Reply-To: <e93b0b3f-ea4b-5238-2f35-8642bc2fd833@amd.com>
+References: <1580272046-32101-1-git-send-email-Sandeep.Singh@amd.com>
+         <1580272046-32101-3-git-send-email-Sandeep.Singh@amd.com>
+         <e93b0b3f-ea4b-5238-2f35-8642bc2fd833@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8275a9a7-bcb0-4ab5-acd2-08d7a86a759a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2020 05:32:28.8375
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: byIQQNPEGqVUuIla7nG6lVacie1nvQ3h3pVnQFBXhT/TvsmEyc2yyNE5lUuk7BvR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR18MB3334
-X-OriginatorOrg: suse.com
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joseph,
-
-before calling ocfs2_refcount_cow() in the function ocfs2_prepare_inode_for_write(), we do not use inode buffer_head.
-So, we can let buffer_head is NULL.
-But, when we invoke ocfs2_refcount_cow() function, we have to pass inode buffer_head without NULL pointer.
-That is why writing clone file will cause oops and kill the user-space process.
-
-Thanks
-Gang
-
-________________________________________
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-Sent: Monday, February 3, 2020 1:15 PM
-To: Gang He; mark@fasheh.com; jlbec@evilplan.org; gechangwei@live.cn; Shuning Zhang
-Cc: linux-kernel@vger.kernel.org; ocfs2-devel@oss.oracle.com; akpm@linux-foundation.org
-Subject: Re: [PATCH] ocfs2: fix the oops problem when write cloned file
-
-
-
-On 20/2/3 10:17, Gang He wrote:
-> Hello Joseph, Changwei, Sunny and all,
->
-> Could you help to review this patch?
-> This patch will fix the oops problem caused by write ocfs2 clone files.
-> The root cause is inode buffer head is NULL when calling ocfs2_refcount_cow.
-> Secondly, we should use EX meta lock when calling ocfs2_refcount_cow.
->
-Before commit e74540b28556, we may also use NULL buffer head in case of
-overwrite, so why there is no such issue before?
+On Mon, 2020-02-03 at 10:35 +0530, Shah, Nehal-bakulchandra wrote:
+> Hi
+> 
+> On 1/29/2020 9:57 AM, Sandeep Singh wrote:
+> > From: Sandeep Singh <sandeep.singh@amd.com>
+> > 
+> > AMD SFH uses HID over PCIe bus.SFH fw is part of MP2
+> > processor and it runs on MP2 where in driver resides
+> > on X86.This part of module will communicate with MP2 FW and
+> > provide that data into DRAM
+> > 
+> > Signed-off-by: Sandeep Singh <sandeep.singh@amd.com>
+> > Signed-off-by: Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+Any possibility of using devm_* calls for both pci_* and memory
+allocation?
 
 Thanks,
-Joseph
+Srinivas
+
+> > ---
+> >  drivers/hid/Kconfig                    |   2 +
+> >  drivers/hid/Makefile                   |   1 +
+> >  drivers/hid/amd-sfh-hid/Kconfig        |  17 +++
+> >  drivers/hid/amd-sfh-hid/Makefile       |  17 +++
+> >  drivers/hid/amd-sfh-hid/amd_mp2_pcie.c | 256
+> > +++++++++++++++++++++++++++++++++
+> >  drivers/hid/amd-sfh-hid/amd_mp2_pcie.h | 169
+> > ++++++++++++++++++++++
+> >  6 files changed, 462 insertions(+)
+> >  create mode 100644 drivers/hid/amd-sfh-hid/Kconfig
+> >  create mode 100644 drivers/hid/amd-sfh-hid/Makefile
+> >  create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> >  create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> > 
+> > diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> > index 494a39e..b253ad1 100644
+> > --- a/drivers/hid/Kconfig
+> > +++ b/drivers/hid/Kconfig
+> > @@ -1155,4 +1155,6 @@ source "drivers/hid/i2c-hid/Kconfig"
+> >  
+> >  source "drivers/hid/intel-ish-hid/Kconfig"
+> >  
+> > +source "drivers/hid/amd-sfh-hid/Kconfig"
+> > +
+> >  endmenu
+> > diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+> > index bfefa36..15a08e8 100644
+> > --- a/drivers/hid/Makefile
+> > +++ b/drivers/hid/Makefile
+> > @@ -139,3 +139,4 @@ obj-$(CONFIG_I2C_HID)		+= i2c-hid/
+> >  
+> >  obj-$(CONFIG_INTEL_ISH_HID)	+= intel-ish-hid/
+> >  obj-$(INTEL_ISH_FIRMWARE_DOWNLOADER)	+= intel-ish-hid/
+> > +obj-$(CONFIG_AMD_SFH_HID)       += amd-sfh-hid/
+> > diff --git a/drivers/hid/amd-sfh-hid/Kconfig b/drivers/hid/amd-sfh-
+> > hid/Kconfig
+> > new file mode 100644
+> > index 0000000..e2dee39
+> > --- /dev/null
+> > +++ b/drivers/hid/amd-sfh-hid/Kconfig
+> > @@ -0,0 +1,17 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +menu "AMD SFH HID support"
+> > +	depends on (X86_64 || COMPILE_TEST) && PCI
+> > +
+> > +config AMD_SFH_HID
+> > +	tristate "AMD Sensor Fusion Hub"
+> > +	default n
+> > +	select HID
+> > +	help
+> > +	  If you say yes to this option, support will be included for
+> > the AMD
+> > +	  Sensor Fusion Hub.
+> > +
+> > +	  This driver can also be built as modules. If so, the modules
+> > will
+> > +	  be  called amd-mp2-pcie and amd-sfhtp-hid.
+> > +	  Say Y here if you want to support AMD SFH. If unsure, say N.
+> > +
+> > +endmenu
+> > diff --git a/drivers/hid/amd-sfh-hid/Makefile b/drivers/hid/amd-
+> > sfh-hid/Makefile
+> > new file mode 100644
+> > index 0000000..5aae934
+> > --- /dev/null
+> > +++ b/drivers/hid/amd-sfh-hid/Makefile
+> > @@ -0,0 +1,17 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Makefile - AMD SFH HID drivers
+> > +# Copyright (c) 2019-2020, Advanced Micro Devices, Inc.
+> > +#
+> > +#
+> > +ccflags-m := -Werror
+> > +obj-$(CONFIG_AMD_SFH_HID) += amd-mp2-pcie.o
+> > +amd-mp2-pcie-objs := amd_mp2_pcie.o
+> > +
+> > +obj-$(CONFIG_AMD_SFH_HID) +=amd-sfhtp-hid.o
+> > +amd-sfhtp-hid-objs := amdsfh-hid.o
+> > +amd-sfhtp-hid-objs+= amdsfh-hid-client.o
+> > +amd-sfhtp-hid-objs+= amdsfh-debugfs.o
+> > +amd-sfhtp-hid-objs+= hid_descriptor/amd_sfh_hid_descriptor.o
+> > +
+> > +ccflags-y += -I$(srctree)/$(src)/
+> > diff --git a/drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> > b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> > new file mode 100644
+> > index 0000000..f264d60
+> > --- /dev/null
+> > +++ b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> > @@ -0,0 +1,256 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * AMD MP2 PCIe communication driver
+> > + *
+> > + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> > + *          Nehal Bakulchandra Shah <
+> > Nehal-bakulchandra.Shah@amd.com>
+> > + */
+> > +
+> > +#include "amd_mp2_pcie.h"
+> > +#include <linux/interrupt.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/delay.h>
+> > +
+> > +#define DRIVER_NAME	"pcie_mp2_amd"
+> > +#define DRIVER_DESC	"AMD(R) PCIe MP2 Communication Driver"
+> > +#define DRIVER_VER	"1.0"
+> > +
+> > +#define	ACEL_EN		BIT(ACCEL_IDX)
+> > +#define	GYRO_EN		BIT(GYRO_IDX)
+> > +#define MAGNO_EN	BIT(MAG_IDX)
+> > +#define ALS_EN		BIT(AMBIENT_LIGHT_IDX)
+> > +
+> > +int amd_start_sensor(struct pci_dev *pdev, struct
+> > amd_mp2_sensor_info info)
+> > +{
+> > +	struct amd_mp2_dev *privdata = pci_get_drvdata(pdev);
+> > +	union sfh_cmd_base cmd_base;
+> > +	union sfh_command_parameter cmd_param;
+> > +
+> > +	/*fill up command register*/
+> > +	cmd_base.ul = 0;
+> > +	cmd_base.s.cmd_id = enable_sensor;
+> > +	cmd_base.s.period = info.period;
+> > +	cmd_base.s.sensor_id = info.sensor_idx;
+> > +
+> > +	/*fill up command param register*/
+> > +	cmd_param.ul = 0;
+> > +	cmd_param.s.buffer_layout = 1;
+> > +	cmd_param.s.buffer_length = 16;
+> > +
+> > +	write64((u64)info.phy_address, privdata->mmio + AMD_C2P_MSG2);
+> > +	writel(cmd_param.ul, privdata->mmio + AMD_C2P_MSG1);
+> > +	writel(cmd_base.ul, privdata->mmio + AMD_C2P_MSG0);
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(amd_start_sensor);
+> > +
+> > +int amd_stop_sensor(struct pci_dev *pdev, u16 sensor_idx)
+> > +{
+> > +	struct amd_mp2_dev *privdata = pci_get_drvdata(pdev);
+> > +	union sfh_cmd_base cmd_base;
+> > +
+> > +	/* fill up command register */
+> > +	cmd_base.ul = 0;
+> > +	cmd_base.s.cmd_id = disable_sensor;
+> > +	cmd_base.s.period = 0;
+> > +	cmd_base.s.sensor_id = sensor_idx;
+> > +
+> > +	write64(0x0, privdata->mmio + AMD_C2P_MSG2);
+> > +	writel(cmd_base.ul, privdata->mmio + AMD_C2P_MSG0);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(amd_stop_sensor);
+> > +
+> > +int amd_stop_all_sensors(struct pci_dev *pdev)
+> > +{
+> > +	struct amd_mp2_dev *privdata = pci_get_drvdata(pdev);
+> > +	union sfh_cmd_base cmd_base;
+> > +
+> > +	/*fill up command register */
+> > +	cmd_base.ul = 0;
+> > +	cmd_base.s.cmd_id = stop_all_sensors;
+> > +	cmd_base.s.period = 0;
+> > +	cmd_base.s.sensor_id = 0;
+> > +
+> > +	writel(cmd_base.ul, privdata->mmio + AMD_C2P_MSG0);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(amd_stop_all_sensors);
+> > +
+> > +int amd_mp2_get_sensor_num(struct pci_dev *dev, u8 *sensor_id)
+> > +{
+> > +	struct amd_mp2_dev *privdata = pci_get_drvdata(dev);
+> > +	int activestatus;
+> > +	int num_of_sensors = 0;
+> > +
+> > +	if (!sensor_id)
+> > +		return -ENOMEM;
+> > +
+> > +	privdata->eventreg.activecontrolstatus =
+> > +			readl(privdata->mmio + AMD_P2C_MSG3);
+> > +	activestatus = privdata->eventreg.activecontrolstatus >> 4;
+> > +
+> > +	if (ACEL_EN  & activestatus) {
+> > +		sensor_id[num_of_sensors] = ACCEL_IDX;
+> > +		num_of_sensors++;
+> > +	}
+> > +	if (GYRO_EN & activestatus) {
+> > +		sensor_id[num_of_sensors] = GYRO_IDX;
+> > +		num_of_sensors++;
+> > +	}
+> > +	if (MAGNO_EN & activestatus) {
+> > +		sensor_id[num_of_sensors] = MAG_IDX;
+> > +		num_of_sensors++;
+> > +	}
+> > +
+> > +	if (ALS_EN & activestatus) {
+> > +		sensor_id[num_of_sensors] = AMBIENT_LIGHT_IDX;
+> > +		num_of_sensors++;
+> > +	}
+> > +
+> > +	return num_of_sensors;
+> > +}
+> > +EXPORT_SYMBOL_GPL(amd_mp2_get_sensor_num);
+> > +
+> > +static int amd_mp2_pci_init(struct amd_mp2_dev *privdata, struct
+> > pci_dev *pdev)
+> > +{
+> > +	int rc;
+> > +	int bar_index = 2;
+> > +	resource_size_t size, base;
+> > +
+> > +	pci_set_drvdata(pdev, privdata);
+> > +
+> > +	rc = pci_enable_device(pdev);
+> > +	if (rc)
+> > +		goto err_pci_enable;
+> > +
+> > +	rc = pci_request_regions(pdev, DRIVER_NAME);
+> > +	if (rc)
+> > +		goto err_pci_regions;
+> > +
+> > +	pci_set_master(pdev);
+> > +
+> > +	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
+> > +	if (rc) {
+> > +		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+> > +		if (rc)
+> > +			goto err_dma_mask;
+> > +		dev_warn(ndev_dev(privdata), "Cannot DMA highmem\n");
+> > +	}
+> > +
+> > +	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
+> > +	if (rc) {
+> > +		rc = pci_set_consistent_dma_mask(pdev,
+> > DMA_BIT_MASK(32));
+> > +		if (rc)
+> > +			goto err_dma_mask;
+> > +		dev_warn(ndev_dev(privdata), "Cannot DMA consistent
+> > highmem\n");
+> > +	}
+> > +
+> > +	base = pci_resource_start(pdev, bar_index);
+> > +	size = pci_resource_len(pdev, bar_index);
+> > +	dev_dbg(ndev_dev(privdata), "Base addr:%llx size:%llx\n",
+> > +		(unsigned long long)base, (unsigned long long)size);
+> > +
+> > +	privdata->mmio = ioremap(base, size);
+> > +	if (!privdata->mmio) {
+> > +		rc = -EIO;
+> > +		goto err_dma_mask;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_dma_mask:
+> > +	pci_clear_master(pdev);
+> > +	pci_release_regions(pdev);
+> > +err_pci_regions:
+> > +	pci_disable_device(pdev);
+> > +err_pci_enable:
+> > +	pci_set_drvdata(pdev, NULL);
+> > +	return rc;
+> > +}
+> > +
+> > +static void amd_mp2_pci_deinit(struct amd_mp2_dev *privdata)
+> > +{
+> > +	struct pci_dev *pdev = ndev_pdev(privdata);
+> > +
+> > +	amd_stop_all_sensors(pdev);
+> > +	pci_iounmap(pdev, privdata->mmio);
+> > +
+> > +	pci_clear_master(pdev);
+> > +	pci_release_regions(pdev);
+> > +	pci_disable_device(pdev);
+> > +	pci_set_drvdata(pdev, NULL);
+> > +}
+> > +
+> > +static int amd_mp2_pci_probe(struct pci_dev *pdev,
+> > +			     const struct pci_device_id *id)
+> > +{
+> > +	struct amd_mp2_dev *privdata;
+> > +	int rc;
+> > +
+> > +	dev_info(&pdev->dev, "MP2 device found [%04x:%04x] (rev %x)\n",
+> > +		 (int)pdev->vendor, (int)pdev->device, (int)pdev-
+> > >revision);
+> > +
+> > +	privdata = kzalloc(sizeof(*privdata), GFP_KERNEL);
+> > +
+> > +	if (!privdata) {
+> > +		rc = -ENOMEM;
+> > +		goto err_dev;
+> > +	}
+> > +
+> > +	privdata->pdev = pdev;
+> > +
+> > +	rc = amd_mp2_pci_init(privdata, pdev);
+> > +	if (rc)
+> > +		goto err_pci_init;
+> > +
+> > +	return 0;
+> > +
+> > +err_pci_init:
+> > +	kfree(privdata);
+> > +err_dev:
+> > +	dev_err(&pdev->dev, "Memory Allocation Failed\n");
+> > +	return rc;
+> > +}
+> > +
+> > +static void amd_mp2_pci_remove(struct pci_dev *pdev)
+> > +{
+> > +	struct amd_mp2_dev *privdata = pci_get_drvdata(pdev);
+> > +
+> > +	amd_mp2_pci_deinit(privdata);
+> > +	kfree(privdata);
+> > +}
+> > +
+> > +static const struct pci_device_id amd_mp2_pci_tbl[] = {
+> > +	{PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_MP2)},
+> > +	{0}
+> > +};
+> > +MODULE_DEVICE_TABLE(pci, amd_mp2_pci_tbl);
+> > +
+> > +static struct pci_driver amd_mp2_pci_driver = {
+> > +	.name		= DRIVER_NAME,
+> > +	.id_table	= amd_mp2_pci_tbl,
+> > +	.probe		= amd_mp2_pci_probe,
+> > +	.remove		= amd_mp2_pci_remove,
+> > +};
+> > +
+> > +static int __init amd_mp2_pci_driver_init(void)
+> > +{
+> > +	return pci_register_driver(&amd_mp2_pci_driver);
+> > +}
+> > +module_init(amd_mp2_pci_driver_init);
+> > +
+> > +static void __exit amd_mp2_pci_driver_exit(void)
+> > +{
+> > +	pci_unregister_driver(&amd_mp2_pci_driver);
+> > +}
+> > +module_exit(amd_mp2_pci_driver_exit);
+> > +MODULE_DESCRIPTION(DRIVER_DESC);
+> > +MODULE_VERSION(DRIVER_VER);
+> > +MODULE_LICENSE("Dual BSD/GPL");
+> > +MODULE_AUTHOR("Shyam Sundar S K <Shyam-sundar.S-k@amd.com>");
+> > +MODULE_AUTHOR("Nehal Bakulchandra Shah <
+> > Nehal-bakulchandra.Shah@amd.com>");
+> > diff --git a/drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> > b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> > new file mode 100644
+> > index 0000000..2bfd2de
+> > --- /dev/null
+> > +++ b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> > @@ -0,0 +1,169 @@
+> > +/* SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + * AMD MP2 PCIe communication driver
+> > + *
+> > + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> > + *          Nehal Bakulchandra Shah <
+> > Nehal-bakulchandra.Shah@amd.com>
+> > + */
+> > +
+> > +#ifndef PCIE_MP2_AMD_H
+> > +#define PCIE_MP2_AMD_H
+> > +
+> > +#include <linux/pci.h>
+> > +#define PCI_DEVICE_ID_AMD_MP2	0x15E4
+> > +
+> > +#define write64 _write64
+> > +static inline void _write64(u64 val, void __iomem *mmio)
+> > +{
+> > +	writel(val, mmio);
+> > +	writel(val >> 32, mmio + sizeof(u32));
+> > +}
+> > +
+> > +#define read64 _read64
+> > +static inline u64 _read64(void __iomem *mmio)
+> > +{
+> > +	u64 low, high;
+> > +
+> > +	low = readl(mmio);
+> > +	high = readl(mmio + sizeof(u32));
+> > +	return low | (high << 32);
+> > +}
+> > +
+> > +enum {
+> > +	/* MP2 C2P Message Registers */
+> > +	AMD_C2P_MSG0 = 0x10500,
+> > +	AMD_C2P_MSG1 = 0x10504,
+> > +	AMD_C2P_MSG2 = 0x10508,
+> > +	AMD_C2P_MSG3 = 0x1050c,
+> > +	AMD_C2P_MSG4 = 0x10510,
+> > +	AMD_C2P_MSG5 = 0x10514,
+> > +	AMD_C2P_MSG6 = 0x10518,
+> > +	AMD_C2P_MSG7 = 0x1051c,
+> > +	AMD_C2P_MSG8 = 0x10520,
+> > +	AMD_C2P_MSG9 = 0x10524,
+> > +
+> > +	/* MP2 P2C Message Registers */
+> > +	AMD_P2C_MSG0 = 0x10680, /*Do not use*/
+> > +	AMD_P2C_MSG1 = 0x10684,
+> > +	AMD_P2C_MSG2 = 0x10688,
+> > +	AMD_P2C_MSG3 = 0x1068C, /*MP2 debug info*/
+> > +	AMD_P2C_MSG_INTEN = 0x10690, /*MP2 int gen register*/
+> > +	AMD_P2C_MSG_INTSTS = 0x10694, /*Interrupt sts*/
+> > +};
+> > +
+> > +/*
+> > + * SFH Command registers
+> > + */
+> > +union sfh_cmd_base {
+> > +	u32 ul;
+> > +	struct {
+> > +		u32 cmd_id : 8;
+> > +		u32 sensor_id : 8;
+> > +		u32 period : 16;
+> > +	} s; /*!< Structure used for bit access */
+> > +};
+> > +
+> > +union sfh_command_parameter {
+> > +	u32 ul;
+> > +	struct {
+> > +		u32 buffer_layout : 2;
+> > +		u32 buffer_length : 6;
+> > +		u32 rsvd : 24;
+> > +	} s;
+> > +};
+> > +
+> > +struct sfh_command_register {
+> > +	union sfh_cmd_base cmd_base;
+> > +	union sfh_command_parameter cmd_param;
+> > +	phys_addr_t phy_addr;
+> > +};
+> > +
+> > +/*
+> > + * SFH Response registers
+> > + */
+> > +enum response_type {
+> > +	non_operationevent,
+> > +	command_success,
+> > +	command_failed,
+> > +	sfi_dataready_event,
+> > +	invalid_response = 0xff,
+> > +};
+> > +
+> > +enum status_type {
+> > +	cmd_success,
+> > +	invalid_data_payload,
+> > +	invalid_data_length,
+> > +	invalid_sensor_id,
+> > +	invalid_dram_addr,
+> > +	invalid_command,
+> > +	sensor_enabled,
+> > +	sensor_disabled,
+> > +	status_end,
+> > +};
+> > +
+> > +enum command_id {
+> > +	non_operation = 0,
+> > +	enable_sensor = 1,
+> > +	disable_sensor = 2,
+> > +	dump_sensorinfo = 3,
+> > +	numberof_sensordiscovered = 4,
+> > +	who_am_i_regchipid = 5,
+> > +	set_dcd_data = 6,
+> > +	get_dcd_data = 7,
+> > +	stop_all_sensors = 8,
+> > +	invalid_cmd = 0xf,
+> > +};
+> > +
+> > +union sfh_event_base {
+> > +	u32 ul;
+> > +	struct {
+> > +		u32 response : 4; /*!< bit: 0..3 SFI response_type */
+> > +		u32 status : 3; /*!< bit: 6..5 status_type */
+> > +		u32 out_in_c2p : 1; /*!< bit: 5 0- output in DRAM,1-in
+> > C2PMsg */
+> > +		u32 length : 6; /*!< bit: 8..13 length */
+> > +		u32 dbg : 2; /*!< bit: 14.15 dbg msg include in p2c msg
+> > 1-2 */
+> > +		u32 sensor_id : 8; /*!< bit: 16..23 Sensor ID */
+> > +		u32 rsvd : 8; /*!< bit: 24..31 Reservered for future
+> > use */
+> > +	} s;
+> > +};
+> > +
+> > +struct sfi_event_register {
+> > +	union sfh_event_base evtbase;
+> > +	u32 debuginfo1;
+> > +	u32 debuginfo2;
+> > +	u32 activecontrolstatus;
+> > +};
+> > +
+> > +enum sensor_idx {
+> > +	ACCEL_IDX               = 0,
+> > +	GYRO_IDX                = 1,
+> > +	MAG_IDX                 = 2,
+> > +	AMBIENT_LIGHT_IDX       = 19,
+> > +	NUM_ALL_SENSOR_CONSUMERS
+> > +};
+> > +
+> > +struct amd_mp2_dev {
+> > +	struct pci_dev *pdev;
+> > +	struct dentry *debugfs_dir;
+> > +	void __iomem *mmio;
+> > +	union sfh_event_base eventval;
+> > +	struct sfi_event_register eventreg;
+> > +	struct delayed_work work;
+> > +	void *ctx;
+> > +	void *cl_data;
+> > +};
+> > +
+> > +struct amd_mp2_sensor_info {
+> > +	u8 sensor_idx;
+> > +	u32 period;
+> > +	phys_addr_t phy_address;
+> > +};
+> > +
+> > +int amd_start_sensor(struct pci_dev *pdev, struct
+> > amd_mp2_sensor_info info);
+> > +int amd_stop_sensor(struct pci_dev *pdev, u16 sensor_idx);
+> > +int amd_stop_all_sensors(struct pci_dev *pdev);
+> > +int amd_mp2_get_sensor_num(struct pci_dev *dev, u8 *sensor_id);
+> > +#define ndev_pdev(ndev) ((ndev)->pdev)
+> > +#define ndev_name(ndev) pci_name(ndev_pdev(ndev))
+> > +#define ndev_dev(ndev) (&ndev_pdev(ndev)->dev)
+> > +#endif
+> > 
+> 
+> any update on this?
+> 
+> Thanks
+> 
+> Nehal Shah
+
