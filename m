@@ -4,58 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6FDC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0FAC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C972082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FF12082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747645;
-	bh=PJK013SBG7u4wYHSiXwoaNEf38vYPFURs3nH2OH3sig=;
+	s=default; t=1580747650;
+	bh=xjJ4n8rgMJFJxqFZQDdJvTScIJTUaEY9F/9qokdtL0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPqGwHYvpbLkGQA3y0lYB8djYeF8LNAH6DGhroROt0uKld1ibcFKjuLqKEgZqad/s
-	 IsGDKEQ97ARvpl3VH4n6cX5uxnHT66J5/Su/g8lswU0ybakptgJlr/Pj0GE2etpo24
-	 yrAHkq3K9ci3V6DPyQ+2g13AqcFwk5fNqNplH8yo=
+	b=X0+i0YUfMjDzSeXcQhQ0053K0ug/EV9vphrbvwV8HqilJ4Z9hafBZ7PokctpLxGdt
+	 JDEJ7vvTK6X3jCYW8gTk9bZGb0va/TYV+8ngeyJoq/mPwtsSgQ/pbgy+cTsLr0iBNO
+	 fdC2d1IleMjMTfOQFr/gnOVQIWBg6XfUkFWmggi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbgBCQeF (ORCPT
+        id S1730737AbgBCQeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48250 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730713AbgBCQeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:02 -0500
+        id S1730725AbgBCQeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:04 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57ED121775;
-        Mon,  3 Feb 2020 16:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D3C21744;
+        Mon,  3 Feb 2020 16:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747641;
-        bh=PJK013SBG7u4wYHSiXwoaNEf38vYPFURs3nH2OH3sig=;
+        s=default; t=1580747644;
+        bh=xjJ4n8rgMJFJxqFZQDdJvTScIJTUaEY9F/9qokdtL0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0GGpJkdILJgPjKygiuTzQYqJ2oQVvMFabqZKyDtcx+7qnb8ZT/aGTCpgNcQjDysP
-         PHsAFQ9LJ3ucaqJbDArid0D5l4xgFBTTUqiwaRVojIsZA5ZJ9hr0k9XCZE48mm80/g
-         BZbTfSCXzgFEBvxWm9ljLjf06bWCSfNkriblH4+8=
+        b=OTn4bgcO85I8aYBlsTOKkEZ5CLAGlSWCqkhutwG/gFQD8drMR5Pb5XDi/Uh2yFL55
+         rRQATxMuJbNrYxCIV14hoI7iLIA/7CgDyqI7NW3vTYGrPn3VqKRY3YZkzpS+wHL/3o
+         LQdL7/wF8k1vTEspCH+Pxsd0roTWHRr1arP0mBK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
-        stable@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 01/90] vfs: fix do_last() regression
-Date:   Mon,  3 Feb 2020 16:19:04 +0000
-Message-Id: <20200203161917.784791200@linuxfoundation.org>
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.4 10/90] PM / devfreq: Add new name attribute for sysfs
+Date:   Mon,  3 Feb 2020 16:19:13 +0000
+Message-Id: <20200203161918.968758819@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,63 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Chanwoo Choi <cw00.choi@samsung.com>
 
-commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
+commit 2fee1a7cc6b1ce6634bb0f025be2c94a58dfa34d upstream.
 
-Brown paperbag time: fetching ->i_uid/->i_mode really should've been
-done from nd->inode.  I even suggested that, but the reason for that has
-slipped through the cracks and I went for dir->d_inode instead - made
-for more "obvious" patch.
+The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
+sysfs") changed the node name to devfreq(x). After this commit, it is not
+possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
 
-Analysis:
+Add new name attribute in order to get device name.
 
- - at the entry into do_last() and all the way to step_into(): dir (aka
-   nd->path.dentry) is known not to have been freed; so's nd->inode and
-   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
-   inode of the file to get opened is not known.
-
- - after step_into(): inode of the file to get opened is known; dir
-   might be pointing to freed memory/be negative/etc.
-
- - at the call of may_create_in_sticky(): guaranteed to be out of RCU
-   mode; inode of the file to get opened is known and pinned; dir might
-   be garbage.
-
-The last was the reason for the original patch.  Except that at the
-do_last() entry we can be in RCU mode and it is possible that
-nd->path.dentry->d_inode has already changed under us.
-
-In that case we are going to fail with -ECHILD, but we need to be
-careful; nd->inode is pointing to valid struct inode and it's the same
-as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
-should use that.
-
-Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
-Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@kernel.org
-Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/namei.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/ABI/testing/sysfs-class-devfreq |    7 +++++++
+ drivers/devfreq/devfreq.c                     |    9 +++++++++
+ 2 files changed, 16 insertions(+)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3249,8 +3249,8 @@ static int do_last(struct nameidata *nd,
- 		   struct file *file, const struct open_flags *op)
+--- a/Documentation/ABI/testing/sysfs-class-devfreq
++++ b/Documentation/ABI/testing/sysfs-class-devfreq
+@@ -7,6 +7,13 @@ Description:
+ 		The name of devfreq object denoted as ... is same as the
+ 		name of device using devfreq.
+ 
++What:		/sys/class/devfreq/.../name
++Date:		November 2019
++Contact:	Chanwoo Choi <cw00.choi@samsung.com>
++Description:
++		The /sys/class/devfreq/.../name shows the name of device
++		of the corresponding devfreq object.
++
+ What:		/sys/class/devfreq/.../governor
+ Date:		September 2011
+ Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1112,6 +1112,14 @@ err_out:
+ }
+ EXPORT_SYMBOL(devfreq_remove_governor);
+ 
++static ssize_t name_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct devfreq *devfreq = to_devfreq(dev);
++	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
++}
++static DEVICE_ATTR_RO(name);
++
+ static ssize_t governor_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buf)
  {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = dir->d_inode->i_uid;
--	umode_t dir_mode = dir->d_inode->i_mode;
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
+@@ -1440,6 +1448,7 @@ static ssize_t trans_stat_show(struct de
+ static DEVICE_ATTR_RO(trans_stat);
+ 
+ static struct attribute *devfreq_attrs[] = {
++	&dev_attr_name.attr,
+ 	&dev_attr_governor.attr,
+ 	&dev_attr_available_governors.attr,
+ 	&dev_attr_cur_freq.attr,
 
 
