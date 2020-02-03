@@ -2,391 +2,170 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B7CC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C03C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1502051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748568;
-	bh=OUCXCq3XibIfbcVziYamvjjRVFnuDgt05l7oDGmiNGw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ucPD3Sl4UeifExHOSKhLO7kNJ5tlHqVgfxf89NrvJRWFNVbCmbFGQp9QwtFzWnpNY
-	 ZWJUtmHr93xxv7ufGdDb3UuaMRLU0AGxzX84SRgEBBjsjKNUjhzFPkXM58tlqqXcGn
-	 nnCLSzXpOwOMoE5eB6/p9dOsOzyK6PXA7Lfe5xmI=
+	by mail.kernel.org (Postfix) with ESMTP id 789EE2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgBCQY6 (ORCPT
+        id S1728691AbgBCQvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35456 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:51:14 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49954 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbgBCQY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:24:57 -0500
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9C420838;
-        Mon,  3 Feb 2020 16:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747095;
-        bh=OUCXCq3XibIfbcVziYamvjjRVFnuDgt05l7oDGmiNGw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=U4vUzEy49XmNsExKlMt5saIGY9Qf4BatGDNcQj0C2W5Ouqf2EBeAwx1X9zgzNTmFw
-         +2mTykUHVA0F5BI/quzHUvYDZG29rFhxdcZjUcm5ExAmaIjrPusXfle0siXWpkQuyi
-         +zIILDY7J+3g/vx/P5OWm+xbepUft7R47fRPRLz4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/68] 4.9.213-stable review
-Date:   Mon,  3 Feb 2020 16:18:56 +0000
-Message-Id: <20200203161904.705434837@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
+        id S1727319AbgBCQvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:51:14 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B93DCAC44;
+        Mon,  3 Feb 2020 16:51:12 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH v3 0/1] parallel 'copy-from' Ops in copy_file_range
+Date:   Mon,  3 Feb 2020 16:51:16 +0000
+Message-Id: <20200203165117.5701-1-lhenriques@suse.com>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.213-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.213-rc1
-X-KernelTest-Deadline: 2020-02-05T16:19+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.213 release.
-There are 68 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+Hi,
 
-Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-Anything received after that time might be too late.
+Here's another re-spin of the patch to improve copy_file_range performance
+by parallelizing the OSD requests.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.213-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+Changelog since v2:
 
-thanks,
+- Refactor copy loop to ensure 'ret' is updated with the number of bytes
+  already copied only after the ceph_osdc_wait_requests() returns.  This
+  meant to change this helper function to also return the number of
+  successful requests.  Also fixed error handling.
 
-greg k-h
+- Use counter for # copies instead of re-calculating ncopies (now
+  copy_count) everytime time it reaches zero.
 
--------------
-Pseudo-Shortlog of commits:
+- Dropped 'dout' in ceph_osdc_wait_requests
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.213-rc1
+- Have ceph_osdc_wait_requests and ceph_osdc_wait_request functions close
 
-Praveen Chaudhary <praveen5582@gmail.com>
-    net: Fix skb->csum update in inet_proto_csum_replace16().
+Changelog since v1 (the RFC):
 
-Vasily Averin <vvs@virtuozzo.com>
-    l2t_seq_next should increase position index
+- Dropped synchronous version of ceph_osdc_copy_from
+  * This was the reason for merging the patchset into a single patch, as
+    changing ceph_osdc_copy_from definition would break bisectability
 
-Vasily Averin <vvs@virtuozzo.com>
-    seq_tab_next() should increase position index
+- Moved wait_copy_from_reqs into libceph, renaming it to
+  ceph_osdc_wait_requests
 
-Finn Thain <fthain@telegraphics.com.au>
-    net/sonic: Quiesce SONIC before re-initializing descriptor memory
+- Use ->r_private_item instead of adding a new list_head into struct
+  ceph_osd_request
 
-Finn Thain <fthain@telegraphics.com.au>
-    net/sonic: Fix receive buffer handling
+- Dropped the module parameter (used for testing) and added the throttling
+  mechanism using the formula suggested by Ilya.
 
-Finn Thain <fthain@telegraphics.com.au>
-    net/sonic: Use MMIO accessors
+For reference, here's the original RFC cover letter (fixed typo in results
+table: 'throttle=5' should be 'throttle=0').
 
-Finn Thain <fthain@telegraphics.com.au>
-    net/sonic: Add mutual exclusion for accessing shared state
+--------------------------------------------------------------------------
 
-Madalin Bucur <madalin.bucur@oss.nxp.com>
-    net: fsl/fman: rename IF_MODE_XGMII to IF_MODE_10G
+As discussed here[1] I'm sending an RFC patchset that does the
+parallelization of the requests sent to the OSDs during a copy_file_range
+syscall in CephFS.
 
-Madalin Bucur <madalin.bucur@oss.nxp.com>
-    net/fsl: treat fsl,erratum-a011043
+  [1] https://lore.kernel.org/lkml/20200108100353.23770-1-lhenriques@suse.com/
 
-Madalin Bucur <madalin.bucur@oss.nxp.com>
-    powerpc/fsl/dts: add fsl,erratum-a011043
+I've also some performance numbers that I wanted to share. Here's a
+description of the very simple tests I've run:
 
-Manish Chopra <manishc@marvell.com>
-    qlcnic: Fix CPU soft lockup while collecting firmware dump
+ - create a file with 200 objects in it
+   * i.e. tests with different object sizes mean different file sizes
+ - drop all caches and umount the filesystem
+ - Measure:
+   * mount filesystem
+   * full file copy (with copy_file_range)
+   * umount filesystem
 
-Hayes Wang <hayeswang@realtek.com>
-    r8152: get default setting of WOL before initializing
+Tests were repeated several times and the average value was used for
+comparison.
 
-Michael Ellerman <mpe@ellerman.id.au>
-    airo: Add missing CAP_NET_ADMIN check in AIROOLDIOCTL/SIOCDEVPRIVATE
+  DISCLAIMER:
+  These numbers are only indicative, and different clusters and client
+  configs will for sure show different performance!  More rigorous tests
+  would be require to validate these results.
 
-Michael Ellerman <mpe@ellerman.id.au>
-    airo: Fix possible info leak in AIROOLDIOCTL/SIOCDEVPRIVATE
+Having as baseline a full read+write (basically, a copy_file_range
+operation within a filesystem mounted without the 'copyfrom' option),
+here's some values for different object sizes:
 
-Vladimir Murzin <vladimir.murzin@arm.com>
-    ARM: 8955/1: virt: Relax arch timer version check during early boot
+			  8M	  4M	  1M	  65k
+read+write		100%	100%	100%	 100%
+sequential		 51%	 52%	 83%	>100%
+parallel (throttle=1)	 51%	 52%	 83%	>100%
+parallel (throttle=0)	 17%	 17%	 83%	>100%
 
-Hannes Reinecke <hare@suse.de>
-    scsi: fnic: do not queue commands during fwreset
+Notes:
 
-Nicolas Dichtel <nicolas.dichtel@6wind.com>
-    vti[6]: fix packet tx through bpf_redirect()
+- 'parallel (throttle=0)' was a test where *all* the requests (i.e. 200
+  requests to copy the 200 objects in the file) were sent to the OSDs and
+  the wait for requests completion is done at the end only.
 
-Johan Hovold <johan@kernel.org>
-    Input: aiptek - use descriptors of current altsetting
+- 'parallel (throttle=1)' was just a control test, where the wait for
+  completion is done immediately after a request is sent.  It was expected
+  to be very similar to the non-optimized ('sequential') tests.
 
-Arnd Bergmann <arnd@arndb.de>
-    wireless: wext: avoid gcc -O3 warning
+- These tests were executed on a cluster with 40 OSDs, spread across 5
+  (bare-metal) nodes.
 
-Jouni Malinen <j@w1.fi>
-    mac80211: Fix TKIP replay protection immediately after key setup
+- The tests with object size of 65k show that copy_file_range definitely
+  doesn't scale to files with small object sizes.  '> 100%' actually means
+  more than 10x slower.
 
-Ganapathi Bhat <ganapathi.bhat@nxp.com>
-    wireless: fix enabling channel 12 for custom regulatory domain
+Measuring the mount+copy+umount masks the actual difference between
+different throttle values due to the time spent in mount+umount.  Thus,
+there was no real difference between throttle=0 (send all and wait) and
+throttle=20 (send 20, wait, send 20, ...).  But here's what I observed
+when measuring only the copy operation (4M object size):
 
-Cambda Zhu <cambda@linux.alibaba.com>
-    ixgbe: Fix calculation of queue with VFs and flow director on interface flap
-
-Radoslaw Tyl <radoslawx.tyl@intel.com>
-    ixgbevf: Remove limit of 10 entries for unicast filter list
-
-Lubomir Rintel <lkundrak@v3.sk>
-    clk: mmp2: Fix the order of timer mux parents
-
-Markus Theil <markus.theil@tu-ilmenau.de>
-    mac80211: mesh: restrict airtime metric to peered established plinks
-
-Dave Gerlach <d-gerlach@ti.com>
-    soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
-
-Kishon Vijay Abraham I <kishon@ti.com>
-    ARM: dts: beagle-x15-common: Model 5V0 regulator
-
-Lee Jones <lee.jones@linaro.org>
-    media: si470x-i2c: Move free() past last use of 'radio'
-
-Bin Liu <b-liu@ti.com>
-    usb: dwc3: turn off VBUS when leaving host mode
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    Bluetooth: Fix race condition in hci_release_sock()
-
-Zhenzhong Duan <zhenzhong.duan@gmail.com>
-    ttyprintk: fix a potential deadlock in interrupt context issue
-
-Hans Verkuil <hverkuil-cisco@xs4all.nl>
-    media: dvb-usb/dvb-usb-urb.c: initialize actlen to 0
-
-Hans Verkuil <hverkuil-cisco@xs4all.nl>
-    media: gspca: zero usb_buf
-
-Sean Young <sean@mess.org>
-    media: af9005: uninitialized variable printked
-
-Sean Young <sean@mess.org>
-    media: digitv: don't continue if remote control state can't be read
-
-Jan Kara <jack@suse.cz>
-    reiserfs: Fix memory leak of journal device string
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
-
-Dirk Behme <dirk.behme@de.bosch.com>
-    arm64: kbuild: remove compressed images on 'make ARCH=arm64 (dist)clean'
-
-Vitaly Chikunov <vt@altlinux.org>
-    tools lib: Fix builds when glibc contains strlcpy()
-
-Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-    iio: gyro: st_gyro: fix L3GD20H support
-
-Linus Walleij <linus.walleij@linaro.org>
-    iio: gyro: st_gyro: inline per-sensor data
-
-Herbert Xu <herbert@gondor.apana.org.au>
-    crypto: pcrypt - Fix user-after-free on module unload
-
-Al Viro <viro@zeniv.linux.org.uk>
-    vfs: fix do_last() regression
-
-Herbert Xu <herbert@gondor.apana.org.au>
-    crypto: af_alg - Use bh_lock_sock in sk_destruct
-
-Eric Dumazet <edumazet@google.com>
-    net_sched: ematch: reject invalid TCF_EM_SIMPLE
-
-Laura Abbott <labbott@fedoraproject.org>
-    usb-storage: Disable UAS on JMicron SATA enclosure
-
-Arnd Bergmann <arnd@arndb.de>
-    atm: eni: fix uninitialized variable warning
-
-Dmitry Osipenko <digetx@gmail.com>
-    gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
-
-Krzysztof Kozlowski <krzk@kernel.org>
-    net: wan: sdla: Fix cast from pointer to integer of different size
-
-Fenghua Yu <fenghua.yu@intel.com>
-    drivers/net/b44: Change to non-atomic bit operations on pwol_mask
-
-Andreas Kemnade <andreas@kemnade.info>
-    watchdog: rn5t618_wdt: fix module aliases
-
-Randy Dunlap <rdunlap@infradead.org>
-    arc: eznps: fix allmodconfig kconfig warning
-
-Johan Hovold <johan@kernel.org>
-    zd1211rw: fix storage endpoint lookup
-
-Johan Hovold <johan@kernel.org>
-    rtl8xxxu: fix interface sanity check
-
-Johan Hovold <johan@kernel.org>
-    brcmfmac: fix interface sanity check
-
-Johan Hovold <johan@kernel.org>
-    ath9k: fix storage endpoint lookup
-
-Lukas Wunner <lukas@wunner.de>
-    serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
-
-Malcolm Priestley <tvboxspy@gmail.com>
-    staging: vt6656: Fix false Tx excessive retries reporting.
-
-Malcolm Priestley <tvboxspy@gmail.com>
-    staging: vt6656: use NULLFUCTION stack on mac80211
-
-Malcolm Priestley <tvboxspy@gmail.com>
-    staging: vt6656: correct packet types for CTS protect, mode.
-
-Colin Ian King <colin.king@canonical.com>
-    staging: wlan-ng: ensure error return is actually returned
-
-Andrey Shvetsov <andrey.shvetsov@k2l.de>
-    staging: most: net: fix buffer overflow
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: ir-usb: fix IrLAP framing
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: ir-usb: fix link-speed handling
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: ir-usb: add missing endpoint sanity check
-
-Johan Hovold <johan@kernel.org>
-    rsi_91x_usb: fix interface sanity check
-
-Johan Hovold <johan@kernel.org>
-    orinoco_usb: fix interface sanity check
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: Add missing copy ops check before clearing buffer
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arc/plat-eznps/Kconfig                        |   2 +-
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi    |  21 +++
- arch/arm/kernel/hyp-stub.S                         |   7 +-
- arch/arm64/boot/Makefile                           |   2 +-
- .../dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi   |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi |   1 +
- .../dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi   |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi  |   1 +
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi  |   1 +
- crypto/af_alg.c                                    |   6 +-
- crypto/pcrypt.c                                    |   3 +-
- drivers/atm/eni.c                                  |   4 +-
- drivers/char/ttyprintk.c                           |  15 +-
- drivers/clk/mmp/clk-of-mmp2.c                      |   2 +-
- drivers/gpio/Kconfig                               |   1 +
- drivers/iio/gyro/st_gyro.h                         |   1 +
- drivers/iio/gyro/st_gyro_core.c                    | 210 +++++++--------------
- drivers/iio/gyro/st_gyro_i2c.c                     |   5 +
- drivers/iio/gyro/st_gyro_spi.c                     |   1 +
- drivers/input/tablet/aiptek.c                      |   2 +-
- drivers/media/radio/si470x/radio-si470x-i2c.c      |   2 +-
- drivers/media/usb/dvb-usb/af9005.c                 |   2 +-
- drivers/media/usb/dvb-usb/digitv.c                 |  10 +-
- drivers/media/usb/dvb-usb/dvb-usb-urb.c            |   2 +-
- drivers/media/usb/gspca/gspca.c                    |   2 +-
- drivers/net/ethernet/broadcom/b44.c                |   9 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |   3 +-
- drivers/net/ethernet/chelsio/cxgb4/l2t.c           |   3 +-
- drivers/net/ethernet/freescale/fman/fman_memac.c   |   4 +-
- drivers/net/ethernet/freescale/xgmac_mdio.c        |   7 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |  37 +++-
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c  |   5 -
- drivers/net/ethernet/natsemi/sonic.c               | 109 +++++++++--
- drivers/net/ethernet/natsemi/sonic.h               |  25 ++-
- .../net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c  |   1 +
- .../net/ethernet/qlogic/qlcnic/qlcnic_minidump.c   |   2 +
- drivers/net/usb/r8152.c                            |   9 +-
- drivers/net/wan/sdla.c                             |   2 +-
- drivers/net/wireless/ath/ath9k/hif_usb.c           |   2 +-
- .../net/wireless/broadcom/brcm80211/brcmfmac/usb.c |   4 +-
- drivers/net/wireless/cisco/airo.c                  |  20 +-
- .../net/wireless/intersil/orinoco/orinoco_usb.c    |   4 +-
- .../net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |   2 +-
- drivers/net/wireless/rsi/rsi_91x_usb.c             |   2 +-
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c       |   2 +-
- drivers/scsi/fnic/fnic_scsi.c                      |   3 +
- drivers/soc/ti/wkup_m3_ipc.c                       |   4 +-
- drivers/staging/most/aim-network/networking.c      |  10 +
- drivers/staging/vt6656/device.h                    |   2 +
- drivers/staging/vt6656/int.c                       |   6 +-
- drivers/staging/vt6656/main_usb.c                  |   1 +
- drivers/staging/vt6656/rxtx.c                      |  26 +--
- drivers/staging/wlan-ng/prism2mgmt.c               |   2 +-
- drivers/tty/serial/8250/8250_bcm2835aux.c          |   2 +-
- drivers/usb/dwc3/core.c                            |   3 +
- drivers/usb/serial/ir-usb.c                        | 136 +++++++++----
- drivers/usb/storage/unusual_uas.h                  |   7 +-
- drivers/watchdog/rn5t618_wdt.c                     |   1 +
- fs/namei.c                                         |   4 +-
- fs/reiserfs/super.c                                |   2 +
- include/linux/usb/irda.h                           |  13 +-
- mm/mempolicy.c                                     |   6 +-
- net/bluetooth/hci_sock.c                           |   3 +
- net/core/utils.c                                   |  20 +-
- net/ipv4/ip_vti.c                                  |  13 +-
- net/ipv6/ip6_vti.c                                 |  13 +-
- net/mac80211/mesh_hwmp.c                           |   3 +
- net/mac80211/tkip.c                                |  18 +-
- net/sched/ematch.c                                 |   3 +
- net/wireless/reg.c                                 |  13 +-
- net/wireless/wext-core.c                           |   3 +-
- sound/core/pcm_native.c                            |   2 +-
- tools/include/linux/string.h                       |   8 +
- tools/lib/string.c                                 |   7 +
- 88 files changed, 587 insertions(+), 321 deletions(-)
-
+read+write		100%
+parallel (throttle=1)	 56%
+parallel (throttle=5)	 23%
+parallel (throttle=10)	 14%
+parallel (throttle=20)	  9%
+parallel (throttle=0)	  5%
+
+Anyway, I'll still need to revisit patch 0003 as it doesn't follow the
+suggestion done by Jeff to *not* add another knob to fine-tune the
+throttle value -- this patch adds a kernel parameter for a knob that I
+wanted to use in my testing to observe different values of this throttle
+limit.
+
+The goal is to probably to drop this patch and do the throttling in patch
+0002.  I just need to come up with a decent heuristic.  Jeff's suggestion
+was to use rsize/wsize, which are set to 64M by default IIRC.  Somehow I
+feel that it should be related to the number of OSDs in the cluster
+instead, but I'm not sure how.  And testing these sort of heuristics would
+require different clusters, which isn't particularly easy to get.  Anyway,
+comments are welcome!
+
+Cheers,
+--
+Luis
+
+Luis Henriques (1):
+  ceph: parallelize all copy-from requests in copy_file_range
+
+ fs/ceph/file.c                  | 45 +++++++++++++++++++++-----
+ include/linux/ceph/osd_client.h |  6 +++-
+ net/ceph/osd_client.c           | 56 +++++++++++++++++++++++++--------
+ 3 files changed, 85 insertions(+), 22 deletions(-)
 
