@@ -2,102 +2,205 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253FDC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4C0C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3EF620721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEABA20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBCWam (ORCPT
+        id S1726994AbgBCWco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:30:42 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39402 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbgBCWal (ORCPT
+        Mon, 3 Feb 2020 17:32:44 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42053 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCWcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:30:41 -0500
-Received: by mail-pj1-f65.google.com with SMTP id e9so415037pjr.4;
-        Mon, 03 Feb 2020 14:30:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ObtV4GuxT1aWcwvfp7nnODJ0y/i5a5qjCP9/aJC070U=;
-        b=hW4EiNO0em8pz5wgUw2B4xuZDZ3mT6E50lFB5EAtc8czq4jqrEqrqbOUcklIal5A63
-         guM0pZZguacTFTTsoP/RFVDKrmcNfMnvDkJOSrsWrRJHYdO6fK5p3RaA/ljtgW+u59lx
-         7QSpuMOi75f0khTuXluY8gA/Q/TWd9ivfI/sZhcLjncuzJ2KgZ+X6CZMtu7Z8QN8AfVA
-         uVeMrzfIeyz9f5LrwOJEl6lw4ew+l3qPy6ebnClD6FuNNeMO86d2BKz6o4F2fJoVXcG1
-         doA9Sko04QXswsFVUFQ+wCwVMKmSA4J1yKqBE3glWUc3uN1x+7+2O2HNCqam0bkZmchh
-         XDCA==
-X-Gm-Message-State: APjAAAXEndnBKLBNN3cBaLZEeXowGySWodoQNOD4yz+oTglYFx2DKTcW
-        e6bpD/HeIE1LvfUABYcibt6pXQKG
-X-Google-Smtp-Source: APXvYqzhao+tOtQQIRX2TXCk3BtyfpXuzqsBketmSKbHOGUSM+cHFPzLANvHmbrGE6KUdsXAh9V19g==
-X-Received: by 2002:a17:90a:d783:: with SMTP id z3mr1567408pju.3.1580769040238;
-        Mon, 03 Feb 2020 14:30:40 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id s206sm3569842pfs.100.2020.02.03.14.30.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 14:30:39 -0800 (PST)
-Subject: Re: [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait time
- support
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
- <1579764349-15578-7-git-send-email-cang@codeaurora.org>
- <d51c7c51-482a-01c3-fae0-1e83f9df45ac@acm.org>
- <bcbd7e82b1ea6f653d5136e89e70c9f0@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <4fee5a64-8ae3-4d90-617f-699b8d27a699@acm.org>
-Date:   Mon, 3 Feb 2020 14:30:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 3 Feb 2020 17:32:43 -0500
+X-Originating-IP: 90.65.92.102
+Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B1EACFF802;
+        Mon,  3 Feb 2020 22:32:40 +0000 (UTC)
+Date:   Mon, 3 Feb 2020 23:32:40 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 5.6
+Message-ID: <20200203223240.GA63964@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <bcbd7e82b1ea6f653d5136e89e70c9f0@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/2/20 11:16 PM, Can Guo wrote:
-> On 2020-01-26 11:34, Bart Van Assche wrote:
->> On 2020-01-22 23:25, Can Guo wrote:
->>> +    /* getting Specification Version in big endian format */
->>> +    hba->dev_info.spec_version = 
->>> desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 8 |
->>> +                      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
->>
->> Please use get_unaligned_be16() instead of open-coding it.
-> 
-> I am just keeping symmetry with the other device descriptors,
-> for example w_manufacturer_id.
+Hello Linus,
 
-Hi Can,
+Here is the pull-request for the RTC subsystem for 5.6.
 
-How about adding an additional patch that refactors the existing code?
+The VL_READ and VL_CLR ioctls have been reworked to be more useful. This
+will not break userspace as there are very few users and they are using
+the integer value as a boolean.
+Apart from that, two drivers were reworked and a few fixes here and
+there for a net reduction of number of lines.
 
-Please use get_unaligned_be16() in new code. That makes code easier to 
-read compared to open-coding get_unaligned_be16().
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Thanks,
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-Bart.
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.6
+
+for you to fetch changes up to f45719240700398b63a165f6b7f3fbab04f0b052:
+
+  dt-bindings: rtc: at91rm9200: document clocks property (2020-01-28 22:48:34 +0100)
+
+----------------------------------------------------------------
+RTC for 5.6
+
+Subsystem:
+ - the VL_READ and VL_CLR ioctls are now documented and their behavior is
+   unified across all the drivers.
+ - RTC_I2C_AND_SPI Kconfig option rework to avoid selecting both REGMAP_I2C and
+   REGMAP_SPI unecessarily.
+
+Drivers:
+ - at91rm9200: remove deprecated procfs, add sam9x60, sama5d4 and sama5d2
+   compatibles.
+ - cmos: solve lost interrupts issue on MS Surface 3
+ - hym8563: return proper errno when time is invalid
+ - rv3029: many fixes, nvram support
+
+----------------------------------------------------------------
+Alexandre Belloni (44):
+      mailmap: Update email address for Alexandre Belloni
+      rtc: define RTC_VL_READ values
+      rtc: Document RTC_VL_READ and RTC_VL_CLR ioctls
+      rtc: abx80x: return meaningful value for RTC_VL_READ
+      rtc: pcf2127: return meaningful value for RTC_VL_READ
+      rtc: pcf8523: return meaningful value for RTC_VL_READ
+      rtc: pcf8563: remove RTC_VL_CLR handling
+      rtc: pcf8563: remove conditional compilation
+      rtc: pcf8563: stop caching voltage_low
+      rtc: pcf8563: return meaningful value for RTC_VL_READ
+      rtc: pcf85063: remove RTC_VL_CLR handling
+      rtc: pcf85063: return meaningful value for RTC_VL_READ
+      rtc: rv3028: remove RTC_VL_CLR handling
+      rtc: rv3028: return meaningful value for RTC_VL_READ
+      rtc: rv8803: avoid clearing RV8803_FLAG_V2F in RTC_VL_CLR
+      rtc: rv8803: return meaningful value for RTC_VL_READ
+      rtc: rx8010: remove RTC_VL_CLR handling
+      rtc: rx8010: return meaningful value for RTC_VL_READ
+      rtc: rv3029: use proper name for the driver
+      rtc: rv3029: let regmap validate the register ranges
+      rtc: rv3029: remove open coded regmap_update_bits
+      rtc: rv3029: remove race condition when update STATUS
+      rtc: rv3029: avoid reading the status register uselessly
+      rtc: rv3029: get rid of rv3029_get_sr
+      rtc: rv3029: simplify rv3029_alarm_irq_enable
+      rtc: rv3029: simplify rv3029_set_alarm
+      rtc: rv3029: drop rv3029_read_regs and rv3029_write_regs
+      rtc: rv3029: add RTC_VL_READ and RTC_VL_CLEAR support
+      rtc: rv3029: correctly handle PON and VLOW2
+      rtc: rv3029: convert to devm_rtc_allocate_device
+      rtc: rv3029: let the core handle rtc range
+      rtc: rv3029: add nvram support
+      rtc: rv3029: drop deprecated compatbiles
+      rtc: rv3029: annotate init and exit functions
+      rtc: rv3029: remove useless error messages
+      rtc: at91rm9200: remove procfs information
+      dt-bindings: rtc: at91rm9200: convert bindings to json-schema
+      rtc: at91rm9200: add sama5d4 and sama5d2 compatibles
+      rtc: at91rm9200: move register definitions to C file
+      rtc: at91rm9200: avoid time readout in at91_rtc_setalarm
+      rtc: at91rm9200: use FIELD_PREP/FIELD_GET
+      rtc: Kconfig: properly indent sd3078 entry
+      rtc: Kconfig: select REGMAP_I2C when necessary
+      dt-bindings: rtc: at91rm9200: document clocks property
+
+Andy Shevchenko (3):
+      rtc: cmos: Stop using shared IRQ
+      rtc: cmos: Use predefined value for RTC IRQ on legacy x86
+      rtc: cmos: Refactor code by using the new dmi_get_bios_year() helper
+
+Chuhong Yuan (2):
+      rtc: stm32: add missed clk_disable_unprepare in error path of resume
+      rtc: asm9260: add the missed check for devm_clk_get
+
+Claudiu Beznea (1):
+      dt-bindings: atmel, at91rm9200-rtc: add microchip, sam9x60-rtc
+
+Dmitry Osipenko (1):
+      rtc: tps6586x: Use IRQ_NOAUTOEN flag
+
+Geert Uytterhoeven (1):
+      rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
+
+Jean-Francois Dagenais (1):
+      rtc: zynqmp: re-use rtc_time64_to_tm operation
+
+Linus Walleij (1):
+      rtc: ds1343: Do not hardcode SPI mode flags
+
+Nobuhiro Iwamatsu (5):
+      rtc: rx8010: Fix return code for rx8010_probe
+      rtc: rx8025: Remove struct i2c_client from struct rx8025_data
+      rtc: ds1343: Remove unused struct spi_device in struct ds1343_priv
+      rtc: moxart: Convert to SPDX identifier
+      rtc: pcf8563: Use BIT
+
+Paul Kocialkowski (2):
+      rtc: hym8563: Return -EINVAL if the time is known to be invalid
+      rtc: hym8563: Read the valid flag directly instead of caching it
+
+Wei Yongjun (1):
+      rtc: mt6397: drop free_irq of devm_ allocated irq
+
+zhengbin (1):
+      rtc: omap: Remove unneeded semicolon
+
+ .mailmap                                           |   1 +
+ Documentation/ABI/testing/rtc-cdev                 |   8 +
+ .../bindings/rtc/atmel,at91rm9200-rtc.txt          |  17 -
+ .../bindings/rtc/atmel,at91rm9200-rtc.yaml         |  49 +++
+ drivers/rtc/Kconfig                                |  24 +-
+ drivers/rtc/rtc-abx80x.c                           |   7 +-
+ drivers/rtc/rtc-asm9260.c                          |   3 +
+ drivers/rtc/rtc-at91rm9200.c                       | 119 +++---
+ drivers/rtc/rtc-at91rm9200.h                       |  71 ----
+ drivers/rtc/rtc-cmos.c                             |  12 +-
+ drivers/rtc/rtc-ds1343.c                           |  10 +-
+ drivers/rtc/rtc-hym8563.c                          |  19 +-
+ drivers/rtc/rtc-moxart.c                           |   5 +-
+ drivers/rtc/rtc-mt6397.c                           |  10 +-
+ drivers/rtc/rtc-omap.c                             |   2 +-
+ drivers/rtc/rtc-pcf2127.c                          |   6 +-
+ drivers/rtc/rtc-pcf85063.c                         |  16 +-
+ drivers/rtc/rtc-pcf8523.c                          |   6 +-
+ drivers/rtc/rtc-pcf8563.c                          |  40 +-
+ drivers/rtc/rtc-rv3028.c                           |  17 +-
+ drivers/rtc/rtc-rv3029c2.c                         | 442 +++++++++------------
+ drivers/rtc/rtc-rv8803.c                           |  16 +-
+ drivers/rtc/rtc-rx8010.c                           |  25 +-
+ drivers/rtc/rtc-rx8025.c                           |  27 +-
+ drivers/rtc/rtc-stm32.c                            |   5 +-
+ drivers/rtc/rtc-tps6586x.c                         |   4 +-
+ drivers/rtc/rtc-zynqmp.c                           |   4 +-
+ include/linux/rtc.h                                |   1 +
+ include/uapi/linux/rtc.h                           |   7 +-
+ 29 files changed, 415 insertions(+), 558 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
+ delete mode 100644 drivers/rtc/rtc-at91rm9200.h
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
