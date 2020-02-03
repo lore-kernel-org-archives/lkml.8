@@ -2,254 +2,123 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3561C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA516C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D072082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580739991;
-	bh=D/zNJaSs6rQP+XLHVrZC4bnZOKsFGxBaJJyDkh+zQOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fFwvWeuFZzL2Xf7M276sLaLAMeCojdxW90dDiQZC/QOOizc6r18sNVd2k8+mJzgtg
-	 VjieEVyhSMjg1vXo2VU8Se84L2DHXtWeS/E74iyjZi80I0AEVH7BpAeO/lV1sflfp3
-	 vq8/CKwOzlNx/b0ubehYt/wRHu/a25EXpekCNYVs=
+	by mail.kernel.org (Postfix) with ESMTP id 96DD820CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgBCO0b (ORCPT
+        id S1728429AbgBCO1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:26:31 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56103 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbgBCO0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:26:30 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so16107510wmj.5;
-        Mon, 03 Feb 2020 06:26:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=itc17noPW/qOhrB9VNLS0A5datkiWJZoXQQ/RMMvGb4=;
-        b=FbNok9t4h4HordSj02XMpfiliSEX/NEn7M/qQw4hIQva8jsU3WQviiJSjLhX+6YeRy
-         at3YDSIScg4u6USeTZoyyod7EX0vNf7RZebnmNNt5/JlrQN7yifzR8r+Qt42C5u2D7bv
-         reYfzBlc1rqRWf9QOFH1sqOxNFQLqnq7eMKQ2e8L+tpXRGn24pKhzQc3UKL7jO89pwc4
-         mlfzI8iRBFbNbJ1cAH8yJbYpovJF8AqOTtMo8Ly0Pm0STpPdDeNxS4ewgOk8lf60JJDd
-         9FIJdRru1KH+JGpRuVpORWRcqIhfNOpjvYL3/Xufe2zvAU0reYrtWTcvIW7u18emmhkY
-         xrRg==
-X-Gm-Message-State: APjAAAVibx/mvqo6d3q6OWw43mzJVILP+zu2DZRdMBTY6BCUP/L/DDs9
-        sZf1/+gAkKPqJKnhhTrbuJs9En3bSA==
-X-Google-Smtp-Source: APXvYqxc2RMlFnmFy5Opti+9z+rRZLxfxDLV3D5FBrtAkPSVjJL0S3CbhEJWd5zGMozHNjHKt12opQ==
-X-Received: by 2002:a1c:96c4:: with SMTP id y187mr30487850wmd.112.1580739987385;
-        Mon, 03 Feb 2020 06:26:27 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id 18sm22963441wmf.1.2020.02.03.06.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 06:26:26 -0800 (PST)
-Received: (nullmailer pid 27658 invoked by uid 1000);
-        Mon, 03 Feb 2020 14:26:25 -0000
-Date:   Mon, 3 Feb 2020 14:26:25 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        mark.rutland@arm.com, sriram.dash@samsung.com,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: net: can: Convert M_CAN to json-schema
-Message-ID: <20200203142625.GA19020@bogus>
-References: <20200124155542.2053-1-benjamin.gaignard@st.com>
+        Mon, 3 Feb 2020 09:27:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:53974 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728361AbgBCO1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:27:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 808BB101E;
+        Mon,  3 Feb 2020 06:27:18 -0800 (PST)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2311A3F68E;
+        Mon,  3 Feb 2020 06:27:17 -0800 (PST)
+Date:   Mon, 3 Feb 2020 14:27:14 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20200203142712.a7yvlyo2y3le5cpn@e107158-lin>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+ <20200131100629.GC27398@codeaurora.org>
+ <20200131153405.2ejp7fggqtg5dodx@e107158-lin.cambridge.arm.com>
+ <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200124155542.2053-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 04:55:42PM +0100, Benjamin Gaignard wrote:
-> Convert M_CAN bindings to json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../bindings/net/can/can-transceiver.txt           |  24 ----
->  .../devicetree/bindings/net/can/m_can.txt          |  75 ----------
->  .../devicetree/bindings/net/can/m_can.yaml         | 151 +++++++++++++++++++++
->  3 files changed, 151 insertions(+), 99 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
+On 02/01/20 07:08, Pavan Kondeti wrote:
+> Thanks for the results. I see that tasks are indeed spreading on to silver.
+> However it is not
+> clear to me from the code how tasks would get spread. Because cpupri_find()
+> never returns
+> little CPU in the lowest_mask because RT task does not fit on little CPU.
+> So from wake up
+> path, we place the task on the previous CPU or BIG CPU. The push logic also
+> has the
+> RT capacity checks, so an overloaded BIG CPU may not push tasks to an idle
+> (RT free) little CPU.
 
-No chance other controllers aren't going to have a transceiver?
+Okay I see what you mean.
 
->  delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
->  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.yaml
+Sorry I had to cache this back in again as it's been a while.
 
-bosch,m_can.yaml
+So yes you're right we won't force move to the little CPUs, but if we were
+running there already we won't force overload the big CPU either. IIRC I didn't
+see more than 2 tasks packed on a big core. But maybe I needed to try more
+combination of things. The 2 tasks packed can be seen in my results. Which
+I don't think it's a necessarily bad thing.
 
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.yaml b/Documentation/devicetree/bindings/net/can/m_can.yaml
-> new file mode 100644
-> index 000000000000..efdbed81af29
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.yaml
-> @@ -0,0 +1,151 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/can/m_can.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bosch MCAN controller Bindings
-> +
-> +description: Bosch MCAN controller for CAN bus
-> +
-> +maintainers:
-> +  -  Sriram Dash <sriram.dash@samsung.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: bosch,m_can
-> +
-> +  reg:
-> +    items:
-> +      - description: M_CAN registers map
-> +      - description: message RAM
-> +
-> +  reg-names:
-> +    items:
-> +      - const: m_can
-> +      - const: message_ram
-> +
-> +  interrupts:
-> +    items:
-> +      - description: interrupt line0
-> +      - description: interrupt line1
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: int0
-> +      - const: int1
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clocks:
-> +    items:
-> +      - description: peripheral clock
-> +      - description: bus clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: hclk
-> +      - const: cclk
-> +
-> +  bosch,mram-cfg:
-> +    description: |
-> +                 Message RAM configuration data.
-> +                 Multiple M_CAN instances can share the same Message RAM
-> +                 and each element(e.g Rx FIFO or Tx Buffer and etc) number
-> +                 in Message RAM is also configurable, so this property is
-> +                 telling driver how the shared or private Message RAM are
-> +                 used by this M_CAN controller.
-> +
-> +                 The format should be as follows:
-> +                 <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems txe_elems txb_elems>
-> +                 The 'offset' is an address offset of the Message RAM where
-> +                 the following elements start from. This is usually set to
-> +                 0x0 if you're using a private Message RAM. The remain cells
-> +                 are used to specify how many elements are used for each FIFO/Buffer.
-> +
-> +                 M_CAN includes the following elements according to user manual:
-> +                 11-bit Filter	0-128 elements / 0-128 words
-> +                 29-bit Filter	0-64 elements / 0-128 words
-> +                 Rx FIFO 0	0-64 elements / 0-1152 words
-> +                 Rx FIFO 1	0-64 elements / 0-1152 words
-> +                 Rx Buffers	0-64 elements / 0-1152 words
-> +                 Tx Event FIFO	0-32 elements / 0-64 words
-> +                 Tx Buffers	0-32 elements / 0-576 words
-> +
-> +                 Please refer to 2.4.1 Message RAM Configuration in Bosch
-> +                 M_CAN user manual for details.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/int32-matrix
+I tried to call out that in overloaded case we don't give any guarantees. I'll
+expand below, but if a user asked for RT tasks to run on big cores more than
+available big cores, then there's very little we can do.
 
-Looks like uint32-array based on the constraints.
+If the tasks really want to be on a big core but the user is asking for more
+than what the system can get, then the end result isn't the best whether we
+pack or spread. Packing might end up good if the 2 tasks aren't intensive. Or
+could end up being bad if they are.
 
-> +      - items:
-> +         items:
-> +           - description: The 'offset' is an address offset of the Message RAM
-> +                          where the following elements start from. This is usually
-> +                          set to 0x0 if you're using a private Message RAM.
-> +             default: 0
-> +           - description: 11-bit Filter 0-128 elements / 0-128 words
-> +             minimum: 0
-> +             maximum: 128
-> +           - description: 29-bit Filter 0-64 elements / 0-128 words
-> +             minimum: 0
-> +             maximum: 64
-> +           - description: Rx FIFO 0 0-64 elements / 0-1152 words
-> +             minimum: 0
-> +             maximum: 64
-> +           - description: Rx FIFO 1 0-64 elements / 0-1152 words
-> +             minimum: 0
-> +             maximum: 64
-> +           - description: Rx Buffers 0-64 elements / 0-1152 words
-> +             minimum: 0
-> +             maximum: 64
-> +           - description: Tx Event FIFO 0-32 elements / 0-64 words
-> +             minimum: 0
-> +             maximum: 32
-> +           - description: Tx Buffers 0-32 elements / 0-576 words
-> +             minimum: 0
-> +             maximum: 32
-> +        maxItems: 1
-> +
-> +  can-transceiver:
-> +    type: object
-> +
-> +    properties:
-> +      max-bitrate:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: a positive non 0 value that determines the max speed that
-> +                     CAN/CAN-FD can run.
-> +        minimum: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - interrupt-names
-> +  - clocks
-> +  - clock-names
-> +  - bosch,mram-cfg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx6sx-clock.h>
-> +    can@20e8000 {
-> +      compatible = "bosch,m_can";
-> +      reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-> +      reg-names = "m_can", "message_ram";
-> +      interrupts = <0 114 0x04>, <0 114 0x04>;
-> +      interrupt-names = "int0", "int1";
-> +      clocks = <&clks IMX6SX_CLK_CANFD>,
-> +               <&clks IMX6SX_CLK_CANFD>;
-> +      clock-names = "hclk", "cclk";
-> +      bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
-> +
-> +      can-transceiver {
-> +        max-bitrate = <5000000>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.15.0
-> 
+Similarly if the 2 tasks aren't computationally intensive, then spreading to
+the little is bad. Most likely the request for running at a certain performance
+level, is to guarantee the predictability to finish execution within a certain
+window of time. But don't quote me on this :)
+
+I don't see one right answer here. The current mechanism could certainly do
+better; but it's not clear what better means without delving into system
+specific details. I am open to any suggestions to improve it.
+
+As it stands, it allows the admin to boost RT tasks and guarantee they end up
+running on the correct CPU. But it doesn't protect against bad RT planning.
+
+> Yes, we do search with in the affined CPUs. However in cpupri_find(), we
+> clear
+> the CPUs on which the task does not fit. so the lowest_mask always be empty
+> and we return -1. There is no fallback.
+
+The question here is: if a task has its uclamp_min set to 1024 but is affined
+to the wrong type of cpus, is it a user error or a kernel failure to deal with
+this case?
+
+The default p->uclamp_min = 1024 is not the right default to use in these
+systems. I am pushing for a patch [1] to allow modifying this default behavior
+at runtime. AFAIU Android has always disabled max RT boosting.
+
+The common use case that we are trying to cater for is that most of the tasks
+are happy to run anywhere, but there might be few that need to be boosted and
+this boost value can only be guaranteed by running on a set of CPUs, in that
+case we give this guarantee.
+
+Again I agree the logic could be improved, but I prefer to see a real use case
+first where this improvement helps.
+
+[1] https://lore.kernel.org/lkml/20191220164838.31619-1-qais.yousef@arm.com/
+
+Cheers
+
+--
+Qais Yousef
