@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B065C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D70C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3399F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC76220838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748049;
-	bh=jQ+TaHHThZHA3Y8tm3ijmMsa/OkFMve527Jlx5shKTc=;
+	s=default; t=1580748059;
+	bh=Y5BE0zz7rfVgCd+kfgW/W0Mn6NUEnOOC+qIMHaMIPGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iL9uEvn60BcnEDcWaN1NUAsNfyx2gh1RUp4V7PRb7D74XKE4vHsp4lJU9pgtQt6oY
-	 WkUuQx0yyYWW7W1MH14dCjNmduaQx1l7y+OfKAycGQzjnqij12Wqgia5GdczqCyy/o
-	 DETA2Ds0s3Pi+s9yK1GxrSa0r9g6To6jrJSxGkwQ=
+	b=WfwC5Vz8mQ/rHkEzAGebWGXDdH9r5caY5TIXWajLghYgjXAck4g/dJFK3Xz631EFi
+	 D49ikuOZXRnAa1WhGAy02ym3U/OuYCFvb/kQ61PbDHJoIyKuHm+lk4Hw7zS+C5bSs3
+	 ErpZOVIMQ+Z8OfVMZpd0ggFQykx+DLUETr1NSPc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgBCQfu (ORCPT
+        id S1731458AbgBCQk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50770 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:40:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730598AbgBCQfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:46 -0500
+        id S1729475AbgBCQfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:37 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794C92051A;
-        Mon,  3 Feb 2020 16:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C32D2051A;
+        Mon,  3 Feb 2020 16:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747745;
-        bh=jQ+TaHHThZHA3Y8tm3ijmMsa/OkFMve527Jlx5shKTc=;
+        s=default; t=1580747736;
+        bh=Y5BE0zz7rfVgCd+kfgW/W0Mn6NUEnOOC+qIMHaMIPGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOdb47i6OKCU6Qw+r7rAAIUZ83J+DLwk6vvPEjhuWZkfvfGRYu0pCUr8E2p+HuKnL
-         76UeqCMoSwGRhYFMqBfiNeL/9268NnJlaWIP/4nRmiiz8wEBBC40V6JmnnbURtkEcW
-         X1utmSzYCkh/ZE3Xx6djX/kDYwNBlHadPUXmJaac=
+        b=Q/yNfzJN7qSEqODACfzM2F9EaPqwYEtxjMVmqeehkjx2azt2tMlkNkI3P7W74x7Tb
+         F5UAoRXavP1a/Q+MBnbOzoGW3n6u4zoQ4EoPfzdPyYSnoPoicSlcD5RoLWbGhe92ol
+         Hmlx6AZMwRNeoA0QBVJR2OHakf0bdfo9Vgm/1Lwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cathy Luo <xiaohua.luo@nxp.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 51/90] wireless: fix enabling channel 12 for custom regulatory domain
-Date:   Mon,  3 Feb 2020 16:19:54 +0000
-Message-Id: <20200203161924.108407734@linuxfoundation.org>
+Subject: [PATCH 5.4 47/90] ASoC: sti: fix possible sleep-in-atomic
+Date:   Mon,  3 Feb 2020 16:19:50 +0000
+Message-Id: <20200203161923.726179092@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,63 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
+[ Upstream commit ce780a47c3c01e1e179d0792df6b853a913928f1 ]
 
-Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
-default when checking usable channels"") fixed a broken
-regulatory (leaving channel 12 open for AP where not permitted).
-Apply a similar fix to custom regulatory domain processing.
+Change mutex and spinlock management to avoid sleep
+in atomic issue.
 
-Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
-Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
-[reword commit message, fix coding style, add a comment]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Link: https://lore.kernel.org/r/20200113100400.30472-1-arnaud.pouliquen@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ sound/soc/sti/uniperif_player.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 446c76d44e65a..3c2070040277d 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2261,14 +2261,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
+diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
+index 48ea915b24ba2..2ed92c990b97c 100644
+--- a/sound/soc/sti/uniperif_player.c
++++ b/sound/soc/sti/uniperif_player.c
+@@ -226,7 +226,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
+ 	 * sampling frequency. If no sample rate is already specified, then
+ 	 * set one.
+ 	 */
+-	mutex_lock(&player->ctrl_lock);
+ 	if (runtime) {
+ 		switch (runtime->rate) {
+ 		case 22050:
+@@ -303,7 +302,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
+ 		player->stream_settings.iec958.status[3 + (n * 4)] << 24;
+ 		SET_UNIPERIF_CHANNEL_STA_REGN(player, n, status);
+ 	}
+-	mutex_unlock(&player->ctrl_lock);
  
- static void handle_channel_custom(struct wiphy *wiphy,
- 				  struct ieee80211_channel *chan,
--				  const struct ieee80211_regdomain *regd)
-+				  const struct ieee80211_regdomain *regd,
-+				  u32 min_bw)
- {
- 	u32 bw_flags = 0;
- 	const struct ieee80211_reg_rule *reg_rule = NULL;
- 	const struct ieee80211_power_rule *power_rule = NULL;
- 	u32 bw;
+ 	/* Update the channel status */
+ 	if (player->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0)
+@@ -365,8 +363,10 @@ static int uni_player_prepare_iec958(struct uniperif *player,
  
--	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
-+	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
- 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
- 					      regd, bw);
- 		if (!IS_ERR(reg_rule))
-@@ -2324,8 +2325,14 @@ static void handle_band_custom(struct wiphy *wiphy,
- 	if (!sband)
- 		return;
+ 	SET_UNIPERIF_CTRL_ZERO_STUFF_HW(player);
  
-+	/*
-+	 * We currently assume that you always want at least 20 MHz,
-+	 * otherwise channel 12 might get enabled if this rule is
-+	 * compatible to US, which permits 2402 - 2472 MHz.
-+	 */
- 	for (i = 0; i < sband->n_channels; i++)
--		handle_channel_custom(wiphy, &sband->channels[i], regd);
-+		handle_channel_custom(wiphy, &sband->channels[i], regd,
-+				      MHZ_TO_KHZ(20));
++	mutex_lock(&player->ctrl_lock);
+ 	/* Update the channel status */
+ 	uni_player_set_channel_status(player, runtime);
++	mutex_unlock(&player->ctrl_lock);
+ 
+ 	/* Clear the user validity user bits */
+ 	SET_UNIPERIF_USER_VALIDITY_VALIDITY_LR(player, 0);
+@@ -598,7 +598,6 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 	iec958->status[1] = ucontrol->value.iec958.status[1];
+ 	iec958->status[2] = ucontrol->value.iec958.status[2];
+ 	iec958->status[3] = ucontrol->value.iec958.status[3];
+-	mutex_unlock(&player->ctrl_lock);
+ 
+ 	spin_lock_irqsave(&player->irq_lock, flags);
+ 	if (player->substream && player->substream->runtime)
+@@ -608,6 +607,8 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 		uni_player_set_channel_status(player, NULL);
+ 
+ 	spin_unlock_irqrestore(&player->irq_lock, flags);
++	mutex_unlock(&player->ctrl_lock);
++
+ 	return 0;
  }
  
- /* Used by drivers prior to wiphy registration */
 -- 
 2.20.1
 
