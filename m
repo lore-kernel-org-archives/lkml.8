@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBFCC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F1EC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752552087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615162087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747002;
-	bh=OGjfV5n9QaMI+CzD3q5e6U652LeN/eafcdZBsbNKC84=;
+	s=default; t=1580747004;
+	bh=bIpEsUaKhOtc1aYG1pGJZDRAwfnJnZMBTydjPblIEN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKnYYl33lDuProUHEkmIELS6s+gob1601Ae3CUqpPANqkrAMPd4YdT6ReZO9yIfXL
-	 Yv6Ca91uZ9Alkx5b624vgrVVDXJYImrUAA45WxJKk7+FRBCibAdGnMQEtfqie/Qd1F
-	 46Xj5cWiFFg/lGnJ654aUhWxK2ssJaEaYrMFjl6s=
+	b=KQe6Robaasz142ceY6GMkq7HmlpWpzVBHbPoFuuPxA7l0ma1DC6blUK9o5AH4I8Jt
+	 PvCPi6jAzt2o1LYdOiyU3891u36pllfmKT7Td3PjaLhwMPlMrvcd1DlXXCOmmH4KyD
+	 VMhrIWbtxpnkDgnaz9B9vq9TzkCQrlluZQK5uqdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgBCQUI (ORCPT
+        id S1728727AbgBCQUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:20:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:20:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgBCQUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:20:05 -0500
+        id S1728695AbgBCQUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:20:00 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AD0520838;
-        Mon,  3 Feb 2020 16:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3CF720CC7;
+        Mon,  3 Feb 2020 16:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746804;
-        bh=OGjfV5n9QaMI+CzD3q5e6U652LeN/eafcdZBsbNKC84=;
+        s=default; t=1580746800;
+        bh=bIpEsUaKhOtc1aYG1pGJZDRAwfnJnZMBTydjPblIEN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBJu9B/MxtEFmNC6URn71+fP6e2znWnmEzCAeRm1xATxtslHK7jErsVvM2mat02aA
-         gz1LTbifdAGJdH/YctuNbiAnm5bR+9Rmr6Tf+mf+eJwN4sW7S/RDdIjQQzXpVueyLZ
-         d67v5wdh7RMQQPMtg5D+CYhv+9YqL2cCfpBM+Gs8=
+        b=rGmAY5n+fIBrGb/Zlka33WbVd0fM4Umeu+bgFJHGtseyhVrFyGyEKHH903PPolOr2
+         lBzK9doAe4R6qPlORnCDOx9nhZse81YdWBi9mFNUm3BszuFzTCkUv83VM9DfwMcKTL
+         NKz9OowbPlDRNdznYgJUqjXVJsEnvfQxfM8HWEUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jes Sorensen <Jes.Sorensen@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 14/53] rtl8xxxu: fix interface sanity check
-Date:   Mon,  3 Feb 2020 16:19:06 +0000
-Message-Id: <20200203161905.703605867@linuxfoundation.org>
+Subject: [PATCH 4.4 12/53] ath9k: fix storage endpoint lookup
+Date:   Mon,  3 Feb 2020 16:19:04 +0000
+Message-Id: <20200203161905.352176468@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -62,35 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 39a4281c312f2d226c710bc656ce380c621a2b16 upstream.
+commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
 
 Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+storage interface descriptors to avoid submitting an URB to an invalid
+endpoint.
 
 Failing to do so could cause the driver to misbehave or trigger a WARN()
 in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
-Cc: stable <stable@vger.kernel.org>     # 4.4
-Cc: Jes Sorensen <Jes.Sorensen@redhat.com>
+Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
+Cc: stable <stable@vger.kernel.org>     # 2.6.39
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c |    2 +-
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c
-@@ -5555,7 +5555,7 @@ static int rtl8xxxu_parse_usb(struct rtl
- 	u8 dir, xtype, num;
- 	int ret = 0;
- 
--	host_interface = &interface->altsetting[0];
-+	host_interface = interface->cur_altsetting;
- 	interface_desc = &host_interface->desc;
- 	endpoints = interface_desc->bNumEndpoints;
- 
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -1211,7 +1211,7 @@ err_fw:
+ static int send_eject_command(struct usb_interface *interface)
+ {
+ 	struct usb_device *udev = interface_to_usbdev(interface);
+-	struct usb_host_interface *iface_desc = &interface->altsetting[0];
++	struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	unsigned char *cmd;
+ 	u8 bulk_out_ep;
 
 
