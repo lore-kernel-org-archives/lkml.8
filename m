@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF223C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577A9C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E2920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2B22192A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747952;
-	bh=wuY22ular1rKxKb63oVD+ukgP8kNjdEQM+Si4zVm7Y4=;
+	s=default; t=1580747954;
+	bh=arkCkF1UEbJgqIxSxjBDGOgeiZF1m899vWxR5mhEmjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7DhezvXGDqbowaTpxHMIAEWvnKxJCIkEE8R77CK9VBcyd1fdduUB/+ij/cDhAq1X
-	 Q6rR1yoHGsw4ljt12MUG9PZ20Aco8m8Siy/m5E3TjCHfHnz5BArMN2c/Zk2BXdUDSM
-	 koj3MOBtGDe/BV0Ixn8ZnePblwqZlZGn2HQd2POc=
+	b=wFP+y25W3gMnmwOS6T0tcVuhz8Hokxx0ys+/ApCY9kngMLUVyIt3Yuus8EEmGKjMn
+	 gg/aNh+wcfRQ63BxvrDiTn7EsToyxzMavsKDsWFf9PXJ853CIi6BxdSubwiKfBFPKl
+	 7VpAuuZzLd07ZQReL9L08fwGmWvxd5irM4BdHEzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbgBCQjL (ORCPT
+        id S1731407AbgBCQhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:39:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:37:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbgBCQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:56 -0500
+        id S1731362AbgBCQhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:39 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED8462051A;
-        Mon,  3 Feb 2020 16:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CF652087E;
+        Mon,  3 Feb 2020 16:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747875;
-        bh=wuY22ular1rKxKb63oVD+ukgP8kNjdEQM+Si4zVm7Y4=;
+        s=default; t=1580747858;
+        bh=arkCkF1UEbJgqIxSxjBDGOgeiZF1m899vWxR5mhEmjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SuMJXVaQGZPDxLnQmQzw1H3z66JWmeA06EqtIYePnq4vwxUN3zv64HQBaVSPsYH2L
-         SHKi11eMerc2QG9qlkfa2esfF0VDYnYy/ec6YqHUx1EjgDh/oEp733idJtSap81Ifc
-         agHTRzx6Zdsp/xi6a2joRefUvDPERiAR3xEIaaHo=
+        b=B+U5i5fo9EU+UQ7/L5eJIi8WiTj67/q4K2rbp4ApQEwIC2CN6zPda0SzQjfgEHSR2
+         tKsCcLkZGcFOoecE+vgagYb22U2o/xz5NR3VCxZfHgC8b/xf4uHw3mkW59wITU7bT0
+         OGCGEWGfYYTWOS41cMkEfVgPB8kqbSfGdCFF+mL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ec869945d3dde5f33b43@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 17/23] media: vp7045: do not read uninitialized values if usb transfer fails
-Date:   Mon,  3 Feb 2020 16:20:37 +0000
-Message-Id: <20200203161905.867506901@linuxfoundation.org>
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.5 10/23] PM / devfreq: Add new name attribute for sysfs
+Date:   Mon,  3 Feb 2020 16:20:30 +0000
+Message-Id: <20200203161904.709880157@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -61,64 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
 
-commit 26cff637121d8bb866ebd6515c430ac890e6ec80 upstream.
+commit 2fee1a7cc6b1ce6634bb0f025be2c94a58dfa34d upstream.
 
-It is not a fatal error if reading the mac address or the remote control
-decoder state fails.
+The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
+sysfs") changed the node name to devfreq(x). After this commit, it is not
+possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
 
-Reported-by: syzbot+ec869945d3dde5f33b43@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Add new name attribute in order to get device name.
+
+Cc: stable@vger.kernel.org
+Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/vp7045.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ Documentation/ABI/testing/sysfs-class-devfreq |    7 +++++++
+ drivers/devfreq/devfreq.c                     |    9 +++++++++
+ 2 files changed, 16 insertions(+)
 
---- a/drivers/media/usb/dvb-usb/vp7045.c
-+++ b/drivers/media/usb/dvb-usb/vp7045.c
-@@ -96,10 +96,14 @@ static int vp7045_power_ctrl(struct dvb_
+--- a/Documentation/ABI/testing/sysfs-class-devfreq
++++ b/Documentation/ABI/testing/sysfs-class-devfreq
+@@ -7,6 +7,13 @@ Description:
+ 		The name of devfreq object denoted as ... is same as the
+ 		name of device using devfreq.
  
- static int vp7045_rc_query(struct dvb_usb_device *d)
- {
-+	int ret;
- 	u8 key;
--	vp7045_usb_op(d,RC_VAL_READ,NULL,0,&key,1,20);
- 
--	deb_rc("remote query key: %x %d\n",key,key);
-+	ret = vp7045_usb_op(d, RC_VAL_READ, NULL, 0, &key, 1, 20);
-+	if (ret)
-+		return ret;
++What:		/sys/class/devfreq/.../name
++Date:		November 2019
++Contact:	Chanwoo Choi <cw00.choi@samsung.com>
++Description:
++		The /sys/class/devfreq/.../name shows the name of device
++		of the corresponding devfreq object.
 +
-+	deb_rc("remote query key: %x\n", key);
- 
- 	if (key != 0x44) {
- 		/*
-@@ -115,15 +119,18 @@ static int vp7045_rc_query(struct dvb_us
- 
- static int vp7045_read_eeprom(struct dvb_usb_device *d,u8 *buf, int len, int offset)
- {
--	int i = 0;
--	u8 v,br[2];
-+	int i, ret;
-+	u8 v, br[2];
- 	for (i=0; i < len; i++) {
- 		v = offset + i;
--		vp7045_usb_op(d,GET_EE_VALUE,&v,1,br,2,5);
-+		ret = vp7045_usb_op(d, GET_EE_VALUE, &v, 1, br, 2, 5);
-+		if (ret)
-+			return ret;
-+
- 		buf[i] = br[1];
- 	}
--	deb_info("VP7045 EEPROM read (offs: %d, len: %d) : ",offset, i);
--	debug_dump(buf,i,deb_info);
-+	deb_info("VP7045 EEPROM read (offs: %d, len: %d) : ", offset, i);
-+	debug_dump(buf, i, deb_info);
- 	return 0;
+ What:		/sys/class/devfreq/.../governor
+ Date:		September 2011
+ Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1259,6 +1259,14 @@ err_out:
  }
+ EXPORT_SYMBOL(devfreq_remove_governor);
  
++static ssize_t name_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct devfreq *devfreq = to_devfreq(dev);
++	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
++}
++static DEVICE_ATTR_RO(name);
++
+ static ssize_t governor_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buf)
+ {
+@@ -1592,6 +1600,7 @@ static ssize_t trans_stat_show(struct de
+ static DEVICE_ATTR_RO(trans_stat);
+ 
+ static struct attribute *devfreq_attrs[] = {
++	&dev_attr_name.attr,
+ 	&dev_attr_governor.attr,
+ 	&dev_attr_available_governors.attr,
+ 	&dev_attr_cur_freq.attr,
 
 
