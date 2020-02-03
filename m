@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83136C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B42C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE90217BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631F321775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747688;
-	bh=p5WUSpnRjJjRF9kGCVdRNlAHBDmitXxxgOiHRt0J9RQ=;
+	s=default; t=1580747692;
+	bh=+5JA2poJMjR7STyvd8Wt5wYwpE8j6WD4wo/41oMHMv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nbUrhRoooZiFb23F3p92XV1d9lKm/mKx3QDTIY2CMJr0+BcArkNOpVWWCHFGmVW7H
-	 Z2BY9pa1rEwJYO+jMicQzSfmpsNWbiBgs3zqme59WIHiRZ8mMN2bLYwhRUVueYpMtA
-	 pHafk0Er5913GFdyLCyFZq7bHG8CGRSfDH1x9Tsg=
+	b=NMqF4ukdGLywJ8jv8PDxltpf3w5R9uwfTm7/c/IJWyovN22RtdVVHwv/+2hmkDF3x
+	 TCTvLGTHJ3tEXLVYlGtJCvG2535Mpi+ZTUtYyTt2xLqwgeAHTFch/dXRU82UNl38A0
+	 4lRpbcgPEdeIRVJqoeTdCDqPbcazvoFJDSQcmS/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbgBCQer (ORCPT
+        id S1730852AbgBCQev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49198 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730846AbgBCQeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:44 -0500
+        id S1730853AbgBCQer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:47 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C950E20CC7;
-        Mon,  3 Feb 2020 16:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B87C20CC7;
+        Mon,  3 Feb 2020 16:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747684;
-        bh=p5WUSpnRjJjRF9kGCVdRNlAHBDmitXxxgOiHRt0J9RQ=;
+        s=default; t=1580747686;
+        bh=+5JA2poJMjR7STyvd8Wt5wYwpE8j6WD4wo/41oMHMv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OMxT04g+FALL/ZKYUreJnanuGgfcqYav7Iadqp8c77RmPK6srQbxPhtiJPu6a4t8P
-         C/KyIJmSCmYlW8Kf6JP8czigqCkR9NOGTPZCZ6husQ6LVSUaKd0qDPSiMraSKRfUjk
-         nW5g7mXm150v94DA05/UxZNxB3aUSu+byJGCjlnw=
+        b=E27yGvk+Tb5OtpA9V5MYo4z1BdzHFFugjHOiHxv757oeSYg0ZFUesHt4dp7glYwIA
+         UAFSZaun6jNHMco9BaG82bDqMwDbRZuCMuNUmDj1qDARQK77vAr3K0Qhx/M8SqoF9k
+         6MhdZHwcrKtlKJILiHkH45iPOtBzR0qwcKKu7DOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 27/90] ARM: dts: am57xx-beagle-x15/am57xx-idk: Remove "gpios" for  endpoint dt nodes
-Date:   Mon,  3 Feb 2020 16:19:30 +0000
-Message-Id: <20200203161921.206999917@linuxfoundation.org>
+Subject: [PATCH 5.4 28/90] ARM: dts: beagle-x15-common: Model 5V0 regulator
+Date:   Mon,  3 Feb 2020 16:19:31 +0000
+Message-Id: <20200203161921.342861160@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,66 +62,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 81cc0877840f72210e809bbedd6346d686560fc1 ]
+[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
 
-PERST# line in the PCIE connector is driven by the host mode and not
-EP mode. The gpios property here is used for driving the PERST# line.
-Remove gpios property from all endpoint device tree nodes.
+On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
+connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
+which is connected to the COMQ port. Model 5V0 regulator here in order
+for it to be used in am57xx-evm to model 3V6 regulator.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am571x-idk.dts                | 4 ----
- arch/arm/boot/dts/am572x-idk-common.dtsi        | 4 ----
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ----
- 3 files changed, 12 deletions(-)
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 9d6a872c2b236..10105a497c1ac 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -170,10 +170,6 @@
- 	gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
- };
- 
--&pcie1_ep {
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
--};
--
- &mmc1 {
- 	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
-diff --git a/arch/arm/boot/dts/am572x-idk-common.dtsi b/arch/arm/boot/dts/am572x-idk-common.dtsi
-index a064f13b38802..ddf123620e962 100644
---- a/arch/arm/boot/dts/am572x-idk-common.dtsi
-+++ b/arch/arm/boot/dts/am572x-idk-common.dtsi
-@@ -147,10 +147,6 @@
- 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
- };
- 
--&pcie1_ep {
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
--};
--
- &mailbox5 {
- 	status = "okay";
- 	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
 diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index bc76f1705c0f6..9a94c96b0350e 100644
+index 9a94c96b0350e..a813a0cf3ff39 100644
 --- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
 +++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -547,10 +547,6 @@
- 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
- };
+@@ -29,6 +29,27 @@
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
+ 	};
  
--&pcie1_ep {
--	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
--};
--
- &mcasp3 {
- 	#sound-dai-cells = <0>;
- 	assigned-clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>;
++	main_12v0: fixedregulator-main_12v0 {
++		/* main supply */
++		compatible = "regulator-fixed";
++		regulator-name = "main_12v0";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	evm_5v0: fixedregulator-evm_5v0 {
++		/* Output of TPS54531D */
++		compatible = "regulator-fixed";
++		regulator-name = "evm_5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vdd_3v3: fixedregulator-vdd_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_3v3";
 -- 
 2.20.1
 
