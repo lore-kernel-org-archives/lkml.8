@@ -2,132 +2,117 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54A0C3524E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90AC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDCE20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="opXWPMPt"
+	by mail.kernel.org (Postfix) with ESMTP id BCCB620721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBCIXJ (ORCPT
+        id S1727566AbgBCIY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:23:09 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22670 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726992AbgBCIXI (ORCPT
+        Mon, 3 Feb 2020 03:24:59 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:62548 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCIY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 03:23:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580718188; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=RSjEiJ0ttdkS4GFK/NmrKRk8pctFGBmoDIg5s6bhlOg=;
- b=opXWPMPto1E6NrMBKIJrw5Axiw1BgUNbzi5qrBS3lz0tA56K9AJFw7J0q+9KFcOSy45sUfve
- HmYnTHsSeCUHoDLJfIsg6yyA01BeL7TCY1KMKlg5jEa/jagImR1tB8lB2pqcpD2p/AuY5Ebp
- k9SAGC6GQWwI1++4kme2Irzmisk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e37d86a.7fc837d1c3e8-smtp-out-n03;
- Mon, 03 Feb 2020 08:23:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C5B3FC447A0; Mon,  3 Feb 2020 08:23:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gubbaven)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FD62C43383;
-        Mon,  3 Feb 2020 08:23:05 +0000 (UTC)
+        Mon, 3 Feb 2020 03:24:58 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: LYzB8tjFzwME2IoR4inF3aAMR7E8mFznysBZRpxY0qLtLp+o30w47celA5tYohtq/EQ+OPcUPP
+ VOwpY9HfKlqC6+tVpHI/0SfinRC93oEXfSydvmuHNe1VOWKjHXeBWewDHhMugGaj0KAVL8QVZC
+ efDneFt+/tM/CAlk2ufRy0ph/PFrbDy3SBhRQ66vTGKKjID6cPvp8N2dyl/IR+x/Sugp0GYHLi
+ c4ZbyGl077x69yTYNOvkVLpov63QtXs9Ys2s2bHUKvCeOxL6pbTNG9+S4qIYotYLhAQkb3zr4j
+ oIo=
+X-IronPort-AV: E=Sophos;i="5.70,397,1574146800"; 
+   d="scan'208";a="1018402"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Feb 2020 01:24:57 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 3 Feb 2020 01:24:57 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 3 Feb 2020 01:24:56 -0700
+Date:   Mon, 3 Feb 2020 09:24:27 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Tudor Ambarus - M18064 <Tudor.Ambarus@microchip.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] dmaengine: at_hdmac: Substitute kzalloc with
+ kmalloc
+Message-ID: <20200203082427.bog6ykmxvixeisg5@M43218.corp.atmel.com>
+Mail-Followup-To: Tudor Ambarus - M18064 <Tudor.Ambarus@microchip.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200123140237.125799-1-tudor.ambarus@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Feb 2020 13:53:05 +0530
-From:   gubbaven@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        robh@kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
-        yshavit@google.com, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3991
-In-Reply-To: <20200131223626.GA237926@google.com>
-References: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
- <1580456335-7317-2-git-send-email-gubbaven@codeaurora.org>
- <20200131223626.GA237926@google.com>
-Message-ID: <3a9f33a4e8e6f2ac2ebd286e31e5836f@codeaurora.org>
-X-Sender: gubbaven@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200123140237.125799-1-tudor.ambarus@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Thu, Jan 23, 2020 at 02:03:02PM +0000, Tudor Ambarus - M18064 wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> All members of the structure are initialized below in the function,
+> there is no need to use kzalloc.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-On 2020-02-01 04:06, Matthias Kaehlcke wrote:
-> + DT folks
-> 
-> On Fri, Jan 31, 2020 at 01:08:55PM +0530, Venkata Lakshmi Narayana 
-> Gubba wrote:
->> Add compatible string for the Qualcomm WCN3991 Bluetooth controller
->> 
->> Signed-off-by: Venkata Lakshmi Narayana Gubba 
->> <gubbaven@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
->> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> index 68b67d9..e72045d 100644
->> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> @@ -11,6 +11,7 @@ Required properties:
->>   - compatible: should contain one of the following:
->>     * "qcom,qca6174-bt"
->>     * "qcom,wcn3990-bt"
->> +   * "qcom,wcn3991-bt"
->>     * "qcom,wcn3998-bt"
->> 
->>  Optional properties for compatible string qcom,qca6174-bt:
->> @@ -30,6 +31,7 @@ Optional properties for compatible string 
->> qcom,wcn399x-bt:
->> 
->>   - max-speed: see 
->> Documentation/devicetree/bindings/serial/slave-device.txt
->>   - firmware-name: specify the name of nvm firmware to load
->> + - clocks: clock provided to the controller
->> 
->>  Examples:
->> 
->> @@ -56,5 +58,6 @@ serial@898000 {
->>  		vddch0-supply = <&vreg_l25a_3p3>;
->>  		max-speed = <3200000>;
->>  		firmware-name = "crnv21.bin";
->> +		clocks = <&rpmhcc>;
-> 
-> That specifies a clock controller, not a clock.
-> 
-> For a device with the SC7180 SoC we use this:
-> 
-> 		clocks = <&rpmhcc RPMH_RF_CLK2>;
+Hi Tudor,
 
-[Venkata] :
+It sounds good for me. Thanks for the cleanup and deadlock fixes.
 
-Sure, we will update in next patch set.
+For the whole set of patches:
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+Ludovic
+
+> ---
+>  drivers/dma/at_hdmac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->>  	};
->>  };
-
-Regards,
-Venkata.
+> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> index 672c73b4a2d4..cad6dcd9cfb5 100644
+> --- a/drivers/dma/at_hdmac.c
+> +++ b/drivers/dma/at_hdmac.c
+> @@ -1671,7 +1671,7 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_SLAVE, mask);
+>  
+> -	atslave = kzalloc(sizeof(*atslave), GFP_KERNEL);
+> +	atslave = kmalloc(sizeof(*atslave), GFP_KERNEL);
+>  	if (!atslave)
+>  		return NULL;
+>  
+> -- 
+> 2.23.0
