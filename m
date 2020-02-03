@@ -2,254 +2,199 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267D3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFB5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCFB520838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8618920658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Y9Om/v/I";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="SASyOHAl"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Z5gtfsfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgBCVTg (ORCPT
+        id S1727080AbgBCVVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:19:36 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:22298 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726331AbgBCVTf (ORCPT
+        Mon, 3 Feb 2020 16:21:34 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42220 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgBCVVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:19:35 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013LEulW021997;
-        Mon, 3 Feb 2020 13:19:25 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=ij3FvUX+CAfVcMdkiVNzUugSMtZnOBDUmHdRQ3srovI=;
- b=Y9Om/v/IIoqqXXAmuOIqlJu2GMAYpPKGKGrk6DvTNBgbf5DNPCHoKEjgYdlxwdVLFhu9
- WyukcLL5p46p4Ju51TQwsszXtUTidIbTHxpLw5hfhgEE07JqazjFrLnHuuvr3VlJqk9m
- Mlu32ha1b48edPp5sNRlpzrlwZ4+FV6JCn8= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xxt4f8bbb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 03 Feb 2020 13:19:25 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 3 Feb 2020 13:19:24 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EoLIyOWcl8gIAalzz4VbMOcSu9p4n8cEff4wzf5bYq5LrsZhgLHmI82NDe4Us1QEmyQYLowTq8RMZI98ydsuwPO2yxOUB72vx/DAFvIu7dPvwH/5iDmbR3Tgz9VMxp2W3UfymxwV2dsdlMRM3iNlJqmdPZeVS5Gm4S+cdZ1gOMO5FDtZQuG60iu/43JNbMYKSLVJGSjOsCeKHEcFKVCH4Egpm61Y1q3wa+sHijl8KUdgPLaDEM7pwMqODnYUy5B1QDYDGyEuerFNe3S9zmdzrq57m0lp5LTGaUaz+5ItUg8c4fFePnkgTolqotnkuJV58/lgai4xC6bpTPbqyxEUaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ij3FvUX+CAfVcMdkiVNzUugSMtZnOBDUmHdRQ3srovI=;
- b=khrbRG5Nxf/0XmAkD8VYJuSPavSGyrz0Ok2GgtgxRigMsOhRWMLbvsPdsHOe+8cK8PHZrkWEzZLP4qkmy4lrM44GQ8S2J1sdh/zzjAx6gyGGWhPelH9fX6Zq3DFAZ6QtJ2+6EpqetR2RxKMvaa1qf9ftFYC2N4r5suADzaL8fIPUMxP0H6q3in6cUKPEXpv5GrXodFpUjh6oalkt9VtYEtmSsWTpSduvC0b/xALpic6VSNRyJf9TzAQL7FmYH+epEGhPVXXY5NBqXf3aG6l3S8SNfsbACHvTo3BrdaMb4HkYa6/4U+XUp/4xusjlIKV/iiyo+zWG8LlcKVd40La5Hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ij3FvUX+CAfVcMdkiVNzUugSMtZnOBDUmHdRQ3srovI=;
- b=SASyOHAlSlmfg5z4zpY+/KBgo9mpO9HsPeluHRzbQ3TlVZUi3KWxAwjNrc3qvKauPgnghxNletQujP5+YZ5apE7xCVeB2VYzPo5GrkC3Ge8ZwF5SWJxHQdcaVOCK8ST6kvK0+AIkpgBvV+2doPvcaQo9L3LDEQ5WXPsM6JDAdAI=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB2854.namprd15.prod.outlook.com (20.178.206.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Mon, 3 Feb 2020 21:19:23 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2686.031; Mon, 3 Feb 2020
- 21:19:22 +0000
-Date:   Mon, 3 Feb 2020 13:19:15 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 16/28] mm: memcg/slab: allocate obj_cgroups for
- non-root slab pages
-Message-ID: <20200203211915.GB6781@xps.dhcp.thefacebook.com>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-17-guro@fb.com>
- <20200203182756.GG1697@cmpxchg.org>
- <20200203183452.GB3700@xps.dhcp.thefacebook.com>
- <20200203204627.GB6380@cmpxchg.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203204627.GB6380@cmpxchg.org>
-X-ClientProxiedBy: MN2PR07CA0022.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::32) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
+        Mon, 3 Feb 2020 16:21:33 -0500
+Received: by mail-wr1-f65.google.com with SMTP id k11so20167233wrd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:21:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Linhx/sgeP54sgG+yFgZRMaacWHjWnum0M0q4uxIwCA=;
+        b=Z5gtfsfAtTaxUTOyoRg2CywyxUtjD9NQNrgkDf53dqfMSbSlzrHW2aKdpciqAD2vKD
+         lqWaoYIS1bCN09Bu99tYSirZ61FxtpEdxLsKgIOkgKx1Lv6CSbzVcKJlZmxI4t+7pm7x
+         UcgcO4RWop26tUYd14soRDqSAL6atSK1889KQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Linhx/sgeP54sgG+yFgZRMaacWHjWnum0M0q4uxIwCA=;
+        b=NGTA19HMsCuTmTWtml+etnAQxMUxoc0MJyJuGidmRrglAJzIVBZwvkPQEiodqsmDjd
+         dg7jW7zYk2KDrhq6qzCcdWor9e74CKgLMwwEDvrYIDIJbYR3oYQyxNgXyUhx+NM2PjjG
+         QmBFoma2/M2z4/TFA0lo3zLitLTlzcZKpL1Cw+UCGHplsVFPFvdV4stc6YJ5jq/ylh6f
+         Q1NWJx71sjywoEYD8+Ob0ttXpNW/MmwNQwOzzmKTzO6EKQipJm48QUJ7PiNVenpe0v4G
+         j/8aSALz9t/wfpM9H94yJz654chHDEFa27jEtUl7rFKUAwPgHpQuHVQnb3gZGGL4vLlQ
+         fHDQ==
+X-Gm-Message-State: APjAAAXrz/WeVMPYyfG/GCRQX3E+MVxTyxypwQti+w718pFgBlgGLsv7
+        3aXkOivbSXdhHtekQNoNDJjEoQ==
+X-Google-Smtp-Source: APXvYqxzc+Knk9Bu4G6pzqI5sZxcvOTL57ZIDi7NYOhwgL1JxlGPYEkVPquC3VdQ5pfubirVGlUKcg==
+X-Received: by 2002:adf:ecc2:: with SMTP id s2mr17929089wro.263.1580764889775;
+        Mon, 03 Feb 2020 13:21:29 -0800 (PST)
+Received: from [10.67.50.115] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 124sm882518wmc.29.2020.02.03.13.21.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2020 13:21:29 -0800 (PST)
+Subject: Re: [PATCH 6/6] net: bcmgenet: reduce severity of missing clock
+ warnings
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-7-jeremy.linton@arm.com>
+ <2dfd6cd2-1dd0-c8ff-8d83-aed3b4ea7a79@gmx.net>
+ <34aba1d9-5cad-0fee-038d-c5f3bfc9ed30@arm.com>
+ <45e138de5ddd70e8033bdef6484703eed60a9cb7.camel@suse.de>
+ <70a6ad63-dccc-e595-789d-800484197bbe@gmx.net>
+From:   Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; prefer-encrypt=mutual; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNKEZsb3JpYW4gRmFpbmVsbGkgPGZhaW5lbGxpQGJyb2FkY29tLmNvbT7CwTsEEAECAM4X
+ CgABv0jL/n0t8VEFmtDa8j7qERo7AN0gFAAAAAAAFgABa2V5LXVzYWdlLW1hc2tAcGdwLmNv
+ bY4wFIAAAAAAIAAHcHJlZmVycmVkLWVtYWlsLWVuY29kaW5nQHBncC5jb21wZ3BtaW1lCAsJ
+ CAcDAgEKAhkBBReAAAAAGRhsZGFwOi8va2V5cy5icm9hZGNvbS5jb20FGwMAAAADFgIBBR4B
+ AAAABBUICQoWIQTV2SqX55Fc3tfkfGiBMbXEKbxmoAUCW23mnwUJERPMXwAhCRCBMbXEKbxm
+ oBYhBNXZKpfnkVze1+R8aIExtcQpvGag720H/ApVwDjxE6o8UBElQNkXULUrWEiXMQ9Rv9hR
+ cxdvnOs69a8Z8Ed7GT2NvNoBIInQL6CLxKMyRzOUM90wzXgYlXnb23sv0vl6vOjszNuuwNk6
+ nMY7GtvhL6fVFNULFxSI8fHP1ujWwunp+XeJsgMtUbEo3QXml3aWeMoXauiFYRNYIi8vo8gB
+ LPxwXR1sj+pQMWtuguoJXbp33QsimEWLRypLJGG2QjczRC34e8qlFmL68Trh1/mNgy1rxMll
+ 1ZsRvI6m4+3mTz5hvfVBwXbToPX9GMYutg4d8embVSLSTEcGx6uFcYZO9nYwQFGxH1YzPiAL
+ 03C8+ci8XLY3EJJpU//OwE0EU8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJ
+ PxDwDRpvU5LhqSPvk/yJdh9k4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/i
+ rm9lX9El27DPHy/0qsxmxVmUpu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk
+ 60R7XGzmSJqF09vYNlJ6BdbsMWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBG
+ x80bBF8AkdThd6SLhreCN7UhIR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6
+ yRJ5DAmIUt5CCPcAEQEAAcLCoAQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAK
+ CRCTYAaomC8PVQ0VCACWk3n+obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5
+ noZi8bKg0bxw4qsg+9cNgZ3PN/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteF
+ CM4dGDRruo69IrHfyyQGx16sCcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mec
+ tdoECEqdF/MWpfWIYQ1hEfdmC2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/C
+ HoYVkKqwUIzI59itl5Lze+R5wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkh
+ ASkJEIExtcQpvGagwF0gBBkBCAAGBQJTwBvBAAoJEJNgBqiYLw9VDRUIAJaTef6hsUAESnlG
+ DpC+ymL2RZdzAJx9lXjU4hhaFcyhznuyyMJqd3mehmLxsqDRvHDiqyD71w2Bnc838MVZw0pw
+ BPdnb/h9Ocmp0lL/9hwSGWvy4az5lYVyoA9u14UIzh0YNGu6jr0isd/LJAbHXqwJwWWs3y8P
+ TrpEp68V6lv+aXt5gR03lJEAvIR1Awp4JJ/eZ5y12gQISp0X8xal9YhhDWER92YLYrO2b6Hc
+ 2S31lAupzfCw8lmZsP1PRz1GmF/KmDD9J9N/b8IehhWQqrBQjMjn2K2XkvN75HnAMHKFYfHZ
+ R3ZHtK52ZP1crV7THtbtrnPXVDq+vO4QPmdC+SG6BwgAl3kRh7oozpjpG8jpO8en5CBtTl3G
+ +OpKJK9qbQyzdCsuJ0K1qe1wZPZbP/Y+VtmqSgnExBzjStt9drjFBK8liPQZalp2sMlS9S7c
+ sSy6cMLF1auZubAZEqpmtpXagbtgR12YOo57Reb83F5KhtwwiWdoTpXRTx/nM0cHtjjrImON
+ hP8OzVMmjem/B68NY++/qt0F5XTsP2zjd+tRLrFh3W4XEcLt1lhYmNmbJR/l6+vVbWAKDAtc
+ bQ8SL2feqbPWV6VDyVKhya/EEq0xtf84qEB+4/+IjCdOzDD3kDZJo+JBkDnU3LBXw4WCw3Qh
+ OXY+VnhOn2EcREN7qdAKw0j9Sw==
+Message-ID: <e5be3a95-0b7e-370a-2d65-fdeabbdfa187@broadcom.com>
+Date:   Mon, 3 Feb 2020 13:21:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Received: from xps.dhcp.thefacebook.com (2620:10d:c091:480::55b0) by MN2PR07CA0022.namprd07.prod.outlook.com (2603:10b6:208:1a0::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.29 via Frontend Transport; Mon, 3 Feb 2020 21:19:20 +0000
-X-Originating-IP: [2620:10d:c091:480::55b0]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 910d3db2-cdb4-4e78-6913-08d7a8eebd3e
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2854:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB28545E2519D5F45AB34B4BE7BE000@BYAPR15MB2854.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0302D4F392
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(366004)(136003)(39860400002)(199004)(189003)(6916009)(6506007)(7696005)(1076003)(52116002)(4326008)(478600001)(55016002)(9686003)(8936002)(81166006)(81156014)(86362001)(66946007)(2906002)(5660300002)(54906003)(16526019)(316002)(66476007)(186003)(33656002)(8676002)(66556008)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2854;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7mhTfvG58TIQSSpjv7iHsdJCWh8AnWpz29bcF2GRY+cresPGyXfJ31Gamha6cZIapx4tMoj+UNw5rnxQShN2a2jzd0gjXUUc8oGWq4f/FtbSgwuAaA0+Jg7ww8B/sQHh/O9gcjLCSTdjJbSRazhQVdVJdzD05V22sImcQONq6jlA+YeB4LkCSaRXqD0VaeL53qO8soY7upKCRuVfuvx831guuWN39bpC1KYR46ok5qa3uX+ddQiFWsPh44mVaK6dzcMQX6HTMo8NNyxu51NjU5i6fjbyvW7Hy3NbKKD5G/x0wBH1Y4yBUfng1w1OlMckiqJrmu7PeAZ1iVtjju3I/i+APTzZVdoetVJ/Lt8Zr/fnNO2TXGdk5sEFXJzngFY7Aim4m5ByeqdhzxP/mEJiMUTvTyP0aPv7vVT2p9FbK77K6TqnZkm40cUzCPlwH6js
-X-MS-Exchange-AntiSpam-MessageData: X+qm4F1VbbmqaL3NVxXWhO3v/aTVNon2Wl9EEAKj7UMQp6gbggCgFeR7zV04aT9xe1wv7EyYQr0tHHgoH17b8eLp24f/xASTmavrpHPZyzRCp/YlRzFxgJpU0wNMEyYEJro4brAmFUc1pfKtFPbcZWnvBP1O7ZW5pswZ5FBDQ8o=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 910d3db2-cdb4-4e78-6913-08d7a8eebd3e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 21:19:22.8540
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nb1VA0Il+XZyuVJzhRkFw9/+SgE70uFqPjbuqr8x7lOiWgWvB5Tse05wLjazlErF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2854
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_07:2020-02-02,2020-02-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=997
- lowpriorityscore=0 adultscore=0 priorityscore=1501 malwarescore=0
- phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0 spamscore=0
- mlxscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002030154
-X-FB-Internal: deliver
+In-Reply-To: <70a6ad63-dccc-e595-789d-800484197bbe@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 03:46:27PM -0500, Johannes Weiner wrote:
-> On Mon, Feb 03, 2020 at 10:34:52AM -0800, Roman Gushchin wrote:
-> > On Mon, Feb 03, 2020 at 01:27:56PM -0500, Johannes Weiner wrote:
-> > > On Mon, Jan 27, 2020 at 09:34:41AM -0800, Roman Gushchin wrote:
-> > > > Allocate and release memory to store obj_cgroup pointers for each
-> > > > non-root slab page. Reuse page->mem_cgroup pointer to store a pointer
-> > > > to the allocated space.
-> > > > 
-> > > > To distinguish between obj_cgroups and memcg pointers in case
-> > > > when it's not obvious which one is used (as in page_cgroup_ino()),
-> > > > let's always set the lowest bit in the obj_cgroup case.
-> > > > 
-> > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > > ---
-> > > >  include/linux/mm.h       | 25 ++++++++++++++++++--
-> > > >  include/linux/mm_types.h |  5 +++-
-> > > >  mm/memcontrol.c          |  5 ++--
-> > > >  mm/slab.c                |  3 ++-
-> > > >  mm/slab.h                | 51 +++++++++++++++++++++++++++++++++++++++-
-> > > >  mm/slub.c                |  2 +-
-> > > >  6 files changed, 83 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > > > index 080f8ac8bfb7..65224becc4ca 100644
-> > > > --- a/include/linux/mm.h
-> > > > +++ b/include/linux/mm.h
-> > > > @@ -1264,12 +1264,33 @@ static inline void set_page_links(struct page *page, enum zone_type zone,
-> > > >  #ifdef CONFIG_MEMCG
-> > > >  static inline struct mem_cgroup *page_memcg(struct page *page)
-> > > >  {
-> > > > -	return page->mem_cgroup;
-> > > > +	struct mem_cgroup *memcg = page->mem_cgroup;
-> > > > +
-> > > > +	/*
-> > > > +	 * The lowest bit set means that memcg isn't a valid memcg pointer,
-> > > > +	 * but a obj_cgroups pointer. In this case the page is shared and
-> > > > +	 * isn't charged to any specific memory cgroup. Return NULL.
-> > > > +	 */
-> > > > +	if ((unsigned long) memcg & 0x1UL)
-> > > > +		memcg = NULL;
-> > > > +
-> > > > +	return memcg;
-> > > 
-> > > That should really WARN instead of silently returning NULL. Which
-> > > callsite optimistically asks a page's cgroup when it has no idea
-> > > whether that page is actually a userpage or not?
-> > 
-> > For instance, look at page_cgroup_ino() called from the
-> > reading /proc/kpageflags.
+On 2/3/20 11:08 AM, Stefan Wahren wrote:
+> Hi,
 > 
-> But that checks PageSlab() and implements memcg_from_slab_page() to
-> handle that case properly. And that's what we expect all callsites to
-> do: make sure that the question asked actually makes sense, instead of
-> having the interface paper over bogus requests.
+> Am 03.02.20 um 19:36 schrieb Nicolas Saenz Julienne:
+>> Hi,
+>> BTW the patch looks good to me too:
+>>
+>> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>
+>> On Sat, 2020-02-01 at 13:27 -0600, Jeremy Linton wrote:
+>>> Hi,
+>>>
+>>> First, thanks for looking at this!
+>>>
+>>> On 2/1/20 10:44 AM, Stefan Wahren wrote:
+>>>> Hi Jeremy,
+>>>>
+>>>> [add Nicolas as BCM2835 maintainer]
+>>>>
+>>>> Am 01.02.20 um 08:46 schrieb Jeremy Linton:
+>>>>> If one types "failed to get enet clock" or similar into google
+>>>>> there are ~370k hits. The vast majority are people debugging
+>>>>> problems unrelated to this adapter, or bragging about their
+>>>>> rpi's. Given that its not a fatal situation with common DT based
+>>>>> systems, lets reduce the severity so people aren't seeing failure
+>>>>> messages in everyday operation.
+>>>>>
+>>>> i'm fine with your patch, since the clocks are optional according to the
+>>>> binding. But instead of hiding of those warning, it would be better to
+>>>> fix the root cause (missing clocks). Unfortunately i don't have the
+>>>> necessary documentation, just some answers from the RPi guys.
+>>> The DT case just added to my ammunition here :)
+>>>
+>>> But really, I'm fixing an ACPI problem because the ACPI power management
+>>> methods are also responsible for managing the clocks. Which means if I
+>>> don't lower the severity (or otherwise tweak the code path) these errors
+>>> are going to happen on every ACPI boot.
+>>>
+>>>> This is what i got so far:
+>> Stefan, Apart from the lack of documentation (and maybe also time), is there
+>> any specific reason you didn't sent the genet clock patch yet? It should be OK
+>> functionally isn't it?
 > 
-> If that function is completely racy and PageSlab isn't stable, then it
-> should really just open-code the lookup, rather than require weakening
-> the interface for everybody else.
+> last time i tried to specify the both clocks as suggest by the binding
+> document (took genet125 for wol, not sure this is correct), but this
+> caused an abort on the BCM2711. In the lack of documentation i stopped
+> further investigations. As i saw that Jeremy send this patch, i wanted
+> to share my current results and retestet it with this version which
+> doesn't crash. I don't know the reason why both clocks should be
+> specified, but this patch should be acceptable since the RPi 4 doesn't
+> support wake on LAN.
 
-Why though?
+Your clock changes look correct, but there is also a CLKGEN register
+block which has separate clocks for the GENET controller, which lives at
+register offset 0x7d5e0048 and which has the following layout:
 
-Another example: process stack can be depending on the machine config and
-platform a vmalloc allocation, a slab allocation or a "high-order slab allocation",
-which is executed by the page allocator directly.
+bit 0: GENET_CLK_250_CLOCK_ENABLE
+bit 1: GENET_EEE_CLOCK_ENABLE
+bit 2: GENET_GISB_CLOCK_ENABLE
+bit 3: GENET_GMII_CLOCK_ENABLE
+bit 4: GENET_HFB_CLOCK_ENABLE
+bit 5: GENET_L2_INTR_CLOCK_ENABLE
+bit 6: GENET_SCB_CLOCK_ENABLE
+bit 7: GENET_UNIMAC_SYS_RX_CLOCK_ENABLE
+bit 8: GENET_UNIMAC_SYS_TX_CLOCK_ENABLE
 
-It's kinda nice to have a function that hides accounting details
-and returns a valid memcg pointer for any kind of objects.
+you will need all of those clocks turned on for normal operation minus
+EEE, unless EEE is desirable which is why it is a separate clock. Those
+clocks default to ON unless turned off, and the main gate that you
+control is probably enough.
 
-To me it seems to be a valid question:
-for a given kernel object give me a pointer to the memory cgroup.
-
-Why it's weakening?
-
-Moreover, open-coding of this question leads to bugs like one fixed by
-ec9f02384f60 ("mm: workingset: fix vmstat counters for shadow nodes").
-
-> 
-> > > >  static inline struct mem_cgroup *page_memcg_rcu(struct page *page)
-> > > >  {
-> > > > +	struct mem_cgroup *memcg = READ_ONCE(page->mem_cgroup);
-> > > > +
-> > > >  	WARN_ON_ONCE(!rcu_read_lock_held());
-> > > > -	return READ_ONCE(page->mem_cgroup);
-> > > > +
-> > > > +	/*
-> > > > +	 * The lowest bit set means that memcg isn't a valid memcg pointer,
-> > > > +	 * but a obj_cgroups pointer. In this case the page is shared and
-> > > > +	 * isn't charged to any specific memory cgroup. Return NULL.
-> > > > +	 */
-> > > > +	if ((unsigned long) memcg & 0x1UL)
-> > > > +		memcg = NULL;
-> > > > +
-> > > > +	return memcg;
-> > > 
-> > > Same here.
-> > > 
-> > > >  }
-> > > >  #else
-> > > >  static inline struct mem_cgroup *page_memcg(struct page *page)
-> > > > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > > > index 270aa8fd2800..5102f00f3336 100644
-> > > > --- a/include/linux/mm_types.h
-> > > > +++ b/include/linux/mm_types.h
-> > > > @@ -198,7 +198,10 @@ struct page {
-> > > >  	atomic_t _refcount;
-> > > >  
-> > > >  #ifdef CONFIG_MEMCG
-> > > > -	struct mem_cgroup *mem_cgroup;
-> > > > +	union {
-> > > > +		struct mem_cgroup *mem_cgroup;
-> > > > +		struct obj_cgroup **obj_cgroups;
-> > > > +	};
-> > > 
-> > > Since you need the casts in both cases anyway, it's safer (and
-> > > simpler) to do
-> > > 
-> > > 	unsigned long mem_cgroup;
-> > > 
-> > > to prevent accidental direct derefs in future code.
-> > 
-> > Agree. Maybe even mem_cgroup_data?
-> 
-> Personally, I don't think the suffix adds much. The type makes it so
-> the compiler catches any accidental use, and access is very
-> centralized so greppability doesn't matter much.
+The Pi4 could support Wake-on-LAN with appropriate VPU firmware changes,
+but I do not believe there is any interest in doing that. I would not
+"bend" the clock representation just so as to please the driver with its
+clocking needs.
+-- 
+Florian
