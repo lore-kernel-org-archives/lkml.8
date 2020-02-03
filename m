@@ -2,233 +2,166 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78C1C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0FC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963CA21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2579D2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3/dlEbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgBCRdb (ORCPT
+        id S1728637AbgBCRfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:33:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39976 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbgBCRda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:33:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F3108ADD7;
-        Mon,  3 Feb 2020 17:33:27 +0000 (UTC)
+        Mon, 3 Feb 2020 12:35:05 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45667 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbgBCRfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:35:05 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so7910228pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 09:35:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/2GnHgYEod44KNh5O907qr0Dr3tZt31Xm1Pio0+BUtU=;
+        b=T3/dlEbss69QCdMNMPoph/AGjrLOJywnCDQUDC2crHYwLXIj8gbLjE1Mhh/0AS4Q5i
+         1AN7ohRk8xc5mWmOgUpM/XP9ETNjwFHjATcQYoN/y6IcTcbeIIKbLoOOtplCNuIlIw6C
+         lt1Al/0QHs4pwiYD+e5S5S6DGygimX8cRV8E3qtmVn0c98qAteldebnd1oAOpSZWRLfg
+         X4hvg2OAdCgQIqlJrR5SZ3IxW3t0aZSQGeM7PWTCFvoCLYqq0Cq4KzyCL5katLBoLA+4
+         hc+utViSzEbgLYkXa9iZmRJ+ZawjFNhlcJ0L48IDNx6YU3dp1OVy3uPvyrzXLMKfamqU
+         h+qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/2GnHgYEod44KNh5O907qr0Dr3tZt31Xm1Pio0+BUtU=;
+        b=MPHQ17kqZTAL67WHYSyiWL1LgBZp72+nJxSk+vX4kYLAV0uEUl9uRbM90/vkYYO8xx
+         7PlYWN6nGe0azhKSpa9WFqnXnkMVO/gNZzyvfDCoIOmCI4EmWcFgdA5FEngbxNfjiDE5
+         kjf7h9aOMVMi5ihCsKDb/+X6N/ysMpPvwdlilsVgWEfJYNLuh7x9/iDeJ3tkr3210izI
+         G1gQqnW6eh48BVLTkCVOjNgO280lGZaKgLPOtqqpu44jOT76ZD0kaqxzA2NY2GnP4YOs
+         gp4yqPG15BUXtm8i5BbYhHC4hfiz+89OJsUOPJAeZdpKcGZwQZMSJjywB9OtoMN/8VwM
+         4UXA==
+X-Gm-Message-State: APjAAAX/IAp5cyX8NnaW+WEZqLMrOY+4E8i55VKYXIBGSoUoF8ercAPx
+        fr5JzZe7NQIx7f0j/8gOSfGY0A==
+X-Google-Smtp-Source: APXvYqwHjAZO5+aiba+vTO0oc2CApTMEtmAA4xfo4oGHCw/dpaiKyNl42GAFhoYlHtXUvoagPsmxZg==
+X-Received: by 2002:a63:7e58:: with SMTP id o24mr25705879pgn.214.1580751302915;
+        Mon, 03 Feb 2020 09:35:02 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s18sm700055pgn.34.2020.02.03.09.35.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 09:35:02 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:35:00 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+ device node
+Message-ID: <20200203173500.GB3948@builder>
+References: <1580281223-2759-1-git-send-email-pillair@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Feb 2020 18:33:27 +0100
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Max Neunhoeffer <max@arangodb.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>
-Subject: Re: epoll_wait misses edge-triggered eventfd events: bug in Linux 5.3
- and 5.4
-In-Reply-To: <20200203151536.caf6n4b2ymvtssmh@tux>
-References: <20200131135730.ezwtgxddjpuczpwy@tux>
- <20200201121647.62914697@cakuba.hsd1.ca.comcast.net>
- <20200203151536.caf6n4b2ymvtssmh@tux>
-Message-ID: <5a16db1f2983ab105b99121ce0737d11@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580281223-2759-1-git-send-email-pillair@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max and all,
+On Tue 28 Jan 23:00 PST 2020, Rakesh Pillai wrote:
 
-I can reproduce the issue.  My epoll optimization which you referenced
-did not consider the case of wakeups on epoll_ctl() path, only the fd
-update path.
-
-I will send the fix upstream today/tomorrow (already tested on the
-epollbug.c), the exemplary patch at the bottom of the current
-email.
-
-Also I would like to  submit the epollbug.c as a test case for
-the epoll test suite. Does the author of epollbug have any
-objections?
-
-Thanks.
-
---
-Roman
-
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index c4159bcc05d9..a90f8b8a5def 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -745,7 +745,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
-*ep,
-                  * the ->poll() wait list (delayed after we release the 
-lock).
-                  */
-                 if (waitqueue_active(&ep->wq))
--                       wake_up(&ep->wq);
-+                       wake_up_locked(&ep->wq);
-                 if (waitqueue_active(&ep->poll_wait))
-                         pwake++;
-         }
-@@ -1200,7 +1200,7 @@ static inline bool chain_epi_lockless(struct 
-epitem *epi)
-   * Another thing worth to mention is that ep_poll_callback() can be 
-called
-   * concurrently for the same @epi from different CPUs if poll table was 
-inited
-   * with several wait queues entries.  Plural wakeup from different CPUs 
-of a
-- * single wait queue is serialized by wq.lock, but the case when 
-multiple wait
-+ * single wait queue is serialized by ep->lock, but the case when 
-multiple wait
-   * queues are used should be detected accordingly.  This is detected 
-using
-   * cmpxchg() operation.
-   */
-@@ -1275,6 +1275,13 @@ static int ep_poll_callback(wait_queue_entry_t 
-*wait, unsigned mode, int sync, v
-                                 break;
-                         }
-                 }
-+               /*
-+                * Since here we have the read lock (ep->lock) taken, 
-plural
-+                * wakeup from different CPUs can occur, thus we call 
-wake_up()
-+                * variant which implies its own lock on wqueue. All 
-other paths
-+                * take write lock, thus modifications on ep->wq are 
-serialized
-+                * by rw lock.
-+                */
-                 wake_up(&ep->wq);
-         }
-         if (waitqueue_active(&ep->poll_wait))
-@@ -1578,7 +1585,7 @@ static int ep_insert(struct eventpoll *ep, const 
-struct epoll_event *event,
-
-                 /* Notify waiting tasks that events are available */
-                 if (waitqueue_active(&ep->wq))
--                       wake_up(&ep->wq);
-+                       wake_up_locked(&ep->wq);
-                 if (waitqueue_active(&ep->poll_wait))
-                         pwake++;
-         }
-@@ -1684,7 +1691,7 @@ static int ep_modify(struct eventpoll *ep, struct 
-epitem *epi,
-
-                         /* Notify waiting tasks that events are 
-available */
-                         if (waitqueue_active(&ep->wq))
--                               wake_up(&ep->wq);
-+                               wake_up_locked(&ep->wq);
-                         if (waitqueue_active(&ep->poll_wait))
-                                 pwake++;
-                 }
-@@ -1881,9 +1888,9 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-                 waiter = true;
-                 init_waitqueue_entry(&wait, current);
-
--               spin_lock_irq(&ep->wq.lock);
-+               write_lock_irq(&ep->lock);
-                 __add_wait_queue_exclusive(&ep->wq, &wait);
--               spin_unlock_irq(&ep->wq.lock);
-+               write_unlock_irq(&ep->lock);
-         }
-
-         for (;;) {
-@@ -1931,9 +1938,9 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-                 goto fetch_events;
-
-         if (waiter) {
--               spin_lock_irq(&ep->wq.lock);
-+               write_lock_irq(&ep->lock);
-                 __remove_wait_queue(&ep->wq, &wait);
--               spin_unlock_irq(&ep->wq.lock);
-+               write_unlock_irq(&ep->lock);
-         }
-
-         return res;
-
-
-
-
-On 2020-02-03 16:15, Max Neunhoeffer wrote:
-> Dear Jakub and all,
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
 > 
-> I have done a git bisect and found that this commit introduced the 
-> epoll
-> bug:
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
 > 
-> https://github.com/torvalds/linux/commit/a218cc4914209ac14476cb32769b31a556355b22
-> 
-> I Cc the author of the commit.
-> 
-> This makes sense, since the commit introduces a new rwlock to reduce
-> contention in ep_poll_callback. I do not fully understand the details
-> but this sounds all very close to this bug.
-> 
-> I have also verified that the bug is still present in the latest master
-> branch in Linus' repository.
-> 
-> Furthermore, Chris Kohlhoff has provided yet another reproducing 
-> program
-> which is no longer using edge-triggered but standard level-triggered
-> events and epoll_wait. This makes the bug all the more urgent, since
-> potentially more programs could run into this problem and could end up
-> with sleeping barbers.
-> 
-> I have added all the details to the bugzilla bugreport:
-> 
->   https://bugzilla.kernel.org/show_bug.cgi?id=205933
-> 
-> Hopefully, we can resolve this now equipped with this amount of 
-> information.
-> 
-> Best regards,
->   Max.
-> 
-> On 20/02/01 12:16, Jakub Kicinski wrote:
->> On Fri, 31 Jan 2020 14:57:30 +0100, Max Neunhoeffer wrote:
->> > Dear All,
->> >
->> > I believe I have found a bug in Linux 5.3 and 5.4 in epoll_wait/epoll_ctl
->> > when an eventfd together with edge-triggered or the EPOLLONESHOT policy
->> > is used. If an epoll_ctl call to rearm the eventfd happens approximately
->> > at the same time as the epoll_wait goes to sleep, the event can be lost,
->> > even though proper protection through a mutex is employed.
->> >
->> > The details together with two programs showing the problem can be found
->> > here:
->> >
->> >   https://bugzilla.kernel.org/show_bug.cgi?id=205933
->> >
->> > Older kernels seem not to have this problem, although I did not test all
->> > versions. I know that 4.15 and 5.0 do not show the problem.
->> >
->> > Note that this method of using epoll_wait/eventfd is used by
->> > boost::asio to wake up event loops in case a new completion handler
->> > is posted to an io_service, so this is probably relevant for many
->> > applications.
->> >
->> > Any help with this would be appreciated.
->> 
->> Could be networking related but let's CC FS folks just in case.
->> 
->> Would you be able to perform bisection to narrow down the search
->> for a buggy change?
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..167f68ac 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -287,6 +287,11 @@
+>  	vdda-pll-supply = <&vreg_l4a_0p8>;
+>  };
+>  
+> +&wifi {
+> +	status = "okay";
+> +	qcom,msa-fixed-perm;
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qspi_clk {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 8011c5f..0a00c94 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -75,6 +75,12 @@
+>  			reg = <0x0 0x80900000 0x0 0x200000>;
+>  			no-map;
+>  		};
+> +
+> +		wlan_fw_mem: memory@93900000 {
+> +			compatible = "removed-dma-pool";
 
+Sorry for not spotting this earlier, the "removed-dma-pool" compatible
+is a downstream thing and isn't defined upstream.
+
+> +                     no-map;
+> +                     reg = <0 0x93900000 0 0x200000>;
+
+If you swap the order of no-map and reg in this node it will look like
+all the others.
+
+
+Apart from that the patch looks good.
+
+Regards,
+Bjorn
+
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -1490,6 +1496,28 @@
+>  
+>  			#freq-domain-cells = <1>;
+>  		};
+> +
+> +		wifi: wifi@18800000 {
+> +			compatible = "qcom,wcn3990-wifi";
+> +			reg = <0 0x18800000 0 0x800000>;
+> +			reg-names = "membase";
+> +			iommus = <&apps_smmu 0xc0 0x1>;
+> +			interrupts =
+> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
+> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
+> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
+> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
+> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
+> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
+> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
+> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
+> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
+> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
+> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+> +			memory-region = <&wlan_fw_mem>;
+> +			status = "disabled";
+> +		};
+>  	};
+>  
+>  	thermal-zones {
+> -- 
+> 2.7.4
+> 
