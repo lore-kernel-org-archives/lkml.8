@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DB7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF53CC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DCFF2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC932051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748363;
-	bh=+9v1YmqM5cGr9f0t/YOS9oSKpM+ddnVM0YUWm6ru+bU=;
+	s=default; t=1580748366;
+	bh=gz9eAKYke4ruOq2+sHvKHX8F3njkkoFPfbTen9cabb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+iqqHCzN+Tk/+L1R0xS93ssIpuCUGG/HN2GXHn8rhkG5tI1QEp1p7aRkP3z0AK6I
-	 npnW9rIf2nr/9Rm0kG/h0eYwsjxYU0tG3flPOJwHkqCzolWcTbXnz3psqqG3zv0/nu
-	 oIteJvmj4c0+40vSS+s0UXM4H1o8oZxY/5Wi0tFo=
+	b=sKutTvOAYbjYO3t0CAfNe8ubtIzJRD8LnJBcPvlzBYaoHQkkOBSgq137zeFzGmav8
+	 QqV9sQOBAfBI8IyUlmokk0wE72TQ2TtQk2IARPWqHTJhfeudKfPtardMeAFqmF7LyO
+	 FY5Dc/9kNFEdxwrNCEjhPIHdusumr3jWq+aYZGTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgBCQ31 (ORCPT
+        id S1729736AbgBCQ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41272 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729768AbgBCQ3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:21 -0500
+        id S1729725AbgBCQ3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:09 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D1552080C;
-        Mon,  3 Feb 2020 16:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F082086A;
+        Mon,  3 Feb 2020 16:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747360;
-        bh=+9v1YmqM5cGr9f0t/YOS9oSKpM+ddnVM0YUWm6ru+bU=;
+        s=default; t=1580747349;
+        bh=gz9eAKYke4ruOq2+sHvKHX8F3njkkoFPfbTen9cabb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEvEZAQE8P5M295Ly/yCa/gSN7bWVf9+Ca9JWgUUp9gdt82q9nIHJgq6gxsP10pwO
-         sA9ePTLK+y8MUUs2S7DmpgH1ddEBfz8Y0eBFbvsa16kYLcw/xQ7k1CvAryY0v8lLUV
-         AY/ditWg8OYU+4keEcPx7eOOkzhRtFFovCi0Ob6w=
+        b=qP/d1W9h5ike8M7BZ84A8rya6jOgGGAS+/hlIJXBhs5jroNltpqTaOg7PW8PdPBxI
+         h6CxCBbn9KLMnRs3zs2VOEofbDBZnp2iYPEL2NNXwsIBoLkXMAuj9xnBel3V6RvDHj
+         fU1RAoPvO2l9fY2CZ/8TRTNcRMzlYKauNlBdwHnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+eba992608adf3d796bcc@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.14 50/89] Bluetooth: Fix race condition in hci_release_sock()
-Date:   Mon,  3 Feb 2020 16:19:35 +0000
-Message-Id: <20200203161923.609945033@linuxfoundation.org>
+        syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.14 46/89] media: af9005: uninitialized variable printked
+Date:   Mon,  3 Feb 2020 16:19:31 +0000
+Message-Id: <20200203161923.154799137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,44 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sean Young <sean@mess.org>
 
-commit 11eb85ec42dc8c7a7ec519b90ccf2eeae9409de8 upstream.
+commit 51d0c99b391f0cac61ad7b827c26f549ee55672c upstream.
 
-Syzbot managed to trigger a use after free "KASAN: use-after-free Write
-in hci_sock_bind".  I have reviewed the code manually and one possibly
-cause I have found is that we are not holding lock_sock(sk) when we do
-the hci_dev_put(hdev) in hci_sock_release().  My theory is that the bind
-and the release are racing against each other which results in this use
-after free.
+If usb_bulk_msg() fails, actual_length can be uninitialized.
 
-Reported-by: syzbot+eba992608adf3d796bcc@syzkaller.appspotmail.com
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Reported-by: syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_sock.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/usb/dvb-usb/af9005.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -826,6 +826,8 @@ static int hci_sock_release(struct socke
- 	if (!sk)
- 		return 0;
+--- a/drivers/media/usb/dvb-usb/af9005.c
++++ b/drivers/media/usb/dvb-usb/af9005.c
+@@ -563,7 +563,7 @@ static int af9005_boot_packet(struct usb
+ 			      u8 *buf, int size)
+ {
+ 	u16 checksum;
+-	int act_len, i, ret;
++	int act_len = 0, i, ret;
  
-+	lock_sock(sk);
-+
- 	switch (hci_pi(sk)->channel) {
- 	case HCI_CHANNEL_MONITOR:
- 		atomic_dec(&monitor_promisc);
-@@ -873,6 +875,7 @@ static int hci_sock_release(struct socke
- 	skb_queue_purge(&sk->sk_receive_queue);
- 	skb_queue_purge(&sk->sk_write_queue);
- 
-+	release_sock(sk);
- 	sock_put(sk);
- 	return 0;
- }
+ 	memset(buf, 0, size);
+ 	buf[0] = (u8) (FW_BULKOUT_SIZE & 0xff);
 
 
