@@ -2,221 +2,201 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A52C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F743C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0032080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580733345;
-	bh=o5DtjYnkWfbL05CkwBTu/BP81Q2//L79o5FOJiCzfHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VuWTbmYwUvuLbGTwMcxl38BnVTpDwl/C6jF0AffPF3jnf7O6Ecu5EZDXqm9C6cb7x
-	 1B/dt39S0sthaNP42r58MBHkPaBNItAmvV9jMxGBw/OQWj+VDntbrhFAFW+IwyoHqa
-	 vW1lcaK/fjimqpku9I3Vj79dfULbpJLIjUhtcvwA=
+	by mail.kernel.org (Postfix) with ESMTP id 74E862084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:37:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WGKBXawb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgBCMfo (ORCPT
+        id S1727367AbgBCMhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:35:44 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39356 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgBCMfn (ORCPT
+        Mon, 3 Feb 2020 07:37:01 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:53076 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbgBCMhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:35:43 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so16814720wme.4;
-        Mon, 03 Feb 2020 04:35:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xXa4goUYYVZ0ZTHIzT0gn35b1DItXYVERf7wIcsGJf0=;
-        b=ufMDYop+TWcrUN5PJd7NvZEDF5imwwCAcqgeKMjaCZuFdd66qX+Py1aT1qsFGdWccg
-         QN3jOvqajxFN59FrILXDscF2/igHsccRMMLopBqCk0fpNFoqbvNETD5dhrccXI0l66WK
-         HxUtoUoB1JcFewc27XM9b8VoAxIjSg7S7Uv4gL6ChOL+SHS/ZVOnwmP/+eJORPOudrF2
-         qf3ZOe0iG/TnSmuptCcTu89BQhBeucy5hCGK7BgWRjqF8a9rFkiMEiCFdKodFTrwKX4x
-         2MgR4/BbqKCMfPVt9aGmY0q9+NpN8wQ5yUIZl7/0ZdFIFgBWM8ZoltrKsR1eDOYhmW/8
-         dLrQ==
-X-Gm-Message-State: APjAAAXhDne6CN4aje+JUA7gC1jWEuPpLujs0YvXcg3EZqOlRFyck/bQ
-        zrzjYWIV7ZkB8zvodrj0E5Hv5p6txA==
-X-Google-Smtp-Source: APXvYqwD7AkEk5EzolooJ7Or0i+TDQW2CUQRuKKaGWjXnRMaB//sjvTWOKVzvrjd6RQlRKk18jSjOw==
-X-Received: by 2002:a1c:9cce:: with SMTP id f197mr30280639wme.133.1580733341113;
-        Mon, 03 Feb 2020 04:35:41 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id l29sm1804725wrb.64.2020.02.03.04.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:35:40 -0800 (PST)
-Received: (nullmailer pid 14680 invoked by uid 1000);
-        Mon, 03 Feb 2020 12:35:39 -0000
-Date:   Mon, 3 Feb 2020 12:35:39 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-        mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH v2] dt-bindings: convert cros-ec-keyb.txt to yaml
-Message-ID: <20200203123539.GA26961@bogus>
-References: <20200124104158.5008-1-dafna.hirschfeld@collabora.com>
+        Mon, 3 Feb 2020 07:37:01 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013CSMFJ096252;
+        Mon, 3 Feb 2020 12:36:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=IJGUSyWiTaDYU5n8SmGWHykGFqXTyFbeX+/CFLNeh/s=;
+ b=WGKBXawbXQfi/qnDTR0v9uR3p39edwt4+FuFM6cy4ibIWN0/YnU5bt84tC68Ah75uLPK
+ op1nohif4RCeyrGIrxb3c3U6c6ghwN7C7TfQsmkn3/m4m6rjHusEoRdu2twLedOs4mvS
+ IyN7N72StYNN2eFrJDEB/jQ6nveIazVBn/N5AN+01201pDgeQFFr1zC5hcC9q6Z4C1gm
+ eSF2NmSRSoQJ4JlBUNvl9mVP7ZAlg246zfOBD6kP1yVkHEoWjYhnKGrGR8/Pmgk5BiB/
+ R7xH4swz0LvPW/FaakFczCZEIvHxlOLB7e4hcjWPbeGsLm3DctSrfW8P3CWwUvpAcUKa 6A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xw0rtyh2m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 12:36:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013CSMZZ081244;
+        Mon, 3 Feb 2020 12:36:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xwkg8pbuf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 12:36:48 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 013CajHQ004519;
+        Mon, 3 Feb 2020 12:36:45 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Feb 2020 04:36:45 -0800
+Subject: Re: [PATCH V4] brd: check and limit max_part par
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        wubo40@huawei.comwubo, Louhongxiang <louhongxiang@huawei.com>
+References: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
+ <fe925c14-fe70-b237-b793-e6b865687c11@huawei.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <606d4b34-7f2f-2207-a725-2999b75cbbb7@oracle.com>
+Date:   Mon, 3 Feb 2020 20:36:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124104158.5008-1-dafna.hirschfeld@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fe925c14-fe70-b237-b793-e6b865687c11@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002030095
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002030095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 11:41:58AM +0100, Dafna Hirschfeld wrote:
-> Convert the binding file cros-ec-keyb.txt to yaml format.
+On 2/3/20 9:53 AM, Zhiqiang Liu wrote:
+> Friendly ping...
 > 
-> This was tested and verified on ARM and ARM64 with:
+> On 2020/1/21 12:04, Zhiqiang Liu wrote:
+>>
+>> In brd_init func, rd_nr num of brd_device are firstly allocated
+>> and add in brd_devices, then brd_devices are traversed to add each
+>> brd_device by calling add_disk func. When allocating brd_device,
+>> the disk->first_minor is set to i * max_part, if rd_nr * max_part
+>> is larger than MINORMASK, two different brd_device may have the same
+>> devt, then only one of them can be successfully added.
+>> when rmmod brd.ko, it will cause oops when calling brd_exit.
+>>
+>> Follow those steps:
+>>   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+>>   # rmmod brd
+>> then, the oops will appear.
+>>
+>> Oops log:
+>> [  726.613722] Call trace:
+>> [  726.614175]  kernfs_find_ns+0x24/0x130
+>> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+>> [  726.615749]  sysfs_remove_group+0x38/0xb0
+>> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+>> [  726.617320]  blk_unregister_queue+0x98/0x100
+>> [  726.618105]  del_gendisk+0x144/0x2b8
+>> [  726.618759]  brd_exit+0x68/0x560 [brd]
+>> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+>> [  726.620384]  el0_svc_common+0x78/0x130
+>> [  726.621057]  el0_svc_handler+0x38/0x78
+>> [  726.621738]  el0_svc+0x8/0xc
+>> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+>>
+>> Here, we add brd_check_and_reset_par func to check and limit max_part par.
+>>
+>> --
+>> V3->V4:(suggested by Ming Lei)
+>>  - remove useless change
+>>  - add one limit of max_part
+>>
+>> V2->V3: (suggested by Ming Lei)
+>>  - clear .minors when running out of consecutive minor space in brd_alloc
+>>  - remove limit of rd_nr
+>>
+>> V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
+>>
+>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>> ---
+>>  drivers/block/brd.c | 27 +++++++++++++++++++++++----
+>>  1 file changed, 23 insertions(+), 4 deletions(-)
+>>
+
+Looks good to me.
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+
+>> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+>> index df8103dd40ac..4684f95e3369 100644
+>> --- a/drivers/block/brd.c
+>> +++ b/drivers/block/brd.c
+>> @@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
+>>  	 *  is harmless)
+>>  	 */
+>>  	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
+>> -	disk = brd->brd_disk = alloc_disk(max_part);
+>> +	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
+>> +			0 : max_part);
+>>  	if (!disk)
+>>  		goto out_free_queue;
+>>  	disk->major		= RAMDISK_MAJOR;
+>> -	disk->first_minor	= i * max_part;
+>> +	disk->first_minor	= i * disk->minors;
+>>  	disk->fops		= &brd_fops;
+>>  	disk->private_data	= brd;
+>>  	disk->queue		= brd->brd_queue;
+>> @@ -468,6 +469,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+>>  	return kobj;
+>>  }
+>>
+>> +static inline void brd_check_and_reset_par(void)
+>> +{
+>> +	if (unlikely(!max_part))
+>> +		max_part = 1;
+>> +
+>> +	if (max_part > DISK_MAX_PARTS) {
+>> +		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
+>> +			DISK_MAX_PARTS, DISK_MAX_PARTS);
+>> +		max_part = DISK_MAX_PARTS;
+>> +	}
+>> +
+>> +	/*
+>> +	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
+>> +	 * otherwise, it is possiable to get same dev_t when adding partitions.
+>> +	 */
+>> +	if ((1U << MINORBITS) % max_part != 0)
+>> +		max_part = 1UL << fls(max_part);
+>> +}
+>> +
+>>  static int __init brd_init(void)
+>>  {
+>>  	struct brd_device *brd, *next;
+>> @@ -491,8 +511,7 @@ static int __init brd_init(void)
+>>  	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+>>  		return -EIO;
+>>
+>> -	if (unlikely(!max_part))
+>> -		max_part = 1;
+>> +	brd_check_and_reset_par();
+>>
+>>  	for (i = 0; i < rd_nr; i++) {
+>>  		brd = brd_alloc(i);
+>>
 > 
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> ---
-> Changes from v1:
-> add: "additionalProperties: false"
-> 
->  .../bindings/input/cros-ec-keyb.txt           |  72 ------------
->  .../bindings/input/cros-ec-keyb.yaml          | 107 ++++++++++++++++++
->  2 files changed, 107 insertions(+), 72 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
->  create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
 
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml b/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> new file mode 100644
-> index 000000000000..d414a2ad7c69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/cros-ec-keyb.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ChromeOS EC Keyboard
-> +
-> +maintainers:
-> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> +  - Rob Herring <robh+dt@kernel.org>
-
-Again, should be a Google/Cros person (I'm assuming Dmitry is here as 
-input maintainer). 
-
-> +
-> +description: |
-> +  Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
-> +  a separate EC (Embedded Controller) device. It provides a message for reading
-> +  key scans from the EC. These are then converted into keycodes for processing
-> +  by the kernel. This binding is based on matrix-keymap.txt and extends it.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-keyb
-> +
-> +  google,needs-ghost-filter:
-> +    type: boolean
-> +    description: |
-> +      True to enable a ghost filter for the matrix keyboard.
-> +      This is recommended if the EC does not have its own logic or
-> +      hardware for this.
-> +
-> +  # properties from matrix-keymap.txt
-> +  linux,keymap:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      an array of packed 1-cell entries containing the equivalent
-> +      of row, column and linux key-code. The 32-bit big endian cell is packed
-> +      as:
-> +      row << 24 | column << 16 | key-code
-> +
-> +  keypad,num-rows:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Number of row lines connected to the keypad controller.
-> +
-> +  keypad,num-columns:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Number of column lines connected to the keypad controller.
-
-matrix-keypad.txt should be converted to yaml and then referenced here.
-
-Unless you have max sizes, then there's not any more to add here.
-
-> +
-> +required:
-> +  - compatible
-> +  - linux,keymap
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    cros-ec-keyb {
-> +        compatible = "google,cros-ec-keyb";
-> +        keypad,num-rows = <8>;
-> +        keypad,num-columns = <13>;
-> +        google,needs-ghost-filter;
-> +        /*
-> +         * Keymap entries take the form of 0xRRCCKKKK where
-> +         * RR=Row CC=Column KKKK=Key Code
-> +         * The values below are for a US keyboard layout and
-> +         * are taken from the Linux driver. Note that the
-> +         * 102ND key is not used for US keyboards.
-> +         */
-> +        linux,keymap = <
-> +                /* CAPSLCK F1         B          F10     */
-> +                0x0001003a 0x0002003b 0x00030030 0x00040044
-> +                /* N       =          R_ALT      ESC     */
-> +                0x00060031 0x0008000d 0x000a0064 0x01010001
-> +                /* F4      G          F7         H       */
-> +                0x0102003e 0x01030022 0x01040041 0x01060023
-> +                /* '       F9         BKSPACE    L_CTRL  */
-> +                0x01080028 0x01090043 0x010b000e 0x0200001d
-> +                /* TAB     F3         T          F6      */
-> +                0x0201000f 0x0202003d 0x02030014 0x02040040
-> +                /* ]       Y          102ND      [       */
-> +                0x0205001b 0x02060015 0x02070056 0x0208001a
-> +                /* F8      GRAVE      F2         5       */
-> +                0x02090042 0x03010029 0x0302003c 0x03030006
-> +                /* F5      6          -          \       */
-> +                0x0304003f 0x03060007 0x0308000c 0x030b002b
-> +                /* R_CTRL  A          D          F       */
-> +                0x04000061 0x0401001e 0x04020020 0x04030021
-> +                /* S       K          J          ;       */
-> +                0x0404001f 0x04050025 0x04060024 0x04080027
-> +                /* L       ENTER      Z          C       */
-> +                0x04090026 0x040b001c 0x0501002c 0x0502002e
-> +                /* V       X          ,          M       */
-> +                0x0503002f 0x0504002d 0x05050033 0x05060032
-> +                /* L_SHIFT /          .          SPACE   */
-> +                0x0507002a 0x05080035 0x05090034 0x050B0039
-> +                /* 1       3          4          2       */
-> +                0x06010002 0x06020004 0x06030005 0x06040003
-> +                /* 8       7          0          9       */
-> +                0x06050009 0x06060008 0x0608000b 0x0609000a
-> +                /* L_ALT   DOWN       RIGHT      Q       */
-> +                0x060a0038 0x060b006c 0x060c006a 0x07010010
-> +                /* E       R          W          I       */
-> +                0x07020012 0x07030013 0x07040011 0x07050017
-> +                /* U       R_SHIFT    P          O       */
-> +                0x07060016 0x07070036 0x07080019 0x07090018
-> +                /* UP      LEFT    */
-> +                0x070b0067 0x070c0069>;
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
