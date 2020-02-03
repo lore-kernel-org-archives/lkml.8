@@ -2,72 +2,99 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66D0C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631E0C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822EB207E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C282082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="II9TKAQ1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aM+vDHpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgBCOU6 (ORCPT
+        id S1728413AbgBCOWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:20:58 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38996 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgBCOU6 (ORCPT
+        Mon, 3 Feb 2020 09:22:45 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42389 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbgBCOWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:20:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=k23CcfH9ASrLYKn7WfbNnaNUbdijVtlcHOMPFjBFcQ4=; b=II9TKAQ1U9DLf2RWWtwO8gJGuT
-        zn11g5GaKb1sKNqd1LqgGThtOlNkVVZg1Q9U5F0aontkXCiHZPKlhk4p4IVzj2PAsdeqSq0PD6rYy
-        bezOG/w1VsBsWwsWJIU8dBmA2L/gX5wMvB/32KULU7Vx0AkgiZ9F4DyoPUAEqZtGWESAMZ5fozSXO
-        Vjleryznv8IBF+wDtJmGG4AxLJ/k7GpAe6hDWHQsfYEEiLTwkxDhx278dfi2EcvoHwZ0M/9gPFqmX
-        84KRNmfupC281paiQe/RBdubpEuAqUoGhCwmSLM2hulU6rFTsD3DM8ocZ4Y7JVCS4gM4LWHz+dAVw
-        9YLfP+vg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iycao-0000KH-Lm; Mon, 03 Feb 2020 14:20:50 +0000
-Date:   Mon, 3 Feb 2020 06:20:50 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, longman@redhat.com, dave@stgolabs.net,
-        jack@suse.com
-Subject: Re: [PATCH -v2 5/7] locking/percpu-rwsem: Remove the embedded rwsem
-Message-ID: <20200203142050.GA28595@infradead.org>
-References: <20200131150703.194229898@infradead.org>
- <20200131151540.155211856@infradead.org>
+        Mon, 3 Feb 2020 09:22:45 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so9819810lfl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 06:22:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cQyJZrqDrPD9QQGrUv31P1u0hJiwjVoo5AE0F4uuGCQ=;
+        b=aM+vDHpiHu7ZsP9uDCCkEBBjYhrgy6/xxq12THpUqTWsI7iZ+ha8+f2DUT/mgRoIOk
+         GJ1cP3I5cf8FnLeqU98LZvLmNys2gevwmDWhWAvr4iGNlkTSdHOCC/j0jGUN6YXuyHR1
+         OyE1zXcPvWfmNOWhwybZcPG1xzYo2aOoK3hrsjUlnvPcTWTX1DayvpleSvTg7qhRUvjr
+         t/9YPUT7lbSx6q54nf1EtBO/tr/Ov9M2XIAN/srNDz54BpYSaBou9f/QFqVV1YvRN4f4
+         s6jDsGcUf+m5j2CSUBKyzmrx/37bsztcQRKUWG8Bt1FwUSp83I7Fn6FCpfnYLgExGhkf
+         1njQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cQyJZrqDrPD9QQGrUv31P1u0hJiwjVoo5AE0F4uuGCQ=;
+        b=Zp+3jIFQPbgtL5tJM0RpirxzrFUdVYuU4b4UScjZkmmNCOWFy6KAssx3w96nRcS1Tr
+         sByYq2QqSoqHeag/nGDM5du7dif3MlM9WZZnsae6YTaQYtXsIpqFoKG15yzsFgQ/70pS
+         PpJLjZ3O2McC/GpzPBOMwvONv1wyqqH82e/77NeOGvARxm2Q+IBuJKMhFgjda7hAPRgG
+         orbbw9Azyd0IbVZA7RDE2o/rSEUBxUGvBKj2haEf+31jureNMUcEmOEhVw2+CAVik1pf
+         N5c7o/wBh0lGUZVNJtxaK039Y7sr/tUNONT9aQ2FHonbcf+VwhC9WY01qivrpXoxAFlN
+         51ww==
+X-Gm-Message-State: APjAAAUO6eQiusOZAhGcn3ITT0APC69UEGfVQCsZfThyVafp8xI+0Rl4
+        pqUlQhVRNVaY1Mynn2DQZnnkNheVwOJY7069f2I=
+X-Google-Smtp-Source: APXvYqxu3RquYZLbeVnhZXAa2l6u5wyw7ijwh/U3Xd58fv1kHVLoV2qoyvjjNMMdryAAt03QZsjjKAB8CVu91pU+HeE=
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr11975049lfa.70.1580739762842;
+ Mon, 03 Feb 2020 06:22:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131151540.155211856@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200202193014.107003-1-stefan@agner.ch>
+In-Reply-To: <20200202193014.107003-1-stefan@agner.ch>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 3 Feb 2020 11:22:33 -0300
+Message-ID: <CAOMZO5CRwOpNUtUqTmdvV0Yz=fRadjYwpv19KZyhdc-ea0+_ZA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: imx: limit errata selection to Cortex-A9 based designs
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Yongcai Huang <Anson.Huang@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stefan Agner <stefan.agner@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 04:07:08PM +0100, Peter Zijlstra wrote:
-> @@ -53,12 +53,6 @@ struct rw_semaphore {
->  #endif
->  };
->  
-> -/*
-> - * Setting all bits of the owner field except bit 0 will indicate
-> - * that the rwsem is writer-owned with an unknown owner.
-> - */
-> -#define RWSEM_OWNER_UNKNOWN	(-2L)
+Hi Stefan,
 
-Can you split the removal of the non-owned resem support into a separate
-patch?  I still think keeping this one and moving aio to that scheme is
-a better idea than the current ad-hoc locking scheme that has all kinds
-of issues.
+On Sun, Feb 2, 2020 at 4:30 PM Stefan Agner <stefan@agner.ch> wrote:
+>
+> From: Stefan Agner <stefan.agner@toradex.com>
+>
+> The two erratas 754322 and 775420 are Cortex-A9 specific. Only
+> select the erratas for SoC which use a Cortex-A9.
+
+Change looks good.
+
+It is not clear from the commit log, which SoC selects the errata
+incorrectly though.
+
+I would mention that i.MX6UL is based on Cortex-A7 and hence should
+not select them.
+
+Otherwise, only by looking at this patch context and commit log, we
+cannot notice the problem.
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
