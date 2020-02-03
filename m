@@ -2,51 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23465C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F084E20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6312051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748428;
-	bh=Nk9jNBcw53r9L6+tLhH7YjGpWnkMDQa7jjKGCG4czck=;
+	s=default; t=1580748434;
+	bh=Mk4vzYviUrOYODydEGb0g0Jx38FB2OMBIl3s58qcUGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EggbMqA2XKJcdsDPEEHmM/L42Azd5ziajs3D42BGfI8L6MXA83sOILZZs/21Yj5N1
-	 n6smRTUr7ARWNLd/8L5+ukSNlzzHmqfTZ5WZHQJU3XXjKLB0RZb/liTu9qKDA+vK2Z
-	 JPUdaBPzcAMl5DckJZqmTUxGaz+5kZZKDUXO5eKU=
+	b=pI1GL4Dx1ykACxKlL/K6BTkUFgeilBObvD6dbSiopyNfqlLdytfpIzw/xpFHVDw+m
+	 uHxSN7VXihcJYF2tnE+8kVc2o4YNJk6LfySVYx4ZJdY7cg2NtwR7HJUaSzuHnXDdtu
+	 DfVLX/VwP+JO37lscjVN1V85UVAHf3U/U/5GibMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbgBCQrH (ORCPT
+        id S1731568AbgBCQrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:47:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39512 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:47:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729511AbgBCQ2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:02 -0500
+        id S1728089AbgBCQ1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:55 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFBA921744;
-        Mon,  3 Feb 2020 16:28:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E3E72080C;
+        Mon,  3 Feb 2020 16:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747282;
-        bh=Nk9jNBcw53r9L6+tLhH7YjGpWnkMDQa7jjKGCG4czck=;
+        s=default; t=1580747275;
+        bh=Mk4vzYviUrOYODydEGb0g0Jx38FB2OMBIl3s58qcUGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HFWltWhdYWEbw4P+pxRl9kP8yMHCjuYs3P5hhqxdcyoeXqAFBvUtH84868H33x3SZ
-         CQbw7GLOQFHpF5x+g0DWf0hu11u4YL/2s0T9OqOCs2v78RMlmSK46mcVOx3URTKGlh
-         IsArs2+ESQVhieMUCuKbBxqtSQWeech8xzQl102U=
+        b=f4P+bNYSHiXoiBk7r4lsRzHeLseXbt9/dLzcZaPTuDnlL+h58Y79wPR5V9nGesjgl
+         0+Klg7bgiglQdQCZz4jG0sDObMGiHR+Sz7GXR/zHUF+q84Yes3CWC1+xHTJYS53LNE
+         oodVh1EmX8zti4RxawWd7VTHoMFt6uSQZ/SolxVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/89] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
-Date:   Mon,  3 Feb 2020 16:19:04 +0000
-Message-Id: <20200203161919.493054041@linuxfoundation.org>
+        stable@vger.kernel.org, Jes Sorensen <Jes.Sorensen@redhat.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 16/89] rtl8xxxu: fix interface sanity check
+Date:   Mon,  3 Feb 2020 16:19:01 +0000
+Message-Id: <20200203161919.067020127@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -59,56 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
+commit 39a4281c312f2d226c710bc656ce380c621a2b16 upstream.
 
-The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
-which is connected to an ITE 8595 USB keyboard controller chip.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-This keyboard has the same quirk for its rfkill / airplane mode hotkey as
-other keyboards with the ITE 8595 chip, it only sends a single release
-event when pressed and released, it never sends a press event.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-This commit adds this keyboards USB id to the hid-ite id-table, fixing
-the rfkill key not working on this keyboard.
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Cc: stable <stable@vger.kernel.org>     # 4.4
+Cc: Jes Sorensen <Jes.Sorensen@redhat.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h | 1 +
- drivers/hid/hid-ite.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 1e2e6e58256ad..9d372fa7c298c 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1024,6 +1024,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5921,7 +5921,7 @@ static int rtl8xxxu_parse_usb(struct rtl
+ 	u8 dir, xtype, num;
+ 	int ret = 0;
  
- #define USB_VENDOR_ID_TEXAS_INSTRUMENTS	0x2047
-diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
-index 98b059d79bc89..2ce1eb0c92125 100644
---- a/drivers/hid/hid-ite.c
-+++ b/drivers/hid/hid-ite.c
-@@ -43,6 +43,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
- static const struct hid_device_id ite_devices[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
-+	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
-+			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(hid, ite_devices);
--- 
-2.20.1
-
+-	host_interface = &interface->altsetting[0];
++	host_interface = interface->cur_altsetting;
+ 	interface_desc = &host_interface->desc;
+ 	endpoints = interface_desc->bNumEndpoints;
+ 
 
 
