@@ -2,124 +2,100 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A342FC3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58BC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6A12067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580696869;
-	bh=a68+GV2ko4evTdfKpR5+M/MKoeUlK5EiIuHzfwvafCY=;
-	h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:List-ID:From;
-	b=fV4AsWm/5pqdMWZjeGLKTYdhvJuOG4Y/hWZbOX8xKr3UtqIsEQUr8CGJQjhDArsmo
-	 ywz0fjcjKQ0PCjoBEfeFX7ZXLqtz/LvQIEWkZGwMQ4w6CHaUPoE521Jd0mevWxr8Ax
-	 5OcA1BJ80yq15evxvUiVY4dwZ4bj47mRaI3g3wks=
+	by mail.kernel.org (Postfix) with ESMTP id 01021205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKIyz7Km"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgBCC1t (ORCPT
+        id S1727310AbgBCC2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 21:27:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbgBCC1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 21:27:48 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7473A205F4;
-        Mon,  3 Feb 2020 02:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580696867;
-        bh=a68+GV2ko4evTdfKpR5+M/MKoeUlK5EiIuHzfwvafCY=;
-        h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:From;
-        b=meoLxkCVSgWhjpRUiqUjzXQKikkVs0tt7z1tu0+1+HHjT9nrRGhsJTTZDsm5RBTsT
-         8UwlQMnXap7EkVH2Htniz8Gm91jAfk/c4BnRFsEqTMWTtbsDNmWIn9vPq+rh/g27Sg
-         gdCLSPyN0Dn7pr0VUbPDjXRNnesFsZCX931Vg6VM=
-From:   Sasha Levin <sashal@kernel.org>
-Date:   Sun, 02 Feb 2020 21:27:46 -0500
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@microsoft.com
-Cc:     linux-hyperv@vger.kernel.org
-Cc:     kys@microsoft.com
-Cc:     sthemmin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Hyper-V commits for v5.6
-Message-Id: <20200203022747.7473A205F4@mail.kernel.org>
+        Sun, 2 Feb 2020 21:28:55 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41191 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgBCC2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 21:28:54 -0500
+Received: by mail-pl1-f193.google.com with SMTP id t14so5216674plr.8;
+        Sun, 02 Feb 2020 18:28:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/Lnmgxusi6/x//le30pI2bUgaub9a+/+5+73CaIB9g8=;
+        b=LKIyz7KmBtrW9kHsHZQPL4N+oaIvvgh5PCAqNNQEfXZWk2LxMAvF06k06ZLCbNcKth
+         hrX+If4cQEyWurJA6taUdMlAf7lLJIOqxFzhh/hTh+lsh2MRZtmxTC5ZPppwwycMtWti
+         2emPrTqzKGoRRM5M+enOppuYMNUd3NM/mKrreNojZ2x4TCRAi8nlb3G3SUU7xXNYHzj7
+         lqq+DARBcrrG+uBQ0dE3DMUzaCqkzsl105twCF+K4vFONwZD3sEYwkfwl3o2WgaaqQRR
+         kLB3HTFG8zpK6zz5jGstXjxsmtJN/tLlWvQlrNbOxkzJBTFxH1s1KfaqiKg8mBB2SVx2
+         JM0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/Lnmgxusi6/x//le30pI2bUgaub9a+/+5+73CaIB9g8=;
+        b=RJAK40/5fE61oLA4KpPDPHCh0rbgBtv4eu7q/RKSS8ukJQZ0vc8YGzQK+z5FUGTcak
+         jmtuzIACwdR/nkq5slBOI2i78AH74oGpB7rzrIAxll+jblxwwjoFsFxn3sPM/3CnEjRi
+         RS8ue26IIV6F0W764By4ai1p0xbe0ZdHwQMlFSDUpBf5M+/iinOoluaK4vAh4ABL7wfW
+         eFOCbsjBj/2IPKbR1JzzZ97u0IBIHxkU1yKAOjF3Hwq2e2pUxSuwh5TTOJtjq/5+KCZ4
+         0R0VSVFq1DHTvlVV8pr35VrTRW4BeISeKBlxuQqADgFptfZXYXu7kJhpApq5GOR9JtzS
+         8WBQ==
+X-Gm-Message-State: APjAAAVlJSf17lcNy99BWGS6tAFImNKUSSqVBuKVBy5M68vbS1WGUuTM
+        7Vh+LYBpTkX08gF7NqPeD0CnVL9w
+X-Google-Smtp-Source: APXvYqzQtvAPe4LfMH07GGznsQA3M6DN5rp77O1mGKiHhnt3BosSJgodP4AkIYfEJJHxYa+HwpUgDw==
+X-Received: by 2002:a17:90a:3268:: with SMTP id k95mr27003561pjb.48.1580696934072;
+        Sun, 02 Feb 2020 18:28:54 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id cx18sm17748292pjb.26.2020.02.02.18.28.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 18:28:53 -0800 (PST)
+Date:   Sun, 2 Feb 2020 18:28:50 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     christopher.s.hall@intel.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
+        x86@kernel.org, jacob.e.keller@intel.com, davem@davemloft.net,
+        sean.v.kelley@intel.com
+Subject: Re: [Intel PMC TGPIO Driver 3/5] drivers/ptp: Add user-space input
+ polling interface
+Message-ID: <20200203022850.GC3516@localhost>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <20191211214852.26317-4-christopher.s.hall@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211214852.26317-4-christopher.s.hall@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+On Wed, Dec 11, 2019 at 01:48:50PM -0800, christopher.s.hall@intel.com wrote:
+> From: Christopher Hall <christopher.s.hall@intel.com>
+> 
+> The Intel PMC Time-Aware GPIO controller doesn't implement interrupts to
+> notify software that an input event has occurred. To solve this problem,
+> implement a user-space polling interface allowing the application to check
+> for input events. The API returns an event count and time. This interface
+> (EVENT_COUNT_TSTAMP2) is *reused* from the output frequency adjustment API.
+> The event count delta indicates that one or more events have occurred and
+> how many events may have been missed.
 
-The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
+So I think this interface is truly horrible.  
 
-  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
+The ptp_pin_desc describes a pin's configuration WRT the PTP_PF_xxx
+and the specific EXTTS/PEROUT_REQUEST channel.  I don't know exactly
+what you are trying to accomplish, but there has got to be a better
+way.  Re-using the ptp_pin_desc for a polling interface is surely not
+the way forward.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
-
-for you to fetch changes up to 54e19d34011fea26d39aa74781131de0ce642a01:
-
-  hv_utils: Add the support of hibernation (2020-01-26 22:10:17 -0500)
-
-- ----------------------------------------------------------------
-- - Most of the commits here are work to enable host-initiated hibernation
-support by Dexuan Cui.
-- - Fix for a warning shown when host sends non-aligned balloon requests
-by Tianyu Lan.
-
-- ----------------------------------------------------------------
-Dexuan Cui (7):
-      Input: hyperv-keyboard: Add the support of hibernation
-      video: hyperv_fb: Fix hibernation for the deferred IO feature
-      Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
-      Tools: hv: Reopen the devices if read() or write() returns errors
-      hv_utils: Support host-initiated restart request
-      hv_utils: Support host-initiated hibernation request
-      hv_utils: Add the support of hibernation
-
-Tianyu Lan (1):
-      hv_balloon: Balloon up according to request page number
-
-Wei Hu (1):
-      video: hyperv: hyperv_fb: Use physical memory for fb on HyperV Gen 1 VMs.
-
- drivers/hv/channel_mgmt.c             |  21 ++--
- drivers/hv/hv_balloon.c               |  13 +--
- drivers/hv/hv_fcopy.c                 |  54 +++++++++-
- drivers/hv/hv_kvp.c                   |  43 +++++++-
- drivers/hv/hv_snapshot.c              |  55 +++++++++-
- drivers/hv/hv_util.c                  | 148 +++++++++++++++++++++++++--
- drivers/hv/hyperv_vmbus.h             |   6 ++
- drivers/hv/vmbus_drv.c                |   4 +
- drivers/input/serio/hyperv-keyboard.c |  27 +++++
- drivers/video/fbdev/Kconfig           |   1 +
- drivers/video/fbdev/hyperv_fb.c       | 184 +++++++++++++++++++++++++++-------
- include/linux/hyperv.h                |   4 +
- tools/hv/hv_fcopy_daemon.c            |  37 ++++++-
- tools/hv/hv_kvp_daemon.c              |  36 ++++---
- tools/hv/hv_vss_daemon.c              |  49 +++++++--
- 15 files changed, 574 insertions(+), 108 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAl43hNkACgkQ3qZv95d3
-LNzSMA/7BCxCW9lMFzTCtL2bhAw48CFxFTpCvj5oM39kCLaxT99l/ub5BydOi8+2
-URGnnWL+6wQSVpnCLjm6BBhbj8CX2jSoG7PgrsT5E1/wpMQafP8vVzi5HmBh2VJL
-usL3ZrvbeHsRlHPr06l9QGe+CMr+eovfd51/v2/aiQEvzl/ekRBqctYH30boXRR3
-CuknWJaS4MRuw5IdnSW6l1wfWn1uzpG5qRD7uHDvK0fkRRKq9Bd7gOOj525qrhYP
-raLwziF3y6cAwco5YPgPWoQvPoT1Kx04CYi5+HH5na4OVXGxI0wNAJDiwuj9h94n
-rfA0FfoBYU0vwT4cp++fIjp3wC2INe1rbrOapy6oFoVn/8wIUe7re23nAO04Vr+g
-sRqDO1qkDQaqWHw27GbtiXtrb8Y5nHpvv6/dAWCNFQnXipeWHzRlF+ppgTi3aQLE
-cl/GhqUVa10owOP06JiEB3ArPDh4UVetjOYAmF8LYkmEgo3nXK/Fptoi/BEUN5tY
-L8iIdvSz5pkuZTM0pXyLjRfBozZCtHj4vx39Q6eyMkFqD1hPQi8zq1PqfdyMmucq
-I33D515yl0qIVB/Qu/I+93ne2sdPQlC889lEDm8CwLbKoSDATYam64mPSd0gDuBU
-YiNvjqSIfqa/uxPTk40C5Y/YdBgmOFKbM7Sx1XI8YVYvcRVZ9LM=
-=tt50
------END PGP SIGNATURE-----
+Thanks,
+Richard
