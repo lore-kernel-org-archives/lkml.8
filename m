@@ -2,330 +2,122 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32185C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9202C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1A820721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c3YWFaz0"
+	by mail.kernel.org (Postfix) with ESMTP id 7D42020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580752408;
+	bh=+F911pBIa8UlZE0vunHO6BITHlbAp/snKVv81Rwfgu4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v++LEGNqB3xRvDDv2lzxn7LYnsjHf7yZcAkLCli+AZfjtbGspLRF7K+aou8bE8el8
+	 2x1/FWpNfseFPrb3oHud3cGYGrnB4nX0PxNcf9FPaYbNjHiwgT5aiDuedoJmyXZJ/E
+	 erlmit1H/Igr1v7TVJ87b7W74jyeKF8fuF2mZGOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgBCRwY (ORCPT
+        id S1729133AbgBCRx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:52:24 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56452 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727314AbgBCRwY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:52:24 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013HdDWu016570;
-        Mon, 3 Feb 2020 18:52:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=j0xx/Vr40+FFZVuRXMdLMe0ryqfyTZ4MJeuGhZs3NCI=;
- b=c3YWFaz0wjzexJu3xgWel9YKC4LCUOUWdq0d2hsPb+13B8qqPNXyssXku/9H30CZ6J+s
- +JnlzRe9N8Gi7852TWcnss2azJf8tIvqiSWLmDtNFrLzS/e2pz+dJKW96/NNq/943yKw
- 8CI0xGZc/+FQdn9HQvcKhK0C5Vn7TL7YRT+bnhQ34sarGybkZOkLGs+BH1X/bJD9BjLZ
- Tff1kNgNImVuRXsnfUkB/s6Cwjg+bF1JuCA2NCr+HAwPndaUuwLQ4QOSd5vFj+7+qMiM
- NunqxFmiXWfv98fOB/iQnl4SdJonVyG9UXvdgD3qp1ZXktarHpz68wiZoWHKVONbNYrI Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xw13nj858-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 18:52:14 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C567510002A;
-        Mon,  3 Feb 2020 18:52:09 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B5CCA2C7B79;
-        Mon,  3 Feb 2020 18:52:09 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 18:52:09
- +0100
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
-CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCHv2] i2c: i2c-stm32f7: allow controller to be wakeup-source
-Date:   Mon, 3 Feb 2020 18:52:08 +0100
-Message-ID: <1580752328-26009-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 3 Feb 2020 12:53:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727311AbgBCRx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:53:27 -0500
+Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4530B2087E;
+        Mon,  3 Feb 2020 17:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580752406;
+        bh=+F911pBIa8UlZE0vunHO6BITHlbAp/snKVv81Rwfgu4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yZNSUeOU9BuVDZG2NfZ2Cjbin6LdM35W5BRwsUTgG2fMGQpmbEIRG55wlqFO2Q1vb
+         KZ03OAq6Q/zN85eIgsgOpx1N/Aw2Rg4CgvUUg7goyX16hRidDcTC32/9skI+kg/PKA
+         XdgO+q/Pevl+hIOGqxPWBzNuO70YsRXXDwtYhRI8=
+Date:   Mon, 3 Feb 2020 09:53:25 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        DTML <devicetree@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
+        mad skateman <madskateman@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
+ ioctl for device
+Message-ID: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <9624aebf-edb9-a3b0-1a29-b61df6b7ba2f@xenosoft.de>
+References: <20200126115247.13402-1-mpe@ellerman.id.au>
+        <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+        <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+        <75aab3c9-1cb6-33bf-5de1-e05bbd98b6fb@c-s.fr>
+        <9624aebf-edb9-a3b0-1a29-b61df6b7ba2f@xenosoft.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_06:2020-02-02,2020-02-03 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the i2c-stm32f7 controller to become a wakeup-source
-of the system. In such case, when a slave is registered to the
-I2C controller, receiving a I2C message targeting that registered
-slave address wakes up the suspended system.
+On Sun, 2 Feb 2020 16:02:18 +0100, Christian Zigotzky wrote:
+> On 02 February 2020 at 09:19 am, Christophe Leroy wrote:
+> > Hello,
+> >
+> > Le 02/02/2020 =C3=A0 01:08, Christian Zigotzky a =C3=A9crit=C2=A0: =20
+> >> Hello,
+> >>
+> >> We regularly compile and test Linux kernels every day during the=20
+> >> merge window. Since Thuesday we have very high CPU loads because of=20
+> >> the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc).
+> >>
+> >> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for=20
+> >> device =20
+> >
+> > Do you know which ioctl, on which device ?
+> > Can you take a trace of running avahi-daemon with 'strace' ?
+> >
+> > Can you bisect ?
+> >
+> > Christophe =20
+> Hi Christophe,
+> Hi All,
+>=20
+> I figured out that the avahi-daemon has a problem with the IPv6 address=20
+> of a network interface since the Git kernel from Thursday. (Log attached)
+> This generates high CPU usage because the avahi-daemon tries to access=20
+> the IPv6 address again and again and thereby it produces a lot of log=20
+> messages.
+>=20
+> We figured out that the networking updates aren't responsible for this=20
+> issue because we created a test kernel on Wednesday. The issue is=20
+> somewhere in the commits from Wednesday night to Thursday (CET).
 
-In order to be able to wake-up, the I2C controller DT node
-must have the property wakeup-source defined and a slave
-must be registered.
+FWIW Thursday is when the latest networking pull came in, so could well
+be networking related..
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- v2: - enclose _suspend and _resume functions (and related) with
-       #ifdef CONFIG_PM_SLEEP
-     - remove the __maybe_unused for functions enclosed with CONFIG_PM_SLEEP
-     - move stm32f7_i2c_enable_wakeup function upper in the file to avoid
-       having a prototype.
- 
- drivers/i2c/busses/i2c-stm32f7.c | 107 +++++++++++++++++++++++++------
- 1 file changed, 86 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 5c3e8ac6ad92..378956ac6d1d 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -29,6 +29,7 @@
- #include <linux/platform_device.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm_runtime.h>
-+#include <linux/pm_wakeirq.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-@@ -49,6 +50,7 @@
- 
- /* STM32F7 I2C control 1 */
- #define STM32F7_I2C_CR1_PECEN			BIT(23)
-+#define STM32F7_I2C_CR1_WUPEN			BIT(18)
- #define STM32F7_I2C_CR1_SBC			BIT(16)
- #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
- #define STM32F7_I2C_CR1_TXDMAEN			BIT(14)
-@@ -301,6 +303,7 @@ struct stm32f7_i2c_msg {
-  * @dma: dma data
-  * @use_dma: boolean to know if dma is used in the current transfer
-  * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
-+ * @wakeup_src: boolean to know if the device is a wakeup source
-  */
- struct stm32f7_i2c_dev {
- 	struct i2c_adapter adap;
-@@ -323,6 +326,7 @@ struct stm32f7_i2c_dev {
- 	struct stm32_i2c_dma *dma;
- 	bool use_dma;
- 	struct regmap *regmap;
-+	bool wakeup_src;
- };
- 
- /*
-@@ -1691,6 +1695,24 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
- 	return ret;
- }
- 
-+static void stm32f7_i2c_enable_wakeup(struct stm32f7_i2c_dev *i2c_dev,
-+				      bool enable)
-+{
-+	void __iomem *base = i2c_dev->base;
-+	u32 mask = STM32F7_I2C_CR1_WUPEN;
-+
-+	if (!i2c_dev->wakeup_src)
-+		return;
-+
-+	if (enable) {
-+		device_set_wakeup_enable(i2c_dev->dev, true);
-+		stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, mask);
-+	} else {
-+		device_set_wakeup_enable(i2c_dev->dev, false);
-+		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1, mask);
-+	}
-+}
-+
- static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(slave->adapter);
-@@ -1717,6 +1739,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
- 	if (ret < 0)
- 		return ret;
- 
-+	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
-+		stm32f7_i2c_enable_wakeup(i2c_dev, true);
-+
- 	if (id == 0) {
- 		/* Configure Own Address 1 */
- 		oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
-@@ -1758,6 +1783,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
- 
- 	ret = 0;
- pm_free:
-+	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
-+		stm32f7_i2c_enable_wakeup(i2c_dev, false);
-+
- 	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
-@@ -1791,8 +1819,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
- 
- 	i2c_dev->slave[id] = NULL;
- 
--	if (!(stm32f7_i2c_is_slave_registered(i2c_dev)))
-+	if (!stm32f7_i2c_is_slave_registered(i2c_dev)) {
- 		stm32f7_i2c_disable_irq(i2c_dev, STM32F7_I2C_ALL_IRQ_MASK);
-+		stm32f7_i2c_enable_wakeup(i2c_dev, false);
-+	}
- 
- 	pm_runtime_mark_last_busy(i2c_dev->dev);
- 	pm_runtime_put_autosuspend(i2c_dev->dev);
-@@ -1879,6 +1909,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 		return irq_error ? : -ENOENT;
- 	}
- 
-+	i2c_dev->wakeup_src = of_property_read_bool(pdev->dev.of_node,
-+						    "wakeup-source");
-+
- 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(i2c_dev->clk)) {
- 		dev_err(&pdev->dev, "Error: Missing controller clock\n");
-@@ -1985,6 +2018,16 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 		goto clk_free;
- 	}
- 
-+	if (i2c_dev->wakeup_src) {
-+		device_set_wakeup_capable(i2c_dev->dev, true);
-+
-+		ret = dev_pm_set_wake_irq(i2c_dev->dev, irq_event);
-+		if (ret) {
-+			dev_err(i2c_dev->dev, "Failed to set wake up irq\n");
-+			goto clr_wakeup_capable;
-+		}
-+	}
-+
- 	platform_set_drvdata(pdev, i2c_dev);
- 
- 	pm_runtime_set_autosuspend_delay(i2c_dev->dev,
-@@ -2014,6 +2057,13 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 	pm_runtime_set_suspended(i2c_dev->dev);
- 	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
- 
-+	if (i2c_dev->wakeup_src)
-+		dev_pm_clear_wake_irq(i2c_dev->dev);
-+
-+clr_wakeup_capable:
-+	if (i2c_dev->wakeup_src)
-+		device_set_wakeup_capable(i2c_dev->dev, false);
-+
- 	if (i2c_dev->dma) {
- 		stm32_i2c_dma_free(i2c_dev->dma);
- 		i2c_dev->dma = NULL;
-@@ -2032,6 +2082,15 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
- 	i2c_del_adapter(&i2c_dev->adap);
- 	pm_runtime_get_sync(i2c_dev->dev);
- 
-+	if (i2c_dev->wakeup_src) {
-+		dev_pm_clear_wake_irq(i2c_dev->dev);
-+		/*
-+		 * enforce that wakeup is disabled and that the device
-+		 * is marked as non wakeup capable
-+		 */
-+		device_init_wakeup(i2c_dev->dev, false);
-+	}
-+
- 	pm_runtime_put_noidle(i2c_dev->dev);
- 	pm_runtime_disable(i2c_dev->dev);
- 	pm_runtime_set_suspended(i2c_dev->dev);
-@@ -2073,8 +2132,8 @@ static int __maybe_unused stm32f7_i2c_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused
--stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
-+#ifdef CONFIG_PM_SLEEP
-+static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
- {
- 	int ret;
- 	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
-@@ -2095,8 +2154,7 @@ stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
- 	return ret;
- }
- 
--static int __maybe_unused
--stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
-+static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
- {
- 	u32 cr1;
- 	int ret;
-@@ -2127,41 +2185,48 @@ stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
- 	return ret;
- }
- 
--static int __maybe_unused stm32f7_i2c_suspend(struct device *dev)
-+static int stm32f7_i2c_suspend(struct device *dev)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
- 	int ret;
- 
- 	i2c_mark_adapter_suspended(&i2c_dev->adap);
--	ret = stm32f7_i2c_regs_backup(i2c_dev);
--	if (ret < 0) {
--		i2c_mark_adapter_resumed(&i2c_dev->adap);
--		return ret;
--	}
- 
--	pinctrl_pm_select_sleep_state(dev);
--	pm_runtime_force_suspend(dev);
-+	if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
-+		ret = stm32f7_i2c_regs_backup(i2c_dev);
-+		if (ret < 0) {
-+			i2c_mark_adapter_resumed(&i2c_dev->adap);
-+			return ret;
-+		}
-+
-+		pinctrl_pm_select_sleep_state(dev);
-+		pm_runtime_force_suspend(dev);
-+	}
- 
- 	return 0;
- }
- 
--static int __maybe_unused stm32f7_i2c_resume(struct device *dev)
-+static int stm32f7_i2c_resume(struct device *dev)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
- 	int ret;
- 
--	ret = pm_runtime_force_resume(dev);
--	if (ret < 0)
--		return ret;
--	pinctrl_pm_select_default_state(dev);
-+	if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
-+		ret = pm_runtime_force_resume(dev);
-+		if (ret < 0)
-+			return ret;
-+		pinctrl_pm_select_default_state(dev);
-+
-+		ret = stm32f7_i2c_regs_restore(i2c_dev);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
--	ret = stm32f7_i2c_regs_restore(i2c_dev);
--	if (ret < 0)
--		return ret;
- 	i2c_mark_adapter_resumed(&i2c_dev->adap);
- 
- 	return 0;
- }
-+#endif
- 
- static const struct dev_pm_ops stm32f7_i2c_pm_ops = {
- 	SET_RUNTIME_PM_OPS(stm32f7_i2c_runtime_suspend,
--- 
-2.17.1
-
+> Please compile the latest Git kernel and test it with a desktop linux=20
+> distribution for example Ubuntu. In my point of view there are many=20
+> desktop machines affected. Many server systems don't use the avahi=20
+> daemon so they aren't affected.
+>=20
+> It's possible to deactivate the access to the IPv6 address with the=20
+> following line in the file "/etc/avahi/avahi-daemon.conf":
+>=20
+> use-ipv6=3Dno
+>=20
+> After a reboot the CPU usage is normal again. This is only a temporary=20
+> solution.
+>=20
+> Unfortunately I don't have the time for bisecting next week. I have a=20
+> lot of other work to do. In my point of view it is very important that=20
+> you also compile the latest Git kernels. Then you will see the issue and=
+=20
+> then you have a better possibility to fix the issue.
