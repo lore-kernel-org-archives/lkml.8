@@ -2,265 +2,231 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465A3C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560B5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1008F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U387uJbx"
+	by mail.kernel.org (Postfix) with ESMTP id 2099C2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580725925;
+	bh=+tclQKs/WNr0VvFV0+aZqL7hnHWDrlqlyWS1+r/kyTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CHyzW4YJG3nPxsaexQJ6Pl4HtroOFXxqwuT/XDhFp1mFtvQFHLUVSPriwSZSEDBHb
+	 MDtm2TOEL4mYFR9VPnhpC5hU70h5vKxp7JgMW06Bsq17ds//mmYe8NzUdu5Q3G9ddM
+	 kkMg5fnNrQtF8rvVa25M8Lstxxlrhcs2+a3rwDGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgBCKbU (ORCPT
+        id S1727881AbgBCKcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:31:20 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28575 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728009AbgBCKbT (ORCPT
+        Mon, 3 Feb 2020 05:32:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43192 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbgBCKcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:31:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580725879;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rvNHYAZjYjkV+vkG1tbRc3CJ+s9eRjtdr7RfxMNvBmY=;
-        b=U387uJbxca4rFYPNwFxaIZDKN0XyDU9uMYQDMyaVNjr7JgKKqTV4qNkZm3dX4jxN6av7Tw
-        VXSFW0jad0S1RL/d1/I/4JClMFIz+1+KM9vNc0Lb5ZhRLMjuferPDbV1No5f/i4ApokucV
-        4ty5MQ38ZZOUoHLg8zHirH/P0Rd6r5s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-1DKBdyuQNHeNiM9ef7qq0A-1; Mon, 03 Feb 2020 05:31:15 -0500
-X-MC-Unique: 1DKBdyuQNHeNiM9ef7qq0A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 021AB13E5;
-        Mon,  3 Feb 2020 10:31:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-218.rdu2.redhat.com [10.10.120.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F3A95DA82;
-        Mon,  3 Feb 2020 10:31:12 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 4/4] rxrpc: Fix NULL pointer deref due to call->conn being
- cleared on disconnect ver #2
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 03 Feb 2020 10:31:12 +0000
-Message-ID: <158072587233.743488.3352010285108950185.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158072584492.743488.4616022353630142921.stgit@warthog.procyon.org.uk>
-References: <158072584492.743488.4616022353630142921.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.19
+        Mon, 3 Feb 2020 05:32:03 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z9so5054607wrs.10;
+        Mon, 03 Feb 2020 02:32:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NFuh06mCbIFHLnWl/yp4KwHBKhZRCL1Lbf1jiW0JM98=;
+        b=ZuVjPYv/+rlib8L06dwZsEkxJknUcLobQfL9w8OvPwoYQvAcpY3sq/6eJKpt7smvBa
+         Ckxro4jxKtPq3kIkzpbgrYv8cFv+lS4yKYBz4fRNnWW3hO2W+zlZiJwd888ts4o4iqV9
+         5nQI0gdpHO1pXhRUMVgFJzTbTEkrXY9VloIk6kIf5+DQzy7TZ/FGFt0NJlan2PabCZcm
+         l4DZdM6mVC95LZA4KLXykvzlb9saWsmx8fkrQelLmeI2z2FKzRgorb2eqR3Rs6GHGO86
+         xSLyBU/8ZXw0fK25p6yj1WRYLMQSKMd91s8QuhyGDYHzipMvG3+aMqleiXsEVmA/IpMR
+         d/TA==
+X-Gm-Message-State: APjAAAUa4py3qVsaNm9Upu+aF1CIYMYs3TeWrvc/TttRwWWpsQcenBH8
+        V669DWt5yYvhAGqsrYd39A==
+X-Google-Smtp-Source: APXvYqyQJyScAUAfc7hRV/ni9Ov1rrCOL/vQpSraOmoLvu0hd1vpN6CEC4XJZDRuzYtupTLkxa0YGQ==
+X-Received: by 2002:a5d:6445:: with SMTP id d5mr14473037wrw.244.1580725921100;
+        Mon, 03 Feb 2020 02:32:01 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.163])
+        by smtp.gmail.com with ESMTPSA id t131sm23233901wmb.13.2020.02.03.02.31.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 02:32:00 -0800 (PST)
+Received: (nullmailer pid 31847 invoked by uid 1000);
+        Mon, 03 Feb 2020 10:31:58 -0000
+Date:   Mon, 3 Feb 2020 10:31:58 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Oscar A Perez <linux@neuralgames.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
+Message-ID: <20200203103158.GA9276@bogus>
+References: <20200120150113.2565-1-linux@neuralgames.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120150113.2565-1-linux@neuralgames.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a call is disconnected, the connection pointer from the call is
-cleared to make sure it isn't used again and to prevent further attempted
-transmission for the call.  Unfortunately, there might be a daemon trying
-to use it at the same time to transmit a packet.
+On Mon, Jan 20, 2020 at 03:01:08PM +0000, Oscar A Perez wrote:
+> This minimal driver adds support for the Hardware Random Number Generator
+> that comes with the AST2400/AST2500/AST2600 SOCs from AspeedTech.
 
-Fix this by keeping call->conn set, but setting a flag on the call to
-indicate disconnection instead.
+This patch is not a driver. 'dt-bindings: rng: ...' for the subject. 
+(Plus, 2 patches with the same subject is never a good idea.)
 
-Remove also the bits in the transmission functions where the conn pointer is
-checked and a ref taken under spinlock as this is now redundant.
+> 
+> The HRNG on these SOCs uses Ring Oscillators working together to generate
+> a stream of random bits that can be read by the platform via a 32bit data
+> register.
+> 
+> Signed-off-by: Oscar A Perez <linux@neuralgames.com>
+> ---
+>  .../devicetree/bindings/rng/aspeed-rng.yaml   | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/aspeed-rng.yaml b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+> new file mode 100644
+> index 000000000000..06070ebe1c33
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Dual license new bindings:
 
- net/rxrpc/ar-internal.h |    1 +
- net/rxrpc/call_object.c |    4 ++--
- net/rxrpc/conn_client.c |    3 +--
- net/rxrpc/conn_object.c |    4 ++--
- net/rxrpc/output.c      |   27 +++++++++------------------
- 5 files changed, 15 insertions(+), 24 deletions(-)
+(GPL-2.0-only OR BSD-2-Clause)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 94441fee85bc..7d730c438404 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -490,6 +490,7 @@ enum rxrpc_call_flag {
- 	RXRPC_CALL_RX_HEARD,		/* The peer responded at least once to this call */
- 	RXRPC_CALL_RX_UNDERRUN,		/* Got data underrun */
- 	RXRPC_CALL_IS_INTR,		/* The call is interruptible */
-+	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
- };
- 
- /*
-diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
-index a31c18c09894..dbdbc4f18b5e 100644
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -493,7 +493,7 @@ void rxrpc_release_call(struct rxrpc_sock *rx, struct rxrpc_call *call)
- 
- 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
- 
--	if (conn)
-+	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		rxrpc_disconnect_call(call);
- 	if (call->security)
- 		call->security->free_call_crypto(call);
-@@ -569,6 +569,7 @@ static void rxrpc_rcu_destroy_call(struct rcu_head *rcu)
- 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
- 	struct rxrpc_net *rxnet = call->rxnet;
- 
-+	rxrpc_put_connection(call->conn);
- 	rxrpc_put_peer(call->peer);
- 	kfree(call->rxtx_buffer);
- 	kfree(call->rxtx_annotations);
-@@ -590,7 +591,6 @@ void rxrpc_cleanup_call(struct rxrpc_call *call)
- 
- 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
- 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
--	ASSERTCMP(call->conn, ==, NULL);
- 
- 	rxrpc_cleanup_ring(call);
- 	rxrpc_free_skb(call->tx_pending, rxrpc_skb_cleaned);
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index 376370cd9285..ea7d4c21f889 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -785,6 +785,7 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
- 	u32 cid;
- 
- 	spin_lock(&conn->channel_lock);
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
- 
- 	cid = call->cid;
- 	if (cid) {
-@@ -792,7 +793,6 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
- 		chan = &conn->channels[channel];
- 	}
- 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
--	call->conn = NULL;
- 
- 	/* Calls that have never actually been assigned a channel can simply be
- 	 * discarded.  If the conn didn't get used either, it will follow
-@@ -908,7 +908,6 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
- 	spin_unlock(&rxnet->client_conn_cache_lock);
- out_2:
- 	spin_unlock(&conn->channel_lock);
--	rxrpc_put_connection(conn);
- 	_leave("");
- 	return;
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 38d718e90dc6..c0b3154f7a7e 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -171,6 +171,8 @@ void __rxrpc_disconnect_call(struct rxrpc_connection *conn,
- 
- 	_enter("%d,%x", conn->debug_id, call->cid);
- 
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
-+
- 	if (rcu_access_pointer(chan->call) == call) {
- 		/* Save the result of the call so that we can repeat it if necessary
- 		 * through the channel, whilst disposing of the actual call record.
-@@ -223,9 +225,7 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
- 	__rxrpc_disconnect_call(conn, call);
- 	spin_unlock(&conn->channel_lock);
- 
--	call->conn = NULL;
- 	conn->idle_timestamp = jiffies;
--	rxrpc_put_connection(conn);
- }
- 
- /*
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 935bb60fff56..bad3d2420344 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -129,7 +129,7 @@ static size_t rxrpc_fill_out_ack(struct rxrpc_connection *conn,
- int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
- 			  rxrpc_serial_t *_serial)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_ack_buffer *pkt;
- 	struct msghdr msg;
- 	struct kvec iov[2];
-@@ -139,18 +139,14 @@ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
- 	int ret;
- 	u8 reason;
- 
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
- 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
--	if (!pkt) {
--		rxrpc_put_connection(conn);
-+	if (!pkt)
- 		return -ENOMEM;
--	}
-+
-+	conn = call->conn;
- 
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
-@@ -244,7 +240,6 @@ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
- 	}
- 
- out:
--	rxrpc_put_connection(conn);
- 	kfree(pkt);
- 	return ret;
- }
-@@ -254,7 +249,7 @@ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
-  */
- int rxrpc_send_abort_packet(struct rxrpc_call *call)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_abort_buffer pkt;
- 	struct msghdr msg;
- 	struct kvec iov[1];
-@@ -271,13 +266,11 @@ int rxrpc_send_abort_packet(struct rxrpc_call *call)
- 	    test_bit(RXRPC_CALL_TX_LAST, &call->flags))
- 		return 0;
- 
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
-+	conn = call->conn;
-+
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
- 	msg.msg_control	= NULL;
-@@ -312,8 +305,6 @@ int rxrpc_send_abort_packet(struct rxrpc_call *call)
- 		trace_rxrpc_tx_packet(call->debug_id, &pkt.whdr,
- 				      rxrpc_tx_point_call_abort);
- 	rxrpc_tx_backoff(call, ret);
--
--	rxrpc_put_connection(conn);
- 	return ret;
- }
- 
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/rng/aspeed-rng.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +
+> +title: Bindings for Aspeed Hardware Random Number Generator
+> +
+> +
+> +maintainers:
+> +  - Oscar A Perez <linux@neuralgames.com>
+> +
+> +
+> +description: |
+> +  The HRNG on the AST2400/AST2500/AST2600 SOCs from AspeedTech  uses four Ring
+> +  Oscillators working together to generate a stream of random bits that can be
+> +  read by the platform via a 32bit data register every one microsecond.
+> +  All the platform has to do is to provide to the driver the 'quality' entropy
+> +  value, the  'mode' in which the combining  ROs will generate the  stream  of
+> +  random bits and, the 'period' value that is used as a wait-time between reads
+> +  from the 32bit data register.
+> +
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - aspeed,ast2400-rng
+> +              - aspeed,ast2500-rng
+> +              - aspeed,ast2600-rng
 
+Just:
 
+compatible:
+  enum: ...
+
+> +
+> +
+> +  reg:
+> +    description:
+> +      Base address and length of the register set of this block.
+
+Drop. That's *every* 'reg' property.
+
+> +      Currently 'reg' must be eight bytes wide and 32-bit aligned.
+
+Currently? Is that going to change? Are things going to break if the DT 
+has a bigger size?
+
+> +
+> +    maxItems: 1
+> +
+> +
+> +  period:
+
+Needs a vendor prefix and unit suffix.
+
+> +    description:
+> +      Wait time in microseconds to be used between reads.
+> +      The RNG on these Aspeed SOCs generates 32bit of random data
+> +      every one microsecond. Choose between 1 and n microseconds.
+
+Why would you pick something more than 1?
+
+> +
+> +    maxItems: 1
+> +
+> +
+> +  mode:
+
+Needs a vendor prefix and a type reference.
+
+> +    description:
+> +      One of the eight modes in which the four internal ROs (Ring
+> +      Oscillators)  are combined to generate a stream  of random
+> +      bits. The default mode is seven which is the default method
+> +      of combining RO random bits on these Aspeed SOCs.
+> +
+> +    maxItems: 1
+> +
+> +
+> +  quality:
+
+Needs a vendor prefix and a type reference.
+
+> +    description:
+> +      Estimated number of bits of entropy per 1024 bits read from
+> +      the RNG.  Note that the default quality is zero which stops
+> +      this HRNG from automatically filling the kernel's entropy
+> +      pool with data.
+> +
+> +    maxItems: 1
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - period
+> +  - quality
+> +
+> +
+> +examples:
+> +  - |
+> +    rng: hwrng@1e6e2074 {
+
+rng@...
+
+> +         compatible = "aspeed,ast2500-rng";
+> +         reg = <0x1e6e2074 0x8>;
+> +         period = <4>;
+> +         quality = <128>;
+> +         mode = <0x7>;
+> +    };
+> +
+> +
+> +...
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
