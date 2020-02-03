@@ -2,52 +2,50 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A04C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EB0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF122051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265292080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747178;
-	bh=DeCJmBu8rm1CIGpWKHCxQhQsPKt5JAnOYnxc4hK8Eqg=;
+	s=default; t=1580747181;
+	bh=EyhJu2pHtYbE7eiPlxOa57jPW0fWAUvL1FgIjbsTiho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQCRqmYvczLh/+EvBoX0nyRYdQRZecinbmhwyBrrquqUcRgn0uVa0glyZc3/5WfgK
-	 sZ8IP9T9BBpAOE3KKcZJcP6jdtLdwIQlUT6HyZLu8RzEqm2+6oaEMx77mZtJU6JJNp
-	 qR+5vD8HZChaaRgKaQ/JsnMYSLoDMxPgzGNzN/g4=
+	b=cKu/8Sy4doph5ZEQqN+lveWlrMrt31ZoYUyHr+sl4sn7APQrd4dKX7JS6K89zC9py
+	 +xDuEJQvxUDpVeokO/Zd6E3gAEymsqK1cP5ukcfbAfJzgziYZK1bBCAomAdEXxmgpF
+	 O4heQTpgiPjY3WdurP6WeJUA7wmrJXOxyWc5BX/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgBCQ0R (ORCPT
+        id S1729108AbgBCQ0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:26:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:26:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbgBCQ0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:26:12 -0500
+        id S1729064AbgBCQ0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:26:17 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A8EC2080C;
-        Mon,  3 Feb 2020 16:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBCAB2080C;
+        Mon,  3 Feb 2020 16:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747171;
-        bh=DeCJmBu8rm1CIGpWKHCxQhQsPKt5JAnOYnxc4hK8Eqg=;
+        s=default; t=1580747176;
+        bh=EyhJu2pHtYbE7eiPlxOa57jPW0fWAUvL1FgIjbsTiho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oMEPG538qkpTZBOpBGvxGJ0nqcBCfGAT1AciBtoSSJIs+ZLKU3HW5JH2rfoLE/Hi6
-         MwrjoaeYgZ0mm95dm+M5T3sKmAKDKRryUJewT72/a/501gEmfkZ6mmbgBQtWbeeYoS
-         bbDgacG5x45CsEXhCLhQyqbjgYByr6k9CTQHWe6Y=
+        b=QieEHCIDih+iWSOHWVEhQnyidByKw02wwPO/kuZnz6eQWf0NvLt2blSkG4SScq24r
+         bylFpWHCh5KqAXZLwERAop/ZlsTIHSVNRsiZJpFNQ17wvXKwbXQ7ZRcrNVo3dxtgd+
+         KtervvjTwDTajAnTdoM1CbDZ32udOmv0HmoW1Jeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 40/68] usb: dwc3: turn off VBUS when leaving host mode
-Date:   Mon,  3 Feb 2020 16:19:36 +0000
-Message-Id: <20200203161911.590194611@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 06/68] USB: serial: ir-usb: fix IrLAP framing
+Date:   Mon,  3 Feb 2020 16:19:02 +0000
+Message-Id: <20200203161905.842123714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,40 +58,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Liu <b-liu@ti.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 09ed259fac621634d51cd986aa8d65f035662658 ]
+commit 38c0d5bdf4973f9f5a888166e9d3e9ed0d32057a upstream.
 
-VBUS should be turned off when leaving the host mode.
-Set GCTL_PRTCAP to device mode in teardown to de-assert DRVVBUS pin to
-turn off VBUS power.
+Commit f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+switched to using the generic write implementation which may combine
+multiple write requests into larger transfers. This can break the IrLAP
+protocol where end-of-frame is determined using the USB short packet
+mechanism, for example, if multiple frames are sent in rapid succession.
 
-Fixes: 5f94adfeed97 ("usb: dwc3: core: refactor mode initialization to its own function")
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+Cc: stable <stable@vger.kernel.org>     # 2.6.35
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/dwc3/core.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 30bc5996a2f23..a89072f3bd3fb 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -936,6 +936,9 @@ static void dwc3_core_exit_mode(struct dwc3 *dwc)
- 		/* do nothing */
- 		break;
- 	}
-+
-+	/* de-assert DRVVBUS for HOST and OTG mode */
-+	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+---
+ drivers/usb/serial/ir-usb.c |  113 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 91 insertions(+), 22 deletions(-)
+
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -49,9 +49,10 @@ static int buffer_size;
+ static int xbof = -1;
+ 
+ static int  ir_startup (struct usb_serial *serial);
+-static int  ir_open(struct tty_struct *tty, struct usb_serial_port *port);
+-static int ir_prepare_write_buffer(struct usb_serial_port *port,
+-						void *dest, size_t size);
++static int ir_write(struct tty_struct *tty, struct usb_serial_port *port,
++		const unsigned char *buf, int count);
++static int ir_write_room(struct tty_struct *tty);
++static void ir_write_bulk_callback(struct urb *urb);
+ static void ir_process_read_urb(struct urb *urb);
+ static void ir_set_termios(struct tty_struct *tty,
+ 		struct usb_serial_port *port, struct ktermios *old_termios);
+@@ -81,8 +82,9 @@ static struct usb_serial_driver ir_devic
+ 	.num_ports		= 1,
+ 	.set_termios		= ir_set_termios,
+ 	.attach			= ir_startup,
+-	.open			= ir_open,
+-	.prepare_write_buffer	= ir_prepare_write_buffer,
++	.write			= ir_write,
++	.write_room		= ir_write_room,
++	.write_bulk_callback	= ir_write_bulk_callback,
+ 	.process_read_urb	= ir_process_read_urb,
+ };
+ 
+@@ -255,35 +257,102 @@ static int ir_startup(struct usb_serial
+ 	return 0;
  }
  
- #define DWC3_ALIGN_MASK		(16 - 1)
--- 
-2.20.1
-
+-static int ir_open(struct tty_struct *tty, struct usb_serial_port *port)
++static int ir_write(struct tty_struct *tty, struct usb_serial_port *port,
++		const unsigned char *buf, int count)
+ {
+-	int i;
++	struct urb *urb = NULL;
++	unsigned long flags;
++	int ret;
+ 
+-	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i)
+-		port->write_urbs[i]->transfer_flags = URB_ZERO_PACKET;
++	if (port->bulk_out_size == 0)
++		return -EINVAL;
+ 
+-	/* Start reading from the device */
+-	return usb_serial_generic_open(tty, port);
+-}
++	if (count == 0)
++		return 0;
+ 
+-static int ir_prepare_write_buffer(struct usb_serial_port *port,
+-						void *dest, size_t size)
+-{
+-	unsigned char *buf = dest;
+-	int count;
++	count = min(count, port->bulk_out_size - 1);
++
++	spin_lock_irqsave(&port->lock, flags);
++	if (__test_and_clear_bit(0, &port->write_urbs_free)) {
++		urb = port->write_urbs[0];
++		port->tx_bytes += count;
++	}
++	spin_unlock_irqrestore(&port->lock, flags);
++
++	if (!urb)
++		return 0;
+ 
+ 	/*
+ 	 * The first byte of the packet we send to the device contains an
+-	 * inbound header which indicates an additional number of BOFs and
++	 * outbound header which indicates an additional number of BOFs and
+ 	 * a baud rate change.
+ 	 *
+ 	 * See section 5.4.2.2 of the USB IrDA spec.
+ 	 */
+-	*buf = ir_xbof | ir_baud;
++	*(u8 *)urb->transfer_buffer = ir_xbof | ir_baud;
++
++	memcpy(urb->transfer_buffer + 1, buf, count);
++
++	urb->transfer_buffer_length = count + 1;
++	urb->transfer_flags = URB_ZERO_PACKET;
++
++	ret = usb_submit_urb(urb, GFP_ATOMIC);
++	if (ret) {
++		dev_err(&port->dev, "failed to submit write urb: %d\n", ret);
++
++		spin_lock_irqsave(&port->lock, flags);
++		__set_bit(0, &port->write_urbs_free);
++		port->tx_bytes -= count;
++		spin_unlock_irqrestore(&port->lock, flags);
++
++		return ret;
++	}
++
++	return count;
++}
++
++static void ir_write_bulk_callback(struct urb *urb)
++{
++	struct usb_serial_port *port = urb->context;
++	int status = urb->status;
++	unsigned long flags;
++
++	spin_lock_irqsave(&port->lock, flags);
++	__set_bit(0, &port->write_urbs_free);
++	port->tx_bytes -= urb->transfer_buffer_length - 1;
++	spin_unlock_irqrestore(&port->lock, flags);
++
++	switch (status) {
++	case 0:
++		break;
++	case -ENOENT:
++	case -ECONNRESET:
++	case -ESHUTDOWN:
++		dev_dbg(&port->dev, "write urb stopped: %d\n", status);
++		return;
++	case -EPIPE:
++		dev_err(&port->dev, "write urb stopped: %d\n", status);
++		return;
++	default:
++		dev_err(&port->dev, "nonzero write-urb status: %d\n", status);
++		break;
++	}
++
++	usb_serial_port_softint(port);
++}
++
++static int ir_write_room(struct tty_struct *tty)
++{
++	struct usb_serial_port *port = tty->driver_data;
++	int count = 0;
++
++	if (port->bulk_out_size == 0)
++		return 0;
++
++	if (test_bit(0, &port->write_urbs_free))
++		count = port->bulk_out_size - 1;
+ 
+-	count = kfifo_out_locked(&port->write_fifo, buf + 1, size - 1,
+-								&port->lock);
+-	return count + 1;
++	return count;
+ }
+ 
+ static void ir_process_read_urb(struct urb *urb)
 
 
