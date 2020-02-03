@@ -2,177 +2,87 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69A0C3524E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAA6C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3342070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="CPpgzeMv"
+	by mail.kernel.org (Postfix) with ESMTP id 1744A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgBCJvq (ORCPT
+        id S1727202AbgBCJyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:51:46 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44247 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgBCJvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:51:45 -0500
-Received: by mail-wr1-f66.google.com with SMTP id m16so17060964wrx.11
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:51:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rnDPBSUuVuYgxfTH/LE+fCmpX3/NqS6sW9R93j88kKg=;
-        b=CPpgzeMv6frDZeN7Ohf8Ni6aGL9A7BPf33E1PJD2dRObj80331n8Tq2PNB26N3uflb
-         v9XTi3vrj3ujEYXIplN6/HZBrorzao1cmnSQi44JxS3QX/7z9dFujRdPvBiGo1NcQXTO
-         AHWfYj4HJylTEAucXZWvYAKMaKJfFZWOq14wL5mPKmOZlY86fUtKOyMu8uws9LgHG8Qj
-         2EAlBBbFhM1XtHjw0KrqvrlqeQB5+4Iusl/A7bEqPeIvYsmjcYW3Cj3LH6i3v5EJpKMY
-         k+JfJnBM/NxsO0ke0m6V+TCXaADzCwbqK4KVb4EU08drZwMQsMJZ/dYnmsfdmAX2rTZu
-         VYzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rnDPBSUuVuYgxfTH/LE+fCmpX3/NqS6sW9R93j88kKg=;
-        b=HLUKrzZjaBXTDT8W6nLKR3zGOlR+5FBv+/1o3mMJIXvXnrXKn208zds9TIVsLyzBCF
-         KHVGVo0pIZYOyv1TlyeF28T4rSOFbqgFeIblb/8VzocFEo94qAae0DKHpKS3QZ585o6g
-         b5rU5go0zMN6JcmeGynzP+9NwkBReBR9R/O8PBLRg1zgNdy9AiQvoT61cTgAtB/m3q03
-         a9DuXkdDuRz4nK4lN43aVxK5EiCTKWMyAkLTkVAlogg/ZTjszZhe1nfBIyBQtXTTRoaM
-         6rhvR1e21kK5WN94ig0th9mTWcYCZ2oZUura5Vi4xRnBzho8DQbJ9wNJbpO3gGT3NLVX
-         IoCA==
-X-Gm-Message-State: APjAAAXnJ+vkcci4PcmTVpoKRexwnMJYwBPjyRosY5XXSlFNFG+yEyMk
-        ngPqukIa0mI4JAMjE0zK0hDnGQ==
-X-Google-Smtp-Source: APXvYqw7V7B7iGDd6nFgnka0ziI8dHLkn3HmGFeQJiw3wbFDH3xDp2B94hEuTX3mpEjB0xaTbYrdsA==
-X-Received: by 2002:adf:ca07:: with SMTP id o7mr14000110wrh.49.1580723502887;
-        Mon, 03 Feb 2020 01:51:42 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:459c:4174:f0ee:1b26])
-        by smtp.gmail.com with ESMTPSA id t1sm23821080wma.43.2020.02.03.01.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 01:51:41 -0800 (PST)
-Date:   Mon, 3 Feb 2020 09:51:40 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/3] PCI: hv: Introduce hv_msi_entry
-Message-ID: <20200203095140.GE20189@big-machine>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-4-boqun.feng@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203050313.69247-4-boqun.feng@gmail.com>
+        Mon, 3 Feb 2020 04:54:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38316 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbgBCJyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:54:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 166CCAC37;
+        Mon,  3 Feb 2020 09:54:17 +0000 (UTC)
+Date:   Mon, 03 Feb 2020 10:54:16 +0100
+Message-ID: <s5hmua0ro6v.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     edes <edes@gmx.net>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: kernel 5.4.11: problems with usb sound cards
+In-Reply-To: <20200203082908.GR10381@localhost>
+References: <20200201105829.5682c887@acme7.acmenet>
+        <20200201141009.GK10381@localhost>
+        <20200201132616.09857152@acme7.acmenet>
+        <20200202101933.GL10381@localhost>
+        <20200202134159.GM10381@localhost>
+        <20200202202816.5a1d8af1@acme7.acmenet>
+        <s5ha76085my.wl-tiwai@suse.de>
+        <20200203082908.GR10381@localhost>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 01:03:13PM +0800, Boqun Feng wrote:
-> Add a new structure (hv_msi_entry), which is also defined int tlfs, to
-
-s/int/in the/ ?
-
-> describe the msi entry for HVCALL_RETARGET_INTERRUPT. The structure is
-> needed because its layout may be different from architecture to
-> architecture.
+On Mon, 03 Feb 2020 09:29:08 +0100,
+Johan Hovold wrote:
 > 
-> Also add a new generic interface hv_set_msi_address_from_desc() to allow
-> different archs to set the msi address from msi_desc.
+> On Mon, Feb 03, 2020 at 08:57:41AM +0100, Takashi Iwai wrote:
+> > On Mon, 03 Feb 2020 00:28:16 +0100,
+> > edes wrote:
+> > > 
+> > > 
+> > > el 2020-02-02 a las 14:41 Johan Hovold escribió:
+> > > 
+> > > > I realised I forgot the test to match on the device descriptor when
+> > > > applying the blacklist. It doesn't matter currently since I only enable
+> > > > the quirk for your device, but if you haven't tested the patch already,
+> > > > would you mind testing the below patch instead?
+> > > 
+> > > Hi, Johan, thank you for looking into this. I tested your patch, and it
+> > > works! (5.4.11 and 5.5.0).
+> > > 
+> > > I haven't performed extensive tests, but the card is again recognized as
+> > > both playback and capture device. Thank you!
+> > > 
+> > > Is this and acceptable solution and will this patch be integrated into the
+> > > kernel?
+> > 
+> > I don't mind where to blacklist; we may add a similar quirk in
+> > USB-audio driver side, too.
 > 
-> No functional change, only preparation for the future support of virtual
-> PCI on non-x86 architectures.
-> 
-> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h  | 11 +++++++++--
->  arch/x86/include/asm/mshyperv.h     |  5 +++++
->  drivers/pci/controller/pci-hyperv.c |  4 ++--
->  3 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 4a76e442481a..953b3ad38746 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -912,11 +912,18 @@ struct hv_partition_assist_pg {
->  	u32 tlb_lock_count;
->  };
->  
-> +union hv_msi_entry {
-> +	u64 as_uint64;
-> +	struct {
-> +		u32 address;
-> +		u32 data;
-> +	} __packed;
-> +};
-> +
->  struct hv_interrupt_entry {
->  	u32 source;			/* 1 for MSI(-X) */
->  	u32 reserved1;
-> -	u32 address;
-> -	u32 data;
-> +	union hv_msi_entry msi_entry;
->  } __packed;
->  
->  /*
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 6b79515abb82..3bdaa3b6e68f 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -240,6 +240,11 @@ bool hv_vcpu_is_preempted(int vcpu);
->  static inline void hv_apic_init(void) {}
->  #endif
->  
-> +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
-> +do {								\
-> +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
-> +} while (0)
+> I'm afraid it needs to be done in core since this info is needed while
+> parsing the descriptors.
 
-Given that this is a single statement, is there really a need for the do ; while(0) ?
+OK, then let's go with your patch if there is no objection.
 
 
-> +
->  #else /* CONFIG_HYPERV */
->  static inline void hyperv_init(void) {}
->  static inline void hyperv_setup_mmu_ops(void) {}
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 0d9b74503577..2240f2b3643e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1170,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
->  	memset(params, 0, sizeof(*params));
->  	params->partition_id = HV_PARTITION_ID_SELF;
->  	params->int_entry.source = 1; /* MSI(-X) */
-> -	params->int_entry.address = msi_desc->msg.address_lo;
-> -	params->int_entry.data = msi_desc->msg.data;
-> +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
-> +	params->int_entry.msi_entry.data = msi_desc->msg.data;
+thanks,
 
-If the layout may differ, then don't we also need a wrapper for data?
-
-Thanks,
-
-Andrew Murray
-
->  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
->  			   (hbus->hdev->dev_instance.b[4] << 16) |
->  			   (hbus->hdev->dev_instance.b[7] << 8) |
-> -- 
-> 2.24.1
-> 
+Takashi
