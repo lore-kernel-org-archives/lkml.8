@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962B0C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C793EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DFC217BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955912051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747622;
-	bh=ma40T8PnWz+A3VyuitkhP7I0EYBLQ679xhGQGlUlpDQ=;
+	s=default; t=1580747625;
+	bh=V67d985jCKm5fPRVRf9nl7XWuWBHPQXZixIhQw/nxHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cfbv4I2vE92YP6G4xXRno27ay5ysOUZWKtx15rm+kDlqrcepW93FFvHDGqSk02lsK
-	 MBKLXZg3CAV+AgMXvTOgATcwzfLZNrN45DeKFdgjpMSUVvK9dMTW64dL9ik0MWie0o
-	 JrzA7hyDiHPlFCV9DGntEyi6mbK5vn3W/en7L2r8=
+	b=gZIRu6wcmiQhQMkhJ2cPfkMoRkm4DDEbojx1M/7OxJ42+88/Zsn03tIC+DxFryzbF
+	 JKjQj3Y7b2wz7ht5KtvTq+KsH/JcxIgyNFjRyR3MlynQH8cJb90HDnVmKnX2tUTpiJ
+	 EE0CQjxoVzDn5S8y+gpJ8zsthJ8Y/qEW1comLb4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbgBCQdl (ORCPT
+        id S1730646AbgBCQdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47646 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbgBCQdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:36 -0500
+        id S1730161AbgBCQdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:38 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53E4E2051A;
-        Mon,  3 Feb 2020 16:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9CD72051A;
+        Mon,  3 Feb 2020 16:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747615;
-        bh=ma40T8PnWz+A3VyuitkhP7I0EYBLQ679xhGQGlUlpDQ=;
+        s=default; t=1580747618;
+        bh=V67d985jCKm5fPRVRf9nl7XWuWBHPQXZixIhQw/nxHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PR5MpV1qD2ubjZFukLFYOZAE+P89g9DdhBPoDmaWdb6BsN6+2gQszW4t0AzR5tI3P
-         jLBMNkGeDotWzX/IWg/pyh34JPkCk3ai7Ro9TB/Cr3nQGVfeUQTtkKn8XS9a3b6eIt
-         Hjoc3H6o3l0gfTCV+MrciBZLGMx2yn+gnkQ5uRq4=
+        b=YmfcO2UzJ+5DIqnp04YG4iZEHlAM7XUmK03uctZfj4vrWDi2hcBwTxVp4xYYXTaur
+         QGdnaXdd0RJptkdmcid7KGlstYsO+L3wX1b1/ub2qt87bv54kZVlzUW6FSoeq2MHnz
+         9SqHpW73vVjkxnhSjuCkcy/YNnIwibDIv8Azfpp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haim Dreyfuss <haim.dreyfuss@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/70] iwlwifi: Dont ignore the cap field upon mcc update
-Date:   Mon,  3 Feb 2020 16:20:03 +0000
-Message-Id: <20200203161919.701897294@linuxfoundation.org>
+Subject: [PATCH 4.19 69/70] l2t_seq_next should increase position index
+Date:   Mon,  3 Feb 2020 16:20:21 +0000
+Message-Id: <20200203161922.032186269@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,157 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haim Dreyfuss <haim.dreyfuss@intel.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 2763bba6328c53c455d8f7f5302b80030551c31b ]
+[ Upstream commit 66018a102f7756cf72db4d2704e1b93969d9d332 ]
 
-When receiving a new MCC driver get all the data about the new country
-code and its regulatory information.
-Mistakenly, we ignored the cap field, which includes global regulatory
-information which should be applies to every channel.
-Fix it.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Signed-off-by: Haim Dreyfuss <haim.dreyfuss@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/intel/iwlwifi/iwl-nvm-parse.c    | 48 ++++++++++++++++++-
- .../wireless/intel/iwlwifi/iwl-nvm-parse.h    |  6 +--
- .../net/wireless/intel/iwlwifi/mvm/mac80211.c |  3 +-
- 3 files changed, 51 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-index b850cca9853c8..a6e64787a3454 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-@@ -217,6 +217,34 @@ enum iwl_nvm_channel_flags {
- 	NVM_CHANNEL_DC_HIGH		= BIT(12),
- };
- 
-+/**
-+ * enum iwl_reg_capa_flags - global flags applied for the whole regulatory
-+ * domain.
-+ * @REG_CAPA_BF_CCD_LOW_BAND: Beam-forming or Cyclic Delay Diversity in the
-+ *	2.4Ghz band is allowed.
-+ * @REG_CAPA_BF_CCD_HIGH_BAND: Beam-forming or Cyclic Delay Diversity in the
-+ *	5Ghz band is allowed.
-+ * @REG_CAPA_160MHZ_ALLOWED: 11ac channel with a width of 160Mhz is allowed
-+ *	for this regulatory domain (valid only in 5Ghz).
-+ * @REG_CAPA_80MHZ_ALLOWED: 11ac channel with a width of 80Mhz is allowed
-+ *	for this regulatory domain (valid only in 5Ghz).
-+ * @REG_CAPA_MCS_8_ALLOWED: 11ac with MCS 8 is allowed.
-+ * @REG_CAPA_MCS_9_ALLOWED: 11ac with MCS 9 is allowed.
-+ * @REG_CAPA_40MHZ_FORBIDDEN: 11n channel with a width of 40Mhz is forbidden
-+ *	for this regulatory domain (valid only in 5Ghz).
-+ * @REG_CAPA_DC_HIGH_ENABLED: DC HIGH allowed.
-+ */
-+enum iwl_reg_capa_flags {
-+	REG_CAPA_BF_CCD_LOW_BAND	= BIT(0),
-+	REG_CAPA_BF_CCD_HIGH_BAND	= BIT(1),
-+	REG_CAPA_160MHZ_ALLOWED		= BIT(2),
-+	REG_CAPA_80MHZ_ALLOWED		= BIT(3),
-+	REG_CAPA_MCS_8_ALLOWED		= BIT(4),
-+	REG_CAPA_MCS_9_ALLOWED		= BIT(5),
-+	REG_CAPA_40MHZ_FORBIDDEN	= BIT(7),
-+	REG_CAPA_DC_HIGH_ENABLED	= BIT(9),
-+};
-+
- static inline void iwl_nvm_print_channel_flags(struct device *dev, u32 level,
- 					       int chan, u16 flags)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index 301c4df8a5664..986277744611c 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -683,8 +683,7 @@ static void *l2t_seq_start(struct seq_file *seq, loff_t *pos)
+ static void *l2t_seq_next(struct seq_file *seq, void *v, loff_t *pos)
  {
-@@ -923,6 +951,7 @@ IWL_EXPORT_SYMBOL(iwl_parse_nvm_data);
- 
- static u32 iwl_nvm_get_regdom_bw_flags(const u8 *nvm_chan,
- 				       int ch_idx, u16 nvm_flags,
-+				       u16 cap_flags,
- 				       const struct iwl_cfg *cfg)
- {
- 	u32 flags = NL80211_RRF_NO_HT40;
-@@ -966,6 +995,20 @@ static u32 iwl_nvm_get_regdom_bw_flags(const u8 *nvm_chan,
- 	    (flags & NL80211_RRF_NO_IR))
- 		flags |= NL80211_RRF_GO_CONCURRENT;
- 
-+	/*
-+	 * cap_flags is per regulatory domain so apply it for every channel
-+	 */
-+	if (ch_idx >= NUM_2GHZ_CHANNELS) {
-+		if (cap_flags & REG_CAPA_40MHZ_FORBIDDEN)
-+			flags |= NL80211_RRF_NO_HT40;
-+
-+		if (!(cap_flags & REG_CAPA_80MHZ_ALLOWED))
-+			flags |= NL80211_RRF_NO_80MHZ;
-+
-+		if (!(cap_flags & REG_CAPA_160MHZ_ALLOWED))
-+			flags |= NL80211_RRF_NO_160MHZ;
-+	}
-+
- 	return flags;
+ 	v = l2t_get_idx(seq, *pos);
+-	if (v)
+-		++*pos;
++	++(*pos);
+ 	return v;
  }
  
-@@ -977,7 +1020,7 @@ struct regdb_ptrs {
- struct ieee80211_regdomain *
- iwl_parse_nvm_mcc_info(struct device *dev, const struct iwl_cfg *cfg,
- 		       int num_of_ch, __le32 *channels, u16 fw_mcc,
--		       u16 geo_info)
-+		       u16 geo_info, u16 cap)
- {
- 	int ch_idx;
- 	u16 ch_flags;
-@@ -1038,7 +1081,8 @@ iwl_parse_nvm_mcc_info(struct device *dev, const struct iwl_cfg *cfg,
- 		}
- 
- 		reg_rule_flags = iwl_nvm_get_regdom_bw_flags(nvm_chan, ch_idx,
--							     ch_flags, cfg);
-+							     ch_flags, cap,
-+							     cfg);
- 
- 		/* we can't continue the same rule */
- 		if (ch_idx == 0 || prev_reg_rule_flags != reg_rule_flags ||
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h
-index 234d1009a9de4..a9bdd4aa01c7e 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h
-@@ -7,7 +7,7 @@
-  *
-  * Copyright(c) 2008 - 2015 Intel Corporation. All rights reserved.
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018        Intel Corporation
-+ * Copyright(c) 2018 - 2019 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -34,7 +34,7 @@
-  *
-  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018        Intel Corporation
-+ * Copyright(c) 2018 - 2019 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -108,7 +108,7 @@ iwl_parse_nvm_data(struct iwl_trans *trans, const struct iwl_cfg *cfg,
- struct ieee80211_regdomain *
- iwl_parse_nvm_mcc_info(struct device *dev, const struct iwl_cfg *cfg,
- 		       int num_of_ch, __le32 *channels, u16 fw_mcc,
--		       u16 geo_info);
-+		       u16 geo_info, u16 cap);
- 
- /**
-  * struct iwl_nvm_section - describes an NVM section in memory.
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 476c44db0e64b..58653598db146 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -317,7 +317,8 @@ struct ieee80211_regdomain *iwl_mvm_get_regdomain(struct wiphy *wiphy,
- 				      __le32_to_cpu(resp->n_channels),
- 				      resp->channels,
- 				      __le16_to_cpu(resp->mcc),
--				      __le16_to_cpu(resp->geo_info));
-+				      __le16_to_cpu(resp->geo_info),
-+				      __le16_to_cpu(resp->cap));
- 	/* Store the return source id */
- 	src_id = resp->source_id;
- 	kfree(resp);
 -- 
 2.20.1
 
