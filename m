@@ -2,127 +2,94 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6C8C3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59E3C3524E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA02F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE8220661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cRJ/xczl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgBCJDz (ORCPT
+        id S1727878AbgBCJEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:03:55 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:44332 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgBCJDy (ORCPT
+        Mon, 3 Feb 2020 04:04:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36497 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727133AbgBCJEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:03:54 -0500
-Received: from [10.7.0.4] (10.28.11.250) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 3 Feb
- 2020 17:04:25 +0800
-Subject: Re: [PATCH v6 5/5] clk: meson: a1: add support for Amlogic A1
- Peripheral clock driver
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200116080440.118679-1-jian.hu@amlogic.com>
- <20200116080440.118679-6-jian.hu@amlogic.com>
- <20200129054253.6F8CD2071E@mail.kernel.org>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <3e103a45-62d4-1a10-e4af-5a4c588162d6@amlogic.com>
-Date:   Mon, 3 Feb 2020 17:04:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 04:04:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580720652;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=H6fxCf78eVhuUAJ68T4mXmDzlZwZiDCeV31HsdqoAPA=;
+        b=cRJ/xczlawbuqevs9NVEPeP2a+HphBQU4H0OgaBSNW25TJTpab8EV5d8xPKk4tfCLXHruK
+        3S/AExvdldWf4ve9RARETRCntFgQoeCmEBzZHBy0QZdRGo7q8xjjZZgbPppOXabbjCHq8N
+        1LgcVTzFv76ERgE7/faLXHaV15D2y/Q=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-Ak6DEi-yPEaSLEoRJzncuw-1; Mon, 03 Feb 2020 04:04:10 -0500
+X-MC-Unique: Ak6DEi-yPEaSLEoRJzncuw-1
+Received: by mail-wr1-f70.google.com with SMTP id t6so4803050wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:04:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H6fxCf78eVhuUAJ68T4mXmDzlZwZiDCeV31HsdqoAPA=;
+        b=ZBtxhITLx7xqUYBKaksNyEYYyEfM+parxJYySOrChRfFYdVI0RmwhtNX32StzbtZb+
+         f75N2Q2sUOKGCmLnwg2wettEe0Vlnp9EArCLIQUNWcla1UE8pcNLznSsD3rKaGAVxQRb
+         hnLKc6OCY7P3R39jKNMs+SL7OeOZV4k04sL3kQFI81ln2G4zHRvV2PZO9pAYtW/UlvFu
+         5EZ5/cN1AGdvbkdnoLzRU9BS2AM/OO9Q2l4ZvYO/vOdvFLHLB6wFP/TuUFQBF0uYTEBt
+         OK0yHUqhmH5gxj+D1o2XY+3YmeUgt0oCjGD1dCumlPD4juesHnOz+miOsBuafNKy90Z3
+         fcjw==
+X-Gm-Message-State: APjAAAU6Ue/m7R5cd1vuaUxWwAp4Yy+Klz4+fZnKRZH8MEt0ELSUTRFa
+        SGoHOjFFB75Fj6oIHh7zofBY/mR0QkgQ1PSNmb2aCYzZG2juBlvU7Sr4vr5B3IY+u40RYDo+Ie8
+        V5oT6nTrFhNcPMYy/U9XBreMb
+X-Received: by 2002:adf:e2cf:: with SMTP id d15mr14314706wrj.225.1580720649224;
+        Mon, 03 Feb 2020 01:04:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyYREAVG5O0ErdfVCjrJuHlKZLavmASH0lil9NjCzoWb7VUJmnMW/g8uhNveQrKDhLPzLxliw==
+X-Received: by 2002:adf:e2cf:: with SMTP id d15mr14314686wrj.225.1580720649063;
+        Mon, 03 Feb 2020 01:04:09 -0800 (PST)
+Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id z3sm7458497wrs.32.2020.02.03.01.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 01:04:08 -0800 (PST)
+Date:   Mon, 3 Feb 2020 10:04:06 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: Re: [PATCH liburing v2 1/1] test: add epoll test case
+Message-ID: <20200203090406.mlgmw2u7lv7a76vd@steredhat>
+References: <20200131142943.120459-1-sgarzare@redhat.com>
+ <20200131142943.120459-2-sgarzare@redhat.com>
+ <00610b2b-2110-36c2-d6ce-85599e46013f@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200129054253.6F8CD2071E@mail.kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.11.250]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00610b2b-2110-36c2-d6ce-85599e46013f@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Stephen
+On Fri, Jan 31, 2020 at 08:41:49AM -0700, Jens Axboe wrote:
+> On 1/31/20 7:29 AM, Stefano Garzarella wrote:
+> > This patch add the epoll test case that has four sub-tests:
+> > - test_epoll
+> > - test_epoll_sqpoll
+> > - test_epoll_nodrop
+> > - test_epoll_sqpoll_nodrop
+> 
+> Since we have EPOLL_CTL now, any chance you could also include
+> a test case that uses that instead of epoll_ctl()?
 
-Thanks for your review
+Sure, I'll add a test case for EPOLL_CTL!
 
-On 2020/1/29 13:42, Stephen Boyd wrote:
-> Quoting Jian Hu (2020-01-16 00:04:40)
->> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
->> new file mode 100644
->> index 000000000000..2cf20ae1db75
->> --- /dev/null
->> +++ b/drivers/clk/meson/a1.c
->> @@ -0,0 +1,2249 @@
-> [...]
->> +       &a1_ceca_32k_clkout,
->> +       &a1_cecb_32k_clkin,
->> +       &a1_cecb_32k_div,
->> +       &a1_cecb_32k_sel_pre,
->> +       &a1_cecb_32k_sel,
->> +       &a1_cecb_32k_clkout,
->> +};
->> +
->> +static struct regmap_config clkc_regmap_config = {
-> 
-> Can this be const?
-OK, I will add const in next v8 version.
-> 
->> +       .reg_bits       = 32,
->> +       .val_bits       = 32,
->> +       .reg_stride     = 4,
->> +};
->> +
->> +static int meson_a1_periphs_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct resource *res;
->> +       void __iomem *base;
->> +       struct regmap *map;
->> +       int ret, i;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +
->> +       base = devm_ioremap_resource(dev, res);
-> 
-> Can you use the combination function that does the get resource and
-> ioremap in one function?
-OK, I will use 'devm_platform_ioremap_resource' here.
-> 
->> +       if (IS_ERR(base))
->> +               return PTR_ERR(base);
->> +
->> +       map = devm_regmap_init_mmio(dev, base, &clkc_regmap_config);
->> +       if (IS_ERR(map))
->> +               return PTR_ERR(map);
->> +
->> +       /* Populate regmap for the regmap backed clocks */
-> 
-> Seems like a useless comment.
-OK, I will remove it.
-> 
->> +       for (i = 0; i < ARRAY_SIZE(a1_periphs_regmaps); i++)
->> +               a1_periphs_regmaps[i]->map = map;
->> +
-> 
-The same with a1-pll.c file, I will modify, too.
-> .
-> 
+Stefano
+
