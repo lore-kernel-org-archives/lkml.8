@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C871C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF171C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EBB2080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4D92080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747183;
-	bh=WUrTKc5YtLb/I/UsRE7CRsbIIlUWvDDl//CIg9ruU80=;
+	s=default; t=1580747191;
+	bh=bJcSbVFWMcIYPUMH8AzaeCu2T16ojXqRV9/OkWShTkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tO/XuCSf6GAUmTRubO6dLhCEuGeyLw+6tllsRleaM2AeuMh/RRSzkXu0mtVzL9pKA
-	 kRG7HgRHDFdzGx3KoUWwgKrceMFZrLoz7+mrGDBlbUZDI27syTbHNlWycClTErkKx8
-	 mEfZJ6zJ8o6u+c/GRNSC/UJOgxOnagZn8sl6lu8Q=
+	b=P3LaWaFmaOSKzfb4vTYxzvuSJ0evoVf6Z2SFp+DLmGLvRTwjTdy2wcNYRrmIAwVKp
+	 dmlIe31cpqNu4xG3wO2mTU014aGCldp//bjFpIhCQJCpPKdXEb8E3RZ2gEzeOtS2P4
+	 AKQYv4wlcihQTrggDHUUuHbfrb58NEdPqErXvvK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgBCQ0W (ORCPT
+        id S1729194AbgBCQ0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:26:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37294 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:26:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbgBCQ0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:26:19 -0500
+        id S1729150AbgBCQ00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:26:26 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5002051A;
-        Mon,  3 Feb 2020 16:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C627C2080C;
+        Mon,  3 Feb 2020 16:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747178;
-        bh=WUrTKc5YtLb/I/UsRE7CRsbIIlUWvDDl//CIg9ruU80=;
+        s=default; t=1580747186;
+        bh=bJcSbVFWMcIYPUMH8AzaeCu2T16ojXqRV9/OkWShTkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vs76urXRvymualtq5MG18rmS3JRcu21cxvUN3E50t8A+Fq68qW/wjDerIjaADJKU2
-         Xk1bNPZT+wYfAG39GlUAfS+J0/Oi1exGU4NFGmcFG8hVcmamPLptabWk6GFbtSUPSN
-         pZaPEddEj3krms7tVGyzcaZRWS5uw+gTxS3wGEP0=
+        b=UZK3wqj9BO4W6QTqdatN77m0EaklyqY6l2OJ2xnCqUB4vmQkXOaZICT+NXNp4RX75
+         quDEaB013TIaWCXmSLxRCqAmowW6XOODLAOomYiyHMK5MgnES0JTBbUwggTT8bZ7fl
+         pxWAYXp1c4KZL02DOTYtt3M3H/kzT/H2Q0Rfscoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 42/68] ARM: dts: beagle-x15-common: Model 5V0 regulator
-Date:   Mon,  3 Feb 2020 16:19:38 +0000
-Message-Id: <20200203161911.873836426@linuxfoundation.org>
+Subject: [PATCH 4.9 45/68] clk: mmp2: Fix the order of timer mux parents
+Date:   Mon,  3 Feb 2020 16:19:41 +0000
+Message-Id: <20200203161912.331634572@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,54 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
+[ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
 
-On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
-connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
-which is connected to the COMQ port. Model 5V0 regulator here in order
-for it to be used in am57xx-evm to model 3V6 regulator.
+Determined empirically, no documentation is available.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
+thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
+what is going on, ended up just dividing the rate as of
+commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
+
+Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/clk/mmp/clk-of-mmp2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 78bee26361f15..552de167f95fe 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -27,6 +27,27 @@
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index 061a9f10218b3..20cfdf837bfab 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
+ static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
  
-+	main_12v0: fixedregulator-main_12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "main_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	evm_5v0: fixedregulator-evm_5v0 {
-+		/* Output of TPS54531D */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_3v3: fixedregulator-vdd_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd_3v3";
+ static DEFINE_SPINLOCK(timer_lock);
+-static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
++static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
+ 
+ static DEFINE_SPINLOCK(reset_lock);
+ 
 -- 
 2.20.1
 
