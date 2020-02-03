@@ -2,57 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F88CC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F37FC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2921A21927
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14772218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747673;
-	bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
+	s=default; t=1580747680;
+	bh=6DmBolbtfr5xFdGIY7cFqc5o5dNUZ0YZKeKqRMpNUGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0w28oPT0Z2Z0rPZSgGxRhQuA3emJ/qO1iqWYMsS5T1YklPtOM5EwRCIOpLeogbVPs
-	 3opyriYQiFqxg/IHF4lmwZ81295iMqKPGXE+qEWtfOjAsUgVPFfvwBPPF2cAlJBt5k
-	 6jyFho0IKQ6h7FnNWjaU1kBTYxfcm3r2KBmWGRMY=
+	b=AN8ePERkJcfhOVAblVZU7f0bKNO3OzpsyyusCl/BMLrAGSxgOcbfoRj7G9mh44bh6
+	 1YvaFUeT9vgVGx+lbjY/eQ70zuYSKaU1Z2ouGqZSJ1WUccGPXF596CY7n8VldA/P4J
+	 eux22zG2xK6c3sBs/ZmbNck9WGvsMTmVpzaRWUYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbgBCQec (ORCPT
+        id S1730488AbgBCQej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730800AbgBCQea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:30 -0500
+        id S1730815AbgBCQef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:35 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E92A2082E;
-        Mon,  3 Feb 2020 16:34:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60E5321775;
+        Mon,  3 Feb 2020 16:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747670;
-        bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
+        s=default; t=1580747674;
+        bh=6DmBolbtfr5xFdGIY7cFqc5o5dNUZ0YZKeKqRMpNUGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1H33yeBFh+gA9NjVz7RfEH58Ctcdjfxe6+kpg7YBR6VMX4JUKGQ1n8ta1sJm29sYX
-         1FrFqpag8pXeSkFfUV6IWQvk8qeLitde180YGQNGV02wJ1KOmrEM8uvG9U/Ytei/+2
-         Fc4BcxnbgjqIpdPcR8TZENd+a6aCso7kbdNdV2n8=
+        b=y+udwoXChaAsIe6jt/Q/klG+/5shPp3zbj1P3SQazZIKppdUXMWXzBGTi4PU8awYR
+         Mss5qtAuk7eSdb65l0GIUs2T7kRnRMxfpZDLYN9yDiho97uyLxLVsvxkPuB0Sg2YUp
+         UvODcTfMzBRFWVXCAaJzh6z0LwwDxVWkIJiP/9fA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 09/90] perf c2c: Fix return type for histogram sorting comparision functions
-Date:   Mon,  3 Feb 2020 16:19:12 +0000
-Message-Id: <20200203161918.812118193@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 15/90] media: digitv: dont continue if remote control state cant be read
+Date:   Mon,  3 Feb 2020 16:19:18 +0000
+Message-Id: <20200203161919.685182477@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -65,86 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Freund <andres@anarazel.de>
+From: Sean Young <sean@mess.org>
 
-commit c1c8013ec34d7163431d18367808ea40b2e305f8 upstream.
+commit eecc70d22ae51225de1ef629c1159f7116476b2e upstream.
 
-Commit 722ddfde366f ("perf tools: Fix time sorting") changed - correctly
-so - hist_entry__sort to return int64. Unfortunately several of the
-builtin-c2c.c comparison routines only happened to work due the cast
-caused by the wrong return type.
+This results in an uninitialized variable read.
 
-This causes meaningless ordering of both the cacheline list, and the
-cacheline details page. E.g a simple:
-
-  perf c2c record -a sleep 3
-  perf c2c report
-
-will result in cacheline table like
-  =================================================
-             Shared Data Cache Line Table
-  =================================================
-  #
-  #        ------- Cacheline ----------    Total     Tot  - LLC Load Hitm -  - Store Reference -  - Load Dram -     LLC  Total  - Core Load Hit -  - LLC Load Hit -
-  # Index         Address  Node  PA cnt  records    Hitm  Total  Lcl    Rmt  Total  L1Hit  L1Miss     Lcl   Rmt  Ld Miss  Loads    FB    L1   L2     Llc      Rmt
-  # .....  ..............  ....  ......  .......  ......  .....  .....  ...  ....   .....  ......  ......  ....  ......   .....  .....  ..... ...  ....     .......
-
-        0  0x7f0d27ffba00   N/A       0       52   0.12%     13      6    7    12      12       0       0     7      14      40      4     16    0    0           0
-        1  0x7f0d27ff61c0   N/A       0     6353  14.04%   1475    801  674   779     779       0       0   718    1392    5574   1299   1967    0  115           0
-        2  0x7f0d26d3ec80   N/A       0       71   0.15%     16      4   12    13      13       0       0    12      24      58      1     20    0    9           0
-        3  0x7f0d26d3ec00   N/A       0       98   0.22%     23     17    6    19      19       0       0     6      12      79      0     40    0   10           0
-
-i.e. with the list not being ordered by Total Hitm.
-
-Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-Signed-off-by: Andres Freund <andres@anarazel.de>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20200109043030.233746-1-andres@anarazel.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/builtin-c2c.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/media/usb/dvb-usb/digitv.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __
+--- a/drivers/media/usb/dvb-usb/digitv.c
++++ b/drivers/media/usb/dvb-usb/digitv.c
+@@ -230,18 +230,22 @@ static struct rc_map_table rc_map_digitv
+ 
+ static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
  {
- 	struct c2c_hist_entry *c2c_left;
- 	struct c2c_hist_entry *c2c_right;
--	unsigned int tot_hitm_left;
--	unsigned int tot_hitm_right;
-+	uint64_t tot_hitm_left;
-+	uint64_t tot_hitm_right;
+-	int i;
++	int ret, i;
+ 	u8 key[5];
+ 	u8 b[4] = { 0 };
  
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
-@@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __m
- 									\
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
--	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-+	return (uint64_t) c2c_left->stats.__f -				\
-+	       (uint64_t) c2c_right->stats.__f;				\
- }
+ 	*event = 0;
+ 	*state = REMOTE_NO_KEY_PRESSED;
  
- #define STAT_FN(__f)		\
-@@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+-	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
++	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
++	if (ret)
++		return ret;
  
--	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-+	return (uint64_t) llc_miss(&c2c_left->stats) -
-+	       (uint64_t) llc_miss(&c2c_right->stats);
- }
+ 	/* Tell the device we've read the remote. Not sure how necessary
+ 	   this is, but the Nebula SDK does it. */
+-	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
++	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
++	if (ret)
++		return ret;
  
- static uint64_t total_records(struct c2c_stats *stats)
+ 	/* if something is inside the buffer, simulate key press */
+ 	if (key[1] != 0)
 
 
