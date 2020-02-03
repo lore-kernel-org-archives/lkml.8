@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D12C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E88C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE2420721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600802051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748395;
-	bh=ONebF2UAM9DjtkYxHchWm/ax6fQTIsdCY9aEriA8tec=;
+	s=default; t=1580748400;
+	bh=LPXC/bbMwboiC8gkHl4hEag4UPlGj4kkNkiySF5hbBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rbT4hJWOmqgdh5F3IEPZR27tZvilPYZUeRUmvKFyeB8orS6tZ1I2nzSyjoUZMJalU
-	 cY9WNDWo5YUkQF+HxbxZjuOkTpaLgvwVf8/E1HGujZZErsrYE1Eg2fH9qAucDpido0
-	 1dPmPL/CxZoeyQHwEQuuNW6k+S2aaNBW1LTcZUMw=
+	b=vAcgp9KeRRmMUd5YrKgLU/R5nwYnMIC9Ov7laYc0eMkHk/2b8Y8RqpoXRg9LIquKn
+	 hOhmP513zY4Jy+ReCaw/8SK8MCZu5qf/0SPNAzV0n/jAyDVprgW4CJ1v1mt8dkeP/M
+	 bOSrRtRNZmSiP1LmUWCKSyP+1s80ba36Oe8cEYMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgBCQqe (ORCPT
+        id S1730970AbgBCQqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:46:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:46:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgBCQ2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:36 -0500
+        id S1729610AbgBCQ2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:33 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA0C2080C;
-        Mon,  3 Feb 2020 16:28:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01EC92051A;
+        Mon,  3 Feb 2020 16:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747315;
-        bh=ONebF2UAM9DjtkYxHchWm/ax6fQTIsdCY9aEriA8tec=;
+        s=default; t=1580747313;
+        bh=LPXC/bbMwboiC8gkHl4hEag4UPlGj4kkNkiySF5hbBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ASzSG9fBE6Ix9TPJRk8TDkCSlk60eAsLN6wP4Z4Oje8IpzgSIsozJQ0SMEueU30K7
-         iVE4yzhc7xuyICqkE//r4tXEZAGLypLok9jt+YSZdc25ZI8CCmDjNj+dwAKTjPs8HD
-         Q5xoS8nLfG5F2LOJrrRlSMxVSv5HHKEH5gb/M4Uw=
+        b=k9Qm7sHcotkNeq/5mMT+ifufv8Loc3aHvY2+mG1Uej6r+S2IMH0JhIeuaLnEar2cc
+         mzZHZgOumsftHBsCyEmPm6I6P0zncB4upPY015FagmCjWTCOf4ttjBV2WYmqNmIVXt
+         +DoR1fzyDdikZ80JUh1rHpCchzXa1G2hDaY5n4PM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
-        stable@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 33/89] vfs: fix do_last() regression
-Date:   Mon,  3 Feb 2020 16:19:18 +0000
-Message-Id: <20200203161921.319406598@linuxfoundation.org>
+        syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 32/89] crypto: af_alg - Use bh_lock_sock in sk_destruct
+Date:   Mon,  3 Feb 2020 16:19:17 +0000
+Message-Id: <20200203161921.119779644@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -62,63 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
+commit 37f96694cf73ba116993a9d2d99ad6a75fa7fdb0 upstream.
 
-Brown paperbag time: fetching ->i_uid/->i_mode really should've been
-done from nd->inode.  I even suggested that, but the reason for that has
-slipped through the cracks and I went for dir->d_inode instead - made
-for more "obvious" patch.
+As af_alg_release_parent may be called from BH context (most notably
+due to an async request that only completes after socket closure,
+or as reported here because of an RCU-delayed sk_destruct call), we
+must use bh_lock_sock instead of lock_sock.
 
-Analysis:
-
- - at the entry into do_last() and all the way to step_into(): dir (aka
-   nd->path.dentry) is known not to have been freed; so's nd->inode and
-   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
-   inode of the file to get opened is not known.
-
- - after step_into(): inode of the file to get opened is known; dir
-   might be pointing to freed memory/be negative/etc.
-
- - at the call of may_create_in_sticky(): guaranteed to be out of RCU
-   mode; inode of the file to get opened is known and pinned; dir might
-   be garbage.
-
-The last was the reason for the original patch.  Except that at the
-do_last() entry we can be in RCU mode and it is possible that
-nd->path.dentry->d_inode has already changed under us.
-
-In that case we are going to fail with -ECHILD, but we need to be
-careful; nd->inode is pointing to valid struct inode and it's the same
-as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
-should use that.
-
-Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
-Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@kernel.org
-Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: c840ac6af3f8 ("crypto: af_alg - Disallow bind/setkey/...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/namei.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/af_alg.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3266,8 +3266,8 @@ static int do_last(struct nameidata *nd,
- 		   int *opened)
- {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = dir->d_inode->i_uid;
--	umode_t dir_mode = dir->d_inode->i_mode;
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -139,11 +139,13 @@ void af_alg_release_parent(struct sock *
+ 	sk = ask->parent;
+ 	ask = alg_sk(sk);
+ 
+-	lock_sock(sk);
++	local_bh_disable();
++	bh_lock_sock(sk);
+ 	ask->nokey_refcnt -= nokey;
+ 	if (!last)
+ 		last = !--ask->refcnt;
+-	release_sock(sk);
++	bh_unlock_sock(sk);
++	local_bh_enable();
+ 
+ 	if (last)
+ 		sock_put(sk);
 
 
