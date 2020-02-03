@@ -2,87 +2,136 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE503C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B77BC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6E92082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4244A2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580754464;
+	bh=0BstmI3p+nE92cj5WvZfcDoqlVcc3+pYnKpm6RsOL3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WOgVSEy4/Zoq+37u19b+BVJpECosTdyN0C76nPjW7H4mEcrZmmoOBCmNL94lRm2j9
+	 UVNx5ZQtmLCCJwFwY4cFhgItWFeZDW9Dk2qsUr3YSfXEVGUEm24oF/k+ks+l8kJzYn
+	 5Mpch6UrpVhw2X0x45ICiVysa6FcHTBhGSsrG2AU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgBCS1a (ORCPT
+        id S1729744AbgBCS1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:27:30 -0500
-Received: from mga02.intel.com ([134.134.136.20]:48173 "EHLO mga02.intel.com"
+        Mon, 3 Feb 2020 13:27:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgBCS1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:27:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 10:27:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="278822787"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.86]) ([134.134.177.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Feb 2020 10:27:28 -0800
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
- Driver with PHC interface changes to support additional H/W Features
-To:     Richard Cochran <richardcochran@gmail.com>,
-        christopher.s.hall@intel.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
-        x86@kernel.org, davem@davemloft.net, sean.v.kelley@intel.com
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <20200203040838.GA5851@localhost>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <85f42aa9-65fa-121b-a24d-017b56c61267@intel.com>
-Date:   Mon, 3 Feb 2020 10:27:28 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1727124AbgBCS1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 13:27:43 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5DA72082E;
+        Mon,  3 Feb 2020 18:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580754462;
+        bh=0BstmI3p+nE92cj5WvZfcDoqlVcc3+pYnKpm6RsOL3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m83JC6OnLDFTNf70zDGiojrB0WGaT6y/KLoEml5T/LD7vZ423WW9x07Im02EtKAil
+         ji8IZ8lXqnoL5b7+m/ba6iNIugWLYegBvKLv1agUA++QFzXNjmvbHCSjMu5F5PTEfy
+         SHAR+w1HBgDRXWJnSicBztoa3EYoXMRPaS6o9iJM=
+Date:   Mon, 3 Feb 2020 18:27:37 +0000
+From:   Will Deacon <will@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        'Eric Dumazet' <edumazet@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: Re: Confused about hlist_unhashed_lockless()
+Message-ID: <20200203182737.GB12136@willie-the-truck>
+References: <20200131164308.GA5175@willie-the-truck>
+ <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+ <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+ <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
+ <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
+ <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
+ <20200203155839.GK2935@paulmck-ThinkPad-P72>
+ <20200203160227.GA7274@willie-the-truck>
+ <20200203172947.GM2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200203040838.GA5851@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203172947.GM2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/2/2020 8:08 PM, Richard Cochran wrote:
-> On Wed, Dec 11, 2019 at 01:48:47PM -0800, christopher.s.hall@intel.com wrote:
->> The ART frequency is not adjustable. In order, to implement output
->> adjustments an additional edge-timestamp API is added, as well, as
->> a periodic output frequency adjustment API. Togther, these implement
->> equivalent functionality to the existing SYS_OFFSET_* and frequency
->> adjustment APIs.
-> 
-> I don't see a reason for a custom, new API just for this device.
-> 
-> The TGPIO input clock, the ART, is a free running counter, but you
-> want to support frequency adjustments.  Use a timecounter cyclecounter
-> pair.
-> 
-> Let the user dial a periodic output signal in the normal way.
-> 
-> Let the user change the frequency in the normal way, and during this
-> call, adjust the counter values accordingly.
-> 
+Hi Paul,
 
-To add:
-
-in order to program the pin output correctly, you may need to reverse
-the timecounter/cyclecounter calculations. I recall doing something
-similar in ixgbe for programming the correct output signal to match.
-
-It may actually be worth adding helper functions to the timecounter
-system for doing those kind of reverse calculations for converting from
-a time value back into cycles.
-
-> Thanks,
-> Richard
+On Mon, Feb 03, 2020 at 09:29:47AM -0800, Paul E. McKenney wrote:
+> On Mon, Feb 03, 2020 at 04:02:28PM +0000, Will Deacon wrote:
+> > On Mon, Feb 03, 2020 at 07:58:39AM -0800, Paul E. McKenney wrote:
+> > > On Mon, Feb 03, 2020 at 03:45:54PM +0000, David Laight wrote:
+> > > > From: Eric Dumazet
+> > > > > Sent: 31 January 2020 18:53
+> > > > > 
+> > > > > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
+> > > > > >
+> > > > > 
+> > > > > > This is nice, now with have data_race()
+> > > > > >
+> > > > > > Remember these patches were sent 2 months ago, at a time we were
+> > > > > > trying to sort out things.
+> > > > > >
+> > > > > > data_race() was merged a few days ago.
+> > > > > 
+> > > > > Well, actually data_race() is not there yet anyway.
+> > > > 
+> > > > Shouldn't it be NO_DATA_RACE() ??
+> > > 
+> > > No, because you use data_race() when there really are data races, but you
+> > > want KCSAN to ignore them.  For example, diagnostic code that doesn't
+> > > participate in the actual concurrency design and that doesn't run all
+> > > that often might use data_race().  For another example, if a developer
+> > > knew that data races existed, but that the compiler could not reasonably
+> > > do anything untoward with those data races, that developer might well
+> > > choose to use data_race() instead of READ_ONCE().  Especially if the
+> > > access in question was on a fastpath where helpful compiler optimizations
+> > > would be prohibited by use of READ_ONCE().
+> > 
+> > Yes, and in this particular case I think we can remove some WRITE_ONCE()s
+> > from the non-RCU hlist code too (similarly for hlist_nulls).
 > 
+> Quite possibly, but we should take them case by case.  READ_ONCE()
+> really does protect against some optimizations, while data_race() does
+> not at all.
+
+Agreed, and I plan to send patches for review so we can discuss them in
+more detail then.
+
+> But yes, in some cases you want to -avoid- using READ_ONCE() and
+> WRITE_ONCE() so that KCSAN can do its job.  For example, given a per-CPU
+> variable that is only supposed to be accessed from the corresponding CPU
+> except for reads by diagnostic code, you should have the main algorithm
+> use plain C-language reads and writes, and have the diagnostic code
+> use data_race().  This allows KCSAN to correctly flag bugs that access
+> this per-CPU variable off-CPU while leaving the diagnostic code alone.
+
+Yes, and in a similar vein I think the WRITE_ONCE() additions to the hlist
+code may hide unintentional racy access to the hlist where I would argue
+that the correct behaviour is either to acknowledge the data race (like the
+timer code) or to use the RCU variant. The problem with what's currently in
+mainline is that it reads a bit like the non-RCU hlist is directly usable as
+a lock-free list implementation, which really isn't the case.
+
+> Seem reasonable?
+
+It does to me, but we should probably try to apply this a bit more
+consistently in patch review. Adding {READ,WRITE}_ONCE() until the
+sanitiser shuts up is easy, but picking that apart later on is a real
+challenge.
+
+Will
