@@ -2,27 +2,27 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D96C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1F3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8452086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AED62086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgBCSsk (ORCPT
+        id S1729458AbgBCSso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:48:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39862 "EHLO mx2.suse.de"
+        Mon, 3 Feb 2020 13:48:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39932 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbgBCSsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:48:40 -0500
+        id S1729159AbgBCSsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 13:48:41 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 14DE3ABB3;
-        Mon,  3 Feb 2020 18:48:38 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 190D2AE6F;
+        Mon,  3 Feb 2020 18:48:40 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, linux-kbuild@vger.kernel.org
@@ -31,10 +31,12 @@ Cc:     bcm-kernel-feedback-list@broadcom.com,
         yamada.masahiro@socionext.com,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] ARM: Introduce multi_v7_lpae_defconfig
-Date:   Mon,  3 Feb 2020 19:48:17 +0100
-Message-Id: <20200203184820.4433-1-nsaenzjulienne@suse.de>
+Subject: [PATCH 2/2] ARM: add multi_v7_lpae_defconfig
+Date:   Mon,  3 Feb 2020 19:48:19 +0100
+Message-Id: <20200203184820.4433-3-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200203184820.4433-1-nsaenzjulienne@suse.de>
+References: <20200203184820.4433-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,29 +44,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces a new configuration target,
-multi_v7_lpae_defconfig, built by merging the config fragment
-lpae.config with mult_v7_defconfig. Ultimately needed in order for
-Raspberry Pi 4's PCIe bus to work on arm builds, but which may benefit
-other boards out there.
+The only missing configuration option preventing us from using
+multi_v7_defconfig with the Raspberry Pi 4 is ARM_LPAE. It's needed as
+the PCIe controller found on the SoC depends on 64bit addressing, yet
+can't be included as not all v7 boards support LPAE.
+
+Introduce multi_v7_lpae_defconfig, built off multi_v7_defconfig, which will
+avoid us having to duplicate and maintain multiple similar configurations.
+
+Needless to say the Raspberry Pi 4 is not the only platform that can
+benefit from this new configuration.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
 ---
 
 Changes since RFC:
- - Move merge function into the scripts directory.
-
-Nicolas Saenz Julienne (2):
-  kbuild: Add config fragment merge functionality
-  ARM: add multi_v7_lpae_defconfig
-
- arch/arm/Makefile            |  4 ++++
- arch/arm/configs/lpae.config |  1 +
- arch/powerpc/Makefile        | 12 +-----------
- scripts/Makefile.defconf     | 15 +++++++++++++++
- 4 files changed, 21 insertions(+), 11 deletions(-)
+ - Move config merge function into scripts folder
+---
+ arch/arm/Makefile            | 4 ++++
+ arch/arm/configs/lpae.config | 1 +
+ 2 files changed, 5 insertions(+)
  create mode 100644 arch/arm/configs/lpae.config
- create mode 100644 scripts/Makefile.defconf
 
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 16d41efea7f2..1f4f9a90561d 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -359,6 +359,10 @@ archclean:
+ # My testing targets (bypasses dependencies)
+ bp:;	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/bootpImage
+ 
++include $(srctree)/scripts/Makefile.defconf
++PHONY += multi_v7_lpae_defconfig
++multi_v7_lpae_defconfig:
++	$(call merge_into_defconfig,multi_v7_defconfig,lpae)
+ 
+ define archhelp
+   echo  '* zImage        - Compressed kernel image (arch/$(ARCH)/boot/zImage)'
+diff --git a/arch/arm/configs/lpae.config b/arch/arm/configs/lpae.config
+new file mode 100644
+index 000000000000..19bab134e014
+--- /dev/null
++++ b/arch/arm/configs/lpae.config
+@@ -0,0 +1 @@
++CONFIG_ARM_LPAE=y
 -- 
 2.25.0
 
