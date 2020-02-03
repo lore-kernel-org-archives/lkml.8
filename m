@@ -7,110 +7,94 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07872C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F15C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2FB20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A1720661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r0TVpkHD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aielRH4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgBCIfv (ORCPT
+        id S1727821AbgBCIiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:35:51 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34486 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgBCIfu (ORCPT
+        Mon, 3 Feb 2020 03:38:51 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46574 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgBCIiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 03:35:50 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0138ZcL0009609;
-        Mon, 3 Feb 2020 02:35:38 -0600
+        Mon, 3 Feb 2020 03:38:51 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0138ckDD100871;
+        Mon, 3 Feb 2020 02:38:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580718939;
-        bh=1PMMDpp6XSqR9WhBph6lQ2FGqfnPABFZhmuwEKRj1ms=;
+        s=ti-com-17Q1; t=1580719126;
+        bh=Tfda4LvuUEYTDvyGlYS6mOHiUVeU9HHASiG1AIAbvcA=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=r0TVpkHDXmlJkbqH8GwxZfFQyOsSIC6G9WUWLNdWiCveKA3CiusHofUW9YMXisBOO
-         /PPehsI1dJ+q5+r9YWpiBr3MzktC0+lsSDVfTzvcxJ206gOkEcSapKRCdPM4R/XUNI
-         Ux7wCHpd73tjGth0jEmJCE+Yi00jYdn2Dg/zvUlE=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0138Zce1064333
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Feb 2020 02:35:38 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=aielRH4sdU7RaEk2GdG9JP1i7St4zjZiS4dkoufB9dlA67dAq+AkPwIbhnA/R+2GP
+         57BXHZUZgiBHZqa2XGSMFuxhEVySL5B+vW8TjKkktaX7409EQ3a/zB8ABoiEIeUCsg
+         HIa2udZRK0MVzhbiZrAy6TLnfG7mwFqh3O0/qCRU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0138ckXi124317;
+        Mon, 3 Feb 2020 02:38:46 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 3 Feb
- 2020 02:35:38 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 02:38:46 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 3 Feb 2020 02:35:38 -0600
+ Frontend Transport; Mon, 3 Feb 2020 02:38:46 -0600
 Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0138ZZGl119265;
-        Mon, 3 Feb 2020 02:35:36 -0600
-Subject: Re: [PATCH] firmware: ti_sci: Export devm_ti_sci_get_of_resource for
- modules
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0138cipW104965;
+        Mon, 3 Feb 2020 02:38:44 -0600
+Subject: Re: [PATCH] firmware: ti_sci: Correct the timeout type in
+ ti_sci_do_xfer()
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <nm@ti.com>,
         <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>
 CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>
-References: <20200122104031.15733-1-peter.ujfalusi@ti.com>
- <88323f5b-1732-f780-5a0d-754026997c2c@ti.com>
+        <linux-kernel@vger.kernel.org>, <lokeshvutla@ti.com>
+References: <20200122104009.15622-1-peter.ujfalusi@ti.com>
 From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <da988700-d7de-ae81-01d2-6bb5d9fa5985@ti.com>
-Date:   Mon, 3 Feb 2020 10:35:35 +0200
+Message-ID: <a63c23ec-d468-fc9b-3990-becd7c120df6@ti.com>
+Date:   Mon, 3 Feb 2020 10:38:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <88323f5b-1732-f780-5a0d-754026997c2c@ti.com>
+In-Reply-To: <20200122104009.15622-1-peter.ujfalusi@ti.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/02/2020 10:10, Peter Ujfalusi wrote:
-> Hi,
+On 22/01/2020 12:40, Peter Ujfalusi wrote:
+> msecs_to_jiffies() returns 'unsigned long' and the timeout parameter for
+> wait_for_completion_timeout() is also 'unsigned long'
 > 
-> On 22/01/2020 12.40, Peter Ujfalusi wrote:
->> Allow devm_ti_sci_get_of_resource() to be usable from modules.
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-This one looks fine to me, so:
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
-
+> ---
+>   drivers/firmware/ti_sci.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I would really appreciate if ti_sci maintainers would spare some time on
-> this and the other two patch ;)
-> 
-> https://lore.kernel.org/lkml/20200122104044.15837-1-peter.ujfalusi@ti.com/
-> https://lore.kernel.org/lkml/20200122104009.15622-1-peter.ujfalusi@ti.com/
-> 
-> - Péter
-> 
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>   drivers/firmware/ti_sci.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
->> index f13e4a96f3b7..3d8241cb6921 100644
->> --- a/drivers/firmware/ti_sci.c
->> +++ b/drivers/firmware/ti_sci.c
->> @@ -3332,6 +3332,7 @@ devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
->>   
->>   	return ERR_PTR(-EINVAL);
->>   }
->> +EXPORT_SYMBOL_GPL(devm_ti_sci_get_of_resource);
->>   
->>   static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
->>   				void *cmd)
->>
-> 
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index 3d8241cb6921..361a82817c1f 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+> @@ -422,7 +422,7 @@ static inline int ti_sci_do_xfer(struct ti_sci_info *info,
+>   				 struct ti_sci_xfer *xfer)
+>   {
+>   	int ret;
+> -	int timeout;
+> +	unsigned long timeout;
+>   	struct device *dev = info->dev;
+>   
+>   	ret = mbox_send_message(info->chan_tx, &xfer->tx_message);
 > 
 
 --
