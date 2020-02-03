@@ -2,52 +2,54 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0820C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520C1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C3720838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2992920838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748252;
-	bh=NrobwdqGaNU0yOau8EcxQ97LyAVOpcmmB++1rcAI2n4=;
+	s=default; t=1580748259;
+	bh=nQ07RDAiC3+NI9ia5iDD9qRPO/t8Hv9eu60i7KhDezE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLSj8Tv9A+enyOh6k7kK1QvWhF0RzQUs+W/csxAds1YoVgaV/SUIOlHxNZ1YSW/yA
-	 LssPmUUq/jm1jHaOehLVTVySmYt15vmjy8gvlp6TcJrUgvYK2vjRO+MtJXlZWG6Xtg
-	 LxZ8E3M9PrtV4FxoCFzHRyxfiCm11QRlfHZpBLpI=
+	b=RY/Ln1Q3QgRMspssYgVHrC+y5yQLfC45G41CiyCmBRZbf5Zxpzb1GOuA8/1G98SZY
+	 AwbdCTJiuIdcutIl05Z3eTudBCuvsaI7VidIZGN0UqyjiTZ09dFlILkXgXiy7zHVJ7
+	 XH56XXt9Mtj84mRF2y46H6TM/vJoKh3eM8WjzsaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbgBCQoL (ORCPT
+        id S1730302AbgBCQbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:44:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:31:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730318AbgBCQb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:31:59 -0500
+        id S1730291AbgBCQbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:31:47 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0CF92051A;
-        Mon,  3 Feb 2020 16:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E5B2051A;
+        Mon,  3 Feb 2020 16:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747518;
-        bh=NrobwdqGaNU0yOau8EcxQ97LyAVOpcmmB++1rcAI2n4=;
+        s=default; t=1580747506;
+        bh=nQ07RDAiC3+NI9ia5iDD9qRPO/t8Hv9eu60i7KhDezE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5/9aUAarX3wSAuUKM0CEneuthCrnu6d8pwfNffqW6Kr9CwkOhWv7JzYE/LiOE29x
-         aOF5bHooGN6HFxUWjMNv3lkFBZWtr0483TStp41iTU9nm79kQNzkXPcGpjfyEJ2HCq
-         ZDkzJhPTJsxYkLuTmsev7iS5lqioCUxjKnZjWjnM=
+        b=rSATkHWGXcjlg2tkpQ2XUfjBkHXlufj8B0lzC1MQub6HiC5KVHEq2BHuZrk19xytC
+         ArEf2LxRcbm84Fc719gbqw8ppMtOWYeD+245ok6jn/YnygfNpV09NH2ACH0pAJh0tt
+         /elh7kTkgugIV1NWZ4bLOhCRihOz2ouhN1qpNQ3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/70] ARM: dts: beagle-x15-common: Model 5V0 regulator
-Date:   Mon,  3 Feb 2020 16:19:39 +0000
-Message-Id: <20200203161916.469335121@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+5493b2a54d31d6aea629@syzkaller.appspotmail.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.19 23/70] cgroup: Prevent double killing of css when enabling threaded cgroup
+Date:   Mon,  3 Feb 2020 16:19:35 +0000
+Message-Id: <20200203161915.970688753@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,56 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Michal Koutný <mkoutny@suse.com>
 
-[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
+commit 3bc0bb36fa30e95ca829e9cf480e1ef7f7638333 upstream.
 
-On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
-connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
-which is connected to the COMQ port. Model 5V0 regulator here in order
-for it to be used in am57xx-evm to model 3V6 regulator.
+The test_cgcore_no_internal_process_constraint_on_threads selftest when
+running with subsystem controlling noise triggers two warnings:
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+> [  597.443115] WARNING: CPU: 1 PID: 28167 at kernel/cgroup/cgroup.c:3131 cgroup_apply_control_enable+0xe0/0x3f0
+> [  597.443413] WARNING: CPU: 1 PID: 28167 at kernel/cgroup/cgroup.c:3177 cgroup_apply_control_disable+0xa6/0x160
+
+Both stem from a call to cgroup_type_write. The first warning was also
+triggered by syzkaller.
+
+When we're switching cgroup to threaded mode shortly after a subsystem
+was disabled on it, we can see the respective subsystem css dying there.
+
+The warning in cgroup_apply_control_enable is harmless in this case
+since we're not adding new subsys anyway.
+The warning in cgroup_apply_control_disable indicates an attempt to kill
+css of recently disabled subsystem repeatedly.
+
+The commit prevents these situations by making cgroup_type_write wait
+for all dying csses to go away before re-applying subtree controls.
+When at it, the locations of WARN_ON_ONCE calls are moved so that
+warning is triggered only when we are about to misuse the dying css.
+
+Reported-by: syzbot+5493b2a54d31d6aea629@syzkaller.appspotmail.com
+Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ kernel/cgroup/cgroup.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 872382bd043f8..0051b2e05c2d5 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -32,6 +32,27 @@
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -2940,8 +2940,6 @@ static int cgroup_apply_control_enable(s
+ 		for_each_subsys(ss, ssid) {
+ 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
  
-+	main_12v0: fixedregulator-main_12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "main_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
+-			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
+-
+ 			if (!(cgroup_ss_mask(dsct) & (1 << ss->id)))
+ 				continue;
+ 
+@@ -2951,6 +2949,8 @@ static int cgroup_apply_control_enable(s
+ 					return PTR_ERR(css);
+ 			}
+ 
++			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
 +
-+	evm_5v0: fixedregulator-evm_5v0 {
-+		/* Output of TPS54531D */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
+ 			if (css_visible(css)) {
+ 				ret = css_populate_dir(css);
+ 				if (ret)
+@@ -2986,11 +2986,11 @@ static void cgroup_apply_control_disable
+ 		for_each_subsys(ss, ssid) {
+ 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
+ 
+-			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
+-
+ 			if (!css)
+ 				continue;
+ 
++			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
 +
- 	vdd_3v3: fixedregulator-vdd_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd_3v3";
--- 
-2.20.1
-
+ 			if (css->parent &&
+ 			    !(cgroup_ss_mask(dsct) & (1 << ss->id))) {
+ 				kill_css(css);
+@@ -3277,7 +3277,8 @@ static ssize_t cgroup_type_write(struct
+ 	if (strcmp(strstrip(buf), "threaded"))
+ 		return -EINVAL;
+ 
+-	cgrp = cgroup_kn_lock_live(of->kn, false);
++	/* drain dying csses before we re-apply (threaded) subtree control */
++	cgrp = cgroup_kn_lock_live(of->kn, true);
+ 	if (!cgrp)
+ 		return -ENOENT;
+ 
 
 
