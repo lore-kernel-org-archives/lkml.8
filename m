@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F41C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C5EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B31C2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92EE2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="XMlXhfYN"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="mFABLiRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgBCQME (ORCPT
+        id S1728661AbgBCQNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:12:04 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39994 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbgBCQME (ORCPT
+        Mon, 3 Feb 2020 11:13:43 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45757 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgBCQNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:12:04 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v25so11833717qto.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 08:12:02 -0800 (PST)
+        Mon, 3 Feb 2020 11:13:42 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d9so11803684qte.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 08:13:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=UE45wlqzCyQq4DipWwUCK35G6cE2qZRpII/okw53kug=;
-        b=XMlXhfYNGnmRvER9HoY+Xnnw0D/suIrufuWQl0h4duypoSxdwVuiLXbrkUforCoibD
-         GhXuJfUSbCmHAbSs52G1+aKpEl//HosHAK7z3SPDVWiL7E3bfg5ga2YHl5EhbfOVb/Wk
-         42hKzfJvQYHLzrf/TMCJncMuoJBOzMGImede+/RJtPCdi71B3DseyvtZuhB33n+R8h0z
-         rAXOGvgRUOKUuBAbw7V7vbqJd/LpLzsfZHVO0X3A2FZet8CBICxWabi8x1aAzifsH0r7
-         SjSbp316QZGdUO3NrYYOwcqIHyXad3g07ZO09bXhnjcvTNIhWzvzj3bqY9/H62YOptTB
-         FasA==
+        bh=5ZPjQ9pyWegFq7ptB0Of0FuoHr1kyVa2z4FlXuSnJwU=;
+        b=mFABLiRZqHMCt0JZs8/Rt/DmWcHMcqdBw8N/uq0D0YvB/GxaEgpyrz5As2bHwWTXcg
+         HoUT2W956XCzqcOsNRC9CYjBV9AQ4jpXQw9DHxWeH393UFWJwPFPc2urzoyv/1v1IgN0
+         kRxR7qcK4KfpcTsQl6F4J95BKmAmSS4PEZpFtjD0fTirNC6zVPnwoCTFgBSbPPmd8FPh
+         YU0jY5dQMjjVxRilvrXBNTPCTcS+8OKNw7peUyihgtkj1Ucg9WOQZWPgt1iMe7bJVFh7
+         C9nfuPz4Z73Z44YqJJizsoRkdx2juj5yx+z5mjUu8yrviZcBM8U4SLLW1g0IevhHjWZs
+         fe6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UE45wlqzCyQq4DipWwUCK35G6cE2qZRpII/okw53kug=;
-        b=s2y6UH6ndzFyQ0dLvaq+XKkyIR14iETnuEwz2n2sAxGKxZRObZ/wy/kpYqUvfnmfbv
-         J3FLRs8klPwBzEcni/RAuKAYtEdia37KkSUXENLOjiI4C/iTkoPjFfZL//gLu/Qj+ZmL
-         kAUyzRfQ/u+6jGA6tsRsSOpZriPqBigJMfPPLOFeWtuhd2px31ZI1dN+sxdelJEZodEj
-         0ioq+baj5tIojieOpagTihslC8xpygUAv1Rt1iyuGfR+zw73ERlJk7u+FbXeUlhkowQs
-         OZSgRurBVBHQmaTPUZ8i/nDoqVIGM7gAf7wmT29/2vp5MtZPx/pTwAjkxK5rdWzkXf+P
-         Z/Rw==
-X-Gm-Message-State: APjAAAU+0radARN4tag2b/XXbXuSsW6l6/uRF0gw9RgQqQjHWQntj2Li
-        AGoLS2Tc+DFfL2iDXoWifd3elg==
-X-Google-Smtp-Source: APXvYqy4dvSwM7XD81xosD/MUAnkK1M8AXFs0CyTqVihq91B3jNrdNGp6aiO98KFBVDey97WnRWJCA==
-X-Received: by 2002:ac8:1e8e:: with SMTP id c14mr22792744qtm.330.1580746321918;
-        Mon, 03 Feb 2020 08:12:01 -0800 (PST)
+        bh=5ZPjQ9pyWegFq7ptB0Of0FuoHr1kyVa2z4FlXuSnJwU=;
+        b=KjQajH+qYeEM5X2VzdCjeL90g7NPTnTMA3LPB9MpGal9nXq6m8CdmwJhaDYorOVF1s
+         Zj/JXYqjPG+hldj0hYZxCFEqsF1RuVUUGC+e0owcjRO5X1CqdEZVfFaC5hPCbVdYGuZa
+         Kd5Hro5oZM/XzqmDUHPlcTP1SFanM2zT/HgEbQXxZ8AB92yq4f2HrjLc7KEoD0OXVfxa
+         Yr/mkDXeI0YLzUFigWGGU0kM7r5lib4o/fm8kkk0ch0SffkAtG7aqxKLIaZDge2MxXv8
+         uMVO8fGcpBZeb9Wir1Hgp0q6u/8roRGLMea9Z2BqsqU16vqlLfhy18CSY37TVIMdf0WG
+         LLqg==
+X-Gm-Message-State: APjAAAUfvs3LdTbzLUjifgy3TKjfcd/gkrn1CprHAwy7doFqGYvAxKuh
+        7azt+UvDOIA/AE51t6zu4iag+Q==
+X-Google-Smtp-Source: APXvYqwjdR9TVx4GU6B5klThIt/F+G0GrsNyifcGvXkPp7QKBRII6lMLqucHhw8EzGWEJEXGddLyLg==
+X-Received: by 2002:ac8:7952:: with SMTP id r18mr24493028qtt.251.1580746421743;
+        Mon, 03 Feb 2020 08:13:41 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::3:c810])
-        by smtp.gmail.com with ESMTPSA id i6sm9515899qkk.7.2020.02.03.08.12.01
+        by smtp.gmail.com with ESMTPSA id d25sm9333054qka.39.2020.02.03.08.13.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 08:12:01 -0800 (PST)
-Date:   Mon, 3 Feb 2020 11:12:00 -0500
+        Mon, 03 Feb 2020 08:13:41 -0800 (PST)
+Date:   Mon, 3 Feb 2020 11:13:40 -0500
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Roman Gushchin <guro@fb.com>
 Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
@@ -65,39 +65,48 @@ Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, kernel-team@fb.com,
         Bharata B Rao <bharata@linux.ibm.com>,
         Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 08/28] mm: fork: fix kernel_stack memcg stats for
- various stack implementations
-Message-ID: <20200203161200.GB1697@cmpxchg.org>
+Subject: Re: [PATCH v2 09/28] mm: memcg/slab: rename
+ __mod_lruvec_slab_state() into __mod_lruvec_obj_state()
+Message-ID: <20200203161340.GC1697@cmpxchg.org>
 References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-9-guro@fb.com>
+ <20200127173453.2089565-10-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127173453.2089565-9-guro@fb.com>
+In-Reply-To: <20200127173453.2089565-10-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:34:33AM -0800, Roman Gushchin wrote:
-> Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio
-> the space for task stacks can be allocated using __vmalloc_node_range(),
-> alloc_pages_node() and kmem_cache_alloc_node(). In the first and the
-> second cases page->mem_cgroup pointer is set, but in the third it's
-> not: memcg membership of a slab page should be determined using the
-> memcg_from_slab_page() function, which looks at
-> page->slab_cache->memcg_params.memcg . In this case, using
-> mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
-> page->mem_cgroup pointer is NULL even for pages charged to a non-root
-> memory cgroup.
-> 
-> In order to fix it, let's introduce a mod_memcg_obj_state() helper,
-> which takes a pointer to a kernel object as a first argument, uses
-> mem_cgroup_from_obj() to get a RCU-protected memcg pointer and
-> calls mod_memcg_state(). It allows to handle all possible
-> configurations (CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE
-> values) without spilling any memcg/kmem specifics into fork.c .
+On Mon, Jan 27, 2020 at 09:34:34AM -0800, Roman Gushchin wrote:
+> Rename __mod_lruvec_slab_state() into __mod_lruvec_obj_state()
+> to unify it with mod_memcg_obj_state(). It better reflects the fact
+> that the passed object isn't necessary slab-backed.
 
-The change looks good to me, but it sounds like this is a bug with
-actual consequences to userspace. Can you elaborate on that in the
-changelog please? Maybe add a Fixes: line, if applicable?
+Makes sense to me.
+
+> @@ -1116,7 +1116,7 @@ static inline void mod_lruvec_page_state(struct page *page,
+>  	mod_node_page_state(page_pgdat(page), idx, val);
+>  }
+>  
+> -static inline void __mod_lruvec_slab_state(void *p, enum node_stat_item idx,
+> +static inline void __mod_lruvec_obj_state(void *p, enum node_stat_item idx,
+>  					   int val)
+>  {
+>  	struct page *page = virt_to_head_page(p);
+> @@ -1217,12 +1217,12 @@ static inline void __dec_lruvec_page_state(struct page *page,
+>  
+>  static inline void __inc_lruvec_slab_state(void *p, enum node_stat_item idx)
+>  {
+> -	__mod_lruvec_slab_state(p, idx, 1);
+> +	__mod_lruvec_obj_state(p, idx, 1);
+>  }
+>  
+>  static inline void __dec_lruvec_slab_state(void *p, enum node_stat_item idx)
+>  {
+> -	__mod_lruvec_slab_state(p, idx, -1);
+> +	__mod_lruvec_obj_state(p, idx, -1);
+>  }
+
+These should be renamed as well, no?
