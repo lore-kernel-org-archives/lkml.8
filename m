@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247C2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86433C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC77322527
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B55D21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747781;
-	bh=jHcyarDWnbqM933FxFt04dQFZkiJ+aPj6+SmsWhOmmc=;
+	s=default; t=1580747783;
+	bh=jBuj1GJ7SQLlWXpyXLdmFYb8a41GA4jJHfpdL8iISgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVcnZSURX9F43sbW9kpX2MftxulYVHOjgCvRUCG3RGgSEmZd1Q3alZAi4t37pmike
-	 WsLx5pL8/39xWI4nRUqy/lhzscIZt9u6XrkpzXC04YR1MZK0M5UCmMt8MK9gE9vVl3
-	 UbCIrQ1zS8qdpJxmrvjGOEf0UIdPpC78WOYa62O4=
+	b=fsQbvOuDR1KhHwtXAsFilRxncjfmX6dkwmNKs1xXS37BjMPY5yv3V47Lls2kA1VeP
+	 Uc/Y31KSySWuOny1A12UWmHUPZbcSEDfBLobhMElaZiQV4wMViBoxssabFXn0/h9sj
+	 Z9Kz34ACADgkFD7AGL8CIzJ6YAYecOA9ZhLVVBRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgBCQgU (ORCPT
+        id S1731184AbgBCQgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731162AbgBCQgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:16 -0500
+        id S1731170AbgBCQgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:19 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9968E2051A;
-        Mon,  3 Feb 2020 16:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C072051A;
+        Mon,  3 Feb 2020 16:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747776;
-        bh=jHcyarDWnbqM933FxFt04dQFZkiJ+aPj6+SmsWhOmmc=;
+        s=default; t=1580747778;
+        bh=jBuj1GJ7SQLlWXpyXLdmFYb8a41GA4jJHfpdL8iISgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15ggu6GDSHYO48a4oR9/zA8Eu3RGjoooKKcpMDsK9myZ5fDa7vOQoy+DzQlXTPi02
-         0AynKCSHVcG4fZqEUAPtY96it3FC7ZtGCT2m9Aoi9hu9P/233PRhweLZv/pnw5f/DZ
-         kirrVfPPejaEHbPRkDcn73Xo2xHDscKlmfq3BI2c=
+        b=qU0H7wwK5tzFcdAzxirXrS3qSuxVQudXk/gWURNu+HrTSBrLlGvKuFupyaOLMVlbX
+         /D2Mez33C47uDwTCPy3CXBmInRclC+n9an+rYOLzy6hnQpfDW9Tq4VoxIVQPC2tNEm
+         zBwS9kF5536GjJDPdd7tsTPTYSFRx4jGF2RYy9Xs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 58/90] riscv: Less inefficient gcc tishift helpers (and export their symbols)
-Date:   Mon,  3 Feb 2020 16:20:01 +0000
-Message-Id: <20200203161924.732994819@linuxfoundation.org>
+Subject: [PATCH 5.4 67/90] vti[6]: fix packet tx through bpf_redirect()
+Date:   Mon,  3 Feb 2020 16:20:10 +0000
+Message-Id: <20200203161925.664813257@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,143 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit fc585d4a5cf614727f64d86550b794bcad29d5c3 ]
+[ Upstream commit 95224166a9032ff5d08fca633d37113078ce7d01 ]
 
-The existing __lshrti3 was really inefficient, and the other two helpers
-are also needed to compile some modules.
+With an ebpf program that redirects packets through a vti[6] interface,
+the packets are dropped because no dst is attached.
 
-Add the missing versions, and export all of the symbols like arm64
-already does.
+This could also be reproduced with an AF_PACKET socket, with the following
+python script (vti1 is an ip_vti interface):
 
-This code is based on the assembly generated by libgcc builds.
+ import socket
+ send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
+ # scapy
+ # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
+ # raw(p)
+ req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
+ send_s.sendto(req, ('vti1', 0x800, 0, 0))
 
-This fixes a build break triggered by ubsan:
-
-riscv64-unknown-linux-gnu-ld: lib/ubsan.o: in function `.L2':
-ubsan.c:(.text.unlikely+0x38): undefined reference to `__ashlti3'
-riscv64-unknown-linux-gnu-ld: ubsan.c:(.text.unlikely+0x42): undefined reference to `__ashrti3'
-
-Signed-off-by: Olof Johansson <olof@lixom.net>
-[paul.walmsley@sifive.com: use SYM_FUNC_{START,END} instead of
- ENTRY/ENDPROC; note libgcc origin]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/asm-prototypes.h |  4 ++
- arch/riscv/lib/tishift.S                | 75 +++++++++++++++++++------
- 2 files changed, 61 insertions(+), 18 deletions(-)
+ net/ipv4/ip_vti.c  | 13 +++++++++++--
+ net/ipv6/ip6_vti.c | 13 +++++++++++--
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
-index c9fecd120d187..8ae9708a8eee8 100644
---- a/arch/riscv/include/asm/asm-prototypes.h
-+++ b/arch/riscv/include/asm/asm-prototypes.h
-@@ -4,4 +4,8 @@
- #include <linux/ftrace.h>
- #include <asm-generic/asm-prototypes.h>
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index fb9f6d60c27cd..79eef5db336a4 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -187,8 +187,17 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
+ 	int mtu;
  
-+long long __lshrti3(long long a, int b);
-+long long __ashrti3(long long a, int b);
-+long long __ashlti3(long long a, int b);
+ 	if (!dst) {
+-		dev->stats.tx_carrier_errors++;
+-		goto tx_error_icmp;
++		struct rtable *rt;
 +
- #endif /* _ASM_RISCV_PROTOTYPES_H */
-diff --git a/arch/riscv/lib/tishift.S b/arch/riscv/lib/tishift.S
-index 15f9d54c7db63..ef90075c4b0a9 100644
---- a/arch/riscv/lib/tishift.S
-+++ b/arch/riscv/lib/tishift.S
-@@ -4,34 +4,73 @@
-  */
++		fl->u.ip4.flowi4_oif = dev->ifindex;
++		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++		if (IS_ERR(rt)) {
++			dev->stats.tx_carrier_errors++;
++			goto tx_error_icmp;
++		}
++		dst = &rt->dst;
++		skb_dst_set(skb, dst);
+ 	}
  
- #include <linux/linkage.h>
-+#include <asm-generic/export.h>
+ 	dst_hold(dst);
+diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
+index 6f08b760c2a7c..524006aa0d78a 100644
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -449,8 +449,17 @@ vti6_xmit(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
+ 	int err = -1;
+ 	int mtu;
  
--ENTRY(__lshrti3)
-+SYM_FUNC_START(__lshrti3)
- 	beqz	a2, .L1
- 	li	a5,64
- 	sub	a5,a5,a2
--	addi	sp,sp,-16
- 	sext.w	a4,a5
- 	blez	a5, .L2
- 	sext.w	a2,a2
--	sll	a4,a1,a4
- 	srl	a0,a0,a2
--	srl	a1,a1,a2
-+	sll	a4,a1,a4
-+	srl	a2,a1,a2
- 	or	a0,a0,a4
--	sd	a1,8(sp)
--	sd	a0,0(sp)
--	ld	a0,0(sp)
--	ld	a1,8(sp)
--	addi	sp,sp,16
--	ret
-+	mv	a1,a2
- .L1:
- 	ret
- .L2:
--	negw	a4,a4
--	srl	a1,a1,a4
--	sd	a1,0(sp)
--	sd	zero,8(sp)
--	ld	a0,0(sp)
--	ld	a1,8(sp)
--	addi	sp,sp,16
-+	negw	a0,a4
-+	li	a2,0
-+	srl	a0,a1,a0
-+	mv	a1,a2
-+	ret
-+SYM_FUNC_END(__lshrti3)
-+EXPORT_SYMBOL(__lshrti3)
-+
-+SYM_FUNC_START(__ashrti3)
-+	beqz	a2, .L3
-+	li	a5,64
-+	sub	a5,a5,a2
-+	sext.w	a4,a5
-+	blez	a5, .L4
-+	sext.w	a2,a2
-+	srl	a0,a0,a2
-+	sll	a4,a1,a4
-+	sra	a2,a1,a2
-+	or	a0,a0,a4
-+	mv	a1,a2
-+.L3:
-+	ret
-+.L4:
-+	negw	a0,a4
-+	srai	a2,a1,0x3f
-+	sra	a0,a1,a0
-+	mv	a1,a2
-+	ret
-+SYM_FUNC_END(__ashrti3)
-+EXPORT_SYMBOL(__ashrti3)
-+
-+SYM_FUNC_START(__ashlti3)
-+	beqz	a2, .L5
-+	li	a5,64
-+	sub	a5,a5,a2
-+	sext.w	a4,a5
-+	blez	a5, .L6
-+	sext.w	a2,a2
-+	sll	a1,a1,a2
-+	srl	a4,a0,a4
-+	sll	a2,a0,a2
-+	or	a1,a1,a4
-+	mv	a0,a2
-+.L5:
-+	ret
-+.L6:
-+	negw	a1,a4
-+	li	a2,0
-+	sll	a1,a0,a1
-+	mv	a0,a2
- 	ret
--ENDPROC(__lshrti3)
-+SYM_FUNC_END(__ashlti3)
-+EXPORT_SYMBOL(__ashlti3)
+-	if (!dst)
+-		goto tx_err_link_failure;
++	if (!dst) {
++		fl->u.ip6.flowi6_oif = dev->ifindex;
++		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++		if (dst->error) {
++			dst_release(dst);
++			dst = NULL;
++			goto tx_err_link_failure;
++		}
++		skb_dst_set(skb, dst);
++	}
+ 
+ 	dst_hold(dst);
+ 	dst = xfrm_lookup(t->net, dst, fl, NULL, 0);
 -- 
 2.20.1
 
