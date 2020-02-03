@@ -2,54 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C13AC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D157C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B59C2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083232051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748541;
-	bh=1B9KFmBU2O+i3TRJgBp+mYFM0mhthc/XGwP4UPSH3gg=;
+	s=default; t=1580748544;
+	bh=w9WNDehsM1lFSFmPeMSuZhv8mPkdVYroQ9F1lrDU4GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpSb/Cv6Z3TaN7cYUNTgwRXVnnytTzNnk6udM6ZafHMFYDLKVj67RZauX3EMbUkp/
-	 xUM5ikfQVbzkgXxUDK+MimkOxfqut9N1Pz5aOdGmQrPSXqKCY9D5vIOeRFweg6Ifmo
-	 Dk0dDtyxAH8GZoOJ4KEUAmXXnPIYcBOTwCYX+av8=
+	b=zyESnlOA7X1jGAkGNaswF/hze07X6hozU/llrEag85jQ2BEh+D1D/KhLI52+/O/R7
+	 hvB63TMnf3wLVLxjYI88E7jvrcLWidarrKatkH2HbQL8hrqkQVSpe0yVPouLFLSXx3
+	 mj4SYtYe+jAqrt/nAbekWDgdG3IMcW+c7Wsf8GwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgBCQZj (ORCPT
+        id S1728462AbgBCQZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgBCQZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:36 -0500
+        id S1728379AbgBCQZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:29 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC5A2080C;
-        Mon,  3 Feb 2020 16:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A74A20CC7;
+        Mon,  3 Feb 2020 16:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747135;
-        bh=1B9KFmBU2O+i3TRJgBp+mYFM0mhthc/XGwP4UPSH3gg=;
+        s=default; t=1580747128;
+        bh=w9WNDehsM1lFSFmPeMSuZhv8mPkdVYroQ9F1lrDU4GQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ck2P+xsl45LFf+1FO8KIbR7bJWRxgse7+/mrVGWpz5zKDbh1Xq01gRVjc542ruws8
-         9DJzVX4yo7DZXxKXpya7FLEbkpP7BTe1gypaLzgbuhz6Og2nSFJAlQ3A4kKV1dn59F
-         M1ZiN0FpoxhCqi0t/R/pvDgJoHQGAqItB0qMHzbY=
+        b=cFrVkOnM2t/9mzY+qtK70VAueHs6dY/qv3BJODmRaFGDZ827lJnKHAvsmaY+hXehE
+         LH3I8jDr/gTcD2VT4MMYQZ07uDe2SVb06fKG1PMb+8hJPj9NYmae5LT3d0wdxM5QRi
+         xmgln/D7jz3IXuDNtRZtpaWg8ojsRZpLbssEyLIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
-        stable@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 26/68] vfs: fix do_last() regression
-Date:   Mon,  3 Feb 2020 16:19:22 +0000
-Message-Id: <20200203161909.354767167@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Ellis <sellis@redhat.com>,
+        Pacho Ramos <pachoramos@gmail.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 23/68] usb-storage: Disable UAS on JMicron SATA enclosure
+Date:   Mon,  3 Feb 2020 16:19:19 +0000
+Message-Id: <20200203161908.929141888@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -62,63 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Laura Abbott <labbott@fedoraproject.org>
 
-commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
+[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
 
-Brown paperbag time: fetching ->i_uid/->i_mode really should've been
-done from nd->inode.  I even suggested that, but the reason for that has
-slipped through the cracks and I went for dir->d_inode instead - made
-for more "obvious" patch.
+Steve Ellis reported incorrect block sizes and alignement
+offsets with a SATA enclosure. Adding a quirk to disable
+UAS fixes the problems.
 
-Analysis:
-
- - at the entry into do_last() and all the way to step_into(): dir (aka
-   nd->path.dentry) is known not to have been freed; so's nd->inode and
-   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
-   inode of the file to get opened is not known.
-
- - after step_into(): inode of the file to get opened is known; dir
-   might be pointing to freed memory/be negative/etc.
-
- - at the call of may_create_in_sticky(): guaranteed to be out of RCU
-   mode; inode of the file to get opened is known and pinned; dir might
-   be garbage.
-
-The last was the reason for the original patch.  Except that at the
-do_last() entry we can be in RCU mode and it is possible that
-nd->path.dentry->d_inode has already changed under us.
-
-In that case we are going to fail with -ECHILD, but we need to be
-careful; nd->inode is pointing to valid struct inode and it's the same
-as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
-should use that.
-
-Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
-Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@kernel.org
-Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Steven Ellis <sellis@redhat.com>
+Cc: Pacho Ramos <pachoramos@gmail.com>
+Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/namei.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/storage/unusual_uas.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3260,8 +3260,8 @@ static int do_last(struct nameidata *nd,
- 		   int *opened)
- {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = dir->d_inode->i_uid;
--	umode_t dir_mode = dir->d_inode->i_mode;
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
+diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+index f15aa47c54a9d..0eb8c67ee1382 100644
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -163,12 +163,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_IGNORE_UAS),
+ 
+-/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
++/*
++ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
++ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
++ */
+ UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
+ 		"JMicron",
+ 		"JMS566",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-		US_FL_NO_REPORT_OPCODES),
++		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
+ 
+ /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
+ UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
+-- 
+2.20.1
+
 
 
