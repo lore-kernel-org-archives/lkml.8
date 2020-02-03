@@ -2,180 +2,108 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B02C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE139C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C904420838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F83520838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjF/en/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgBCVnC (ORCPT
+        id S1727230AbgBCVnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:43:02 -0500
-Received: from mga01.intel.com ([192.55.52.88]:38302 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbgBCVnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:43:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 13:43:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="278868982"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Feb 2020 13:43:01 -0800
-Date:   Mon, 3 Feb 2020 13:43:00 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v2 5/6] kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
-Message-ID: <20200203214300.GI19638@linux.intel.com>
-References: <20200203151608.28053-1-xiaoyao.li@intel.com>
- <20200203151608.28053-6-xiaoyao.li@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203151608.28053-6-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 3 Feb 2020 16:43:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34441 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbgBCVnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 16:43:10 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so8286789pfc.1;
+        Mon, 03 Feb 2020 13:43:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4utvhxtA7zvr4Iu+DFpm/vNXzWR8TFP5LHSqSIJBCWo=;
+        b=AjF/en/PwCT4W2EHQ5+3AviOlyIo9uYNWYWol1vasV9sf8IdjnbhX0VVoyzxvrEf/D
+         GFZdJygPyQAUvAfYJcknUmlv/ZtEEyBxTFc9ZsL0fnmwF2hX+u7HoCsDurh8jvMg1FWI
+         ZWHACVb5FbOXuB2KNwYM0j5X+9+pI30sBWK2io4DQOsjatvjLtJ3k8LvU5jD6h+0bApj
+         nji7QoFrpIa/EfyS9aE1H8PnCdnd46+Bv/wWa0lI/yY3MRhmscM5HAz8FUe4N0GHhpMf
+         AblamewqllV4aFJNX9rqC38Bfrua5qSGpBXfEvK4rxqB8uDXrzrhq3DbRWcLI4ZsALte
+         Lfjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4utvhxtA7zvr4Iu+DFpm/vNXzWR8TFP5LHSqSIJBCWo=;
+        b=kaYy9bn6CiQJOQv9VcSKd6kZQoVT9NL3NbS85qC2V8bRe/69zKYV5SV6I7SMfcKJA/
+         X4JDPrs5idQaw0W+jtGWtXrkcTnD6ZQUV2syvh0qr04N3q13CxKgaq2IYh+geFUa40nH
+         INHMv6ED2YVf+Yj27ZQJE65TRmF5aCfp/pmsFYsrDv12N9RBT9wfBtpvuCSE/vx3r2tI
+         2UUVHjcj9J0+jeDJNf/UNGBlJ75z6J4jXdIhqb3+eUZyK1SkQgPhKuv58CbyTaFSNvtU
+         CASOdC/6X6NFSYmqzphxoTdMoP/P+a5zPl+EfASS4QihMdd7Dtc7Sj7UqyoTXI+eN6up
+         W8qA==
+X-Gm-Message-State: APjAAAUEZSn4dHuHz2AAVFyZHTcrPXGsLfnPs50ux/Pw1Mjg2LQPAPUk
+        nSjGth1wSFk6dLPRC2andZlYyNzo
+X-Google-Smtp-Source: APXvYqzqvmjhjyfBbCiXK6ubgSKYGKoWsiXrEE1FSXHo7/8RTwhszxSZmlrQQ8mbNKUBQU48ZmIo+A==
+X-Received: by 2002:a63:6c82:: with SMTP id h124mr27098458pgc.328.1580766189626;
+        Mon, 03 Feb 2020 13:43:09 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c26sm2947558pfj.8.2020.02.03.13.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 13:43:08 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Bart Tanghe <bart.tanghe@thomasmore.be>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH] pwm: bcm2835: Dynamically allocate base
+Date:   Mon,  3 Feb 2020 13:35:35 -0800
+Message-Id: <20200203213536.32226-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 11:16:07PM +0800, Xiaoyao Li wrote:
-> Emulate MSR_IA32_CORE_CAPABILITIES in software and unconditionally
-> advertise its support to userspace. Like MSR_IA32_ARCH_CAPABILITIES, it
-> is a feature-enumerating MSR and can be fully emulated regardless of
-> hardware support. Existence of CORE_CAPABILITIES is enumerated via
-> CPUID.(EAX=7H,ECX=0):EDX[30].
-> 
-> Note, support for individual features enumerated via CORE_CAPABILITIES,
-> e.g., split lock detection, will be added in future patches.
-> 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/cpuid.c            |  5 +++--
->  arch/x86/kvm/x86.c              | 22 ++++++++++++++++++++++
->  3 files changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 329d01c689b7..dc231240102f 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -591,6 +591,7 @@ struct kvm_vcpu_arch {
->  	u64 ia32_xss;
->  	u64 microcode_version;
->  	u64 arch_capabilities;
-> +	u64 core_capabilities;
->  
->  	/*
->  	 * Paging state of the vcpu
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b1c469446b07..7282d04f3a6b 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -409,10 +409,11 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
->  		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
->  			entry->edx |= F(SPEC_CTRL_SSBD);
->  		/*
-> -		 * We emulate ARCH_CAPABILITIES in software even
-> -		 * if the host doesn't support it.
-> +		 * ARCH_CAPABILITIES and CORE_CAPABILITIES are emulated in
-> +		 * software regardless of host support.
->  		 */
->  		entry->edx |= F(ARCH_CAPABILITIES);
-> +		entry->edx |= F(CORE_CAPABILITIES);
->  		break;
->  	case 1:
->  		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 821b7404c0fd..a97a8f5dd1df 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1222,6 +1222,7 @@ static const u32 emulated_msrs_all[] = {
->  	MSR_IA32_TSC_ADJUST,
->  	MSR_IA32_TSCDEADLINE,
->  	MSR_IA32_ARCH_CAPABILITIES,
-> +	MSR_IA32_CORE_CAPS,
->  	MSR_IA32_MISC_ENABLE,
->  	MSR_IA32_MCG_STATUS,
->  	MSR_IA32_MCG_CTL,
-> @@ -1288,6 +1289,7 @@ static const u32 msr_based_features_all[] = {
->  	MSR_F10H_DECFG,
->  	MSR_IA32_UCODE_REV,
->  	MSR_IA32_ARCH_CAPABILITIES,
-> +	MSR_IA32_CORE_CAPS,
->  };
->  
->  static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all)];
-> @@ -1341,12 +1343,20 @@ static u64 kvm_get_arch_capabilities(void)
->  	return data;
->  }
->  
-> +static u64 kvm_get_core_capabilities(void)
-> +{
-> +	return 0;
-> +}
-> +
->  static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
->  {
->  	switch (msr->index) {
->  	case MSR_IA32_ARCH_CAPABILITIES:
->  		msr->data = kvm_get_arch_capabilities();
->  		break;
-> +	case MSR_IA32_CORE_CAPS:
-> +		msr->data = kvm_get_core_capabilities();
-> +		break;
->  	case MSR_IA32_UCODE_REV:
->  		rdmsrl_safe(msr->index, &msr->data);
->  		break;
-> @@ -2716,6 +2726,11 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  			return 1;
->  		vcpu->arch.arch_capabilities = data;
->  		break;
-> +	case MSR_IA32_CORE_CAPS:
-> +		if (!msr_info->host_initiated)
+The newer 2711 and 7211 chips have two PWM controllers and failure to
+dynamically allocate the PWM base would prevent the second PWM
+controller instance being probed for succeeding with an -EEXIST error
+from alloc_pwms().
 
-Shouldn't @data be checked against kvm_get_core_capabilities()?
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pwm/pwm-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +			return 1;
-> +		vcpu->arch.core_capabilities = data;
-> +		break;
->  	case MSR_EFER:
->  		return set_efer(vcpu, msr_info);
->  	case MSR_K7_HWCR:
-> @@ -3044,6 +3059,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  			return 1;
->  		msr_info->data = vcpu->arch.arch_capabilities;
->  		break;
-> +	case MSR_IA32_CORE_CAPS:
-> +		if (!msr_info->host_initiated &&
-> +		    !guest_cpuid_has(vcpu, X86_FEATURE_CORE_CAPABILITIES))
-> +			return 1;
-> +		msr_info->data = vcpu->arch.core_capabilities;
-> +		break;
->  	case MSR_IA32_POWER_CTL:
->  		msr_info->data = vcpu->arch.msr_ia32_power_ctl;
->  		break;
-> @@ -9288,6 +9309,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  		goto free_guest_fpu;
->  
->  	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
-> +	vcpu->arch.core_capabilities = kvm_get_core_capabilities();
->  	vcpu->arch.msr_platform_info = MSR_PLATFORM_INFO_CPUID_FAULT;
->  	kvm_vcpu_mtrr_init(vcpu);
->  	vcpu_load(vcpu);
-> -- 
-> 2.23.0
-> 
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index 91e24f01b54e..d78f86f8e462 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+ 
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
++	pc->chip.base = -1;
+ 	pc->chip.npwm = 2;
+ 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	pc->chip.of_pwm_n_cells = 3;
+-- 
+2.17.1
+
