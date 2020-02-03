@@ -2,97 +2,129 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F3BC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA01EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5642087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE22620721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:42:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VXhPfUbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgBCSmK (ORCPT
+        id S1729682AbgBCSmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:42:10 -0500
-Received: from mga02.intel.com ([134.134.136.20]:49288 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbgBCSmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:42:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 10:42:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="310804552"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 03 Feb 2020 10:42:01 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 2/2] KVM: MIPS: Fold comparecount_func() into comparecount_wakeup()
-Date:   Mon,  3 Feb 2020 10:42:00 -0800
-Message-Id: <20200203184200.23585-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200203184200.23585-1-sean.j.christopherson@intel.com>
-References: <20200203184200.23585-1-sean.j.christopherson@intel.com>
+        Mon, 3 Feb 2020 13:42:19 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42853 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729647AbgBCSmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 13:42:17 -0500
+Received: by mail-pl1-f194.google.com with SMTP id e8so3582436plt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:42:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=agwkyBrldDg9XuoJ/vuTI4Bkm2/60ebehPR4ONCSu1A=;
+        b=VXhPfUbvBDPUPwgbLZ+4MxcC+79OxTxus1DagUQ6PZIiK2UHMJjD6BUw6ZUhutRicA
+         AJg5jJl+3QUgunQNplsGHuqurSmnQvgznY5mbYUSue4QpFGXen18JGdddf7mEHTxfT74
+         jb2o3f8djD5lRy6hUQlrkaUErCqYG4eG6l6u2yvJeVNF7ZtE3ztFOpquhw5qhSzp0CMh
+         PGnyIfgYBh/T42kRWPuPqYwCwZWOHa2r32p6LCLt/5LiT5jZPxsTMltX9yHxR8eQkoRj
+         q5ZLWse95cjzwqVE7EXLBn05/9sO8rDgF+NotlOpDB83qYZK6UK9SudViPpb5uJL19sY
+         b99w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=agwkyBrldDg9XuoJ/vuTI4Bkm2/60ebehPR4ONCSu1A=;
+        b=j1g9RaHFhypfg3+jMD9azKr+OFA0179rOsFk2DDNhEBW3Xk2DmgWHaZiuqzSBur7MD
+         Emd2mZqNItOQckESs52uMyWJM2xDKZCvy7s8seilTyIe/KLHYBLz7MngvcrbsLFYrz85
+         unshVRNtZkNKrTJd6ORhJAcb5LiT3rcqv2QiKVzT09r6tww+q1sI2/0F2mweWCWxmXet
+         ss1MV8cinpFOfY2YkrR2C68Si5R4MInD8AknpCCxA5HRSgDHXfeN33tsaz56k7uUEd+h
+         BnyjsVI0RR5KHkIpkUOTMs3CBdKwCeDcerst/DQd8Mn/IiNDIh+DX7EGrZdKBpERZHNj
+         gNLw==
+X-Gm-Message-State: APjAAAXi1TmR2Oftq010+RS9Io/Qg4Y72iKmLIGnGA5stpK5e2vWira7
+        7vwcpU2iAlCKYk3HhDOpTfjZZw==
+X-Google-Smtp-Source: APXvYqywujKu1jX+eoX2Ww6KqrPLX4hn6f7F55QKMclqSfe3MX/7rEZ4+VJs8S0YyZQpaUrEQwhQtg==
+X-Received: by 2002:a17:902:ff08:: with SMTP id f8mr21399303plj.261.1580755336546;
+        Mon, 03 Feb 2020 10:42:16 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t8sm159330pjy.20.2020.02.03.10.42.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 10:42:16 -0800 (PST)
+Date:   Mon, 3 Feb 2020 10:42:13 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] drivers: thermal: tsens: Add watchdog support
+Message-ID: <20200203184213.GG3948@builder>
+References: <cover.1580390127.git.amit.kucheria@linaro.org>
+ <a1f7d34b7281c4e40307f67fce9a5c435ee5e7eb.1580390127.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1f7d34b7281c4e40307f67fce9a5c435ee5e7eb.1580390127.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fold kvm_mips_comparecount_func() into kvm_mips_comparecount_wakeup() to
-eliminate the nondescript function name as well as its unnecessary cast
-of a vcpu to "unsigned long" and back to a vcpu.  Presumably func() was
-used as a callback at some point during pre-upstream development, as
-wakeup() is the only user of func() and has been the only user since
-both with introduced by commit 669e846e6c4e ("KVM/MIPS32: MIPS arch
-specific APIs for KVM").
+On Thu 30 Jan 05:27 PST 2020, Amit Kucheria wrote:
 
-Cc: Davidlohr Bueso <dbueso@suse.de>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/mips/kvm/mips.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+> TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
+> HW FSM is stuck. Add support to detect and restart the FSM in the
+> driver. The watchdog is configured by the bootloader, we just enable the
+> watchdog bark as a debug feature in the kernel.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 43 +++++++++++++++++++++++++++++
+>  drivers/thermal/qcom/tsens-v2.c     | 10 +++++++
+>  drivers/thermal/qcom/tsens.h        | 14 ++++++++++
+>  3 files changed, 67 insertions(+)
+> 
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 9d1594d2f1ed..ee2414f33606 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -377,6 +377,26 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+>  	struct tsens_irq_data d;
+>  	unsigned long flags;
+>  	int temp, ret, i;
+> +	u32 wdog_status, wdog_count;
+> +
+> +	if (priv->feat->has_watchdog) {
+> +		ret = regmap_field_read(priv->rf[WDOG_BARK_STATUS], &wdog_status);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (wdog_status) {
+> +			/* Clear WDOG interrupt */
+> +			regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 1);
+> +			regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 0);
+> +			ret = regmap_field_read(priv->rf[WDOG_BARK_COUNT], &wdog_count);
+> +			if (ret)
+> +				return ret;
+> +			if (wdog_count)
+> +				dev_dbg(priv->dev, "%s: watchdog count: %d\n", __func__, wdog_count);
+> +
+> +			return IRQ_HANDLED;
 
-diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-index 92509041b954..71244bf87c3a 100644
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -280,24 +280,19 @@ static inline void dump_handler(const char *symbol, void *start, void *end)
- 	pr_debug("\tEND(%s)\n", symbol);
- }
- 
--static void kvm_mips_comparecount_func(unsigned long data)
-+/* low level hrtimer wake routine */
-+static enum hrtimer_restart kvm_mips_comparecount_wakeup(struct hrtimer *timer)
- {
--	struct kvm_vcpu *vcpu = (struct kvm_vcpu *)data;
-+	struct kvm_vcpu *vcpu;
-+
-+	vcpu = container_of(timer, struct kvm_vcpu, arch.comparecount_timer);
- 
- 	kvm_mips_callbacks->queue_timer_int(vcpu);
- 
- 	vcpu->arch.wait = 0;
- 	if (swq_has_sleeper(&vcpu->wq))
- 		swake_up_one(&vcpu->wq);
--}
- 
--/* low level hrtimer wake routine */
--static enum hrtimer_restart kvm_mips_comparecount_wakeup(struct hrtimer *timer)
--{
--	struct kvm_vcpu *vcpu;
--
--	vcpu = container_of(timer, struct kvm_vcpu, arch.comparecount_timer);
--	kvm_mips_comparecount_func((unsigned long) vcpu);
- 	return kvm_mips_count_timeout(vcpu);
- }
- 
--- 
-2.24.1
+Patch looks good, but would is make sense to fall through and handle
+critical interrupts as well (both in positive and error cases of this
+hunk)?
 
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
