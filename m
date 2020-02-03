@@ -2,119 +2,151 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842B3C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EC8C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5003421775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J4jYr3FY"
+	by mail.kernel.org (Postfix) with ESMTP id 7A01020658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgBCK7X (ORCPT
+        id S1727585AbgBCLAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:59:23 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54844 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgBCK7X (ORCPT
+        Mon, 3 Feb 2020 06:00:17 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36183 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgBCLAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:59:23 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 013AxGEI120579;
-        Mon, 3 Feb 2020 04:59:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580727556;
-        bh=cFprP7rRtLx9L/2ElRIu0VGanLcb4fT2ApIe8RsdSB4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=J4jYr3FYeGjT4adX/UUtxsz4F9kAvldlKUuHftUJXKn3hab4Lb+wNTodjyT4vzLof
-         Jfe7EniYbbBXi0u+WeEMxi4DN4JoviNCj+bK7A1av6xsQBuhX7mlfEJLi4PnPtjXni
-         S6Th1+nc2uFW2Tu4e0YrtU8fOFanSGiB4bO7b5ek=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 013AxGI0100404
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Feb 2020 04:59:16 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 3 Feb
- 2020 04:59:15 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 3 Feb 2020 04:59:15 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 013AxEpW108348;
-        Mon, 3 Feb 2020 04:59:14 -0600
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
- dma_request_slave_chan()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
- <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com>
-Date:   Mon, 3 Feb 2020 12:59:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 3 Feb 2020 06:00:17 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j20so4748474otq.3;
+        Mon, 03 Feb 2020 03:00:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HSvHNN+8r5amtyKmUg8emtWtzRdpFVJ7MMDiOIdoqoo=;
+        b=LxNXUWdVPZ2zLmfQ7Pg53uu6Xy5JwPIBL2+3M6wV8VUu7ZySEi4Gpt+jZMm6Qn+0Px
+         s8hFaGZ7r+TO7jxs1QKy1wzaxmIQJuQWOCUPU4bK+sk6qMDJPZMmWR4txAwi/OAZVjYu
+         fKKpG3uvqg5lxhSNLHyUr3N3UR+U071xMS3Mp1pTNmAkIblJNwGvbqpBeFFGAvKYURk2
+         slGU1cGjA8LrapNJHYKymS+qwXRdAcWblv6SGzQYM5cO0se2WphoD1zTvzztm2yNgEXu
+         XdOjn1/wUjhROcs1fDS1TzBt7w1F91Clqa/qKsi7KL/joIIQl0W0BO0SCFz0CfYBy1U0
+         CxOg==
+X-Gm-Message-State: APjAAAW+k8cZWRg2LkWK4BzzkrmL84H6zdKXo4HD5PbcYLqMCoqjeOpR
+        VG+4CmBpJpDcO6bS07kUzlPJCfAHbMxWmsgn7q4=
+X-Google-Smtp-Source: APXvYqzIgEOEaL8DuU6yXLdqdxv9NXwCp/3gdAFi0sFpJIv6us2mrWb0MONCGISYKLRdjNXpciySPXw9HvYAXx4melE=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr17372599ots.250.1580727615977;
+ Mon, 03 Feb 2020 03:00:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
+ <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com> <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Feb 2020 12:00:04 +0100
+Message-ID: <CAMuHMdWerVTn-RvUOzHzGurY71NP9fNj+24EjnVkxnmp5g94jw@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Yamada-san,
 
-On 03/02/2020 12.37, Andy Shevchenko wrote:
-> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> 
->> dma_request_slave_channel_reason() no longer have user in mainline, it
->> can be removed.
->>
->> Advise users of dma_request_slave_channel() and
->> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
-> 
-> How? There are legacy ARM boards you have to care / remove before.
-> DMAengine subsystem makes a p*s off decisions
+On Mon, Feb 3, 2020 at 2:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> On Sun, Feb 2, 2020 at 3:45 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> > On Fri, Jan 31, 2020 at 8:06 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > >  - simplify built-in initramfs creation
+> >
+> > Hmm.
+> >
+> > This may simplify it from a _technical_ angle, but it seems to be a
+> > fairly annoying step backwards from a UI perspective.
+> >
+> > Now Kconfig asks a completely pointless question that most people have
+> > absolutely zero interest in. The old situation was better, I feel.
+> >
+> > Basically, I feel that from a "get normal users to test development
+> > kernels", our Kconfig pain ends up being the biggest hurdle by far.
+> >
+> > The kernel is easy to build and doesn't really require all that much
+> > infrastructure, but generating the config - particularly when it
+> > changes over time and you can't just say "just use the distro config"
+> > - is a big step for people.
+> >
+> > So honestly, while I've pulled this, I feel that this kind of change
+> > is going _exactly_ the wrong way when it asks people questions that
+> > they don't care one whit about.
+> >
+> > If I as a kernel developer can't find it in myself to care and go "why
+> > does it ask this new question", then that should tell you something.
+> >
+> > Why do we have this choice in the first place?
+>
+> Generally, initramfs is passed from a boot-loader,
+> but some architectures embed initramfs into vmlinux
+> (perhaps due to poor boot-loader support??)
+>
+> arch/arc/configs/tb10x_defconfig:CONFIG_INITRAMFS_SOURCE="../tb10x-rootfs.cpio"
+> arch/unicore32/configs/defconfig:#CONFIG_INITRAMFS_SOURCE="arch/unicore/ramfs/ramfs_config"
+> arch/xtensa/configs/cadence_csp_defconfig:CONFIG_INITRAMFS_SOURCE="$$KERNEL_INITRAMFS_SOURCE"
 
-The dma_slave_map support is added few years back for the legacy ARM
-boards, because we do care.
-daVinci, OMAP1, pxa, s3cx4xx and even m68k/coldfire moved over.
+Note that the above are examples that do not actually work, as the files
+referred to are not present in mainline (read below[1] why I have just
+checked that ;-).
 
-Imho it is confusing to have 4+ APIs to do the same thing, but in a
-slightly different way.
+> So, data-compression is useful - that's is what I understand.
 
-> without taking care of
-> (I'm talking now about dma release callback, for example) end users.
+Yes it is, depending on your config.
 
-I have been converting users in the background, but the _compat() is a
-bit more problematic as I need to maintainers of those legacy platforms
-to craft the map. If they care.
+> For major architectures, vmlinux embeds a tiny initramfs,
+> which is generated based on usr/default_cpio_list.
+>
+> We do not need data-compression for such a small cpio,
+> but handling it in a consistent way is sensible.
+> This is annoying from the users' PoV, I admit.
 
-Obviously the APIs are not going to be removed if we have a single user
-and if there is clearly a need for something the _compat() was doing and
-it can not be done via the dma_slave_map, then rest assured there will
-be a clean API to achieve just that.
+I was also confused by this question, as by default you have
+    CONFIG_RD_GZIP=y
+    CONFIG_RD_BZIP2=y
+    CONFIG_RD_LZMA=y
+    CONFIG_RD_XZ=y
+    CONFIG_RD_LZO=y
+    CONFIG_RD_LZ4=y
+so the old 'default ".gz" if RD_GZIP' looked like it would use gzip.
+However, the tiny default initramfs ended up being uncompressed anyway
+before, as until commit ddd09bcc899fd374 ("initramfs: make compression
+options not depend on INITRAMFS_SOURCE"), INITRAMFS_COMPRESSION wasn't
+taken into account for the default tiny initramfs...
 
-> They will be scary for no reason.
+So INITRAMFS_COMPRESSION_NONE is the right answer to retain the
+old behavior? One might question why not to use gzip anyway, as
+CONFIG_RD_GZIP=y is enabled by default, and would give a (small)
+improvement of ca. 350 bytes ;-)
+Hence there is some area for improvement...
 
-There is a reason: to clean up the API to make it non confusing for the
-users.
-New drivers should not use the old API i new code and developers tend to
-pick the API they use after a quick 'git grep dma_request_' and see what
-the majority is using.
+Thanks!
 
-- Péter
+[1] I'm still carrying a local patch for handling relative initramfs
+    paths with O=, but it's been a while I actually used it.  Due to your
+    recent changes, it no longer applies, and needs to be updated.
+    But of course that is only useful if there are some real users...
+    https://lore.kernel.org/lkml/1384467283-14806-1-git-send-email-geert@linux-m68k.org/
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
