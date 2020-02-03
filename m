@@ -2,216 +2,216 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96BAC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71360C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93AEF20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haYQFwfe"
+	by mail.kernel.org (Postfix) with ESMTP id 491EE2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 08:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgBCIcF (ORCPT
+        id S1727315AbgBCIcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:32:05 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41410 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgBCIcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 03:32:05 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so13931481oie.8;
-        Mon, 03 Feb 2020 00:32:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vgFT7KCLvNSNXKaIMj+AMJeeoDZdmCntNB9bIaSyhR8=;
-        b=haYQFwferv5+ZHvfqKEEV/YUXLdSYxjZlN0P4WdvN1Okw1asRKqpj1d86PDYFJ0bNa
-         xbKaXhElGXZr/ely1gzZrQrCPFVTjVuXzwzXhE/ijyl7iQ3LoLSiswWk38Q253tqBw0q
-         1nw/VQSBppW6Lk0PvkCsBqDNGWtWJEcmhb1puBaNLNh9vBH58UgOLbDbbnoKpofIKRJj
-         xFnaM4t2BEeo3hEnz+THrNEobj8VkLSIs7bjRb1vExJYwtzyJwskDSjlgvULeWME5Iji
-         PYA4PfHdddbpHlCPtScYnFwV9mMQqUaPVWeQZt0ezObLlBgGIrTaE2+qmR9/nWgEykGc
-         BkIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vgFT7KCLvNSNXKaIMj+AMJeeoDZdmCntNB9bIaSyhR8=;
-        b=EOl0CDIIY2/7YIbcHUNkN5gnaBypwjCyFGvU86Uu46s6wkgGmj519FbjWDL+DS2q40
-         3Ca7h3uqEJEZ2ruWWBtw09wSrJh/Gn4U4faF294EiFqWaWK/xdIHgAZBic5aw9tOvGTA
-         vhf4Z5FSB0PNVPg64ki8I6FII0s98+zLfLr4wBhUAjXn8zMSw6MmLxBu/jACPdV3Px/b
-         qeaAL0dSSMq3x14QpFkLQMT8lTrx1+gyJAlAkkQ9ZKmTNObYT8nL1cDHX948f7rjr0Ra
-         C4OHxwB8Gz7r47QU3mZ9NDKrjuhcyQn/3Q1wfNkgVZAQoSI8sDV/qW35fz/GRnEJtnXx
-         m9fg==
-X-Gm-Message-State: APjAAAWrohb13bDmGVSO7xheuxlJuHxF7nURN9vpGywJmY9MvrOuIRkb
-        9fmM4zD6LN+yW/I4illpths/vCwcEPdSyFQ3mEQ=
-X-Google-Smtp-Source: APXvYqyqbOZhNxcsolX/qhng0QvUrm1rXnOtQGEwvMXjjoc299vee2VDlGRGcQcpGnKEBBQUOUw1WCNoUuIu5xhQjIE=
-X-Received: by 2002:aca:44d7:: with SMTP id r206mr5716393oia.33.1580718724066;
- Mon, 03 Feb 2020 00:32:04 -0800 (PST)
+        Mon, 3 Feb 2020 03:32:22 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:44594 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726244AbgBCIcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 03:32:22 -0500
+Received: from [192.168.68.106] (unknown [111.18.44.203])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL2h+2jdej_YLAA--.374S3;
+        Mon, 03 Feb 2020 16:32:00 +0800 (CST)
+Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jean Delvare <jdelvare@suse.de>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <a267161f-c8b3-a11c-7416-3ab9ba19aa82@loongson.cn>
+Date:   Mon, 3 Feb 2020 16:32:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200127071602.11460-1-nick.desaulniers@gmail.com>
-In-Reply-To: <20200127071602.11460-1-nick.desaulniers@gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 3 Feb 2020 16:31:52 +0800
-Message-ID: <CANRm+CwK0Cg45mktda9Yz9fsjPCvtuB8O+fma5L3tV725ki1qw@mail.gmail.com>
-Subject: Re: [PATCH] dynamically allocate struct cpumask
-To:     Nick Desaulniers <nick.desaulniers@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: AQAAf9DxL2h+2jdej_YLAA--.374S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF1rJryDXF4fCFWkXFykGrg_yoW7GF1fpF
+        WDAFsYyr4DJF47G34fA34fuF15Xan3WFZ0kFyj9r17ZasxXF17Jrs3Kw4DAryDAr4kKay0
+        9F1agF1Yka9FkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j
+        6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+        BIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
-On Mon, 27 Jan 2020 at 15:16, Nick Desaulniers
-<nick.desaulniers@gmail.com> wrote:
+On 1/16/20 9:26 PM, Tiezhu Yang wrote:
+> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+> driver can easily match various of mainboards.
 >
-> This helps avoid avoid a potentially large stack allocation.
+> In the SMBIOS reference specification, the table anchor string "_SM_" is
+> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+> but there exists a special case for Loongson platform, when call function
+> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+> it is reserved for SMBIOS and can be normally access in the BIOS.
 >
-> When building with:
-> $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-> The following warning is observed:
-> arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-> function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-> static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-> vector)
->             ^
-> Debugging with:
-> https://github.com/ClangBuiltLinux/frame-larger-than
-> via:
-> $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
->   kvm_send_ipi_mask_allbutself
-> points to the stack allocated `struct cpumask newmask` in
-> `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-> potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-> the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-> 8192, making a single instance of a `struct cpumask` 1024 B.
+> This patch works fine on the Loongson 3A3000 platform which belongs to
+> MIPS architecture and has no influence on the other architectures such
+> as x86 and ARM.
+>
+> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhc@lemote.com>
+> ---
+>
+> v2:
+>    - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
+>    - refine definitions and Kconfig by Jiaxun
+>
+>   arch/mips/Kconfig           | 10 ++++++++++
+>   arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
+>   arch/mips/kernel/setup.c    |  2 ++
+>   drivers/firmware/dmi_scan.c |  6 +++++-
+>   4 files changed, 37 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/mips/include/asm/dmi.h
 
-Could you help test the below untested patch?
 
-From 867753e2fa27906f15df7902ba1bce7f9cef6ebe Mon Sep 17 00:00:00 2001
-From: Wanpeng Li <wanpengli@tencent.com>
-Date: Mon, 3 Feb 2020 16:26:35 +0800
-Subject: [PATCH] KVM: Pre-allocate 1 cpumask variable per cpu for both
-pv tlb and pv ipis
+Hi Paul and Jean,
 
-Reported-by: Nick Desaulniers <nick.desaulniers@gmail.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+How do you think this patch?
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 81045aab..b1e8efa 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -425,6 +425,8 @@ static void __init sev_map_percpu_data(void)
-     }
- }
+Should I split it into the following two patches?
+[PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+[PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
 
-+static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
-+
- #ifdef CONFIG_SMP
- #define KVM_IPI_CLUSTER_SIZE    (2 * BITS_PER_LONG)
+The first patch is only related with the common dmi code
+drivers/firmware/dmi_scan.c, the other patch is only related
+with the mips code under arch/mips.
 
-@@ -490,12 +492,12 @@ static void kvm_send_ipi_mask(const struct
-cpumask *mask, int vector)
- static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
-int vector)
- {
-     unsigned int this_cpu = smp_processor_id();
--    struct cpumask new_mask;
-+    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-     const struct cpumask *local_mask;
+If you have any questions or suggestions, please let me know.
+I am looking forward to your early reply.
 
--    cpumask_copy(&new_mask, mask);
--    cpumask_clear_cpu(this_cpu, &new_mask);
--    local_mask = &new_mask;
-+    cpumask_copy(new_mask, mask);
-+    cpumask_clear_cpu(this_cpu, new_mask);
-+    local_mask = new_mask;
-     __send_ipi_mask(local_mask, vector);
- }
+Thanks,
 
-@@ -575,7 +577,6 @@ static void __init kvm_apf_trap_init(void)
-     update_intr_gate(X86_TRAP_PF, async_page_fault);
- }
+Tiezhu Yang
 
--static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
 
- static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-             const struct flush_tlb_info *info)
-@@ -583,7 +584,7 @@ static void kvm_flush_tlb_others(const struct
-cpumask *cpumask,
-     u8 state;
-     int cpu;
-     struct kvm_steal_time *src;
--    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
-+    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 4b83507..c097f78 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -2773,6 +2773,16 @@ config HW_PERF_EVENTS
+>   	  Enable hardware performance counter support for perf events. If
+>   	  disabled, perf events will use software events only.
+>   
+> +config DMI
+> +	default y if MACH_LOONGSON64
+> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+> +	bool "Enable DMI scanning"
+> +	help
+> +	  Enabled scanning of DMI to identify machine quirks. Say Y
+> +	  here unless you have verified that your setup is not
+> +	  affected by entries in the DMI blacklist. Required by PNP
+> +	  BIOS code.
+> +
+>   config SMP
+>   	bool "Multi-Processing support"
+>   	depends on SYS_SUPPORTS_SMP
+> diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
+> new file mode 100644
+> index 0000000..27415a2
+> --- /dev/null
+> +++ b/arch/mips/include/asm/dmi.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_DMI_H
+> +#define _ASM_DMI_H
+> +
+> +#include <linux/io.h>
+> +#include <linux/memblock.h>
+> +
+> +#define dmi_early_remap(x, l)		ioremap_cache(x, l)
+> +#define dmi_early_unmap(x, l)		iounmap(x)
+> +#define dmi_remap(x, l)			ioremap_cache(x, l)
+> +#define dmi_unmap(x)			iounmap(x)
+> +
+> +/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
+> +#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
+> +
+> +#if defined(CONFIG_MACH_LOONGSON64)
+> +#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
+> +#endif
+> +
+> +#endif /* _ASM_DMI_H */
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index 701f4bc..d9bd841 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/decompress/generic.h>
+>   #include <linux/of_fdt.h>
+>   #include <linux/of_reserved_mem.h>
+> +#include <linux/dmi.h>
+>   
+>   #include <asm/addrspace.h>
+>   #include <asm/bootinfo.h>
+> @@ -800,6 +801,7 @@ void __init setup_arch(char **cmdline_p)
+>   #endif
+>   
+>   	arch_mem_init(cmdline_p);
+> +	dmi_setup();
+>   
+>   	resource_init();
+>   	plat_smp_setup();
+> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> index 2045566..f59163c 100644
+> --- a/drivers/firmware/dmi_scan.c
+> +++ b/drivers/firmware/dmi_scan.c
+> @@ -11,6 +11,10 @@
+>   #include <asm/dmi.h>
+>   #include <asm/unaligned.h>
+>   
+> +#ifndef SMBIOS_ENTRY_POINT_SCAN_START
+> +#define SMBIOS_ENTRY_POINT_SCAN_START 0xF0000
+> +#endif
+> +
+>   struct kobject *dmi_kobj;
+>   EXPORT_SYMBOL_GPL(dmi_kobj);
+>   
+> @@ -663,7 +667,7 @@ static void __init dmi_scan_machine(void)
+>   			return;
+>   		}
+>   	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
+> -		p = dmi_early_remap(0xF0000, 0x10000);
+> +		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
+>   		if (p == NULL)
+>   			goto error;
+>   
 
-     cpumask_copy(flushmask, cpumask);
-     /*
-@@ -624,6 +625,7 @@ static void __init kvm_guest_init(void)
-         kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
-         pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-         pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-+        pr_info("KVM setup pv remote TLB flush\n");
-     }
-
-     if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-@@ -732,23 +734,30 @@ static __init int activate_jump_labels(void)
- }
- arch_initcall(activate_jump_labels);
-
--static __init int kvm_setup_pv_tlb_flush(void)
-+static __init int kvm_alloc_cpumask(void)
- {
-     int cpu;
-+    bool alloc = false;
-
-     if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
-         !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
--        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
-+        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
-+        alloc = true;
-+
-+#if defined(CONFIG_SMP)
-+    if (!alloc && kvm_para_has_feature(KVM_FEATURE_PV_SEND_IPI))
-+        alloc = true;
-+#endif
-+
-+    if (alloc)
-         for_each_possible_cpu(cpu) {
--            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
-+            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
-                 GFP_KERNEL, cpu_to_node(cpu));
-         }
--        pr_info("KVM setup pv remote TLB flush\n");
--    }
-
-     return 0;
- }
--arch_initcall(kvm_setup_pv_tlb_flush);
-+arch_initcall(kvm_alloc_cpumask);
-
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
-
---
-1.8.3.1
