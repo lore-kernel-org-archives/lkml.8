@@ -2,51 +2,57 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03507C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0D82080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB9F2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747330;
-	bh=ckcf98rypvLsz0Vp0cFslnWN27jANYoCwPDwd2GDQGs=;
+	s=default; t=1580747332;
+	bh=RAaMw1GoJKgjkz+PKYuc2ip6hIl/aRXvb4UczCFTohI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXtGVhx6DkgGPGpQJ2Tcj25HaI5+XKlC3ix2svBMtxF7fxOMRLe/v758/UZrtepS0
-	 PEhSeaATQ1BnAlD71H7FeAGarzBG2V+nA/szBNAU4x7Igi7QIIiFzi1oeuvN4jiXca
-	 j9pzf2Hpx30OhcqDJ6NXAmJCT1javXa97K7t+490=
+	b=KHlPt8bIHn3gHZum1khVujHCLaLiyrOqt5mRt/RiCl6JXfRJOUW4U1grn3eHK+o2f
+	 8v39FstetR9DIdXwro5ds0rwrHpMHP9rbZ8lXypnlLtqC7c1gLc2hAwAlizgvdtPs+
+	 5CNN56PjhRgf3rTJZoRMs2Co/6oZNeVE9NF9qfXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbgBCQ2t (ORCPT
+        id S1729669AbgBCQ2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:28:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:28:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbgBCQ2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:46 -0500
+        id S1729657AbgBCQ2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:48 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A23C20CC7;
-        Mon,  3 Feb 2020 16:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 592DF2051A;
+        Mon,  3 Feb 2020 16:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747325;
-        bh=ckcf98rypvLsz0Vp0cFslnWN27jANYoCwPDwd2GDQGs=;
+        s=default; t=1580747327;
+        bh=RAaMw1GoJKgjkz+PKYuc2ip6hIl/aRXvb4UczCFTohI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HLnj/0Qq+TGCNdtcGBHrJePj/sUocPS15p1Q5GyUrErLrPvBck9Gtb3HTo1qIwpgs
-         6ETaFxOlmdAX8CusAFtT+yJhyB5r3Lejbfkn9WZkuMB5OU39nxisitExkLqWTg7AKY
-         am+d7dFwqmOILMhK0Sl+AMRlVNocZuNVrBzvT4PI=
+        b=0BKjYqOY/Qbnz+sEIoeMWEUVE6EB53Oq8ljghQLDDKQOpNMoMlD+tIGAKZbPWMfWx
+         nDuGk0/km4PxuEnLNnykLXtZwWtMZz+juXjCfPscBjkTZLCKuKtVA7F4F2aPdBgeDz
+         CxiulH8j6YGC6AeRF2qozoS9Jy9gIZUITnYwQngg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 37/89] crypto: pcrypt - Fix user-after-free on module unload
-Date:   Mon,  3 Feb 2020 16:19:22 +0000
-Message-Id: <20200203161921.955878030@linuxfoundation.org>
+        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 38/89] perf c2c: Fix return type for histogram sorting comparision functions
+Date:   Mon,  3 Feb 2020 16:19:23 +0000
+Message-Id: <20200203161922.078754322@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -59,43 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Andres Freund <andres@anarazel.de>
 
-[ Upstream commit 07bfd9bdf568a38d9440c607b72342036011f727 ]
+commit c1c8013ec34d7163431d18367808ea40b2e305f8 upstream.
 
-On module unload of pcrypt we must unregister the crypto algorithms
-first and then tear down the padata structure.  As otherwise the
-crypto algorithms are still alive and can be used while the padata
-structure is being freed.
+Commit 722ddfde366f ("perf tools: Fix time sorting") changed - correctly
+so - hist_entry__sort to return int64. Unfortunately several of the
+builtin-c2c.c comparison routines only happened to work due the cast
+caused by the wrong return type.
 
-Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This causes meaningless ordering of both the cacheline list, and the
+cacheline details page. E.g a simple:
+
+  perf c2c record -a sleep 3
+  perf c2c report
+
+will result in cacheline table like
+  =================================================
+             Shared Data Cache Line Table
+  =================================================
+  #
+  #        ------- Cacheline ----------    Total     Tot  - LLC Load Hitm -  - Store Reference -  - Load Dram -     LLC  Total  - Core Load Hit -  - LLC Load Hit -
+  # Index         Address  Node  PA cnt  records    Hitm  Total  Lcl    Rmt  Total  L1Hit  L1Miss     Lcl   Rmt  Ld Miss  Loads    FB    L1   L2     Llc      Rmt
+  # .....  ..............  ....  ......  .......  ......  .....  .....  ...  ....   .....  ......  ......  ....  ......   .....  .....  ..... ...  ....     .......
+
+        0  0x7f0d27ffba00   N/A       0       52   0.12%     13      6    7    12      12       0       0     7      14      40      4     16    0    0           0
+        1  0x7f0d27ff61c0   N/A       0     6353  14.04%   1475    801  674   779     779       0       0   718    1392    5574   1299   1967    0  115           0
+        2  0x7f0d26d3ec80   N/A       0       71   0.15%     16      4   12    13      13       0       0    12      24      58      1     20    0    9           0
+        3  0x7f0d26d3ec00   N/A       0       98   0.22%     23     17    6    19      19       0       0     6      12      79      0     40    0   10           0
+
+i.e. with the list not being ordered by Total Hitm.
+
+Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+Signed-off-by: Andres Freund <andres@anarazel.de>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20200109043030.233746-1-andres@anarazel.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- crypto/pcrypt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-c2c.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index a5718c0a3dc4e..1348541da463a 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -505,11 +505,12 @@ static int __init pcrypt_init(void)
- 
- static void __exit pcrypt_exit(void)
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -528,8 +528,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __
  {
-+	crypto_unregister_template(&pcrypt_tmpl);
-+
- 	pcrypt_fini_padata(&pencrypt);
- 	pcrypt_fini_padata(&pdecrypt);
+ 	struct c2c_hist_entry *c2c_left;
+ 	struct c2c_hist_entry *c2c_right;
+-	unsigned int tot_hitm_left;
+-	unsigned int tot_hitm_right;
++	uint64_t tot_hitm_left;
++	uint64_t tot_hitm_right;
  
- 	kset_unregister(pcrypt_kset);
--	crypto_unregister_template(&pcrypt_tmpl);
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+@@ -562,7 +562,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __m
+ 									\
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
+-	return c2c_left->stats.__f - c2c_right->stats.__f;		\
++	return (uint64_t) c2c_left->stats.__f -				\
++	       (uint64_t) c2c_right->stats.__f;				\
  }
  
- module_init(pcrypt_init);
--- 
-2.20.1
-
+ #define STAT_FN(__f)		\
+@@ -615,7 +616,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+ 
+-	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
++	return (uint64_t) llc_miss(&c2c_left->stats) -
++	       (uint64_t) llc_miss(&c2c_right->stats);
+ }
+ 
+ static uint64_t total_records(struct c2c_stats *stats)
 
 
