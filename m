@@ -2,85 +2,139 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93153C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE6DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0AC2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1D62086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgBCNbv (ORCPT
+        id S1728284AbgBCNct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:31:51 -0500
-Received: from mga03.intel.com ([134.134.136.65]:1860 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbgBCNbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:31:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 05:31:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="225163163"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Feb 2020 05:31:32 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 33AB614E; Mon,  3 Feb 2020 15:31:30 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v5 1/7] console: Don't perform test for CON_BRL flag
-Date:   Mon,  3 Feb 2020 15:31:24 +0200
-Message-Id: <20200203133130.11591-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 3 Feb 2020 08:32:49 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38693 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgBCNcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 08:32:48 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l9so10890529oii.5;
+        Mon, 03 Feb 2020 05:32:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j8a77+R58LAe2xXbMwZGt5F1KqF29qhEEgIiu5hvCV0=;
+        b=IKZjN3TyHGpqzNf2xzFfp2+EkVgfU3rNJIMOXhZLcjIqnKMB/+xsakj5Igol8nv5To
+         wFF6YdYXH0JN9YuqQDEnpjH+nrpBq3VujbwL0/IIGBMvJwEy0Uw2i2bb9F1a4fBeDVgf
+         HD199wQNEyF6kV6FX/5hZ2TE5bXlUZDAfD1MD+n3EjGr9t9yhADVt6IYq1+2fj34b4Dy
+         iXQRuynJpuui0hFdv6fjiSwqLCSyGMmyx/andR9yHBtZAu2IqY8r6y2b1IKW4dB1ZYEp
+         XkURyqYnsrjA/n4Js0+C2gDo38lEYc8CbbvFr+yfJhqvwS9Am6YcMniIOOPKUhmVj8cK
+         8UgQ==
+X-Gm-Message-State: APjAAAWmoe61y0oqFpbP3IOA8qYJxthrK66ZkBnF94BObr7XtM/A+4i3
+        8xe+scESk5WSpSFY5ApOlsYLtpXYgi2gSZt/RVM=
+X-Google-Smtp-Source: APXvYqyRJiH/1Qcj8aUeQeozGzHCPtNftoPVo7qflSkX4WA3sZYULTlbZxKTd5bnObw2ce+CmK026N210WC5uhGFItw=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr14052076oia.148.1580736767514;
+ Mon, 03 Feb 2020 05:32:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com> <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
+ <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+In-Reply-To: <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Feb 2020 14:32:35 +0100
+Message-ID: <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't call braille_register_console() without CON_BRL flag set.
-And the _braille_unregister_console() already tests for console to have
-CON_BRL flag. No need to repeat this in braille_unregister_console().
+Hi Peter,
 
-Drop the repetitive checks from Braille console driver.
+On Mon, Feb 3, 2020 at 1:49 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 03/02/2020 13.16, Andy Shevchenko wrote:
+> > On Mon, Feb 3, 2020 at 12:59 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >> On 03/02/2020 12.37, Andy Shevchenko wrote:
+> >>> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >>>> Advise users of dma_request_slave_channel() and
+> >>>> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+> >>>
+> >>> How? There are legacy ARM boards you have to care / remove before.
+> >>> DMAengine subsystem makes a p*s off decisions
+> >>
+> >> The dma_slave_map support is added few years back for the legacy ARM
+> >> boards, because we do care.
+> >> daVinci, OMAP1, pxa, s3cx4xx and even m68k/coldfire moved over.
+> >
+> > Then why simple not to convert (start converting) those few drivers to
+> > new API and simple remove the old one?
+>
+> _if_ the dma_request_slave_channel_compat() is really falling back after
+> dma_request_chan() - this is what it calls first, then it is not a
+> simple convert to a new API.
+> 1. The arch needs to define the dma_slave_map for the SoC.
+> 2. The dma driver needs few lines to add it to DMAengine core (+pdata
+> change).
+> After this the _compat() can be replaced with dma_request_chan()
+>
+> In most cases I do not have access to documentation and boards to test.
+>
+> Looking at the output of 'git grep dma_request_slave_channel_compat':
+> drivers/mmc/host/renesas_sdhi_sys_dmac.c
+> drivers/spi/spi-pxa2xx-dma.c
+> drivers/spi/spi-rspi.c
+> drivers/spi/spi-sh-msiof.c
+> drivers/tty/serial/8250/8250_dma.c
+>
+> From these rspi boots only in DT and I'm not sure about the others.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
----
-v5: no change
- drivers/accessibility/braille/braille_console.c | 4 ----
- 1 file changed, 4 deletions(-)
+Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
 
-diff --git a/drivers/accessibility/braille/braille_console.c b/drivers/accessibility/braille/braille_console.c
-index 1339c586bf64..a8f7c278b691 100644
---- a/drivers/accessibility/braille/braille_console.c
-+++ b/drivers/accessibility/braille/braille_console.c
-@@ -347,8 +347,6 @@ int braille_register_console(struct console *console, int index,
- {
- 	int ret;
- 
--	if (!(console->flags & CON_BRL))
--		return 0;
- 	if (!console_options)
- 		/* Only support VisioBraille for now */
- 		console_options = "57600o8";
-@@ -371,8 +369,6 @@ int braille_unregister_console(struct console *console)
- {
- 	if (braille_co != console)
- 		return -EINVAL;
--	if (!(console->flags & CON_BRL))
--		return 0;
- 	unregister_keyboard_notifier(&keyboard_notifier_block);
- 	unregister_vt_notifier(&vt_notifier_block);
- 	braille_co = NULL;
+    arch/sh/kernel/cpu/sh4a/setup-sh7757.c: .name   = "rspi",
+    arch/sh/boards/mach-ecovec24/setup.c:   .name           = "spi_sh_msiof",
+
+The former seems to be used with drivers/dma/sh/shdmac.c:
+
+    arch/sh/include/cpu-sh4/cpu/sh7757.h:   SHDMA_SLAVE_RSPI_TX,
+    arch/sh/include/cpu-sh4/cpu/sh7757.h:   SHDMA_SLAVE_RSPI_RX,
+    arch/sh/kernel/cpu/sh4a/setup-sh7757.c:         .slave_id       =
+SHDMA_SLAVE_RSPI_TX,
+    arch/sh/kernel/cpu/sh4a/setup-sh7757.c:         .slave_id       =
+SHDMA_SLAVE_RSPI_RX,
+
+but I have no idea if it still works (and no hardware).
+
+The latter doesn't seem to be used with DMA on ecovec24/sh7724, so
+probably we can just drop the _compat() from sh-sh-msiof.c.
+
+BTW, we no longer support non-legacy DMA in drivers/tty/serial/sh-sci.c
+(DMA was completely broken in that driver when I added DT suppport),
+but it seems it was used at some point on various SH, cfr. e.g.
+arch/sh/kernel/cpu/sh4a/setup-sh7724.c still setting up the channels.
+Which might be a motivation for just dropping _compat() from spi-rspi.c,
+too? ;-)
+
+Anyone who cares for DMA on SuperH?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.24.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
