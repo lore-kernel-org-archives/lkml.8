@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E184DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA24C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFAB921927
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732A221D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747734;
-	bh=pYJmhRfn9YOi7piJCSMO3M5A4Rv0EXDHpAb2QRyajSE=;
+	s=default; t=1580747737;
+	bh=VliAeT8Po/eV+MTczlUWIup6JgY6fmjh0jhjULFIku0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ml/kkmwi3GzqTuMGURH2sq5FEaUt5O824NwELmX4TPNWReXQMEjANY6+V68LjRU7L
-	 DQYIUzffBWnvfXihW388/VTCyes89wiOPlolxKf57pwQaAkua0rUO4KkSIDrLlKOCv
-	 g93itgFpCyszQ8E5WZClFl0gigdjflT772RF/WbU=
+	b=gOQx7qBNqjJ9nKzCC2YnSr8f3rQ9qT/4l/Qfi2YMlxqTs/E5PzfXfXuoVYCCXvo/w
+	 rwUC65yd9xsoe2j/RVNWrIa9tr/1XlBN4iEclggVzVabvwSp3s1nOorwYJNF6Ce7mv
+	 YeNIX4Zs0tS2cydGCCfZifTGaAyw2ZibDrfEUHKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbgBCQfd (ORCPT
+        id S1730985AbgBCQff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:35:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730562AbgBCQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:25 -0500
+        id S1731058AbgBCQfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:32 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0B92082E;
-        Mon,  3 Feb 2020 16:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C4F2051A;
+        Mon,  3 Feb 2020 16:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747724;
-        bh=pYJmhRfn9YOi7piJCSMO3M5A4Rv0EXDHpAb2QRyajSE=;
+        s=default; t=1580747731;
+        bh=VliAeT8Po/eV+MTczlUWIup6JgY6fmjh0jhjULFIku0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pty0At0YIaezgavdE6EF5bz3UcB90MB9v98frVDoSc0HCJEymx4LlYaZrojqKsbE1
-         RHZo/2M8OIh0FyyEDDF1GXwNAC1HF5ykoNRqP5shwABFuJJBXCY9rNCVNWZ/l4/hHE
-         aV9mLSk/FF4vX1MmoYp0TTe1ap94SWmNNrAwnMwY=
+        b=COp8Fg/H+MrDBis/u1I5Al6CMYpxWHI84guu2o/oQhFHxExIQe5NNy9NLlHUHIU7C
+         bo8M3T19BfdDEJrHqaFuh9nxRX4f9PdEWhFAOjFd/WX/3FvPy+DIuTQXqNEsgbsCKt
+         kNqRU74K8J9EMryPJTaOmyxG8RTPH2fq/REFLmQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Anderson <jasona.594@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 43/90] platform/x86: GPD pocket fan: Allow somewhat lower/higher temperature limits
-Date:   Mon,  3 Feb 2020 16:19:46 +0000
-Message-Id: <20200203161923.329640270@linuxfoundation.org>
+Subject: [PATCH 5.4 45/90] ASoC: SOF: Intel: fix HDA codec driver probe with multiple controllers
+Date:   Mon,  3 Feb 2020 16:19:48 +0000
+Message-Id: <20200203161923.547205729@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,37 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 1f27dbd8265dbb379926c8f6a4453fe7fe26d7a3 ]
+[ Upstream commit 2c63bea714780f8e1fc9cb7bc10deda26fada25b ]
 
-Allow the user to configure the fan to turn on / speed-up at lower
-thresholds then before (20 degrees Celcius as minimum instead of 40) and
-likewise also allow the user to delay the fan speeding-up till the
-temperature hits 90 degrees Celcius (was 70).
+In case system has multiple HDA controllers, it can happen that
+same HDA codec driver is used for codecs of multiple controllers.
+In this case, SOF may fail to probe the HDA driver and SOF
+initialization fails.
 
-Cc: Jason Anderson <jasona.594@gmail.com>
-Reported-by: Jason Anderson <jasona.594@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+SOF HDA code currently relies that a call to request_module() will
+also run device matching logic to attach driver to the codec instance.
+However if driver for another HDA controller was already loaded and it
+already loaded the HDA codec driver, this breaks current logic in SOF.
+In this case the request_module() SOF does becomes a no-op and HDA
+Codec driver is not attached to the codec instance sitting on the HDA
+bus SOF is controlling. Typical scenario would be a system with both
+external and internal GPUs, with driver of the external GPU loaded
+first.
+
+Fix this by adding similar logic as is used in legacy HDA driver
+where an explicit device_attach() call is done after request_module().
+
+Also add logic to propagate errors reported by device_attach() back
+to caller. This also works in the case where drivers are not built
+as modules.
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200110235751.3404-8-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/gpd-pocket-fan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/intel/hda-codec.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-index 73eb1572b9662..b471b86c28fe8 100644
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -127,7 +127,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
- 	int i;
+diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
+index 3ca6795a89ba3..9e8233c10d860 100644
+--- a/sound/soc/sof/intel/hda-codec.c
++++ b/sound/soc/sof/intel/hda-codec.c
+@@ -24,19 +24,18 @@
+ #define IDISP_VID_INTEL	0x80860000
  
- 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
--		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
-+		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
- 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
- 				temp_limits[i]);
- 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
+ /* load the legacy HDA codec driver */
+-#ifdef MODULE
+-static void hda_codec_load_module(struct hda_codec *codec)
++static int hda_codec_load_module(struct hda_codec *codec)
+ {
++#ifdef MODULE
+ 	char alias[MODULE_NAME_LEN];
+ 	const char *module = alias;
+ 
+ 	snd_hdac_codec_modalias(&codec->core, alias, sizeof(alias));
+ 	dev_dbg(&codec->core.dev, "loading codec module: %s\n", module);
+ 	request_module(module);
+-}
+-#else
+-static void hda_codec_load_module(struct hda_codec *codec) {}
+ #endif
++	return device_attach(hda_codec_dev(codec));
++}
+ 
+ /* enable controller wake up event for all codecs with jack connectors */
+ void hda_codec_jack_wake_enable(struct snd_sof_dev *sdev)
+@@ -116,10 +115,16 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 	/* use legacy bus only for HDA codecs, idisp uses ext bus */
+ 	if ((resp & 0xFFFF0000) != IDISP_VID_INTEL) {
+ 		hdev->type = HDA_DEV_LEGACY;
+-		hda_codec_load_module(&hda_priv->codec);
++		ret = hda_codec_load_module(&hda_priv->codec);
++		/*
++		 * handle ret==0 (no driver bound) as an error, but pass
++		 * other return codes without modification
++		 */
++		if (ret == 0)
++			ret = -ENOENT;
+ 	}
+ 
+-	return 0;
++	return ret;
+ #else
+ 	hdev = devm_kzalloc(sdev->dev, sizeof(*hdev), GFP_KERNEL);
+ 	if (!hdev)
 -- 
 2.20.1
 
