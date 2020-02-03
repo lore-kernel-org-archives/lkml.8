@@ -2,190 +2,114 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B488C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C10C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA9820838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cyf3WXeo"
+	by mail.kernel.org (Postfix) with ESMTP id 17D8C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgBCSIy (ORCPT
+        id S1728904AbgBCSML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:08:54 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38135 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728319AbgBCSIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:08:53 -0500
-Received: by mail-pg1-f195.google.com with SMTP id a33so8227540pgm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:08:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b2IyM27KyGz4uJ+vHY0/xwqTCFrd9ysYN6CzGQ8O0cA=;
-        b=cyf3WXeo+GEVwg/4OZISbxU2gp/IhQjjuTpf8rT81hx7LGyqXIgw1pC1AHBtKK8cOg
-         Ed5B57Gd7EuRpya4U0ZQS6SYWIUt8ZmLpczD7cuVp0vHxXG0p3wgIY6YroY1V6mw3uFJ
-         u6zQCQj+nWL4HUPvvseKDYTAEkkA4aYHxmYv42odgtN5Eq9hY/er5NgCwIpXfbCRdF72
-         PLJNxPgE3dYbWh1wBM2XCpA/oqdBLfctvl2Bdsj0p/5V9Be+l2blYWAmdtlsq6WQisHZ
-         In3pLgrZAuQIpEHrj69GmUsPJIEV/HoMa9JP9MMVn62C8VLvfFA2sEL2vwJTPdevw9TI
-         dkNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b2IyM27KyGz4uJ+vHY0/xwqTCFrd9ysYN6CzGQ8O0cA=;
-        b=mupf6t3yXoMzgGNxsqqRoGgy1RZTu0LU707fjp7FKKYsRqrxAAvtfyPDBgHSpdhTZk
-         xbQVlka71FffMPfCOu3/h0UXWIEXcR++MCSrcthtML4IQMbjAN/dquYrmhkKZujPaUq5
-         QPBr7JXQ0z6sqrCgpMbGEhVUM9XuQWzUvuR8zsU2/yEn4nOxoRKuSOu7ZfyscKE4V2sJ
-         KJTP7Tw94FxJmqnbLnmmEeq0tROzAZMmIianl+8bYQP+/uyx7Hy/T3Yo5vbPGQopWba+
-         xrm3JQ/0swRfczMGQJlh/jCP2+qAgxVJE6EQdPMejndcMujYG6zf4xEuAWhX7hDwXuwS
-         U9Yw==
-X-Gm-Message-State: APjAAAWNaUIuf/grVVqgjXbsugeIvvYyk7Sc0xmZVJoKCFlDpc/JeG5/
-        8sNO0URvx04vukVExPu1+/OhM+A0uwQseunBSo49r5uU+8w=
-X-Google-Smtp-Source: APXvYqyhUchSG2HsKkW7TBXJrPuGOTXzynXq+EVVt9qQtbLQHc/WCqbzSLTWdw+gfP4BBVQ/xDXtvq95tbTf5V4kZD4=
-X-Received: by 2002:a65:678f:: with SMTP id e15mr26594774pgr.130.1580753332411;
- Mon, 03 Feb 2020 10:08:52 -0800 (PST)
+        Mon, 3 Feb 2020 13:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727188AbgBCSMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 13:12:10 -0500
+Received: from oasis.local.home (unknown [213.120.252.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8932320838;
+        Mon,  3 Feb 2020 18:12:08 +0000 (UTC)
+Date:   Mon, 3 Feb 2020 13:12:03 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Pavan Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20200203131203.20bf3fc3@oasis.local.home>
+In-Reply-To: <20200203171745.alba7aswajhnsocj@e107158-lin>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+        <20200131100629.GC27398@codeaurora.org>
+        <20200131153405.2ejp7fggqtg5dodx@e107158-lin.cambridge.arm.com>
+        <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
+        <20200203142712.a7yvlyo2y3le5cpn@e107158-lin>
+        <20200203111451.0d1da58f@oasis.local.home>
+        <20200203171745.alba7aswajhnsocj@e107158-lin>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1579007786.git.andreyknvl@google.com> <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
- <87ftfv7nf0.fsf@kernel.org> <CAAeHK+wwmis4z9ifPAnkM36AnfG2oESSLAkKvDkuAa0QUM2wRg@mail.gmail.com>
- <87a7637ise.fsf@kernel.org>
-In-Reply-To: <87a7637ise.fsf@kernel.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 3 Feb 2020 19:08:41 +0100
-Message-ID: <CAAeHK+zNuqwmHG4NJwZNtQHizdaOpriHxoQffZHMffeke_hsGQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 4:22 PM Felipe Balbi <balbi@kernel.org> wrote:
->
->
-> Hi,
->
-> Andrey Konovalov <andreyknvl@google.com> writes:
-> >> > diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
-> >> > new file mode 100644
-> >> > index 000000000000..51796af48069
-> >> > --- /dev/null
-> >> > +++ b/drivers/usb/gadget/legacy/raw_gadget.c
-> >> > @@ -0,0 +1,1068 @@
-> >> > +// SPDX-License-Identifier: GPL-2.0
-> >>
-> >> V2 only
-> >
-> > Like this: SPDX-License-Identifier: GPL-2.0 only ?
->
-> Right, you need to choose if you want 2.0-only or 2.0-or-later and make
-> sure spdx and module_license() agree.
->
-> https://spdx.org/licenses/GPL-2.0-only.html
->
-> What you had before, implies GPL-2.0-only...
->
-> >> > +MODULE_LICENSE("GPL");
->
-> but this is GPL 2+
->
-> /me goes look
->
-> Actually Thomas Gleixner changed the meaning of MODULE_LICENSE("GPL"),
-> so I don't really know how this should look today.
->
-> >> > +static int raw_event_queue_add(struct raw_event_queue *queue,
-> >> > +     enum usb_raw_event_type type, size_t length, const void *data)
-> >> > +{
-> >> > +     unsigned long flags;
-> >> > +     struct usb_raw_event *event;
-> >> > +
-> >> > +     spin_lock_irqsave(&queue->lock, flags);
-> >> > +     if (WARN_ON(queue->size >= RAW_EVENT_QUEUE_SIZE)) {
-> >> > +             spin_unlock_irqrestore(&queue->lock, flags);
-> >> > +             return -ENOMEM;
-> >> > +     }
-> >> > +     event = kmalloc(sizeof(*event) + length, GFP_ATOMIC);
-> >>
-> >> I would very much prefer dropping GFP_ATOMIC here. Must you have this
-> >> allocation under a spinlock?
-> >
-> > The issue here is not the spinlock, but that this might be called in
-> > interrupt context. The number of atomic allocations here is restricted
-> > by 128, and we can reduce the limit even further (until some point in
-> > the future when and if we'll report more different events). Another
-> > option would be to preallocate the required number of objects
-> > (although we don't know the required size in advance, so we'll waste
-> > some memory) and use those. What would you prefer?
->
-> I think you shouldn't do either :-) Here's what I think you should do:
->
-> 1. support O_NONBLOCK. This just means conditionally removing your
->    wait_for_completion_interruptible().
+On Mon, 3 Feb 2020 17:17:46 +0000
+Qais Yousef <qais.yousef@arm.com> wrote:
 
-I don't think non blocking read/writes will work for us. We do
-coverage-guided fuzzing and need to collect coverage for each syscall.
-In the USB case "syscall" means processing a USB request from start to
-end, and thus we need to wait until the kernel finishes processing it,
-otherwise we'll fail to associate coverage properly (It's actually a
-bit more complex, as we collect coverage for the whole initial
-enumeration process as for one "syscall", but the general idea stands,
-that we need to wait until the operation finishes.)
 
->
-> 2. Every time user calls write(), you usb_ep_alloc(), allocate a buffer
->    with the write size, copy buffer to kernel space,
->    usb_ep_queue(). When complete() callback is called, then you free the
->    request. This would allow us to amortize the cost of copy_from_user()
->    with several requests being queued to USB controller.
+> I'm torn about pushing a task already on a big core to a little core if it says
+> it wants it (down migration).
 
-I'm not sure I really get this part. We'll still need to call
-copy_from_user() and usb_ep_queue() once per each operation/request.
-How does it get amortized? Or do you mean that having multiple
-requests queued will allow USB controller to process them in bulk?
-This makes sense, but again, we"ll then have an issue with coverage
-association.
+If the "down migration" happens to a process that is lower in priority,
+then that stays in line with the policy decisions of scheduling RT
+tasks. That is, higher priority task take precedence over lower
+priority tasks, even if that means "degrading" that lower priority task.
 
->
-> 3. Have a pre-allocated list of requests (128?) for read(). Enqueue them
->    all during set_alt(). When user calls read() you will:
->
->    a) check if there are completed requests to be copied over to
->       userspace. Recycle the request.
->
->    b) if there are no completed requests, then it depends on O_NONBLOCK
->
->       i) If O_NONBLOCK, return -EWOULDBLOCK
->       ii) otherwise, wait_for_completion
+For example, if a high priority task wakes up on a CPU that is running
+a lower priority task, and with the exception of that lower priority
+task being pinned, it will boot it off the CPU. Even if the lower
+priority task is pinned, it may still take over the CPU if it can't
+find another CPU.
 
-See response to #1, if we prequeue requests, then the kernel will
-start handling them before we do read(), and we'll fail to associate
-coverage properly. (This will also require adding another ioctl to
-imitate set_alt(), like the USB_RAW_IOCTL_CONFIGURE that we have.)
 
-> I think this can all be done without any GFP_ATOMIC allocations.
+> > 
+> > 4. If a little core is returned, and we schedule an RT task that
+> > prefers big cores on it, we mark it overloaded.
+> > 
+> > 5. An RT task on a big core schedules out. Start looking at the RT
+> > overloaded run queues.
+> > 
+> > 6. See that there's an RT task on the little core, and migrate it over.  
+> 
+> I think the above should depend on the fitness of the cpu we currently run on.
+> I think we shouldn't down migrate, or at least investigate better down
+> migration makes more sense than keeping tasks running on the correct CPU where
+> they are.
 
-Overall, supporting O_NONBLOCK might be a useful feature for people
-who are doing something else other than fuzzing, We can account for
-potential future extensions that'll support it, so detecting
-O_NONBLOCK and returning an error for now makes sense.
+Note, this only happens when a big core CPU schedules. And if you do
+not have HAVE_RT_PUSH_IPI (which sends IPIs to overloaded CPUS and just
+schedules), then that "down migration" happens to an RT task that isn't
+even running.
 
-WDYT?
+You can add to the logic that you do not take over an RT task that is
+pinned and can't move itself. Perhaps that may be the only change to
+cpu_find(), is that it will only pick a big CPU if little CPUs are
+available if the big CPU doesn't have a pinned RT task on it.
 
-Thanks!
+Like you said, this is best effort, and I believe this is the best
+approach. The policy has always been the higher the priority of a task,
+the more likely it will push other tasks away. We don't change that. If
+the system administrator is overloading the big cores with RT tasks,
+then this is what they get.
+
+> 
+> > Note, this will require a bit more logic as the overloaded code wasn't
+> > designed for migration of running tasks, but that could be added.  
+> 
+> I'm wary of overloading the meaning of rt.overloaded. Maybe I can convert it to
+> a bitmap so that we can encode the reason.
+
+We can change the name to something like rt.needs_pull or whatever.
+
+-- Steve
