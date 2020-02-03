@@ -2,159 +2,157 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA1C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169AFC33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685C62080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDF020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580730780;
+	bh=7xf6l0x9f3yqiOhlxlprQWM2OQY9DYvJlDJWXMnII54=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vq7PajAWAaEsnG/oHkScrvZc49c85LNzR9yX99ggB+d4y4G35/Ehqgp6clAoO21C1
+	 PTKKNTVjLIjN1jgNoCOqYarBsIW/BhuczR+DPlufcOv7uwTE7iBCA4E68DSNFnJdum
+	 W163ofbsIgS7TritEXlCjaVyIFRAhIBFpA1qlj2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgBCLs1 (ORCPT
+        id S1727340AbgBCLxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:48:27 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40134 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBCLs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:48:27 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so13314874otr.7;
-        Mon, 03 Feb 2020 03:48:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cIcM6horOupoNF42on3HiLd9WMI2OhEwseOUcpsov84=;
-        b=B+MSGhX/QygLDvu3oeN0ZQGEny4N+s9yRSdA+0Y3s5lk3OEqFfZN+5I9OotOntZmnV
-         UdnTDuPeHMnYX/8wPtkNlgYlnVI9tsw0KPnuhtuZf/cjTJkIng4m2fl7yvK2vj3WGtzA
-         dwPNOjBF2ABoa1hC8TOomb6KlhUTlJ/nISRPMw37R09rmYoQjMapAF26vwCkXVQoXuIa
-         blZhRR55IqklzD32l8hNE8RSFMfCuSyU+hRdiKA5UlHn+wdKSwjhPXFlbIiREpPywr+N
-         ZDC948+5tonP6xw4Quhit/Jmjit4dImvYpMXu9R6n1JJwOVB4Fm3BAfoMLLK0wKF5cav
-         q7gw==
-X-Gm-Message-State: APjAAAXSEgImvWxgFNcrEdxsYzAaH+Dh64myFaMM2DgTafc+VUFMsT6X
-        Mnu/p0QtU9lEwQT8AsVUIeGfjfEQ7a2TmrFdHhA=
-X-Google-Smtp-Source: APXvYqzgBYt4Oe5WFNix0AnKWCYlhcYw0seqUZPjZjKoUbQle7EkA5r5ug5YQolBrxyeUryZdxrR6o0/dnHKTN7LUlQ=
-X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr17483399oth.145.1580730504596;
- Mon, 03 Feb 2020 03:48:24 -0800 (PST)
+        Mon, 3 Feb 2020 06:53:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgBCLw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 06:52:59 -0500
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0DE217BA;
+        Mon,  3 Feb 2020 11:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580730778;
+        bh=7xf6l0x9f3yqiOhlxlprQWM2OQY9DYvJlDJWXMnII54=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QAAyKp0DMnE4/Ke93ayIXNd2pfxyBG9VkCoj8wEGNaGM/6XTQdWI1P194C5TNIw6h
+         m5Wu+ATH6+LztErcvWKxz2sep2OFwsgKGWHxZAE3wqMr3bSNwm8ZVYc7FsB4J1FZJx
+         GFNHkcd4WglHAIf2oN4mWPlfR9HRwokyWSF3soKc=
+Received: by mail-lj1-f181.google.com with SMTP id x7so14330773ljc.1;
+        Mon, 03 Feb 2020 03:52:58 -0800 (PST)
+X-Gm-Message-State: APjAAAUtZXlQFHfVa4+wjO4rgTDxrHqoYNOL4ziHF+0QpBiwOr9Dwtgm
+        s4UF6CwfXqJaH7TzjXYV7RqmkLsyOVFkN/ozF90=
+X-Google-Smtp-Source: APXvYqzr5wd/VbPIliYCYFMvvcM1qcze60h66l8h6hCiB4vZZDzfTGLOeSa9EfTbYebXVLxdN/na3R/Ef6tYAfxaBEQ=
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr13176749lji.256.1580730776602;
+ Mon, 03 Feb 2020 03:52:56 -0800 (PST)
 MIME-Version: 1.0
-References: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
- <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
- <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com>
- <CAMuHMdWerVTn-RvUOzHzGurY71NP9fNj+24EjnVkxnmp5g94jw@mail.gmail.com> <CAK7LNAQOJGnL62ADL76V_jMm356+1rGxqBRt=BBpvvy+iASniw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQOJGnL62ADL76V_jMm356+1rGxqBRt=BBpvvy+iASniw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 3 Feb 2020 12:48:13 +0100
-Message-ID: <CAMuHMdVNKp+jsFyyDd+P34QRiBjmYHJKN=77Yt8R+t1ZTS35xw@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <20200130195525.4525-1-krzk@kernel.org> <20200130195525.4525-2-krzk@kernel.org>
+ <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com>
+In-Reply-To: <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 3 Feb 2020 12:52:45 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+Message-ID: <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: configs: Cleanup old Kconfig options
+To:     Joe Perches <joe@perches.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, openbmc@lists.ozlabs.org,
+        arm@kernel.org, soc@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
-
-On Mon, Feb 3, 2020 at 12:38 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> On Mon, Feb 3, 2020 at 8:00 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Mon, Feb 3, 2020 at 2:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > On Sun, Feb 2, 2020 at 3:45 AM Linus Torvalds
-> > > <torvalds@linux-foundation.org> wrote:
-> > > > On Fri, Jan 31, 2020 at 8:06 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > > >
-> > > > >  - simplify built-in initramfs creation
-> > > >
-> > > > Hmm.
-> > > >
-> > > > This may simplify it from a _technical_ angle, but it seems to be a
-> > > > fairly annoying step backwards from a UI perspective.
-> > > >
-> > > > Now Kconfig asks a completely pointless question that most people have
-> > > > absolutely zero interest in. The old situation was better, I feel.
-> > > >
-> > > > Basically, I feel that from a "get normal users to test development
-> > > > kernels", our Kconfig pain ends up being the biggest hurdle by far.
-> > > >
-> > > > The kernel is easy to build and doesn't really require all that much
-> > > > infrastructure, but generating the config - particularly when it
-> > > > changes over time and you can't just say "just use the distro config"
-> > > > - is a big step for people.
-> > > >
-> > > > So honestly, while I've pulled this, I feel that this kind of change
-> > > > is going _exactly_ the wrong way when it asks people questions that
-> > > > they don't care one whit about.
-> > > >
-> > > > If I as a kernel developer can't find it in myself to care and go "why
-> > > > does it ask this new question", then that should tell you something.
-> > > >
-> > > > Why do we have this choice in the first place?
-> > >
-> > > Generally, initramfs is passed from a boot-loader,
-> > > but some architectures embed initramfs into vmlinux
-> > > (perhaps due to poor boot-loader support??)
-> > >
-> > > arch/arc/configs/tb10x_defconfig:CONFIG_INITRAMFS_SOURCE="../tb10x-rootfs.cpio"
-> > > arch/unicore32/configs/defconfig:#CONFIG_INITRAMFS_SOURCE="arch/unicore/ramfs/ramfs_config"
-> > > arch/xtensa/configs/cadence_csp_defconfig:CONFIG_INITRAMFS_SOURCE="$$KERNEL_INITRAMFS_SOURCE"
+On Thu, 30 Jan 2020 at 23:06, Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2020-01-30 at 20:55 +0100, Krzysztof Kozlowski wrote:
+> > CONFIG_MMC_BLOCK_BOUNCE is gone since commit c3dccb74be28 ("mmc: core:
+> > Delete bounce buffer Kconfig option").
 > >
-> > Note that the above are examples that do not actually work, as the files
-> > referred to are not present in mainline (read below[1] why I have just
-> > checked that ;-).
+> > CONFIG_LBDAF is gone since commit 72deb455b5ec ("block: remove
+> > CONFIG_LBDAF").
 > >
-> > > So, data-compression is useful - that's is what I understand.
+> > CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
+> > commit f382fb0bcef4 ("block: remove legacy IO schedulers").
 > >
-> > Yes it is, depending on your config.
+> > The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
+> > now enabled by default (along with MQ_IOSCHED_KYBER).
 > >
-> > > For major architectures, vmlinux embeds a tiny initramfs,
-> > > which is generated based on usr/default_cpio_list.
-> > >
-> > > We do not need data-compression for such a small cpio,
-> > > but handling it in a consistent way is sensible.
-> > > This is annoying from the users' PoV, I admit.
-
-> > So INITRAMFS_COMPRESSION_NONE is the right answer to retain the
-> > old behavior?
+> > The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
+> > previously choosing the latter.
+> >
+> > CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
+> > CONFIG_CROSS_COMPILE support").
 >
-> Yes, INITRAMFS_COMPRESSION_NONE retains the previous behavior.
+> Hi Krzysztof.
 >
-> But, as far as he I understood what Linus said,
-> "we do not care".
+> There seems there are a lot more of these unused CONFIG_<foo>
+> symbols in various defconfigs. (just for arm and treewide below)
 >
-> > One might question why not to use gzip anyway, as
-> > CONFIG_RD_GZIP=y is enabled by default, and would give a (small)
-> > improvement of ca. 350 bytes ;-)
-> > Hence there is some area for improvement...
+> ARM defconfigs:
+
+Hi Joe,
+
+Nice finding! The trickier point is to nicely remove them because:
+1. The easiest is 'savedefconfig' but then some valuable options might
+disappear (like recently happened with DEBUG_FS),
+2. They could be removed in automated way with a script. However in
+such case what about replacements? If some symbol was replaced with
+other (or just renamed), maybe we should enable the other one to
+restore the desired functionality?
+3. Or maybe let's don't care about keeping defconfigs stable and just
+clean them up automatically.
+
+Best regards,
+Krzysztof
+
+> --------------------------------------------------------------------
 >
-> GZIP is not the only compression algorithm.
+> # find all defined config symbols in Kconfig files
 >
-> Somebody may want to disable RD_GZIP,
-> then enable RD_XZ.
+> $ git grep -P -oh '^\s*(?:menu)?config\s+\w+' -- '*/Kconfig*' | \
+>   sed -r -e 's/\s*config\s+//' -e 's/\s*menuconfig\s+//' | \
+>   sort | uniq > config_symbols
+>
+> # find CONFIG_ symbols in arm defconfigs
+>
+> $ git grep -w -oh -P 'CONFIG_\w+' 'arch/arm*/*defconfig*' | \
+>   sort | uniq > used_in_arm_defconfigs
+>
+> # find all the unused symbols
+>
+> $ cat used_in_arm_defconfigs | \
+>   while read line ; do \
+>     echo -n "$line " ; grep -w -c ${line/CONFIG_/} config_symbols ; \
+>   done | \
+>   grep " 0" | \
+>   sed 's/ 0//'
 
-Sure, it can only be used when available.
-
-> If we allow the data compression,
-> Kconfig must ask "which compression algorithm".
-
-Or default to one of the available ones.
-
-> So, if Kconfig would siltently choose something
-> as default, INITRAMFS_COMPRESSION_NONE would be the best.
-
-Yeah, probably it's good enough.
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+(...)
