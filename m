@@ -2,225 +2,98 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F277CC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC70C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C7920674
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2236C20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ue0DVmxj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DubTVcqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBCXjG (ORCPT
+        id S1727129AbgBCXjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:39:06 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32864 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgBCXjF (ORCPT
+        Mon, 3 Feb 2020 18:39:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59072 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726287AbgBCXjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:39:05 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so8707026pgk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:39:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yw2JA/6AXwF+6u8uNVr/YyXYYHJ8klG+TzKG0d9b16Q=;
-        b=ue0DVmxjJvkuQVa0LhJ+216bR3UWp4VHUBpSBdIy6xpQBmjvSqkBYXi1YWlRNkl3jv
-         Wo+YTkHsG/7aFVNT+Lkpqcqzd7En3WdUy/hpxXAVM4ZaXCwqdiaKulu7Hj0ieRF6xFoi
-         n867VxVwHjui6lBCAs2clAbLG+8qHJtXOXrDCwfC/+s3WpwuPEF8ipKd8HodlVbz2qJo
-         NbicofDd+5ti86vjkN9MY4jmo0/G/IBinNEouvxiCoJ81PArcUTZLMya5Ws9M9f1B+9z
-         dZpe9EgERXKsKT7ptP5WnKcD2E2WVrVdVvltY44f0sZCxt8CwSzOz8MUHwhs8kzyQzbQ
-         Mmhg==
+        Mon, 3 Feb 2020 18:39:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580773179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5I1HAxr39AdpMHsVkl2MOFdKX0uTzBJ2hmslg/vYG7U=;
+        b=DubTVcqOFVj39bd7gdrUSPyjF2hSDz8hYCnaXJr7jZ8Xt4tQVfsdfRdbhIlZ9NazTY3lAT
+        Qd4tB78xBZeHKQigs8IUs9M/goi7cuotV1p77mG8DDbI0SAUmXjhGMxQAy13t59xBZtrhN
+        9L6y/C7uPTndWHwEXp0C5MZwkvZms/0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-o-HuKVCfNPOI0C9G5s94ow-1; Mon, 03 Feb 2020 18:39:38 -0500
+X-MC-Unique: o-HuKVCfNPOI0C9G5s94ow-1
+Received: by mail-wr1-f69.google.com with SMTP id j4so9085707wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:39:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yw2JA/6AXwF+6u8uNVr/YyXYYHJ8klG+TzKG0d9b16Q=;
-        b=DUjNKcQ43A4P1zOQxCZppBzka3B4ZafYkUG/NRKQ/gZNKqBe+CbKQnmieFz8cL5fv9
-         TKuQtOvtIDPaBooTVinQn+xGzKo/t3VUhtyNFfdl0Rw3cvJeyKR9285VJSIF8lWk3pp1
-         jo5z0EpPqWb0xO+meZxnfQac1tlDY4ezcDDfOUV9D8lNs4gLl/T8oaL51Klhi3iV2Jkl
-         DDJUa8GW3tq2/0MItSFV2ZMlgrY9azxzHrkSaHua/bbfJvuHGqjz9/RkVIj4P1uEJuZJ
-         YujxXc7WPccEbRshNrTAGNf1m90/lTZbr8PEKoT6hQBS7p1FCDIj36jYDygHh+oXbmSu
-         9VQg==
-X-Gm-Message-State: APjAAAUGLqGhkXvMg7rlS6QrV0/raZHZVMtydiLpIZ6E/BnbUnkZuYQl
-        2rtVFws5YkwGklMj/ySV27q5pA==
-X-Google-Smtp-Source: APXvYqxOoFk3CyqcPGJfbhnecTv/NZMWeZNBLC2qjizan1SzjZNjXWy0WgOLL1Q4sNdufGFAOQs10w==
-X-Received: by 2002:a62:e40e:: with SMTP id r14mr27073983pfh.115.1580773144397;
-        Mon, 03 Feb 2020 15:39:04 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z14sm20152891pgj.43.2020.02.03.15.39.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5I1HAxr39AdpMHsVkl2MOFdKX0uTzBJ2hmslg/vYG7U=;
+        b=QOvX848flluUcL6PSs0VizcvoWPnXfgSjVysLIn6C7ja55AuW4cVjeF2lQoSO0LF0r
+         kGaCUWFxjesG1nXrMemruTkRt8fcDTAibOtzDon9h4BHfXx4t1rLHrGrhpbfhWdQJbUp
+         CfFGGNxSxtEDCIAn5eACMhIgJ7lhEjaE4oKzWeX5o0dQD2Ga/lmN8hGAjN1MnOdk47pc
+         cHq27iaB6frPWlmAE049Ao0GlcF31Ahn3O/u1I7X1a5PcRdWQZfsj3Q6Hkfv4GMNDg8f
+         evdBfkk6r5DHVhpQLhp4INnGeQk2VDb0+OiaUeUlGVF+BRlj3I2/Dc+fVFjPlUl6dKgy
+         ozIw==
+X-Gm-Message-State: APjAAAW/SMWyVnmK+9snM81C/a7IWDGojkXCnTgzzbmkokXcU6+n9zOC
+        3HSR6snfjAgmafFbh/OE/b9sGMSPQ8lpGngVs1Zgit9oxjOAJrNo0EtdljWCRhqtJx1F3hLfrae
+        //HOuzxYEenCI2HEJwgo+IJZk
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr17323060wru.382.1580773177188;
+        Mon, 03 Feb 2020 15:39:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyZsbPh5JGaqRxiFxIHmn8GVyOzze6usAiUfosb3U5cluC+GypdbmtQRvgfeOTfq2Jb0PdZjw==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr17323047wru.382.1580773177034;
+        Mon, 03 Feb 2020 15:39:37 -0800 (PST)
+Received: from raver.teknoraver.net (net-2-36-173-8.cust.vodafonedsl.it. [2.36.173.8])
+        by smtp.gmail.com with ESMTPSA id h17sm28264258wrs.18.2020.02.03.15.39.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 15:39:03 -0800 (PST)
-Date:   Mon, 3 Feb 2020 15:39:01 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
-        seanpaul@chromium.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 7/9] drm/bridge: ti-sn65dsi86: Group DP link training
- bits in a function
-Message-ID: <20200203233901.GG311651@builder>
-References: <20191218223530.253106-1-dianders@chromium.org>
- <20191218143416.v3.7.I1fc75ad11db9048ef08cfe1ab7322753d9a219c7@changeid>
+        Mon, 03 Feb 2020 15:39:36 -0800 (PST)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH] crypto: arm64/poly1305: ignore build files
+Date:   Tue,  4 Feb 2020 00:39:33 +0100
+Message-Id: <20200203233933.19577-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218143416.v3.7.I1fc75ad11db9048ef08cfe1ab7322753d9a219c7@changeid>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18 Dec 14:35 PST 2019, Douglas Anderson wrote:
+Add arch/arm64/crypto/poly1305-core.S to .gitignore
+as it's built from poly1305-core.S_shipped
 
-> We'll re-organize the ti_sn_bridge_enable() function a bit to group
-> together all the parts relating to link training and split them into a
-> sub-function.  This is not intended to have any functional change and
-> is in preparation for trying link training several times at different
-> rates.  One small side effect here is that if link training fails
-> we'll now leave the DP PLL disabled, but that seems like a sane thing
-> to do.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Tested-by: Rob Clark <robdclark@gmail.com>
-> Reviewed-by: Rob Clark <robdclark@gmail.com>
+Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ arch/arm64/crypto/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/arch/arm64/crypto/.gitignore b/arch/arm64/crypto/.gitignore
+index 879df8781ed5..e403b1343328 100644
+--- a/arch/arm64/crypto/.gitignore
++++ b/arch/arm64/crypto/.gitignore
+@@ -1,2 +1,3 @@
+ sha256-core.S
+ sha512-core.S
++poly1305-core.S
+-- 
+2.24.1
 
-> ---
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 86 ++++++++++++++++-----------
->  1 file changed, 52 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index d5990a0947b9..48fb4dc72e1c 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -530,6 +530,46 @@ static unsigned int ti_sn_get_max_lanes(struct ti_sn_bridge *pdata)
->  	return data & DP_LANE_COUNT_MASK;
->  }
->  
-> +static int ti_sn_link_training(struct ti_sn_bridge *pdata)
-> +{
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/* set dp clk frequency value */
-> +	ti_sn_bridge_set_dp_rate(pdata);
-> +
-> +	/* enable DP PLL */
-> +	regmap_write(pdata->regmap, SN_PLL_ENABLE_REG, 1);
-> +
-> +	ret = regmap_read_poll_timeout(pdata->regmap, SN_DPPLL_SRC_REG, val,
-> +				       val & DPPLL_SRC_DP_PLL_LOCK, 1000,
-> +				       50 * 1000);
-> +	if (ret) {
-> +		DRM_ERROR("DP_PLL_LOCK polling failed (%d)\n", ret);
-> +		goto exit;
-> +	}
-> +
-> +	/* Semi auto link training mode */
-> +	regmap_write(pdata->regmap, SN_ML_TX_MODE_REG, 0x0A);
-> +	ret = regmap_read_poll_timeout(pdata->regmap, SN_ML_TX_MODE_REG, val,
-> +				       val == ML_TX_MAIN_LINK_OFF ||
-> +				       val == ML_TX_NORMAL_MODE, 1000,
-> +				       500 * 1000);
-> +	if (ret) {
-> +		DRM_ERROR("Training complete polling failed (%d)\n", ret);
-> +	} else if (val == ML_TX_MAIN_LINK_OFF) {
-> +		DRM_ERROR("Link training failed, link is off\n");
-> +		ret = -EIO;
-> +	}
-> +
-> +exit:
-> +	/* Disable the PLL if we failed */
-> +	if (ret)
-> +		regmap_write(pdata->regmap, SN_PLL_ENABLE_REG, 0);
-> +
-> +	return ret;
-> +}
-> +
->  static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->  {
->  	struct ti_sn_bridge *pdata = bridge_to_ti_sn_bridge(bridge);
-> @@ -555,29 +595,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->  	regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
->  			   CHA_DSI_LANES_MASK, val);
->  
-> -	/* Set the DP output format (18 bpp or 24 bpp) */
-> -	val = (ti_sn_bridge_get_bpp(pdata) == 18) ? BPP_18_RGB : 0;
-> -	regmap_update_bits(pdata->regmap, SN_DATA_FORMAT_REG, BPP_18_RGB, val);
-> -
-> -	/* DP lane config */
-> -	val = DP_NUM_LANES(min(pdata->dp_lanes, 3));
-> -	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
-> -			   val);
-> -
-> -	/* set dsi/dp clk frequency value */
-> +	/* set dsi clk frequency value */
->  	ti_sn_bridge_set_dsi_rate(pdata);
-> -	ti_sn_bridge_set_dp_rate(pdata);
-> -
-> -	/* enable DP PLL */
-> -	regmap_write(pdata->regmap, SN_PLL_ENABLE_REG, 1);
-> -
-> -	ret = regmap_read_poll_timeout(pdata->regmap, SN_DPPLL_SRC_REG, val,
-> -				       val & DPPLL_SRC_DP_PLL_LOCK, 1000,
-> -				       50 * 1000);
-> -	if (ret) {
-> -		DRM_ERROR("DP_PLL_LOCK polling failed (%d)\n", ret);
-> -		return;
-> -	}
->  
->  	/**
->  	 * The SN65DSI86 only supports ASSR Display Authentication method and
-> @@ -588,19 +607,18 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->  	drm_dp_dpcd_writeb(&pdata->aux, DP_EDP_CONFIGURATION_SET,
->  			   DP_ALTERNATE_SCRAMBLER_RESET_ENABLE);
->  
-> -	/* Semi auto link training mode */
-> -	regmap_write(pdata->regmap, SN_ML_TX_MODE_REG, 0x0A);
-> -	ret = regmap_read_poll_timeout(pdata->regmap, SN_ML_TX_MODE_REG, val,
-> -				       val == ML_TX_MAIN_LINK_OFF ||
-> -				       val == ML_TX_NORMAL_MODE, 1000,
-> -				       500 * 1000);
-> -	if (ret) {
-> -		DRM_ERROR("Training complete polling failed (%d)\n", ret);
-> -		return;
-> -	} else if (val == ML_TX_MAIN_LINK_OFF) {
-> -		DRM_ERROR("Link training failed, link is off\n");
-> +	/* Set the DP output format (18 bpp or 24 bpp) */
-> +	val = (ti_sn_bridge_get_bpp(pdata) == 18) ? BPP_18_RGB : 0;
-> +	regmap_update_bits(pdata->regmap, SN_DATA_FORMAT_REG, BPP_18_RGB, val);
-> +
-> +	/* DP lane config */
-> +	val = DP_NUM_LANES(min(pdata->dp_lanes, 3));
-> +	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
-> +			   val);
-> +
-> +	ret = ti_sn_link_training(pdata);
-> +	if (ret)
->  		return;
-> -	}
->  
->  	/* config video parameters */
->  	ti_sn_bridge_set_video_timings(pdata);
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
