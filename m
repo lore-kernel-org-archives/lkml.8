@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED30C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07C8C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47792086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADC320838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748318;
-	bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
+	s=default; t=1580748320;
+	bh=uZnpqr58FAIQr5basJhVzbytWtXZYs6Nk1b4vihknk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXxlUtQCVf0dZr6jk9K9jDQ4JumWmZnf3fXzq/4dxcSpruc71BMTIPIEID3JAWBpO
-	 3YC7X40znrE1nuw3zyf32HOUdROVWcR/yPNtk28E8kjHXaGynYTYSdTvWqT72V3Vnq
-	 2WoBx/HUUe/F8oD9fvg+D4etyqSZtr5FEkIupqdE=
+	b=HLj/7z2WCDq8k2kcAfZaYVp57ONUKWPkaDKsqxTo6uW1tI3iuma2rZk4dUR13cOTd
+	 ttGFfnw5jnMUJP52FsJiBssCnK8SOFUwaFrrqpCNq/kB99fTj0UmqXIpBSTI+O/1HS
+	 6jiNNcfc4+Ae8PWMBvBXzy2LhlMp8q2H8ntHqyC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbgBCQaW (ORCPT
+        id S1731596AbgBCQpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:30:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42642 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:45:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbgBCQaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:17 -0500
+        id S1728423AbgBCQaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:23 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4D382051A;
-        Mon,  3 Feb 2020 16:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE6DC20838;
+        Mon,  3 Feb 2020 16:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747416;
-        bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
+        s=default; t=1580747423;
+        bh=uZnpqr58FAIQr5basJhVzbytWtXZYs6Nk1b4vihknk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6mU7zjjrPCJ5OwhmeVCqlumck2aQfcg2jnS8EjAGesMqbC4wpbFFIuieh9kHE5p3
-         FqMQl3bRZxp0CBaTkW/xaiM0tkAYBNJQWw3gGr/L/oc/nuFAMu+HfoynmPqJZlVWl9
-         iisFUFLcZoeXrrMsEn61Lmum6l9jqy0ukX/kMXwQ=
+        b=gIX67rs54LNIFDQPhY1gnmgpsWYycJ+vs2U19Bqyn2kdzq+7n7eF6g13axOl8OrPr
+         199goSdsDomqBseKii+NmAq3qdOa01e7FkE/SMyP+x7bzRjF1DBvqlcjYQsUVe9OMW
+         U6q06pD3sBRiRYF8P/kWqHUEsX6w5dVBltweKnO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/89] phy: cpcap-usb: Prevent USB line glitches from waking up modem
-Date:   Mon,  3 Feb 2020 16:19:05 +0000
-Message-Id: <20200203161919.622920947@linuxfoundation.org>
+Subject: [PATCH 4.14 78/89] r8152: get default setting of WOL before initializing
+Date:   Mon,  3 Feb 2020 16:20:03 +0000
+Message-Id: <20200203161926.425684713@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -63,92 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Hayes Wang <hayeswang@realtek.com>
 
-[ Upstream commit 63078b6ba09e842f09df052c5728857389fddcd2 ]
+[ Upstream commit 9583a3638dc07cc1878f41265e85ed497f72efcb ]
 
-The micro-USB connector on Motorola Mapphone devices can be muxed between
-the SoC and the mdm6600 modem. But even when used for the SoC, configuring
-the PHY with ID pin grounded will wake up the modem from idle state. Looks
-like the issue is probably caused by line glitches.
+Initailization would reset runtime suspend by tp->saved_wolopts, so
+the tp->saved_wolopts should be set before initializing.
 
-We can prevent the glitches by using a previously unknown mode of the
-GPIO mux to prevent the USB lines from being connected to the moden while
-configuring the USB PHY, and enable the USB lines after configuring the
-PHY.
-
-Note that this only prevents waking up mdm6600 as regular USB A-host mode,
-and does not help when connected to a lapdock. The lapdock specific issue
-still needs to be debugged separately.
-
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/motorola/phy-cpcap-usb.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/usb/r8152.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
-index 4ba3634009afc..593c77dbde2eb 100644
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -115,7 +115,7 @@ struct cpcap_usb_ints_state {
- enum cpcap_gpio_mode {
- 	CPCAP_DM_DP,
- 	CPCAP_MDM_RX_TX,
--	CPCAP_UNKNOWN,
-+	CPCAP_UNKNOWN_DISABLED,	/* Seems to disable USB lines */
- 	CPCAP_OTG_DM_DP,
- };
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 0083c60f5cdff..a7f9c1886bd4c 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5244,6 +5244,11 @@ static int rtl8152_probe(struct usb_interface *intf,
  
-@@ -379,7 +379,8 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- {
- 	int error;
+ 	intf->needs_remote_wakeup = 1;
  
--	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	/* Disable lines to prevent glitches from waking up mdm6600 */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
- 	if (error)
- 		goto out_err;
- 
-@@ -406,6 +407,11 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- 	if (error)
- 		goto out_err;
- 
-+	/* Enable UART mode */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	if (error)
-+		goto out_err;
++	if (!rtl_can_wakeup(tp))
++		__rtl_set_wol(tp, 0);
++	else
++		tp->saved_wolopts = __rtl_get_wol(tp);
 +
- 	return 0;
+ 	tp->rtl_ops.init(tp);
+ 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
+ 	set_ethernet_addr(tp);
+@@ -5257,10 +5262,6 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		goto out1;
+ 	}
  
- out_err:
-@@ -418,7 +424,8 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
- {
- 	int error;
- 
--	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	/* Disable lines to prevent glitches from waking up mdm6600 */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
- 	if (error)
- 		return error;
- 
-@@ -458,6 +465,11 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
- 	if (error)
- 		goto out_err;
- 
-+	/* Enable USB mode */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	if (error)
-+		goto out_err;
-+
- 	return 0;
- 
- out_err:
+-	if (!rtl_can_wakeup(tp))
+-		__rtl_set_wol(tp, 0);
+-
+-	tp->saved_wolopts = __rtl_get_wol(tp);
+ 	if (tp->saved_wolopts)
+ 		device_set_wakeup_enable(&udev->dev, true);
+ 	else
 -- 
 2.20.1
 
