@@ -2,245 +2,145 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DATE_IN_PAST_24_48,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AB0C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C443C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011AE20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPO1AgLl"
+	by mail.kernel.org (Postfix) with ESMTP id 1A2A52086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgBCMZh (ORCPT
+        id S1728081AbgBCMZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:25:37 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36321 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgBCMZg (ORCPT
+        Mon, 3 Feb 2020 07:25:47 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:56091 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgBCMZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:25:36 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so7503862pfv.3;
-        Mon, 03 Feb 2020 04:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:message-id:subject:to:cc:in-reply-to:references:mime-version
-         :date:user-agent:content-transfer-encoding;
-        bh=FKUC96H2QwgVAGrgpxfMD76drSTiMD3FF9MdbiCIpS8=;
-        b=HPO1AgLlnfZ+pZluxQyqrCTra6XSAwt2F+Uj29FPvo2c4XwRnwT72wrZ+jzbuurIXK
-         C+KAlWeBcVrPXX07WgD5kWbvkehjRGvGKZQgBoP0gwGp/plQRcySiHHb5RRmYdGynuFO
-         +6CW/ZwP1YlgBAwyBIfaF82nh2r+7uSzFgcqnSB7L0Ar2naG8oEpogeO6sS6BCcQSrly
-         w+hw8kJA2NPNK+AuCvFQ7AMOSzwWz+nMuvLX170Ds2yLbr7vi6SNZQo/UXA/r4tDj7+z
-         fq17M4t1bk1moTxFhigPrcp3YpYftiVCzykWuOr7B0IQEqFbckyfzpcj7P97SNzmhpHA
-         KJKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:subject:to:cc:in-reply-to
-         :references:mime-version:date:user-agent:content-transfer-encoding;
-        bh=FKUC96H2QwgVAGrgpxfMD76drSTiMD3FF9MdbiCIpS8=;
-        b=GfIBf4FFurTz53R2CekLfe/A0TtObbyGOwzcPClzD8DeFfMIQvT8gG3FrgZh6YUYvD
-         UbuwnXVRNkLmOKdqpHNA0r26GnW/N86UGrdODyWl1d1QWpxHYaFh+WA/fyyOEATxI+9a
-         dIFHYZy0f6uek3F4scA0e3jWLS+zlRqQ+GVbXC+0Z6plxSd0MeqJR9UKLTQwEDWVCVOJ
-         Cf+jBYAkbYR1Ai9zMNzl1w5VVgIS30Qv5/vQOuBt27LKDpHt+GzDVM68T77RE6UCq3Mp
-         GpJwNC0FNwKxWC1MLbt+pS8w26COc9mq4zw9kX7vHe7gpObv1rWFGNMkFsaPcJDiyAQn
-         YC7Q==
-X-Gm-Message-State: APjAAAV7qqHIiYhLd3gio9EaM1XkiVZXBOrd90dKENCKToEK9uIw7Bml
-        WRSIwvJJIWCyf7UmIe2FWg+b1tsN+IEq+OTa
-X-Google-Smtp-Source: APXvYqxOxWVTsRcvd9C4m7tKFtSR+8DtXkqhasjaCOq+nAlY3nENXgj29dpRAJjfDVd0Kr5ww8JTBA==
-X-Received: by 2002:aa7:820d:: with SMTP id k13mr25350332pfi.10.1580732734710;
-        Mon, 03 Feb 2020 04:25:34 -0800 (PST)
-Received: from xps ([103.125.232.133])
-        by smtp.gmail.com with ESMTPSA id o16sm19905855pgl.58.2020.02.03.04.25.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:25:33 -0800 (PST)
-From:   YunQiang Su <wzssyqa@gmail.com>
-X-Google-Original-From: YunQiang Su <ysu@wavecomp.com>
-Message-ID: <cca45705edcdd27898188be06c9f31ec824a6b50.camel@wavecomp.com>
-Subject: Re: [EXTERNAL][PATCH v3] binfmt_misc: pass binfmt_misc flags to
- the interpreter
-To:     Laurent Vivier <laurent@vivier.eu>, linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-In-Reply-To: <20200128132539.782286-1-laurent@vivier.eu>
-References: <20200128132539.782286-1-laurent@vivier.eu>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Feb 2020 07:25:47 -0500
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N7yuz-1jdEvy0FiF-0150X2; Mon, 03 Feb 2020 13:25:45 +0100
+Received: by mail-qk1-f170.google.com with SMTP id u19so6277011qku.8;
+        Mon, 03 Feb 2020 04:25:44 -0800 (PST)
+X-Gm-Message-State: APjAAAVsig5ayJqpiKY25ChbkwKG8B2i4S8N2jQsFADPbXJ25qZZzHaR
+        qsMyO9bGFEhTUo73T6fu0YHDFqXxy7aA0wWLF+A=
+X-Google-Smtp-Source: APXvYqx0ocLgdidrznoQ8Enyx2eLL3hOdlL2MjBSkguYuLYfdkmdQylLrutBTZG2BNKne5lK1uCb3UnyrUHgc1yB+DQ=
+X-Received: by 2002:a05:620a:909:: with SMTP id v9mr10712027qkv.138.1580732743857;
+ Mon, 03 Feb 2020 04:25:43 -0800 (PST)
 MIME-Version: 1.0
-Date:   Sun, 02 Feb 2020 20:15:43 +0800
-User-Agent: Evolution 3.34.1-3 
-Content-Transfer-Encoding: 8bit
+References: <20200130195525.4525-1-krzk@kernel.org> <20200130195525.4525-2-krzk@kernel.org>
+ <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com> <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+In-Reply-To: <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 3 Feb 2020 13:25:27 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3VxqKuPyoparMZQYNNic6K2QsuzHE2mHskBt56cjny=g@mail.gmail.com>
+Message-ID: <CAK8P3a3VxqKuPyoparMZQYNNic6K2QsuzHE2mHskBt56cjny=g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: configs: Cleanup old Kconfig options
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        arm-soc <arm@kernel.org>, SoC Team <soc@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Z/o9hl+VbVFCd3JbFMrSX5q5pl1EGoe4TUEC+JYUrP0wfQufBCt
+ x/tSoiBEU2+RFgpd5DRkEdhSBsimgXbMosZEhQwG00/NdJbNrh11Sbm/DeULFKlaCeVyeB5
+ jcHDjtZgpX05iLKDnf4MAuciJQN3pjxGpydNJk2z7UPVXVle2k17FStyt0rJCs3NOo469iv
+ ghOOcuDImLbuTdPVxsRQg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LTIDGvjRHmQ=:+Cq4IdjiThj/pyKdrz+aZ5
+ NEPm6iOhe4dr/KngwTqUhDIgfOi1FdeUuxDeiR/8cIt3yVDDN6B3WACw4uqsMlUgY4c77b3iu
+ gElD4y/8VkSsdXCM/pYed4MgPGHq5eCCyE5uK20EYRzL04ssTZskfnT2VrWa76ie0ynDCn8c8
+ eeXPuY7MmtuKm4jY+KkX5kgvjMgBK8OtzZ2RLYgjZqPOOHcuXriVmkdvoCJZdZAq+MaofmJGy
+ k+A0bj7Si1cTiru9eupfeADcU8FAI3LuVdHgeVC/ZQbVMrjhlXcGb8NyXnmGlbT9BeRiOXG3Z
+ aiM+PlQQPqRp84D2hH62/SETV3NBmRrh7P21KIvYWxOA9eoMTT22Lyrftu78euEHg/oioRQYR
+ PTOSBbXaaANOxfY89g3Sdpq6XHZJTqZWkrW6YeuH3Fd0kPmlH6vANXiOqZ/mWMO0MfHLKgIuR
+ FAlEfkGEDe7FiZGyhTJbpPvlFQ10XsS4ulDUQGqH/sIBsxqPQgqShvHbQOr9q88dvyR76O7kn
+ TsECwZ0M3dPWp34ZoIqMO0ZWnfMRa8E+2/k2O+iekVYOXFj1VYo/0MsMTjuvcKByqne5hwbaZ
+ QFWGYFgehhGWiVd/4Ozl5hhrX5XKEe7+KLRBN/rlsOg7KoGMK/BiAVego8K3dcRFgeg0E3PL5
+ WU5tWfKPlXFZ6/TUN+hLOZbVTl0xSlZle/9aGGcifhHP66TeWwWoNCwY5YyGEPzadfaGNYHua
+ VmBedHg+ed2vKsUWz3amSLXqXPRYoq3PPw639aVAh6HXoVxoztZiTC/qREn3BLIicS5Gc76Zl
+ 0RPWL2QF/raRe/ihJd7aLmKj/oJwKYEj8qNK6mnlBo1PwXiYpM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020-01-28二的 14:25 +0100，Laurent Vivier写道：
-> It can be useful to the interpreter to know which flags are in use.
-> 
-> For instance, knowing if the preserve-argv[0] is in use would
-> allow to skip the pathname argument.
-> 
-> This patch uses an unused auxiliary vector, AT_FLAGS, to add a
-> flag to inform interpreter if the preserve-argv[0] is enabled.
-> 
-> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+On Mon, Feb 3, 2020 at 12:53 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Thu, 30 Jan 2020 at 23:06, Joe Perches <joe@perches.com> wrote:
+> >
+> > On Thu, 2020-01-30 at 20:55 +0100, Krzysztof Kozlowski wrote:
+> > > CONFIG_MMC_BLOCK_BOUNCE is gone since commit c3dccb74be28 ("mmc: core:
+> > > Delete bounce buffer Kconfig option").
+> > >
+> > > CONFIG_LBDAF is gone since commit 72deb455b5ec ("block: remove
+> > > CONFIG_LBDAF").
+> > >
+> > > CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
+> > > commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+> > >
+> > > The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
+> > > now enabled by default (along with MQ_IOSCHED_KYBER).
+> > >
+> > > The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
+> > > previously choosing the latter.
+> > >
+> > > CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
+> > > CONFIG_CROSS_COMPILE support").
 
-Reviewed-by: YunQiang Su <ysu@wavecomp.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-> ---
-> 
-> Notes:
->     This can be tested with QEMU from my branch:
->     
->       https://github.com/vivier/qemu/commits/binfmt-argv0
->     
->     With something like:
->     
->       # cp ..../qemu-ppc /chroot/powerpc/jessie
->     
->       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential
-> yes \
->                             --persistent no --preserve-argv0 yes
->       # systemctl restart systemd-binfmt.service
->       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
->       enabled
->       interpreter //qemu-ppc
->       flags: POC
->       offset 0
->       magic 7f454c4601020100000000000000000000020014
->       mask ffffffffffffff00fffffffffffffffffffeffff
->       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
->       sh
->     
->       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential
-> yes \
->                             --persistent no --preserve-argv0 no
->       # systemctl restart systemd-binfmt.service
->       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
->       enabled
->       interpreter //qemu-ppc
->       flags: OC
->       offset 0
->       magic 7f454c4601020100000000000000000000020014
->       mask ffffffffffffff00fffffffffffffffffffeffff
->       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
->       /bin/sh
->     
->     v3: mix my patch with one from YunQiang Su and my comments on it
->         introduce a new flag in the uabi for the AT_FLAGS
->     v2: only pass special flags (remove Magic and Enabled flags)
-> 
->  fs/binfmt_elf.c              | 5 ++++-
->  fs/binfmt_elf_fdpic.c        | 5 ++++-
->  fs/binfmt_misc.c             | 4 +++-
->  include/linux/binfmts.h      | 4 ++++
->  include/uapi/linux/binfmts.h | 4 ++++
->  5 files changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index ecd8d2698515..ff918042ceed 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -176,6 +176,7 @@ create_elf_tables(struct linux_binprm *bprm,
-> struct elfhdr *exec,
->  	unsigned char k_rand_bytes[16];
->  	int items;
->  	elf_addr_t *elf_info;
-> +	elf_addr_t flags = 0;
->  	int ei_index = 0;
->  	const struct cred *cred = current_cred();
->  	struct vm_area_struct *vma;
-> @@ -250,7 +251,9 @@ create_elf_tables(struct linux_binprm *bprm,
-> struct elfhdr *exec,
->  	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
->  	NEW_AUX_ENT(AT_BASE, interp_load_addr);
-> -	NEW_AUX_ENT(AT_FLAGS, 0);
-> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +	NEW_AUX_ENT(AT_FLAGS, flags);
->  	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
->  	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred-
-> >uid));
->  	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred-
-> >euid));
-> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-> index 240f66663543..abb90d82aa58 100644
-> --- a/fs/binfmt_elf_fdpic.c
-> +++ b/fs/binfmt_elf_fdpic.c
-> @@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct
-> linux_binprm *bprm,
->  	char __user *u_platform, *u_base_platform, *p;
->  	int loop;
->  	int nr;	/* reset for each csp adjustment */
-> +	unsigned long flags = 0;
->  
->  #ifdef CONFIG_MMU
->  	/* In some cases (e.g. Hyper-Threading), we want to avoid L1
-> evictions
-> @@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct
-> linux_binprm *bprm,
->  	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
->  	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
-> -	NEW_AUX_ENT(AT_FLAGS,	0);
-> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +	NEW_AUX_ENT(AT_FLAGS,	flags);
->  	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
->  	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred-
-> >user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred-
-> >user_ns, cred->euid));
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index cdb45829354d..b9acdd26a654 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm
-> *bprm)
->  	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
->  		goto ret;
->  
-> -	if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
-> +	if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
-> +		bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
-> +	} else {
->  		retval = remove_arg_zero(bprm);
->  		if (retval)
->  			goto ret;
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index b40fc633f3be..265b80d5fd6f 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -78,6 +78,10 @@ struct linux_binprm {
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 <<
-> BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
->  
-> +/* if preserve the argv0 for the interpreter  */
-> +#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
-> +#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 <<
-> BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
-> +
->  /* Function parameter for binfmt->coredump */
->  struct coredump_params {
->  	const kernel_siginfo_t *siginfo;
-> diff --git a/include/uapi/linux/binfmts.h
-> b/include/uapi/linux/binfmts.h
-> index 689025d9c185..a70747416130 100644
-> --- a/include/uapi/linux/binfmts.h
-> +++ b/include/uapi/linux/binfmts.h
-> @@ -18,4 +18,8 @@ struct pt_regs;
->  /* sizeof(linux_binprm->buf) */
->  #define BINPRM_BUF_SIZE 256
->  
-> +/* if preserve the argv0 for the interpreter  */
-> +#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-> +#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
-> +
->  #endif /* _UAPI_LINUX_BINFMTS_H */
+> > Hi Krzysztof.
+> >
+> > There seems there are a lot more of these unused CONFIG_<foo>
+> > symbols in various defconfigs. (just for arm and treewide below)
 
+Feel free to pick any of these symbols and send patches for those.
+No need to do it one symbol at a time, but please group them like
+Krzysztof has done.
+
+> Nice finding! The trickier point is to nicely remove them because:
+> 1. The easiest is 'savedefconfig' but then some valuable options might
+> disappear (like recently happened with DEBUG_FS),
+> 2. They could be removed in automated way with a script. However in
+> such case what about replacements? If some symbol was replaced with
+> other (or just renamed), maybe we should enable the other one to
+> restore the desired functionality?
+> 3. Or maybe let's don't care about keeping defconfigs stable and just
+> clean them up automatically.
+
+I don't see a good way to do it automatically. It would be good to check
+that we don't remove Kconfig symbols that are still used in defconfig
+files without changing those files as well. Cleaning up afterwards also
+works, but this always requires manual inspection for each symbol.
+
+     Arnd
