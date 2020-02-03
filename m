@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9FC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD457C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4852067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E6F20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eO3E7ihU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HOtFjfzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgBCBxF (ORCPT
+        id S1727287AbgBCBxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:53:05 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46503 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbgBCBxF (ORCPT
+        Sun, 2 Feb 2020 20:53:12 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39112 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbgBCBxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:53:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so6917226pgb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 17:53:04 -0800 (PST)
+        Sun, 2 Feb 2020 20:53:12 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 84so6700072pfy.6
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 17:53:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ovSiMu6eDg8baSn4QabjoCI5Td3xLx7krHbZCycw6hU=;
-        b=eO3E7ihUXPiMjX8jGUakX3FEHjLd2ZMiVPSuyOuH5f9C5BIMM76Prjrie2GEQAeQzr
-         zfWwdrs8YnD4mEdB9cDpPd3bwTDSmwm6lZjin8ULJ94omHChZLlFTdFOWqYlmebYpdHz
-         vG768/8ONU5r1nsx01y3DfoStJ5nrpL+2fK4hEpWITgM0lCIygkPh65bcTMkRhaSnYkY
-         cH8FtUcSyTQzCoE1CZkPhDQvnWMk0F3uSEI1Q7S6HK/sq5C2zRfqO/0BpLI8CSak73Nl
-         kqMjxtdvzzr5HTbttXtdNrUJ3bAkeb+u2jnmnxH9KkmSTVU4+V69aejkzAjMhFAlDqdt
-         CIsw==
+        bh=2+2YWgBMeeryAAU9fYclXtNdUgS1YJs1/8RQuKlQaE8=;
+        b=HOtFjfzsqzJtNZK8kSGu8LnG5oJm+REHMExI1vFCBQR7p1YFxE3PiBeN2XMp8dM3mu
+         aAvEHJl8lXIqD2PguYF76B8wK9dK8rDxyZJh90JQku3rINQPzMEJkvmd4KrracreRGND
+         mVyYYSAfXdRUmlvhKjerkcLqwV1fZ0J7VOMKjUsL5mY79s5Zsou2lpGHkZqpUiNIijb3
+         DYlnTCldlG9XM7qlsOIGH4LNEn+qfAvadE5cKhuCe1y6Qw1KQXKnFefFcuNKb28dcO4S
+         vIgaWVZYfdZTeEbpyhKTjuwWhLP5Dho9CoZj7bp2urRRQMOHn4K+jJvoQS9yPunnTUua
+         KA/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ovSiMu6eDg8baSn4QabjoCI5Td3xLx7krHbZCycw6hU=;
-        b=RKKBCpb+YqPmqHM6rkLbHB7pgZAyBEhx/IdooiKClzpMH6rVzkQslXmPdkttiJcAI2
-         Int3K2ppz4REalf/MCPKflvzhxq02fEirkw8NFwkZR136X0rUBAG9ZMP6th10znq+g5s
-         k+WuaBoTi605PU8HZUkx7T9Yz7dIXD6xWeHAavQqfff9153cVRThqhsh7TyubleHziTG
-         2FtTi6diq4YwYBK6AsmcbyJydGCTVJkY4tVPjrlA8pLwrKxpyEgBQIk0lgQEf0gMx3GR
-         8eSirNrJDVrxP21vF8WZ81Gsj87Znm+dsgY3zotFENltBgGuMP0mw7mq2f4lKbOXa5uQ
-         m08w==
-X-Gm-Message-State: APjAAAUac18qc+UGfp+YWPr+LftlK2Gqt+NCLWBsnTm7lX/3HN1n3RRZ
-        v0BFC5VpuJrW8WaByNwn0QDSfg==
-X-Google-Smtp-Source: APXvYqxlO9/tml5cbTSe/F/G4LZUuePd8W1y1ke8p1Q3ox/374edCW1lA0+O9W0i9RosVX44mEj7bQ==
-X-Received: by 2002:a63:fe43:: with SMTP id x3mr23657136pgj.119.1580694784305;
-        Sun, 02 Feb 2020 17:53:04 -0800 (PST)
+        bh=2+2YWgBMeeryAAU9fYclXtNdUgS1YJs1/8RQuKlQaE8=;
+        b=Ap0NlQks+TBEQyYmk2PSYwx6kZStK46M9FTyzgocNNhdocDsz4m/eq3eGTKxFKs+30
+         2+FfyLKjhP23DxXSvl5qc3XlpLC71XJ9zd8QozJp17j7eEYR2+w+nrNP3vFCcReosgBU
+         /hoG1BrVDH6o0wJOkwuRnu39LDqdjYHACUdgk9L9JjXzSFpQf5NfZygtLQPj+xSKj4iF
+         GwRItiKmThkJ8akg/LnSJvA2hIjfEZmJQCB/6YO2rfNUB28UbSIfh+u3KbK7TNbv8/HT
+         j+E4gbwQGB/ZJgqSKnXoAX3jsZOIlRizD5YjmYv8pHo2xHGKRVjz59zYtEgnohuuUBQj
+         NrWA==
+X-Gm-Message-State: APjAAAUU0zWICd0K0210RQbAWKWoF2zmdc70ERYK8fBM263Bo/iFqsUU
+        FF7dfMp6yu9niuzWIpFH9pMcig==
+X-Google-Smtp-Source: APXvYqyAbgLqJ9Isw3Tp2wOvQehMh8mkseNeD3y6W7Gpa4NaE0cR6RhiKf7WDy1GXf+n7lrx2pGgkQ==
+X-Received: by 2002:a63:520a:: with SMTP id g10mr20966953pgb.298.1580694791834;
+        Sun, 02 Feb 2020 17:53:11 -0800 (PST)
 Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id y38sm17348308pgk.33.2020.02.02.17.52.56
+        by smtp.gmail.com with ESMTPSA id y38sm17348308pgk.33.2020.02.02.17.53.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 17:53:03 -0800 (PST)
+        Sun, 02 Feb 2020 17:53:11 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -70,9 +70,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Robert Walker <robert.walker@arm.com>,
         Coresight ML <coresight@lists.linaro.org>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 4/5] perf cs-etm: Optimize copying last branches
-Date:   Mon,  3 Feb 2020 09:52:02 +0800
-Message-Id: <20200203015203.27882-5-leo.yan@linaro.org>
+Subject: [PATCH v3 5/5] perf cs-etm: Fix unsigned variable comparison to zero
+Date:   Mon,  3 Feb 2020 09:52:03 +0800
+Message-Id: <20200203015203.27882-6-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200203015203.27882-1-leo.yan@linaro.org>
 References: <20200203015203.27882-1-leo.yan@linaro.org>
@@ -81,86 +81,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an instruction range packet can generate multiple instruction
-samples, these samples share the same last branches; it's not necessary
-to copy the same last branches repeatedly for these samples within the
-same packet.
-
-This patch moves out the last branches copying from function
-cs_etm__synth_instruction_sample(), and execute it prior to generating
-instruction samples.
+The variable 'offset' in function cs_etm__sample() is u64 type, it's not
+appropriate to check it with 'while (offset > 0)'; this patch changes to
+'while (offset)'.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ tools/perf/util/cs-etm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index c5a05f728eac..dbddf1eec2be 100644
+index dbddf1eec2be..720108bd8dba 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -1134,10 +1134,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+@@ -945,7 +945,7 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+ 	if (packet->isa == CS_ETM_ISA_T32) {
+ 		u64 addr = packet->start_addr;
  
- 	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
- 
--	if (etm->synth_opts.last_branch) {
--		cs_etm__copy_last_branch_rb(etmq, tidq);
-+	if (etm->synth_opts.last_branch)
- 		sample.branch_stack = tidq->last_branch;
--	}
- 
- 	if (etm->synth_opts.inject) {
- 		ret = cs_etm__inject_event(event, &sample,
-@@ -1407,6 +1405,10 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		 */
- 		u64 instrs_over = instrs_executed;
- 
-+		/* Prepare last branches for instruction sample */
-+		if (etm->synth_opts.last_branch)
-+			cs_etm__copy_last_branch_rb(etmq, tidq);
-+
- 		/*
- 		 * 'head' is the instructions number of the head in the new
- 		 * packet, it combines with the tail of previous packet to
-@@ -1526,6 +1528,11 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 
- 	if (etmq->etm->synth_opts.last_branch &&
- 	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
-+		u64 addr;
-+
-+		/* Prepare last branches for instruction sample */
-+		cs_etm__copy_last_branch_rb(etmq, tidq);
-+
- 		/*
- 		 * Generate a last branch event for the branches left in the
- 		 * circular buffer at the end of the trace.
-@@ -1533,7 +1540,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 		 * Use the address of the end of the last reported execution
- 		 * range
- 		 */
--		u64 addr = cs_etm__last_executed_instr(tidq->prev_packet);
-+		addr = cs_etm__last_executed_instr(tidq->prev_packet);
- 
- 		err = cs_etm__synth_instruction_sample(
- 			etmq, tidq, addr,
-@@ -1587,11 +1594,16 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
- 	 */
- 	if (etmq->etm->synth_opts.last_branch &&
- 	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
-+		u64 addr;
-+
-+		/* Prepare last branches for instruction sample */
-+		cs_etm__copy_last_branch_rb(etmq, tidq);
-+
- 		/*
- 		 * Use the address of the end of the last reported execution
- 		 * range.
- 		 */
--		u64 addr = cs_etm__last_executed_instr(tidq->prev_packet);
-+		addr = cs_etm__last_executed_instr(tidq->prev_packet);
- 
- 		err = cs_etm__synth_instruction_sample(
- 			etmq, tidq, addr,
+-		while (offset > 0) {
++		while (offset) {
+ 			addr += cs_etm__t32_instr_size(etmq,
+ 						       trace_chan_id, addr);
+ 			offset--;
 -- 
 2.17.1
 
