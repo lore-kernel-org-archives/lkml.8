@@ -2,568 +2,272 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B780DC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAA0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A23C2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bg3fYC3R"
+	by mail.kernel.org (Postfix) with ESMTP id 71A792051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgBCTfj (ORCPT
+        id S1727150AbgBCTiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:35:39 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42612 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgBCTfj (ORCPT
+        Mon, 3 Feb 2020 14:38:15 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:46496 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgBCTiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:35:39 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 4so8078913pfz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:35:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7YpQxLX4U2GQICWgq80GxBdSsHfJwYraOcMspQmkaJ0=;
-        b=bg3fYC3RKmgV/sMcfmvy1pggK34Ib5VpRewrB0Mi9lfNDp7rPMEVJYKYtR1ljj7MyQ
-         2372WDE0bcx4LBrx9UNo+Cd+eTdGA1zMEygaiz6jPMKNinxRwXLVS5rK8QfhaHs52G9z
-         EAVeLiASBPUMv/m3fRYGZLs+dabTOvp6Y1GzWU92IQi2wvSEEYtltk9cQU6GtrRKYrr0
-         njwqIAthBzuOVbgk4NPkQqmBuzKfYNBk/U6nAHccCR/NnPI8gFLYh64O5fAQuCRoC2MU
-         0uM+Rl7lT340ZzqiQrDIvp6l7Rk1p+OCUnOY8zhFbGt0OWRSdLWW9C2QogsBhxYKPTda
-         4Z6w==
+        Mon, 3 Feb 2020 14:38:14 -0500
+Received: by mail-il1-f198.google.com with SMTP id a2so12910082ill.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:38:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7YpQxLX4U2GQICWgq80GxBdSsHfJwYraOcMspQmkaJ0=;
-        b=sjNEYqXhHXfESHBmnfVqsqdPnF/ZW0ePyUYfwWcoZxgPOzUVMew0X7LPthafngJwEi
-         ZC+VYfjWa8QAtrgvkFFO1eYEUvQxo8eJiysPKw7ZBeKtLdthvlaAXykiUd1MJ5U7mWje
-         Ry3N3HIdeSwIypf2hD/3ou8VRdGaq8sGpHnSJCprP300miWB1RrTaoQcR9F28+Jy0SE3
-         X+msoJh0IygMBj05cDTz78BiCQc574zZyMtVtE5RbZ9swMMZwFHbpE7h/EhbRTqxh3uy
-         mbeUp20wK29lHnLWPg1Q0EOlpurUz9W8qHlUgmI+YeOjEIfx7q+PFhxtaNdf8DU35k4r
-         TH9g==
-X-Gm-Message-State: APjAAAUu5A1LRlcREQ0OXngF7Q4zz0A+GsaN1Yn2fhP2QIIS1dq1y5uu
-        l/EgKSIvApV2G2pD2zFcG10+9g==
-X-Google-Smtp-Source: APXvYqx33SiywJBS8WUBgtOsFbiFeFhOY3NEGlPquTjtqr8k4+o2FiX22dJlysQXLts2+O+Augxa2Q==
-X-Received: by 2002:a62:be0a:: with SMTP id l10mr27375113pff.110.1580758536897;
-        Mon, 03 Feb 2020 11:35:36 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h10sm20820459pfo.181.2020.02.03.11.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 11:35:36 -0800 (PST)
-Date:   Mon, 3 Feb 2020 11:35:33 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org, satyap@codeaurora.org,
-        pheragu@codeaurora.org
-Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
-Message-ID: <20200203193533.GL3948@builder>
-References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
- <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ndasFXdu/GcMUz7FeOuI0D5JvGdHZK1Tuq1Ky4IlMOU=;
+        b=DeR8wS492N16WecQbSyFfRlYpY0Kh8loQeKcwtqcjCklLI2HSZH2d7BR+QSw/ALiU5
+         2ut+EG7XRyWk+2R6FITWo3lKWoJEo6mb/n6lFfs/LgJK5OoQSb9zquor2oTbFlKxf3Pk
+         yXrvHeJ+GxO3O1z7y/Z5G53pSsxY8i/ruGyXLglEcePiXMhhEKFb09h5i4l6e43riqtC
+         uUhNHvx+cbWlWS0BRiSZACNkrarl1kNfYjpjnlB6Slf+fNu8W+o/rua47qsWVuF2mbuS
+         97l02+diEFzzonAGBbYUjnfS9EY0ebzObNV8quvnCXOhzL2d1bY7yIWRCOq0iXjTkhKf
+         7jGA==
+X-Gm-Message-State: APjAAAVIy0hv9DRY2nMnKxB69HTbjV9fNgK6s4UzVAcOTXBmfeYMhw76
+        jPRkTArOiuFbmkQjvXHTFlNCI5rGJB0DsOC522e6zaN/2zU0
+X-Google-Smtp-Source: APXvYqw7lPTCZaD8PekpXIJcvCIF5HzjkqpNkME57xW73tNFX6e06P0q3xdwc+IJ47awmg4nNNWfmvcJZnpRzNXUuLMGsxWdobu/
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr21092079jas.37.1580758692430;
+ Mon, 03 Feb 2020 11:38:12 -0800 (PST)
+Date:   Mon, 03 Feb 2020 11:38:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000568bdd059db1107b@google.com>
+Subject: possible deadlock in proc_tgid_io_accounting
+From:   syzbot <syzbot+86a925872c5fba672f8c@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
+        christian@brauner.io, kent.overstreet@gmail.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@suse.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+Hello,
 
-> Add support for control peripheral of EUD (Embedded USB Debugger) to
-> listen to events such as USB attach/detach, charger enable/disable, pet
-> EUD to indicate software is functional. Reusing the platform device kobj,
-> sysfs entry 'enable' is created to enable or disable EUD.
-> 
-> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+syzbot found the following crash on:
 
-Either ensure Satya is the author, or add some Co-developed-by to
-indicate that all three of you have authored the patch.
+HEAD commit:    94f2630b Merge tag '5.6-rc-small-smb3-fix-for-stable' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11203a4ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6dda7ccc1e75a63f
+dashboard link: https://syzkaller.appspot.com/bug?extid=86a925872c5fba672f8c
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-> ---
->  Documentation/ABI/stable/sysfs-driver-msm-eud |   5 +
->  drivers/soc/qcom/Kconfig                      |  12 +
->  drivers/soc/qcom/Makefile                     |   1 +
->  drivers/soc/qcom/eud.c                        | 329 ++++++++++++++++++++++++++
->  4 files changed, 347 insertions(+)
->  create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
->  create mode 100644 drivers/soc/qcom/eud.c
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-driver-msm-eud b/Documentation/ABI/stable/sysfs-driver-msm-eud
-> new file mode 100644
-> index 0000000..d96ae05
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-driver-msm-eud
-> @@ -0,0 +1,5 @@
-> +What:           /sys/bus/platform/drivers/msm-eud/enable
-> +Date:           Jan 2020
-> +Contact:        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-> +Description:    Enable/Disable use of eud device.
-> +Users:          User space debug application which intend to use EUD h/w block.
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index d0a73e7..6b7c9d0 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -202,4 +202,16 @@ config QCOM_APR
->  	  application processor and QDSP6. APR is
->  	  used by audio driver to configure QDSP6
->  	  ASM, ADM and AFE modules.
-> +
-> +config QCOM_EUD
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Please aim for keeping the sort order in this file (ignore QCOM_APR
-which obviously is in the wrong place)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+86a925872c5fba672f8c@syzkaller.appspotmail.com
 
-> +       tristate "QTI Embedded USB Debugger (EUD)"
-> +       depends on ARCH_QCOM
-> +       help
-> +         The Embedded USB Debugger (EUD) driver is a driver for the
-> +         control peripheral which waits on events like USB attach/detach
-> +         and charger enable/disable. The control peripheral further helps
-> +         support the USB-based debug and trace capabilities.
-> +         This module enables support for Qualcomm Technologies, Inc.
-> +         Embedded USB Debugger (EUD).
-> +         If unsure, say N.
->  endmenu
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index 9fb35c8..c15be68 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -25,3 +25,4 @@ obj-$(CONFIG_QCOM_APR) += apr.o
->  obj-$(CONFIG_QCOM_LLCC) += llcc-qcom.o
->  obj-$(CONFIG_QCOM_RPMHPD) += rpmhpd.o
->  obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
-> +obj-$(CONFIG_QCOM_EUD) += eud.o
-> diff --git a/drivers/soc/qcom/eud.c b/drivers/soc/qcom/eud.c
-> new file mode 100644
-> index 0000000..e6c3604
-> --- /dev/null
-> +++ b/drivers/soc/qcom/eud.c
-> @@ -0,0 +1,329 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/extcon.h>
-> +#include <linux/extcon-provider.h>
-> +#include <linux/delay.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/io.h>
-> +#include <linux/bitops.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/power_supply.h>
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor.4/2716 is trying to acquire lock:
+ffff888054af5d50 (&sig->cred_guard_mutex){+.+.}, at: do_io_accounting fs/proc/base.c:2864 [inline]
+ffff888054af5d50 (&sig->cred_guard_mutex){+.+.}, at: proc_tgid_io_accounting+0x16a/0x570 fs/proc/base.c:2913
 
-Please sort these.
+but task is already holding lock:
+ffff8880926c4be0 (&p->lock){+.+.}, at: seq_read+0x6b/0xdb0 fs/seq_file.c:161
 
-> +
-> +#define EUD_ENABLE_CMD 1
-> +#define EUD_DISABLE_CMD 0
+which lock already depends on the new lock.
 
-These defines doesn't add much value.
 
-> +
-> +#define EUD_REG_INT1_EN_MASK	0x0024
-> +#define EUD_REG_INT_STATUS_1	0x0044
-> +#define EUD_REG_CTL_OUT_1	0x0074
-> +#define EUD_REG_VBUS_INT_CLR	0x0080
-> +#define EUD_REG_CHGR_INT_CLR	0x0084
-> +#define EUD_REG_CSR_EUD_EN	0x1014
-> +#define EUD_REG_SW_ATTACH_DET	0x1018
-> +
-> +#define EUD_INT_VBUS		BIT(2)
-> +#define EUD_INT_CHGR		BIT(3)
-> +#define EUD_INT_SAFE_MODE	BIT(4)
-> +#define EUD_INT_ALL		(EUD_INT_VBUS|EUD_INT_CHGR|\
-> +				EUD_INT_SAFE_MODE)
-> +
-> +struct eud_chip {
-> +	struct device			*dev;
-> +	int				eud_irq;
-> +	unsigned int			extcon_id;
-> +	unsigned int			int_status;
-> +	bool				usb_attach;
-> +	bool				chgr_enable;
-> +	void __iomem			*eud_reg_base;
-> +	struct extcon_dev		*extcon;
-> +	int				enable;
-> +	struct work_struct		eud_work;
-> +};
-> +
-> +static const unsigned int eud_extcon_cable[] = {
-> +	EXTCON_USB,
-> +	EXTCON_CHG_USB_SDP,
-> +	EXTCON_NONE,
-> +};
-> +
-> +static int enable_eud(struct eud_chip *priv)
-> +{
-> +	int ret;
-> +
-> +	/* write into CSR to enable EUD */
+the existing dependency chain (in reverse order) is:
 
-Make up a define for BIT(0) and the next line is self explanatory - i.e.
-drop the comment..
+-> #4 (&p->lock){+.+.}:
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
+       __mutex_lock kernel/locking/mutex.c:1103 [inline]
+       mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
+       seq_read+0x6b/0xdb0 fs/seq_file.c:161
+       proc_reg_read+0x1d5/0x2e0 fs/proc/inode.c:223
+       do_loop_readv_writev fs/read_write.c:714 [inline]
+       do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
+       vfs_readv+0xc2/0x120 fs/read_write.c:997
+       kernel_readv fs/splice.c:365 [inline]
+       default_file_splice_read+0x579/0xa40 fs/splice.c:422
+       do_splice_to fs/splice.c:892 [inline]
+       splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
+       do_splice_direct+0x200/0x330 fs/splice.c:1080
+       do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
+       __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+       __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+       __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
+       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +	writel_relaxed(BIT(0), priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
+-> #3 (sb_writers#3){.+.+}:
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
+       __sb_start_write+0x189/0x420 fs/super.c:1674
+       sb_start_write include/linux/fs.h:1650 [inline]
+       mnt_want_write+0x4a/0xa0 fs/namespace.c:354
+       ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
+       ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
+       ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
+       lookup_open fs/namei.c:3309 [inline]
+       do_last fs/namei.c:3401 [inline]
+       path_openat+0x230c/0x4380 fs/namei.c:3607
+       do_filp_open+0x192/0x3d0 fs/namei.c:3637
+       do_sys_openat2+0x42b/0x6f0 fs/open.c:1149
+       do_sys_open fs/open.c:1165 [inline]
+       ksys_open include/linux/syscalls.h:1386 [inline]
+       __do_sys_creat fs/open.c:1233 [inline]
+       __se_sys_creat fs/open.c:1231 [inline]
+       __x64_sys_creat+0xd5/0x100 fs/open.c:1231
+       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Don't use _relaxed version of writel/readl unless you have a really good
-reason - and if so provide a comment to why this is.
+-> #2 (&ovl_i_mutex_dir_key[depth]){++++}:
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       down_read+0x39/0x50 kernel/locking/rwsem.c:1495
+       inode_lock_shared include/linux/fs.h:801 [inline]
+       lookup_slow fs/namei.c:1773 [inline]
+       lookup_one_len_unlocked+0xd2/0x1d0 fs/namei.c:2690
+       lookup_positive_unlocked+0x25/0xb0 fs/namei.c:2706
+       ovl_lookup_single+0x67/0x830 fs/overlayfs/namei.c:203
+       ovl_lookup_layer+0x3b1/0x470 fs/overlayfs/namei.c:287
+       ovl_lookup+0x843/0x1c60 fs/overlayfs/namei.c:902
+       lookup_open fs/namei.c:3288 [inline]
+       do_last fs/namei.c:3401 [inline]
+       path_openat+0x1b73/0x4380 fs/namei.c:3607
+       do_filp_open+0x192/0x3d0 fs/namei.c:3637
+       do_open_execat+0xff/0x620 fs/exec.c:860
+       __do_execve_file+0x758/0x1ca0 fs/exec.c:1765
+       do_execveat_common fs/exec.c:1871 [inline]
+       do_execve fs/exec.c:1888 [inline]
+       __do_sys_execve fs/exec.c:1964 [inline]
+       __se_sys_execve fs/exec.c:1959 [inline]
+       __x64_sys_execve+0x94/0xb0 fs/exec.c:1959
+       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +	/* Enable vbus, chgr & safe mode warning interrupts */
+-> #1 (&ovl_i_mutex_dir_key[depth]#2){.+.+}:
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       down_read+0x39/0x50 kernel/locking/rwsem.c:1495
+       inode_lock_shared include/linux/fs.h:801 [inline]
+       do_last fs/namei.c:3400 [inline]
+       path_openat+0xbb7/0x4380 fs/namei.c:3607
+       do_filp_open+0x192/0x3d0 fs/namei.c:3637
+       do_open_execat+0xff/0x620 fs/exec.c:860
+       __do_execve_file+0x758/0x1ca0 fs/exec.c:1765
+       do_execveat_common fs/exec.c:1871 [inline]
+       do_execve fs/exec.c:1888 [inline]
+       __do_sys_execve fs/exec.c:1964 [inline]
+       __se_sys_execve fs/exec.c:1959 [inline]
+       __x64_sys_execve+0x94/0xb0 fs/exec.c:1959
+       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This just repeats exactly what can be read from the next line.
+-> #0 (&sig->cred_guard_mutex){+.+.}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
+       __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
+       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+       __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
+       __mutex_lock kernel/locking/mutex.c:1103 [inline]
+       mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
+       do_io_accounting fs/proc/base.c:2864 [inline]
+       proc_tgid_io_accounting+0x16a/0x570 fs/proc/base.c:2913
+       proc_single_show+0xe7/0x180 fs/proc/base.c:758
+       seq_read+0x4d8/0xdb0 fs/seq_file.c:229
+       do_loop_readv_writev fs/read_write.c:714 [inline]
+       do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
+       vfs_readv+0xc2/0x120 fs/read_write.c:997
+       kernel_readv fs/splice.c:365 [inline]
+       default_file_splice_read+0x579/0xa40 fs/splice.c:422
+       do_splice_to fs/splice.c:892 [inline]
+       splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
+       do_splice_direct+0x200/0x330 fs/splice.c:1080
+       do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
+       __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+       __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+       __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
+       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +	writel_relaxed(EUD_INT_VBUS | EUD_INT_CHGR | EUD_INT_SAFE_MODE,
-> +			priv->eud_reg_base + EUD_REG_INT1_EN_MASK);
-> +
-> +	/* Ensure Register Writes Complete */
+other info that might help us debug this:
 
-wmb() ensures ordering, it deosn't wait for the operation to complete,
-if you need that readl() the register.
+Chain exists of:
+  &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
 
-> +	wmb();
-> +
-> +	/*
-> +	 * Set the default cable state to usb connect and charger
-> +	 * enable
-> +	 */
-> +	ret = extcon_set_state_sync(priv->extcon, EXTCON_USB, true);
-> +	if (ret)
-> +		return ret;
-> +	ret = extcon_set_state_sync(priv->extcon,
-> +			EXTCON_CHG_USB_SDP, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static void disable_eud(struct eud_chip *priv)
-> +{
-> +	/* write into CSR to disable EUD */
-> +	writel_relaxed(0, priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
+ Possible unsafe locking scenario:
 
-Use writel() and drop the comment.
+       CPU0                    CPU1
+       ----                    ----
+  lock(&p->lock);
+                               lock(sb_writers#3);
+                               lock(&p->lock);
+  lock(&sig->cred_guard_mutex);
 
-> +}
-> +
-> +static ssize_t enable_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct eud_chip *chip = dev_get_drvdata(dev);
-> +
-> +	return snprintf(buf, sizeof(int), "%d", chip->enable);
+ *** DEADLOCK ***
 
-buf is not sizeof(int) big...Just do sprintf()...
+1 lock held by syz-executor.4/2716:
+ #0: ffff8880926c4be0 (&p->lock){+.+.}, at: seq_read+0x6b/0xdb0 fs/seq_file.c:161
 
-> +}
-> +
-> +static ssize_t enable_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t count)
-> +{
-> +	struct eud_chip *chip = dev_get_drvdata(dev);
-> +	int enable = 0;
+stack backtrace:
+CPU: 1 PID: 2716 Comm: syz-executor.4 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_circular_bug+0xc3f/0xe70 kernel/locking/lockdep.c:1684
+ check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
+ __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
+ lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+ __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
+ __mutex_lock kernel/locking/mutex.c:1103 [inline]
+ mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
+ do_io_accounting fs/proc/base.c:2864 [inline]
+ proc_tgid_io_accounting+0x16a/0x570 fs/proc/base.c:2913
+ proc_single_show+0xe7/0x180 fs/proc/base.c:758
+ seq_read+0x4d8/0xdb0 fs/seq_file.c:229
+ do_loop_readv_writev fs/read_write.c:714 [inline]
+ do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
+ vfs_readv+0xc2/0x120 fs/read_write.c:997
+ kernel_readv fs/splice.c:365 [inline]
+ default_file_splice_read+0x579/0xa40 fs/splice.c:422
+ do_splice_to fs/splice.c:892 [inline]
+ splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
+ do_splice_direct+0x200/0x330 fs/splice.c:1080
+ do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
+ __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+ __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b399
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0c198b1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007f0c198b26d4 RCX: 000000000045b399
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000010001ff R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000008ca R14: 00000000004ca24d R15: 000000000075bf2c
 
-You shouldn't need to initialize this as you're checking the return
-value of sscanf().
 
-> +	int ret = 0;
-> +
-> +	if (sscanf(buf, "%du", &enable) != 1)
-> +		return -EINVAL;
-> +
-> +	if (enable == EUD_ENABLE_CMD)
-> +		ret = enable_eud(chip);
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-If ret is !0 you should probably return that, rather than count...
-
-> +	else if (enable == EUD_DISABLE_CMD)
-> +		disable_eud(chip);
-> +	if (!ret)
-
-...and then you don't need this check, or initialize ret to 0 above.
-
-> +		chip->enable = enable;
-
-So if I write 42 to "enable" nothing will change in the hardware, but
-chip->enable will be 42...
-
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(enable);
-> +
-> +static struct attribute *attrs[] = {
-> +	&dev_attr_enable.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute_group attr_group = {
-> +	.attrs = attrs,
-> +};
-> +
-> +static const struct attribute_group *attr_groups[] = {
-> +	&attr_group,
-> +	NULL
-> +};
-> +
-> +static void eud_event_notifier(struct work_struct *eud_work)
-
-Why do you need a worker for this? Why not just use a threaded handler
-and execute this directly in that context?
-
-> +{
-> +	struct eud_chip *chip = container_of(eud_work, struct eud_chip,
-> +					eud_work);
-> +	int ret;
-> +
-> +	if (chip->int_status == EUD_INT_VBUS) {
-
-And if you just call this function from the handler, you don't need
-chip->int_status to pass parameters between the handler and the worker.
-
-> +		ret = extcon_set_state_sync(chip->extcon, chip->extcon_id,
-> +					chip->usb_attach);
-> +		if (ret)
-> +			return;
-> +	} else if (chip->int_status == EUD_INT_CHGR) {
-> +		ret = extcon_set_state_sync(chip->extcon, chip->extcon_id,
-> +					chip->chgr_enable);
-> +		if (ret)
-> +			return;
-> +	}
-> +}
-> +
-> +static void usb_attach_detach(struct eud_chip *chip)
-> +{
-> +	u32 reg;
-> +
-> +	chip->extcon_id = EXTCON_USB;
-> +	/* read ctl_out_1[4] to find USB attach or detach event */
-> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_CTL_OUT_1);
-> +	if (reg & BIT(4))
-
-Give this bit a define
-
-> +		chip->usb_attach = true;
-> +	else
-> +		chip->usb_attach = false;
-> +
-> +	schedule_work(&chip->eud_work);
-> +
-> +	/* set and clear vbus_int_clr[0] to clear interrupt */
-> +	writel_relaxed(BIT(0), chip->eud_reg_base + EUD_REG_VBUS_INT_CLR);
-> +	/* Ensure Register Writes Complete */
-> +	wmb();
-
-Use writel() and you probably don't need the wmb() here.
-
-> +	writel_relaxed(0, chip->eud_reg_base + EUD_REG_VBUS_INT_CLR);
-> +}
-> +
-> +static void chgr_enable_disable(struct eud_chip *chip)
-> +{
-> +	u32 reg;
-> +
-> +	chip->extcon_id = EXTCON_CHG_USB_SDP;
-> +	/* read ctl_out_1[6] to find charger enable or disable event */
-> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_CTL_OUT_1);
-> +	if (reg & BIT(6))
-
-Again, this deserves a define
-
-> +		chip->chgr_enable = true;
-> +	else
-> +		chip->chgr_enable = false;
-> +
-> +	schedule_work(&chip->eud_work);
-> +
-> +	/* set and clear chgr_int_clr[0] to clear interrupt */
-> +	writel_relaxed(BIT(0), chip->eud_reg_base + EUD_REG_CHGR_INT_CLR);
-> +	/* Ensure Register Writes Complete */
-> +	wmb();
-> +	writel_relaxed(0, chip->eud_reg_base + EUD_REG_CHGR_INT_CLR);
-> +}
-> +
-> +static void pet_eud(struct eud_chip *chip)
-> +{
-> +	u32 reg;
-> +
-> +	/* read sw_attach_det[0] to find attach/detach event */
-> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_SW_ATTACH_DET);
-> +	if (reg & BIT(0)) {
-
-define
-
-> +		/* Detach & Attach pet for EUD */
-
-All comments in this driver relates to the very next line, but this
-seems to document the next two writes - i.e. this seems to be a proper
-comment.
-
-> +		writel_relaxed(0, chip->eud_reg_base + EUD_REG_SW_ATTACH_DET);
-> +		/* Ensure Register Writes Complete */
-> +		wmb();
-> +		/* Delay to make sure detach pet is done before attach pet */
-> +		udelay(100);
-
-Better read back the value if you want to ensure the length of the delay
-between the two writes.
-
-> +		writel_relaxed(BIT(0), chip->eud_reg_base +
-> +					EUD_REG_SW_ATTACH_DET);
-> +		/* Ensure Register Writes Complete */
-> +		wmb();
-> +	} else {
-> +		/* Attach pet for EUD */
-> +		writel_relaxed(BIT(0), chip->eud_reg_base +
-> +					EUD_REG_SW_ATTACH_DET);
-> +		/* Ensure Register Writes Complete */
-> +		wmb();
-
-It will complete, if you need to wait for it to have completed read back
-the value.
-
-> +	}
-> +}
-> +
-> +static irqreturn_t handle_eud_irq(int irq, void *data)
-> +{
-> +	struct eud_chip *chip = data;
-> +	u32 reg;
-> +
-> +	/* read status register and find out which interrupt triggered */
-> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_INT_STATUS_1);
-> +	switch (reg & EUD_INT_ALL) {
-
-What is the expected outcome if for some reason more than one of these
-bits are set?
-
-> +	case EUD_INT_VBUS:
-> +		chip->int_status = EUD_INT_VBUS;
-> +		usb_attach_detach(chip);
-> +		break;
-> +	case EUD_INT_CHGR:
-> +		chip->int_status = EUD_INT_CHGR;
-> +		chgr_enable_disable(chip);
-> +		break;
-> +	case EUD_INT_SAFE_MODE:
-> +		pet_eud(chip);
-> +		break;
-> +	default:
-> +		return IRQ_NONE;
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int msm_eud_probe(struct platform_device *pdev)
-> +{
-> +	struct eud_chip *chip;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	chip->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, chip);
-> +
-> +	chip->extcon = devm_extcon_dev_allocate(&pdev->dev, eud_extcon_cable);
-
-Aren't we moving away from extcon in favor of the usb role switching
-thing?
-
-> +	if (IS_ERR(chip->extcon))
-> +		return PTR_ERR(chip->extcon);
-> +
-> +	ret = devm_extcon_dev_register(&pdev->dev, chip->extcon);
-> +	if (ret)
-> +		return ret;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	chip->eud_reg_base = devm_ioremap_resource(&pdev->dev, res);
-
-Use devm_platform_ioremap_resource() instead
-
-> +	if (IS_ERR(chip->eud_reg_base))
-> +		return PTR_ERR(chip->eud_reg_base);
-> +
-> +	chip->eud_irq = platform_get_irq(pdev, 0);
-> +
-> +	ret = devm_request_irq(&pdev->dev, chip->eud_irq, handle_eud_irq,
-> +				IRQF_TRIGGER_HIGH, NULL, chip);
-
-Omit the irq trigger information here and let it come from devicetree.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	device_init_wakeup(&pdev->dev, true);
-> +	enable_irq_wake(chip->eud_irq);
-> +
-> +	INIT_WORK(&chip->eud_work, eud_event_notifier);
-> +
-> +	if (ret)
-
-Duplicate of the same check 8 lines up.
-
-> +		return ret;
-> +
-> +	/* Enable EUD */
-> +	if (chip->enable)
-
-I'm not seeing where this would have been written during probe.
-
-> +		enable_eud(chip);
-> +
-> +	return 0;
-> +}
-> +
-> +static int msm_eud_remove(struct platform_device *pdev)
-> +{
-> +	struct eud_chip *chip = platform_get_drvdata(pdev);
-> +
-> +	if (chip->enable)
-> +		disable_eud(chip);
-> +	device_init_wakeup(&pdev->dev, false);
-> +	disable_irq_wake(chip->eud_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id msm_eud_dt_match[] = {
-> +	{.compatible = "qcom,msm-eud"},
-
-Is this the one and only, past and future, version of the EUD hardware
-block? Or do we need this compatible to be more specific?
-
-Nit. Please add a space after { and before }
-
-Regards,
-Bjorn
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
