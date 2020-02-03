@@ -2,92 +2,99 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC8AC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA9CC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6BB220674
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B930420732
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580771097;
+	bh=vzyez2WIfsTNn3tKO6gcRBw5UeiKLIVBY41eTtjUVsU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DX4/I0Bjdt6BABHczRR/w+6cYK5/+OtSNG+zmek9QsHPMQCEDy4AIcNi6d5lnkT0p
+	 NevZLWfXXMgTdvrhBsWRyZUk55kN9SxmI/zwy9Ec9XsS5vhMLeATbtYkEsyX0Ut2zS
+	 ium1sYnlkSH7dEH7MRMAu7ku42ERsgj+uzbJ6IIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgBCXCR (ORCPT
+        id S1727044AbgBCXE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:02:17 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46218 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726872AbgBCXCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:02:15 -0500
-Received: from dread.disaster.area (pa49-181-161-120.pa.nsw.optusnet.com.au [49.181.161.120])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 77ADE3A2A22;
-        Tue,  4 Feb 2020 10:02:10 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iykjJ-0006Rf-AX; Tue, 04 Feb 2020 10:02:09 +1100
-Date:   Tue, 4 Feb 2020 10:02:09 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: RFC: hold i_rwsem until aio completes
-Message-ID: <20200203230209.GC20628@dread.disaster.area>
-References: <20200114161225.309792-1-hch@lst.de>
- <20200118092838.GB9407@dread.disaster.area>
- <20200203174641.GA20035@lst.de>
+        Mon, 3 Feb 2020 18:04:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbgBCXE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 18:04:56 -0500
+Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CC120674;
+        Mon,  3 Feb 2020 23:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580771095;
+        bh=vzyez2WIfsTNn3tKO6gcRBw5UeiKLIVBY41eTtjUVsU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2FueImXvEyyZitLXHJBvvGyOWtS4YDUn5n2hYwUS03ovEeuXiU8uhlsqj97bmJb1N
+         Aw4bDeZ1I3S75w0P0LlcqpMUno7HDbfCwM/pBNSjEQt9TKySfagHSIhZ1No+5sBY/f
+         LMPTPgEBH9w8kRhXgNkoX7K7Ij/wUzPKbW5ysSS4=
+Date:   Mon, 3 Feb 2020 15:04:54 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     davem@davemloft.net, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: Delete txtimer in suspend()
+Message-ID: <20200203150454.2938960b@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20200201020124.5989-1-nicoleotsuka@gmail.com>
+References: <20200201020124.5989-1-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203174641.GA20035@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=SkgQWeG3jiSQFIjTo4+liA==:117 a=SkgQWeG3jiSQFIjTo4+liA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=4rX9TS273XGzNsaKJp0A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 06:46:41PM +0100, Christoph Hellwig wrote:
-> On Sat, Jan 18, 2020 at 08:28:38PM +1100, Dave Chinner wrote:
-> > I think it's pretty gross, actually. It  makes the same mistake made
-> > with locking in the old direct IO code - it encodes specific lock
-> > operations via flags into random locations in the DIO path. This is
-> > a very slippery slope, and IMO it is an layering violation to encode
-> > specific filesystem locking smeantics into a layer that is supposed
-> > to be generic and completely filesystem agnostic. i.e.  this
-> > mechanism breaks if a filesystem moves to a different type of lock
-> > (e.g. range locks), and history teaches us that we'll end up making
-> > a horrible, unmaintainable mess to support different locking
-> > mechanisms and contexts.
-> > 
-> > I think that we should be moving to a model where the filesystem
-> > provides an unlock method in the iomap operations structure, and if
-> > the method is present in iomap_dio_complete() it gets called for the
-> > filesystem to unlock the inode at the appropriate point. This also
-> > allows the filesystem to provide a different method for read or
-> > write unlock, depending on what type of lock it held at submission.
-> > This gets rid of the need for the iomap code to know what type of
-> > lock the caller holds, too.
+On Fri, 31 Jan 2020 18:01:24 -0800, Nicolin Chen wrote:
+> When running v5.5 with a rootfs on NFS, memory abort may happen in
+> the system resume stage:
+>  Unable to handle kernel paging request at virtual address dead00000000012a
+>  [dead00000000012a] address between user and kernel address ranges
+>  pc : run_timer_softirq+0x334/0x3d8
+>  lr : run_timer_softirq+0x244/0x3d8
+>  x1 : ffff800011cafe80 x0 : dead000000000122
+>  Call trace:
+>   run_timer_softirq+0x334/0x3d8
+>   efi_header_end+0x114/0x234
+>   irq_exit+0xd0/0xd8
+>   __handle_domain_irq+0x60/0xb0
+>   gic_handle_irq+0x58/0xa8
+>   el1_irq+0xb8/0x180
+>   arch_cpu_idle+0x10/0x18
+>   do_idle+0x1d8/0x2b0
+>   cpu_startup_entry+0x24/0x40
+>   secondary_start_kernel+0x1b4/0x208
+>  Code: f9000693 a9400660 f9000020 b4000040 (f9000401)
+>  ---[ end trace bb83ceeb4c482071 ]---
+>  Kernel panic - not syncing: Fatal exception in interrupt
+>  SMP: stopping secondary CPUs
+>  SMP: failed to stop secondary CPUs 2-3
+>  Kernel Offset: disabled
+>  CPU features: 0x00002,2300aa30
+>  Memory Limit: none
+>  ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 > 
-> I'd rather avoid yet another method.  But I think with a little
-> tweaking we can move the unlock into the ->end_io method.
+> It's found that stmmac_xmit() and stmmac_resume() sometimes might
+> run concurrently, possibly resulting in a race condition between
+> mod_timer() and setup_timer(), being called by stmmac_xmit() and
+> stmmac_resume() respectively.
+> 
+> Since the resume() runs setup_timer() every time, it'd be safer to
+> have del_timer_sync() in the suspend() as the counterpart.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-That would work, too :)
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Applied, and queued for stable, thank you!
