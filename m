@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE72C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82E6C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B8020838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910CF2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747094;
-	bh=+Bnp/PEjYgWugTCK5CbHdsK5GEnec/R5q6lbcnrZi3g=;
+	s=default; t=1580747100;
+	bh=blro8WKHqirWAxDR/MgBABqkpB2q71gDN9yLScRLkCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8g/CoVcPUXOFN3p5FOlW/YoAx28x0QZdY6tWuAf7RUBZE9RoS7TR/1Vy6EGS0swi
-	 Q4cgMxJTwAj5/TiaScnFkwvGLoWYP3lFyzTf3bYWAzUXtdQ7h1km2swAiiE5RB/61W
-	 YqgIaz7u1efttqlaQtwsHvANCg8eSeUdDW8/czrg=
+	b=tXLqrrO+5L36LmobYQtfYVtJWqvO8X1BuuZW1NhTv4SwMSeEb+re6olnP47GmdUPj
+	 rOKugCFX2wUlD5D3glWQDT1C8YfH3CYBz+O34EIARuflKhNjT9Sxxh2NxB/H8GLIym
+	 Qyr0WU2i2tj62+x9Lq/S3REcpkh+FP1yTb/jAZSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgBCQYx (ORCPT
+        id S1727927AbgBCQY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35400 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:24:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbgBCQYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:24:53 -0500
+        id S1727382AbgBCQY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:24:58 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7077C2080C;
-        Mon,  3 Feb 2020 16:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418B42080C;
+        Mon,  3 Feb 2020 16:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747092;
-        bh=+Bnp/PEjYgWugTCK5CbHdsK5GEnec/R5q6lbcnrZi3g=;
+        s=default; t=1580747097;
+        bh=blro8WKHqirWAxDR/MgBABqkpB2q71gDN9yLScRLkCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6lKbpqbyGEJ+Oy4R9QLxlqNJZ+XfEZag3VbGXPaedOW+kXn2g0FFksfeR6Kus7GC
-         2SO0nHq5iu1NVoKVJ29I44HdXzC0kIm/5JUZf97AX8EQwbqsR2JcYuuzkY+DyiT9/q
-         VVVBHyhVRzT8SneMF5t8oAYMFBLqqPlDGH8fWMdQ=
+        b=WJ3XjLwU9/H4ey4HQQlWNeytgN2Ewg/wrPTPMTG3V29gQBhMvjM8XXc1tZGyi6WjC
+         Y4O0ydGht/AHb71tIms416NU3eVju2P4i3zWwuaZCxBwjFE8PTtC/mVcpny9RVHX++
+         hkq23OY10NaAkrMq9dyNi0N9oy+qyJ5Lu22/baCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Andreas Schneider <asn@cryptomilk.org>
-Subject: [PATCH 4.9 01/68] ALSA: pcm: Add missing copy ops check before clearing buffer
-Date:   Mon,  3 Feb 2020 16:18:57 +0000
-Message-Id: <20200203161904.914178529@linuxfoundation.org>
+        stable@vger.kernel.org, Fariya Fatima <fariyaf@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 03/68] rsi_91x_usb: fix interface sanity check
+Date:   Mon,  3 Feb 2020 16:18:59 +0000
+Message-Id: <20200203161905.273228676@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Johan Hovold <johan@kernel.org>
 
-[ this is a fix specific to 4.4.y and 4.9.y stable trees;
-  4.14.y and older already contain the right fix ]
+commit 3139b180906af43bc09bd3373fc2338a8271d9d9 upstream.
 
-The stable 4.4.y and 4.9.y backports of the upstream commit
-add9d56d7b37 ("ALSA: pcm: Avoid possible info leaks from PCM stream
-buffers") dropped the check of substream->ops->copy_user as copy_user
-is a new member that isn't present in the older kernels.
-Although upstream drivers should work without this NULL check, it may
-cause a regression with a downstream driver that sets some
-inaccessible address to runtime->dma_area, leading to a crash at
-worst.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Since such drivers must have ops->copy member on older kernels instead
-of ops->copy_user, this patch adds the missing check of ops->copy for
-fixing the regression.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Reported-and-tested-by: Andreas Schneider <asn@cryptomilk.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+Cc: stable <stable@vger.kernel.org>     # 3.15
+Cc: Fariya Fatima <fariyaf@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/core/pcm_native.c |    2 +-
+ drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -588,7 +588,7 @@ static int snd_pcm_hw_params(struct snd_
- 		runtime->boundary *= 2;
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -103,7 +103,7 @@ static int rsi_find_bulk_in_and_out_endp
+ 	__le16 buffer_size;
+ 	int ii, bep_found = 0;
  
- 	/* clear the buffer for avoiding possible kernel info leaks */
--	if (runtime->dma_area)
-+	if (runtime->dma_area && !substream->ops->copy)
- 		memset(runtime->dma_area, 0, runtime->dma_bytes);
+-	iface_desc = &(interface->altsetting[0]);
++	iface_desc = interface->cur_altsetting;
  
- 	snd_pcm_timer_resolution_change(substream);
+ 	for (ii = 0; ii < iface_desc->desc.bNumEndpoints; ++ii) {
+ 		endpoint = &(iface_desc->endpoint[ii].desc);
 
 
