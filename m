@@ -2,82 +2,95 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE70DC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1CBC33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD4520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9809C2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DutMquvd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vfkTNXzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgBCKXu (ORCPT
+        id S1727369AbgBCKXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:23:50 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44507 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726100AbgBCKXu (ORCPT
+        Mon, 3 Feb 2020 05:23:55 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39668 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgBCKXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:23:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580725429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ir31YPKw00IaR4oAq3edSrrdUHl7ICLQw2SC3HVAAC4=;
-        b=DutMquvdbcFzWxbaeJqrEYw23CO0QRlhTP2n+eUPy56BVuKWhHgVmJBaCb0cj3g9XI95E6
-        /ReMVQBYYS9e8oiDeHf2+D1ygVh6e0XDhNq1/XxMmMzX+wU34i+HLFh+90uE6NiRTxjWbP
-        cCj2XeuRWqpJG7OdZSwdGvE4mnkJAws=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-nK8sREX3OCKJMwcjJ7ImLg-1; Mon, 03 Feb 2020 05:23:47 -0500
-X-MC-Unique: nK8sREX3OCKJMwcjJ7ImLg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 780EB18A6EC2;
-        Mon,  3 Feb 2020 10:23:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-218.rdu2.redhat.com [10.10.120.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 702A91FD3B;
-        Mon,  3 Feb 2020 10:23:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200202122735.157d8b44@cakuba.hsd1.ca.comcast.net>
-References: <20200202122735.157d8b44@cakuba.hsd1.ca.comcast.net> <158047735578.133127.17728061182258449164.stgit@warthog.procyon.org.uk> <158047737679.133127.13567286503234295.stgit@warthog.procyon.org.uk>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 3/4] rxrpc: Fix missing active use pinning of rxrpc_local object
+        Mon, 3 Feb 2020 05:23:53 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so5678177plp.6;
+        Mon, 03 Feb 2020 02:23:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5ygzMeYDHdIu6FabSbP67HIaiz5b6P4CRnJ4Hak7tsY=;
+        b=vfkTNXzfHRMeFNDUTLiFgrVuVeQ16cr3W1p+2Ln6+DxbN3Sp58Ed0gLrLasqtPD5iv
+         asTGdlS7dJ8qJBhBofLYSDHS4fKz6TUqUm/KZwmTbQ2mARDQ3w0NbVXJzNvA2fM+yAdg
+         FlPrCxaUT2frwpgiwkV39+4jf0kM1dqAkhAygSGe/X0LYNrjag2E0clZK2IaQOhgwwWi
+         K0a1Y2U1pyw2DLyp1RPYUMO+63e4kdUuJiSvGkvFsprT+tglsMDwfSpyr5exdDztsHWj
+         fg3hLupdCiI8Rs/+E4CnkrmxNjEX1jXJy4M55b5WPBZ6l5KRtYt/Zjr8Is1VjOoiaiFD
+         xzFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5ygzMeYDHdIu6FabSbP67HIaiz5b6P4CRnJ4Hak7tsY=;
+        b=lncX33h4uAxMJT0m6cMrejFkp194Ucj68C8JE+rWyByBcGCemk0K51YchRGIJcVe60
+         I+vEjR7faOCHcvvE4SNA/EcLu1OLWlJjgcREn7VZgBlAyKlw6dw+VqqxUQasfKjSgCEZ
+         kXteq2Y8U+HBlOElelyDFSRoOec5EMK9JkHJieqAaR8DsR7+FCJzeHrrzq9xBxK4h1wG
+         33hwvqDjgDpEfrJXrNWw0I+JP1/nms+0Ejkkn0tSrECyOsdoVAP6id29uPyq9GpHla7K
+         Tf9vYocy30pHy+Sy/EwysmzXPzA1Vb2/mFY8aXVlQF9YUriOAdwv3LWuzdRVi1B11ZcK
+         UdKQ==
+X-Gm-Message-State: APjAAAXHl7DZ/P9lO/pQsvgDWtDWUE60hfj8uNm5PIJqFRyoh/oaa04l
+        QhI58m7BYzApzM8nY0qercpuEsSTbsijOyZ9Rzc=
+X-Google-Smtp-Source: APXvYqwYKUBVPWsmExO5T7OGN6sQqSkBbqMJaj83l8H+dStpIIxoMm17XbeeKY72nzLes4kuNlne4jE7RRqB4nit6YA=
+X-Received: by 2002:a17:902:b598:: with SMTP id a24mr22398587pls.262.1580725432990;
+ Mon, 03 Feb 2020 02:23:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <734243.1580725424.1@warthog.procyon.org.uk>
-Date:   Mon, 03 Feb 2020 10:23:44 +0000
-Message-ID: <734244.1580725424@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200201161931.29665-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200201161931.29665-1-lukas.bulwahn@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Feb 2020 12:23:44 +0200
+Message-ID: <CAHp75VezYub1YzGSMrwQ7ntAV6EftgLxFiQu9wVnekPHPe4d_g@mail.gmail.com>
+Subject: Re: [PATCH RFC] MAINTAINERS: add TRACE EVENT LIBRARY section
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-devel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jakub Kicinski <kuba@kernel.org> wrote:
+On Sat, Feb 1, 2020 at 6:21 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+>
+> The git history shows that the files under ./tools/lib/traceevent/ are
+> being developed and maintained by Tzetomir Stoyanov and Steven Rostedt
+> and are discussed on the linux-trace-devel list.
+>
+> Add a suitable section in MAINTAINERS for patches to reach them.
+>
+> This was identified with a small script that finds all files only
+> belonging to "THE REST" according to the current MAINTAINERS file, and I
+> acted upon its output.
 
-> > +	BUG_ON(!conn->params.local);
-> > +	BUG_ON(!conn->params.local->socket);
-> 
-> Is this really, really not possible to convert those into a WARN_ON()
-> and return?
+> +TRACE EVENT LIBRARY
+> +M:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+> +M:     Steven Rostedt <rostedt@goodmis.org>
+> +L:     linux-trace-devel@vger.kernel.org
+> +S:     Maintained
+> +F:     tools/lib/traceevent/
 
-I can take those out - I actually put them in to help figure out which pointer
-had become NULL - but turning them into a WARN_ON() and return doesn't
-actually help that much since, without this patch, there was nothing to stop
-the relevant pointer getting cleared between this point and the next access,
-so there's a chance you'd end up with the same oops anyway.
+Don't forget to run early mentioned scripts (in some other threads).
 
-David
-
+-- 
+With Best Regards,
+Andy Shevchenko
