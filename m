@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7F1C3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4471EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00DA20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1823220838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748261;
-	bh=rcQDecP37dL91YXleyWQRqGSr0A+L9q6Ie3Ao5CUXLY=;
+	s=default; t=1580748263;
+	bh=T/LbyhOpANalFGth4QIQR7yQjVB/DcC7Wez3GWw4MgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2haIW4WOWzUt+mrzRATNkemOdbUoq7oqNsfy1ByZ2vFzM6gVlAnxzro6G+Zi23+T
-	 JM5cUwjCqnMCLGsq70wRo/dMVKBfCT3qS0L4ZpjPj1xG0nzSg7ylhl7UHE+dtOzplK
-	 u5aAK5W80DrPjHMPvV8PF3UQ25mfCE1w3UC2RMsQ=
+	b=dP46TnjskSijE5W5i4EpABKL0fr29ZPgDVm/hbWyfGmXc6J86G3wW6MPevSZBAcis
+	 jV3a+1bzsT1W/EXjo512BizC6+ThyO3O7+4oXMCqilHgpQkk/3QDuPKfVcbeoAdEEw
+	 1X8lZD8yQ6hWCuYuJnuRF/WStckxLNVRFf+NzkJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbgBCQbs (ORCPT
+        id S1730274AbgBCQbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:31:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45142 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:31:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729925AbgBCQbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:31:44 -0500
+        id S1730233AbgBCQbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:31:39 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C88CF20CC7;
-        Mon,  3 Feb 2020 16:31:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 049322082E;
+        Mon,  3 Feb 2020 16:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747504;
-        bh=rcQDecP37dL91YXleyWQRqGSr0A+L9q6Ie3Ao5CUXLY=;
+        s=default; t=1580747499;
+        bh=T/LbyhOpANalFGth4QIQR7yQjVB/DcC7Wez3GWw4MgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lj5JAoUXAQGvLJia5cUwpeeqqOZ2Yl+7EvCFOpFdITCQIjjmCMwK1Pm2RBo5JrT4P
-         IEP5VLPUqlpj9uUkUIiEI9UBXzoT0j8wx9P+FzCr92rYXqg2kzQ1lj8tXTlBox8FTc
-         b6X08lAs18XpEcJY5Lt0xgClpZ8bhUsVORoQ0xWw=
+        b=nxDfaqXYjbXwuB+A+7AUSxTNwoX2BzGPhkajvSiR2zz04z8It4cJFNmoTkH39pC5O
+         6IWRUhepIfDKdvKjjWWOXFfCBjWD0mgoXaqGbASU1DcWWDDbcMV8ONpwMoe/L0WxqY
+         aobhNW+/76wbKZV2c/h2TSfDMhXNqe+UQ5kCjgHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+eba992608adf3d796bcc@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.19 22/70] Bluetooth: Fix race condition in hci_release_sock()
-Date:   Mon,  3 Feb 2020 16:19:34 +0000
-Message-Id: <20200203161915.832501957@linuxfoundation.org>
+        syzbot <syzbot+efea72d4a0a1d03596cd@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH 4.19 20/70] tomoyo: Use atomic_t for statistics counter
+Date:   Mon,  3 Feb 2020 16:19:32 +0000
+Message-Id: <20200203161915.573229417@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,44 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 11eb85ec42dc8c7a7ec519b90ccf2eeae9409de8 upstream.
+commit a8772fad0172aeae339144598b809fd8d4823331 upstream.
 
-Syzbot managed to trigger a use after free "KASAN: use-after-free Write
-in hci_sock_bind".  I have reviewed the code manually and one possibly
-cause I have found is that we are not holding lock_sock(sk) when we do
-the hci_dev_put(hdev) in hci_sock_release().  My theory is that the bind
-and the release are racing against each other which results in this use
-after free.
+syzbot is reporting that there is a race at tomoyo_stat_update() [1].
+Although it is acceptable to fail to track exact number of times policy
+was updated, convert to atomic_t because this is not a hot path.
 
-Reported-by: syzbot+eba992608adf3d796bcc@syzkaller.appspotmail.com
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+[1] https://syzkaller.appspot.com/bug?id=a4d7b973972eeed410596e6604580e0133b0fc04
+
+Reported-by: syzbot <syzbot+efea72d4a0a1d03596cd@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_sock.c |    3 +++
- 1 file changed, 3 insertions(+)
+ security/tomoyo/common.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -831,6 +831,8 @@ static int hci_sock_release(struct socke
- 	if (!sk)
- 		return 0;
+--- a/security/tomoyo/common.c
++++ b/security/tomoyo/common.c
+@@ -2254,9 +2254,9 @@ static const char * const tomoyo_memory_
+ 	[TOMOYO_MEMORY_QUERY]  = "query message:",
+ };
  
-+	lock_sock(sk);
-+
- 	switch (hci_pi(sk)->channel) {
- 	case HCI_CHANNEL_MONITOR:
- 		atomic_dec(&monitor_promisc);
-@@ -878,6 +880,7 @@ static int hci_sock_release(struct socke
- 	skb_queue_purge(&sk->sk_receive_queue);
- 	skb_queue_purge(&sk->sk_write_queue);
+-/* Timestamp counter for last updated. */
+-static unsigned int tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
+ /* Counter for number of updates. */
++static atomic_t tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
++/* Timestamp counter for last updated. */
+ static time64_t tomoyo_stat_modified[TOMOYO_MAX_POLICY_STAT];
  
-+	release_sock(sk);
- 	sock_put(sk);
- 	return 0;
+ /**
+@@ -2268,10 +2268,7 @@ static time64_t tomoyo_stat_modified[TOM
+  */
+ void tomoyo_update_stat(const u8 index)
+ {
+-	/*
+-	 * I don't use atomic operations because race condition is not fatal.
+-	 */
+-	tomoyo_stat_updated[index]++;
++	atomic_inc(&tomoyo_stat_updated[index]);
+ 	tomoyo_stat_modified[index] = ktime_get_real_seconds();
  }
+ 
+@@ -2291,7 +2288,7 @@ static void tomoyo_read_stat(struct tomo
+ 	for (i = 0; i < TOMOYO_MAX_POLICY_STAT; i++) {
+ 		tomoyo_io_printf(head, "Policy %-30s %10u",
+ 				 tomoyo_policy_headers[i],
+-				 tomoyo_stat_updated[i]);
++				 atomic_read(&tomoyo_stat_updated[i]));
+ 		if (tomoyo_stat_modified[i]) {
+ 			struct tomoyo_time stamp;
+ 			tomoyo_convert_time(tomoyo_stat_modified[i], &stamp);
 
 
