@@ -2,140 +2,70 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F9FC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025BAC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C692521741
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OGtzFIa+"
+	by mail.kernel.org (Postfix) with ESMTP id BBC3E217BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580742916;
+	bh=akO6zxzTYa31r9tgyQw1xYMcFayqbVeA9ogxk9shhl8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=zP9dpUXSizyYa6qeDBq2h1iI9XJ/feY7y3T9Vr0tuK3/gYepTMn3M5OexlrlYF3Tp
+	 M6eWybicXisbiK5VC57qa1q+blYDzZM5xD0GDCfrOBbxk82XhM/8ItaI6VEAD26CDT
+	 j18/h+k0aKtraq2iZCCnTwVbdO6Qiv1tfdZlh9O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgBCPO3 (ORCPT
+        id S1729016AbgBCPPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:14:29 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:44923 "EHLO pegase1.c-s.fr"
+        Mon, 3 Feb 2020 10:15:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728918AbgBCPO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:14:28 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48BBF846fMz9v3ls;
-        Mon,  3 Feb 2020 16:14:20 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=OGtzFIa+; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5VszB6UW2Yif; Mon,  3 Feb 2020 16:14:20 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48BBF82h8pz9v3lm;
-        Mon,  3 Feb 2020 16:14:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580742860; bh=i4hAG7YwdO6LNDmYZ4wBEtikutj9N76WG5xl/PwnPrw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OGtzFIa+5ZhSxgd/BuHky5Jny2LDfnoF42zPtabwjmhorMsQSP8od+tqTvY9oMk3O
-         ug6+KKaiRNlh/wtS69Y4UVsFdUJC1Vu36ZVhY++cHIlyr4PBVDhCfDbWqmvxtfLxhX
-         pBTvZSaYZbiw2B0JwaU6kwU/pCLUp2ai2uhwAOdA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DE228B7B0;
-        Mon,  3 Feb 2020 16:14:25 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id unrhNEULKrXy; Mon,  3 Feb 2020 16:14:25 +0100 (CET)
-Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 12E638B7AC;
-        Mon,  3 Feb 2020 16:14:25 +0100 (CET)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Qian Cai <cai@lca.pw>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev <kasan-dev@googlegroups.com>
-References: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
- <2C4ADFAE-7BB4-42B7-8F54-F036EA7A4316@lca.pw>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <8e94a073-4045-89aa-6a3b-24847ad7c858@c-s.fr>
-Date:   Mon, 3 Feb 2020 16:14:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <2C4ADFAE-7BB4-42B7-8F54-F036EA7A4316@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        id S1729000AbgBCPPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 10:15:15 -0500
+Subject: Re: [GIT PULL] Hyper-V commits for v5.6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580742915;
+        bh=akO6zxzTYa31r9tgyQw1xYMcFayqbVeA9ogxk9shhl8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=PJnUijxlEHn/POU8nGNEp25CmOIqQreU44NT2grDDoIjT3rCrzCy2PYGoKF2v9kod
+         6yDrWBhmbAtFQ9AoEd+KDZFplfKZMsmSh4K7e2AukigFiIaBIWEEFegXgFj0Dja7G7
+         eOnNaDLYwznsn9GoB/8AZg7zz7GihC5CjvjR6nqA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200203022747.7473A205F4@mail.kernel.org>
+References: <20200203022747.7473A205F4@mail.kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200203022747.7473A205F4@mail.kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+ tags/hyperv-next-signed
+X-PR-Tracked-Commit-Id: 54e19d34011fea26d39aa74781131de0ce642a01
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d0fa9250317ff6e92a1397ebf7cf4d83014f38a6
+Message-Id: <158074291518.25778.8185482567151622892.pr-tracker-bot@kernel.org>
+Date:   Mon, 03 Feb 2020 15:15:15 +0000
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, sthemmin@microsoft.com,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Sun, 02 Feb 2020 21:27:46 -0500:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
 
-Le 02/02/2020 à 12:26, Qian Cai a écrit :
-> 
-> 
->> On Jan 30, 2020, at 9:13 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
->>
->> config DEBUG_VM_PGTABLE
->>     bool "Debug arch page table for semantics compliance" if ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
->>     depends on MMU
->>     default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
->>     default 'y' if DEBUG_VM
-> 
-> Does it really necessary to potentially force all bots to run this? Syzbot, kernel test robot etc? Does it ever pay off for all their machine times there?
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d0fa9250317ff6e92a1397ebf7cf4d83014f38a6
 
-Machine time ?
+Thank you!
 
-On a 32 bits powerpc running at 132 MHz, the tests takes less than 10ms. 
-Is it worth taking the risk of not detecting faults by not selecting it 
-by default ?
-
-[    5.656916] debug_vm_pgtable: debug_vm_pgtable: Validating 
-architecture page table helpers
-[    5.665661] debug_vm_pgtable: debug_vm_pgtable: Validated 
-architecture page table helpers
-
-Christophe
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
