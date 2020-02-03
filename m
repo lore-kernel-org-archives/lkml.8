@@ -2,260 +2,295 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BB2C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE312C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F522082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903AD2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frYgh3Mq"
+	dkim=pass (2048-bit key) header.d=btinternet.com header.i=@btinternet.com header.b="l9foF+Ks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgBCODP (ORCPT
+        id S1728347AbgBCODt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:03:15 -0500
-Received: from mail-pj1-f45.google.com ([209.85.216.45]:50842 "EHLO
-        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbgBCODP (ORCPT
+        Mon, 3 Feb 2020 09:03:49 -0500
+Received: from mailomta22-sa.btinternet.com ([213.120.69.28]:20897 "EHLO
+        sa-prd-fep-046.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726836AbgBCODt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:03:15 -0500
-Received: by mail-pj1-f45.google.com with SMTP id r67so6401982pjb.0;
-        Mon, 03 Feb 2020 06:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=unX/aYRFmZLl9TJExjbDq92LTpqEHM348VjW5uFemjo=;
-        b=frYgh3Mq7FsPvvCa16FZ1jIAbWzdKWlnsl2Z3gspOwslyPekh/UT3BSMfQa1qobLVK
-         OFxkpQA5r2k/Onr9+Z+hWkhkzMdM5Q5yhGQlJtLHCEY0oDlosD70FOrNQ5tdobEULvnf
-         w5WMVodaRPi30HqFKxFaBEhVkCG4QtStkEwEFr2vh8oQrfxGyZ6oM2Ke6/24WH3EBBr9
-         /AbDM+CQDQybIQG0bEk2B+4ZfXwyegKhyBn5d/Qiupkfzme5zeAd5b31yh4wGH1h4fTX
-         VLvMRegtAFHBy/c9m93dT8V8l73jaF8oX4YS5OQ4C40BpR9MX9roXEyX/78BwepgenZ+
-         taWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=unX/aYRFmZLl9TJExjbDq92LTpqEHM348VjW5uFemjo=;
-        b=aGTceFNdBaujdTC3s0GCdD4ZQEXjmQf7c9qlNRn0vVEFU4OEFU7wlu2iBgk6Dp0okR
-         dgCiI0aEaYbnyDBXfUswJr0MYhJAH/vGaPu+ya3jnhm90QBDRHsUJ5mvEV2SRh1Ta6Eu
-         6I3fbqPhUIPKcREdNuf9B+gBEES3rstla709vhZb2Ac8GBEBgnu53sfrqOw0W+fuOLJh
-         kde3f6iCJIgKha2i6aXNJrm0T/pN4E8gxn6DlHaVs3vcln66Pt2a3BjcortFZobID1b5
-         6bxmxSX9qcyoLFUDyuSAvuEOb13CAsO/c13KIS5ABYYgTzzyalU0lxcz4LwvwyBhCeSi
-         1bmg==
-X-Gm-Message-State: APjAAAWizFgYHopTcg04nAu5EsDCFsvqteTU3Q+0uqp0buREi0o9Agei
-        ZDAdcoZUDkzgTHEeNy/W2Es=
-X-Google-Smtp-Source: APXvYqyo1Xml9XA4cyK1oIeaWfQsB1TF0ym6LOqzTMXH2Y4I63CZOJ/ySTkRagjTyZ3A3XXN4YGZ+Q==
-X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr28362331pjb.99.1580738592820;
-        Mon, 03 Feb 2020 06:03:12 -0800 (PST)
-Received: from localhost.localdomain ([2408:84e1:66:9abe:a0b7:8d02:f456:6577])
-        by smtp.gmail.com with ESMTPSA id 76sm21191077pfx.97.2020.02.03.06.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 06:03:12 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2] Documentation: Fix build error for cpu-idle-cooling.rst and client.rst
-Date:   Mon,  3 Feb 2020 22:02:23 +0800
-Message-Id: <20200203140223.10298-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 3 Feb 2020 09:03:49 -0500
+Received: from sa-prd-rgout-004.btmx-prd.synchronoss.net ([10.2.38.7])
+          by sa-prd-fep-046.btinternet.com with ESMTP
+          id <20200203140346.QMSD7796.sa-prd-fep-046.btinternet.com@sa-prd-rgout-004.btmx-prd.synchronoss.net>;
+          Mon, 3 Feb 2020 14:03:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=btinternet.com; s=btmx201904; t=1580738626; 
+        bh=odtDPqYBh+p2C4keV0mqKOGARWyqpAI0msrk7QF3YVA=;
+        h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:MIME-Version;
+        b=l9foF+KsqM9edasn0NcSVuYLaVVcDeVblpIClnx+kn33CuKCT0RZqxUMql0Xbui6zOS6I9cTFONKKlFdOZyzvog3TgpUgUGIkg0wMS2EBlToLvTrGQrlS4+//iXLR7E+1/KTcl6nlPZjZQxUdvIWvRKE7I+ogNSkniW641LSY6t4MBVNIUshYzkBQwZaPn1zWasFg0FYkLOGO3acyNMVjGhb67qNjaYCuBBMVwMXhhilDuJ9lvMLQd5KMDJ5V6Lr/W8F+kTbKWGzne0e2TpOhg8oSDZfK+C6Cj3Z/9r4UPJQrbhqgHYZ9kezjPY/2e3Ij0kdDvHx/IcrizvBKJHu1A==
+Authentication-Results: btinternet.com;
+    auth=pass (PLAIN) smtp.auth=richard_c_haines@btinternet.com
+X-Originating-IP: [31.51.79.157]
+X-OWM-Source-IP: 31.51.79.157 (GB)
+X-OWM-Env-Sender: richard_c_haines@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedrgeejgdehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomheptfhitghhrghrugcujfgrihhnvghsuceorhhitghhrghruggptggphhgrihhnvghssegsthhinhhtvghrnhgvthdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepfedurdehuddrjeelrdduheejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpihhnvghtpeefuddrhedurdejledrudehjedpmhgrihhlfhhrohhmpeeorhhitghhrghruggptggphhgrihhnvghssegsthhinhhtvghrnhgvthdrtghomhequceuqfffjgepkeeukffvoffkoffgpdhrtghpthhtohepoeguhhhofigvlhhlshesrhgvughhrghtrdgtohhmqedprhgtphhtthhopeeokhgvhihrihhnghhssehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeolhhinhhugidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgheqpdhrtghp
+        thhtohepoehprghulhesphgruhhlqdhmohhorhgvrdgtohhmqedprhgtphhtthhopeeorhhitghhrghruggptggphhgrihhnvghssehhohhtmhgrihhlrdgtohhmqedprhgtphhtthhopeeoshgushesthihtghhohdrnhhsrgdrghhovheqpdhrtghpthhtohepoehsvghlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgqe
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from localhost.localdomain (31.51.79.157) by sa-prd-rgout-004.btmx-prd.synchronoss.net (5.8.337) (authenticated as richard_c_haines@btinternet.com)
+        id 5E1A2CBA0388ACAD; Mon, 3 Feb 2020 14:03:45 +0000
+Message-ID: <de8d82ba7db7abdf2a72d88c8cbc590e289f5f6f.camel@btinternet.com>
+Subject: Re: SELinux: How to split permissions for keys?
+From:   Richard Haines <richard_c_haines@btinternet.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>,
+        David Howells <dhowells@redhat.com>, paul@paul-moore.com
+Cc:     keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 03 Feb 2020 14:03:44 +0000
+In-Reply-To: <3d1923ec-f02b-6be7-b0c0-d3d6f539b034@tycho.nsa.gov>
+References: <8ee40192da117d9cdf4eab1e63ab5f77b359801c.camel@btinternet.com>
+         <4057700.1579792320@warthog.procyon.org.uk>
+         <de2c5cda-567b-d310-42f7-46a2c20969c4@tycho.nsa.gov>
+         <50f98f04-d00e-ae54-9a90-d0ff10be515a@tycho.nsa.gov>
+         <459818a9ad1c808298bf3d7c9bcb130323d30e97.camel@btinternet.com>
+         <3d1923ec-f02b-6be7-b0c0-d3d6f539b034@tycho.nsa.gov>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
+On Mon, 2020-02-03 at 08:13 -0500, Stephen Smalley wrote:
+> On 2/2/20 2:30 PM, Richard Haines wrote:
+> > On Thu, 2020-01-23 at 15:35 -0500, Stephen Smalley wrote:
+> > > On 1/23/20 10:46 AM, Stephen Smalley wrote:
+> > > > On 1/23/20 10:12 AM, David Howells wrote:
+> > > > > Hi Stephen,
+> > > > > 
+> > > > > I have patches to split the permissions that are used for
+> > > > > keys to
+> > > > > make
+> > > > > them a
+> > > > > bit finer grained and easier to use - and also to move to
+> > > > > ACLs
+> > > > > rather
+> > > > > than
+> > > > > fixed masks.  See patch "keys: Replace uid/gid/perm
+> > > > > permissions
+> > > > > checking with
+> > > > > an ACL" here:
+> > > > > 
+> > > > >      
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-acl
+> > > > >   
+> > > > > 
+> > > > > 
+> > > > > However, I may not have managed the permission mask
+> > > > > transformation inside
+> > > > > SELinux correctly.  Could you lend an eyeball?  The change to
+> > > > > the
+> > > > > permissions
+> > > > > model is as follows:
+> > > > > 
+> > > > >       The SETATTR permission is split to create two new
+> > > > > permissions:
+> > > > >        (1) SET_SECURITY - which allows the key's owner, group
+> > > > > and
+> > > > > ACL
+> > > > > to be
+> > > > >            changed and a restriction to be placed on a
+> > > > > keyring.
+> > > > >        (2) REVOKE - which allows a key to be revoked.
+> > > > >       The SEARCH permission is split to create:
+> > > > >        (1) SEARCH - which allows a keyring to be search and a
+> > > > > key
+> > > > > to be
+> > > > > found.
+> > > > >        (2) JOIN - which allows a keyring to be joined as a
+> > > > > session
+> > > > > keyring.
+> > > > >        (3) INVAL - which allows a key to be invalidated.
+> > > > >       The WRITE permission is also split to create:
+> > > > >        (1) WRITE - which allows a key's content to be altered
+> > > > > and
+> > > > > links
+> > > > > to be
+> > > > >            added, removed and replaced in a keyring.
+> > > > >        (2) CLEAR - which allows a keyring to be cleared
+> > > > > completely.
+> > > > > This is
+> > > > >            split out to make it possible to give just this to
+> > > > > an
+> > > > > administrator.
+> > > > >        (3) REVOKE - see above.
+> > > > > 
+> > > > > The change to SELinux is attached below.
+> > > > > 
+> > > > > Should the split be pushed down into the SELinux policy
+> > > > > rather
+> > > > > than
+> > > > > trying to
+> > > > > calculate it?
+> > > > 
+> > > > My understanding is that you must provide full backward
+> > > > compatibility
+> > > > with existing policies; hence, you must ensure that you always
+> > > > check the
+> > > > same SELinux permission(s) for the same operation when using an
+> > > > existing
+> > > > policy.
+> > > > 
+> > > > In order to support finer-grained distinctions in SELinux with
+> > > > future
+> > > > policies, you can define a new SELinux policy capability along
+> > > > with
+> > > > the
+> > > > new permissions, and if the policy capability is enabled in the
+> > > > policy,
+> > > > check the new permissions rather than the old ones. A recent
+> > > > example of
+> > > > adding a new policy capability and using it can be seen in:
+> > > > https://lore.kernel.org/selinux/20200116194530.8696-1-jeffv@google.com/T/#u
+> > > > although that patch was rejected for other reasons.
+> > > > 
+> > > > Another example was when we introduced fine-grained
+> > > > distinctions
+> > > > for all
+> > > > network address families, commit
+> > > > da69a5306ab92e07224da54aafee8b1dccf024f6.
+> > > > 
+> > > > The new policy capability also needs to be defined in libsepol
+> > > > for
+> > > > use
+> > > > by the policy compiler; an example can be seen in:
+> > > > https://lore.kernel.org/selinux/20170714164801.6346-1-sds@tycho.nsa.gov/
+> > > > 
+> > > > Then future policies can declare the policy capability when
+> > > > they
+> > > > are
+> > > > ready to start using the new permissions instead of the old.
+> > > > 
+> > > > > Thanks,
+> > > > > David
+> > > > > ---
+> > > > > diff --git a/security/selinux/hooks.c
+> > > > > b/security/selinux/hooks.c
+> > > > > index 116b4d644f68..c8db5235b01f 100644
+> > > > > --- a/security/selinux/hooks.c
+> > > > > +++ b/security/selinux/hooks.c
+> > > > > @@ -6556,6 +6556,7 @@ static int
+> > > > > selinux_key_permission(key_ref_t
+> > > > > key_ref,
+> > > > >    {
+> > > > >        struct key *key;
+> > > > >        struct key_security_struct *ksec;
+> > > > > +    unsigned oldstyle_perm;
+> > > > >        u32 sid;
+> > > > >        /* if no specific permissions are requested, we skip
+> > > > > the
+> > > > > @@ -6564,13 +6565,26 @@ static int
+> > > > > selinux_key_permission(key_ref_t
+> > > > > key_ref,
+> > > > >        if (perm == 0)
+> > > > >            return 0;
+> > > > > +    oldstyle_perm = perm & (KEY_NEED_VIEW | KEY_NEED_READ |
+> > > > > KEY_NEED_WRITE |
+> > > > > +                KEY_NEED_SEARCH | KEY_NEED_LINK);
+> > > > > +    if (perm & KEY_NEED_SETSEC)
+> > > > > +        oldstyle_perm |= OLD_KEY_NEED_SETATTR;
+> > > > > +    if (perm & KEY_NEED_INVAL)
+> > > > > +        oldstyle_perm |= KEY_NEED_SEARCH;
+> > > > > +    if (perm & KEY_NEED_REVOKE && !(perm &
+> > > > > OLD_KEY_NEED_SETATTR))
+> > > > > +        oldstyle_perm |= KEY_NEED_WRITE;
+> > > > > +    if (perm & KEY_NEED_JOIN)
+> > > > > +        oldstyle_perm |= KEY_NEED_SEARCH;
+> > > > > +    if (perm & KEY_NEED_CLEAR)
+> > > > > +        oldstyle_perm |= KEY_NEED_WRITE;
+> > > > > +
+> > > > 
+> > > > I don't know offhand if this ensures that the same SELinux
+> > > > permission is
+> > > > always checked as it would have been previously for the same
+> > > > operation+arguments.  That's what you have to preserve for
+> > > > existing
+> > > > policies.
+> > > 
+> > > As Richard pointed out in his email, your key-acl series replaces
+> > > two
+> > > different old permissions (LINK, SEARCH) with a single permission
+> > > (JOIN)
+> > > in different callers, so by the time we reach the SELinux hook we
+> > > cannot
+> > > map it back unambiguously and provide full backward
+> > > compatibility.  The
+> > > REVOKE case also seems fragile although there you seem to
+> > > distinguish
+> > > by
+> > > sometimes passing in OLD_KEY_NEED_SETATTR and sometimes
+> > > not?  You'll
+> > > have to fix the JOIN case to avoid userspace breakage.
+> > > 
+> > > You may want to go ahead and explicitly translate all of the
+> > > KEY_NEED
+> > > permissions to SELinux permissions rather than passing the key
+> > > permissions directly here to avoid requiring that the values
+> > > always
+> > > match.  The SELinux permission symbols are of the form
+> > > CLASS__PERMISSION
+> > > (NB double underscore), e.g. KEY__SETATTR, generated
+> > > automatically
+> > > from
+> > > the security/selinux/include/classmap.h tables to the
+> > > security/selinux/av_permissions.h generated header. Most hooks
+> > > perform
+> > > such translation, e.g. file_mask_to_av().  You will almost
+> > > certainly
+> > > need to do this if/when you introduce support for the new
+> > > permissions
+> > > to
+> > > SELinux.
+> > 
+> > This problem has now been fixed in [1].
+> > It passes the current selinux-test-suite (except test/fs_filesystem
+> > regression).
+> > 
+> > As the fix now includes a new 'key_perms' policy capability to
+> > allow
+> > use of the extended key permissions, I've updated libsepol and the
+> > selinux-testsuite test/keys to test these.
+> > 
+> > I'll submit two RFC patches that will allow [1] to be tested with
+> > 'key_perms' true or false.
+> > 
+> > [1]
+> > https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=keys-next
+> 
+> Was that kernel patch ever posted to selinux list and/or the selinux 
+> kernel maintainers?  I don't recall seeing it.  If not, please send
+> it 
+> to the selinux list for review; at least one selinux maintainer
+> should 
+> ack it before it gets accepted into any other tree.
+> 
+> 
 
-Sphinx parallel build error:
-docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
+Not formally. I did post it in a discussion about keys in [2]. Since
+then it's been modified to support the split permissions.
 
-Sphinx parallel build error:
-docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
+I've extracted the patch from [1] and will post that to list for
+comments.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
----
-v2: rebase.
----
- Documentation/driver-api/dmaengine/client.rst | 14 +++++++---
- .../driver-api/thermal/cpu-idle-cooling.rst   | 27 ++++++++++---------
- Documentation/driver-api/thermal/index.rst    |  1 +
- 3 files changed, 26 insertions(+), 16 deletions(-)
+[2] 
+https://lore.kernel.org/selinux/35455b30b5185780628e92c98ec8191c70f39bde.camel@btinternet.com/
 
-diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-index a9a7a3c84c63..2104830a99ae 100644
---- a/Documentation/driver-api/dmaengine/client.rst
-+++ b/Documentation/driver-api/dmaengine/client.rst
-@@ -151,8 +151,8 @@ The details of these operations are:
-      Note that callbacks will always be invoked from the DMA
-      engines tasklet, never from interrupt context.
- 
--  Optional: per descriptor metadata
--  ---------------------------------
-+  **Optional: per descriptor metadata**
-+
-   DMAengine provides two ways for metadata support.
- 
-   DESC_METADATA_CLIENT
-@@ -199,12 +199,15 @@ The details of these operations are:
-   DESC_METADATA_CLIENT
- 
-     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-          construct the metadata in the client's buffer
-       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-          descriptor
-       3. submit the transfer
-+
-     - DMA_DEV_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-          descriptor
-@@ -215,6 +218,7 @@ The details of these operations are:
-   DESC_METADATA_ENGINE
- 
-     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-       2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
-          engine's metadata area
-@@ -222,7 +226,9 @@ The details of these operations are:
-       4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
-          amount of data the client has placed into the metadata buffer
-       5. submit the transfer
-+
-     - DMA_DEV_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-       2. submit the transfer
-       3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get
-@@ -278,8 +284,8 @@ The details of these operations are:
- 
-       void dma_async_issue_pending(struct dma_chan *chan);
- 
--Further APIs:
---------------
-+Further APIs
-+------------
- 
- 1. Terminate APIs
- 
-diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-index 9f0016ee4cfb..698fcadbecee 100644
---- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-+++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-@@ -1,6 +1,9 @@
-+================
-+CPU Idle Cooling
-+================
- 
--Situation:
------------
-+Situation
-+---------
- 
- Under certain circumstances a SoC can reach a critical temperature
- limit and is unable to stabilize the temperature around a temperature
-@@ -24,8 +27,8 @@ with a power less than the requested power budget and the next OPP
- exceeds the power budget. An intermediate OPP could have been used if
- it were present.
- 
--Solutions:
------------
-+Solutions
-+---------
- 
- If we can remove the static and the dynamic leakage for a specific
- duration in a controlled period, the SoC temperature will
-@@ -45,12 +48,12 @@ idle state target residency, we lead to dropping the static and the
- dynamic leakage for this period (modulo the energy needed to enter
- this state). So the sustainable power with idle cycles has a linear
- relation with the OPP’s sustainable power and can be computed with a
--coefficient similar to:
-+coefficient similar to::
- 
- 	    Power(IdleCycle) = Coef x Power(OPP)
- 
--Idle Injection:
-----------------
-+Idle Injection
-+--------------
- 
- The base concept of the idle injection is to force the CPU to go to an
- idle state for a specified time each control cycle, it provides
-@@ -136,7 +139,7 @@ Power considerations
- --------------------
- 
- When we reach the thermal trip point, we have to sustain a specified
--power for a specific temperature but at this time we consume:
-+power for a specific temperature but at this time we consume::
- 
-  Power = Capacitance x Voltage^2 x Frequency x Utilisation
- 
-@@ -145,7 +148,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
- fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
- because we don’t want to change the OPP. We can group the
- ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
--‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
-+‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
- 
-  Pdyn = Cdyn x Voltage^2 x Frequency
- 
-@@ -154,7 +157,7 @@ in order to target the sustainable power defined in the device
- tree. So with the idle injection mechanism, we want an average power
- (Ptarget) resulting in an amount of time running at full power on a
- specific OPP and idle another amount of time. That could be put in a
--equation:
-+equation::
- 
-  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
- 			(Trunning + Tidle)
-@@ -165,7 +168,7 @@ equation:
- 
- At this point if we know the running period for the CPU, that gives us
- the idle injection we need. Alternatively if we have the idle
--injection duration, we can compute the running duration with:
-+injection duration, we can compute the running duration with::
- 
-  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
- 
-@@ -188,7 +191,7 @@ However, in this demonstration we ignore three aspects:
-    target residency, otherwise we end up consuming more energy and
-    potentially invert the mitigation effect
- 
--So the final equation is:
-+So the final equation is::
- 
-  Trunning = (Tidle - Twakeup ) x
- 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
-diff --git a/Documentation/driver-api/thermal/index.rst b/Documentation/driver-api/thermal/index.rst
-index 5ba61d19c6ae..4cb0b9b6bfb8 100644
---- a/Documentation/driver-api/thermal/index.rst
-+++ b/Documentation/driver-api/thermal/index.rst
-@@ -8,6 +8,7 @@ Thermal
-    :maxdepth: 1
- 
-    cpu-cooling-api
-+   cpu-idle-cooling
-    sysfs-api
-    power_allocator
- 
--- 
-2.24.0
+> 
 
