@@ -2,118 +2,124 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5375C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143C4C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3772051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0802087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZhvyRhZd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YSoFqclO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgBCTCT (ORCPT
+        id S1727084AbgBCTCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:02:19 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45566 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgBCS4s (ORCPT
+        Mon, 3 Feb 2020 14:02:42 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46193 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgBCTCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:56:48 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d9so12250947qte.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:56:46 -0800 (PST)
+        Mon, 3 Feb 2020 14:02:42 -0500
+Received: by mail-vs1-f65.google.com with SMTP id t12so9638196vso.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:02:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=VwnXekGQXSa7uk8525c/XCF18A7jAwffbm1SfA/XcX4=;
-        b=ZhvyRhZdwPSk7E9iCxSIx3EugvYG564eEnnAlJ/ouVluCpK2VPQykwpEsqeRNgUitR
-         W/BuFusZ27zSDBT+/jYTFFymspJ3dERHirQZvBgZVrPNxvcQm66owTyXKCVV1yAM+Sxc
-         Bc3MKo0HUrcNJ72m8XBBipQotrgt+vwcAEYdeU7BYEaU8lMCQPv6JYIiTQF4Soit1oRW
-         lqzcMVDoNq4Du3f4O9oS0xAciHWKOnCi07fTyMVmG8psBJbz6t/3KtdULlIkacbymLvz
-         b9KRuLJfKpSWd+C74YlFiOGFUD9mabLukExPKGdNs58NJOCldOOgwEQ5mRN7wA9RbOl/
-         ettg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H92Ceqpm5PG9xicOBj3pwciuaSxJbU1fy1wmWiFsutU=;
+        b=YSoFqclOI7dib/E7gGqaXKXp2CnNGDGmj1obojZ3zyFNN+d1a8M5OGDVct9g5m+3Qc
+         EVBG+5Oyeo8eOzC0EfMf7EgxD/qD79HxaUgerNMIkAWrzGB9FyIBvFUvs6a8ufMFh0mC
+         01nYZLM4yzr5u23teE/ErNPhUeXbQgMLyoAMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VwnXekGQXSa7uk8525c/XCF18A7jAwffbm1SfA/XcX4=;
-        b=CqKCMMX268XphVojm/olFtbY3KakUnY5mh661hOBu7XExlsTJbMtawfH2ZOnlVMVoH
-         8w0OYaf9AAAssAr3ily5nR+iwit2U4G9d6lcbEr2S+rtFiDF+0qyvhAdJnjnJKDxRckp
-         WeLlgZQ8yoUKk3CVsyeuDOzVNbtDZWFX0tJeFrBdPu9vtNLjji1jhliQuNM+2esu0XaX
-         cWYtRswg/tzBvrllsXaLPmLEmzkavpzBhCGGgQBbLTgpYsGW91V0yL94o19EP3zJ52I4
-         MMS/Zpse7qZOoSjXM1AccoFrDbEH/6stNASCaWlxWOgh6PJ0R21OLWXXr9LADmg8USnV
-         zmSg==
-X-Gm-Message-State: APjAAAU8xFg7CGMIi0S54a+l9vwEKsrvjeS5Ju8BWSOuVNCbU9O4F6KW
-        tQIhrHtoUeIMhmfxgOQlyZPvPA==
-X-Google-Smtp-Source: APXvYqwPf1/ipGCfx3eQPpZLwPLV0xEziSVZYePbcGHclQRptnOnIRJbIK+DKn9LkhEgbFE/x02lNg==
-X-Received: by 2002:ac8:4b6f:: with SMTP id g15mr24999365qts.196.1580756205793;
-        Mon, 03 Feb 2020 10:56:45 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id v18sm9694220qkg.67.2020.02.03.10.56.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2020 10:56:44 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     kuba@kernel.org, elver@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] skbuff: fix a data race in skb_queue_len()
-Date:   Mon,  3 Feb 2020 13:56:30 -0500
-Message-Id: <1580756190-3541-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H92Ceqpm5PG9xicOBj3pwciuaSxJbU1fy1wmWiFsutU=;
+        b=JTCRoy0GS3WykUQ6ChfYcwY6FOZZUzujcj2C/Pf8QqrhjBmjm5s0LYmvY8zEYlPf+C
+         IXTawY2MRiC1HYFDX8aaAe6+bSlZ7gVxgdPutvdpLuKSXJlTxVM8pMzzeUzh1vnFFtux
+         vbo9lo5bmvuC8cySwC9JQpgWCjTPCSeEc0d79+206K2JjfYngcHqAO67bo7imS0236sh
+         jkX2SBFvwkx2sl2yjOoj/f4s0fj+bwb1FRdbimlsW+wStogrreA3HzwwUhcctym03TkQ
+         svILT8pUQhQgDew9ndkW0IpO4dZONvTEi5A57GGRPBUBEe94EkxROxX062B4peBGcX5I
+         m5tA==
+X-Gm-Message-State: APjAAAWP9BV4fwDahC12zNIg/rbzW0HqplijapzllchWYyqK+YO52T+i
+        xOeLoT0BTzU7j80aR5o6MrKz5cSLNVY=
+X-Google-Smtp-Source: APXvYqzOCLEY5867eOHecB5zAEebQZYACsIKjjQRbQsHgtoaumN60I1CpKkhP9GFw3kY0nztxMkpVg==
+X-Received: by 2002:a05:6102:3235:: with SMTP id x21mr14977140vsf.8.1580756558476;
+        Mon, 03 Feb 2020 11:02:38 -0800 (PST)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id l125sm2882854vke.24.2020.02.03.11.02.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2020 11:02:37 -0800 (PST)
+Received: by mail-vs1-f48.google.com with SMTP id g15so9693432vsf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:02:37 -0800 (PST)
+X-Received: by 2002:a67:fa1a:: with SMTP id i26mr15830765vsq.169.1580756556608;
+ Mon, 03 Feb 2020 11:02:36 -0800 (PST)
+MIME-Version: 1.0
+References: <20200121183748.68662-1-swboyd@chromium.org> <CACRpkdbgfNuJCgOWMBGwf1FoF+9cpQACnGH7Uon5Y6X+kN+x_w@mail.gmail.com>
+ <5e29f186.1c69fb81.61d8.83b9@mx.google.com>
+In-Reply-To: <5e29f186.1c69fb81.61d8.83b9@mx.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 3 Feb 2020 11:02:24 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=W=NjMf5UqpSaY-VZfE013Ut=qe2EgSY2UErXM3eqpsGQ@mail.gmail.com>
+Message-ID: <CAD=FV=W=NjMf5UqpSaY-VZfE013Ut=qe2EgSY2UErXM3eqpsGQ@mail.gmail.com>
+Subject: Re: [PATCH] spmi: pmic-arb: Set lockdep class for hierarchical irq domains
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, Douglas Anderson
+        <dianders@chromium.org>, Brian Masney <masneyb@onstation.org>, Lina Iyer
+        <ilina@codeaurora.org>, Maulik Shah <mkshah@codeaurora.org>, Bjorn
+        Andersson" <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
+Hi,
 
- BUG: KCSAN: data-race in __skb_try_recv_from_queue / unix_dgram_sendmsg
+On Thu, Jan 23, 2020 at 11:18 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Linus Walleij (2020-01-23 07:29:31)
+> > On Tue, Jan 21, 2020 at 7:37 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >   kobj_attr_store+0x14/0x24
+> > >   sysfs_kf_write+0x4c/0x64
+> > >   kernfs_fop_write+0x15c/0x1fc
+> > >   __vfs_write+0x54/0x18c
+> > >   vfs_write+0xe4/0x1a4
+> > >   ksys_write+0x7c/0xe4
+> > >   __arm64_sys_write+0x20/0x2c
+> > >   el0_svc_common+0xa8/0x160
+> > >   el0_svc_handler+0x7c/0x98
+> > >   el0_svc+0x8/0xc
+> > >
+> > > Set a lockdep class when we map the irq so that irq_set_wake() doesn't
+> > > warn about a lockdep bug that doesn't exist.
+> > >
+> > > Fixes: 12a9eeaebba3 ("spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips")
+> > > Cc: Douglas Anderson <dianders@chromium.org>
+> > > Cc: Brian Masney <masneyb@onstation.org>
+> > > Cc: Lina Iyer <ilina@codeaurora.org>
+> > > Cc: Maulik Shah <mkshah@codeaurora.org>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> >
+> > LGTM
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Thanks. I was hoping you would apply it given that the commit it's
+> fixing was applied by you. I can send it to Gregkh or have some qcom
+> person pick it up though if you prefer.
 
- read to 0xffff8a1b1d8a81c0 of 4 bytes by task 5371 on cpu 96:
-  unix_dgram_sendmsg+0x9a9/0xb70 include/linux/skbuff.h:1821
-				 net/unix/af_unix.c:1761
-  ____sys_sendmsg+0x33e/0x370
-  ___sys_sendmsg+0xa6/0xf0
-  __sys_sendmsg+0x69/0xf0
-  __x64_sys_sendmsg+0x51/0x70
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+It appears that the commit this is Fixing is now in Linus's tree but
+Stephen's fix is still nowhere to be found.  Any update on what the
+plan is?
 
- write to 0xffff8a1b1d8a81c0 of 4 bytes by task 1 on cpu 99:
-  __skb_try_recv_from_queue+0x327/0x410 include/linux/skbuff.h:2029
-  __skb_try_recv_datagram+0xbe/0x220
-  unix_dgram_recvmsg+0xee/0x850
-  ____sys_recvmsg+0x1fb/0x210
-  ___sys_recvmsg+0xa2/0xf0
-  __sys_recvmsg+0x66/0xf0
-  __x64_sys_recvmsg+0x51/0x70
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Thanks!
 
-Since only the read is operating as lockless, it could introduce a logic
-bug in unix_recvq_full() due to the load tearing. Fix it by adding
-a READ_ONCE() there.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/linux/skbuff.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 3d13a4b717e9..4b5157164f3e 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -1818,7 +1818,7 @@ static inline struct sk_buff *skb_peek_tail(const struct sk_buff_head *list_)
-  */
- static inline __u32 skb_queue_len(const struct sk_buff_head *list_)
- {
--	return list_->qlen;
-+	return READ_ONCE(list_->qlen);
- }
- 
- /**
--- 
-1.8.3.1
-
+-Doug
