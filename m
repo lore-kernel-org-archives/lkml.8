@@ -2,123 +2,306 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44004C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2737DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFC120661
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E548C2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580823007;
+	bh=l33RWzyOhunOQWWxKiqXr9cBwMNqhBEmiBxmnBqfDNg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=B6VseNovwShgSc6DA6um5IKIaW56Cf4MkmVW+Mgtwo98duRxzhpR5szNDS7r+Kntl
+	 SM1kLrEJ4CXZ5ffIvGhM14uvvLErqC9THoObfE35gPgnLePbW/DdvC3uXi3wlGSxBZ
+	 1x6A6CMNZlG7ofpe7IbiRu8P+hze5EKYUuRdevh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgBDN1g (ORCPT
+        id S1727253AbgBDNaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:27:36 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56224 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727185AbgBDN1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:27:34 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014DLlrJ111111;
-        Tue, 4 Feb 2020 08:27:29 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxm9dx45n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 08:27:27 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 014DP12L012074;
-        Tue, 4 Feb 2020 13:27:19 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 2xw0y69fw2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 13:27:19 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014DRHnv47186282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Feb 2020 13:27:17 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94C2CC6057;
-        Tue,  4 Feb 2020 13:27:17 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F071FC6059;
-        Tue,  4 Feb 2020 13:27:16 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Feb 2020 13:27:16 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
-        gcwilson@linux.ibm.com, Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-Date:   Tue,  4 Feb 2020 08:27:06 -0500
-Message-Id: <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
+        Tue, 4 Feb 2020 08:30:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727183AbgBDNaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 08:30:06 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7801D20661;
+        Tue,  4 Feb 2020 13:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580823005;
+        bh=l33RWzyOhunOQWWxKiqXr9cBwMNqhBEmiBxmnBqfDNg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=YMzcYedveQftwneHDJTjxLnvNfxZckkVKdX6AozQXlQwz52nSDSkgd2LQt9gKA1CZ
+         RCt6cvvaU9/RuR6maJMrUSPoTPj4asOxr3ETY/hY10LlP/kaIW25Krw0wEOpTDOYjZ
+         JvuYEN5K0h4/m73xns8GjpY2RvmqSk8KixjoxjG4=
+Message-ID: <0ab59ba87c07ffec6a05b2ed39bc0c112bcf5863.camel@kernel.org>
+Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
+ copy_file_range
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Feb 2020 08:30:03 -0500
+In-Reply-To: <20200203165117.5701-2-lhenriques@suse.com>
+References: <20200203165117.5701-1-lhenriques@suse.com>
+         <20200203165117.5701-2-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_04:2020-02-04,2020-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 spamscore=0 phishscore=0 clxscore=1015 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002040095
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Mon, 2020-02-03 at 16:51 +0000, Luis Henriques wrote:
+> Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
+> operations, waiting for each request to complete before sending the next
+> one.  This patch modifies copy_file_range so that all the 'copy-from'
+> operations are sent in bulk and waits for its completion at the end.  This
+> will allow significant speed-ups, specially when sending requests for
+> different target OSDs.
+> 
 
-Support TPM 2 in the IBM vTPM driver. The hypervisor tells us what
-version of TPM is connected through the vio_device_id.
+Looks good overall. A few nits below:
 
-In case a TPM 2 is found, we set the TPM_OPS_AUTO_STARTUP flag to
-have properly initialize the TPM and driver.
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/file.c                  | 45 +++++++++++++++++++++-----
+>  include/linux/ceph/osd_client.h |  6 +++-
+>  net/ceph/osd_client.c           | 56 +++++++++++++++++++++++++--------
+>  3 files changed, 85 insertions(+), 22 deletions(-)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index 1e6cdf2dfe90..b9d8ffafb8c5 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1943,12 +1943,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+>  	struct ceph_object_locator src_oloc, dst_oloc;
+>  	struct ceph_object_id src_oid, dst_oid;
+> +	struct ceph_osd_request *req;
+>  	loff_t endoff = 0, size;
+>  	ssize_t ret = -EIO;
+>  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+>  	u32 src_objlen, dst_objlen, object_size;
+>  	int src_got = 0, dst_got = 0, err, dirty;
+> +	unsigned int max_copies, copy_count, reqs_complete = 0;
+>  	bool do_final_copy = false;
+> +	LIST_HEAD(osd_reqs);
+>  
+>  	if (src_inode->i_sb != dst_inode->i_sb) {
+>  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> @@ -2083,6 +2086,13 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  			goto out_caps;
+>  	}
+>  	object_size = src_ci->i_layout.object_size;
+> +
+> +	/*
+> +	 * Throttle the object copies: max_copies holds the number of allowed
+> +	 * in-flight 'copy-from' requests before waiting for their completion
+> +	 */
+> +	max_copies = (src_fsc->mount_options->wsize / object_size) * 4;
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
----
- drivers/char/tpm/tpm_ibmvtpm.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+A note about why you chose to multiply by a factor of 4 here would be
+good. In another year or two, we won't remember.
 
-diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-index eee566eddb35..d479d64a65aa 100644
---- a/drivers/char/tpm/tpm_ibmvtpm.c
-+++ b/drivers/char/tpm/tpm_ibmvtpm.c
-@@ -29,6 +29,7 @@ static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
- 
- static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
- 	{ "IBM,vtpm", "IBM,vtpm"},
-+	{ "IBM,vtpm", "IBM,vtpm20"},
- 	{ "", "" }
- };
- MODULE_DEVICE_TABLE(vio, tpm_ibmvtpm_device_table);
-@@ -443,7 +444,7 @@ static bool tpm_ibmvtpm_req_canceled(struct tpm_chip *chip, u8 status)
- 	return (status == 0);
- }
- 
--static const struct tpm_class_ops tpm_ibmvtpm = {
-+static struct tpm_class_ops tpm_ibmvtpm = {
- 	.recv = tpm_ibmvtpm_recv,
- 	.send = tpm_ibmvtpm_send,
- 	.cancel = tpm_ibmvtpm_cancel,
-@@ -672,6 +673,11 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
- 	if (rc)
- 		goto init_irq_cleanup;
- 
-+	if (!strcmp(id->compat, "IBM,vtpm20")) {
-+		chip->flags |= TPM_CHIP_FLAG_TPM2;
-+		tpm_ibmvtpm.flags = TPM_OPS_AUTO_STARTUP;
-+	}
-+
- 	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
- 				ibmvtpm->rtce_buf != NULL,
- 				HZ)) {
+> +	copy_count = max_copies;
+>  	while (len >= object_size) {
+>  		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+>  					      object_size, &src_objnum,
+> @@ -2097,7 +2107,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+>  				dst_ci->i_vino.ino, dst_objnum);
+>  		/* Do an object remote copy */
+> -		err = ceph_osdc_copy_from(
+> +		req = ceph_osdc_copy_from(
+>  			&src_fsc->client->osdc,
+>  			src_ci->i_vino.snap, 0,
+>  			&src_oid, &src_oloc,
+> @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+>  			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+>  			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> -		if (err) {
+> -			if (err == -EOPNOTSUPP) {
+> -				src_fsc->have_copy_from2 = false;
+> -				pr_notice("OSDs don't support 'copy-from2'; "
+> -					  "disabling copy_file_range\n");
+> -			}
+> +		if (IS_ERR(req)) {
+> +			err = PTR_ERR(req);
+>  			dout("ceph_osdc_copy_from returned %d\n", err);
+> +
+> +			/* wait for all queued requests */
+> +			ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> +			ret += reqs_complete * object_size; /* Update copied bytes */
+>  			if (!ret)
+>  				ret = err;
+>  			goto out_caps;
+>  		}
+> +		list_add(&req->r_private_item, &osd_reqs);
+>  		len -= object_size;
+>  		src_off += object_size;
+>  		dst_off += object_size;
+> -		ret += object_size;
+> +		/*
+> +		 * Wait requests if we've reached the maximum requests allowed
+
+"Wait for requests..."
+
+> +		 * or if this was the last copy
+> +		 */
+> +		if ((--copy_count == 0) || (len < object_size)) {
+> +			err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> +			ret += reqs_complete * object_size; /* Update copied bytes */
+> +			if (err) {
+> +				if (err == -EOPNOTSUPP) {
+> +					src_fsc->have_copy_from2 = false;
+> +					pr_notice("OSDs don't support 'copy-from2'; "
+> +						  "disabling copy_file_range\n");
+> +				}
+> +				if (!ret)
+> +					ret = err;
+> +				goto out_caps;
+> +			}
+> +			copy_count = max_copies;
+> +		}
+>  	}
+>  
+>  	if (len)
+> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> index 5a62dbd3f4c2..0121767cd65e 100644
+> --- a/include/linux/ceph/osd_client.h
+> +++ b/include/linux/ceph/osd_client.h
+> @@ -496,6 +496,9 @@ extern int ceph_osdc_start_request(struct ceph_osd_client *osdc,
+>  extern void ceph_osdc_cancel_request(struct ceph_osd_request *req);
+>  extern int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
+>  				  struct ceph_osd_request *req);
+> +extern int ceph_osdc_wait_requests(struct list_head *osd_reqs,
+> +				   unsigned int *reqs_complete);
+> +
+>  extern void ceph_osdc_sync(struct ceph_osd_client *osdc);
+>  
+>  extern void ceph_osdc_flush_notifies(struct ceph_osd_client *osdc);
+> @@ -526,7 +529,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
+>  				struct timespec64 *mtime,
+>  				struct page **pages, int nr_pages);
+>  
+> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+> +struct ceph_osd_request *ceph_osdc_copy_from(
+> +			struct ceph_osd_client *osdc,
+>  			u64 src_snapid, u64 src_version,
+>  			struct ceph_object_id *src_oid,
+>  			struct ceph_object_locator *src_oloc,
+> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+> index b68b376d8c2f..df9f342f860a 100644
+> --- a/net/ceph/osd_client.c
+> +++ b/net/ceph/osd_client.c
+> @@ -4531,6 +4531,35 @@ int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
+>  }
+>  EXPORT_SYMBOL(ceph_osdc_wait_request);
+>  
+> +/*
+> + * wait for all requests to complete in list @osd_reqs, returning the number of
+> + * successful completions in @reqs_complete
+> + */
+
+Maybe consider just having it return a positive reqs_complete value or a
+negative error code, and drop the reqs_complete pointer argument? It'd
+also be good to note what this function returns.
+
+> +int ceph_osdc_wait_requests(struct list_head *osd_reqs,
+> +			    unsigned int *reqs_complete)
+> +{
+> +	struct ceph_osd_request *req;
+> +	int ret = 0, err;
+> +	unsigned int counter = 0;
+> +
+> +	while (!list_empty(osd_reqs)) {
+> +		req = list_first_entry(osd_reqs,
+> +				       struct ceph_osd_request,
+> +				       r_private_item);
+> +		list_del_init(&req->r_private_item);
+> +		err = ceph_osdc_wait_request(req->r_osdc, req);
+
+ceph_osdc_wait_request calls wait_request_timeout, which uses a killable
+sleep. That's better than uninterruptible sleep, but maybe it'd be good
+to use an interruptible sleep here instead? Having to send fatal signals
+when things are stuck kind of sucks.
+
+> +		if (!err)
+> +			counter++;
+> +		else if (!ret)
+> +			ret = err;
+> +		ceph_osdc_put_request(req);
+> +	}
+> +	*reqs_complete = counter;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(ceph_osdc_wait_requests);
+> +
+>  /*
+>   * sync - wait for all in-flight requests to flush.  avoid starvation.
+>   */
+> @@ -5346,23 +5375,24 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
+>  	return 0;
+>  }
+>  
+> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+> -			u64 src_snapid, u64 src_version,
+> -			struct ceph_object_id *src_oid,
+> -			struct ceph_object_locator *src_oloc,
+> -			u32 src_fadvise_flags,
+> -			struct ceph_object_id *dst_oid,
+> -			struct ceph_object_locator *dst_oloc,
+> -			u32 dst_fadvise_flags,
+> -			u32 truncate_seq, u64 truncate_size,
+> -			u8 copy_from_flags)
+> +struct ceph_osd_request *ceph_osdc_copy_from(
+> +		struct ceph_osd_client *osdc,
+> +		u64 src_snapid, u64 src_version,
+> +		struct ceph_object_id *src_oid,
+> +		struct ceph_object_locator *src_oloc,
+> +		u32 src_fadvise_flags,
+> +		struct ceph_object_id *dst_oid,
+> +		struct ceph_object_locator *dst_oloc,
+> +		u32 dst_fadvise_flags,
+> +		u32 truncate_seq, u64 truncate_size,
+> +		u8 copy_from_flags)
+>  {
+>  	struct ceph_osd_request *req;
+>  	int ret;
+>  
+>  	req = ceph_osdc_alloc_request(osdc, NULL, 1, false, GFP_KERNEL);
+>  	if (!req)
+> -		return -ENOMEM;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	req->r_flags = CEPH_OSD_FLAG_WRITE;
+>  
+> @@ -5381,11 +5411,11 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+>  		goto out;
+>  
+>  	ceph_osdc_start_request(osdc, req, false);
+> -	ret = ceph_osdc_wait_request(osdc, req);
+> +	return req;
+>  
+>  out:
+>  	ceph_osdc_put_request(req);
+> -	return ret;
+> +	return ERR_PTR(ret);
+>  }
+>  EXPORT_SYMBOL(ceph_osdc_copy_from);
+>  
+
 -- 
-2.23.0
+Jeff Layton <jlayton@kernel.org>
 
