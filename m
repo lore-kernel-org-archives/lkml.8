@@ -2,133 +2,59 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A882CC3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F918C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845B12166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6EB2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgBDJ03 (ORCPT
+        id S1726684AbgBDJ3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:26:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55308 "EHLO mx2.suse.de"
+        Tue, 4 Feb 2020 04:29:14 -0500
+Received: from mga04.intel.com ([192.55.52.120]:64108 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgBDJ02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:26:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 195CDAC2C;
-        Tue,  4 Feb 2020 09:26:25 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 10:26:23 +0100
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v6 09/10] mm/memory_hotplug: Drop local variables in
- shrink_zone_span()
-Message-ID: <20200204092623.GD6494@linux>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-10-david@redhat.com>
+        id S1726196AbgBDJ3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:29:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 01:29:06 -0800
+X-IronPort-AV: E=Sophos;i="5.70,401,1574150400"; 
+   d="scan'208";a="224237394"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 01:29:02 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/12] drm/i915/display: conversion to drm_device based logging macros
+In-Reply-To: <20200130083229.12889-1-wambui.karugax@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200130083229.12889-1-wambui.karugax@gmail.com>
+Date:   Tue, 04 Feb 2020 11:28:59 +0200
+Message-ID: <87o8ue3dlw.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006085646.5768-10-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 10:56:45AM +0200, David Hildenbrand wrote:
-> Get rid of the unnecessary local variables.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/memory_hotplug.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 8dafa1ba8d9f..843481bd507d 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -374,14 +374,11 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
->  static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->  			     unsigned long end_pfn)
->  {
-> -	unsigned long zone_start_pfn = zone->zone_start_pfn;
-> -	unsigned long z = zone_end_pfn(zone); /* zone_end_pfn namespace clash */
-> -	unsigned long zone_end_pfn = z;
->  	unsigned long pfn;
->  	int nid = zone_to_nid(zone);
+On Thu, 30 Jan 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
+> This series continues the conversion of the printk based logging macros
+> to the new struct drm_device based logging macros in the drm/i915/display
+> folder.
 
-We could also remove the nid, right?
-AFAICS, the nid is only used in find_{smallest/biggest}_section_pfn so we could
-place there as well.
+Thanks for the patches, series pushed to drm-intel-next-queued.
 
-Anyway, nothing to nit-pick about:
-
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
->  
->  	zone_span_writelock(zone);
-> -	if (zone_start_pfn == start_pfn) {
-> +	if (zone->zone_start_pfn == start_pfn) {
->  		/*
->  		 * If the section is smallest section in the zone, it need
->  		 * shrink zone->zone_start_pfn and zone->zone_spanned_pages.
-> @@ -389,25 +386,25 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->  		 * for shrinking zone.
->  		 */
->  		pfn = find_smallest_section_pfn(nid, zone, end_pfn,
-> -						zone_end_pfn);
-> +						zone_end_pfn(zone));
->  		if (pfn) {
-> +			zone->spanned_pages = zone_end_pfn(zone) - pfn;
->  			zone->zone_start_pfn = pfn;
-> -			zone->spanned_pages = zone_end_pfn - pfn;
->  		} else {
->  			zone->zone_start_pfn = 0;
->  			zone->spanned_pages = 0;
->  		}
-> -	} else if (zone_end_pfn == end_pfn) {
-> +	} else if (zone_end_pfn(zone) == end_pfn) {
->  		/*
->  		 * If the section is biggest section in the zone, it need
->  		 * shrink zone->spanned_pages.
->  		 * In this case, we find second biggest valid mem_section for
->  		 * shrinking zone.
->  		 */
-> -		pfn = find_biggest_section_pfn(nid, zone, zone_start_pfn,
-> +		pfn = find_biggest_section_pfn(nid, zone, zone->zone_start_pfn,
->  					       start_pfn);
->  		if (pfn)
-> -			zone->spanned_pages = pfn - zone_start_pfn + 1;
-> +			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
->  		else {
->  			zone->zone_start_pfn = 0;
->  			zone->spanned_pages = 0;
-> -- 
-> 2.21.0
-> 
+BR,
+Jani.
 
 -- 
-Oscar Salvador
-SUSE L3
+Jani Nikula, Intel Open Source Graphics Center
