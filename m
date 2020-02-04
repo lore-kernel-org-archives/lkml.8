@@ -2,124 +2,130 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB29C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47D3C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2480721582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABE121582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lEciPoSL"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Gc7IHYVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgBDGwv (ORCPT
+        id S1727136AbgBDGxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:52:51 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35690 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgBDGwv (ORCPT
+        Tue, 4 Feb 2020 01:53:44 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:49683 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgBDGxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:52:51 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0146qepo081703;
-        Tue, 4 Feb 2020 00:52:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580799160;
-        bh=kqHjON9qr5o5bbhRZyitzLHtPGadeidJrm20nZP2rPw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lEciPoSLv6eg/ca444XD396RT1yJylQxslE0enN1iz3KkZSI54RnuZ4mdQrwm5BuT
-         26NmudokKyzAWXdNvfx+BQB4WqI9S5k4M/E6npfHQjlDcF2AbptZ2LWjJuwkOKsxnc
-         vGpDUBeg+is1H5WTdtjEumucqHabhpC4kDJfs6mY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0146qeSX101493
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Feb 2020 00:52:40 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
- 2020 00:52:40 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 4 Feb 2020 00:52:40 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0146qb9Z046269;
-        Tue, 4 Feb 2020 00:52:38 -0600
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
- dma_request_slave_chan()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
- <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com>
- <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
- <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
- <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
- <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
- <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
-Date:   Tue, 4 Feb 2020 08:52:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 4 Feb 2020 01:53:43 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200204065340epoutp026f92155b3e84a6cc8ccb81cd4bb4e0d3~wIIPrIYSV3034730347epoutp02p
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2020 06:53:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200204065340epoutp026f92155b3e84a6cc8ccb81cd4bb4e0d3~wIIPrIYSV3034730347epoutp02p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580799220;
+        bh=M0xz+FX9Njete8XBnuXr5iyf/TCr/CudSOBVfJT8FpQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Gc7IHYVo8oZ2du7cwoYxUzqADYPq1Cqs6XE3qscWGfvmFZZjiWecD3buRGk1c07Ad
+         S2LM29PqGUWy2UhG6xJORKpi2vjWvYcsNc48wM97xgs3llKrjW6kQH9UJQ9hg7wWke
+         LXGbmsCeMceyxKCsJZvI7r+j2coZvo8NRFGsk0rU=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200204065339epcas1p34f6e1cc8146332bf73b97a6a4a954cd7~wIIPS8JJa0765807658epcas1p3s;
+        Tue,  4 Feb 2020 06:53:39 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 48Bb4y4CWdzMqYkp; Tue,  4 Feb
+        2020 06:53:38 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BB.A1.57028.2F4193E5; Tue,  4 Feb 2020 15:53:38 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200204065338epcas1p3c8c5e52a85ceedd3d4cbe540e28d0d36~wIIN3f32l0270002700epcas1p3H;
+        Tue,  4 Feb 2020 06:53:38 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200204065338epsmtrp2685bdef72af5da971f3c32fff4e4be57~wIIN2ogvY2803228032epsmtrp2g;
+        Tue,  4 Feb 2020 06:53:38 +0000 (GMT)
+X-AuditID: b6c32a35-50bff7000001dec4-7d-5e3914f22b48
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AB.F7.10238.2F4193E5; Tue,  4 Feb 2020 15:53:38 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200204065338epsmtip148be7b568560c88d232fc131e2d0b17b~wIINqK1Io2695226952epsmtip12;
+        Tue,  4 Feb 2020 06:53:37 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     =?utf-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>
+Cc:     "'Namjae Jeon'" <linkinjeon@gmail.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <sj1557.seo@samsung.com>,
+        <pali.rohar@gmail.com>, <arnd@arndb.de>, <viro@zeniv.linux.org.uk>,
+        "'Christoph Hellwig'" <hch@lst.de>
+In-Reply-To: <20200204060654.GB31675@lst.de>
+Subject: RE: [PATCH] exfat: update file system parameter handling
+Date:   Tue, 4 Feb 2020 15:53:38 +0900
+Message-ID: <003701d5db27$d3cd1ce0$7b6756a0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJ3hnUxsyInosG8UqH0czz03xeGfQIFUA17AgPO9oympvlEgA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0hTURzHObvb3dVcXOesH+u1bgVpLjfn9BoqvchBBkr0Rw+0i142aS92
+        Z/QgMXpYKyR7NzO1wsgKw1Y5S0azl5YVFYiGkVhYmvnqvRltu4v87/P7ne/vec4hMOk9XE4U
+        me2szcwYKTxSeKs1LlE5JkvLU/XVzKEnjj4U03suNOD05SsPBHRnTzdG321pE9Kvms/idMUT
+        n4B2/bkvol8Ojwjp5xOPREsjdb7fR5HO7ewR6zxVV8W6O12luK7cVY90442zdd7bn3Fd4/sh
+        QQ6xwZhuYJlC1qZgzQWWwiKzPoNavTZ/Rb42RaVWqtPoVEphZkxsBrUyO0e5qsgYaJJSbGWM
+        xQFXDsNxVGJmus1SbGcVBgtnz6BYa6HRqlZZF3OMiSs26xcXWExL1CpVkjag3Gw0uE534tYa
+        0bae8ahStFfkQBEEkMnw/YoLD7KUbELQ3ZDsQJEBHkNQ5i8X8sZ3BKP+asG/iMEzNRh/0IKg
+        2dMbNj4hOPnhXSgXTirhj98TYIKQkcvA3x8Z1GBkhQCqO9pCmSLIBDhy9TEKckxAc+j6eIiF
+        5HwY/tYXYgmZBo4WJ8ZzNLSdeS8MMkYugrraQYzvSAG/PtSF5pGRy+GgtxrjNTKoPLg/1ByQ
+        p8RwYehXOGAl+Osd4QXEwMAjl5hnOYx/aQk1DeROGPWE5QcQfPyRwbMGuhqui4ISjIyDhuZE
+        3j0X3L4qxJedCl++HRbxWSRwYL+UlyyA8pet4R3OAEfZiPgIopyTBnNOGsw5aQDn/2I1SFiP
+        prFWzqRnObVVPfmqG1Ho+cZrm9DxZ9leRBKIipK8yKTzpCJmK7fd5EVAYJRMUrJEmyeVFDLb
+        d7A2S76t2MhyXqQN7L0Ck8cWWAKfwWzPV2uTNBoNnZySmqLVUNMlvevj8qSknrGzW1jWytr+
+        xQmICHkpumRPX8QM4lmboh6PWta546PX5N6sa/9R1ZHbt3zOxdf65g3t2jLOsW3fuc4TJb6Z
+        lWO57vYpC9jna2upjQt7z/sGshYmTI+9pnhKZb75eEL5dsD1JOn20Ci3e95PySxx0rEqrF/Q
+        VDtRkhrTe2Pe7gT3qa8dhpRd5Vl0/wupR/xGTgk5A6OOx2wc8xdLSE8b1AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsWy7bCSnO4nEcs4g/uT2S3+TjrGbtG8eD2b
+        xcrVR5ksrt+9xWyxZ+9JFovLu+awWUw8/ZvJYsu/I6wWl95/YLE4//c4qwOXx+9fkxg9ds66
+        y+6xf+4ado/dNxvYPPq2rGL0+LxJzuPQ9jdsHpuevGUK4IjisklJzcksSy3St0vgyrj66wlr
+        wR3misX3NzM1MDYydzFyckgImEi8nrkAyObiEBLYzSjx+1ETI0RCWuLYiTNACQ4gW1ji8OFi
+        kLCQwHNGibuz+EFsNgFdiX9/9rOBlIgIOEr8ec4FMoZZYDaTxN7OJYwQM+czSvzpOMMO0sAp
+        oCMxYc0JsPnCQA3dGz6D2SwCKhLvvz4Gs3kFLCW69s5ihrAFJU7OfMICYjMLaEs8vfkUzl62
+        8DXUAwoSP58uYwWxRQScJDoPzWeGqBGRmN3ZxjyBUXgWklGzkIyahWTULCQtCxhZVjFKphYU
+        56bnFhsWGOallusVJ+YWl+al6yXn525iBEeiluYOxstL4g8xCnAwKvHwXrCziBNiTSwrrsw9
+        xCjBwawkwltnZRonxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdp3rFIIYH0xJLU7NTUgtQimCwT
+        B6dUA2OK3n+Jp32vTZM+bH1xe0FI2pkvnX8b3z/RVSnPnvxMblMsz7cXp9prdyqv837+wWtS
+        jlldwVbdOUsZq1aYap/5UnGclSc7pr5ucfWh4FV8llKxgtUn73wPOnn6qcI/X2uWQNdVEz9m
+        V3y/r+Si09h63+tSkllxkLDpWwPpN6FJPAoFB/l/fFViKc5INNRiLipOBACxjOPawAIAAA==
+X-CMS-MailID: 20200204065338epcas1p3c8c5e52a85ceedd3d4cbe540e28d0d36
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200204060659epcas1p1968fda93ab3a2cbbdb812b33c12d8a55
+References: <297144.1580786668@turing-police>
+        <CGME20200204060659epcas1p1968fda93ab3a2cbbdb812b33c12d8a55@epcas1p1.samsung.com>
+        <20200204060654.GB31675@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert, Adrian,
-
-On 03/02/2020 22.34, Geert Uytterhoeven wrote:
-> Hi Adrian,
-> 
-> On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
-> <glaubitz@physik.fu-berlin.de> wrote:
->> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
->>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
->>
->> FWIW, there is a patch set by Yoshinori Sato to add device tree support
->> for classical SuperH hardware. It was never merged, unfortunately :(.
-> 
-> True.
-> 
->>> Anyone who cares for DMA on SuperH?
->>
->> What is DMA used for on SuperH? Wouldn't dropping it cut support for
->> essential hardware features?
-> 
-> It may make a few things slower.
-
-I would not drop DMA support but I would suggest to add dma_slave_map
-for non DT boot so the _compat() can be dropped.
-
-Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
-difference offloading data movement from the CPU.
-
-> Does any of your SuperH boards use DMA?
-> Anything interesting in /proc or /sys w.r.t. DMA?
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> On Mon, Feb 03, 2020 at 10:24:28PM -0500, Valdis Kl=C4=93tnieks=20wrote:=
+=0D=0A>=20>=20Al=20Viro=20recently=20reworked=20the=20way=20file=20system=
+=20parameters=20are=20handled=0D=0A>=20>=20Update=20super.c=20to=20work=20w=
+ith=20it=20in=20linux-next=2020200203.=0D=0A>=20>=0D=0A>=20>=20Signed-off-b=
+y:=20Valdis=20Kletnieks=20<valdis.kletnieks=40vt.edu>=0D=0A>=20=0D=0A>=20Lo=
+oks=20good:=0D=0A>=20=0D=0A>=20Reviewed-by:=20Christoph=20Hellwig=20<hch=40=
+lst.de>=0D=0AAcked-by:=20Namjae=20Jeon=20<namjae.jeon=40samsung.com>=0D=0A=
+=0D=0AIf=20I=20need=20to=20make=20v14=20patch=20series=20for=20this,=20Let=
+=20me=20know=20it.=0D=0A=0D=0AThanks=21=0D=0A=0D=0A
