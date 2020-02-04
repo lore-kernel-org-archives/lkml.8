@@ -2,109 +2,214 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2DDC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C771C3524F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FA720730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E78A217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lXCbSwzx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgBDQTQ (ORCPT
+        id S1727376AbgBDQXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:19:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3773 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727334AbgBDQTQ (ORCPT
+        Tue, 4 Feb 2020 11:23:09 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:45138 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbgBDQXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:19:16 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014GBUUq070878;
-        Tue, 4 Feb 2020 11:19:08 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxm9e3xc4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 11:19:08 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 014GJ7wb117859;
-        Tue, 4 Feb 2020 11:19:07 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxm9e3xax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 11:19:07 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 014GI0ml015994;
-        Tue, 4 Feb 2020 16:19:05 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma05wdc.us.ibm.com with ESMTP id 2xw0y6tse9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 16:19:05 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014GJ4aP13173466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Feb 2020 16:19:04 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA97828058;
-        Tue,  4 Feb 2020 16:19:04 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF8E82805E;
-        Tue,  4 Feb 2020 16:19:04 +0000 (GMT)
-Received: from localhost (unknown [9.41.179.32])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Feb 2020 16:19:04 +0000 (GMT)
-Date:   Tue, 4 Feb 2020 10:19:04 -0600
-From:   Scott Cheloha <cheloha@linux.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     Nathan Fontenont <ndfont@gmail.com>,
-        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] powerpc/drmem: cache LMBs in xarray to accelerate lookup
-Message-ID: <20200204161904.62gpevnygu2pzdnk@rascal.austin.ibm.com>
-References: <20200128221113.17158-1-cheloha@linux.ibm.com>
- <87pnf3i188.fsf@linux.ibm.com>
+        Tue, 4 Feb 2020 11:23:09 -0500
+Received: by mail-vk1-f195.google.com with SMTP id g7so5319451vkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 08:23:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ea6CDByKgSbDMkqbEgMOnAWDJppEuzPTacXPBXjbpgg=;
+        b=lXCbSwzxafLM6raSAdWogoEHnO/mTBZD3bcocFBdYquY+ylaHskUaAIPOpm5ZF4vfe
+         5G+IMeYmCFkLMv2064sPCqXmUD5JjEVGGnhFN4QptJL9Ffy0ppVxkro0Qb+pTTlyo3gX
+         qzYbZsN7wrNsiOQKPuhW3cv1pUnsW9CbWE53RSyVpL9YQITT1a+Rfr0M1d1LwwgDrf0C
+         RT04I35DZYseJxv8/qZx96j89aQhI8gcRQTByB5eGO1Pxz+rB1R7rZH5FEhk+VualXt7
+         eB/RTzHU+uERuUQ1xAP7Xf7Q4fdYZwhhSYjJ1HdbJ4kTHqHylJaNzyc1oFsXNYNAGzLl
+         Oz+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ea6CDByKgSbDMkqbEgMOnAWDJppEuzPTacXPBXjbpgg=;
+        b=MhgeGVWhBVl9oML9+DPxqfQlpFBqCrZ+Uh9xuxIrDaGy4CXBhAhyg2sz/s1y5GKxLy
+         NVwCUevrc9SzWCfeyVnIJh2QxCv0JTyFFMJ1jJDx6cr+6lLzq02mkmsHoGgF2ibrFoeN
+         HAFGHe9rHZ7PaOOEp1R2EgDRksX4RVtLTGzAy7CuEMYkLJ20IapKQtGLQFPc7m00EDxQ
+         r2fgpC5EjCTHDYnlIBEnxO0UonZM7ijI5NO0o62omVOB6Q2eVW1ciBBukHzTbrOw6WuJ
+         /zxEuhAa+qApzC0TTO0clFn84HTqcRbz1TviZdJFA5plMM4BNhPg6HIT7Zy3b+CIpH2E
+         JrSw==
+X-Gm-Message-State: APjAAAWUIPrg0XB9BTZX2rvnHcBbjy1AH7lXGLqRrYEwdV138uecyQM3
+        CNqKaWviDI/1KWSFm3x9zf0mQDLDs3Wl0DcVZAyNIQ==
+X-Google-Smtp-Source: APXvYqxWM9fd6TMYJGwvNp5QFj5S6ty/tZWeIxo/riCcbo9OzCBtnZc9dh8yM76cDOmNEVNYb5HxComQmEn6RDn1Zd0=
+X-Received: by 2002:a1f:914b:: with SMTP id t72mr18118471vkd.101.1580833387699;
+ Tue, 04 Feb 2020 08:23:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pnf3i188.fsf@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_05:2020-02-04,2020-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 spamscore=0 phishscore=0 clxscore=1015 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002040108
+References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org> <1574254593-16078-4-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1574254593-16078-4-git-send-email-thara.gopinath@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 4 Feb 2020 17:22:31 +0100
+Message-ID: <CAPDyKFozvt-LdxwkCB9C+t-mR-CZ37HigsB88z9Tj_SzKfRBLg@mail.gmail.com>
+Subject: Re: [Patch v4 3/7] thermal: core: Allow cooling devices to register a parent.
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 05:56:55PM -0600, Nathan Lynch wrote:
-> Scott Cheloha <cheloha@linux.ibm.com> writes:
-> > LMB lookup is currently an O(n) linear search.  This scales poorly when
-> > there are many LMBs.
-> >
-> > If we cache each LMB by both its base address and its DRC index
-> > in an xarray we can cut lookups to O(log n), greatly accelerating
-> > drmem initialization and memory hotplug.
-> >
-> > This patch introduces two xarrays of of LMBs and fills them during
-> > drmem initialization.  The patch also adds two interfaces for LMB
-> > lookup.
-> 
-> Good but can you replace the array of LMBs altogether
-> (drmem_info->lmbs)? xarray allows iteration over the members if needed.
+On Wed, 20 Nov 2019 at 13:56, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>
+> With introduction of power domain warming devices, devices that control the
+> power domain are registered as the parent of the cooling device so that the
+> device-genpd hierarchy in kernel is maintained intact. To enable this,
+> introduce a new API thermal_of_cooling_device_parent_register that takes a
+> parent device pointer as input. Also, modify
+> __thermal_cooling_device_register to register parent of a newly created
+> cooling device, if specified.
 
-I would like to try to "solve one problem at a time".
+I am not sure I understand the reasons why you need this, can you
+please elaborate?
 
-We can fix the linear search performance scaling problems without
-removing the array of LMBs.  As I've shown in my diff, we can do it
-with minimal change to the existing code.
+I remember we talked about using a "parent" device to deal with device
+attaching to PM domains (genpd). However, since the DT bindings for
+"warming devices" was concluded to consist by a single property
+("#cooling-cells") as a part of the PM domain provider node, this
+seems not to be needed.
 
-If it turns out that the PAPR guarantees the ordering of the memory
-DRCs then in a subsequent patch (series) we can replace the LMB array
-(__drmem_info.lmbs) with an xarray indexed by DRC and use e.g.
-xa_for_each() in the hotplug code.
+By looking at patch 4/7, you are attaching devices via
+of_genpd_add_device() and I don't see any need for using a "parent" in
+there.
+
+Can $subject patch be dropped or what am I missing?
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  drivers/thermal/thermal_core.c | 22 +++++++++++++++++++---
+>  include/linux/thermal.h        | 15 +++++++++++++++
+>  2 files changed, 34 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index d4481cc..912ba75 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -947,6 +947,7 @@ static void bind_cdev(struct thermal_cooling_device *cdev)
+>   */
+>  static struct thermal_cooling_device *
+>  __thermal_cooling_device_register(struct device_node *np,
+> +                                 struct device *parent,
+>                                   const char *type, void *devdata,
+>                                   const struct thermal_cooling_device_ops *ops)
+>  {
+> @@ -979,6 +980,8 @@ __thermal_cooling_device_register(struct device_node *np,
+>         cdev->ops = ops;
+>         cdev->updated = false;
+>         cdev->device.class = &thermal_class;
+> +       if (parent)
+> +               cdev->device.parent = parent;
+>         cdev->devdata = devdata;
+>         thermal_cooling_device_setup_sysfs(cdev);
+>         dev_set_name(&cdev->device, "cooling_device%d", cdev->id);
+> @@ -1024,7 +1027,8 @@ struct thermal_cooling_device *
+>  thermal_cooling_device_register(const char *type, void *devdata,
+>                                 const struct thermal_cooling_device_ops *ops)
+>  {
+> -       return __thermal_cooling_device_register(NULL, type, devdata, ops);
+> +       return __thermal_cooling_device_register(NULL, NULL, type,
+> +                                                devdata, ops);
+>  }
+>  EXPORT_SYMBOL_GPL(thermal_cooling_device_register);
+>
+> @@ -1048,10 +1052,22 @@ thermal_of_cooling_device_register(struct device_node *np,
+>                                    const char *type, void *devdata,
+>                                    const struct thermal_cooling_device_ops *ops)
+>  {
+> -       return __thermal_cooling_device_register(np, type, devdata, ops);
+> +       return __thermal_cooling_device_register(np, NULL, type, devdata, ops);
+>  }
+>  EXPORT_SYMBOL_GPL(thermal_of_cooling_device_register);
+>
+> +struct thermal_cooling_device *
+> +thermal_of_cooling_device_parent_register(struct device_node *np,
+> +                                         struct device *parent,
+> +                                         const char *type, void *devdata,
+> +                                         const struct
+> +                                         thermal_cooling_device_ops *ops)
+> +{
+> +       return __thermal_cooling_device_register(np, parent, type,
+> +                                                devdata, ops);
+> +}
+> +EXPORT_SYMBOL_GPL(thermal_of_cooling_device_parent_register);
+> +
+>  static void thermal_cooling_device_release(struct device *dev, void *res)
+>  {
+>         thermal_cooling_device_unregister(
+> @@ -1088,7 +1104,7 @@ devm_thermal_of_cooling_device_register(struct device *dev,
+>         if (!ptr)
+>                 return ERR_PTR(-ENOMEM);
+>
+> -       tcd = __thermal_cooling_device_register(np, type, devdata, ops);
+> +       tcd = __thermal_cooling_device_register(np, NULL, type, devdata, ops);
+>         if (IS_ERR(tcd)) {
+>                 devres_free(ptr);
+>                 return tcd;
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index e45659c..ac5f268 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -448,6 +448,11 @@ struct thermal_cooling_device *
+>  thermal_of_cooling_device_register(struct device_node *np, const char *, void *,
+>                                    const struct thermal_cooling_device_ops *);
+>  struct thermal_cooling_device *
+> +thermal_of_cooling_device_parent_register(struct device_node *np,
+> +                                         struct device *parent,
+> +                                         const char *, void *, const struct
+> +                                         thermal_cooling_device_ops *);
+> +struct thermal_cooling_device *
+>  devm_thermal_of_cooling_device_register(struct device *dev,
+>                                 struct device_node *np,
+>                                 char *type, void *devdata,
+> @@ -508,6 +513,16 @@ static inline struct thermal_cooling_device *
+>  thermal_of_cooling_device_register(struct device_node *np,
+>         char *type, void *devdata, const struct thermal_cooling_device_ops *ops)
+>  { return ERR_PTR(-ENODEV); }
+> +
+> +static inline struct thermal_cooling_device *
+> +thermal_of_cooling_device_parent_register(struct device_node *np,
+> +                                         struct device *parent,
+> +                                         const char *, void *, const struct
+> +                                         thermal_cooling_device_ops *)
+> +{
+> +       return ERR_PTR(-ENODEV);
+> +}
+> +
+>  static inline struct thermal_cooling_device *
+>  devm_thermal_of_cooling_device_register(struct device *dev,
+>                                 struct device_node *np,
+> --
+> 2.1.4
+>
