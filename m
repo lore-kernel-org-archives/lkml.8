@@ -2,86 +2,152 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F91C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E48C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE43720730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A307D2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:25:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3z7W9fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgBDOXO (ORCPT
+        id S1727336AbgBDOZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:23:14 -0500
-Received: from mga14.intel.com ([192.55.52.115]:11985 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgBDOXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:23:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 06:23:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,402,1574150400"; 
-   d="scan'208";a="219762640"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 04 Feb 2020 06:23:12 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iyz6d-0003zL-JS; Tue, 04 Feb 2020 22:23:11 +0800
-Date:   Tue, 4 Feb 2020 22:22:02 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Taehee Yoo <ap420073@gmail.com>
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] netdevsim: fix ptr_ret.cocci warnings
-Message-ID: <20200204142200.hinq3pju772kmwyu@f53c9c00458a>
-References: <202002042248.5gLay9S1%lkp@intel.com>
+        Tue, 4 Feb 2020 09:25:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49484 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727247AbgBDOZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 09:25:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580826327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ut05QA9J5WKSRE8iQ2AH3oPYzXnHzXfW9BoUs/aT13g=;
+        b=c3z7W9flyFddKlyVmMluuCNT5S/u5TlsjcpbfE0Hbh81XBCFSZMKYUEKPVcBgJcAe9bVQe
+        d493F0qrV53Irth3yNQLnmVr4ilxdthhK3ZnYk2eQpBya1QCevv75BkMlKpJztB8HmuSka
+        M2xGt5DOXEBe3T9haPil6aNGmBiucF4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-0pa_ZXTfPAGteHs5vWnWkg-1; Tue, 04 Feb 2020 09:25:25 -0500
+X-MC-Unique: 0pa_ZXTfPAGteHs5vWnWkg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F08C18010E6;
+        Tue,  4 Feb 2020 14:25:22 +0000 (UTC)
+Received: from localhost (ovpn-13-129.pek2.redhat.com [10.72.13.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DC6085785;
+        Tue,  4 Feb 2020 14:25:19 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 22:25:16 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+ in shrink_zone_span()
+Message-ID: <20200204142516.GD26758@MiWiFi-R3L-srv>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-9-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202002042248.5gLay9S1%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191006085646.5768-9-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On 10/06/19 at 10:56am, David Hildenbrand wrote:
+> If we have holes, the holes will automatically get detected and removed
+> once we remove the next bigger/smaller section. The extra checks can
+> go.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory_hotplug.c | 34 +++++++---------------------------
+>  1 file changed, 7 insertions(+), 27 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index f294918f7211..8dafa1ba8d9f 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>  		if (pfn) {
+>  			zone->zone_start_pfn = pfn;
+>  			zone->spanned_pages = zone_end_pfn - pfn;
+> +		} else {
+> +			zone->zone_start_pfn = 0;
+> +			zone->spanned_pages = 0;
+>  		}
+>  	} else if (zone_end_pfn == end_pfn) {
+>  		/*
+> @@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>  					       start_pfn);
+>  		if (pfn)
+>  			zone->spanned_pages = pfn - zone_start_pfn + 1;
+> +		else {
+> +			zone->zone_start_pfn = 0;
+> +			zone->spanned_pages = 0;
 
-drivers/net/netdevsim/dev.c:937:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+Thinking in which case (zone_start_pfn != start_pfn) and it comes here.
 
+> +		}
+>  	}
+> -
+> -	/*
+> -	 * The section is not biggest or smallest mem_section in the zone, it
+> -	 * only creates a hole in the zone. So in this case, we need not
+> -	 * change the zone. But perhaps, the zone has only hole data. Thus
+> -	 * it check the zone has only hole or not.
+> -	 */
+> -	pfn = zone_start_pfn;
+> -	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
+> -		if (unlikely(!pfn_to_online_page(pfn)))
+> -			continue;
+> -
+> -		if (page_zone(pfn_to_page(pfn)) != zone)
+> -			continue;
+> -
+> -		/* Skip range to be removed */
+> -		if (pfn >= start_pfn && pfn < end_pfn)
+> -			continue;
+> -
+> -		/* If we find valid section, we have nothing to do */
+> -		zone_span_writeunlock(zone);
+> -		return;
+> -	}
+> -
+> -	/* The zone has no valid section */
+> -	zone->zone_start_pfn = 0;
+> -	zone->spanned_pages = 0;
+>  	zone_span_writeunlock(zone);
+>  }
+>  
+> -- 
+> 2.21.0
+> 
+> 
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
-
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
-
-Fixes: 6556ff32f12d ("netdevsim: use IS_ERR instead of IS_ERR_OR_NULL for debugfs")
-CC: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git master
-head:   83b43045308ea0600099830292955f18818f8d5e
-commit: 6556ff32f12d0a5380dd2fa6bbaa01373925a7d1 [40/48] netdevsim: use IS_ERR instead of IS_ERR_OR_NULL for debugfs
-
- dev.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/drivers/net/netdevsim/dev.c
-+++ b/drivers/net/netdevsim/dev.c
-@@ -934,9 +934,7 @@ int nsim_dev_port_del(struct nsim_bus_de
- int nsim_dev_init(void)
- {
- 	nsim_dev_ddir = debugfs_create_dir(DRV_NAME, NULL);
--	if (IS_ERR(nsim_dev_ddir))
--		return PTR_ERR(nsim_dev_ddir);
--	return 0;
-+	return PTR_ERR_OR_ZERO(nsim_dev_ddir);
- }
- 
- void nsim_dev_exit(void)
