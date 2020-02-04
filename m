@@ -2,133 +2,117 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5E5C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130E9C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B72920674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580801797;
-	bh=WUFEjfexfAn28sJ9AUp2kzluNRF9714XTUnJnecywJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rv5nfw8LtYpD1zQJqPm4aU5p00zZBbZS3L69/QyuZa1SbqO/ZMF8JkCBmqM8tqohu
-	 tUfz+XyXYfA8nveJwwSnYPousECOXQJLo6VZeHJyCkE9om9o6nXKNXME+u8ae0AIB7
-	 ikBMuAx5x78Y0Fs1+14zrnUgXifzANI4TvKihP1Y=
+	by mail.kernel.org (Postfix) with ESMTP id D96D620674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="YJvzz9xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgBDHgg (ORCPT
+        id S1727102AbgBDHh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 02:36:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59078 "EHLO mail.kernel.org"
+        Tue, 4 Feb 2020 02:37:56 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:55499 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgBDHgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 02:36:36 -0500
-Received: from localhost (unknown [167.98.85.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215DE2087E;
-        Tue,  4 Feb 2020 07:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580801794;
-        bh=WUFEjfexfAn28sJ9AUp2kzluNRF9714XTUnJnecywJM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pjoZ2s4RFWiWcb+Nq7LFFuCdqj2UypIjt4yVH5O3VdEpBTSFXD/4MflI22sejvDLy
-         JF8TLK1qCRaNDPw2aHpoH7nt2FMy7MnPRSXB5J99BwczgSR6H/J/GNDxMQwtCaSFsZ
-         NMHXGJm0iKRYf1tMbbdh3DaVmxJSmt0WH5suF59U=
-Date:   Tue, 4 Feb 2020 07:36:32 +0000
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>
-Subject: Re: [PATCH] staging/octeon: Mark Ethernet driver as BROKEN
-Message-ID: <20200204073632.GB1085438@kroah.com>
-References: <20191202141836.9363-1-linux@roeck-us.net>
- <20191202165231.GA728202@kroah.com>
- <20191202173620.GA29323@roeck-us.net>
- <20191202181505.GA732872@kroah.com>
- <8168627a60e9e851860f8cc295498423828401c9.camel@alliedtelesis.co.nz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8168627a60e9e851860f8cc295498423828401c9.camel@alliedtelesis.co.nz>
+        id S1725834AbgBDHhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 02:37:55 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Bc404254z9vC1Z;
+        Tue,  4 Feb 2020 08:37:52 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=YJvzz9xk; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 36ijhWjZF_9L; Tue,  4 Feb 2020 08:37:52 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Bc402ltrz9vC1c;
+        Tue,  4 Feb 2020 08:37:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580801872; bh=2rd8qlLlpkX1BdaONPB2UupCXZuKoBgAK38pBszsWNk=;
+        h=From:Subject:To:Cc:Date:From;
+        b=YJvzz9xkMOFYsr6EVEph5R1Myd4IiyaKhRFL67S2BQUsqvlgCqfz66/3auiBINhmM
+         mJ3yt6dXJV6UpkZeUFB3+XRdJKyi/L2WgqMUqbdqxn41K4F2kSN3j02BFZ8M4bonOg
+         AouTrITGEKao7/tBHhmeuoRrUk5oCB94TXvcyfQA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 51D8C8B7B6;
+        Tue,  4 Feb 2020 08:37:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id T9QVY0qwbEkJ; Tue,  4 Feb 2020 08:37:53 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0ABF68B755;
+        Tue,  4 Feb 2020 08:37:53 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 8AEA7652B3; Tue,  4 Feb 2020 07:37:52 +0000 (UTC)
+Message-Id: <f96ed94dc57ea810b738c4e02263e08c2c8781b6.1580801787.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue,  4 Feb 2020 07:37:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 12:54:26AM +0000, Chris Packham wrote:
-> Hi Greg & All,
-> 
-> On Mon, 2019-12-02 at 19:15 +0100, Greg Kroah-Hartman wrote:
-> > On Mon, Dec 02, 2019 at 09:36:20AM -0800, Guenter Roeck wrote:
-> > > On Mon, Dec 02, 2019 at 05:52:31PM +0100, Greg Kroah-Hartman wrote:
-> > > > On Mon, Dec 02, 2019 at 06:18:36AM -0800, Guenter Roeck wrote:
-> > > > > The code doesn't compile due to incompatible pointer errors
-> > > > > such as
-> > > > > 
-> > > > > drivers/staging/octeon/ethernet-tx.c:649:50: error:
-> > > > > 	passing argument 1 of 'cvmx_wqe_get_grp' from
-> > > > > incompatible pointer type
-> > > > > 
-> > > > > This is due to mixing, for example, cvmx_wqe_t with 'struct
-> > > > > cvmx_wqe'.
-> > > > > 
-> > > > > Unfortunately, one can not just revert the primary offending
-> > > > > commit, as doing so
-> > > > > results in secondary errors. This is made worse by the fact
-> > > > > that the "removed"
-> > > > > typedefs still exist and are used widely outside the staging
-> > > > > directory,
-> > > > > making the entire set of "remove typedef" changes pointless and
-> > > > > wrong.
-> > > > 
-> > > > Ugh, sorry about that.
-> > > > 
-> > > > > Reflect reality and mark the driver as BROKEN.
-> > > > 
-> > > > Should I just delete this thing?  No one seems to be using it and
-> > > > there
-> > > > is no move to get it out of staging at all.
-> > > > 
-> > > > Will anyone actually miss it?  It can always come back of someone
-> > > > does...
-> > > > 
-> > > 
-> > > All it does is causing trouble and misguided attempts to clean it
-> > > up.
-> > > If anything, the whole thing goes into the wrong direction (declare
-> > > a
-> > > complete set of dummy functions just to be able to build the driver
-> > > with COMPILE_TEST ? Seriously ?).
-> > > 
-> > > I second the motion to drop it. This has been in staging for 10
-> > > years.
-> > > Don't we have some kind of time limit for code in staging ? If not,
-> > > should we ? If anyone really needs it, that person or group should
-> > > really invest the time to get it out of staging for good.
-> > 
-> > 10 years?  Ugh, yes, it's time to drop the thing, I'll do so after
-> > -rc1
-> > is out.
-> > 
-> 
-> As a long suffering Cavium MIPs customer could I request that this
-> isn't dropped. I'll get someone here to take a look at fixing the build
-> issues.
-> 
-> Given our platform isn't upstream I'm not sure that we'll be able to
-> meet the criteria for getting it out of staging.
-> 
+Some architectures like powerpc64 have the capability to separate
+read access and write access protection.
+For get_user() and copy_from_user(), powerpc64 only open read access.
+For put_user() and copy_to_user(), powerpc64 only open write access.
+But when using unsafe_get_user() or unsafe_put_user(),
+user_access_begin open both read and write.
 
-Can't you push this onto Cavium as you are paying them for hardware and
-support?
+In order to avoid any risk based of hacking some variable parameters
+passed to user_access_begin/end that would allow hacking and
+leaving user access open or opening too much, it is preferable to
+use dedicated static functions that can't be overridden.
 
-thanks,
+Add a user_read_access_begin and user_read_access_end to only open
+read access.
 
-greg k-h
+Add a user_write_access_begin and user_write_access_end to only open
+write access.
+
+By default, when undefined, those new access helpers default on the
+existing user_access_begin and user_access_end.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ include/linux/uaccess.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 67f016010aad..9861c89f93be 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -378,6 +378,14 @@ extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
+ static inline unsigned long user_access_save(void) { return 0UL; }
+ static inline void user_access_restore(unsigned long flags) { }
+ #endif
++#ifndef user_write_access_begin
++#define user_write_access_begin user_access_begin
++#define user_write_access_end user_access_end
++#endif
++#ifndef user_read_access_begin
++#define user_read_access_begin user_access_begin
++#define user_read_access_end user_access_end
++#endif
+ 
+ #ifdef CONFIG_HARDENED_USERCOPY
+ void usercopy_warn(const char *name, const char *detail, bool to_user,
+-- 
+2.25.0
+
