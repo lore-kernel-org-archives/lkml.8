@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDECC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BE3C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14812082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB26E22464
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PD1xyBi0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gXxL5y/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgBDOE2 (ORCPT
+        id S1727302AbgBDOEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:04:28 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:42237 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbgBDOE1 (ORCPT
+        Tue, 4 Feb 2020 09:04:31 -0500
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:42237 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgBDOEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:04:27 -0500
-Received: by mail-wm1-f74.google.com with SMTP id d4so1214757wmd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 06:04:26 -0800 (PST)
+        Tue, 4 Feb 2020 09:04:30 -0500
+Received: by mail-wm1-f73.google.com with SMTP id d4so1214808wmd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 06:04:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=KtW08c4N/a2oVRHrX0WYeOZxmDiJvCqs/eWAvVn9zAs=;
-        b=PD1xyBi0it61cmDpiG9PZDHp+qhrT9OgiLa82dmTHx3mddRhqfoKzbkfPY1XlNNED0
-         edSeM6QjA66SGyS7wMEMBCGRbNtF7148dzzX39l8q2w7n/27ooIO322AbDdTDjrfKF06
-         f1CLml824JYqce7RAxlqd+crkwigfWwWQO6p3pzKKr6bHEDj8ORD5Kggu6v+GxrXjQ1b
-         HsTvlBfg2uBzwesMshwo/2VT365sljDfLwYD2GCsyDFBsQzc+EE6otCdRegG/9iIBrL6
-         a6Bs/11+rrYsbR3cdCqwPT5edlj+Hh58bWupgDkk6rHlIc0WQHlIdxBRtMczt3LExH6v
-         w2rA==
+        bh=M5QDlwOFPFeBvx3bqm6hRs2LqKGsL5jmQQoVlW04gqY=;
+        b=gXxL5y/8ZfoayNMAanpmqonkztj0S52rqHHImIicJ4MhhNjd31v/0u+t+Y2lCEwB3t
+         Zrd/23x/Xjx0+g+Dgd/aAFkA6ASHh249rtjiWvc/dsRzgY10FHepBVnCn+gT+vYW9Rsg
+         wLX+HTdvdRWkKslS9QdFL1cRoYBC/l92f/srw+Q3uOctBJR/VPLTOldRXYmqtPknk6Pu
+         /LeRYhvKTYXFqHj0HutDNSGV5aNaGuJxADC5tiTiYiOCAfzfyRPllYx/pv74O+bPep+a
+         KayVQeuq6SWYLqoi6TvPXuSRJhgcgJYFX4Ryoqovfx8yTP6KOUePBc1YGzcd7ftFhPEc
+         C3SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=KtW08c4N/a2oVRHrX0WYeOZxmDiJvCqs/eWAvVn9zAs=;
-        b=F/qlfaHGHHjZeFw81pI7YlGYCplWOir+MQ/wuAQj41hdu15c2x8qtBx7qq1DQ13f/w
-         2sk0ZZURQH/jjfhnDuThVKHYBd0aIYw5OdQvrYg0XGu+MRsj4QSunrYNVRygj5vmpUk9
-         osbyKly9kQlwsFCirtqJJS7GqVj3d6qFOtUFSpt3oeEi92LmFAKtjhBIVTJ3N+mwmaxY
-         tJ8x2RszE7oqFyZQfZ7UlMamuxlOXcfd0uhtqOtJB8vLUSpX36CfO106QTsEgzqei56p
-         +4Dyjlh3fOVC1GHMnQ9Lf8Ds1+SicY+ByFnegI6HyvTnQ0+5QrWP3jW+RAFiicvgaVbm
-         r/HQ==
-X-Gm-Message-State: APjAAAVfNb0EWe3j2t6eipghLFcaF6Xgq9vd5TgBBpNk7vXRUKlWcqJO
-        mnLB+ug+vaZtoUF44OU1lB3bxkyuNQ==
-X-Google-Smtp-Source: APXvYqwncnT9r1x/4RrOaQtvjXAN3GZnAkUK2m/xSD2a6Esfjkx3lDl1yjliLAza6WZ3i1YNQcjujfzqQQ==
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr21824539wrr.418.1580825050694;
- Tue, 04 Feb 2020 06:04:10 -0800 (PST)
-Date:   Tue,  4 Feb 2020 15:03:52 +0100
+        bh=M5QDlwOFPFeBvx3bqm6hRs2LqKGsL5jmQQoVlW04gqY=;
+        b=mR0DaN9oZhAnB2eRSIVNna6kmm9udCBhaaa0rQfqtsiapSQhUS2DUTj9LU5Xg9FMdo
+         kU7i5tRN7HZrQVO8GKlJGzXwH47ehaKrEBQpUUa0odoFtsXldVbLt/MbYcaUNh2MT1Rk
+         f2oNhm1dHDTZwOqbdHQp/A82IeQW5hcCA/Wz68qdB4aQPdvncmLK+l1hQ6PePbt/Bb+N
+         zYLFnxNjUJn45V0HQJYnleI3u6Gg3tmyNA0hC5oOzJVSkm8IP7HLhipTW40g/xjuU/ND
+         idZemZbVXyfr5iCRQfatWlJS/uP+z4F4ZT9rIrQ4aqhJ0oGK1kpHJoMJZea9peiNHWaq
+         PprQ==
+X-Gm-Message-State: APjAAAWD43DZ/vSCmxb09lZUlAPM/gc1bn4w4hKKxReMbjNmrxTOv38L
+        /tCvHguViUexMmwqmACUslBpRPhTEw==
+X-Google-Smtp-Source: APXvYqxKXMV8rmeLGLDkEfmXBf+98I1ti+BY60d88Xy7gAfqeTiHL6Th4QBvxdjjVZBKP99VcfUCl4F1Pg==
+X-Received: by 2002:a5d:4052:: with SMTP id w18mr16149162wrp.112.1580825068609;
+ Tue, 04 Feb 2020 06:04:28 -0800 (PST)
+Date:   Tue,  4 Feb 2020 15:03:53 +0100
 In-Reply-To: <20200204140353.177797-1-elver@google.com>
-Message-Id: <20200204140353.177797-2-elver@google.com>
+Message-Id: <20200204140353.177797-3-elver@google.com>
 Mime-Version: 1.0
 References: <20200204140353.177797-1-elver@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH 2/3] kcsan: Clarify Kconfig option KCSAN_IGNORE_ATOMICS
+Subject: [PATCH 3/3] kcsan: Cleanup of main KCSAN Kconfig option
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
@@ -70,39 +70,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clarify difference between options KCSAN_IGNORE_ATOMICS and
-KCSAN_ASSUME_PLAIN_WRITES_ATOMIC in help text.
+This patch cleans up the rules of the 'KCSAN' Kconfig option by:
+  1. implicitly selecting 'STACKTRACE' instead of depending on it;
+  2. depending on DEBUG_KERNEL, to avoid accidentally turning KCSAN on if
+     the kernel is not meant to be a debug kernel;
+  3. updating the short and long summaries.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- lib/Kconfig.kcsan | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ lib/Kconfig.kcsan | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index 08972376f0454..35fab63111d75 100644
+index 35fab63111d75..0af6301061c03 100644
 --- a/lib/Kconfig.kcsan
 +++ b/lib/Kconfig.kcsan
-@@ -131,8 +131,17 @@ config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
- config KCSAN_IGNORE_ATOMICS
- 	bool "Do not instrument marked atomic accesses"
- 	help
--	  If enabled, never instruments marked atomic accesses. This results in
--	  not reporting data races where one access is atomic and the other is
--	  a plain access.
-+	  Never instrument marked atomic accesses. This option can be used for
-+	  more advanced filtering. Conflicting marked atomic reads and plain
-+	  writes will never be reported as a data race, however, will cause
-+	  plain reads and marked writes to result in "unknown origin" reports.
-+	  If combined with CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN=n, data
-+	  races where at least one access is marked atomic will never be
-+	  reported.
-+
-+	  Like KCSAN_ASSUME_PLAIN_WRITES_ATOMIC, conflicting marked atomic
-+	  reads and plain writes will not be reported as data races, however,
-+	  unlike that option, data races due to two conflicting plain writes
-+	  will be reported (if CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n).
+@@ -4,12 +4,15 @@ config HAVE_ARCH_KCSAN
+ 	bool
  
- endif # KCSAN
+ menuconfig KCSAN
+-	bool "KCSAN: watchpoint-based dynamic data race detector"
+-	depends on HAVE_ARCH_KCSAN && !KASAN && STACKTRACE
++	bool "KCSAN: dynamic data race detector"
++	depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
++	select STACKTRACE
+ 	help
+-	  Kernel Concurrency Sanitizer is a dynamic data race detector, which
+-	  uses a watchpoint-based sampling approach to detect races. See
+-	  <file:Documentation/dev-tools/kcsan.rst> for more details.
++	  The Kernel Concurrency Sanitizer (KCSAN) is a dynamic data race
++	  detector, which relies on compile-time instrumentation, and uses a
++	  watchpoint-based sampling approach to detect data races.
++
++	  See <file:Documentation/dev-tools/kcsan.rst> for more details.
+ 
+ if KCSAN
+ 
 -- 
 2.25.0.341.g760bfbb309-goog
 
