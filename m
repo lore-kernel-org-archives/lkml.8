@@ -2,248 +2,144 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6383CC3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B35C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362B62082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60EC52087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FfPi7CGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgBDQ0w (ORCPT
+        id S1727378AbgBDQ1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:26:52 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30678 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727297AbgBDQ0v (ORCPT
+        Tue, 4 Feb 2020 11:27:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60139 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727336AbgBDQ1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:26:51 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014GGGcn107797
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2020 11:26:50 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xybyxreud-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:26:50 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sandipan@linux.ibm.com>;
-        Tue, 4 Feb 2020 16:26:48 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Feb 2020 16:26:44 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014GQhfj59769072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Feb 2020 16:26:43 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7DD811C04C;
-        Tue,  4 Feb 2020 16:26:42 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14F9411C04A;
-        Tue,  4 Feb 2020 16:26:40 +0000 (GMT)
-Received: from [9.199.41.160] (unknown [9.199.41.160])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Feb 2020 16:26:39 +0000 (GMT)
-Subject: Re: [PATCH v11 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
- tests
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     mike.kravetz@oracle.com, shuah@kernel.org, rientjes@google.com,
-        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-8-almasrymina@google.com>
-From:   Sandipan Das <sandipan@linux.ibm.com>
-Date:   Tue, 4 Feb 2020 21:56:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 11:27:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580833625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7UfeUadWGEMW1NQQDMTb46Kq24+b/r0Da8oMBdBFtk8=;
+        b=FfPi7CGiKXNPhNUap0OsIK9RWAqqg3h6x9cR8JzHj/A1cH+p0fcfyBdvguvvJ2GHOfr/NA
+        uZvG8j7JqSPMX7GdJ62dJ5SRx+jLgl0VAfbC9kmL3D+1nsTeRHmNLbpgw4QOhwj5XVLoFm
+        0i2PmeVdP8bEFAvGZSOT3MAHwVN9kSk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-bUZ9P-RVMyOj2_w0T8-OiQ-1; Tue, 04 Feb 2020 11:26:59 -0500
+X-MC-Unique: bUZ9P-RVMyOj2_w0T8-OiQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95BB4802586;
+        Tue,  4 Feb 2020 16:26:58 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 04D9B857AF;
+        Tue,  4 Feb 2020 16:26:56 +0000 (UTC)
+Subject: Re: [PATCH v5 6/7] locking/lockdep: Reuse freed chain_hlocks entries
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20200203164147.17990-1-longman@redhat.com>
+ <20200203164147.17990-7-longman@redhat.com>
+ <20200204154236.GE14879@hirez.programming.kicks-ass.net>
+ <c1af8458-7269-53c3-59f4-b87c5d51c208@redhat.com>
+Organization: Red Hat
+Message-ID: <16125cbf-09ee-919e-4b7a-33dabb123159@redhat.com>
+Date:   Tue, 4 Feb 2020 11:26:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200203232248.104733-8-almasrymina@google.com>
+In-Reply-To: <c1af8458-7269-53c3-59f4-b87c5d51c208@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020416-4275-0000-0000-0000039DE5A1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020416-4276-0000-0000-000038B20D7F
-Message-Id: <0fa5d77c-d115-1e30-cb17-d6a48c916922@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_05:2020-02-04,2020-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002040108
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mina,
+On 2/4/20 11:12 AM, Waiman Long wrote:
+> On 2/4/20 10:42 AM, Peter Zijlstra wrote:
+>> On Mon, Feb 03, 2020 at 11:41:46AM -0500, Waiman Long wrote:
+>>> +	/*
+>>> +	 * We require a minimum of 2 (u16) entries to encode a freelist
+>>> +	 * 'pointer'.
+>>> +	 */
+>>> +	req =3D max(req, 2);
+>> Would something simple like the below not avoid that whole 1 entry
+>> 'chain' nonsense?
+>>
+>> It boots and passes the selftests, so it must be perfect :-)
+>>
+>> --- a/kernel/locking/lockdep.c
+>> +++ b/kernel/locking/lockdep.c
+>> @@ -3163,7 +3163,7 @@ static int validate_chain(struct task_st
+>>  	 * (If lookup_chain_cache_add() return with 1 it acquires
+>>  	 * graph_lock for us)
+>>  	 */
+>> -	if (!hlock->trylock && hlock->check &&
+>> +	if (!chain_head && !hlock->trylock && hlock->check &&
+>>  	    lookup_chain_cache_add(curr, hlock, chain_key)) {
+>>  		/*
+>>  		 * Check whether last held lock:
+>>
+> Well, I think that will eliminate the 1-entry chains for the process
+> context. However, we can still have 1-entry chain in the irq context, I
+> think, as long as there are process context locks in front of it.
+>
+> I think this fix is still worthwhile as it will eliminate some of the
+> 1-entry chains.
 
-On 04/02/20 4:52 am, Mina Almasry wrote:
-> The tests use both shared and private mapped hugetlb memory, and
-> monitors the hugetlb usage counter as well as the hugetlb reservation
-> counter. They test different configurations such as hugetlb memory usage
-> via hugetlbfs, or MAP_HUGETLB, or shmget/shmat, and with and without
-> MAP_POPULATE.
-> 
-> Also add test for hugetlb reservation reparenting, since this is
-> a subtle issue.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Cc: sandipan@linux.ibm.com
-> 
-> ---
-> 
-> Changes in v11:
-> - Modify test to not assume 2MB hugepage size.
-> - Updated resv.* to rsvd.*
-> Changes in v10:
-> - Updated tests to resv.* name changes.
-> Changes in v9:
-> - Added tests for hugetlb reparenting.
-> - Make tests explicitly support cgroup v1 and v2 via script argument.
-> Changes in v6:
-> - Updates tests for cgroups-v2 and NORESERVE allocations.
-> 
+Sorry, I think I mis-read the code. This patch will eliminate some
+cross-context check. How=C2=A0 about something like
 
-There are still a couple of places where 2MB page size is being used.
-These are my workarounds to get the tests running on ppc64.
-
-diff --git a/tools/testing/selftests/vm/hugetlb_reparenting_test.sh b/tools/testing/selftests/vm/hugetlb_reparenting_test.sh
-index 2be672c2b311..d11d1febccc3 100755
---- a/tools/testing/selftests/vm/hugetlb_reparenting_test.sh
-+++ b/tools/testing/selftests/vm/hugetlb_reparenting_test.sh
-@@ -29,6 +29,15 @@ if [[ ! -e $CGROUP_ROOT ]]; then
-   fi
- fi
- 
-+function get_machine_hugepage_size() {
-+  hpz=$(grep -i hugepagesize /proc/meminfo)
-+  kb=${hpz:14:-3}
-+  mb=$(($kb / 1024))
-+  echo $mb
-+}
-+
-+MB=$(get_machine_hugepage_size)
-+
- function cleanup() {
-   echo cleanup
-   set +e
-@@ -67,7 +76,7 @@ function assert_state() {
-   fi
- 
-   local actual_a_hugetlb
--  actual_a_hugetlb="$(cat "$CGROUP_ROOT"/a/hugetlb.2MB.$usage_file)"
-+  actual_a_hugetlb="$(cat "$CGROUP_ROOT"/a/hugetlb.${MB}MB.$usage_file)"
-   if [[ $actual_a_hugetlb -lt $(($expected_a_hugetlb - $tolerance)) ]] ||
-     [[ $actual_a_hugetlb -gt $(($expected_a_hugetlb + $tolerance)) ]]; then
-     echo actual a hugetlb = $((${actual_a_hugetlb%% *} / 1024 / 1024)) MB
-@@ -95,7 +104,7 @@ function assert_state() {
-   fi
- 
-   local actual_b_hugetlb
--  actual_b_hugetlb="$(cat "$CGROUP_ROOT"/a/b/hugetlb.2MB.$usage_file)"
-+  actual_b_hugetlb="$(cat "$CGROUP_ROOT"/a/b/hugetlb.${MB}MB.$usage_file)"
-   if [[ $actual_b_hugetlb -lt $(($expected_b_hugetlb - $tolerance)) ]] ||
-     [[ $actual_b_hugetlb -gt $(($expected_b_hugetlb + $tolerance)) ]]; then
-     echo actual b hugetlb = $((${actual_b_hugetlb%% *} / 1024 / 1024)) MB
-@@ -152,7 +161,7 @@ write_hugetlbfs() {
- 
- set -e
- 
--size=$((2 * 1024 * 1024 * 25)) # 50MB = 25 * 2MB hugepages.
-+size=$((${MB} * 1024 * 1024 * 25)) # 50MB = 25 * 2MB hugepages.
- 
- cleanup
-
-diff --git a/tools/testing/selftests/vm/charge_reserved_hugetlb.sh b/tools/testing/selftests/vm/charge_reserved_hugetlb.sh
-index fa82a66e497a..ca98ad229b75 100755
---- a/tools/testing/selftests/vm/charge_reserved_hugetlb.sh
-+++ b/tools/testing/selftests/vm/charge_reserved_hugetlb.sh
-@@ -226,7 +226,7 @@ function write_hugetlbfs_and_get_usage() {
- function cleanup_hugetlb_memory() {
-   set +e
-   local cgroup="$1"
--  if [[ "$(pgrep write_to_hugetlbfs)" != "" ]]; then
-+  if [[ "$(pgrep -f write_to_hugetlbfs)" != "" ]]; then
-     echo kiling write_to_hugetlbfs
-     killall -2 write_to_hugetlbfs
-     wait_for_hugetlb_memory_to_get_depleted $cgroup
-@@ -264,7 +264,7 @@ function run_test() {
-   setup_cgroup "hugetlb_cgroup_test" "$cgroup_limit" "$reservation_limit"
- 
-   mkdir -p /mnt/huge
--  mount -t hugetlbfs -o pagesize=2M,size=256M none /mnt/huge
-+  mount -t hugetlbfs -o pagesize=${MB}M,size=256M none /mnt/huge
- 
-   write_hugetlbfs_and_get_usage "hugetlb_cgroup_test" "$size" "$populate" \
-     "$write" "/mnt/huge/test" "$method" "$private" "$expect_failure" \
-@@ -318,7 +318,7 @@ function run_multiple_cgroup_test() {
-   setup_cgroup "hugetlb_cgroup_test2" "$cgroup_limit2" "$reservation_limit2"
- 
-   mkdir -p /mnt/huge
--  mount -t hugetlbfs -o pagesize=2M,size=256M none /mnt/huge
-+  mount -t hugetlbfs -o pagesize=${MB}M,size=256M none /mnt/huge
- 
-   write_hugetlbfs_and_get_usage "hugetlb_cgroup_test1" "$size1" \
-     "$populate1" "$write1" "/mnt/huge/test1" "$method" "$private" \
-
----
-
-Also I had missed running charge_reserved_hugetlb.sh the last time.
-Right now, it stops at the following scenario.
-
-Test normal case with write.
-private=, populate=, method=2, reserve=
-nr hugepages = 10
-writing cgroup limit: 83886080
-writing reseravation limit: 83886080
-
-Starting:
-hugetlb_usage=0
-reserved_usage=0
-expect_failure is 0
-Putting task in cgroup 'hugetlb_cgroup_test'
-Method is 2
-Executing ./write_to_hugetlbfs -p /mnt/huge/test -s 83886080 -w  -m 2  -l
-Writing to this path: /mnt/huge/test
-Writing this size: 83886080
-Not populating.
-Using method=2
-Shared mapping.
-RESERVE mapping.
-Allocating using SHM.
-shmid: 0x5, shmget key:0
-shmaddr: 0x7dfffb000000
-Writing to memory.
-Starting the writes:
-.write_result is 0
-.After write:
-hugetlb_usage=16777216
-reserved_usage=83886080
-....kiling write_to_hugetlbfs
-...Received 2.
-Deleting the memory
-Done deleting the memory
-16777216
-83886080
-Memory charged to hugtlb=16777216
-Memory charged to reservation=83886080
-expected (83886080) != actual (16777216): Reserved memory charged to hugetlb cgroup.
-CLEANUP DONE
-
-
-The other test script (hugetlb_reparenting_test.sh) passes.
-Did not observe anything unusual with hugepage accounting
-either.
-
-
-- Sandipan
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 32406ef0d6a2..d746897b638f 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -2931,7 +2931,7 @@ static int validate_chain(struct task_struct *curr,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * (If lookup_chain_cache=
+_add() return with 1 it acquires
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * graph_lock for us)
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!hlock->trylock && hlock->check=
+ &&
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((chain_head !=3D 1) && !hlock->=
+trylock && hlock->check &&
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lookup=
+_chain_cache_add(curr, hlock, chain_key)) {
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 /*
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 * Check whether last held lock:
+@@ -3937,7 +3937,7 @@ static int __lock_acquire(struct lockdep_map
+*lock, unsign
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hlock->prev_chain_key =3D chai=
+n_key;
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (separate_irq_context(curr,=
+ hlock)) {
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 chain_key =3D INITIAL_CHAIN_KEY;
+-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 chain_head =3D 1;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 chain_head =3D 2; /* Head of irq context chain */
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chain_key =3D iterate_chain_ke=
+y(chain_key, class_idx);
+=C2=A0
+Cheers,
+Longman
 
