@@ -2,142 +2,115 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0867BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE64C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD0521741
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA5220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dBA6JtY8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WeRebeBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgBDSU2 (ORCPT
+        id S1727486AbgBDSWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:20:28 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44665 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbgBDSU1 (ORCPT
+        Tue, 4 Feb 2020 13:22:12 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46582 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbgBDSWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 13:20:27 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d9so7590531plo.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 10:20:25 -0800 (PST)
+        Tue, 4 Feb 2020 13:22:11 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x14so19608076ljd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 10:22:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CAMBy3NGAyHNH2wCGCsteiJRgCMQA3d7e+wpMMPzaNM=;
-        b=dBA6JtY8VAIHgTSG/m3Mm694yoeeGq0PpedkAvgfVdygHk+yDxvbEkaI0OZgAruXCd
-         Oqxs/pAIkdyQh3FUG6RW6hx5Jm+8ioqk1rDFVpeB4P7NAkkgWAwIHKgE5toPWVQ/Gfp4
-         spH3EiYZ+2IrGNIGbKXv45ye3A6lTdm7929uTztEkFX0h/iyZ/JsRt5CDrtU/vfVKq4d
-         gbIZHXJKSkEDYaUeRZlPLXThNErMfFRfj3ZS5FK665oPREjtQwyQaLevKqdqy4HinU68
-         F7UvQkHg8tQdVE6eajwq41kb0fIzVHYnWkT+AJoHJ1OQFbiJxHHeWYi12IuU9pcbg+4j
-         zxhw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QDmc7rJKH3PB8BRLa4LSMdik+WscauM3bJQAO66d9eA=;
+        b=WeRebeBVSEUt28wl435zQEX1/6tiqV9monpU/7Ej5fqLhT4R41NF8WtVIPn3kCpd2W
+         wbcN2Sjxu4ENSsuskkDYKK9U80zRpDL4LUYH/tlUOhVyLqB1KATrcbuAqPq0Al5qoWvp
+         rMHMlBCss0WzMtE8Lymhfpn15/d3thD2oJEIZmNP8MDzdV8YSMDGPweIJImQWGcV8Ga/
+         j/IbkkAP1Fj9pbuFBAyq/t9v6EySeBAPmFRUvTPRYghB8ovJFADomNk5+wvaaAHEWM0S
+         hpqdASOKeTOzzB6JZ+53/Eq07SOogb68gbxVJW6udAD0KmS978l/cAwWllNpHbBrJLcc
+         ldEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CAMBy3NGAyHNH2wCGCsteiJRgCMQA3d7e+wpMMPzaNM=;
-        b=HOGUONZxh3dJ7YsOXD103zvzVxFSlQ6QxMX45FWnb+h3WOpggl7k8b1v1P9CjqdT+y
-         c/GmPJm6K/pTwYA860tqS5lLGRY/CwV34Uzaxy+Qg18TFzKmdDT4kOP9AjdQ6pevzcsK
-         1F5gb9GoPL1L6abfP8kifH3XM8QSHcADj3NstlHtS7/vplUcqVcxdZMyxl1rxo5Cqprw
-         sKMggLb822Zp6J90jNUp5SN1otMocb8lPSEbEKQ2vQC+Zgp9kRhVzJHIvvrhGCLdIKiy
-         4tnby5MDV0NYbqvot4/ydHrtu1Czsqd32Ifzko9KBzbtreOGTgvUmksjG/JAQJdwtSXZ
-         QuSA==
-X-Gm-Message-State: APjAAAVHfrgQE2zmy86LqPQCyMBVwtSke9Sbu4dcLjqQtbBDEsdjBHTU
-        fIt6FY8o01cca6r7XRxWkrJUWg==
-X-Google-Smtp-Source: APXvYqwRjsxFHkomjw16464hTqweh60BpZMJ6xeDoW9lFDkzNpbofpmThIZb3diiY9PJQguYwiSX3A==
-X-Received: by 2002:a17:90a:cb11:: with SMTP id z17mr468603pjt.122.1580840424859;
-        Tue, 04 Feb 2020 10:20:24 -0800 (PST)
-Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:50b7:ffca:29c4:6488])
-        by smtp.googlemail.com with ESMTPSA id f127sm25578589pfa.112.2020.02.04.10.20.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 10:20:24 -0800 (PST)
-Subject: Re: [PATCH RFC 10/10] nvdimm/e820: add multiple namespaces support
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        KVM list <kvm@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Nikita Leshenko <nikita.leshchenko@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20200110190313.17144-1-joao.m.martins@oracle.com>
- <20200110190313.17144-11-joao.m.martins@oracle.com>
- <e605fed8-46f5-6a07-11e6-2cc079a1159b@google.com>
- <CAPcyv4iiSsEOsfEwLQcV3bNDjBSxw1OgWoBdEWPQEymq6=xm-A@mail.gmail.com>
-From:   Barret Rhoden <brho@google.com>
-Message-ID: <ae788015-616f-96e6-3a0e-39c1911c4b01@google.com>
-Date:   Tue, 4 Feb 2020 13:20:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QDmc7rJKH3PB8BRLa4LSMdik+WscauM3bJQAO66d9eA=;
+        b=MimoEktQwf7ISp//qO9wghQOY9qnZyKuqOpPhgnngkbfBLe5D0EnLf3n4K7905eaWd
+         WaX+Cp84+BItp4veDRIfr6n7awKPI3coHl7NXtpIt5qoAXP1e8ebZeGmaaQuKppDu7SP
+         mRCJfpirfzgW4PWs69bPer0GXQMql62SgUnKi0hGUdElXb8GEClkXsquD2OmSWCXnPXf
+         KJWPbcyyJ1b4FUwYQcC4S3sX2gnxHv0S1RHOy2TgJ10aq5UMP4hB/kgxeaSRZUqUtcEY
+         VvH1St3LTqxR4JMgXZkg3nIgI3qNanGw6A8yzcOekh7QIZJKohn2JDL5BXhCOdtRg+88
+         OXYA==
+X-Gm-Message-State: APjAAAWKRWxEOTIug7nqOHUdlN9VSLFi/gUu10/dKhi8QuLnk/mM6eu9
+        DyuGBrkIr4Gxd+5l9PBG9Cn5AgJp2MSeskegE53qhg==
+X-Google-Smtp-Source: APXvYqxET1q8n/qQ6aY0jYO8nGz1OvZdbUcpn8bnrFqAZJyuuJYIXotPvLB+pBHSS5AiqYMW6+TjrlGJYozegKXPWGc=
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr18353599ljg.3.1580840527698;
+ Tue, 04 Feb 2020 10:22:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iiSsEOsfEwLQcV3bNDjBSxw1OgWoBdEWPQEymq6=xm-A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
+From:   Evan Green <evgreen@google.com>
+Date:   Tue, 4 Feb 2020 10:21:31 -0800
+Message-ID: <CAE=gft6--=zhxfR9G=S0g-5c9YdpvaFWz9dcgV7zJQAzcreZjg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] interconnect: qcom: sdm845: Split qnodes into
+ their respective NoCs
+To:     David Dai <daidavid1@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>,
+        Alex Elder <elder@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi -
+On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
+>
+> In order to better represent the hardware and its different Network-On-Chip
+> devices, split the sdm845 provider driver into NoC specific providers.
+> Remove duplicate functionality already provided by the icc rpmh and
+> bcm voter drivers to calculate and commit bandwidth requests to hardware.
+>
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+>  drivers/interconnect/qcom/sdm845.c             | 1132 ++++++++++--------------
+>  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
+>  2 files changed, 609 insertions(+), 786 deletions(-)
+>
+> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+> index f078cf0..8145612 100644
+> --- a/drivers/interconnect/qcom/sdm845.c
+> +++ b/drivers/interconnect/qcom/sdm845.c
+> @@ -5,283 +5,285 @@
+>   */
+>
+>  #include <asm/div64.h>
 
-On 2/4/20 11:44 AM, Dan Williams wrote:
-> On Tue, Feb 4, 2020 at 7:30 AM Barret Rhoden <brho@google.com> wrote:
->>
->> Hi -
->>
->> On 1/10/20 2:03 PM, Joao Martins wrote:
->>> User can define regions with 'memmap=size!offset' which in turn
->>> creates PMEM legacy devices. But because it is a label-less
->>> NVDIMM device we only have one namespace for the whole device.
->>>
->>> Add support for multiple namespaces by adding ndctl control
->>> support, and exposing a minimal set of features:
->>> (ND_CMD_GET_CONFIG_SIZE, ND_CMD_GET_CONFIG_DATA,
->>> ND_CMD_SET_CONFIG_DATA) alongside NDD_ALIASING because we can
->>> store labels.
->>
->> FWIW, I like this a lot.  If we move away from using memmap in favor of
->> efi_fake_mem, ideally we'd have the same support for full-fledged
->> pmem/dax regions and namespaces that this patch brings.
-> 
-> No, efi_fake_mem only supports creating dax-regions. What's the use
-> case that can't be satisfied by just specifying multiple memmap=
-> ranges?
+You don't need this header anymore, right?
 
-I'd like to be able to create and destroy dax regions on the fly.  In 
-particular, I want to run guest VMs using the dax files for guest 
-memory, but I don't know at boot time how many VMs I'll have, or what 
-their sizes are.  Ideally, I'd have separate files for each VM, instead 
-of a single /dev/dax.
+> -#include <dt-bindings/interconnect/qcom,sdm845.h>
+>  #include <linux/device.h>
+>  #include <linux/interconnect.h>
+>  #include <linux/interconnect-provider.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_platform.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/sort.h>
 
-I currently do this with fs-dax with one big memmap region (ext4 on 
-/dev/pmem0), and I use the file system to handle the 
-creation/destruction/resizing and metadata management.  But since fs-dax 
-won't work with device pass-through, I started looking at dev-dax, with 
-the expectation that I'd need some software to manage the memory (i.e. 
-allocation).  That led me to ndctl, which seems to need namespace labels 
-to have the level of control I was looking for.
-
-Thanks,
-
-Barret
-
+..or this one.
