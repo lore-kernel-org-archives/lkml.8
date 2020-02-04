@@ -2,110 +2,120 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F2EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CBBC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6831421582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lE90fGNe"
+	by mail.kernel.org (Postfix) with ESMTP id 982E62166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580811271;
+	bh=k3y6FHJ9Pxh0wgF06sccbDGztyzSJSulKu5x2oTdduM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B4HSUsbUiFnZrYxIX+P1qypFOJ3aIYa01LDjTzM6UxK53SLTcbJ+hSnr62HMYdRFI
+	 lefzv95S+eL6QtOF17H8s6vZAjE9JAfIM4FnxLZ2qKYszO77KesJ4yB9uhyPYRLx8V
+	 YO6M1HwmRAg13PBBBD6OA9bJc/sZ0dJiLkI6zLE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgBDKN5 (ORCPT
+        id S1727067AbgBDKOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:13:57 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33504 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgBDKN5 (ORCPT
+        Tue, 4 Feb 2020 05:14:31 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41887 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgBDKOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:13:57 -0500
-Received: by mail-qk1-f194.google.com with SMTP id h4so6460707qkm.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:13:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/OmUGIvaQb9Uv8wXS+U/nOoZbtIeQjrWvcPoE8LQKys=;
-        b=lE90fGNeNZlYffihiymjp+CIVPE140qXhzVNDlD4CY96NdUDGVla63HH1RTMeVSPOt
-         zdGxZy2fYPolO84vJF4pkzKp6qFU8ePFuemyyhHq0eBXtFQTXw3va7tniDmy6WRySrnk
-         /J2Ll36rovMpTkJamgbEMjqyR5vjeh2N+tQU3xiMqtqZW68LLdOm/bQSax4VsVuflzxc
-         JstrrJqs3ajDW2A4Cwq/73VhrU0SvZyrdxiY9sk+EZhcCd54XkddB8ODe5g5ohcf3SRm
-         7N/e2uBo7CAT6b0TGfOIBJ7zjZeS86AKmwyh3FE2V1Q6dRe/XL0GJYqrdG16wiRUpidx
-         T8hQ==
+        Tue, 4 Feb 2020 05:14:30 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so17959196ljc.8;
+        Tue, 04 Feb 2020 02:14:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/OmUGIvaQb9Uv8wXS+U/nOoZbtIeQjrWvcPoE8LQKys=;
-        b=fQ3MtRMwUAIcEw8i82w6+CemFRSdYitASE/6dOuuuCKBJHF7hReuDf/NIPJyMCQCab
-         O4OhzFAUNcmUrDzxNrlZelSazaxDI19uI7gi20NZY1xcQQSc89dndrjH0S6Bcxb4MgT8
-         MO+cXySEerb1w+rNKhggcsor+mAI6EsJzkkhtkOjNu21+qcIjfuljDMOtqyISTNvCv8r
-         FMEqM4P62aA2U4swlA1se7LgmbfrmGMPvQJ1HJAf4QEpts3/wmeHviATeUi0aIKH0Pvh
-         Z5gJkn2aBu5dis1bhsQoygUVYud8+YlLFoerukjp30QvV2ojzfjc3Nn8dxKJYx0ZOfQf
-         8CWg==
-X-Gm-Message-State: APjAAAWVSRXkWPxPWtdL8FddEhHnm9ht2a3zvPS8bpsYeZxhZs8HN4iE
-        iIj8x/Yfhztv6HwxkCiTwf7QJT6ckeKC3tupQ3o4iQ==
-X-Google-Smtp-Source: APXvYqxusDUOGf7EAio/6WaiWOL3Jwf0uUKX6apnrP03VDouhia9JSFw1LetFwos8sSaTee5LhWyUxO1JiXRmzVyW1g=
-X-Received: by 2002:a05:620a:11ba:: with SMTP id c26mr27339140qkk.323.1580811235278;
- Tue, 04 Feb 2020 02:13:55 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YroDskDtOiHLDDMcrVefUIpLn8oU+NjUW8m8Wr0DB+0=;
+        b=sEMB/MkGhQYTHekGCt/zaKVDl9fnK7aJkgeP2aoNxiNyGs7QvV3k51sy1kDtDdNb/8
+         YeeydrNe++ltk98zHoWjqWEs8gZNL0KgqHUOgb0AVJz9ty9eJVl7UJpXRNMpH/sYYSax
+         2S0yXnQTUXNJqGZF5LvwGnK/KOb7TYFjpt5bfWubwSG0eGcaq/UZJI87TY8G6XFX+Mw3
+         ZHVMxh7bMy4iH6ROgJ0fa6HdQadfuF2FcIc+VWyl+GnBbm7KlX9RSV03pNLRzqicok1R
+         2gRpcDrBbSxdo1878dcvNv+91+C0HUV1VMkNiPqcknhrJWb2xoAVAvWso1SHoQrp3nUb
+         seLw==
+X-Gm-Message-State: APjAAAXj0EPivO4Ov32x8pPZPr16yKhnbq0ifDAim/9qmPZAwLdMhAoy
+        0B79Ozaycn6qDeXYZfu9I6cbPhWE
+X-Google-Smtp-Source: APXvYqxvN2spd0grsAdJdC39ryTTu164g1OIKcHz1JEILoyVxWuZXhzV7+rWFIUGZPtBNaSu8ojCIA==
+X-Received: by 2002:a2e:9a93:: with SMTP id p19mr16872179lji.177.1580811266356;
+        Tue, 04 Feb 2020 02:14:26 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id f4sm11211472ljo.79.2020.02.04.02.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 02:14:25 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iyvE3-0003Wz-57; Tue, 04 Feb 2020 11:14:35 +0100
+Date:   Tue, 4 Feb 2020 11:14:35 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH 1/7] Input: pegasus_notetaker: fix endpoint sanity check
+Message-ID: <20200204101435.GH26725@localhost>
+References: <20191210113737.4016-1-johan@kernel.org>
+ <20191210113737.4016-2-johan@kernel.org>
+ <20200204082441.GD26725@localhost>
+ <20200204100232.GB1088789@kroah.com>
 MIME-Version: 1.0
-References: <20200128210845.332679-1-lkundrak@v3.sk>
-In-Reply-To: <20200128210845.332679-1-lkundrak@v3.sk>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 4 Feb 2020 11:13:44 +0100
-Message-ID: <CAMpxmJUPcackGYLfX83TT1V9x2=iHgnw3cZ=KufuHn9FeKOn_A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pxa: Avoid a warning when gpio0 and gpio1 IRQS are
- not there
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204100232.GB1088789@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 28 sty 2020 o 22:08 Lubomir Rintel <lkundrak@v3.sk> napisa=C5=82(a):
->
-> Not all platforms use those. Let's use
-> platform_get_irq_byname_optional() instead platform_get_irq_byname() so
-> that we avoid a useless warning:
->
->   [    1.359455] pxa-gpio d4019000.gpio: IRQ gpio0 not found
->   [    1.359583] pxa-gpio d4019000.gpio: IRQ gpio1 not found
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  drivers/gpio/gpio-pxa.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-> index 9888b62f37afb..567742d962aef 100644
-> --- a/drivers/gpio/gpio-pxa.c
-> +++ b/drivers/gpio/gpio-pxa.c
-> @@ -652,8 +652,8 @@ static int pxa_gpio_probe(struct platform_device *pde=
-v)
->         if (!pchip->irqdomain)
->                 return -ENOMEM;
->
-> -       irq0 =3D platform_get_irq_byname(pdev, "gpio0");
-> -       irq1 =3D platform_get_irq_byname(pdev, "gpio1");
-> +       irq0 =3D platform_get_irq_byname_optional(pdev, "gpio0");
-> +       irq1 =3D platform_get_irq_byname_optional(pdev, "gpio1");
->         irq_mux =3D platform_get_irq_byname(pdev, "gpio_mux");
->         if ((irq0 > 0 && irq1 <=3D 0) || (irq0 <=3D 0 && irq1 > 0)
->                 || (irq_mux <=3D 0))
-> --
-> 2.24.1
->
+On Tue, Feb 04, 2020 at 10:02:32AM +0000, Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2020 at 09:24:41AM +0100, Johan Hovold wrote:
+> > On Tue, Dec 10, 2019 at 12:37:31PM +0100, Johan Hovold wrote:
+> > > The driver was checking the number of endpoints of the first alternate
+> > > setting instead of the current one, something which could be used by a
+> > > malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
+> > > dereference.
+> > > 
+> > > Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
+> > > Cc: stable <stable@vger.kernel.org>     # 4.8
+> > > Cc: Martin Kepplinger <martink@posteo.de>
+> > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > 
+> > Looks like the stable tag was removed when this one was applied, and
+> > similar for patches 2, 4 and 7 of this series (commits 3111491fca4f,
+> > a8eeb74df5a6, 6b32391ed675 upstream).
+> > 
+> > While the last three are mostly an issue for the syzbot fuzzer, we have
+> > started backporting those as well.
+> > 
+> > This one (bcfcb7f9b480) is more clear cut as it can be used to trigger a
+> > NULL-deref.
+> > 
+> > I only noticed because Sasha picked up one of the other patches in the
+> > series which was never intended for stable.
+> 
+> Did I end up catching all of these properly?  I've had to expand my
+> search for some patches like this that do not explicitly have the cc:
+> stable mark on them as not all subsystems do this well (if at all.)
 
-Patch applied. Thanks!
+No, sorry, should have been more clear on that point; these four were
+never picked up for stable it seems.
 
-Bartosz
+I was a bit surprised to see the stable-tags be removed from the
+original submissions here, even if I know the net-maintainers do this
+routinely, and any maintainer can of course override a submitters
+judgement.
+
+> And there's also Sasha's work in digging up patches based on patterns of
+> fixes, which also is needed because of this "problem".
+
+Yeah, seems likely that autosel would have caught these eventually.
+
+Johan
