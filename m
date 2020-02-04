@@ -2,88 +2,122 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C90C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AB7C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A61E2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DFD2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXFvQTnt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="A0XINnLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgBDPrm (ORCPT
+        id S1727390AbgBDPtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:47:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45438 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727319AbgBDPrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:47:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580831260;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k5j3ObvOODL75kJLhay5/4twRQnCsNc1II2lP04Cwzc=;
-        b=EXFvQTntXUNXt7svOP1my7rv8MJb2pHJklxfIyioWzthFzHE16TIwHX0pajDYMq/2QCBkv
-        rqNa+mcP8/BKtf01LV/cTX/GXrMf6o5+ba6bZsbuPOk/sijKwJS5g3biZfQTn7RlwSomL5
-        KO+5uBg9yYwHfZL2FQuvv4+C2P86u70=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-6f651S_0N52lsFSFMHrBKg-1; Tue, 04 Feb 2020 10:47:39 -0500
-X-MC-Unique: 6f651S_0N52lsFSFMHrBKg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3F7A19251A6;
-        Tue,  4 Feb 2020 15:47:36 +0000 (UTC)
-Received: from x2.localnet (ovpn-116-11.phx2.redhat.com [10.3.116.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFF115C1B5;
-        Tue,  4 Feb 2020 15:47:23 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-Date:   Tue, 04 Feb 2020 10:47:22 -0500
-Message-ID: <3665686.i1MIc9PeWa@x2>
-Organization: Red Hat
-In-Reply-To: <20200204131944.esnzcqvnecfnqgbi@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com> <5238532.OiMyN8JqPO@x2> <20200204131944.esnzcqvnecfnqgbi@madcap2.tricolour.ca>
+        Tue, 4 Feb 2020 10:49:16 -0500
+Received: from dougal.metanate.com ([90.155.101.14]:30752 "EHLO metanate.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727311AbgBDPtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:49:16 -0500
+X-Greylist: delayed 1165 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Feb 2020 10:49:16 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
+         s=stronger; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OvOkKA8YrVohxNFd6lUTWVLJe0uQSPQYn+QRHOVtyyg=; b=A0XINnLprZlnob0BQI7yIkZXrD
+        6BmMJ+A9vN6KR/V+r/RVNTpKxjZ9Uoo9JKQKPQqhoR/VRLpCUPcdjjR/IIxImfkQ7U6NkdveRJH9Z
+        gU4Lziw/cgQe9/KnV7CIl4n3Jii2nXs+dcXi5S0q5hBgTqE7zaksrO+ZEJ/dLDCDpsUfaDrASTC+L
+        N1Zt6uoZzS3yESED2vZgW5GvgA0AHfhFfrA5tCOItSDD7bOr4CaDorGP2ynnZz3gzIHadS1NJ97jy
+        l7zTHytXkeYjD4fcrA8XG08FfM7XjitHYtbFVIIHlw/fNWajkG7HfaprM/ypGmwb6m7cSqeEzL84W
+        HuuKav6Q==;
+Received: from dougal.metanate.com ([192.168.88.1] helo=donbot.metanate.com)
+        by email.metanate.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <john@metanate.com>)
+        id 1iz095-0002mK-9X; Tue, 04 Feb 2020 15:29:47 +0000
+From:   John Keeping <john@metanate.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>
+Cc:     Felipe Balbi <balbi@kernel.org>, John Keeping <john@metanate.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org (open list:DESIGNWARE USB2 DRD IP DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] usb: dwc2: Implement set_selfpowered()
+Date:   Tue,  4 Feb 2020 15:29:33 +0000
+Message-Id: <20200204152933.2216615-1-john@metanate.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Authenticated: YES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, February 4, 2020 8:19:44 AM EST Richard Guy Briggs wrote:
-> > The established pattern is that we print -1 when its unset and "?" when
-> > its totalling missing. So, how could this be invalid? It should be set
-> > or not. That is unless its totally missing just like when we do not run
-> > with selinux enabled and a context just doesn't exist.
-> 
-> Ok, so in this case it is clearly unset, so should be -1, which will be a
-> 20-digit number when represented as an unsigned long long int.
-> 
-> Thank you for that clarification Steve.
+dwc2 always reports as self-powered in response to a device status
+request.  Implement the set_selfpowered() operations so that the gadget
+can report as bus-powered when appropriate.
 
-It is literally a  -1.  ( 2 characters)
+This is modelled on the dwc3 implementation.
 
--Steve
+Signed-off-by: John Keeping <john@metanate.com>
+---
+ drivers/usb/dwc2/gadget.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 2717f4401b97..76c0a5242175 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -1646,7 +1646,8 @@ static int dwc2_hsotg_process_req_status(struct dwc2_hsotg *hsotg,
+ 
+ 	switch (ctrl->bRequestType & USB_RECIP_MASK) {
+ 	case USB_RECIP_DEVICE:
+-		status = 1 << USB_DEVICE_SELF_POWERED;
++		status = hsotg->gadget.is_selfpowered <<
++			 USB_DEVICE_SELF_POWERED;
+ 		status |= hsotg->remote_wakeup_allowed <<
+ 			  USB_DEVICE_REMOTE_WAKEUP;
+ 		reply = cpu_to_le16(status);
+@@ -4530,6 +4531,26 @@ static int dwc2_hsotg_gadget_getframe(struct usb_gadget *gadget)
+ 	return dwc2_hsotg_read_frameno(to_hsotg(gadget));
+ }
+ 
++/**
++ * dwc2_hsotg_set_selfpowered - set if device is self/bus powered
++ * @gadget: The usb gadget state
++ * @is_selfpowered: Whether the device is self-powered
++ *
++ * Set if the device is self or bus powered.
++ */
++static int dwc2_hsotg_set_selfpowered(struct usb_gadget *gadget,
++				      int is_selfpowered)
++{
++	struct dwc2_hsotg *hsotg = to_hsotg(gadget);
++	unsigned long flags;
++
++	spin_lock_irqsave(&hsotg->lock, flags);
++	gadget->is_selfpowered = !!is_selfpowered;
++	spin_unlock_irqrestore(&hsotg->lock, flags);
++
++	return 0;
++}
++
+ /**
+  * dwc2_hsotg_pullup - connect/disconnect the USB PHY
+  * @gadget: The usb gadget state
+@@ -4621,6 +4642,7 @@ static int dwc2_hsotg_vbus_draw(struct usb_gadget *gadget, unsigned int mA)
+ 
+ static const struct usb_gadget_ops dwc2_hsotg_gadget_ops = {
+ 	.get_frame	= dwc2_hsotg_gadget_getframe,
++	.set_selfpowered	= dwc2_hsotg_set_selfpowered,
+ 	.udc_start		= dwc2_hsotg_udc_start,
+ 	.udc_stop		= dwc2_hsotg_udc_stop,
+ 	.pullup                 = dwc2_hsotg_pullup,
+-- 
+2.25.0
 
