@@ -2,99 +2,142 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25BFC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB54C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A2F2084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BC32084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="jV+b0Pt2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="keuTsSrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgBDPwv (ORCPT
+        id S1727376AbgBDPzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:52:51 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43456 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbgBDPwv (ORCPT
+        Tue, 4 Feb 2020 10:55:09 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36063 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbgBDPzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:52:51 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dc19so20196047edb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 07:52:48 -0800 (PST)
+        Tue, 4 Feb 2020 10:55:08 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so19166336ljg.3;
+        Tue, 04 Feb 2020 07:55:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0d0fJd2kqJOBxIhDrO5YQ550FVzvPHsXp/LZedW7iYo=;
-        b=jV+b0Pt2SFxKxAS8cj1UQHfhP4u6Is0Ked6engWmcGC4Vi3TiaYTuMDEDShbyo/W7Z
-         1G3Z0cM0PQWOg38Z+JVqucnhUkVnrOHTg50fin3WAGhZgHIYgSQ19+fPt7zs5oVqfJea
-         pFWTF/n1Y213SSzHRtw5+jlUvJShRGJ7FhRpHhM1nAXcPW2m+/YHt61prqobroLuGOGk
-         Y1CQM8QgSJwCyjxAesY/KCzkHfxFaZvogMV+xmE/W9owG68Y6pOv1plJSjhJiJzmsdiF
-         xLMebzV4Z6XBRCCVQYgqj7kXbOFpljAZJuaOraWTomEviTzwCFj9906EhFb5Yal9kDuO
-         Yt1g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JZwaZAs4VPg+MZljM+SS0kMupA1fP3M0vka2FZtHyUs=;
+        b=keuTsSrKE/2sGEZ/mCNFBtfA5/nM187MrzUuQuHvBMmn2K8XCXRwbE4Qd/r2UMIFFV
+         h3JnXWcGCpHrRZwHIqf0ethN27sLiVG1o9ZYsC26dJpmv/z8C/RL9eXARiuUvm+/2p5V
+         8oMMC4Munw/6fj9RtsfimU/AzN8AvGQ9BdGRhWzJLJQjbpSzCLLQeT2nF7gUfdl25TXY
+         z2pBxogs5PUSvzyLaTZudiH75HrxrB+rUZXm3MFl8tFHa+Okjfcugglb1V2jXhPKKtA5
+         tR//mSQjS0Z3wXRffaKwje4oWDEZQFJtc4pFHM+GRYHN3bVX2nwF4SZANs2/s9z7A4MP
+         ay1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0d0fJd2kqJOBxIhDrO5YQ550FVzvPHsXp/LZedW7iYo=;
-        b=B56r/tAo5+8ZzylSg4WWvJ9xZuIacn9Ng9a9jYtdVekp8pBRkgUjMT6/eP0Nq+ilqf
-         HUTU8CO51rguoECzuDIA1Rvch4VfWjzFd2XZ9R416OdMCnkX3tX7yTJOfjz+fFKrACDZ
-         WZvlDLP62uo2cLlc2mDhu8pD17Pq6/uv4mLc4qD98UyX1om6ee/YYMAf8dsIkapbuwI3
-         axk9jv/9mkdjwSAM8N9fpPjiWCQ2iwPl/hfQh1UrduzsgtOpWlu3g2BZ9YrPJ+mMpOQV
-         7FQLQBLlE2UkjG/43x5H7OzBMrTd1NMiNb+At9zhwt1zPWX8Q4b53epZS9lo6nv/Rq4/
-         q/EA==
-X-Gm-Message-State: APjAAAXsdKOa3s5ouQX+ut3kvcpaImDZ0y6nGFyOMk0mfcCoMs5HcFae
-        96AiL+4NyG/K6BkX8d5gqLY0DyPz5aIfURPsRj3t
-X-Google-Smtp-Source: APXvYqw+zYvw6F4Umt3lSDJsc2lvOiKELPOHsE6Als0Io7phWfq8MkukCyGdnY7at8Qo98R48gqGhqoNt5voV/XvnH4=
-X-Received: by 2002:a17:906:22cf:: with SMTP id q15mr26062018eja.77.1580831567900;
- Tue, 04 Feb 2020 07:52:47 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JZwaZAs4VPg+MZljM+SS0kMupA1fP3M0vka2FZtHyUs=;
+        b=eOygJrkwboHkKPfu+9anbZXpXi2D5A/VFWp8OMt2d7eK7XMDFquTKllc6jqjgVeWZj
+         YKJwSX2zFIG/MaDwOzSka/APNVEg2rWNSuW/8SHpxIU10UC7+eGW4rpSj40IzsuPK6lW
+         viaTlPqW4ky9c4b1/CP4sBmwy8zxF8vwwlO/ymNucpw+cK+HTUE/Sl3RZvJ2BL7//89R
+         4t65P8C1mCqiYnM+P5ezo2aFPuY771wUdef/P98WmbRe00PDfWQdqpdZqtGtdz0X7Fkd
+         VfAmQNshuq0aNdtqRjrLLEDm4LjE8oEvUyePcrLT78g7CfU+ln1DTCiI4FealRK3FqiM
+         mp8w==
+X-Gm-Message-State: APjAAAVfSGOyTc1X0jhQu0cYyPs+WfT4TGCOs4HdQb+K0vUpm3CpzdVa
+        +X8BDvt5w3b17iO9It9YAo/qooy5
+X-Google-Smtp-Source: APXvYqz9EywivV4SrY2+zghH9X/t0s+7ktKmSSPeAg5hYqrzXzJR9qDy2sP9teMcgdHvAfU0z97esg==
+X-Received: by 2002:a2e:9708:: with SMTP id r8mr17980763lji.92.1580831705084;
+        Tue, 04 Feb 2020 07:55:05 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 126sm10695751lfm.38.2020.02.04.07.55.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 07:55:04 -0800 (PST)
+Subject: Re: [PATCH v7 13/19] dmaengine: tegra-apb: Don't stop cyclic DMA in a
+ case of error condition
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200202222854.18409-1-digetx@gmail.com>
+ <20200202222854.18409-14-digetx@gmail.com>
+ <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ad86f2a4-6fa0-7958-aad7-1b18f02cabfe@gmail.com>
+Date:   Tue, 4 Feb 2020 18:55:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <5238532.OiMyN8JqPO@x2>
- <20200204131944.esnzcqvnecfnqgbi@madcap2.tricolour.ca> <3665686.i1MIc9PeWa@x2>
-In-Reply-To: <3665686.i1MIc9PeWa@x2>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 4 Feb 2020 10:52:36 -0500
-Message-ID: <CAHC9VhRHfjuv5yyn+nQ2LbHtcezBcjKtOQ69ssYrXOiExuCjBw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 10:47 AM Steve Grubb <sgrubb@redhat.com> wrote:
-> On Tuesday, February 4, 2020 8:19:44 AM EST Richard Guy Briggs wrote:
-> > > The established pattern is that we print -1 when its unset and "?" when
-> > > its totalling missing. So, how could this be invalid? It should be set
-> > > or not. That is unless its totally missing just like when we do not run
-> > > with selinux enabled and a context just doesn't exist.
-> >
-> > Ok, so in this case it is clearly unset, so should be -1, which will be a
-> > 20-digit number when represented as an unsigned long long int.
-> >
-> > Thank you for that clarification Steve.
->
-> It is literally a  -1.  ( 2 characters)
+04.02.2020 15:02, Jon Hunter пишет:
+> 
+> On 02/02/2020 22:28, Dmitry Osipenko wrote:
+>> There is no harm in keeping DMA active in the case of error condition,
+>> which should never happen in practice anyways. This will become useful
+>> for the next patch, which will keep RPM enabled only during of DMA
+>> transfer, and thus, it will be much nicer if cyclic DMA handler could
+>> not touch the DMA-enable state.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/dma/tegra20-apb-dma.c | 9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>> index c7dc27ef1856..50abce608318 100644
+>> --- a/drivers/dma/tegra20-apb-dma.c
+>> +++ b/drivers/dma/tegra20-apb-dma.c
+>> @@ -571,9 +571,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+>>  	 */
+>>  	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
+>>  	if (!hsgreq->configured) {
+>> -		tegra_dma_stop(tdc);
+>> -		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
+>> -		tegra_dma_abort_all(tdc);
+>> +		dev_err_ratelimited(tdc2dev(tdc), "Error in DMA transfer\n");
+> 
+> While we are at it, a more descriptive error message could be good here.
+> I believe that this condition would indicate a potential underrun condition.
 
-Well, not as Richard has currently written the code, it is a "%llu".
-This was why I asked the question I did; if we want the "-1" here we
-probably want to special case that as I don't think we want to display
-audit container IDs as signed numbers in general.
+Yes, this error indicates the underrun and indeed the error message
+could be improved. I'll change it in v8.
 
--- 
-paul moore
-www.paul-moore.com
+>>  		return false;
+>>  	}
+>>  
+>> @@ -772,7 +770,10 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>  	if (!list_empty(&tdc->pending_sg_req) && was_busy) {
+>>  		sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq),
+>>  					 node);
+>> -		sgreq->dma_desc->bytes_transferred +=
+>> +		dma_desc = sgreq->dma_desc;
+>> +
+>> +		if (dma_desc->dma_status != DMA_ERROR)
+>> +			dma_desc->bytes_transferred +=
+>>  				get_current_xferred_count(tdc, sgreq, wcount);
+> 
+> I am wondering if we need to check this here? I assume that the transfer
+> count would still reflect the amount of data transferred, even if some
+> was dropped. We will never know how much data was lost.
+
+I'm wondering too.. stopping DMA in a error case removes this ambiguity
+and that's why in my previous answer to v6 I suggested to drop this patch.
+
+Do you think it's worth to keep this patch?
