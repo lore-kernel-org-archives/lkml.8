@@ -2,196 +2,270 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E7BC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F86C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE4C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580830818;
-	bh=XjO/rypf4gOojGf0oXOQkll6+73OmV+xBEcS+uJX0Ac=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=u9aJwnpWMG8CpWCpEnOMaQPT17FlKHF2WMIj4fcVEIyxlkzs+npnJvshSKyaXIAVE
-	 3NuhvRBP+P7GHidM7OkiiDkRXTMRPIo40EqQJKqI7EhbOjM1R4eLb/RwHCIiqpr8s8
-	 2MJQuDUWanbwpc96pBkq93CRmBaUR0DZKdK3Pk2M=
+	by mail.kernel.org (Postfix) with ESMTP id 171B720674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:41:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S7l1s5Fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgBDPkR (ORCPT
+        id S1727399AbgBDPk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:40:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbgBDPkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:40:16 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 4 Feb 2020 10:40:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34527 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727334AbgBDPk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:40:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580830857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dXxOTLkEBtHgvJaBcMBJ+4ieNdzXZNDs1C5kycOcPMA=;
+        b=S7l1s5FrirD3ARykF0w1Z5nCaPzR4OQ8nU8P9sJb40hCxXrhKiCBYgGUFPzXw4btD2VS03
+        jQNLtBqWiqwZEzeFagxZAacg63Dy10Yxj0CMJJmgGqkB5CPB+81linTakCdufWmCXCfR3C
+        2y7us14VCgVGlkGPofAldqVuBx8AxUw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-Q-qBMgmKMIeLGuOpXZ5lxg-1; Tue, 04 Feb 2020 10:40:38 -0500
+X-MC-Unique: Q-qBMgmKMIeLGuOpXZ5lxg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB1720674;
-        Tue,  4 Feb 2020 15:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580830815;
-        bh=XjO/rypf4gOojGf0oXOQkll6+73OmV+xBEcS+uJX0Ac=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=vodTEsLi+gyzU1kEcPqnqOzgfXe7tDAP6mg488qR+wwKflCraZFaf1nRX5gBLiPlM
-         k0WOtxiHHQaY/qHSKZUlBbYzEXNWfj4Sf+cN8xFNPXXu87KVUUJ/nMXXpK5Qc8k7nw
-         RO7JNt9amNpSfJw3V4ttf203mW86CZPqL5u0Bx9Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5D8DD352270F; Tue,  4 Feb 2020 07:40:15 -0800 (PST)
-Date:   Tue, 4 Feb 2020 07:40:15 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] kcsan: Add option to assume plain writes up to word
- size are atomic
-Message-ID: <20200204154015.GQ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200204140353.177797-1-elver@google.com>
- <CANpmjNMF3LpOUZSKXigxVXaH8imA2O5OvVu4ibPEDhCjwAXk0w@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2032286A066;
+        Tue,  4 Feb 2020 15:40:37 +0000 (UTC)
+Received: from localhost (ovpn-116-121.ams2.redhat.com [10.36.116.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A287587B2F;
+        Tue,  4 Feb 2020 15:40:36 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 15:40:35 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Avi Kivity <avi@scylladb.com>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Masatake YAMATO <yamato@redhat.com>
+Subject: Re: [RFC] eventfd: add EFD_AUTORESET flag
+Message-ID: <20200204154035.GA47059@stefanha-x1.localdomain>
+References: <20200129172010.162215-1-stefanha@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200129172010.162215-1-stefanha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
 Content-Disposition: inline
-In-Reply-To: <CANpmjNMF3LpOUZSKXigxVXaH8imA2O5OvVu4ibPEDhCjwAXk0w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 04:28:47PM +0100, Marco Elver wrote:
-> On Tue, 4 Feb 2020 at 15:04, Marco Elver <elver@google.com> wrote:
-> >
-> > This adds option KCSAN_ASSUME_PLAIN_WRITES_ATOMIC. If enabled, plain
-> > writes up to word size are also assumed to be atomic, and also not
-> > subject to other unsafe compiler optimizations resulting in data races.
-> 
-> I just realized we should probably also check for alignedness. Would
-> this be fair to add as an additional constraint? It would be my
-> preference.
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Checking for alignment makes a lot of sense to me!  Otherwise, write
-tearing is expected behavior on some systems.
+On Wed, Jan 29, 2020 at 05:20:10PM +0000, Stefan Hajnoczi wrote:
+> Some applications simply use eventfd for inter-thread notifications
+> without requiring counter or semaphore semantics.  They wait for the
+> eventfd to become readable using poll(2)/select(2) and then call read(2)
+> to reset the counter.
+>=20
+> This patch adds the EFD_AUTORESET flag to reset the counter when
+> f_ops->poll() finds the eventfd is readable, eliminating the need to
+> call read(2) to reset the counter.
+>=20
+> This results in a small but measurable 1% performance improvement with
+> QEMU virtio-blk emulation.  Each read(2) takes 1 microsecond execution
+> time in the event loop according to perf.
+>=20
+> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> ---
+> Does this look like a reasonable thing to do?  I'm not very familiar
+> with f_ops->poll() or the eventfd internals, so maybe I'm overlooking a
+> design flaw.
 
-							Thanx, Paul
+Ping?
 
-> Thanks,
-> -- Marco
-> 
-> > This option has been enabled by default to reflect current kernel-wide
-> > preferences.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  kernel/kcsan/core.c | 20 +++++++++++++++-----
-> >  lib/Kconfig.kcsan   | 26 +++++++++++++++++++-------
-> >  2 files changed, 34 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> > index 64b30f7716a12..3bd1bf8d6bfeb 100644
-> > --- a/kernel/kcsan/core.c
-> > +++ b/kernel/kcsan/core.c
-> > @@ -169,10 +169,19 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
-> >         return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
-> >  }
-> >
-> > -static __always_inline bool is_atomic(const volatile void *ptr)
-> > +static __always_inline bool
-> > +is_atomic(const volatile void *ptr, size_t size, int type)
-> >  {
-> > -       struct kcsan_ctx *ctx = get_ctx();
-> > +       struct kcsan_ctx *ctx;
-> > +
-> > +       if ((type & KCSAN_ACCESS_ATOMIC) != 0)
-> > +               return true;
-> >
-> > +       if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
-> > +           (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long))
-> > +               return true; /* Assume all writes up to word size are atomic. */
-> > +
-> > +       ctx = get_ctx();
-> >         if (unlikely(ctx->atomic_next > 0)) {
-> >                 /*
-> >                  * Because we do not have separate contexts for nested
-> > @@ -193,7 +202,8 @@ static __always_inline bool is_atomic(const volatile void *ptr)
-> >         return kcsan_is_atomic(ptr);
-> >  }
-> >
-> > -static __always_inline bool should_watch(const volatile void *ptr, int type)
-> > +static __always_inline bool
-> > +should_watch(const volatile void *ptr, size_t size, int type)
-> >  {
-> >         /*
-> >          * Never set up watchpoints when memory operations are atomic.
-> > @@ -202,7 +212,7 @@ static __always_inline bool should_watch(const volatile void *ptr, int type)
-> >          * should not count towards skipped instructions, and (2) to actually
-> >          * decrement kcsan_atomic_next for consecutive instruction stream.
-> >          */
-> > -       if ((type & KCSAN_ACCESS_ATOMIC) != 0 || is_atomic(ptr))
-> > +       if (is_atomic(ptr, size, type))
-> >                 return false;
-> >
-> >         if (this_cpu_dec_return(kcsan_skip) >= 0)
-> > @@ -460,7 +470,7 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
-> >         if (unlikely(watchpoint != NULL))
-> >                 kcsan_found_watchpoint(ptr, size, type, watchpoint,
-> >                                        encoded_watchpoint);
-> > -       else if (unlikely(should_watch(ptr, type)))
-> > +       else if (unlikely(should_watch(ptr, size, type)))
-> >                 kcsan_setup_watchpoint(ptr, size, type);
-> >  }
-> >
-> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > index 3552990abcfe5..08972376f0454 100644
-> > --- a/lib/Kconfig.kcsan
-> > +++ b/lib/Kconfig.kcsan
-> > @@ -91,13 +91,13 @@ config KCSAN_REPORT_ONCE_IN_MS
-> >           limiting reporting to avoid flooding the console with reports.
-> >           Setting this to 0 disables rate limiting.
-> >
-> > -# Note that, while some of the below options could be turned into boot
-> > -# parameters, to optimize for the common use-case, we avoid this because: (a)
-> > -# it would impact performance (and we want to avoid static branch for all
-> > -# {READ,WRITE}_ONCE, atomic_*, bitops, etc.), and (b) complicate the design
-> > -# without real benefit. The main purpose of the below options is for use in
-> > -# fuzzer configs to control reported data races, and they are not expected
-> > -# to be switched frequently by a user.
-> > +# The main purpose of the below options is to control reported data races (e.g.
-> > +# in fuzzer configs), and are not expected to be switched frequently by other
-> > +# users. We could turn some of them into boot parameters, but given they should
-> > +# not be switched normally, let's keep them here to simplify configuration.
-> > +#
-> > +# The defaults below are chosen to be very conservative, and may miss certain
-> > +# bugs.
-> >
-> >  config KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
-> >         bool "Report races of unknown origin"
-> > @@ -116,6 +116,18 @@ config KCSAN_REPORT_VALUE_CHANGE_ONLY
-> >           the data value of the memory location was observed to remain
-> >           unchanged, do not report the data race.
-> >
-> > +config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
-> > +       bool "Assume that plain writes up to word size are atomic"
-> > +       default y
-> > +       help
-> > +         Assume that plain writes up to word size are atomic by default, and
-> > +         also not subject to other unsafe compiler optimizations resulting in
-> > +         data races. This will cause KCSAN to not report data races due to
-> > +         conflicts where the only plain accesses are writes up to word size:
-> > +         conflicts between marked reads and plain writes up to word size will
-> > +         not be reported as data races; notice that data races between two
-> > +         conflicting plain writes will also not be reported.
-> > +
-> >  config KCSAN_IGNORE_ATOMICS
-> >         bool "Do not instrument marked atomic accesses"
-> >         help
-> > --
-> > 2.25.0.341.g760bfbb309-goog
-> >
+> I've tested this with QEMU and it works fine:
+> https://github.com/stefanha/qemu/commits/eventfd-autoreset
+> ---
+>  fs/eventfd.c            | 99 +++++++++++++++++++++++++----------------
+>  include/linux/eventfd.h |  3 +-
+>  2 files changed, 62 insertions(+), 40 deletions(-)
+>=20
+> diff --git a/fs/eventfd.c b/fs/eventfd.c
+> index 8aa0ea8c55e8..208f6b9e2234 100644
+> --- a/fs/eventfd.c
+> +++ b/fs/eventfd.c
+> @@ -116,45 +116,62 @@ static __poll_t eventfd_poll(struct file *file, pol=
+l_table *wait)
+> =20
+>  =09poll_wait(file, &ctx->wqh, wait);
+> =20
+> -=09/*
+> -=09 * All writes to ctx->count occur within ctx->wqh.lock.  This read
+> -=09 * can be done outside ctx->wqh.lock because we know that poll_wait
+> -=09 * takes that lock (through add_wait_queue) if our caller will sleep.
+> -=09 *
+> -=09 * The read _can_ therefore seep into add_wait_queue's critical
+> -=09 * section, but cannot move above it!  add_wait_queue's spin_lock act=
+s
+> -=09 * as an acquire barrier and ensures that the read be ordered properl=
+y
+> -=09 * against the writes.  The following CAN happen and is safe:
+> -=09 *
+> -=09 *     poll                               write
+> -=09 *     -----------------                  ------------
+> -=09 *     lock ctx->wqh.lock (in poll_wait)
+> -=09 *     count =3D ctx->count
+> -=09 *     __add_wait_queue
+> -=09 *     unlock ctx->wqh.lock
+> -=09 *                                        lock ctx->qwh.lock
+> -=09 *                                        ctx->count +=3D n
+> -=09 *                                        if (waitqueue_active)
+> -=09 *                                          wake_up_locked_poll
+> -=09 *                                        unlock ctx->qwh.lock
+> -=09 *     eventfd_poll returns 0
+> -=09 *
+> -=09 * but the following, which would miss a wakeup, cannot happen:
+> -=09 *
+> -=09 *     poll                               write
+> -=09 *     -----------------                  ------------
+> -=09 *     count =3D ctx->count (INVALID!)
+> -=09 *                                        lock ctx->qwh.lock
+> -=09 *                                        ctx->count +=3D n
+> -=09 *                                        **waitqueue_active is false=
+**
+> -=09 *                                        **no wake_up_locked_poll!**
+> -=09 *                                        unlock ctx->qwh.lock
+> -=09 *     lock ctx->wqh.lock (in poll_wait)
+> -=09 *     __add_wait_queue
+> -=09 *     unlock ctx->wqh.lock
+> -=09 *     eventfd_poll returns 0
+> -=09 */
+> -=09count =3D READ_ONCE(ctx->count);
+> +=09if (ctx->flags & EFD_AUTORESET) {
+> +=09=09unsigned long flags;
+> +=09=09__poll_t requested =3D poll_requested_events(wait);
+> +
+> +=09=09spin_lock_irqsave(&ctx->wqh.lock, flags);
+> +=09=09count =3D ctx->count;
+> +
+> +=09=09/* Reset counter if caller is polling for read */
+> +=09=09if (count !=3D 0 && (requested & EPOLLIN)) {
+> +=09=09=09ctx->count =3D 0;
+> +=09=09=09events |=3D EPOLLOUT;
+> +=09=09=09/* TODO is a EPOLLOUT wakeup necessary here? */
+> +=09=09}
+> +
+> +=09=09spin_unlock_irqrestore(&ctx->wqh.lock, flags);
+> +=09} else {
+> +=09=09/*
+> +=09=09 * All writes to ctx->count occur within ctx->wqh.lock.  This read
+> +=09=09 * can be done outside ctx->wqh.lock because we know that poll_wai=
+t
+> +=09=09 * takes that lock (through add_wait_queue) if our caller will sle=
+ep.
+> +=09=09 *
+> +=09=09 * The read _can_ therefore seep into add_wait_queue's critical
+> +=09=09 * section, but cannot move above it!  add_wait_queue's spin_lock =
+acts
+> +=09=09 * as an acquire barrier and ensures that the read be ordered prop=
+erly
+> +=09=09 * against the writes.  The following CAN happen and is safe:
+> +=09=09 *
+> +=09=09 *     poll                               write
+> +=09=09 *     -----------------                  ------------
+> +=09=09 *     lock ctx->wqh.lock (in poll_wait)
+> +=09=09 *     count =3D ctx->count
+> +=09=09 *     __add_wait_queue
+> +=09=09 *     unlock ctx->wqh.lock
+> +=09=09 *                                        lock ctx->qwh.lock
+> +=09=09 *                                        ctx->count +=3D n
+> +=09=09 *                                        if (waitqueue_active)
+> +=09=09 *                                          wake_up_locked_poll
+> +=09=09 *                                        unlock ctx->qwh.lock
+> +=09=09 *     eventfd_poll returns 0
+> +=09=09 *
+> +=09=09 * but the following, which would miss a wakeup, cannot happen:
+> +=09=09 *
+> +=09=09 *     poll                               write
+> +=09=09 *     -----------------                  ------------
+> +=09=09 *     count =3D ctx->count (INVALID!)
+> +=09=09 *                                        lock ctx->qwh.lock
+> +=09=09 *                                        ctx->count +=3D n
+> +=09=09 *                                        **waitqueue_active is fa=
+lse**
+> +=09=09 *                                        **no wake_up_locked_poll=
+!**
+> +=09=09 *                                        unlock ctx->qwh.lock
+> +=09=09 *     lock ctx->wqh.lock (in poll_wait)
+> +=09=09 *     __add_wait_queue
+> +=09=09 *     unlock ctx->wqh.lock
+> +=09=09 *     eventfd_poll returns 0
+> +=09=09 */
+> +=09=09count =3D READ_ONCE(ctx->count);
+> +=09}
+> =20
+>  =09if (count > 0)
+>  =09=09events |=3D EPOLLIN;
+> @@ -400,6 +417,10 @@ static int do_eventfd(unsigned int count, int flags)
+>  =09if (flags & ~EFD_FLAGS_SET)
+>  =09=09return -EINVAL;
+> =20
+> +=09/* Semaphore semantics don't make sense when autoreset is enabled */
+> +=09if ((flags & EFD_SEMAPHORE) && (flags & EFD_AUTORESET))
+> +=09=09return -EINVAL;
+> +
+>  =09ctx =3D kmalloc(sizeof(*ctx), GFP_KERNEL);
+>  =09if (!ctx)
+>  =09=09return -ENOMEM;
+> diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
+> index ffcc7724ca21..27577fafc553 100644
+> --- a/include/linux/eventfd.h
+> +++ b/include/linux/eventfd.h
+> @@ -21,11 +21,12 @@
+>   * shared O_* flags.
+>   */
+>  #define EFD_SEMAPHORE (1 << 0)
+> +#define EFD_AUTORESET (1 << 6) /* aliases O_CREAT */
+>  #define EFD_CLOEXEC O_CLOEXEC
+>  #define EFD_NONBLOCK O_NONBLOCK
+> =20
+>  #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
+> -#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
+> +#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE | EFD_AUTO=
+RESET)
+> =20
+>  struct eventfd_ctx;
+>  struct file;
+> --=20
+> 2.24.1
+>=20
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl45kHMACgkQnKSrs4Gr
+c8iTNggApTLgc3Ziv/nmctwnk3zXZZrhBa6QLbwH2UE3fUhcF11wbp+cmfXojaT0
+7doSdvRX6otXx6p8apCzWD0SEKKaiTgyuozpumNd8D1B9/mFOWBIH+CA12u5Hsfw
+gy006bLnJ3e/p+3UDVdDcVkREAKAnwNEGtr73s8AWD0DyRe4ICqSMRUrHifDeFq3
+sy6ecEG9qA5MsYMxG6rjSCbo2zzR1Q/owGYlYuCaLxkgy9XvySns33psZdoTDfPA
+yG4pK4da6XFiPVx+uSePzGkdzHgrr4lTEzl3wjNcgtrzNEarLgEoNunh9wFUQaMI
+vatzl5WuXU722nBmOXrB2fM29om7Jg==
+=vzEC
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
+
