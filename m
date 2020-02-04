@@ -2,105 +2,154 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA3EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8FEC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58B22166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BCA2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UX3nLFOH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lo3rwbgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgBDJea (ORCPT
+        id S1726917AbgBDJe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:34:30 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33014 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgBDJea (ORCPT
+        Tue, 4 Feb 2020 04:34:59 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59702 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgBDJe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:34:30 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d5so13836759qto.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:34:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qpsKRCqtVgfj8tu6tU10wGF0V1/J4SqlhXKuSnenORM=;
-        b=UX3nLFOHi3gIGKvTdXHJbFxYnvRnisObk0J3+wW2vTMQUOrIqhaWXQvhFg3/Zh1KVF
-         ROu3c+tBy6SiaZWBOgVA7ubUPghwIq/emYPlFUytA8jV5nhaSr7gt7qx4UIZuo9IDCMx
-         MckjYiQ97F4ATDnwoLQv/+EdJogrc94SwBlFk+IHPhMoSwhgwSH0XS62q4MLPrAlqxAv
-         Jg7fbXUwmUQZkbWFljgkkPR3sMFfW2WfTb4LZqdGIs73ZYfnOZGavmFuNxqs1NFtmXOc
-         bgc53w3AcSO1jqA38rrkQNe4WxbH/kDxcjJghdjiqweuGV9DDjAjh4LqGE8BxlQ+dh7J
-         AWaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qpsKRCqtVgfj8tu6tU10wGF0V1/J4SqlhXKuSnenORM=;
-        b=fG92OHlGHUnSRTa+a/P5dL9DbKAmC0x0C2Uvg1ZiwuB3D9RIH/Np9Vlp5rPneT05oN
-         qrZgtfC+CGkf423zmcuzSzv4gMDWBWW+V1aDU65BkyX75t2QR/bi7Aden1x8TGFn80Fy
-         C4FxAYWVpS/4njT3GF3M6wxn+xejRYJ3ewtg7K0oTmoMGPRL7AF4iGqDt9Mh0x/dh1ic
-         uRM3DyaZG8dh4AV3e/FpuX20aevY+6Vg87PhdACpgquM7lgdKFEriMCq3aP83NEfPdwN
-         gj5I8KHtaEbFlsPjq/vjjZC63IdiseEw03xad0BjHjWWWXe3VkJUT7zMTmYKC1JXVxFd
-         ldwg==
-X-Gm-Message-State: APjAAAXqYTZz4ZhsTXE6R85Qa0C/linfpmgCxSWTT4mhg8AlTmKlwdDZ
-        RW8p1gNeZwbmKlpvqYfSoxV/XOASMhQWfz9vH6T3xg==
-X-Google-Smtp-Source: APXvYqyaC+88MpAySDesiNwLBufJcQEB/bABzBOCHTb3qij+8VwlxK2t9pFZcvefw7EuG7b9hgeV4sanl8A6Q+vWg2A=
-X-Received: by 2002:ac8:3676:: with SMTP id n51mr27397583qtb.208.1580808868098;
- Tue, 04 Feb 2020 01:34:28 -0800 (PST)
+        Tue, 4 Feb 2020 04:34:59 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0149YbZM070502;
+        Tue, 4 Feb 2020 03:34:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580808877;
+        bh=0YLT5G2KDDkaXYmv/lijgenq70L6rJ93LRjbmt0OMok=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lo3rwbgEe/PjhcxYvDiI14ysBcjXhMf+d211fVU0G0lHMuWdy4vM8sFKX21HJF4rA
+         vIGJAK+1evNgkugBYeW0Fi8gNJ9A+zNLHUBoc2TAnS7WS17WyCMP0y3huK1ehAQFTV
+         ylfU80fWWkvf5MXpzHIZIT+VOQlZxxG+WTcb9wa8=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0149YbJL077913
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Feb 2020 03:34:37 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
+ 2020 03:34:37 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 4 Feb 2020 03:34:37 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0149YZ1A087824;
+        Tue, 4 Feb 2020 03:34:35 -0600
+Subject: Re: [PATCH] dma-direct: relax addressability checks in
+ dma_direct_supported
+To:     Christoph Hellwig <hch@lst.de>, <iommu@lists.linux-foundation.org>
+CC:     <robin.murphy@arm.com>, <m.szyprowski@samsung.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200203171601.539254-1-hch@lst.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <1011c272-9527-9e61-4954-c7e27cd1fcb6@ti.com>
+Date:   Tue, 4 Feb 2020 11:34:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200203125551.84769-1-sachinagarwal@sachins-MacBook-2.local>
-In-Reply-To: <20200203125551.84769-1-sachinagarwal@sachins-MacBook-2.local>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 4 Feb 2020 10:34:17 +0100
-Message-ID: <CAMpxmJWBAx=_4=xPU9STN04tYficUrpKSu7B6qZ=Tu3-xta__w@mail.gmail.com>
-Subject: Re: [PATCH 6/6] GPIO: it87: fixed a typo
-To:     sachin agarwal <asachin591@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200203171601.539254-1-hch@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 3 lut 2020 o 13:56 sachin agarwal <asachin591@gmail.com> napisa=C5=82=
-(a):
->
-> From: sachin agarwal <asachin591@gmail.com>
->
-> we had written "IO" rather than "I/O".
->
-> Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
+Hi Christoph,
+
+On 03/02/2020 19.16, Christoph Hellwig wrote:
+> dma_direct_supported tries to find the minimum addressable bitmask
+> based on the end pfn and optional magic that architectures can use
+> to communicate the size of the magic ZONE_DMA that can be used
+> for bounce buffering.  But between the DMA offsets that can change
+> per device (or sometimes even region), the fact the ZONE_DMA isn't
+> even guaranteed to be the lowest addresses and failure of having
+> proper interfaces to the MM code this fails at least for one
+> arm subarchitecture.
+> 
+> As all the legacy DMA implementations have supported 32-bit DMA
+> masks, and 32-bit masks are guranteed to always work by the API
+> contract (using bounce buffers if needed), we can short cut the
+> complicated check and always return true without breaking existing
+> assumptions.  Hopefully we can properly clean up the interaction
+> with the arch defined zones and the bootmem allocator eventually.
+> 
+> Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE configs")
+> Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+Thank you for the proper patch, I can reaffirm my Tested-by.
+We have also tested remoteproc on k2, which got broken as well.
+
+Thanks again,
+- Péter
+
 > ---
->  drivers/gpio/gpio-it87.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-it87.c b/drivers/gpio/gpio-it87.c
-> index b497a1d18ca9..79b688e9cd2a 100644
-> --- a/drivers/gpio/gpio-it87.c
-> +++ b/drivers/gpio/gpio-it87.c
-> @@ -53,7 +53,7 @@
->   * @io_size size of the port rage starting from io_base.
->   * @output_base Super I/O register address for Output Enable register
->   * @simple_base Super I/O 'Simple I/O' Enable register
-> - * @simple_size Super IO 'Simple I/O' Enable register size; this is
-> + * @simple_size Super I/O 'Simple I/O' Enable register size; this is
->   *     required because IT87xx chips might only provide Simple I/O
->   *     switches on a subset of lines, whereas the others keep the
->   *     same status all time.
-> --
-> 2.24.1
->
+>  kernel/dma/direct.c | 24 +++++++++++-------------
+>  1 file changed, 11 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 04f308a47fc3..efab894c1679 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -464,28 +464,26 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>  }
+>  #endif /* CONFIG_MMU */
+>  
+> -/*
+> - * Because 32-bit DMA masks are so common we expect every architecture to be
+> - * able to satisfy them - either by not supporting more physical memory, or by
+> - * providing a ZONE_DMA32.  If neither is the case, the architecture needs to
+> - * use an IOMMU instead of the direct mapping.
+> - */
+>  int dma_direct_supported(struct device *dev, u64 mask)
+>  {
+> -	u64 min_mask;
+> -
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> -		min_mask = DMA_BIT_MASK(zone_dma_bits);
+> -	else
+> -		min_mask = DMA_BIT_MASK(32);
+> +	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
+>  
+> -	min_mask = min_t(u64, min_mask, (max_pfn - 1) << PAGE_SHIFT);
+> +	/*
+> +	 * Because 32-bit DMA masks are so common we expect every architecture
+> +	 * to be able to satisfy them - either by not supporting more physical
+> +	 * memory, or by providing a ZONE_DMA32.  If neither is the case, the
+> +	 * architecture needs to use an IOMMU instead of the direct mapping.
+> +	 */
+> +	if (mask >= DMA_BIT_MASK(32))
+> +		return 1;
+>  
+>  	/*
+>  	 * This check needs to be against the actual bit mask value, so
+>  	 * use __phys_to_dma() here so that the SME encryption mask isn't
+>  	 * part of the check.
+>  	 */
+> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> +		min_mask = min_t(u64, min_mask, DMA_BIT_MASK(zone_dma_bits));
+>  	return mask >= __phys_to_dma(dev, min_mask);
+>  }
+>  
+> 
 
-Patchwork seems to be confused by this series - or maybe you just sent
-another iteration without a version number? Anyway - please see other
-patches on the list, adjust your subject message and send the entire
-series at once using git send-email.
-
-Bart
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
