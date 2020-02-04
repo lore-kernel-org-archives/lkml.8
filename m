@@ -2,106 +2,82 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC911C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D74C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E36620674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="uJNzDuDI"
+	by mail.kernel.org (Postfix) with ESMTP id 55651218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgBDKen (ORCPT
+        id S1727136AbgBDKfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:34:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37999 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgBDKen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:34:43 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a9so2911635wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=XCYQuXOsEa3amwBAE0MdHl+l7HQHKrgjj6YtdNoNSCY=;
-        b=uJNzDuDIBrxfkrSMoIF8sumQ1Qk6Enzo0YYveDFEAa6Z1fgvL13kO1yspfNxThxdg7
-         izToQLfRBthR+BDUqqkzJWGU+nerMVYQzmuHflz4CUJhpoCYNApxnf95zi1NZDxzpHFl
-         WSRIT+748Xo4IcErvr82swBreWIxuH1j6V0TvnQBVlMAxyMgIEpesjx4OHhnH7TWuKe8
-         3TUqbbih80Xim00tZVFYDzR7g+FVM/rRzyeeGZjaWCQU7+4lxqdt9NXLkiCtrVuhmuco
-         M0Aaz0CV7mUV2DEKatMqyNyPiP+8mt2Hm31/PKJKcaW4C58X5tslvoxUlso/2Dhoi+BD
-         R44g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=XCYQuXOsEa3amwBAE0MdHl+l7HQHKrgjj6YtdNoNSCY=;
-        b=WcEoW7OzvtBLAhRIwT1m/bG8wS3BTdzeDRqiaG3vKTqhEeePhW48goRhNrG4zOlzuT
-         zu7FcLQ+SuLoXvliHDB5l2X56rZZmiJ4dMQmMufHhYm2W7p65Bk4Ux3K9RqSZ87WniGB
-         0e3S3NvgiGuwNgcBpP7hzwLxaDaFfa50R7MEJvCNPdGWL/bICQHPepW6zufOPfWEUjvh
-         mV8snwDZGk5NxpnrOV8TbKpSChOsZGhjdYf+xpiQZS6K1F/pDFqVjC/g8h7j8RHBSDOc
-         NSFmP0bava1wuJPB27EbYe5G5No9ftIPhrJVG3H302vHxsQ6WNzYzTwFaGZW0G92X7vC
-         sUvQ==
-X-Gm-Message-State: APjAAAUGO4+SAHo7xuM2bjXf5Sl5kyVudI57iFXwvxkETEji1eZmWVV8
-        MSmzLZ9fUcj02X+S+UaY7VXNzP2FIsL2kev1w/5j5mqpsrM=
-X-Google-Smtp-Source: APXvYqw30Zpxp1GzfYbp2HCXTP5cBsAU08r2WRTyVJA0GxeahQPIBFj7Rt9k6RqafFje+FcD8phmoFweXi3ywf4tQfo=
-X-Received: by 2002:a1c:7919:: with SMTP id l25mr4912195wme.135.1580812481717;
- Tue, 04 Feb 2020 02:34:41 -0800 (PST)
+        Tue, 4 Feb 2020 05:35:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49090 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgBDKfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 05:35:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 00132AAC2;
+        Tue,  4 Feb 2020 10:35:17 +0000 (UTC)
 MIME-Version: 1.0
-References: <5e56ec0090bceb711dbab145ffffa52f60c23d87.1579009444.git.michal.simek@xilinx.com>
-In-Reply-To: <5e56ec0090bceb711dbab145ffffa52f60c23d87.1579009444.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Date:   Tue, 4 Feb 2020 11:34:30 +0100
-Message-ID: <CAHTX3dK2DwzjC=7VhVsso_d-mjF1S=ifDNgEoZqDJDfGar3L3g@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: Add ID for Microblaze v11
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 04 Feb 2020 11:35:16 +0100
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     =?UTF-8?Q?Max_Neunh=C3=B6ffer?= <max@arangodb.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>,
+        lars@arangodb.com
+Subject: Re: epoll_wait misses edge-triggered eventfd events: bug in Linux 5.3
+ and 5.4
+In-Reply-To: <F0CB2FAC-A6F7-4B72-BC27-413DCF35E256@arangodb.com>
+References: <20200131135730.ezwtgxddjpuczpwy@tux>
+ <20200201121647.62914697@cakuba.hsd1.ca.comcast.net>
+ <20200203151536.caf6n4b2ymvtssmh@tux>
+ <5a16db1f2983ab105b99121ce0737d11@suse.de>
+ <F0CB2FAC-A6F7-4B72-BC27-413DCF35E256@arangodb.com>
+Message-ID: <d4d188512ea84f243310dd9464922a82@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=BAt 14. 1. 2020 v 14:44 odes=C3=ADlatel Michal Simek <michal.simek@xili=
-nx.com> napsal:
->
-> List Microblaze v11 from PVR.
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
->  arch/microblaze/kernel/cpu/cpuinfo.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/microblaze/kernel/cpu/cpuinfo.c b/arch/microblaze/kerne=
-l/cpu/cpuinfo.c
-> index ef2f49471a2a..cd9b4450763b 100644
-> --- a/arch/microblaze/kernel/cpu/cpuinfo.c
-> +++ b/arch/microblaze/kernel/cpu/cpuinfo.c
-> @@ -51,6 +51,7 @@ const struct cpu_ver_key cpu_ver_lookup[] =3D {
->         {"9.5", 0x22},
->         {"9.6", 0x23},
->         {"10.0", 0x24},
-> +       {"11.0", 0x25},
->         {NULL, 0},
->  };
->
-> --
-> 2.24.0
->
+On 2020-02-03 22:03, Max Neunhöffer wrote:
+> Hi Roman,
+> 
+> Thanks for your quick response. This sounds fantastic!
+> 
+> The epollbug.c program was originally written by my colleague Lars
+> Maier and then modified by me and subsequently by Chris Kohlhoff. Note
+> that the bugzilla bug report contains altogether three variants which
+> test epoll_wait/epoll_ctl in three different ways. It might be
+> sensible to take all three variants for the test suite.
 
-Applied.
-M
+I checked 3 variants, they do same things: epoll_ctl() races against
+epoll_wait(), and this is exactly the bug reproduction, regardless
+actual read() from a file descriptor or EPOLLET flag set.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+> I cannot imagine that any of the three authors would object to this, I
+> definitely do not, the other two are on Cc in this email and can speak
+> for themselves.
+
+I adapted the logic from epollbug.c and included it into 
+epoll_wakeup_test.c
+test suite, you should have received the email: "[PATCH 3/3] kselftest:
+introduce new epoll test case".  Please, take a look or ask your 
+colleague
+to take a look. If no objections - then fine, leave as is.
+
+Thanks.
+
+--
+Roman
+
