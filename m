@@ -2,115 +2,143 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF69C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BF3C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825D02087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580803909;
-	bh=SLLYssBIp08aYMdVHWBeSqmn5t621xNAmpahvakYJwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r0sffM4ImURAQHSSgZNedtTYlSqZCuAoApnM070zKvrt5iH8KccUBlh/bAGodL7SX
-	 ETRDvrMKVgDiFg4h//RcdRAnPZ0meCEF82ZlUvISu36swGTFZ5ijOQbgrLzmscVSxu
-	 uM8wgo+gPYHyoFM1XmnNYDX0/wYuIa8z+HVB6VsE=
+	by mail.kernel.org (Postfix) with ESMTP id EDC672087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgBDILt (ORCPT
+        id S1727149AbgBDINk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:11:49 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39221 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgBDILs (ORCPT
+        Tue, 4 Feb 2020 03:13:40 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38961 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgBDINk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 03:11:48 -0500
-Received: by mail-lj1-f195.google.com with SMTP id o15so11994534ljg.6;
-        Tue, 04 Feb 2020 00:11:47 -0800 (PST)
+        Tue, 4 Feb 2020 03:13:40 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so16297201oty.6;
+        Tue, 04 Feb 2020 00:13:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6sqvvOg/zAjFutnY8VlDzQ+LHwP3wPOLlyLeY12TqRo=;
-        b=d0nXHj1AYL/cgvrqezF1eAENPZy5pqhoq8pqblU/RX/m+HKBtJPNcfUgRYFlqXvYea
-         7Yo+QmOHGRtrvBngFLPl5xMLJU+WpGYOq4Je1BKmebVkPU7JdszFwZjsoZyMepyMuNNK
-         du7rFV8Xet/kiKQMBw4VWYrV2FjJ4b01T6YXymwyZcyIgagbBxsHbA4nDpVZ9kmGJdKA
-         OT30W6N9+jmwa3qXWpMk4jjvFrSrJ0cLjTRGq32eqRG8uN52uzoRdt9jMpACs9jlJe+e
-         vZTYL2kSwdBaxhZLzsYRVGkSVs6Y60G05udx7HkQ0WUD42HZkar1wdHMALYA5WuzeeTZ
-         5fOQ==
-X-Gm-Message-State: APjAAAVNdDfbVzI3gYdQgraZlqZJavIFucH9t/z0P8xkJE6yc99xcNJG
-        LoCQo8PH1AXhfd71551qI8604j6C
-X-Google-Smtp-Source: APXvYqxLUwXw1YItqMStIvVnNVaPKbRTXtu6eTz1EIIRlzhPvMelYSxTm/BrTrOpMwUuSF3DC52aow==
-X-Received: by 2002:a2e:6e19:: with SMTP id j25mr16359366ljc.95.1580803906831;
-        Tue, 04 Feb 2020 00:11:46 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id a8sm11032729ljn.74.2020.02.04.00.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 00:11:45 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iytJL-0008Dh-3q; Tue, 04 Feb 2020 09:11:55 +0100
-Date:   Tue, 4 Feb 2020 09:11:55 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 65/90] Input: aiptek - use descriptors of current
- altsetting
-Message-ID: <20200204081155.GC26725@localhost>
-References: <20200203161917.612554987@linuxfoundation.org>
- <20200203161925.451117468@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kOzfGH3X0V7ecKmEp3BZzWw2D7F64fbWXNLsPHZv3Qk=;
+        b=I06b4qcYw2a+YqKHfHovDGMw9nYIicHHhZBgjaSpaAZUiUZwdqvUM58O9u8NL8qg7T
+         HllGG6chJ04qBQ4nkKwxFIndOVlBpHtqMc6Y6ao4xDCcpcoyHYiX3kV6mt6ZgQWYmplB
+         Q5LvqC92WgM+60BE8GqxSFG7/xl17joJJ5YaoCipYcAEwwk3LvgVL/ceoe2gCuyfkCgy
+         u5r4moENdkaDIY1YZ+gzl3Tia+1tY7yMAUzL2gfMn4kcCp5yQfVXflGG782HUPkayzmh
+         NPCHs7wkehjaRc2pa42qB7wKKxgjZZOi3Bt13hz1wfwYw9eYgzyGHOSBcnefw7ClmV6f
+         BnAg==
+X-Gm-Message-State: APjAAAWDkcH/khYA1HjPF/PZPGHxypp9nmHo9ZbJsAufkuaeTAteRdw3
+        12YmDLGpHqPl7BTIoPE6bJr9ZwUxYGRaxWloPSTabCHs
+X-Google-Smtp-Source: APXvYqzBBbfQ012lpgP2RMvqRgR8Gp2+vA99nmHPTZXVWc6+0iUKHnH6KWrk+z3SoV9h6r6W7AXNIMmHDCOpoG3WrKM=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr21313411oth.145.1580804018956;
+ Tue, 04 Feb 2020 00:13:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203161925.451117468@linuxfoundation.org>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com> <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
+ <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com> <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
+ <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
+ <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com> <00734e40-da0b-9d7f-20bc-ce1f9658dcd3@physik.fu-berlin.de>
+In-Reply-To: <00734e40-da0b-9d7f-20bc-ce1f9658dcd3@physik.fu-berlin.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Feb 2020 09:13:27 +0100
+Message-ID: <CAMuHMdWKHOm8WjMx3Lm-MwZ_VZVaFz_otGe0V3pKp01v81mqZA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:20:08PM +0000, Greg Kroah-Hartman wrote:
-> From: Johan Hovold <johan@kernel.org>
-> 
-> [ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
-> 
-> Make sure to always use the descriptors of the current alternate setting
-> to avoid future issues when accessing fields that may differ between
-> settings.
-> 
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> Acked-by: Vladis Dronov <vdronov@redhat.com>
-> Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/input/tablet/aiptek.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-> index 06d0ffef4a171..e08b0ef078e81 100644
-> --- a/drivers/input/tablet/aiptek.c
-> +++ b/drivers/input/tablet/aiptek.c
-> @@ -1713,7 +1713,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
->  
->  	aiptek->inputdev = inputdev;
->  	aiptek->intf = intf;
-> -	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
-> +	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
->  	aiptek->inDelay = 0;
->  	aiptek->endDelay = 0;
->  	aiptek->previousJitterable = 0;
+Hi Adrian,
 
-I asked Sasha to drop this one directly when he added it, so it's
-probable gone from all the stable queues by now.
+On Mon, Feb 3, 2020 at 10:26 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On 2/3/20 9:34 PM, Geert Uytterhoeven wrote:
+> > On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
+> > <glaubitz@physik.fu-berlin.de> wrote:
+> >> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
+> >>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
+> >>
+> >> FWIW, there is a patch set by Yoshinori Sato to add device tree support
+> >> for classical SuperH hardware. It was never merged, unfortunately :(.
+> >
+> > True.
+>
+> Would it be possible to keep DMA support if device tree support was
+> added for SuperH? I think Rich eventually wanted to merge the patches,
+> there were just some minor issues with them.
 
-But I'm still curious how this ended up being selected for stable in the
-first place? There's no fixes or stable tag in the commit, and I never
-received a mail from the AUTOSEL scripts.
+Adding DT support would definitely make things easier, but would be a lot
+of work.
+However, using dma_slave_map would be an alternative.
 
-Johan
+> >>> Anyone who cares for DMA on SuperH?
+> >>
+> >> What is DMA used for on SuperH? Wouldn't dropping it cut support for
+> >> essential hardware features?
+> >
+> > It may make a few things slower.
+> >
+> > Does any of your SuperH boards use DMA?
+> > Anything interesting in /proc or /sys w.r.t. DMA?
+>
+> I have:
+>
+> root@tirpitz:/sys> find . -iname "*dma*"
+> ./bus/dma
+> ./bus/dma/devices/dma0
+> ./bus/dma/devices/dma1
+> ./bus/dma/devices/dma2
+> ./bus/dma/devices/dma3
+> ./bus/dma/devices/dma4
+> ./bus/dma/devices/dma5
+> ./bus/dma/devices/dma6
+> ./bus/dma/devices/dma7
+> ./bus/dma/devices/dma8
+> ./bus/dma/devices/dma9
+> ./bus/dma/devices/dma10
+> ./bus/dma/devices/dma11
+> ./bus/platform/devices/sh_dmac
+> ./bus/platform/devices/sh-dma-engine.0
+> ./bus/platform/devices/sh-dma-engine.1
+
+So you do have the two dmaengines...
+
+> On my SH-7785LCR.
+
+... but are they actually used?
+
+git grep -E "(SHDMA|sh_dmae_slave_config)" -- "arch/sh/*7785*"
+doesn't come up with any matches, so I don't think any sh7785 platform
+is wired to use DMA (yet), only sh7757 and sh772[234].
+
+To double-check:
+With current upstream, you can look for "slave" symlinks in sysfs.
+With older kernels, you can look at the interrupt counts for the DMACs
+in /proc/interrupts.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
