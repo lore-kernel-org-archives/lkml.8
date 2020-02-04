@@ -2,74 +2,55 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB4C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5355C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBAC2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZOSE1cm"
+	by mail.kernel.org (Postfix) with ESMTP id 73F2E2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbgBDRXB (ORCPT
+        id S1727538AbgBDRXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:23:01 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33733 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727501AbgBDRW7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:22:59 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m7so1040878pjs.0;
-        Tue, 04 Feb 2020 09:22:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hc2O/DJa+SbVtGN5pJ7qoYwZMHQBm+KpbKV1j82QsLo=;
-        b=FZOSE1cm6cxg7GDUk43uErcYeL8r98b5mATYq32pk+E3rMY8r8481VSvVde93h+ecs
-         F7AjkBeWOgCvsMqzLtqKDne8hSkYuHYMHGLw7nLM/OyTQo6+C9Dp1iIIsUWiCw5lSMWf
-         NqjpLv1eVHUItpOI4iDdt6FdRkv6oRjDEfLTU4jXtPI9syWATjHcuqmuriWeGZCI8Y8y
-         4vkjtJqJvjGPQv+J9Rf+wuuxHGVBmwkYGHpuCA9XMXWZRWDZKE/dk1M6ceO/5Rv9YUOV
-         fBp+p6mVUk4C1W3qPpncp+Olr+9M3PecXxO9a8vpIni0DXSiHx/j9UgnqzfShLJq6+ch
-         ER1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hc2O/DJa+SbVtGN5pJ7qoYwZMHQBm+KpbKV1j82QsLo=;
-        b=E6tPQrQwvy5w0VtE9maaUL/b1iUVbZXbkS/va36D+Iihqlx4O1sNqQJqFeXdBZyna7
-         FYg3PVmYB23Cne/IKUtTegOOKTt9jrJo5HYJez/G/CTGzqYT44HhJwo/PWjl76lAUaCi
-         2LuOjzOE6zCrZlJp4NT7K4ICZnxHlMbgc3BrppQO7xsPEZR+s8HmCpwgnJYAB73WzgN2
-         vHtGZ3NrSJDsfUKjTQ4BpwMqC/zPSqfZE/DMOqoxo26otua/fGKnb/5ELZkA8koAhPRk
-         L4RVEqGTVVs1WCuKqyecxQbShZ8a656ETJ4aNj9647TSGEBH3U9CCJ07QSFSlpxFmgy6
-         udow==
-X-Gm-Message-State: APjAAAVFprYoIcFLF6nVVW6+O8fSBycHcOIlgbxelK99qFP+X/WEvlom
-        pQ9jffGbYfMDrhPjWZHxUFJJAXDJ
-X-Google-Smtp-Source: APXvYqy7iG09y8o63IJ5RQklu8YJLenNB0Eekk87qymcm7jhpREh6oKFybD5WWWWusHykXWedpWD/w==
-X-Received: by 2002:a17:902:7e4b:: with SMTP id a11mr30483505pln.61.1580836978921;
-        Tue, 04 Feb 2020 09:22:58 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id s7sm4515747pjk.22.2020.02.04.09.22.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 09:22:58 -0800 (PST)
-Subject: Re: [PATCH v2] skbuff: fix a data race in skb_queue_len()
-To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
-Cc:     kuba@kernel.org, elver@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580832945-28331-1-git-send-email-cai@lca.pw>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <d73b3f08-a01e-95db-8beb-a11b33d834e8@gmail.com>
-Date:   Tue, 4 Feb 2020 09:22:57 -0800
+        Tue, 4 Feb 2020 12:23:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:39110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727382AbgBDRXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 12:23:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9F29101E;
+        Tue,  4 Feb 2020 09:23:18 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AD373F68E;
+        Tue,  4 Feb 2020 09:23:17 -0800 (PST)
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+To:     Qais Yousef <qais.yousef@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Pavan Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+ <20200131100629.GC27398@codeaurora.org>
+ <20200131153405.2ejp7fggqtg5dodx@e107158-lin.cambridge.arm.com>
+ <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
+ <20200203142712.a7yvlyo2y3le5cpn@e107158-lin>
+ <20200203111451.0d1da58f@oasis.local.home>
+ <20200203171745.alba7aswajhnsocj@e107158-lin>
+ <20200203131203.20bf3fc3@oasis.local.home>
+ <20200203190259.bnly7hfp3wfiteof@e107158-lin>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <c30eddd3-143e-03f1-6975-97f5af1d3075@arm.com>
+Date:   Tue, 4 Feb 2020 18:23:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1580832945-28331-1-git-send-email-cai@lca.pw>
+In-Reply-To: <20200203190259.bnly7hfp3wfiteof@e107158-lin>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,84 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/02/2020 20:03, Qais Yousef wrote:
+> On 02/03/20 13:12, Steven Rostedt wrote:
+>> On Mon, 3 Feb 2020 17:17:46 +0000
+>> Qais Yousef <qais.yousef@arm.com> wrote:
 
+[...]
 
-On 2/4/20 8:15 AM, Qian Cai wrote:
-> sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
+> In the light of strictly adhering to priority based scheduling; yes this makes
+> sense. Though I still think the migration will produce worse performance, but
+> I can appreciate even if that was true it breaks the strict priority rule.
 > 
+>>
+>> You can add to the logic that you do not take over an RT task that is
+>> pinned and can't move itself. Perhaps that may be the only change to
 > 
-> Since only the read is operating as lockless, it could introduce a logic
-> bug in unix_recvq_full() due to the load tearing. Fix it by adding
-> a lockless variant of skb_queue_len() and unix_recvq_full() where
-> READ_ONCE() is on the read while WRITE_ONCE() is on the write similar to
-> the commit d7d16a89350a ("net: add skb_queue_empty_lockless()").
+> I get this.
 > 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
+>> cpu_find(), is that it will only pick a big CPU if little CPUs are
+>> available if the big CPU doesn't have a pinned RT task on it.
 > 
-> v2: add lockless variant helpers and WRITE_ONCE().
+> But not that. Do you mind rephrasing it?
 > 
->  include/linux/skbuff.h | 14 +++++++++++++-
->  net/unix/af_unix.c     |  9 ++++++++-
->  2 files changed, 21 insertions(+), 2 deletions(-)
+> Or let me try first:
 > 
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index 3d13a4b717e9..de5eade20e52 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -1822,6 +1822,18 @@ static inline __u32 skb_queue_len(const struct sk_buff_head *list_)
->  }
->  
->  /**
-> + *	skb_queue_len	- get queue length
+> 	1. Search all priority levels for a fitting CPU
 
-Please fix to use the exact name.
+Just so I get this right: All _lower_ prio levels than p->prio, right?
 
-> + *	@list_: list to measure
-> + *
-> + *	Return the length of an &sk_buff queue.
-> + *	This variant can be used in lockless contexts.
-> + */
-> +static inline __u32 skb_queue_len_lockless(const struct sk_buff_head *list_)
-> +{
-> +	return READ_ONCE(list_->qlen);
-> +}
-> +
-> +/**
->   *	__skb_queue_head_init - initialize non-spinlock portions of sk_buff_head
->   *	@list: queue to initialize
->   *
-> @@ -2026,7 +2038,7 @@ static inline void __skb_unlink(struct sk_buff *skb, struct sk_buff_head *list)
->  {
->  	struct sk_buff *next, *prev;
->  
-> -	list->qlen--;
-> +	WRITE_ONCE(list->qlen, list->qlen - 1);
->  	next	   = skb->next;
->  	prev	   = skb->prev;
->  	skb->next  = skb->prev = NULL;
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index 321af97c7bbe..349e7fbfbc67 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -194,6 +194,12 @@ static inline int unix_recvq_full(struct sock const *sk)
->  	return skb_queue_len(&sk->sk_receive_queue) > sk->sk_max_ack_backlog;
->  }
->  
-> +static inline int unix_recvq_full_lockless(struct sock const *sk)
+> 	2. If failed, return the first lowest mask found
+> 	3. If it succeeds, remove any CPU that has a pinned task in it
+> 	4. If the lowest_mask is empty, return (2).
+> 	5. Else return the lowest_mask with the fitting CPU(s)
 
-The const attribute is misplaced. It should be :
+Mapping this to the 5 FIFO tasks rt-tasks of Pavan's example (all
+p->prio=89 (dflt rt-app prio), dflt min_cap=1024 max_cap=1024) on a 4
+big (Cpu Capacity=1024) 4 little (Cpu capacity < 1024) system:
 
-static inline bool unix_recvq_full_lockless(const struct sock *sk)
+You search from idx 1 to 11 [p->prio=89 eq. idx (task_pri)=12] and since
+there are no lower prior RT tasks the lowest mask of idx=1 (CFS or Idle)
+for the 5th RT task is returned.
 
-> +{
-> +	return skb_queue_len_lockless(&sk->sk_receive_queue) >
-> +		sk->sk_max_ack_backlog;
+But that means that CPU capacity trumps priority?
 
-You probably also need a READ_ONCE() for sk->sk_max_ack_backlog
-
-It is a matter of time before syzbot finds how to trigger the race.
-
-Since you added a nice unix_recvq_full_lockless() helper, lets make it right.
-
-Thanks.
+[...]
