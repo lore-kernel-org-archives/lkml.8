@@ -7,58 +7,55 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1B3C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5056EC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62362082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B50D22314
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQ0ZB6uu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHYYBpDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBDRVg (ORCPT
+        id S1727461AbgBDRVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 4 Feb 2020 12:21:36 -0500
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:57226 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbgBDRVf (ORCPT
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:39764 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbgBDRVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Feb 2020 12:21:35 -0500
-Received: by mail-ua1-f74.google.com with SMTP id b15so5057419uas.23
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:21:35 -0800 (PST)
+Received: by mail-wr1-f74.google.com with SMTP id 90so10619113wrq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:21:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=P5Zl9LQYe0TwoSBlL27JA/OuhbAcWy+b13rTN8vanpc=;
-        b=QQ0ZB6uuqbxCJElvNJUgezUS9U6tosI0PZypsN0qkNsnv8Q5ab7WkP44YW9MlwxLa5
-         p1A+xVX18I0IsONIy3AGkxpYM1iJP2xssabLbdjsqRqVHYUpNc8FvAATeI6/SxOUzpYH
-         TDq3tfoRXHGaZiPvYTZXVSm9zWwKFZZTDKwhQLSdrlDjYFRbb0rl5veBZ35WqR2tGJMn
-         aiywLjOnlKgvtjSOc+LLxfvkwdqp5aLJv5yv5Sf9WbAyctIbpGdJqNOa3fTNqWxFW3q9
-         Em/OVGsyxOqHNY/iGfA/nWumKOnRmynQRKf+i3LYrKntb8lNxj4JgVkvZ7ul7LduO4nn
-         ghgA==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kiVUGxEhpAM2mYb96Fzo4yFVjkxMzxjZ34CLdXp6/BA=;
+        b=iHYYBpDM23i8xlqcLxsIInOL/fqAzMaeDrcrX4teRPxJARTrbtVRCjGDA/gJgAfL4h
+         MZ2dhjnjrSYp3sUY6gx9I1627RNY8IbJ4IJ1GWmtv6+lh29Sr2EPC3U/pMVVbsHhYufN
+         2xls69TABg/khlp10KcCX+iFuXv5W+Q2DnKCb6993yxYnDsVZKdFGqsTEjVvluo5r+bC
+         3eh0S95ih46VU0nI6Z9w8G8qlz9dF1Z1OJ5ohvoBo+AalieLzvDSn5AZbK96HLu/860l
+         hh/t43jhf6GF9l8YrQdIZal2wkDszcSI9kHq+4CBGvqAijAasAoTDZdnAsPG3IVszdMz
+         NQnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=P5Zl9LQYe0TwoSBlL27JA/OuhbAcWy+b13rTN8vanpc=;
-        b=YW2NEcCKl86fNV0q6IkbWTtxn9dkBN431V/lhZTotywGKnZ/OaTLmyyG9DWdITtHX/
-         /idLAhx0yzEyyvEpJKOBsX7GiWi2krYzarxwgyZT2hUEa2POJ+eSMNPQYtUN/EQS/0kR
-         mc5pK0Dyp3j8bNBgvl6H31BS1keZy0XZX1KtNt0oC31DAARqRAJa/RP8wsYj7NT9z5RJ
-         6PmK5pY78NhCENy+E7QGL8uvVRFz7WBJRv9a3NaZyoDCBRxP/zvk7FT0wqHcwrz4mmfC
-         TPP+EtH8Fcp/SqGhCe1FxYf3n2cuBW7E1FO5bQH0OTUg6ty9did9QckAhz6rhAbn0UJx
-         hVrg==
-X-Gm-Message-State: APjAAAXJgrxa1FFAif4AUd7jrbDOLH569+wzwtFOx+bjaWd74yt7b+Q2
-        k3VHT0lvTOLKbhI0xF2Y7YxpGynBRg==
-X-Google-Smtp-Source: APXvYqwFQgJtsGlJlVyMC5UJR7gARCZMcqT2mxfWx6E5XwMyiGKF8uu5MTEINJPmX+QRk3Vapx6+Wd6skg==
-X-Received: by 2002:a1f:db81:: with SMTP id s123mr17780179vkg.45.1580836894663;
- Tue, 04 Feb 2020 09:21:34 -0800 (PST)
-Date:   Tue,  4 Feb 2020 18:21:11 +0100
-In-Reply-To: <20200204172112.234455-1-elver@google.com>
-Message-Id: <20200204172112.234455-2-elver@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kiVUGxEhpAM2mYb96Fzo4yFVjkxMzxjZ34CLdXp6/BA=;
+        b=mjg9oMaH9YHluKR24wPxwkKI3NrJRcyXBQ2bN1eF5lFbjG+hn9encmEgYAdMGoNfWU
+         +Vcaj7WiS+hJ2JMFAI6qESdLsf5gnkF8nvkIbMvMVg7vbzcKuho5XNwvwcXvUvR5eL4a
+         G4soniytuK7ZEBemmVsZnrRF/9jfUhPVCExaIoH9P0+BE0Q9Qc1DzgTzEI647jXoRcqF
+         8CqdrQ410Q/L66JZjRZ8nv2E0Zan0RhY+Lx5UF6wmu/FDL/VMqFKOQtRUIYiszdROlz6
+         uAF0jJeLLb8v3oAoVZSgji1PvcwVhtC8cCh9ceM2xdFis8/fhqbJi6ji60F+oyY6saHB
+         1Sbg==
+X-Gm-Message-State: APjAAAVLTlSdstuEBrT6uxso1IXgPDgcEnrV6r9Xrc6ISCsrFYLXmsfx
+        wsHal6ongMP1T9caWHdkmQdsXLUbFw==
+X-Google-Smtp-Source: APXvYqwWCUDwitvhY0FZCZW08I+x93BnMVM/jpwKglWQ+MNuYP3yhrRh/OyC4AZFFjfHRZlNe7eNv/HqqA==
+X-Received: by 2002:adf:90e7:: with SMTP id i94mr22040781wri.47.1580836891511;
+ Tue, 04 Feb 2020 09:21:31 -0800 (PST)
+Date:   Tue,  4 Feb 2020 18:21:10 +0100
+Message-Id: <20200204172112.234455-1-elver@google.com>
 Mime-Version: 1.0
-References: <20200204172112.234455-1-elver@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v2 2/3] kcsan: Clarify Kconfig option KCSAN_IGNORE_ATOMICS
+Subject: [PATCH v2 1/3] kcsan: Add option to assume plain aligned writes up to
+ word size are atomic
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
@@ -70,43 +67,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clarify difference between options KCSAN_IGNORE_ATOMICS and
-KCSAN_ASSUME_PLAIN_WRITES_ATOMIC in help text.
+This adds option KCSAN_ASSUME_PLAIN_WRITES_ATOMIC. If enabled, plain
+aligned writes up to word size are assumed to be atomic, and also not
+subject to other unsafe compiler optimizations resulting in data races.
+
+This option has been enabled by default to reflect current kernel-wide
+preferences.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
 v2:
-* Update help text to mention alignment w.r.t. previous option.
+* Also check for alignment of writes.
 ---
- lib/Kconfig.kcsan | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ kernel/kcsan/core.c | 22 +++++++++++++++++-----
+ lib/Kconfig.kcsan   | 27 ++++++++++++++++++++-------
+ 2 files changed, 37 insertions(+), 12 deletions(-)
 
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 64b30f7716a12..e3c7d8f34f2ff 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -5,6 +5,7 @@
+ #include <linux/delay.h>
+ #include <linux/export.h>
+ #include <linux/init.h>
++#include <linux/kernel.h>
+ #include <linux/percpu.h>
+ #include <linux/preempt.h>
+ #include <linux/random.h>
+@@ -169,10 +170,20 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
+ 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+ }
+ 
+-static __always_inline bool is_atomic(const volatile void *ptr)
++static __always_inline bool
++is_atomic(const volatile void *ptr, size_t size, int type)
+ {
+-	struct kcsan_ctx *ctx = get_ctx();
++	struct kcsan_ctx *ctx;
++
++	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
++		return true;
+ 
++	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
++	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
++	    IS_ALIGNED((unsigned long)ptr, size))
++		return true; /* Assume aligned writes up to word size are atomic. */
++
++	ctx = get_ctx();
+ 	if (unlikely(ctx->atomic_next > 0)) {
+ 		/*
+ 		 * Because we do not have separate contexts for nested
+@@ -193,7 +204,8 @@ static __always_inline bool is_atomic(const volatile void *ptr)
+ 	return kcsan_is_atomic(ptr);
+ }
+ 
+-static __always_inline bool should_watch(const volatile void *ptr, int type)
++static __always_inline bool
++should_watch(const volatile void *ptr, size_t size, int type)
+ {
+ 	/*
+ 	 * Never set up watchpoints when memory operations are atomic.
+@@ -202,7 +214,7 @@ static __always_inline bool should_watch(const volatile void *ptr, int type)
+ 	 * should not count towards skipped instructions, and (2) to actually
+ 	 * decrement kcsan_atomic_next for consecutive instruction stream.
+ 	 */
+-	if ((type & KCSAN_ACCESS_ATOMIC) != 0 || is_atomic(ptr))
++	if (is_atomic(ptr, size, type))
+ 		return false;
+ 
+ 	if (this_cpu_dec_return(kcsan_skip) >= 0)
+@@ -460,7 +472,7 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
+ 	if (unlikely(watchpoint != NULL))
+ 		kcsan_found_watchpoint(ptr, size, type, watchpoint,
+ 				       encoded_watchpoint);
+-	else if (unlikely(should_watch(ptr, type)))
++	else if (unlikely(should_watch(ptr, size, type)))
+ 		kcsan_setup_watchpoint(ptr, size, type);
+ }
+ 
 diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index 66126853dab02..020ac63e43617 100644
+index 3552990abcfe5..66126853dab02 100644
 --- a/lib/Kconfig.kcsan
 +++ b/lib/Kconfig.kcsan
-@@ -132,8 +132,18 @@ config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
+@@ -91,13 +91,13 @@ config KCSAN_REPORT_ONCE_IN_MS
+ 	  limiting reporting to avoid flooding the console with reports.
+ 	  Setting this to 0 disables rate limiting.
+ 
+-# Note that, while some of the below options could be turned into boot
+-# parameters, to optimize for the common use-case, we avoid this because: (a)
+-# it would impact performance (and we want to avoid static branch for all
+-# {READ,WRITE}_ONCE, atomic_*, bitops, etc.), and (b) complicate the design
+-# without real benefit. The main purpose of the below options is for use in
+-# fuzzer configs to control reported data races, and they are not expected
+-# to be switched frequently by a user.
++# The main purpose of the below options is to control reported data races (e.g.
++# in fuzzer configs), and are not expected to be switched frequently by other
++# users. We could turn some of them into boot parameters, but given they should
++# not be switched normally, let's keep them here to simplify configuration.
++#
++# The defaults below are chosen to be very conservative, and may miss certain
++# bugs.
+ 
+ config KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
+ 	bool "Report races of unknown origin"
+@@ -116,6 +116,19 @@ config KCSAN_REPORT_VALUE_CHANGE_ONLY
+ 	  the data value of the memory location was observed to remain
+ 	  unchanged, do not report the data race.
+ 
++config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
++	bool "Assume that plain aligned writes up to word size are atomic"
++	default y
++	help
++	  Assume that plain aligned writes up to word size are atomic by
++	  default, and also not subject to other unsafe compiler optimizations
++	  resulting in data races. This will cause KCSAN to not report data
++	  races due to conflicts where the only plain accesses are aligned
++	  writes up to word size: conflicts between marked reads and plain
++	  aligned writes up to word size will not be reported as data races;
++	  notice that data races between two conflicting plain aligned writes
++	  will also not be reported.
++
  config KCSAN_IGNORE_ATOMICS
  	bool "Do not instrument marked atomic accesses"
  	help
--	  If enabled, never instruments marked atomic accesses. This results in
--	  not reporting data races where one access is atomic and the other is
--	  a plain access.
-+	  Never instrument marked atomic accesses. This option can be used for
-+	  additional filtering. Conflicting marked atomic reads and plain
-+	  writes will never be reported as a data race, however, will cause
-+	  plain reads and marked writes to result in "unknown origin" reports.
-+	  If combined with CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN=n, data
-+	  races where at least one access is marked atomic will never be
-+	  reported.
-+
-+	  Similar to KCSAN_ASSUME_PLAIN_WRITES_ATOMIC, but including unaligned
-+	  accesses, conflicting marked atomic reads and plain writes will not
-+	  be reported as data races; however, unlike that option, data races
-+	  due to two conflicting plain writes will be reported (aligned and
-+	  unaligned, if CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n).
- 
- endif # KCSAN
 -- 
 2.25.0.341.g760bfbb309-goog
 
