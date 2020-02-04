@@ -2,164 +2,112 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A670BC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE896C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E551217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900B42084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5VDOtm/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTvxoRFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBDR6i (ORCPT
+        id S1727502AbgBDR7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:58:38 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39573 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbgBDR6i (ORCPT
+        Tue, 4 Feb 2020 12:59:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34815 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgBDR7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:58:38 -0500
-Received: by mail-vs1-f65.google.com with SMTP id p14so11963273vsq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:58:37 -0800 (PST)
+        Tue, 4 Feb 2020 12:59:23 -0500
+Received: by mail-pg1-f196.google.com with SMTP id j4so10042458pgi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:59:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tzVO/i3RlK8wTW0CtIUDqXR3obK88NMKP/u+iDd4rUQ=;
-        b=O5VDOtm/ib9l1nZlkLp5aAjoHDGmbe/pDbvrnrOFQxx0ugJzt1szBuYP/xwnZgETip
-         P7HAfIEw3unJXYEVS4ie/bxig8VQ0AorpiyBzWFvlFBu2KjH3y4NnS7MNtts3L5btYIC
-         ij6sGv8mGSatOqli5mxV83kZVF3PE/4COaxgB7LSHF5HBP1q8UWGxi8IFnO4JFFHivpB
-         4P+JhkKMxD2r24UnI3YkDjuXSbSgbHBTDZuRqnMayX0j18RWJJ47chbBK1li9ZMqSFeQ
-         hiZrZN3Z8qSqzz9dE8/gSy8tALakqrzvM01IHNEFKAhrSTNr8tFlilhaAGg4OUOCOCvD
-         kdwQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jbEbwOgo7ENCwWxsnPJP8SPkXj10iYhhwUubuuIQGpU=;
+        b=aTvxoRFiBebcpxpfT28nCZjCnxMHAde5s0Gwzhhz7aM9dn6pzTFRQofnf3ecqFSI8D
+         eMlAaT0BNAFswRWePkJS0Q1CK41c2C6gPpAp2fJMco2yBO9zlcz9VJnXupigVxYkJnFv
+         bSGHFpr8YK2Dio6gyxW0JmAChekk6Mq/wheYOsCnxZvA/MC5z5P+sHyUaDGSkFDKTNPU
+         7bb1L0P/hUpNNCFLSH0Kez79DlcMyuEVZMTA7wyUVQLmxJ7Puw2TNXIFA1jUk7kYzVJt
+         TrsgC8DZriaeOksvbbRG0FwjN9x3kWnCGqjs/6JZiS+Avc8Q/Fq3gnNDF21vgzontS90
+         s9xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tzVO/i3RlK8wTW0CtIUDqXR3obK88NMKP/u+iDd4rUQ=;
-        b=Un0GDgs8yWiQlTLR7pywxrZTusLLk5yOcUyNvUXY44YHwbe6FhRRT6cCTgl1mb5IUD
-         7daBvit+ozSL3TfEgsPmPLLO2eUWlAWXKJgt1mxQ/PFgEIFSHklVtelLgWLWnquBxHL6
-         hbCwT/DLr93zlHEbJvqkDgxxX4BxBXMHAX0fYnuw1vlvpqwG+FvOA70d54pPeCqLb3HD
-         qw8YQKobutYCZSNXMgpbFhnFj9WKjd7dnSrOythc3g3jcAcc3N7qOeENIIP/pm92aSXf
-         QYQ1gsaoyeOkCXwUp2hvsohCiUJzdwmLWGPx8dft4VbNYCbQEgpCNZ5F1yIyrrIg1r+w
-         sNPg==
-X-Gm-Message-State: APjAAAVsQ7nTotViCUApy1qSbDjicSoHn9zeojeVuTp8zmCIgr+/k6QO
-        sCRdfA0jt7AlljKHWEkBM976F6NzmoA+L4UCYaz/sg==
-X-Google-Smtp-Source: APXvYqy8K0HZyom2Se94kPkPrPAC4jNuAoEYRybckINHoKbQmKOYiKuIMKD8CqYzd04t+SoQUijdLLODpClkxzUnst0=
-X-Received: by 2002:a05:6102:757:: with SMTP id v23mr19931507vsg.35.1580839116928;
- Tue, 04 Feb 2020 09:58:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20200115013751.249588-1-swboyd@chromium.org>
-In-Reply-To: <20200115013751.249588-1-swboyd@chromium.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 4 Feb 2020 18:58:00 +0100
-Message-ID: <CAPDyKFrQoWaj6uc4Ej_0sUk01X=denmu=v6vq-KgNePbNxkwmw@mail.gmail.com>
-Subject: Re: [PATCH] drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jbEbwOgo7ENCwWxsnPJP8SPkXj10iYhhwUubuuIQGpU=;
+        b=WJ9HVXgrK2AWkyU6uAhS/30hrnejpV2hhhuzvBG9oBnbStQchEPmaWnu0TzRu32Oy7
+         1MVI1AuzsZ2f9lsd2fkHHBusIzP14xBUrPwJL6sbxmBN/eZt1SzbhtYvJ/apjyDeZUYg
+         +Tjt1DKUeFMhk3fFjdUMMhlBT6nObDHyFvOPPU78pwTiuveqINwyid0KEOirWRxkAaWw
+         FbZwr/xUMhKrtivFYM3Wf00QsBUAnm77qAG4xjD1TP9le1zylfbUEc3GFlXTCwRI3yOY
+         rJn+DK4TC3jwMM2ol9QUDx4XwaBwMVzDnMETtG52t9JaeInm7Ot5yAlbvJmHc21XDVHI
+         r7cg==
+X-Gm-Message-State: APjAAAWWvBgw+IGx51u2HrYCSICUxVjIHtz4F3S/kr5U36a8aKn2hOiH
+        5fT/8EimCXmyxO2W/4L4rgU=
+X-Google-Smtp-Source: APXvYqxcrSIfmbjS9s7ArRFpumpHY7MXaw0phOSNLdABf42PWMJi52QVUpc2eRXUbUhDgU/SFtdxGQ==
+X-Received: by 2002:a63:7454:: with SMTP id e20mr32353159pgn.192.1580839162631;
+        Tue, 04 Feb 2020 09:59:22 -0800 (PST)
+Received: from localhost.localdomain ([2620:0:1008:fd00:25a6:3140:768c:a64d])
+        by smtp.gmail.com with ESMTPSA id d73sm25414465pfd.109.2020.02.04.09.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 09:59:20 -0800 (PST)
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: [PATCH 0/5] arm64: add the time namespace support
+Date:   Tue,  4 Feb 2020 09:59:08 -0800
+Message-Id: <20200204175913.74901-1-avagin@gmail.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 at 02:37, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> This tracepoint is hit now that we call into the rpmh code from the cpu
-> idle path. Let's move this to be an rcuidle tracepoint so that we avoid
-> the RCU idle splat below
->
->  =============================
->  WARNING: suspicious RCU usage
->  5.4.10 #68 Tainted: G S
->  -----------------------------
->  drivers/soc/qcom/trace-rpmh.h:72 suspicious rcu_dereference_check() usage!
->
->  other info that might help us debug this:
->
->  RCU used illegally from idle CPU!
->  rcu_scheduler_active = 2, debug_locks = 1
->  RCU used illegally from extended quiescent state!
->  5 locks held by swapper/2/0:
->   #0: ffffff81745d6ee8 (&(&genpd->slock)->rlock){+.+.}, at: genpd_lock_spin+0x1c/0x2c
->   #1: ffffff81745da6e8 (&(&genpd->slock)->rlock/1){....}, at: genpd_lock_nested_spin+0x24/0x34
->   #2: ffffff8174f2ca20 (&(&genpd->slock)->rlock/2){....}, at: genpd_lock_nested_spin+0x24/0x34
->   #3: ffffff8174f2c300 (&(&drv->client.cache_lock)->rlock){....}, at: rpmh_flush+0x48/0x24c
->   #4: ffffff8174f2c150 (&(&tcs->lock)->rlock){+.+.}, at: rpmh_rsc_write_ctrl_data+0x74/0x270
->
->  stack backtrace:
->  CPU: 2 PID: 0 Comm: swapper/2 Tainted: G S                5.4.10 #68
->  Call trace:
->   dump_backtrace+0x0/0x174
->   show_stack+0x20/0x2c
->   dump_stack+0xc8/0x124
->   lockdep_rcu_suspicious+0xe4/0x104
->   __tcs_buffer_write+0x230/0x2d0
->   rpmh_rsc_write_ctrl_data+0x210/0x270
->   rpmh_flush+0x84/0x24c
->   rpmh_domain_power_off+0x78/0x98
->   _genpd_power_off+0x40/0xc0
->   genpd_power_off+0x168/0x208
->   genpd_power_off+0x1e0/0x208
->   genpd_power_off+0x1e0/0x208
->   genpd_runtime_suspend+0x1ac/0x220
->   __rpm_callback+0x70/0xfc
->   rpm_callback+0x34/0x8c
->   rpm_suspend+0x218/0x4a4
->   __pm_runtime_suspend+0x88/0xac
->   psci_enter_domain_idle_state+0x3c/0xb4
->   cpuidle_enter_state+0xb8/0x284
->   cpuidle_enter+0x38/0x4c
->   call_cpuidle+0x3c/0x68
->   do_idle+0x194/0x260
->   cpu_startup_entry+0x24/0x28
->   secondary_start_kernel+0x150/0x15c
->
-> Fixes: a65a397f2451 ("cpuidle: psci: Add support for PM domains by using genpd")
-> Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Allocate the time namespace page among VVAR pages and add the logic
+to handle faults on VVAR properly.
 
-Sorry for the delay and many thanks for fixing this!
+If a task belongs to a time namespace then the VVAR page which contains
+the system wide VDSO data is replaced with a namespace specific page
+which has the same layout as the VVAR page. That page has vdso_data->seq
+set to 1 to enforce the slow path and vdso_data->clock_mode set to
+VCLOCK_TIMENS to enforce the time namespace handling path.
 
-> ---
->
-> I think the commit that this is "Fixes"ing is a stable commit, but I'm
-> not positive.
+The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+update of the VDSO data is in progress, is not really affecting regular
+tasks which are not part of a time namespace as the task is spin waiting
+for the update to finish and vdso_data->seq to become even again.
 
-Correct, the commit is in Linus' tree by now.
+If a time namespace task hits that code path, it invokes the corresponding
+time getter function which retrieves the real VVAR page, reads host time
+and then adds the offset for the requested clock which is stored in the
+special VVAR page.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dmitry Safonov <dima@arista.com>
 
-Kind regards
-Uffe
+Andrei Vagin (5):
+  arm64/vdso: use the fault callback to map vvar pages
+  arm64/vdso: Zap vvar pages when switching to a time namespace
+  arm64/vdso: Add time napespace page
+  arm64/vdso: Handle faults on timens page
+  arm64/vdso: Restrict splitting VVAR VMA
 
->
->  drivers/soc/qcom/rpmh-rsc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index e278fc11fe5c..b71822131f59 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -277,7 +277,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
->                 write_tcs_cmd(drv, RSC_DRV_CMD_MSGID, tcs_id, j, msgid);
->                 write_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j, cmd->addr);
->                 write_tcs_cmd(drv, RSC_DRV_CMD_DATA, tcs_id, j, cmd->data);
-> -               trace_rpmh_send_msg(drv, tcs_id, j, msgid, cmd);
-> +               trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
->         }
->
->         write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
-> --
-> Sent by a computer, using git, on the internet
->
+ arch/arm64/Kconfig                            |   1 +
+ .../include/asm/vdso/compat_gettimeofday.h    |  11 ++
+ arch/arm64/include/asm/vdso/gettimeofday.h    |   8 ++
+ arch/arm64/kernel/vdso.c                      | 134 ++++++++++++++++--
+ arch/arm64/kernel/vdso/vdso.lds.S             |   3 +-
+ arch/arm64/kernel/vdso32/vdso.lds.S           |   3 +-
+ include/vdso/datapage.h                       |   1 +
+ 7 files changed, 147 insertions(+), 14 deletions(-)
+
+-- 
+2.24.1
+
