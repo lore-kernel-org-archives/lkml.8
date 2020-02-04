@@ -2,210 +2,160 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E455C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB4C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69ADA2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBAC2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPVZGvXG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZOSE1cm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgBDRW5 (ORCPT
+        id S1727571AbgBDRXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:22:57 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46031 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgBDRW5 (ORCPT
+        Tue, 4 Feb 2020 12:23:01 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33733 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbgBDRW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:22:57 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v19so19199622oic.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:22:57 -0800 (PST)
+        Tue, 4 Feb 2020 12:22:59 -0500
+Received: by mail-pj1-f68.google.com with SMTP id m7so1040878pjs.0;
+        Tue, 04 Feb 2020 09:22:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WdU/+EXQPN08tVx0Omqu46OD1KCs9yfQsxA+mu440FM=;
-        b=iPVZGvXGfBh1inJbO0YdK20ZBCVXEMHeler4kSYegphW0CJQi9jbvx1jt3ZM6SZeKc
-         gaveKKl/tureoe6x+M6AiRoAZozmqns7F4qDGWiMpz6c3pXH2zVUMuC29D0yiU25WZDl
-         eu1YYnT3M3H4Z6xJjLcMN4aYPsG67nl3fmdRSqb7uE9sLm73mvgd4iBkuYklwZsgmrYj
-         74jpk8aPh0d2l5aaWMI+ZxUtdyfA2wqx6FHI/7sD/E9OXeZosZGnca0wL+Vceq8jjACH
-         jtiFp9tgFv0mJOEcTZSpMDoRInQTe6WOjc4kszR6AMDICueVBnEFu6ZidlwOUir+jUNZ
-         7m+w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Hc2O/DJa+SbVtGN5pJ7qoYwZMHQBm+KpbKV1j82QsLo=;
+        b=FZOSE1cm6cxg7GDUk43uErcYeL8r98b5mATYq32pk+E3rMY8r8481VSvVde93h+ecs
+         F7AjkBeWOgCvsMqzLtqKDne8hSkYuHYMHGLw7nLM/OyTQo6+C9Dp1iIIsUWiCw5lSMWf
+         NqjpLv1eVHUItpOI4iDdt6FdRkv6oRjDEfLTU4jXtPI9syWATjHcuqmuriWeGZCI8Y8y
+         4vkjtJqJvjGPQv+J9Rf+wuuxHGVBmwkYGHpuCA9XMXWZRWDZKE/dk1M6ceO/5Rv9YUOV
+         fBp+p6mVUk4C1W3qPpncp+Olr+9M3PecXxO9a8vpIni0DXSiHx/j9UgnqzfShLJq6+ch
+         ER1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WdU/+EXQPN08tVx0Omqu46OD1KCs9yfQsxA+mu440FM=;
-        b=eChj34sNakg/CwHkrFQ0pe2nBeyvzFdlwKP5OrAK4TXveegEKIDfDEdkbALesBWXh3
-         OHUfLb9ivt2wa6XNWuX5Hao80BUQv9+ZelSgcO0NP5EXi483KiwFby54llGsaBbWyOFL
-         kKO1YtxlPXWEUYznaSCJCZqqL6qua0K6O7umO9KJVSwS9VX3V8ZE6ByOHbn84vp5S4SS
-         klbp4xn67oo3nCoO5MKOyIzk0a1gmaAq5yg1Woa7N26tsn8q3aHi41fFtWDWSTQwlVq/
-         gStyz1gYs3lsqBAaVNVh14uuI9kH3eSvNJ4CfsoqxDU97cUUtYZgeaz9sUN82AclL2OS
-         FJVg==
-X-Gm-Message-State: APjAAAWu2CKSTKVmxftRDvz+Jq6xw9MHqu0sBsCZYlYJHEno8gkzopgi
-        LV7RJ22RoE3EmhgxE4j8WHKRY/3WYA/hoF1F3q2bLg==
-X-Google-Smtp-Source: APXvYqzyEsKyqfs6ZO6WD2nc5+12Y9GeYZsNPMQ9Yol06XzyAN5/Aa0BMZywEoEU+Umr4RhueIpAsJ0Kb8ZRC/2KV1w=
-X-Received: by 2002:aca:2112:: with SMTP id 18mr47816oiz.155.1580836976510;
- Tue, 04 Feb 2020 09:22:56 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Hc2O/DJa+SbVtGN5pJ7qoYwZMHQBm+KpbKV1j82QsLo=;
+        b=E6tPQrQwvy5w0VtE9maaUL/b1iUVbZXbkS/va36D+Iihqlx4O1sNqQJqFeXdBZyna7
+         FYg3PVmYB23Cne/IKUtTegOOKTt9jrJo5HYJez/G/CTGzqYT44HhJwo/PWjl76lAUaCi
+         2LuOjzOE6zCrZlJp4NT7K4ICZnxHlMbgc3BrppQO7xsPEZR+s8HmCpwgnJYAB73WzgN2
+         vHtGZ3NrSJDsfUKjTQ4BpwMqC/zPSqfZE/DMOqoxo26otua/fGKnb/5ELZkA8koAhPRk
+         L4RVEqGTVVs1WCuKqyecxQbShZ8a656ETJ4aNj9647TSGEBH3U9CCJ07QSFSlpxFmgy6
+         udow==
+X-Gm-Message-State: APjAAAVFprYoIcFLF6nVVW6+O8fSBycHcOIlgbxelK99qFP+X/WEvlom
+        pQ9jffGbYfMDrhPjWZHxUFJJAXDJ
+X-Google-Smtp-Source: APXvYqy7iG09y8o63IJ5RQklu8YJLenNB0Eekk87qymcm7jhpREh6oKFybD5WWWWusHykXWedpWD/w==
+X-Received: by 2002:a17:902:7e4b:: with SMTP id a11mr30483505pln.61.1580836978921;
+        Tue, 04 Feb 2020 09:22:58 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id s7sm4515747pjk.22.2020.02.04.09.22.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 09:22:58 -0800 (PST)
+Subject: Re: [PATCH v2] skbuff: fix a data race in skb_queue_len()
+To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
+Cc:     kuba@kernel.org, elver@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1580832945-28331-1-git-send-email-cai@lca.pw>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <d73b3f08-a01e-95db-8beb-a11b33d834e8@gmail.com>
+Date:   Tue, 4 Feb 2020 09:22:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200204140353.177797-1-elver@google.com> <CANpmjNMF3LpOUZSKXigxVXaH8imA2O5OvVu4ibPEDhCjwAXk0w@mail.gmail.com>
- <20200204154015.GQ2935@paulmck-ThinkPad-P72>
-In-Reply-To: <20200204154015.GQ2935@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 4 Feb 2020 18:22:45 +0100
-Message-ID: <CANpmjNOeHTMtTPFt1b3bzFanYrtswG-GUZgURaJzchgX7E5psA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] kcsan: Add option to assume plain writes up to word
- size are atomic
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1580832945-28331-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Feb 2020 at 16:40, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Tue, Feb 04, 2020 at 04:28:47PM +0100, Marco Elver wrote:
-> > On Tue, 4 Feb 2020 at 15:04, Marco Elver <elver@google.com> wrote:
-> > >
-> > > This adds option KCSAN_ASSUME_PLAIN_WRITES_ATOMIC. If enabled, plain
-> > > writes up to word size are also assumed to be atomic, and also not
-> > > subject to other unsafe compiler optimizations resulting in data races.
-> >
-> > I just realized we should probably also check for alignedness. Would
-> > this be fair to add as an additional constraint? It would be my
-> > preference.
->
-> Checking for alignment makes a lot of sense to me!  Otherwise, write
-> tearing is expected behavior on some systems.
 
-Sent v2: http://lkml.kernel.org/r/20200204172112.234455-1-elver@google.com
 
-Thanks,
--- Marco
+On 2/4/20 8:15 AM, Qian Cai wrote:
+> sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
+> 
+> 
+> Since only the read is operating as lockless, it could introduce a logic
+> bug in unix_recvq_full() due to the load tearing. Fix it by adding
+> a lockless variant of skb_queue_len() and unix_recvq_full() where
+> READ_ONCE() is on the read while WRITE_ONCE() is on the write similar to
+> the commit d7d16a89350a ("net: add skb_queue_empty_lockless()").
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: add lockless variant helpers and WRITE_ONCE().
+> 
+>  include/linux/skbuff.h | 14 +++++++++++++-
+>  net/unix/af_unix.c     |  9 ++++++++-
+>  2 files changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 3d13a4b717e9..de5eade20e52 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -1822,6 +1822,18 @@ static inline __u32 skb_queue_len(const struct sk_buff_head *list_)
+>  }
+>  
+>  /**
+> + *	skb_queue_len	- get queue length
 
->                                                         Thanx, Paul
->
-> > Thanks,
-> > -- Marco
-> >
-> > > This option has been enabled by default to reflect current kernel-wide
-> > > preferences.
-> > >
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> > > ---
-> > >  kernel/kcsan/core.c | 20 +++++++++++++++-----
-> > >  lib/Kconfig.kcsan   | 26 +++++++++++++++++++-------
-> > >  2 files changed, 34 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> > > index 64b30f7716a12..3bd1bf8d6bfeb 100644
-> > > --- a/kernel/kcsan/core.c
-> > > +++ b/kernel/kcsan/core.c
-> > > @@ -169,10 +169,19 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
-> > >         return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
-> > >  }
-> > >
-> > > -static __always_inline bool is_atomic(const volatile void *ptr)
-> > > +static __always_inline bool
-> > > +is_atomic(const volatile void *ptr, size_t size, int type)
-> > >  {
-> > > -       struct kcsan_ctx *ctx = get_ctx();
-> > > +       struct kcsan_ctx *ctx;
-> > > +
-> > > +       if ((type & KCSAN_ACCESS_ATOMIC) != 0)
-> > > +               return true;
-> > >
-> > > +       if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
-> > > +           (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long))
-> > > +               return true; /* Assume all writes up to word size are atomic. */
-> > > +
-> > > +       ctx = get_ctx();
-> > >         if (unlikely(ctx->atomic_next > 0)) {
-> > >                 /*
-> > >                  * Because we do not have separate contexts for nested
-> > > @@ -193,7 +202,8 @@ static __always_inline bool is_atomic(const volatile void *ptr)
-> > >         return kcsan_is_atomic(ptr);
-> > >  }
-> > >
-> > > -static __always_inline bool should_watch(const volatile void *ptr, int type)
-> > > +static __always_inline bool
-> > > +should_watch(const volatile void *ptr, size_t size, int type)
-> > >  {
-> > >         /*
-> > >          * Never set up watchpoints when memory operations are atomic.
-> > > @@ -202,7 +212,7 @@ static __always_inline bool should_watch(const volatile void *ptr, int type)
-> > >          * should not count towards skipped instructions, and (2) to actually
-> > >          * decrement kcsan_atomic_next for consecutive instruction stream.
-> > >          */
-> > > -       if ((type & KCSAN_ACCESS_ATOMIC) != 0 || is_atomic(ptr))
-> > > +       if (is_atomic(ptr, size, type))
-> > >                 return false;
-> > >
-> > >         if (this_cpu_dec_return(kcsan_skip) >= 0)
-> > > @@ -460,7 +470,7 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
-> > >         if (unlikely(watchpoint != NULL))
-> > >                 kcsan_found_watchpoint(ptr, size, type, watchpoint,
-> > >                                        encoded_watchpoint);
-> > > -       else if (unlikely(should_watch(ptr, type)))
-> > > +       else if (unlikely(should_watch(ptr, size, type)))
-> > >                 kcsan_setup_watchpoint(ptr, size, type);
-> > >  }
-> > >
-> > > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > > index 3552990abcfe5..08972376f0454 100644
-> > > --- a/lib/Kconfig.kcsan
-> > > +++ b/lib/Kconfig.kcsan
-> > > @@ -91,13 +91,13 @@ config KCSAN_REPORT_ONCE_IN_MS
-> > >           limiting reporting to avoid flooding the console with reports.
-> > >           Setting this to 0 disables rate limiting.
-> > >
-> > > -# Note that, while some of the below options could be turned into boot
-> > > -# parameters, to optimize for the common use-case, we avoid this because: (a)
-> > > -# it would impact performance (and we want to avoid static branch for all
-> > > -# {READ,WRITE}_ONCE, atomic_*, bitops, etc.), and (b) complicate the design
-> > > -# without real benefit. The main purpose of the below options is for use in
-> > > -# fuzzer configs to control reported data races, and they are not expected
-> > > -# to be switched frequently by a user.
-> > > +# The main purpose of the below options is to control reported data races (e.g.
-> > > +# in fuzzer configs), and are not expected to be switched frequently by other
-> > > +# users. We could turn some of them into boot parameters, but given they should
-> > > +# not be switched normally, let's keep them here to simplify configuration.
-> > > +#
-> > > +# The defaults below are chosen to be very conservative, and may miss certain
-> > > +# bugs.
-> > >
-> > >  config KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
-> > >         bool "Report races of unknown origin"
-> > > @@ -116,6 +116,18 @@ config KCSAN_REPORT_VALUE_CHANGE_ONLY
-> > >           the data value of the memory location was observed to remain
-> > >           unchanged, do not report the data race.
-> > >
-> > > +config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
-> > > +       bool "Assume that plain writes up to word size are atomic"
-> > > +       default y
-> > > +       help
-> > > +         Assume that plain writes up to word size are atomic by default, and
-> > > +         also not subject to other unsafe compiler optimizations resulting in
-> > > +         data races. This will cause KCSAN to not report data races due to
-> > > +         conflicts where the only plain accesses are writes up to word size:
-> > > +         conflicts between marked reads and plain writes up to word size will
-> > > +         not be reported as data races; notice that data races between two
-> > > +         conflicting plain writes will also not be reported.
-> > > +
-> > >  config KCSAN_IGNORE_ATOMICS
-> > >         bool "Do not instrument marked atomic accesses"
-> > >         help
-> > > --
-> > > 2.25.0.341.g760bfbb309-goog
-> > >
+Please fix to use the exact name.
+
+> + *	@list_: list to measure
+> + *
+> + *	Return the length of an &sk_buff queue.
+> + *	This variant can be used in lockless contexts.
+> + */
+> +static inline __u32 skb_queue_len_lockless(const struct sk_buff_head *list_)
+> +{
+> +	return READ_ONCE(list_->qlen);
+> +}
+> +
+> +/**
+>   *	__skb_queue_head_init - initialize non-spinlock portions of sk_buff_head
+>   *	@list: queue to initialize
+>   *
+> @@ -2026,7 +2038,7 @@ static inline void __skb_unlink(struct sk_buff *skb, struct sk_buff_head *list)
+>  {
+>  	struct sk_buff *next, *prev;
+>  
+> -	list->qlen--;
+> +	WRITE_ONCE(list->qlen, list->qlen - 1);
+>  	next	   = skb->next;
+>  	prev	   = skb->prev;
+>  	skb->next  = skb->prev = NULL;
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 321af97c7bbe..349e7fbfbc67 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -194,6 +194,12 @@ static inline int unix_recvq_full(struct sock const *sk)
+>  	return skb_queue_len(&sk->sk_receive_queue) > sk->sk_max_ack_backlog;
+>  }
+>  
+> +static inline int unix_recvq_full_lockless(struct sock const *sk)
+
+The const attribute is misplaced. It should be :
+
+static inline bool unix_recvq_full_lockless(const struct sock *sk)
+
+> +{
+> +	return skb_queue_len_lockless(&sk->sk_receive_queue) >
+> +		sk->sk_max_ack_backlog;
+
+You probably also need a READ_ONCE() for sk->sk_max_ack_backlog
+
+It is a matter of time before syzbot finds how to trigger the race.
+
+Since you added a nice unix_recvq_full_lockless() helper, lets make it right.
+
+Thanks.
