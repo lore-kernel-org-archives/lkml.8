@@ -2,96 +2,147 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12138C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318FAC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB01321744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034C32082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvogxxIG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GASTvG1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgBDOoB (ORCPT
+        id S1727337AbgBDOoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:44:01 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51123 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBDOoA (ORCPT
+        Tue, 4 Feb 2020 09:44:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39131 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727258AbgBDOoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:44:00 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so1469332pjb.0;
-        Tue, 04 Feb 2020 06:44:00 -0800 (PST)
+        Tue, 4 Feb 2020 09:44:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so3967807wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 06:44:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8n810gaGJvuL2/9scbf9Fe+76HM2g6iAgGCEUyKkt88=;
-        b=HvogxxIGZLajYutQIqHhjSNzgdIWOdt53DrmV6sIFa97n81BzHiHQMzQ4kP/ePA06V
-         SHDbpcwL3TH0Ca7ZQSn0IUSD368G/6seVWzjCirotXdECqKUq6rDWqAq9usPrfp2e7nM
-         w3hWUTW1igTD8tX7qtLTXTZ1yTDeiJV/i57jes1D8k+teYxlIWrm58yMhFK6m6Rsg2j2
-         hA0p07ZNmhqp7SynDYELfXJhpXbUgoYNqt3Ydok3o12WcXvOalvR6rLiaSPcFX00GYUW
-         KThToPYxWFnrF665HgRLHsKyXwUmiPv/gzUNxA7ohlNMPrMAmONihXECPOWVRQLgqKfk
-         ATnA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1IXHtRUMShcVj0I7kyO/iiIdumIO9Jb0cIQ8fggcE/4=;
+        b=GASTvG1JvEAbAvzsvUyAnc3ILW1Gx+26xA3ilwVyNL7T33tvt+Lz5T2gHkQPZXm+kq
+         M1TPCQg4XHeftf3cfLN8TJFcwJsa+OXXLIlgNSpQNM36YUFxwfDnsFfmz7GtEi8tPzYA
+         rlqjkZUaW7PWBT3yBPOPhJheNAmu0zqG5S5P9Eo49PSjSVTv5QF/hqWT+5nXzlw7u8ky
+         EvBF2KfkLmhLnfxJ1wiqTQA6OCdxfx0ADM4CDYsfMGiw443gGHSHkTWTTTUzj5g0GUyq
+         7kZfvBkoMdsBz0BmnkdIGi8R30GNOZpJs+LZXbdwrii7WtNsp6N+s30vOjRbyc6xz05e
+         1skA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8n810gaGJvuL2/9scbf9Fe+76HM2g6iAgGCEUyKkt88=;
-        b=b5bObNLbdePqR34YN2s3ho/G/w411SY77WJztrzLsRP9frAQp9BVRhvbEyfB0GsQ7D
-         nwtLzbOk5miD+95dIj4vIYZal88V6RvWxJEIaxQc2IiwGEugmgPk3SgdRTKjKYNjUxYG
-         meIZYy/hh/id8i1uFoRLxjUz3PJX5kcB6IAB0Vrft5PXrTKOaTOiIBR7y8rqDcHPAS7L
-         fDDJgdpLqppdrQzoThMwU3ynWrHXu1vic0Ug+ENfy9H9RpOETlCtPMXMot7K4qnXjKW9
-         oEKt5EqNc1v0OHtdpbgPu8VSkgWNOBku/M8JTkBP2mdHWt9FsMsAKin1kMG1yjw0xjQi
-         A2RQ==
-X-Gm-Message-State: APjAAAUrQx9pU2U8i4mRhxMDk8uwH8qiKiP5B70lljrAi9GKh125cSLN
-        xut8nh4eKR+vNu7xoG8YJvcR22Fp
-X-Google-Smtp-Source: APXvYqxthy5HpgQTLe7bGeZlbz4t/D9rqFcBLoDbg3oaO7UibdPjMnWH0TfWPdt9HHmk27jaa+7q6w==
-X-Received: by 2002:a17:90a:cc02:: with SMTP id b2mr6565751pju.137.1580827439993;
-        Tue, 04 Feb 2020 06:43:59 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l12sm2860348pgj.16.2020.02.04.06.43.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 06:43:59 -0800 (PST)
-Subject: Re: [PATCH 4.4 00/53] 4.4.213-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200203161902.714326084@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <3bd0423b-478e-d626-88e7-5d62167ee7e0@roeck-us.net>
-Date:   Tue, 4 Feb 2020 06:43:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1IXHtRUMShcVj0I7kyO/iiIdumIO9Jb0cIQ8fggcE/4=;
+        b=KAL7i+Hj0PZGud9687rnFfbef0uW0nV6phaiVpZsTdEx8ImCzxZ196uTBbJk7kOdJ9
+         rnChLvRH8XxkJxMk6wNJdmuUZxz6WOqsq5Wr4Nif0dVgXe7gM+tgLgo/bYAYT1oAvBFS
+         EVEJ1nnbATG0SWANjHDqoi/gTBtufMi5fstDKWr07rcTSpcl2ccG5X9129lTfBq5uUFH
+         9EauspSoz3SFOEYqGvRapTlupuuzhG62bEnGOhn5vkDgM8yWO3wveiIt0UBaacs4RG4f
+         e9da6PWTHei7r/fLy0KZOpd0MCMwyle1/SJhUg0UiIsRCSOxHRXchqdvu23FL8ochpXf
+         ds4A==
+X-Gm-Message-State: APjAAAVJOotSg3KtFzgCkWvhXrwtOPRg8dK5Sw95axm+juEtpkHeIiDz
+        nin3OIuuWTAAt4Vkwf5ugOkV5Q==
+X-Google-Smtp-Source: APXvYqzVi62MG4N9AgDN5RDsH5ZMtz54CCua+ACBsaV+ksCH9ExoaI8R+1bNIuPw67s5CtrWxt1jAQ==
+X-Received: by 2002:a7b:c759:: with SMTP id w25mr6083222wmk.15.1580827456175;
+        Tue, 04 Feb 2020 06:44:16 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id c9sm3962843wmc.47.2020.02.04.06.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 06:44:15 -0800 (PST)
+Date:   Tue, 4 Feb 2020 14:44:15 +0000
+From:   Matthias Maennich <maennich@google.com>
+To:     Quentin Perret <qperret@google.com>
+Cc:     masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        kernel-team@android.com, jeyu@kernel.org
+Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+Message-ID: <20200204144415.GC42496@google.com>
+References: <20200129181541.105335-1-qperret@google.com>
+ <20200131131508.GH102066@google.com>
+ <20200131174055.GA8425@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200131174055.GA8425@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 8:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.213 release.
-> There are 53 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> Anything received after that time might be too late.
-> 
+On Fri, Jan 31, 2020 at 05:40:55PM +0000, Quentin Perret wrote:
+>On Friday 31 Jan 2020 at 13:15:08 (+0000), 'Matthias Maennich' via kernel-team wrote:
+>> On Wed, Jan 29, 2020 at 06:15:41PM +0000, Quentin Perret wrote:
+>> > diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+>> > index a904bf1f5e67..8e1b7f70e800 100755
+>> > --- a/scripts/adjust_autoksyms.sh
+>> > +++ b/scripts/adjust_autoksyms.sh
+>> > @@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
+>> > EOT
+>> > sed 's/ko$/mod/' modules.order |
+>> > xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+>> > +cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+>>
+>> This handles absolute paths very well. I wonder whether we can make this
+>> more useful for folks that want to maintain such a whitelist in their
+>> copy of the tree. Lets say, I have in my sources
+>> arch/x86/configs/x86_64_symbol_whitelist and in my config I have
+>> CONFIG_UNUSED_KSYMS_WHITELIST="arch/x86/configs/x86_64_symbol_whitelist".
+>>
+>> If I see it correctly, UNUSED_KSYMS_WHITELIST is currently either an
+>> absolute path or a relative path to the current build directory. I would
+>> prefer if relative paths would be relative to the source directory to
+>> support the above use case. (Note, that scenario above works if I build
+>> directly in the sources, but fails if I build O=/somewhere/else.)
+>
+>Right, that is an interesting use case. I suppose something like the
+>below should work (with appropriate documentation of the config option).
+>
+>---8<---
+>diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+>index 8e1b7f70e800..d37803fd75ce 100755
+>--- a/scripts/adjust_autoksyms.sh
+>+++ b/scripts/adjust_autoksyms.sh
+>@@ -38,6 +38,12 @@ esac
+> # We need access to CONFIG_ symbols
+> . include/config/auto.conf
+>
+>+ksym_wl="${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}"
+>+# If the path is relative, it must be relative to the source tree
+>+if [ "$ksym_wl" == "${ksym_wl#/}" ]; then
+>+       ksym_wl="$abs_srctree/$ksym_wl"
+>+fi
+>+
+> # Generate a new ksym list file with symbols needed by the current
+> # set of modules.
+> cat > "$new_ksyms_file" << EOT
+>@@ -48,7 +54,7 @@ cat > "$new_ksyms_file" << EOT
+> EOT
+> sed 's/ko$/mod/' modules.order |
+> xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+>-cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+>+cat - "$ksym_wl" |
+> sort -u |
+> sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+>--->8---
+>
+>Thoughts ?
 
-arm:{allmodconfig, omap2plus_defconfig, imx_v6_v7_defconfig}"
+That definitely looks like I would expect that config option to work.
+Thanks for looking into that!
 
-arch/arm/kernel/hyp-stub.S: Assembler messages:
-arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not support `ubfx r7,r7,#16,#4' in ARM mode
+Cheers,
+Matthias
 
-Guenter
+>
+>Thanks,
+>Quentin
