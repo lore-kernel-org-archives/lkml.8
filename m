@@ -2,91 +2,99 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11359C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C7BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D647D20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KVQzzxEw"
+	by mail.kernel.org (Postfix) with ESMTP id C49E220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580817270;
+	bh=kaFMBzxhagSbrYS+zS3O9SbCDL4qry+IIcGowt+UL/w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wWNTWwM+Te/fWpTlXIjUNWuFSrByu8peBw0UJ28TgZB3P+drSQIAedx8OGFNIvCo5
+	 Z0+l6rpo7fcf3RtzHiu0Y2SWY3HAk3Xy//elN2cSmhL8ptk9m0Vq/ZbmATS9z1t3aZ
+	 au9oKKNbwrOUuBnRQLAh1K7RykO+s4GEuutybktM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBDLyC (ORCPT
+        id S1727177AbgBDLy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:54:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51718 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgBDLyC (ORCPT
+        Tue, 4 Feb 2020 06:54:29 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44994 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbgBDLy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:54:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iUu18RYN80bzMMLTjBJu6yIsP2v0nDSnUCJt6N21n6A=; b=KVQzzxEwjH+T/QHWi2sBA9hSk6
-        3YEa05Z7jzH6PZOqAtx4/80TcdwU6pRdSk3UvqNI1dESExgcgU2hjTDEsqQmuyiYsTDnja/tuV3st
-        3RmlufXrmB7hhAKpM0FEgnpJygQRQYRvW4Q4ykMQulQ8ZYF48NxRwKxawmmhDojuEdD4JdRyIcj4N
-        NTx9eVuWxbmDL2N5LFEycSeQT//85aGCNXPB+CK6skMQ9QS3TW3c0S9Rr/w1hATzWkrqaTKAt1dGm
-        Qfa+g7v+keGDGVuq6+CWBBrBPkPQ6g6NLiIKKTPEAHnA3ueQON4a/Cc4uEPOJzhbBBzXoZ2h35PAX
-        qEaDf1Rg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iywm9-00060d-Sw; Tue, 04 Feb 2020 11:53:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D983F30257C;
-        Tue,  4 Feb 2020 12:52:05 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 483C720247145; Tue,  4 Feb 2020 12:53:51 +0100 (CET)
-Date:   Tue, 4 Feb 2020 12:53:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v5 5/6] clone3: allow spawning processes into cgroups
-Message-ID: <20200204115351.GD14879@hirez.programming.kicks-ass.net>
-References: <20200121154844.411-1-christian.brauner@ubuntu.com>
- <20200121154844.411-6-christian.brauner@ubuntu.com>
+        Tue, 4 Feb 2020 06:54:29 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v201so11942818lfa.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 03:54:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yX+ida8pfl0LTkmQBZ8UesmAMvaSo4x+eVGozJlhRbE=;
+        b=Msx1Lk+gS6WK5KpsBIBXAZ6Q+BjDDE6D5RVC5kF4wW7nWes0L0h9qxiZNCWwdTt5Po
+         1uDep+XkjiT7YMZHsV3SVf/SDiOW2mDJCF9LBQDua4wQuOpK5DYKkztX0FV1VyxuNlCz
+         0nulKLN5X+CXcluOmZatBJy0rtpvm9Q2szSCs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yX+ida8pfl0LTkmQBZ8UesmAMvaSo4x+eVGozJlhRbE=;
+        b=OY82Cf1TM8cy0ztMF4/JKzMd4O9a5ik1iH53qK/7K6pHO8Yx3ehgwK+VcD3PBHXwS5
+         RSU54URv1eVcMNstSu4e0c1J/bEsHyv0fSFmGxHAPhOv1DesZxI1Q+9RB2BAbrFMihUI
+         dYfXzRsDrp2gzPFryh4WqcgCZftjtf4EKChUR2f5IliU/ytE0bcUrMUm6n0iJ86vTFkx
+         khAqR8Zm9FXDUrx3yH/w7FFF37YNZayQ7OnQo7fhibWUb4ZoYM+qquDcSZheTi3xQoR2
+         guP2xp/JIKUxnUApy5vAzLo16bK/DqFZZQxuHAGI3KtO0+1Xta7TrYCQJR+Uz1ozPupM
+         GxZA==
+X-Gm-Message-State: APjAAAV1d6X5kj35xF07wCml+0/ZUMOwubySM0dxQE2Sgf+0sSePjLz0
+        s4lMNqc2RtFx7ol65NdXmyH5uKrXt1DvUg==
+X-Google-Smtp-Source: APXvYqxBV8tlpplAD3oit8h967PxNOrJ7rOL1RBwEzyD3YGCQ0w/JBbMBNoN2HavHjG+y4s08sTPzQ==
+X-Received: by 2002:a19:ca59:: with SMTP id h25mr14823818lfj.27.1580817266993;
+        Tue, 04 Feb 2020 03:54:26 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id n23sm10341234lfa.41.2020.02.04.03.54.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 03:54:26 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id v17so18294798ljg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 03:54:25 -0800 (PST)
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr17424595ljb.150.1580817265630;
+ Tue, 04 Feb 2020 03:54:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121154844.411-6-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200204053155.127c3f1e@oasis.local.home>
+In-Reply-To: <20200204053155.127c3f1e@oasis.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 4 Feb 2020 11:54:09 +0000
+X-Gmail-Original-Message-ID: <CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com>
+Message-ID: <CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com>
+Subject: Re: [GIT PULL] tracing: Changes for 5.6
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:48:43PM +0100, Christian Brauner wrote:
-> This adds support for creating a process in a different cgroup than its
-> parent. Callers can limit and account processes and threads right from
-> the moment they are spawned:
-> - A service manager can directly spawn new services into dedicated
->   cgroups.
-> - A process can be directly created in a frozen cgroup and will be
->   frozen as well.
-> - The initial accounting jitter experienced by process supervisors and
->   daemons is eliminated with this.
-> - Threaded applications or even thread implementations can choose to
->   create a specific cgroup layout where each thread is spawned
->   directly into a dedicated cgroup.
-> 
-> This feature is limited to the unified hierarchy. Callers need to pass
-> an directory file descriptor for the target cgroup. The caller can
-> choose to pass an O_PATH file descriptor. All usual migration
-> restrictions apply, i.e. there can be no processes in inner nodes. In
-> general, creating a process directly in a target cgroup adheres to all
-> migration restrictions.
+On Tue, Feb 4, 2020 at 10:32 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+>  - Added new "bootconfig".
+>    Looks for a file appended to initrd to add boot config options.
+>    This has been discussed thoroughly at Linux Plumbers.
+>    Very useful for adding kprobes at bootup.
 
-AFAICT, he *big* win here is avoiding the write side of the
-cgroup_threadgroup_rwsem. Or am I mis-reading the patch?
+Is there a way to disable this from the "real" kernel command line?
 
-That global lock is what makes moving tasks/threads around super
-expensive, avoiding that by use of this clone() variant wins the day.
+If I have problems, I want to boot with a known kernel command line
+(forcing text mode etc). If the bootconfig file always gets parsed,
+there's no way to do that from the bootloader (grub2, whatever)..
+
+              Linus
