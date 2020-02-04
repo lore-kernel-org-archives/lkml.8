@@ -2,166 +2,101 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21DDC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B078FC3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A150D20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:12:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QmGatZo5"
+	by mail.kernel.org (Postfix) with ESMTP id 7E20221741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBDTMT (ORCPT
+        id S1727555AbgBDTMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:12:19 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33286 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727472AbgBDTML (ORCPT
+        Tue, 4 Feb 2020 14:12:25 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59428 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727472AbgBDTMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:12:11 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so10152902pgk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:12:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JKvmDVxy4kPptOpluOnd5nqz5ne1kgTAiZGcRHMD2xY=;
-        b=QmGatZo5AQKdw6iZM42/iQS0txhM5VJ5AYIV8UJ5EbGC9dvfkvXbhi2eVzuLMgzpBs
-         CiSfriVsIon2gXxo7M5jGGR4OGCNVjD1GXQblCO/j75M/Y+Ws4N2IgsgHI5YnmMSdMUh
-         djgCMpR1gGqYHdAJmsn443KVZ5seHJAqNeIGQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JKvmDVxy4kPptOpluOnd5nqz5ne1kgTAiZGcRHMD2xY=;
-        b=NSePr2mF5vQfyWRuUW5s3WQ3/5+isC7BOyPG4dQofoj2nGDnxF7uuUB4wmn2lHDVHZ
-         RRTmMAS0li9W9UL5hBFKg+4vwdYFTyhIB12jTBBTAne2PRL+U+zrSvn29p6pTB5h41L9
-         ZOc/W7J1raGxGG1ncSqZFh5iNy8iWMp6VvcxwwGZpLNS0bzFAudyIJiMgmXWbozRuEw7
-         OOJCZTYhEMC1aZi/GmUyCuFe7QGMO4ktSniNNXa1KFH9CsKua3ruxXaeJMSd8J7z2uHC
-         dwVMmBEPjAumBZ7297FzTNFOTjbTghVZczNzNJdX7oRJQ/ZdjuDRlZnJnORbhTaMTRi7
-         uw8A==
-X-Gm-Message-State: APjAAAX6iSDoqdSHCBVhSckXUXWoChWgo/RmScBhijNKSHmngkAkoJBx
-        BG8lZFcD+CZEywFyW+X3U9SEnQ==
-X-Google-Smtp-Source: APXvYqz5B0ISUvpmRlOc0CrD+73NFBAB7FlJ/G8hV7kP45lvHFY/1iFcUNwsOP96zSI3zH6JLNf3oA==
-X-Received: by 2002:aa7:8f3d:: with SMTP id y29mr33560076pfr.183.1580843529848;
-        Tue, 04 Feb 2020 11:12:09 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c19sm26303229pfc.144.2020.02.04.11.12.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 11:12:09 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-spi@vger.kernel.org,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/3] spi: spi-geni-qcom: Grow a dev pointer to simplify code
-Date:   Tue,  4 Feb 2020 11:12:05 -0800
-Message-Id: <20200204191206.97036-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200204191206.97036-1-swboyd@chromium.org>
-References: <20200204191206.97036-1-swboyd@chromium.org>
+        Tue, 4 Feb 2020 14:12:24 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 954011C013F; Tue,  4 Feb 2020 20:12:22 +0100 (CET)
+Date:   Tue, 4 Feb 2020 20:12:21 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jason Anderson <jasona.594@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 38/70] platform/x86: GPD pocket fan: Allow somewhat
+ lower/higher temperature limits
+Message-ID: <20200204191221.GA19410@amd>
+References: <20200203161912.158976871@linuxfoundation.org>
+ <20200203161917.952945455@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
+Content-Disposition: inline
+In-Reply-To: <20200203161917.952945455@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some lines are long here. Use a struct dev pointer to shorten lines and
-simplify code. The clk_get() call can fail because of EPROBE_DEFER
-problems too, so just remove the error print message because it isn't
-useful.
 
-Cc: Girish Mahadevan <girishm@codeaurora.org>
-Cc: Dilip Kota <dkota@codeaurora.org>
-Cc: Alok Chauhan <alokc@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/spi/spi-geni-qcom.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 46e501fc87f3..f0ca7f5ae714 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -536,6 +536,7 @@ static int spi_geni_probe(struct platform_device *pdev)
- 	struct spi_geni_master *mas;
- 	void __iomem *base;
- 	struct clk *clk;
-+	struct device *dev = &pdev->dev;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-@@ -545,28 +546,25 @@ static int spi_geni_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	clk = devm_clk_get(&pdev->dev, "se");
--	if (IS_ERR(clk)) {
--		dev_err(&pdev->dev, "Err getting SE Core clk %ld\n",
--						PTR_ERR(clk));
-+	clk = devm_clk_get(dev, "se");
-+	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
--	}
- 
--	spi = spi_alloc_master(&pdev->dev, sizeof(*mas));
-+	spi = spi_alloc_master(dev, sizeof(*mas));
- 	if (!spi)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, spi);
- 	mas = spi_master_get_devdata(spi);
- 	mas->irq = irq;
--	mas->dev = &pdev->dev;
--	mas->se.dev = &pdev->dev;
--	mas->se.wrapper = dev_get_drvdata(pdev->dev.parent);
-+	mas->dev = dev;
-+	mas->se.dev = dev;
-+	mas->se.wrapper = dev_get_drvdata(dev->parent);
- 	mas->se.base = base;
- 	mas->se.clk = clk;
- 
- 	spi->bus_num = -1;
--	spi->dev.of_node = pdev->dev.of_node;
-+	spi->dev.of_node = dev->of_node;
- 	spi->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LOOP | SPI_CS_HIGH;
- 	spi->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
- 	spi->num_chipselect = 4;
-@@ -579,13 +577,13 @@ static int spi_geni_probe(struct platform_device *pdev)
- 
- 	init_completion(&mas->xfer_done);
- 	spin_lock_init(&mas->lock);
--	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_enable(dev);
- 
- 	ret = spi_geni_init(mas);
- 	if (ret)
- 		goto spi_geni_probe_runtime_disable;
- 
--	ret = request_irq(mas->irq, geni_spi_isr, 0, dev_name(&pdev->dev), spi);
-+	ret = request_irq(mas->irq, geni_spi_isr, 0, dev_name(dev), spi);
- 	if (ret)
- 		goto spi_geni_probe_runtime_disable;
- 
-@@ -597,7 +595,7 @@ static int spi_geni_probe(struct platform_device *pdev)
- spi_geni_probe_free_irq:
- 	free_irq(mas->irq, spi);
- spi_geni_probe_runtime_disable:
--	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_disable(dev);
- 	spi_master_put(spi);
- 	return ret;
- }
--- 
-Sent by a computer, using git, on the internet
+Hi!
 
+> From: Hans de Goede <hdegoede@redhat.com>
+>=20
+> [ Upstream commit 1f27dbd8265dbb379926c8f6a4453fe7fe26d7a3 ]
+>=20
+> Allow the user to configure the fan to turn on / speed-up at lower
+> thresholds then before (20 degrees Celcius as minimum instead of 40) and
+> likewise also allow the user to delay the fan speeding-up till the
+> temperature hits 90 degrees Celcius (was 70).
+
+I see it does not break anything, but I don't quite see it as a stable
+material.
+
+That said... does lower limit make sense? Spinning fans 10C might be
+interesting but not wrong.
+
+Anyway, dev_err() text is now outdated.
+
+Best regards,
+								Pavel
+
+>  	for (i =3D 0; i < ARRAY_SIZE(temp_limits); i++) {
+> -		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
+> +		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+>  			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and=
+ 70000)\n",
+>  				temp_limits[i]);
+>  			temp_limits[0] =3D TEMP_LIMIT0_DEFAULT;
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--17pEHd4RhPHOinZp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl45whUACgkQMOfwapXb+vKlaQCgthMtI4VpqP9aDyCw0KBAI+6V
+WhgAoI+V/p2EY/e+PWCDPHPJNhp/jlf1
+=nEj6
+-----END PGP SIGNATURE-----
+
+--17pEHd4RhPHOinZp--
