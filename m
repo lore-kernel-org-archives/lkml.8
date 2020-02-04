@@ -2,190 +2,219 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4607CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D65C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3A62087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F58221741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="muEMdnhD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u5lJU7Jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgBDJTc (ORCPT
+        id S1726923AbgBDJUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:19:32 -0500
-Received: from mga17.intel.com ([192.55.52.151]:38997 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgBDJTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:19:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 01:19:31 -0800
-X-IronPort-AV: E=Sophos;i="5.70,401,1574150400"; 
-   d="scan'208";a="224235165"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.164]) ([10.255.30.164])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Feb 2020 01:19:28 -0800
-Subject: Re: [PATCH v2 5/6] kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@aculab.com>
-References: <20200203151608.28053-1-xiaoyao.li@intel.com>
- <20200203151608.28053-6-xiaoyao.li@intel.com>
- <20200203214300.GI19638@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <829bd606-6852-121f-0d95-e9f1d35a3dde@intel.com>
-Date:   Tue, 4 Feb 2020 17:19:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 4 Feb 2020 04:20:00 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50471 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726554AbgBDJUA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:20:00 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 59B186B76;
+        Tue,  4 Feb 2020 04:19:58 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 04 Feb 2020 04:19:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=x4lyZnW5C94NfX9C1zEMyUaspjy
+        lIhh7aPoztF74m5c=; b=muEMdnhDQ+bTk2YEyzZPghqhY3VJVq5qOVd8NnIvzo1
+        1v0IUNwdPCmJrVxK4WqQ5vtpIrt1E9kZsULc+Zr+bOGEqUFmyAdV1hYxSWJjPaE3
+        w1XHJ6foSS5FEMzJmvjcA976KdZgtrojUYwEaQFrcQFIOC4dcW80Lu0WxVDIWaXa
+        iyI2pcKSVAOLniHLLXWpGlW+dYPaNa5qDhA4eSdH7E7flgJGhwgBfYJSAugnDqbx
+        vIb7z0TpyEZf0hZsxMWWi4y6fOUHjyu2l1DhIg6xx0hZs8WTVQ9M0U//hlKqSN6S
+        1TJqdYxlB4rm/UiOHJ/p4L2M9/peZfb2PNUhHNR/+Xg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=x4lyZn
+        W5C94NfX9C1zEMyUaspjylIhh7aPoztF74m5c=; b=u5lJU7JhJcrZtKQRcmrAxA
+        /UyFU3w5EzuqZMvB9hxipXPXzRfWzPS/r3Wi1tW1G5Z8YSZTw/KyLJYyf3ajPbN2
+        EuR4QNVmD7/v2yMJQ3I6HjjmVCt1XC5kK/J648RTACqi+NJYa6AVPqJdwONP7QuK
+        YPmnM0kfSO78B9wIXclXWCkFEfOBqGZufvg9tgpUyLQc/ozwUYAd1c/P7/d0Ayth
+        LmUb4X3Bfqbv/TlNP+CH/89XT9goaFCXKWYPXUhS6jza57BwjoSc2lltzaeYzCDd
+        ok3MQsvHEKLZsy5kyTh/8irPfU4HZXNTo8828fiz2YKcFp/pDXejgAWQdVZgykQQ
+        ==
+X-ME-Sender: <xms:PDc5Xq02AxCfAFgRtkb6tRwZf7wGEE4687_w6Jd0HIGFjgJ9JPV1Rw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeelgddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:PDc5XgBMh_8nOAw7B3cMzQtSqeGyhnSgBAW3H_IlmWPVBOOvNAto3w>
+    <xmx:PDc5XnEn5YITSLPoIMnnYQCTJg4jAa9CnAqF8fGaU5I66PVuhevoIQ>
+    <xmx:PDc5XpDU3Rb5S3xbjgDiZtaG4g53ogju3QEQ9-Ln-AjfyNTg-lR8sw>
+    <xmx:Pjc5XiAaywj81i7AfV_Z1EYGEoOIiLSRyq4fC7xZQolWtPR-10Qsvw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 86DDC328005A;
+        Tue,  4 Feb 2020 04:19:56 -0500 (EST)
+Date:   Tue, 4 Feb 2020 10:19:54 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sugaya Taichi <sugaya.taichi@socionext.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH 11/12] dt-bindings: arm: Document Broadcom SoCs
+ 'secondary-boot-reg'
+Message-ID: <20200204091954.4zdxow4ijqnmvbdj@gilmour.lan>
+References: <20200202211827.27682-1-f.fainelli@gmail.com>
+ <20200202211827.27682-12-f.fainelli@gmail.com>
+ <20200203083403.6wmuduxqsv7quujp@gilmour.lan>
+ <2744136e-a6e7-de19-4142-04f7edf0c6ea@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200203214300.GI19638@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vg5cqlhr5mk6q6uh"
+Content-Disposition: inline
+In-Reply-To: <2744136e-a6e7-de19-4142-04f7edf0c6ea@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/2020 5:43 AM, Sean Christopherson wrote:
-> On Mon, Feb 03, 2020 at 11:16:07PM +0800, Xiaoyao Li wrote:
->> Emulate MSR_IA32_CORE_CAPABILITIES in software and unconditionally
->> advertise its support to userspace. Like MSR_IA32_ARCH_CAPABILITIES, it
->> is a feature-enumerating MSR and can be fully emulated regardless of
->> hardware support. Existence of CORE_CAPABILITIES is enumerated via
->> CPUID.(EAX=7H,ECX=0):EDX[30].
->>
->> Note, support for individual features enumerated via CORE_CAPABILITIES,
->> e.g., split lock detection, will be added in future patches.
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/include/asm/kvm_host.h |  1 +
->>   arch/x86/kvm/cpuid.c            |  5 +++--
->>   arch/x86/kvm/x86.c              | 22 ++++++++++++++++++++++
->>   3 files changed, 26 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index 329d01c689b7..dc231240102f 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -591,6 +591,7 @@ struct kvm_vcpu_arch {
->>   	u64 ia32_xss;
->>   	u64 microcode_version;
->>   	u64 arch_capabilities;
->> +	u64 core_capabilities;
->>   
->>   	/*
->>   	 * Paging state of the vcpu
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index b1c469446b07..7282d04f3a6b 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -409,10 +409,11 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
->>   		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
->>   			entry->edx |= F(SPEC_CTRL_SSBD);
->>   		/*
->> -		 * We emulate ARCH_CAPABILITIES in software even
->> -		 * if the host doesn't support it.
->> +		 * ARCH_CAPABILITIES and CORE_CAPABILITIES are emulated in
->> +		 * software regardless of host support.
->>   		 */
->>   		entry->edx |= F(ARCH_CAPABILITIES);
->> +		entry->edx |= F(CORE_CAPABILITIES);
->>   		break;
->>   	case 1:
->>   		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 821b7404c0fd..a97a8f5dd1df 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -1222,6 +1222,7 @@ static const u32 emulated_msrs_all[] = {
->>   	MSR_IA32_TSC_ADJUST,
->>   	MSR_IA32_TSCDEADLINE,
->>   	MSR_IA32_ARCH_CAPABILITIES,
->> +	MSR_IA32_CORE_CAPS,
->>   	MSR_IA32_MISC_ENABLE,
->>   	MSR_IA32_MCG_STATUS,
->>   	MSR_IA32_MCG_CTL,
->> @@ -1288,6 +1289,7 @@ static const u32 msr_based_features_all[] = {
->>   	MSR_F10H_DECFG,
->>   	MSR_IA32_UCODE_REV,
->>   	MSR_IA32_ARCH_CAPABILITIES,
->> +	MSR_IA32_CORE_CAPS,
->>   };
->>   
->>   static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all)];
->> @@ -1341,12 +1343,20 @@ static u64 kvm_get_arch_capabilities(void)
->>   	return data;
->>   }
->>   
->> +static u64 kvm_get_core_capabilities(void)
->> +{
->> +	return 0;
->> +}
->> +
->>   static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
->>   {
->>   	switch (msr->index) {
->>   	case MSR_IA32_ARCH_CAPABILITIES:
->>   		msr->data = kvm_get_arch_capabilities();
->>   		break;
->> +	case MSR_IA32_CORE_CAPS:
->> +		msr->data = kvm_get_core_capabilities();
->> +		break;
->>   	case MSR_IA32_UCODE_REV:
->>   		rdmsrl_safe(msr->index, &msr->data);
->>   		break;
->> @@ -2716,6 +2726,11 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   			return 1;
->>   		vcpu->arch.arch_capabilities = data;
->>   		break;
->> +	case MSR_IA32_CORE_CAPS:
->> +		if (!msr_info->host_initiated)
-> 
-> Shouldn't @data be checked against kvm_get_core_capabilities()?
 
-Maybe it's for the case that userspace might have the ability to emulate 
-SLD feature? And we usually let userspace set whatever it wants, e.g., 
-ARCH_CAPABILITIES.
+--vg5cqlhr5mk6q6uh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Anyway, I have no objection to add this check.
+On Mon, Feb 03, 2020 at 09:29:30PM -0800, Florian Fainelli wrote:
+>
+>
+> On 2/3/2020 12:34 AM, Maxime Ripard wrote:
+> > On Sun, Feb 02, 2020 at 01:18:26PM -0800, Florian Fainelli wrote:
+> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> index c23c24ff7575..6f56a623c1cd 100644
+> >> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> @@ -272,6 +272,22 @@ properties:
+> >>        While optional, it is the preferred way to get access to
+> >>        the cpu-core power-domains.
+> >>
+> >> +  secondary-boot-reg:
+> >> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> >> +    description: |
+> >> +      Required for systems that have an "enable-method" property value of
+> >> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
+> >> +
+> >> +      This includes the following SoCs: |
+> >> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
+> >> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
+> >> +
+> >> +      The secondary-boot-reg property is a u32 value that specifies the
+> >> +      physical address of the register used to request the ROM holding pen
+> >> +      code release a secondary CPU. The value written to the register is
+> >> +      formed by encoding the target CPU id into the low bits of the
+> >> +      physical start address it should jump to.
+> >> +
+> >
+> > You can make the requirement explicit (and enforced by the schemas) using:
+> >
+> > if:
+> >   properties:
+> >     enable-method:
+> >       contains:
+> >         enum:
+> > 	  - brcm,bcm11351-cpu-method
+> > 	  - brcm,bcm23550
+> > 	  - brcm,bcm-nsp-smp
+> >
+> > then:
+> >   required:
+> >     - secondary-boot-reg
+>
+> Thanks! That was exactly what I was looking for, it seems to be matching
+> a bit too greedily though:
+>
+>   DTC     arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml
+>   CHECK   arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@0: 'secondary-boot-reg' is a required property
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@1: 'secondary-boot-reg' is a required property
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@2: 'secondary-boot-reg' is a required property
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@3: 'secondary-boot-reg' is a required property
+>   DTC     arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dt.yaml
+>
+> not sure why though as your example appears correct.
 
->> +			return 1;
->> +		vcpu->arch.core_capabilities = data;
->> +		break;
->>   	case MSR_EFER:
->>   		return set_efer(vcpu, msr_info);
->>   	case MSR_K7_HWCR:
->> @@ -3044,6 +3059,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   			return 1;
->>   		msr_info->data = vcpu->arch.arch_capabilities;
->>   		break;
->> +	case MSR_IA32_CORE_CAPS:
->> +		if (!msr_info->host_initiated &&
->> +		    !guest_cpuid_has(vcpu, X86_FEATURE_CORE_CAPABILITIES))
->> +			return 1;
->> +		msr_info->data = vcpu->arch.core_capabilities;
->> +		break;
->>   	case MSR_IA32_POWER_CTL:
->>   		msr_info->data = vcpu->arch.msr_ia32_power_ctl;
->>   		break;
->> @@ -9288,6 +9309,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->>   		goto free_guest_fpu;
->>   
->>   	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
->> +	vcpu->arch.core_capabilities = kvm_get_core_capabilities();
->>   	vcpu->arch.msr_platform_info = MSR_PLATFORM_INFO_CPUID_FAULT;
->>   	kvm_vcpu_mtrr_init(vcpu);
->>   	vcpu_load(vcpu);
->> -- 
->> 2.23.0
->>
+Yeah, sorry, that's on me :)
 
+The nodes that are generating this error are the cpu@[0-3] ones, and
+they don't have the enable-method property at all.
+
+This is because if needs a schema, and will only try to validate the
+schema under then if the one under if is valid.
+
+The one under if contains a list of values for enable-method, but in
+the case where enable-method is absent, the schema will be valid, and
+thus the schema under then will be applied.
+
+What we actually want to express is "if there's an enable-method
+property, and that property contains those three values, then you need
+to have a secondary-boot-reg property."
+
+So you need:
+
+if:
+  # If the enable-method property contains one of those values
+  properties:
+    enable-method:
+      contains:
+        enum:
+          - brcm,bcm11351-cpu-method
+          - brcm,bcm23550
+          - brcm,bcm-nsp-smp
+
+  # and if enable method is present
+  required:
+    - enable-method
+
+# Then we need secondary-boot-reg too
+then:
+  required:
+    - secondary-boot-reg
+
+Maxime
+
+--vg5cqlhr5mk6q6uh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjk3NQAKCRDj7w1vZxhR
+xUJqAP9PY/enY2j1VQJ01XYs+KegUxo9BgTuq8dCybDPrips1QEArb4oFWY9TC8/
+z/m1a1AkxlYIO28zaAO8oofwiueDjAQ=
+=AiEU
+-----END PGP SIGNATURE-----
+
+--vg5cqlhr5mk6q6uh--
