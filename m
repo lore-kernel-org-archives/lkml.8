@@ -2,82 +2,109 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB54C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC95EC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BC32084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:55:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="keuTsSrK"
+	by mail.kernel.org (Postfix) with ESMTP id 7728521582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580831865;
+	bh=g8HMHr9zNb7pwPbXgTl3NCZrwNVAu/yZtqlC5lUflyM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=gVHGYUOvikJral1WP+SEVankKUK9+MDn0IMMJtmGuPvT7a0GTseRvxOPH1K8qmN0f
+	 qTaT7++Dj63HFEc1DO44Fb8mHtqw3xqD4E24TTjQ9POtg9LgJxaVq++KGt2RmYpv8A
+	 GbYENZ9yY6TK0y2kMOZsvK+qOWXQV7xaB7dSlncU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgBDPzJ (ORCPT
+        id S1727369AbgBDP5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:55:09 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36063 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbgBDPzI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:55:08 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so19166336ljg.3;
-        Tue, 04 Feb 2020 07:55:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JZwaZAs4VPg+MZljM+SS0kMupA1fP3M0vka2FZtHyUs=;
-        b=keuTsSrKE/2sGEZ/mCNFBtfA5/nM187MrzUuQuHvBMmn2K8XCXRwbE4Qd/r2UMIFFV
-         h3JnXWcGCpHrRZwHIqf0ethN27sLiVG1o9ZYsC26dJpmv/z8C/RL9eXARiuUvm+/2p5V
-         8oMMC4Munw/6fj9RtsfimU/AzN8AvGQ9BdGRhWzJLJQjbpSzCLLQeT2nF7gUfdl25TXY
-         z2pBxogs5PUSvzyLaTZudiH75HrxrB+rUZXm3MFl8tFHa+Okjfcugglb1V2jXhPKKtA5
-         tR//mSQjS0Z3wXRffaKwje4oWDEZQFJtc4pFHM+GRYHN3bVX2nwF4SZANs2/s9z7A4MP
-         ay1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JZwaZAs4VPg+MZljM+SS0kMupA1fP3M0vka2FZtHyUs=;
-        b=eOygJrkwboHkKPfu+9anbZXpXi2D5A/VFWp8OMt2d7eK7XMDFquTKllc6jqjgVeWZj
-         YKJwSX2zFIG/MaDwOzSka/APNVEg2rWNSuW/8SHpxIU10UC7+eGW4rpSj40IzsuPK6lW
-         viaTlPqW4ky9c4b1/CP4sBmwy8zxF8vwwlO/ymNucpw+cK+HTUE/Sl3RZvJ2BL7//89R
-         4t65P8C1mCqiYnM+P5ezo2aFPuY771wUdef/P98WmbRe00PDfWQdqpdZqtGtdz0X7Fkd
-         VfAmQNshuq0aNdtqRjrLLEDm4LjE8oEvUyePcrLT78g7CfU+ln1DTCiI4FealRK3FqiM
-         mp8w==
-X-Gm-Message-State: APjAAAVfSGOyTc1X0jhQu0cYyPs+WfT4TGCOs4HdQb+K0vUpm3CpzdVa
-        +X8BDvt5w3b17iO9It9YAo/qooy5
-X-Google-Smtp-Source: APXvYqz9EywivV4SrY2+zghH9X/t0s+7ktKmSSPeAg5hYqrzXzJR9qDy2sP9teMcgdHvAfU0z97esg==
-X-Received: by 2002:a2e:9708:: with SMTP id r8mr17980763lji.92.1580831705084;
-        Tue, 04 Feb 2020 07:55:05 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 126sm10695751lfm.38.2020.02.04.07.55.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 07:55:04 -0800 (PST)
-Subject: Re: [PATCH v7 13/19] dmaengine: tegra-apb: Don't stop cyclic DMA in a
- case of error condition
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200202222854.18409-1-digetx@gmail.com>
- <20200202222854.18409-14-digetx@gmail.com>
- <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ad86f2a4-6fa0-7958-aad7-1b18f02cabfe@gmail.com>
-Date:   Tue, 4 Feb 2020 18:55:03 +0300
+        Tue, 4 Feb 2020 10:57:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727297AbgBDP5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:57:44 -0500
+Received: from [192.168.1.32] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D8C2084E;
+        Tue,  4 Feb 2020 15:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580831863;
+        bh=g8HMHr9zNb7pwPbXgTl3NCZrwNVAu/yZtqlC5lUflyM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ed48RRYJBvc6dXMeKafRE6EQlt2V0XIfLCQFPzuEI6uGNs708ba6Dyx2HzowTy99+
+         PIbz5V6c9lQf2BzQJnw8X/fYdMHaR+fmqKMMDwa/vvPwR2Urd8Di5ZkSpuytboh9EJ
+         07pylRJ8Ntx8KnDa2O6azfsDdtABD+/TzcnhH8d0=
+Subject: Re: [PATCH v8 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>,
+        Tien-Fong Chee <tien.fong.chee@intel.com>,
+        Marek Vasut <marex@denx.de>
+Cc:     Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>,
+        linux-spi@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200129072455.35807-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200129072455.35807-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qszwQ5sJw4G_fM5vKjYu24xs03CuW371gyFE4G0hNJHdXw@mail.gmail.com>
+ <abaae0fa-c2b8-bbe0-b64d-0ee4c95c1479@linux.intel.com>
+ <CAAh8qsxRPx8KDyqvp=8zcrGCE82YJ_9O9cJXrgKdH7VwXeGQgg@mail.gmail.com>
+ <0f079cf6-c146-8941-5bdd-f978ff3455ab@linux.intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d938fcc6-3e9b-2b5d-bf6c-1de7c8649798@kernel.org>
+Date:   Tue, 4 Feb 2020 09:57:40 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
+In-Reply-To: <0f079cf6-c146-8941-5bdd-f978ff3455ab@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -86,58 +113,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.02.2020 15:02, Jon Hunter пишет:
+Hi
+
+On 1/29/20 9:41 PM, Ramuthevar, Vadivel MuruganX wrote:
+> Hi Simon,
 > 
-> On 02/02/2020 22:28, Dmitry Osipenko wrote:
->> There is no harm in keeping DMA active in the case of error condition,
->> which should never happen in practice anyways. This will become useful
->> for the next patch, which will keep RPM enabled only during of DMA
->> transfer, and thus, it will be much nicer if cyclic DMA handler could
->> not touch the DMA-enable state.
+> On 29/1/2020 8:01 PM, Simon Goldschmidt wrote:
+>> + some people possibly interested in this for the Altera platforms
+>> (see below)
 >>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/dma/tegra20-apb-dma.c | 9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
+>> Hi all,
 >>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index c7dc27ef1856..50abce608318 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -571,9 +571,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
->>  	 */
->>  	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
->>  	if (!hsgreq->configured) {
->> -		tegra_dma_stop(tdc);
->> -		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
->> -		tegra_dma_abort_all(tdc);
->> +		dev_err_ratelimited(tdc2dev(tdc), "Error in DMA transfer\n");
+>> This is about moving the cadence qspi driver (which is used on TI,
+>> Altera FPGAs
+>> and a new Intel SoC) to spi-mem.Vadivel asked me to include some
+>> Altera people
+>> in the loop (see below), as this is the only platform currently untested,
+>> I think.
+>>
+>> Right now, I'm not in the position to test this myself as we're
+>> currently stuck
+>> on an older RT kernel, so I cannot test with HEAD.
+>>
+>> Feel free to involve other Intel/Altera if you're interested in that
+>> peripheral
+>> not being broke for socfpga in one of the next releases :-)
+>>
+>> On Wed, Jan 29, 2020 at 10:18 AM Ramuthevar, Vadivel MuruganX
+>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>> Hi,
+>>>
+>>>    Thank you for the query and confirmation.
+>>>
+>>> On 29/1/2020 4:31 PM, Simon Goldschmidt wrote:
+>>>
+>>> On Wed, Jan 29, 2020 at 8:25 AM Ramuthevar,Vadivel MuruganX
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>
+>>> From: Ramuthevar Vadivel Murugan
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>
+>>> Add support for the Cadence QSPI controller. This controller is
+>>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+>>> This driver has been tested on the Intel LGM SoCs.
+>>>
+>>> So it has been tested on LGM and Vignesh gave his ok for TI. Is there
+>>> anyone
+>>> in the loop by now checking that this is valid for the 3rd platform
+>>> using this
+>>> (Altera)?
+>>>
+>>> Or am I wrong in thinking that this driver is meant to replace
+>>> drivers/mtd/spi-nor/cadence-quadspi.c used on that platform?
+>>>
+>>> Absolutely , You are right, this driver is meant to replace to
+>>> drivers/mtd/spi-nor/cadence-quadspi.c
+>>> for Intel, TI and Altera SoC's using Cadence-QSPI IP.
+>>>
+>>> Meanwhile we have adapted to spi-mem framework (to support
+>>> spi-nor/nand)and also didn't change the existing
+>>> functionalities of spi-nor flash operations like
+>>> hw_init/read/write/erase in drivers/mtd/spi-nor/cadence-quadspi.c,
+>>> so it works fine (might be in Altera as well).
+>>>
+>>> Already I checked that Graham Moore <grmoore@opensource.altera.com>
+>>> who has submitted the existing driver patches to upstream,
+>>> His mail-id is bouncing back, then I decided that you are the right
+>>> person to ask, could you please add them in loop if you know the team
+>>> (socfpga platform engineers).
+
+Thanks for including Graham, but he's moved on to a different career
+that no longer includes Linux.
+
+>> OK, done that. I mainly know them from U-Boot development, so I'm not
+>> sure
+>> who's responsible for the Linux drivers...
+> Thank you for adding the team and respective members, let's see.
 > 
-> While we are at it, a more descriptive error message could be good here.
-> I believe that this condition would indicate a potential underrun condition.
 
-Yes, this error indicates the underrun and indeed the error message
-could be improved. I'll change it in v8.
+I don't have the original patch series, but will monitor going forward.
+As long as the new driver does not break legacy SoCFPGA products that
+use the cadence-quadspi driver then it should be ok.
 
->>  		return false;
->>  	}
->>  
->> @@ -772,7 +770,10 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>  	if (!list_empty(&tdc->pending_sg_req) && was_busy) {
->>  		sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq),
->>  					 node);
->> -		sgreq->dma_desc->bytes_transferred +=
->> +		dma_desc = sgreq->dma_desc;
->> +
->> +		if (dma_desc->dma_status != DMA_ERROR)
->> +			dma_desc->bytes_transferred +=
->>  				get_current_xferred_count(tdc, sgreq, wcount);
-> 
-> I am wondering if we need to check this here? I assume that the transfer
-> count would still reflect the amount of data transferred, even if some
-> was dropped. We will never know how much data was lost.
-
-I'm wondering too.. stopping DMA in a error case removes this ambiguity
-and that's why in my previous answer to v6 I suggested to drop this patch.
-
-Do you think it's worth to keep this patch?
+Dinh
