@@ -2,117 +2,86 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83751C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F91C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BB72084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:19:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="R3YSkdAC"
+	by mail.kernel.org (Postfix) with ESMTP id EE43720730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgBDOTt (ORCPT
+        id S1727290AbgBDOXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:19:49 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38587 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbgBDOTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:19:49 -0500
-Received: by mail-il1-f196.google.com with SMTP id f5so15992187ilq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 06:19:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4NlxEaC0CdDvRmfmIJOSEJmWKwzQJ80B9aXkZjJVyL8=;
-        b=R3YSkdACMblNudrIIr49OI3al1MMBN9pmhJpPWyJwaetdve9dKaEu4pAHACB4+u2DF
-         8Re7w8S0G+/W+SkBaa9pXdjLEJgZqKWQ8s9eCl/DKXsZWeLk9hHmOdPgOxqLuTCXvXyk
-         yJRQaS5WB/Irw4AlkCK5j79caBjeqEiCu6e+ltXtI1P2/VvDKBPrk5jI5npLthe2pl+a
-         nTQKvvmGHkeckVgcdRdGQPIKUsViJqgnocZDU+l36nuGwDK226cjTK9FOJu3VhK1iTvc
-         k7xzCvUqwAdTduymjTDHAuc7mlfsxytXEsCZRHITH6bb+AxexBTsa7Ee6DRQnwyM7ls5
-         MJyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4NlxEaC0CdDvRmfmIJOSEJmWKwzQJ80B9aXkZjJVyL8=;
-        b=aq1TzIEAn22j0xwB0Ui70b20o4Le7YWnZ0/op3nAWd2MwZN5O8FjeicPzohpfs4lNH
-         F60TpgrqDBDCVjXcto069QuH5Ip+7W5529gOXJpYTCy6PnkcdMmFQ4zBdB4U5CKL6blH
-         V17v609H9zUFkHjo6jEd0MjYuqUc2Tj1jUmlY9GVQPOcHSJ+AWsMgkI0uk5Fjfq6SgUu
-         34kk7Plhso5V3YzvJ7HP1SG9pBLAPd/bxiIxht7UtNFr4B5MRu+aXwmnJnkxn31pk8Tn
-         FDKCLPxB2EIHtbdhYwcEqTip3/lHOLHNFPrd9fDBRF5UDyWxoFxLHzABwn7FN6Fy5pFA
-         OEew==
-X-Gm-Message-State: APjAAAWOt38bgZEv+NnWRdNUMRJ8neNzAWgZuKgdwPGhgolYb9oRfcA9
-        rigyl+/isMjrRuogolu/5ocrnw==
-X-Google-Smtp-Source: APXvYqyxorWrGAGoWeM+23k80onJrm+gVqtgsoo6CxIXcvEAH60ecFJYPhSM/N/ICQ4LGxIScoIUBA==
-X-Received: by 2002:a92:2904:: with SMTP id l4mr28325026ilg.166.1580825987128;
-        Tue, 04 Feb 2020 06:19:47 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d17sm8838522ild.11.2020.02.04.06.19.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 06:19:46 -0800 (PST)
-Subject: Re: [PATCH V6] brd: check and limit max_part par
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>, Guiyao <guiyao@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>
-References: <b643ad2e-33d7-0f0f-38a1-0ef06ccd3d3f@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <14b08288-7f0d-1033-302d-41549bfa5b67@kernel.dk>
-Date:   Tue, 4 Feb 2020 07:19:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 09:23:14 -0500
+Received: from mga14.intel.com ([192.55.52.115]:11985 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727250AbgBDOXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 09:23:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 06:23:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,402,1574150400"; 
+   d="scan'208";a="219762640"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 04 Feb 2020 06:23:12 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iyz6d-0003zL-JS; Tue, 04 Feb 2020 22:23:11 +0800
+Date:   Tue, 4 Feb 2020 22:22:02 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Taehee Yoo <ap420073@gmail.com>
+Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] netdevsim: fix ptr_ret.cocci warnings
+Message-ID: <20200204142200.hinq3pju772kmwyu@f53c9c00458a>
+References: <202002042248.5gLay9S1%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <b643ad2e-33d7-0f0f-38a1-0ef06ccd3d3f@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202002042248.5gLay9S1%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 4:30 AM, Zhiqiang Liu wrote:
-> In brd_init func, rd_nr num of brd_device are firstly allocated
-> and add in brd_devices, then brd_devices are traversed to add each
-> brd_device by calling add_disk func. When allocating brd_device,
-> the disk->first_minor is set to i * max_part, if rd_nr * max_part
-> is larger than MINORMASK, two different brd_device may have the same
-> devt, then only one of them can be successfully added.
-> when rmmod brd.ko, it will cause oops when calling brd_exit.
-> 
-> Follow those steps:
->   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
->   # rmmod brd
-> then, the oops will appear.
-> 
-> Oops log:
-> [  726.613722] Call trace:
-> [  726.614175]  kernfs_find_ns+0x24/0x130
-> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-> [  726.615749]  sysfs_remove_group+0x38/0xb0
-> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-> [  726.617320]  blk_unregister_queue+0x98/0x100
-> [  726.618105]  del_gendisk+0x144/0x2b8
-> [  726.618759]  brd_exit+0x68/0x560 [brd]
-> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-> [  726.620384]  el0_svc_common+0x78/0x130
-> [  726.621057]  el0_svc_handler+0x38/0x78
-> [  726.621738]  el0_svc+0x8/0xc
-> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
-> 
-> Here, we add brd_check_and_reset_par func to check and limit max_part par.
+From: kbuild test robot <lkp@intel.com>
 
-Applied, thanks.
+drivers/net/netdevsim/dev.c:937:1-3: WARNING: PTR_ERR_OR_ZERO can be used
 
--- 
-Jens Axboe
 
+ Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
+
+Fixes: 6556ff32f12d ("netdevsim: use IS_ERR instead of IS_ERR_OR_NULL for debugfs")
+CC: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git master
+head:   83b43045308ea0600099830292955f18818f8d5e
+commit: 6556ff32f12d0a5380dd2fa6bbaa01373925a7d1 [40/48] netdevsim: use IS_ERR instead of IS_ERR_OR_NULL for debugfs
+
+ dev.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/drivers/net/netdevsim/dev.c
++++ b/drivers/net/netdevsim/dev.c
+@@ -934,9 +934,7 @@ int nsim_dev_port_del(struct nsim_bus_de
+ int nsim_dev_init(void)
+ {
+ 	nsim_dev_ddir = debugfs_create_dir(DRV_NAME, NULL);
+-	if (IS_ERR(nsim_dev_ddir))
+-		return PTR_ERR(nsim_dev_ddir);
+-	return 0;
++	return PTR_ERR_OR_ZERO(nsim_dev_ddir);
+ }
+ 
+ void nsim_dev_exit(void)
