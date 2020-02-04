@@ -2,152 +2,191 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C637BC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506F7C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAA52166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2504B2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TZxM/3ha"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBEFGJ76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgBDXFo (ORCPT
+        id S1727812AbgBDXFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:05:44 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49132 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727494AbgBDXFo (ORCPT
+        Tue, 4 Feb 2020 18:05:54 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:34832 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbgBDXFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:05:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580857543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=50yJ/0uSQd8YRp4Nzpt7nFwJU44bA7UT36hqDKQZmJc=;
-        b=TZxM/3haiTtCkhp6j1IFQXCq254ZD8+17Vsj0txbfa0Rse90I1MUHaVokzKc8qWbqX6tjJ
-        2LSR9gYDHh7zRFCSP+1dnXykAvIzT+KJpGMy3UXRCKIsjjrByuIEl9dQ6SL3mL96Vt9Chq
-        MhpByx/UZ4yQ+EoIzD9jk2ZZH+gSKa8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-_PGm0uoKPEO2dpkXo_Cobw-1; Tue, 04 Feb 2020 18:05:39 -0500
-X-MC-Unique: _PGm0uoKPEO2dpkXo_Cobw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1C5F1085926;
-        Tue,  4 Feb 2020 23:05:37 +0000 (UTC)
-Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 88DEA1084194;
-        Tue,  4 Feb 2020 23:05:34 +0000 (UTC)
-Subject: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
-        bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com, cohuck@redhat.com
-Date:   Tue, 04 Feb 2020 16:05:34 -0700
-Message-ID: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Tue, 4 Feb 2020 18:05:53 -0500
+Received: by mail-yw1-f66.google.com with SMTP id i190so610205ywc.2;
+        Tue, 04 Feb 2020 15:05:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YrYTUO2Q77JjgQVjeJh09goSUpzPILNsJ5mmTOcpwY8=;
+        b=FBEFGJ76/Ot3voodjukXPoHQYLJcDFq66AR1siCu3j64KGSgTtyPIB8ZmIugKV8N01
+         /DUlLTX/nipCgl0I2M7S5fsWs2sUrb0nS7QBXZvxlZIH82BCFSs5ckQg1plHCprSsIv+
+         ujVZUJF7xTeh2B7lJt9STKbXHaBpzIoIdlVnoM4IIGwDrm7PfNseBWQOjz8OkGW9ttAE
+         kY4wdYQvubje/sYMhi+feQmGw4itZyjTFf0d/8dcvCJcgbT27CfPz6802hWzSLsM0bai
+         HY6vbwxMDeepvK94iroChr+p6HloJCM0bVibhjS0JhhkKDPI0TCa4yQXUXu7j9erOr28
+         czBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YrYTUO2Q77JjgQVjeJh09goSUpzPILNsJ5mmTOcpwY8=;
+        b=T2b/Unoz08efmh06U8oHtkb8mIkzD9FYeFZfiKgrMrRS5FPo/eKiV640onWkL06zV0
+         G0tOW0egWxkUALxZBAXxHjnq9vz6BfX1kGFfcyVKCHGtuBDxKO3BPm0lH/2HR9mlL/n/
+         iYsLdGdRRAJzW0IQmcEDVY8Od9aebHm3GSvhNTPaSZQFGUlkKg2GF13+Nmhbzg3Jpix6
+         jpLh59uZeiZmFYk6lXHhs0AIDUe8tuKbbOrHKGRH4jS2kFfUoQ/uxB7T5Z2OTrj1Wq8M
+         r4AXxzd6qqnTsLgpVeBkP1E5l2t1e1hFQC/IYa6ZMGnH0lQwbE63nnsd9gTzSN2WXWKX
+         Ypow==
+X-Gm-Message-State: APjAAAVhRYIRkADe+iZRTjcMZNzhQDoAy4u4SWVTH3yGqi/TLV5mqtnV
+        ZuktwE5VlQcGVJJLsGCXy0w=
+X-Google-Smtp-Source: APXvYqyKfM69VLy5Ee+aBTiUgRgse09zOU1ALRKZujwY/FZFiCRrjDJGnyjMjQZk/hVbHPxCR9wv9w==
+X-Received: by 2002:a0d:cc88:: with SMTP id o130mr8018607ywd.498.1580857552431;
+        Tue, 04 Feb 2020 15:05:52 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id j184sm10522708ywa.39.2020.02.04.15.05.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 15:05:52 -0800 (PST)
+Subject: Re: [PATCH v2 6/7] kunit: Add 'kunit_shutdown' option
+From:   Frank Rowand <frowand.list@gmail.com>
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, knut.omang@oracle.com,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200130230812.142642-1-brendanhiggins@google.com>
+ <20200130230812.142642-7-brendanhiggins@google.com>
+ <143dcdac-b19a-8eff-b441-ba79f1873801@gmail.com>
+Message-ID: <8f7a5e34-d386-abcd-9926-1bd4cab8aeef@gmail.com>
+Date:   Tue, 4 Feb 2020 17:05:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <143dcdac-b19a-8eff-b441-ba79f1873801@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There seems to be an ongoing desire to use userspace, vfio-based
-drivers for both SR-IOV PF and VF devices.  The fundamental issue
-with this concept is that the VF is not fully independent of the PF
-driver.  Minimally the PF driver might be able to deny service to the
-VF, VF data paths might be dependent on the state of the PF device,
-or the PF my have some degree of ability to inspect or manipulate the
-VF data.  It therefore would seem irresponsible to unleash VFs onto
-the system, managed by a user owned PF.
+On 2/4/20 5:05 PM, Frank Rowand wrote:
+> On 1/30/20 5:08 PM, Brendan Higgins wrote:
+>> From: David Gow <davidgow@google.com>
+>>
+>> Add a new kernel command-line option, 'kunit_shutdown', which allows the
+>> user to specify that the kernel poweroff, halt, or reboot after
+>> completing all KUnit tests; this is very handy for running KUnit tests
+>> on UML or a VM so that the UML/VM process exits cleanly immediately
+>> after running all tests without needing a special initramfs.
+> 
+> kunit_shutdown needs to be added to Documentation/admin-guide/kernel-parameters.txt
 
-We address this in a few ways in this series.  First, we can use a bus
-notifier and the driver_override facility to make sure VFs are bound
-to the vfio-pci driver by default.  This should eliminate the chance
-that a VF is accidentally bound and used by host drivers.  We don't
-however remove the ability for a host admin to change this override.
+Oops, patch 7/7 does exactly that.
 
-The next issue we need to address is how we let userspace drivers
-opt-in to this participation with the PF driver.  We do not want an
-admin to be able to unwittingly assign one of these VFs to a tenant
-that isn't working in collaboration with the PF driver.  We could use
-IOMMU grouping, but this seems to push too far towards tightly coupled
-PF and VF drivers.  This series introduces a "VF token", implemented
-as a UUID, as a shared secret between PF and VF drivers.  The token
-needs to be set by the PF driver and used as part of the device
-matching by the VF driver.  Provisions in the code also account for
-restarting the PF driver with active VF drivers, requiring the PF to
-use the current token to re-gain access to the PF.
+-Frank
 
-The above solutions introduce a bit of a modification to the VFIO ABI
-and an additional ABI extension.  The modification is that the
-VFIO_GROUP_GET_DEVICE_FD ioctl is specified to require a char string
-from the user providing the device name.  For this solution, we extend
-the syntax to allow the device name followed by key/value pairs.  In
-this case we add "vf_token=3e7e882e-1daf-417f-ad8d-882eea5ee337", for
-example.  These options are expected to be space separated.  Matching
-these key/value pairs is entirely left to the vfio bus driver (ex.
-vfio-pci) and the internal ops structure is extended to allow this
-optional support.  This extension should be fully backwards compatible
-to existing userspace, such code will simply fail to open these newly
-exposed devices, as intended.
-
-I've been debating whether instead of the above we should allow the
-user to get the device fd as normal, but restrict the interfaces until
-the user authenticates, but I'm afraid this would be a less backwards
-compatible solution.  It would be just as unclear to the user why a
-device read/write/mmap/ioctl failed as it might be to why getting the
-device fd could fail.  However in the latter case, I believe we do a
-better job of restricting how far userspace code might go before they
-ultimately fail.  I'd welcome discussion in the space, and or course
-the extension of the GET_DEVICE_FD string.
-
-Finally, the user needs to be able to set a VF token.  I add a
-VFIO_DEVICE_FEATURE ioctl for this that's meant to be reusable for
-getting, setting, and probing arbitrary features of a device.
-
-I'll reply to this cover letter with a very basic example of a QEMU
-update to support this interface, though I haven't found a device yet
-that behaves well with the PF running in one VM with the VF in
-another, or really even just a PF running in a VM with SR-IOV enabled.
-I know these devices exist though, and I suspect QEMU will not be the
-primary user of this support for now, but this behavior reaffirms my
-concerns to prevent mis-use.
-
-Please comment.  In particular, does this approach meet the DPDK needs
-for userspace PF and VF drivers, with the hopefully minor hurdle of
-sharing a token between drivers.  The token is of course left to
-userspace how to manage, and might be static (and not very secret) for
-a given set of drivers.  Thanks,
-
-Alex
-
----
-
-Alex Williamson (7):
-      vfio: Include optional device match in vfio_device_ops callbacks
-      vfio/pci: Implement match ops
-      vfio/pci: Introduce VF token
-      vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
-      vfio/pci: Add sriov_configure support
-      vfio/pci: Remove dev_fmt definition
-      vfio/pci: Cleanup .probe() exit paths
-
-
- drivers/vfio/pci/vfio_pci.c         |  315 ++++++++++++++++++++++++++++++++---
- drivers/vfio/pci/vfio_pci_private.h |   10 +
- drivers/vfio/vfio.c                 |   19 ++
- include/linux/vfio.h                |    3 
- include/uapi/linux/vfio.h           |   37 ++++
- 5 files changed, 356 insertions(+), 28 deletions(-)
+> 
+> -Frank
+> 
+>>
+>> Signed-off-by: David Gow <davidgow@google.com>
+>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>> ---
+>>  lib/kunit/executor.c                | 20 ++++++++++++++++++++
+>>  tools/testing/kunit/kunit_kernel.py |  2 +-
+>>  tools/testing/kunit/kunit_parser.py |  2 +-
+>>  3 files changed, 22 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+>> index 7fd16feff157e..a93821116ccec 100644
+>> --- a/lib/kunit/executor.c
+>> +++ b/lib/kunit/executor.c
+>> @@ -1,5 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  
+>> +#include <linux/reboot.h>
+>>  #include <kunit/test.h>
+>>  
+>>  /*
+>> @@ -11,6 +12,23 @@ extern struct kunit_suite * const * const __kunit_suites_end[];
+>>  
+>>  #if IS_BUILTIN(CONFIG_KUNIT)
+>>  
+>> +static char *kunit_shutdown;
+>> +core_param(kunit_shutdown, kunit_shutdown, charp, 0644);
+>> +
+>> +static void kunit_handle_shutdown(void)
+>> +{
+>> +	if (!kunit_shutdown)
+>> +		return;
+>> +
+>> +	if (!strcmp(kunit_shutdown, "poweroff"))
+>> +		kernel_power_off();
+>> +	else if (!strcmp(kunit_shutdown, "halt"))
+>> +		kernel_halt();
+>> +	else if (!strcmp(kunit_shutdown, "reboot"))
+>> +		kernel_restart(NULL);
+>> +
+>> +}
+>> +
+>>  static void kunit_print_tap_header(void)
+>>  {
+>>  	struct kunit_suite * const * const *suites, * const *subsuite;
+>> @@ -42,6 +60,8 @@ int kunit_run_all_tests(void)
+>>  		}
+>>  	}
+>>  
+>> +	kunit_handle_shutdown();
+>> +
+>>  	if (has_test_failed)
+>>  		return -EFAULT;
+>>  
+>> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+>> index cc5d844ecca13..43314aa537d30 100644
+>> --- a/tools/testing/kunit/kunit_kernel.py
+>> +++ b/tools/testing/kunit/kunit_kernel.py
+>> @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
+>>  		return True
+>>  
+>>  	def run_kernel(self, args=[], timeout=None, build_dir=''):
+>> -		args.extend(['mem=256M'])
+>> +		args.extend(['mem=256M', 'kunit_shutdown=halt'])
+>>  		process = self._ops.linux_bin(args, timeout, build_dir)
+>>  		with open(os.path.join(build_dir, 'test.log'), 'w') as f:
+>>  			for line in process.stdout:
+>> diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+>> index 78b3bdd03b1e4..633811dd9bce8 100644
+>> --- a/tools/testing/kunit/kunit_parser.py
+>> +++ b/tools/testing/kunit/kunit_parser.py
+>> @@ -48,7 +48,7 @@ class TestStatus(Enum):
+>>  	FAILURE_TO_PARSE_TESTS = auto()
+>>  
+>>  kunit_start_re = re.compile(r'^TAP version [0-9]+$')
+>> -kunit_end_re = re.compile('List of all partitions:')
+>> +kunit_end_re = re.compile(r'reboot: System halted')
+>>  
+>>  def isolate_kunit_output(kernel_output):
+>>  	started = False
+>>
+> 
+> 
 
