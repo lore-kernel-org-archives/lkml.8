@@ -2,117 +2,119 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48CCC3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279F7C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B459B20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78AA20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="rJteDZ77"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GQZmYL+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgBDT64 (ORCPT
+        id S1727588AbgBDT7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:58:56 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41466 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbgBDT6z (ORCPT
+        Tue, 4 Feb 2020 14:59:02 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:44236 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbgBDT7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:58:55 -0500
-Received: by mail-qt1-f196.google.com with SMTP id l19so15332374qtq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:58:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=nUYiDfAhgCZXRYErtoRQy6/rVWr7Gr3L/ebDcQHtW8c=;
-        b=rJteDZ77rao5hGEilyGPjz2uLvmX8nHdHJNyj2fs0bRbiulWazSW29HRjw63ZRbMSf
-         YOOaGro7M76kDhN4Pz8lQrpWqWnBaPpT9idY4uJoSenhaB+gJ1JRMexyeo06S+2aw2gb
-         N4EJZjiOwtvpE+nFn5BkwAbfkp+8K5VhwRdXCPoUnpfRczgprwqze5jtEZJlBhK2DCtq
-         YSOIAIgdtKzYH8bdDy4H4r/xQARIpX0ec7j1YFcnVZHmx12YjtNWwXNPHsQejHEGqP1z
-         LqiNMp5vIF2kBmOlrsy/LXnI2ZD0klA2C95GIVh1DOlQ0VeqogrNUfFUcw4Scbhj36he
-         RYRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=nUYiDfAhgCZXRYErtoRQy6/rVWr7Gr3L/ebDcQHtW8c=;
-        b=ejMEfus6/1tPrxeQzMAz6JGHpiq37qEEMB3l56P/g/N/pcBpADiJ35Xtt0H42cpu2m
-         6s/WsSbB/wSvIpMCLYAfObpmx093H80lzhqTtgE0/NEQkBDw/LQIDoFIfyc87FV3c3Ww
-         q4ewPM9Gn23ug26G2GndV+8A/9NCxbLdqZe6VyjOIckQl+9BvBAaBHnau9zoHjG4C4HK
-         odH9xz9JyJU3K+teKuAgKXG8rCU2p0Klcmdp0v53iM47QxPp4SaOywdZy3wArjOerSH3
-         aaEly2MCwDKuFHLSL54qf+qtUY0etiMj+PRVGbRK+Wp9KeRW+yVUIvHgsSCxnafhSJxM
-         MG9w==
-X-Gm-Message-State: APjAAAXUA/+/fyluycFN6kK5LjGF0kP1Lj/M9Zeu7S9B55TMWqT9w8lU
-        DWGS5NcSD8sv31zCxWE62/xJ8g==
-X-Google-Smtp-Source: APXvYqwWXd+xCIFH82pgvzLUel/qSAxcq02npWNuT+UV/0x2XRvUupDPcFmEm6BmLWUk12NmYXKi3w==
-X-Received: by 2002:ac8:70d3:: with SMTP id g19mr29789882qtp.209.1580846334248;
-        Tue, 04 Feb 2020 11:58:54 -0800 (PST)
-Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
-        by smtp.gmail.com with ESMTPSA id o187sm11852053qkf.26.2020.02.04.11.58.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 11:58:53 -0800 (PST)
-Message-ID: <ef94a7c141479622ecc499dba4da0583a4ea315e.camel@ndufresne.ca>
-Subject: Re: [PATCH for v5.6] hantro: Fix broken media controller links
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil@xs4all.nl>, stable@vger.kernel.org
-Date:   Tue, 04 Feb 2020 14:58:51 -0500
-In-Reply-To: <20200204193837.16021-1-ezequiel@collabora.com>
-References: <20200204193837.16021-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 4 Feb 2020 14:59:01 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014JrICc081459;
+        Tue, 4 Feb 2020 19:57:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=0INpg/Hj1QddaeE9Yvl2yxKNQKLHtaJEwGKy7Tyco0U=;
+ b=GQZmYL+yR/ltnneW8n9lk5qDTNZvvS0UN8v9V3KNedxvCKp2iHYml59CK7t5nYIo+5UF
+ 44Yg3sYJIE7Gwi6DT336UjElBxPmqL6Bp59SVHremdVsXfAouUl1BqiwXfBprC2IrqvK
+ hDc7hyGTUxlQaX/5PsxNU/n6QVH5OZfRd73D0BVDQqfcRQsf/FfGQAqSQVsP2kTmYP4C
+ wS/5IkSpvXgzJy+Pl+qRVE8SnEprGTBwlvTT0XcOb4XgMGsS54dQCEN0WGK58AAN4vJe
+ o/zOVL+B+WQD81DuyqXlljbjv9pa8USpZyZO9/XHj2DTHlQoFKZcPJut+LV+uFg324B8 6Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xw19qh4vn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 19:57:45 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014JrYt6063307;
+        Tue, 4 Feb 2020 19:57:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xxsbr9ytx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 19:57:44 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014Jveoe012599;
+        Tue, 4 Feb 2020 19:57:40 GMT
+Received: from localhost.localdomain (/10.159.243.11)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Feb 2020 11:57:40 -0800
+Subject: Re: [PATCH] KVM: nVMX: Remove stale comment from
+ nested_vmx_load_cr3()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200204153259.16318-1-sean.j.christopherson@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <dcee13f5-f447-9ab4-4803-e3c4f42fb011@oracle.com>
+Date:   Tue, 4 Feb 2020 11:57:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200204153259.16318-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002040134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002040134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mardi 04 février 2020 à 16:38 -0300, Ezequiel Garcia a écrit :
-> The driver currently creates a broken topology,
-> with a source-to-source link and a sink-to-sink
-> link instead of two source-to-sink links.
-> 
-> Reported-by: Nicolas Dufresne <nicolas@ndufresne.ca>
-> Cc: <stable@vger.kernel.org>      # for v5.3 and up
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
+On 2/4/20 7:32 AM, Sean Christopherson wrote:
+> The blurb pertaining to the return value of nested_vmx_load_cr3() no
+> longer matches reality, remove it entirely as the behavior it is
+> attempting to document is quite obvious when reading the actual code.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  drivers/staging/media/hantro/hantro_drv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_drv.c
-> b/drivers/staging/media/hantro/hantro_drv.c
-> index 448493a08805..840b96bee082 100644
-> --- a/drivers/staging/media/hantro/hantro_drv.c
-> +++ b/drivers/staging/media/hantro/hantro_drv.c
-> @@ -556,13 +556,13 @@ static int hantro_attach_func(struct hantro_dev *vpu,
->  		goto err_rel_entity1;
->  
->  	/* Connect the three entities */
-> -	ret = media_create_pad_link(&func->vdev.entity, 0, &func->proc, 1,
-> +	ret = media_create_pad_link(&func->vdev.entity, 0, &func->proc, 0,
+>   arch/x86/kvm/vmx/nested.c | 2 --
+>   1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 7608924ee8c1..0c9b847f7a25 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1076,8 +1076,6 @@ static bool nested_cr3_valid(struct kvm_vcpu *vcpu, unsigned long val)
+>   /*
+>    * Load guest's/host's cr3 at nested entry/exit. nested_ept is true if we are
+>    * emulating VM entry into a guest with EPT enabled.
+> - * Returns 0 on success, 1 on failure. Invalid state exit qualification code
+> - * is assigned to entry_failure_code on failure.
+>    */
+>   static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
+>   			       u32 *entry_failure_code)
 
-As for the m2m comment, some local define to name the pad index would make this
-readable.
-
->  				    MEDIA_LNK_FL_IMMUTABLE |
->  				    MEDIA_LNK_FL_ENABLED);
->  	if (ret)
->  		goto err_rel_entity2;
->  
-> -	ret = media_create_pad_link(&func->proc, 0, &func->sink, 0,
-> +	ret = media_create_pad_link(&func->proc, 1, &func->sink, 0,
->  				    MEDIA_LNK_FL_IMMUTABLE |
->  				    MEDIA_LNK_FL_ENABLED);
->  	if (ret)
+I think it's worth keeping the last part which is " Exit qualification 
+code is assigned to entry_failure_code on failure." because "Entry 
+Failure" and "Exit Qualification" might sound bit confusing until you 
+actually look at the caller nested_vmx_enter_non_root_mode().
 
