@@ -2,294 +2,132 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839C2C3524F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11BCC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552602087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:44:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="Ts3V/FpD"
+	by mail.kernel.org (Postfix) with ESMTP id 8A7342087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgBDRo2 (ORCPT
+        id S1727492AbgBDRpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:44:28 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:55346 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbgBDRo1 (ORCPT
+        Tue, 4 Feb 2020 12:45:17 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:14426 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbgBDRpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:44:27 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 5810E27E158A;
-        Tue,  4 Feb 2020 18:44:24 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id WJPOZQGRi_y4; Tue,  4 Feb 2020 18:44:23 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id B586A27E167F;
-        Tue,  4 Feb 2020 18:44:23 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu B586A27E167F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1580838263;
-        bh=2+jOm4uxCdzytPIisYiGBQNcx2EeztEUsQZVDUXbrJ8=;
-        h=From:To:Date:Message-Id;
-        b=Ts3V/FpDsmfPQOxZLcrnnUSB55T0fdn3Qxku6FKlIrUXJUPijUFuGwyZo4Rhy1Iat
-         y2ae3QLA8cgdR6h4eJvBp7p0JY4/R46vQ1PgS2yvwqkBpLYNPeX0YBfGT46GtGJR92
-         sKiPR8uIUAoncs7v8IuGt7YDhz3muuc1zLfbu0Cw=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id VcfkZnCAfGlJ; Tue,  4 Feb 2020 18:44:23 +0100 (CET)
-Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 91A4127E1660;
-        Tue,  4 Feb 2020 18:44:23 +0100 (CET)
-From:   Clement Leger <cleger@kalray.eu>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc@vger.kernel.org
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Clement Leger <cleger@kalray.eu>
-Subject: [PATCH v3 1/2] remoteproc: Use u64 len for da_to_va
-Date:   Tue,  4 Feb 2020 18:44:11 +0100
-Message-Id: <20200204174412.16814-2-cleger@kalray.eu>
-X-Mailer: git-send-email 2.15.0.276.g89ea799
-In-Reply-To: <20200204174412.16814-1-cleger@kalray.eu>
-References: <20200129163013.GA16538@xps15>
- <20200204174412.16814-1-cleger@kalray.eu>
+        Tue, 4 Feb 2020 12:45:17 -0500
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Feb 2020 12:45:17 EST
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48BsNc0x4QzQlBW;
+        Tue,  4 Feb 2020 18:38:08 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id r-FS5AX31atR; Tue,  4 Feb 2020 18:38:04 +0100 (CET)
+From:   Hagen Paul Pfeifer <hagen@jauu.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Hagen Paul Pfeifer <hagen@jauu.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH] perf script: introduce deltatime option
+Date:   Tue,  4 Feb 2020 18:37:09 +0100
+Message-Id: <20200204173709.489161-1-hagen@jauu.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With upcoming changes in elf loader for elf64 support, section size will
-be a u64. When used with da_to_va, this will potentially lead to
-overflow if using the current "int" type for len argument. Change
-da_to_va prototype to use a u64 for len and fix all users of this
-function.
+For some kind of analysis a deltatime output is more human friendly and reduce
+the cognitive load for further analysis.
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
+The following output demonstrate the new option "deltatime": calculate
+the time difference in relation to the previous event.
+
+$ perf script --deltatime
+test  2525 [001]     0.000000:            sdt_libev:ev_add: (5635e72a5ebd)
+test  2525 [001]     0.000091:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
+test  2525 [001]     1.000051: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+test  2525 [001]     0.000685:            sdt_libev:ev_add: (5635e72a5ebd)
+test  2525 [001]     0.000048:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
+test  2525 [001]     1.000104: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+test  2525 [001]     0.003895:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
+test  2525 [001]     0.996034: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+test  2525 [001]     0.000058:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
+test  2525 [001]     1.000004: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+test  2525 [001]     0.000064:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
+test  2525 [001]     0.999934: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+test  2525 [001]     0.000056:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
+test  2525 [001]     0.999930: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Hagen Paul Pfeifer <hagen@jauu.net>
 ---
- drivers/remoteproc/imx_rproc.c           | 9 +++++----
- drivers/remoteproc/keystone_remoteproc.c | 2 +-
- drivers/remoteproc/qcom_q6v5_adsp.c      | 2 +-
- drivers/remoteproc/qcom_q6v5_mss.c       | 2 +-
- drivers/remoteproc/qcom_q6v5_pas.c       | 2 +-
- drivers/remoteproc/qcom_q6v5_wcss.c      | 2 +-
- drivers/remoteproc/qcom_wcnss.c          | 2 +-
- drivers/remoteproc/remoteproc_core.c     | 2 +-
- drivers/remoteproc/remoteproc_internal.h | 2 +-
- drivers/remoteproc/st_slim_rproc.c       | 4 ++--
- drivers/remoteproc/wkup_m3_rproc.c       | 2 +-
- include/linux/remoteproc.h               | 2 +-
- 12 files changed, 17 insertions(+), 16 deletions(-)
+ tools/perf/builtin-script.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 3e72b6f38d4b..1e895d5cf918 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -186,7 +186,7 @@ static int imx_rproc_stop(struct rproc *rproc)
- }
- 
- static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
--			       int len, u64 *sys)
-+			       u64 len, u64 *sys)
- {
- 	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
- 	int i;
-@@ -203,12 +203,12 @@ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index e2406b291c1c..d5566b121159 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -63,7 +63,9 @@
+ static char const		*script_name;
+ static char const		*generate_script_lang;
+ static bool			reltime;
++static bool			deltatime;
+ static u64			initial_time;
++static u64			previous_time;
+ static bool			debug_mode;
+ static u64			last_timestamp;
+ static u64			nr_unordered;
+@@ -704,6 +706,13 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 			if (!initial_time)
+ 				initial_time = sample->time;
+ 			t = sample->time - initial_time;
++		} else if (deltatime) {
++			if (previous_time)
++				t = sample->time - previous_time;
++			else {
++				t = 0;
++			}
++			previous_time = sample->time;
+ 		}
+ 		nsecs = t;
+ 		secs = nsecs / NSEC_PER_SEC;
+@@ -3551,6 +3560,7 @@ int cmd_script(int argc, const char **argv)
+ 		     "anything beyond the specified depth will be ignored. "
+ 		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
+ 	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
++	OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
+ 	OPT_BOOLEAN('I', "show-info", &show_full_info,
+ 		    "display extended information from perf.data file"),
+ 	OPT_BOOLEAN('\0', "show-kernel-path", &symbol_conf.show_kernel_path,
+@@ -3647,6 +3657,13 @@ int cmd_script(int argc, const char **argv)
  		}
  	}
  
--	dev_warn(priv->dev, "Translation failed: da = 0x%llx len = 0x%x\n",
-+	dev_warn(priv->dev, "Translation failed: da = 0x%llx len = 0x%llx\n",
- 		 da, len);
- 	return -ENOENT;
- }
- 
--static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct imx_rproc *priv = rproc->priv;
- 	void *va = NULL;
-@@ -235,7 +235,8 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
- 		}
- 	}
- 
--	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da, len, va);
-+	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%llx va = 0x%p\n",
-+		da, len, va);
- 
- 	return va;
- }
-diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
-index 5c4658f00b3d..25c01df47eba 100644
---- a/drivers/remoteproc/keystone_remoteproc.c
-+++ b/drivers/remoteproc/keystone_remoteproc.c
-@@ -246,7 +246,7 @@ static void keystone_rproc_kick(struct rproc *rproc, int vqid)
-  * can be used either by the remoteproc core for loading (when using kernel
-  * remoteproc loader), or by any rpmsg bus drivers.
-  */
--static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct keystone_rproc *ksproc = rproc->priv;
- 	void __iomem *va = NULL;
-diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-index e953886b2eb7..7518e67a49e5 100644
---- a/drivers/remoteproc/qcom_q6v5_adsp.c
-+++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-@@ -270,7 +270,7 @@ static int adsp_stop(struct rproc *rproc)
- 	return ret;
- }
- 
--static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
- 	int offset;
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 471128a2e723..248febde6fc1 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1148,7 +1148,7 @@ static int q6v5_stop(struct rproc *rproc)
- 	return 0;
- }
- 
--static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *q6v5_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct q6v5 *qproc = rproc->priv;
- 	int offset;
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index db4b3c4bacd7..cf2cd609c90d 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -159,7 +159,7 @@ static int adsp_stop(struct rproc *rproc)
- 	return ret;
- }
- 
--static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
- 	int offset;
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index f93e1e4a1cc0..3a6b82a16961 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -406,7 +406,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 	return 0;
- }
- 
--static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int offset;
-diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-index dc135754bb9c..f893219e45a8 100644
---- a/drivers/remoteproc/qcom_wcnss.c
-+++ b/drivers/remoteproc/qcom_wcnss.c
-@@ -287,7 +287,7 @@ static int wcnss_stop(struct rproc *rproc)
- 	return ret;
- }
- 
--static void *wcnss_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *wcnss_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
- 	int offset;
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 307df98347ba..9e6d3c6a60ee 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -185,7 +185,7 @@ EXPORT_SYMBOL(rproc_va_to_pa);
-  * here the output of the DMA API for the carveouts, which should be more
-  * correct.
-  */
--void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct rproc_mem_entry *carveout;
- 	void *ptr = NULL;
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index 493ef9262411..004867061721 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -50,7 +50,7 @@ void rproc_exit_sysfs(void);
- void rproc_free_vring(struct rproc_vring *rvring);
- int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
- 
--void *rproc_da_to_va(struct rproc *rproc, u64 da, int len);
-+void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len);
- phys_addr_t rproc_va_to_pa(void *cpu_addr);
- int rproc_trigger_recovery(struct rproc *rproc);
- 
-diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-index 04492fead3c8..fc01cd879b60 100644
---- a/drivers/remoteproc/st_slim_rproc.c
-+++ b/drivers/remoteproc/st_slim_rproc.c
-@@ -174,7 +174,7 @@ static int slim_rproc_stop(struct rproc *rproc)
- 	return 0;
- }
- 
--static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct st_slim_rproc *slim_rproc = rproc->priv;
- 	void *va = NULL;
-@@ -191,7 +191,7 @@ static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
- 		}
- 	}
- 
--	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%pK\n",
-+	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%llx va = 0x%pK\n",
- 		da, len, va);
- 
- 	return va;
-diff --git a/drivers/remoteproc/wkup_m3_rproc.c b/drivers/remoteproc/wkup_m3_rproc.c
-index 3984e585c847..0e8082948489 100644
---- a/drivers/remoteproc/wkup_m3_rproc.c
-+++ b/drivers/remoteproc/wkup_m3_rproc.c
-@@ -80,7 +80,7 @@ static int wkup_m3_rproc_stop(struct rproc *rproc)
- 	return 0;
- }
- 
--static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
- {
- 	struct wkup_m3_rproc *wkupm3 = rproc->priv;
- 	void *va = NULL;
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 16ad66683ad0..f84bd5fe0211 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -374,7 +374,7 @@ struct rproc_ops {
- 	int (*start)(struct rproc *rproc);
- 	int (*stop)(struct rproc *rproc);
- 	void (*kick)(struct rproc *rproc, int vqid);
--	void * (*da_to_va)(struct rproc *rproc, u64 da, int len);
-+	void * (*da_to_va)(struct rproc *rproc, u64 da, u64 len);
- 	int (*parse_fw)(struct rproc *rproc, const struct firmware *fw);
- 	int (*handle_rsc)(struct rproc *rproc, u32 rsc_type, void *rsc,
- 			  int offset, int avail);
++	if (reltime && deltatime) {
++		fprintf(stderr,
++			"reltime and deltatime - the two don't get along well. "
++			"Please limit to --reltime or --deltatime.\n");
++		return -1;
++	}
++
+ 	if (itrace_synth_opts.callchain &&
+ 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
+ 		scripting_max_stack = itrace_synth_opts.callchain_sz;
 -- 
-2.15.0.276.g89ea799
+2.24.1
 
