@@ -2,184 +2,200 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD088C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7843EC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B693221582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546C120730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgBDQE4 (ORCPT
+        id S1727368AbgBDQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:04:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727345AbgBDQEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:04:55 -0500
-Received: from oasis.local.home (unknown [212.187.182.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8D082084E;
-        Tue,  4 Feb 2020 16:04:52 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 11:04:46 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v3] bootconfig: Only load bootconfig if "bootconfig" is on
- the kernel cmdline
-Message-ID: <20200204110446.2c2616cd@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 4 Feb 2020 11:06:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29358 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727290AbgBDQGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 11:06:33 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014FiTWa023326;
+        Tue, 4 Feb 2020 11:06:27 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxy9jdgs8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Feb 2020 11:06:25 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 014Fj5ak027405;
+        Tue, 4 Feb 2020 11:06:25 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxy9jdgr8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Feb 2020 11:06:25 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 014G4xDi005541;
+        Tue, 4 Feb 2020 16:06:24 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 2xw0y6sb97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Feb 2020 16:06:24 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014G6NYb33292792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Feb 2020 16:06:23 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70639112065;
+        Tue,  4 Feb 2020 16:06:23 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8AB6112063;
+        Tue,  4 Feb 2020 16:06:22 +0000 (GMT)
+Received: from [9.163.68.178] (unknown [9.163.68.178])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Feb 2020 16:06:22 +0000 (GMT)
+Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Eddie James <eajames@linux.vnet.ibm.com>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>
+References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
+ <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
+ <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com>
+ <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com>
+Date:   Tue, 4 Feb 2020 10:06:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-04_05:2020-02-04,2020-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ mlxscore=0 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2002040107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On 2/4/20 5:02 AM, Andy Shevchenko wrote:
+> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
+>>> On Wed, Jan 29, 2020 at 10:09 PM Eddie James <eajames@linux.ibm.com> wrote:
+> ...
+>
+>>>> +       struct device *dev;
+>>> Isn't fsl->dev the same?
+>>> Perhaps kernel doc to explain the difference?
+>>
+>> No, it's not the same, as dev here is the SPI controller. I'll add a
+>> comment.
+> Why to have duplication then?
 
-As the bootconfig is appended to the initrd it is not as easy to modify as
-the kernel command line. If there's some issue with the kernel, and the
-developer wants to boot a pristine kernel, it should not be needed to modify
-the initrd to remove the bootconfig for a single boot.
 
-As bootconfig is silently added (if the admin does not know where to look
-they may not know it's being loaded). It should be explicitly added to the
-kernel cmdline. The loading of the bootconfig is only done if "bootconfig"
-is on the kernel command line. This will let admins know that the kernel
-command line is extended.
+Nothing is being duplicated, the two variables are storing entirely 
+different information, both of which are necessary for each SPI 
+controller that this driver is driving.
 
-Note, after adding printk()s for when the size is too great or the checksum
-is wrong, exposed that the current method always looked for the boot config,
-and if this size and checksum matched, it would parse it (as if either is
-wrong a printk has been added to show this). It's better to only check this
-if the boot config is asked to be looked for.
 
-Link: https://lore.kernel.org/r/CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com
+>
+>>>> +       struct fsi_device *fsi;
+> ...
+>
+>>>> +       for (i = 0; i < num_bytes; ++i)
+>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
+>>> Redundant & 0xffULL part.
+>>>
+>>> Isn't it NIH of get_unalinged_be64 / le64 or something similar?
+>>
+>> No, these are shift in/out operations. The read register will also have
+>> previous operations data in them and must be extracted with only the
+>> correct number of bytes.
+> Why not to call put_unaligned() how the tail in this case (it's 0 or
+> can be easily made to be 0) will affect the result?
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-Changes from v2:
-  - Use "bootconfig" instead of "config=bootconifg"
 
- Documentation/admin-guide/bootconfig.rst      |  2 ++
- .../admin-guide/kernel-parameters.txt         |  6 ++++
- init/main.c                                   | 28 ++++++++++++++-----
- 3 files changed, 29 insertions(+), 7 deletions(-)
+The shift-in is not the same as any byte-swap or unaligned operation. 
+For however many bytes we've read, we start at that many bytes 
+left-shifted in the register and copy out to our buffer, moving right 
+for each next byte... I don't think there is an existing function for 
+this operation.
 
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 4d617693c0c8..b342a6796392 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -123,6 +123,8 @@ To remove the config from the image, you can use -d option as below::
- 
-  # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
- 
-+Then add "bootconfig" on the normal kernel command line to tell the
-+kernel to look for the bootconfig at the end of the initrd file.
- 
- Config File Limitation
- ======================
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..b48c70ba9841 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -437,6 +437,12 @@
- 			no delay (0).
- 			Format: integer
- 
-+	bootconfig	[KNL]
-+			Extended command line options can be added to an initrd
-+			and this will cause the kernel to look for it.
-+
-+			See Documentation/admin-guide/bootconfig.rst
-+
- 	bert_disable	[ACPI]
- 			Disable BERT OS support on buggy BIOSes.
- 
-diff --git a/init/main.c b/init/main.c
-index dd7da62d99a5..1465fb2d7277 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -336,28 +336,39 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
- 	return ret;
- }
- 
--static void __init setup_boot_config(void)
-+static void __init setup_boot_config(const char *cmdline)
- {
- 	u32 size, csum;
- 	char *data, *copy;
-+	const char *p;
- 	u32 *hdr;
- 
--	if (!initrd_end)
-+	p = strstr(cmdline, "bootconfig");
-+	if (!p || (p != cmdline && !isspace(*(p-1))) ||
-+	    (p[10] && !isspace(p[10])))
- 		return;
- 
-+	if (!initrd_end)
-+		goto not_found;
-+
- 	hdr = (u32 *)(initrd_end - 8);
- 	size = hdr[0];
- 	csum = hdr[1];
- 
--	if (size >= XBC_DATA_MAX)
-+	if (size >= XBC_DATA_MAX) {
-+		pr_err("bootconfig size %d greater than max size %d\n",
-+			size, XBC_DATA_MAX);
- 		return;
-+	}
- 
- 	data = ((void *)hdr) - size;
- 	if ((unsigned long)data < initrd_start)
--		return;
-+		goto not_found;
- 
--	if (boot_config_checksum((unsigned char *)data, size) != csum)
-+	if (boot_config_checksum((unsigned char *)data, size) != csum) {
-+		pr_err("bootconfig checksum failed\n");
- 		return;
-+	}
- 
- 	copy = memblock_alloc(size + 1, SMP_CACHE_BYTES);
- 	if (!copy) {
-@@ -377,9 +388,12 @@ static void __init setup_boot_config(void)
- 		/* Also, "init." keys are init arguments */
- 		extra_init_args = xbc_make_cmdline("init");
- 	}
-+	return;
-+not_found:
-+	pr_err("config=bootconfig on command line, but no bootconfig found\n");
- }
- #else
--#define setup_boot_config()	do { } while (0)
-+#define setup_boot_config(cmdline)	do { } while (0)
- #endif
- 
- /* Change NUL term back to "=", to make "param" the whole string. */
-@@ -760,7 +774,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	pr_notice("%s", linux_banner);
- 	early_security_init();
- 	setup_arch(&command_line);
--	setup_boot_config();
-+	setup_boot_config(command_line);
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
- 	setup_per_cpu_areas();
--- 
-2.20.1
 
+>
+>>>> +       return num_bytes;
+>>>> +}
+>>>> +static int fsi_spi_data_out(u64 *out, const u8 *tx, int len)
+>>>> +{
+>>> Ditto as for above function. (put_unaligned ...)
+> Ditto.
+
+
+I don't understand how this could work for transfers of less than 8 
+bytes, any put_unaligned would access memory that it doesn't own.
+
+
+>
+>>>> +}
+> ...
+>
+>>>> +static int fsi_spi_transfer_data(struct fsi_spi *ctx,
+>>>> +                                struct spi_transfer *transfer)
+>>>> +{
+>>> Can you refactor to tx and rx parts?
+>>
+>> Why?
+> It's way too long function to read. Indentation level also can improve
+> readability.
+> That's basically what refactoring is for.
+
+
+The body is 65 lines, I don't think it is too long.
+
+Since the function is used multiple times I think it makes more sense to 
+encapsulate the check for tx/rx in the function rather than split it and 
+have to check each time the functions are used.
+
+
+>
+>>>> +       return 0;
+>>>> +}
+> ...
+>
+>>>> +       if ((clock_cfg & (SPI_FSI_CLOCK_CFG_MM_ENABLE |
+>>>> +                         SPI_FSI_CLOCK_CFG_ECC_DISABLE |
+>>>> +                         SPI_FSI_CLOCK_CFG_MODE |
+>>>> +                         SPI_FSI_CLOCK_CFG_SCK_RECV_DEL |
+>>>> +                         SPI_FSI_CLOCK_CFG_SCK_DIV)) != wanted_clock_cfg)
+>>>> +               rc = fsi_spi_write_reg(ctx, SPI_FSI_CLOCK_CFG,
+>>>> +                                      wanted_clock_cfg);
+>>> Missed {} ?
+>>
+>> No? It's one line under the if.
+> One statement, but *two* lines.
+> What does checkpatch.pl tell you about this?
+
+
+Right.
+
+checkpatch.pl says nothing about this, I think it meets the coding 
+standards as is.
+
+
+Thanks for the review,
+
+Eddie
+
+
+>
