@@ -2,159 +2,214 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831ECC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263BCC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A43F2084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4E22087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ha4sjdSj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOzf6L7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgBDUH0 (ORCPT
+        id S1727604AbgBDUIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 15:07:26 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21190 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727423AbgBDUH0 (ORCPT
+        Tue, 4 Feb 2020 15:08:17 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38222 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgBDUIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 15:07:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580846843;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type; bh=geGRjyscrsBDWiuFu7NKdhGNNINWr76N/yWWXvC2beI=;
-        b=ha4sjdSjxYD+pmibKS0Ei0uwWQBvMSRegzo1voOmbXTtrW6cQGjI9SXD4WyYRDadlZ50Om
-        /IwCbJwTF5e7hCqpnVv7Mm/Bq/BDre3rx/6LcZEquCLuksxIyXb4PvECGE+XiaLaEikH1+
-        u4d1jZowxeQ+SzMd6WnDgYQTrT8tX4M=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432-4Fxkqk66MXWmjBzbw7jJlA-1; Tue, 04 Feb 2020 15:07:17 -0500
-X-MC-Unique: 4Fxkqk66MXWmjBzbw7jJlA-1
-Received: by mail-qt1-f200.google.com with SMTP id c10so13089108qtk.18
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 12:07:17 -0800 (PST)
+        Tue, 4 Feb 2020 15:08:17 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so24738498wrh.5;
+        Tue, 04 Feb 2020 12:08:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PHx4gmYSsjhkcb+YYunSIVKUTRkmzceHIgudcZVaYjY=;
+        b=jOzf6L7FM4VQs0rJDocs2tJJqsE5W6K4dqb4y2g7BdzD521M5RZT8ywJzGPfGZLFst
+         lfswUpx1v9hNLG/rIl2pwEmtylSrHBb4J6KCGduSZ51dkE+wYYJELLMD2SqRHEL949Zw
+         BDXjIhmcOeBu5xJ70qYTRAKT1jU+xJ2msI+FEomo9s+tUYEU90GsHl//wZfOmwG++ohL
+         RBfgv1B6+4Hfs9tet/50S5vYWFnVUPzH5APKpc7ZyJ8Nigd/rRbc2lGgI2xUpI2cB4NE
+         XJJhvSwd0oD9+bcQrtm490lyhsT1In+rv/p8mMNt7gA8gH8PPdQAWoK8fTNXkzppwgI2
+         WQTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
-         :mail-followup-to:mime-version:content-disposition;
-        bh=geGRjyscrsBDWiuFu7NKdhGNNINWr76N/yWWXvC2beI=;
-        b=Q8P0rGQlI1kejE+i/smkrIwu+LtRlDv3GKo5+Rzejhm3LBa88+OMkhqvW5MehR4bGL
-         L045nwX512OH8EKZLJIehe2xn6UPSsswk9AFfyWs4r8a0mrwvdX+e7f6e0uPQwbXaXhy
-         RW3Xowa82oBNPXRrKmroNUgSXiEO9sdYYf1rvAEQuasPLxtBMqCP5twE7yUQRO2vdJ9h
-         WimOQ2zSpaYJ1MvNsrOY/BEgyu1j35YJFzFC9cPu5zCo3MwVoU2dLRdyxxAVYa7G9n05
-         Ux6c21wT7lQR7CB1ImR/0CO5cmntV1DHrPkPeTeRG396OSYfP4AHA8HQaCZbPRXWwGIx
-         Iwzw==
-X-Gm-Message-State: APjAAAUZmt0AMkRaf3RNklIa+vQGN8g1/CNPKU7cbjJ1gXozfVUnnmL7
-        /qcc+AokaKqu5WI5GEmkS8KUlGtZfSJiDXfxv2nC45SsICr35L9cCqv9HIdUQPPF/hvRSZutTc8
-        QH9Y63iO4k0occURj1un5Exio
-X-Received: by 2002:ad4:56a7:: with SMTP id bd7mr29701013qvb.238.1580846836737;
-        Tue, 04 Feb 2020 12:07:16 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwLQAjJRQbVUSFZ+x161T/kjJ9SZRCG1YYob8z9h/7atufYdB9Psm1FOsP/c8c4TvblrtbBSQ==
-X-Received: by 2002:ad4:56a7:: with SMTP id bd7mr29700987qvb.238.1580846836375;
-        Tue, 04 Feb 2020 12:07:16 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id e64sm12365895qtd.45.2020.02.04.12.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 12:07:15 -0800 (PST)
-Date:   Tue, 4 Feb 2020 13:07:14 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: warning from domain_get_iommu
-Message-ID: <20200204200714.u4ezhi6vhqhxog6e@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PHx4gmYSsjhkcb+YYunSIVKUTRkmzceHIgudcZVaYjY=;
+        b=N6oHIVLmL0v6g0GJthCzNYyYKH85fkDdDRqD8FYilAu39aoXqlpAu+JIOxOYYbIpPR
+         rgej9r2J5v4F6RgYwePUzchB0B1OIZG38koNG/wL0eRD/ibqEWEmrpv1tz3Yt86pkfSy
+         rNtVh9C9Tu5XTJBTPzCjMvU+ptBFFmuFR1VALZIV6txF790sWTdgjs8r3PuVfExkJuqO
+         COplZ8Yv/QfVT44ILgC3psG/toq1N0XUiK/1E4P3G9yDAltfUnzzSoMGVHTQti+p3iPf
+         EnG4Ia+Z6TflKkZMcGJPxx/jjB58PbMHUciRUAImx45Ta3yTrmEeptumQgTZ0pslqbbY
+         INRQ==
+X-Gm-Message-State: APjAAAWykPnN9duKAQkt7v4msEZkLjVYrt0JgkmM/9yp3ZBV2eLcNkbN
+        yExJ+jfdZ9qCm0TaroplH9tzVvhm
+X-Google-Smtp-Source: APXvYqzxZzrY8ceiVvGKbtHfxrjbMOZd1WNUPXE4zfI9fQCuTXYJgWlKPYzQumPdzVXk25tVTPfSEw==
+X-Received: by 2002:adf:e686:: with SMTP id r6mr23927442wrm.177.1580846895441;
+        Tue, 04 Feb 2020 12:08:15 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:bce3:a6b1:8ca3:57b9? (p200300EA8F296000BCE3A6B18CA357B9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:bce3:a6b1:8ca3:57b9])
+        by smtp.googlemail.com with ESMTPSA id y7sm29419255wrr.56.2020.02.04.12.08.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 12:08:14 -0800 (PST)
+Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
+ feature
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com
+Cc:     linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200204181319.27381-1-dmurphy@ti.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <f977a302-16fc-de68-e84b-d41a0eca4c12@gmail.com>
+Date:   Tue, 4 Feb 2020 21:08:07 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
+In-Reply-To: <20200204181319.27381-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm working on getting a system to reproduce this, and verify it also occurs
-with 5.5, but I have a report of a case where the kdump kernel gives
-warnings like the following on a hp dl360 gen9:
+On 04.02.2020 19:13, Dan Murphy wrote:
+> Set the speed optimization bit on the DP83867 PHY.
+> This feature can also be strapped on the 64 pin PHY devices
+> but the 48 pin devices do not have the strap pin available to enable
+> this feature in the hardware.  PHY team suggests to have this bit set.
+> 
+> With this bit set the PHY will auto negotiate and report the link
+> parameters in the PHYSTS register.  This register provides a single
+> location within the register set for quick access to commonly accessed
+> information.
+> 
+> In this case when auto negotiation is on the PHY core reads the bits
+> that have been configured or if auto negotiation is off the PHY core
+> reads the BMCR register and sets the phydev parameters accordingly.
+> 
+> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
+> 4-wire cable.  If this should occur the PHYSTS register contains the
+> current negotiated speed and duplex mode.
+> 
+> In overriding the genphy_read_status the dp83867_read_status will do a
+> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
+> register is read and the phydev speed and duplex mode settings are
+> updated.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-[    2.830589] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-[    2.832615] ehci-pci: EHCI PCI platform driver
-[    2.834190] ehci-pci 0000:00:1a.0: EHCI Host Controller
-[    2.835974] ehci-pci 0000:00:1a.0: new USB bus registered, assigned bus number 1
-[    2.838276] ehci-pci 0000:00:1a.0: debug port 2
-[    2.839700] WARNING: CPU: 0 PID: 1 at drivers/iommu/intel-iommu.c:598 domain_get_iommu+0x55/0x60
-[    2.840671] Modules linked in:
-[    2.840671] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.0-170.el8.kdump2.x86_64 #1
-[    2.840671] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 07/21/2019
-[    2.840671] RIP: 0010:domain_get_iommu+0x55/0x60
-[    2.840671] Code: c2 01 eb 0b 48 83 c0 01 8b 34 87 85 f6 75 0b 48 63 c8 48 39 c2 75 ed 31 c0 c3 48 c1 e1 03 48 8b 05 70 f3 91 01 48 8b 04 08 c3 <0f> 0b 31 c0 c3 31 c9 eb eb 66 90 0f 1f 44 00 00 41 55 40 0f b6 f6
-[    2.840671] RSP: 0018:ffffc900000dfab8 EFLAGS: 00010202
-[    2.840671] RAX: ffff88ec7f1c8000 RBX: 0000006c7c867000 RCX: 0000000000000000
-[    2.840671] RDX: 00000000fffffff0 RSI: 0000000000000000 RDI: ffff88ec7f1c8000
-[    2.840671] RBP: ffff88ec6f7000b0 R08: ffff88ec7f19d000 R09: ffff88ec7cbfcd00
-[    2.840671] R10: 0000000000000095 R11: ffffc900000df928 R12: 0000000000000000
-[    2.840671] R13: ffff88ec7f1c8000 R14: 0000000000001000 R15: 00000000ffffffff
-[    2.840671] FS:  0000000000000000(0000) GS:ffff88ec7f600000(0000) knlGS:0000000000000000
-[    2.840671] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.840671] CR2: 00007ff3e1713000 CR3: 0000006c7de0a004 CR4: 00000000001606b0
-[    2.840671] Call Trace:
-[    2.840671]  __intel_map_single+0x62/0x140
-[    2.840671]  intel_alloc_coherent+0xa6/0x130
-[    2.840671]  dma_pool_alloc+0xd8/0x1e0
-[    2.840671]  e_qh_alloc+0x55/0x130
-[    2.840671]  ehci_setup+0x284/0x7b0
-[    2.840671]  ehci_pci_setup+0xa3/0x530
-[    2.840671]  usb_add_hcd+0x2b6/0x800
-[    2.840671]  usb_hcd_pci_probe+0x375/0x460
-[    2.840671]  local_pci_probe+0x41/0x90
-[    2.840671]  pci_device_probe+0x105/0x1b0
-[    2.840671]  driver_probe_device+0x12d/0x460
-[    2.840671]  device_driver_attach+0x50/0x60
-[    2.840671]  __driver_attach+0x61/0x130
-[    2.840671]  ? device_driver_attach+0x60/0x60
-[    2.840671]  bus_for_each_dev+0x77/0xc0
-[    2.840671]  ? klist_add_tail+0x3b/0x70
-[    2.840671]  bus_add_driver+0x14d/0x1e0
-[    2.840671]  ? ehci_hcd_init+0xaa/0xaa
-[    2.840671]  ? do_early_param+0x91/0x91
-[    2.840671]  driver_register+0x6b/0xb0
-[    2.840671]  ? ehci_hcd_init+0xaa/0xaa
-[    2.840671]  do_one_initcall+0x46/0x1c3
-[    2.840671]  ? do_early_param+0x91/0x91
-[    2.840671]  kernel_init_freeable+0x1af/0x258
-[    2.840671]  ? rest_init+0xaa/0xaa
-[    2.840671]  kernel_init+0xa/0xf9
-[    2.840671]  ret_from_fork+0x35/0x40
-[    2.840671] ---[ end trace e87b0d9a1c8135c4 ]---
-[    3.010848] ehci-pci 0000:00:1a.0: Using iommu dma mapping
-[    3.012551] ehci-pci 0000:00:1a.0: 32bit DMA uses non-identity mapping
-[    3.018537] ehci-pci 0000:00:1a.0: cache line size of 64 is not supported
-[    3.021188] ehci-pci 0000:00:1a.0: irq 18, io mem 0x93002000
-[    3.029006] ehci-pci 0000:00:1a.0: USB 2.0 started, EHCI 1.00
-[    3.030918] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 4.18
-[    3.033491] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[    3.035900] usb usb1: Product: EHCI Host Controller
-[    3.037423] usb usb1: Manufacturer: Linux 4.18.0-170.el8.kdump2.x86_64 ehci_hcd
-[    3.039691] usb usb1: SerialNumber: 0000:00:1a.0
+net-next is closed currently. See here for details:
+https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+Reopening will be announced on the netdev mailing list, you can also
+check net-next status here: http://vger.kernel.org/~davem/net-next.html
 
-It looks like the device finishes initializing once it figures out it
-needs dma mapping instead of the default
-passthrough. intel_alloc_coherent calls iommu_need_mapping, before it
-calls __intel_map_single, so I'm not sure why it is tripping over the
-WARN_ON in domain_get_iommu.
-
-one thing I noticed while looking at this is that domain_get_iommu can
-return NULL. So should there be something like the following in
-__intel_map_single after the domain_get_iommu call?
-
-if (!iommu)
-    goto error;
-
-It is possible to deref the null pointer later otherwise.
-
-Regards,
-Jerry
+> ---
+> v2 - Updated read status to call genphy_read_status first, added link_change
+> callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/ 
+> 
+>  drivers/net/phy/dp83867.c | 55 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index 967f57ed0b65..6f86ca1ebb51 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -21,6 +21,7 @@
+>  #define DP83867_DEVADDR		0x1f
+>  
+>  #define MII_DP83867_PHYCTRL	0x10
+> +#define MII_DP83867_PHYSTS	0x11
+>  #define MII_DP83867_MICR	0x12
+>  #define MII_DP83867_ISR		0x13
+>  #define DP83867_CFG2		0x14
+> @@ -118,6 +119,15 @@
+>  #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+>  #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+>  
+> +/* PHY STS bits */
+> +#define DP83867_PHYSTS_1000			BIT(15)
+> +#define DP83867_PHYSTS_100			BIT(14)
+> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
+> +#define DP83867_PHYSTS_LINK			BIT(10)
+> +
+> +/* CFG2 bits */
+> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
+> +
+>  /* CFG3 bits */
+>  #define DP83867_CFG3_INT_OE			BIT(7)
+>  #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
+> @@ -287,6 +297,43 @@ static int dp83867_config_intr(struct phy_device *phydev)
+>  	return phy_write(phydev, MII_DP83867_MICR, micr_status);
+>  }
+>  
+> +static void dp83867_link_change_notify(struct phy_device *phydev)
+> +{
+> +	if (phydev->state != PHY_RUNNING)
+> +		return;
+> +
+> +	if (phydev->speed == SPEED_100 || phydev->speed == SPEED_10)
+> +		phydev_warn(phydev, "Downshift detected connection is %iMbps\n",
+> +			    phydev->speed);
+> +}
+> +
+> +static int dp83867_read_status(struct phy_device *phydev)
+> +{
+> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
+> +	int ret;
+> +
+> +	ret = genphy_read_status(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (status < 0)
+> +		return status;
+> +
+> +	if (status & DP83867_PHYSTS_DUPLEX)
+> +		phydev->duplex = DUPLEX_FULL;
+> +	else
+> +		phydev->duplex = DUPLEX_HALF;
+> +
+> +	if (status & DP83867_PHYSTS_1000)
+> +		phydev->speed = SPEED_1000;
+> +	else if (status & DP83867_PHYSTS_100)
+> +		phydev->speed = SPEED_100;
+> +	else
+> +		phydev->speed = SPEED_10;
+> +
+> +	return 0;
+> +}
+> +
+>  static int dp83867_config_port_mirroring(struct phy_device *phydev)
+>  {
+>  	struct dp83867_private *dp83867 =
+> @@ -467,6 +514,11 @@ static int dp83867_config_init(struct phy_device *phydev)
+>  	int ret, val, bs;
+>  	u16 delay;
+>  
+> +	/* Force speed optimization for the PHY even if it strapped */
+> +	ret = phy_set_bits(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = dp83867_verify_rgmii_cfg(phydev);
+>  	if (ret)
+>  		return ret;
+> @@ -655,6 +707,9 @@ static struct phy_driver dp83867_driver[] = {
+>  		.config_init	= dp83867_config_init,
+>  		.soft_reset	= dp83867_phy_reset,
+>  
+> +		.read_status	= dp83867_read_status,
+> +		.link_change_notify = dp83867_link_change_notify,
+> +
+>  		.get_wol	= dp83867_get_wol,
+>  		.set_wol	= dp83867_set_wol,
+>  
+> 
 
