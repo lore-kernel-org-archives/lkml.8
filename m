@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F427C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E19C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B842166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5398217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580822705;
-	bh=Rc6NqeXWz9S3r4LWSxPFOJ2ycNr1OekbG9nhhgvWA9c=;
+	s=default; t=1580822717;
+	bh=zWecOsuswcRe5ymy/QZcCUNLiCf/++nueeTEOX88OtM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=R2fUYkaNjnErtbP/PK/L9wFa5GXrKJMyYSROYh8YDGUJtLV4L3RfZvvTxrLSwf96v
-	 G2LWG14Agmzipo/ck3D1cLElXRtx7cwoA2j31/y2v4uWrR6XctFCT7syKRNwyEDdjS
-	 XfdjA3ejcjZHlCzMIviyfL1hnetZqVdX1Th/Srqo=
+	b=2arU4+CSPFJa+QJXrcHPjtJUarfBmXZK1wdCP5BtSAat43XsGM1e9kEJW9s5PeZrr
+	 uZcp9hI0DhkV5Hm0t2W1sPaqJ64mil8HWjHo0BASscqJK+jdZY9hkih6wXmEc6gHWS
+	 OSYmWZm0e4CbOJSH88/CmFx903Dd76qUsRZOmKVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbgBDNZE (ORCPT
+        id S1727494AbgBDNZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:25:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
+        Tue, 4 Feb 2020 08:25:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbgBDNZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:25:04 -0500
-Subject: Re: [GIT PULL] overlayfs update for 5.6
+        id S1727481AbgBDNZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 08:25:16 -0500
+Subject: Re: [GIT PULL] arch/microblaze patches for 5.6-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580822703;
-        bh=Rc6NqeXWz9S3r4LWSxPFOJ2ycNr1OekbG9nhhgvWA9c=;
+        s=default; t=1580822716;
+        bh=zWecOsuswcRe5ymy/QZcCUNLiCf/++nueeTEOX88OtM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vG5IZN1vJ5ZIqJPAhvKYdjh8/GlnSTQojD1RzAybg0MIron8Xopc8DQ/DhqjyxrnB
-         dVPlKVQa1NZ16nasaw+jf+MuNhfUDDlykeH9GON6+Pwa1Cro3iF5nRvexUsyEibbu3
-         PFABCSVK/Bu08Edz0Yoc4CIrcpU2Vn0aSpjVdMKU=
+        b=zjeIPcsmShi/UGq4KkVE4tSD0Rax8TjjhyqhoGYa4j1gO5D5+omoXjqNYIIhJ7lx+
+         w5wKWPzzuSqRMK6CYyNZjPB582EJ0tbLdQPMv0Cw+cvOMB473jPW5PQfZLrO89/kK+
+         lnp5CdxHwZqhbb5psvSIKmhHNd3wb5ZJU1r0poAo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200204093758.GA7822@miu.piliscsaba.redhat.com>
-References: <20200204093758.GA7822@miu.piliscsaba.redhat.com>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200204093758.GA7822@miu.piliscsaba.redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git
- tags/ovl-update-5.6
-X-PR-Tracked-Commit-Id: a4ac9d45c0cd14a2adc872186431c79804b77dbf
+In-Reply-To: <92cc6617-e2c3-e3b8-cf20-c8ccf748d37a@monstr.eu>
+References: <92cc6617-e2c3-e3b8-cf20-c8ccf748d37a@monstr.eu>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <92cc6617-e2c3-e3b8-cf20-c8ccf748d37a@monstr.eu>
+X-PR-Tracked-Remote: git://git.monstr.eu/linux-2.6-microblaze.git
+ tags/microblaze-v5.6-rc1
+X-PR-Tracked-Commit-Id: 6aa71ef9bcf9d8688c777dfbff340348cb89a5b4
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7f879e1a94ac99586abf0659c03f35c1e48279c4
-Message-Id: <158082270392.19118.7086093890010037735.pr-tracker-bot@kernel.org>
-Date:   Tue, 04 Feb 2020 13:25:03 +0000
-To:     Miklos Szeredi <miklos@szeredi.hu>
+X-PR-Merge-Commit-Id: 153b5c566d30fb984827acb12fd93c3aa6c147d3
+Message-Id: <158082271623.19118.12820077347343651549.pr-tracker-bot@kernel.org>
+Date:   Tue, 04 Feb 2020 13:25:16 +0000
+To:     Michal Simek <monstr@monstr.eu>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 4 Feb 2020 10:37:58 +0100:
+The pull request you sent on Tue, 4 Feb 2020 12:08:25 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-update-5.6
+> git://git.monstr.eu/linux-2.6-microblaze.git tags/microblaze-v5.6-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7f879e1a94ac99586abf0659c03f35c1e48279c4
+https://git.kernel.org/torvalds/c/153b5c566d30fb984827acb12fd93c3aa6c147d3
 
 Thank you!
 
