@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEBEC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532B5C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD21C2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2840021927
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QBN3hZRq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dDsXTEAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgBDK46 (ORCPT
+        id S1727129AbgBDK6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:56:58 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:33410 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgBDK46 (ORCPT
+        Tue, 4 Feb 2020 05:58:04 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40083 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgBDK6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:56:58 -0500
-Received: by mail-qv1-f68.google.com with SMTP id z3so8342758qvn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:56:56 -0800 (PST)
+        Tue, 4 Feb 2020 05:58:04 -0500
+Received: by mail-qk1-f196.google.com with SMTP id b7so2212814qkl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:58:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=/oUsrvLxDIg2kRTkRIDa+3f0CNVdXlRSCLiuyEtYa9c=;
-        b=QBN3hZRqRJfvXM7KsldzN/Y7UB9nRf6fT56y9YAkEYDPA55hGUnbTbep8I6bfTbsdW
-         m9Pwoqx4QhXDeO4XtwYSVmDPrWsWQOAo19+2PH+U9Ib5ANtLC8DwrcskFIYSaLHRm45h
-         wLNqkjMwYOrCgjqSaai4YcdjOhwatJxCFjhvu8E89Kxo754pXUvKWDfKHhQxIbcwKFzj
-         h/dQt17+28/5KKynnLEiKf8IZ/OdCSCJJKD1FhhadNOwhLKCLtBsQjUOMyr5LS94Be9/
-         jR+tIGVKEm8A36MijR7kSUYjISnBxK4tA4/iPgmJoWnNId1zmePgSeO4W49pCkgbszTL
-         EAtg==
+        bh=NMkyhVQSWvkEio+aMy2Gad6E8U/YVr2WvfbqrIM79Ns=;
+        b=dDsXTEAwh3dw/aFpDHOSx/OkiR/dsRVQgWaqh/SmX9VrwPf88A3B/TVUN0PSbdTQYj
+         lZFmOK2ulhEsePjtkVF/4C/B4IupUXnqdIpRVSJRaWy9kyjY68vsl5j7PaoeyFdqU+o0
+         jka4e73H48C6I9RUBHYWoNW28ZBnq55U0uLzMqC++YRHovqVCZYGUA99ljOsGx1AnWb7
+         8SKe0YFxMl9p3OOcrGVxjKh74ghwXEPVw3pa8bDymu0VRIm6waXfy22wQQS1qWyqipCG
+         9d8P1fB8zHSuh9ls6JnYc+Ds7FRQJE7aYXW0SpkwtFUa6JD5u8aLJtQbaApeGsf9KX9P
+         HQZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/oUsrvLxDIg2kRTkRIDa+3f0CNVdXlRSCLiuyEtYa9c=;
-        b=QDddND6p4lvPj3+fTr4i2Sm7/ei3teiqBEvmMSMu4Kk4LCo9LQ7pANXFGbcwXQ7o52
-         pNeaxCP5AnT153Sh0pLyJvBiDsPkNHT6uvG12LTtLyIA/e+wJC9lUoYmaS9jgPkJvpcR
-         L5L1uTaDaMUr69Uj7WLRgm82LHR95uZ753d7pvCINRXNAyZMklKdsqmbQOumkGR/bRzr
-         cbCjp+4QarVPaYo6oMG0ZI1uWKX+bXSlMiHgkdf0Sa89FTP6qz4a6hbBDYde18N33krj
-         lx2697PRbaxdZi5VH2Uu0HTBSpI+lWf6KyHSXz2bKtTfCsBqBDxYX6oyaKrCaG0Uqx5E
-         OHRA==
-X-Gm-Message-State: APjAAAWD1onhSKoqF1izULNa7xfKjMScMA/wc5scr8zRob3a+ro6IdzI
-        /5PFOoCFWXLUzufgoTKV1FzBB5VeE+UYDqarMFonaA==
-X-Google-Smtp-Source: APXvYqwHoNsb4va0mzD8ErAs5TLzl8MOKBkFKNiQum74YciVvwTDMrSJ6Tqrk1Jak8OGeSAYlPULUa93UHza4xbn1YQ=
-X-Received: by 2002:a0c:ead1:: with SMTP id y17mr25795609qvp.210.1580813815924;
- Tue, 04 Feb 2020 02:56:55 -0800 (PST)
+        bh=NMkyhVQSWvkEio+aMy2Gad6E8U/YVr2WvfbqrIM79Ns=;
+        b=qh+3NC4rOBBo/JkqH2TmEUqlSFljNoE5Bh7qoUBBy3uwayMeIWTxfnVgEU1Pa5scpq
+         K+ZQYsrMipfd5jeLeyE9c7AlfbYvZoMAKKLQz0Vvv1WTD5kM6S+SZMeXRVQnZyjSKeDW
+         5oBT1lWmKdn/h6Xy3WTFbt9S1J7vFuFBnWpGf0Fqf5NvVbk1WaLbskDlshvjswvMdMOa
+         tGMU5NLsAJDJcIrY2579QBK8J2UqqztiI20o1fdN1ARQZhj8WuE8sWWg+VzpaEWVpHGl
+         Inbrb8V/O4wZnZbEv+r7zNBw/8wWA+wcJmu7HYuMZ52kK7ugDqntVoo4owYkmKHbcdzw
+         19MA==
+X-Gm-Message-State: APjAAAVoobvndh5mFYuDbisZLj/ZzlMuaUtmptENfv9PQjmIlDwqAVwj
+        f0Am6QIHbPWJJgyQkCcTFqc1FHV6Q9LRfI1sBG52vA==
+X-Google-Smtp-Source: APXvYqzs7YECRnkA2CODtIe2tL8VK33eJyMjTkmUGRZ40CQfDGS6bPX1AvCyMG1yAkx4sNvxOLFawWhiHrXirYxrgv8=
+X-Received: by 2002:a37:9c07:: with SMTP id f7mr28691354qke.103.1580813882093;
+ Tue, 04 Feb 2020 02:58:02 -0800 (PST)
 MIME-Version: 1.0
-References: <1579528013-28445-1-git-send-email-yannick.fertre@st.com> <69cced11-c30a-da6c-0465-79b632901b62@st.com>
-In-Reply-To: <69cced11-c30a-da6c-0465-79b632901b62@st.com>
+References: <1579601632-7001-1-git-send-email-yannick.fertre@st.com> <2b967bed-c2fa-1575-3e06-ae5b19069e56@st.com>
+In-Reply-To: <2b967bed-c2fa-1575-3e06-ae5b19069e56@st.com>
 From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Tue, 4 Feb 2020 11:56:45 +0100
-Message-ID: <CA+M3ks5dcQOcHAszgCP=XH5dQrO7OYqpHybeZOm2dXrLBeoJ+w@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: enable/disable depends on encoder
+Date:   Tue, 4 Feb 2020 11:57:51 +0100
+Message-ID: <CA+M3ks5FFZgnWnNcgz7YM7AWbtSNqkQ2-P29ss5FyfDzd6PxeA@mail.gmail.com>
+Subject: Re: [PATCH] drm/stm: ltdc: add number of interrupts
 To:     Philippe CORNU <philippe.cornu@st.com>
 Cc:     Yannick FERTRE <yannick.fertre@st.com>,
         Benjamin GAIGNARD <benjamin.gaignard@st.com>,
@@ -79,7 +79,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeu. 23 janv. 2020 =C3=A0 10:47, Philippe CORNU <philippe.cornu@st.com> =
+Le jeu. 23 janv. 2020 =C3=A0 10:49, Philippe CORNU <philippe.cornu@st.com> =
 a =C3=A9crit :
 >
 > Dear Yannick,
@@ -89,90 +89,105 @@ a =C3=A9crit :
 >
 > Philippe :-)
 >
-> On 1/20/20 2:46 PM, Yannick Fertre wrote:
-> > From: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
-> >
-> > When connected to a dsi host, the ltdc display controller
-> > must send frames only after the end of the dsi panel
-> > initialization to avoid errors when the dsi host sends
-> > commands to the dsi panel (dsi px fifo full).
-> > To avoid this issue, the display controller must be
-> > enabled/disabled when the encoder is enabled/disabled.
-> >
+> On 1/21/20 11:13 AM, Yannick Fertre wrote:
+> > The number of interrupts depends on the ltdc version.
+> > Don't try to get interrupt which not exist, avoiding
+> > kernel warning messages.
 
 Applied on drm-misc-next.
 
-Thanks
+Thanks,
 Benjamin
 
-> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
+> >
+> > Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
 > > ---
-> >   drivers/gpu/drm/stm/ltdc.c | 14 ++++++++------
-> >   1 file changed, 8 insertions(+), 6 deletions(-)
+> >   drivers/gpu/drm/stm/ltdc.c | 30 +++++++++++++++---------------
+> >   drivers/gpu/drm/stm/ltdc.h |  1 +
+> >   2 files changed, 16 insertions(+), 15 deletions(-)
 > >
 > > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index 719dfc5..9ef125d 100644
+> > index c2815e8..58092b0 100644
 > > --- a/drivers/gpu/drm/stm/ltdc.c
 > > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -437,9 +437,6 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc=
- *crtc,
-> >       /* Commit shadow registers =3D update planes at next vblank */
-> >       reg_set(ldev->regs, LTDC_SRCR, SRCR_VBR);
+> > @@ -1146,12 +1146,14 @@ static int ltdc_get_caps(struct drm_device *dde=
+v)
+> >               ldev->caps.pad_max_freq_hz =3D 90000000;
+> >               if (ldev->caps.hw_version =3D=3D HWVER_10200)
+> >                       ldev->caps.pad_max_freq_hz =3D 65000000;
+> > +             ldev->caps.nb_irq =3D 2;
+> >               break;
+> >       case HWVER_20101:
+> >               ldev->caps.reg_ofs =3D REG_OFS_4;
+> >               ldev->caps.pix_fmt_hw =3D ltdc_pix_fmt_a1;
+> >               ldev->caps.non_alpha_only_l1 =3D false;
+> >               ldev->caps.pad_max_freq_hz =3D 150000000;
+> > +             ldev->caps.nb_irq =3D 4;
+> >               break;
+> >       default:
+> >               return -ENODEV;
+> > @@ -1251,13 +1253,21 @@ int ltdc_load(struct drm_device *ddev)
+> >       reg_clear(ldev->regs, LTDC_IER,
+> >                 IER_LIE | IER_RRIE | IER_FUIE | IER_TERRIE);
 > >
-> > -     /* Enable LTDC */
-> > -     reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
-> > -
-> >       drm_crtc_vblank_on(crtc);
-> >   }
-> >
-> > @@ -453,9 +450,6 @@ static void ltdc_crtc_atomic_disable(struct drm_crt=
-c *crtc,
-> >
-> >       drm_crtc_vblank_off(crtc);
-> >
-> > -     /* disable LTDC */
-> > -     reg_clear(ldev->regs, LTDC_GCR, GCR_LTDCEN);
-> > -
-> >       /* disable IRQ */
-> >       reg_clear(ldev->regs, LTDC_IER, IER_RRIE | IER_FUIE | IER_TERRIE)=
-;
-> >
-> > @@ -1058,9 +1052,13 @@ static const struct drm_encoder_funcs ltdc_encod=
-er_funcs =3D {
-> >   static void ltdc_encoder_disable(struct drm_encoder *encoder)
-> >   {
-> >       struct drm_device *ddev =3D encoder->dev;
-> > +     struct ltdc_device *ldev =3D ddev->dev_private;
-> >
-> >       DRM_DEBUG_DRIVER("\n");
-> >
-> > +     /* Disable LTDC */
-> > +     reg_clear(ldev->regs, LTDC_GCR, GCR_LTDCEN);
+> > -     for (i =3D 0; i < MAX_IRQ; i++) {
+> > +     ret =3D ltdc_get_caps(ddev);
+> > +     if (ret) {
+> > +             DRM_ERROR("hardware identifier (0x%08x) not supported!\n"=
+,
+> > +                       ldev->caps.hw_version);
+> > +             goto err;
+> > +     }
 > > +
-> >       /* Set to sleep state the pinctrl whatever type of encoder */
-> >       pinctrl_pm_select_sleep_state(ddev->dev);
-> >   }
-> > @@ -1068,6 +1066,7 @@ static void ltdc_encoder_disable(struct drm_encod=
-er *encoder)
-> >   static void ltdc_encoder_enable(struct drm_encoder *encoder)
-> >   {
-> >       struct drm_device *ddev =3D encoder->dev;
-> > +     struct ltdc_device *ldev =3D ddev->dev_private;
-> >
-> >       DRM_DEBUG_DRIVER("\n");
-> >
-> > @@ -1078,6 +1077,9 @@ static void ltdc_encoder_enable(struct drm_encode=
-r *encoder)
-> >        */
-> >       if (encoder->encoder_type =3D=3D DRM_MODE_ENCODER_DPI)
-> >               pinctrl_pm_select_default_state(ddev->dev);
+> > +     DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_versio=
+n);
 > > +
-> > +     /* Enable LTDC */
-> > +     reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
-> >   }
+> > +     for (i =3D 0; i < ldev->caps.nb_irq; i++) {
+> >               irq =3D platform_get_irq(pdev, i);
+> > -             if (irq =3D=3D -EPROBE_DEFER)
+> > +             if (irq < 0) {
+> > +                     ret =3D irq;
+> >                       goto err;
+> > -
+> > -             if (irq < 0)
+> > -                     continue;
+> > +             }
 > >
-> >   static const struct drm_encoder_helper_funcs ltdc_encoder_helper_func=
-s =3D {
+> >               ret =3D devm_request_threaded_irq(dev, irq, ltdc_irq,
+> >                                               ltdc_irq_thread, IRQF_ONE=
+SHOT,
+> > @@ -1268,16 +1278,6 @@ int ltdc_load(struct drm_device *ddev)
+> >               }
+> >       }
+> >
+> > -
+> > -     ret =3D ltdc_get_caps(ddev);
+> > -     if (ret) {
+> > -             DRM_ERROR("hardware identifier (0x%08x) not supported!\n"=
+,
+> > -                       ldev->caps.hw_version);
+> > -             goto err;
+> > -     }
+> > -
+> > -     DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_versio=
+n);
+> > -
+> >       /* Add endpoints panels or bridges if any */
+> >       for (i =3D 0; i < MAX_ENDPOINTS; i++) {
+> >               if (panel[i]) {
+> > diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
+> > index a1ad0ae..310e87f 100644
+> > --- a/drivers/gpu/drm/stm/ltdc.h
+> > +++ b/drivers/gpu/drm/stm/ltdc.h
+> > @@ -19,6 +19,7 @@ struct ltdc_caps {
+> >       const u32 *pix_fmt_hw;  /* supported pixel formats */
+> >       bool non_alpha_only_l1; /* non-native no-alpha formats on layer 1=
+ */
+> >       int pad_max_freq_hz;    /* max frequency supported by pad */
+> > +     int nb_irq;             /* number of hardware interrupts */
+> >   };
+> >
+> >   #define LTDC_MAX_LAYER      4
 > >
 > _______________________________________________
 > linux-arm-kernel mailing list
