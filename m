@@ -2,107 +2,67 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73DEC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F2CC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B611021582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02E521582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580803504;
+	bh=C9ZIXkdQOj2tiHTCuXspMqR8xG3hB6U6ESXiyD40ZlU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=lo9/iDPUs5InYDODNSuhDOU+i/5h1kIWgEnwsIw3ZeSE7cRhNZf5fBs0TKjtFI/JI
+	 JtROOB1+9bqL8YaSMY/hw6gVsBAd7qldHdmlP7c+n4UknO/6/jL6XebjALNFNsxtGg
+	 7JeQTsEo3cVFjUZEQ4FtS6MaSmBY51jugjMBtH4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgBDICJ (ORCPT
+        id S1727244AbgBDIFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:02:09 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44017 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgBDICI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 03:02:08 -0500
-Received: by mail-oi1-f193.google.com with SMTP id p125so17544249oif.10;
-        Tue, 04 Feb 2020 00:02:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dum+o5gu2gGFpSl+O8wsomQ94Fs2sL9d8ohYuPebAnY=;
-        b=ns192hVFZLPa4xwD+cCtN++jd0e7NrjqVwQ2e49oDjaLNhpOUm/Bu5kJ5a4d1lgosZ
-         TVlJ/oOUVGyp5LEq+2VxMJRPMh8sLMzj3oi+ms1wJ7GiTdLp0+pop+ISVGvhyPILgUZI
-         1k7J2R1U6/1y8Qfqd5XeKpshgkilbPJiOsB32iW8KxoZG4nXFqeG05SceaVXIPGY/1Nz
-         GzGWAIHK0r7SXnIGwuSv8BePCNKYWBW3GgPmEkDMWRbx/pUkfK41/5hSbwlqYNnGyg34
-         0aDiv+dpr8yazbNJdtwXU2Oefr8FCq/cEo4rJmfe2yjTjSX6QaWZl6X0JwRfCtmGpSsN
-         SHnQ==
-X-Gm-Message-State: APjAAAUQGwSL/O+4LDLfB9hZmiUtemXsVbAEjPbZVlgohb0erih9g1mw
-        9fQg+VLAuAfxF5RtnjkEEqCOhYHg1LjMMX+A7Mg=
-X-Google-Smtp-Source: APXvYqzzEX39mrChEWmOwQfxI4cvrJqp32wsemcpmKn2mv1qMu0WlwDSpDrURvjggP7ZnFmlvGoXXaie/JESZoxAYEY=
-X-Received: by 2002:a54:4707:: with SMTP id k7mr2486144oik.153.1580803327484;
- Tue, 04 Feb 2020 00:02:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com> <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
- <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com> <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
- <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
- <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com> <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
-In-Reply-To: <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Feb 2020 09:01:55 +0100
-Message-ID: <CAMuHMdUYcSPoK8NOSdMzU_Jtg84aPMNKeGnacnF7=aidV4eqvw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Feb 2020 03:05:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727004AbgBDIFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 03:05:03 -0500
+Subject: Re: [GIT PULL] RTC for 5.6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580803503;
+        bh=C9ZIXkdQOj2tiHTCuXspMqR8xG3hB6U6ESXiyD40ZlU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=n/wOU2P/SUBysT7IkZ/DF5FMkM/Slx+BQpc8P0fYI2N4ZffTu7+Bnb9AG9Ejs9ej+
+         vQ21Xh88DSgSvKdTjFQJD5qFwsnQapS4NBxX9DuxXA2Q3guttVcBUev02tyhtUAgDi
+         wq1DmlcbCphNn0MK9IpPGZ3GAAsYEX4lykv4m5/4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200203223240.GA63964@piout.net>
+References: <20200203223240.GA63964@piout.net>
+X-PR-Tracked-List-Id: <linux-rtc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200203223240.GA63964@piout.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.6
+X-PR-Tracked-Commit-Id: f45719240700398b63a165f6b7f3fbab04f0b052
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: eadc4e40e68832fc61ae5e3ef2ef5cfcd9308b2c
+Message-Id: <158080350294.18289.15866442909143805846.pr-tracker-bot@kernel.org>
+Date:   Tue, 04 Feb 2020 08:05:02 +0000
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+The pull request you sent on Mon, 3 Feb 2020 23:32:40 +0100:
 
-On Tue, Feb 4, 2020 at 7:52 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 03/02/2020 22.34, Geert Uytterhoeven wrote:
-> > On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
-> > <glaubitz@physik.fu-berlin.de> wrote:
-> >> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
-> >>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
-> >>
-> >> FWIW, there is a patch set by Yoshinori Sato to add device tree support
-> >> for classical SuperH hardware. It was never merged, unfortunately :(.
-> >
-> > True.
-> >
-> >>> Anyone who cares for DMA on SuperH?
-> >>
-> >> What is DMA used for on SuperH? Wouldn't dropping it cut support for
-> >> essential hardware features?
-> >
-> > It may make a few things slower.
->
-> I would not drop DMA support but I would suggest to add dma_slave_map
-> for non DT boot so the _compat() can be dropped.
+> git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.6
 
-Which is similar in spirit to gpiod_lookup and clk_register_clkdev(),
-right?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/eadc4e40e68832fc61ae5e3ef2ef5cfcd9308b2c
 
-> Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
-> difference offloading data movement from the CPU.
-
-Assumed it is actually used...
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thank you!
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
