@@ -2,189 +2,179 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_DBL_ABUSE_MALW autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4EAC35249
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1643C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8412166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:22:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5yVxar/"
+	by mail.kernel.org (Postfix) with ESMTP id 70F6E2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580783002;
+	bh=yj3bmniCixgorYoSaSIkoELN+YXjH9z7lsVYDOx9pHA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dxFTraOvWr1hjMr41h90uv4Xm2vFZ5hOGQ69nwI3yP3GIw5BDJqIr9Zea7EB5PTTe
+	 JNUeeI9i+UosH4iiLLBk0YOV00XkI9rDlXEU/uFAD1DJI9HAYQLB03QUe8V5WpJeEK
+	 aVZREQWkqxmYm04FOZxs1OzzukW+f+Vc8OiPItHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgBDCWa (ORCPT
+        id S1727127AbgBDCXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 21:22:30 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40477 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgBDCW3 (ORCPT
+        Mon, 3 Feb 2020 21:23:21 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:30282 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgBDCXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 21:22:29 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so7856689qvb.7;
-        Mon, 03 Feb 2020 18:22:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+7bNDkzYQObh2nR2oGbuE4Dpd0rtrc7Ng0f3Nsbx0is=;
-        b=m5yVxar/U8syjDQWSw87By9g8yzUYQf7wttomeou+XraVPd7q6Unrpdz2RlocmovZ5
-         GYkArBneH9e1IFHBW1qKfqDyvotGHGbmOKl8xpHnr0kwVHNcXUM+NfEYkVIHjBOe/jpA
-         lvgXe39I0B6MW1MRpvSwFKnX2W/gZxF55LS/362DdvVw6FHBbnD8G3Xu1HUKgww5eCYQ
-         vqZis0NnSNY36O97WGO9Kemk4Oo11iGkz6o4w/hMxfpEJ+PE61okSoFPwckx1i756vhW
-         FKN5HD3/G5itpv4x2bbKjGKUCQKMMQulHQW7HGu5JcPCMa5hGp4A03ii346QQKUxMKeq
-         QWQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+7bNDkzYQObh2nR2oGbuE4Dpd0rtrc7Ng0f3Nsbx0is=;
-        b=qUmVcNZtwTDa6Li5YL3TtU8JmExoSjFSUiDMq065TBxO/NRhtamF5QtcMA+ha1e48T
-         KeqaLc8mG6Z/kH3g+qwdnI7a0wNNYMS7Yz1VY9amVCTgoYR0YsEe2BaT+TvH90ZqCdQJ
-         8IjJjCqN6Y390cGQB+bFSMTnKO1S85epSvjR2hXDy5dQgss1z6pH+1u9x5f5Su2RZZR5
-         /sNSRbGrMu5xuy0+kn6vVX6iWUK5+qMZkmR4qxRUpZkiWwGApXzSlaf4eLdxUD/nWisc
-         p07TYHdXn1Jw+dKK6+W5u+Hn9qJqHYC/KKeWnVGjTlL+DdTRa9+nIrYXSPqcttli6oMP
-         DZOA==
-X-Gm-Message-State: APjAAAWUiDtPzLmSrJi47LS/yhNjafXp/Ir3qC7oXFtdl4OF5QpHkF+7
-        WC9gSaa3U7+WXVR9hl1xe2I=
-X-Google-Smtp-Source: APXvYqzseWAXn508OZu6/LH11PnekWyK3CLv5IOOZVn0+EH0AtuUIsi/FVxiEve5zsRqV9wvlwvijA==
-X-Received: by 2002:a05:6214:162c:: with SMTP id e12mr25020577qvw.3.1580782947998;
-        Mon, 03 Feb 2020 18:22:27 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id w24sm10923234qts.3.2020.02.03.18.22.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2020 18:22:27 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 91C6321D26;
-        Mon,  3 Feb 2020 21:22:26 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 03 Feb 2020 21:22:26 -0500
-X-ME-Sender: <xms:YNU4Xmowd6HWnVT6dy_HxbxIBs5KN6Auhiy_VWxy9ToftOgTAQ6F8A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeekgdeghecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
-    epihhnfhhrrgguvggrugdrohhrghenucfkphephedvrdduheehrdduuddurdejudenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnod
-    hmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeek
-    heehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrg
-    hmvg
-X-ME-Proxy: <xmx:YNU4XhiuFOpkyXZAqllNI2BrqRetE_5DfP1rcXKO9PXrOzLBMCnNgQ>
-    <xmx:YNU4Xq9l5JoQklMWaq7fB5Obzz0lNoBvvpMOZd2Ju47GooYO2hCaXg>
-    <xmx:YNU4XlW1bie1w9CJ0Ga3oVN065fa-luZPf3pssfAx5CI9kZ7OmTA_Q>
-    <xmx:YtU4Xk0FmGTG-BF4UFvPenn2YWCpiLoZT3Ymbj25IMOOjkjMDJb0gZ9aFuA>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6A34F30605C8;
-        Mon,  3 Feb 2020 21:22:24 -0500 (EST)
-Date:   Tue, 4 Feb 2020 10:22:22 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, x86@kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>
-Subject: Re: [PATCH v2 1/3] PCI: hv: Move hypercall related definitions into
- tlfs header
-Message-ID: <20200204022222.GI83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-2-boqun.feng@gmail.com>
- <20200203092525.GC20189@big-machine>
+        Mon, 3 Feb 2020 21:23:21 -0500
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0142MuYg018302;
+        Tue, 4 Feb 2020 11:22:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0142MuYg018302
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580782977;
+        bh=SYP8mvlfp4LCPh04gPtjz20E46u6IAmKwTPA0CfKfIg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jrLmykN6mxtJ2Yiw5lxGloq0DJZsOChCO2Q8riNsOhvk9hDZTKz32eGG2bDpnzroi
+         rat2PzTluadDcT5oR4WCQ+PXYv6KW50pfmlYuk+UQ9QcmDx2t3EKoJUZNAjjrDdoaZ
+         qg2wsVzgqq/uqYYDZyElMnvA7IDmUqihTeXMTPzH7UR1/PCgYjkW08vKlmezfKQ9gQ
+         fVQyeIDp41HcStofal8ProdtEhlTkvM99gdlvxFiLa3qy6fnwCDvEn8NNiZ84yx75K
+         wzVd/14HsFe/hma+UXPDtyJw0nImiaGywSnqXM2uS2daLtQYWg7Rd2Cgy941FVDHzy
+         fCCkYywnQGI4w==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id g7so4735061vkl.12;
+        Mon, 03 Feb 2020 18:22:57 -0800 (PST)
+X-Gm-Message-State: APjAAAWxZD1yEZt6R8CmX0vUSrb7xi1XJVa07dPRQ3OvcZ2GXnwqtqq6
+        zWJDsOFcVR/nDx2WsIjDGTYBsegI9JH0V4Snme8=
+X-Google-Smtp-Source: APXvYqwe3zxe9hfuDke5qn1vv3ofqQynPyNCI/LCnIO5Ligc29RBUCW4iDTumBajiO3sMQze/jhP7vGscjlIqr5vvns=
+X-Received: by 2002:a1f:8cd5:: with SMTP id o204mr15815541vkd.66.1580782975866;
+ Mon, 03 Feb 2020 18:22:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203092525.GC20189@big-machine>
+References: <20200203200656.GA455151@rani.riverdale.lan> <20200203211644.39847-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200203211644.39847-1-nivedita@alum.mit.edu>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 4 Feb 2020 11:22:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQq7ah1yLOr-fgH-Oo7_NHzvYiy6huY1=4DxJoCGi+cmw@mail.gmail.com>
+Message-ID: <CAK7LNAQq7ah1yLOr-fgH-Oo7_NHzvYiy6huY1=4DxJoCGi+cmw@mail.gmail.com>
+Subject: Re: [PATCH] initramfs: don't double-compress built-in initramfs if
+ the kernel is compressed
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 09:25:25AM +0000, Andrew Murray wrote:
-> On Mon, Feb 03, 2020 at 01:03:11PM +0800, Boqun Feng wrote:
-> > Currently HVCALL_RETARGET_INTERRUPT and HV_PARTITION_ID_SELF are defined
-> > in pci-hyperv.c. However, similar to other hypercall related definitions
-> > , it makes more sense to put them in the tlfs header file.
-> 
-> Nit: please keep the comma attached to the previous word - even if that
-> means you need to move the word with it to the next line to maintain line
-> limits.
-> 
-> > 
-> > Besides, these definitions are arch-dependent, so for the support of
-> > virtual PCI on non-x86 archs in the future, move them into arch-specific
-> > tlfs header file.
-> > 
-> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> > ---
-> >  arch/x86/include/asm/hyperv-tlfs.h  | 3 +++
-> >  drivers/pci/controller/pci-hyperv.c | 6 ------
-> >  2 files changed, 3 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> > index 5f10f7f2098d..739bd89226a5 100644
-> > --- a/arch/x86/include/asm/hyperv-tlfs.h
-> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> > @@ -376,6 +376,7 @@ struct hv_tsc_emulation_status {
-> >  #define HVCALL_SEND_IPI_EX			0x0015
-> >  #define HVCALL_POST_MESSAGE			0x005c
-> >  #define HVCALL_SIGNAL_EVENT			0x005d
-> > +#define HVCALL_RETARGET_INTERRUPT		0x007e
-> >  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
-> >  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
-> >  
-> > @@ -405,6 +406,8 @@ enum HV_GENERIC_SET_FORMAT {
-> >  	HV_GENERIC_SET_ALL,
-> >  };
-> >  
-> > +#define HV_PARTITION_ID_SELF                    ((u64)-1)
-> > +
-> >  #define HV_HYPERCALL_RESULT_MASK	GENMASK_ULL(15, 0)
-> >  #define HV_HYPERCALL_FAST_BIT		BIT(16)
-> >  #define HV_HYPERCALL_VARHEAD_OFFSET	17
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index 9977abff92fc..aacfcc90d929 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -406,12 +406,6 @@ struct pci_eject_response {
-> >  
-> >  static int pci_ring_size = (4 * PAGE_SIZE);
-> >  
-> > -/*
-> > - * Definitions or interrupt steering hypercall.
-> > - */
-> > -#define HV_PARTITION_ID_SELF		((u64)-1)
-> > -#define HVCALL_RETARGET_INTERRUPT	0x7e
-> > -
-> 
-> Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
-> 
+Hi.
 
-Thanks! I will fix the comma thing and add your Reviewed-by in next
-version.
+On Tue, Feb 4, 2020 at 6:16 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> If the kernel is going to be compressed anyway, there is no point in
+> double-compressing the built-in initramfs. Hide the built-in initramfs
+> compression choice in this case.
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Regards,
-Boqun
 
-> >  struct hv_interrupt_entry {
-> >  	u32	source;			/* 1 for MSI(-X) */
-> >  	u32	reserved1;
-> > -- 
-> > 2.24.1
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Double-compression slightly reduces the data size.
+And, keeping the bare vmlinux small is beneficial, IMHO.
+
+
+
+
+> ---
+>  init/Kconfig | 9 +++++++++
+>  usr/Kconfig  | 2 +-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 24b23d843df1..88da0976bbfa 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -176,6 +176,9 @@ config HAVE_KERNEL_LZ4
+>  config HAVE_KERNEL_UNCOMPRESSED
+>         bool
+>
+> +config KERNEL_COMPRESSED
+> +       bool
+> +
+>  choice
+>         prompt "Kernel compression mode"
+>         default KERNEL_GZIP
+> @@ -201,6 +204,7 @@ choice
+>  config KERNEL_GZIP
+>         bool "Gzip"
+>         depends on HAVE_KERNEL_GZIP
+> +       select KERNEL_COMPRESSED
+>         help
+>           The old and tried gzip compression. It provides a good balance
+>           between compression ratio and decompression speed.
+> @@ -208,6 +212,7 @@ config KERNEL_GZIP
+>  config KERNEL_BZIP2
+>         bool "Bzip2"
+>         depends on HAVE_KERNEL_BZIP2
+> +       select KERNEL_COMPRESSED
+>         help
+>           Its compression ratio and speed is intermediate.
+>           Decompression speed is slowest among the choices.  The kernel
+> @@ -218,6 +223,7 @@ config KERNEL_BZIP2
+>  config KERNEL_LZMA
+>         bool "LZMA"
+>         depends on HAVE_KERNEL_LZMA
+> +       select KERNEL_COMPRESSED
+>         help
+>           This compression algorithm's ratio is best.  Decompression speed
+>           is between gzip and bzip2.  Compression is slowest.
+> @@ -226,6 +232,7 @@ config KERNEL_LZMA
+>  config KERNEL_XZ
+>         bool "XZ"
+>         depends on HAVE_KERNEL_XZ
+> +       select KERNEL_COMPRESSED
+>         help
+>           XZ uses the LZMA2 algorithm and instruction set specific
+>           BCJ filters which can improve compression ratio of executable
+> @@ -241,6 +248,7 @@ config KERNEL_XZ
+>  config KERNEL_LZO
+>         bool "LZO"
+>         depends on HAVE_KERNEL_LZO
+> +       select KERNEL_COMPRESSED
+>         help
+>           Its compression ratio is the poorest among the choices. The kernel
+>           size is about 10% bigger than gzip; however its speed
+> @@ -249,6 +257,7 @@ config KERNEL_LZO
+>  config KERNEL_LZ4
+>         bool "LZ4"
+>         depends on HAVE_KERNEL_LZ4
+> +       select KERNEL_COMPRESSED
+>         help
+>           LZ4 is an LZ77-type compressor with a fixed, byte-oriented encoding.
+>           A preliminary version of LZ4 de/compression tool is available at
+> diff --git a/usr/Kconfig b/usr/Kconfig
+> index bdf5bbd40727..f39eeb9ea2e3 100644
+> --- a/usr/Kconfig
+> +++ b/usr/Kconfig
+> @@ -102,7 +102,7 @@ config RD_LZ4
+>
+>  choice
+>         prompt "Built-in initramfs compression mode"
+> -       depends on INITRAMFS_SOURCE != ""
+> +       depends on INITRAMFS_SOURCE != "" && !KERNEL_COMPRESSED
+>         help
+>           This option allows you to decide by which algorithm the builtin
+>           initramfs will be compressed.  Several compression algorithms are
+> --
+> 2.24.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
