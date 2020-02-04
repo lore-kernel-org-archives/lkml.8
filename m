@@ -2,103 +2,162 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13ACC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05145C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5FB2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A462082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bphTE9jn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJongeyY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBDVSJ (ORCPT
+        id S1727655AbgBDVSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 16:18:09 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38812 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727619AbgBDVSI (ORCPT
+        Tue, 4 Feb 2020 16:18:45 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45409 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727441AbgBDVSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 16:18:08 -0500
-Received: by mail-vs1-f68.google.com with SMTP id r18so12458423vso.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 13:18:07 -0800 (PST)
+        Tue, 4 Feb 2020 16:18:44 -0500
+Received: by mail-yw1-f67.google.com with SMTP id a125so117768ywe.12;
+        Tue, 04 Feb 2020 13:18:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+YV7XvdlsIH5IDESBp45bVi5suaLif02bOusLL/UcAg=;
-        b=bphTE9jnt5pwshYrT5bVIe6w+pYy2uTHTOXG6zCT/v03+zOC2lc8VCPBqK8yQrSx/5
-         mdNdS0Hg9A8cnU6gYq/C50cIyByUlThuUSRMW9Hn/rWs/3L7rWzw4UvULJ4VQWtnGpRg
-         xa9In03NU2Po3Hd6I1ppVTeQh0gOd3walkFVE=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rJdNxill8piqvMTWCgF4RO24y2zuf2qXqfrV3PzwGbQ=;
+        b=QJongeyYsMcOyLwpvXAwz6WVMVDNeXOfV03/lDzb1w++4+APc5JpfERT6/M36Me943
+         0TE46okBUMZcgFUSz7/U0eAzS0hX5mwTJET3bF5woubK5iqfFoND5279RcPU1/z5zlPb
+         rsEGY4G7wLyc0riOmp5xb5uXALgBpgcoa7r0MZ0AoFidRnrLmIAqWFi9qvO0lbHPW2Uu
+         wCzGdGPlQdjgMgk0GRG4oK0LMzL3bqviHeBPaBLVtzc+9OygZQtLKwTj8K8xmed/2Ooe
+         3PfWrIz+lloiFGRDybGnlxqoqiIFvInklnmnDLKSJlbd+VeqUAtiDU/qDYlVJDXmD6lJ
+         vVyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+YV7XvdlsIH5IDESBp45bVi5suaLif02bOusLL/UcAg=;
-        b=s8x2VJd2hOeqyK6wpx7FG7ECXhuelsLlRE33yGuAKSQyJ6dBiuVUL34lEkV9dh3J87
-         /tVfT3qk3prsCifTeVb5ohzHG/tk1id1gN7Y+vNMennTh5BR790MSc110Wb84rq/ceJC
-         81yXxrLm1VOqCT7cRtBa0n7OjG486qPKFjv2Dei1FHAWu5HAnRhbGfsh5B99LAC/n6Q3
-         c+u0q4SSZAxFwIncCpgXlEoMahia+hBu3Sgy16b55bjEyL2vRZfsokjPhHFPxCB1Wexu
-         7xbQoH5xlD1F8HAbtM+nIIkb2FAcafvurPkfbyRGmAyx5eFBLf/ue/M8qcTV/ftLjJz0
-         6BGA==
-X-Gm-Message-State: APjAAAWP0xZrsf/VRwumWmyJw1wrglzMJJ7glWfhRxPGKDMCtLg23Bxd
-        TEV3fXlBOswxa0njhd61uZ5YYtzgO88=
-X-Google-Smtp-Source: APXvYqy0WBZtUwdW2VvEB6vnKPmrHFPD9pviSgMVfq2+W13+SHT3YDotwPy21E69PSDF5WT5xW47pA==
-X-Received: by 2002:a67:6601:: with SMTP id a1mr19755620vsc.0.1580851086770;
-        Tue, 04 Feb 2020 13:18:06 -0800 (PST)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id v21sm5630386vkd.54.2020.02.04.13.18.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 13:18:06 -0800 (PST)
-Received: by mail-vs1-f52.google.com with SMTP id b79so12420415vsd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 13:18:05 -0800 (PST)
-X-Received: by 2002:a67:e342:: with SMTP id s2mr19486104vsm.198.1580851085540;
- Tue, 04 Feb 2020 13:18:05 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rJdNxill8piqvMTWCgF4RO24y2zuf2qXqfrV3PzwGbQ=;
+        b=D5Y/1eF0EzYqd7u/7/QrjsR35dtmkuZ/MWl/8B4Rthmageef+2t89CPsIDbadV6uR6
+         ulkcXjMaWj2W5itPvGon92UOwSyvFv8W2dxlDqcG325GM7cRqqzQ2IPCg+1wsGa0egv1
+         73uWjRQ2munQ9gw7bPsDvSJyZ7NsccdB0WdyRFyhx2xT+DpMBxD0toED/9rkBbIDEw/S
+         qlUBH7ALzRPInZeGR27rU4CmX3lbgExJQK5gTDQVFL38rYCmpzSp/7TzfcU0j5NA7Vw8
+         C9nFBJUy+IHP9mgsQ70LH5yd4MS1olzvBKzx/FFMMnZPpiF8cyXZwnyEpKlMGT0TggEn
+         1kNA==
+X-Gm-Message-State: APjAAAXvN+T/P/gpDtS4stI5uPUMK+jRz88KMDbwUf2G9/tLu81nCCNd
+        P3mKZQNLOrmgx1G/pGxo3L3u5S0j
+X-Google-Smtp-Source: APXvYqx/4pLiWvDN2SSeNNE0WCYREq9BMw/a3Cyz3ZlWWFHi2jbhi1ruHmyqFPzoGZ1eBHqH741jjQ==
+X-Received: by 2002:a81:a00f:: with SMTP id x15mr7413542ywg.327.1580851123678;
+        Tue, 04 Feb 2020 13:18:43 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id 124sm10363570ywm.25.2020.02.04.13.18.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 13:18:43 -0800 (PST)
+Subject: Re: [PATCH v2 0/7] kunit: create a centralized executor to dispatch
+ all KUnit tests
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, knut.omang@oracle.com,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200130230812.142642-1-brendanhiggins@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <9e203718-dcca-3145-bc28-28979d41c278@gmail.com>
+Date:   Tue, 4 Feb 2020 15:18:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200204193152.124980-1-swboyd@chromium.org> <20200204193152.124980-2-swboyd@chromium.org>
-In-Reply-To: <20200204193152.124980-2-swboyd@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 4 Feb 2020 13:17:54 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Wf99AkNqtJ_W92sDNGS3dKQN3FK3960-=Oq8sJf7kKVA@mail.gmail.com>
-Message-ID: <CAD=FV=Wf99AkNqtJ_W92sDNGS3dKQN3FK3960-=Oq8sJf7kKVA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] i2c: qcom-geni: Let firmware specify irq trigger flags
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-i2c@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Alok Chauhan <alokc@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200130230812.142642-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 1/30/20 5:08 PM, Brendan Higgins wrote:
+> ## TL;DR
+> 
+> This patchset adds a centralized executor to dispatch tests rather than
+> relying on late_initcall to schedule each test suite separately along
+> with a couple of new features that depend on it.
 
-On Tue, Feb 4, 2020 at 11:31 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> We don't need to force IRQF_TRIGGER_HIGH here as the DT or ACPI tables
-> should take care of this for us. Just use 0 instead so that we use the
-> flags from the firmware. Also, remove specify dev_name() for the irq
-> name so that we can get better information in /proc/interrupts about
-> which device is generating interrupts.
->
-> Cc: Girish Mahadevan <girishm@codeaurora.org>
-> Cc: Dilip Kota <dkota@codeaurora.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+And the "couple of new features" are .... ?
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
+> ## What am I trying to do?
+> 
+> Conceptually, I am trying to provide a mechanism by which test suites
+> can be grouped together so that they can be reasoned about collectively.
+> The last two of three patches in this series add features which depend
+> on this:
+> 
+> PATCH 5/7 Prints out a test plan right before KUnit tests are run[1];
+>           this is valuable because it makes it possible for a test
+>           harness to detect whether the number of tests run matches the
+>           number of tests expected to be run, ensuring that no tests
+>           silently failed.
+> 
+> PATCH 6/7 Add a new kernel command-line option which allows the user to
+>           specify that the kernel poweroff, halt, or reboot after
+>           completing all KUnit tests; this is very handy for running
+>           KUnit tests on UML or a VM so that the UML/VM process exits
+>           cleanly immediately after running all tests without needing a
+>           special initramfs.
+> 
+
+> In addition, by dispatching tests from a single location, we can
+> guarantee that all KUnit tests run after late_init is complete, which
+
+That the tests will run after late init (and are guaranteed to do such)
+needs to be added to the documentation.
+
+-Frank
+
+> was a concern during the initial KUnit patchset review (this has not
+> been a problem in practice, but resolving with certainty is nevertheless
+> desirable).
+> 
+> Other use cases for this exist, but the above features should provide an
+> idea of the value that this could provide.
+> 
+> Alan Maguire (1):
+>   kunit: test: create a single centralized executor for all tests
+> 
+> Brendan Higgins (5):
+>   vmlinux.lds.h: add linker section for KUnit test suites
+>   arch: um: add linker section for KUnit test suites
+>   init: main: add KUnit to kernel init
+>   kunit: test: add test plan to KUnit TAP format
+>   Documentation: Add kunit_shutdown to kernel-parameters.txt
+> 
+> David Gow (1):
+>   kunit: Add 'kunit_shutdown' option
+> 
+>  .../admin-guide/kernel-parameters.txt         |  7 ++
+>  arch/um/include/asm/common.lds.S              |  4 +
+>  include/asm-generic/vmlinux.lds.h             |  8 ++
+>  include/kunit/test.h                          | 82 ++++++++++++-------
+>  init/main.c                                   |  4 +
+>  lib/kunit/Makefile                            |  3 +-
+>  lib/kunit/executor.c                          | 71 ++++++++++++++++
+>  lib/kunit/test.c                              | 11 ---
+>  tools/testing/kunit/kunit_kernel.py           |  2 +-
+>  tools/testing/kunit/kunit_parser.py           | 76 ++++++++++++++---
+>  .../test_is_test_passed-all_passed.log        |  1 +
+>  .../test_data/test_is_test_passed-crash.log   |  1 +
+>  .../test_data/test_is_test_passed-failure.log |  1 +
+>  13 files changed, 217 insertions(+), 54 deletions(-)
+>  create mode 100644 lib/kunit/executor.c
+> 
+
