@@ -2,141 +2,144 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C158C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5020C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB372084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9695620674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:06:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqZW+ocT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgBDFGM (ORCPT
+        id S1726553AbgBDFGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 00:06:12 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:59896 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725813AbgBDFGM (ORCPT
+        Tue, 4 Feb 2020 00:06:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57352 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725813AbgBDFGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 00:06:12 -0500
-Received: from mr2.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01456Apj002924
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2020 00:06:10 -0500
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 0145652L005691
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2020 00:06:10 -0500
-Received: by mail-qt1-f199.google.com with SMTP id o24so11577173qtr.17
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 21:06:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=pz98ZlR3bR56pQ1i3ZQP3uFsFMXbwH6n0r2XfZ1ia0I=;
-        b=HUZtdYBhIgXPRCF9LwyvcjKuhPOAFNuONwzGhkwwDGO8dSvwmBosVWwsiXt+VXpcDX
-         F7Ph1ShFuuvKn0i07HM65HpQHllOJtW+P2XihREGmoMmjaaGnYG0R2ItIBijY3+y2swf
-         trVYNLIyviHV0SQ4bq8m+e7U/sSLyKAhWTl0fLa1Z54KYiL+MUImu2pCDt1vIuslNv2J
-         eocUwpY4CbgUqLN7QW8K5r3VuJk02slsIqcPdsPqpFdfD/tCfFr/dIP6aVK81fcnfQT+
-         DDZa5L/nlXMKBS322MVBYfovaRHAF7M3GWLtl1AF/D2OO5VZHV0f/0pTM13nuW0RGL7H
-         Xs+g==
-X-Gm-Message-State: APjAAAXjrlUb6QSsQYjtSCFF79/fa0p83Xp7KMTWJBbRW7Y/KtL6c//q
-        LQwtuw9i3I8RUIBf31VG/gDm8VRDVgSicRW6AdQoUCbUrDrkC1JAb927AcwOxy8bJwz41u3iawE
-        U7N9c+4Es3FtWeCY5BB8GeNXSlgXZCylq/6s=
-X-Received: by 2002:ac8:4e43:: with SMTP id e3mr27432120qtw.129.1580792765281;
-        Mon, 03 Feb 2020 21:06:05 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxVWoIMwNoBeStRaw+j6XUPYd1HIGxOIIrMq0t70HtTsVrjAec0Q+NTOrEhNh1FQevpnMDynA==
-X-Received: by 2002:ac8:4e43:: with SMTP id e3mr27432090qtw.129.1580792764954;
-        Mon, 03 Feb 2020 21:06:04 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id z11sm10600747qkj.91.2020.02.03.21.06.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 21:06:03 -0800 (PST)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Namjae Jeon <linkinjeon@gmail.com>
-cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, hch@lst.de, sj1557.seo@samsung.com,
-        pali.rohar@gmail.com, arnd@arndb.de, namjae.jeon@samsung.com,
-        viro@zeniv.linux.org.uk
-Subject: [PATCH v2] exfat: update file system parameter handling
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 04 Feb 2020 00:06:02 -0500
-Message-ID: <328657.1580792762@turing-police>
+        Tue, 4 Feb 2020 00:06:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580792813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=77aFIeWZ6g7NaVIYQN/nFVqyjpYjPXX41AYEjCL1ybk=;
+        b=UqZW+ocT+PP250dlPN2qn6Z999XrJ7EWRNztRG6qEeNyxr4NCy75IykIi/btTfvlqCtG8D
+        wuK2ai8au6nO+FN/+eRH2LyZNI8wOZwywzYxkcZa4Kap8tnmmhic2tUPIMY4KPDk68yhJ9
+        dBYzpAo6WWD1+T2njVnwF6Z9CLIPNN0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-4xlkwQ1bMKSfm9fi0BiRng-1; Tue, 04 Feb 2020 00:06:51 -0500
+X-MC-Unique: 4xlkwQ1bMKSfm9fi0BiRng-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3ABE48018A3;
+        Tue,  4 Feb 2020 05:06:50 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-13-129.pek2.redhat.com [10.72.13.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D8F38E9E5;
+        Tue,  4 Feb 2020 05:06:44 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
+        david@redhat.com, jgross@suse.com, bsingharora@gmail.com
+Subject: [PATCH v3] mm/hotplug: Only respect mem= parameter during boot stage
+Date:   Tue,  4 Feb 2020 13:06:43 +0800
+Message-Id: <20200204050643.20925-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro recently reworked the way file system parameters are handled
-Update super.c to work with it in linux-next 20200203.
+In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
+parameter") a global varialbe max_mem_size is added to store
+the value parsed from 'mem= ', then checked when memory region is
+added. This truly stops those DIMMs from being added into system memory
+during boot-time.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+However, it also limits the later memory hotplug functionality. Any
+DIMM can't be hotplugged any more if its region is beyond the
+max_mem_size. We will get errors like:
+
+[  216.387164] acpi PNP0C80:02: add_memory failed
+[  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+[  216.392187] acpi PNP0C80:02: Enumeration failure
+
+This will cause issue in a known use case where 'mem=' is added to
+the hypervisor. The memory that lies after 'mem=' boundary will be
+assigned to KVM guests. After commit 357b4da50a62 merged, memory
+can't be extended dynamically if system memory on hypervisor is not
+sufficient.
+
+So fix it by also checking if it's during boot-time restricting to add
+memory. Otherwise, skip the restriction.
+
+And also add this use case to document of 'mem=' kernel parameter.
+
+Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem= parameter")
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
-Changes in v2: make patch work with -p1 rather than -p0.
+v2->v3:
+  In discussion of v1 and v2, People have concern about the use case
+  related to the code change. So add the use case into patch log and
+  document of 'mem=' in kernel-parameters.txt.
 
---- a/fs/exfat/super.c.orig	2020-02-03 21:11:02.562305585 -0500
-+++ b/fs/exfat/super.c	2020-02-03 22:17:21.699045311 -0500
-@@ -214,7 +214,14 @@ enum {
- 	Opt_time_offset,
- };
+ Documentation/admin-guide/kernel-parameters.txt | 13 +++++++++++--
+ mm/memory_hotplug.c                             |  8 +++++++-
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index ddc5ccdd4cd1..b809767e5f74 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2533,13 +2533,22 @@
+ 			For details see: Documentation/admin-guide/hw-vuln/mds.rst
  
--static const struct fs_parameter_spec exfat_param_specs[] = {
-+static const struct constant_table exfat_param_enums[] = {
-+	{ "continue",		EXFAT_ERRORS_CONT },
-+	{ "panic",		EXFAT_ERRORS_PANIC },
-+	{ "remount-ro",		EXFAT_ERRORS_RO },
-+	{}
-+};
+ 	mem=nn[KMG]	[KNL,BOOT] Force usage of a specific amount of memory
+-			Amount of memory to be used when the kernel is not able
+-			to see the whole system memory or for test.
++			Amount of memory to be used in cases as follows:
 +
-+static const struct fs_parameter_spec exfat_parameters[] = {
- 	fsparam_u32("uid",			Opt_uid),
- 	fsparam_u32("gid",			Opt_gid),
- 	fsparam_u32oct("umask",			Opt_umask),
-@@ -222,25 +229,12 @@ static const struct fs_parameter_spec ex
- 	fsparam_u32oct("fmask",			Opt_fmask),
- 	fsparam_u32oct("allow_utime",		Opt_allow_utime),
- 	fsparam_string("iocharset",		Opt_charset),
--	fsparam_enum("errors",			Opt_errors),
-+	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
- 	fsparam_flag("discard",			Opt_discard),
- 	fsparam_s32("time_offset",		Opt_time_offset),
- 	{}
- };
++			1 for test;
++			2 when the kernel is not able to see the whole system memory;
++			3 memory that lies after 'mem=' boundary is excluded from
++			 the hypervisor, then assigned to KVM guests.
++
+ 			[X86] Work as limiting max address. Use together
+ 			with memmap= to avoid physical address space collisions.
+ 			Without memmap= PCI devices could be placed at addresses
+ 			belonging to unused RAM.
  
--static const struct fs_parameter_enum exfat_param_enums[] = {
--	{ Opt_errors,	"continue",		EXFAT_ERRORS_CONT },
--	{ Opt_errors,	"panic",		EXFAT_ERRORS_PANIC },
--	{ Opt_errors,	"remount-ro",		EXFAT_ERRORS_RO },
--	{}
--};
--
--static const struct fs_parameter_description exfat_parameters = {
--	.name		= "exfat",
--	.specs		= exfat_param_specs,
--	.enums		= exfat_param_enums,
--};
--
- static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
- 	struct exfat_sb_info *sbi = fc->s_fs_info;
-@@ -248,7 +242,7 @@ static int exfat_parse_param(struct fs_c
- 	struct fs_parse_result result;
- 	int opt;
++			Note that this only takes effects during boot time since
++			in above case 3, memory may need be hot added after boot
++			if system memory of hypervisor is not sufficient.
++
+ 	mem=nopentium	[BUGS=X86-32] Disable usage of 4MB pages for kernel
+ 			memory.
  
--	opt = fs_parse(fc, &exfat_parameters, param, &result);
-+	opt = fs_parse(fc, exfat_parameters, param, &result);
- 	if (opt < 0)
- 		return opt;
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 36d80915ddc2..e6c75ceacf9a 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -105,7 +105,13 @@ static struct resource *register_memory_resource(u64 start, u64 size)
+ 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ 	char *resource_name = "System RAM";
  
-@@ -665,7 +659,7 @@ static struct file_system_type exfat_fs_
- 	.owner			= THIS_MODULE,
- 	.name			= "exfat",
- 	.init_fs_context	= exfat_init_fs_context,
--	.parameters		= &exfat_parameters,
-+	.parameters		= exfat_parameters,
- 	.kill_sb		= kill_block_super,
- 	.fs_flags		= FS_REQUIRES_DEV,
- };
+-	if (start + size > max_mem_size)
++	/*
++	 * Make sure value parsed from 'mem=' only restricts memory adding
++	 * while booting, so that memory hotplug won't be impacted. Please
++	 * refer to document of 'mem=' in kernel-parameters.txt for more
++	 * details.
++	 */
++	if (start + size > max_mem_size && system_state < SYSTEM_RUNNING)
+ 		return ERR_PTR(-E2BIG);
+ 
+ 	/*
+-- 
+2.17.2
 
