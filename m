@@ -6,153 +6,121 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2448C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86033C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38C12084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A08E2084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgBDAAg (ORCPT
+        id S1727084AbgBDAEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 19:00:36 -0500
-Received: from namei.org ([65.99.196.166]:43090 "EHLO namei.org"
+        Mon, 3 Feb 2020 19:04:50 -0500
+Received: from mga12.intel.com ([192.55.52.136]:13095 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgBDAAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:00:35 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 013Nxnn2015307;
-        Mon, 3 Feb 2020 23:59:49 GMT
-Date:   Tue, 4 Feb 2020 10:59:49 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     linux-security-module@vger.kernel.org
-cc:     linux-kernel@vger.kernel.org, lwn@lwn.net,
-        fedora-selinux-list@redhat.com, linux-crypto@vger.kernel.org,
-        kernel-hardening@lists.openwall.com,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        Audit-ML <linux-audit@redhat.com>, gentoo-hardened@gentoo.org,
-        keyrings@linux-nfs.org, tpmdd-devel@lists.sourceforge.net,
-        Linux Security Summit Program Committee 
-        <lss-pc@lists.linuxfoundation.org>
-Subject: [ANNOUNCE][CFP] Linux Security Summit North America 2020
-Message-ID: <alpine.LRH.2.21.2002041054320.12768@namei.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1726331AbgBDAEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 19:04:50 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 16:04:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="310876865"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 03 Feb 2020 16:04:49 -0800
+Date:   Mon, 3 Feb 2020 16:04:49 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v17] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200204000449.GA28014@linux.intel.com>
+References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com>
+ <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com>
+ <8CC9FBA7-D464-4E58-8912-3E14A751D243@gmail.com>
+ <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="1665246916-1737447927-1580774163=:12768"
-Content-ID: <alpine.LRH.2.21.2002041056360.12768@namei.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, Jan 26, 2020 at 12:05:35PM -0800, Luck, Tony wrote:
 
---1665246916-1737447927-1580774163=:12768
-Content-Type: text/plain; CHARSET=ISO-8859-7
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.LRH.2.21.2002041056361.12768@namei.org>
+...
 
-==============================================================================
-		   ANNOUNCEMENT AND CALL FOR PARTICIPATION
+> +bool handle_user_split_lock(struct pt_regs *regs, long error_code)
 
-		   LINUX SECURITY SUMMIT NORTH AMERICA 2020
-                             
-			        24-26 JUNE
-			    AUSTIN, TEXAS, USA
-==============================================================================
+No reason to take the error code unless there's a plan to use it.
 
-DESCRIPTION
- 
-Linux Security Summit North America (LSS-NA) is a technical forum for
-collaboration between Linux developers, researchers, and end-users.  Its
-primary aim is to foster community efforts in analyzing and solving Linux
-security challenges.
- 
- The program committee currently seeks proposals for:
- 
-   * Refereed Presentations:
-     45 minutes in length.
- 
-   * Panel Discussion Topics:
-     45 minutes in length.
- 
-   * Short Topics:
-     30 minutes in total, including at least 10 minutes discussion.
- 
-   * Tutorials
-     90 minutes in length.
- 
-Tutorial sessions should be focused on advanced Linux security defense
-topics within areas such as the kernel, compiler, and security-related
-libraries.  Priority will be given to tutorials created for this conference,
-and those where the presenter a leading subject matter expert on the topic.
- 
-Topic areas include, but are not limited to:
- 
-   * Kernel self-protection
-   * Access control
-   * Cryptography and key management
-   * Integrity policy and enforcement
-   * Hardware Security
-   * IoT and embedded security
-   * Virtualization and containers
-   * System-specific system hardening
-   * Case studies
-   * Security tools
-   * Security UX
-   * Emerging technologies, threats & techniques
+> +{
+> +	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> +		return false;
 
-  Proposals should be submitted via:
+Any objection to moving the EFLAGS.AC up to do_alignment_check()?  And
+take "unsigned long rip" instead of @regs?
 
-    https://events.linuxfoundation.org/linux-security-summit-north-america/program/cfp/
- 
+That would allow KVM to reuse handle_user_split_lock() for guest faults
+without any changes (other than exporting).
 
-DATES
- 
-  * CFP close:            March 31
-  * CFP notifications:    April 13
-  * Schedule announced:   April 16
-  * Event:                June 24-26
+E.g. do_alignment_check() becomes:
 
+	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
+		return;
 
-WHO SHOULD ATTEND
- 
-We're seeking a diverse range of attendees and welcome participation by
-people involved in Linux security development, operations, and research.
- 
-LSS-NA is a unique global event that provides the opportunity to present and
-discuss your work or research with key Linux security community members and
-maintainers.  It¢s also useful for those who wish to keep up with the latest
-in Linux security development and to provide input to the development
-process.
+> +
+> +	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+> +			    current->comm, current->pid, regs->ip);
+> +
+> +	/*
+> +	 * Disable the split lock detection for this task so it can make
+> +	 * progress and set TIF_SLD so the detection is re-enabled via
+> +	 * switch_to_sld() when the task is scheduled out.
+> +	 */
+> +	__sld_msr_set(false);
+> +	set_tsk_thread_flag(current, TIF_SLD);
+> +	return true;
+> +}
 
-WEB SITE
+...
 
-    https://events.linuxfoundation.org/linux-security-summit-north-america/
-
-TWITTER
-
-  For event updates and announcements, follow:
-
-    https://twitter.com/LinuxSecSummit
-  
-    #linuxsecuritysummit
-
-PROGRAM COMMITTEE
-
-  The program committee for LSS 2020 is:
-
-    * James Morris, Microsoft
-    * Serge Hallyn, Cisco
-    * Paul Moore, Cisco
-    * Stephen Smalley, NSA
-    * Elena Reshetova, Intel
-    * John Johansen, Canonical
-    * Kees Cook, Google
-    * Casey Schaufler, Intel
-    * Mimi Zohar, IBM
-    * David A. Wheeler, Institute for Defense Analyses
-
-  The program committee may be contacted as a group via email:
-    lss-pc () lists.linuxfoundation.org
---1665246916-1737447927-1580774163=:12768--
+> +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
+> +{
+> +	char *str = "alignment check";
+> +
+> +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> +
+> +	if (notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_AC, SIGBUS) == NOTIFY_STOP)
+> +		return;
+> +
+> +	if (!user_mode(regs))
+> +		die("Split lock detected\n", regs, error_code);
+> +
+> +	local_irq_enable();
+> +
+> +	if (handle_user_split_lock(regs, error_code))
+> +		return;
+> +
+> +	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
+> +		error_code, BUS_ADRALN, NULL);
+> +}
+> +
+>  #ifdef CONFIG_VMAP_STACK
+>  __visible void __noreturn handle_stack_overflow(const char *message,
+>  						struct pt_regs *regs,
+> -- 
+> 2.21.1
+> 
