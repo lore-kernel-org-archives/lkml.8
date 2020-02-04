@@ -2,181 +2,172 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6257EC3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ADEC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C1A21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B96220730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZsEAf/Yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBDNhf convert rfc822-to-8bit (ORCPT
+        id S1727258AbgBDNiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:37:35 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2363 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727174AbgBDNhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:37:34 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id AD56E374ACE0C262B18F;
-        Tue,  4 Feb 2020 13:37:32 +0000 (GMT)
-Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 4 Feb 2020 13:37:32 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 4 Feb 2020 14:37:31 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Tue, 4 Feb 2020 14:37:31 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-CC:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
- on different TPM banks
-Thread-Topic: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
- on different TPM banks
-Thread-Index: AQHV14mgGDRCXCHq1UG77eo7NcEnk6gLEMcg
-Date:   Tue, 4 Feb 2020 13:37:31 +0000
-Message-ID: <01986ba728014571a3907fef9c69ff2c@huawei.com>
-References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
- <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
-In-Reply-To: <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 4 Feb 2020 08:38:07 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35775 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbgBDNiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 08:38:07 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so18648037ljb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 05:38:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=n/m3NWqGbb+4HJdRKqiqsaJ6PjbAVsfkhoBTq4U1QkY=;
+        b=ZsEAf/YcuhuC44t1ZiPkUVNIPYrzUBgrLcwUxSs5WZbsDV0/kcBnFDTtwUUSC4wd9M
+         oVGZQ0ybNKKbsoKtrbUPx7o9F1PvsVeM6SpsqzuCtCH0awXYQ3huy0yoPHRFkdkG9nIp
+         hSxKXj+/rTvjVD91QSR6SIWyh5NjnACCQP6d6RY4NQYBfmQdY2pTsSAupGaYdAB8C8YW
+         f1rxCZVTIcSuSwfQXwpKqH8M+hWvSGxUfftdHcteMV3b15UMFTIGPvv5bO4KitSQzhLW
+         RWRh/2Z9EKCfqEf0cck22t893sJxz/BBOJC8WsFY+P9QmLy6V4BYvob5Ug4hDNxXOo2E
+         A+ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=n/m3NWqGbb+4HJdRKqiqsaJ6PjbAVsfkhoBTq4U1QkY=;
+        b=MBus7NrGkXolpw+bb7LVrwJXSiB25xLiCL9M/JuSRaKupNFH/hKk+/4/8gh0ZGPP2t
+         50HrUK6r9DQVv/9Q377sdT7dHHMpzdwm0z2zk/75JQKL7BOyve/7BUpp3+gmgfH5JhZt
+         gsGTZU6v8itjVqdGVXMbrpoV4TrqU3Y1Ac88wRid+1CqnrVrTHXcyGGZyOznr8rFxUyJ
+         mDNggnFSWH4+wmEJl5dltl4l+BrejwO03nz4y3fNPkhFJgEvcNSIlAQ/hyK3vGLfRAvD
+         7rAEcox6zGVPx0Ekp8SIrIO5Qs9ezcqLQNJrM+iJIXeR4f9s4MP+KklDNFACVGyc7SuQ
+         7JXA==
+X-Gm-Message-State: APjAAAUgTuxe+kWnz1c0Swio90J97YL19zvQCGvkQAoUB1kjyKq7Um/F
+        vGo/iYYLV4aorMUIzALH2O9GOaxGu9w9DzokzB3ZmU2p8JQ=
+X-Google-Smtp-Source: APXvYqzg70xarq/GVtWcCSLMMbK2uqnzbVPl7WsHYDFsLM43Rs6i4lwnDKroDPpkgGAnKIvpcLpStWwMNbxGN+RQR6E=
+X-Received: by 2002:a05:651c:414:: with SMTP id 20mr16664224lja.165.1580823483575;
+ Tue, 04 Feb 2020 05:38:03 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200203161912.158976871@linuxfoundation.org>
+In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 4 Feb 2020 19:07:52 +0530
+Message-ID: <CA+G9fYtJFiCNG2Z6hhgx=wzWDxhHaeP_zegynYG1eZx-Ejwvfg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/70] 4.19.102-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> owner@vger.kernel.org] On Behalf Of Mimi Zohar
-> Sent: Thursday, January 30, 2020 5:23 PM
-> To: linux-integrity@vger.kernel.org
-> Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
-> <James.Bottomley@HansenPartnership.com>; linux-
-> kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
-> Subject: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
-> on different TPM banks
-> 
-> Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
-> assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
-> could support multiple TPM PCR banks, allowing firmware to configure and
-> enable different banks.
-> 
-> Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
-> the boot-aggregate, use the same hash algorithm for reading the TPM PCRs
-> as
-> for calculating the boot aggregate digest.  Preference is given to the
-> configured IMA default hash algorithm.
-> 
-> For TPM 1.2 SHA1 is the only supported hash algorithm.
-> 
-> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  security/integrity/ima/ima_crypto.c | 45
-> ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/ima/ima_crypto.c
-> b/security/integrity/ima/ima_crypto.c
-> index 7967a6904851..a020aaefdea8 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -656,13 +656,34 @@ static void __init ima_pcrread(u32 idx, struct
-> tpm_digest *d)
->  		pr_err("Error Communicating to TPM chip\n");
->  }
-> 
-> +static enum hash_algo get_hash_algo(const char *algname)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < HASH_ALGO__LAST; i++) {
-> +		if (strcmp(algname, hash_algo_name[i]) == 0)
-> +			break;
-> +	}
-> +
-> +	return i;
-> +}
-> +
->  /*
-> - * Calculate the boot aggregate hash
-> + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
-> + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but
-> with
-> + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
-> + * allowing firmware to configure and enable different banks.
-> + *
-> + * Knowing which TPM bank is read to calculate the boot_aggregate digest
-> + * needs to be conveyed to a verifier.  For this reason, use the same
-> + * hash algorithm for reading the TPM PCRs as for calculating the boot
-> + * aggregate digest as stored in the measurement list.
->   */
->  static int __init ima_calc_boot_aggregate_tfm(char *digest,
->  					      struct crypto_shash *tfm)
->  {
->  	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
-> +	enum hash_algo crypto_id;
->  	int rc;
->  	u32 i;
->  	SHASH_DESC_ON_STACK(shash, tfm);
-> @@ -673,6 +694,28 @@ static int __init ima_calc_boot_aggregate_tfm(char
-> *digest,
->  	if (rc != 0)
->  		return rc;
-> 
-> +	crypto_id = get_hash_algo(crypto_shash_alg_name(tfm));
-> +	if (crypto_id == HASH_ALGO__LAST) {
-> +		pr_devel("unknown hash algorithm (%s), failing to read
-> PCRs.\n",
-> +			 crypto_shash_alg_name(tfm));
-> +		return 0;
-> +	}
-> +
-> +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
-> +		if (ima_tpm_chip->allocated_banks[i].crypto_id ==
-> crypto_id) {
-> +			d.alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
-> +			break;
-> +		}
-> +	}
-> +	if (i == ima_tpm_chip->nr_allocated_banks) {
-> +		pr_devel("TPM %s bank not allocated, failing to read
-> PCRs.\n",
-> +			 crypto_shash_alg_name(tfm));
-> +		return 0;
-> +	}
-> +
-> +	pr_devel("calculating the boot-aggregregate based on TPM
-> bank: %04x\n",
-> +		  d.alg_id);
-> +
->  	/* cumulative sha1 over tpm registers 0-7 */
->  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
->  		ima_pcrread(i, &d);
+On Mon, 3 Feb 2020 at 22:01, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.102 release.
+> There are 70 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.102-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-The third argument of crypto_shash_update() should be
-crypto_shash_digestsize(tfm).
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Roberto
+Summary
+------------------------------------------------------------------------
 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+kernel: 4.19.102-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 32591972abd801a21846d4d355bc4e70784d02c6
+git describe: v4.19.101-74-g32591972abd8
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.101-74-g32591972abd8
+
+No regressions (compared to build v4.19.101)
+
+No fixes (compared to build v4.19.101)
+
+Ran 12112 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-open-posix-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
