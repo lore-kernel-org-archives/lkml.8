@@ -2,126 +2,122 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942A2C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCEBC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD8421744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C282166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kffE1qec"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l6INJAji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgBDOdP (ORCPT
+        id S1727351AbgBDOeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:33:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60978 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727256AbgBDOdN (ORCPT
+        Tue, 4 Feb 2020 09:34:14 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:15308 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727249AbgBDOeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:33:13 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014ENEvJ174913;
-        Tue, 4 Feb 2020 14:31:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=pt2dhiYXg1N/Fuw4ZspxpERuJ9G0f6yoC8gPPXAvscc=;
- b=kffE1qec3euoQJxKNleY2033qTlUsqCITkCLMS3EGZvyvDdufuyHS5ABue8wxStJCnSK
- 833owxFAnzfVG4w4RbpeOtZ6AXOXocFWTLDJy0K/LBx23keJERPQQ0/XSjR8vIPlSXSj
- lzC5E3lG9EFMWYZjKHitNeLDQt+/9g6oEycsBKOfwK6WnxyvSmTo/86b/5pCAJ4x4Uqv
- Zdj7y+wiUEpQT25mKcpOZ4pmuE1SVLL4O0X5ttn7gRir1xa7zVkVpwE+ybUgUk2F8vzg
- SaDAKMhXRlSItv0q9wxPEc/aod+IE5NdS2BJ1gHeon1GUkZfczB2gPPAaDn7S//BNfEX cQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2xwyg9k7m4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 14:31:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014EOVJZ164778;
-        Tue, 4 Feb 2020 14:31:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xxw0x3vqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 14:31:58 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014EVsda006815;
-        Tue, 4 Feb 2020 14:31:54 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 06:31:54 -0800
-Date:   Tue, 4 Feb 2020 17:31:42 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Shiju Jose <shiju.jose@huawei.com>
-Cc:     kbuild-all@lists.01.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rjw@rjwysocki.net, helgaas@kernel.org, lenb@kernel.org,
-        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
-        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
-        tglx@linutronix.de, linuxarm@huawei.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
-        yangyicong@hisilicon.com, Shiju Jose <shiju.jose@huawei.com>
-Subject: Re: [PATCH v3 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
- controller's errors
-Message-ID: <20200204143142.GQ11068@kadam>
+        Tue, 4 Feb 2020 09:34:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580826853; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=LOayz92CiS3mJzv9h9nepoJ7jN0NsDcY/StZV7GTdyM=; b=l6INJAjiq2YDaEXkpFGD8yu8cc+5VNEJFmGbXE2Hb21VeGZrLioiF7A8MGUAZUDGn07tdCfV
+ 5oi083RXWvzSMm+99Ty+t9R/2quldTmu80n71G7rsLxbcvtNPulFQXy6Sv/BoomTiRjbTyym
+ XH4FllJgw7mgldVdfo2flW0DqoA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3980df.7f0a627aa298-smtp-out-n03;
+ Tue, 04 Feb 2020 14:34:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DEE0CC447A6; Tue,  4 Feb 2020 14:34:06 +0000 (UTC)
+Received: from [192.168.1.5] (unknown [122.164.174.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EBEEC447A2;
+        Tue,  4 Feb 2020 14:34:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7EBEEC447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org, agross@kernel.org,
+        sivaprak@codeaurora.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
+ <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+ <20200127154113.GA6904@bogus>
+ <422e31d0-f67f-3b10-5d8f-ccc9d6f7dc70@codeaurora.org>
+ <9acb9b69-fd44-57db-e974-9fee5a1d871f@codeaurora.org>
+Message-ID: <11ad212e-5c6a-968b-33ca-977c8596ef6a@codeaurora.org>
+Date:   Tue, 4 Feb 2020 20:03:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203165122.17748-3-shiju.jose@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002040102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002040102
+In-Reply-To: <9acb9b69-fd44-57db-e974-9fee5a1d871f@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shiju,
+Hi Linus,
 
-Thank you for the patch! Perhaps something to improve:
+On 2/4/2020 7:34 PM, Sricharan R wrote:
+> Hi Rob,
+> 
+> On 1/28/2020 10:07 AM, Sricharan R wrote:
+>> Hi,
+>>
+>> On 1/27/2020 9:11 PM, Rob Herring wrote:
+>>> On Sun, 19 Jan 2020 18:43:17 +0530, Sricharan R wrote:
+>>>> Add device tree binding Documentation details for ipq6018
+>>>> pinctrl driver.
+>>>>
+>>>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>>>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>>>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>>>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>>>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>> ---
+>>>> [V6] 
+>>>>   * Addressed review comments form Rob.
+>>>>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
+>>>>  1 file changed, 153 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>>>>
+>>>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Thanks Rob.
+>>
+>> Hi Linus,
+>>    The pinctrl driver can now be pulled in.
+> 
+> Any chance this can be taken for 5.6 ?
+> 
 
-url:    https://github.com/0day-ci/linux/commits/Shiju-Jose/ACPI-APEI-Add-support-to-notify-the-vendor-specific-HW-errors/20200204-073736
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+Can the pinctrl driver be taken for 5.6 by any chance ?
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Regards,
+ Sricharan
 
-smatch warnings:
-drivers/pci/controller/pcie-hisi-error.c:234 hisi_pcie_handle_one_error() warn: should '((((1))) << (9 + i))' be a 64 bit type?
-
-# https://github.com/0day-ci/linux/commit/71688ac6d222c137b66a707f8a6fdf28b48e1942
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 71688ac6d222c137b66a707f8a6fdf28b48e1942
-vim +234 drivers/pci/controller/pcie-hisi-error.c
-
-71688ac6d222c1 Yicong Yang 2020-02-03  228  	p += snprintf(p, end - p, "]\n");
-71688ac6d222c1 Yicong Yang 2020-02-03  229  	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
-71688ac6d222c1 Yicong Yang 2020-02-03  230  	dev_info(dev, "%s\n", buf);
-71688ac6d222c1 Yicong Yang 2020-02-03  231  
-71688ac6d222c1 Yicong Yang 2020-02-03  232  	dev_info(dev, "Reg Dump:\n");
-71688ac6d222c1 Yicong Yang 2020-02-03  233  	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
-71688ac6d222c1 Yicong Yang 2020-02-03 @234  		if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-                                                                            ^^^
-This should be BIT_ULL() because it goes up to 9 + 32.
-
-71688ac6d222c1 Yicong Yang 2020-02-03  235  			dev_info(dev,
-71688ac6d222c1 Yicong Yang 2020-02-03  236  				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
-71688ac6d222c1 Yicong Yang 2020-02-03  237  	}
-71688ac6d222c1 Yicong Yang 2020-02-03  238  
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
