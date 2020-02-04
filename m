@@ -2,110 +2,75 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E787C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE3DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E768E21741
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/8fpH8c"
+	by mail.kernel.org (Postfix) with ESMTP id 72D3321741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBDKYl (ORCPT
+        id S1726924AbgBDK1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:24:41 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50502 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgBDKYl (ORCPT
+        Tue, 4 Feb 2020 05:27:04 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33307 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgBDK1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:24:41 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so2618857wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:24:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HcMMJQIo94sDORwN3NPMMwEJv40Fu1AswMuILXzE1Po=;
-        b=e/8fpH8ceuC4QoxlYq1ClcUtM2PODeUMfpJQVju6Mlfe8tnwBG3nua1c7vvNfJkFfN
-         da+Mtu98/b2qv6F7NTaVmM2grfa8zYx/ceaeIFzBIYBcDErELlJjFA8wn+FERBGM2MND
-         XW/aP3jrLK3ZP/39W0crG1IqpoRkvC43ukJr9tOD983vIxCy12cAeFvAiA19OmBVyxbw
-         9oxGO3bcEXwyTwOOEBipHBU+F/+Y7cCSx+gJ8GEkc6Cskba4rp2yqoCKcwtoLHrgGVpZ
-         z9a49nzX3ww7wtvkr1yJL2He1Gpqwkqc5jewKSkwY1wcqeyR9MxB3veKpheScwA9FqMF
-         8ePQ==
+        Tue, 4 Feb 2020 05:27:04 -0500
+Received: by mail-yw1-f66.google.com with SMTP id 192so17125007ywy.0;
+        Tue, 04 Feb 2020 02:27:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HcMMJQIo94sDORwN3NPMMwEJv40Fu1AswMuILXzE1Po=;
-        b=PI8p8bdwLlk6qoPv9Q+v4SIwl6gKkiNCQwjLc/rrMBCX9DdRnbcem2eO82WlQoqAH4
-         3ph1Nwur6hGCcUBZeDFsxhCusi23gHclQA0IQka8UiEbpB0iXDSbBc8uf9pddcGwJ1PC
-         z6ig0CPAZO2dFklcDCL3Uv3Bf5bg+2GhC+g/18NkCo/3SPA2rdoUpwItFxsyAymrsk7L
-         XM/ZELucjs3QwYGxIJ9c3EwqCyMPBgrBw+6hcyrTh1ubmPRP9uKm7h6V35luzegK3UHF
-         07HMc2HQPGlGLnpu+NZOxngZanw4jv7iUVzMkdstG4yn3faoN9MkipcXKeFc/t2aj/Gp
-         cJIA==
-X-Gm-Message-State: APjAAAVVxjwrTHlkEeuxf455Fakk07ix1LYYOEEjQH3dOsnChcm/xKJ1
-        CzSD41n+kQ57EXtz5zBuq8GpXw==
-X-Google-Smtp-Source: APXvYqxDK+9e46ZWTzRKuIJLw0hzd2ajwQLTt6vfG5+a3lenp3SiWluj5c+iJSQ2CDghW6bOiOtIaw==
-X-Received: by 2002:a1c:a9c3:: with SMTP id s186mr4825881wme.64.1580811878171;
-        Tue, 04 Feb 2020 02:24:38 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id b18sm29558987wru.50.2020.02.04.02.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 02:24:37 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, sfr@canb.auug.org.au,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] ASoC: wcd934x: Add missing COMMON_CLK dependency
-Date:   Tue,  4 Feb 2020 10:24:28 +0000
-Message-Id: <20200204102428.26021-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iiOblPPXkUap1hSjW+vVczvgK9orjq02UMpan/2cwmk=;
+        b=bVbwTQXY0FYG0Ho+ddAImk73DbHsaJ42N2TZy+H7+3UGdkVSnZYKT7YavzkYYekRdq
+         Yo5P18x3UvZR3w76MTAzv5cG1W8/nUsjLGe6OdSk5h+H4PTN+3JkQDoSXiipeX3q2vsH
+         4hhHAJlxpdZ4GnjnC1DqYLECZRRg9NHQZpNhRjnf2qQzikv/T6+/+HSkqZvqFCt6QSmA
+         YAXPs6H3ZTOFtlLR309hCq+JhniXHgcZjspFG5TgecpvZ3vBjt53Waf8Xa6VYdR6nfLV
+         j3zlLFHt+kbZa+YLjhwW/smmBiN+EKI30UgLAajfW5G+M9QHE1hEDngmTLh+4HVog5qI
+         9TXg==
+X-Gm-Message-State: APjAAAU3i8V1TxLRIjpTuTjGu232lJjScVVCNWQ2XtCNjjwGaxTLRmWf
+        6YAGd0khS1iRqECdT/Hv3h1R7Xb9jsnhfAdaB44=
+X-Google-Smtp-Source: APXvYqwsBojweVPH1NIKFh79Z2yMuoe7rLawOuZXEiFEqjUOqC8YxjLGonbjUqh45rVQ9y4gNorrHBcyRwcipvYCRoU=
+X-Received: by 2002:a25:8587:: with SMTP id x7mr23609359ybk.325.1580812022096;
+ Tue, 04 Feb 2020 02:27:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
+ <1580735882-7429-3-git-send-email-harini.katakam@xilinx.com>
+ <20200204.103749.1474392609351299440.davem@davemloft.net> <BN7PR02MB51215810D1240E98E81F6176C9030@BN7PR02MB5121.namprd02.prod.outlook.com>
+In-Reply-To: <BN7PR02MB51215810D1240E98E81F6176C9030@BN7PR02MB5121.namprd02.prod.outlook.com>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Tue, 4 Feb 2020 15:56:51 +0530
+Message-ID: <CAFcVECKXoG5Cdi2Ef2D13zj7afx4ZVVyTRRm0H84dzEAYFvHnA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] net: macb: Limit maximum GEM TX length in TSO
+To:     David Miller <davem@davemloft.net>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Harini Katakam <harinikatakamlinux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like some platforms are not yet using COMMON CLK.
+Hi David,
 
-PowerPC allyesconfig failed with below error in next
+<snip>
+> > > v2:
+> > > Use 0x3FC0 by default
+> >
+> > You should add a comment above the definition which explains how this value
+> > was derived.  It looks magic currently.
 
-ld: sound/soc/codecs/wcd934x.o:(.toc+0x0):
-	 undefined reference to `of_clk_src_simple_get'
-ld: sound/soc/codecs/wcd934x.o: in function `.wcd934x_codec_probe':
-wcd934x.c:(.text.wcd934x_codec_probe+0x3d4):
-	 undefined reference to `.__clk_get_name'
-ld: wcd934x.c:(.text.wcd934x_codec_probe+0x438):
-	 undefined reference to `.clk_hw_register'
-ld: wcd934x.c:(.text.wcd934x_codec_probe+0x474):
-	 undefined reference to `.of_clk_add_provider'
+I'll add a comment. The value was specified in the errata document that Cadence
+provided to us.
 
-Add the missing COMMON_CLK dependency to fix this errors.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/codecs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 4d5b0d5a73d3..3e2396ee727f 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1280,6 +1280,7 @@ config SND_SOC_WCD9335
- config SND_SOC_WCD934X
- 	tristate "WCD9340/WCD9341 Codec"
- 	depends on SLIMBUS
-+	depends on COMMON_CLK
- 	select REGMAP_SLIMBUS
- 	select REGMAP_IRQ
- 	help
--- 
-2.21.0
-
+Regards,
+Harini
