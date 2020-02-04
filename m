@@ -2,135 +2,478 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AA2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF5DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0032B2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ECF2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="se0qgK5+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PCgLwG19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgBDJXw (ORCPT
+        id S1726892AbgBDJYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:23:52 -0500
-Received: from mout.web.de ([212.227.15.3]:45405 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgBDJXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:23:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1580808219;
-        bh=qFFodg6FjTAzmbOWPLdYdtgK3Q2ItN0dlxBnaNp4kvI=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=se0qgK5+LmvblxexiNDDoSl0sw+7Rl8PdHfSdGWYt22hViNTSxa8cwWIDMywFAxG6
-         HlqEqKHhyysbFxW9zUmW6gzstx/vBvMVNhF4DMOzzvb1JqgCrhPH2unENmhQ0CuH0t
-         ov3NwOxpjfjBTuBgBGv2fFWKuMvrvGTBvjp1kCuU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.133.16]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LyOuM-1jeJoL23GQ-015nVB; Tue, 04
- Feb 2020 10:23:39 +0100
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Subject: Re: [PATCH v10 0/2] New zonefs file system
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Message-ID: <b6046f64-89a0-faba-bbd8-f82c8809ee8f@web.de>
-Date:   Tue, 4 Feb 2020 10:23:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 04:24:14 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:54662 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgBDJYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:24:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KGp7S9Is8Um65DcpLlVhCuRPQXxFX+BbY6/I/l+gjGQ=; b=PCgLwG19386pcWWTjTTJGOMnT8
+        XzwtBRWJl5SW2PcnqG6RAOV6x/U349uNGqRRxUVtXZsE4h7XtY3VYrgPzKzY+YYJIEVouq7hUZZf9
+        dLjKkYgPYG+oWHTINJ0ohHtwqT4uxKuZtqdYAq+cCcRxcAt27pzYQM81M/F/LDYdNFjU2tQhsb4xE
+        G3giIQ98997gY9y1o7hs0bWBdC1BYv3xcFsybaD53hSzFHtc7gRE4QYfvVNnF7+U9qnuG7wCt9TFX
+        WusXVWf7Z9/JFvg34X+C7K91Sl6+slXeuFrLkC+rD5cDte68iZohU5oGQFC705yq+ureKVB0chJ5A
+        8wfqAKZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyuRB-0000xO-Vh; Tue, 04 Feb 2020 09:24:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 36489304C21;
+        Tue,  4 Feb 2020 10:22:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A966C203A89B2; Tue,  4 Feb 2020 10:24:03 +0100 (CET)
+Date:   Tue, 4 Feb 2020 10:24:03 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, will@kernel.org
+Cc:     oleg@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
+        bristot@redhat.com, longman@redhat.com, dave@stgolabs.net,
+        jack@suse.com
+Subject: [PATCH -v2-mkII 5/7] locking/percpu-rwsem: Remove the embedded rwsem
+Message-ID: <20200204092403.GB14879@hirez.programming.kicks-ass.net>
+References: <20200131150703.194229898@infradead.org>
+ <20200131151540.155211856@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pBoBB0tJqYGsVZuhA/IDWsJadO7GINgG5gK4Dkiw+MtUYmS1OBX
- XD+l3lhJuAK29e7GC64rvtizCPgSXNJh2P4Zf+svu14dNWTjxm70ih/uGS3ivWcljaVtLyY
- jyzOFjgahV6iaTHWk3WiinLUNplkAiPwapyJ9ilXGTK7QBmt8Y3My6SsHg3AjJ50Y3KAd1P
- +yuH5ohNoDjF579nLb0Jw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YZpg5oH4O8I=:5OQtx9akIUkZIctJbfbZas
- 5JmPnBS6NwqedSpwTj8YYy8GKfpWdqLFaKewV29Pn3N4aLMSwxN8Oh7ZkzTpeGQF4FWPp5VCE
- ftWiaQk3QMQepvCF1VGuRaO8goYHFu0+WQZmttU+CrqNhiZHjA231/nMmN6L75raX/Fs9HFm9
- 9lEdr8CiHlxw8VtoZw2uQS8HJgGuKaozPJMRWy4G1SXNWtJ2MG6kHG804U2UT1yKt/y0oycvM
- w/PDKxB6wxgoKwKgC8j+fRBQgvMYNwVkgZH6H0Wv5Aa/oCOUsI726nstaHa8n8kuOxvcUrrEw
- XYlPw9ps3XGVrbBRR+pjU7WEwU9ZycvsnRRa/QKlk0LbqqHpBRCEnSl0p/P9DQb7jVDZH9RPr
- PnGgn7/pAi5K0nfOwmPr5e0enu9dSq9fCuBt1JD5hCbpewL71ERkw6hqjQCi1Fkqjewwt5G5m
- BQYYueGJ6GDx8B26j/4uZ2uCdLaOv9/jS3XKxq4l+Xn+MBVcxqI9duxByeXr7TFPCbPPegiBy
- DzvjhGHzjmJtuZCVPb5+6IU8cHl24iKhXH4GRa+23E99dyumfT1JKjwGUWKiJx+apx+VgSLtj
- NYnS609Iz4nlhKljGCe21BgUu/2c1xoICOq1zgyHZtPa3u6UQBgkBDnsduSbQWD+kTLjFRhGn
- Gu3e+uQVjADPEcGYVf8CE8vOEBhmP8GyWuj1JEKK0s/IsJHVn94kn9u5XQ21T6am1/KNPl+CH
- WuG89qF+rih3o4jnkfrO30Bt5WAnP+E+9NxV0DuJSpkh6jHTWzMP5pHxaIFiQk0lc956pGWOc
- aFieQy6krWAB6EK6zvEVCnAAlv/xGrW9hxvC+xq7GI2kBIWqf6T2gbWEmwSF2dFXIbke8xDnN
- jWwauZBwxtYNQJto/sxufsji+VVZDOoPJ07bMASv0I0JIpGIVvLxNI3oYGWKh1tmeuSiHyK2b
- 2Bh+huHzg/AYhrXRXLQs95cAwDqWR87aCKAsD8FqjsUYSAufNjocPE8z3Drpnub3P36KO4iST
- K67FHp3sRnsiDTKuMmjRSFqizC5y0UljeFjcAjVIkgi4BoabroJu4hWTxYFOGmikUF5Qn8S84
- Upr822LhisdKn5rpYzWInAWQtbSYC9qJs8jbT+ZPaS5fGJX3U4aKYYiyl1/UZmDwr9mn2JE+O
- EzwgtxjEDMB2C8IOG8pJILtAecmoLrWqTD2RM+I3KBUYtpQsqJtnF5pTE88Zklpqokcp6REgJ
- CEULoREhe4rSwWciF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131151540.155211856@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> zonefs IO management implementation uses the new iomap generic code.
+Subject: locking/percpu-rwsem: Remove the embedded rwsem
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Wed Oct 30 20:30:41 CET 2019
 
-Can it matter to begin such sentences with the capital letter =E2=80=9CZ=
-=E2=80=9D?
+The filesystem freezer uses percpu-rwsem in a way that is effectively
+write_non_owner() and achieves this with a few horrible hacks that
+rely on the rwsem (!percpu) implementation.
 
+When PREEMPT_RT replaces the rwsem implementation with a PI aware
+variant this comes apart.
 
-> Changes from v9:
+Remove the embedded rwsem and implement it using a waitqueue and an
+atomic_t.
 
-Are any more adjustments worth to be mentioned here?
+ - make readers_block an atomic, and use it, with the waitqueue
+   for a blocking test-and-set write-side.
 
-Regards,
-Markus
+ - have the read-side wait for the 'lock' state to clear.
+
+Have the waiters use FIFO queueing and mark them (reader/writer) with
+a new WQ_FLAG. Use a custom wake_function to wake either a single
+writer or all readers until a writer.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Acked-by: Will Deacon <will@kernel.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
+---
+
+Moved the RWSEM_OWNER_UNKNOWN removal into it's own patch.
+
+ include/linux/percpu-rwsem.h  |   19 +----
+ include/linux/wait.h          |    1 
+ kernel/locking/percpu-rwsem.c |  153 ++++++++++++++++++++++++++++++------------
+ kernel/locking/rwsem.c        |    9 +-
+ kernel/locking/rwsem.h        |   12 ---
+ 5 files changed, 123 insertions(+), 71 deletions(-)
+
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
+@@ -3,18 +3,18 @@
+ #define _LINUX_PERCPU_RWSEM_H
+ 
+ #include <linux/atomic.h>
+-#include <linux/rwsem.h>
+ #include <linux/percpu.h>
+ #include <linux/rcuwait.h>
++#include <linux/wait.h>
+ #include <linux/rcu_sync.h>
+ #include <linux/lockdep.h>
+ 
+ struct percpu_rw_semaphore {
+ 	struct rcu_sync		rss;
+ 	unsigned int __percpu	*read_count;
+-	struct rw_semaphore	rw_sem; /* slowpath */
+-	struct rcuwait          writer; /* blocked writer */
+-	int			readers_block;
++	struct rcuwait		writer;
++	wait_queue_head_t	waiters;
++	atomic_t		block;
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	struct lockdep_map	dep_map;
+ #endif
+@@ -31,8 +31,9 @@ static DEFINE_PER_CPU(unsigned int, __pe
+ is_static struct percpu_rw_semaphore name = {				\
+ 	.rss = __RCU_SYNC_INITIALIZER(name.rss),			\
+ 	.read_count = &__percpu_rwsem_rc_##name,			\
+-	.rw_sem = __RWSEM_INITIALIZER(name.rw_sem),			\
+ 	.writer = __RCUWAIT_INITIALIZER(name.writer),			\
++	.waiters = __WAIT_QUEUE_HEAD_INITIALIZER(name.waiters),		\
++	.block = ATOMIC_INIT(0),					\
+ 	__PERCPU_RWSEM_DEP_MAP_INIT(name)				\
+ }
+ 
+@@ -130,20 +131,12 @@ static inline void percpu_rwsem_release(
+ 					bool read, unsigned long ip)
+ {
+ 	lock_release(&sem->dep_map, ip);
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-	if (!read)
+-		atomic_long_set(&sem->rw_sem.owner, RWSEM_OWNER_UNKNOWN);
+-#endif
+ }
+ 
+ static inline void percpu_rwsem_acquire(struct percpu_rw_semaphore *sem,
+ 					bool read, unsigned long ip)
+ {
+ 	lock_acquire(&sem->dep_map, 0, 1, read, 1, NULL, ip);
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-	if (!read)
+-		atomic_long_set(&sem->rw_sem.owner, (long)current);
+-#endif
+ }
+ 
+ #endif
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -20,6 +20,7 @@ int default_wake_function(struct wait_qu
+ #define WQ_FLAG_EXCLUSIVE	0x01
+ #define WQ_FLAG_WOKEN		0x02
+ #define WQ_FLAG_BOOKMARK	0x04
++#define WQ_FLAG_CUSTOM		0x08
+ 
+ /*
+  * A single wait-queue entry structure:
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -1,15 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/atomic.h>
+-#include <linux/rwsem.h>
+ #include <linux/percpu.h>
++#include <linux/wait.h>
+ #include <linux/lockdep.h>
+ #include <linux/percpu-rwsem.h>
+ #include <linux/rcupdate.h>
+ #include <linux/sched.h>
++#include <linux/sched/task.h>
+ #include <linux/errno.h>
+ 
+-#include "rwsem.h"
+-
+ int __percpu_init_rwsem(struct percpu_rw_semaphore *sem,
+ 			const char *name, struct lock_class_key *key)
+ {
+@@ -17,11 +16,10 @@ int __percpu_init_rwsem(struct percpu_rw
+ 	if (unlikely(!sem->read_count))
+ 		return -ENOMEM;
+ 
+-	/* ->rw_sem represents the whole percpu_rw_semaphore for lockdep */
+ 	rcu_sync_init(&sem->rss);
+-	init_rwsem(&sem->rw_sem);
+ 	rcuwait_init(&sem->writer);
+-	sem->readers_block = 0;
++	init_waitqueue_head(&sem->waiters);
++	atomic_set(&sem->block, 0);
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
+ 	lockdep_init_map(&sem->dep_map, name, key, 0);
+@@ -54,23 +52,23 @@ static bool __percpu_down_read_trylock(s
+ 	 * the same CPU as the increment, avoiding the
+ 	 * increment-on-one-CPU-and-decrement-on-another problem.
+ 	 *
+-	 * If the reader misses the writer's assignment of readers_block, then
+-	 * the writer is guaranteed to see the reader's increment.
++	 * If the reader misses the writer's assignment of sem->block, then the
++	 * writer is guaranteed to see the reader's increment.
+ 	 *
+ 	 * Conversely, any readers that increment their sem->read_count after
+-	 * the writer looks are guaranteed to see the readers_block value,
+-	 * which in turn means that they are guaranteed to immediately
+-	 * decrement their sem->read_count, so that it doesn't matter that the
+-	 * writer missed them.
++	 * the writer looks are guaranteed to see the sem->block value, which
++	 * in turn means that they are guaranteed to immediately decrement
++	 * their sem->read_count, so that it doesn't matter that the writer
++	 * missed them.
+ 	 */
+ 
+ 	smp_mb(); /* A matches D */
+ 
+ 	/*
+-	 * If !readers_block the critical section starts here, matched by the
++	 * If !sem->block the critical section starts here, matched by the
+ 	 * release in percpu_up_write().
+ 	 */
+-	if (likely(!smp_load_acquire(&sem->readers_block)))
++	if (likely(!atomic_read_acquire(&sem->block)))
+ 		return true;
+ 
+ 	__this_cpu_dec(*sem->read_count);
+@@ -81,6 +79,88 @@ static bool __percpu_down_read_trylock(s
+ 	return false;
+ }
+ 
++static inline bool __percpu_down_write_trylock(struct percpu_rw_semaphore *sem)
++{
++	if (atomic_read(&sem->block))
++		return false;
++
++	return atomic_xchg(&sem->block, 1) == 0;
++}
++
++static bool __percpu_rwsem_trylock(struct percpu_rw_semaphore *sem, bool reader)
++{
++	if (reader) {
++		bool ret;
++
++		preempt_disable();
++		ret = __percpu_down_read_trylock(sem);
++		preempt_enable();
++
++		return ret;
++	}
++	return __percpu_down_write_trylock(sem);
++}
++
++/*
++ * The return value of wait_queue_entry::func means:
++ *
++ *  <0 - error, wakeup is terminated and the error is returned
++ *   0 - no wakeup, a next waiter is tried
++ *  >0 - woken, if EXCLUSIVE, counted towards @nr_exclusive.
++ *
++ * We use EXCLUSIVE for both readers and writers to preserve FIFO order,
++ * and play games with the return value to allow waking multiple readers.
++ *
++ * Specifically, we wake readers until we've woken a single writer, or until a
++ * trylock fails.
++ */
++static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
++				      unsigned int mode, int wake_flags,
++				      void *key)
++{
++	struct task_struct *p = get_task_struct(wq_entry->private);
++	bool reader = wq_entry->flags & WQ_FLAG_CUSTOM;
++	struct percpu_rw_semaphore *sem = key;
++
++	/* concurrent against percpu_down_write(), can get stolen */
++	if (!__percpu_rwsem_trylock(sem, reader))
++		return 1;
++
++	list_del_init(&wq_entry->entry);
++	smp_store_release(&wq_entry->private, NULL);
++
++	wake_up_process(p);
++	put_task_struct(p);
++
++	return !reader; /* wake (readers until) 1 writer */
++}
++
++static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool reader)
++{
++	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
++	bool wait;
++
++	spin_lock_irq(&sem->waiters.lock);
++	/*
++	 * Serialize against the wakeup in percpu_up_write(), if we fail
++	 * the trylock, the wakeup must see us on the list.
++	 */
++	wait = !__percpu_rwsem_trylock(sem, reader);
++	if (wait) {
++		wq_entry.flags |= WQ_FLAG_EXCLUSIVE | reader * WQ_FLAG_CUSTOM;
++		__add_wait_queue_entry_tail(&sem->waiters, &wq_entry);
++	}
++	spin_unlock_irq(&sem->waiters.lock);
++
++	while (wait) {
++		set_current_state(TASK_UNINTERRUPTIBLE);
++		if (!smp_load_acquire(&wq_entry.private))
++			break;
++		schedule();
++	}
++	__set_current_state(TASK_RUNNING);
++}
++
+ bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
+ {
+ 	if (__percpu_down_read_trylock(sem))
+@@ -89,20 +169,10 @@ bool __percpu_down_read(struct percpu_rw
+ 	if (try)
+ 		return false;
+ 
+-	/*
+-	 * We either call schedule() in the wait, or we'll fall through
+-	 * and reschedule on the preempt_enable() in percpu_down_read().
+-	 */
+-	preempt_enable_no_resched();
+-
+-	/*
+-	 * Avoid lockdep for the down/up_read() we already have them.
+-	 */
+-	__down_read(&sem->rw_sem);
+-	this_cpu_inc(*sem->read_count);
+-	__up_read(&sem->rw_sem);
+-
++	preempt_enable();
++	percpu_rwsem_wait(sem, /* .reader = */ true);
+ 	preempt_disable();
++
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(__percpu_down_read);
+@@ -117,7 +187,7 @@ void __percpu_up_read(struct percpu_rw_s
+ 	 */
+ 	__this_cpu_dec(*sem->read_count);
+ 
+-	/* Prod writer to recheck readers_active */
++	/* Prod writer to re-evaluate readers_active_check() */
+ 	rcuwait_wake_up(&sem->writer);
+ }
+ EXPORT_SYMBOL_GPL(__percpu_up_read);
+@@ -137,6 +207,8 @@ EXPORT_SYMBOL_GPL(__percpu_up_read);
+  * zero.  If this sum is zero, then it is stable due to the fact that if any
+  * newly arriving readers increment a given counter, they will immediately
+  * decrement that same counter.
++ *
++ * Assumes sem->block is set.
+  */
+ static bool readers_active_check(struct percpu_rw_semaphore *sem)
+ {
+@@ -160,23 +232,22 @@ void percpu_down_write(struct percpu_rw_
+ 	/* Notify readers to take the slow path. */
+ 	rcu_sync_enter(&sem->rss);
+ 
+-	__down_write(&sem->rw_sem);
+-
+ 	/*
+-	 * Notify new readers to block; up until now, and thus throughout the
+-	 * longish rcu_sync_enter() above, new readers could still come in.
++	 * Try set sem->block; this provides writer-writer exclusion.
++	 * Having sem->block set makes new readers block.
+ 	 */
+-	WRITE_ONCE(sem->readers_block, 1);
++	if (!__percpu_down_write_trylock(sem))
++		percpu_rwsem_wait(sem, /* .reader = */ false);
+ 
+-	smp_mb(); /* D matches A */
++	/* smp_mb() implied by __percpu_down_write_trylock() on success -- D matches A */
+ 
+ 	/*
+-	 * If they don't see our writer of readers_block, then we are
+-	 * guaranteed to see their sem->read_count increment, and therefore
+-	 * will wait for them.
++	 * If they don't see our store of sem->block, then we are guaranteed to
++	 * see their sem->read_count increment, and therefore will wait for
++	 * them.
+ 	 */
+ 
+-	/* Wait for all now active readers to complete. */
++	/* Wait for all active readers to complete. */
+ 	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
+ }
+ EXPORT_SYMBOL_GPL(percpu_down_write);
+@@ -195,12 +266,12 @@ void percpu_up_write(struct percpu_rw_se
+ 	 * Therefore we force it through the slow path which guarantees an
+ 	 * acquire and thereby guarantees the critical section's consistency.
+ 	 */
+-	smp_store_release(&sem->readers_block, 0);
++	atomic_set_release(&sem->block, 0);
+ 
+ 	/*
+-	 * Release the write lock, this will allow readers back in the game.
++	 * Prod any pending reader/writer to make progress.
+ 	 */
+-	__up_write(&sem->rw_sem);
++	__wake_up(&sem->waiters, TASK_NORMAL, 1, sem);
+ 
+ 	/*
+ 	 * Once this completes (at least one RCU-sched grace period hence) the
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -28,7 +28,6 @@
+ #include <linux/rwsem.h>
+ #include <linux/atomic.h>
+ 
+-#include "rwsem.h"
+ #include "lock_events.h"
+ 
+ /*
+@@ -1338,7 +1337,7 @@ static struct rw_semaphore *rwsem_downgr
+ /*
+  * lock for reading
+  */
+-inline void __down_read(struct rw_semaphore *sem)
++static inline void __down_read(struct rw_semaphore *sem)
+ {
+ 	if (!rwsem_read_trylock(sem)) {
+ 		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
+@@ -1383,7 +1382,7 @@ static inline int __down_read_trylock(st
+ /*
+  * lock for writing
+  */
+-inline void __down_write(struct rw_semaphore *sem)
++static inline void __down_write(struct rw_semaphore *sem)
+ {
+ 	long tmp = RWSEM_UNLOCKED_VALUE;
+ 
+@@ -1426,7 +1425,7 @@ static inline int __down_write_trylock(s
+ /*
+  * unlock after reading
+  */
+-inline void __up_read(struct rw_semaphore *sem)
++static inline void __up_read(struct rw_semaphore *sem)
+ {
+ 	long tmp;
+ 
+@@ -1446,7 +1445,7 @@ inline void __up_read(struct rw_semaphor
+ /*
+  * unlock after writing
+  */
+-inline void __up_write(struct rw_semaphore *sem)
++static inline void __up_write(struct rw_semaphore *sem)
+ {
+ 	long tmp;
+ 
+--- a/kernel/locking/rwsem.h
++++ b/kernel/locking/rwsem.h
+@@ -1,12 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-
+-#ifndef __INTERNAL_RWSEM_H
+-#define __INTERNAL_RWSEM_H
+-#include <linux/rwsem.h>
+-
+-extern void __down_read(struct rw_semaphore *sem);
+-extern void __up_read(struct rw_semaphore *sem);
+-extern void __down_write(struct rw_semaphore *sem);
+-extern void __up_write(struct rw_semaphore *sem);
+-
+-#endif /* __INTERNAL_RWSEM_H */
