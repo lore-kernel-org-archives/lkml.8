@@ -2,90 +2,117 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACF4C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D02EC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3943821582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90F720732
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RQmp6/Yf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hj4dY79M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgBDAkB (ORCPT
+        id S1727129AbgBDAkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 19:40:01 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36629 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgBDAkB (ORCPT
+        Mon, 3 Feb 2020 19:40:53 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34816 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgBDAkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:40:01 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so6523959plm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:40:00 -0800 (PST)
+        Mon, 3 Feb 2020 19:40:53 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q15so16301771qki.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:subject:cc:user-agent:date;
-        bh=nDX2pOrFO8+HqSdSgLX9aJulWTBY/K4HRKE5kgWbO3o=;
-        b=RQmp6/YfNqfWMLRf7Vpv1rU6ihIhTpfXh2fJauyZWP+ac/wMTKsf+qz10keMfpFaek
-         Lr7xSjSsaaAWO2S8eiZsCfg6C4m7VapEm26sWbZ9V2fccFKfS56oJyNJTztMeLIU72qZ
-         o/5RBWBySGZg1YT16fcw8EE5cMZYObM5qlydY=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2eh5eLlWcHGoF/U52PtaGDoZRzy+/UdPDBxS5lqGdoE=;
+        b=Hj4dY79MwiC316wkyEPymztpuzb2g7dCtVDuFqvOw3ugIm6LAFv8f7B8dLHnYb6aKb
+         hB3K705ssZ76iWGwTfnC+H4FCAUermPXw4aS6LB/eqrKd+wBNRDAt+kgVTuxBsq9MZNR
+         c6GO3acbSixCoaI/e4GkapdxAhVi4JVF0/Bho=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
-         :user-agent:date;
-        bh=nDX2pOrFO8+HqSdSgLX9aJulWTBY/K4HRKE5kgWbO3o=;
-        b=PB5DUrhE3kV29pL8BmBdlpnoVaeNq/dcPPGHouKnTxNLJLBl9NTIfGBtFLjzgLxf7n
-         uXeIfw5Hwx7UXDFazZD7KOxtRWt3HalinXcSsvFQfhZhi/HF6NHcR1SDoAy5+ZssRJuQ
-         nSLYfkoulKXqJMcnNWVzfu/L+SfiZFdu1+93sY1nvkyht81z+8xig6dsju6cZyJIDa/n
-         gmGonlHYspBqAu+aDsCMJTrA+a6FAHp6QQRBIaZ0NEftczc/goVLTnicpXwjMcFXw9sl
-         qNMrFKEplLDelcSUD2jc2lpkpte44Bn5B6s703o3XnUKZyUdAymXE2uwObYHMbKO3KLI
-         bd6A==
-X-Gm-Message-State: APjAAAXla12YpKmdH5ifaUmK9yKMekRn3D0/NZASPvh+4DjdoGua0RkK
-        k8lgYPPolxG5Da6Jkto1XkskCw==
-X-Google-Smtp-Source: APXvYqyNUNXKUOiH6nIoLqHpUNf4PMruM+fuDE/kmUzYKdah7fcsP3wiQTOlxMeXa9QVo0Pmc44D6Q==
-X-Received: by 2002:a17:90a:2ec5:: with SMTP id h5mr2347158pjs.79.1580776800370;
-        Mon, 03 Feb 2020 16:40:00 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r7sm22171384pfg.34.2020.02.03.16.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 16:39:59 -0800 (PST)
-Message-ID: <5e38bd5f.1c69fb81.78a32.df02@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2eh5eLlWcHGoF/U52PtaGDoZRzy+/UdPDBxS5lqGdoE=;
+        b=m3rP2QudBoEa49VrSvqj4lfMUA8hHpG2m5tapdOz8mSq+9xqKmQGCbxL5BVuRyjfd2
+         qWZZwdTkMUlsjdUGY5SJ0Dy13LJnWfv8gKXJAx9IkWPmFcSTONmmR6uEPAVicf/l1A6M
+         Ea2WjVSPAS5CPJ1ntgagkhJg5a6NpOu5dDJIFqGo3lo66m6VpaKBIZxcZkkPTUUnlKLN
+         P2aepcIfCRgjzFVlzSjkVTykqHzs+KvnwmEJmQ0+Ta5gd91VGXJLrTvUJFTVmqrJ1pM/
+         suXA52iAc6R7bFg11KEw/pIvvIR9Go74wdNWDMKxyTXMuoLai3yTJfIJwwIc+Wk4AUYY
+         b7lQ==
+X-Gm-Message-State: APjAAAWDPkNvc0XCNTcw+hYF+BJkSU4by8oeqQgkURuTc4PZ12mM9ebK
+        jTW6NfpxI9qXemz2ElNtnF4q12LKFGxVegriWkudvA==
+X-Google-Smtp-Source: APXvYqxU1bO55XCmlZLBDVH2y1S8uFyVky5JIP8map2b8dUYRhMu18trOmjE/aFqdhps6L2iqh/DxhB2Gx3nHn6tq0g=
+X-Received: by 2002:a37:9186:: with SMTP id t128mr24986019qkd.180.1580776851921;
+ Mon, 03 Feb 2020 16:40:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580305919-30946-4-git-send-email-sanm@codeaurora.org>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org> <1580305919-30946-4-git-send-email-sanm@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v4 3/8] phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 03 Feb 2020 16:39:59 -0800
+References: <20200124231834.63628-1-pmalani@chromium.org> <adcf2a99-d6d8-cd4e-e22d-9ce539d87b7f@collabora.com>
+ <20200127184439.GA150048@google.com> <CACeCKafdroLXf62aHeP8CZPuiR02EEmKAGmhHczzoSyX0bFv5g@mail.gmail.com>
+ <dc1fec43-1bb0-53de-af17-a91fea42a3f5@collabora.com> <CANLzEks0+J9qvAk_rw2_1r74twnonXmPGdCpY3w2nY8xYPAYLw@mail.gmail.com>
+In-Reply-To: <CANLzEks0+J9qvAk_rw2_1r74twnonXmPGdCpY3w2nY8xYPAYLw@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 3 Feb 2020 16:40:40 -0800
+Message-ID: <CACeCKafOhUXcqE6jyaijuFr0V5UtXU8h09RQ=HjV0mE9ar1jWg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] platform: chrome: Add cros-usbpd-notify driver
+To:     Benson Leung <bleung@google.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" 
+        <linux-pm@vger.kernel.org>, Jon Flatley <jflat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-01-29 05:51:54)
-> Add generic QUSB2 V2 PHY table so the respective phys
-> can use the same table.
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
+On Mon, Feb 3, 2020 at 3:42 PM Benson Leung <bleung@google.com> wrote:
+>
+> Hi Enric, Hi Prashant,
+>
+> On Wed, Jan 29, 2020 at 12:37 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> > >> I'm OK with creating a branch for this series and merging it into
+> > >> chrome-platform-5.7 once Linus releases v5.6-rc1 late next week.
+> > > Thanks; I'm guessing one of the maintainers will perform the creation
+> > > of chrome-platform-5.7 and merge this patch into that branch.
+> > > Also, kindly pick https://lkml.org/lkml/2020/1/24/2068 , i.e patch 4/4
+> > > of this series (I think an earlier version of this patch, i.e
+> > > https://lkml.org/lkml/2020/1/17/628 was marked "Reviewed-by: Sebastian
+> > > Reichel <sebastian.reichel@collabora.com>"
+> > >
+> >
+> > That patch should go through Sebastian's tree, we will create an immutable
+> > branch for him when rc1 is released.
+> >
+>
+> Before rc1 is released, I've gone ahead and created a staging branch
+> on chrome-platform collaboration repo here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=staging-cros-usbpd-notify
+>
+> Here are the two commits I have right now:
+> e8573ca91ae4 power: supply: cros-ec-usbpd-charger: Fix host events
+> a49c1263a22b platform: chrome: Add cros-usbpd-notify driver
+>
+> Enric, I went ahead and modified the Kconfig on the first patch to
+> depend on MFD_CROS_EC_DEV and default it as well.
+> Prashant, let me know how these look to you. We can convert the branch
+> to an immutable next week.
+Thanks Benson, looks good to me.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
+>
+> --
+> Benson Leung
+> Staff Software Engineer
+> Chrome OS Kernel
+> Google Inc.
+> bleung@google.com
+> Chromium OS Project
+> bleung@chromium.org
