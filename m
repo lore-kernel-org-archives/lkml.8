@@ -2,136 +2,109 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6214DC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F84AC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3072E2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736BB20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ObPyHTm2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B83REeVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgBDQQu (ORCPT
+        id S1727385AbgBDQSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:16:50 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41150 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727310AbgBDQQu (ORCPT
+        Tue, 4 Feb 2020 11:18:40 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59154 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgBDQSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:16:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580833009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=d/1kZYW+amVRWeTIsaypigSvaXiL8dz1iR14XKJQ+1Q=;
-        b=ObPyHTm2TC5UwgAEwtWR4zIsfd12JTST/mEWy2p7Uh83//J/AW7+BqPxxKuCfnH8pwyD5T
-        L77fhy6iQMRv+Yp5YUl+kFqxIhkEjjXlm81+8SkZX9Kk6bls7aeCgXskbShk7pMtiJxXNu
-        t7gXaaopIdyc/IwK9c5F9EknvMM97VA=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-mmicGmilN8u6gjkkr9UpgQ-1; Tue, 04 Feb 2020 11:16:43 -0500
-X-MC-Unique: mmicGmilN8u6gjkkr9UpgQ-1
-Received: by mail-qt1-f200.google.com with SMTP id b5so12714450qtt.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 08:16:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d/1kZYW+amVRWeTIsaypigSvaXiL8dz1iR14XKJQ+1Q=;
-        b=IXLbWqAV6Ub6USL2dVgQU3O7laECaJPfaaWmofErDwIUv7eTLWvV4KTeWE1QQXV7TM
-         Jl60BZT2R+qNql/h/VyK1iJWxxyK3bTOtoCKyXQEqL55Vn7TNFsInVH+9TiVbbCmZvQi
-         McZhSplB52zcR1z2T1vmCppjpCFrHTkVY04Sdb1VM4JdjWvHb2T+B3cri+J8qpAIttaS
-         aKatVO2n8azHKfwUYYDRYqdAGdVO+sTfbO8q3dvN8s8FJVLNiqcb8mSYfCbTr+qplZpW
-         Dfs1MnXKYeIQXfM52fWKRoBWZKxcMH2MG5j7ssmpRnSbDZq+/Z+skXQEKnPlnbJ4CT3A
-         c8jQ==
-X-Gm-Message-State: APjAAAXs6/R5Sdwyy1dKliUN8Agaln9EfIo6t8zoSdWJEmp+aRM2Tfgg
-        dYMM3xulMryktc3ywWdPtNcLCIZXGVL5+bqQisw4xJafNQITJt+pWWRGB1BMzl0Rhh4i0YliUAE
-        gc/7IvLagwenTxFBWjEi/Wr4z
-X-Received: by 2002:aed:2047:: with SMTP id 65mr29242862qta.78.1580833003007;
-        Tue, 04 Feb 2020 08:16:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx6q9T58E4rVois1ODbTqp34NKMnQQMv8LOqipqZDrbLugQmaiN1vBOjCzPlV7P4fDCxHzpQg==
-X-Received: by 2002:aed:2047:: with SMTP id 65mr29242835qta.78.1580833002741;
-        Tue, 04 Feb 2020 08:16:42 -0800 (PST)
-Received: from xz-x1.redhat.com ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id b35sm12386718qtc.9.2020.02.04.08.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 08:16:41 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterx@redhat.com, Ming Lei <ming.lei@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
-Date:   Tue,  4 Feb 2020 11:16:39 -0500
-Message-Id: <20200204161639.267026-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 4 Feb 2020 11:18:40 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014GFpm9099115;
+        Tue, 4 Feb 2020 16:18:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=rKE6BXas3LZe481kZHsQO9RrFsrswJ8xXmcNA5ia/sc=;
+ b=B83REeVYK/qA/uk+oNSDRp+5EZio8ECEraJSWV7MzTlwxzLxjK0dCBX7/3cBu4IuEntU
+ Q1Y8pi4wWrh1em0ZC4e7lGaKm6i/0RRM/QnIwHH1gDJLvate0O6i76HWnDscTBFE03jp
+ m0vYMX+CR8CzHfsUkd0oSvHE3E4LMihs90G5z8RF7RlKSMXGVYHAiLAbIu9zS8fO5cqp
+ BmX2YTRDlSo03ouhjqzQh0eaz+YLA705/vTz5f67vJro2hoMppguLlZtpfjRoh/Ajtlw
+ q5v78rojwBeLB9TacrjrNMjrioqHLiAuhvXudutZGto/SNje390kzS8o5T8HTQ+QrK+h FQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xw0ru7rry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 16:18:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014GGNC4155573;
+        Tue, 4 Feb 2020 16:18:09 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2xxw0xb6a8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 16:18:08 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014GI6qi018533;
+        Tue, 4 Feb 2020 16:18:06 GMT
+Received: from [10.175.207.61] (/10.175.207.61)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Feb 2020 08:18:05 -0800
+Subject: Re: [PATCH RFC 02/10] mm: Handle pmd entries in follow_pfn()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nvdimm@lists.01.org, Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Liran Alon <liran.alon@oracle.com>,
+        Nikita Leshenko <nikita.leshchenko@oracle.com>,
+        Barret Rhoden <brho@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+References: <20200110190313.17144-1-joao.m.martins@oracle.com>
+ <20200110190313.17144-3-joao.m.martins@oracle.com>
+ <20200203213718.GL8731@bombadil.infradead.org>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <94c35449-16ac-235b-fa2e-a5aea85dc568@oracle.com>
+Date:   Tue, 4 Feb 2020 16:17:59 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200203213718.GL8731@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=767
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002040108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=830 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002040108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "isolcpus=" parameter allows sub-parameters to exist before the
-cpulist is specified, and if it sees unknown sub-parameters the whole
-parameter will be ignored.  This design is incompatible with itself
-when we add more sub-parameters to "isolcpus=", because the old
-kernels will not recognize the new "isolcpus=" sub-parameters, then it
-will invalidate the whole parameter so the CPU isolation will not
-really take effect if we start to use the new sub-parameters while
-later we reboot into an old kernel. Instead we will see this when
-booting the old kernel:
+On 2/3/20 9:37 PM, Matthew Wilcox wrote:
+> On Fri, Jan 10, 2020 at 07:03:05PM +0000, Joao Martins wrote:
+>> @@ -4366,6 +4366,7 @@ EXPORT_SYMBOL(follow_pte_pmd);
+>>  int follow_pfn(struct vm_area_struct *vma, unsigned long address,
+>>  	unsigned long *pfn)
+>>  {
+>> +	pmd_t *pmdpp = NULL;
+> 
+> Please rename to 'pmdp'.
+> 
+Will do.
 
-    isolcpus: Error, unknown flag
-
-The better and compatible way is to allow "isolcpus=" to skip unknown
-sub-parameters, so that even if we add new sub-parameters to it the
-old kernel will still be able to behave as usual even if with the new
-sub-parameter is specified.
-
-Ideally this patch should be there when we introduce the first
-sub-parameter for "isolcpus=", so it's already a bit late.  However
-late is better than nothing.
-
-CC: Ming Lei <ming.lei@redhat.com>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Juri Lelli <juri.lelli@redhat.com>
-CC: Luiz Capitulino <lcapitulino@redhat.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- kernel/sched/isolation.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 008d6ac2342b..d5defb667bbc 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -169,8 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 			continue;
- 		}
- 
--		pr_warn("isolcpus: Error, unknown flag\n");
--		return 0;
-+		str = strchr(str, ',');
-+		if (str)
-+			/* Skip unknown sub-parameter */
-+			str++;
-+		else
-+			return 0;
- 	}
- 
- 	/* Default behaviour for isolcpus without flags */
--- 
-2.24.1
-
+Alongside patch 4 usage of pmdpp and renaming 'pudpp' to 'pudp'.
