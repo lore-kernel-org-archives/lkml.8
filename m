@@ -2,190 +2,126 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A01C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAE3C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAC22166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF22220730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgLuP3Py"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vAIRMq8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgBDNAS (ORCPT
+        id S1727191AbgBDND0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:00:18 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34556 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbgBDNAR (ORCPT
+        Tue, 4 Feb 2020 08:03:26 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36769 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgBDND0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:00:17 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j4so9643741pgi.1;
-        Tue, 04 Feb 2020 05:00:17 -0800 (PST)
+        Tue, 4 Feb 2020 08:03:26 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j20so8542592otq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 05:03:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1z/n271TAMQxCbZpsrlX1gBILEvIghmkAvstnFg0FQQ=;
-        b=CgLuP3PyPtFcgaIolDBsY0o+eSnuY9GxD5O6/Mc7PIRmYc1csipQF1Mdm4S9CsnXVc
-         O6H+JC3N9IpMlEZ20jyH40LuuBJ0vQrWQq1xLk8nJZvE/kkECltlG4wIKgOVCRX6Otpf
-         gDoZP2TaGmfRyiB1JZj/IzAagC8fOjJtGSEHc2gOnzxfH86K1HTNW9ZPkcIcDyv5nxYV
-         WGMNYtDPJ2cWB913/KtN6JY2vXrUoj/iSE05kpSGx/sl0Mzhuvl9xYpR2SPlN4kvFJvu
-         1XvN9IlyTU/OM8YZxSrSZg6inYxmvbJvNRMuCN/oOnYE4lBnSbS72PBDB4v6Dfp+Yp5C
-         6Yvg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5kwMY+yOcoe9hemHRL4Y06hBc7IAz8tTHyF8xqYySrw=;
+        b=vAIRMq8SoUHEI2zcLg6Qytv91Rusr976z0RRPo/o6VAnOW13HGwWguRH8xGdq0cw0z
+         yvrRohCP2MtVydNTLQRSJIgM6ZZZflHTwOvTpGxMuuL2P0Ar2EtF+qihMQap9pRMt6GU
+         kPwlHKIiiJ6VXG2phr8zGOi3qpafsIDAXK+o0mEudVv6ov9W3E63Czn5EHAdrzj9OWWN
+         UpOB51VKBYLb1vCdR5hM/mJe4XlV0puUyQaaJlccAC+4d+XLe8z9gADbuDAelzFEuoNF
+         5XroVNWj/G2Ck28XDSJQBD01EJhMLUFWzMSGIbJBipnPW3/bwWyhqjWoyhMIZPuOa9uu
+         2qYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1z/n271TAMQxCbZpsrlX1gBILEvIghmkAvstnFg0FQQ=;
-        b=NbdQZpUDWuCH2lUEMFj8aNPGAzicBs3iZtGvxEu/jqqKmaQTFhIC0hCU7htXtjAyyt
-         pRp84Zo5IX/MupNMgpCwu/LW6um7dFk1y93HOiWBGXPs9shrRZOsxbQkNqQiD5Ctzob6
-         o/ZkxRs/zrDuluxaWfJpxkD5+CHTlDJbh+Fx7VAnWxdwGF3yu5T/30GLD5i43LRePAp7
-         WR1TdBbpF/pIWni99o+czAEXHV6wInnC9toBi3OG0yZWaHX3jAO/9HDk9IDSv8TSBqhW
-         GJCnk0T9czXkABxMNgABZ3/aUW8mTlLVSeHBfl+Jhn5zxfJVVT4IhLCFgOatb93bEGqd
-         WaUA==
-X-Gm-Message-State: APjAAAUETiXjEEvLgbHlGwkZYAgf/NuiAJvgAAdWHRte+ZsYL8YDqF1y
-        vRh3+eN3sLKxeX4f8W6RzvknIk3GJ6k=
-X-Google-Smtp-Source: APXvYqw07Yi/iWKd2J+nJaNFJzxZXAlBDFtVoeCHvkOjMSisR5Y830ivlYfZm2P7P1eADaZja20VVQ==
-X-Received: by 2002:a63:f40d:: with SMTP id g13mr7140683pgi.374.1580821216573;
-        Tue, 04 Feb 2020 05:00:16 -0800 (PST)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id e26sm5812312pfl.59.2020.02.04.05.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 05:00:15 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] thermal: doc: Add cooling device documentation to Sphinx TOC tree
-Date:   Tue,  4 Feb 2020 21:00:06 +0800
-Message-Id: <20200204130006.12882-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5kwMY+yOcoe9hemHRL4Y06hBc7IAz8tTHyF8xqYySrw=;
+        b=LYjMNiMnzFFhlWpuDULimr02jqAl5I0LjSbrhtqq79t5ts7MBq/VYRUinv32PSosH7
+         5jag5MhYv5gjENXs75h789r7KQJgQbA2fUDKe4oQysbtlfdmxsmLWS/vTWYHpm1pMYfM
+         KycNfx3XMFDjWM156MqdKJ4+NMvBYcKL+OUZuWTjt2GbFeZ0oUAB8cqfAq0QWZOSMCjT
+         vHDaJybbjUyvAwVY5er6ud3gj4PUjURkZpB5GpJfhyFjs+0yDWHP/JA3qzEjK63/xBSG
+         hQKAbGCB+2zvmYRMmZNQBd8Z2q65fAf0ozfSWcx93KtOcOHXt1fxffcyteniyH/dbXdS
+         dpMg==
+X-Gm-Message-State: APjAAAVpSSEKqZHwd5eLtREPoWiUoG7DFdbYn96lv9iOtPwEg9MvaI20
+        C9nZApgkoYzynwQT7U0+/TyihBherFXkaACaiiYPFQ==
+X-Google-Smtp-Source: APXvYqyUDEChjDRXpZSB7Ici17ut0o0FeHEcZPweNHQh7TrPef5JWZJJ3GGksPBLGT6NChvfjIm+gcL4NY1dAnPk0kQ=
+X-Received: by 2002:a05:6830:22cc:: with SMTP id q12mr22662566otc.110.1580821405204;
+ Tue, 04 Feb 2020 05:03:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <0000000000005cad20059db8adba@google.com>
+In-Reply-To: <0000000000005cad20059db8adba@google.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 4 Feb 2020 14:02:58 +0100
+Message-ID: <CAG48ez3tsUWA8tXL7rVMJ+CEpuNmxZrX=RjFhvMcu1SkvXkHDw@mail.gmail.com>
+Subject: unbounded recursion through bond_netdev_event notifier? [was: BUG:
+ stack guard page was hit in update_stack_state]
+To:     syzbot <syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>
+Cc:     Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds cpu-idle-cooling.rst into Sphinx TOC tree and fixes
-some warnings and style issues.
+On Tue, Feb 4, 2020 at 5:43 AM syzbot
+<syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com> wrote:
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    b3a60822 Merge branch 'for-v5.6' of git://git.kernel.org:/..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=147ae5f1e00000
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- .../driver-api/thermal/cpu-idle-cooling.rst   | 27 ++++++++++---------
- Documentation/driver-api/thermal/index.rst    |  1 +
- 2 files changed, 16 insertions(+), 12 deletions(-)
+In the console output, you can see that this seems to be an unbounded
+recursion bug. The stack trace is unreliable, but it looks like the
+actual recursion might be something like the following, where a netdev
+change triggers the bond_netdev_event notifier, which in turn causes
+another netdev change, and so on:
 
-diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-index 9f0016ee4cfb..698fcadbecee 100644
---- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-+++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-@@ -1,6 +1,9 @@
-+================
-+CPU Idle Cooling
-+================
- 
--Situation:
------------
-+Situation
-+---------
- 
- Under certain circumstances a SoC can reach a critical temperature
- limit and is unable to stabilize the temperature around a temperature
-@@ -24,8 +27,8 @@ with a power less than the requested power budget and the next OPP
- exceeds the power budget. An intermediate OPP could have been used if
- it were present.
- 
--Solutions:
------------
-+Solutions
-+---------
- 
- If we can remove the static and the dynamic leakage for a specific
- duration in a controlled period, the SoC temperature will
-@@ -45,12 +48,12 @@ idle state target residency, we lead to dropping the static and the
- dynamic leakage for this period (modulo the energy needed to enter
- this state). So the sustainable power with idle cycles has a linear
- relation with the OPP’s sustainable power and can be computed with a
--coefficient similar to:
-+coefficient similar to::
- 
- 	    Power(IdleCycle) = Coef x Power(OPP)
- 
--Idle Injection:
-----------------
-+Idle Injection
-+--------------
- 
- The base concept of the idle injection is to force the CPU to go to an
- idle state for a specified time each control cycle, it provides
-@@ -136,7 +139,7 @@ Power considerations
- --------------------
- 
- When we reach the thermal trip point, we have to sustain a specified
--power for a specific temperature but at this time we consume:
-+power for a specific temperature but at this time we consume::
- 
-  Power = Capacitance x Voltage^2 x Frequency x Utilisation
- 
-@@ -145,7 +148,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
- fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
- because we don’t want to change the OPP. We can group the
- ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
--‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
-+‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
- 
-  Pdyn = Cdyn x Voltage^2 x Frequency
- 
-@@ -154,7 +157,7 @@ in order to target the sustainable power defined in the device
- tree. So with the idle injection mechanism, we want an average power
- (Ptarget) resulting in an amount of time running at full power on a
- specific OPP and idle another amount of time. That could be put in a
--equation:
-+equation::
- 
-  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
- 			(Trunning + Tidle)
-@@ -165,7 +168,7 @@ equation:
- 
- At this point if we know the running period for the CPU, that gives us
- the idle injection we need. Alternatively if we have the idle
--injection duration, we can compute the running duration with:
-+injection duration, we can compute the running duration with::
- 
-  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
- 
-@@ -188,7 +191,7 @@ However, in this demonstration we ignore three aspects:
-    target residency, otherwise we end up consuming more energy and
-    potentially invert the mitigation effect
- 
--So the final equation is:
-+So the final equation is::
- 
-  Trunning = (Tidle - Twakeup ) x
- 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
-diff --git a/Documentation/driver-api/thermal/index.rst b/Documentation/driver-api/thermal/index.rst
-index 5ba61d19c6ae..4cb0b9b6bfb8 100644
---- a/Documentation/driver-api/thermal/index.rst
-+++ b/Documentation/driver-api/thermal/index.rst
-@@ -8,6 +8,7 @@ Thermal
-    :maxdepth: 1
- 
-    cpu-cooling-api
-+   cpu-idle-cooling
-    sysfs-api
-    power_allocator
- 
--- 
-2.24.0
+[  734.548523][T28658]  ? netdev_lower_get_next_private+0x85/0xb0
+[  734.554632][T28658]  ? bond_compute_features.isra.0+0x56a/0xa80
+[inlined bond_slave_netdev_event ?]
+[  734.572769][T28658]  ? bond_netdev_event+0x71a/0x950
+[  734.577901][T28658]  ? notifier_call_chain+0xc2/0x230
+[  734.583113][T28658]  ? raw_notifier_call_chain+0x2e/0x40
+[  734.588589][T28658]  ? call_netdevice_notifiers_info+0xba/0x130
+[  734.594765][T28658]  ? netdev_update_features+0xc7/0xd0
+[  734.600142][T28658]  ? __netdev_update_features+0x13e0/0x13e0
+[...]
+[  734.617522][T28658]  ? netdev_upper_get_next_dev_rcu+0xac/0x110
+[  734.623605][T28658]  ? __netdev_update_features+0x8af/0x13e0
+[...]
+[  734.649988][T28658]  ? netdev_change_features+0x64/0xb0
+[...]
 
+
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=614e56d86457f3a7
+
+says CONFIG_UNWINDER_FRAME_POINTER=y. Unfortunately, the x86 frame
+pointer unwinder apparently can't unwind out of a double fault...
+maybe it'd be better to use ORC for syzkaller?
+
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c2fb6f9ddcea95ba49b5
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com
