@@ -2,136 +2,129 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0232EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF8BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19A62087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAC4217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgBDMnj (ORCPT
+        id S1727183AbgBDMrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:43:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbgBDMni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:43:38 -0500
-Received: from oasis.local.home (unknown [212.187.182.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E182A2082E;
-        Tue,  4 Feb 2020 12:43:34 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 07:43:30 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] bootconfig: Add "disable_bootconfig" cmdline option to
- disable bootconfig
-Message-ID: <20200204074330.1e7cd4db@oasis.local.home>
-In-Reply-To: <20200204072856.0da60613@oasis.local.home>
-References: <20200204053155.127c3f1e@oasis.local.home>
-        <CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com>
-        <20200204072856.0da60613@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 4 Feb 2020 07:47:24 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50844 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgBDMrY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 07:47:24 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E74F31C0141; Tue,  4 Feb 2020 13:47:21 +0100 (CET)
+Date:   Tue, 4 Feb 2020 13:47:21 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>
+Subject: Re: [PATCH 4.4 00/53] 4.4.213-stable review
+Message-ID: <20200204124721.GB6903@duo.ucw.cz>
+References: <20200203161902.714326084@linuxfoundation.org>
+ <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+--i0/AhcQY5QxfSsSZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As the bootconfig is appended to the initrd it is not as easy to modify as
-the kernel command line. If there's some issue with the kernel, and the
-developer wants to boot a pristine kernel, it should not be needed to modify
-the initrd to remove the bootconfig for a single boot.
+Hi!
 
-A "disable_bootconfig" kernel command line option solves this. If
-"disable_bootconfig" is found on the kernel command line, then the
-bootconfig file that may be attached to the initrd will not be parsed.
+> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > Behalf Of Greg Kroah-Hartman
+> > Sent: 03 February 2020 16:19
+> >=20
+> > This is the start of the stable review cycle for the 4.4.213 release.
+> > There are 53 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> > Anything received after that time might be too late.
+>=20
+> We're seeing an issue with 4.4.213-rc1 (36670370c48b) and 4.4.213-rc2 (75=
+8a39807529) with our 4 am335x configurations [0]:
+>=20
+>    AS      arch/arm/kernel/hyp-stub.o
+>  arch/arm/kernel/hyp-stub.S:   CC      arch/arm/mach-omap2/sram.o
+>  Assembler messages:
+>    AS      arch/arm/kernel/smccc-call.o
+>  arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not suppo=
+rt `ubfx r7,r7,#16,#4' in ARM mode
+>  scripts/Makefile.build:375: recipe for target 'arch/arm/kernel/hyp-stub.=
+o' failed
+>  make[1]: *** [arch/arm/kernel/hyp-stub.o] Error 1
+>=20
+> The culprit seems to be: 15163bcee7b5 ("ARM: 8955/1: virt: Relax arch tim=
+er version check during early boot")
+> Reverting the same resolves the build issue.
+>=20
+> Latest pipeline: https://gitlab.com/cip-project/cip-testing/linux-stable-=
+rc-ci/pipelines/114683657
+>=20
+> [0] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/-/blob/ma=
+ster/4.4.y-cip/arm/
+> siemens_am335x-axm2_defconfig, siemens_am335x-draco_defconfig, siemens_am=
+335x-dxr2_defconfig, siemens_am335x-etamin_defconfig
+>=20
 
-Link: https://lore.kernel.org/r/CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com
+For the record, build results are here:
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- Documentation/admin-guide/kernel-parameters.txt |  4 ++++
- init/main.c                                     | 14 +++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/114=
+683657
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..c4f1417f1934 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -857,6 +857,10 @@
-                 on      Perform hardened usercopy checks (default).
-                 off     Disable hardened usercopy checks.
- 
-+	disable_bootconfig
-+			Disable reading the bootconfig that may be attached
-+			to the initrd.
-+
- 	disable_radix	[PPC]
- 			Disable RADIX MMU mode on POWER9
- 
-diff --git a/init/main.c b/init/main.c
-index dd7da62d99a5..b52636cd9c1d 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -336,15 +336,23 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
- 	return ret;
- }
- 
--static void __init setup_boot_config(void)
-+static void __init setup_boot_config(const char *cmdline)
- {
- 	u32 size, csum;
- 	char *data, *copy;
-+	const char *p;
- 	u32 *hdr;
- 
- 	if (!initrd_end)
- 		return;
- 
-+	p = strstr(cmdline, "disable_bootconfig");
-+	if (p && (p == cmdline || isspace(*(p-1))) &&
-+	    (!p[18] || isspace(p[18]))) {
-+		pr_info("Disabling bootconfig because 'disable_bootconfig' found on the command line\n");
-+		return;
-+	}
-+
- 	hdr = (u32 *)(initrd_end - 8);
- 	size = hdr[0];
- 	csum = hdr[1];
-@@ -379,7 +387,7 @@ static void __init setup_boot_config(void)
- 	}
- }
- #else
--#define setup_boot_config()	do { } while (0)
-+#define setup_boot_config(cmdline)	do { } while (0)
- #endif
- 
- /* Change NUL term back to "=", to make "param" the whole string. */
-@@ -760,7 +768,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	pr_notice("%s", linux_banner);
- 	early_security_init();
- 	setup_arch(&command_line);
--	setup_boot_config();
-+	setup_boot_config(command_line);
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
- 	setup_per_cpu_areas();
--- 
-2.20.1
+4.19.102 builds okay:
 
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/114=
+683672
+
+but that's probably because siemens_am335x* configurations are not
+tested in 4.19.X case.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--i0/AhcQY5QxfSsSZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXjln2QAKCRAw5/Bqldv6
+8sIgAKCyj4zI/uOT7gLAynk1FPJR4qIjfQCeMFByf8ArntJ0TdW9b+2Yosh+sEc=
+=7XhL
+-----END PGP SIGNATURE-----
+
+--i0/AhcQY5QxfSsSZ--
