@@ -2,122 +2,124 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09020C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB29C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AAD2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2480721582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:52:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="d/KZFCei"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lEciPoSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgBDGs6 (ORCPT
+        id S1726855AbgBDGwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:48:58 -0500
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:38796 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgBDGs5 (ORCPT
+        Tue, 4 Feb 2020 01:52:51 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35690 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgBDGwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:48:57 -0500
-Received: by mail-wr1-f49.google.com with SMTP id y17so21495173wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 22:48:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kAXZNxonL2vo5mn3WOyL1SDgpcuL3/WC4tHGYNoQMV0=;
-        b=d/KZFCeiCZdQPtcj9G8N5DVQ6kXgN+7JFlSSrVqBG8c0ai7XBHuo0B+nct/SD1nOKh
-         2Kc1/Ic+G4gU5vMnLTlIH0/+tzHpvX010nsjyRsdcEqKL9PhV3WG3SFpsbenbZE6xicX
-         v2xycH5QjxAwCZWNXFotHkEwXG6vJu5DX1jLaAlUZJYWvSfKr5CebIpZtqmaZ7rsWMbv
-         Pt59JTbjWkArYaVaSewCuXco7cCvxzuBkrFC++9BfrEcjA37u/0YflEWPQ+zUj6VSSfc
-         f3XPQeCF8kpkCgtbG4/eZim91TD9n/YaCp9neacuAZ+xDqNzD+xhXtkY6Ba3/+tuSvCI
-         i+RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kAXZNxonL2vo5mn3WOyL1SDgpcuL3/WC4tHGYNoQMV0=;
-        b=WUHkgNO7PBv42dpJUbspaxVCrqYVe7e+NCndyn19rtn0+lAQJpQsn4IQjecajEC9mS
-         zKOiDkR0Y6Ml7PzQiOSLbD5j9rqbe43nz+sU+qCqn0hjEIHQSCcMfRTTxnFqU01hNmTu
-         pNK03wjDR1396fBJLMgGmp3kURFcRzUtBKSgjSzSWqZdUB5hkoqIVuHnQx/1qPn2DlN7
-         RUsPo5xscvXqQLFuAyQ6GSnyepvVxaridKZyMprCfuU9AlRDmlxd4FHwrI8AULKFK5Yg
-         V/Nmeks6H8WnjatSJ1Z7jAoPqQbUYKayvV2sumuOTI/oDZaT3RTJKSGHPAO1Tl8FMkrR
-         TPHQ==
-X-Gm-Message-State: APjAAAWLYFpEkc8KJ0gm2F2kBFMen6D11keKFtYB8ApCBzeFtUyUH9Bq
-        7idjOuRETkwkktmg5P9M94HVLQ==
-X-Google-Smtp-Source: APXvYqwb4NZNOIRGxyQyRRUFv7hAT3ekkC210egylcZ1zTFHFkGBAIAZn9gcflFR/QlaoXSYuU1CSg==
-X-Received: by 2002:a5d:538e:: with SMTP id d14mr21307843wrv.358.1580798935241;
-        Mon, 03 Feb 2020 22:48:55 -0800 (PST)
-Received: from localhost (ip-89-177-6-126.net.upcbroadband.cz. [89.177.6.126])
-        by smtp.gmail.com with ESMTPSA id b21sm2477376wmd.37.2020.02.03.22.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 22:48:54 -0800 (PST)
-Date:   Tue, 4 Feb 2020 07:48:54 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: RFC: Use of devlink/health report for non-Ethernet devices
-Message-ID: <20200204064854.GK2260@nanopsycho>
-References: <f8e67e40-71d4-f03c-6bc0-6496663af895@broadcom.com>
+        Tue, 4 Feb 2020 01:52:51 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0146qepo081703;
+        Tue, 4 Feb 2020 00:52:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580799160;
+        bh=kqHjON9qr5o5bbhRZyitzLHtPGadeidJrm20nZP2rPw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lEciPoSLv6eg/ca444XD396RT1yJylQxslE0enN1iz3KkZSI54RnuZ4mdQrwm5BuT
+         26NmudokKyzAWXdNvfx+BQB4WqI9S5k4M/E6npfHQjlDcF2AbptZ2LWjJuwkOKsxnc
+         vGpDUBeg+is1H5WTdtjEumucqHabhpC4kDJfs6mY=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0146qeSX101493
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Feb 2020 00:52:40 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
+ 2020 00:52:40 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 4 Feb 2020 00:52:40 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0146qb9Z046269;
+        Tue, 4 Feb 2020 00:52:38 -0600
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
+ dma_request_slave_chan()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+ <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com>
+ <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
+ <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+ <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
+ <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
+ <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
+Date:   Tue, 4 Feb 2020 08:52:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8e67e40-71d4-f03c-6bc0-6496663af895@broadcom.com>
+In-Reply-To: <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Feb 04, 2020 at 12:01:37AM CET, ray.jui@broadcom.com wrote:
->Hi Jiri/Eran/David,
->
->I've been investigating the health report feature of devlink, and have a
->couple related questions as follows:
->
->1. Based on my investigation, it seems that devlink health report mechanism
->provides the hook for a device driver to report errors, dump debug
->information, trigger object dump, initiate self-recovery, and etc. The
->current users of health report are all Ethernet based drivers. However, it
->does not seem the health report framework prohibits the use from any
->non-Ethernet based device drivers. Is my understanding correct?
+Hi Geert, Adrian,
 
-The whole devlink framework is designed to be independent on
-ethernet/networking.
+On 03/02/2020 22.34, Geert Uytterhoeven wrote:
+> Hi Adrian,
+> 
+> On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
+> <glaubitz@physik.fu-berlin.de> wrote:
+>> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
+>>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
+>>
+>> FWIW, there is a patch set by Yoshinori Sato to add device tree support
+>> for classical SuperH hardware. It was never merged, unfortunately :(.
+> 
+> True.
+> 
+>>> Anyone who cares for DMA on SuperH?
+>>
+>> What is DMA used for on SuperH? Wouldn't dropping it cut support for
+>> essential hardware features?
+> 
+> It may make a few things slower.
 
+I would not drop DMA support but I would suggest to add dma_slave_map
+for non DT boot so the _compat() can be dropped.
 
->
->2. Following my first question, in this case, do you think it makes any sense
->to use devlink health report as a generic error reporting and recovery
->mechanism, for other devices, e.g., NVMe and Virt I/O?
+Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
+difference offloading data movement from the CPU.
 
-Sure.
+> Does any of your SuperH boards use DMA?
+> Anything interesting in /proc or /sys w.r.t. DMA?
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
+- Péter
 
->
->3. In the Ethernet device driver based use case, if one has a "smart NIC"
->type of platform, i.e., running Linux on the embedded processor of the NIC,
->it seems to make a lot of sense to also use devlink health report to deal
->with other non-Ethernet specific errors, originated from the embedded Linux
->(or any other OSes). The front-end driver that registers various health
->reporters will still be an Ethernet based device driver, running on the host
->server system. Does this make sense to you?
-
-Should not be ethetnet based driver. You should create the devlink
-instance in a driver for the particular device you want to report
-the health for.
-
-
->
->Thanks in advance for your feedback!
->
->Thanks,
->
->Ray
->
->
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
