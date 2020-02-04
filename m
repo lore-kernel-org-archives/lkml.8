@@ -2,113 +2,106 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB4AC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C654C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A252084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6038A2084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E2AUYCRn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLQxWerq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBDSCf (ORCPT
+        id S1727484AbgBDSDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:02:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53050 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727355AbgBDSCf (ORCPT
+        Tue, 4 Feb 2020 13:03:19 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36043 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727355AbgBDSDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 13:02:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580839353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LGryG4ZsTtUfBbko/RblThw9g52nQf5Sd+iysNke/p4=;
-        b=E2AUYCRnbn3np7DhpSTbRquHgY4ySvRJB4aFoH8E4cjmjhKakbXt7kF94ZwEITrxEailgR
-        kP8X8uHiMToUJD/pYdFgG4a/aZ3+x87i0OKiZ/fovpm5xxxcWtHIST4HO+/c8iNDc1T1mB
-        H4LDt6D7pX77HxjXNLZaLrQWrvEvJHk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-UWrXDWIkNeCEyNlmDlTijg-1; Tue, 04 Feb 2020 13:02:31 -0500
-X-MC-Unique: UWrXDWIkNeCEyNlmDlTijg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E73771084456;
-        Tue,  4 Feb 2020 18:02:29 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 55F9C5C296;
-        Tue,  4 Feb 2020 18:02:29 +0000 (UTC)
-Subject: Re: [PATCH v5 7/7] locking/lockdep: Add a fast path for chain_hlocks
- allocation
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20200203164147.17990-1-longman@redhat.com>
- <20200203164147.17990-8-longman@redhat.com>
- <20200204131813.GQ14914@hirez.programming.kicks-ass.net>
- <20200204134446.GQ14946@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <ed63dc8f-747d-4b92-78f1-58563177a1dd@redhat.com>
-Date:   Tue, 4 Feb 2020 13:02:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 4 Feb 2020 13:03:19 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so10038543pgc.3;
+        Tue, 04 Feb 2020 10:03:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=E8TOUJb1LB1CGjhRZlBmQYfzHnpM6fLCA335raKvA2E=;
+        b=MLQxWerqYuNYbiSuIddhGPcw/f2KrN+IYw9SJLGy3qyOjA+Ux1wMpnyc/zWnle0AlK
+         bAb1WtyMcY7alctYQTVQQcinJaoqkMOzRE3UAYXco3OFid/MXm6q1SlmETLRK51m7+iN
+         xqOcxIedAgSPRfOuRylvDKysGj60wPSZ2dTPrJKUU6WpL53y8Gdog2li7PFyvzdtCYPz
+         yR3vC/HuccTRevBQy8eeWnFN5qFlVRgKOu5Edvm9UqVfHFqZ7Mc+pRsq0LJCWx/TB8ic
+         U+bXabrIHvoJO8uMu5An9CpQmjNNyTZOCRYlyMFMzXgl1DuwsCafCXBP24keqA66EERk
+         wfPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E8TOUJb1LB1CGjhRZlBmQYfzHnpM6fLCA335raKvA2E=;
+        b=AZp603gJ7ltvYDlaGu7hgcIhv9HddJMw/lUplDpcfD2LqZLJ1h4mfJtXGpSR1pUfPc
+         UGzOngTLC34SZ6BVtrdWdAYB6+lKDmIrJE79BdRx2OlGfAoQoIauXmrexIzDJ7YKizLE
+         c+mb1Ni+IEY7DRIArxDhfYZWbTj209+Au4KQ+ZWI26m6GKMBEoG/jHfUq/MmTpkfe1r+
+         4AlrqIH66vYzL7bDZcEYDLBMFxw4tMB9idQ/7tfDYKEbPGfCHjrI2GGIvAAUpMoljbO4
+         lTxWbqJP086b3vBj9y1ya6D18KIxQGlBua5xrGwpvNIBeUkT/3qZFa/QYW7DijuEwbSk
+         8oWA==
+X-Gm-Message-State: APjAAAVk2yAoFvlMVjzHRyRoUU3sXzwxWzlb9X9lZ6o9bN1Gxb0PNbBe
+        6gYXZkSI+OIvQGW/Wpqj22qXzCxE
+X-Google-Smtp-Source: APXvYqwpCEt7Ve+QDFk7hfb8VlqxpZPJCjxtg1oAHNkMcmdWpBb398WQboTbu4dVUuImidW2CetKMw==
+X-Received: by 2002:a63:515d:: with SMTP id r29mr24456711pgl.265.1580839398398;
+        Tue, 04 Feb 2020 10:03:18 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id w14sm3022453pgi.22.2020.02.04.10.03.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 10:03:17 -0800 (PST)
+Subject: Re: memory leak in tcindex_set_parms
+To:     syzbot <syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com>,
+        davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+References: <0000000000009a59d2059dc3c8e9@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <a1673e4f-6382-d7df-6942-6e4ffd2b81ce@gmail.com>
+Date:   Tue, 4 Feb 2020 10:03:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200204134446.GQ14946@hirez.programming.kicks-ass.net>
+In-Reply-To: <0000000000009a59d2059dc3c8e9@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 8:44 AM, Peter Zijlstra wrote:
-> On Tue, Feb 04, 2020 at 02:18:13PM +0100, Peter Zijlstra wrote:
->> On Mon, Feb 03, 2020 at 11:41:47AM -0500, Waiman Long wrote:
->>
->>> @@ -2809,6 +2813,18 @@ static int alloc_chain_hlocks(int req)
->>>  			return curr;
->>>  		}
->>>  
->>> +		/*
->>> +		 * Fast path: splitting out a sub-block at the end of the
->>> +		 * primordial chain block.
->>> +		 */
->>> +		if (likely((size > MAX_LOCK_DEPTH) &&
->>> +			   (size - req > MAX_CHAIN_BUCKETS))) {
->>> +			size -= req;
->>> +			nr_free_chain_hlocks -= req;
->>> +			init_chain_block_size(curr, size);
->>> +			return curr + size;
->>> +		}
->>> +
->>>  		if (size > max_size) {
->>>  			max_prev = prev;
->>>  			max_curr = curr;
->> A less horrible hack might be to keep the freelist sorted on size (large
->> -> small)
->>
->> That moves the linear-search from alloc_chain_hlocks() into
->> add_chain_block().  But the thing is that it would amortize to O(1)
->> because this initial chunk is pretty much 'always' the largest.
->>
->> Only once we've exhausted the initial block will we hit that search, but
->> then the hope is that we mostly live off of the buckets, not the
->> variable freelist.
-> Completely untested something like so
 
-I will integrate that into patch 6. I won't push for this patch for now.
-It can be for a later discussion.
 
-Thanks,
-Longman
+On 2/4/20 9:58 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    322bf2d3 Merge branch 'for-5.6' of git://git.kernel.org/pu..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1111f8e6e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8d0490614a000a37
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f0bbb2287b8993d4fa74
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17db90f6e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a94511e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com
+> 
+>
+
+Might have been fixed already ?
+
+commit 599be01ee567b61f4471ee8078870847d0a11e8e    net_sched: fix an OOB access in cls_tcindex
 
