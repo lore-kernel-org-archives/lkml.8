@@ -2,451 +2,154 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017E8C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CF0C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86872084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0Z+ap+v"
+	by mail.kernel.org (Postfix) with ESMTP id 191FA2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580856816;
+	bh=oxwJvXSqIfXICehj/SghLfgVcbieW0oDOVxIwdXphck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LyvOkCBsTByIc6wEzprflJaqupL/3iW5c9s2SQCKOt1KMohBublMN04yqbM5Dr8i0
+	 jSJ3agD3Pag6Vc9xVBhRcspPGp3u9Mmm0/liAwgtr6xOZWpir3o0iUkTdXx/oz5ojp
+	 TJjQWtH9jZOnKJ1/2YAaIj2Fami5vfM5HfCIxWIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgBDWw2 (ORCPT
+        id S1727657AbgBDWxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:52:28 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50385 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgBDWw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:52:27 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so82648pjb.0;
-        Tue, 04 Feb 2020 14:52:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bL16aPVcHJJAbC6OpG1fw3NkrVsr1W8L9M44BnAEkuw=;
-        b=J0Z+ap+vFjC9eHG71WcxR24kdm4rTYivqEAdrI1gXwVgmDa5ilDUE2ChW0mYse8dBR
-         Sap/xWqL0gJVvNvn5RJymEHvXJhTodrVjSqJhkoJePeOshlxSkx6MDIX4M5ju7tOiydr
-         c79EjDk8uXB4FWICytChos0oriND69gaMieGIRGsPttyqTqXrBJ/5dSsbaXADnGUuhyF
-         dCkqtmrIPug7FHnr5fi2n6Pt1eUgaPQs1t/uayWd2A7Vzc7VJrmrp/kKnX8xvhgI3no3
-         0LRvbLQtBljPHTn1wrpQDZBb52aVB8aCEkAHGBfYhoLh1ztj2N2xRCrCJgEH6NHOepoh
-         nlzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=bL16aPVcHJJAbC6OpG1fw3NkrVsr1W8L9M44BnAEkuw=;
-        b=mgpWs7qU/nAzqRCdIXP2MCJnM6XokbBwlEQV1nHsRvLpiILfFIUTqC+X5F9+aX/KSv
-         TQ04Mn8BmyF/fzCJ6wz4t3Skeu6PRBBi1y9ga7jkgrqxsxCWXxsM6SS30u1BpshTleyH
-         +0a8n/N+IScurFI2YhytN/zu1SFgaTj3gc2HcMo/iUeBj961KIawD2n2qL0Xmg425Ksp
-         MMYr9dpoAWrKjG/pa3ZkmZBcbidAfEXUQcJlNYqYedFyJ2iGLsoQ9WaDPaBVGQU/dOlT
-         NKCiqnXwKQ3JGrbSZq1cxcPP86PQH/Wj9s+yAf5ChNmE1zZLJVUe63Io37QePysr4w3+
-         U1vg==
-X-Gm-Message-State: APjAAAVxckbZHKU4wZKTLFvf1DiKDRkwgwjJMH1GlW4bncDH597MHxIt
-        Szn1oinU80xVkHXgunYO3FywOPFsE9A=
-X-Google-Smtp-Source: APXvYqy46XuN+YVX43ywLX65VomhRNoV8459efeM12J5y894c511WIVrvzIyukPfnTr02wZJ82zpmQ==
-X-Received: by 2002:a17:90a:3603:: with SMTP id s3mr1830948pjb.61.1580856746360;
-        Tue, 04 Feb 2020 14:52:26 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l10sm4621557pjy.5.2020.02.04.14.52.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 14:52:25 -0800 (PST)
-Date:   Tue, 4 Feb 2020 14:52:24 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Kent Gustavsson <kent@minoris.se>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-clk@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix paths in schema $id fields
-Message-ID: <20200204225224.GA1914@roeck-us.net>
-References: <20200204224909.26880-1-robh@kernel.org>
+        Tue, 4 Feb 2020 17:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgBDWxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 17:53:35 -0500
+Received: from localhost (unknown [167.98.85.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB8A32084E;
+        Tue,  4 Feb 2020 22:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580856814;
+        bh=oxwJvXSqIfXICehj/SghLfgVcbieW0oDOVxIwdXphck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=suYV9xqyxODkhiSyMOMTvwm0iiZhH1MYizjV4dK0YLem/fMLCJkqGNKxe3W5QxGxK
+         BXpilZWtXehy0JhBNdivHZurUzUc6VDgIJXWNMSPPrpgzMcPQ1VBqMltLFN9+0176j
+         O/5Jr74Xcj9wVm7X3II2m7DeJH/ZbefC6Rek0kiw=
+Date:   Tue, 4 Feb 2020 22:53:32 +0000
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "brandonbonaby94@gmail.com" <brandonbonaby94@gmail.com>,
+        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ddaney@caviumnetworks.com" <ddaney@caviumnetworks.com>,
+        "bobdc9664@seznam.cz" <bobdc9664@seznam.cz>,
+        "sandro@volery.com" <sandro@volery.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "ivalery111@gmail.com" <ivalery111@gmail.com>,
+        "ynezz@true.cz" <ynezz@true.cz>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>
+Subject: Re: [PATCH 1/2] staging: octeon: delete driver
+Message-ID: <20200204225332.GC1128093@kroah.com>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net>
+ <da150cdb160b5d1b58ad1ea2674cc93c1fc6aadc.camel@alliedtelesis.co.nz>
+ <20200204070927.GA966981@kroah.com>
+ <1a90dc4c62c482ed6a44de70962996b533d6f627.camel@alliedtelesis.co.nz>
+ <20200204203116.GN8731@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200204224909.26880-1-robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200204203116.GN8731@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:49:09PM +0000, Rob Herring wrote:
-> The $id path checks were inadequately checking the path part of the $id
-> value. With the check fixed, there's a number of errors that need to be
-> fixed. Most of the errors are including 'bindings/' in the path which
-> should not be as that is considered the root.
+On Tue, Feb 04, 2020 at 12:31:16PM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 04, 2020 at 08:06:14PM +0000, Chris Packham wrote:
+> > On Tue, 2020-02-04 at 07:09 +0000, gregkh@linuxfoundation.org wrote:
+> > > On Tue, Feb 04, 2020 at 04:02:15AM +0000, Chris Packham wrote:
+> > > > I'll pipe up on this thread too
+> > > > 
+> > > > On Tue, 2019-12-10 at 02:42 -0800, Guenter Roeck wrote:
+> > > > > On 12/10/19 1:15 AM, Greg Kroah-Hartman wrote:
+> > > > > > This driver has been in the tree since 2009 with no real movement to get
+> > > > > > it out.  Now it is starting to cause build issues and other problems for
+> > > > > > people who want to fix coding style problems, but can not actually build
+> > > > > > it.
+> > > > > > 
+> > > > > > As nothing is happening here, just delete the module entirely.
+> > > > > > 
+> > > > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > > > > > Cc: David Daney <ddaney@caviumnetworks.com>
+> > > > > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > > > > Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > > > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > > > > Cc: YueHaibing <yuehaibing@huawei.com>
+> > > > > > Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> > > > > > Cc: Wambui Karuga <wambui.karugax@gmail.com>
+> > > > > > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > > > > > Cc: Florian Westphal <fw@strlen.de>
+> > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > > Cc: Branden Bonaby <brandonbonaby94@gmail.com>
+> > > > > > Cc: "Petr Å tetiar" <ynezz@true.cz>
+> > > > > > Cc: Sandro Volery <sandro@volery.com>
+> > > > > > Cc: Paul Burton <paulburton@kernel.org>
+> > > > > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > > > Cc: Giovanni Gherdovich <bobdc9664@seznam.cz>
+> > > > > > Cc: Valery Ivanov <ivalery111@gmail.com>
+> > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > 
+> > > > > Acked-by: Guenter Roeck <linux@roeck-us.net>
+> > > > 
+> > > > Please can we keep this driver. We do have platforms using it and we
+> > > > would like it to stay around.
+> > > > 
+> > > > Clearly we'll need to sort things out to a point where they build
+> > > > successfully. We've been hoping to see this move out of staging ever
+> > > > since we selected Cavium as a vendor.
+> > > 
+> > > Great, can you send me a patchset that reverts this and fixes the build
+> > > issues and accept maintainership of the code?
+> > > 
+> > 
+> > Yep will do.
+> > 
+> > On Tue, 2020-02-04 at 10:21 +0300, Dan Carpenter wrote:
+> > > My advice is to delete all the COMPILE_TEST code.  That stuff was a
+> > > constant source of confusion and headaches.
+> > 
+> > I was also going to suggest this. Since the COMPILE_TEST has been a
+> > source of trouble I was going to propose dropping the || COMPILE_TEST
+> > from the Kconfig for the octeon drivers.
 > 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: "Nuno Sá" <nuno.sa@analog.com>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Stefan Popa <stefan.popa@analog.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Marcus Folkesson <marcus.folkesson@gmail.com>
-> Cc: Kent Gustavsson <kent@minoris.se>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml                  | 2 +-
->  Documentation/devicetree/bindings/arm/qcom.yaml                 | 2 +-
->  Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml | 2 +-
->  Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml      | 2 +-
->  Documentation/devicetree/bindings/clock/imx8mn-clock.yaml       | 2 +-
->  Documentation/devicetree/bindings/clock/imx8mp-clock.yaml       | 2 +-
->  Documentation/devicetree/bindings/clock/milbeaut-clock.yaml     | 2 +-
->  Documentation/devicetree/bindings/clock/qcom,dispcc.yaml        | 2 +-
->  Documentation/devicetree/bindings/clock/qcom,gcc.yaml           | 2 +-
->  Documentation/devicetree/bindings/clock/qcom,gpucc.yaml         | 2 +-
->  Documentation/devicetree/bindings/clock/qcom,mmcc.yaml          | 2 +-
->  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml        | 2 +-
->  Documentation/devicetree/bindings/clock/qcom,videocc.yaml       | 2 +-
->  Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml    | 2 +-
->  Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml    | 2 +-
->  Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml        | 2 +-
+> Not having it also causes problems.  I didn't originally add it for
+> shits and giggles.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Yes, without this option, the code bit-rotted horribly.  It needs to be
+able to be built otherwise people will change the code and it will break
+and no one will notice except Guenter's build bots and then no one will
+fix it :(
 
->  Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml       | 2 +-
->  Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml       | 2 +-
->  .../devicetree/bindings/iio/adc/microchip,mcp3911.yaml          | 2 +-
->  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml         | 2 +-
->  Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml     | 2 +-
->  Documentation/devicetree/bindings/input/gpio-vibrator.yaml      | 2 +-
->  22 files changed, 22 insertions(+), 22 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index f79683a628f0..b0a7454a70b8 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/arm/fsl.yaml#
-> +$id: http://devicetree.org/schemas/arm/fsl.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Freescale i.MX Platforms Device Tree Bindings
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index e39d8f02e33c..b5bef5abc281 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/arm/qcom.yaml#
-> +$id: http://devicetree.org/schemas/arm/qcom.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: QCOM device tree bindings
-> diff --git a/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml b/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
-> index e63827399c1a..8559fe8f7efd 100644
-> --- a/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/bitmain,bm1880-clk.yaml#
-> +$id: http://devicetree.org/schemas/clock/bitmain,bm1880-clk.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Bitmain BM1880 Clock Controller
-> diff --git a/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
-> index 8fb2060ac47f..fc3bdfdc091a 100644
-> --- a/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/fsl,sai-clock.yaml#
-> +$id: http://devicetree.org/schemas/clock/fsl,sai-clock.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Freescale SAI bitclock-as-a-clock binding
-> diff --git a/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
-> index 622f3658bd9f..cd0b8a341321 100644
-> --- a/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/imx8mn-clock.yaml#
-> +$id: http://devicetree.org/schemas/clock/imx8mn-clock.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: NXP i.MX8M Nano Clock Control Module Binding
-> diff --git a/Documentation/devicetree/bindings/clock/imx8mp-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mp-clock.yaml
-> index 80278882cf57..89aee63c9019 100644
-> --- a/Documentation/devicetree/bindings/clock/imx8mp-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/imx8mp-clock.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/imx8mp-clock.yaml#
-> +$id: http://devicetree.org/schemas/clock/imx8mp-clock.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: NXP i.MX8M Plus Clock Control Module Binding
-> diff --git a/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml b/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
-> index 5cf0b811821e..f0b804a7f096 100644
-> --- a/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/milbeaut-clock.yaml#
-> +$id: http://devicetree.org/schemas/clock/milbeaut-clock.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Milbeaut SoCs Clock Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
-> index 9c58e02a1de1..795fe686f3ea 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/qcom,dispcc.yaml#
-> +$id: http://devicetree.org/schemas/clock/qcom,dispcc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Qualcomm Display Clock & Reset Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> index cac1150c9292..e814eec1bf8d 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc.yaml#
-> +$id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Qualcomm Global Clock & Reset Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> index 622845aa643f..679e7fe0fa83 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
-> +$id: http://devicetree.org/schemas/clock/qcom,gpucc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Qualcomm Graphics Clock & Reset Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> index 91101c915904..85518494ce43 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/qcom,mmcc.yaml#
-> +$id: http://devicetree.org/schemas/clock/qcom,mmcc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Qualcomm Multimedia Clock & Reset Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> index 94e2f14eb967..2cd158f13bab 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/qcom,rpmhcc.yaml#
-> +$id: http://devicetree.org/schemas/clock/qcom,rpmhcc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Qualcomm Technologies, Inc. RPMh Clocks Bindings
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> index 43cfc893a8d1..2946b240e161 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/qcom,videocc.yaml#
-> +$id: http://devicetree.org/schemas/clock/qcom,videocc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Qualcomm Video Clock & Reset Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
-> index b8f91e444d2f..4e385508f516 100644
-> --- a/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/st,stm32mp1-rcc.yaml#
-> +$id: http://devicetree.org/schemas/clock/st,stm32mp1-rcc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Reset Clock Controller Binding
-> diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> index f1150cad34a4..229af98b1d30 100644
-> --- a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/clock/xlnx,versal-clk.yaml#
-> +$id: http://devicetree.org/schemas/clock/xlnx,versal-clk.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Xilinx Versal clock controller
-> diff --git a/Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml b/Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml
-> index ae04903f34bf..6a742a51e2f9 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/hwmon/adi,ltc2947.yaml#
-> +$id: http://devicetree.org/schemas/hwmon/adi,ltc2947.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Analog Devices LTC2947 high precision power and energy monitor
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> index e932d5aed02f..f0934b295edc 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> @@ -2,7 +2,7 @@
->  # Copyright 2019 Analog Devices Inc.
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7124.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Analog Devices AD7124 ADC device driver
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> index 567a33a83dce..84d25bd39488 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> @@ -2,7 +2,7 @@
->  # Copyright 2019 Analog Devices Inc.
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7192.yaml#
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7192.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Analog Devices AD7192 ADC device driver
-> diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
-> index 881059b80d61..0ce290473fb0 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
-> @@ -2,7 +2,7 @@
->  # Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
->  %YAML 1.2
->  ---
-> -$id: "http://devicetree.org/schemas/bindings/iio/adc/microchip,mcp3911.yaml#"
-> +$id: "http://devicetree.org/schemas/iio/adc/microchip,mcp3911.yaml#"
->  $schema: "http://devicetree.org/meta-schemas/core.yaml#"
->  
->  title: Microchip MCP3911 Dual channel analog front end (ADC)
-> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-> index c91407081aa5..acf36eef728b 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/st,stm32-dfsdm-adc.yaml#
-> +$id: http://devicetree.org/schemas/iio/adc/st,stm32-dfsdm-adc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: STMicroelectronics STM32 DFSDM ADC device driver
-> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-> index 13d005b68931..a285eaba7125 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-> @@ -2,7 +2,7 @@
->  # Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
->  %YAML 1.2
->  ---
-> -$id: "http://devicetree.org/schemas/bindings/iio/dac/lltc,ltc1660.yaml#"
-> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc1660.yaml#"
->  $schema: "http://devicetree.org/meta-schemas/core.yaml#"
->  
->  title: Linear Technology Micropower octal 8-Bit and 10-Bit DACs
-> diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> index 903475f52dbd..b98bf9363c8f 100644
-> --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/input/gpio-vibrator.yaml#
-> +$id: http://devicetree.org/schemas/input/gpio-vibrator.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: GPIO vibrator
-> -- 
-> 2.20.1
-> 
+i.e. exactly what was happening before...
+
+So this needs to all be fixed up properly, and really, should be merged
+to the "real" part of the kernel...
+
+thanks,
+
+greg k-h
