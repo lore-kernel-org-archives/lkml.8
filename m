@@ -2,92 +2,67 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DBEC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F022DC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAAE2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:19:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEbGW1hy"
+	by mail.kernel.org (Postfix) with ESMTP id CDBB1222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgBDRT0 (ORCPT
+        id S1727539AbgBDRUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:19:26 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37651 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbgBDRT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:19:26 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m13so1667077pjb.2;
-        Tue, 04 Feb 2020 09:19:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xiQDV/rIbxr4XLs+e7ic/p2cgIZwicIgHmWjxF4UqHE=;
-        b=lEbGW1hy0E4aWeTF5t0SG+rDmG1EuZ1FldS3Pih1Cw0GPkizE7ozoGWQq2JUW7o/R7
-         KKrmv2b2Qy29D3xVNRI4uJMK2ct6wNUc4mmrsjFswdfg5kt/hIA7P9WJs3eLguxmVLoo
-         NDhe3DnToMm8TMqKykPV2McNgBROUP5ninmM26or6mBGAoe3+SluCFNgqNGVLR5kFQd1
-         neKf3a468J9ijl/kOZILffMcNfkNVkZsvss5WVbHwwB9co4JH1stdA1Z80YCAeWFajek
-         xD97gJ0ov9gkk3z0ObjI/tQ/2X46PADbcA9gSCEdsPr2pxwKzhjDv9Ep6LLdqXit4NZb
-         Ulfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xiQDV/rIbxr4XLs+e7ic/p2cgIZwicIgHmWjxF4UqHE=;
-        b=YwQ3TrADoADGu1WoRYWXw7CQVwruxG9dBQA0y1OrGnW7cSaQ0CEpkT0jK2dcM0wkDt
-         Muli1kYdOP90LKfVzdB+cCpJkSr4s5O57gaB788N4ghAaAAH/cpfZXFhYErAmx48lV3d
-         wF65Ee5Ip4Txh5C62Y22TEM2lIlZoWekWxe6VSNiThfp/Tk1umikU9MTF6fb3MJOUmcH
-         yK/tphghMoIcpKyWbSZJnHLPjcHy1fe2lNUbsKSZnGqkfdvyB7M/B7agPIGuTDhhtZlI
-         WmpgRsiN7vv9YFoe6qftAza+cAAGP9fI2FiP2gZM5572UbI/hRbF+5t3MnkKrJxizLe+
-         c3OQ==
-X-Gm-Message-State: APjAAAU1xTjXdEZsqWoPmOw1t3UmhRP6KLNKr+g1ZWPy80KvWuJMr/7J
-        ONaaCrNK4CUMRH+lrPxAhbA=
-X-Google-Smtp-Source: APXvYqzHohbS0G4pBnb5+0yAi25Tqq7QOavVd9/0lkQG4b7h9XnzIQ8WNOChB78HB3RhPZN3b3PvqA==
-X-Received: by 2002:a17:902:bd88:: with SMTP id q8mr29187737pls.13.1580836765771;
-        Tue, 04 Feb 2020 09:19:25 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 11sm26126758pfz.25.2020.02.04.09.19.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 09:19:25 -0800 (PST)
-Date:   Tue, 4 Feb 2020 09:19:24 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/70] 4.19.102-stable review
-Message-ID: <20200204171924.GD10163@roeck-us.net>
-References: <20200203161912.158976871@linuxfoundation.org>
+        Tue, 4 Feb 2020 12:20:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59298 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727310AbgBDRUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 12:20:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 97A2FADAD;
+        Tue,  4 Feb 2020 17:20:04 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 04 Feb 2020 18:20:03 +0100
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Max Neunhoeffer <max@arangodb.com>,
+        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Jason Baron <jbaron@akamai.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] epoll: fix possible lost wakeup on epoll_ctl() path
+In-Reply-To: <20200204083237.7fa30aea@cakuba.hsd1.ca.comcast.net>
+References: <20200203205907.291929-1-rpenyaev@suse.de>
+ <51f29f23a4d996810bfad12b9634ee12@suse.de>
+ <20200204083237.7fa30aea@cakuba.hsd1.ca.comcast.net>
+Message-ID: <549916868753e737316f509640550b66@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:19:12PM +0000, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.102 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2020-02-04 17:32, Jakub Kicinski wrote:
+> On Tue, 04 Feb 2020 11:41:42 +0100, Roman Penyaev wrote:
+>> Hi Andrew,
+>> 
+>> Could you please suggest me, do I need to include Reported-by tag,
+>> or reference to the bug is enough?
 > 
-> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> Anything received after that time might be too late.
-> 
+> Sorry to jump in but FWIW I like the Reported-and-bisected-by tag to
+> fully credit the extra work done by the reporter.
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 385 pass: 385 fail: 0
+Reported-by: Max Neunhoeffer <max@arangodb.com>
+Bisected-by: Max Neunhoeffer <max@arangodb.com>
 
-Guenter
+Correct?
+
+--
+Roman
