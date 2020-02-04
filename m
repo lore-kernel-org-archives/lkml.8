@@ -2,132 +2,119 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4A8C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86141C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5C12166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D0E214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXCavDKV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BcTXvoSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgBDXfW (ORCPT
+        id S1727678AbgBDXhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:35:22 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42688 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbgBDXfW (ORCPT
+        Tue, 4 Feb 2020 18:37:46 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:51668 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727461AbgBDXhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:35:22 -0500
-Received: by mail-yw1-f67.google.com with SMTP id b81so626957ywe.9;
-        Tue, 04 Feb 2020 15:35:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a0Zh5A5UVxi7kLLHGfwoywGVILuqTGw6v50Ysx9v2pg=;
-        b=pXCavDKVVuw9mEkjafbCaKO5pjGoKu6fDxeJnvd1MP4Ho/MclHwZFj5TW3BUrhBfmQ
-         1SmqmXVWfty49DriNJQ95H35dObsy498Oq0YoIpQ4xoJcFv0qQQM42YWPwm1cuVFhRqi
-         gwGbaDmTBoJgvutLWDYXQjgZvPTMGnASlyiY45aU8e7IrERrhJzIdzIYilgXMBI45TcA
-         NZbjj1XZ83DjOMTwSxD1+p5WgZhPEX+LU5siBJWHTgRilJ7uHCRgjmbbG/BeQwqY3M7I
-         mr//gJt8IbDaSMZ6o1EXESADBXmSj+iZbjbNuFBCJVG+KsPbFb6nK5xrG1maymE9EjS2
-         Jwsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a0Zh5A5UVxi7kLLHGfwoywGVILuqTGw6v50Ysx9v2pg=;
-        b=pGHYRc536rlxJE/iKM95Mdt4R5SfTKTdbTAlxyrGInQR5ZUhePuk64hbeOI5v5JNqF
-         97Tw0Le4cayQl9KPhkm4cThp0yCLl4zAHL/z7QYcFoA3G6h2iGiBlIwR6WJSuK9Y93X7
-         KfIlG4k7Gf+i77heywRTKC/SFHtCOXrt2CT7VLSaJIAULVrhMZSa314hryipfZbEeY58
-         myvakjO/jhrq35evaE9joeEh6JTWSRaRu7MF2lgY20jHdtqoj5HnM1IGQlONdDbgfU5B
-         aJxRbQpxFWUJiDZZYy8MAfu5yNo/QoXSzCMYZJKeLl8YE8vVneGGpaMsPZ9xpmyVuXRB
-         2juQ==
-X-Gm-Message-State: APjAAAXjjoNdB3JqYdXkTddQFdNVKT0cGSMvQ1k7JD2qB3ZN97IQFBYW
-        jSDvm5Q8xbCmp0m35SqzXR0=
-X-Google-Smtp-Source: APXvYqxDpSKKSu2un/TP0Ysy4WFWa6lTEAL6/sexOdBqb4s9dfVx7yM35vus7F6YnJ3GRb+1LFZYCA==
-X-Received: by 2002:a81:9912:: with SMTP id q18mr7487623ywg.383.1580859319894;
-        Tue, 04 Feb 2020 15:35:19 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id o69sm10579207ywd.38.2020.02.04.15.35.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Feb 2020 15:35:19 -0800 (PST)
-Subject: Re: [PATCH v2 0/7] kunit: create a centralized executor to dispatch
- all KUnit tests
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>, David Gow <davidgow@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Kees Cook <keescook@chromium.org>,
-        Richard Weinberger <richard@nod.at>, rppt@linux.ibm.com,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200204071915.AF32B21582@mail.kernel.org>
- <CAFd5g44ZG+E==gT24w49oKc6nHv4nBQFeipikKxXJH3oHdO99Q@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <4d0f42f7-8dbe-3d47-e0df-3e31cc8ebf52@gmail.com>
-Date:   Tue, 4 Feb 2020 17:35:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 4 Feb 2020 18:37:46 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014NXSju080207;
+        Tue, 4 Feb 2020 23:37:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2019-08-05;
+ bh=c89x4AYik3CY1dqU0wAVrxhhMg8pCILWGeQVUweuj80=;
+ b=BcTXvoSgSVY0m9Zzdg/u2oQVSbOgPMijyGuj5/cPHMH6Wq2/zuOk5s0RrK1cL4vs3yYn
+ +/090kIgsQcfCSdXLEAaJHXHlnZfYAbAZxeZqAKkO3sHqD08O2IMIgFKXBE6RayLRd7B
+ gHdhmQCa11ujg63Mf5NH/OLsT6jCDMBY6U8w3KVoCrgsCqE94Xc7ciGudP60fbEanmnv
+ xTRsaVl/ZVuhbMIFU6ByYia5a0dwZ8KyuPURF9PDVeGYhqHFE1hDFBBpymD0XhJeeJ59
+ 0uiNq5Fm98VmSMb9T7VY5oi3IAU/39pY63LAt3W7l1xZaCVMvIqWmWtLYGBB5xTMlkbf Eg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xyhkfg614-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 23:37:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014NXQKX177891;
+        Tue, 4 Feb 2020 23:37:34 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xyhmqubup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 23:37:34 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014NbWoi010973;
+        Tue, 4 Feb 2020 23:37:32 GMT
+Received: from dhcp-10-154-157-166.vpn.oracle.com (/10.154.157.166)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Feb 2020 15:37:32 -0800
+Message-ID: <787a40adec270a7c72ab1862f4fe1ada088818f1.camel@oracle.com>
+Subject: Re: [PATCH] mm: always consider THP when adjusting min_free_kbytes
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Tue, 04 Feb 2020 16:37:30 -0700
+In-Reply-To: <8cc18928-0b52-7c2e-fbc6-5952eb9b06ab@oracle.com>
+References: <20200204194156.61672-1-mike.kravetz@oracle.com>
+         <alpine.DEB.2.21.2002041218580.58724@chino.kir.corp.google.com>
+         <8cc18928-0b52-7c2e-fbc6-5952eb9b06ab@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g44ZG+E==gT24w49oKc6nHv4nBQFeipikKxXJH3oHdO99Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2001150001 definitions=main-2002040160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-2001150001
+ definitions=main-2002040160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 1:35 PM, Brendan Higgins wrote:
-> On Mon, Feb 3, 2020 at 11:19 PM Stephen Boyd <sboyd@kernel.org> wrote:
->>
->> Quoting Brendan Higgins (2020-01-30 15:08:05)
->>> ## TL;DR
->>>
->>> This patchset adds a centralized executor to dispatch tests rather than
->>> relying on late_initcall to schedule each test suite separately along
->>> with a couple of new features that depend on it.
->>
->> Is there any diff from v1 to v2? I don't know what changed, but I see
->> that my Reviewed-by tag has been put on everything, so I guess
->> everything I said was addressed or discussed in the previous round.
+On Tue, 2020-02-04 at 13:42 -0800, Mike Kravetz wrote:
+> On 2/4/20 12:33 PM, David Rientjes wrote:
+> > 
+> > So it looks like this is fixing an obvious correctness issue but
+> > also now 
+> > requires users to rewrite the sysctl if they want to decrease the
+> > min 
+> > watermark.
 > 
-> Oh yes, sorry about that. I have gotten a bit lazy in regard to
-> changing logs. I noticed that a lot of people don't seem to care. I'll
-> make a note that you do.
-
-Please ignore those who don't care.  Just always include a change log.
-
-You may encounter bike shedding about where the log belongs (in patch 0,
-in the modified patches, in both locations).  The color of my bike shed
-is simply that they exist somewhere, but my most favorite color is both
-places.
-
+> Moving the call to khugepaged_adjust_min_free_kbytes as described
+> above
+> would avoid the THP adjustment unless we were going to overwrite the
+> user defined value.  Now, I am not sure overwriting the user defined
+> value
+> as is done today is actually the correct thing to do.
 > 
-> Changes since last revision:
-> - On patch 6/7, I flipped the include order and removed braces from the if
->   statements.
-> - On patch 7/7, I removed the periods from the short descriptions.
-> 
+> Thoughts?
+> Perhaps we should never overwrite a user defined value?
+
+We might need to override user defined value if it is too low but
+overriding it silently is not quite right. We should print a warning
+at least. On the other hand, a user setting min_free_kbytes should know
+what they are doing and if they set it too low, they have been warned
+in the sysctl documentation. I would say we never override user defined
+value but print a warning if the value is too low and kernel would have
+adjusted it if it were not for the user defined value.
+
+--
+Khalid
 
