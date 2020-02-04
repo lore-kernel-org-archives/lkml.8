@@ -4,64 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B63AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD555C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F24DD21927
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79FF020674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="wRaKb9GC"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="p5y/+ahd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgBDKce (ORCPT
+        id S1727004AbgBDKdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:32:34 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50509 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgBDKcd (ORCPT
+        Tue, 4 Feb 2020 05:33:06 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45022 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgBDKdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:32:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so2653772wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:32:32 -0800 (PST)
+        Tue, 4 Feb 2020 05:33:06 -0500
+Received: by mail-wr1-f67.google.com with SMTP id m16so22269911wrx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:33:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=1SYMxKK3rfeZvqEbPZchRaPU1qcwRe9ko80AsNTrp6g=;
-        b=wRaKb9GCH1iII+N1vEDR1HM/dAgxMJ+SGP4LqJ2mJHZoVnCjHS0/Z3oE7ardXiyCJ0
-         GSKGusmqT2WTzHuTnFf20V5rVq6OUvGTGkanJ893QHoqxN6uPf6Yo4m2b+du/ydfNShD
-         0qejGLeiuCr97p4mJ5WyaF2Sqrb4Ip5TxXLTxiLt7FJVLW4EuAcR/B/Q74CpUtI1MxGD
-         IySZZWMzNO8aMzvJW+uigwBkfZNSkC3CmaxtNvDPR6vbcBT/NMKX6PtwTni/Pv9uG2vJ
-         LwQjr59K5JVwLK2B0Pj23MGYFhx3k8JGB07IrssBD7HVCh8YyiGx8ahREa/jZe7DEx41
-         E0oA==
+        bh=hi5ABYQUkVP/jgGhAuOreV5DcMK/yqN3/B3hQICD40c=;
+        b=p5y/+ahdBBy4euOtV0GdIxNBysYzXRURg3EbjLLAVG6Qq5uE9nN32QzcaSRWOZNTXZ
+         KbX2/rqwbUSpE9iwgH7M5ZdC3wVuKcTg2GeDYtJAcYJ4E4GOJfXZqaKuqdAXfyh2rgnF
+         9LtC+n/mx9Pv9l6b2Bp6jTV6WjMCqbCitxwSatyDpPoFh3PeKDUUpd8+q6TUdg3HBywo
+         meWOofxJi26Vpv+dpYUmInRztpTkkmN/WWOt/Wyv8u36d2OnLNuWqqYh9Js2xQWBkkcX
+         O4J7MkLz6zbeV7Bq5T9rCES0lQnaBx4mVxJN4ESeq6bhFLFThewvYcEbwR4QAE7DwIa1
+         Kqbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1SYMxKK3rfeZvqEbPZchRaPU1qcwRe9ko80AsNTrp6g=;
-        b=G8TxsMXbc1DQ2NLTfwwx+Di7qdqh8ZHWO8XolBh1WoCM9RnZiv6JfIoDK63+/NSOru
-         R/9G7KzVXiiAMMfDCWvikkPjPX5Vj9JHPCAtCcSZQOHHs3Dmi72AWs7Y4f2mMYhyIO2l
-         v1rmtx4HAzH+nEO4i8YWwnZkbSUy5o4kzyI+vEIMpsSQyd5XyFKh8tWRZiqpnrQkO2sJ
-         O0yo5oQoLIag4SVqXyoZRysnRfxbB+1q+IHFeiCh7/CD4lIScUJZQ9KmYNgIRDO8euMb
-         kSMjY3B2APHwXIuDZX1WTwGEH3zatQW4iG3Mqhy31zpTLc9VfpJ5AI2ocgczu5Lo/3mP
-         AwTg==
-X-Gm-Message-State: APjAAAUXdfkD2J5H0dlsATpzHQjrl6FAjNYg9WqmjUpBvDAFI+ZulWvB
-        oAvuYhxWo+M/coF6DoxlB7/GP8NvdIcbOty8SYZP9Whievk=
-X-Google-Smtp-Source: APXvYqzoXmXCV29YylA4DEA+wVOoa8ZXDKE78e085e0LER8wyWz4HraH+l06llspk8nHKA8qk7ONB1aFvkw8pLG4EKY=
-X-Received: by 2002:a7b:cf35:: with SMTP id m21mr5331338wmg.144.1580812351649;
- Tue, 04 Feb 2020 02:32:31 -0800 (PST)
+        bh=hi5ABYQUkVP/jgGhAuOreV5DcMK/yqN3/B3hQICD40c=;
+        b=WR86mEgP20jZoclXZTKepPy8q0jB48lNVCYVMlPTfp6J4Kay6ZwDZ7t+Db0OLrHA15
+         +FM1AL8YxbcR/L0UGAtJmWro9M1T6an956pOeYtpS3OpQZmygwuVxjWSrMfSKOFNZpy0
+         UouIG6i5WsbHcwKj45uaTEAUHRFudr9Mn4K0ZS+H51oC2Onf/wM0kSwaXpshKuKl4Bjb
+         VvV5x9Ac86zwwM72OPcn6/+o9tfpSFfnwizGxOnSHwzIsilZ3WLi0JA3x7rTTh1HQ1h+
+         IMq3v0xJy10m26yVwWPvA+hXSnRBEGlmpfnxH3oA/XpDosxAgXsSbtkYirJl8zEizex3
+         X4mA==
+X-Gm-Message-State: APjAAAVcnN7dAzoChHGCiepq/se0aH3bCfjV7TqSgiPFw9fP/IAJf+yx
+        iIuUxLUv/suAXAwHD8HaZNKYcSoxvRJQjuUeaFhY+d8WV2w=
+X-Google-Smtp-Source: APXvYqzNghy9cmIkCAJBnH0aV7c6CZH7NQMk6DyQKWRtK1iVloxi0xWtvAm7QXlMvab+J5CTra3f7hersnBUw/FHPPk=
+X-Received: by 2002:a5d:530e:: with SMTP id e14mr21073083wrv.250.1580812383791;
+ Tue, 04 Feb 2020 02:33:03 -0800 (PST)
 MIME-Version: 1.0
-References: <15fd2e90780c08fe1a2989cdbbe69e95f46904a5.1578492549.git.michal.simek@xilinx.com>
-In-Reply-To: <15fd2e90780c08fe1a2989cdbbe69e95f46904a5.1578492549.git.michal.simek@xilinx.com>
+References: <1a11e5cd73f6eb999f78981953d39773eb154040.1578492778.git.michal.simek@xilinx.com>
+In-Reply-To: <1a11e5cd73f6eb999f78981953d39773eb154040.1578492778.git.michal.simek@xilinx.com>
 From:   Michal Simek <monstr@monstr.eu>
-Date:   Tue, 4 Feb 2020 11:32:20 +0100
-Message-ID: <CAHTX3dKUf0RPDt7WerPOe-4fGhqJZ4cAOTjWtrNG8oZu4iU-_Q@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: Align comments with register usage
+Date:   Tue, 4 Feb 2020 11:32:52 +0100
+Message-ID: <CAHTX3d+0BD6kysK89Rge64PSYEFYX=PyNps8aiinT3n+P+xnzQ@mail.gmail.com>
+Subject: Re: [PATCH] microblaze: Fix message about compiled-in FDT location
 To:     LKML <linux-kernel@vger.kernel.org>,
         Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
-Cc:     Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,47 +68,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-st 8. 1. 2020 v 15:09 odes=C3=ADlatel Michal Simek <michal.simek@xilinx.com=
+st 8. 1. 2020 v 15:13 odes=C3=ADlatel Michal Simek <michal.simek@xilinx.com=
 > napsal:
 >
-> Trivial patch.
+> %p is not working that early (don't know why)
+>
+> Before this patch:
+> Compiled-in FDT at (ptrval)
+>
+> After:
+> Compiled-in FDT at 0xc043c24c
 >
 > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
 >
->  arch/microblaze/kernel/head.S | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/microblaze/kernel/setup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/microblaze/kernel/head.S b/arch/microblaze/kernel/head.=
-S
-> index 7d2894418691..14b276406153 100644
-> --- a/arch/microblaze/kernel/head.S
-> +++ b/arch/microblaze/kernel/head.S
-> @@ -121,10 +121,10 @@ no_fdt_arg:
->         tophys(r4,r4)                   /* convert to phys address */
->         ori     r3, r0, COMMAND_LINE_SIZE - 1 /* number of loops */
->  _copy_command_line:
-> -       /* r2=3Dr5+r6 - r5 contain pointer to command line */
-> +       /* r2=3Dr5+r11 - r5 contain pointer to command line */
->         lbu     r2, r5, r11
->         beqid   r2, skip                /* Skip if no data */
-> -       sb      r2, r4, r11             /* addr[r4+r6]=3D r2 */
-> +       sb      r2, r4, r11             /* addr[r4+r11]=3D r2 */
->         addik   r11, r11, 1             /* increment counting */
->         bgtid   r3, _copy_command_line  /* loop for all entries       */
->         addik   r3, r3, -1              /* decrement loop */
-> @@ -139,8 +139,8 @@ skip:
->         ori     r4, r0, TOPHYS(_bram_load_start)        /* save bram cont=
-ext */
->         ori     r3, r0, (LMB_SIZE - 4)
->  _copy_bram:
-> -       lw      r7, r0, r11             /* r7 =3D r0 + r6 */
-> -       sw      r7, r4, r11             /* addr[r4 + r6] =3D r7 */
-> +       lw      r7, r0, r11             /* r7 =3D r0 + r11 */
-> +       sw      r7, r4, r11             /* addr[r4 + r11] =3D r7 */
->         addik   r11, r11, 4             /* increment counting */
->         bgtid   r3, _copy_bram          /* loop for all entries */
->         addik   r3, r3, -4              /* descrement loop */
+> diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setu=
+p.c
+> index 522a0c5d9c59..effed14eee06 100644
+> --- a/arch/microblaze/kernel/setup.c
+> +++ b/arch/microblaze/kernel/setup.c
+> @@ -138,7 +138,7 @@ void __init machine_early_init(const char *cmdline, u=
+nsigned int ram,
+>         if (fdt)
+>                 pr_info("FDT at 0x%08x\n", fdt);
+>         else
+> -               pr_info("Compiled-in FDT at %p\n", _fdt_start);
+> +               pr_info("Compiled-in FDT at 0x%08x\n", (unsigned)&_fdt_st=
+art);
+>
+>  #ifdef CONFIG_MTD_UCLINUX
+>         pr_info("Found romfs @ 0x%08x (0x%08x)\n",
 > --
 > 2.24.0
 >
