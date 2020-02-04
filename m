@@ -2,101 +2,133 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1544EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F6AC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CB9217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeAfttWg"
+	by mail.kernel.org (Postfix) with ESMTP id 9581C217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580815423;
+	bh=QmUJLjNtctwjPOg/fo2/bUliXImpve1GP4rGIVKoIV0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=w5Bb2PRvr4rOru/2ferNt6f4XbLT6X0FyrFV8oMwoN0LRuKYYJWvR+ffDnF+za1FP
+	 H1Ba6E2Ia3mAtyV2+tWxw/ujV2X/eRpQHCWopSq58nx1Eosz1/j1bUNLC3i8/e8TzT
+	 Za/BYosGtZMrvCXETxIT6vibxAD7CC2U3xEtJxtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbgBDLWR (ORCPT
+        id S1727165AbgBDLXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:22:17 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35969 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgBDLWQ (ORCPT
+        Tue, 4 Feb 2020 06:23:42 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33744 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgBDLXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:22:16 -0500
-Received: by mail-pj1-f67.google.com with SMTP id gv17so1245449pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 03:22:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1W+3zsnEU6ZNkubtrp4GhFh9NK/nPnnv+lTC1XegvP8=;
-        b=OeAfttWgeChdF9jpkkVhU+wvcxHefjsWiwdrj2bhSZJT0Dr1h7Haz2ILIGKxW1pati
-         jWehdM8enEg1fnOfj9k14OETsvT058yy816xDBSWLLtwX+6W1U5uxSs+Ky/n54JVHLza
-         myy+gxjwYaoR9mx27dDhk7ftGOgtfkSEeGOqu/l/8TTSEDXHy2danjBrVVObAhyab/l4
-         fONNsjAJMbhlGJu5zMdNxQRoky60xsHUA6R9Z4Hth10regafKyM62/8owbTUUwJ2IePx
-         K8LLcFp79iMIdloo7KQX5AWzEXfzXU1IJms7gbAYpmL9bFSNOuCfi6eWUWztTNeNQsr2
-         9wLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1W+3zsnEU6ZNkubtrp4GhFh9NK/nPnnv+lTC1XegvP8=;
-        b=ja80OpgmTxeRjUld+5JcvSeXijhXSEbiPl2kyqnAqsd6oVX/FKYEgkQo1hTGj1DkRW
-         6m5uqMqvPz1XVnra9wPNlYiNV81hOL9J9fP7qCrKDhhClk+GjT/SEy9sr1bkOwurLtTQ
-         vIbvbTPiLWVQ7zRkVtYRV7fEVtwK6S/PINp8FgNTY5Ac+5mOmgNEybWlydRVJP177yUp
-         uzfNnu0hmLDcsasmLwDTW3EfdyQ1I9SaX4a/GaIi3NMltRJ2HQYCTlgZgXEDdhc9Zpod
-         T5M+cfMpX8Ff+ZwVSOX+HVDGYvJ0I2wAaCNzoko2JOHxtJg6n7XPBznkJcjc9IL7zRxe
-         Ud0Q==
-X-Gm-Message-State: APjAAAVOTV9JETa5pspPX1e75+Gk45JRH3KyrLTMurUHCYtVv6xuco+O
-        9DVmtbvE1MgU2DEkaYgzaq8=
-X-Google-Smtp-Source: APXvYqxiY99hRz0Z6ZPw4flyNky2QRyCA5rtWeXn3U1HJyW3z3hjSBngmChiLfN+jOENx+SaSwVs+A==
-X-Received: by 2002:a17:90a:8a08:: with SMTP id w8mr5823926pjn.125.1580815336037;
-        Tue, 04 Feb 2020 03:22:16 -0800 (PST)
-Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id z14sm22336409pgj.43.2020.02.04.03.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 03:22:14 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 4 Feb 2020 20:22:11 +0900
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v1] printk: Declare log_wait as external variable
-Message-ID: <20200204112211.GA2009@jagdpanzerIV.localdomain>
-References: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
- <20200204021620.GD41358@google.com>
- <20200204090533.GM32742@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204090533.GM32742@smile.fi.intel.com>
+        Tue, 4 Feb 2020 06:23:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=p3ecvIGvTCPUYxkPwEIi3DyBl4sbJaimA2IDcfZHVA0=; b=rkMTOmyxLH9K
+        T3arp4n3AjZwzYNX5SW0yWsqPHOzCgChYCtf4oAMvbKCrETXdcL7lh0qsQLf/JgBotdvuYDIep8rx
+        4UYmWjWwic0BXMsX2YVCBMh9TZzZdF4FlsPtG5Ye6YSOpLst3rO70vQvK8PJlEIwdiqDx3+lkARrM
+        2QPfY=;
+Received: from fw-tnat-cam2.arm.com ([217.140.106.50] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iywIo-0007QR-GZ; Tue, 04 Feb 2020 11:23:34 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 271E2D01A54; Tue,  4 Feb 2020 11:23:34 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, sfr@canb.auug.org.au,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Applied "ASoC: wcd934x: Add missing COMMON_CLK dependency" to the asoc tree
+In-Reply-To: <20200204111241.6927-1-srinivas.kandagatla@linaro.org>
+Message-Id: <applied-20200204111241.6927-1-srinivas.kandagatla@linaro.org>
+X-Patchwork-Hint: ignore
+Date:   Tue,  4 Feb 2020 11:23:34 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/04 11:05), Andy Shevchenko wrote:
-> > > --- a/kernel/printk/printk.c
-> > > +extern wait_queue_head_t log_wait;	/* Used in fs/proc/kmsg.c */
-> > >  DECLARE_WAIT_QUEUE_HEAD(log_wait);
-> > > +#else
-> > > +static DECLARE_WAIT_QUEUE_HEAD(log_wait);
-> > > +#endif /* CONFIG_PROC_FS */
-> > 
-> > [..]
-> > 
-> > Since we are now introducing CONFIG_PROC_FS dependency to printk (and
-> > proc/kmsg already has CONFIG_PRINTK dependency),
-> 
-> I'm not sure I understood. The above does not introduce any dependencies.
+The patch
 
-kernel/printk/printk.c
- +#ifdef CONFIG_PROC_FS
- ..
+   ASoC: wcd934x: Add missing COMMON_CLK dependency
 
-Not exactly "dependency"... what is the correct word here.
+has been applied to the asoc tree at
 
-	-ss
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 42b716359beca10684195fd6e93a74ecd8ca8003 Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Tue, 4 Feb 2020 11:12:41 +0000
+Subject: [PATCH] ASoC: wcd934x: Add missing COMMON_CLK dependency
+
+Looks like some platforms are not yet using COMMON CLK.
+
+PowerPC allyesconfig failed with below error in next
+
+ld: sound/soc/codecs/wcd934x.o:(.toc+0x0):
+	 undefined reference to `of_clk_src_simple_get'
+ld: sound/soc/codecs/wcd934x.o: in function `.wcd934x_codec_probe':
+wcd934x.c:(.text.wcd934x_codec_probe+0x3d4):
+	 undefined reference to `.__clk_get_name'
+ld: wcd934x.c:(.text.wcd934x_codec_probe+0x438):
+	 undefined reference to `.clk_hw_register'
+ld: wcd934x.c:(.text.wcd934x_codec_probe+0x474):
+	 undefined reference to `.of_clk_add_provider'
+
+Add the missing COMMON_CLK dependency to fix this errors.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200204111241.6927-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index c9eb683bd1b0..286514865960 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1334,6 +1334,7 @@ config SND_SOC_WCD9335
+ 
+ config SND_SOC_WCD934X
+ 	tristate "WCD9340/WCD9341 Codec"
++	depends on COMMON_CLK
+ 	depends on MFD_WCD934X
+ 	help
+ 	  The WCD9340/9341 is a audio codec IC Integrated in
+-- 
+2.20.1
+
