@@ -2,177 +2,104 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FA5C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8942087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35F121D7D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="RfSI5TO1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CQFG9weU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgBDXK6 (ORCPT
+        id S1727647AbgBDXPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:10:58 -0500
-Received: from mga17.intel.com ([192.55.52.151]:42802 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbgBDXK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:10:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 15:10:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,403,1574150400"; 
-   d="scan'208";a="403958120"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga005.jf.intel.com with ESMTP; 04 Feb 2020 15:10:56 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 4 Feb 2020 15:10:55 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 4 Feb 2020 15:10:55 -0800
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 4 Feb 2020 15:10:55 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 4 Feb 2020 15:10:54 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EseUbKb3CYmwLA45SQw6vtG2+nCJ2TGduxbttcogEAq4DVdbrn/KxlR/RD2pY8rAaptMCISfjqxM3DjtGj1gW45Yn3KHWH0T7FJJhFb0e1FVbQX68+fC4q0MCun3gkUmAPqvz2P20AdIcnQSml8OqzueSIlwzCPYwbwk1itDPrIZW230DO5pYrgLZ1q0//4NkNnIDWzTAxIAGvRdwKkZA+wSmgxC5RJ4eKXhIgnTFHYURPpRuVW98ULzrlXG+7HWF4Tk1FHGuU5+vH92a3g3jB+TAarheEv2ROSUKPc9HSgNvDmP78j+f1B1u0vLIymmrmcOpeAqZI3cIqhB/pAP6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VmlPAGpv4A9TZlfvZcaYr95z4F4IYheic30NaOXseJ8=;
- b=gEa+JDFc+JjFWMmzfPZ9CByZG8YkJnT4vTVHod/T3TIoa84GijHLHZhYJQT0vubuPbakY1H+vpiG++t+ZS4YQL33Sbz33XZLMQmvVtHrw9ybEq2130sSvHAhE4RbMeKKcHV6KrL1yzO9Cz7F0kWPZH7alAqOmOn/bcksx/Eh3OImjBrikAiis015/hcPEz3NCSjvvEYQd917j6pMdahqiz2gCBjjoaShyshMNN+/dcl3HpXMgLIqs2bNeQQD9fsO5eBknEFMrAj3GuQPDs6vKm1WN2QcYr68LBdEV1HSddURfNfbhyGCruHgDpu+ylwH4uZ09V2Z8KQ5pMeXjeF+qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VmlPAGpv4A9TZlfvZcaYr95z4F4IYheic30NaOXseJ8=;
- b=RfSI5TO1Et9GE9xzCyXQYLP1VwUxGGsatU4w9PK2O+9GQZe5VpRQOvHNGu1KabHEXKQZG27GtnSYtXCoUZLtXtNWgTXRyf0TdlSX/jjc7n1TNDB4C/ZuqxsUE8EOdSbsoYWzOzCl3Nee2CKdG1UCalODkACmKs/7VTeI+1ONzko=
-Received: from BYAPR11MB3624.namprd11.prod.outlook.com (20.178.239.225) by
- BYAPR11MB3688.namprd11.prod.outlook.com (20.178.237.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.30; Tue, 4 Feb 2020 23:10:50 +0000
-Received: from BYAPR11MB3624.namprd11.prod.outlook.com
- ([fe80::d12e:da32:257e:7d51]) by BYAPR11MB3624.namprd11.prod.outlook.com
- ([fe80::d12e:da32:257e:7d51%5]) with mapi id 15.20.2686.034; Tue, 4 Feb 2020
- 23:10:49 +0000
-From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        "Westerberg, Mika" <mika.westerberg@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Box, David E" <david.e.box@intel.com>
-Subject: RE: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
-Thread-Topic: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
-Thread-Index: AQHV0uehR65JqlDsd0qQ+gWeMY04Aqf+WQcAgAB1iqCAABOEAIALk8swgACCXgCAAMFZ8A==
-Date:   Tue, 4 Feb 2020 23:10:49 +0000
-Message-ID: <BYAPR11MB362427151E22D623A1B48E37F2030@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <cover.1579890793.git.gayatri.kammela@intel.com>
- <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
- <BL0PR11MB31071AD85775C09B8EC26608F20B0@BL0PR11MB3107.namprd11.prod.outlook.com>
- <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
- <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
- <20200204113414.GB10400@smile.fi.intel.com>
-In-Reply-To: <20200204113414.GB10400@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gayatri.kammela@intel.com; 
-x-originating-ip: [192.55.52.207]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4ec15bc-546e-4d49-906f-08d7a9c77998
-x-ms-traffictypediagnostic: BYAPR11MB3688:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB3688FDD26A0A0FDA7C92A85CF2030@BYAPR11MB3688.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03030B9493
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10019020)(376002)(396003)(366004)(136003)(39860400002)(346002)(199004)(189003)(66556008)(66946007)(54906003)(316002)(66476007)(52536014)(66446008)(2906002)(64756008)(6916009)(966005)(76116006)(71200400001)(6506007)(86362001)(186003)(26005)(8676002)(81156014)(8936002)(7696005)(55016002)(9686003)(81166006)(5660300002)(4326008)(107886003)(478600001)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3688;H:BYAPR11MB3624.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pC5oiIwaSJjbR4UWO5MFejbkQN7a7Fbt9SC4+WSqDIuQyMRyhHHeLY+5jbHTxtt6IkTHbNIJuOf3ZVA7xLrHN8eLWF/Qhfynb2iPCc1OY3Ny07eR3HYtpXKv3wg14leO1pATN/Q2RcYbvQ4zJtxeVUiX8uSUjPGYlEWsGSsaOczQW/jKndViIXt6c5Je08a9NWZ3/pw8Q7LVDjDCYSn+YDX25Sn+4Hj+Z9NX5VA2pgg6StFayN917G96wEGT5bQtchuwB9uX6QNpu68z8yuC1E/05UjR/LndHT5BXAXgLyLoP9CQcFWEglEl+e/19AM5PQxTefMoyXlrLTA5Np54c3P+dsi1UzHTyDsXjG0rZ5jOGq28W/kuY3jg9Dr294tn2RVpOnosWK5FGS3nttx/aU9/t9hPpPuZRk2qczyIvMTdxneqEpI4g3rRRGBBT/Fc9vOdLffNmSJkC+b+Gpy52uNbUwkOuzF+hmi3aaUwdiM0XTrPv8eEn/h0BfcXwOkvhBp3xc51DbCg5rcq5f8nlEH9CC3LQDNzkiobFVQiGyuMZsGVYEcCyc4b7mhluNO07sBfoxTZbiUUH614lZqApkTGSq3mMjduLXLLyGrj7XzNUOk24yW+5yAIN45Pj5pbO5CL4l1ex91y1ro9erxGlbs4HiunoC1jAgmKr4ksfoWpWIjEmkB+U+sTDK726plJQFQ5VOThi5JWzOKhXKQ8BUgVYgZ4f82nNreT0TiNjMg=
-x-ms-exchange-antispam-messagedata: x97zJdguefypK9IfKaCwkktzP//NZb1N9PEaD8NA+WolWOUUP+Ohyzeh9qgQEirj6qfItqv6bARP14OkNCuCfIGOMWAf2u1YDcDMSfdWIXZ0jC0mgspJLgald4CG6qAE5D+7fUVB96Qo5Wk9NT/q7Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Feb 2020 18:15:13 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50513 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbgBDXPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 18:15:12 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so105793pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 15:15:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eHL57O5Lzv9h0dmVqfW61X6PePuavBPvsAF59IMgl1g=;
+        b=CQFG9weUlLK1Zu7Zfgkxnny8IqBI2BzJSepTO/sqAVKxSyjZ6+wdiMch925et+bAfO
+         mU0oQhsCzTxAEosyBr2cX942wbPZY6xf80Tj/Q2fUY6yfDOnBEY49xmSYVJtmaPDC5bc
+         KYombeK6wjGdm8lzmDgNjBJtcKx4oEUm63RlU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eHL57O5Lzv9h0dmVqfW61X6PePuavBPvsAF59IMgl1g=;
+        b=hFCCoB+oRzf4HOr8wvl64lxTuYV+2Qozck9ADW+E2hlhRfc5QHPhBCiQIWNmN+ZyRS
+         UQN0RYVlW8cjBMSzdbuyeoO3ZroeMRLkWJ8RW/3TYaBT01/H6cLei787+kpWdLu+D5yg
+         hxBrItLo4HB4QqGPgsFpMhMyVV6oTWB9e0wZ8Dr8nrOufH/gHkxIJCut4U0/Y/Rdh62P
+         5O2SdErBkLze1nHeNJCxnDYb2rZUIDU2lyDom2Ak2gXebIyVF0GKv5G2JihJsWOMYQHn
+         /dm/v80+nI4DpYtr2qfwyBqartT4yb1OIxY+OHff1cK4YO7R4z8yGZaVUdvF+5kfqnKi
+         C6jg==
+X-Gm-Message-State: APjAAAUIC2ZJSWv132CHFEv/JhPfqIj79AGv0YGcTWAUI8XD/MhtHJus
+        +SBO0XzX2o/6U9JQH77dq1BXZjUAlec=
+X-Google-Smtp-Source: APXvYqyFPGXQmmH7C4ggqmXijaSpcmMAXH+pQ3854xeghzQF/MlW6fcJmdLmu4uW+b8rKx1bNNBa2w==
+X-Received: by 2002:a17:902:7790:: with SMTP id o16mr31145864pll.271.1580858111944;
+        Tue, 04 Feb 2020 15:15:11 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w26sm25319641pfj.119.2020.02.04.15.15.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 15:15:11 -0800 (PST)
+Date:   Tue, 4 Feb 2020 15:15:09 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] arm64: dts: qcom: sc7180: Add cpuidle low power
+ states
+Message-ID: <20200204231509.GB18972@google.com>
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-7-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4ec15bc-546e-4d49-906f-08d7a9c77998
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2020 23:10:49.8722
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yDX3jwzKSUa7dAe5aljqot/yJx48lOF4SNajCp52S4nsaezG06wbH8uZ+f3z4QbamSuK3WlvxwvRXmVpYneES/AjRplp2QVmdfOCeMA5phU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3688
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1580736940-6985-7-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > > It doesn't apply to our for-next branch.
-> > > > Sorry to hear that. I've rebased the series on mainline 5.5-rc7.
-> > > > Should I
-> > > rebase it on for-next branch?
-> > >
-> > > You should always base your branch on the for-next (whatever it's
-> > > being
-> > > called) of the subsystem your series against of.
-> >
-> > Hi Andy,
-> >
-> > The current series has a dependency on Tiger Lake and Elkhart Lake patc=
-he
-> which is merged in to mainline.
-> >
-> > (554f269f0f38 platform/x86: intel_pmc_core: Add Intel Elkhart Lake
-> > support 49a437941c3f platform/x86: intel_pmc_core: Add Intel Tiger
-> > Lake support
-> > 6268c0b278b5 platform/x86: intel_pmc_core: Make debugfs entry for
-> > pch_ip_power_gating_status conditional
-> > e39854781830 platform/x86: intel_pmc_core: Create platform dependent
-> > bitmap structs
-> > b1cb33dae414 platform/x86: intel_pmc_core: Clean up: Remove comma
-> > after the termination line)
-> >
-> > But they are not available in for-next branch. I am confused, how that =
-could
-> be the case. For me to base the current series on for-next branch, the
-> dependency patch series should be available in for-next branch.
->=20
-> I'm wondering how did you check it?
-> The branch location is in this [1] tree.
+On Mon, Feb 03, 2020 at 07:05:39PM +0530, Maulik Shah wrote:
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 8011c5f..0aa0ced 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -86,6 +86,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
 
-Thank you for your patience Andy. I apologize for the mishap as I was check=
-ing in the wrong tree. I have rebased the series on for-next branch on righ=
-t tree this time and sent v2.
-
->=20
-> [1]: http://git.infradead.org/linux-platform-drivers-x86.git
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
-
+These entries are deleted again by the next patch in this series ('arm64:
+dts: qcom: sc7180: Convert to the hierarchical CPU topology layout').
+What is the point in adding them in the first place?
