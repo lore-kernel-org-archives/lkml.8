@@ -2,77 +2,99 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068BFC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D120C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79AD2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580800757;
-	bh=gsyVytQK3lixYjo33kenNe/YEUvIbsBpfPWPkn8VMak=;
-	h=In-Reply-To:References:From:To:Subject:Cc:Date:List-ID:From;
-	b=a+zttLXzFglG76itpNIfLhcB0N6mDOvK3IZVylbFVOUZ4hMW73xgU441cqGWpu2UI
-	 dSUwCqdaFwVayRt+olw38/PZMlDXS0uC2b40oNWROc1HviCZSVwyCTPy01mwF3ljPL
-	 328VHJxU/cLOr51v+xMe6bhkGltVuA+gBTHqOUfg=
+	by mail.kernel.org (Postfix) with ESMTP id 20AEC20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mPbMY8mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgBDHTR (ORCPT
+        id S1726406AbgBDHX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 02:19:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgBDHTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 02:19:16 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF32B21582;
-        Tue,  4 Feb 2020 07:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580800755;
-        bh=gsyVytQK3lixYjo33kenNe/YEUvIbsBpfPWPkn8VMak=;
-        h=In-Reply-To:References:From:To:Subject:Cc:Date:From;
-        b=YOESc0J/SHEpC/EWipMosXdbRmdp9/hgZzW02aTkN02BWA7qg8SdYtNgTEc9CMzE4
-         I2IL8ok2TF1bqiwmH14mE92yxsGbgdBhHidnG9n/DbA8zO2mvbFv0qd3pLEth4flUR
-         FNDsbDpC6W63KwlisnBO2WxUXSS+iuHw99Nwe4lY=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 4 Feb 2020 02:23:59 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:39580 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgBDHX7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 02:23:59 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0147NQS3010279;
+        Tue, 4 Feb 2020 07:23:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Ij7io4GUXzasW7kqfziYoaIi88dN3t5qR5PedXGC7Q8=;
+ b=mPbMY8mmWlZXnYNwLOgaWPeUatfXaoeggd9mCeJ5qNx4vNCKWYFQ4LBAg34P5Dz7sqLo
+ NnrlGHM4Rtfoc1hjYfTH+4tE44CaR7ROHVSlyG2wNiCE7HCuMZhIVWj2sq2jBjHnVflk
+ HauDb/kTe1mRSKJttt7oW753H9ZfUHpOnjcdTmZykhjZ2436CHxpb5IZUa2ZU61iZ/QO
+ XK5f0Pl6wMLIxun3c2wNCsjxb89dWWDB2UB69yMJZCPnTWDnzcNdxV5d8JN76zacuzNg
+ hbDqpvoJ/PN9LJHVMkkOQ5/JZAk7NMFt0xhidUGh+aWzNMl62qTStgdzXwmtnNp5KA1+ 7Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xwyg9gwa5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 07:23:37 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0147JMEp052982;
+        Tue, 4 Feb 2020 07:21:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xxvy26x70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 07:21:37 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0147LU1A015593;
+        Tue, 4 Feb 2020 07:21:30 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Feb 2020 23:21:30 -0800
+Date:   Tue, 4 Feb 2020 10:21:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "ddaney.cavm@gmail.com" <ddaney.cavm@gmail.com>,
+        "pundirsumit11@gmail.com" <pundirsumit11@gmail.com>,
+        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nishkadg.linux@gmail.com" <nishkadg.linux@gmail.com>,
+        "frank@generalsoftwareinc.com" <frank@generalsoftwareinc.com>,
+        "laura.lazzati.15@gmail.com" <laura.lazzati.15@gmail.com>
+Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
+ controller driver
+Message-ID: <20200204072122.GR1778@kadam>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <20191210091509.3546251-2-gregkh@linuxfoundation.org>
+ <e97e28140b8c46cde93f40b93e2e0614943e96fc.camel@alliedtelesis.co.nz>
+ <20200204071548.GB966981@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200130230812.142642-1-brendanhiggins@google.com>
-References: <20200130230812.142642-1-brendanhiggins@google.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        akpm@linux-foundation.org, alan.maguire@oracle.com,
-        anton.ivanov@cambridgegreys.com, arnd@arndb.de,
-        davidgow@google.com, frowand.list@gmail.com, jdike@addtoit.com,
-        keescook@chromium.org, richard@nod.at, rppt@linux.ibm.com,
-        skhan@linuxfoundation.org, yzaikin@google.com
-Subject: Re: [PATCH v2 0/7] kunit: create a centralized executor to dispatch all KUnit tests
-Cc:     gregkh@linuxfoundation.org, logang@deltatee.com, mcgrof@kernel.org,
-        knut.omang@oracle.com, linux-um@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>
-User-Agent: alot/0.8.1
-Date:   Mon, 03 Feb 2020 23:19:14 -0800
-Message-Id: <20200204071915.AF32B21582@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204071548.GB966981@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=971
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002040053
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002040054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2020-01-30 15:08:05)
-> ## TL;DR
->=20
-> This patchset adds a centralized executor to dispatch tests rather than
-> relying on late_initcall to schedule each test suite separately along
-> with a couple of new features that depend on it.
+My advice is to delete all the COMPILE_TEST code.  That stuff was a
+constant source of confusion and headaches.
 
-Is there any diff from v1 to v2? I don't know what changed, but I see
-that my Reviewed-by tag has been put on everything, so I guess
-everything I said was addressed or discussed in the previous round.
+regards,
+dan carpenter
 
