@@ -2,178 +2,192 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B70C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3861C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E9C2084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:54:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CbAgUNM8"
+	by mail.kernel.org (Postfix) with ESMTP id ABA1F2084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBDRys (ORCPT
+        id S1727458AbgBDR6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:54:48 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:46590 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbgBDRyr (ORCPT
+        Tue, 4 Feb 2020 12:58:16 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:35083 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbgBDR6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:54:47 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014HrFVZ192141;
-        Tue, 4 Feb 2020 17:53:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=/K8bkH1tluP7AqL7A5f3qlqtdLKkacRQXpV1VnbEX58=;
- b=CbAgUNM8xdGO+4tR+vkDHikxaGnulHiTHVcPlTr45h1WaN+kHVZ93QdL3KjgbaeUemjE
- s5gJb/Ezs6mklvvIcvbbGHSRaAvtu5/pLiFFQxnal7DNdfdbRR/QR/MZ1O5t9MbwJ1Nz
- yCpfLEezeXvFO+2x170eFuhc1995C39LSCnEfhe8eFLIAZHo5qf/S+1YuepRum6eE1ok
- ifMak7JJHYO/JD13IxXFalU+ON4G7Gsuuzz+7coaqerRYOc/d4S9pzR+U9ybbkisN1B5
- 7zJJkm3adUxRPfM6HLyYTa28L+zu3gYeShH1yn1i0JBWGPMFFBeGsS1hlcSK57gRcyTD 2w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xw0ru8ddp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 17:53:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014HrloE163721;
-        Tue, 4 Feb 2020 17:53:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xxvusa5p5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 17:53:54 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014HrngU027321;
-        Tue, 4 Feb 2020 17:53:49 GMT
-Received: from [10.11.111.157] (/10.11.111.157)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 09:53:48 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <e26b3afa-80d6-71bf-39c8-0fa4b875cbb2@redhat.com>
-Date:   Tue, 4 Feb 2020 12:53:46 -0500
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B98581F8-DE4B-4DF6-B435-112993605E8E@oracle.com>
-References: <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <20200125111931.GW11457@worktop.programming.kicks-ass.net>
- <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
- <20200203134540.GA14879@hirez.programming.kicks-ass.net>
- <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
- <20200203152807.GK14914@hirez.programming.kicks-ass.net>
- <15fa978d-bd41-3ecb-83d5-896187e11244@redhat.com>
- <83762715-F68C-42DF-9B41-C4C48DF6762F@oracle.com>
- <20200204172758.GF14879@hirez.programming.kicks-ass.net>
- <e26b3afa-80d6-71bf-39c8-0fa4b875cbb2@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=857
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002040119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=907 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002040119
+        Tue, 4 Feb 2020 12:58:15 -0500
+Received: by mail-io1-f72.google.com with SMTP id x10so12280779iob.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:58:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Um3Xpzx3vG7vvdGcvA/0vPPxMKJre/Qdw6/82ARcNPc=;
+        b=jbehFsWF+h8P58/R43U1c8Ar1i7OIIoexq3FsN5oDFq8yoz4hSvxx0DJ4JLLfzsSq0
+         aRn61Noc0J/e6S7y2NlPuXYyGJBC7W9tSRKOjV/sXMu6lyNYj+QkFKFTBtLCFFAq6/34
+         POMbSAm/w5WKGZllNw6NRM3qP0OGIgejCa8sLxPj43Q4BoeGVeLFrBzIaLdW0CipJPR6
+         wiJZ8YjiGvjHFa3H4HTmN6R/ELG4QdZ/9RhdqNRg+Aepr3ZtwaK88kdJGPHqSJ0iJPKR
+         4hm3NfnLsPCpjCpkQ16Urw2tC4Bk7AXpvEeoj2b4P+Lkzzqtea9xQkioebKgTqSSB5+U
+         4MYA==
+X-Gm-Message-State: APjAAAVVc5nPqaXrlcZOFAa+xKqTlVY/2GSUJ4wZSLTGldlY7Bw73xu/
+        95PcM7YV77AMUERiwZe8osRybW/v70LtPhNKRUceHOdvHcz8
+X-Google-Smtp-Source: APXvYqz/k4Imyeeca95alZX24eMTHmjPtFwnVqBqXMpEoIKiVc1JLT2fCo9+2dodxN3LxxIeANc25wcdden+gG5lgaAfBgztARLH
+MIME-Version: 1.0
+X-Received: by 2002:a6b:8e51:: with SMTP id q78mr23341440iod.179.1580839093292;
+ Tue, 04 Feb 2020 09:58:13 -0800 (PST)
+Date:   Tue, 04 Feb 2020 09:58:13 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009a59d2059dc3c8e9@google.com>
+Subject: memory leak in tcindex_set_parms
+From:   syzbot <syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    322bf2d3 Merge branch 'for-5.6' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1111f8e6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8d0490614a000a37
+dashboard link: https://syzkaller.appspot.com/bug?extid=f0bbb2287b8993d4fa74
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17db90f6e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a94511e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com
+
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff88811ee18c00 (size 256):
+  comm "syz-executor278", pid 7255, jiffies 4294941828 (age 13.710s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000004705b10>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<0000000004705b10>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<0000000004705b10>] slab_alloc mm/slab.c:3320 [inline]
+    [<0000000004705b10>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<000000005a926de7>] kmalloc include/linux/slab.h:556 [inline]
+    [<000000005a926de7>] kmalloc_array include/linux/slab.h:597 [inline]
+    [<000000005a926de7>] kcalloc include/linux/slab.h:609 [inline]
+    [<000000005a926de7>] tcf_exts_init include/net/pkt_cls.h:210 [inline]
+    [<000000005a926de7>] tcindex_set_parms+0xac/0x970 net/sched/cls_tcindex.c:313
+    [<000000004198237d>] tcindex_change+0xd8/0x110 net/sched/cls_tcindex.c:519
+    [<00000000f90be4e9>] tc_new_tfilter+0x566/0xf50 net/sched/cls_api.c:2103
+    [<00000000bdffab68>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5429
+    [<000000008de6f6fa>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<00000000637db501>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+    [<00000000cb1396a7>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000cb1396a7>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<000000003d9f7439>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<0000000004922ee9>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000004922ee9>] sock_sendmsg+0x54/0x70 net/socket.c:672
+    [<00000000bbc6917f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
+    [<00000000d3ae3854>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
+    [<0000000000c5372b>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
+    [<00000000db15859a>] __do_sys_sendmsg net/socket.c:2439 [inline]
+    [<00000000db15859a>] __se_sys_sendmsg net/socket.c:2437 [inline]
+    [<00000000db15859a>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
+    [<00000000a5a1c036>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
+    [<00000000e73613df>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811ee18900 (size 256):
+  comm "syz-executor278", pid 7255, jiffies 4294941828 (age 13.710s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000004705b10>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<0000000004705b10>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<0000000004705b10>] slab_alloc mm/slab.c:3320 [inline]
+    [<0000000004705b10>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<0000000036dbc592>] kmalloc include/linux/slab.h:556 [inline]
+    [<0000000036dbc592>] kmalloc_array include/linux/slab.h:597 [inline]
+    [<0000000036dbc592>] kcalloc include/linux/slab.h:609 [inline]
+    [<0000000036dbc592>] tcf_exts_init include/net/pkt_cls.h:210 [inline]
+    [<0000000036dbc592>] tcindex_alloc_perfect_hash net/sched/cls_tcindex.c:287 [inline]
+    [<0000000036dbc592>] tcindex_alloc_perfect_hash+0x8f/0xf0 net/sched/cls_tcindex.c:277
+    [<0000000088e6ec51>] tcindex_set_parms+0x831/0x970 net/sched/cls_tcindex.c:405
+    [<000000004198237d>] tcindex_change+0xd8/0x110 net/sched/cls_tcindex.c:519
+    [<00000000f90be4e9>] tc_new_tfilter+0x566/0xf50 net/sched/cls_api.c:2103
+    [<00000000bdffab68>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5429
+    [<000000008de6f6fa>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<00000000637db501>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+    [<00000000cb1396a7>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000cb1396a7>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<000000003d9f7439>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<0000000004922ee9>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000004922ee9>] sock_sendmsg+0x54/0x70 net/socket.c:672
+    [<00000000bbc6917f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
+    [<00000000d3ae3854>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
+    [<0000000000c5372b>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
+    [<00000000db15859a>] __do_sys_sendmsg net/socket.c:2439 [inline]
+    [<00000000db15859a>] __se_sys_sendmsg net/socket.c:2437 [inline]
+    [<00000000db15859a>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
+    [<00000000a5a1c036>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
+
+BUG: memory leak
+unreferenced object 0xffff88811ee18800 (size 256):
+  comm "syz-executor278", pid 7255, jiffies 4294941828 (age 13.710s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000004705b10>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<0000000004705b10>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<0000000004705b10>] slab_alloc mm/slab.c:3320 [inline]
+    [<0000000004705b10>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<0000000036dbc592>] kmalloc include/linux/slab.h:556 [inline]
+    [<0000000036dbc592>] kmalloc_array include/linux/slab.h:597 [inline]
+    [<0000000036dbc592>] kcalloc include/linux/slab.h:609 [inline]
+    [<0000000036dbc592>] tcf_exts_init include/net/pkt_cls.h:210 [inline]
+    [<0000000036dbc592>] tcindex_alloc_perfect_hash net/sched/cls_tcindex.c:287 [inline]
+    [<0000000036dbc592>] tcindex_alloc_perfect_hash+0x8f/0xf0 net/sched/cls_tcindex.c:277
+    [<0000000088e6ec51>] tcindex_set_parms+0x831/0x970 net/sched/cls_tcindex.c:405
+    [<000000004198237d>] tcindex_change+0xd8/0x110 net/sched/cls_tcindex.c:519
+    [<00000000f90be4e9>] tc_new_tfilter+0x566/0xf50 net/sched/cls_api.c:2103
+    [<00000000bdffab68>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5429
+    [<000000008de6f6fa>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<00000000637db501>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+    [<00000000cb1396a7>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000cb1396a7>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<000000003d9f7439>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<0000000004922ee9>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000004922ee9>] sock_sendmsg+0x54/0x70 net/socket.c:672
+    [<00000000bbc6917f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
+    [<00000000d3ae3854>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
+    [<0000000000c5372b>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
+    [<00000000db15859a>] __do_sys_sendmsg net/socket.c:2439 [inline]
+    [<00000000db15859a>] __se_sys_sendmsg net/socket.c:2437 [inline]
+    [<00000000db15859a>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
+    [<00000000a5a1c036>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
 
 
-> On Feb 4, 2020, at 12:39 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> On 2/4/20 12:27 PM, Peter Zijlstra wrote:
->> On Tue, Feb 04, 2020 at 11:54:02AM -0500, Alex Kogan wrote:
->>>> On Feb 3, 2020, at 10:47 AM, Waiman Long <longman@redhat.com> =
-wrote:
->>>>=20
->>>> On 2/3/20 10:28 AM, Peter Zijlstra wrote:
->>>>> On Mon, Feb 03, 2020 at 09:59:12AM -0500, Waiman Long wrote:
->>>>>> On 2/3/20 8:45 AM, Peter Zijlstra wrote:
->>>>>>> Presumably you have a workload where CNA is actually a win? That =
-is,
->>>>>>> what inspired you to go down this road? Which actual kernel lock =
-is so
->>>>>>> contended on NUMA machines that we need to do this?
->>> There are quite a few actually. files_struct.file_lock, =
-file_lock_context.flc_lock
->>> and lockref.lock are some concrete examples that get very hot in =
-will-it-scale
->>> benchmarks.=20
->> Right, that's all a variant of banging on the same resources across
->> nodes. I'm not sure there's anything fundamental we can fix there.
-Not much, except gain that 2x from a better lock.
 
->>=20
->>> And then there are spinlocks in __futex_data.queues,=20
->>> which get hot when applications have contended (pthread) locks =E2=80=94=
-=20
->>> LevelDB is an example.
->> A numa aware rework of futexes has been on the todo list for years :/
-> Now, we are going to get that for free with this patchset:-)
-Exactly!!
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->>=20
->>> Our initial motivation was based on an observation that kernel =
-qspinlock is not=20
->>> NUMA-aware. So what, you may ask. Much like people realized in the =
-past that
->>> global spinning is bad for performance, and they switched from =
-ticket lock to
->>> locks with local spinning (e.g., MCS), I think everyone would agree =
-these days that
->>> bouncing a lock (and cache lines in general) across numa nodes is =
-similarly bad.
->>> And as CNA demonstrates, we are easily leaving 2-3x speedups on the =
-table by
->>> doing just that with the current qspinlock.
->> Actual benchmarks with performance numbers are required. It helps
->> motivate the patches as well as gives reviewers clues on how to
->> reproduce / inspect the claims made.
->>=20
-> I think the cover-letter does have some benchmark results listed.
-To clarify on that, I _used to include benchmark results in the cover =
-letter=20
-for previous revisions. I stopped doing that as the changes between =
-revisions
-were rather minor =E2=80=94 maybe that is the missing part? If so, my =
-apologies, I can
-certainly publish them again.
-
-The point is that we have numbers for actual benchmarks, plus the kernel =
-build
-robot has sent quite a few reports on positive improvements in the =
-performance
-of AIM7 and other benchmarks due to CNA (plus ARM folks noticed =
-improvement
-in their benchmarks, although I think those were mostly microbenchmarks.=20=
-
-Yet, it is evident that the improvements are cross-platform.)
-
-Regards,
-=E2=80=94 Alex=
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
