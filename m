@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAD1C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E911C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E48520730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0102087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JiCO87Rp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AZ5H0Gfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgBDLTH (ORCPT
+        id S1727316AbgBDLTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:19:07 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14221 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgBDLTG (ORCPT
+        Tue, 4 Feb 2020 06:19:10 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19196 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgBDLTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:19:06 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3952f00000>; Tue, 04 Feb 2020 03:18:08 -0800
+        Tue, 4 Feb 2020 06:19:09 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3953150001>; Tue, 04 Feb 2020 03:18:45 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 03:19:04 -0800
+  Tue, 04 Feb 2020 03:19:08 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 03:19:04 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 11:19:04 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 11:19:03 +0000
+        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 03:19:08 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 11:19:07 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 4 Feb 2020 11:19:07 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3953240004>; Tue, 04 Feb 2020 03:19:03 -0800
+        id <B5e3953280002>; Tue, 04 Feb 2020 03:19:07 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -45,9 +45,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 03/19] phy: tegra: xusb: Add usb-role-switch support
-Date:   Tue, 4 Feb 2020 16:46:49 +0530
-Message-ID: <1580815025-10915-4-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V4 04/19] phy: tegra: xusb: Add usb-phy support
+Date:   Tue, 4 Feb 2020 16:46:50 +0530
+Message-ID: <1580815025-10915-5-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
 References: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
@@ -55,175 +55,181 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580815088; bh=1OfvPYR9hYh1Ivz7BSmZrZRI0tjZeK+qA72ykblKOQc=;
+        t=1580815125; bh=zKTeyFUNsRn96F6Uc0UkINYhSSylKTEGSVBcsXNNV5U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=JiCO87Rp8XnINWLuuawmn56wsYBYQk6GDkU+eK975BM9GEIr/EBPF5ucmvbRCVymf
-         arejFMs4LfwJp4TdnkM4WOksYsylgE2n55kE4aKZKdlNcU56fUA2DfY/cqd6I1FA2j
-         L4e2C4+wVIJrJKg9MozXnuDbBC3AqZqbMbMiyIh7WSRBGeTku2Oz9It5syiTtjZjLt
-         sWfp+NYsEt+Z8/06HxV5ujBCGFi+Q2McJogZZGb2Mdw2JSa8U6dlvniEggo2IiLtqq
-         26KQFnd+i99gE8JxIYnmQlx8b4z27qXelhtRWD4sEBqe2cvVXgIwbeSE1grh7w0MOB
-         67oUx8wgIizog==
+        b=AZ5H0GfwA3S0VL1T5w3/PauZ7CyJ3qwPb4p80GzwgkI5Cl4L1G720q5iH3iDkK3pB
+         gM1JooemJQPX0sS52nONL1ABYAEIctolEvR6iV9hkyCmhNtKXQ9ZEJI7DlUk1dEIo+
+         gs23y2jM/4EtFQDNj/9W+RctaPLYsmXgm4FcZJTGHIUIjy90ce5f6HfoNNcy2O/V9J
+         smhwC7W/Jzt4kKL8Kr6scYzE0SWLpPs4ldA/05hQqe/yBZPiS/zX7w9wGBehqWc5FK
+         mERFSsLvHXEBTSKPAVoiZ9Yx8Ntus/YUykpNIO5TWlUOaFMfFBkVsndD8uNtUY6dt+
+         J3nITupw6S1iA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If usb-role-switch property is present in USB 2 port, register
-usb-role-switch to receive usb role changes.
+For USB 2 ports that has usb-role-switch enabled, add usb-phy for
+corresponding USB 2 phy. USB role changes from role switch are then
+updated to corresponding host and device mode drivers via usb-phy notifier
+block.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V4:
- - Updated function name in debug messages as suggested by Thierry.
- - Added owner info to port->dev during USB role switch registration.
----
+ - Addressed nit comments from Thierry.
+ - usb_phy_event is set accoring to received usb_role.
+ - Added Acked-by info.
 V3:
- - Driver aborts if usb-role-switch is not added in dt forotg/peripheral
-   roles.
- - Added role name strings instead of enum values in debug prints.
  - Updated arguments and variable allignments as per Thierry inputs.
 ---
 V2:
- - Removed dev_set_drvdata for port->dev.
- - Added of_platform_depopulate during error handling and driver removal.
+ - Added dev_set_drvdata for port->dev.
 ---
- drivers/phy/tegra/Kconfig |  1 +
- drivers/phy/tegra/xusb.c  | 67 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.h  |  3 +++
- 3 files changed, 71 insertions(+)
+ drivers/phy/tegra/xusb.c | 84 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/phy/tegra/xusb.h |  2 ++
+ 2 files changed, 86 insertions(+)
 
-diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-index f9817c3..df07c4d 100644
---- a/drivers/phy/tegra/Kconfig
-+++ b/drivers/phy/tegra/Kconfig
-@@ -2,6 +2,7 @@
- config PHY_TEGRA_XUSB
- 	tristate "NVIDIA Tegra XUSB pad controller driver"
- 	depends on ARCH_TEGRA
-+	select USB_CONN_GPIO
- 	help
- 	  Choose this option if you have an NVIDIA Tegra SoC.
- 
 diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index f98ec39..0fdbaa2 100644
+index 0fdbaa2..2c0e29c 100644
 --- a/drivers/phy/tegra/xusb.c
 +++ b/drivers/phy/tegra/xusb.c
-@@ -541,6 +541,11 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+@@ -532,6 +532,8 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+ 	if (err < 0)
+ 		goto unregister;
  
- static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
- {
-+	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
-+		of_platform_depopulate(&port->dev);
-+		usb_role_switch_unregister(port->usb_role_sw);
-+	}
++	dev_set_drvdata(&port->dev, port);
 +
- 	device_unregister(&port->dev);
- }
+ 	return 0;
  
-@@ -551,11 +556,59 @@ static const char *const modes[] = {
- 	[USB_DR_MODE_OTG] = "otg",
+ unregister:
+@@ -544,6 +546,8 @@ static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
+ 	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
+ 		of_platform_depopulate(&port->dev);
+ 		usb_role_switch_unregister(port->usb_role_sw);
++		cancel_work_sync(&port->usb_phy_work);
++		usb_remove_phy(&port->usb_phy);
+ 	}
+ 
+ 	device_unregister(&port->dev);
+@@ -562,15 +566,70 @@ static const char * const usb_roles[] = {
+ 	[USB_ROLE_DEVICE]	= "device",
  };
  
-+static const char * const usb_roles[] = {
-+	[USB_ROLE_NONE]		= "none",
-+	[USB_ROLE_HOST]		= "host",
-+	[USB_ROLE_DEVICE]	= "device",
-+};
-+
-+static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
++static enum usb_phy_events to_usb_phy_event(enum usb_role role)
 +{
-+	dev_dbg(dev, "%s(): role %s\n", __func__, usb_roles[role]);
++	switch (role) {
++	case USB_ROLE_DEVICE: return USB_EVENT_VBUS;
++	case USB_ROLE_HOST: return USB_EVENT_ID;
++	default: return USB_EVENT_NONE;
++	}
++}
++
++static void tegra_xusb_usb_phy_work(struct work_struct *work)
++{
++	struct tegra_xusb_port *port = container_of(work,
++						    struct tegra_xusb_port,
++						    usb_phy_work);
++	enum usb_role role = usb_role_switch_get_role(port->usb_role_sw);
++
++	usb_phy_set_event(&port->usb_phy, to_usb_phy_event(role));
++
++	dev_dbg(&port->dev, "%s(): calling notifier for role %s\n", __func__,
++		usb_roles[role]);
++
++	atomic_notifier_call_chain(&port->usb_phy.notifier, 0, &port->usb_phy);
++}
++
+ static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+ {
++	struct tegra_xusb_port *port = dev_get_drvdata(dev);
++
+ 	dev_dbg(dev, "%s(): role %s\n", __func__, usb_roles[role]);
+ 
++	schedule_work(&port->usb_phy_work);
 +
 +	return 0;
 +}
 +
-+static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
++static int tegra_xusb_set_peripheral(struct usb_otg *otg,
++				     struct usb_gadget *gadget)
 +{
-+	struct usb_role_switch_desc role_sx_desc = {
-+		.fwnode = dev_fwnode(&port->dev),
-+		.set = tegra_xusb_role_sw_set,
-+	};
-+	int err = 0;
++	struct tegra_xusb_port *port = container_of(otg->usb_phy,
++						    struct tegra_xusb_port,
++						    usb_phy);
++
++	if (gadget != NULL)
++		schedule_work(&port->usb_phy_work);
++
+ 	return 0;
+ }
+ 
++static int tegra_xusb_set_host(struct usb_otg *otg, struct usb_bus *host)
++{
++	struct tegra_xusb_port *port = container_of(otg->usb_phy,
++						    struct tegra_xusb_port,
++						    usb_phy);
++
++	if (host != NULL)
++		schedule_work(&port->usb_phy_work);
++
++	return 0;
++}
++
++
+ static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+ {
++	struct tegra_xusb_lane *lane;
+ 	struct usb_role_switch_desc role_sx_desc = {
+ 		.fwnode = dev_fwnode(&port->dev),
+ 		.set = tegra_xusb_role_sw_set,
+@@ -597,6 +656,31 @@ static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+ 		return err;
+ 	}
+ 
++	INIT_WORK(&port->usb_phy_work, tegra_xusb_usb_phy_work);
++
++	port->usb_phy.otg = devm_kzalloc(&port->dev, sizeof(struct usb_otg),
++					 GFP_KERNEL);
++	if (!port->usb_phy.otg)
++		return -ENOMEM;
++
++	lane = tegra_xusb_find_lane(port->padctl, "usb2", port->index);
 +
 +	/*
-+	 * USB role switch driver needs parent driver owner info. This is a
-+	 * suboptimal solution. TODO: Need to revisit this in a follow-up patch
-+	 * where an optimal solution is possible with changes to USB role
-+	 * switch driver.
++	 * Assign phy dev to usb-phy dev. Host/device drivers can use phy
++	 * reference to retrieve usb-phy details.
 +	 */
-+	port->dev.driver = devm_kzalloc(&port->dev,
-+					sizeof(struct device_driver),
-+					GFP_KERNEL);
-+	port->dev.driver->owner	 = THIS_MODULE;
++	port->usb_phy.dev = &lane->pad->lanes[port->index]->dev;
++	port->usb_phy.dev->driver = port->padctl->dev->driver;
++	port->usb_phy.otg->usb_phy = &port->usb_phy;
++	port->usb_phy.otg->set_peripheral = tegra_xusb_set_peripheral;
++	port->usb_phy.otg->set_host = tegra_xusb_set_host;
 +
-+	port->usb_role_sw = usb_role_switch_register(&port->dev,
-+						     &role_sx_desc);
-+	if (IS_ERR(port->usb_role_sw)) {
-+		err = PTR_ERR(port->usb_role_sw);
-+		dev_err(&port->dev, "failed to register USB role switch: %d",
-+			err);
++	err = usb_add_phy_dev(&port->usb_phy);
++	if (err < 0) {
++		dev_err(&port->dev, "Failed to add USB PHY: %d\n", err);
 +		return err;
 +	}
 +
-+	/* populate connector entry */
-+	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
-+
-+	return err;
-+}
-+
- static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
- {
- 	struct tegra_xusb_port *port = &usb2->base;
- 	struct device_node *np = port->dev.of_node;
- 	const char *mode;
-+	int err;
+ 	/* populate connector entry */
+ 	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
  
- 	usb2->internal = of_property_read_bool(np, "nvidia,internal");
- 
-@@ -572,6 +625,20 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
- 		usb2->mode = USB_DR_MODE_HOST;
- 	}
- 
-+	/* usb-role-switch property is mandatory for OTG/Peripheral modes */
-+	if (usb2->mode == USB_DR_MODE_PERIPHERAL ||
-+	    usb2->mode == USB_DR_MODE_OTG) {
-+		if (of_property_read_bool(np, "usb-role-switch")) {
-+			err = tegra_xusb_setup_usb_role_switch(port);
-+			if (err < 0)
-+				return err;
-+		} else {
-+			dev_err(&port->dev, "usb-role-switch not found for %s mode",
-+				modes[usb2->mode]);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	usb2->supply = devm_regulator_get(&port->dev, "vbus");
- 	return PTR_ERR_OR_ZERO(usb2->supply);
- }
 diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index da94fcc..9f27899 100644
+index 9f27899..2345657 100644
 --- a/drivers/phy/tegra/xusb.h
 +++ b/drivers/phy/tegra/xusb.h
-@@ -12,6 +12,7 @@
- #include <linux/workqueue.h>
- 
- #include <linux/usb/otg.h>
-+#include <linux/usb/role.h>
- 
- /* legacy entry points for backwards-compatibility */
- int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
-@@ -266,6 +267,8 @@ struct tegra_xusb_port {
- 	struct list_head list;
+@@ -268,6 +268,8 @@ struct tegra_xusb_port {
  	struct device dev;
  
-+	struct usb_role_switch *usb_role_sw;
-+
+ 	struct usb_role_switch *usb_role_sw;
++	struct work_struct usb_phy_work;
++	struct usb_phy usb_phy;
+ 
  	const struct tegra_xusb_port_ops *ops;
  };
- 
 -- 
 2.7.4
 
