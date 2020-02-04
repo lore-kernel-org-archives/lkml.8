@@ -2,91 +2,81 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C994CC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B787C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A45320732
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF372086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cPhAokTZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IqtYxprk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBDA2i (ORCPT
+        id S1727023AbgBDAgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 19:28:38 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45631 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgBDA2i (ORCPT
+        Mon, 3 Feb 2020 19:36:06 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39220 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726369AbgBDAgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:28:38 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so8475782pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:28:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vAhBNULLMh9XOTvTdD4G3os1qV1uXBckyQ+ldlyDpfU=;
-        b=cPhAokTZ9kQlxDMTNKVdWb25SdZQI8UBNjRVl3ZSbzLxuAeFM6nmq3+LvH5C//TF72
-         KnmhtKKTDOHe+qmvVNbgnDAq2Img5xAMjhjYPLWv+sLiUToMmBjdRXFhceXTZHrF2ZbY
-         QAgYwXicceFkzvpgstFkXqu24LkxVf4tauXIa/0VhQSciw8bdJEQn5AkAx2RfGETBATL
-         sTUJK4WpvdJJ+lHg8NEvi1TaCek47dl7BprkR5UbBzvJ0SEB9KQamt7iu86LmxJXmwnt
-         /6C7kujevhxm1/7+UJB4473pqpmOeMG8UwOChUsbyZ0K12JZ/+PasYw2ROZpLYfmIVgv
-         Wfnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vAhBNULLMh9XOTvTdD4G3os1qV1uXBckyQ+ldlyDpfU=;
-        b=gNNbR+LAXCH7ZeNXPg12fso519pezBYL6gNQjPTYhVpEJ2xMMKhk+eznZpHkOyrXXh
-         AaFBRlEwdiEr3pYU+5VTLYiJRT/V+4O31Ud286xtKscA+EVWvbTnE2nw3CWa9mKK6Iyd
-         /dqsroQOukn+wwTm+qZkluYGijsuyfEUEF+6ipGlkgCKCTLx7+f5dAyCCygPnV1NR/sD
-         JqCtySRqChUQ4SJ5shYbnH/q+sFPmepY2doYRC88au+RURrSpH/+RPxQs/DCwWCTWr53
-         5FJf4D5iF8q9Hvu5hf+1fFu9PW+Prj6IRsNLHLSVwsXL4oFzropklQZfQ1U0XAUcs3pG
-         Hqcw==
-X-Gm-Message-State: APjAAAUbkBq0yx+xCczLYrf1rcDlubsYsUZ1XgfD3ohRTygrt+8uXXVJ
-        NBZNcSCN3u+dGuPj40yDIi4jD9+Xsjs=
-X-Google-Smtp-Source: APXvYqwUc9cZI7DMbGryZAH6VeR/EOia6vpZadPgVDPS+m5PjCNf3yY9tmflych0xth95EjpIgFBDg==
-X-Received: by 2002:aa7:864b:: with SMTP id a11mr27630304pfo.175.1580776117631;
-        Mon, 03 Feb 2020 16:28:37 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id g13sm17438595pfo.169.2020.02.03.16.28.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 16:28:37 -0800 (PST)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200204112555.0f1b1490@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <eaad4710-872e-a0fd-33df-747d16c8c293@kernel.dk>
-Date:   Mon, 3 Feb 2020 17:28:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200204112555.0f1b1490@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Feb 2020 19:36:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580776564;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=9E5JwZpRiglVmZRBi3lit3JyiT8tTvxFskBeSob+PSs=;
+        b=IqtYxprkBgic3Wqw1B3R1DPR9xJJD+TBF6vKM160WjNMFatUIUITs/cahcvqJkoyP9EQRK
+        7kuoJAE/gxv9qFb0U//IJXmzl9HnYMMYdzKVlVz6oC+CXqZpGTQCdSz5bUyrngC+6Wvnh1
+        Cx3mBALeKpbdw6wzDgv9NR6fQJfCFnc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-71nBJxXBOeCHni-qEuIWcA-1; Mon, 03 Feb 2020 19:36:01 -0500
+X-MC-Unique: 71nBJxXBOeCHni-qEuIWcA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5960800D4C;
+        Tue,  4 Feb 2020 00:35:59 +0000 (UTC)
+Received: from intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com (intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com [10.19.176.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8DE5E60BF4;
+        Tue,  4 Feb 2020 00:35:58 +0000 (UTC)
+From:   Scott Wood <swood@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Scott Wood <swood@redhat.com>
+Subject: [PATCH] sched/core: sched_tick_remote: Remove duplicate assignment
+Date:   Mon,  3 Feb 2020 19:35:58 -0500
+Message-Id: <1580776558-12882-1-git-send-email-swood@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 5:25 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the block tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
+A redundant "curr = rq->curr" was added; remove it.
 
-[snip]
+Fixes: ebc0f83c78a2 ("timers/nohz: Update NOHZ load in remote tick")
+Signed-off-by: Scott Wood <swood@redhat.com>
+---
+ kernel/sched/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks, apparently we needed two includes... I've folded in your
-fix.
-
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 45f79bcc3146..377ec26e9159 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3683,7 +3683,6 @@ static void sched_tick_remote(struct work_struct *work)
+ 	if (cpu_is_offline(cpu))
+ 		goto out_unlock;
+ 
+-	curr = rq->curr;
+ 	update_rq_clock(rq);
+ 
+ 	if (!is_idle_task(curr)) {
 -- 
-Jens Axboe
+1.8.3.1
 
