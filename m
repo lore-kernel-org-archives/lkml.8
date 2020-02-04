@@ -2,83 +2,93 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3BFC3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93455C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5422166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2BD2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580800431;
-	bh=4dteibOy4ES6giaiq+d9lMelNb1ecIhbNtrvVUt9phU=;
-	h=In-Reply-To:References:To:Subject:From:Date:List-ID:From;
-	b=RtMt0EhU3COXAayvgooKpPztsZqurGmqh+Cn01pO9BwWI8eNYwZPuzP22gsSOcoOu
-	 oBN6g2SjBo3xowQaMTXYzFIqkh5LUI52lK7xzwOIcskr3lKZXYtwQIql4jkAGtgKNM
-	 NLj3l/uIVh03K2cGzYSvBzgvHbb0uwMLTGdjTzTM=
+	s=default; t=1580800552;
+	bh=K79BsejKQ50ooIm4cS9/TH4bKCFwVULRlWaG1bw1O3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kIZXHrDHvaLT/J3p61GKWFRFQ/0e9WHJuI6vW6Rq0HS6EFM7kupyxhb+RDfOzGncc
+	 izlkInfuvrmNJePaWu0NBx2AquThV0HjGx4lklSKzYQDMK+Ncky7QTaHUXNxsyBVNz
+	 LzNRwbrLL5XGYdUaN75cUkVVWL0NhH54uT9KFwWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgBDHNv (ORCPT
+        id S1726689AbgBDHPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 02:13:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        Tue, 4 Feb 2020 02:15:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgBDHNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 02:13:49 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726151AbgBDHPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 02:15:51 -0500
+Received: from localhost (unknown [167.98.85.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A0662087E;
-        Tue,  4 Feb 2020 07:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39F7621582;
+        Tue,  4 Feb 2020 07:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580800429;
-        bh=4dteibOy4ES6giaiq+d9lMelNb1ecIhbNtrvVUt9phU=;
-        h=In-Reply-To:References:To:Subject:From:Date:From;
-        b=glybLJx9lH02+WiQlAdl448gEU8QXDYmvsCr/Bv6WqIJW9IJq70tAltfj1ejH4yQA
-         T+GeYYb1SuA/ECzWFQ4bRCd2HIvoKybRb4Vk9eu2d9/qBCBj1LEokOU7ClcY0EarhM
-         PCvcm1/nSCo3V+lO+ydJWEKX1bjm0xpdZqeked8Y=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1580800550;
+        bh=K79BsejKQ50ooIm4cS9/TH4bKCFwVULRlWaG1bw1O3g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MJ8LifNB43rUOT4G3OQdF9A7P8ClC6nqiWgyxcO+68PtUHKi0uaXE+On8By4kSPjH
+         j7LPyxfEbj9xf5tjAgzsSvqpXGQQo9VlyvScilYKOG9JMjFMKVzTleteVTvcrj9rBI
+         ZVJOsOebEvGU7vO7rXRVJ6zKPmEVxOgaQ+rAQ/MA=
+Date:   Tue, 4 Feb 2020 07:15:48 +0000
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "ddaney.cavm@gmail.com" <ddaney.cavm@gmail.com>,
+        "pundirsumit11@gmail.com" <pundirsumit11@gmail.com>,
+        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nishkadg.linux@gmail.com" <nishkadg.linux@gmail.com>,
+        "frank@generalsoftwareinc.com" <frank@generalsoftwareinc.com>,
+        "laura.lazzati.15@gmail.com" <laura.lazzati.15@gmail.com>
+Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
+ controller driver
+Message-ID: <20200204071548.GB966981@kroah.com>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <20191210091509.3546251-2-gregkh@linuxfoundation.org>
+ <e97e28140b8c46cde93f40b93e2e0614943e96fc.camel@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1579905147-12142-6-git-send-email-vnkgutta@codeaurora.org>
-References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org> <1579905147-12142-6-git-send-email-vnkgutta@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vinod.koul@linaro.org, vnkgutta@codeaurora.org
-Subject: Re: [PATCH v2 5/7] dt-bindings: clock: Add SM8250 GCC clock bindings
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 03 Feb 2020 23:13:48 -0800
-Message-Id: <20200204071349.0A0662087E@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e97e28140b8c46cde93f40b93e2e0614943e96fc.camel@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:25)
-> From: Taniya Das <tdas@codeaurora.org>
->=20
-> Add device tree bindings for global clock controller on SM8250 SoCs.
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,gcc.yaml        |   1 +
+On Tue, Feb 04, 2020 at 04:06:51AM +0000, Chris Packham wrote:
+> On Tue, 2019-12-10 at 10:15 +0100, Greg Kroah-Hartman wrote:
+> > This driver was merged back in 2013 and shows no progress toward every
+> > being merged into the "correct" part of the kernel.  The code doesn't
+> > even build for anyone unless you have the specific hardware platform
+> > selected, so odds are it doesn't even work anymore.
+> > 
+> > Remove it for now and is someone comes along that has the hardware and
+> > is willing to fix it up, it can be reverted.
+> > 
+> > Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> > Cc: David Daney <ddaney.cavm@gmail.com>
+> > Cc: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> > Cc: Himadri Pandya <himadri18.07@gmail.com>
+> > Cc: "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+> > Cc: Sumit Pundir <pundirsumit11@gmail.com>
+> > Cc: Laura Lazzati <laura.lazzati.15@gmail.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> 
+> Similarly we'd really like to keep this too.
 
-Please rebase this atop Doug's clk series and specify the parents and
-binding file for the binding. I'd prefer that we make a new file in the
-bindings directory for this SoC.
+Great, same thing here!
 
->  include/dt-bindings/clock/qcom,gcc-sm8250.h        | 271 +++++++++++++++=
-++++++
->  2 files changed, 272 insertions(+)
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
->=20
+thanks,
+
+greg k-h
