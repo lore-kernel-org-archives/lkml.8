@@ -2,106 +2,105 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0998C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C340C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F8820730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608D121582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:12:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rzuIGOuX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L2Msm28d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgBDQLv (ORCPT
+        id S1727427AbgBDQMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:11:51 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38386 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbgBDQLu (ORCPT
+        Tue, 4 Feb 2020 11:12:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23721 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727317AbgBDQMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:11:50 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so9877409pgm.5;
-        Tue, 04 Feb 2020 08:11:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V+cYisoVlXbzdOPJU0/EsbztEMzDD+Up0QG4aFr1054=;
-        b=rzuIGOuXeVMHS9+5/ZQUK+GuPFPAqjQYrt1KaJe7BViMSvaMtB/rPi3jZQqK/bQoNb
-         f6YHmX8AyGwL4fkzSHxtelhZtKB8lMaCSjYJMaINeD+zD3+MkXMD4cpTWVv9GE1Yp2ur
-         GqUArcEF8ZMRhhIu/x74f+Ku723UfjvVlCS9AjP+9B5dYE2cLJUR7RaPLUhO7BAMYAnT
-         +2hYledcrYI2Szo7SWCshIy2q6VrWm6DpNSQ9/L92bVUif2c6vsqx/4qIhctY2xtaukl
-         gRwVNyZ1Q1kOGyaxqoXEUaPZHzh9QuV2c5iOwXb9NozbqdCWn/pjWEXwc74R/d7guyVk
-         efdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V+cYisoVlXbzdOPJU0/EsbztEMzDD+Up0QG4aFr1054=;
-        b=pTDB0yhQEw5pMaf2b5N7XtQoCLS+dDoWr4fCFpRNZsSGB+D/DmHU8ZaBavrNrTNSbx
-         XNa7iD+6gb1JsdPLS4bst6TBevbbwsqHpkhut6MbD+Xd2EGBIjkReXcxq36ALsZKd4LF
-         dCmJsG9g4FHip5KH4Ih5/YgXEraizLKWcdVcNjXmQIX06/Yt2T8ns8qgo/slrKFPpNUR
-         kIkgDf49YUw2ba7YRLwFI/oA7cNOQ2oYXET8XB2J0OXwOF7rWBXJH0vYkTGgoBnAfknC
-         6M2andJ+5gYUzqkfy1Skc48c80Iy6BmdDNO1l6cZjkWehZ/HPOuthfizccRLgsXb6SKS
-         nxGg==
-X-Gm-Message-State: APjAAAVPbAo8Pz97DJeutOdYPe0iSl9uPM8omCWXecwHd4IeLnIGARQS
-        0oveSwJJ667MQTPPA+uZ4x4=
-X-Google-Smtp-Source: APXvYqxD05ec97YIo/YDmjZyz3awYH68AxoOhXx83xhb+6X3R2RNb0Brkqm9D/3kOUQYRhFvuM/Dbg==
-X-Received: by 2002:a62:3304:: with SMTP id z4mr30093384pfz.79.1580832709903;
-        Tue, 04 Feb 2020 08:11:49 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o9sm21675657pfg.130.2020.02.04.08.11.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 08:11:49 -0800 (PST)
-Date:   Tue, 4 Feb 2020 08:11:48 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Documentation: watchdog: qcom-wdt: add new
- no-pretimeout option
-Message-ID: <20200204161148.GC17320@roeck-us.net>
-References: <20200204152104.13278-1-ansuelsmth@gmail.com>
- <20200204152104.13278-3-ansuelsmth@gmail.com>
+        Tue, 4 Feb 2020 11:12:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580832740;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sOrQ7w5M+kp5LzSySUhZ3mTMSbQnOjGBnYt8dbqzsv8=;
+        b=L2Msm28d3mNzz1Zun2sMVHRmJxbv1kq+zfIix7PbL7iZhB0/iwMhSZ4Ogqcbz1r/cGH8Q/
+        eRTitoe993Jj2hiFok9N3dqTLO+tvGtDcpHVPKQo4rP9k8G+wo63vcJwFXEIJf4Ji4XXK+
+        OuMHwoDkGeoCFkBUQUDJZ7U/HW15itE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-cwyy0IVcPMOMomfWx25bIw-1; Tue, 04 Feb 2020 11:12:15 -0500
+X-MC-Unique: cwyy0IVcPMOMomfWx25bIw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5442ADB62;
+        Tue,  4 Feb 2020 16:12:14 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B29AD81213;
+        Tue,  4 Feb 2020 16:12:13 +0000 (UTC)
+Subject: Re: [PATCH v5 6/7] locking/lockdep: Reuse freed chain_hlocks entries
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20200203164147.17990-1-longman@redhat.com>
+ <20200203164147.17990-7-longman@redhat.com>
+ <20200204154236.GE14879@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <c1af8458-7269-53c3-59f4-b87c5d51c208@redhat.com>
+Date:   Tue, 4 Feb 2020 11:12:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204152104.13278-3-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200204154236.GE14879@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 04:21:03PM +0100, Ansuel Smith wrote:
-> Add description for new no-pretimeout function to force legacy
-> probe if any interrupt is defined.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  Documentation/devicetree/bindings/watchdog/qcom-wdt.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> index 33081bd33637..01978bff74ee 100644
-> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> @@ -14,6 +14,8 @@ Required properties :
->  Optional properties :
->  - timeout-sec : shall contain the default watchdog timeout in seconds,
->                  if unset, the default timeout is 30 seconds
-> +- no-pretimeout : shall be set if the platform have some interrupts
-> +                  defined in the node but doesn't support pretimeout
+On 2/4/20 10:42 AM, Peter Zijlstra wrote:
+> On Mon, Feb 03, 2020 at 11:41:46AM -0500, Waiman Long wrote:
+>> +	/*
+>> +	 * We require a minimum of 2 (u16) entries to encode a freelist
+>> +	 * 'pointer'.
+>> +	 */
+>> +	req = max(req, 2);
+>
+> Would something simple like the below not avoid that whole 1 entry
+> 'chain' nonsense?
+>
+> It boots and passes the selftests, so it must be perfect :-)
+>
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3163,7 +3163,7 @@ static int validate_chain(struct task_st
+>  	 * (If lookup_chain_cache_add() return with 1 it acquires
+>  	 * graph_lock for us)
+>  	 */
+> -	if (!hlock->trylock && hlock->check &&
+> +	if (!chain_head && !hlock->trylock && hlock->check &&
+>  	    lookup_chain_cache_add(curr, hlock, chain_key)) {
+>  		/*
+>  		 * Check whether last held lock:
+>
+Well, I think that will eliminate the 1-entry chains for the process
+context. However, we can still have 1-entry chain in the irq context, I
+think, as long as there are process context locks in front of it.
 
-As mentioned in the other patch, why specify an interrupt in the first
-place in that situation ?
+I think this fix is still worthwhile as it will eliminate some of the
+1-entry chains.
 
-Guenter
+Cheers,
+Longman
+
