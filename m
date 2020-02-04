@@ -2,144 +2,156 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4DAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C097FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C33222C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEC820674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="U6GC4mSi"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="hyXf1OIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgBDLMM (ORCPT
+        id S1727256AbgBDLMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:12:12 -0500
-Received: from mail-db8eur05hn2224.outbound.protection.outlook.com ([52.101.150.224]:29465
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Tue, 4 Feb 2020 06:12:16 -0500
+Received: from mail-am6eur05hn2233.outbound.protection.outlook.com ([52.101.152.233]:26047
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726887AbgBDLMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:12:12 -0500
+        id S1726887AbgBDLMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 06:12:14 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vrd0k9gX7W0DdX8NeTCZCVmL4Q68TxrDFuVKMFtSzUVzSyIfLRciy6g/4b9xHLfQTeF26mexxaOCMXAxg168HebzMI9DeAQi/e4YhZfPg/TTRlsVSr4hVAQOTh3P/u9Ht94PTSx3B4eBEIENdB4xGQCfVPpfJH3qPSQbtotNXKVjIMjC0ocY1wndepZv8iyNp6FYWWChfZ63JK+LOArALeV04yF8da+b5L7K/hs4TJDwPlh4VjkfcJGpkeAw7ZeUvP1x53Fa4OI5AMsToBenm/bmXdWgR81kUKxSug7+tU7AUy0a8zRHcVGYadHrk3VCUfpVNAF8EVGNE9k+ixPBpA==
+ b=Qg7dfIuPv95xMATbqpBRZkXALF5lFoaBT90dDjFdk58yQyIrFO5CWV0QfVQXRUBCa+AdQosFE7DZh1i6TPYoqjjJhDiYEfa4UlyFCnYWxrVtWmTOX8Dnsmt3tGoOOWBLbLCz7KtQYqeYM/IJ+vh0W8rlKjG2eApE2EYMEdM+Quv8gaIqMdw5B9uy1zTFF39qvtZr/RYeze6zDCKk467EVGSZ7h7Z+FVi04+V6fafaK/0pNhRx6sqKRtr7oMcZ5t7JiiomE7NHMXOwDFHX5s4/M5TuR8lBmKMzhJrHi6BF3XTIBJ1Wzu6uJjn+YVdFJhML0qHQGLJF34oz55yxM1vnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zkjPjzfDMgMB3/na1YLTKsGY9i8jue32k9z/pee5+lo=;
- b=kns7ubWaCWrjVGpQoX1u5gtjQPhYBH0suqCPrOCjVoSkDp0bFMfKgx2HCRSOZvihEArK+Htlz9QUQutqfjxLDgyqma61nHPeNUzutvOO2MfJJBq0IvD5c3XwC/3oZZrhtazmlLbfFSBlgPvu6wIzziBte26qb4Om164dCzuP4+iPyQ8jS/Vs+Xy6B7LHIO5y9RYlms/qlFrVMnFof1qS1b2CEf1IWV/ekpg8OsqJkSr5q7P9n8kGapV99/vVqB7NjO6nuLdxJRp7flzJ/7Zd1Pb+ouo2uOuP0XXMgqpzTRP3qVza+ww5Mm4WkWUKbADpqFkwhOD6p6Em2YImmV9/Kw==
+ bh=J/u8mIwI4tZFl0wl78bAtuqvbTdyisDecXZYGOVJmvA=;
+ b=YcEfmJzEODMQrehVLzYeAsTh3Tb6l4+trioV8sEutCqIwtmKcayvGXXmYUyf494rC5xBrgNOt/7HZeiy7VWkG1NSG4PdFKdD1Urod+qF/RgMhvRD28S4YIqwttS0PwergPKMPUAsGbkYW0LAssBrUx+dP7A8KfI9FpH5LdrYDtu/DJftQYY+yZd12AS/O6Yy+I1EAIU2yIh78Tm7YxYCyelXVyRYWvr40Ko0J/uiUwCT2dDwnZvC5uyFeSoqoEEAeF+gTeIdUO+VMdUHNRNe//Ztrsn78EUwCnRapZjMrAdc4lP5QKZMjOtqSozEYrQuglMeN31VJB3/iWs4aINKZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
  dkim=pass header.d=toradex.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zkjPjzfDMgMB3/na1YLTKsGY9i8jue32k9z/pee5+lo=;
- b=U6GC4mSi6GqE7iYMFirjNNZXtz0ceTo/4K60QobErI/VJbfcCg8Xj5fqKhF4pDsbQj3drnXCZ0/R8+aywclTqkfz6zeAm6s9TrGL8BEvxlR2iejp++1mDNAOSGCMouW9JJzwQqiG/TFPS/O1gqH5IoXBprREOC5NNkGVoS1a464=
+ bh=J/u8mIwI4tZFl0wl78bAtuqvbTdyisDecXZYGOVJmvA=;
+ b=hyXf1OIxifQqOUQnDlxnORcr8H0i3vcWj0qEGjyJP4XK6+CKSwhrJhoNBpKh+6jZyemh/uv3Kcam9b4maAz4SOnAcpqL8iAIlYBi9n73K7VVY8hpG58stDKbyZm4aJ5yf14vTaMD9qqBh+vQtclJhCn9GinPtbQ/rrcMZaFGGjM=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=oleksandr.suvorov@toradex.com; 
 Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB7039.eurprd05.prod.outlook.com (20.181.33.149) with Microsoft SMTP
+ VI1PR05MB5632.eurprd05.prod.outlook.com (20.178.120.89) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.29; Tue, 4 Feb 2020 11:11:58 +0000
+ 15.20.2686.27; Tue, 4 Feb 2020 11:12:02 +0000
 Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
  ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
  ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2686.031; Tue, 4 Feb 2020
- 11:11:58 +0000
+ 11:12:02 +0000
 From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 To:     devicetree@vger.kernel.org
 Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Igor Opaniuk <igor.opaniuk@toradex.com>,
         Philippe Schenker <philippe.schenker@toradex.com>,
         Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Adam Ford <aford173@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Peter Chen <peter.chen@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Shawn Guo <shawnguo@kernel.org>,
         Stefan Agner <stefan@agner.ch>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] Add Aster carrier board support for Colibri iMX7 CoM
-Date:   Tue,  4 Feb 2020 13:11:45 +0200
-Message-Id: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
+Subject: [PATCH 2/6] ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+Date:   Tue,  4 Feb 2020 13:11:47 +0200
+Message-Id: <20200204111151.3426090-3-oleksandr.suvorov@toradex.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
+References: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: PR2P264CA0009.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::21)
- To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
+X-ClientProxiedBy: PR0P264CA0173.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::17) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
 MIME-Version: 1.0
-Received: from localhost (194.105.145.90) by PR2P264CA0009.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.30 via Frontend Transport; Tue, 4 Feb 2020 11:11:58 +0000
+Received: from localhost (194.105.145.90) by PR0P264CA0173.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1c::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.34 via Frontend Transport; Tue, 4 Feb 2020 11:12:02 +0000
 X-Mailer: git-send-email 2.24.1
 X-Originating-IP: [194.105.145.90]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 23c72aa3-c4d7-4618-8340-08d7a9630d2d
-X-MS-TrafficTypeDiagnostic: VI1PR05MB7039:|VI1PR05MB7039:
+X-MS-Office365-Filtering-Correlation-Id: f53000a4-ab28-4029-6a58-08d7a9630f80
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5632:|VI1PR05MB5632:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB70392196B666E697F7BF0C13F9030@VI1PR05MB7039.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Microsoft-Antispam-PRVS: <VI1PR05MB563219BD7637DF3A3D2ECE02F9030@VI1PR05MB5632.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
 X-Forefront-PRVS: 03030B9493
-X-Forefront-Antispam-Report: SFV:SPM;SFS:(10019020)(4636009)(346002)(136003)(39840400004)(366004)(376002)(396003)(189003)(199004)(186003)(66946007)(36756003)(478600001)(8676002)(81156014)(2906002)(81166006)(66476007)(6486002)(8936002)(5660300002)(66556008)(16526019)(1076003)(6666004)(956004)(44832011)(7416002)(4326008)(2616005)(54906003)(86362001)(6916009)(316002)(26005)(6496006)(52116002)(23200700001);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR05MB7039;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;CAT:OSPM;
+X-Forefront-Antispam-Report: SFV:SPM;SFS:(10019020)(4636009)(39840400004)(366004)(136003)(396003)(376002)(346002)(189003)(199004)(1076003)(86362001)(36756003)(5660300002)(4326008)(6666004)(44832011)(316002)(6486002)(52116002)(6496006)(54906003)(16526019)(186003)(26005)(956004)(2616005)(478600001)(66556008)(66476007)(6916009)(7416002)(66946007)(2906002)(8936002)(81156014)(8676002)(81166006)(23200700001);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR05MB5632;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;CAT:OSPM;
 Received-SPF: None (protection.outlook.com: toradex.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GgfMpO488fAngJz0IEUQ0ut22t30KmvHzGbe7xpxx81kpOFPrmyBwE4vvvv4gJ6m39IWT4QZ4B+C/Ebnoo/37ybIzzCF/yvGlzWAkKl//lp3dHfinXr5mDXiX8uPIkv5C2SsVeFsibUOYfzHcvQkfcP3qeCV+72nVoWGitqmFlNOQ0Dx87RPj1NJXza/7v0iAHFvy33uBSuSEUAhTzzvcKs9CGSv6bvlAC8mIYOPOViNGF2YHQ7EXN6g0783K99JSlNEbUjiP6gKVUcK5RMX7bWQUfsYBJcdp7YKrgzw/TnP6aC6tGyyrmrRvEW1YJIY8ir6RRY4KVv2OSLhmHd0rvAB4KjjRZVVcjviO10iJS365wvQfyLNgjpYkGAHzBzjIeh/W6StCC8P7ZKgXCEBMMvhrll+oPxOkAtmkxzWzAXhX/6G91La25jvc/4iGX45lcv1A3B3xpMg6QpmhlKtnpYBOHQzQHfKW12a4k38FGlFTkyqd832wyFcBK89aOcALgLTLOSPMRUFP+MFJQmlogWuPuf+x0ZkxuJWcPcRI/yKBvjVrw9IasddHS9rVG/fjgIS4bhiBz5HMqlbPW2W1Hhyy5J/QHurikyl74a6Rn7jK1YyxJp7G8V+3m2O0y4MtfV0tCwWHOzfcn5t6ukUgPdDq5kkwT9gRpSjbOFcfwl5zXO242FRHve2ptP/ux590WmmJMHCzUihgx1Q0iiULMCOV4s2jYj8F5RnbpPEZnnQwUAgUoqdjGs2l898xzOCamp2WBE3kQZYarjOkENy2A==
-X-MS-Exchange-AntiSpam-MessageData: FN80g9++rnwkfOkTrqwwH9/lePvBdfuRv4gmur4VWTjuzsbjmd2kD5FsQ3NaaK8ib8q1+KitYP7el6CdBD97s466x7gR6Hi4VHogzhHtTk1SISViPEUA9Rfxy7qz/7PMGNWBh12IFOz9gWEih9Qdeg==
+X-Microsoft-Antispam-Message-Info: +J7QpS4uHcsNTQKB9yn9lo4ZLDolhMiySmoIq0IpwsZpzQf5GJ6Ror9gkIsBOWGmOc2+wXl/wM8H6C120A1ldJPhMD/Did3knaWgz9+DPG/pcdHzLG4ucq9EiBX5BCdVxOjQDOtwJWQkcuwrK5RQty+ql8d6d9rFVs+PrUqytX7DPZHfYcKbbbSjERjG2zUWyYuoG8Q4wc0NA09nKT4FGZABFuGGrimme3BaC02Fek0O8dSLY42PXi8q328acq8xpOg1Y6vj+4OT37YuG2gEJVWNv1ZZ0u7hTi7BQib+bis40mBLMbUo+7mku/c6GfXD2Wr4NINLmyHtWBAchxafmvtSsyu/XAc0Rd4lloRMK03J1n7yC9RGGKvW0uD4D6isiDZesY8BiouUMalQbBhYds1hn0RJXE99WKU6pVdtc6e0BWpDnxXTchq1dCtGWIAn3Lhj0Q2Ib1MDw8MRnjIwSTSzR+1ylpQ67MwXLTuvpMB2M16R2Znfx5bfsOiCrnql0/eexzrzkL0RhzMMjaQ6NKjWi3rRvqRbXG0YjHHGNLvu1dKnaCmSrVLP8mtGGqnpR2d+k6jG8g8ughpIlxC95PsxgZcVoUKv8FAMKxYM0v+8NRRm5tCTE4D17H3Xm4TIj/VN7Fs5agpBE6IwZmaYF9skef1eK9wGiPg7UpJKzRSQO/p9RXrLhHJxngxYL0joQEkTXNfOfzU+de5p6lyFIJtdLoc4Agr4VOtNkEOzuN6XAmszTI5R+Q0toKUWW5gmiEpa95DwGdxuxkPnJyq7UQ==
+X-MS-Exchange-AntiSpam-MessageData: mqvXxSWMOmnQcWlsfQcVRH/aHz5yMpc8LkjlvoT7YyJHYxfimjD4U9vfnw5/z4tmGRL8RkHm9xKL8YBHkVeNyNVYmfL8UP7sJ4rRl26u63l1QDkdkEffGnkDIvUOWwIt1o4gCOWLekX2VF5IpxW5iA==
 X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23c72aa3-c4d7-4618-8340-08d7a9630d2d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2020 11:11:58.6286
+X-MS-Exchange-CrossTenant-Network-Message-Id: f53000a4-ab28-4029-6a58-08d7a9630f80
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2020 11:12:02.4754
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 107KJoy3vARzFekdd9/dbrzpBl5w1Tyr28VaclgapbdGTFhnaLSLD95pPDCC8c+iAr1zVvHvB8fIYLieW6yrOCPwyLJ8MDc1mIkXOmRgbiE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7039
+X-MS-Exchange-CrossTenant-UserPrincipalName: K/H4BK8CtAaXId0bDnVSVbCar6hgN6K+jrwcQARFkJpwhgdWVeYtl7SlyxwLSl/uiWrlbtuEteDvrMhJvFbiOczYtCKBIZB9FVPE3Sszpco=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5632
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+USB_C_DET pin shouldn't be in ethernet group.
 
-This series adds devicetree for the Toradex Aster board along with
-Toradex Computer on Module Colibri iMX7S/iMX7D.
+Creating a separate group allows one to use this pin
+as an USB ID pin.
 
+Fixes: b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D suppor")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+---
 
-Oleksandr Suvorov (6):
-  ARM: dts: imx7-colibri: add alias for RTC
-  ARM: dts: imx7-colibri: fix muxing of usbc_det pin
-  ARM: dts: imx7-colibri: Convert to SPDX license tags for Colibri iMX7
-  ARM: imx_v6_v7_defconfig: Enable TOUCHSCREEN_ATMEL_MXT
-  ARM: imx_v6_v7_defconfig: Enable TOUCHSCREEN_AD7879
-  ARM: dts: imx7-colibri: add support for Toradex Aster carrier board
+ arch/arm/boot/dts/imx7-colibri.dtsi | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
- arch/arm/boot/dts/Makefile                    |   3 +
- arch/arm/boot/dts/imx7-colibri-aster.dtsi     | 191 ++++++++++++++++++
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi   |  45 +----
- arch/arm/boot/dts/imx7-colibri.dtsi           |  51 +----
- arch/arm/boot/dts/imx7d-colibri-aster.dts     |  20 ++
- .../arm/boot/dts/imx7d-colibri-emmc-aster.dts |  20 ++
- arch/arm/boot/dts/imx7d-colibri-eval-v3.dts   |  40 +---
- arch/arm/boot/dts/imx7s-colibri-aster.dts     |  15 ++
- arch/arm/boot/dts/imx7s-colibri-eval-v3.dts   |  40 +---
- arch/arm/configs/imx_v6_v7_defconfig          |   3 +
- 10 files changed, 272 insertions(+), 156 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx7-colibri-aster.dtsi
- create mode 100644 arch/arm/boot/dts/imx7d-colibri-aster.dts
- create mode 100644 arch/arm/boot/dts/imx7d-colibri-emmc-aster.dts
- create mode 100644 arch/arm/boot/dts/imx7s-colibri-aster.dts
-
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index d05be3f0e2a7..f18a7c9e1303 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -346,7 +346,7 @@ &usdhc3 {
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
+-		     &pinctrl_gpio7>;
++		     &pinctrl_gpio7 &pinctrl_usbc_det>;
+ 
+ 	pinctrl_gpio1: gpio1-grp {
+ 		fsl,pins = <
+@@ -451,7 +451,6 @@ MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0X14 /* SODIMM 73 */
+ 
+ 	pinctrl_enet1: enet1grp {
+ 		fsl,pins = <
+-			MX7D_PAD_ENET1_CRS__GPIO7_IO14			0x14
+ 			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x73
+ 			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x73
+ 			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x73
+@@ -649,6 +648,12 @@ MX7D_PAD_UART3_RX_DATA__UART3_DTE_TX 0x79
+ 		>;
+ 	};
+ 
++	pinctrl_usbc_det: gpio-usbc-det {
++		fsl,pins = <
++			MX7D_PAD_ENET1_CRS__GPIO7_IO14	0x14
++		>;
++	};
++
+ 	pinctrl_usbh_reg: gpio-usbh-vbus {
+ 		fsl,pins = <
+ 			MX7D_PAD_UART3_CTS_B__GPIO4_IO7	0x14 /* SODIMM 129 USBH PEN */
 -- 
 2.24.1
 
