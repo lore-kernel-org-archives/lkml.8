@@ -2,144 +2,116 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5020C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FAEC3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9695620674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02FE21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqZW+ocT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cb9WOLeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgBDFGy (ORCPT
+        id S1726596AbgBDFIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 00:06:54 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57352 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725813AbgBDFGy (ORCPT
+        Tue, 4 Feb 2020 00:08:41 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38780 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgBDFIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 00:06:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580792813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=77aFIeWZ6g7NaVIYQN/nFVqyjpYjPXX41AYEjCL1ybk=;
-        b=UqZW+ocT+PP250dlPN2qn6Z999XrJ7EWRNztRG6qEeNyxr4NCy75IykIi/btTfvlqCtG8D
-        wuK2ai8au6nO+FN/+eRH2LyZNI8wOZwywzYxkcZa4Kap8tnmmhic2tUPIMY4KPDk68yhJ9
-        dBYzpAo6WWD1+T2njVnwF6Z9CLIPNN0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-4xlkwQ1bMKSfm9fi0BiRng-1; Tue, 04 Feb 2020 00:06:51 -0500
-X-MC-Unique: 4xlkwQ1bMKSfm9fi0BiRng-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3ABE48018A3;
-        Tue,  4 Feb 2020 05:06:50 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-13-129.pek2.redhat.com [10.72.13.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D8F38E9E5;
-        Tue,  4 Feb 2020 05:06:44 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-        david@redhat.com, jgross@suse.com, bsingharora@gmail.com
-Subject: [PATCH v3] mm/hotplug: Only respect mem= parameter during boot stage
-Date:   Tue,  4 Feb 2020 13:06:43 +0800
-Message-Id: <20200204050643.20925-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Tue, 4 Feb 2020 00:08:40 -0500
+Received: by mail-ed1-f66.google.com with SMTP id p23so18521778edr.5;
+        Mon, 03 Feb 2020 21:08:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=EOehpKBxDkbplUHN6oDL4a2sNVmEAPe8+ZU2b8kq5Yo=;
+        b=cb9WOLeP5FuhT+WSH3fZo7yVOwmSEkUU+WUl0U+QAZNVT3Z5XdGG+Bd6i4+15QVQos
+         E1lxfeu9mYXTdM8di/7y7IzCkRSwWcbGlmkU5B57vKNY7rYJRdfQTL7jpOxSov1/AzUG
+         aUALIieobGYIv0aR/43Y7cOtQo9YNpz419S82WUwc3iavuqjJ1THo6LEDu8TLPxed/tK
+         eOvueH10iOAzGT/oRG3xghvhuUk8zxaCcYPv9tODbWbFBSa44My+sCNqOWHfyRtR3n+0
+         ynME1U2PkW4lasqOr2twbjtpzw8uCR45YwuGChUtFE2uswwipeaNNByJkdgfur6dITqR
+         N9/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=EOehpKBxDkbplUHN6oDL4a2sNVmEAPe8+ZU2b8kq5Yo=;
+        b=JGPT7yBMNfRTRqUxc/0ezvqp3n8kLV6G0W75zpaDeRrVlY7EpZcU7hveezveYO+HZI
+         CkQ6maoIEcMb0C7XmRAWCIn/UjdcEFFKnW4p8bFgE92ZkfqBA7QcqR37q3/soO3ZICf7
+         2xydmnl27Md1ehZ8j4Aby032zJ2x7tFpBi7mEhfk4dkc+dTFT8Q4BL+p/rAPzFRGAkQS
+         ASgXdrthWEZTpKCi2NUP40h5bjsB7oBZFfrbmgOSrnOVxipFuAcbieR+WwNFpgCfyO/W
+         Nz5UJePyPqlVIig+P5fISzXHQynrKsAn46956CvjJitw/1dqeL5LcUa+7MLHzB9DPV7I
+         a/Qg==
+X-Gm-Message-State: APjAAAUIAoYNAQLF4pTHuJCM8VkNgO4HLSNPT0Nf0BDsV9JOXmHdjaTw
+        ftgj3WqqaxgiE0qQtnVI9JQ=
+X-Google-Smtp-Source: APXvYqxMOWCMu+l63Kvc5ncOkddOLlTa4A+kMAU7qeSxUkXNiXg8pvV1fEfQ++nMb34HBVbIN0bXLw==
+X-Received: by 2002:a17:906:7d6:: with SMTP id m22mr24019635ejc.335.1580792918983;
+        Mon, 03 Feb 2020 21:08:38 -0800 (PST)
+Received: from felia ([2001:16b8:2daa:dc00:2c0a:8928:125e:2b0f])
+        by smtp.gmail.com with ESMTPSA id j17sm1132429ejo.1.2020.02.03.21.08.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 21:08:38 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Tue, 4 Feb 2020 06:08:37 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+cc:     Joe Perches <joe@perches.com>, Jakub Kicinski <kuba@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        isdn4linux@listserv.isdn4linux.de, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+In-Reply-To: <CAHp75VdaaOW0ktt4eo4NsLFu2QT1K1mHK8DZeycOPhbvcMq4wQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2002040550540.3062@felia>
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com> <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net> <CAHp75VdVXqz7fab4MKH2jZozx4NGGkQnJyTWHDKCdgSwD2AtpA@mail.gmail.com> <ce81e9b1ac6ede9f7a16823175192ef69613ec07.camel@perches.com>
+ <CAHp75VdaaOW0ktt4eo4NsLFu2QT1K1mHK8DZeycOPhbvcMq4wQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
-parameter") a global varialbe max_mem_size is added to store
-the value parsed from 'mem= ', then checked when memory region is
-added. This truly stops those DIMMs from being added into system memory
-during boot-time.
 
-However, it also limits the later memory hotplug functionality. Any
-DIMM can't be hotplugged any more if its region is beyond the
-max_mem_size. We will get errors like:
 
-[  216.387164] acpi PNP0C80:02: add_memory failed
-[  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
-[  216.392187] acpi PNP0C80:02: Enumeration failure
+On Mon, 3 Feb 2020, Andy Shevchenko wrote:
 
-This will cause issue in a known use case where 'mem=' is added to
-the hypervisor. The memory that lies after 'mem=' boundary will be
-assigned to KVM guests. After commit 357b4da50a62 merged, memory
-can't be extended dynamically if system memory on hypervisor is not
-sufficient.
+> On Mon, Feb 3, 2020 at 1:08 PM Joe Perches <joe@perches.com> wrote:
+> > On Mon, 2020-02-03 at 12:13 +0200, Andy Shevchenko wrote:
+> > > On Sun, Feb 2, 2020 at 10:45 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> 
+> ...
+> 
+> > > I'm not sure it's ready. I think parse-maintainers.pl will change few
+> > > lines here.
+> >
+> > parse-maintainers would change a _lot_ of the MAINTAINERS file
+> > by reordering section letters.
+> 
+> I think it's quite easy to find out if it had changed the record in question.
+>
 
-So fix it by also checking if it's during boot-time restricting to add
-memory. Otherwise, skip the restriction.
+I checked it and it does change a bit. My patch adds to a list of file 
+entries sorted by "relevance" (not alphabetically) two further minor (by 
+relevance) entries, i.e., Kconfig and Makefile, to the end of that list.
 
-And also add this use case to document of 'mem=' kernel parameter.
+The other reorderings would have already applied to the original state; 
+rather than trying to "fix" this locally for this one patch here, I would 
+prefer to understand why the discussion on splitting the MAINTAINERS file,
+summarized at https://lwn.net/Articles/730509/, got stuck and how I can 
+contribute to that. If that bigger change would happen, we could 
+automatically clean up all the entries when the things are splitted, 
+rather than sending reordering patches to the maintainers that then spend 
+time on trying to merge that all back together.
 
-Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem= parameter")
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-v2->v3:
-  In discussion of v1 and v2, People have concern about the use case
-  related to the code change. So add the use case into patch log and
-  document of 'mem=' in kernel-parameters.txt.
-
- Documentation/admin-guide/kernel-parameters.txt | 13 +++++++++++--
- mm/memory_hotplug.c                             |  8 +++++++-
- 2 files changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ddc5ccdd4cd1..b809767e5f74 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2533,13 +2533,22 @@
- 			For details see: Documentation/admin-guide/hw-vuln/mds.rst
- 
- 	mem=nn[KMG]	[KNL,BOOT] Force usage of a specific amount of memory
--			Amount of memory to be used when the kernel is not able
--			to see the whole system memory or for test.
-+			Amount of memory to be used in cases as follows:
-+
-+			1 for test;
-+			2 when the kernel is not able to see the whole system memory;
-+			3 memory that lies after 'mem=' boundary is excluded from
-+			 the hypervisor, then assigned to KVM guests.
-+
- 			[X86] Work as limiting max address. Use together
- 			with memmap= to avoid physical address space collisions.
- 			Without memmap= PCI devices could be placed at addresses
- 			belonging to unused RAM.
- 
-+			Note that this only takes effects during boot time since
-+			in above case 3, memory may need be hot added after boot
-+			if system memory of hypervisor is not sufficient.
-+
- 	mem=nopentium	[BUGS=X86-32] Disable usage of 4MB pages for kernel
- 			memory.
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 36d80915ddc2..e6c75ceacf9a 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -105,7 +105,13 @@ static struct resource *register_memory_resource(u64 start, u64 size)
- 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
- 	char *resource_name = "System RAM";
- 
--	if (start + size > max_mem_size)
-+	/*
-+	 * Make sure value parsed from 'mem=' only restricts memory adding
-+	 * while booting, so that memory hotplug won't be impacted. Please
-+	 * refer to document of 'mem=' in kernel-parameters.txt for more
-+	 * details.
-+	 */
-+	if (start + size > max_mem_size && system_state < SYSTEM_RUNNING)
- 		return ERR_PTR(-E2BIG);
- 
- 	/*
--- 
-2.17.2
+Lukas
 
