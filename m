@@ -2,102 +2,129 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F37C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF95C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AED42087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pv3brgod"
+	by mail.kernel.org (Postfix) with ESMTP id 3E24420674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBDLUJ (ORCPT
+        id S1727230AbgBDLUR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:20:09 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19289 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgBDLUF (ORCPT
+        Tue, 4 Feb 2020 06:20:17 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22704 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727154AbgBDLUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:20:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e39534d0000>; Tue, 04 Feb 2020 03:19:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 03:20:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:20:04 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 11:20:04 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 11:20:03 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3953600002>; Tue, 04 Feb 2020 03:20:03 -0800
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 19/19] ARM: tegra: Remove USB 2-0 port from Jetson TK1 padctl
-Date:   Tue, 4 Feb 2020 16:47:05 +0530
-Message-ID: <1580815025-10915-20-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
-References: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 4 Feb 2020 06:20:14 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-10-vBYvQg4LN36nAgPRQBlxpQ-1; Tue, 04 Feb 2020 11:20:11 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 4 Feb 2020 11:20:11 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 4 Feb 2020 11:20:11 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'axboe@kernel.dk'" <axboe@kernel.dk>
+CC:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] Fix io_read() and io_write() when io_import_fixed() is used.
+Thread-Topic: [PATCH] Fix io_read() and io_write() when io_import_fixed() is
+ used.
+Thread-Index: AdXbTP+YLQmyIuo6Sk+vDwZErsD4Xw==
+Date:   Tue, 4 Feb 2020 11:20:11 +0000
+Message-ID: <0cf51853bebe4c889e4d00e4bbc61fb3@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580815181; bh=UZPndxJaS6exdoWA+8qZB2sYlM6GTteSHhoz8vK44JU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=pv3brgodZD9Z9So0D+oNlB0/adP3C6bCPz7RZfGAkog3ecSZsqBgmfXnQDu1JdWfh
-         nLZRyKDXJ1/Q+Oa2MFYQCGXn19xDfGMzBU+lJrk88qClHWeI1fuaGc1az5A8cRZo/H
-         8Eo9ON7YwdDQ6XvXpChVIh0E2WKWAKntXVhps2Oj3NqOOU15Qi3E1h6LQSvkuYrU+i
-         UcyHRsSPImRg3QuZ8LAsbX8Z/BnGH3D/3ZOBx0W9es+NqA5nBgSZ6rYA5UpZIvSpOE
-         UW9+ggGkfeTUBsP7pgOfG8XFKhU20eMA6RkQrEo3j1d9DM4A3vPqkt0k4v/HMcGvY6
-         aac5MLR8KCXRw==
+X-MC-Unique: vBYvQg4LN36nAgPRQBlxpQ-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Jetson TK1 USB 2-0 port is controlled by phy-tegra-usb driver
-rather than padctl driver. Remove the entry for the same.
+io_import_fixed() returns 0 on success so io_import_iovec() may
+not return the length of the transfer.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
-V4:
- - New patch in the series.
----
- arch/arm/boot/dts/tegra124-jetson-tk1.dts | 6 ------
- 1 file changed, 6 deletions(-)
+Instead always use the value from iov_iter_count()
+(Which is called at the same place.)
 
-diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-index d5fd642..54600ff 100644
---- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-+++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-@@ -1782,12 +1782,6 @@
- 		};
+Fixes 9d93a3f5a (modded by 491381ce0) and 9e645e110.
+
+Signed-off-by: David Laight <david.laight@aculab.com>
+---
+
+Spotted while working on another patch to change the return value
+of import_iovec() to be the address of the memory to kfree().
+
+ fs/io_uring.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index bde73b1..28128aa 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1376,7 +1376,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
+ 	struct iov_iter iter;
+ 	struct file *file;
+ 	size_t iov_count;
+-	ssize_t read_size, ret;
++	ssize_t ret;
  
- 		ports {
--			/* Micro A/B */
--			usb2-0 {
--				status = "okay";
--				mode = "otg";
--			};
+ 	ret = io_prep_rw(req, s, force_nonblock);
+ 	if (ret)
+@@ -1390,11 +1390,10 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	read_size = ret;
++	iov_count = iov_iter_count(&iter);
+ 	if (req->flags & REQ_F_LINK)
+-		req->result = read_size;
++		req->result = iov_count;
+ 
+-	iov_count = iov_iter_count(&iter);
+ 	ret = rw_verify_area(READ, file, &kiocb->ki_pos, iov_count);
+ 	if (!ret) {
+ 		ssize_t ret2;
+@@ -1414,7 +1413,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
+ 		 */
+ 		if (force_nonblock && !(req->flags & REQ_F_NOWAIT) &&
+ 		    (req->flags & REQ_F_ISREG) &&
+-		    ret2 > 0 && ret2 < read_size)
++		    ret2 > 0 && ret2 < iov_count)
+ 			ret2 = -EAGAIN;
+ 		/* Catch -EAGAIN return for forced non-blocking submission */
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+@@ -1455,10 +1454,9 @@ static int io_write(struct io_kiocb *req, const struct sqe_submit *s,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (req->flags & REQ_F_LINK)
+-		req->result = ret;
 -
- 			/* Mini PCIe */
- 			usb2-1 {
- 				status = "okay";
+ 	iov_count = iov_iter_count(&iter);
++	if (req->flags & REQ_F_LINK)
++		req->result = iov_count;
+ 
+ 	ret = -EAGAIN;
+ 	if (force_nonblock && !(kiocb->ki_flags & IOCB_DIRECT)) {
 -- 
-2.7.4
+1.8.1.2
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
