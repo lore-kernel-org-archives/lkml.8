@@ -4,63 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD555C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60F4C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79FF020674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2C320674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="p5y/+ahd"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="SmjV2KcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgBDKdG (ORCPT
+        id S1727084AbgBDKde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:33:06 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45022 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgBDKdG (ORCPT
+        Tue, 4 Feb 2020 05:33:34 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39162 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgBDKdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:33:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id m16so22269911wrx.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:33:04 -0800 (PST)
+        Tue, 4 Feb 2020 05:33:33 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so2896659wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:33:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=hi5ABYQUkVP/jgGhAuOreV5DcMK/yqN3/B3hQICD40c=;
-        b=p5y/+ahdBBy4euOtV0GdIxNBysYzXRURg3EbjLLAVG6Qq5uE9nN32QzcaSRWOZNTXZ
-         KbX2/rqwbUSpE9iwgH7M5ZdC3wVuKcTg2GeDYtJAcYJ4E4GOJfXZqaKuqdAXfyh2rgnF
-         9LtC+n/mx9Pv9l6b2Bp6jTV6WjMCqbCitxwSatyDpPoFh3PeKDUUpd8+q6TUdg3HBywo
-         meWOofxJi26Vpv+dpYUmInRztpTkkmN/WWOt/Wyv8u36d2OnLNuWqqYh9Js2xQWBkkcX
-         O4J7MkLz6zbeV7Bq5T9rCES0lQnaBx4mVxJN4ESeq6bhFLFThewvYcEbwR4QAE7DwIa1
-         Kqbw==
+        bh=dXZpcJNcrSChz8uMigrQ9vo5oCrVD78dOySEAXVtnIY=;
+        b=SmjV2KcBEgVk7VQgpAwcbFjiZsKPTXGEHhLEBA31DKX3pNzqKmFTbxf+EuOu9u4wcA
+         EB8ct83JJnw0StpoTdm2NLNt6rB08Zru4BEyHAa4jwkJlX07O5f3Vl4wawS0nkpn+nZz
+         SMbOepVnMikF6rtXj9JddjqNMd91gbrBFPmJKKkLMvcYwigYRuYzdJ//isIWbQBRgSKG
+         8sNNiwueOfzaL1SwD6QlO1A6NnM/LVvc8olvKzUJwlOjN+sHaOAzUHwiCm+xs+maon1h
+         RBlmv2rnYIb7isDyApOAgLm5X987YsSeAV+LN+UhN0SdZjEoY4Ib+aH6RNtQHEBfScVE
+         oOQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hi5ABYQUkVP/jgGhAuOreV5DcMK/yqN3/B3hQICD40c=;
-        b=WR86mEgP20jZoclXZTKepPy8q0jB48lNVCYVMlPTfp6J4Kay6ZwDZ7t+Db0OLrHA15
-         +FM1AL8YxbcR/L0UGAtJmWro9M1T6an956pOeYtpS3OpQZmygwuVxjWSrMfSKOFNZpy0
-         UouIG6i5WsbHcwKj45uaTEAUHRFudr9Mn4K0ZS+H51oC2Onf/wM0kSwaXpshKuKl4Bjb
-         VvV5x9Ac86zwwM72OPcn6/+o9tfpSFfnwizGxOnSHwzIsilZ3WLi0JA3x7rTTh1HQ1h+
-         IMq3v0xJy10m26yVwWPvA+hXSnRBEGlmpfnxH3oA/XpDosxAgXsSbtkYirJl8zEizex3
-         X4mA==
-X-Gm-Message-State: APjAAAVcnN7dAzoChHGCiepq/se0aH3bCfjV7TqSgiPFw9fP/IAJf+yx
-        iIuUxLUv/suAXAwHD8HaZNKYcSoxvRJQjuUeaFhY+d8WV2w=
-X-Google-Smtp-Source: APXvYqzNghy9cmIkCAJBnH0aV7c6CZH7NQMk6DyQKWRtK1iVloxi0xWtvAm7QXlMvab+J5CTra3f7hersnBUw/FHPPk=
-X-Received: by 2002:a5d:530e:: with SMTP id e14mr21073083wrv.250.1580812383791;
- Tue, 04 Feb 2020 02:33:03 -0800 (PST)
+        bh=dXZpcJNcrSChz8uMigrQ9vo5oCrVD78dOySEAXVtnIY=;
+        b=imhPXXQpELLG2mJvKwepzLmYjSCvuyeUs99kcwRBThJlkykk/epWMjLok+uPNMyeS1
+         O12hWHRIV2soorZJ8usxHXcpLCKQfxqRVAN7MOxj6Bx1OzX/XpG/dZsYubKODsTY6yc0
+         x7XtrEyFwtqEy9qFE6OknRJ65GAgLXzBq00IVYl2dbLceYDj/98lL85ws03aSxBEJc1e
+         gONdJZLs7dpe77kU1DxyKyRk4rnjH0TA/vw5zh7bcFF6v0N5Cdh6Wk/VhTgWS21IZ7Ca
+         G3VhRwqO3GfSJ02ywZtS9zdB0lvbtXVfVXJ8p0byCdGAA/EZwupvJfAKmeGk/8WJot2u
+         G5JQ==
+X-Gm-Message-State: APjAAAWtyTobqU1TBqcDh0cW3O4C/RE82yNJgtss0sMHbPf75W+xYF3Z
+        9vmq8/Wd5Gj4qgeIEg9Y3v8uP42HU1tNjHZHh0JZXBFx2dg=
+X-Google-Smtp-Source: APXvYqyh5AEOBE9yUwQC10uFZt5d0deZ00spyHDvHIZcmpmlm2JeIuNd6tTMhf0+uCJvE5gajMzXnoayzKRjZwrAz08=
+X-Received: by 2002:a1c:3204:: with SMTP id y4mr161605wmy.166.1580812411405;
+ Tue, 04 Feb 2020 02:33:31 -0800 (PST)
 MIME-Version: 1.0
-References: <1a11e5cd73f6eb999f78981953d39773eb154040.1578492778.git.michal.simek@xilinx.com>
-In-Reply-To: <1a11e5cd73f6eb999f78981953d39773eb154040.1578492778.git.michal.simek@xilinx.com>
+References: <f9bbfa27026d0f596dbc0a9c2e1253575d6cc82e.1578576542.git.michal.simek@xilinx.com>
+In-Reply-To: <f9bbfa27026d0f596dbc0a9c2e1253575d6cc82e.1578576542.git.michal.simek@xilinx.com>
 From:   Michal Simek <monstr@monstr.eu>
-Date:   Tue, 4 Feb 2020 11:32:52 +0100
-Message-ID: <CAHTX3d+0BD6kysK89Rge64PSYEFYX=PyNps8aiinT3n+P+xnzQ@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: Fix message about compiled-in FDT location
+Date:   Tue, 4 Feb 2020 11:33:20 +0100
+Message-ID: <CAHTX3dJwX==px4qyMBXt3w4jzSg=jc77SzKSKVBPsX4BaRqyKQ@mail.gmail.com>
+Subject: Re: [PATCH] microblaze: defconfig: Disable EXT2 driver and Enable
+ EXT3 & EXT4 drivers
 To:     LKML <linux-kernel@vger.kernel.org>,
         Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Manish Narani <manish.narani@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,39 +72,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-st 8. 1. 2020 v 15:13 odes=C3=ADlatel Michal Simek <michal.simek@xilinx.com=
-> napsal:
+=C4=8Dt 9. 1. 2020 v 14:29 odes=C3=ADlatel Michal Simek <michal.simek@xilin=
+x.com> napsal:
 >
-> %p is not working that early (don't know why)
+> From: Manish Narani <manish.narani@xilinx.com>
 >
-> Before this patch:
-> Compiled-in FDT at (ptrval)
+> As EXT4 filesystem driver is used for handling EXT2 file systems as
+> well. There is no need to enable EXT2 driver. This patch disables EXT2
+> and enables EXT3/EXT4 drivers.
 >
-> After:
-> Compiled-in FDT at 0xc043c24c
->
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
 >
->  arch/microblaze/kernel/setup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/microblaze/configs/mmu_defconfig   | 2 +-
+>  arch/microblaze/configs/nommu_defconfig | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setu=
-p.c
-> index 522a0c5d9c59..effed14eee06 100644
-> --- a/arch/microblaze/kernel/setup.c
-> +++ b/arch/microblaze/kernel/setup.c
-> @@ -138,7 +138,7 @@ void __init machine_early_init(const char *cmdline, u=
-nsigned int ram,
->         if (fdt)
->                 pr_info("FDT at 0x%08x\n", fdt);
->         else
-> -               pr_info("Compiled-in FDT at %p\n", _fdt_start);
-> +               pr_info("Compiled-in FDT at 0x%08x\n", (unsigned)&_fdt_st=
-art);
->
->  #ifdef CONFIG_MTD_UCLINUX
->         pr_info("Found romfs @ 0x%08x (0x%08x)\n",
+> diff --git a/arch/microblaze/configs/mmu_defconfig b/arch/microblaze/conf=
+igs/mmu_defconfig
+> index b3b433db89d8..0e2f5e1fd1ef 100644
+> --- a/arch/microblaze/configs/mmu_defconfig
+> +++ b/arch/microblaze/configs/mmu_defconfig
+> @@ -73,7 +73,7 @@ CONFIG_FB_XILINX=3Dy
+>  CONFIG_UIO=3Dy
+>  CONFIG_UIO_PDRV_GENIRQ=3Dy
+>  CONFIG_UIO_DMEM_GENIRQ=3Dy
+> -CONFIG_EXT2_FS=3Dy
+> +CONFIG_EXT3_FS=3Dy
+>  # CONFIG_DNOTIFY is not set
+>  CONFIG_TMPFS=3Dy
+>  CONFIG_CRAMFS=3Dy
+> diff --git a/arch/microblaze/configs/nommu_defconfig b/arch/microblaze/co=
+nfigs/nommu_defconfig
+> index 377de39ccb8c..8c420782d6e4 100644
+> --- a/arch/microblaze/configs/nommu_defconfig
+> +++ b/arch/microblaze/configs/nommu_defconfig
+> @@ -70,7 +70,7 @@ CONFIG_XILINX_WATCHDOG=3Dy
+>  CONFIG_FB=3Dy
+>  CONFIG_FB_XILINX=3Dy
+>  # CONFIG_USB_SUPPORT is not set
+> -CONFIG_EXT2_FS=3Dy
+> +CONFIG_EXT3_FS=3Dy
+>  # CONFIG_DNOTIFY is not set
+>  CONFIG_CRAMFS=3Dy
+>  CONFIG_ROMFS_FS=3Dy
 > --
 > 2.24.0
 >
