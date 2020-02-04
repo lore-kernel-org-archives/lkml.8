@@ -2,106 +2,180 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEF5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216D0C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B357F21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2CD21775
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fsToL9Vi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wd7mzS76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgBDAoV (ORCPT
+        id S1727023AbgBDAwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 19:44:21 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30771 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726928AbgBDAoU (ORCPT
+        Mon, 3 Feb 2020 19:52:09 -0500
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:46948 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBDAwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:44:20 -0500
-X-UUID: 1a1ab3d8e5a645109859a7adbcd181ea-20200204
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5GT0W0D4fp1R9e9GcyJmXd1HEmQL0ETrvY40fzATcrY=;
-        b=fsToL9ViJWcZIICJM27OSDhjNoyoImIJQbMjTeHViMESeY6WIzQhavCKcknZyTi8PCVd8zzUydDg6B1nIZgCvnB+d+t9ilhp1AuRPVw0/JAHXczEyfDpdrav7QwXJTk0i7Qk2gnxLNZgCXwd2iXmWtA43ZuGsEmYEKZ1/da68Is=;
-X-UUID: 1a1ab3d8e5a645109859a7adbcd181ea-20200204
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1633236549; Tue, 04 Feb 2020 08:44:15 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 4 Feb 2020 08:43:34 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 4 Feb 2020 08:44:29 +0800
-Message-ID: <1580777053.4621.1.camel@mtkswgap22>
-Subject: Re: [PATCH 1/3] [1/3] mmc: core: expose MMC_CAP2_CQE* to dt
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 4 Feb 2020 08:44:13 +0800
-In-Reply-To: <CAPDyKFropF-au2OTgyRL8-sO0MKXs3GtZGMqYpWpsKHtfdtpyw@mail.gmail.com>
-References: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
-         <CAPDyKFropF-au2OTgyRL8-sO0MKXs3GtZGMqYpWpsKHtfdtpyw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 3 Feb 2020 19:52:08 -0500
+Received: by mail-pl1-f171.google.com with SMTP id y8so6513965pll.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:52:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:subject:cc:user-agent:date;
+        bh=hcIePRtjEpO0TZ9jpC5LlD4R/lpZZZ3BibuM5fjf+D8=;
+        b=Wd7mzS76ljQ/4qpb1siNkBg4U0iNC8Flv4k2iIn7K7CX6OYPrVh+iypR8nVmEpBhCV
+         2fa2RhLn4FsSP7mNmro9wArlkyph4AMAVVjj5S3RZgsK1ZsQFdONdfCDj+qsOUesrGxu
+         94HRhQlbXJBpAwNFkv65dUXbSIG69xmiBmVXs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
+         :user-agent:date;
+        bh=hcIePRtjEpO0TZ9jpC5LlD4R/lpZZZ3BibuM5fjf+D8=;
+        b=aV7jU9niLfx4hYbfOTGfXOM1BAUIH5bvvSl9Opx7QdEnCwxGZTU3LkupzHamsChJLv
+         soET4Q2Mfu/dAl2BUsToofa3tI2xKoGo7G+aVnF5yllLSKX7enteAE/72xqNle2M7TRN
+         RaTiQLDfQZx1NEIoh1c4gP8oQokclgHPsC+9qBErxEC7jdj3bgJek8y9lfJqDiTtqLrK
+         mUMkFhs/Hw5Quwjw3xXT7uJ2Q/shlGgMkIinZsCUDtGS2caA2wNHXa5HnuBmGRgRl3j+
+         /GRjiUtmVc/zsELEvK/5CuDkgwhcBxV9KOhQiCA+eWsoyr70ci3dZrOpEIsunUkyX+vl
+         IbUw==
+X-Gm-Message-State: APjAAAV06N2MQURPz/tIISuvp0Mp4DGd6kYHNsAKT4v3oEbjZmchXGrX
+        48mhNmVekaRHgjma/hgU//xaHA==
+X-Google-Smtp-Source: APXvYqzXCR3u4HFYZyRHw5Y2qD6gJW15nagfIOV2RqNELlue/UXK8myO+hYQBmo83ngr9qpX9ygUnA==
+X-Received: by 2002:a17:90a:d986:: with SMTP id d6mr2438594pjv.78.1580777527487;
+        Mon, 03 Feb 2020 16:52:07 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y23sm21626086pfn.101.2020.02.03.16.52.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 16:52:06 -0800 (PST)
+Message-ID: <5e38c036.1c69fb81.3da87.c53d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1580305919-30946-6-git-send-email-sanm@codeaurora.org>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org> <1580305919-30946-6-git-send-email-sanm@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v4 5/8] phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2 V2 PHY
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 03 Feb 2020 16:52:05 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGZvciB0aGUgcmV2aWV3ICwgd2lsbCByZW1vdmUgdGhlIHRhZyBpbiB2MiBkcml2ZXIu
-DQoNCk9uIE1vbiwgMjAxOS0xMS0xMSBhdCAxNDowNCArMDEwMCwgVWxmIEhhbnNzb24gd3JvdGU6
-DQo+IE9uIEZyaSwgMSBOb3YgMjAxOSBhdCAwNzo0MywgQ2h1bi1IdW5nIFd1IDxjaHVuLWh1bmcu
-d3VAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEV4cG9zZSBNTUNfQ0FQMl9DUUUgYW5k
-IE1NQ19DQVAyX0NRRV9EQ01EDQo+ID4gdG8gaG9zdC0+Y2FwczIgaWYNCj4gPiAxLiAic3VwcG9y
-dHMtY3FlIiBpcyBkZWZpbmVkIGluIGR0IGFuZA0KPiA+IDIuICJkaXNhYmxlLWNxZS1kY21kIiBp
-cyBub3QgZGVmaW5lZCBpbiBkdC4NCj4gPg0KPiA+IENoYW5nZS1JZDogSTNkMTcyZTZiY2ZhYzM0
-NTIwYzM5MzJhNmY4ZGYyZTIwZjJjMGQwNWINCj4gPiBDUi1JZDoNCj4gPiBGZWF0dXJlOg0KPiAN
-Cj4gUmVtb3ZlIHRoZXNlIHRhZ3MgcGxlYXNlLg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVu
-LUh1bmcgV3UgPGNodW4taHVuZy53dUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZl
-cnMvbW1jL2NvcmUvaG9zdC5jIHwgOCArKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBp
-bnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvY29yZS9ob3N0
-LmMgYi9kcml2ZXJzL21tYy9jb3JlL2hvc3QuYw0KPiA+IGluZGV4IDEwNWI3YTcuLmVmYjBkYmUg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tbWMvY29yZS9ob3N0LmMNCj4gPiArKysgYi9kcml2
-ZXJzL21tYy9jb3JlL2hvc3QuYw0KPiA+IEBAIC0zMTksNiArMzE5LDE0IEBAIGludCBtbWNfb2Zf
-cGFyc2Uoc3RydWN0IG1tY19ob3N0ICpob3N0KQ0KPiA+ICAgICAgICAgICAgICAgICBob3N0LT5j
-YXBzMiB8PSBNTUNfQ0FQMl9OT19TRDsNCj4gPiAgICAgICAgIGlmIChkZXZpY2VfcHJvcGVydHlf
-cmVhZF9ib29sKGRldiwgIm5vLW1tYyIpKQ0KPiA+ICAgICAgICAgICAgICAgICBob3N0LT5jYXBz
-MiB8PSBNTUNfQ0FQMl9OT19NTUM7DQo+ID4gKyAgICAgICBpZiAoZGV2aWNlX3Byb3BlcnR5X3Jl
-YWRfYm9vbChkZXYsICJzdXBwb3J0cy1jcWUiKSkNCj4gPiArICAgICAgICAgICAgICAgaG9zdC0+
-Y2FwczIgfD0gTU1DX0NBUDJfQ1FFOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIE11c3QgYmUgYWZ0
-ZXIgInN1cHBvcnRzLWNxZSIgY2hlY2sgKi8NCj4gPiArICAgICAgIGlmICghZGV2aWNlX3Byb3Bl
-cnR5X3JlYWRfYm9vbChkZXYsICJkaXNhYmxlLWNxZS1kY21kIikpIHsNCj4gPiArICAgICAgICAg
-ICAgICAgaWYgKGhvc3QtPmNhcHMyICYgTU1DX0NBUDJfQ1FFKQ0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGhvc3QtPmNhcHMyIHw9IE1NQ19DQVAyX0NRRV9EQ01EOw0KPiA+ICsgICAgICAg
-fQ0KPiA+DQo+ID4gICAgICAgICAvKiBNdXN0IGJlIGFmdGVyICJub24tcmVtb3ZhYmxlIiBjaGVj
-ayAqLw0KPiA+ICAgICAgICAgaWYgKGRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJmaXhl
-ZC1lbW1jLWRyaXZlci10eXBlIiwgJmRydl90eXBlKSA9PSAwKSB7DQo+ID4gLS0NCj4gPiAxLjku
-MQ0KPiA+DQo+IA0KPiBPdGhlcndpc2UsIHRoaXMgbG9va3MgZ29vZCB0byBtZS4NCj4gDQo+IEtp
-bmQgcmVnYXJkcw0KPiBVZmZlDQoNCg==
+Quoting Sandeep Maheswaram (2020-01-29 05:51:56)
+> @@ -277,6 +289,34 @@ static const char * const qusb2_phy_vreg_names[] =3D=
+ {
+> =20
+>  #define QUSB2_NUM_VREGS                ARRAY_SIZE(qusb2_phy_vreg_names)
+> =20
+> +/* struct override_param - structure holding qusb2 v2 phy overriding par=
+am
+> + * set override true if the  device tree property exists and read and as=
+sign
+> + * to value
+> + */
+> +struct override_param {
+> +       bool override;
+> +       u8 value;
+> +};
+> +
+> +/*struct override_params - structure holding qusb2 v2 phy overriding par=
+ams
+> + * @imp_res_offset: rescode offset to be updated in IMP_CTRL1 register
+> + * @hstx_trim: HSTX_TRIM to be updated in TUNE1 register
+> + * @preemphasis: Amplitude Pre-Emphasis to be updated in TUNE1 register
+> + * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
+> + * @bias_ctrl: bias ctrl to be updated in BIAS_CONTROL_2 register
+> + * @charge_ctrl: charge ctrl to be updated in CHG_CTRL2 register
+> + * @hsdisc_trim: disconnect threshold to be updated in TUNE2 register
+> + */
+> +struct override_params {
+> +       struct override_param imp_res_offset;
+> +       struct override_param hstx_trim;
+> +       struct override_param preemphasis;
+> +       struct override_param preemphasis_width;
+> +       struct override_param bias_ctrl;
+> +       struct override_param charge_ctrl;
+> +       struct override_param hsdisc_trim;
+> +};
+> +
+>  /**
+>   * struct qusb2_phy - structure holding qusb2 phy attributes
+>   *
+> @@ -395,23 +423,33 @@ static void qusb2_phy_override_phy_params(struct qu=
+sb2_phy *qphy)
+> @@ -421,6 +459,11 @@ static void qusb2_phy_override_phy_params(struct qus=
+b2_phy *qphy)
+>                                       cfg->regs[QUSB2PHY_PORT_TUNE1],
+>                                       PREEMPH_WIDTH_HALF_BIT);
+>         }
+> +
+> +       if (qphy->overrides.hsdisc_trim.override)
+> +               qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE=
+2],
+> +               qphy->overrides.hsdisc_trim.value << HSDISC_TRIM_SHIFT,
+> +                                HSDISC_TRIM_MASK);
+>  }
+> =20
+>  /*
+> @@ -864,26 +907,44 @@ static int qusb2_phy_probe(struct platform_device *=
+pdev)
+> =20
+[...]
+>         if (!of_property_read_u32(dev->of_node, "qcom,preemphasis-width",
+>                                      &value)) {
+> -               qphy->preemphasis_width =3D (u8)value;
+> -               qphy->override_preemphasis_width =3D true;
+> +               qphy->overrides.preemphasis_width.value =3D (u8)value;
+> +               qphy->overrides.preemphasis_width.override =3D true;
+> +       }
+> +
+> +       if (!of_property_read_u32(dev->of_node, "qcom,hsdisc-trim-value",
+> +                                 &value)) {
+> +               qphy->overrides.hsdisc_trim.value =3D (u8)value;
+> +               qphy->overrides.hsdisc_trim.override =3D true;
+>         }
+> =20
+
+Is it possible to make a local array that we can crank through the
+overrides with? If they're all u8 values maybe we can have an array like
+
+	const char * const char override_names[] =3D {
+		[HSDISC_TRIM_VALUE] =3D "qcom,hsdisc-trim-value",
+		[PREEMP_WIDTH] =3D ...
+	};
+
+that we then link to another array inside qphy named overrides:
+=09
+	struct override_param overrides[NUM_OVERRIDES];
+
+and then we can bounce from overrides to override_names to parse out the
+random u8 values from the DT node. The idea is to avoid "wasting"
+pointers to the name when we don't care after parsing it. It may not be
+any different vs. just having a const char *name in the override_paramt
+struct though, so please measure it.
+
+Also, why not  use of_property_read_u8() and make DT writers have
+
+	/bits/ 8 <0xf0>
+
+properties so that we can keep things smaller. I don't understand why
+they're u32 in DT besides to make it simpler to specify a u32.
 
