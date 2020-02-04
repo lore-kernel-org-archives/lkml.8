@@ -2,91 +2,83 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D424FC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F71C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A838E2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2732166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:37:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Di9MDRXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgBDJh0 (ORCPT
+        id S1727044AbgBDJhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:37:26 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:41344 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgBDJhZ (ORCPT
+        Tue, 4 Feb 2020 04:37:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57640 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgBDJhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:37:25 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        Tue, 4 Feb 2020 04:37:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l8wLZvShLpGwIIo23/sbMyLLHi4SrrzV56FOntvn8cI=; b=Di9MDRXL6hCNrmrgU2T1UQxxtd
+        QCgGDtQZz86r4eBxsvjQS+JGvuAKaXEk5mYR3xUAN2cOfRH3BVt0J/GteOAJFOubIqpX2nO58vr1h
+        IDI9cpZX1dhx3wtklr1EkbM5UTLR6PZX7Yje9A7OncjQRWL4PYG/YzbVW1vADHltDp/xVr13IPR93
+        uBbT9ml4OzR2KKs+ddvF9LClb2Y1G40Q8BMV+bSzq2ydgvZ69jQuXC0fMdN92lrrl+2PcQOfLUL1R
+        +873A6dCC817+w5aQR74FTSuVlknaCXt5+L9bJ+zDZb8tmhEse8lscBB9qSHp/n7Ewe8yPbpFzEy3
+        BjkCucoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyue7-0005kv-D7; Tue, 04 Feb 2020 09:37:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 905B41577F51A;
-        Tue,  4 Feb 2020 01:37:23 -0800 (PST)
-Date:   Tue, 04 Feb 2020 10:37:18 +0100 (CET)
-Message-Id: <20200204.103718.1343105885567379294.davem@davemloft.net>
-To:     harini.katakam@xilinx.com
-Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
-        harinikatakamlinux@gmail.com
-Subject: Re: [PATCH v2 1/2] net: macb: Remove unnecessary alignment check
- for TSO
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1580735882-7429-2-git-send-email-harini.katakam@xilinx.com>
-References: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
-        <1580735882-7429-2-git-send-email-harini.katakam@xilinx.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Feb 2020 01:37:25 -0800 (PST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D5E5A30257C;
+        Tue,  4 Feb 2020 10:35:39 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4A4E620236A49; Tue,  4 Feb 2020 10:37:25 +0100 (CET)
+Date:   Tue, 4 Feb 2020 10:37:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v2 5/6] kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
+Message-ID: <20200204093725.GC14879@hirez.programming.kicks-ass.net>
+References: <20200203151608.28053-1-xiaoyao.li@intel.com>
+ <20200203151608.28053-6-xiaoyao.li@intel.com>
+ <20200203214300.GI19638@linux.intel.com>
+ <829bd606-6852-121f-0d95-e9f1d35a3dde@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <829bd606-6852-121f-0d95-e9f1d35a3dde@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
-Date: Mon,  3 Feb 2020 18:48:01 +0530
+On Tue, Feb 04, 2020 at 05:19:26PM +0800, Xiaoyao Li wrote:
 
-> The IP TSO implementation does NOT require the length to be a
-> multiple of 8. That is only a requirement for UFO as per IP
-> documentation.
+> > > +	case MSR_IA32_CORE_CAPS:
+> > > +		if (!msr_info->host_initiated)
+> > 
+> > Shouldn't @data be checked against kvm_get_core_capabilities()?
 > 
-> Fixes: 1629dd4f763c ("cadence: Add LSO support.")
-> Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-> ---
-> v2:
-> Added Fixes tag
+> Maybe it's for the case that userspace might have the ability to emulate SLD
+> feature? And we usually let userspace set whatever it wants, e.g.,
+> ARCH_CAPABILITIES.
 
-Several problems with this.
-
-The subject talks about alignemnt check, but you are not changing
-the alignment check.  Instead you are modifying the linear buffer
-check:
-
-> @@ -1792,7 +1792,7 @@ static netdev_features_t macb_features_check(struct sk_buff *skb,
->  	/* Validate LSO compatibility */
->  
->  	/* there is only one buffer */
-> -	if (!skb_is_nonlinear(skb))
-> +	if (!skb_is_nonlinear(skb) || (ip_hdr(skb)->protocol != IPPROTO_UDP))
->  		return features;
-
-So either your explanation is wrong or the code change is wrong.
-
-Furthermore, if you add this condition then there is now dead code
-below this.  The code that checks for example:
-
-	/* length of header */
-	hdrlen = skb_transport_offset(skb);
-	if (ip_hdr(skb)->protocol == IPPROTO_TCP)
-		hdrlen += tcp_hdrlen(skb);
-
-will never trigger this IPPROTO_TCP condition after your change.
-
-A lot of things about this patch do not add up.
-
+If the 'sq_misc.split_lock' event is sufficiently accurate, I suppose
+the host could use that to emulate the feature at the cost of one
+counter used.
