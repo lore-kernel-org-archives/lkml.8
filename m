@@ -2,200 +2,133 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7843EC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0FBC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546C120730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B1820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:08:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQGAshzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgBDQGd (ORCPT
+        id S1727379AbgBDQI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:06:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29358 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727290AbgBDQGd (ORCPT
+        Tue, 4 Feb 2020 11:08:27 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44832 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgBDQI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:06:33 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014FiTWa023326;
-        Tue, 4 Feb 2020 11:06:27 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxy9jdgs8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 11:06:25 -0500
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 014Fj5ak027405;
-        Tue, 4 Feb 2020 11:06:25 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxy9jdgr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 11:06:25 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 014G4xDi005541;
-        Tue, 4 Feb 2020 16:06:24 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02dal.us.ibm.com with ESMTP id 2xw0y6sb97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 16:06:24 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014G6NYb33292792
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Feb 2020 16:06:23 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70639112065;
-        Tue,  4 Feb 2020 16:06:23 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8AB6112063;
-        Tue,  4 Feb 2020 16:06:22 +0000 (GMT)
-Received: from [9.163.68.178] (unknown [9.163.68.178])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Feb 2020 16:06:22 +0000 (GMT)
-Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.vnet.ibm.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
- <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
- <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com>
- <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com>
-Date:   Tue, 4 Feb 2020 10:06:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 4 Feb 2020 11:08:27 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y5so9658015pfb.11;
+        Tue, 04 Feb 2020 08:08:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aJyPBejd2KHeFnws6O5Ct6jDTArqwJQptRALIFCVTtc=;
+        b=SQGAshzGZuSFK2mUSmXisa3vVER33pORKfjfSofOqjBezn8T9NUsDSI2wW2UZ8sh/s
+         CfPk52f4CSQAmSUbacYbR+NsFcKA0wJxlK8giYe9PHM78oHAFPfYD+eUUPzLXV+kcqdl
+         BfoJg8pV3/W97QWNrJfuTIUUbj7I9EwIER3gtFYxS32gtdZEt90Grh+MSzOxYFkyc3Xa
+         ifioalqDQIOQvOIgnhoXC3cU+r2AQLv2qHRG7r8RyFXtpbxcMHim5s7h0k7JY53C19ul
+         G+nqUHnVLymmK6VQEp4KZkQonrBYMx8c005G0c4M9hbGQfKTSnDdgo97P+Nc5JeUFx7L
+         BKkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aJyPBejd2KHeFnws6O5Ct6jDTArqwJQptRALIFCVTtc=;
+        b=eIvR3N8jqZ9N97Y9QPDZNh4J2cOzXSovHuPkWKESfO/D2biApoBNfS2SOCh+wuLw9D
+         qSIE6TsurKv3X8XN8cuDFRYMpyFkRgqTEOPUwq1hqtHgo2ho0r13uGfDvkZlCZjs1klh
+         2lo66x998TdJ1Ck84LBca3ZdHXDvfQVrmCUBMuhFSaAT1A1zbk4qbo3Qmi8hdnKn3Ttu
+         /zIDKkj3LL13XzifKpGSBG9C1VY4XWFqAgO1TNSuORygoLsSm5pmrwaSc0Y6wqpgaNqs
+         4gRQFsvbjHeKQW76mwHfWpqTM2xdQ1cn4FlIkyOb4Ef3xvU9DhgqB8fvr0MNEgVuTavB
+         5O6Q==
+X-Gm-Message-State: APjAAAWQGFuebJWKNq9fb1g5u5ZgYrOsdMy/DbTnqh9Wf5aaTHrDq0ge
+        4CtFVYj5uVtg3X8wkDJAes6X3bCT
+X-Google-Smtp-Source: APXvYqxrJwoHQaFiVDu+a5C7dFrCynpXMTGgIPHDF/NSAujTe95ynfq1TaRTRDc9qsR/QvHvzp5XXw==
+X-Received: by 2002:a62:f243:: with SMTP id y3mr32329175pfl.146.1580832506445;
+        Tue, 04 Feb 2020 08:08:26 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v9sm4163253pja.26.2020.02.04.08.08.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Feb 2020 08:08:25 -0800 (PST)
+Date:   Tue, 4 Feb 2020 08:08:24 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] watchdog: qcom-wdt: add option to skip pretimeout
+Message-ID: <20200204160824.GA17320@roeck-us.net>
+References: <20200204152104.13278-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_05:2020-02-04,2020-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- mlxscore=0 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002040107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204152104.13278-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 04, 2020 at 04:21:01PM +0100, Ansuel Smith wrote:
+> Some platform like ipq806x doesn't support pretimeout.
+> As the driver check if there are available interrupts and ipq806x
+> use msm-timer that require interrupts, the watchdog fail to probe
+> as request_irq tries to use a ppi interrupt. Add an option to skip
+> pretimeout setup and use the normal watchdog probe.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/watchdog/qcom-wdt.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index a494543d3ae1..e689e97e883e 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -189,6 +189,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	u32 percpu_offset;
+>  	int irq, ret;
+>  	struct clk *clk;
+> +	bool nopretimeout;
+>  
+>  	regs = of_device_get_match_data(dev);
+>  	if (!regs) {
+> @@ -204,6 +205,8 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	if (!res)
+>  		return -ENOMEM;
+>  
+> +	nopretimeout = of_property_read_bool(np, "no-pretimeout");
+> +
+>  	/* We use CPU0's DGT for the watchdog */
+>  	if (of_property_read_u32(np, "cpu-offset", &percpu_offset))
+>  		percpu_offset = 0;
+> @@ -247,7 +250,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  
+>  	/* check if there is pretimeout support */
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq > 0) {
+> +	if (!nopretimeout && irq > 0) {
 
-On 2/4/20 5:02 AM, Andy Shevchenko wrote:
-> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
->> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
->>> On Wed, Jan 29, 2020 at 10:09 PM Eddie James <eajames@linux.ibm.com> wrote:
-> ...
->
->>>> +       struct device *dev;
->>> Isn't fsl->dev the same?
->>> Perhaps kernel doc to explain the difference?
->>
->> No, it's not the same, as dev here is the SPI controller. I'll add a
->> comment.
-> Why to have duplication then?
+That is unnecessary; such platforms should simply not provide an interrupt.
+Or, in other words, what is the point of assigning an interrupt to be used
+for pretimeout if the platform doesn't support it ? And then to add yet
+another attribute to tell the driver not to use it ?
 
+Guenter
 
-Nothing is being duplicated, the two variables are storing entirely 
-different information, both of which are necessary for each SPI 
-controller that this driver is driving.
-
-
->
->>>> +       struct fsi_device *fsi;
-> ...
->
->>>> +       for (i = 0; i < num_bytes; ++i)
->>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
->>> Redundant & 0xffULL part.
->>>
->>> Isn't it NIH of get_unalinged_be64 / le64 or something similar?
->>
->> No, these are shift in/out operations. The read register will also have
->> previous operations data in them and must be extracted with only the
->> correct number of bytes.
-> Why not to call put_unaligned() how the tail in this case (it's 0 or
-> can be easily made to be 0) will affect the result?
-
-
-The shift-in is not the same as any byte-swap or unaligned operation. 
-For however many bytes we've read, we start at that many bytes 
-left-shifted in the register and copy out to our buffer, moving right 
-for each next byte... I don't think there is an existing function for 
-this operation.
-
-
->
->>>> +       return num_bytes;
->>>> +}
->>>> +static int fsi_spi_data_out(u64 *out, const u8 *tx, int len)
->>>> +{
->>> Ditto as for above function. (put_unaligned ...)
-> Ditto.
-
-
-I don't understand how this could work for transfers of less than 8 
-bytes, any put_unaligned would access memory that it doesn't own.
-
-
->
->>>> +}
-> ...
->
->>>> +static int fsi_spi_transfer_data(struct fsi_spi *ctx,
->>>> +                                struct spi_transfer *transfer)
->>>> +{
->>> Can you refactor to tx and rx parts?
->>
->> Why?
-> It's way too long function to read. Indentation level also can improve
-> readability.
-> That's basically what refactoring is for.
-
-
-The body is 65 lines, I don't think it is too long.
-
-Since the function is used multiple times I think it makes more sense to 
-encapsulate the check for tx/rx in the function rather than split it and 
-have to check each time the functions are used.
-
-
->
->>>> +       return 0;
->>>> +}
-> ...
->
->>>> +       if ((clock_cfg & (SPI_FSI_CLOCK_CFG_MM_ENABLE |
->>>> +                         SPI_FSI_CLOCK_CFG_ECC_DISABLE |
->>>> +                         SPI_FSI_CLOCK_CFG_MODE |
->>>> +                         SPI_FSI_CLOCK_CFG_SCK_RECV_DEL |
->>>> +                         SPI_FSI_CLOCK_CFG_SCK_DIV)) != wanted_clock_cfg)
->>>> +               rc = fsi_spi_write_reg(ctx, SPI_FSI_CLOCK_CFG,
->>>> +                                      wanted_clock_cfg);
->>> Missed {} ?
->>
->> No? It's one line under the if.
-> One statement, but *two* lines.
-> What does checkpatch.pl tell you about this?
-
-
-Right.
-
-checkpatch.pl says nothing about this, I think it meets the coding 
-standards as is.
-
-
-Thanks for the review,
-
-Eddie
-
-
->
+>  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+>  				       IRQF_TRIGGER_RISING,
+>  				       "wdt_bark", &wdt->wdd);
+> -- 
+> 2.24.0
+> 
