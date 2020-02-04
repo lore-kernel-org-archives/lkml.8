@@ -2,391 +2,167 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F05AC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816BCC3524F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64920217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E67217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="OsWvzK4r"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HK499qij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgBDJvB (ORCPT
+        id S1726992AbgBDJvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:51:01 -0500
-Received: from mail-eopbgr1410132.outbound.protection.outlook.com ([40.107.141.132]:25765
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726553AbgBDJvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:51:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f5K9bADNBwIBMIrAKRE6M/tHpmTHvxD9CgHNzXUnDoQ5SXwi/dlSF6lrszP97OcGqFJbBZdeErLzzUEKyH673pHT37QgQk7NHHF/AyTw4BOQOLac22YXYf2bxJei5j+1FCb/BNZXXW8d25ShHbMBHPKh70uDYkhkQb+/LMX5r4Fj/vbcEurhWP3oMh+pPBN70xAMtDmTFL24kCNdXoiu8O80Y6vP7SBC4xY0EHW011/MAAT5YZ5XHnMggm7HHba5s4dpM4IawIc48PNwOzX7I7vxIul7NXANKCbxqzqMdpNnTXuIKTd0JYn22xF60PgGgGKx5agMNiY/GkrfukShiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RzZNwK0+9CJNSAgVDlI0GGwzdNuCmDXANIg2Mcu78gE=;
- b=IpBXjo5mZGFjYE2wHKadtxocnk0lyERGXuPbVm6U9cVLzhaq1lA3k77ZDialcs/9Y2vTHTTW7KUHIROsQKNxLCTnNRgUH6BLJEbItok2/WRlvqkDPPGqhvfj5axSX3Y2yiXvw3CSY2C6p/jDK0Tzkgejta4k3SwH45e/SQq5LuA/OAYe4Q+5H2q+CdKGuMwCu/gE950TjHKCrAmMjt2WW/1HYYh3ZAtphJISbQhr2Bhu9xGsUZCogGAVK2druyFu856rSXSYQgH73tLSZ00I2KYusxahjGspIXfUNIh4BVH9Yzy8kUTNi9D/1P5ngDb0f4V9hr4SYUYu3wtgVwYBbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RzZNwK0+9CJNSAgVDlI0GGwzdNuCmDXANIg2Mcu78gE=;
- b=OsWvzK4rBa48gxFYcMNuKsnjbL+LNl56vz+Je1VXRYgi3egZdJQWYPVa1q/UpUXAFJ4gGBElb/R8EUwMWJCGIwFL+PCRMwzsfdFFiYh2ED7pWqp9djwacdMC5E1BEauyuW7LMGbvOqeVfo2qvcdo3pYumYpbjHxUrevPcjfQDRA=
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
- TYAPR01MB4797.jpnprd01.prod.outlook.com (20.179.175.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.30; Tue, 4 Feb 2020 09:50:56 +0000
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::1045:4879:77ed:8a70]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::1045:4879:77ed:8a70%7]) with mapi id 15.20.2686.030; Tue, 4 Feb 2020
- 09:50:56 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>
-Subject: RE: [PATCH 4.4 00/53] 4.4.213-stable review
-Thread-Topic: [PATCH 4.4 00/53] 4.4.213-stable review
-Thread-Index: AQHV2q371s8BhYMrikS93RDHT0J2SagKwR1g
-Date:   Tue, 4 Feb 2020 09:50:56 +0000
-Message-ID: <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-References: <20200203161902.714326084@linuxfoundation.org>
-In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Paterson2@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 936b2cf4-a071-426d-b0b5-08d7a957bb32
-x-ms-traffictypediagnostic: TYAPR01MB4797:
-x-microsoft-antispam-prvs: <TYAPR01MB4797D6142E555D082AC26F80B7030@TYAPR01MB4797.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 03030B9493
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(376002)(346002)(136003)(199004)(189003)(110136005)(6506007)(86362001)(52536014)(2906002)(8936002)(966005)(8676002)(316002)(26005)(66556008)(478600001)(76116006)(66476007)(64756008)(66946007)(66446008)(81166006)(81156014)(33656002)(4326008)(71200400001)(54906003)(7416002)(9686003)(5660300002)(7696005)(55016002)(186003)(6606295002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4797;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eznMU/1dLXXayzkZzeQwU9udU9ll8a9sVVbAV2teImzZvmOm+7GaeA35dlJnBJ5hO5JL1l7vCwzTXrl3jCBCsvIvtsapZtE08eVppQ66ZS+ZwBCS9G1JU+hXeJlGPFclxx++Y06ITRoX6IVaqAUQJ4WCfm7EnAPs60Zk5bdQ5ZY5H7Is7QXkpZL278euRkvJshGXaMuInngM8uqU4gMg/BiMpbgzwn09aytIT7u1ebBYjf60y9ZHULV3Y2Igh6VUel0dpn58Vr79noQJKScrxVAXYqsIqHaw9t7FfTTNvFk+Xw/LGOhqFU5noAJ2mnR3SK3LmAW2DgeQVCANRe0NXUNRjpsdNtQfOVjLZIwTY675eZM2iGG8YNys+pxtqbYVP6hGnqwv2BX4z//GfYYtqoQ54uwVTZkHDNWroj6ACM+MG67IDw15+3i6gZ3OKqSUrgKXE14wGgGh9DW83cHbpwqOse5rN0ofe+QtkuL6aRgxHSAXFKjzugcfKmlPc0w+PSGIvJ4isYVydRz5T6YgYu1aQ2sdM4YzUz7w5dcX+BEeZVfjCQFIJqAmkjgihMZP
-x-ms-exchange-antispam-messagedata: AcMojIGp25prA4WPJkor7tBRJ9HwjNVueGjXx8MTdwVzlXoiyeZekB64+hu+xWsVIM5R/jpmrhXz5DYwBOysi2qXEJulQa5Ztl8ie4udBD6dFv0SjviV4/nDXs7XsEaF1cKoInZ9s7hhbuOOU90QEw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Feb 2020 04:51:05 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:46633 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726343AbgBDJvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:51:04 -0500
+Received: from [IPv6:2001:420:44c1:2577:c522:bb58:9147:43ff]
+ ([IPv6:2001:420:44c1:2577:c522:bb58:9147:43ff])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id yurBiQflTVuxOyurFiI8yZ; Tue, 04 Feb 2020 10:51:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580809861; bh=udrDG7W7XxVlZg9dFBjVJa1SeinJFWf8PYu2s1ZBzEE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=HK499qijLMt0d3NsJ/R6CALFLgIH5TPDKLVv3JotVW7E7jZ07nDX/u+G3KPwDGiya
+         4vO23Pn04jCbJi6EvdQs9zHPgm/gaq7SPu1V1vcxUy6lHQbMxg4I6sahHsRi+zfTQj
+         OlBSokrE5w+DUmlQcCjjnkKOK2C+brr7gVNvAFop+zpL5UXbuooWaXd0/JdVlheRAT
+         WSE2ytobns3p7mUHPWFQ+eBzzs54fwXOfF4uZDMWcwgm/kMPMz44GEH+lILGNNy1wB
+         BdYCKaK1svlIxvF8PyWmJJvrOHO6jzJ4YgYSL2nFmktclMlk08Wo+AM9lmyPf7R+DP
+         KlTsvzXhDJ6uA==
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
+        frankc@nvidia.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
+ <20200130154246.GA2904678@ulmo>
+ <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
+ <20200131170351.GA3444092@ulmo>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <b1678339-5ba6-4950-6afe-01fe26ee527f@xs4all.nl>
+Date:   Tue, 4 Feb 2020 10:50:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 936b2cf4-a071-426d-b0b5-08d7a957bb32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2020 09:50:56.2925
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wWduqBH+krydvfBww4sIjFqum74oAjPk+hzhxaYYA+9MhfUWTKb1s69Gc8+OmjV3p4ObLHQ+F2wl3ghsZvv5psGDZqVOiSpzvHgM9k579VI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4797
+In-Reply-To: <20200131170351.GA3444092@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfE57kH2nPdi6RuL5Tj6iVOgBB0zQcKUPr7DSyqTUxljwxpmmpytfaq19V/tG1nCy/2R9YUpxBlmWXq14r7ylSGpMXGwLU42dekPcaxldoLur6pV9KZyV
+ bmZ3MXgxDSVJZDaKgt7TNK5D66zRoiaCRZX5ad8dvMCxEXluNKfGp5uFyV/FQYVU142nJVOFaH08xF2mBEqHFhjdE40AvLtxGARg3NkLqb4QAmPq7yJibDpd
+ jbYvK+HxyYndRWamV7nImM/+YIe0B2UCXpV6EZYNAnC4mOl9kUte1dh5SLAr3gofV2EZC7tm/sSsMnI0nhbNf21TWdbNVNnypNqOyypbnfhnjQnjLrGOtt5z
+ tI6TLNg3Ay3dhmS4IsjnfvfaJSyYMWgrFOGIwXRD5gmihhhAXZzUSZbJwyZoGamDeTKx6nnP8koFBr1Z+lrwCtO62ecn3QYrRGS0WPqTLjct/wdBuGrVD6Tx
+ KZogcjGuaBQxB6g1SerbtTxl7YLyikSGJnSr1cgzLspZhnYRBQ+lgkqSKEia61J+FK2Yc5aVd0iwOep+TuQHNmUjKWZt9RJG4i9OvrbsZGroHLFI3iqtPTIr
+ BT8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 1/31/20 6:03 PM, Thierry Reding wrote:
+> On Fri, Jan 31, 2020 at 03:29:52PM +0100, Hans Verkuil wrote:
+>> On 1/30/20 4:42 PM, Thierry Reding wrote:
+>>> On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
+>>>> Hi Sowjanya,
+>>>>
+>>>> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+>>>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>>>> generator (TPG) capture.
+>>>>>
+>>>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>>>> CSI port is one-to-one mapped to VI channel for video capture.
+>>>>>
+>>>>> This series has TPG support only where it creates hard media links
+>>>>> between CSI subdevice and VI video device without device graphs.
+>>>>>
+>>>>> v4l2-compliance results are available below the patch diff.
+>>>>>
+>>>>> [v0]:	Includes,
+>>>>> 	- Adds CSI TPG clock to Tegra210 clock driver
+>>>>> 	- Host1x video driver with VI and CSI clients.
+>>>>> 	- Support for Tegra210 only.
+>>>>> 	- VI CSI TPG support with hard media links in driver.
+>>>>> 	- Video formats supported by Tegra210 VI
+>>>>> 	- CSI TPG supported video formats
+>>>>
+>>>> I'm trying to compile this patch series using the media_tree master
+>>>> branch (https://git.linuxtv.org//media_tree.git), but it fails:
+>>>>
+>>>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
+>>>> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
+>>>>    71 |  unsigned int count = *nbuffers;
+>>>>       |               ^~~~~
+>>>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
+>>>> drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
+>>>>   518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+>>>>       |                                                       ^
+>>>> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
+>>>> make[4]: *** Waiting for unfinished jobs....
+>>>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
+>>>> drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
+>>>>   157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+>>>>       |                                                       ^
+>>>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
+>>>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
+>>>> drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>>>   213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>>>       |                                                   ^~
+>>>> drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>>>   259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>>>       |                                                   ^~
+>>>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
+>>>> drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>>>   246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>>>       |                                                   ^~
+>>>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
+>>>> drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>>>   286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>>>       |                                                   ^~
+>>>>
+>>>> And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
+>>>> have a 'host' field.
+>>>>
+>>>> Does this series depend on another patch that's not yet in mainline?
+>>>
+>>> Sowjanya's been working on top of linux-next, so, yes, this patch
+>>> depends on a change that's been merged into the DRM tree for v5.6-rc1.
+>>>
+>>> Thierry
+>>>
+>>
+>> Is there a specific linux-next tag that works? I tried next-20200131 but that
+>> failed to boot. Same problem with the mainline repo since the host1x patches
+>> were merged yesterday. It compiles fine, but the boot just stops. Or am I
+>> missing some kernel config that is now important to have?
+> 
+> linux-next and mainline are currently regressing on Tegra210 (and some
+> Tegra124) boards. I just sent out a series that fixes the regression for
+> me:
+> 
+> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=156215
+> 
+> Please test if this works for you. If so, I'll send this to Dave as soon
+> as possible.
 
-> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> Behalf Of Greg Kroah-Hartman
-> Sent: 03 February 2020 16:19
->=20
-> This is the start of the stable review cycle for the 4.4.213 release.
-> There are 53 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> Anything received after that time might be too late.
+Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-We're seeing an issue with 4.4.213-rc1 (36670370c48b) and 4.4.213-rc2 (758a=
-39807529) with our 4 am335x configurations [0]:
+Thank you, now it boots on mainline + this series + the new VI/CSI driver.
 
-   AS      arch/arm/kernel/hyp-stub.o
- arch/arm/kernel/hyp-stub.S:   CC      arch/arm/mach-omap2/sram.o
- Assembler messages:
-   AS      arch/arm/kernel/smccc-call.o
- arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not support=
- `ubfx r7,r7,#16,#4' in ARM mode
- scripts/Makefile.build:375: recipe for target 'arch/arm/kernel/hyp-stub.o'=
- failed
- make[1]: *** [arch/arm/kernel/hyp-stub.o] Error 1
+Regards,
 
-The culprit seems to be: 15163bcee7b5 ("ARM: 8955/1: virt: Relax arch timer=
- version check during early boot")
-Reverting the same resolves the build issue.
+	Hans
 
-Latest pipeline: https://gitlab.com/cip-project/cip-testing/linux-stable-rc=
--ci/pipelines/114683657
-
-[0] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/-/blob/mast=
-er/4.4.y-cip/arm/
-siemens_am335x-axm2_defconfig, siemens_am335x-draco_defconfig, siemens_am33=
-5x-dxr2_defconfig, siemens_am335x-etamin_defconfig
-
-
-Kind regards, Chris
-
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-
-> review/patch-4.4.213-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-
-> rc.git linux-4.4.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
->=20
-> -------------
-> Pseudo-Shortlog of commits:
->=20
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Linux 4.4.213-rc1
->=20
-> Praveen Chaudhary <praveen5582@gmail.com>
->     net: Fix skb->csum update in inet_proto_csum_replace16().
->=20
-> Vasily Averin <vvs@virtuozzo.com>
->     l2t_seq_next should increase position index
->=20
-> Vasily Averin <vvs@virtuozzo.com>
->     seq_tab_next() should increase position index
->=20
-> Finn Thain <fthain@telegraphics.com.au>
->     net/sonic: Quiesce SONIC before re-initializing descriptor memory
->=20
-> Finn Thain <fthain@telegraphics.com.au>
->     net/sonic: Fix receive buffer handling
->=20
-> Finn Thain <fthain@telegraphics.com.au>
->     net/sonic: Use MMIO accessors
->=20
-> Finn Thain <fthain@telegraphics.com.au>
->     net/sonic: Add mutual exclusion for accessing shared state
->=20
-> Madalin Bucur <madalin.bucur@oss.nxp.com>
->     net/fsl: treat fsl,erratum-a011043
->=20
-> Manish Chopra <manishc@marvell.com>
->     qlcnic: Fix CPU soft lockup while collecting firmware dump
->=20
-> Hayes Wang <hayeswang@realtek.com>
->     r8152: get default setting of WOL before initializing
->=20
-> Michael Ellerman <mpe@ellerman.id.au>
->     airo: Add missing CAP_NET_ADMIN check in
-> AIROOLDIOCTL/SIOCDEVPRIVATE
->=20
-> Michael Ellerman <mpe@ellerman.id.au>
->     airo: Fix possible info leak in AIROOLDIOCTL/SIOCDEVPRIVATE
->=20
-> Vladimir Murzin <vladimir.murzin@arm.com>
->     ARM: 8955/1: virt: Relax arch timer version check during early boot
->=20
-> Hannes Reinecke <hare@suse.de>
->     scsi: fnic: do not queue commands during fwreset
->=20
-> Nicolas Dichtel <nicolas.dichtel@6wind.com>
->     vti[6]: fix packet tx through bpf_redirect()
->=20
-> Johan Hovold <johan@kernel.org>
->     Input: aiptek - use descriptors of current altsetting
->=20
-> Arnd Bergmann <arnd@arndb.de>
->     wireless: wext: avoid gcc -O3 warning
->=20
-> Cambda Zhu <cambda@linux.alibaba.com>
->     ixgbe: Fix calculation of queue with VFs and flow director on interfa=
-ce flap
->=20
-> Radoslaw Tyl <radoslawx.tyl@intel.com>
->     ixgbevf: Remove limit of 10 entries for unicast filter list
->=20
-> Lubomir Rintel <lkundrak@v3.sk>
->     clk: mmp2: Fix the order of timer mux parents
->=20
-> Lee Jones <lee.jones@linaro.org>
->     media: si470x-i2c: Move free() past last use of 'radio'
->=20
-> Bin Liu <b-liu@ti.com>
->     usb: dwc3: turn off VBUS when leaving host mode
->=20
-> Zhenzhong Duan <zhenzhong.duan@gmail.com>
->     ttyprintk: fix a potential deadlock in interrupt context issue
->=20
-> Hans Verkuil <hverkuil-cisco@xs4all.nl>
->     media: dvb-usb/dvb-usb-urb.c: initialize actlen to 0
->=20
-> Hans Verkuil <hverkuil-cisco@xs4all.nl>
->     media: gspca: zero usb_buf
->=20
-> Sean Young <sean@mess.org>
->     media: digitv: don't continue if remote control state can't be read
->=20
-> Jan Kara <jack@suse.cz>
->     reiserfs: Fix memory leak of journal device string
->=20
-> Dan Carpenter <dan.carpenter@oracle.com>
->     mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
->=20
-> Dirk Behme <dirk.behme@de.bosch.com>
->     arm64: kbuild: remove compressed images on 'make ARCH=3Darm64
-> (dist)clean'
->=20
-> Herbert Xu <herbert@gondor.apana.org.au>
->     crypto: pcrypt - Fix user-after-free on module unload
->=20
-> Al Viro <viro@zeniv.linux.org.uk>
->     vfs: fix do_last() regression
->=20
-> Herbert Xu <herbert@gondor.apana.org.au>
->     crypto: af_alg - Use bh_lock_sock in sk_destruct
->=20
-> Eric Dumazet <edumazet@google.com>
->     net_sched: ematch: reject invalid TCF_EM_SIMPLE
->=20
-> Laura Abbott <labbott@fedoraproject.org>
->     usb-storage: Disable UAS on JMicron SATA enclosure
->=20
-> Arnd Bergmann <arnd@arndb.de>
->     atm: eni: fix uninitialized variable warning
->=20
-> Krzysztof Kozlowski <krzk@kernel.org>
->     net: wan: sdla: Fix cast from pointer to integer of different size
->=20
-> Fenghua Yu <fenghua.yu@intel.com>
->     drivers/net/b44: Change to non-atomic bit operations on pwol_mask
->=20
-> Andreas Kemnade <andreas@kemnade.info>
->     watchdog: rn5t618_wdt: fix module aliases
->=20
-> Johan Hovold <johan@kernel.org>
->     zd1211rw: fix storage endpoint lookup
->=20
-> Johan Hovold <johan@kernel.org>
->     rtl8xxxu: fix interface sanity check
->=20
-> Johan Hovold <johan@kernel.org>
->     brcmfmac: fix interface sanity check
->=20
-> Johan Hovold <johan@kernel.org>
->     ath9k: fix storage endpoint lookup
->=20
-> Malcolm Priestley <tvboxspy@gmail.com>
->     staging: vt6656: Fix false Tx excessive retries reporting.
->=20
-> Malcolm Priestley <tvboxspy@gmail.com>
->     staging: vt6656: use NULLFUCTION stack on mac80211
->=20
-> Malcolm Priestley <tvboxspy@gmail.com>
->     staging: vt6656: correct packet types for CTS protect, mode.
->=20
-> Colin Ian King <colin.king@canonical.com>
->     staging: wlan-ng: ensure error return is actually returned
->=20
-> Andrey Shvetsov <andrey.shvetsov@k2l.de>
->     staging: most: net: fix buffer overflow
->=20
-> Johan Hovold <johan@kernel.org>
->     USB: serial: ir-usb: fix IrLAP framing
->=20
-> Johan Hovold <johan@kernel.org>
->     USB: serial: ir-usb: fix link-speed handling
->=20
-> Johan Hovold <johan@kernel.org>
->     USB: serial: ir-usb: add missing endpoint sanity check
->=20
-> Johan Hovold <johan@kernel.org>
->     rsi_91x_usb: fix interface sanity check
->=20
-> Johan Hovold <johan@kernel.org>
->     orinoco_usb: fix interface sanity check
->=20
-> Takashi Iwai <tiwai@suse.de>
->     ALSA: pcm: Add missing copy ops check before clearing buffer
->=20
->=20
-> -------------
->=20
-> Diffstat:
->=20
->  Makefile                                           |   4 +-
->  arch/arm/kernel/hyp-stub.S                         |   7 +-
->  arch/arm64/boot/Makefile                           |   2 +-
->  crypto/af_alg.c                                    |   6 +-
->  crypto/pcrypt.c                                    |   3 +-
->  drivers/atm/eni.c                                  |   4 +-
->  drivers/char/ttyprintk.c                           |  15 ++-
->  drivers/clk/mmp/clk-of-mmp2.c                      |   2 +-
->  drivers/input/tablet/aiptek.c                      |   2 +-
->  drivers/media/radio/si470x/radio-si470x-i2c.c      |   2 +-
->  drivers/media/usb/dvb-usb/digitv.c                 |  10 +-
->  drivers/media/usb/dvb-usb/dvb-usb-urb.c            |   2 +-
->  drivers/media/usb/gspca/gspca.c                    |   2 +-
->  drivers/net/ethernet/broadcom/b44.c                |   9 +-
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |   3 +-
->  drivers/net/ethernet/chelsio/cxgb4/l2t.c           |   3 +-
->  drivers/net/ethernet/freescale/xgmac_mdio.c        |   7 +-
->  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |  37 ++++--
->  drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c  |   5 -
->  drivers/net/ethernet/natsemi/sonic.c               | 109 ++++++++++++++-=
---
->  drivers/net/ethernet/natsemi/sonic.h               |  25 ++--
->  .../net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c  |   1 +
->  .../net/ethernet/qlogic/qlcnic/qlcnic_minidump.c   |   2 +
->  drivers/net/usb/r8152.c                            |   9 +-
->  drivers/net/wan/sdla.c                             |   2 +-
->  drivers/net/wireless/airo.c                        |  20 ++-
->  drivers/net/wireless/ath/ath9k/hif_usb.c           |   2 +-
->  drivers/net/wireless/brcm80211/brcmfmac/usb.c      |   4 +-
->  drivers/net/wireless/orinoco/orinoco_usb.c         |   4 +-
->  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c   |   2 +-
->  drivers/net/wireless/rsi/rsi_91x_usb.c             |   2 +-
->  drivers/net/wireless/zd1211rw/zd_usb.c             |   2 +-
->  drivers/scsi/fnic/fnic_scsi.c                      |   3 +
->  drivers/staging/most/aim-network/networking.c      |  10 ++
->  drivers/staging/vt6656/device.h                    |   2 +
->  drivers/staging/vt6656/int.c                       |   6 +-
->  drivers/staging/vt6656/main_usb.c                  |   1 +
->  drivers/staging/vt6656/rxtx.c                      |  26 ++--
->  drivers/staging/wlan-ng/prism2mgmt.c               |   2 +-
->  drivers/usb/dwc3/core.c                            |   3 +
->  drivers/usb/serial/ir-usb.c                        | 136 +++++++++++++++=
-+-----
->  drivers/usb/storage/unusual_uas.h                  |   7 +-
->  drivers/watchdog/rn5t618_wdt.c                     |   1 +
->  fs/namei.c                                         |   4 +-
->  fs/reiserfs/super.c                                |   2 +
->  include/linux/usb/irda.h                           |  13 +-
->  mm/mempolicy.c                                     |   6 +-
->  net/core/utils.c                                   |  20 ++-
->  net/ipv4/ip_vti.c                                  |  13 +-
->  net/ipv6/ip6_vti.c                                 |  13 +-
->  net/sched/ematch.c                                 |   3 +
->  net/wireless/wext-core.c                           |   3 +-
->  sound/core/pcm_native.c                            |   2 +-
->  53 files changed, 418 insertions(+), 167 deletions(-)
->=20
+> 
+> Thierry
+> 
 
