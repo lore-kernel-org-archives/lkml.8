@@ -2,138 +2,112 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D6CC35249
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D49C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4E021741
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380812084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVi4gby9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eozpiRxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgBDCNd (ORCPT
+        id S1727100AbgBDCQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 21:13:33 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40236 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgBDCNc (ORCPT
+        Mon, 3 Feb 2020 21:16:24 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44015 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgBDCQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 21:13:32 -0500
-Received: by mail-qk1-f193.google.com with SMTP id b7so1222041qkl.7;
-        Mon, 03 Feb 2020 18:13:32 -0800 (PST)
+        Mon, 3 Feb 2020 21:16:24 -0500
+Received: by mail-pf1-f194.google.com with SMTP id s1so8608618pfh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 18:16:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VZmEGXacXxicuuPoJQtVnZbvxG0RFnbvOKhiEeP6vow=;
-        b=KVi4gby9PprqxfGEEC+4ouLgLiwpLisNZBv8dGQhj8U16REXKcxfbNCTW84pL3Pfrk
-         dYOKdGaqVn6s+Nl0twegaWDeGN69OZYAAxMiiqMmKKZ8s1PaQV7eNZ410S6X3lBkVcVP
-         19oTCOs1bPLpPVGVtGUDsInHS4wqJJSgC3eSWnE/HkIC08rCCLG0QuXnNZ5sxPEdi/TC
-         of3F1/BTRLd2zVbWEiVeZtyBE5nRJxoMJrz3/1y/Qxw0n+A/zv4k7sSJ2P6kV7aIazXZ
-         VU/DUSZp7vYFUMhuhhbDVKoqNwSGkXoSMJIu4hhJbZ/R+y5fH+0IqbY8hbsLr16c1vKx
-         oxyg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=QH6t5+P9IvjHew1g3+ZZFvveJFDwCjcHV2ml4p3nTPg=;
+        b=eozpiRxf1ifzipl/Fgd3fvIqP2hdE/FX1LeJgVDf44CUROE3vz1QaKnniZ1qT7Aj16
+         6AChhuW2rNu52u+DvKIV8aKwXeHTlgB1ekN2Tf0ZOgGrbEnI71mFV1QUsThfvmcRh3ho
+         000MtGIG3o4WdZfGtS93vreC3xN1/FbLyR0v40NzvNHNxtXAblWqYXdUxQPDrQeOEZ4Z
+         1PkZjEKuuXbkioEyuiJnEO2HXDTu3XnQbSB7oCClZRrj2L1fTAVG4m1WGq4qoVcrkd8P
+         5qr5BV86idf/vtK4/KYNdjSRi8neOXG+pn9Y+Uf12rkE2u4V3KIYRO08CbRxcCathKr1
+         unhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VZmEGXacXxicuuPoJQtVnZbvxG0RFnbvOKhiEeP6vow=;
-        b=duc9MaercplkGV5iLDMOUB2farcqklsTc2pHaewFwySk/BPVWaosyP7Jc3H7VHzbZq
-         eVUAEFNB/6fHOcl1C7gtVFoQODvjTZf9jDvWWl/9wnpBpu4Awl0evO0JwVPNkeMfoB2k
-         g+qQXE3MCWWul1JxfY+y1GPmQdmk0kOTMx4rMldoqyJCJWijNinLK3f7xVNOSj5nloZl
-         QjC4DYdlD1LeOZGF7Q4LlhnIM1/bmyEq3+6hJgyNp3KSTrDZNiRjbYsdQBP9w21MIYqB
-         78vNLmWwepMDFCTjnU8vcEtY3EZXZAKEfhkzE+mClUy1H1dd+OIZYiV3KSpjpXIVi8o2
-         3Vyw==
-X-Gm-Message-State: APjAAAU3v3GsXsLymNM6sCN0uxZNPDnha7s/J9/wPKICDvDCBvanAsjK
-        tzHKuJ9nGTTxnRp7fbzhaeg=
-X-Google-Smtp-Source: APXvYqz5Ms8KUiDTqQ+/nuTELvlSFK9eOOh8AFmWmwRebL0ckOFYlc2O0lnRebTQvyLb5G3YcWC4wg==
-X-Received: by 2002:a05:620a:ce5:: with SMTP id c5mr25694582qkj.49.1580782411625;
-        Mon, 03 Feb 2020 18:13:31 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id f26sm10743199qtv.77.2020.02.03.18.13.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2020 18:13:31 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id EFBE722129;
-        Mon,  3 Feb 2020 21:13:28 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 03 Feb 2020 21:13:29 -0500
-X-ME-Sender: <xms:RNM4XroX4ED5nLLTtnhMzmQtsFGh05NaZLBSk2l16WX-NH5qGJcb8w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeekgdegfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
-    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:RNM4Xnt5B3BsSnOBYJ83rKXOnPs1jjiWjda9LccU84dAeiYARLVT-A>
-    <xmx:RNM4XmVBjIpuJQCDL4m3qbpZZjWPjSr2h8uFSVtBFhmX3C3Slv5Zcw>
-    <xmx:RNM4Xj0Kaovit0lFRiXKgjHxuPoogsQaIQVlT8V6pGOFr_-e05ODkg>
-    <xmx:SNM4XmK_iGvA1SLWIFwSAfO1rgItoJMqReOtGvuK0_5f_76115Ra-POAL5I>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E95B130602DB;
-        Mon,  3 Feb 2020 21:13:23 -0500 (EST)
-Date:   Tue, 4 Feb 2020 10:13:22 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/3] PCI: hv: Introduce hv_msi_entry
-Message-ID: <20200204021322.GH83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-4-boqun.feng@gmail.com>
- <87d0av20nj.fsf@nanos.tec.linutronix.de>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QH6t5+P9IvjHew1g3+ZZFvveJFDwCjcHV2ml4p3nTPg=;
+        b=sKky7TVl5q51oRhF11QZPVeVOINXkXqqh4XLytUJtgx4uSvhWx5c1dbs7SggK/zejM
+         XVYy7GHIOBrXqw/2mutPLS+gIFY5Ue1Wd4+6wUEwHLZ1PCotl56lEOj5Q3xVHk5RuQtJ
+         /1b8xQw+tGAyTEHp44A77F+E8Xhl7buUpQEgbWde4e/PGYO7GWNOGb0E9mOStaE5ELs7
+         adkTlimUDiJ4BBEP0Im7ystFan9viFCs+t55mbqlmA4j+PpKhFIcRLtQEJI5Yp9GHCHj
+         2e1AMDxB9z40Q3GKO5OeZdBY/JhknhyzOlHoVI78cvFOGCZy6ryrSLpyqa4zAzQQfvb+
+         5cvA==
+X-Gm-Message-State: APjAAAUu8DBFgyv+1Rh3LsyrupTcmP8uWszGfYUfCrQXLizD5O4W3uW7
+        nOActJ3oudwpwCy253Hb5gHhMslX
+X-Google-Smtp-Source: APXvYqzfLYfco8Pv23blx1p7G6YEjbP2W9xGDfDycLtP/wusgLrgFwSBE7IiVllJtq5ISH7lx5OAkg==
+X-Received: by 2002:aa7:9a0b:: with SMTP id w11mr8842662pfj.4.1580782583373;
+        Mon, 03 Feb 2020 18:16:23 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id w131sm22534230pfc.16.2020.02.03.18.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 18:16:22 -0800 (PST)
+Date:   Tue, 4 Feb 2020 11:16:20 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1] printk: Declare log_wait as external variable
+Message-ID: <20200204021620.GD41358@google.com>
+References: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d0av20nj.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 03:41:52PM +0100, Thomas Gleixner wrote:
-> Boqun Feng <boqun.feng@gmail.com> writes:
-> >  /*
-> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> > index 6b79515abb82..3bdaa3b6e68f 100644
-> > --- a/arch/x86/include/asm/mshyperv.h
-> > +++ b/arch/x86/include/asm/mshyperv.h
-> > @@ -240,6 +240,11 @@ bool hv_vcpu_is_preempted(int vcpu);
-> >  static inline void hv_apic_init(void) {}
-> >  #endif
-> >  
-> > +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
-> > +do {								\
-> > +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
-> > +} while (0)
+On (20/02/03 15:15), Andy Shevchenko wrote:
+> Static analyzer is not happy:
 > 
-> Any reason why this needs to be a macro? inlines are preferrred. They
-
-Making it an inline function will require #include <linux/msi.h> in
-mshyperv.h, which I was trying to avoid. But now it seems pointless. I
-will make it an inline in next version.
-
-Regards,
-Boqun
-
-> are typesafe and readable.
+> kernel/printk/printk.c:421:1: warning: symbol 'log_wait' was not declared. Should it be static?
 > 
-> Thanks,
-> 
->         tglx
+> This is due to usage of log_wait in the other module without announcing
+> its declaration to the world. I wasn't able to dug into deep history of
+> reasons why it is so, and thus decide to make less invasive change, i.e.
+> declaring log_wait as external variable to make static analyzer happy.
+
+[..]
+
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 633f41a11d75..43b5cb88c607 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -418,7 +418,14 @@ DEFINE_RAW_SPINLOCK(logbuf_lock);
+>  	} while (0)
+>
+>  #ifdef CONFIG_PRINTK
+> +
+> +#ifdef CONFIG_PROC_FS
+> +extern wait_queue_head_t log_wait;	/* Used in fs/proc/kmsg.c */
+>  DECLARE_WAIT_QUEUE_HEAD(log_wait);
+> +#else
+> +static DECLARE_WAIT_QUEUE_HEAD(log_wait);
+> +#endif /* CONFIG_PROC_FS */
+
+[..]
+
+Since we are now introducing CONFIG_PROC_FS dependency to printk (and
+proc/kmsg already has CONFIG_PRINTK dependency), then I guess I wouldn't
+mind it if fs/proc/kmsg would just relocate to printk, next to devksmg
+implementation. Just saying.
+
+	-ss
