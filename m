@@ -2,110 +2,93 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEADC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F924C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0CA2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="huoOQfew"
+	by mail.kernel.org (Postfix) with ESMTP id 2E3EF2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgBDUfS (ORCPT
+        id S1727592AbgBDUgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 15:35:18 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47346 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbgBDUfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 15:35:17 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 014KZ5VG105411;
-        Tue, 4 Feb 2020 14:35:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580848505;
-        bh=IocsJb4lt8ba4aTh9yVCxKQrrItDY600pxBV4Igcxn0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=huoOQfewWrW/q7cjEvE35DCyOuUXPTBgUqHbU3Sj1MZWfpT0+BXXCbSxeurZ0U1qg
-         sZ/GsO5c2gWh2L1JSWu4Mkf+uRzhiID1M0IwdvI1Ir4KwYYhj7rfxcY1vMTo1JosIM
-         RcNugpb/cbW9z5U8w5Aw7KHF/vfyypvfSzqSozfA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 014KZ5vu126333
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Feb 2020 14:35:05 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
- 2020 14:35:05 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 4 Feb 2020 14:35:05 -0600
-Received: from [128.247.59.107] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 014KZ4rE087244;
-        Tue, 4 Feb 2020 14:35:04 -0600
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200204181319.27381-1-dmurphy@ti.com>
- <f977a302-16fc-de68-e84b-d41a0eca4c12@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <29de8f3f-d9ba-88b3-ca48-61936c012172@ti.com>
-Date:   Tue, 4 Feb 2020 14:30:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 15:36:08 -0500
+Received: from mga01.intel.com ([192.55.52.88]:11975 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727458AbgBDUgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 15:36:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 12:36:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,403,1574150400"; 
+   d="scan'208";a="279168231"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Feb 2020 12:36:06 -0800
+Date:   Tue, 4 Feb 2020 12:36:07 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: Remove stale comment from
+ nested_vmx_load_cr3()
+Message-ID: <20200204203607.GB5663@linux.intel.com>
+References: <20200204153259.16318-1-sean.j.christopherson@intel.com>
+ <dcee13f5-f447-9ab4-4803-e3c4f42fb011@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <f977a302-16fc-de68-e84b-d41a0eca4c12@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dcee13f5-f447-9ab4-4803-e3c4f42fb011@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiner
+On Tue, Feb 04, 2020 at 11:57:39AM -0800, Krish Sadhukhan wrote:
+> 
+> On 2/4/20 7:32 AM, Sean Christopherson wrote:
+> >The blurb pertaining to the return value of nested_vmx_load_cr3() no
+> >longer matches reality, remove it entirely as the behavior it is
+> >attempting to document is quite obvious when reading the actual code.
+> >
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >---
+> >  arch/x86/kvm/vmx/nested.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> >index 7608924ee8c1..0c9b847f7a25 100644
+> >--- a/arch/x86/kvm/vmx/nested.c
+> >+++ b/arch/x86/kvm/vmx/nested.c
+> >@@ -1076,8 +1076,6 @@ static bool nested_cr3_valid(struct kvm_vcpu *vcpu, unsigned long val)
+> >  /*
+> >   * Load guest's/host's cr3 at nested entry/exit. nested_ept is true if we are
+> >   * emulating VM entry into a guest with EPT enabled.
+> >- * Returns 0 on success, 1 on failure. Invalid state exit qualification code
+> >- * is assigned to entry_failure_code on failure.
+> >   */
+> >  static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
+> >  			       u32 *entry_failure_code)
+> 
+> I think it's worth keeping the last part which is " Exit qualification code
+> is assigned to entry_failure_code on failure." because "Entry Failure" and
+> "Exit Qualification" might sound bit confusing until you actually look at
+> the caller nested_vmx_enter_non_root_mode().
 
-On 2/4/20 2:08 PM, Heiner Kallweit wrote:
-> On 04.02.2020 19:13, Dan Murphy wrote:
->> Set the speed optimization bit on the DP83867 PHY.
->> This feature can also be strapped on the 64 pin PHY devices
->> but the 48 pin devices do not have the strap pin available to enable
->> this feature in the hardware.  PHY team suggests to have this bit set.
->>
->> With this bit set the PHY will auto negotiate and report the link
->> parameters in the PHYSTS register.  This register provides a single
->> location within the register set for quick access to commonly accessed
->> information.
->>
->> In this case when auto negotiation is on the PHY core reads the bits
->> that have been configured or if auto negotiation is off the PHY core
->> reads the BMCR register and sets the phydev parameters accordingly.
->>
->> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
->> 4-wire cable.  If this should occur the PHYSTS register contains the
->> current negotiated speed and duplex mode.
->>
->> In overriding the genphy_read_status the dp83867_read_status will do a
->> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
->> register is read and the phydev speed and duplex mode settings are
->> updated.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> net-next is closed currently. See here for details:
-> https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
-> Reopening will be announced on the netdev mailing list, you can also
-> check net-next status here: http://vger.kernel.org/~davem/net-next.html
->
-Thanks Heiner for the link I RTM.  I will wait for the opening.
+Hmm, something like this?
 
-Dan
-
+/*
+ * Load guest's/host's cr3 at nested entry/exit.  @nested_ept is true if we are
+ * emulating VM-Entry into a guest with EPT enabled.  On failure, the expected
+ * Exit Qualification (for a VM-Entry consistency check VM-Exit) is assigned to
+ * @entry_failure_code.
+ */
