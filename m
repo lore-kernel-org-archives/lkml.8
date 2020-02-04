@@ -2,98 +2,133 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85581C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC23C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503A52166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580827874;
-	bh=i5VLeV4e5x9ghuIKRaD6Lh7802bcgyXrqoMy5Rmb5WQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=eVn+eQAU/mHp2r/Vg1zp5YJ+GqKQYPxRMEIKCwpzDIf+dNcD8ZopS5zfF//4PADSh
-	 rB92ftO/3Fg3Y9kQWfwvrTv1Py54fbsgR8kry0v1HZDr6YLZHplBKHwMlUIbbSPOFO
-	 ZrecJHUjykPhE0IN6KT95csLURin9Rl3sfMWt3LU=
+	by mail.kernel.org (Postfix) with ESMTP id E93B620674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l1lYopHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBDOvN (ORCPT
+        id S1727331AbgBDOvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:51:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727252AbgBDOvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:51:13 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA612082E;
-        Tue,  4 Feb 2020 14:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580827872;
-        bh=i5VLeV4e5x9ghuIKRaD6Lh7802bcgyXrqoMy5Rmb5WQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1t3n6KRGQYoZSzfSLwX0pi390M6357QS7ioVrwY8UcMX1jOSbSmh4edU7gZ15YxnA
-         0lOVf/yHFmn3GpskdeyL6Lzr/Vwe594mxrFfPWeYtBU1QBLb/jca0FtbLLW3wg5MlI
-         D1lTfR9tMquPmgYZgcYo9grR2uT1CoGOUjDbS84w=
-Date:   Tue, 4 Feb 2020 08:51:11 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hch@lst.de
-Subject: Re: [PATCH v2] x86/PCI: ensure to_pci_sysdata usage is available to
- !CONFIG_PCI
-Message-ID: <20200204145111.GA6313@google.com>
+        Tue, 4 Feb 2020 09:51:24 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8010 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBDOvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 09:51:23 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3984dc0000>; Tue, 04 Feb 2020 06:51:08 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 04 Feb 2020 06:51:22 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 06:51:22 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 14:51:20 +0000
+Subject: Re: [PATCH v7 10/19] dmaengine: tegra-apb: Remove assumptions about
+ unavailable runtime PM
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200202222854.18409-1-digetx@gmail.com>
+ <20200202222854.18409-11-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9671058d-6fe1-2d1b-9aca-3d943dafeb04@nvidia.com>
+Date:   Tue, 4 Feb 2020 14:51:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203215306.172000-1-Jason@zx2c4.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200202222854.18409-11-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580827868; bh=YlB0hyncMtxlGcVgLfgkMbZcAfow8+8s3gntXqlFKj4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=l1lYopHxJTiQVZHrcoIoFS9qJz9QFl4Iru3uJPuZDnSVNC8uO8unKQBdKBXULfdMS
+         jY8m9B3Bsi3ZBFw/zo12zaM2o2TCJeHRmwwchA+ji59PS4T4Nw4C39+iYZVPzpbNTK
+         1un1yIfem1domNld3YOiyqa70T/gZH8ium8P9k3OSmPJCc5FMulz/QF8MimIdfM5YD
+         WK28AKg/uxxpb1rKhaeJxMLamu2zEAVV4nyhkOha8512sTM4OS1yGjsk9pm42fboW7
+         CTHItkJdPzzKhy6zO4IdA1V7AMI9YXdwGB7mLpvgOmnz90LilRAN73XqCdkaGtm9Tt
+         bcKPoTltg8RnQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 10:53:06PM +0100, Jason A. Donenfeld wrote:
-> Recently, the helper to_pci_sysdata was added inside of the CONFIG_PCI
-> guard, but it is used from inside of a CONFIG_NUMA guard, which does not
-> require CONFIG_PCI. This breaks builds on !CONFIG_PCI machines. This
-> commit makes that function available in all configurations.
+
+On 02/02/2020 22:28, Dmitry Osipenko wrote:
+> The runtime PM is always available on all Tegra SoCs since the commit
+> 40b2bb1b132a ("ARM: tegra: enforce PM requirement"), so there is no
+> need to handle the case of unavailable RPM in the code anymore.
 > 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Fixes: aad6aa0cd674 ("x86/PCI: Add to_pci_sysdata() helper")
-> Cc: Christoph Hellwig <hch@lst.de>
-
-Thanks, applied with Randy's and Christoph's
-reported/acked/reviewed-by to for-linus.  I'll try to get this in
-v5.6-rc1 so the build issue is fixed.
-
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  arch/x86/include/asm/pci.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/dma/tegra20-apb-dma.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-> index 40ac1330adb2..7ccb338507e3 100644
-> --- a/arch/x86/include/asm/pci.h
-> +++ b/arch/x86/include/asm/pci.h
-> @@ -33,13 +33,13 @@ extern int pci_routeirq;
->  extern int noioapicquirk;
->  extern int noioapicreroute;
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 7158bd3145c4..22b88ccff05d 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -1429,11 +1429,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  	spin_lock_init(&tdma->global_lock);
 >  
-> -#ifdef CONFIG_PCI
-> -
->  static inline struct pci_sysdata *to_pci_sysdata(const struct pci_bus *bus)
->  {
->  	return bus->sysdata;
+>  	pm_runtime_enable(&pdev->dev);
+> -	if (!pm_runtime_enabled(&pdev->dev))
+> -		ret = tegra_dma_runtime_resume(&pdev->dev);
+> -	else
+> -		ret = pm_runtime_get_sync(&pdev->dev);
+>  
+> +	ret = pm_runtime_get_sync(&pdev->dev);
+>  	if (ret < 0)
+>  		goto err_pm_disable;
+>  
+> @@ -1546,8 +1543,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  
+>  err_pm_disable:
+>  	pm_runtime_disable(&pdev->dev);
+> -	if (!pm_runtime_status_suspended(&pdev->dev))
+> -		tegra_dma_runtime_suspend(&pdev->dev);
+>  
+>  	return ret;
 >  }
+> @@ -1557,10 +1552,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
+>  	struct tegra_dma *tdma = platform_get_drvdata(pdev);
 >  
-> +#ifdef CONFIG_PCI
-> +
->  #ifdef CONFIG_PCI_DOMAINS
->  static inline int pci_domain_nr(struct pci_bus *bus)
->  {
-> -- 
-> 2.25.0
+>  	dma_async_device_unregister(&tdma->dma_dev);
+> -
+>  	pm_runtime_disable(&pdev->dev);
+> -	if (!pm_runtime_status_suspended(&pdev->dev))
+> -		tegra_dma_runtime_suspend(&pdev->dev);
+>  
+>  	return 0;
+>  }
 > 
+
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic
