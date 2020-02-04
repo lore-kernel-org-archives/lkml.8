@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0492CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDCCC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C521320730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104B0218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l5VUPyXl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rMCxiN0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBDLTo (ORCPT
+        id S1727521AbgBDLTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:19:44 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19180 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgBDLTl (ORCPT
+        Tue, 4 Feb 2020 06:19:45 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14270 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbgBDLTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Feb 2020 06:19:41 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e39530d0000>; Tue, 04 Feb 2020 03:18:37 -0800
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3953120000>; Tue, 04 Feb 2020 03:18:43 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 03:19:00 -0800
+  Tue, 04 Feb 2020 03:19:39 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:19:00 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:19:39 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 11:19:00 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 11:19:00 +0000
+ 2020 11:19:38 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 4 Feb 2020 11:19:37 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3953200005>; Tue, 04 Feb 2020 03:18:59 -0800
+        id <B5e3953460001>; Tue, 04 Feb 2020 03:19:37 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -45,9 +45,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 02/19] dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-Date:   Tue, 4 Feb 2020 16:46:48 +0530
-Message-ID: <1580815025-10915-3-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V4 12/19] usb: gadget: tegra-xudc: support multiple device modes
+Date:   Tue, 4 Feb 2020 16:46:58 +0530
+Message-ID: <1580815025-10915-13-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
 References: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
@@ -55,246 +55,436 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580815117; bh=WaEbZePg+LFcVpfDyrewjyC1+vbGZxN4pi2VKu8N5KE=;
+        t=1580815123; bh=x5atCMod6wQ5pzjLhhLnxrnsJ8gKt4G4VFyFn6MhoFM=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=l5VUPyXlbBJD1IHBXIuN4P9Mr1+lun7xGbXh/5qJ9N0p5Fj1umlJZjm8lXN/Yp4eM
-         QWbAW7zWIHPzLGKppPKyiYdKwTRU/BS7fFxqhr09zWv5YFHaoKm6zPpP9sZgYQ0XEH
-         p8UYaoxdUSdYwA/ptGyfwWxWpa9/MRbWrsBw6JKzokMuHQmsxsf1vR3WO4I2V6pPiH
-         +nmcfikJ0PGFY7y0znooGNYsKJvTRouxBW41awPznX6eZq2oh/GnNiAxFUwZDPt6nI
-         I/0+aNJzSfmFUsVJCCNqEfxAGoMU/NdauWtuVt8tqfi0qHcf/ro9pPrbBdv3taTugH
-         QoQBX+YLvROHQ==
+        b=rMCxiN0TnCVgYQMzWRiBSTGCmRd/4bQZZUtGzdGwDXVKGy87giaS0fZd7tFhbazwu
+         mqSttKuVepBQjZnZiZqli9MCNjK7MUbkWZ7n+gEQZvS+xhtYOAiE4n1+l7dm1tZIBy
+         sBT0mKDn3Q72lNBdRvhkBa+lsISMLr4rcDdRMjKyBSpU5w9PqQix9JEUlECraeQqix
+         1zWzGjm+9sNNAL0Ub/+GWrt9MI0O17GTfj/FJDuKjW9+JkuDCyRHZLpdFB/drww6sx
+         AxWLW6D/sc7a1lwxTM82gDkwEgfUWqQJzEItDrperdpLSa1IXwPGxDhkFgDnrWK+xu
+         cNQC+Gbta7/kg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree binding documentation for the XUSB device mode controller
-present on Tegra210 and Tegra186 SoC. This controller supports the USB 3.0
-specification.
+This change supports limited multiple device modes by:
+- At most 4 ports contains OTG/Device capability.
+- One port run as device mode at a time.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V4:
- - No changes.
+ - Replaced current_phy_index usage with curr_*phy pointers.
+ - Used unsigned int instead of int wherever needed.
+---
 V3:
- - Added Reviewed-by and Acked-by updates to commit message.
+ - No changes in this version
 ---
 V2:
- - used enum instead of oneOf and const.
- - Moved reg, reg-names, clocks, clock-names to property section from allOf.
- - Limited allOf to min and max items based on soc.
- - Updated description for power-domains.
- - Added V1 reference
+ - Updated err variable on failure to get usbphy.
+ - Corrected identation after tegra_xudc_phy_get API call in tegra_xudc_probe.
 ---
-V1
- - This document is yaml version of [1], with difference of usb-role-switch
-   removal.
-[1] https://patchwork.kernel.org/patch/11156253/ 
----
- .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 +++++++++++++++++++++
- 1 file changed, 190 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+ drivers/usb/gadget/udc/tegra-xudc.c | 217 ++++++++++++++++++++++++++----------
+ 1 file changed, 160 insertions(+), 57 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
-new file mode 100644
-index 0000000..b84ed8e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
-@@ -0,0 +1,190 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/nvidia,tegra-xudc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc/tegra-xudc.c
+index a2299ee..3ffb929 100644
+--- a/drivers/usb/gadget/udc/tegra-xudc.c
++++ b/drivers/usb/gadget/udc/tegra-xudc.c
+@@ -482,14 +482,16 @@ struct tegra_xudc {
+ 	bool device_mode;
+ 	struct work_struct usb_role_sw_work;
+ 
+-	struct phy *usb3_phy;
+-	struct phy *utmi_phy;
++	struct phy **usb3_phy;
++	struct phy *curr_usb3_phy;
++	struct phy **utmi_phy;
++	struct phy *curr_utmi_phy;
+ 
+ 	struct tegra_xudc_save_regs saved_regs;
+ 	bool suspended;
+ 	bool powergated;
+ 
+-	struct usb_phy *usbphy;
++	struct usb_phy **usbphy;
+ 	struct notifier_block vbus_nb;
+ 
+ 	struct completion disconnect_complete;
+@@ -521,6 +523,7 @@ struct tegra_xudc_soc {
+ 	unsigned int num_supplies;
+ 	const char * const *clock_names;
+ 	unsigned int num_clks;
++	unsigned int num_phys;
+ 	bool u1_enable;
+ 	bool u2_enable;
+ 	bool lpm_enable;
+@@ -602,17 +605,18 @@ static void tegra_xudc_device_mode_on(struct tegra_xudc *xudc)
+ 
+ 	pm_runtime_get_sync(xudc->dev);
+ 
+-	err = phy_power_on(xudc->utmi_phy);
++	err = phy_power_on(xudc->curr_utmi_phy);
+ 	if (err < 0)
+ 		dev_err(xudc->dev, "utmi power on failed %d\n", err);
+ 
+-	err = phy_power_on(xudc->usb3_phy);
++	err = phy_power_on(xudc->curr_usb3_phy);
+ 	if (err < 0)
+ 		dev_err(xudc->dev, "usb3 phy power on failed %d\n", err);
+ 
+ 	dev_dbg(xudc->dev, "device mode on\n");
+ 
+-	phy_set_mode_ext(xudc->utmi_phy, PHY_MODE_USB_OTG, USB_ROLE_DEVICE);
++	phy_set_mode_ext(xudc->curr_utmi_phy, PHY_MODE_USB_OTG,
++			 USB_ROLE_DEVICE);
+ }
+ 
+ static void tegra_xudc_device_mode_off(struct tegra_xudc *xudc)
+@@ -627,7 +631,7 @@ static void tegra_xudc_device_mode_off(struct tegra_xudc *xudc)
+ 
+ 	reinit_completion(&xudc->disconnect_complete);
+ 
+-	phy_set_mode_ext(xudc->utmi_phy, PHY_MODE_USB_OTG, USB_ROLE_NONE);
++	phy_set_mode_ext(xudc->curr_utmi_phy, PHY_MODE_USB_OTG, USB_ROLE_NONE);
+ 
+ 	pls = (xudc_readl(xudc, PORTSC) & PORTSC_PLS_MASK) >>
+ 		PORTSC_PLS_SHIFT;
+@@ -652,11 +656,11 @@ static void tegra_xudc_device_mode_off(struct tegra_xudc *xudc)
+ 	/* Make sure interrupt handler has completed before powergating. */
+ 	synchronize_irq(xudc->irq);
+ 
+-	err = phy_power_off(xudc->utmi_phy);
++	err = phy_power_off(xudc->curr_utmi_phy);
+ 	if (err < 0)
+ 		dev_err(xudc->dev, "utmi_phy power off failed %d\n", err);
+ 
+-	err = phy_power_off(xudc->usb3_phy);
++	err = phy_power_off(xudc->curr_usb3_phy);
+ 	if (err < 0)
+ 		dev_err(xudc->dev, "usb3_phy power off failed %d\n", err);
+ 
+@@ -674,12 +678,27 @@ static void tegra_xudc_usb_role_sw_work(struct work_struct *work)
+ 		tegra_xudc_device_mode_off(xudc);
+ }
+ 
++static int tegra_xudc_get_phy_index(struct tegra_xudc *xudc,
++					      struct usb_phy *usbphy)
++{
++	unsigned int i;
 +
-+title: Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
++	for (i = 0; i < xudc->soc->num_phys; i++) {
++		if (xudc->usbphy[i] && usbphy == xudc->usbphy[i])
++			return i;
++	}
 +
-+description:
-+  The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
-+  USB 3.0 SuperSpeed protocols.
++	dev_info(xudc->dev, "phy index could not be found for shared USB PHY");
++	return -1;
++}
 +
-+maintainers:
-+  - Nagarjuna Kristam <nkristam@nvidia.com>
-+  - JC Kuo <jckuo@nvidia.com>
-+  - Thierry Reding <treding@nvidia.com>
+ static int tegra_xudc_vbus_notify(struct notifier_block *nb,
+ 					 unsigned long action, void *data)
+ {
+ 	struct tegra_xudc *xudc = container_of(nb, struct tegra_xudc,
+ 					       vbus_nb);
+ 	struct usb_phy *usbphy = (struct usb_phy *)data;
++	int phy_index;
+ 
+ 	dev_dbg(xudc->dev, "%s(): event is %d\n", __func__, usbphy->last_event);
+ 
+@@ -693,8 +712,15 @@ static int tegra_xudc_vbus_notify(struct notifier_block *nb,
+ 	xudc->device_mode = (usbphy->last_event == USB_EVENT_VBUS) ? true :
+ 								     false;
+ 
+-	if (!xudc->suspended)
++	phy_index = tegra_xudc_get_phy_index(xudc, usbphy);
++	dev_dbg(xudc->dev, "%s(): current phy index is %d\n", __func__,
++		phy_index);
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - nvidia,tegra210-xudc # For Tegra210
-+          - nvidia,tegra186-xudc # For Tegra186
++	if (!xudc->suspended && phy_index != -1) {
++		xudc->curr_utmi_phy = xudc->utmi_phy[phy_index];
++		xudc->curr_usb3_phy = xudc->usb3_phy[phy_index];
+ 		schedule_work(&xudc->usb_role_sw_work);
++	}
+ 
+ 	return NOTIFY_OK;
+ }
+@@ -714,9 +740,9 @@ static void tegra_xudc_plc_reset_work(struct work_struct *work)
+ 
+ 		if (pls == PORTSC_PLS_INACTIVE) {
+ 			dev_info(xudc->dev, "PLS = Inactive. Toggle VBUS\n");
+-			phy_set_mode_ext(xudc->utmi_phy, PHY_MODE_USB_OTG,
++			phy_set_mode_ext(xudc->curr_utmi_phy, PHY_MODE_USB_OTG,
+ 					 USB_ROLE_NONE);
+-			phy_set_mode_ext(xudc->utmi_phy, PHY_MODE_USB_OTG,
++			phy_set_mode_ext(xudc->curr_utmi_phy, PHY_MODE_USB_OTG,
+ 					 USB_ROLE_DEVICE);
+ 
+ 			xudc->wait_csc = false;
+@@ -745,7 +771,8 @@ static void tegra_xudc_port_reset_war_work(struct work_struct *work)
+ 		if (pls == PORTSC_PLS_DISABLED) {
+ 			dev_dbg(xudc->dev, "toggle vbus\n");
+ 			/* PRC doesn't complete in 100ms, toggle the vbus */
+-			ret = tegra_phy_xusb_utmi_port_reset(xudc->utmi_phy);
++			ret = tegra_phy_xusb_utmi_port_reset(
++				xudc->curr_utmi_phy);
+ 			if (ret == 1)
+ 				xudc->wait_for_sec_prc = 0;
+ 		}
+@@ -1934,6 +1961,7 @@ static int tegra_xudc_gadget_start(struct usb_gadget *gadget,
+ 	unsigned long flags;
+ 	u32 val;
+ 	int ret;
++	unsigned int i;
+ 
+ 	if (!driver)
+ 		return -EINVAL;
+@@ -1969,8 +1997,9 @@ static int tegra_xudc_gadget_start(struct usb_gadget *gadget,
+ 		xudc_writel(xudc, val, CTRL);
+ 	}
+ 
+-	if (xudc->usbphy)
+-		otg_set_peripheral(xudc->usbphy->otg, gadget);
++	for (i = 0; i < xudc->soc->num_phys; i++)
++		if (xudc->usbphy[i])
++			otg_set_peripheral(xudc->usbphy[i]->otg, gadget);
+ 
+ 	xudc->driver = driver;
+ unlock:
+@@ -1987,13 +2016,15 @@ static int tegra_xudc_gadget_stop(struct usb_gadget *gadget)
+ 	struct tegra_xudc *xudc = to_xudc(gadget);
+ 	unsigned long flags;
+ 	u32 val;
++	unsigned int i;
+ 
+ 	pm_runtime_get_sync(xudc->dev);
+ 
+ 	spin_lock_irqsave(&xudc->lock, flags);
+ 
+-	if (xudc->usbphy)
+-		otg_set_peripheral(xudc->usbphy->otg, NULL);
++	for (i = 0; i < xudc->soc->num_phys; i++)
++		if (xudc->usbphy[i])
++			otg_set_peripheral(xudc->usbphy[i]->otg, NULL);
+ 
+ 	val = xudc_readl(xudc, CTRL);
+ 	val &= ~(CTRL_IE | CTRL_ENABLE);
+@@ -3327,33 +3358,120 @@ static void tegra_xudc_device_params_init(struct tegra_xudc *xudc)
+ 	xudc_writel(xudc, val, CFG_DEV_SSPI_XFER);
+ }
+ 
+-static int tegra_xudc_phy_init(struct tegra_xudc *xudc)
++static int tegra_xudc_phy_get(struct tegra_xudc *xudc)
+ {
+-	int err;
++	int err = 0, usb3;
++	unsigned int i;
+ 
+-	err = phy_init(xudc->utmi_phy);
+-	if (err < 0) {
+-		dev_err(xudc->dev, "utmi phy init failed: %d\n", err);
+-		return err;
+-	}
++	xudc->utmi_phy = devm_kcalloc(xudc->dev, xudc->soc->num_phys,
++					   sizeof(*xudc->utmi_phy), GFP_KERNEL);
++	if (!xudc->utmi_phy)
++		return -ENOMEM;
+ 
+-	err = phy_init(xudc->usb3_phy);
+-	if (err < 0) {
+-		dev_err(xudc->dev, "usb3 phy init failed: %d\n", err);
+-		goto exit_utmi_phy;
++	xudc->usb3_phy = devm_kcalloc(xudc->dev, xudc->soc->num_phys,
++					   sizeof(*xudc->usb3_phy), GFP_KERNEL);
++	if (!xudc->usb3_phy)
++		return -ENOMEM;
 +
-+  reg:
-+    minItems: 2
-+    maxItems: 3
-+    items:
-+      - description: XUSB device controller registers
-+      - description: XUSB device PCI Config registers
-+      - description: XUSB device registers.
++	xudc->usbphy = devm_kcalloc(xudc->dev, xudc->soc->num_phys,
++					   sizeof(*xudc->usbphy), GFP_KERNEL);
++	if (!xudc->usbphy)
++		return -ENOMEM;
 +
-+  reg-names:
-+    minItems: 2
-+    maxItems: 3
-+    items:
-+      - const: base
-+      - const: fpci
-+      - const: ipfs
++	xudc->vbus_nb.notifier_call = tegra_xudc_vbus_notify;
 +
-+  interrupts:
-+    maxItems: 1
-+    description: Must contain the XUSB device interrupt.
++	for (i = 0; i < xudc->soc->num_phys; i++) {
++		char phy_name[] = "usb.-.";
 +
-+  clocks:
-+    minItems: 4
-+    maxItems: 5
-+    items:
-+      - description: Clock to enable core XUSB dev clock.
-+      - description: Clock to enable XUSB super speed clock.
-+      - description: Clock to enable XUSB super speed dev clock.
-+      - description: Clock to enable XUSB high speed dev clock.
-+      - description: Clock to enable XUSB full speed dev clock.
++		/* Get USB2 phy */
++		snprintf(phy_name, sizeof(phy_name), "usb2-%d", i);
++		xudc->utmi_phy[i] = devm_phy_optional_get(xudc->dev, phy_name);
++		if (IS_ERR(xudc->utmi_phy[i])) {
++			err = PTR_ERR(xudc->utmi_phy[i]);
++			if (err != -EPROBE_DEFER)
++				dev_err(xudc->dev, "failed to get usb2-%d phy: %d\n",
++					i, err);
 +
-+  clock-names:
-+    minItems: 4
-+    maxItems: 5
-+    items:
-+     - const: dev
-+     - const: ss
-+     - const: ss_src
-+     - const: fs_src
-+     - const: hs_src
++			goto clean_up;
++		} else if (xudc->utmi_phy[i]) {
++			/* Get usb-phy, if utmi phy is available */
++			xudc->usbphy[i] = devm_usb_get_phy_by_node(xudc->dev,
++						xudc->utmi_phy[i]->dev.of_node,
++						&xudc->vbus_nb);
++			if (IS_ERR(xudc->usbphy[i])) {
++				err = PTR_ERR(xudc->usbphy[i]);
++				dev_err(xudc->dev, "failed to get usbphy-%d: %d\n",
++					i, err);
++				goto clean_up;
++			}
++		} else if (!xudc->utmi_phy[i]) {
++			/* if utmi phy is not available, ignore USB3 phy get */
++			continue;
++		}
 +
-+  power-domains:
-+    maxItems: 2
-+    items:
-+      - description: XUSBB(device) power-domain
-+      - description: XUSBA(superspeed) power-domain
++		/* Get USB3 phy */
++		usb3 = tegra_xusb_padctl_get_usb3_companion(xudc->padctl, i);
++		if (usb3 < 0)
++			continue;
 +
-+  power-domain-names:
-+    maxItems: 2
-+    items:
-+      - const: dev
-+      - const: ss
++		snprintf(phy_name, sizeof(phy_name), "usb3-%d", usb3);
++		xudc->usb3_phy[i] = devm_phy_optional_get(xudc->dev, phy_name);
++		if (IS_ERR(xudc->usb3_phy[i])) {
++			err = PTR_ERR(xudc->usb3_phy[i]);
++			if (err != -EPROBE_DEFER)
++				dev_err(xudc->dev, "failed to get usb3-%d phy: %d\n",
++					usb3, err);
 +
-+  nvidia,xusb-padctl:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      phandle to the XUSB pad controller that is used to configure the USB pads
-+      used by the XUDC controller.
++			goto clean_up;
++		} else if (xudc->usb3_phy[i])
++			dev_dbg(xudc->dev, "usb3_phy-%d registered", usb3);
+ 	}
+ 
+-	return 0;
++	return err;
 +
-+  phys:
-+    minItems: 1
-+    description:
-+      Must contain an entry for each entry in phy-names.
-+      See ../phy/phy-bindings.txt for details.
++clean_up:
++	for (i = 0; i < xudc->soc->num_phys; i++) {
++		xudc->usb3_phy[i] = NULL;
++		xudc->utmi_phy[i] = NULL;
++		xudc->usbphy[i] = NULL;
++	}
+ 
+-exit_utmi_phy:
+-	phy_exit(xudc->utmi_phy);
+ 	return err;
+ }
+ 
+ static void tegra_xudc_phy_exit(struct tegra_xudc *xudc)
+ {
+-	phy_exit(xudc->usb3_phy);
+-	phy_exit(xudc->utmi_phy);
++	unsigned int i;
 +
-+  phy-names:
-+    minItems: 1
-+    items:
-+      - const: usb2-0
-+      - const: usb2-1
-+      - const: usb2-2
-+      - const: usb2-3
-+      - const: usb3-0
-+      - const: usb3-1
-+      - const: usb3-2
-+      - const: usb3-3
++	for (i = 0; i < xudc->soc->num_phys; i++) {
++		phy_exit(xudc->usb3_phy[i]);
++		phy_exit(xudc->utmi_phy[i]);
++	}
++}
 +
-+  avddio-usb-supply:
-+    description: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
++static int tegra_xudc_phy_init(struct tegra_xudc *xudc)
++{
++	int err;
++	unsigned int i;
 +
-+  hvdd-usb-supply:
-+    description: USB controller power supply. Must supply 3.3 V.
++	for (i = 0; i < xudc->soc->num_phys; i++) {
++		err = phy_init(xudc->utmi_phy[i]);
++		if (err < 0) {
++			dev_err(xudc->dev, "utmi phy init failed: %d\n", err);
++			goto exit_phy;
++		}
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - power-domain-names
-+  - nvidia,xusb-padctl
-+  - phys
-+  - phy-names
++		err = phy_init(xudc->usb3_phy[i]);
++		if (err < 0) {
++			dev_err(xudc->dev, "usb3 phy init failed: %d\n", err);
++			goto exit_phy;
++		}
++	}
++	return 0;
 +
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra210-xudc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 3
-+        reg-names:
-+          minItems: 3
-+        clocks:
-+          minItems: 5
-+        clock-names:
-+          minItems: 5
-+      required:
-+        - avddio-usb-supply
-+        - hvdd-usb-supply
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra186-xudc
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 2
-+        reg-names:
-+          maxItems: 2
-+        clocks:
-+          maxItems: 4
-+        clock-names:
-+          maxItems: 4
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/tegra210-car.h>
-+    #include <dt-bindings/gpio/tegra-gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    usb@700d0000 {
-+        compatible = "nvidia,tegra210-xudc";
-+        reg = <0x0 0x700d0000 0x0 0x8000>,
-+              <0x0 0x700d8000 0x0 0x1000>,
-+              <0x0 0x700d9000 0x0 0x1000>;
-+        reg-names = "base", "fpci", "ipfs";
-+
-+        interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>;
-+        clock-names = "dev", "ss", "ss_src", "fs_src", "hs_src";
-+
-+        power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+        power-domain-names = "dev", "ss";
-+
-+        nvidia,xusb-padctl = <&padctl>;
-+
-+        phys = <&micro_b>;
-+        phy-names = "usb2-0";
-+
-+        avddio-usb-supply = <&vdd_pex_1v05>;
-+        hvdd-usb-supply = <&vdd_3v3_sys>;
-+    };
++exit_phy:
++	tegra_xudc_phy_exit(xudc);
++	return err;
+ }
+ 
+ static const char * const tegra210_xudc_supply_names[] = {
+@@ -3381,6 +3499,7 @@ static struct tegra_xudc_soc tegra210_xudc_soc_data = {
+ 	.num_supplies = ARRAY_SIZE(tegra210_xudc_supply_names),
+ 	.clock_names = tegra210_xudc_clock_names,
+ 	.num_clks = ARRAY_SIZE(tegra210_xudc_clock_names),
++	.num_phys = 4,
+ 	.u1_enable = false,
+ 	.u2_enable = true,
+ 	.lpm_enable = false,
+@@ -3393,6 +3512,7 @@ static struct tegra_xudc_soc tegra210_xudc_soc_data = {
+ static struct tegra_xudc_soc tegra186_xudc_soc_data = {
+ 	.clock_names = tegra186_xudc_clock_names,
+ 	.num_clks = ARRAY_SIZE(tegra186_xudc_clock_names),
++	.num_phys = 4,
+ 	.u1_enable = true,
+ 	.u2_enable = true,
+ 	.lpm_enable = false,
+@@ -3558,19 +3678,9 @@ static int tegra_xudc_probe(struct platform_device *pdev)
+ 		goto put_padctl;
+ 	}
+ 
+-	xudc->usb3_phy = devm_phy_optional_get(&pdev->dev, "usb3");
+-	if (IS_ERR(xudc->usb3_phy)) {
+-		err = PTR_ERR(xudc->usb3_phy);
+-		dev_err(xudc->dev, "failed to get usb3 phy: %d\n", err);
+-		goto disable_regulator;
+-	}
+-
+-	xudc->utmi_phy = devm_phy_optional_get(&pdev->dev, "usb2");
+-	if (IS_ERR(xudc->utmi_phy)) {
+-		err = PTR_ERR(xudc->utmi_phy);
+-		dev_err(xudc->dev, "failed to get usb2 phy: %d\n", err);
++	err = tegra_xudc_phy_get(xudc);
++	if (err)
+ 		goto disable_regulator;
+-	}
+ 
+ 	err = tegra_xudc_powerdomain_init(xudc);
+ 	if (err)
+@@ -3599,16 +3709,6 @@ static int tegra_xudc_probe(struct platform_device *pdev)
+ 	INIT_DELAYED_WORK(&xudc->port_reset_war_work,
+ 				tegra_xudc_port_reset_war_work);
+ 
+-	xudc->vbus_nb.notifier_call = tegra_xudc_vbus_notify;
+-	xudc->usbphy = devm_usb_get_phy_by_node(xudc->dev,
+-						xudc->utmi_phy->dev.of_node,
+-						&xudc->vbus_nb);
+-	if (IS_ERR(xudc->usbphy)) {
+-		err = PTR_ERR(xudc->usbphy);
+-		dev_err(xudc->dev, "failed to get USB PHY: %d\n", err);
+-		goto free_eps;
+-	}
+-
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	xudc->gadget.ops = &tegra_xudc_gadget_ops;
+@@ -3643,6 +3743,7 @@ static int tegra_xudc_probe(struct platform_device *pdev)
+ static int tegra_xudc_remove(struct platform_device *pdev)
+ {
+ 	struct tegra_xudc *xudc = platform_get_drvdata(pdev);
++	unsigned int i;
+ 
+ 	pm_runtime_get_sync(xudc->dev);
+ 
+@@ -3658,8 +3759,10 @@ static int tegra_xudc_remove(struct platform_device *pdev)
+ 
+ 	regulator_bulk_disable(xudc->soc->num_supplies, xudc->supplies);
+ 
+-	phy_power_off(xudc->utmi_phy);
+-	phy_power_off(xudc->usb3_phy);
++	for (i = 0; i < xudc->soc->num_phys; i++) {
++		phy_power_off(xudc->utmi_phy[i]);
++		phy_power_off(xudc->usb3_phy[i]);
++	}
+ 
+ 	tegra_xudc_phy_exit(xudc);
+ 
 -- 
 2.7.4
 
