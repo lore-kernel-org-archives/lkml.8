@@ -2,110 +2,114 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919EBC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A83C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694B12087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363862087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRSUE6Qc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VghFQN5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgBDOhl (ORCPT
+        id S1727286AbgBDOjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:37:41 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46995 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbgBDOhl (ORCPT
+        Tue, 4 Feb 2020 09:39:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40579 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbgBDOjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:37:41 -0500
-Received: by mail-pf1-f195.google.com with SMTP id k29so9546457pfp.13;
-        Tue, 04 Feb 2020 06:37:41 -0800 (PST)
+        Tue, 4 Feb 2020 09:39:55 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z7so970833pgk.7;
+        Tue, 04 Feb 2020 06:39:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TWWJwj+Dmrmt9v9lizLX3wiTASy/X2FqssJzcPgkTKI=;
-        b=cRSUE6Qc/R8SAiwcZAPO92X5aiAJUr1mJu/McPrsP9EiazIW3asLZ4vC55l5pliSTI
-         FTWbUVn5N9L8ZuogwWyLp6I8fDgdZUT/kJc4IKO7y3fnDHyc9cupUUvtPk7OIUdmlKnN
-         SUk3f0k/l7xkPmSjAw5wO+lEk03NXn2Z6vTNif/CtjZLmTQo88rlyLVFfXmGySdtVLc/
-         hsXKE4Tz5kauTy9RFbRYLjuvdI5EUFXcYHCoapQeDKUWqswMqPBbllgvHvBi4y2cKXT/
-         EYfcUmYajyJOCdQxoReWOZzUsMG/2hQDRC76qg05cA5LmRzJRmkuQKSc/YQVwKiSyjEB
-         820w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qa7V4WeINwfXimSzmyAs2b+JZ6CbLBjZJ3A0tfgUH/c=;
+        b=VghFQN5t9pt1ay7zA3/kToQO8ogGxmq0sF+aJ9o4SZALTTJSjh4XqASHkqbh/bqBhc
+         pLb6lnOKRq8r4Vm9tZvE5VJUvGDzkHQIQs1jkSN02YPp31Dcrg0uijoAEHHT2VhBeDb2
+         6Gd4zRgtep3rygzbaEGZ4xsE/QR1e569+l8Yg67Gl0X9Z4O+/0jfotyaCVClt5F3V0kb
+         BF3u72iTl9nzmvhnMgQV4g8xEKxBNGlYlEb+Bbv2jpjZ4Zlb6wWyeWnTEgwFomEOvvas
+         FlzDvUMkqhz/HUMck62M5xyqsZaWUqTvfFCTf73ekO524JegaE3AfLeprYXxxP4K5YRI
+         WaIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TWWJwj+Dmrmt9v9lizLX3wiTASy/X2FqssJzcPgkTKI=;
-        b=gjjpNauRq0Z9KwzELD8Tv9wWmTfcuDlLvg2bD6psxHbVdZ/9PhGtloTFIvYvurWopB
-         G6NkSanyRlnoNeOYB2VpVxmhjOAMnGHTt4OyNvZejBV73OV4FJj5v+Jbd+AuygX7YSUc
-         1W4hsXV3x0w72uHDW/f+sQIxCYXHp4LbYvGNiYWKFe50DN5WtDzoesI/+n2zyeMFbU9E
-         INXO0b0PPz8exp5dXdF/8RzaDz33FYHMp3CM8FgpvhtSket7uMv2MDQn61y7LerEtjbX
-         8MH28W9Z0PQS7F8scKJDszg5NUhl9iwJ3TQgN2z7BhMkvD59DabYnvHDxTjgB/FQyQW3
-         cDhg==
-X-Gm-Message-State: APjAAAVakYaELoRzpDIqTQY2Bak+BSlrfNLY4AI5mUmfHz9DJyklrVkC
-        S3TLhVW5DpgsBjw+IgMpgaqkogcR
-X-Google-Smtp-Source: APXvYqyirmfrcttwWUyyphpTjPm58EaXFhDPbCE7pmdI/WyEK9gFvX3t24ZPhbtqtSGvVkOJQXludw==
-X-Received: by 2002:aa7:968c:: with SMTP id f12mr31176499pfk.235.1580827060521;
-        Tue, 04 Feb 2020 06:37:40 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f1sm3764705pjq.31.2020.02.04.06.37.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 06:37:39 -0800 (PST)
-Subject: Re: [PATCH 5.4 00/90] 5.4.18-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200203161917.612554987@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9a5a92f2-6e28-a9ab-a851-8d7e56482df6@roeck-us.net>
-Date:   Tue, 4 Feb 2020 06:37:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qa7V4WeINwfXimSzmyAs2b+JZ6CbLBjZJ3A0tfgUH/c=;
+        b=YdnUuJXxCtOhe7kV62op3+3DOmrss5RF1vnINKgDm6g/Bs+u5IVEHiyMLKJmSEcUZf
+         TMA+u7ZoHr+1FJZSnB65zs0b/s0rVoXLzGCXs9OTzR26FH83nIPfn4FtU/h+I99hHSnn
+         Elf2C5rJJy7/lXSK403U45AiO4nDKzUCQKBcK3R6Dp3IXbu2/0aWjnKGGoYMX6k0tm84
+         qWf7dANNewX2Z+u9zksEYSDqHvCwisQ5to5JVEf1impO1rCSXwPDi0382SMzxLM/P+jo
+         czTI+9IKj02qOnBlHngyjUl1Detqdty/Vh3JHgEKDEOnoWSN/LZu7d42+GVywGMvtr+W
+         n68Q==
+X-Gm-Message-State: APjAAAUZmVEJs1vsaUtuREFKkkGSOkGrPQIRbQ1Q+vVbuDja4qrZpWe7
+        JNnanCMS+cRy1Oy6Z+MvyCCACRmD0bpkswJgMi4=
+X-Google-Smtp-Source: APXvYqxEKtpAOKfDM6HdgNcYObin2NhIphHNUktLTD1h0rK0K4goZvhX6hU282ObhITboaTgU0paE8xAOIDbLXxNEtQ=
+X-Received: by 2002:a62:1944:: with SMTP id 65mr32174637pfz.151.1580827193984;
+ Tue, 04 Feb 2020 06:39:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200204113912.14048-1-tbogendoerfer@suse.de>
+In-Reply-To: <20200204113912.14048-1-tbogendoerfer@suse.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Feb 2020 16:39:45 +0200
+Message-ID: <CAHp75Ve2_cH7M4nLQ-KynPWRt6NvCGk3LGafOEAjigfNyprcZw@mail.gmail.com>
+Subject: Re: [PATCH] serial: 8250_ioc3: Fix ioremap call
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Paul Burton <paulburton@kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 8:19 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.18 release.
-> There are 90 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> Anything received after that time might be too late.
-> 
+On Tue, Feb 4, 2020 at 1:40 PM Thomas Bogendoerfer
+<tbogendoerfer@suse.de> wrote:
+>
+> Commit 4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
+> removed devm_ioremap_nocache, but 8250_ioc3 wasn't upstream at that
+> time. So fix 8250_ioc3 by using devm_ioremap.
+>
 
-Building i386:allyesconfig ... failed
-Building i386:allmodconfig ... failed
---------------
-Error log:
-In file included from arch/x86/kernel/pci-dma.c:2:
-include/linux/dma-direct.h:29:20: error: conflicting types for 'dma_capable'
-    29 | static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
-       |                    ^~~~~~~~~~~
-In file included from include/linux/dma-direct.h:12,
-                  from arch/x86/kernel/pci-dma.c:2:
-arch/x86/include/asm/dma-direct.h:5:6: note: previous declaration of 'dma_capable' was here
-     5 | bool dma_capable(struct device *dev, dma_addr_t addr, size_t size);
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
----
-Building riscv:{defconfig, allnoconfig, tinyconfig} ... failed
+> Fixes: 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip")
 
-Error log:
-arch/riscv/lib/tishift.S: Assembler messages:
-arch/riscv/lib/tishift.S:9: Error: unrecognized opcode `sym_func_start(__lshrti3)'
-[ many of those ]
+Basically it happened due to ioremap_nocache() removal, but it really
+doesn't matter because in this case no functional change is expected.
+
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>  drivers/tty/serial/8250/8250_ioc3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_ioc3.c b/drivers/tty/serial/8250/8250_ioc3.c
+> index 4c405f1b9c67..d5a39e105a76 100644
+> --- a/drivers/tty/serial/8250/8250_ioc3.c
+> +++ b/drivers/tty/serial/8250/8250_ioc3.c
+> @@ -47,7 +47,7 @@ static int serial8250_ioc3_probe(struct platform_device *pdev)
+>         if (!data)
+>                 return -ENOMEM;
+>
+> -       membase = devm_ioremap_nocache(&pdev->dev, r->start, resource_size(r));
+> +       membase = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+>         if (!membase)
+>                 return -ENOMEM;
+>
+> --
+> 2.24.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
