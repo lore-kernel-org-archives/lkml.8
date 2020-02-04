@@ -2,119 +2,140 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12CCC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF69C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF242087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7B32166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWK4nea1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MS7LtFiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgBDTcS (ORCPT
+        id S1727664AbgBDTcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:32:18 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42028 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbgBDTcS (ORCPT
+        Tue, 4 Feb 2020 14:32:47 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:54924 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbgBDTcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:32:18 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so18275726otd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Et9pRiR1Ma9sl4dJgbbua/nMtmbzH7oTYgwDY47X7gk=;
-        b=mWK4nea1vZ+jAlGOExb5wDwpAZ3JWzhU5OdQ8/31S3QOckRF2nYpYo6wWHBDYmVM4j
-         MDthJxcFcL/zDT6gYv5DHan4HE3uI3+QrFYOGCUZQx6XENcty1le7xnHUpfu3GPP6A5Q
-         zD1HMqARhWC5qO0rwcMm0qVwyVm6espiPRjn1S1kadtT50muRqMQFTPisCGAeCYIXU3U
-         XmoG1NdhWw9VIy4/MrBAPmP+rVMk9bPFw2moHnlh+iEbv78d7GZC0NQ6DXeD5ou3lX0H
-         4InqYTjATU6AbgeIXLM+1PChmJPFJrwYQnLl6GNPDTwSRhDlNnY9gDPkZauDc0jB0H3G
-         VD2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Et9pRiR1Ma9sl4dJgbbua/nMtmbzH7oTYgwDY47X7gk=;
-        b=JZdiV/yZmKKXVuJPyMHuCUSyXBFPQ1M272aZe1fCysdZjrw4CcWDey+lathP14qTFO
-         3aYxEDHwSqap/OYYJ54rfm05oddbLzURYcUWX0jrJ/NdUMd0LuoFaoPvgB5x6AIoxM2d
-         pPJVj5OUa4KysEBVXD11no8fnfI62HVJIITpE1QCoxEIFTOzXdhF33p+H3ovbAxSjcag
-         8SLrXugWr+fhRvvcgcpXCC3mW+TzFi7lEuoMtutazYZiwrxTsnun94lAuATg2XrPWT//
-         fgk0upe2fQEoPvzuWhEviWkW53jRFD8HzdXDSCcV5m5mbq4IWCBfUADAJBVH5Go57lx3
-         6qAw==
-X-Gm-Message-State: APjAAAUDypH8SFux8zmH54cYs3x8kPmeeB7IPytop65ZHtsdTXvwd2f+
-        Dfxfjc9i06Ec4O31dwPRQjI=
-X-Google-Smtp-Source: APXvYqxQ67LpNhXsPEsg9KZN32c1olOPxSz/GZrtpkwwa1ocuWDNEP7eW11vQi3Lai5XLFsN73GBAw==
-X-Received: by 2002:a9d:588c:: with SMTP id x12mr22627232otg.2.1580844736997;
-        Tue, 04 Feb 2020 11:32:16 -0800 (PST)
-Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id b145sm3997400oii.31.2020.02.04.11.32.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 11:32:16 -0800 (PST)
-Date:   Tue, 4 Feb 2020 12:32:15 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ASoC: wcd934x: Remove some unnecessary NULL checks
-Message-ID: <20200204193215.GA44094@ubuntu-x2-xlarge-x86>
-References: <20200204060143.23393-1-natechancellor@gmail.com>
- <20200204100039.GX3897@sirena.org.uk>
+        Tue, 4 Feb 2020 14:32:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NEyB+td276ts8YTAgKy+Wd6aG//Mg77+7niimGcvraE=; b=MS7LtFiH+GHOwbhBv+vWvw2G6
+        GGWaM353Shw+BRBXs3RPScYYjeHQWFMROBIpEnJT7HGRbSG1i8cbmhXaKODdxvHybU3ar6gtLPDjK
+        v7CeOGLDXcMudmwpzsdOQT8Tg3F1uCEx98i+Uv6jo4DSh0TY7l0+Oq1AzLR124wiV8lWBE+CtiRzt
+        H1JY2UDAKt+Sv2+BWrf3iA9Jkf/+VFwVJraFRdDYOAiVKA70VZuRUOCEckZxy2i9fRi38TAP0VZni
+        Zxa04NpiTRK6Y50rqsQgLNI2xlxelTAhwhieQKXV7XbA7I79pi+7flkAWySufmzU+MTigSV/8khep
+        JPfNySMhQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:35968)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iz3w3-00040d-Fm; Tue, 04 Feb 2020 19:32:35 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iz3vy-0001AI-Sy; Tue, 04 Feb 2020 19:32:30 +0000
+Date:   Tue, 4 Feb 2020 19:32:30 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200204193230.GT25745@shell.armlinux.org.uk>
+References: <20200127114600.GU25745@shell.armlinux.org.uk>
+ <20200127140038.GD13647@lunn.ch>
+ <20200127140834.GW25745@shell.armlinux.org.uk>
+ <20200127145107.GE13647@lunn.ch>
+ <20200127161132.GX25745@shell.armlinux.org.uk>
+ <20200127162206.GJ13647@lunn.ch>
+ <c3e863b8-2143-fee3-bb0b-65699661d7ab@gmail.com>
+ <BN8PR12MB3266B69DA09E1CC215843C3CD30A0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200204172603.GS25745@shell.armlinux.org.uk>
+ <20200204174318.GB1364@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204100039.GX3897@sirena.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200204174318.GB1364@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:00:39AM +0000, Mark Brown wrote:
-> On Mon, Feb 03, 2020 at 11:01:44PM -0700, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > ../sound/soc/codecs/wcd934x.c:1886:11: warning: address of array
-> > 'wcd->rx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
-> >         if (wcd->rx_chs) {
-> >         ~~  ~~~~~^~~~~~
-> > ../sound/soc/codecs/wcd934x.c:1894:11: warning: address of array
-> > 'wcd->tx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
-> >         if (wcd->tx_chs) {
-> >         ~~  ~~~~~^~~~~~
-> > 2 warnings generated.
-> > 
-> > Arrays that are in the middle of a struct are never NULL so they don't
-> > need a check like this.
+On Tue, Feb 04, 2020 at 06:43:18PM +0100, Andrew Lunn wrote:
+> > There, there is one MAC, but there are multiple different PCS - one
+> > for SGMII and 1000base-X, another for 10G, another for 25G, etc.
+> > These PCS are accessed via a MDIO adapter embedded in each of the
+> > MAC hardware blocks.
 > 
-> I'm not convincd this is a sensible warning, at the use site a
-> pointer to an array in a struct looks identical to an array
-> embedded in the struct so it's not such a bad idea to check and
-> refactoring of the struct could easily introduce problems.
+> Hi Russell
+> 
+> Marvell mv88e6390X switches are like this is a well. There is a PCS
+> for SGMII and 1000Base-X, and a second one for 10G. And it dynamically
+> swaps between them depending on the port mode, the so called cmode.
+> 
+> So a generic solution is required, and please take your time to build
+> one.
 
-There have been a few other bugs found with this warning:
+Well, DSA is quite a mixed bag...
 
-9fcf2b3c1c02 ("drm/atmel-hlcdc: check stride values in the first plane")
-44d7f1a77d8c ("media: pxa_camera: Fix check for pdev->dev.of_node")
-8a72b81e6df5 ("isdn: isdnloop: fix pointer dereference bug")
+As far as I can work out, the situation with the CPU and DSA ports is
+quite hopeless - you've claimed that a change in phylink has broken it,
+I can't find what that may be.  The fact is, phylink has never had any
+link information for DSA links when no fixed-link property has been
+specified in DT.  As I've already said in a previous email about this,
+I can't see *any* sane way to fix that - but there was no response.
 
-Other static checkers like smatch will warn about this as well (since I
-am sure that is how Dan Carpenter found the same issue in the wcd9335
-driver). Isn't an antipattern in the kernel to do things "just in
-case we do something later"? There are plenty of NULL checks removed
-from the kernel because they do not do anything now.
 
-I'd be fine with changing the check to something else that keeps the
-same logic but doesn't create a warning; I am not exactly sure what that
-would be because that is more of a specific driver logic thing, which I
-am not familiar with.
+On a more positive note...
 
-Cheers,
-Nathan
+The mac_link_up() changes that I've talked about should work for DSA,
+if only there was a reasonable way to reconfigure the ports.  If you
+look at the "phy" branch, you will notice that there's a patch there -
+"net: mv88e6xxx: use resolved link config in mac_link_up()" which adds
+the support to configure the MAC manually.  It's rather messy, and I
+see no way to deal with the pause settings.  There is support in some
+Marvell DSA switches to force flow control but that's not supported
+through the current mid-layer at all (port_set_pause doesn't do it.)
+I'm not sure whether the "mv88e6xxx_phy_is_internal()" check there is
+the right test for every DSA switch correct either.
+
+What is missing is reading the results from the PCS (aka serdes) and
+forwarding them into phylink - I did have a quick look at how that might
+be possible, but the DSA code structure (consisting of multiple
+mid-layers) makes it hard without rewriting quite a lot of code.  That's
+fine if you know all the DSA chips inside out, but I don't - and that's
+where we need someone who has the knowledge of all DSA switches that we
+support.  Or, we get rid of the multiple mid-layers and switch to a
+library approach, so that we can modify support for one DSA switch
+without affecting everything.  It may be a simple matter of dropping the
+existing serdes workaround, but I'm not sure at the moment.
+
+I've tried this code out on the ZII rev B, I haven't tried it on the rev
+C which has the 6390 switches yet.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
