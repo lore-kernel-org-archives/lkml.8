@@ -2,221 +2,119 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBA5C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12CCC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3512084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF242087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G3JESj+d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWK4nea1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgBDTb6 (ORCPT
+        id S1727644AbgBDTcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:31:58 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46088 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbgBDTb4 (ORCPT
+        Tue, 4 Feb 2020 14:32:18 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42028 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbgBDTcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:31:56 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so7667346pll.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:31:56 -0800 (PST)
+        Tue, 4 Feb 2020 14:32:18 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so18275726otd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:32:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N0feqpjiIoHn9/Mmqog1G13Nvzq6P+/4k/jXqeGN5W4=;
-        b=G3JESj+dNoN1RTcDn6NVnvw+kbOcW38OQAUJL0SPzI3QJKq+Tan5slIeUBMtnTsq2O
-         Z3Css13xCcrTLB463unY2yR1kaWJhFijMvduMNUAHLjL5LnR2S7J0J+wtw4IGcBenzbD
-         3F/WZE6q3n39bxrLJi2p3Avvri0iwIGtI+mC4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Et9pRiR1Ma9sl4dJgbbua/nMtmbzH7oTYgwDY47X7gk=;
+        b=mWK4nea1vZ+jAlGOExb5wDwpAZ3JWzhU5OdQ8/31S3QOckRF2nYpYo6wWHBDYmVM4j
+         MDthJxcFcL/zDT6gYv5DHan4HE3uI3+QrFYOGCUZQx6XENcty1le7xnHUpfu3GPP6A5Q
+         zD1HMqARhWC5qO0rwcMm0qVwyVm6espiPRjn1S1kadtT50muRqMQFTPisCGAeCYIXU3U
+         XmoG1NdhWw9VIy4/MrBAPmP+rVMk9bPFw2moHnlh+iEbv78d7GZC0NQ6DXeD5ou3lX0H
+         4InqYTjATU6AbgeIXLM+1PChmJPFJrwYQnLl6GNPDTwSRhDlNnY9gDPkZauDc0jB0H3G
+         VD2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N0feqpjiIoHn9/Mmqog1G13Nvzq6P+/4k/jXqeGN5W4=;
-        b=klC+EPhDwmQJCbf/opGTtGmlN467EszDH/DunPJ9aGI0HUmeNGsrKbVW9ob0PyHIFz
-         q2pDIi+Tttsmd5zNVGQ1AFjwuY9HFgqYSOHTz2aTnwMYLHUOyBNG6i4d0RwUZq54yJVJ
-         X2ChzAz3NHBEzqdw8SNX2YkC6cPYUYMEwvPiEdFYqUMBoDQtVB+0Bo0quvfAEbYgBedr
-         DC14zB/SJXam3JXc8K6VqKq2xbtkcjzBc9Ms8g/ZBx8lq+xkH09KH6OX0I+kG3MjdPGl
-         4pCpWCMT2Xo+V0YHQkK8YkIdC3nQH8YWcS+A1AX4VgLfPlrHwEfqU3S4jKH5xBCvg3vZ
-         7/8Q==
-X-Gm-Message-State: APjAAAWwa59rAixuN/JWcnySM6ev2XixlBtwJf6MBuMujiPSoo+dBuki
-        zWY5Av/ibSZOFYBjc1ctHbQcNg==
-X-Google-Smtp-Source: APXvYqyUm6HojgglzaDuVY1G0FhMILDd2qS6iQYa38TUfUC+nG0OxhpbEMlDDvYGfJITKEfcR7fzvA==
-X-Received: by 2002:a17:90a:c706:: with SMTP id o6mr801929pjt.82.1580844716160;
-        Tue, 04 Feb 2020 11:31:56 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g18sm24956626pfi.80.2020.02.04.11.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 11:31:55 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/3] i2c: qcom-geni: Grow a dev pointer to simplify code
-Date:   Tue,  4 Feb 2020 11:31:51 -0800
-Message-Id: <20200204193152.124980-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200204193152.124980-1-swboyd@chromium.org>
-References: <20200204193152.124980-1-swboyd@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Et9pRiR1Ma9sl4dJgbbua/nMtmbzH7oTYgwDY47X7gk=;
+        b=JZdiV/yZmKKXVuJPyMHuCUSyXBFPQ1M272aZe1fCysdZjrw4CcWDey+lathP14qTFO
+         3aYxEDHwSqap/OYYJ54rfm05oddbLzURYcUWX0jrJ/NdUMd0LuoFaoPvgB5x6AIoxM2d
+         pPJVj5OUa4KysEBVXD11no8fnfI62HVJIITpE1QCoxEIFTOzXdhF33p+H3ovbAxSjcag
+         8SLrXugWr+fhRvvcgcpXCC3mW+TzFi7lEuoMtutazYZiwrxTsnun94lAuATg2XrPWT//
+         fgk0upe2fQEoPvzuWhEviWkW53jRFD8HzdXDSCcV5m5mbq4IWCBfUADAJBVH5Go57lx3
+         6qAw==
+X-Gm-Message-State: APjAAAUDypH8SFux8zmH54cYs3x8kPmeeB7IPytop65ZHtsdTXvwd2f+
+        Dfxfjc9i06Ec4O31dwPRQjI=
+X-Google-Smtp-Source: APXvYqxQ67LpNhXsPEsg9KZN32c1olOPxSz/GZrtpkwwa1ocuWDNEP7eW11vQi3Lai5XLFsN73GBAw==
+X-Received: by 2002:a9d:588c:: with SMTP id x12mr22627232otg.2.1580844736997;
+        Tue, 04 Feb 2020 11:32:16 -0800 (PST)
+Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id b145sm3997400oii.31.2020.02.04.11.32.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Feb 2020 11:32:16 -0800 (PST)
+Date:   Tue, 4 Feb 2020 12:32:15 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ASoC: wcd934x: Remove some unnecessary NULL checks
+Message-ID: <20200204193215.GA44094@ubuntu-x2-xlarge-x86>
+References: <20200204060143.23393-1-natechancellor@gmail.com>
+ <20200204100039.GX3897@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204100039.GX3897@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some lines are long here. Use a struct dev pointer to shorten lines and
-simplify code. The clk_get() call can fail because of EPROBE_DEFER
-problems too, so just remove the error print message because it isn't
-useful.
+On Tue, Feb 04, 2020 at 10:00:39AM +0000, Mark Brown wrote:
+> On Mon, Feb 03, 2020 at 11:01:44PM -0700, Nathan Chancellor wrote:
+> > Clang warns:
+> > 
+> > ../sound/soc/codecs/wcd934x.c:1886:11: warning: address of array
+> > 'wcd->rx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
+> >         if (wcd->rx_chs) {
+> >         ~~  ~~~~~^~~~~~
+> > ../sound/soc/codecs/wcd934x.c:1894:11: warning: address of array
+> > 'wcd->tx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
+> >         if (wcd->tx_chs) {
+> >         ~~  ~~~~~^~~~~~
+> > 2 warnings generated.
+> > 
+> > Arrays that are in the middle of a struct are never NULL so they don't
+> > need a check like this.
+> 
+> I'm not convincd this is a sensible warning, at the use site a
+> pointer to an array in a struct looks identical to an array
+> embedded in the struct so it's not such a bad idea to check and
+> refactoring of the struct could easily introduce problems.
 
-Cc: Girish Mahadevan <girishm@codeaurora.org>
-Cc: Dilip Kota <dkota@codeaurora.org>
-Cc: Alok Chauhan <alokc@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/i2c/busses/i2c-qcom-geni.c | 51 ++++++++++++++----------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+There have been a few other bugs found with this warning:
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 3e13b54ce3f8..192a8f622f3d 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -502,45 +502,42 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	u32 proto, tx_depth;
- 	int ret;
-+	struct device *dev = &pdev->dev;
- 
--	gi2c = devm_kzalloc(&pdev->dev, sizeof(*gi2c), GFP_KERNEL);
-+	gi2c = devm_kzalloc(dev, sizeof(*gi2c), GFP_KERNEL);
- 	if (!gi2c)
- 		return -ENOMEM;
- 
--	gi2c->se.dev = &pdev->dev;
--	gi2c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
-+	gi2c->se.dev = dev;
-+	gi2c->se.wrapper = dev_get_drvdata(dev->parent);
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	gi2c->se.base = devm_ioremap_resource(&pdev->dev, res);
-+	gi2c->se.base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(gi2c->se.base))
- 		return PTR_ERR(gi2c->se.base);
- 
--	gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
--	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
-+	gi2c->se.clk = devm_clk_get(dev, "se");
-+	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(dev)) {
- 		ret = PTR_ERR(gi2c->se.clk);
--		dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
- 		return ret;
- 	}
- 
--	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
--							&gi2c->clk_freq_out);
-+	ret = device_property_read_u32(dev, "clock-frequency",
-+				       &gi2c->clk_freq_out);
- 	if (ret) {
--		dev_info(&pdev->dev,
--			"Bus frequency not specified, default to 100kHz.\n");
-+		dev_info(dev, "Bus frequency not specified, default to 100kHz.\n");
- 		gi2c->clk_freq_out = KHZ(100);
- 	}
- 
--	if (has_acpi_companion(&pdev->dev))
--		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
-+	if (has_acpi_companion(dev))
-+		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
- 
- 	gi2c->irq = platform_get_irq(pdev, 0);
--	if (gi2c->irq < 0) {
--		dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
-+	if (gi2c->irq < 0)
- 		return gi2c->irq;
--	}
- 
- 	ret = geni_i2c_clk_map_idx(gi2c);
- 	if (ret) {
--		dev_err(&pdev->dev, "Invalid clk frequency %d Hz: %d\n",
-+		dev_err(dev, "Invalid clk frequency %d Hz: %d\n",
- 			gi2c->clk_freq_out, ret);
- 		return ret;
- 	}
-@@ -550,28 +547,28 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 	spin_lock_init(&gi2c->lock);
- 	platform_set_drvdata(pdev, gi2c);
- 	ret = devm_request_irq(dev, gi2c->irq, geni_i2c_irq, 0,
--			       dev_name(&pdev->dev), gi2c);
-+			       dev_name(dev), gi2c);
- 	if (ret) {
--		dev_err(&pdev->dev, "Request_irq failed:%d: err:%d\n",
-+		dev_err(dev, "Request_irq failed:%d: err:%d\n",
- 			gi2c->irq, ret);
- 		return ret;
- 	}
- 	/* Disable the interrupt so that the system can enter low-power mode */
- 	disable_irq(gi2c->irq);
- 	i2c_set_adapdata(&gi2c->adap, gi2c);
--	gi2c->adap.dev.parent = &pdev->dev;
--	gi2c->adap.dev.of_node = pdev->dev.of_node;
-+	gi2c->adap.dev.parent = dev;
-+	gi2c->adap.dev.of_node = dev->of_node;
- 	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
- 
- 	ret = geni_se_resources_on(&gi2c->se);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error turning on resources %d\n", ret);
-+		dev_err(dev, "Error turning on resources %d\n", ret);
- 		return ret;
- 	}
- 	proto = geni_se_read_proto(&gi2c->se);
- 	tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
- 	if (proto != GENI_SE_I2C) {
--		dev_err(&pdev->dev, "Invalid proto %d\n", proto);
-+		dev_err(dev, "Invalid proto %d\n", proto);
- 		geni_se_resources_off(&gi2c->se);
- 		return -ENXIO;
- 	}
-@@ -581,11 +578,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 							true, true, true);
- 	ret = geni_se_resources_off(&gi2c->se);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error turning off resources %d\n", ret);
-+		dev_err(dev, "Error turning off resources %d\n", ret);
- 		return ret;
- 	}
- 
--	dev_dbg(&pdev->dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
-+	dev_dbg(dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
- 
- 	gi2c->suspended = 1;
- 	pm_runtime_set_suspended(gi2c->se.dev);
-@@ -595,12 +592,12 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 
- 	ret = i2c_add_adapter(&gi2c->adap);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error adding i2c adapter %d\n", ret);
-+		dev_err(dev, "Error adding i2c adapter %d\n", ret);
- 		pm_runtime_disable(gi2c->se.dev);
- 		return ret;
- 	}
- 
--	dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-+	dev_dbg(dev, "Geni-I2C adaptor successfully added\n");
- 
- 	return 0;
- }
--- 
-Sent by a computer, using git, on the internet
+9fcf2b3c1c02 ("drm/atmel-hlcdc: check stride values in the first plane")
+44d7f1a77d8c ("media: pxa_camera: Fix check for pdev->dev.of_node")
+8a72b81e6df5 ("isdn: isdnloop: fix pointer dereference bug")
 
+Other static checkers like smatch will warn about this as well (since I
+am sure that is how Dan Carpenter found the same issue in the wcd9335
+driver). Isn't an antipattern in the kernel to do things "just in
+case we do something later"? There are plenty of NULL checks removed
+from the kernel because they do not do anything now.
+
+I'd be fine with changing the check to something else that keeps the
+same logic but doesn't create a warning; I am not exactly sure what that
+would be because that is more of a specific driver logic thing, which I
+am not familiar with.
+
+Cheers,
+Nathan
