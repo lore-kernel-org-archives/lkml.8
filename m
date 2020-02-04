@@ -5,74 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49420C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F32C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D09B217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A57821744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6krExxw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je6p4Jtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgBDXub (ORCPT
+        id S1727992AbgBDXuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:50:31 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43803 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbgBDXtu (ORCPT
+        Tue, 4 Feb 2020 18:50:37 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33351 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgBDXtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:49:50 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p11so60646plq.10;
-        Tue, 04 Feb 2020 15:49:49 -0800 (PST)
+        Tue, 4 Feb 2020 18:49:47 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so80231plb.0;
+        Tue, 04 Feb 2020 15:49:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=h5BHRotCYsy0a67S2KVH1ySLbRo1QXYTOC5G0a45OSw=;
-        b=N6krExxw+iDOgtznqR14UzAobO+11LQwTqSIFnq01ZN+/cRryxOKZiPH6j258N7gnB
-         XksOmfuX4/M+r1Ju1OKEH2S4W9cd5roKe4PJNDc5alJYXDpC9qE2xA4J38T135DvnfXl
-         mmHfMcfbwroPCc5Lbd/vDm3uVA6hNtr4ZPTOOy8MhbKLeN/FcWNVvVktChc3ohX2InZ3
-         sSOOFVcIHGII58Flo8fj2sVSutv4X2heuk3jRs7L3k/wyMHyrFSHcFGqc1HSSqEuLJ+3
-         trYC8ZZpAuwpjNkWf31EakOElMLkmv6dZuI9Ly2ya1nNwOSMj40SKlBPa8lzkymc+aQD
-         M+wg==
+        bh=0UeHl1Dd9diRnbI2rT7HKFn8mPPNQOcd6CGGZuCp63s=;
+        b=je6p4JtnrsQJgU5HRv7LG/DWeA5nUeQ876l1bbDqix79BNZBL1WFwSWBcPg+eNhb+v
+         kd9GvQghy2Q2ollGwJFeSYH6iYubc+m+ZSQSruBP+joBpdpksb6g+YgDOb6wMJEV6Fy6
+         h462nCEEqZgtJi5qkGQ84zqt8NIN7sUkohqvVIxFzisjlN80EE5gSm7Jz8Bp71vDl4rc
+         EyQLT5g7xHGvLQfhqwNJsuoDaaGXCQzYK01+dSINnkgLknGHFqsrJCK6SCjo8BheX5w7
+         cDT4TPB+YFLrF3IkQndJfH80v8/9Gw+he8uv80EN+W6ais/+le82IYf5RX7j9yPj9O/+
+         wvtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=h5BHRotCYsy0a67S2KVH1ySLbRo1QXYTOC5G0a45OSw=;
-        b=BSX+Ably089jeMuFXxX/UZPAeBf2+Ce1S2JsCmSuFTx/AThVKGQDue+vIKpVN6cD8Z
-         dQewFSieEgKfMemUKyutJM7DyfjScMH2PfoizGBoKGGz1FEPjNlkt+a3An0Tqodzyhjk
-         xWWJ7OeCsCUHG2R2mPzXREQ785NGCLmlzO5abavgYtJl6uSbv56y+iNnFsVxWDP7iQfx
-         ibbDzXvgzVUqryTtgdWHDMSHutIKJIhKiaUI+0yPWKa5sJ+l0Klf1v4tJ3Ydq+D8t2F3
-         FYiIGgCVx6UfGxs257FYt2tDE/VpUguDRL0dUvTgfhQGlTyJn9YMJL2DFgT5sOtXI4ox
-         kBjA==
-X-Gm-Message-State: APjAAAXsi/mB4FNkCP2J3MH+QS4eTyWTSRf1xGZDWAHYbzpcra1dB7bM
-        D+27rUEyDq/eXImdcsDYGUUweQsw
-X-Google-Smtp-Source: APXvYqysNJ3RiWVPT9jFpzVjeZWRqmiw1QVTywJOVhIiqMr4BgmIi5yBgbIXD7yptVHG0IAPw4XeBA==
-X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr2085955pjt.88.1580860189106;
-        Tue, 04 Feb 2020 15:49:49 -0800 (PST)
+        bh=0UeHl1Dd9diRnbI2rT7HKFn8mPPNQOcd6CGGZuCp63s=;
+        b=FN/8Eokg2H1uGRuUWnXKzCMVQzt52NnT5LvWnvV1JupdGUOnY2Xnmiyrf7JJ48VkbG
+         R6l+VZtXHDIAc2Yhj155uxIqsZywcv08DufmAr5WWfxs6aqN/GXcootgoC4kauoti0XD
+         3lFrxLhyjL4SqeN7QeQVzgBId/075zG+g2Isfr/HKVKSwB9Yf/LdDRGwgwZra0gkN7BI
+         m9/lbyneSVLQ2cgmTW1uY0uqe3oFa6+O7P6LRj5yGJvOSGC0Mv6KcqWpWqo0N0fz36Hr
+         nrnLtxneuRB2B5jqoY+snoWdwgQFjGnk12YWW/E8iYvo4nJEcEoVCmN/aL5LuJu2Yic1
+         uvzQ==
+X-Gm-Message-State: APjAAAVpzSbCeG+KCB4VS2ysQl8wiLslVM1BIpjkROz/HSKaPmcuzNqu
+        A34rsIJcFoOxO+ThS2OszB/U3Q7M
+X-Google-Smtp-Source: APXvYqwE9MALBruftzHtjQib2jg9yrrMeSI1bfo5Fhf0lDaNpE4ULauWZfLkuf6FZ/FiGpO4TrbJRw==
+X-Received: by 2002:a17:902:b612:: with SMTP id b18mr30588327pls.318.1580860185998;
+        Tue, 04 Feb 2020 15:49:45 -0800 (PST)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.47
+        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 15:49:48 -0800 (PST)
+        Tue, 04 Feb 2020 15:49:45 -0800 (PST)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 09/17] media: imx7-mipi-csis: Create media links in bound notifier
-Date:   Tue,  4 Feb 2020 15:49:10 -0800
-Message-Id: <20200204234918.20425-10-slongerbeam@gmail.com>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 07/17] media: video-mux: Create media links in bound notifier
+Date:   Tue,  4 Feb 2020 15:49:08 -0800
+Message-Id: <20200204234918.20425-8-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200204234918.20425-1-slongerbeam@gmail.com>
 References: <20200204234918.20425-1-slongerbeam@gmail.com>
@@ -82,67 +74,134 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Implement a notifier bound op to register media links from the remote
-sub-device's source pad(s) to the mipi csi-2 receiver sink pad.
+sub-device's source pad(s) to the video-mux sink pad(s).
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
 Changes in v3:
-- call a local imx-media utility imx_media_create_fwnode_pad_link().
-Changes in v2:
-- Move notifier_to_csis_state() next to mipi_sd_to_csis_state(), remove
-  unnecessary inline, and rename to mipi_notifier_to_csis_state().
-  Suggested by Rui Silva.
+- this version does the work inline. The previous version called
+  a media_create_fwnode_links() which is removed in v3.
 ---
- drivers/staging/media/imx/imx7-mipi-csis.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/media/platform/video-mux.c | 92 ++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 4c54456318ea..d3a83577efed 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -317,6 +317,12 @@ static int mipi_csis_dump_regs(struct csi_state *state)
- 	return 0;
- }
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index c1c477e4e33f..a6b09a79fbe3 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -36,6 +36,12 @@ static const struct v4l2_mbus_framefmt video_mux_format_mbus_default = {
+ 	.field = V4L2_FIELD_NONE,
+ };
  
-+static struct csi_state *
-+mipi_notifier_to_csis_state(struct v4l2_async_notifier *n)
++static inline struct video_mux *
++notifier_to_video_mux(struct v4l2_async_notifier *n)
 +{
-+	return container_of(n, struct csi_state, notifier);
++	return container_of(n, struct video_mux, notifier);
 +}
 +
- static struct csi_state *mipi_sd_to_csis_state(struct v4l2_subdev *sdev)
+ static inline struct video_mux *v4l2_subdev_to_video_mux(struct v4l2_subdev *sd)
  {
- 	return container_of(sdev, struct csi_state, mipi_sd);
-@@ -848,6 +854,20 @@ static int mipi_csis_parse_endpoint(struct device *dev,
- 	return 0;
+ 	return container_of(sd, struct video_mux, subdev);
+@@ -372,6 +378,90 @@ static int video_mux_parse_endpoint(struct device *dev,
+ 	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -ENOTCONN;
  }
  
-+static int mipi_csis_notify_bound(struct v4l2_async_notifier *notifier,
++static int video_mux_notify_bound(struct v4l2_async_notifier *notifier,
 +				  struct v4l2_subdev *sd,
 +				  struct v4l2_async_subdev *asd)
 +{
-+	struct csi_state *state = mipi_notifier_to_csis_state(notifier);
-+	struct media_pad *sink = &state->mipi_sd.entity.pads[CSIS_PAD_SINK];
++	struct video_mux *vmux = notifier_to_video_mux(notifier);
++	struct fwnode_handle *vmux_fwnode = dev_fwnode(vmux->subdev.dev);
++	struct fwnode_handle *sd_fwnode = dev_fwnode(sd->dev);
++	struct fwnode_handle *vmux_ep;
 +
-+	return imx_media_create_fwnode_pad_link(sd, sink);
++	fwnode_graph_for_each_endpoint(vmux_fwnode, vmux_ep) {
++		struct fwnode_handle *remote_ep, *sd_ep;
++		struct media_pad *src_pad, *sink_pad;
++		struct fwnode_endpoint fwep;
++		int src_idx, sink_idx, ret;
++		bool remote_ep_belongs;
++
++		ret = fwnode_graph_parse_endpoint(vmux_ep, &fwep);
++		if (ret)
++			continue;
++
++		/* only create links to the vmux sink pads */
++		if (fwep.port >= vmux->subdev.entity.num_pads - 1)
++			continue;
++
++		sink_idx = fwep.port;
++		sink_pad = &vmux->subdev.entity.pads[sink_idx];
++
++		remote_ep = fwnode_graph_get_remote_endpoint(vmux_ep);
++		if (!remote_ep)
++			continue;
++
++		/*
++		 * verify that this remote endpoint is owned by the
++		 * sd, in case the sd does not check for that in its
++		 * .get_fwnode_pad operation or does not implement it.
++		 */
++		remote_ep_belongs = false;
++		fwnode_graph_for_each_endpoint(sd_fwnode, sd_ep) {
++			if (sd_ep == remote_ep) {
++				remote_ep_belongs = true;
++				fwnode_handle_put(sd_ep);
++				break;
++			}
++		}
++		if (!remote_ep_belongs)
++			continue;
++
++		src_idx = media_entity_get_fwnode_pad(&sd->entity, remote_ep,
++						      MEDIA_PAD_FL_SOURCE);
++		fwnode_handle_put(remote_ep);
++
++		if (src_idx < 0)
++			continue;
++
++		src_pad = &sd->entity.pads[src_idx];
++
++		/* skip this link if it already exists */
++		if (media_entity_find_link(src_pad, sink_pad))
++			continue;
++
++		ret = media_create_pad_link(&sd->entity, src_idx,
++					    &vmux->subdev.entity,
++					    sink_idx, 0);
++		if (ret) {
++			dev_err(vmux->subdev.dev,
++				"%s:%d -> %s:%d failed with %d\n",
++				sd->entity.name, src_idx,
++				vmux->subdev.entity.name, sink_idx, ret);
++			fwnode_handle_put(vmux_ep);
++			return ret;
++		}
++
++		dev_dbg(vmux->subdev.dev, "%s:%d -> %s:%d\n",
++			sd->entity.name, src_idx,
++			vmux->subdev.entity.name, sink_idx);
++	}
++
++	return 0;
 +}
 +
-+static const struct v4l2_async_notifier_operations mipi_csis_notify_ops = {
-+	.bound = mipi_csis_notify_bound,
++static const struct v4l2_async_notifier_operations video_mux_notify_ops = {
++	.bound = video_mux_notify_bound,
 +};
 +
- static int mipi_csis_subdev_init(struct v4l2_subdev *mipi_sd,
- 				 struct platform_device *pdev,
- 				 const struct v4l2_subdev_ops *ops)
-@@ -886,6 +906,8 @@ static int mipi_csis_subdev_init(struct v4l2_subdev *mipi_sd,
+ static int video_mux_async_register(struct video_mux *vmux,
+ 				    unsigned int num_input_pads)
+ {
+@@ -386,6 +476,8 @@ static int video_mux_async_register(struct video_mux *vmux,
  
- 	v4l2_async_notifier_init(&state->notifier);
+ 	v4l2_async_notifier_init(&vmux->notifier);
  
-+	state->notifier.ops = &mipi_csis_notify_ops;
++	vmux->notifier.ops = &video_mux_notify_ops;
 +
- 	ret = v4l2_async_register_fwnode_subdev(mipi_sd, &state->notifier,
- 						sizeof(struct v4l2_async_subdev),
- 						&sink_port, 1,
+ 	ret = v4l2_async_register_fwnode_subdev(
+ 		&vmux->subdev, &vmux->notifier,
+ 		sizeof(struct v4l2_async_subdev),
 -- 
 2.17.1
 
