@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ABAC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF184C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D3621744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B664E21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Le9ycugO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yy9WKoJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgBDXtv (ORCPT
+        id S1727883AbgBDXt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:49:51 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36119 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbgBDXts (ORCPT
+        Tue, 4 Feb 2020 18:49:56 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:56102 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgBDXtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:49:48 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so74016plm.3;
-        Tue, 04 Feb 2020 15:49:48 -0800 (PST)
+        Tue, 4 Feb 2020 18:49:52 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d5so126503pjz.5;
+        Tue, 04 Feb 2020 15:49:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=j/2evpY7A0C04k+gk98K37iMCYdFmql/BmRTWB1csrg=;
-        b=Le9ycugOfEEybykcT8+miCmVKrq1TITIUOBemZS+jQOP3orUFyi38fSpfiRSq1UyOB
-         pf3wQI/DtHAfBlQpH/0VDZOe5UYWreuBz1Y/+MDCTgy6j66TIQr3MN4Vd0IB2qDRjGZi
-         xAxZ/tExX08f3od/rBpZ1SHFML1yWq540pS4Wd8rvs6xrUurW1w2xy563mxmtgM7JPaV
-         cq/cE4uhXMt7XyQ+SlAz9gA1yvX9f3sPhyUww6iz2tGkwvHyr3soulGOUCbbjfJhPJAZ
-         ZNZlnK9SPDu6AXDVtKSgFlxbWa5feYE4EvPIKzlb1aDS98rtw7a3cMC1XvRijjJAF7hr
-         eZMA==
+        bh=nw6qFQx6S/L6ma/0AlsKxKIDrQ4PZDVJaM1fr3Im7gQ=;
+        b=Yy9WKoJxny1WM1LTJAaHQp4AkTgd8LBI0xpYLY6Fn0oeSdfohwks8vumgGn8JP3Yj2
+         +4hupFpmWJDqwsNDq4eQ/VCgwhYYJ6i2pr9H4QplI4Vw+QZKC09SCn5y7RB/PCD1ZVRG
+         HXxnXpugQb3SFC8tfPrvcpwAnA8MLwgyuTp2Q1BdAfs7cAMfi2Jaowa0b9KSsECDGBjM
+         Sya0BgFaa2vQEGhDhOjJoJ46panfmfwJgvYIjywdBpcZ18pznnsWs8zxyBSctFs0YgbM
+         VovFpV/24b5dlIzNkjlJ0OkQc21k4vS6607CXahqymGABgwBU8pvIKVpBnIHLBVikYJW
+         vHyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=j/2evpY7A0C04k+gk98K37iMCYdFmql/BmRTWB1csrg=;
-        b=g4aP3lWaPgtjkWDiSuirAr5qkz+/VaKA8q2HDLPeqiGJldLZjylEfN1CAh/Bke80EZ
-         kgzgEnqigY3YuKQobII46vzOZLwjreo6yqvxm5slTj+oeL2DDAZEJNHNpbQCZrTf5xdk
-         MTO+xINt5ZCuHpb7v+wn2DWnGNv+UP08OKiKgwrNvDvBQjupb0K05T7+r8jbveXfvE6V
-         cRDxwp2JDcQdggPB7p8cyIbclPMui6Sat5VRWkLXqCv2fJpVg/1dW2xNeYDxErJa0xNb
-         wkQeOg+HtwaZcKeP2JYp2VfWHvk6r84y8yXpRM43k63gLv9yTihOuP/2QfDNnKwFoZgb
-         R3sg==
-X-Gm-Message-State: APjAAAXXYU+G7W6OVUVp0/olnhG/zZqkgcLzCvTVP2o1dw9JKPXs9BS3
-        vBIfbxPIzfIFT8Ea7IcbfKqN50H1
-X-Google-Smtp-Source: APXvYqzd5F1QfdHZ4Puy966CryZKh3FhnnA+0FjfKGt35fUDUUvC8HOzxic58qwpCy2MTsi8+gEBzA==
-X-Received: by 2002:a17:90a:cc02:: with SMTP id b2mr1960199pju.137.1580860187663;
-        Tue, 04 Feb 2020 15:49:47 -0800 (PST)
+        bh=nw6qFQx6S/L6ma/0AlsKxKIDrQ4PZDVJaM1fr3Im7gQ=;
+        b=B8wepfbGp3F3rAEFK/8RtfWDl3q1Pwzr9fDuXUJdCYC7QoXuGb+oH8+5l0iLb8OJJz
+         2L69k1+Yh+HGiPT+hz1o8fGkAKP2b3XRGEyR4mN5pMbwi36QVclntfAzM+WvQq45721G
+         dvDhV3oPzeur2KcN5Yl89XI8u1qdZbPEWUm43T41BS29LGy0Oo0ppbRYxAaBl2k8V0RK
+         QUQzCqYUvVz3QqCL3SgErGtAQiVlqCCOMSbo8g0ZbbNnEBpVQh08vKt02c3ZblE48X28
+         QVR/QCSjMx+XOXfotkLIYTgbwnPBn13u4nr+cq7ykL87LwTKkw2yj0VKEmIHzcLd9ylw
+         MMxA==
+X-Gm-Message-State: APjAAAXnZ+O6eJppTfOhmFjbzRU6L7BUcWLUv9n1scvomZjMX6Q8F/DM
+        eqeetTtxGS5LqtREKem7athvMuZs
+X-Google-Smtp-Source: APXvYqzubusBvsBD9wy7XWJhiFY4WOQKzM1XZxKRj5dG2YKTAV1RksFDtvGAJxFrohKb/059exTxcw==
+X-Received: by 2002:a17:902:8549:: with SMTP id d9mr31416618plo.153.1580860191823;
+        Tue, 04 Feb 2020 15:49:51 -0800 (PST)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.46
+        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 15:49:47 -0800 (PST)
+        Tue, 04 Feb 2020 15:49:51 -0800 (PST)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>
@@ -70,9 +70,9 @@ Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
         / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 08/17] media: imx: mipi csi-2: Create media links in bound notifier
-Date:   Tue,  4 Feb 2020 15:49:09 -0800
-Message-Id: <20200204234918.20425-9-slongerbeam@gmail.com>
+Subject: [PATCH v3 11/17] media: imx: csi: Embed notifier in struct csi_priv
+Date:   Tue,  4 Feb 2020 15:49:12 -0800
+Message-Id: <20200204234918.20425-12-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200204234918.20425-1-slongerbeam@gmail.com>
 References: <20200204234918.20425-1-slongerbeam@gmail.com>
@@ -81,64 +81,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a notifier bound op to register media links from the remote
-sub-device's source pad(s) to the mipi csi-2 receiver sink pad.
+Embed the notifier in 'struct csi_priv', instead of dynamically allocating
+it, to make it possible to retrieve csi_priv in a notifier callback op.
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
-Changes in v3:
-- call a local imx-media utility imx_media_create_fwnode_pad_link()
-  that creates a single link.
----
- drivers/staging/media/imx/imx6-mipi-csi2.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/staging/media/imx/imx-media-csi.c | 25 +++++++++--------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-index e27a342751fc..fddf6388348a 100644
---- a/drivers/staging/media/imx/imx6-mipi-csi2.c
-+++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-@@ -91,6 +91,11 @@ static inline struct csi2_dev *sd_to_dev(struct v4l2_subdev *sdev)
- 	return container_of(sdev, struct csi2_dev, sd);
- }
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index dc5fe25fe7b8..3e2afdd59276 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -58,6 +58,8 @@ struct csi_priv {
+ 	struct ipu_soc *ipu;
+ 	struct v4l2_subdev sd;
+ 	struct media_pad pad[CSI_NUM_PADS];
++	struct v4l2_async_notifier notifier;
++
+ 	/* the video device at IDMAC output pad */
+ 	struct imx_media_video_dev *vdev;
+ 	struct imx_media_fim *fim;
+@@ -1896,31 +1898,28 @@ static int imx_csi_parse_endpoint(struct device *dev,
  
-+static inline struct csi2_dev *notifier_to_dev(struct v4l2_async_notifier *n)
-+{
-+	return container_of(n, struct csi2_dev, notifier);
-+}
-+
- /*
-  * The required sequence of MIPI CSI-2 startup as specified in the i.MX6
-  * reference manual is as follows:
-@@ -584,6 +589,20 @@ static int csi2_parse_endpoint(struct device *dev,
- 	return 0;
- }
- 
-+static int csi2_notify_bound(struct v4l2_async_notifier *notifier,
-+			     struct v4l2_subdev *sd,
-+			     struct v4l2_async_subdev *asd)
-+{
-+	struct csi2_dev *csi2 = notifier_to_dev(notifier);
-+	struct media_pad *sink = &csi2->sd.entity.pads[CSI2_SINK_PAD];
-+
-+	return imx_media_create_fwnode_pad_link(sd, sink);
-+}
-+
-+static const struct v4l2_async_notifier_operations csi2_notify_ops = {
-+	.bound = csi2_notify_bound,
-+};
-+
- static int csi2_probe(struct platform_device *pdev)
+ static int imx_csi_async_register(struct csi_priv *priv)
  {
- 	unsigned int sink_port = 0;
-@@ -667,6 +686,8 @@ static int csi2_probe(struct platform_device *pdev)
+-	struct v4l2_async_notifier *notifier;
+ 	struct fwnode_handle *fwnode;
+ 	unsigned int port;
+ 	int ret;
  
- 	v4l2_async_notifier_init(&csi2->notifier);
+-	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
+-	if (!notifier)
+-		return -ENOMEM;
+-
+-	v4l2_async_notifier_init(notifier);
++	v4l2_async_notifier_init(&priv->notifier);
  
-+	csi2->notifier.ops = &csi2_notify_ops;
-+
- 	ret = v4l2_async_register_fwnode_subdev(
- 		&csi2->sd, &csi2->notifier, sizeof(struct v4l2_async_subdev),
- 		&sink_port, 1, csi2_parse_endpoint);
+ 	fwnode = dev_fwnode(priv->dev);
+ 
+ 	/* get this CSI's port id */
+ 	ret = fwnode_property_read_u32(fwnode, "reg", &port);
+ 	if (ret < 0)
+-		goto out_free;
++		return ret;
+ 
+ 	ret = v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+-		priv->dev->parent, notifier, sizeof(struct v4l2_async_subdev),
++		priv->dev->parent, &priv->notifier,
++		sizeof(struct v4l2_async_subdev),
+ 		port, imx_csi_parse_endpoint);
+ 	if (ret < 0)
+ 		goto out_cleanup;
+ 
+-	ret = v4l2_async_subdev_notifier_register(&priv->sd, notifier);
++	ret = v4l2_async_subdev_notifier_register(&priv->sd,
++						  &priv->notifier);
+ 	if (ret < 0)
+ 		goto out_cleanup;
+ 
+@@ -1928,16 +1927,12 @@ static int imx_csi_async_register(struct csi_priv *priv)
+ 	if (ret < 0)
+ 		goto out_unregister;
+ 
+-	priv->sd.subdev_notifier = notifier;
+-
+ 	return 0;
+ 
+ out_unregister:
+-	v4l2_async_notifier_unregister(notifier);
++	v4l2_async_notifier_unregister(&priv->notifier);
+ out_cleanup:
+-	v4l2_async_notifier_cleanup(notifier);
+-out_free:
+-	kfree(notifier);
++	v4l2_async_notifier_cleanup(&priv->notifier);
+ 
+ 	return ret;
+ }
 -- 
 2.17.1
 
