@@ -2,51 +2,51 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8467CC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25733C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC052087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCC120661
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pgIu/M29"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wESYPm8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBDN0c (ORCPT
+        id S1727324AbgBDN0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:26:32 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44314 "EHLO
+        Tue, 4 Feb 2020 08:26:36 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44304 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727209AbgBDN0a (ORCPT
+        by vger.kernel.org with ESMTP id S1727451AbgBDN0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:26:30 -0500
+        Tue, 4 Feb 2020 08:26:31 -0500
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014DN70n018475;
-        Tue, 4 Feb 2020 14:26:21 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014DN70m018475;
+        Tue, 4 Feb 2020 14:26:19 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=DQPPnENN4OvejI/WvANWll8Ll71nJFT9PWSn4hA0scM=;
- b=pgIu/M29OKqF+lFLKhE5yFuYlnstLG7kaviC8Ef8hu+rDOUlpCP9vGHYv0Fn1zZ6h/Nd
- ZxPjy+FfpUfMFNAkLRj+PFC7gz/pjN8xI61G4T4eQvW/XKZJgCMnalNJntArxAVngITV
- ffXTbtSbiCWHhV3KOxSdlaBovPYmM2/zT3yVkEbKaqy2ZNS9UllinQqzpp90zcZkJOxd
- el4KDdnqmHBoBisYDVL2ZG0aMc0XINmtiqdRUtA/2cRGQqvfC2fSWUfBmD/gj41biYA4
- CD6MnZyhCprJ0ZDmf7oZoiWiJmHYHwapUOzX7bQ7xPgL7k1Pw4B3e2n7nrHuWJdakdSh 1Q== 
+ bh=svNIL8S5ikLq6fC5dYVL1FJyfGZacEgFr1/P7H/Zw64=;
+ b=wESYPm8NZ7MqQhZxSsf1kewzyR9WtukfZ9+7H77bjnhQUGqHmBIW735MRm6eLYOvU9g2
+ 1joyWI2Z0sxhLzw0ZsmG/jcw/tDRSW2Ca3xn20jVFLAmyOzsQcocIh7vvGwAb+8lAyF1
+ GG5ygIRZoaWOvBG52snMnyzOYV6EIXgIRWPAjRnIP7E6+poWekKDMh/R3/8Ilj3ZwWPO
+ 4XJkRh3Y/XJYHbHrHLe080cLWjvTImZhCw7FRoy4LSRbckMbvAXAtRLG8j700FJez2sR
+ 7tmslg+wDuka/NI83N/OhvDYVbiGnuD8aSy/sNZXHNG+RolSIAxpNVWtA+zvAp2RpNE3 Hg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xvyp61uyx-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xvyp61uyt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 14:26:21 +0100
+        Tue, 04 Feb 2020 14:26:19 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9B8A810003A;
-        Tue,  4 Feb 2020 14:26:15 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D14F2100039;
+        Tue,  4 Feb 2020 14:26:14 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8FF402BC7BA;
-        Tue,  4 Feb 2020 14:26:15 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 4 Feb 2020 14:26:15
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C6A832BC7BA;
+        Tue,  4 Feb 2020 14:26:14 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 4 Feb 2020 14:26:14
  +0100
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -57,16 +57,16 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 3/3] ARM: dts: stm32: enable USB OTG Dual Role on stm32mp157c-ev1
-Date:   Tue, 4 Feb 2020 14:26:06 +0100
-Message-ID: <20200204132606.20222-4-amelie.delaunay@st.com>
+Subject: [PATCH 2/3] ARM: dts: stm32: add USB OTG pinctrl to stm32mp15
+Date:   Tue, 4 Feb 2020 14:26:05 +0100
+Message-ID: <20200204132606.20222-3-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200204132606.20222-1-amelie.delaunay@st.com>
 References: <20200204132606.20222-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-04_04:2020-02-04,2020-02-04 signatures=0
@@ -75,46 +75,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that st,stm32mp15-hsotg is used, dual role is supported. ID pin is
-managed to detect the current role.
-On stm32mp157c-ev1, Host mode requires a vbus-supply property. Charge pump
-for vbus is provided by PMIC VBUS_OTG.
+Add pinctrl definition for USB High-Speed OTG ID pin and USB Full-Speed OTG
+DP and DM lines that can be used on stm32mp15.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 3 ++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 1fc43251d697..c84f14b17371 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -355,6 +355,10 @@
- 	status = "okay";
- };
- 
-+&usbotg_hs {
-+	vbus-supply = <&vbus_otg>;
-+};
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 0237d4ddaa92..345dc18d2224 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1040,6 +1040,19 @@
+ 			bias-disable;
+ 		};
+ 	};
 +
- &usbphyc_port0 {
- 	phy-supply = <&vdd_usb>;
- 	vdda1v1-supply = <&reg11>;
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 228e35e16884..8f1fe0781d9f 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -353,7 +353,8 @@
++	usbotg_hs_pins_a: usbotg-hs-0 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 10, ANALOG)>; /* OTG_ID */
++		};
++	};
++
++	usbotg_fs_dp_dm_pins_a: usbotg-fs-dp-dm-0 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 11, ANALOG)>, /* OTG_FS_DM */
++				 <STM32_PINMUX('A', 12, ANALOG)>; /* OTG_FS_DP */
++		};
++	};
  };
  
- &usbotg_hs {
--	dr_mode = "peripheral";
-+	pinctrl-0 = <&usbotg_hs_pins_a>;
-+	pinctrl-names = "default";
- 	phys = <&usbphyc_port1 0>;
- 	phy-names = "usb2-phy";
- 	status = "okay";
+ &pinctrl_z {
 -- 
 2.17.1
 
