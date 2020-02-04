@@ -2,478 +2,126 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF5DC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DA0C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ECF2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CC52166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PCgLwG19"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="P60K4t5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgBDJYO (ORCPT
+        id S1726898AbgBDJZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:24:14 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:54662 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgBDJYO (ORCPT
+        Tue, 4 Feb 2020 04:25:48 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:35855 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgBDJZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:24:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KGp7S9Is8Um65DcpLlVhCuRPQXxFX+BbY6/I/l+gjGQ=; b=PCgLwG19386pcWWTjTTJGOMnT8
-        XzwtBRWJl5SW2PcnqG6RAOV6x/U349uNGqRRxUVtXZsE4h7XtY3VYrgPzKzY+YYJIEVouq7hUZZf9
-        dLjKkYgPYG+oWHTINJ0ohHtwqT4uxKuZtqdYAq+cCcRxcAt27pzYQM81M/F/LDYdNFjU2tQhsb4xE
-        G3giIQ98997gY9y1o7hs0bWBdC1BYv3xcFsybaD53hSzFHtc7gRE4QYfvVNnF7+U9qnuG7wCt9TFX
-        WusXVWf7Z9/JFvg34X+C7K91Sl6+slXeuFrLkC+rD5cDte68iZohU5oGQFC705yq+ureKVB0chJ5A
-        8wfqAKZw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyuRB-0000xO-Vh; Tue, 04 Feb 2020 09:24:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 36489304C21;
-        Tue,  4 Feb 2020 10:22:18 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A966C203A89B2; Tue,  4 Feb 2020 10:24:03 +0100 (CET)
-Date:   Tue, 4 Feb 2020 10:24:03 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, will@kernel.org
-Cc:     oleg@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, longman@redhat.com, dave@stgolabs.net,
-        jack@suse.com
-Subject: [PATCH -v2-mkII 5/7] locking/percpu-rwsem: Remove the embedded rwsem
-Message-ID: <20200204092403.GB14879@hirez.programming.kicks-ass.net>
-References: <20200131150703.194229898@infradead.org>
- <20200131151540.155211856@infradead.org>
+        Tue, 4 Feb 2020 04:25:48 -0500
+Received: by mail-ua1-f68.google.com with SMTP id y3so6471909uae.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/LrB1QQcfXPxi0BB+lcewM64zrtrSOEYAcITFbKQ4wI=;
+        b=P60K4t5ggLQr/vhZHiXRlNywK69iPHwx590eFL3PWBdM4grhTUdcJtIzcoDprLCWT5
+         7m0n41QNkC8//4JfksLTz3YdQUVxEAGSDuZ9j+W1a0nr+VT86k3WY6fHx1FvGidLTTLy
+         +w3Et4GwWqW1Y/UOb4tyjt07vAISYdOcsP/ZwOg1V/KnnyOAF5auYXjo5JGMn7+72ZuG
+         KOS57j5QABVOvSR/VaJ+0zijMitZCtAji/0qGDGkhMome9LKH3rlcKGXQN1d+0fDdjdr
+         11d7hpEYBvM/Pc5HMA4mbzRQuC7Z5V/iFUQep1upy5JLQZhZKX4GTwvjnL9DG9LiIf3K
+         gI/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/LrB1QQcfXPxi0BB+lcewM64zrtrSOEYAcITFbKQ4wI=;
+        b=DpAsAsj60zTQc4xDE/dMkAAUcmvQOMaLESZpOhURD7m4kJNqZQIrL7DbP7jGHx0alG
+         Shn7ECm6YF2nkR/72De6K+ArhqWXXgn7BWYvi+F5JirBU8CNn6XVOvOoIJnZxAV23H4S
+         ibO1Q4GRsD2QplAgnQPODS1bEPJeHZyz0ILLYFTGyrkj1rS8trmugOUq66FjVBtaf/CZ
+         kLZd88Oc5PIspr+rkINQnqzRDaP/YH30mqRT2c+8CJ1icbCIsNp/wpp8m+WGr+DGRG7E
+         0LT2paalE3QexKZRjlqkccVQ984O5aofl0O/Zvfjxbwkt+lj7SIJkd3ulM2Kjg801hNa
+         RIEA==
+X-Gm-Message-State: APjAAAVCUiABCM5BdhlzRNZlmMebasQja+YuB0KTana+qKnHyTby4U7t
+        E22jd10CYUUB+tt0OU+oEwdl0jfY2C2DtAPZQkYONQ==
+X-Google-Smtp-Source: APXvYqwgmuBZwg5kpKbNPQPbL9DX7UGf6nqnhW6qNJ300wkY5DIL2j8Eyl5WkLN8NrTTLujLR9GHxiRbWohjJDze1KI=
+X-Received: by 2002:ab0:2a0c:: with SMTP id o12mr16324286uar.72.1580808347038;
+ Tue, 04 Feb 2020 01:25:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131151540.155211856@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200203091009.196658-1-jian-hong@endlessm.com> <aab0948d-c6a3-baa1-7343-f18c936d662d@linux.intel.com>
+In-Reply-To: <aab0948d-c6a3-baa1-7343-f18c936d662d@linux.intel.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Tue, 4 Feb 2020 17:25:04 +0800
+Message-ID: <CAPpJ_edkkWm0DYHB3U8nQPv=z_o-aV4V7RDMuLTXL5N1H6ZYrA@mail.gmail.com>
+Subject: Re: [PATCH] iommu/intel-iommu: set as DUMMY_DEVICE_DOMAIN_INFO if no IOMMU
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: locking/percpu-rwsem: Remove the embedded rwsem
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Wed Oct 30 20:30:41 CET 2019
+Lu Baolu <baolu.lu@linux.intel.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=884=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On 2020/2/3 17:10, Jian-Hong Pan wrote:
+> > If the device has no IOMMU, it still invokes iommu_need_mapping during
+> > intel_alloc_coherent. However, iommu_need_mapping can only check the
+> > device is DUMMY_DEVICE_DOMAIN_INFO or not. This patch marks the device
+> > is a DUMMY_DEVICE_DOMAIN_INFO if the device has no IOMMU.
+> >
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > ---
+> >   drivers/iommu/intel-iommu.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> > index 35a4a3abedc6..878bc986a015 100644
+> > --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5612,8 +5612,10 @@ static int intel_iommu_add_device(struct device =
+*dev)
+> >       int ret;
+> >
+> >       iommu =3D device_to_iommu(dev, &bus, &devfn);
+> > -     if (!iommu)
+> > +     if (!iommu) {
+> > +             dev->archdata.iommu =3D DUMMY_DEVICE_DOMAIN_INFO;
+>
+> Is this a DMA capable device?
 
-The filesystem freezer uses percpu-rwsem in a way that is effectively
-write_non_owner() and achieves this with a few horrible hacks that
-rely on the rwsem (!percpu) implementation.
+Do you mean is the device in DMA Remapping table?
+Dump DMAR from ACPI table.  The device is not in the table.
+So, it does not support DMAR, Intel IOMMU.
 
-When PREEMPT_RT replaces the rwsem implementation with a PI aware
-variant this comes apart.
+Or, should device_to_iommu be invoked in iommu_need_mapping to check
+IOMMU feature again?
 
-Remove the embedded rwsem and implement it using a waitqueue and an
-atomic_t.
+Best regards,
+Jian-Hong Pan
 
- - make readers_block an atomic, and use it, with the waitqueue
-   for a blocking test-and-set write-side.
-
- - have the read-side wait for the 'lock' state to clear.
-
-Have the waiters use FIFO queueing and mark them (reader/writer) with
-a new WQ_FLAG. Use a custom wake_function to wake either a single
-writer or all readers until a writer.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Acked-by: Will Deacon <will@kernel.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
----
-
-Moved the RWSEM_OWNER_UNKNOWN removal into it's own patch.
-
- include/linux/percpu-rwsem.h  |   19 +----
- include/linux/wait.h          |    1 
- kernel/locking/percpu-rwsem.c |  153 ++++++++++++++++++++++++++++++------------
- kernel/locking/rwsem.c        |    9 +-
- kernel/locking/rwsem.h        |   12 ---
- 5 files changed, 123 insertions(+), 71 deletions(-)
-
---- a/include/linux/percpu-rwsem.h
-+++ b/include/linux/percpu-rwsem.h
-@@ -3,18 +3,18 @@
- #define _LINUX_PERCPU_RWSEM_H
- 
- #include <linux/atomic.h>
--#include <linux/rwsem.h>
- #include <linux/percpu.h>
- #include <linux/rcuwait.h>
-+#include <linux/wait.h>
- #include <linux/rcu_sync.h>
- #include <linux/lockdep.h>
- 
- struct percpu_rw_semaphore {
- 	struct rcu_sync		rss;
- 	unsigned int __percpu	*read_count;
--	struct rw_semaphore	rw_sem; /* slowpath */
--	struct rcuwait          writer; /* blocked writer */
--	int			readers_block;
-+	struct rcuwait		writer;
-+	wait_queue_head_t	waiters;
-+	atomic_t		block;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	struct lockdep_map	dep_map;
- #endif
-@@ -31,8 +31,9 @@ static DEFINE_PER_CPU(unsigned int, __pe
- is_static struct percpu_rw_semaphore name = {				\
- 	.rss = __RCU_SYNC_INITIALIZER(name.rss),			\
- 	.read_count = &__percpu_rwsem_rc_##name,			\
--	.rw_sem = __RWSEM_INITIALIZER(name.rw_sem),			\
- 	.writer = __RCUWAIT_INITIALIZER(name.writer),			\
-+	.waiters = __WAIT_QUEUE_HEAD_INITIALIZER(name.waiters),		\
-+	.block = ATOMIC_INIT(0),					\
- 	__PERCPU_RWSEM_DEP_MAP_INIT(name)				\
- }
- 
-@@ -130,20 +131,12 @@ static inline void percpu_rwsem_release(
- 					bool read, unsigned long ip)
- {
- 	lock_release(&sem->dep_map, ip);
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--	if (!read)
--		atomic_long_set(&sem->rw_sem.owner, RWSEM_OWNER_UNKNOWN);
--#endif
- }
- 
- static inline void percpu_rwsem_acquire(struct percpu_rw_semaphore *sem,
- 					bool read, unsigned long ip)
- {
- 	lock_acquire(&sem->dep_map, 0, 1, read, 1, NULL, ip);
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--	if (!read)
--		atomic_long_set(&sem->rw_sem.owner, (long)current);
--#endif
- }
- 
- #endif
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -20,6 +20,7 @@ int default_wake_function(struct wait_qu
- #define WQ_FLAG_EXCLUSIVE	0x01
- #define WQ_FLAG_WOKEN		0x02
- #define WQ_FLAG_BOOKMARK	0x04
-+#define WQ_FLAG_CUSTOM		0x08
- 
- /*
-  * A single wait-queue entry structure:
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -1,15 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <linux/atomic.h>
--#include <linux/rwsem.h>
- #include <linux/percpu.h>
-+#include <linux/wait.h>
- #include <linux/lockdep.h>
- #include <linux/percpu-rwsem.h>
- #include <linux/rcupdate.h>
- #include <linux/sched.h>
-+#include <linux/sched/task.h>
- #include <linux/errno.h>
- 
--#include "rwsem.h"
--
- int __percpu_init_rwsem(struct percpu_rw_semaphore *sem,
- 			const char *name, struct lock_class_key *key)
- {
-@@ -17,11 +16,10 @@ int __percpu_init_rwsem(struct percpu_rw
- 	if (unlikely(!sem->read_count))
- 		return -ENOMEM;
- 
--	/* ->rw_sem represents the whole percpu_rw_semaphore for lockdep */
- 	rcu_sync_init(&sem->rss);
--	init_rwsem(&sem->rw_sem);
- 	rcuwait_init(&sem->writer);
--	sem->readers_block = 0;
-+	init_waitqueue_head(&sem->waiters);
-+	atomic_set(&sem->block, 0);
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
- 	lockdep_init_map(&sem->dep_map, name, key, 0);
-@@ -54,23 +52,23 @@ static bool __percpu_down_read_trylock(s
- 	 * the same CPU as the increment, avoiding the
- 	 * increment-on-one-CPU-and-decrement-on-another problem.
- 	 *
--	 * If the reader misses the writer's assignment of readers_block, then
--	 * the writer is guaranteed to see the reader's increment.
-+	 * If the reader misses the writer's assignment of sem->block, then the
-+	 * writer is guaranteed to see the reader's increment.
- 	 *
- 	 * Conversely, any readers that increment their sem->read_count after
--	 * the writer looks are guaranteed to see the readers_block value,
--	 * which in turn means that they are guaranteed to immediately
--	 * decrement their sem->read_count, so that it doesn't matter that the
--	 * writer missed them.
-+	 * the writer looks are guaranteed to see the sem->block value, which
-+	 * in turn means that they are guaranteed to immediately decrement
-+	 * their sem->read_count, so that it doesn't matter that the writer
-+	 * missed them.
- 	 */
- 
- 	smp_mb(); /* A matches D */
- 
- 	/*
--	 * If !readers_block the critical section starts here, matched by the
-+	 * If !sem->block the critical section starts here, matched by the
- 	 * release in percpu_up_write().
- 	 */
--	if (likely(!smp_load_acquire(&sem->readers_block)))
-+	if (likely(!atomic_read_acquire(&sem->block)))
- 		return true;
- 
- 	__this_cpu_dec(*sem->read_count);
-@@ -81,6 +79,88 @@ static bool __percpu_down_read_trylock(s
- 	return false;
- }
- 
-+static inline bool __percpu_down_write_trylock(struct percpu_rw_semaphore *sem)
-+{
-+	if (atomic_read(&sem->block))
-+		return false;
-+
-+	return atomic_xchg(&sem->block, 1) == 0;
-+}
-+
-+static bool __percpu_rwsem_trylock(struct percpu_rw_semaphore *sem, bool reader)
-+{
-+	if (reader) {
-+		bool ret;
-+
-+		preempt_disable();
-+		ret = __percpu_down_read_trylock(sem);
-+		preempt_enable();
-+
-+		return ret;
-+	}
-+	return __percpu_down_write_trylock(sem);
-+}
-+
-+/*
-+ * The return value of wait_queue_entry::func means:
-+ *
-+ *  <0 - error, wakeup is terminated and the error is returned
-+ *   0 - no wakeup, a next waiter is tried
-+ *  >0 - woken, if EXCLUSIVE, counted towards @nr_exclusive.
-+ *
-+ * We use EXCLUSIVE for both readers and writers to preserve FIFO order,
-+ * and play games with the return value to allow waking multiple readers.
-+ *
-+ * Specifically, we wake readers until we've woken a single writer, or until a
-+ * trylock fails.
-+ */
-+static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
-+				      unsigned int mode, int wake_flags,
-+				      void *key)
-+{
-+	struct task_struct *p = get_task_struct(wq_entry->private);
-+	bool reader = wq_entry->flags & WQ_FLAG_CUSTOM;
-+	struct percpu_rw_semaphore *sem = key;
-+
-+	/* concurrent against percpu_down_write(), can get stolen */
-+	if (!__percpu_rwsem_trylock(sem, reader))
-+		return 1;
-+
-+	list_del_init(&wq_entry->entry);
-+	smp_store_release(&wq_entry->private, NULL);
-+
-+	wake_up_process(p);
-+	put_task_struct(p);
-+
-+	return !reader; /* wake (readers until) 1 writer */
-+}
-+
-+static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool reader)
-+{
-+	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
-+	bool wait;
-+
-+	spin_lock_irq(&sem->waiters.lock);
-+	/*
-+	 * Serialize against the wakeup in percpu_up_write(), if we fail
-+	 * the trylock, the wakeup must see us on the list.
-+	 */
-+	wait = !__percpu_rwsem_trylock(sem, reader);
-+	if (wait) {
-+		wq_entry.flags |= WQ_FLAG_EXCLUSIVE | reader * WQ_FLAG_CUSTOM;
-+		__add_wait_queue_entry_tail(&sem->waiters, &wq_entry);
-+	}
-+	spin_unlock_irq(&sem->waiters.lock);
-+
-+	while (wait) {
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		if (!smp_load_acquire(&wq_entry.private))
-+			break;
-+		schedule();
-+	}
-+	__set_current_state(TASK_RUNNING);
-+}
-+
- bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
- {
- 	if (__percpu_down_read_trylock(sem))
-@@ -89,20 +169,10 @@ bool __percpu_down_read(struct percpu_rw
- 	if (try)
- 		return false;
- 
--	/*
--	 * We either call schedule() in the wait, or we'll fall through
--	 * and reschedule on the preempt_enable() in percpu_down_read().
--	 */
--	preempt_enable_no_resched();
--
--	/*
--	 * Avoid lockdep for the down/up_read() we already have them.
--	 */
--	__down_read(&sem->rw_sem);
--	this_cpu_inc(*sem->read_count);
--	__up_read(&sem->rw_sem);
--
-+	preempt_enable();
-+	percpu_rwsem_wait(sem, /* .reader = */ true);
- 	preempt_disable();
-+
- 	return true;
- }
- EXPORT_SYMBOL_GPL(__percpu_down_read);
-@@ -117,7 +187,7 @@ void __percpu_up_read(struct percpu_rw_s
- 	 */
- 	__this_cpu_dec(*sem->read_count);
- 
--	/* Prod writer to recheck readers_active */
-+	/* Prod writer to re-evaluate readers_active_check() */
- 	rcuwait_wake_up(&sem->writer);
- }
- EXPORT_SYMBOL_GPL(__percpu_up_read);
-@@ -137,6 +207,8 @@ EXPORT_SYMBOL_GPL(__percpu_up_read);
-  * zero.  If this sum is zero, then it is stable due to the fact that if any
-  * newly arriving readers increment a given counter, they will immediately
-  * decrement that same counter.
-+ *
-+ * Assumes sem->block is set.
-  */
- static bool readers_active_check(struct percpu_rw_semaphore *sem)
- {
-@@ -160,23 +232,22 @@ void percpu_down_write(struct percpu_rw_
- 	/* Notify readers to take the slow path. */
- 	rcu_sync_enter(&sem->rss);
- 
--	__down_write(&sem->rw_sem);
--
- 	/*
--	 * Notify new readers to block; up until now, and thus throughout the
--	 * longish rcu_sync_enter() above, new readers could still come in.
-+	 * Try set sem->block; this provides writer-writer exclusion.
-+	 * Having sem->block set makes new readers block.
- 	 */
--	WRITE_ONCE(sem->readers_block, 1);
-+	if (!__percpu_down_write_trylock(sem))
-+		percpu_rwsem_wait(sem, /* .reader = */ false);
- 
--	smp_mb(); /* D matches A */
-+	/* smp_mb() implied by __percpu_down_write_trylock() on success -- D matches A */
- 
- 	/*
--	 * If they don't see our writer of readers_block, then we are
--	 * guaranteed to see their sem->read_count increment, and therefore
--	 * will wait for them.
-+	 * If they don't see our store of sem->block, then we are guaranteed to
-+	 * see their sem->read_count increment, and therefore will wait for
-+	 * them.
- 	 */
- 
--	/* Wait for all now active readers to complete. */
-+	/* Wait for all active readers to complete. */
- 	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
- }
- EXPORT_SYMBOL_GPL(percpu_down_write);
-@@ -195,12 +266,12 @@ void percpu_up_write(struct percpu_rw_se
- 	 * Therefore we force it through the slow path which guarantees an
- 	 * acquire and thereby guarantees the critical section's consistency.
- 	 */
--	smp_store_release(&sem->readers_block, 0);
-+	atomic_set_release(&sem->block, 0);
- 
- 	/*
--	 * Release the write lock, this will allow readers back in the game.
-+	 * Prod any pending reader/writer to make progress.
- 	 */
--	__up_write(&sem->rw_sem);
-+	__wake_up(&sem->waiters, TASK_NORMAL, 1, sem);
- 
- 	/*
- 	 * Once this completes (at least one RCU-sched grace period hence) the
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -28,7 +28,6 @@
- #include <linux/rwsem.h>
- #include <linux/atomic.h>
- 
--#include "rwsem.h"
- #include "lock_events.h"
- 
- /*
-@@ -1338,7 +1337,7 @@ static struct rw_semaphore *rwsem_downgr
- /*
-  * lock for reading
-  */
--inline void __down_read(struct rw_semaphore *sem)
-+static inline void __down_read(struct rw_semaphore *sem)
- {
- 	if (!rwsem_read_trylock(sem)) {
- 		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
-@@ -1383,7 +1382,7 @@ static inline int __down_read_trylock(st
- /*
-  * lock for writing
-  */
--inline void __down_write(struct rw_semaphore *sem)
-+static inline void __down_write(struct rw_semaphore *sem)
- {
- 	long tmp = RWSEM_UNLOCKED_VALUE;
- 
-@@ -1426,7 +1425,7 @@ static inline int __down_write_trylock(s
- /*
-  * unlock after reading
-  */
--inline void __up_read(struct rw_semaphore *sem)
-+static inline void __up_read(struct rw_semaphore *sem)
- {
- 	long tmp;
- 
-@@ -1446,7 +1445,7 @@ inline void __up_read(struct rw_semaphor
- /*
-  * unlock after writing
-  */
--inline void __up_write(struct rw_semaphore *sem)
-+static inline void __up_write(struct rw_semaphore *sem)
- {
- 	long tmp;
- 
---- a/kernel/locking/rwsem.h
-+++ b/kernel/locking/rwsem.h
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--
--#ifndef __INTERNAL_RWSEM_H
--#define __INTERNAL_RWSEM_H
--#include <linux/rwsem.h>
--
--extern void __down_read(struct rw_semaphore *sem);
--extern void __up_read(struct rw_semaphore *sem);
--extern void __down_write(struct rw_semaphore *sem);
--extern void __up_write(struct rw_semaphore *sem);
--
--#endif /* __INTERNAL_RWSEM_H */
+> I am afraid some real bugs might be
+> covered up if we marking the device as IOMMU dummy here.
+>
+> Best regards,
+> baolu
+>
+> >               return -ENODEV;
+> > +     }
+> >
+> >       iommu_device_link(&iommu->iommu, dev);
+> >
+> >
