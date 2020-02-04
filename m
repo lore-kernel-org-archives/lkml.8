@@ -2,86 +2,97 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F3CC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F3DC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7E220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vxwCAsrt"
+	by mail.kernel.org (Postfix) with ESMTP id E6FD120674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580831003;
+	bh=oVPrNzODDtgXgCWPFR6ZymA05QJEWKYQgvYLAh+iNiI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ppjhD0RtolWwRgW/zgDhjLkLu0r92kEdw1WfysOHiCTsVD/ZJLBUaIger/39IxmjZ
+	 0jIZlfLq6UIjJctA+ijn2ar3uZm1PXU7btfzrpL1rA1DB86+/oG51R8cQ3dP/2kAqd
+	 5DmzdBhkuB3yrVjbeTuqPZXUU87RFnvrKs3ShOw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgBDPmn (ORCPT
+        id S1727388AbgBDPnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:42:43 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:54896 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbgBDPmm (ORCPT
+        Tue, 4 Feb 2020 10:43:22 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36720 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbgBDPnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:42:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EbEGOeP5qZeH1FznwM60dtjG3y2n99NGAdinrR8oUl8=; b=vxwCAsrt0T14o/pBIENd3rkIHc
-        x+EyClFMGMLBdEcQzMvEypMsg0/hydLrBl9j6cIAZ6iUsCvIxjpbtcseX4zhszncH2b85lnkpzpFf
-        U8xu9wg1/otQ8LF/EFKj3udS0oJTPjsyifnsEpnLdVqnlOCLYdfquo8xaTNcnKSQh4bsSGhCCr2N7
-        sbprhW0EBuU8AUf1YMCGL5kyf8CvKvBE6AonUFjDlUZr00bKZ147awd9iEY99Qzy3DCMo2LyZQohn
-        odKFWUAJ77Lxu86Su/+bKsduLfDPt1NexLgiSbJHOEBhMDaobkBL9pMnQX+uH891TgqqnIhO1ryO7
-        Q52kE8cw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iz0LX-0007cd-4X; Tue, 04 Feb 2020 15:42:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1AE4A304C21;
-        Tue,  4 Feb 2020 16:40:51 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9F82B2B49E53A; Tue,  4 Feb 2020 16:42:36 +0100 (CET)
-Date:   Tue, 4 Feb 2020 16:42:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v5 6/7] locking/lockdep: Reuse freed chain_hlocks entries
-Message-ID: <20200204154236.GE14879@hirez.programming.kicks-ass.net>
-References: <20200203164147.17990-1-longman@redhat.com>
- <20200203164147.17990-7-longman@redhat.com>
+        Tue, 4 Feb 2020 10:43:22 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so19122433ljg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 07:43:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HMNz4wJasUKgOXfbJm3ZdyJfRO3XX6VpUM83bUcb5lM=;
+        b=SfAgXYTwadYPWOvT6zNtV2PJPdpph6rHkFV5XFWMDa4vcCw3pysV8q6wQ7nHYGjzU3
+         1QN1UwhHQAP2hLGW5j8wHuOSJkUZqQRuFUznQZxmkwlhfR/gDn5WmBDaKLKotDnPoTJc
+         wjxNr2I0OHgom+LmiTt99TczYVgzxZlJxllO4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HMNz4wJasUKgOXfbJm3ZdyJfRO3XX6VpUM83bUcb5lM=;
+        b=YwxciK6rQNxRzqd/IWoMXJXrosMzQB9u6EX8Ncrs5dzSeTsD0UyssaiHnLo3BDx5Gj
+         uPgf9VTV9GSBTi4QFGeHEKUziyzh4HkSgpBnvz30JquzU5P20/YR9L28pEmowQVRbSI2
+         SBtyI+dG/32mg1Z6hwQgpFw5lyJEhlwxFddl/HnlxVhmn5EpLXExNmwZE55OgFGcfAHV
+         CkczdI/6vUbxFY/Zi9xM792R2Dgtft0wpHZAoKl0LJWdn5bVZI9IpLaCRtFnkD9yS5gn
+         3ikgg2ZsCfLbqf8rXIPJ7DNeJ3i3878GxegJH21stUArr5U8lG8N8vwZkZOEQ7ozla8D
+         SgyQ==
+X-Gm-Message-State: APjAAAVlWb8RnTPVvgG7XSrAn+sRneKjcM0NDs0My6QKoLr1JvcIYdBs
+        nS0u0TDbjmqDXcYg7tbF8jBhKGYqd3U5Xg==
+X-Google-Smtp-Source: APXvYqw2kfbcA/VhJy9InjlQxxtyIjuHmqmV37Qb22NKE17BGsfgpPO1Pw6+J6Q9MNC/Hr8q/C3Mow==
+X-Received: by 2002:a2e:918c:: with SMTP id f12mr16472632ljg.66.1580830998626;
+        Tue, 04 Feb 2020 07:43:18 -0800 (PST)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id t10sm11682477lji.61.2020.02.04.07.43.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 07:43:17 -0800 (PST)
+Received: by mail-lj1-f182.google.com with SMTP id x7so19144788ljc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 07:43:17 -0800 (PST)
+X-Received: by 2002:a2e:3a13:: with SMTP id h19mr18023700lja.16.1580830997232;
+ Tue, 04 Feb 2020 07:43:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203164147.17990-7-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200204053155.127c3f1e@oasis.local.home> <CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com>
+ <20200204072856.0da60613@oasis.local.home> <CAHk-=wg2Wk9ZgVBDCBHa3-b0fSfByiRJnGA_F8snMy=3HHg_gw@mail.gmail.com>
+ <20200204084642.450b6ebd@oasis.local.home> <20200204092528.2dc8fba4@oasis.local.home>
+ <20200204093302.593cb82e@oasis.local.home>
+In-Reply-To: <20200204093302.593cb82e@oasis.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 4 Feb 2020 15:43:00 +0000
+X-Gmail-Original-Message-ID: <CAHk-=wjTT81QUTAEbDPY=dJE2E18M_K2RhxSUxWmcbMyZUpm5w@mail.gmail.com>
+Message-ID: <CAHk-=wjTT81QUTAEbDPY=dJE2E18M_K2RhxSUxWmcbMyZUpm5w@mail.gmail.com>
+Subject: Re: [PATCH v2] bootconfig: Only load bootconfig if
+ "config=bootconfig" is on the kernel cmdline (was: bootconfig: Add
+ "disable_bootconfig" cmdline option to disable bootconfig)
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 11:41:46AM -0500, Waiman Long wrote:
-> +	/*
-> +	 * We require a minimum of 2 (u16) entries to encode a freelist
-> +	 * 'pointer'.
-> +	 */
-> +	req = max(req, 2);
+On Tue, Feb 4, 2020 at 2:33 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I wonder if we need the "config=" part. Would "bootconfig" be
+> sufficient, or is it better to keep it for documentation purposes.
 
+I suspect "bootconfig" is sufficient, if it's easier to parse.
 
-Would something simple like the below not avoid that whole 1 entry
-'chain' nonsense?
-
-It boots and passes the selftests, so it must be perfect :-)
-
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3163,7 +3163,7 @@ static int validate_chain(struct task_st
- 	 * (If lookup_chain_cache_add() return with 1 it acquires
- 	 * graph_lock for us)
- 	 */
--	if (!hlock->trylock && hlock->check &&
-+	if (!chain_head && !hlock->trylock && hlock->check &&
- 	    lookup_chain_cache_add(curr, hlock, chain_key)) {
- 		/*
- 		 * Check whether last held lock:
+            Linus
