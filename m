@@ -2,114 +2,148 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEB6C352A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F164C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEB3218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354262087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:42:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IyapnXT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgBDEia (ORCPT
+        id S1727192AbgBDEmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 23:38:30 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:52629 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgBDEi3 (ORCPT
+        Mon, 3 Feb 2020 23:42:07 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36631 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgBDEmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 23:38:29 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id D0B35101C051A;
-        Tue,  4 Feb 2020 05:38:25 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 7C426DFAA5; Tue,  4 Feb 2020 05:38:25 +0100 (CET)
-Date:   Tue, 4 Feb 2020 05:38:25 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Ben Skeggs <skeggsb@gmail.com>,
-        Karol Herbst <karolherbst@gmail.com>,
-        "Alex G." <mr.nuke.me@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jan Vesely <jano.vesely@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-Message-ID: <20200204043825.thpbqpz3ao7zqvlh@wunner.de>
-References: <20200120023326.GA149019@google.com>
- <b9764896-102c-84cb-32ea-c2a122b6f0db@gmail.com>
- <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
- <CAPM=9twvggZqVu=HmXZMN70+-6hAPGdog-dGFnM7jp3RhjAB9w@mail.gmail.com>
- <CAPM=9tz9dOLL=onbA-73T-hwzFYMXjSywCufqmnM7bP5dT_x0Q@mail.gmail.com>
- <CADnq5_PRQJmG_NYHmqWhv2R1utaNf0LcTVgFA7LMeYr75fy55w@mail.gmail.com>
+        Mon, 3 Feb 2020 23:42:07 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so1888522wma.1;
+        Mon, 03 Feb 2020 20:42:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=khtrtOCVWWeJbPnRhjdZ9vo6WVczqxHC+cLqbAHzhTM=;
+        b=IyapnXT25ffCnYZBCGvwwVauH0FM4omVPnwZ74gJZfHIDS8aFvE9xoUaL3zyGvKM/z
+         m75q2TvrUCXJbvTkoXJLlP5KgCYiH4fLXas+HD9dhWBCQmNC7c3VWtUwCXL8werx/yTI
+         /7GjYvPbK9+U2WwOfF9yA4zIKGtqXUosyn/OGI4hATzvzq51T+jsl65fRORq9564Wfxr
+         CTt0EfV+WdZcmY+gyuy30GcMZQS5eNjNCnDJ5T4xpJh8izruvSMOsGrIHwUkVBbndxoo
+         VAfUmyQ6G1mP+feAKQhDOmBM4w+KP82GZcy6X0Jhcf4ZXAChF+TQwPwHqw49pc5sACaJ
+         sdwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=khtrtOCVWWeJbPnRhjdZ9vo6WVczqxHC+cLqbAHzhTM=;
+        b=LeDsWu4oDimniD8aH+jEzFopB9Wmq26NMx/vPKOBPhi77ilZYbs3+dvXOKcuAxGnJ3
+         NOJyXLjfzjAOT8BVz4UIDyNxaeuTnhHqzDwhYvEAFY2L+HVZ04Q32SFLI3fQJo9kjk44
+         l6r1Gp852BwGx3ffJ/Sbo7J9MXwPPfHnPNV+zgLyPC6av/1w407lZrZbi6v0h+78daeI
+         JkEXPcXp26VgEN77xjUK7MQb5BHxoBs9fWUA2tuF8fzoSNJNBdGqKIwBWzirUxRa7FIq
+         gjCThiWMA7ScVN4LtNxixHwIpaE2fUsbfEKeIW0GOkAEq4FdtVu9zE6JSlJMO8hmTnjy
+         9k4g==
+X-Gm-Message-State: APjAAAXAQffmgbRL0yQa6AsegLDX2sXToCBBOCRf3ZFyiTz5xSea0q7f
+        7EQ5oBLSedn85OJ/GSGuUOqEXohc
+X-Google-Smtp-Source: APXvYqwg2guMhUMIeFkhjCYK/XOBEUN9P6WzktGJBbYo1Uo2tsf2GCh5kRud4Khc4H2mfDoORG01pQ==
+X-Received: by 2002:a1c:8156:: with SMTP id c83mr2959034wmd.164.1580791323469;
+        Mon, 03 Feb 2020 20:42:03 -0800 (PST)
+Received: from felia ([2001:16b8:2daa:dc00:2c0a:8928:125e:2b0f])
+        by smtp.gmail.com with ESMTPSA id f207sm2179773wme.9.2020.02.03.20.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 20:42:02 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Tue, 4 Feb 2020 05:41:56 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-devel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] MAINTAINERS: add TRACE EVENT LIBRARY section
+In-Reply-To: <CAHp75VezYub1YzGSMrwQ7ntAV6EftgLxFiQu9wVnekPHPe4d_g@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2002040533360.3062@felia>
+References: <20200201161931.29665-1-lukas.bulwahn@gmail.com> <CAHp75VezYub1YzGSMrwQ7ntAV6EftgLxFiQu9wVnekPHPe4d_g@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADnq5_PRQJmG_NYHmqWhv2R1utaNf0LcTVgFA7LMeYr75fy55w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:16:36PM -0500, Alex Deucher wrote:
-> AMD has had a micro-controller on the GPU handling pcie link speeds
-> and widths dynamically (in addition to GPU clocks and voltages) for
-> about 12 years or so at this point to save power when the GPU is idle
-> and improve performance when it's required.  The micro-controller
-> changes the link parameters dynamically based on load independent of
-> the driver.  The driver can tweak the heuristics, or even disable the
-> dynamic changes, but by default it's enabled when the driver loads.
-> The ucode for this micro-controller is loaded by the driver so you'll
-> see fixed clocks and widths prior to the driver loading.  We'd need
-> some sort of opt out I suppose for periods when the driver has enabled
-> dynamic pcie power management in the micro-controller.
 
-Note that there are *two* bits in the Link Status Register:
 
-* Link Autonomous Bandwidth Status
-  "This bit is Set by hardware to indicate that hardware has
-  autonomously changed Link speed or width, without the Port
-  transitioning through DL_Down status, for reasons other than to
-  attempt to correct unreliable Link operation.  This bit must be set if
-  the Physical Layer reports a speed or width change was initiated by
-  the Downstream component that was indicated as an autonomous change."
+On Mon, 3 Feb 2020, Andy Shevchenko wrote:
 
-* Link Bandwidth Management Status
-  "This bit is Set by hardware to indicate that either of the
-  following has occurred without the Port transitioning through
-  DL_Down status. [...] Hardware has changed Link speed or width to
-  attempt to correct unreliable Link operation, either through an
-  LTSSM timeout or a higher level process."
+> On Sat, Feb 1, 2020 at 6:21 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> >
+> > The git history shows that the files under ./tools/lib/traceevent/ are
+> > being developed and maintained by Tzetomir Stoyanov and Steven Rostedt
+> > and are discussed on the linux-trace-devel list.
+> >
+> > Add a suitable section in MAINTAINERS for patches to reach them.
+> >
+> > This was identified with a small script that finds all files only
+> > belonging to "THE REST" according to the current MAINTAINERS file, and I
+> > acted upon its output.
+> 
+> > +TRACE EVENT LIBRARY
+> > +M:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+> > +M:     Steven Rostedt <rostedt@goodmis.org>
+> > +L:     linux-trace-devel@vger.kernel.org
+> > +S:     Maintained
+> > +F:     tools/lib/traceevent/
+> 
+> Don't forget to run early mentioned scripts (in some other threads).
+>
 
-See PCIe Base Spec 4.0 sec 7.8.8, 7.8.7, 4.2.6.3.3.1.
+Andy, I did run on next-20200203:
 
-The two bits generate *separate* interrupts.  We only enable the
-interrupt for the latter.
+$ ./scripts/checkpatch.pl -f MAINTAINERS
 
-If AMD GPUs generate a Link Bandwidth Management Interrupt upon
-autonomously changing bandwidth for power management reasons
-(instead of to correct unreliability issues), that would be a
-spec violation.
+WARNING: MAINTAINERS entries use one tab after TYPE:
+#14607: FILE: MAINTAINERS:14607:
++M:     Micah Morton <mortonm@chromium.org>
 
-So the question is, do your GPUs violate the spec in this regard?
+WARNING: MAINTAINERS entries use one tab after TYPE:
+#14608: FILE: MAINTAINERS:14608:
++S:     Supported
 
-Thanks,
+WARNING: MAINTAINERS entries use one tab after TYPE:
+#14609: FILE: MAINTAINERS:14609:
++F:     security/safesetid/
+
+WARNING: MAINTAINERS entries use one tab after TYPE:
+#14610: FILE: MAINTAINERS:14610:
++F:     Documentation/admin-guide/LSM/SafeSetID.rst
+
+total: 0 errors, 4 warnings, 18577 lines checked
+
+
+That issue in MAINTAINERS has a pending patch since 2019-12-07, with three 
+attempts of asking to be picked up by now:
+
+- https://lore.kernel.org/lkml/20191207182751.14249-1-lukas.bulwahn@gmail.com/
+- https://lore.kernel.org/lkml/20200116185844.11201-1-lukas.bulwahn@gmail.com/
+- https://lore.kernel.org/lkml/20200204040434.7173-1-lukas.bulwahn@gmail.com/
+
+It is not related to this patch in MAINTAINERS here.
+
+
+I also ran $ perl ./scripts/parse-maintainers.pl and checked the generated 
+diff for this entry, but there was no reordering required; a one-element 
+list of F: entries is difficult to get unsorted ;)
+
+I am not adding any mess (ordering issues) to MAINTAINERS with this patch, 
+other than what is already there, but cleaning that up is completely other 
+story.
 
 Lukas
