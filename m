@@ -2,233 +2,287 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621BFC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524ADC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C8F2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="g9y3Xj/Q"
+	by mail.kernel.org (Postfix) with ESMTP id 16C582087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580845374;
+	bh=OwjUyYXK8t3y2DVJJLuvBpmv/CS5hDc7JBBI4aQM4/0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=XBTbK/lPOQUoR3TRyD1o/0YK7G4qbu263lzCBZ0XKBi7Wtp+q1InBQxuW7IG5kun7
+	 EKvgtzJswYYoqYA8BROlNMk4pCVdd0ix94ZEILT5fd/t6e+VCIgrSdGWxR4fdnGy7x
+	 CmbKK0cn+lhzq7OaE6OHxUAytmOT5d1SQ4+giD7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgBDTmY (ORCPT
+        id S1727505AbgBDTmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:42:24 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56416 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727369AbgBDTmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:42:24 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014Jcni3068450;
-        Tue, 4 Feb 2020 19:42:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=yEuu2rGf2EzMFdKEz2FW/Nbv62TgR5F3I7z7o8+SbDI=;
- b=g9y3Xj/QBfWn5aGbDt9KnscnH+Qg/zPpv2u29tk54o+S75+3imhs5yCfIrc+3iZ7oOF2
- ETWH+aLZf0KU8e+JKuKMIC1fYsG2FV328p3rlpU8wv4ryZvhShtA/iZWIguPxmHxm1g3
- zAWwPQEXOlCsd8PvqL1NrlzG4xigR43wvnGmnZMaGCY3gcLqj2dW4XNe3N26nrIzoUqI
- w+TJ8+OB0d4FUGM//p8Uvwtbb65OGJZmwVzsno7uU/boM3/6M9NIRqpBG6iR9XJRZrva
- lMFtPjKeYBtQjNt2XZOMo7q6u9tnEhQbXMInfmx8rOg4gjbHe21KY72Dr5yPNO4JMct7 BQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xw19qh255-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 19:42:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014Jd9ZX045156;
-        Tue, 4 Feb 2020 19:42:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xxvusgppk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 19:42:11 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 014Jg9KO017732;
-        Tue, 4 Feb 2020 19:42:10 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 11:42:09 -0800
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Song Liu <songliubraving@fb.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH] mm: always consider THP when adjusting min_free_kbytes
-Date:   Tue,  4 Feb 2020 11:41:56 -0800
-Message-Id: <20200204194156.61672-1-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 4 Feb 2020 14:42:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727314AbgBDTmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 14:42:52 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B56D82082E;
+        Tue,  4 Feb 2020 19:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580845371;
+        bh=OwjUyYXK8t3y2DVJJLuvBpmv/CS5hDc7JBBI4aQM4/0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=KLJstslFYOxpkOBDRvdD6/szsz9T5truuZ8aboKpf+wDPktP1GzjbwLmAcLe7owCT
+         t6fRlPNhI2G/Sly1q+PzZ4FN6n1jLfq5bgbLHe0uZt+kKW6rjd+cyl/rOh+WM33tuc
+         slZNN4ndtc+38FMeJe0kkstpu1T2geStIffGDxqs=
+Message-ID: <0834b616a1c13570bffdf598034f09695362eb00.camel@kernel.org>
+Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
+ copy_file_range
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Feb 2020 14:42:49 -0500
+In-Reply-To: <20200204153050.GA18215@suse.com>
+References: <20200203165117.5701-1-lhenriques@suse.com>
+         <20200203165117.5701-2-lhenriques@suse.com>
+         <0ab59ba87c07ffec6a05b2ed39bc0c112bcf5863.camel@kernel.org>
+         <20200204153050.GA18215@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002040132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002040132
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At system initialization time, min_free_kbytes is calculated based
-on the amount of memory in the system.  If THP is enabled, then
-khugepaged is started and min_free_kbytes may be adjusted in an
-attempt to reserve some pageblocks for THP allocations.
+On Tue, 2020-02-04 at 15:30 +0000, Luis Henriques wrote:
+> On Tue, Feb 04, 2020 at 08:30:03AM -0500, Jeff Layton wrote:
+> > On Mon, 2020-02-03 at 16:51 +0000, Luis Henriques wrote:
+> > > Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
+> > > operations, waiting for each request to complete before sending the next
+> > > one.  This patch modifies copy_file_range so that all the 'copy-from'
+> > > operations are sent in bulk and waits for its completion at the end.  This
+> > > will allow significant speed-ups, specially when sending requests for
+> > > different target OSDs.
+> > > 
+> > 
+> > Looks good overall. A few nits below:
+> > 
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > ---
+> > >  fs/ceph/file.c                  | 45 +++++++++++++++++++++-----
+> > >  include/linux/ceph/osd_client.h |  6 +++-
+> > >  net/ceph/osd_client.c           | 56 +++++++++++++++++++++++++--------
+> > >  3 files changed, 85 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > index 1e6cdf2dfe90..b9d8ffafb8c5 100644
+> > > --- a/fs/ceph/file.c
+> > > +++ b/fs/ceph/file.c
+> > > @@ -1943,12 +1943,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+> > >  	struct ceph_object_locator src_oloc, dst_oloc;
+> > >  	struct ceph_object_id src_oid, dst_oid;
+> > > +	struct ceph_osd_request *req;
+> > >  	loff_t endoff = 0, size;
+> > >  	ssize_t ret = -EIO;
+> > >  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+> > >  	u32 src_objlen, dst_objlen, object_size;
+> > >  	int src_got = 0, dst_got = 0, err, dirty;
+> > > +	unsigned int max_copies, copy_count, reqs_complete = 0;
+> > >  	bool do_final_copy = false;
+> > > +	LIST_HEAD(osd_reqs);
+> > >  
+> > >  	if (src_inode->i_sb != dst_inode->i_sb) {
+> > >  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> > > @@ -2083,6 +2086,13 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >  			goto out_caps;
+> > >  	}
+> > >  	object_size = src_ci->i_layout.object_size;
+> > > +
+> > > +	/*
+> > > +	 * Throttle the object copies: max_copies holds the number of allowed
+> > > +	 * in-flight 'copy-from' requests before waiting for their completion
+> > > +	 */
+> > > +	max_copies = (src_fsc->mount_options->wsize / object_size) * 4;
+> > 
+> > A note about why you chose to multiply by a factor of 4 here would be
+> > good. In another year or two, we won't remember.
+> 
+> Sure, but to be honest I just picked an early suggestion from Ilya :-)
+> In practice it means that, by default, 64 will be the maximum requests
+> in-flight.  I tested this value, and it looked OK although in the (very
+> humble) test cluster I've used a value of 16 (i.e. dropping the factor of
+> 4) wasn't much worst.
+> 
 
-When memory is offlined or onlined, min_free_kbytes is recalculated
-and adjusted based on the amount of memory.  However, the adjustment
-for THP is not considered.  Here is an example from a 2 node system
-with 8GB of memory.
+What happens if you ramp it up to be even more greedy? Does that speed
+things up? It might be worth doing some experimentation with a tunable
+too?
 
- # cat /proc/sys/vm/min_free_kbytes
- 90112
- # echo 0 > /sys/devices/system/node/node1/memory56/online
- # cat /proc/sys/vm/min_free_kbytes
- 11243
- # echo 1 > /sys/devices/system/node/node1/memory56/online
- # cat /proc/sys/vm/min_free_kbytes
- 11412
+In any case though, we need to consider what the ideal default would be.
+I'm now wondering whether the wsize is the right thing to base this on.
+If you have a 1000 OSD cluster, then even 64 actually sounds a bit weak.
 
-One would expect that min_free_kbytes would return to it's original
-value after the offline/online operations.
+I wonder whether it should it be calculated on the fly from some
+function of the number OSDs or PGs in the data pool? Maybe even
+something like:
 
-Create a simple interface for THP/khugepaged based adjustment and
-call this whenever min_free_kbytes is adjusted.
+    (number of PGs) / 2
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- include/linux/khugepaged.h |  5 +++++
- mm/khugepaged.c            | 35 ++++++++++++++++++++++++++++++-----
- mm/page_alloc.c            |  4 +++-
- 3 files changed, 38 insertions(+), 6 deletions(-)
+...assuming the copies go between 2 PGs. With a perfect distribution, you'd
+be able to keep all your OSDs busy that way and do the copy really quickly.
 
-diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-index bc45ea1efbf7..8f02d3575829 100644
---- a/include/linux/khugepaged.h
-+++ b/include/linux/khugepaged.h
-@@ -15,6 +15,7 @@ extern int __khugepaged_enter(struct mm_struct *mm);
- extern void __khugepaged_exit(struct mm_struct *mm);
- extern int khugepaged_enter_vma_merge(struct vm_area_struct *vma,
- 				      unsigned long vm_flags);
-+extern bool khugepaged_adjust_min_free_kbytes(void);
- #ifdef CONFIG_SHMEM
- extern void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr);
- #else
-@@ -81,6 +82,10 @@ static inline int khugepaged_enter_vma_merge(struct vm_area_struct *vma,
- {
- 	return 0;
- }
-+static bool khugepaged_adjust_min_free_kbytes(void)
-+{
-+	return false;
-+}
- static inline void collapse_pte_mapped_thp(struct mm_struct *mm,
- 					   unsigned long addr)
- {
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index b679908743cb..d8040cf19e98 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -2138,7 +2138,7 @@ static int khugepaged(void *none)
- 	return 0;
- }
- 
--static void set_recommended_min_free_kbytes(void)
-+bool __khugepaged_adjust_min_free_kbytes(void)
- {
- 	struct zone *zone;
- 	int nr_zones = 0;
-@@ -2174,17 +2174,26 @@ static void set_recommended_min_free_kbytes(void)
- 
- 	if (recommended_min > min_free_kbytes) {
- 		if (user_min_free_kbytes >= 0)
--			pr_info("raising min_free_kbytes from %d to %lu to help transparent hugepage allocations\n",
-+			pr_info_once("raising min_free_kbytes from %d to %lu to help transparent hugepage allocations\n",
- 				min_free_kbytes, recommended_min);
- 
- 		min_free_kbytes = recommended_min;
-+		return true;
- 	}
--	setup_per_zone_wmarks();
-+
-+	return false;
-+}
-+
-+static void set_recommended_min_free_kbytes(void)
-+{
-+	if (__khugepaged_adjust_min_free_kbytes())
-+		setup_per_zone_wmarks();
- }
- 
--int start_stop_khugepaged(void)
-+static struct task_struct *khugepaged_thread __read_mostly;
-+
-+int __ref start_stop_khugepaged(void)
- {
--	static struct task_struct *khugepaged_thread __read_mostly;
- 	static DEFINE_MUTEX(khugepaged_mutex);
- 	int err = 0;
- 
-@@ -2207,8 +2216,24 @@ int start_stop_khugepaged(void)
- 	} else if (khugepaged_thread) {
- 		kthread_stop(khugepaged_thread);
- 		khugepaged_thread = NULL;
-+		init_per_zone_wmark_min();
- 	}
- fail:
- 	mutex_unlock(&khugepaged_mutex);
- 	return err;
- }
-+
-+bool khugepaged_adjust_min_free_kbytes(void)
-+{
-+	bool ret = false;
-+
-+	/*
-+	 * This is a bit racy, and we could miss transitions.  However,
-+	 * start/stop code above will make additional adjustments at the
-+	 * end of transitions.
-+	 */
-+	if (khugepaged_enabled() && khugepaged_thread)
-+		ret = __khugepaged_adjust_min_free_kbytes();
-+
-+	return ret;
-+}
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d047bf7d8fd4..a7b3a6663ba6 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -68,6 +68,7 @@
- #include <linux/lockdep.h>
- #include <linux/nmi.h>
- #include <linux/psi.h>
-+#include <linux/khugepaged.h>
- 
- #include <asm/sections.h>
- #include <asm/tlbflush.h>
-@@ -7827,9 +7828,10 @@ int __meminit init_per_zone_wmark_min(void)
- 		if (min_free_kbytes > 65536)
- 			min_free_kbytes = 65536;
- 	} else {
--		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
-+		pr_warn_once("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
- 				new_min_free_kbytes, user_min_free_kbytes);
- 	}
-+	(void)khugepaged_adjust_min_free_kbytes();
- 	setup_per_zone_wmarks();
- 	refresh_zone_stat_thresholds();
- 	setup_per_zone_lowmem_reserve();
+> > > +	copy_count = max_copies;
+> > >  	while (len >= object_size) {
+> > >  		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+> > >  					      object_size, &src_objnum,
+> > > @@ -2097,7 +2107,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >  		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> > >  				dst_ci->i_vino.ino, dst_objnum);
+> > >  		/* Do an object remote copy */
+> > > -		err = ceph_osdc_copy_from(
+> > > +		req = ceph_osdc_copy_from(
+> > >  			&src_fsc->client->osdc,
+> > >  			src_ci->i_vino.snap, 0,
+> > >  			&src_oid, &src_oloc,
+> > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >  			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > >  			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > >  			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > -		if (err) {
+> > > -			if (err == -EOPNOTSUPP) {
+> > > -				src_fsc->have_copy_from2 = false;
+> > > -				pr_notice("OSDs don't support 'copy-from2'; "
+> > > -					  "disabling copy_file_range\n");
+> > > -			}
+> > > +		if (IS_ERR(req)) {
+> > > +			err = PTR_ERR(req);
+> > >  			dout("ceph_osdc_copy_from returned %d\n", err);
+> > > +
+> > > +			/* wait for all queued requests */
+> > > +			ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> > > +			ret += reqs_complete * object_size; /* Update copied bytes */
+> > >  			if (!ret)
+> > >  				ret = err;
+> > >  			goto out_caps;
+> > >  		}
+> > > +		list_add(&req->r_private_item, &osd_reqs);
+> > >  		len -= object_size;
+> > >  		src_off += object_size;
+> > >  		dst_off += object_size;
+> > > -		ret += object_size;
+> > > +		/*
+> > > +		 * Wait requests if we've reached the maximum requests allowed
+> > 
+> > "Wait for requests..."
+> > 
+> > > +		 * or if this was the last copy
+> > > +		 */
+> > > +		if ((--copy_count == 0) || (len < object_size)) {
+> > > +			err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> > > +			ret += reqs_complete * object_size; /* Update copied bytes */
+> > > +			if (err) {
+> > > +				if (err == -EOPNOTSUPP) {
+> > > +					src_fsc->have_copy_from2 = false;
+> > > +					pr_notice("OSDs don't support 'copy-from2'; "
+> > > +						  "disabling copy_file_range\n");
+> > > +				}
+> > > +				if (!ret)
+> > > +					ret = err;
+> > > +				goto out_caps;
+> > > +			}
+> > > +			copy_count = max_copies;
+> > > +		}
+> > >  	}
+> > >  
+> > >  	if (len)
+> > > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> > > index 5a62dbd3f4c2..0121767cd65e 100644
+> > > --- a/include/linux/ceph/osd_client.h
+> > > +++ b/include/linux/ceph/osd_client.h
+> > > @@ -496,6 +496,9 @@ extern int ceph_osdc_start_request(struct ceph_osd_client *osdc,
+> > >  extern void ceph_osdc_cancel_request(struct ceph_osd_request *req);
+> > >  extern int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
+> > >  				  struct ceph_osd_request *req);
+> > > +extern int ceph_osdc_wait_requests(struct list_head *osd_reqs,
+> > > +				   unsigned int *reqs_complete);
+> > > +
+> > >  extern void ceph_osdc_sync(struct ceph_osd_client *osdc);
+> > >  
+> > >  extern void ceph_osdc_flush_notifies(struct ceph_osd_client *osdc);
+> > > @@ -526,7 +529,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
+> > >  				struct timespec64 *mtime,
+> > >  				struct page **pages, int nr_pages);
+> > >  
+> > > -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+> > > +struct ceph_osd_request *ceph_osdc_copy_from(
+> > > +			struct ceph_osd_client *osdc,
+> > >  			u64 src_snapid, u64 src_version,
+> > >  			struct ceph_object_id *src_oid,
+> > >  			struct ceph_object_locator *src_oloc,
+> > > diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+> > > index b68b376d8c2f..df9f342f860a 100644
+> > > --- a/net/ceph/osd_client.c
+> > > +++ b/net/ceph/osd_client.c
+> > > @@ -4531,6 +4531,35 @@ int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
+> > >  }
+> > >  EXPORT_SYMBOL(ceph_osdc_wait_request);
+> > >  
+> > > +/*
+> > > + * wait for all requests to complete in list @osd_reqs, returning the number of
+> > > + * successful completions in @reqs_complete
+> > > + */
+> > 
+> > Maybe consider just having it return a positive reqs_complete value or a
+> > negative error code, and drop the reqs_complete pointer argument? It'd
+> > also be good to note what this function returns.
+> 
+> In my (flawed) design I wanted to know that there was an error in a
+> request but also how many successful requests.  But after the last review
+> from Ilya I'll probably need to revisit this anyway.
+> 
+
+Sounds good.
+
+> > > +int ceph_osdc_wait_requests(struct list_head *osd_reqs,
+> > > +			    unsigned int *reqs_complete)
+> > > +{
+> > > +	struct ceph_osd_request *req;
+> > > +	int ret = 0, err;
+> > > +	unsigned int counter = 0;
+> > > +
+> > > +	while (!list_empty(osd_reqs)) {
+> > > +		req = list_first_entry(osd_reqs,
+> > > +				       struct ceph_osd_request,
+> > > +				       r_private_item);
+> > > +		list_del_init(&req->r_private_item);
+> > > +		err = ceph_osdc_wait_request(req->r_osdc, req);
+> > 
+> > ceph_osdc_wait_request calls wait_request_timeout, which uses a killable
+> > sleep. That's better than uninterruptible sleep, but maybe it'd be good
+> > to use an interruptible sleep here instead? Having to send fatal signals
+> > when things are stuck kind of sucks.
+> 
+> Good point.  It looks like Zheng changed this to a killable sleep in
+> commit 0e76abf21e76 ("libceph: make ceph_osdc_wait_request()
+> uninterruptible").  I guess you're suggesting to add a new function
+> (wait_request_uninterruptible_timeout) that would be used only here,
+> right?
+> 
+
+Yes, basically. We're not dealing with writeback in this function, so
+I'm not so worried about things getting interrupted. If the user wants
+to hit ^c here I don't see any reason to wait.
+
 -- 
-2.24.1
+Jeff Layton <jlayton@kernel.org>
 
