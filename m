@@ -2,89 +2,73 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A8AC3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BACDC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA75920674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE792084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="At/BzPYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgBDGLs (ORCPT
+        id S1726631AbgBDGOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:11:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:38538 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgBDGLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:11:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 22:11:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="254308213"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.209.105]) ([10.254.209.105])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Feb 2020 22:11:46 -0800
-Subject: Re: [PATCH] iommu/intel-iommu: set as DUMMY_DEVICE_DOMAIN_INFO if no
- IOMMU
-To:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com
-References: <20200203091009.196658-1-jian-hong@endlessm.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <aab0948d-c6a3-baa1-7343-f18c936d662d@linux.intel.com>
-Date:   Tue, 4 Feb 2020 14:11:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200203091009.196658-1-jian-hong@endlessm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 4 Feb 2020 01:14:39 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19211 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725834AbgBDGOj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 01:14:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580796878; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=8AUoz89RioV7iQtgC6x47BZ4XsDCMQfyG7d4Q9lkC18=; b=At/BzPYkS1pzGchDfgMLpGiQspOzVrWgVNb7drBWm8rAqBnRPTtM1hM0aSS8ZGCTccel2CQ9
+ 24vr4SEh+vaAKfSTTVjXbzdbiYNSHe9pCXkxH8pclJiQU+ogtidl476+WCLh2TNwVRMZnPAN
+ Gb1uXsEAlN3IdwZjIS1pisC2fzQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e390bc7.7f99b77b5420-smtp-out-n03;
+ Tue, 04 Feb 2020 06:14:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5E750C4479C; Tue,  4 Feb 2020 06:14:30 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6335DC43383;
+        Tue,  4 Feb 2020 06:14:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6335DC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH 0/3] Misc stability fixes and optimization for rpmh driver
+Date:   Tue,  4 Feb 2020 11:43:48 +0530
+Message-Id: <1580796831-18996-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series includes stability fixes and optimization for rpmh driver.
 
-On 2020/2/3 17:10, Jian-Hong Pan wrote:
-> If the device has no IOMMU, it still invokes iommu_need_mapping during
-> intel_alloc_coherent. However, iommu_need_mapping can only check the
-> device is DUMMY_DEVICE_DOMAIN_INFO or not. This patch marks the device
-> is a DUMMY_DEVICE_DOMAIN_INFO if the device has no IOMMU.
-> 
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> ---
->   drivers/iommu/intel-iommu.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 35a4a3abedc6..878bc986a015 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5612,8 +5612,10 @@ static int intel_iommu_add_device(struct device *dev)
->   	int ret;
->   
->   	iommu = device_to_iommu(dev, &bus, &devfn);
-> -	if (!iommu)
-> +	if (!iommu) {
-> +		dev->archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
+Maulik Shah (3):
+  soc: qcom: rpmh: Update dirty flag only when data changes
+  soc: qcom: rpmh: Update rpm_msgs offset address and add list_del
+  soc: qcom: rpmh: Invalidate sleep and wake TCS before flushing new
+    data
 
-Is this a DMA capable device? I am afraid some real bugs might be
-covered up if we marking the device as IOMMU dummy here.
+ drivers/soc/qcom/rpmh.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-Best regards,
-baolu
-
->   		return -ENODEV;
-> +	}
->   
->   	iommu_device_link(&iommu->iommu, dev);
->   
-> 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
