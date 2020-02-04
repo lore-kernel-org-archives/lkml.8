@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F299DC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0BAC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71BD2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652BC2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gW+SLLfP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puIBDqJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgBEAH5 (ORCPT
+        id S1727775AbgBEAHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:07:57 -0500
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:43851 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgBEAHl (ORCPT
+        Tue, 4 Feb 2020 19:07:31 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40045 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727494AbgBEAH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:07:41 -0500
-Received: by mail-pf1-f181.google.com with SMTP id s1so186973pfh.10;
-        Tue, 04 Feb 2020 16:07:41 -0800 (PST)
+        Tue, 4 Feb 2020 19:07:29 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y1so83396plp.7;
+        Tue, 04 Feb 2020 16:07:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CWkZ+hPOQw0CLt3DIMXNZXqIluJmIb2SwavOv+rxo54=;
-        b=gW+SLLfP8z3aWyWKk+jfFvgADyBQ0AnrBjjwgje8s7KGIEgrE5fPGKZRU37oxYh+L7
-         8qQ+Gy+9cTbJVQpwrvWjAi2YRCFNzeO3lULRFYyoLLuiTjjpzDbbCxWs53qhsSjgERXs
-         uqyO1jRppMX1MauyHDYnyXsZxC2hzDP8zr3Pos1qw8YDFzqGxC/jA3whiTiAHlHKd0Af
-         qm+oUdzthXzT/DCAOs6AGUV16p85tZQ4m2lmHP8uSRgsFlFxm/uvrAzltOy3fGa7OTWJ
-         wJaIJRogqoFNWZB+VXnY3elETVaL9c6lWkokNLSzocYUXTavcxI1ez/vUG5k0OEyO3YS
-         N2qA==
+        bh=j/Ku8B9Qr+kQIDeYMGdjbQdZuNDZp/3dsOQZapgb5l0=;
+        b=puIBDqJg+eXqX8nYBtw/bkm2+Z7h/fw+YJFBNnP6/hdde8A+TsEnMhjJtXMdE0j4Uh
+         nMyFsWmqIEFYkKcRd+2ymE4OQCuuONUoD+xixXU+fhKKI30bwwXh0dkvPsQl7y+Vw0Wv
+         b5zd+IqWqGI9AEpgPUXj1F4LKV3b+HPQzAzJH8fkn4NUcIxHS6Tx5FYnKPIKoeZc6mmX
+         1Im+xJNFAp8ArvN/E2LXcyX6DpedyPPuImJ+bGUUU2QlHKvze7oRV/YCjvC+j+Kd3c4Y
+         gIragZeNvm+5SsxBdDWuft3sj3aajxhHE+yxy+7I+z7VXOGkknBoZN9MAmVyCR+e3yLA
+         6uBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CWkZ+hPOQw0CLt3DIMXNZXqIluJmIb2SwavOv+rxo54=;
-        b=WGf05H2CZn5ZoqJMS6KtnuSUa2RHn7EyNIUkZzhznpAA5jnrxU2Y2Njt4htXsMgw0n
-         A4tPqiFdmQjTiz37DZDwtcpb3+FnknIVfWO2zQQiyxcXBAKr6mfk5Tdowk7Pk1my2+6D
-         KJ/StJumJi3M0ZHwa5ue0OPKJgqfjAAa85O7BsXqeSI0r03UzgwhsaA9DvHITaZTiFFV
-         Yy+5idzGqWtkKhFySkngY9nE/T0Zor2T6Dx3tbh3a9ZiNn41TbuqMeZnS/rmgHWucVzy
-         Q+f1ZePkbQiufKLsHwfQqFf+xMQlkKTAQGuRyXOq4x6KmU44wD0bXP+ntcU2jeMhUXAp
-         1tSw==
-X-Gm-Message-State: APjAAAUzGCuO2TqRv/pMOQ2ZGB17mLc1g2W0YOCDtpM21FhCon3sCzkD
-        vNUnUeM+Vg9WCP6b72ckDmY=
-X-Google-Smtp-Source: APXvYqwzuaFZnoTtVrOKEsVT2qZTwaiz5vwrkRG1cX+LtJZGGmTzCfmaY/I6bRFaxWHqaDcaSKVEiQ==
-X-Received: by 2002:a63:4525:: with SMTP id s37mr4520697pga.418.1580861260751;
-        Tue, 04 Feb 2020 16:07:40 -0800 (PST)
+        bh=j/Ku8B9Qr+kQIDeYMGdjbQdZuNDZp/3dsOQZapgb5l0=;
+        b=edKzEDMabuSkWUgujR7tuA7YQhMf4tAWeD4YK0+yRBBWi1ijjQiqqnvUBTVO5lrAyV
+         F3V9L7fjHBVB3Qi2zAXKf0EOU4hqiogZ4Obnsm1frr7dRSo5IrJf8Btt8/3bRGbZ1q0t
+         y8tSZub3IikZxx7aNRWznOc99b3YtowW1qrUAk734fXCO00h5K2hdJZuOt8t0ZibISH+
+         fxnYPNyiVK3RFdI7gI2jQGRdM2+ZpYE3M/PBlmQiG/1RyyV0ThHCwmAwtKYbQ39ZMS4q
+         bF+hZVx83xj6mj1bTLTtyrOgFCEnKxWTpDUjbuVv6aWs6zxG5GNqyLykLxXBQtfhFN50
+         UUEQ==
+X-Gm-Message-State: APjAAAWGHIIjnmn3JaUlJX8iN6uLN/vavAqNZ7XN3vGGuqJUX5/8QnGl
+        fWcTl+3kaqUf/eLwcEZ5vPM=
+X-Google-Smtp-Source: APXvYqwQcg6bMiHxRctNlJLi7ARBxfRZwq7QNImw2mutKJl+gsQUxTccPJQXv487JwMRS0XOEDbe0w==
+X-Received: by 2002:a17:902:8bc7:: with SMTP id r7mr29014884plo.12.1580861248342;
+        Tue, 04 Feb 2020 16:07:28 -0800 (PST)
 Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id g2sm25575468pgn.59.2020.02.04.16.07.39
+        by smtp.gmail.com with ESMTPSA id g2sm25575468pgn.59.2020.02.04.16.07.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 16:07:40 -0800 (PST)
+        Tue, 04 Feb 2020 16:07:27 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -76,9 +76,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH v2 09/12] dt-bindings: arm: bcm: Convert BCM11351 to YAML
-Date:   Tue,  4 Feb 2020 15:55:49 -0800
-Message-Id: <20200204235552.7466-10-f.fainelli@gmail.com>
+Subject: [PATCH v2 02/12] dt-bindings: arm: bcm: Convert Hurricane 2 to YAML
+Date:   Tue,  4 Feb 2020 15:55:42 -0800
+Message-Id: <20200204235552.7466-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20200204235552.7466-1-f.fainelli@gmail.com>
 References: <20200204235552.7466-1-f.fainelli@gmail.com>
@@ -89,46 +89,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the Broadcom BCM11351 SoC family binding document for boards/SoCs
-to use YAML. Verified with dt_binding_check and dtbs_check.
+Update the Broadcom Hurricane 2 SoC binding document for boards/SoCs to use
+YAML. Verified with dt_binding_check and dtbs_check.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/arm/bcm/brcm,bcm11351.txt        | 10 ---------
- .../bindings/arm/bcm/brcm,bcm11351.yaml       | 21 +++++++++++++++++++
- 2 files changed, 21 insertions(+), 10 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.yaml
+ .../devicetree/bindings/arm/bcm/brcm,hr2.txt  | 14 ----------
+ .../devicetree/bindings/arm/bcm/brcm,hr2.yaml | 28 +++++++++++++++++++
+ 2 files changed, 28 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
 deleted file mode 100644
-index 0ff6560e6094..000000000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt
+index a124c7fc4dcd..000000000000
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
 +++ /dev/null
-@@ -1,10 +0,0 @@
--Broadcom BCM11351 device tree bindings
---------------------------------------------
+@@ -1,14 +0,0 @@
+-Broadcom Hurricane 2 device tree bindings
+----------------------------------------
 -
--Boards with the bcm281xx SoC family (which includes bcm11130, bcm11140,
--bcm11351, bcm28145, bcm28155 SoCs) shall have the following properties:
+-Broadcom Hurricane 2 family of SoCs are used for switching control. These SoCs
+-are based on Broadcom's iProc SoC architecture and feature a single core Cortex
+-A9 ARM CPUs, DDR2/DDR3 memory, PCIe GEN-2, USB 2.0 and USB 3.0, serial and NAND
+-flash and a PCIe attached integrated switching engine.
+-
+-Boards with Hurricane SoCs shall have the following properties:
 -
 -Required root node property:
 -
--compatible = "brcm,bcm11351";
--DEPRECATED: compatible = "bcm,bcm11351";
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.yaml
+-BCM53342
+-compatible = "brcm,bcm53342", "brcm,hr2";
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.yaml
 new file mode 100644
-index 000000000000..b5ef2666e6b2
+index 000000000000..1158f49b0b83
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.yaml
-@@ -0,0 +1,21 @@
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.yaml
+@@ -0,0 +1,28 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/bcm/brcm,bcm11351.yaml#
++$id: http://devicetree.org/schemas/arm/bcm/brcm,hr2.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom BCM11351 device tree bindings
++title: Broadcom Hurricane 2 device tree bindings
++
++description:
++  Broadcom Hurricane 2 family of SoCs are used for switching control. These SoCs
++  are based on Broadcom's iProc SoC architecture and feature a single core Cortex
++  A9 ARM CPUs, DDR2/DDR3 memory, PCIe GEN-2, USB 2.0 and USB 3.0, serial and NAND
++  flash and a PCIe attached integrated switching engine.
 +
 +maintainers:
 +  - Florian Fainelli <f.fainelli@gmail.com>
@@ -139,8 +149,9 @@ index 000000000000..b5ef2666e6b2
 +  compatible:
 +    items:
 +      - enum:
-+        - brcm,bcm28155-ap
-+      - const: brcm,bcm11351
++        - ubnt,unifi-switch8
++      - const: brcm,bcm53342
++      - const: brcm,hr2
 +
 +...
 -- 
