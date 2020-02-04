@@ -7,120 +7,114 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A76C35253
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC5C352A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921952084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C484521775
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TMmBB64q"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qVsWiJP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgBDETw (ORCPT
+        id S1727177AbgBDEYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 23:19:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39251 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727159AbgBDETv (ORCPT
+        Mon, 3 Feb 2020 23:24:43 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12586 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbgBDEYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 23:19:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580789990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qnJ7pfLwugdYhxtD4QkD0UVYEM/OAM1UnVZIU6mM8I8=;
-        b=TMmBB64q+kN6FVe7DjZ2lgdnEr53dwQ96sHocmIr5exVXm+7+MA0WpZfJ/Y68ss2du8jf8
-        ivD88Y1nktNC951cWLnlSLa8P2oA9bO01iSy8bcl0OwiqFH+ZWgBCnYc9/YarK1aiuVwAN
-        25ztiPKhoRAr6CcCxxboEarBWWJvIMA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-0vUHyZWFNFOwOQXfk-hPwA-1; Mon, 03 Feb 2020 23:19:49 -0500
-X-MC-Unique: 0vUHyZWFNFOwOQXfk-hPwA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 658278017DF;
-        Tue,  4 Feb 2020 04:19:46 +0000 (UTC)
-Received: from [10.72.12.170] (ovpn-12-170.pek2.redhat.com [10.72.12.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3602B5C1D4;
-        Tue,  4 Feb 2020 04:19:29 +0000 (UTC)
-Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>,
-        "kuba@kernel.org" <kuba@kernel.org>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-6-jasowang@redhat.com>
- <20200116154658.GJ20978@mellanox.com>
- <aea2bff8-82c8-2c0f-19ee-e86db73e199f@redhat.com>
- <20200117141021.GW20978@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d53a864c-d96f-ccac-78ad-0c596bda2718@redhat.com>
-Date:   Tue, 4 Feb 2020 12:19:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 3 Feb 2020 23:24:42 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e38f1f30000>; Mon, 03 Feb 2020 20:24:19 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 20:24:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 20:24:42 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 04:24:37 +0000
+CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: sound: tegra: add DT binding for AHUB
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-2-git-send-email-spujar@nvidia.com>
+ <32d6c62d-0ac4-54e0-2efb-9f9a8cf2d271@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <62ea74fe-1f3c-e56c-669f-9a2dd9c02412@nvidia.com>
+Date:   Tue, 4 Feb 2020 09:54:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200117141021.GW20978@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <32d6c62d-0ac4-54e0-2efb-9f9a8cf2d271@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580790259; bh=c7jWe5+LZRdJDnKDrOesDfCG5Wq2kGvI3fJo43SYT+M=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qVsWiJP3Pc+CUUL/ZLo8d9Y0iCzJUjSU5/EdA5r9EnEKfftMA2EOxLnsAuA/KVsMF
+         KUVPkCBC+gpmBumUOq5rvGGCD9kQDM+aQ6+d+O8Kmy1zxU0jVDZn8KMwf9sdGgxET0
+         RtIdAQyLHLTaV9seQLYkwjk4o1uouRPZknEjGMkncgyBxKnywLnqq7LMQS3m/8mEPl
+         wIUYM19jnqVYOEkv9OQTg8mL8TRHDZew6WUTQCGPUHu2f0pSy+r3C/LmWJgu+EY60B
+         Qev/FCnAeNogiid+Ng8YZ3Niq+V7vo32L85/Nfx8v4givaZzJ4AGdXw30otGm0KhXq
+         u4bbs1zQ/qN4w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/1/17 =E4=B8=8B=E5=8D=8810:10, Jason Gunthorpe wrote:
->>>> Netlink based lifecycle management could be implemented for vDPA
->>>> simulator as well.
->>> This is just begging for a netlink based approach.
->>>
->>> Certainly netlink driven removal should be an agreeable standard for
->>> all devices, I think.
->> Well, I think Parav had some proposals during the discussion of mdev
->> approach. But I'm not sure if he had any RFC codes for me to integrate=
- it
->> into vdpasim.
->>
->> Or do you want me to propose the netlink API? If yes, would you prefer=
- to a
->> new virtio dedicated one or be a subset of devlink?
-> Well, lets see what feed back Parav has
+
+On 2/4/2020 1:49 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 >
-> Jason
+>
+> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - items:
+>> +          const: nvidia,tegra210-i2s
+>> +      - items:
+>> +          - enum:
+>> +              - nvidia,tegra194-i2s
+>> +              - nvidia,tegra186-i2s
+>> +          - enum:
+>> +              - nvidia,tegra210-i2s
+> Couldn't this be something like this:
+>
+> properties:
+>    compatible:
+>      - enum:
+>        - nvidia,tegra210-i2s
+>        - nvidia,tegra186-i2s
+>        - nvidia,tegra194-i2s
 
+I used that way because,
+For Tegra210: compatible =3D "nvidia,tegra210-i2s";
+For Tegra186: compatible =3D "nvidia,tegra186-i2s", "nvidia,tegra210-i2s";=
+=20
+(future proof)
+For Tegra194: compatible =3D "nvidia,tegra194-i2s", "nvidia,tegra210-i2s";=
+=20
+(future proof)
 
-Hi Parav:
+Currently driver uses "nvidia,tegra210-i2s" alone.
 
-Do you have any update on this? If it still require sometime, I will=20
-post V2 that sticks to sysfs based API.
-
-Thanks
+YAML binding check fails otherwise as it does not let me have future=20
+proof bindings.
 
