@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A60C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37271C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A072086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F40B2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sh6Bs+7V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usojpGLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbgBDGYR (ORCPT
+        id S1727345AbgBDGYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:24:17 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37942 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgBDGYQ (ORCPT
+        Tue, 4 Feb 2020 01:24:24 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42176 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgBDGYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:24:16 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t6so6842169plj.5;
-        Mon, 03 Feb 2020 22:24:16 -0800 (PST)
+        Tue, 4 Feb 2020 01:24:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so8914250pfz.9;
+        Mon, 03 Feb 2020 22:24:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MvKM1CZ6aMvLaWJ0D+59kHuYEYSh47NwjoPQm914yG8=;
-        b=Sh6Bs+7V8Gla6ZXDutklqmYvd6pqY62tzdHZhIPwrMMnqi467xE8KVKz1/YGWdIH/W
-         hbmaf9e8p0+yeQ8ia/uy+iqKtpapBba33G2RCwnuhH8Xf7pWmDcwl+pkY9E3s7sjJdx0
-         0G69il0TyaONPRQ9/n/ZEYagrW367xmY8DepYXdbZdOvrDI9CMmVNhkr6iJIOkGTAgSa
-         Yd6cdg40jR617HO9uWYw05kya7xZ2i3b2DzYBeac2SKwRslABFVDS8vq+XnMvKcUCpSc
-         FZ5IbyQd25efuQ7OI4tn3u9eOqcmgjyIhaT5ur5WdOf769gHXXeWpjpBVvMalDhKsu9t
-         ktFg==
+        bh=Kgwt3mvUxDF/4h5A6PO11Mgg+qixlsRKZ7kH5hXHtOE=;
+        b=usojpGLLj57Z3wvu2mPCgoKTiJrkEIIGLCb+lCdufsX39ROV1cpGt0BrxFzldX7piK
+         69KYY/OKR14AEUECwXDl9fwl6M5lbWVuk6K0YLcjp7z27uzl7b40leLw1nT88JQU4BJt
+         BOiA9t5WK4qD6jS+MDypjUwLaMjB7GX3aTFvA8bWRTdZ4KDSLX6p+hMcTgZgeU31qXjb
+         7DLDnpLl3xqLt/kIiuk2lGUnzPHGZS071MUFHWEHODFSrBzTA4e677xNmEvW3+w+pxlY
+         MfuCIyXbARgyVPAAAWv7eUbVwjnCfgmRAbVnj1v3xxrOZyfaUFVsraxW3u2A4Mq4raSS
+         pcZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MvKM1CZ6aMvLaWJ0D+59kHuYEYSh47NwjoPQm914yG8=;
-        b=N3xsF9p/IVLo/w9ruDWOrQ4M+UUlg+5LG4aJNIP8Q3xT8KRWBXJw0xzbkSfts0Tck9
-         twc4xTiyo3HI2hCCmQSiNJt3LPn0UJOY4i/SpPa3/sOBt1iGdUdcuuSxHKfPET69nybW
-         jcmmIqIWfNQitngiGAq4On6iAqPdFjYCoMKaxOA499Eey2TUJVXND5YSQzsrihA02son
-         hh20W3Lc9GbBr0iTlr8WmHfXVYB40uNJipHe81qAaYdgodshzj4MAQr99yRXBMTAvb0X
-         ODlmCZXDgA2YC5bYi+DQxNbhSlgI4R9RB3Q2Wg5k3zHAoKU8cO8DOTRamcq2ZF5vMGqo
-         ey+w==
-X-Gm-Message-State: APjAAAXD6deBgKDwaX/Pmtxjq93bBuQadSlA6W59Gt5SkRZ+ZsQkYB2i
-        n27SRhjTmLOu7ofIu0XBNND+13ru0pFuWQ==
-X-Google-Smtp-Source: APXvYqzGFTa2GMOm2xxmiPXXuMlRkl5CZ6juXLNhL4q+PxETxC1ttR6BeOXXfO6aIVuohVWP8/UTsQ==
-X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr27569172plz.264.1580797455989;
-        Mon, 03 Feb 2020 22:24:15 -0800 (PST)
+        bh=Kgwt3mvUxDF/4h5A6PO11Mgg+qixlsRKZ7kH5hXHtOE=;
+        b=aNk6IWHpWBPlXLTUbc6pPgSq0VIl2uhxDW32n6DhVOhv/5gBzqXDJwu1Mwx368SEGK
+         fvydJn53Ct8OzEfdmwFNr+SD3sx8kU0fLp+WjE7gtyg33x3KdysCpdK4YknXSX5SDOD9
+         QzAU8XIJVdTdLyHQki9R0cYRLjj/1b1wtP6s3ZTxeGGM/ZTADq4adsd4myPVYkvhAenl
+         SQx9pKyY8nCRxtispHowUhsjFUIldCl9669KvMljJU0eI2vmDAqQWtdkrpzfe520Zr7i
+         drehjl+zrGgcrHpx8ZjVyrItCveqzqLLQ/cGE9IFwgVNos/NPLry1GgqGTc4y91w3NYK
+         +A9w==
+X-Gm-Message-State: APjAAAX6rUDicFxHPK94GtyeEE2nM4UX6o6+FXmw9c+Tq7dgt7ig3Jkc
+        d8iOIvxIRp9hd4MGyI7Rkjs=
+X-Google-Smtp-Source: APXvYqye5zn8oWPNMoqgG54z3RMcKwJ+WnAZWJRv0bFoDAjW2POnyjov/s7WAlqBAsIgAe47CwAOQQ==
+X-Received: by 2002:a63:3487:: with SMTP id b129mr29614510pga.320.1580797463177;
+        Mon, 03 Feb 2020 22:24:23 -0800 (PST)
 Received: from localhost.localdomain ([106.254.212.20])
-        by smtp.gmail.com with ESMTPSA id u26sm21880240pfn.46.2020.02.03.22.24.09
+        by smtp.gmail.com with ESMTPSA id u26sm21880240pfn.46.2020.02.03.22.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 22:24:15 -0800 (PST)
+        Mon, 03 Feb 2020 22:24:22 -0800 (PST)
 From:   sj38.park@gmail.com
 To:     akpm@linux-foundation.org
 Cc:     SeongJae Park <sjpark@amazon.de>, acme@kernel.org,
@@ -68,9 +68,9 @@ Cc:     SeongJae Park <sjpark@amazon.de>, acme@kernel.org,
         rostedt@goodmis.org, sj38.park@gmail.com, vdavydov.dev@gmail.com,
         linux-mm@kvack.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 06/11] mm/damon: Add debugfs interface
-Date:   Tue,  4 Feb 2020 06:23:07 +0000
-Message-Id: <20200204062312.19913-7-sj38.park@gmail.com>
+Subject: [PATCH v3 07/11] mm/damon: Add a tracepoint for result writing
+Date:   Tue,  4 Feb 2020 06:23:08 +0000
+Message-Id: <20200204062312.19913-8-sj38.park@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200204062312.19913-1-sj38.park@gmail.com>
 References: <20200204062312.19913-1-sj38.park@gmail.com>
@@ -81,461 +81,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit adds a debugfs interface for DAMON.
-
-DAMON exports four files, ``attrs``, ``pids``, ``record``, and
-``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
-
-Attributes
-----------
-
-Users can read and write the ``sampling interval``, ``aggregation
-interval``, ``regions update interval``, and min/max number of
-monitoring target regions by reading from and writing to the ``attrs``
-file.  For example, below commands set those values to 5 ms, 100 ms,
-1,000 ms, 10, 1000 and check it again::
-
-    # cd <debugfs>/damon
-    # echo 5000 100000 1000000 10 1000 > attrs
-    # cat attrs
-    5000 100000 1000000 10 1000
-
-Target PIDs
------------
-
-Users can read and write the pids of current monitoring target processes
-by reading from and writing to the ``pids`` file.  For example, below
-commands set processes having pids 42 and 4242 as the processes to be
-monitored and check it again::
-
-    # cd <debugfs>/damon
-    # echo 42 4242 > pids
-    # cat pids
-    42 4242
-
-Note that setting the pids doesn't starts the monitoring.
-
-Record
-------
-
-DAMON support direct monitoring result record feature.  The recorded
-results are first written to a buffer and flushed to a file in batch.
-Users can set the size of the buffer and the path to the result file by
-reading from and writing to the ``record`` file.  For example, below
-commands set the buffer to be 4 KiB and the result to be saved in
-'/damon.data'.
-
-    # cd <debugfs>/damon
-    # echo 4096 /damon.data > pids
-    # cat record
-    4096 /damon.data
-
-Turning On/Off
---------------
-
-You can check current status, start and stop the monitoring by reading
-from and writing to the ``monitor_on`` file.  Writing ``on`` to the file
-starts DAMON to monitor the target processes with the attributes.
-Writing ``off`` to the file stops DAMON.  DAMON also stops if every
-target processes is be terminated.  Below example commands turn on, off,
-and check status of DAMON::
-
-    # cd <debugfs>/damon
-    # echo on > monitor_on
-    # echo off > monitor_on
-    # cat monitor_on
-    off
-
-Please note that you cannot write to the ``attrs`` and ``pids`` files
-while the monitoring is turned on.  If you write to the files while
-DAMON is running, ``-EINVAL`` will be returned.
+This commit adds a tracepoint for DAMON's result buffer writing.  It is
+called for each writing of the DAMON results and print the result data.
+Therefore, it would be used to easily integrated with other tracepoint
+supporting tracers such as perf.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- mm/damon.c | 348 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 347 insertions(+), 1 deletion(-)
+ include/trace/events/damon.h | 32 ++++++++++++++++++++++++++++++++
+ mm/damon.c                   |  4 ++++
+ 2 files changed, 36 insertions(+)
+ create mode 100644 include/trace/events/damon.h
 
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+new file mode 100644
+index 000000000000..fb33993620ce
+--- /dev/null
++++ b/include/trace/events/damon.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM damon
++
++#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_DAMON_H
++
++#include <linux/types.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(damon_write_rbuf,
++
++	TP_PROTO(void *buf, const ssize_t sz),
++
++	TP_ARGS(buf, sz),
++
++	TP_STRUCT__entry(
++		__dynamic_array(char, buf, sz)
++	),
++
++	TP_fast_assign(
++		memcpy(__get_dynamic_array(buf), buf, sz);
++	),
++
++	TP_printk("dat=%s", __print_hex(__get_dynamic_array(buf),
++			__get_dynamic_array_len(buf)))
++);
++
++#endif /* _TRACE_DAMON_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 diff --git a/mm/damon.c b/mm/damon.c
-index 1c9299543678..f1d7200f3936 100644
+index f1d7200f3936..c2a098843936 100644
 --- a/mm/damon.c
 +++ b/mm/damon.c
-@@ -10,6 +10,7 @@
+@@ -9,6 +9,8 @@
+ 
  #define pr_fmt(fmt) "damon: " fmt
  
++#define CREATE_TRACE_POINTS
++
  #include <linux/damon.h>
-+#include <linux/debugfs.h>
+ #include <linux/debugfs.h>
  #include <linux/delay.h>
- #include <linux/kthread.h>
- #include <linux/mm.h>
-@@ -41,6 +42,24 @@
- #define damon_for_each_task_safe(ctx, t, next) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
+@@ -20,6 +22,7 @@
+ #include <linux/sched/mm.h>
+ #include <linux/sched/task.h>
+ #include <linux/slab.h>
++#include <trace/events/damon.h>
  
-+/*
-+ * For each 'sample_interval', DAMON checks whether each region is accessed or
-+ * not.  It aggregates and keeps the access information (number of accesses to
-+ * each region) for 'aggr_interval' and then flushes it to the result buffer if
-+ * an 'aggr_interval' surpassed.  And for each 'regions_update_interval', damon
-+ * checks whether the memory mapping of the target tasks has changed (e.g., by
-+ * mmap() calls from the applications) and applies the changes.
-+ *
-+ * All time intervals are in micro-seconds.
-+ */
-+static struct damon_ctx damon_user_ctx = {
-+	.sample_interval = 5 * 1000,
-+	.aggr_interval = 100 * 1000,
-+	.regions_update_interval = 1000 * 1000,
-+	.min_nr_regions = 10,
-+	.max_nr_regions = 1000,
-+};
-+
- #define LEN_RES_FILE_PATH	256
- 
- /* Get a random number in [l, r) */
-@@ -1040,15 +1059,342 @@ int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 	return 0;
- }
- 
-+/*
-+ * debugfs functions
-+ */
-+
-+static ssize_t debugfs_monitor_on_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char monitor_on_buf[5];
-+	bool monitor_on;
-+
-+	spin_lock(&ctx->kdamond_lock);
-+	monitor_on = ctx->kdamond != NULL;
-+	spin_unlock(&ctx->kdamond_lock);
-+
-+	snprintf(monitor_on_buf, 5, monitor_on ? "on\n" : "off\n");
-+
-+	return simple_read_from_buffer(buf, count, ppos, monitor_on_buf,
-+			monitor_on ? 3 : 4);
-+}
-+
-+static ssize_t debugfs_monitor_on_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	ssize_t ret;
-+	bool on = false;
-+	char cmdbuf[5];
-+
-+	ret = simple_write_to_buffer(cmdbuf, 5, ppos, buf, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (sscanf(cmdbuf, "%s", cmdbuf) != 1)
-+		return -EINVAL;
-+	if (!strncmp(cmdbuf, "on", 5))
-+		on = true;
-+	else if (!strncmp(cmdbuf, "off", 5))
-+		on = false;
-+	else
-+		return -EINVAL;
-+
-+	if (damon_turn_kdamond(ctx, on))
-+		return -EINVAL;
-+
-+	return ret;
-+}
-+
-+static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
-+{
-+	char *cursor = buf;
-+	struct damon_task *t;
-+
-+	damon_for_each_task(ctx, t) {
-+		snprintf(cursor, len, "%lu ", t->pid);
-+		cursor += strnlen(cursor, len);
-+	}
-+	if (cursor != buf)
-+		cursor--;
-+	snprintf(cursor, len, "\n");
-+	return strnlen(buf, len);
-+}
-+
-+static ssize_t debugfs_pids_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	ssize_t len;
-+	char pids_buf[512];
-+
-+	len = damon_sprint_pids(ctx, pids_buf, 512);
-+
-+	return simple_read_from_buffer(buf, count, ppos, pids_buf, len);
-+}
-+
-+/*
-+ * Converts a string into an array of unsigned long integers
-+ *
-+ * Returns an array of unsigned long integers that converted, or NULL if the
-+ * input is wrong.
-+ */
-+static unsigned long *str_to_pids(const char *str, ssize_t len,
-+				ssize_t *nr_pids)
-+{
-+	unsigned long *pids;
-+	unsigned long pid;
-+	int pos = 0, parsed, ret;
-+
-+	*nr_pids = 0;
-+	pids = kmalloc_array(256, sizeof(unsigned long), GFP_KERNEL);
-+	while (*nr_pids < 256 && pos < len) {
-+		ret = sscanf(&str[pos], "%lu%n", &pid, &parsed);
-+		pos += parsed;
-+		if (ret != 1)
-+			break;
-+		pids[*nr_pids] = pid;
-+		*nr_pids += 1;
-+	}
-+	if (*nr_pids == 0) {
-+		kfree(pids);
-+		pids = NULL;
-+	}
-+
-+	return pids;
-+}
-+
-+static ssize_t debugfs_pids_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	ssize_t ret;
-+	unsigned long *targets;
-+	ssize_t nr_targets;
-+	char pids_buf[512];
-+
-+	ret = simple_write_to_buffer(pids_buf, 512, ppos, buf, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	targets = str_to_pids(pids_buf, ret, &nr_targets);
-+
-+	spin_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond)
-+		goto monitor_running;
-+
-+	damon_set_pids(ctx, targets, nr_targets);
-+	spin_unlock(&ctx->kdamond_lock);
-+	kfree(targets);
-+
-+	return ret;
-+
-+monitor_running:
-+	spin_unlock(&ctx->kdamond_lock);
-+	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
-+	return -EINVAL;
-+}
-+
-+static ssize_t debugfs_record_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char record_buf[512];
-+
-+	snprintf(record_buf, 512, "%u %s\n",
-+			ctx->rbuf_len, ctx->rfile_path);
-+	return simple_read_from_buffer(buf, count, ppos, record_buf,
-+			strnlen(record_buf, 512));
-+}
-+
-+static ssize_t debugfs_record_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char record_buf[512];
-+	unsigned int rbuf_len;
-+	char res_file_path[LEN_RES_FILE_PATH];
-+	ssize_t ret;
-+
-+	if (count > 512) {
-+		pr_err("record debugfs input is too large: %s\n", buf);
-+		return -ENOMEM;
-+	}
-+
-+	ret = simple_write_to_buffer(record_buf, 512, ppos, buf, count);
-+	if (ret < 0)
-+		return ret;
-+	if (sscanf(record_buf, "%u %s",
-+				&rbuf_len, res_file_path) != 2)
-+		return -EINVAL;
-+
-+	spin_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond)
-+		goto monitor_running;
-+
-+	damon_set_recording(ctx, rbuf_len, res_file_path);
-+	spin_unlock(&ctx->kdamond_lock);
-+
-+	return ret;
-+
-+monitor_running:
-+	spin_unlock(&ctx->kdamond_lock);
-+	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
-+	return -EINVAL;
-+}
-+
-+
-+static ssize_t debugfs_attrs_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char attrs_buf[256];
-+
-+	snprintf(attrs_buf, 256, "%lu %lu %lu %lu %lu\n",
-+			ctx->sample_interval, ctx->aggr_interval,
-+			ctx->regions_update_interval, ctx->min_nr_regions,
-+			ctx->max_nr_regions);
-+
-+	return simple_read_from_buffer(buf, count, ppos, attrs_buf,
-+			strnlen(attrs_buf, 256));
-+}
-+
-+static ssize_t debugfs_attrs_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	unsigned long s, a, r, minr, maxr;
-+	char attrs_buf[256];
-+	ssize_t ret;
-+
-+	if (count > 256) {
-+		pr_err("attributes stream is too large: %s\n", buf);
-+		return -ENOMEM;
-+	}
-+
-+	ret = simple_write_to_buffer(attrs_buf, 256, ppos, buf, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (sscanf(attrs_buf, "%lu %lu %lu %lu %lu",
-+				&s, &a, &r, &minr, &maxr) != 5)
-+		return -EINVAL;
-+
-+	spin_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond)
-+		goto monitor_running;
-+
-+	damon_set_attrs(ctx, s, a, r, minr, maxr);
-+	spin_unlock(&ctx->kdamond_lock);
-+
-+	return ret;
-+
-+monitor_running:
-+	spin_unlock(&ctx->kdamond_lock);
-+	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
-+	return -EINVAL;
-+}
-+
-+static const struct file_operations monitor_on_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_monitor_on_read,
-+	.write = debugfs_monitor_on_write,
-+};
-+
-+static const struct file_operations pids_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_pids_read,
-+	.write = debugfs_pids_write,
-+};
-+
-+static const struct file_operations record_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_record_read,
-+	.write = debugfs_record_write,
-+};
-+
-+static const struct file_operations attrs_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_attrs_read,
-+	.write = debugfs_attrs_write,
-+};
-+
-+static struct dentry *debugfs_root;
-+
-+static int __init debugfs_init(void)
-+{
-+	const char * const file_names[] = {"attrs", "record",
-+		"pids", "monitor_on"};
-+	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
-+		&pids_fops, &monitor_on_fops};
-+	int i;
-+
-+	debugfs_root = debugfs_create_dir("damon", NULL);
-+	if (!debugfs_root) {
-+		pr_err("failed to create the debugfs dir\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(file_names); i++) {
-+		if (!debugfs_create_file(file_names[i], 0600, debugfs_root,
-+					NULL, fops[i])) {
-+			pr_err("failed to create %s file\n", file_names[i]);
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init damon_init_user_ctx(void)
-+{
-+	int rc;
-+
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+
-+	ktime_get_coarse_ts64(&ctx->last_aggregation);
-+	ctx->last_regions_update = ctx->last_aggregation;
-+
-+	ctx->rbuf_offset = 0;
-+	rc = damon_set_recording(ctx, 4096, "/damon.data");
-+	if (rc)
-+		return rc;
-+
-+	ctx->kdamond = NULL;
-+	ctx->kdamond_stop = false;
-+	spin_lock_init(&ctx->kdamond_lock);
-+
-+	prandom_seed_state(&ctx->rndseed, 42);
-+	INIT_LIST_HEAD(&ctx->tasks_list);
-+
-+	ctx->sample_cb = NULL;
-+	ctx->aggregate_cb = NULL;
-+
-+	return 0;
-+}
-+
- static int __init damon_init(void)
+ #define damon_get_task_struct(t) \
+ 	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
+@@ -553,6 +556,7 @@ static void damon_flush_rbuffer(struct damon_ctx *ctx)
+  */
+ static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
  {
-+	int rc;
-+
- 	pr_info("init\n");
- 
--	return 0;
-+	rc = damon_init_user_ctx();
-+	if (rc)
-+		return rc;
-+
-+	return debugfs_init();
- }
- 
- static void __exit damon_exit(void)
- {
-+	damon_turn_kdamond(&damon_user_ctx, false);
-+	debugfs_remove_recursive(debugfs_root);
-+
-+	kfree(damon_user_ctx.rbuf);
-+	kfree(damon_user_ctx.rfile_path);
-+
- 	pr_info("exit\n");
- }
- 
++	trace_damon_write_rbuf(data, size);
+ 	if (!ctx->rbuf_len || !ctx->rbuf)
+ 		return;
+ 	if (ctx->rbuf_offset + size > ctx->rbuf_len)
 -- 
 2.17.1
 
