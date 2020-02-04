@@ -2,368 +2,177 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2550C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FA5C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE1C2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8942087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P8DRV0s6"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="RfSI5TO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbgBDXKV (ORCPT
+        id S1727674AbgBDXK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:10:21 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:46045 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbgBDXKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:10:20 -0500
-Received: by mail-vk1-f193.google.com with SMTP id g7so5704170vkl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 15:10:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1pbIdR9ujfTPYUY6ALHtfJ9GZ4YcKZQiFHRxNIlFQpc=;
-        b=P8DRV0s6W4a+o5l5kw7DEIN9RbhBiCffaC3xu5ByTojz7G2F+9F/E6jtUvZdgYWGxx
-         FgDB2WwiYlSI6WHmzqErxrjOSAM5RwJW+ORKhKcqijjXkIk46uS8Le5eu0NSYPdM+9FI
-         G00Yl3YWiH+iplcGgJBUQjvzxAoCjrzPU1jfU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1pbIdR9ujfTPYUY6ALHtfJ9GZ4YcKZQiFHRxNIlFQpc=;
-        b=gjL3AgPMMg0+ATCs5F778wjTwyFOKrzDzySfjZ9VkSaaJwikJBfZ2XQHtZ3HipH2O8
-         I9LofRa2PeJDK4HbqI65MMZwjSNVweqntsnzusmaUiY4LMUnhvxU/VnbLHOuO1Bk0hJh
-         ke6DWMzY5FehdfokeJrMrlqsZhC/NgG6jAiLj1WvRtif8XQxxOa7TT2/0utIW8Q6Np8m
-         rKdDhM1biaicEnpc2dF/wF1MLo5tE7tqtWo2ddUloqyxOscazesXCNXt0YG/31feej34
-         C/yLA/I9DfsT9xaUNj8Djp4xS3i2uGjpf6baxzDk076AUAcUjj17F0nonh4E2k5D2C7k
-         5hzA==
-X-Gm-Message-State: APjAAAWvV6S2d7p4CohKgRynuvw8HH6xAb1UlGI5299f2647dcUdLHZY
-        jwsVZqB1TgXhc5wG6T5x40sqGr+ZibuieGtIbzHK1A==
-X-Google-Smtp-Source: APXvYqxKPqeDvmA0HWiBDMr83K63ubXL/QNqQXVlLc6ldmMD6O/j8mHP5Qp4s5ptSzZY4TSxH54xnLKSQhZz/Mkhqkg=
-X-Received: by 2002:a1f:6012:: with SMTP id u18mr18807361vkb.77.1580857818602;
- Tue, 04 Feb 2020 15:10:18 -0800 (PST)
+        Tue, 4 Feb 2020 18:10:58 -0500
+Received: from mga17.intel.com ([192.55.52.151]:42802 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727468AbgBDXK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 18:10:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 15:10:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,403,1574150400"; 
+   d="scan'208";a="403958120"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga005.jf.intel.com with ESMTP; 04 Feb 2020 15:10:56 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 4 Feb 2020 15:10:55 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 4 Feb 2020 15:10:55 -0800
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 4 Feb 2020 15:10:55 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 4 Feb 2020 15:10:54 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EseUbKb3CYmwLA45SQw6vtG2+nCJ2TGduxbttcogEAq4DVdbrn/KxlR/RD2pY8rAaptMCISfjqxM3DjtGj1gW45Yn3KHWH0T7FJJhFb0e1FVbQX68+fC4q0MCun3gkUmAPqvz2P20AdIcnQSml8OqzueSIlwzCPYwbwk1itDPrIZW230DO5pYrgLZ1q0//4NkNnIDWzTAxIAGvRdwKkZA+wSmgxC5RJ4eKXhIgnTFHYURPpRuVW98ULzrlXG+7HWF4Tk1FHGuU5+vH92a3g3jB+TAarheEv2ROSUKPc9HSgNvDmP78j+f1B1u0vLIymmrmcOpeAqZI3cIqhB/pAP6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VmlPAGpv4A9TZlfvZcaYr95z4F4IYheic30NaOXseJ8=;
+ b=gEa+JDFc+JjFWMmzfPZ9CByZG8YkJnT4vTVHod/T3TIoa84GijHLHZhYJQT0vubuPbakY1H+vpiG++t+ZS4YQL33Sbz33XZLMQmvVtHrw9ybEq2130sSvHAhE4RbMeKKcHV6KrL1yzO9Cz7F0kWPZH7alAqOmOn/bcksx/Eh3OImjBrikAiis015/hcPEz3NCSjvvEYQd917j6pMdahqiz2gCBjjoaShyshMNN+/dcl3HpXMgLIqs2bNeQQD9fsO5eBknEFMrAj3GuQPDs6vKm1WN2QcYr68LBdEV1HSddURfNfbhyGCruHgDpu+ylwH4uZ09V2Z8KQ5pMeXjeF+qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VmlPAGpv4A9TZlfvZcaYr95z4F4IYheic30NaOXseJ8=;
+ b=RfSI5TO1Et9GE9xzCyXQYLP1VwUxGGsatU4w9PK2O+9GQZe5VpRQOvHNGu1KabHEXKQZG27GtnSYtXCoUZLtXtNWgTXRyf0TdlSX/jjc7n1TNDB4C/ZuqxsUE8EOdSbsoYWzOzCl3Nee2CKdG1UCalODkACmKs/7VTeI+1ONzko=
+Received: from BYAPR11MB3624.namprd11.prod.outlook.com (20.178.239.225) by
+ BYAPR11MB3688.namprd11.prod.outlook.com (20.178.237.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.30; Tue, 4 Feb 2020 23:10:50 +0000
+Received: from BYAPR11MB3624.namprd11.prod.outlook.com
+ ([fe80::d12e:da32:257e:7d51]) by BYAPR11MB3624.namprd11.prod.outlook.com
+ ([fe80::d12e:da32:257e:7d51%5]) with mapi id 15.20.2686.034; Tue, 4 Feb 2020
+ 23:10:49 +0000
+From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        "Westerberg, Mika" <mika.westerberg@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "Box, David E" <david.e.box@intel.com>
+Subject: RE: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Thread-Topic: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Thread-Index: AQHV0uehR65JqlDsd0qQ+gWeMY04Aqf+WQcAgAB1iqCAABOEAIALk8swgACCXgCAAMFZ8A==
+Date:   Tue, 4 Feb 2020 23:10:49 +0000
+Message-ID: <BYAPR11MB362427151E22D623A1B48E37F2030@BYAPR11MB3624.namprd11.prod.outlook.com>
+References: <cover.1579890793.git.gayatri.kammela@intel.com>
+ <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
+ <BL0PR11MB31071AD85775C09B8EC26608F20B0@BL0PR11MB3107.namprd11.prod.outlook.com>
+ <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
+ <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
+ <20200204113414.GB10400@smile.fi.intel.com>
+In-Reply-To: <20200204113414.GB10400@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gayatri.kammela@intel.com; 
+x-originating-ip: [192.55.52.207]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4ec15bc-546e-4d49-906f-08d7a9c77998
+x-ms-traffictypediagnostic: BYAPR11MB3688:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB3688FDD26A0A0FDA7C92A85CF2030@BYAPR11MB3688.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03030B9493
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10019020)(376002)(396003)(366004)(136003)(39860400002)(346002)(199004)(189003)(66556008)(66946007)(54906003)(316002)(66476007)(52536014)(66446008)(2906002)(64756008)(6916009)(966005)(76116006)(71200400001)(6506007)(86362001)(186003)(26005)(8676002)(81156014)(8936002)(7696005)(55016002)(9686003)(81166006)(5660300002)(4326008)(107886003)(478600001)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3688;H:BYAPR11MB3624.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pC5oiIwaSJjbR4UWO5MFejbkQN7a7Fbt9SC4+WSqDIuQyMRyhHHeLY+5jbHTxtt6IkTHbNIJuOf3ZVA7xLrHN8eLWF/Qhfynb2iPCc1OY3Ny07eR3HYtpXKv3wg14leO1pATN/Q2RcYbvQ4zJtxeVUiX8uSUjPGYlEWsGSsaOczQW/jKndViIXt6c5Je08a9NWZ3/pw8Q7LVDjDCYSn+YDX25Sn+4Hj+Z9NX5VA2pgg6StFayN917G96wEGT5bQtchuwB9uX6QNpu68z8yuC1E/05UjR/LndHT5BXAXgLyLoP9CQcFWEglEl+e/19AM5PQxTefMoyXlrLTA5Np54c3P+dsi1UzHTyDsXjG0rZ5jOGq28W/kuY3jg9Dr294tn2RVpOnosWK5FGS3nttx/aU9/t9hPpPuZRk2qczyIvMTdxneqEpI4g3rRRGBBT/Fc9vOdLffNmSJkC+b+Gpy52uNbUwkOuzF+hmi3aaUwdiM0XTrPv8eEn/h0BfcXwOkvhBp3xc51DbCg5rcq5f8nlEH9CC3LQDNzkiobFVQiGyuMZsGVYEcCyc4b7mhluNO07sBfoxTZbiUUH614lZqApkTGSq3mMjduLXLLyGrj7XzNUOk24yW+5yAIN45Pj5pbO5CL4l1ex91y1ro9erxGlbs4HiunoC1jAgmKr4ksfoWpWIjEmkB+U+sTDK726plJQFQ5VOThi5JWzOKhXKQ8BUgVYgZ4f82nNreT0TiNjMg=
+x-ms-exchange-antispam-messagedata: x97zJdguefypK9IfKaCwkktzP//NZb1N9PEaD8NA+WolWOUUP+Ohyzeh9qgQEirj6qfItqv6bARP14OkNCuCfIGOMWAf2u1YDcDMSfdWIXZ0jC0mgspJLgald4CG6qAE5D+7fUVB96Qo5Wk9NT/q7Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1580832929-2067-1-git-send-email-gubbaven@codeaurora.org>
-In-Reply-To: <1580832929-2067-1-git-send-email-gubbaven@codeaurora.org>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 4 Feb 2020 15:10:07 -0800
-Message-ID: <CANFp7mXgvfQGw0bc0dwNXg9KME1XD1zYGtPdEFWbM20NJpKtzQ@mail.gmail.com>
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Bug fixes while collecting
- controller memory dump
-To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        robh@kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
-        Yoni Shavit <yshavit@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4ec15bc-546e-4d49-906f-08d7a9c77998
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2020 23:10:49.8722
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yDX3jwzKSUa7dAe5aljqot/yJx48lOF4SNajCp52S4nsaezG06wbH8uZ+f3z4QbamSuK3WlvxwvRXmVpYneES/AjRplp2QVmdfOCeMA5phU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3688
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Venkata,
+> > > > > It doesn't apply to our for-next branch.
+> > > > Sorry to hear that. I've rebased the series on mainline 5.5-rc7.
+> > > > Should I
+> > > rebase it on for-next branch?
+> > >
+> > > You should always base your branch on the for-next (whatever it's
+> > > being
+> > > called) of the subsystem your series against of.
+> >
+> > Hi Andy,
+> >
+> > The current series has a dependency on Tiger Lake and Elkhart Lake patc=
+he
+> which is merged in to mainline.
+> >
+> > (554f269f0f38 platform/x86: intel_pmc_core: Add Intel Elkhart Lake
+> > support 49a437941c3f platform/x86: intel_pmc_core: Add Intel Tiger
+> > Lake support
+> > 6268c0b278b5 platform/x86: intel_pmc_core: Make debugfs entry for
+> > pch_ip_power_gating_status conditional
+> > e39854781830 platform/x86: intel_pmc_core: Create platform dependent
+> > bitmap structs
+> > b1cb33dae414 platform/x86: intel_pmc_core: Clean up: Remove comma
+> > after the termination line)
+> >
+> > But they are not available in for-next branch. I am confused, how that =
+could
+> be the case. For me to base the current series on for-next branch, the
+> dependency patch series should be available in for-next branch.
+>=20
+> I'm wondering how did you check it?
+> The branch location is in this [1] tree.
 
-Per our earlier review on chromium gerrit:
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1992966
+Thank you for your patience Andy. I apologize for the mishap as I was check=
+ing in the wrong tree. I have rebased the series on for-next branch on righ=
+t tree this time and sent v2.
 
-I'm not too keen on the change from mutex to spinlock because it's
-made the code more complex.
-
-Also, it has been a couple weeks since my last review and I've lost
-the context of what order of events are supposed to happen (making
-reviewing the sequencing hard).
-
-Good case:
-
-Memdump event from firmware
-Some number of memdump events with seq #
-Hw error event
-Reset
-
-Timeout case:
-
-Memdump event from firmware
-Some number of memdump events with seq #
-Timeout schedules hw_error_event
-hw_error_event clears the memdump activity
-reset
-
-Software memdump:
-
-hw_error_event sends memdump command to firmware and waits for completion
-memdump event with seq#
-hw error event
-reset
-
-Does this look right? Could you add this to either the commit message
-or as a comment in one of the functions so that it's easier to
-understand what is the expected order of events.
-
-On Tue, Feb 4, 2020 at 8:16 AM Venkata Lakshmi Narayana Gubba
-<gubbaven@codeaurora.org> wrote:
->
-> This patch will fix the below issues
->    1.Fixed race conditions while accessing memory dump state flags.
->    2.Updated with actual context of timer in hci_memdump_timeout()
->    3.Updated injecting hardware error event if the dumps failed to receive.
->    4.Once timeout is triggered, stopping the memory dump collections.
->
-> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
-> Reported-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 104 ++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 90 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index eacc65b..ea956c3 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -69,7 +69,8 @@ enum qca_flags {
->         QCA_IBS_ENABLED,
->         QCA_DROP_VENDOR_EVENT,
->         QCA_SUSPENDING,
-> -       QCA_MEMDUMP_COLLECTION
-> +       QCA_MEMDUMP_COLLECTION,
-> +       QCA_HW_ERROR_EVENT
->  };
->
->
-> @@ -150,6 +151,7 @@ struct qca_data {
->         struct completion drop_ev_comp;
->         wait_queue_head_t suspend_wait_q;
->         enum qca_memdump_states memdump_state;
-> +       spinlock_t hci_memdump_lock;
-In an earlier revision of this patch, you had this lock as a mutex.
-Why change it from mutex to spinlock_t? I think this has made your
-change more complex since you have to unlock during the middle of an
-operation more often (i.e. since it can block)
->
->         /* For debugging purpose */
->         u64 ibs_sent_wacks;
-> @@ -524,19 +526,19 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
->
->  static void hci_memdump_timeout(struct timer_list *t)
->  {
-> -       struct qca_data *qca = from_timer(qca, t, tx_idle_timer);
-> +       struct qca_data *qca = from_timer(qca, t, memdump_timer);
->         struct hci_uart *hu = qca->hu;
-> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
-> -       char *memdump_buf = qca_memdump->memdump_buf_tail;
-> +       unsigned long flags;
->
-> -       bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
-> -       /* Inject hw error event to reset the device and driver. */
-> -       hci_reset_dev(hu->hdev);
-> -       vfree(memdump_buf);
-> -       kfree(qca_memdump);
-> +       spin_lock_irqsave(&qca->hci_memdump_lock, flags);
->         qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
-> +       if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
-> +               /* Inject hw error event to reset the device and driver. */
-> +               hci_reset_dev(hu->hdev);
-> +       }
-> +
->         del_timer(&qca->memdump_timer);
-> -       cancel_work_sync(&qca->ctrl_memdump_evt);
-> +       spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
-
-Missing cancel_work_sync (not sure if intentional but it's included in
-qca_wait_for_dump_collection so it should probably be here too)
-
->  }
->
->  /* Initialize protocol */
-> @@ -558,6 +560,7 @@ static int qca_open(struct hci_uart *hu)
->         skb_queue_head_init(&qca->tx_wait_q);
->         skb_queue_head_init(&qca->rx_memdump_q);
->         spin_lock_init(&qca->hci_ibs_lock);
-> +       spin_lock_init(&qca->hci_memdump_lock);
->         qca->workqueue = alloc_ordered_workqueue("qca_wq", 0);
->         if (!qca->workqueue) {
->                 BT_ERR("QCA Workqueue not initialized properly");
-> @@ -960,14 +963,25 @@ static void qca_controller_memdump(struct work_struct *work)
->         char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
->         u16 seq_no;
->         u32 dump_size;
-> +       unsigned long flags;
->
->         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
->
-> +               spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-> +               /* Skip processing the received packets if timeout detected. */
-> +               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-> +                       spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
-> +                       return;
-> +               }
-> +
->                 if (!qca_memdump) {
->                         qca_memdump = kzalloc(sizeof(struct qca_memdump_data),
->                                               GFP_ATOMIC);
-> -                       if (!qca_memdump)
-> +                       if (!qca_memdump) {
-> +                               spin_unlock_irqrestore(&qca->hci_memdump_lock,
-> +                                                               flags);
->                                 return;
-> +                       }
->
->                         qca->qca_memdump = qca_memdump;
->                 }
-> @@ -992,6 +1006,8 @@ static void qca_controller_memdump(struct work_struct *work)
->                         if (!(dump_size)) {
->                                 bt_dev_err(hu->hdev, "Rx invalid memdump size");
->                                 kfree_skb(skb);
-> +                               spin_unlock_irqrestore(&qca->hci_memdump_lock,
-> +                                                       flags);
->                                 return;
->                         }
->
-> @@ -1001,7 +1017,24 @@ static void qca_controller_memdump(struct work_struct *work)
->                                   msecs_to_jiffies(MEMDUMP_TIMEOUT_MS)));
->
->                         skb_pull(skb, sizeof(dump_size));
-> +
-> +                       /* vmalloc() might go to sleep while trying to allocate
-> +                        * memory.As calling sleep function under spin lock is
-> +                        * not allowed so unlocking spin lock and will be locked
-> +                        * again after vmalloc().
-> +                        */
-> +                       spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
->                         memdump_buf = vmalloc(dump_size);
-> +                       spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-> +                       /* Skip processing the received packets if timeout
-> +                        * detected.
-> +                        */
-> +                       if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-> +                               spin_unlock_irqrestore(&qca->hci_memdump_lock,
-> +                                                       flags);
-> +                               return;
-> +                       }
-> +
->                         qca_memdump->memdump_buf_head = memdump_buf;
->                         qca_memdump->memdump_buf_tail = memdump_buf;
->                 }
-> @@ -1016,6 +1049,7 @@ static void qca_controller_memdump(struct work_struct *work)
->                         kfree(qca_memdump);
->                         kfree_skb(skb);
->                         qca->qca_memdump = NULL;
-> +                       spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
->                         return;
->                 }
->
-> @@ -1044,18 +1078,37 @@ static void qca_controller_memdump(struct work_struct *work)
->                         bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
->                                    qca_memdump->received_dump);
->                         memdump_buf = qca_memdump->memdump_buf_head;
-> +
-> +                       /* dev_coredumpv() might go to sleep.As calling sleep
-> +                        * function under spin lock is not allowed so unlocking
-> +                        * spin lock and will be locked again after
-> +                        * dev_coredumpv().
-> +                        */
-> +                       spin_unlock_irqrestore(&qca->hci_memdump_lock,
-> +                                               flags);
->                         dev_coredumpv(&hu->serdev->dev, memdump_buf,
->                                       qca_memdump->received_dump, GFP_KERNEL);
-> +                       spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-> +                       if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-> +                               spin_unlock_irqrestore(&qca->hci_memdump_lock,
-> +                                                       flags);
-> +                               return;
-> +                       }
-> +
->                         del_timer(&qca->memdump_timer);
->                         kfree(qca->qca_memdump);
->                         qca->qca_memdump = NULL;
->                         qca->memdump_state = QCA_MEMDUMP_COLLECTED;
-> +                       clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
->                 }
-> +
-> +               spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
->         }
->
->  }
->
-> -int qca_controller_memdump_event(struct hci_dev *hdev, struct sk_buff *skb)
-> +static int qca_controller_memdump_event(struct hci_dev *hdev,
-> +                                       struct sk_buff *skb)
->  {
->         struct hci_uart *hu = hci_get_drvdata(hdev);
->         struct qca_data *qca = hu->priv;
-> @@ -1408,19 +1461,25 @@ static void qca_wait_for_dump_collection(struct hci_dev *hdev)
->         struct qca_data *qca = hu->priv;
->         struct qca_memdump_data *qca_memdump = qca->qca_memdump;
->         char *memdump_buf = NULL;
-> +       unsigned long flags;
->
->         wait_on_bit_timeout(&qca->flags, QCA_MEMDUMP_COLLECTION,
->                             TASK_UNINTERRUPTIBLE, MEMDUMP_TIMEOUT_MS);
->
->         clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
-> -       if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-> +       if (qca->memdump_state == QCA_MEMDUMP_IDLE ||
-> +           qca->memdump_state == QCA_MEMDUMP_COLLECTING) {
->                 bt_dev_err(hu->hdev, "Clearing the buffers due to timeout");
-> +               spin_lock_irqsave(&qca->hci_memdump_lock, flags);
->                 if (qca_memdump)
-> -                       memdump_buf = qca_memdump->memdump_buf_tail;
-> +                       memdump_buf = qca_memdump->memdump_buf_head;
->                 vfree(memdump_buf);
->                 kfree(qca_memdump);
-> +               qca->qca_memdump = NULL;
->                 qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->                 del_timer(&qca->memdump_timer);
-> +               skb_queue_purge(&qca->rx_memdump_q);
-> +               spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
->                 cancel_work_sync(&qca->ctrl_memdump_evt);
->         }
->  }
-> @@ -1429,7 +1488,11 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
->  {
->         struct hci_uart *hu = hci_get_drvdata(hdev);
->         struct qca_data *qca = hu->priv;
-> +       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
-> +       char *memdump_buf = NULL;
-> +       unsigned long flags;
->
-> +       set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->         bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
->
->         if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-> @@ -1448,7 +1511,20 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
->                  */
->                 bt_dev_info(hdev, "waiting for dump to complete");
->                 qca_wait_for_dump_collection(hdev);
-> +       } else if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-> +               bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
-> +               spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-> +               if (qca_memdump)
-> +                       memdump_buf = qca_memdump->memdump_buf_head;
-> +               vfree(memdump_buf);
-> +               kfree(qca_memdump);
-> +               qca->qca_memdump = NULL;
-> +               skb_queue_purge(&qca->rx_memdump_q);
-> +               spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
-> +               cancel_work_sync(&qca->ctrl_memdump_evt);
->         }
-> +
-> +       clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->  }
->
->  static void qca_cmd_timeout(struct hci_dev *hdev)
+>=20
+> [1]: http://git.infradead.org/linux-platform-drivers-x86.git
+>=20
 > --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+> With Best Regards,
+> Andy Shevchenko
+>=20
+
