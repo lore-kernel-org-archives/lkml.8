@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61A4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDDCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A410C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFD62166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580838582;
-	bh=K8MgPJ4kdAlLdmdpBa90M0OO6pyenhnAEWv7TX1nJa0=;
+	s=default; t=1580838590;
+	bh=IQJeBNXB7TH1RXnY8Qd6oCTkjf56O446jnxgR0CYsOo=;
 	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
-	b=o6dOHe20rY9JagrRbaZuGluPrOS6dWW9hNXZTH+Tj81UsfoaQ7+pMLyzn84xDflVH
-	 K8doRbNqpwsklmt8bDUen1WrQTq/uhfdlGR9hP2Ikqxxa7bZDLzkSK1zBeEgzKjCMV
-	 6g9Yc6NFVqRYHBdxLrhj4/95xe0vtpxBXCDCRnoM=
+	b=Lqggy087KuKqbWGTveyP/ScIKShaHbgU7DzXUR5qSuwr1s/OHOdj4Qut3bBtIbIbX
+	 ri2IB3vv55EMDL4EX1slZklFNLyMjBm3AmPWxQAkd2+tWsGjSXPubTA0OZWblc5Xew
+	 ZuV0/bguITsMYR/oqOohJ5xbBejB83x4h5d7GDi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBDRtm (ORCPT
+        id S1727584AbgBDRtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:49:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46148 "EHLO mail.kernel.org"
+        Tue, 4 Feb 2020 12:49:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727392AbgBDRtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:49:41 -0500
+        id S1727392AbgBDRtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 12:49:49 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2493120674;
-        Tue,  4 Feb 2020 17:49:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CA7B20674;
+        Tue,  4 Feb 2020 17:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580838581;
-        bh=K8MgPJ4kdAlLdmdpBa90M0OO6pyenhnAEWv7TX1nJa0=;
+        s=default; t=1580838588;
+        bh=IQJeBNXB7TH1RXnY8Qd6oCTkjf56O446jnxgR0CYsOo=;
         h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
-        b=foH7k2mU2Z1qMmYKVaDy7LyoispdTF5vi+GP/LLgRftNFT4eyTirfmtMso6Hkq+NW
-         lradjlifr7rAf3j0EGTQJWgWDY72uxx9z17vu2kf4ksLIPaYnEfE0iYMR/OyB19CVj
-         T76rA2RmAxBRFZ366H98Qm7OaAQVgIJIeKsMU088=
+        b=Xzr+CP3wdFVVfHdNw8PnfLlcrcp0+9OISpa67N7VYkJ6VEH3G6QexVDwLMUqyinT0
+         48XwsCYoCaQEho1urlMCQYE7Sj9w4MWg/OlBm8J1+/aTJJ7gWI53Qs3WifZegKHFlL
+         a0Pqx2PXgneGh6DtuYQV1sVoS761PW/73hvsYnxg=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200203103049.v4.12.Ifd19a2701a102ec9f04e61a09345198383a9e937@changeid>
-References: <20200203183149.73842-1-dianders@chromium.org> <20200203103049.v4.12.Ifd19a2701a102ec9f04e61a09345198383a9e937@changeid>
-Subject: Re: [PATCH v4 12/15] clk: qcom: Get rid of the test clock for videocc-sc7180
+In-Reply-To: <20200203103049.v4.13.If37e4b1b5553ac9db5ea51e84a6eec286cdf209e@changeid>
+References: <20200203183149.73842-1-dianders@chromium.org> <20200203103049.v4.13.If37e4b1b5553ac9db5ea51e84a6eec286cdf209e@changeid>
+Subject: Re: [PATCH v4 13/15] clk: qcom: Use ARRAY_SIZE in videocc-sc7180 for parent clocks
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>,
@@ -55,23 +55,22 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org
 From:   Stephen Boyd <sboyd@kernel.org>
 User-Agent: alot/0.8.1
-Date:   Tue, 04 Feb 2020 09:49:40 -0800
-Message-Id: <20200204174941.2493120674@mail.kernel.org>
+Date:   Tue, 04 Feb 2020 09:49:47 -0800
+Message-Id: <20200204174948.6CA7B20674@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-02-03 10:31:45)
-> The test clock isn't in the bindings and apparently it's not used by
-> anyone upstream.  Remove it.
+Quoting Douglas Anderson (2020-02-03 10:31:46)
+> It's nicer to use ARRAY_SIZE instead of hardcoding.  Had we always
+> been doing this it would have prevented a previous bug.  See commit
+> 74c31ff9c84a ("clk: qcom: gpu_cc_gmu_clk_src has 5 parents, not 6").
 >=20
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
 
