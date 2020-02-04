@@ -2,219 +2,124 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C90C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D35C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D1B2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F4C21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4H66yf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgBDPLz (ORCPT
+        id S1727331AbgBDPVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:11:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44626 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbgBDPLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:11:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 03028AAFD;
-        Tue,  4 Feb 2020 15:11:51 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 15:11:58 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
- copy_file_range
-Message-ID: <20200204151158.GA15992@suse.com>
-References: <20200203165117.5701-1-lhenriques@suse.com>
- <20200203165117.5701-2-lhenriques@suse.com>
- <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
+        Tue, 4 Feb 2020 10:21:31 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36029 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbgBDPVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:21:30 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so4165824wma.1;
+        Tue, 04 Feb 2020 07:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GhE5FW40OPB90pmIillZl/71nzFIm2pOC803DrZ4Spw=;
+        b=Z4H66yf0ClAGZ9BU9Y1LjQyl8Ns+xdotOdY3OLtZcf7OMRs2jRCAc1RFWdkKqv3Ge4
+         ajcwLi6kYGhEeQEv+X6c7uZtL310AGgjRwH6joEcoR56RGRNSK9Zbo4BSrecXFNUtu/d
+         RGpAhtm/ChL1jX7kNaOHhr8V9w+ZcV6fyjNiNrq89p85D84E4jNAiyLZgHmP2dX0dm3u
+         0PGue8Tk4zklj0ulPaa0t/GTe13hxoLZ9qpLakHhxydDCDRhEEpPxAKBB2MX0UxGyx86
+         VkkyldEAOrIbz6m9zM4Eg8UFJeCOkWi5K8QYFUBUDuOS35wYEL+OGy3HXpB6k2vMxFop
+         FGYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GhE5FW40OPB90pmIillZl/71nzFIm2pOC803DrZ4Spw=;
+        b=qZr5YYNB96MVATmMITWbK06SIoLbRDVI0ZOiDW5qflbAGfY8MzLTCJsMTtq6KFa92X
+         G3JpP1+QVa6rfeVBP6cmE68hasAjIbobhenNL51Y9J1j+GY3Yn2lhgyYDADAKSqP5LmM
+         AP2iSoC3lxot8W+QQ2pWzGj9vpSaFmlGtbcHtM/BU9p0dTIkMqzWL0YU5E8maZMIa2Oc
+         gsPENnYyO7D07sX2B2vfWb7Fo4q2JJ1/+bf49jZACYblie+TNO7JeiKN9o+uXBxDyB98
+         iiNRRVbUUI/diYNVViS917JsgTdLA+tTob/Fcmnu7TO+uhRVVAzRSl/ZStIT4baAzLtA
+         HzZQ==
+X-Gm-Message-State: APjAAAXo5DAQZF0aUTI4kUdyYZEOEkIuQzkW5nLj5V3pLOTrOmSEKy0h
+        E3S1h2z39vrk6S4VjltXnco=
+X-Google-Smtp-Source: APXvYqxj2GHvAQRiTyHO73SCccCsAxR0kmLAN3Xf1aA64me3ICvJ8h71Ene7V4cxj8rM4pJPz1nACw==
+X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr6184072wmk.131.1580829687814;
+        Tue, 04 Feb 2020 07:21:27 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id x10sm29902174wrv.60.2020.02.04.07.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 07:21:27 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] watchdog: qcom-wdt: add option to skip pretimeout
+Date:   Tue,  4 Feb 2020 16:21:01 +0100
+Message-Id: <20200204152104.13278-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
-...
-> > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > -               if (err) {
-> > -                       if (err == -EOPNOTSUPP) {
-> > -                               src_fsc->have_copy_from2 = false;
-> > -                               pr_notice("OSDs don't support 'copy-from2'; "
-> > -                                         "disabling copy_file_range\n");
-> > -                       }
-> > +               if (IS_ERR(req)) {
-> > +                       err = PTR_ERR(req);
-> >                         dout("ceph_osdc_copy_from returned %d\n", err);
-> > +
-> > +                       /* wait for all queued requests */
-> > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> 
-> Hi Luis,
-> 
-> Looks like ret is still incremented unconditionally?  What happens
-> if there are three OSD requests on the list and the first fails but
-> the second and the third succeed?  As is, ceph_osdc_wait_requests()
-> will return an error with reqs_complete set to 2...
-> 
-> >                         if (!ret)
-> >                                 ret = err;
-> 
-> ... and we will return 8M instead of an error.
+Some platform like ipq806x doesn't support pretimeout.
+As the driver check if there are available interrupts and ipq806x
+use msm-timer that require interrupts, the watchdog fail to probe
+as request_irq tries to use a ppi interrupt. Add an option to skip
+pretimeout setup and use the normal watchdog probe.
 
-Right, my assumption was that if a request fails, all subsequent requests
-would also fail.  This would allow ret to be updated with the number of
-successful requests (x object size), even if the OSDs replies were being
-delivered in a different order.  But from your comment I see that my
-assumption is incorrect.
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/watchdog/qcom-wdt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-In that case, when shall ret be updated with the number of bytes already
-written?  Only after a successful call to ceph_osdc_wait_requests()?
-I.e. only after each throttling cycle, when we don't have any requests
-pending completion?  In this case, I can simply drop the extra
-reqs_complete parameter to the ceph_osdc_wait_requests.
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index a494543d3ae1..e689e97e883e 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -189,6 +189,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	u32 percpu_offset;
+ 	int irq, ret;
+ 	struct clk *clk;
++	bool nopretimeout;
+ 
+ 	regs = of_device_get_match_data(dev);
+ 	if (!regs) {
+@@ -204,6 +205,8 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	if (!res)
+ 		return -ENOMEM;
+ 
++	nopretimeout = of_property_read_bool(np, "no-pretimeout");
++
+ 	/* We use CPU0's DGT for the watchdog */
+ 	if (of_property_read_u32(np, "cpu-offset", &percpu_offset))
+ 		percpu_offset = 0;
+@@ -247,7 +250,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 
+ 	/* check if there is pretimeout support */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq > 0) {
++	if (!nopretimeout && irq > 0) {
+ 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+ 				       IRQF_TRIGGER_RISING,
+ 				       "wdt_bark", &wdt->wdd);
+-- 
+2.24.0
 
-In your example the right thing to do would be to simply return an error,
-I guess.  But then we're assuming that we're loosing space in the storage,
-as we may have created objects that won't be reachable anymore.
-
-> 
-> >                         goto out_caps;
-> >                 }
-> > +               list_add(&req->r_private_item, &osd_reqs);
-> >                 len -= object_size;
-> >                 src_off += object_size;
-> >                 dst_off += object_size;
-> > -               ret += object_size;
-> > +               /*
-> > +                * Wait requests if we've reached the maximum requests allowed
-> > +                * or if this was the last copy
-> > +                */
-> > +               if ((--copy_count == 0) || (len < object_size)) {
-> > +                       err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> 
-> Same here.
-> 
-> > +                       if (err) {
-> > +                               if (err == -EOPNOTSUPP) {
-> > +                                       src_fsc->have_copy_from2 = false;
-> 
-> Since EOPNOTSUPP is special in that it triggers the fallback, it
-> should be returned even if something was copied.  Think about a
-> mixed cluster, where some OSDs support copy-from2 and some don't.
-> If the range is split between such OSDs, copy_file_range() will
-> always return short if the range happens to start on a new OSD.
-
-IMO, if we managed to copy some objects, we still need to return the
-number of bytes copied.  Because, since this return value will be less
-then the expected amount of bytes, the application will retry the
-operation.  And at that point, since we've set have_copy_from2 to 'false',
-the default VFS implementation will be used.
-
-> 
-> > +                                       pr_notice("OSDs don't support 'copy-from2'; "
-> > +                                                 "disabling copy_file_range\n");
-> 
-> This line is over 80 characters but shouldn't be split because it
-> is a grepable log message.  Also, this message was slightly tweaked
-> in ceph-client.git, so this patch doesn't apply.
-
-Ok.
-
-> > +                               }
-> > +                               if (!ret)
-> > +                                       ret = err;
-> > +                               goto out_caps;
-> 
-> I'm confused about out_caps.  Since a short copy is still copy which
-> may change the size, update mtime and ctime times, etc why aren't we
-> dirtying caps in these cases?
-
-Hmm...  yeah, this does look like a bug already present in the code.
-
-> > +                       }
-> > +                       copy_count = max_copies;
-> > +               }
-> >         }
-> >
-> >         if (len)
-> > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> > index 5a62dbd3f4c2..0121767cd65e 100644
-> > --- a/include/linux/ceph/osd_client.h
-> > +++ b/include/linux/ceph/osd_client.h
-> > @@ -496,6 +496,9 @@ extern int ceph_osdc_start_request(struct ceph_osd_client *osdc,
-> >  extern void ceph_osdc_cancel_request(struct ceph_osd_request *req);
-> >  extern int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
-> >                                   struct ceph_osd_request *req);
-> > +extern int ceph_osdc_wait_requests(struct list_head *osd_reqs,
-> > +                                  unsigned int *reqs_complete);
-> > +
-> >  extern void ceph_osdc_sync(struct ceph_osd_client *osdc);
-> >
-> >  extern void ceph_osdc_flush_notifies(struct ceph_osd_client *osdc);
-> > @@ -526,7 +529,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
-> >                                 struct timespec64 *mtime,
-> >                                 struct page **pages, int nr_pages);
-> >
-> > -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> > +struct ceph_osd_request *ceph_osdc_copy_from(
-> > +                       struct ceph_osd_client *osdc,
-> >                         u64 src_snapid, u64 src_version,
-> >                         struct ceph_object_id *src_oid,
-> >                         struct ceph_object_locator *src_oloc,
-> > diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> > index b68b376d8c2f..df9f342f860a 100644
-> > --- a/net/ceph/osd_client.c
-> > +++ b/net/ceph/osd_client.c
-> > @@ -4531,6 +4531,35 @@ int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
-> >  }
-> >  EXPORT_SYMBOL(ceph_osdc_wait_request);
-> >
-> > +/*
-> > + * wait for all requests to complete in list @osd_reqs, returning the number of
-> > + * successful completions in @reqs_complete
-> > + */
-> > +int ceph_osdc_wait_requests(struct list_head *osd_reqs,
-> > +                           unsigned int *reqs_complete)
-> > +{
-> > +       struct ceph_osd_request *req;
-> > +       int ret = 0, err;
-> > +       unsigned int counter = 0;
-> > +
-> > +       while (!list_empty(osd_reqs)) {
-> > +               req = list_first_entry(osd_reqs,
-> > +                                      struct ceph_osd_request,
-> > +                                      r_private_item);
-> > +               list_del_init(&req->r_private_item);
-> > +               err = ceph_osdc_wait_request(req->r_osdc, req);
-> > +               if (!err)
-> > +                       counter++;
-> 
-> I think you want to stop incrementing counter after encountering an
-> error...
-> 
-> Thanks,
-> 
->                 Ilya
-
-Cheers,
---
-Luís
