@@ -2,107 +2,104 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD721C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468BAC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C2421927
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qhm990Wx"
+	by mail.kernel.org (Postfix) with ESMTP id 184D420730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580856519;
+	bh=OuBNb9pRCpr2aDz2m+y/8WceLO92IqRoNNnHD6SjPsY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UtYBDCOUKjgnF8VRbKIkmwpX+X6yFla8c/94els6vLhFlD6YR8SaGlVoWkKmo7M0T
+	 cHr5GtWHT9364s/nQSBL3f/5uFHae3xFDR/Sv9UtNUE0SSOFMM600LjQHYA/hUXFWq
+	 R+hLD0Dv6e98ED58xBNlofWWT4nny07mhYrjZzLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgBDWpG (ORCPT
+        id S1727604AbgBDWsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:45:06 -0500
-Received: from ozlabs.org ([203.11.71.1]:34401 "EHLO ozlabs.org"
+        Tue, 4 Feb 2020 17:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBDWpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:45:06 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727412AbgBDWsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 17:48:37 -0500
+Received: from localhost (unknown [167.98.85.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48C0Bk6P1yz9sRG;
-        Wed,  5 Feb 2020 09:45:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580856303;
-        bh=XjnKhWUeT2aA272cve5msZ/Tda9nKnRkTA8Pr4oy1n4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Qhm990WxfqRRwkRtSwa0SJBCa904qwiBhhS9hBAqPBr+d2VXcSzRmh4fvTLT1vR+B
-         aoZpL0sKPjqjInpcQVSziNADhfNfTJWRFJcZHK9CmQlHuR9wtBH3JvlKDrp7mfTVKm
-         EKYdM/JScO6FjxLxGhheXl8EtrP2xApE8SbxxNlXY1cjTuR6s1Q93WVi+Uc4Zf50TD
-         ftki6fCnGiYruBRdxrvba+MEB77Vc3fHo7+tqDtxzFDF2f+VU+fryYVQPRPMLw3dn+
-         BaAlv+9/H/Rin07MStjg+9MTtFp7KB56YXxxFPxvZoueV5WcZIbi+1gIqJxpglBM5Z
-         cL41glO29ZoUw==
-Date:   Wed, 5 Feb 2020 09:44:56 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Frank Min <Frank.Min@amd.com>
-Subject: linux-next: build warning after merge of the amdgpu tree
-Message-ID: <20200205094456.7f41ec4e@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F33E20730;
+        Tue,  4 Feb 2020 22:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580856517;
+        bh=OuBNb9pRCpr2aDz2m+y/8WceLO92IqRoNNnHD6SjPsY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OueAhdlrHM04/MMfJF5IvTWRaNgVlXLhCWSIM97Xp4TDa4uDG7GSsiIGYZug0csC1
+         07bn/3iS5EDwbt+tj9FrlVKcZpn1AP+rx/L8aRnSYFBTNlSXoFW1pTYFsH03QBCGZ+
+         /CL1vWMNryLAMZ5X7TE6B5QTY0EdxsMclki5xVlw=
+Date:   Tue, 4 Feb 2020 22:48:35 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tomas Winkler <tomas.winkler@intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: constify properties in mfd_cell
+Message-ID: <20200204224835.GA1128093@kroah.com>
+References: <20200204201651.15778-1-tomas.winkler@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+4nzSf1pdYqPUBdli9k.RjM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204201651.15778-1-tomas.winkler@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+4nzSf1pdYqPUBdli9k.RjM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 04, 2020 at 10:16:51PM +0200, Tomas Winkler wrote:
+> Constify 'struct property_entry *properties' in
+> mfd_cell and platform_device. It is always passed
+> around as a pointer const struct.
+> 
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> ---
+>  include/linux/mfd/core.h        | 2 +-
+>  include/linux/platform_device.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> index d01d1299e49d..7e5ac3c00891 100644
+> --- a/include/linux/mfd/core.h
+> +++ b/include/linux/mfd/core.h
+> @@ -70,7 +70,7 @@ struct mfd_cell {
+>  	size_t			pdata_size;
+>  
+>  	/* device properties passed to the sub devices drivers */
+> -	struct property_entry *properties;
+> +	const struct property_entry *properties;
+>  
+>  	/*
+>  	 * Device Tree compatible string
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index 276a03c24691..8e83c6ff140d 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -89,7 +89,7 @@ struct platform_device_info {
+>  		size_t size_data;
+>  		u64 dma_mask;
+>  
+> -		struct property_entry *properties;
+> +		const struct property_entry *properties;
+>  };
+>  extern struct platform_device *platform_device_register_full(
+>  		const struct platform_device_info *pdevinfo);
+> -- 
+> 2.21.1
+> 
 
-Hi all,
+This really is two different patches, can you split and resend?
 
-After merging the amdgpu tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+thanks,
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c: In function 'amdgpu_xgmi_remove_d=
-evice':
-drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:466:3: warning: 'return' with no v=
-alue, in function returning non-void [-Wreturn-type]
-  466 |   return;
-      |   ^~~~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:461:5: note: declared here
-  461 | int amdgpu_xgmi_remove_device(struct amdgpu_device *adev)
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:470:3: warning: 'return' with no v=
-alue, in function returning non-void [-Wreturn-type]
-  470 |   return;
-      |   ^~~~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:461:5: note: declared here
-  461 | int amdgpu_xgmi_remove_device(struct amdgpu_device *adev)
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
-
-Introduced by commit
-
-  2fe4750e8506 ("drm/amdgpu: move xgmi init/fini to xgmi_add/remove_device =
-call")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+4nzSf1pdYqPUBdli9k.RjM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl458+gACgkQAVBC80lX
-0GxITwf/cH9GSswlD1acan05JLq1aabo0qjT7kk5myR7hvtjwt1e9UQnPzTVp+hN
-mzyV9+MpqOdn3WetotHQnSccPIIVTh2/bj8X9BXtDj8huv9EtV9/SAfHlvUUWHDy
-qJluJeySzqMOWtZWCj9x5l41Pq6BIXv1UZ3oBjn/49+UkvrdcyPGx5qpGQJW97XT
-Uv6RmP6VmSfSWXC5Am9R3qWem9Tph2QeBcbn25mfWVKjzsvgpF3GgqcnWlFLXfd7
-WdRh0z9TCMgkh4BwKtDPT5YVsbJMQQQVIhPZZc54y0YmkdhcE60zEWdxu4VRe5Ke
-edmxd2/vqT/UWyFyc0YSYi7Rm+xGpg==
-=+ka6
------END PGP SIGNATURE-----
-
---Sig_/+4nzSf1pdYqPUBdli9k.RjM--
+gre gk-h
