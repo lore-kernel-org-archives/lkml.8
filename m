@@ -2,89 +2,269 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412D2C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 01:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC7C35249
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 01:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A71A2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 01:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43FB21741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 01:24:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="IsfOtT9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBDBVm (ORCPT
+        id S1727084AbgBDBYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 20:21:42 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57692 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726369AbgBDBVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 20:21:41 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 46FACBF277107A2ED144;
-        Tue,  4 Feb 2020 09:21:39 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Feb 2020
- 09:21:29 +0800
-Subject: Re: [PATCH V4] brd: check and limit max_part par
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-References: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
- <20200203122005.GB31450@ming.t460p>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <9d82e25c-c909-3180-e987-260f53de51a4@huawei.com>
-Date:   Tue, 4 Feb 2020 09:21:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 3 Feb 2020 20:24:34 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34366 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBDBYd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 20:24:33 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l136so16830452oig.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 17:24:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zaDofTomGFH7niMxAvlM4SlRadN36KR0v+tIdhJo7+Q=;
+        b=IsfOtT9+NHHnq/sKg7+EGZj8H1jckeyOm5iMgQuY93l7vwexXpoM0gI8kVp2DFyCVP
+         aBgE/cTY6vrnR2MaC5QILyfCNFv9AIq/986DLz/syRYLB9a5SVa/AeVxohJSnv3e3bvV
+         dPx+gMnFD39YXULqYcXGvEV8+eDltTXa3qQgwvBNNzNRz8er2J2JmL/h3JfA8fRHDblz
+         6kt72a040EluXNLpv56fFzhkVmpekmFUDV/xB/mk+ay9eZU09EBifqzI493jIszzyxk5
+         5iQbeJHlA2IyrtQHWbudM6Vl1M4ChcY2PNFkV+yfOYcGwYHEe8lt+Bd2oHpXUW3GQo8e
+         EnqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zaDofTomGFH7niMxAvlM4SlRadN36KR0v+tIdhJo7+Q=;
+        b=CZltCBj6M7wWqSii+K91xvqljU5+NE80Y839bVvzLowy66O1B1+s+RQDxrgsfRGyHk
+         SnI5TyZrYwHq+gzk2z7BQUkIdjWOqo2zXAtDGrYRd7xlX1liqcFTN8JQmsYrdkgeCyxa
+         32I6Bil35m4xe3QUbSqo082nJ9UUaUfN9YQhuDW3Mk8RN4tU+/Mzbdo2y15yBjRWGVdB
+         RWJ9N7yoG2aXQZnY+mbK1PuujhX6XAetnZCpHx2nmfkrqh4N97sGw7/vcU1ae7e/GSQZ
+         7E1n+BuTJ88uDRQgc3bbFxSRa79/2KNvaFgk5EIWk0blBOFhNYf+TZkccDZlIUzA6L9J
+         7oUw==
+X-Gm-Message-State: APjAAAXAIhU4JX0THeItyN1IuUPE6IBkHIrtBZN/X8JGRvCZ68UDLqwC
+        tM3rIt3/19Y/EFHtGJm6bHM7lS7cRYkOv0GUIWNN8w==
+X-Google-Smtp-Source: APXvYqzH9aFwvXGqQNNkgrqsOiweMxROzznWHNNlwVOwzZcx0XlCLCOCWsgCWH6sPG1tYrPlD3IQpJGN4iYEgXuBuS4=
+X-Received: by 2002:aca:aa0e:: with SMTP id t14mr1557357oie.149.1580779471936;
+ Mon, 03 Feb 2020 17:24:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200203122005.GB31450@ming.t460p>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+References: <20200110190313.17144-1-joao.m.martins@oracle.com>
+In-Reply-To: <20200110190313.17144-1-joao.m.martins@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 3 Feb 2020 17:24:20 -0800
+Message-ID: <CAPcyv4g__yY-Gj1S7usijmMXYh8QbD5qtnMhyB27E7UtkK_ffQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/10] device-dax: Support devices without PFN metadata
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Nikita Leshenko <nikita.leshchenko@oracle.com>,
+        Barret Rhoden <brho@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 10, 2020 at 11:06 AM Joao Martins <joao.m.martins@oracle.com> wrote:
+>
+> Hey,
 
+Hi Joao,
 
-On 2020/2/3 20:26, Ming Lei wrote:
-> On Tue, Jan 21, 2020 at 12:04:41PM +0800, Zhiqiang Liu wrote:
->>
->> In brd_init func, rd_nr num of brd_device are firstly allocated
->> and add in brd_devices, then brd_devices are traversed to add each
->> brd_device by calling add_disk func. When allocating brd_device,
->> the disk->first_minor is set to i * max_part, if rd_nr * max_part
->> is larger than MINORMASK, two different brd_device may have the same
->> devt, then only one of them can be successfully added.
->> when rmmod brd.ko, it will cause oops when calling brd_exit.
->>
+>
+> Presented herewith a small series which allows device-dax to work without
+> struct page to be used to back KVM guests memory. It's an RFC, and there's
+> still some items we're looking at (see TODO below);
 
->> +static inline void brd_check_and_reset_par(void)
->> +{
->> +	if (unlikely(!max_part))
->> +		max_part = 1;
->> +
->> +	if (max_part > DISK_MAX_PARTS) {
->> +		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
->> +			DISK_MAX_PARTS, DISK_MAX_PARTS);
->> +		max_part = DISK_MAX_PARTS;
->> +	}
->> +
->> +	/*
->> +	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
->> +	 * otherwise, it is possiable to get same dev_t when adding partitions.
->> +	 */
->> +	if ((1U << MINORBITS) % max_part != 0)
->> +		max_part = 1UL << fls(max_part);
->> +}
-> 
-> You should move the above change before capping it to DISK_MAX_PARTS
-> since  1UL << fls() may increase 'max_part'.
-> 
-Thanks for your suggestion. I will send the v5 patch.
+So it turns out I already have some patches in flight that address
+discontiguous allocation item. Here's a WIP branch that I'll be
+sending out after the merge window closes.
 
+https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending
+
+> but wondering if folks
+> would be OK carving some time out of their busy schedules to provide feedback
+> direction-wise on this work.
+
+...apologies I did not get to this sooner. Please feel free to ping me
+after a week if you're awaiting comment on anything in the nvdimm or
+device-dax area.
+
+> In virtualized environments (specially those with no kernel-backed PV
+> interfaces, and just SR-IOV), memory is largelly assigned to guests: either
+> persistent with NVDIMMs or volatile for regular RAM. The kernel
+> (hypervisor) tracks it with 'struct page' (64b) for each 4K page. Overall
+> we're spending 16GB for each 1Tb of host memory tracked that the kernel won't
+> need  which could instead be used to create other guests. One of motivations of
+> this series is to then get that memory used for 'struct page', when it is meant
+> to solely be used by userspace.
+
+Do you mean reclaim it for the guest to use for 'struct page' capacity
+since the host hypervisor has reduced need for it?
+
+> This is also useful for the case of memory
+> backing guests virtual NVDIMMs. The other neat side effect is that the
+> hypervisor has no virtual mapping of the guest and hence code gadgets (if
+> found) are limited in their effectiveness.
+
+You mean just the direct-map? qemu still gets a valid virtual address,
+or are you proposing it's not mapped there either?
+
+> It is expected that a smaller (instead of total) amount of host memory is
+> defined for the kernel (with mem=X or memmap=X!Y). For KVM userspace VMM (e.g.
+> QEMU), the main thing that is needed is a device which open + mmap + close with
+> a certain alignment (4K, 2M, 1G). That made us look at device-dax which does
+> just that and so the work comprised here was improving what's there and the
+> interfaces it uses.
+
+In general I think this "'struct page'-less device-dax" capability
+makes sense, why suffer 1.6% capacity loss when that memory is going
+unused? My main concerns are:
+
+1/ Use of memmap=nn!ss when none of the persistent memory
+infrastructure is needed.
+
+2/ Auditing the new usage of VM_PFNMAP and what that means for
+memory-error handling and applications that expect 'struct page'
+services to be present.
+
+3/ "page-less" dreams have been dashed on the rocks in the past. The
+slow drip of missing features (ptrace(), direct-I/O, fork()...) is why
+the kernel now requires them by default for dax.
+
+For 1/ I have a proposal, for 2/ I need to dig in to what you have
+here, but maybe I can trade you some review on the discontiguous
+allocation patches. For 3/ can you say a bit more about why the
+overhead is intolerable?
+
+The proposal for 1/ is please let's not build more on top of
+memmap=nn!ss. It's fragile because there's no facility to validate
+that it is correct, the assumption is that the user overriding the
+memmap knows to pick address that don't collide and have real memory
+backing. Practice has shown that people get it wrong often enough that
+we need something better. It's also confusing that applications start
+seeing "Persistent Memory" in /proc/iomem when it's only there to
+shunt memory over to device-dax.
+
+The alternative is "efi_fake_mem=nn@ss:0x40000" and the related
+'soft-reservation' enabling that bypasses the persistent memory
+enabling and assigns memory to device-dax directly. EFI attribute
+override is safer because this attribute is only honored when applied
+to existing EFI conventional memory.
+
+Have a look at that branch just be warned it's not polished, or just
+wait for me to send them out with a proper cover letter, and I'll take
+a look at what you have below.
+
+>
+> The series is divided as follows:
+>
+>  * Patch 1 , 3: Preparatory work for patch 7 for adding support for
+>                vmf_insert_{pmd,pud} with dax pfn flags PFN_DEV|PFN_SPECIAL
+>
+>  * Patch 2 , 4: Preparatory work for patch 7 for adding support for
+>                follow_pfn() to work with 2M/1G huge pages, which is
+>                what KVM uses for VM_PFNMAP.
+>
+>  * Patch 5 - 7: One bugfix and device-dax support for PFN_DEV|PFN_SPECIAL,
+>                which encompasses mainly dealing with the lack of devmap,
+>                and creating a VM_PFNMAP vma.
+>
+>  * Patch 8: PMEM support for no PFN metadata only for device-dax namespaces.
+>            At the very end of the cover letter (after scissors mark),
+>            there's a patch for ndctl to be able to create namespaces
+>            with '--mode devdax --map none'.
+>
+>  * Patch 9: Let VFIO handle VM_PFNMAP without relying on vm_pgoff being
+>             a PFN.
+>
+>  * Patch 10: The actual end consumer example for RAM case. The patch just adds a
+>              label storage area which consequently allows namespaces to be
+>              created. We picked PMEM legacy for starters.
+>
+> Thoughts, coments appreciated.
+>         Joao
+>
+> P.S. As an example to try this out:
+>
+>  1) add 'memmap=48G!16G' to the kernel command line, on a host with 64G,
+>  and kernel has 16G.
+>
+>  2) create a devdax namespace with 1G hugepages:
+>
+>  $ ndctl create-namespace --verbose --mode devdax --map none --size 32G --align 1G -r 0
+>  {
+>   "dev":"namespace0.0",
+>   "mode":"devdax",
+>   "map":"none",
+>   "size":"32.00 GiB (34.36 GB)",
+>   "uuid":"dfdd05cd-2611-46ac-8bcd-10b6194f32d4",
+>   "daxregion":{
+>     "id":0,
+>     "size":"32.00 GiB (34.36 GB)",
+>     "align":1073741824,
+>     "devices":[
+>       {
+>         "chardev":"dax0.0",
+>         "size":"32.00 GiB (34.36 GB)",
+>         "target_node":0,
+>         "mode":"devdax"
+>       }
+>     ]
+>   },
+>   "align":1073741824
+>  }
+>
+>  3) Add this to your qemu params:
+>   -m 32G
+>   -object memory-backend-file,id=mem,size=32G,mem-path=/dev/dax0.0,share=on,align=1G
+>   -numa node,memdev=mem
+>
+> TODO:
+>
+>  * Discontiguous regions/namespaces: The work above is limited to max
+> contiguous extent, coming from nvdimm dpa allocation heuristics -- which I take
+> is because of what specs allow for persistent namespaces. But for volatile RAM
+> case we would need handling of discontiguous extents (hence a region would represent
+> more than a resource) to be less bound to how guests are placed on the system.
+> I played around with multi-resource for device-dax, but I'm wondering about
+> UABI: 1) whether nvdimm DPA allocation heuristics should be relaxed for RAM
+> case (under certain nvdimm region bits); or if 2) device-dax would have it's
+> own separate UABI to be used by daxctl (which would be also useful for hmem
+> devices?).
+>
+>  * MCE handling: For contiguous regions vm_pgoff could be set to the pfn in
+> device-dax, which would allow collect_procs() to find the processes solely based
+> on the PFN. But for discontiguous namespaces, not sure if this would work; perhaps
+> looking at the dax-region pfn range for each DAX vma.
+
+You mean, make the memory error handling device-dax aware?
+
+>
+>  * NUMA: For now excluded setting the target_node; while these two patches
+>  are being worked on[1][2].
+>
+>  [1] https://lore.kernel.org/lkml/157401276776.43284.12396353118982684546.stgit@dwillia2-desk3.amr.corp.intel.com/
+>  [2] https://lore.kernel.org/lkml/157401277293.43284.3805106435228534675.stgit@dwillia2-desk3.amr.corp.intel.com/
+
+I'll ping x86 folks again after the merge window. I expect they have
+just not had time to ack them yet.
