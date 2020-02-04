@@ -2,219 +2,130 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D65C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354F2C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F58221741
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0993021741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="muEMdnhD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u5lJU7Jh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7Cjy7lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgBDJUA (ORCPT
+        id S1726981AbgBDJUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:20:00 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50471 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726554AbgBDJUA (ORCPT
+        Tue, 4 Feb 2020 04:20:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46190 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726506AbgBDJUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:20:00 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 59B186B76;
-        Tue,  4 Feb 2020 04:19:58 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 04 Feb 2020 04:19:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=x4lyZnW5C94NfX9C1zEMyUaspjy
-        lIhh7aPoztF74m5c=; b=muEMdnhDQ+bTk2YEyzZPghqhY3VJVq5qOVd8NnIvzo1
-        1v0IUNwdPCmJrVxK4WqQ5vtpIrt1E9kZsULc+Zr+bOGEqUFmyAdV1hYxSWJjPaE3
-        w1XHJ6foSS5FEMzJmvjcA976KdZgtrojUYwEaQFrcQFIOC4dcW80Lu0WxVDIWaXa
-        iyI2pcKSVAOLniHLLXWpGlW+dYPaNa5qDhA4eSdH7E7flgJGhwgBfYJSAugnDqbx
-        vIb7z0TpyEZf0hZsxMWWi4y6fOUHjyu2l1DhIg6xx0hZs8WTVQ9M0U//hlKqSN6S
-        1TJqdYxlB4rm/UiOHJ/p4L2M9/peZfb2PNUhHNR/+Xg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=x4lyZn
-        W5C94NfX9C1zEMyUaspjylIhh7aPoztF74m5c=; b=u5lJU7JhJcrZtKQRcmrAxA
-        /UyFU3w5EzuqZMvB9hxipXPXzRfWzPS/r3Wi1tW1G5Z8YSZTw/KyLJYyf3ajPbN2
-        EuR4QNVmD7/v2yMJQ3I6HjjmVCt1XC5kK/J648RTACqi+NJYa6AVPqJdwONP7QuK
-        YPmnM0kfSO78B9wIXclXWCkFEfOBqGZufvg9tgpUyLQc/ozwUYAd1c/P7/d0Ayth
-        LmUb4X3Bfqbv/TlNP+CH/89XT9goaFCXKWYPXUhS6jza57BwjoSc2lltzaeYzCDd
-        ok3MQsvHEKLZsy5kyTh/8irPfU4HZXNTo8828fiz2YKcFp/pDXejgAWQdVZgykQQ
-        ==
-X-ME-Sender: <xms:PDc5Xq02AxCfAFgRtkb6tRwZf7wGEE4687_w6Jd0HIGFjgJ9JPV1Rw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeelgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:PDc5XgBMh_8nOAw7B3cMzQtSqeGyhnSgBAW3H_IlmWPVBOOvNAto3w>
-    <xmx:PDc5XnEn5YITSLPoIMnnYQCTJg4jAa9CnAqF8fGaU5I66PVuhevoIQ>
-    <xmx:PDc5XpDU3Rb5S3xbjgDiZtaG4g53ogju3QEQ9-Ln-AjfyNTg-lR8sw>
-    <xmx:Pjc5XiAaywj81i7AfV_Z1EYGEoOIiLSRyq4fC7xZQolWtPR-10Qsvw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 86DDC328005A;
-        Tue,  4 Feb 2020 04:19:56 -0500 (EST)
-Date:   Tue, 4 Feb 2020 10:19:54 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH 11/12] dt-bindings: arm: Document Broadcom SoCs
- 'secondary-boot-reg'
-Message-ID: <20200204091954.4zdxow4ijqnmvbdj@gilmour.lan>
-References: <20200202211827.27682-1-f.fainelli@gmail.com>
- <20200202211827.27682-12-f.fainelli@gmail.com>
- <20200203083403.6wmuduxqsv7quujp@gilmour.lan>
- <2744136e-a6e7-de19-4142-04f7edf0c6ea@gmail.com>
+        Tue, 4 Feb 2020 04:20:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580808019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4HmF44R80GKRh8aK+Z42+sLW1TADRobX8DrtXDK9DG0=;
+        b=f7Cjy7lzceiCH+FgPQBvBeyiyzjbOnHSvz/+N4jb2LqhQVQ0r9ycy1VOIhZ2DcB/ua1zzu
+        zOk4PejpCqFckLFOglYzGy/zYM4gBIy556ymRoZOCFhF9rsTqBQK/bqCNwUnvlxGm95WtY
+        kFuobHO/HNBSxi6CHHeYUV4DdYfQxmg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-f5tWAjK_NNumwGHVwxlfuA-1; Tue, 04 Feb 2020 04:20:17 -0500
+X-MC-Unique: f5tWAjK_NNumwGHVwxlfuA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CF4F18A6EC6;
+        Tue,  4 Feb 2020 09:20:14 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-32.pek2.redhat.com [10.72.8.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 759B690F57;
+        Tue,  4 Feb 2020 09:20:08 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 17:20:04 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Salman Qazi <sqazi@google.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O
+ scheduler in one go
+Message-ID: <20200204092004.GB19922@ming.t460p>
+References: <CAKUOC8U03G27b6E7Z6mBo6RB=D7bKS_MQPwexEZiA7SOt_Lyvw@mail.gmail.com>
+ <20200203205950.127629-1-sqazi@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vg5cqlhr5mk6q6uh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2744136e-a6e7-de19-4142-04f7edf0c6ea@gmail.com>
+In-Reply-To: <20200203205950.127629-1-sqazi@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 03, 2020 at 12:59:50PM -0800, Salman Qazi wrote:
+> We observed that it is possible for a flush to bypass the I/O
+> scheduler and get added to hctx->dispatch in blk_mq_sched_bypass_insert.
 
---vg5cqlhr5mk6q6uh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+We always bypass io scheduler for flush request.
 
-On Mon, Feb 03, 2020 at 09:29:30PM -0800, Florian Fainelli wrote:
->
->
-> On 2/3/2020 12:34 AM, Maxime Ripard wrote:
-> > On Sun, Feb 02, 2020 at 01:18:26PM -0800, Florian Fainelli wrote:
-> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> >> index c23c24ff7575..6f56a623c1cd 100644
-> >> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> >> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> >> @@ -272,6 +272,22 @@ properties:
-> >>        While optional, it is the preferred way to get access to
-> >>        the cpu-core power-domains.
-> >>
-> >> +  secondary-boot-reg:
-> >> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> >> +    description: |
-> >> +      Required for systems that have an "enable-method" property value of
-> >> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
-> >> +
-> >> +      This includes the following SoCs: |
-> >> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
-> >> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
-> >> +
-> >> +      The secondary-boot-reg property is a u32 value that specifies the
-> >> +      physical address of the register used to request the ROM holding pen
-> >> +      code release a secondary CPU. The value written to the register is
-> >> +      formed by encoding the target CPU id into the low bits of the
-> >> +      physical start address it should jump to.
-> >> +
-> >
-> > You can make the requirement explicit (and enforced by the schemas) using:
-> >
-> > if:
-> >   properties:
-> >     enable-method:
-> >       contains:
-> >         enum:
-> > 	  - brcm,bcm11351-cpu-method
-> > 	  - brcm,bcm23550
-> > 	  - brcm,bcm-nsp-smp
-> >
-> > then:
-> >   required:
-> >     - secondary-boot-reg
->
-> Thanks! That was exactly what I was looking for, it seems to be matching
-> a bit too greedily though:
->
->   DTC     arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml
->   CHECK   arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml
-> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
-> cpu@0: 'secondary-boot-reg' is a required property
-> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
-> cpu@1: 'secondary-boot-reg' is a required property
-> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
-> cpu@2: 'secondary-boot-reg' is a required property
-> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
-> cpu@3: 'secondary-boot-reg' is a required property
->   DTC     arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dt.yaml
->
-> not sure why though as your example appears correct.
+> This can happen while a kworker is running blk_mq_do_dispatch_sched call
+> in blk_mq_sched_dispatch_requests.
+> 
+> However, the blk_mq_do_dispatch_sched call doesn't end in bounded time.
+> As a result, the flush can sit there indefinitely, as the I/O scheduler
+> feeds an arbitrary number of requests to the hardware.
 
-Yeah, sorry, that's on me :)
+blk-mq supposes to handle requests in hctx->dispatch with higher
+priority, see blk_mq_sched_dispatch_requests().
 
-The nodes that are generating this error are the cpu@[0-3] ones, and
-they don't have the enable-method property at all.
+However, there is single hctx->run_work, so async run queue for dispatching
+flush request can only be run until another async run queue from scheduler
+is done.
 
-This is because if needs a schema, and will only try to validate the
-schema under then if the one under if is valid.
+> 
+> The solution is to periodically poll hctx->dispatch in
+> blk_mq_do_dispatch_sched, to put a bound on the latency of the commands
+> sitting there.
+> 
+> Signed-off-by: Salman Qazi <sqazi@google.com>
+> ---
+>  block/blk-mq-sched.c   |  6 ++++++
+>  block/blk-mq.c         |  4 ++++
+>  block/blk-sysfs.c      | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/blkdev.h |  2 ++
+>  4 files changed, 45 insertions(+)
+> 
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index ca22afd47b3d..75cdec64b9c7 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -90,6 +90,7 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  	struct request_queue *q = hctx->queue;
+>  	struct elevator_queue *e = q->elevator;
+>  	LIST_HEAD(rq_list);
+> +	int count = 0;
+>  
+>  	do {
+>  		struct request *rq;
+> @@ -97,6 +98,10 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+>  			break;
+>  
+> +		if (count > 0 && count % q->max_sched_batch == 0 &&
+> +		    !list_empty_careful(&hctx->dispatch))
+> +			break;
 
-The one under if contains a list of values for enable-method, but in
-the case where enable-method is absent, the schema will be valid, and
-thus the schema under then will be applied.
+q->max_sched_batch may not be needed, and it is reasonable to always
+disaptch requests in hctx->dispatch first.
 
-What we actually want to express is "if there's an enable-method
-property, and that property contains those three values, then you need
-to have a secondary-boot-reg property."
+Also such trick is missed in dispatch from sw queue.
 
-So you need:
 
-if:
-  # If the enable-method property contains one of those values
-  properties:
-    enable-method:
-      contains:
-        enum:
-          - brcm,bcm11351-cpu-method
-          - brcm,bcm23550
-          - brcm,bcm-nsp-smp
+Thanks,
+Ming
 
-  # and if enable method is present
-  required:
-    - enable-method
-
-# Then we need secondary-boot-reg too
-then:
-  required:
-    - secondary-boot-reg
-
-Maxime
-
---vg5cqlhr5mk6q6uh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjk3NQAKCRDj7w1vZxhR
-xUJqAP9PY/enY2j1VQJ01XYs+KegUxo9BgTuq8dCybDPrips1QEArb4oFWY9TC8/
-z/m1a1AkxlYIO28zaAO8oofwiueDjAQ=
-=AiEU
------END PGP SIGNATURE-----
-
---vg5cqlhr5mk6q6uh--
