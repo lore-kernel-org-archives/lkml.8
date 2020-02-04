@@ -2,95 +2,109 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B46C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5A7C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D12721D7E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AE92192A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580810739;
-	bh=sVWw5io65CFud55R48cwmbeybCwucc32GqEz2clXunY=;
+	s=default; t=1580810744;
+	bh=ydG7oHl6UEGUJ5PULCZPSOsM9FlmM3TxwNrJs/CzYIM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KtUBhAdfTkvjYCxEkTWJwetmA9h8zMnRvTqnRum8OR1cznesjHpq9eLy6gSBqxGR2
-	 UVK8CqZyERtZHRTDUsr246GLrwNTT/UZn8FbNNwHbn0h7h0HOYB19i8P2BPc/NZUvN
-	 QGbUc7SORnop5osMOaxN5vJtij5Z/4pmomrlWu34=
+	b=kx7d/3L1GhJwMcvwQturIS1vTla6alRrQdB8T0Zlk95VUpNYyMNz65r/JmpBUyV3Z
+	 +TipRpQiHWhAkacFpH97FfuukPSlLruY6PGB8NUnufF9cClQnEeavuH5ugHGqN9J8x
+	 7d8DKA2sArdFzUbGJlZIFtnsHx8/CKTFSo7rkx2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgBDKFj (ORCPT
+        id S1727149AbgBDKFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:05:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
+        Tue, 4 Feb 2020 05:05:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgBDKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:05:38 -0500
+        id S1726554AbgBDKFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 05:05:41 -0500
 Received: from localhost (unknown [212.187.182.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDCA2192A;
-        Tue,  4 Feb 2020 10:05:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADB6921D7E;
+        Tue,  4 Feb 2020 10:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580810738;
-        bh=sVWw5io65CFud55R48cwmbeybCwucc32GqEz2clXunY=;
+        s=default; t=1580810741;
+        bh=ydG7oHl6UEGUJ5PULCZPSOsM9FlmM3TxwNrJs/CzYIM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ax84ru3DK2QxnRTnncBb96xb4kYi7b9Nl02GW0bc1uYLwCNmBIZKvAejB5unuRIbP
-         swUYQujkGap5VWVJB/accBIEXOfyiz0/V9EXV6CS0OpVIqIrjk8o/j6nyJfou35mT8
-         Ps/R7s0IwOQNnQffVe81oqnurYtgOu/hAz+uqYaw=
-Date:   Tue, 4 Feb 2020 10:02:32 +0000
-From:   Greg KH <gregkh@linuxfoundation.org>
+        b=u4Nq2APgyPAtxR9GfW2rgOgAgLWRzv/9dPZ9DN6ydK0YvYAqO7Xe3KBkDPPFIvlqg
+         GbXfEgRS0xtTUPYVvarpKN5h9EVfztA4G9OZP+ExDnUZ9wgD6h6eJmlpARXKh100uI
+         wvEaw75CZKv+zfNrnFnoJuD9MV1gYMPa3Yd7n0ak=
+Date:   Tue, 4 Feb 2020 10:03:32 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Johan Hovold <johan@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        stable@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martink@posteo.de>
-Subject: Re: [PATCH 1/7] Input: pegasus_notetaker: fix endpoint sanity check
-Message-ID: <20200204100232.GB1088789@kroah.com>
-References: <20191210113737.4016-1-johan@kernel.org>
- <20191210113737.4016-2-johan@kernel.org>
- <20200204082441.GD26725@localhost>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 65/90] Input: aiptek - use descriptors of current
+ altsetting
+Message-ID: <20200204100332.GC1088789@kroah.com>
+References: <20200203161917.612554987@linuxfoundation.org>
+ <20200203161925.451117468@linuxfoundation.org>
+ <20200204081155.GC26725@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204082441.GD26725@localhost>
+In-Reply-To: <20200204081155.GC26725@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 09:24:41AM +0100, Johan Hovold wrote:
-> On Tue, Dec 10, 2019 at 12:37:31PM +0100, Johan Hovold wrote:
-> > The driver was checking the number of endpoints of the first alternate
-> > setting instead of the current one, something which could be used by a
-> > malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
-> > dereference.
+On Tue, Feb 04, 2020 at 09:11:55AM +0100, Johan Hovold wrote:
+> On Mon, Feb 03, 2020 at 04:20:08PM +0000, Greg Kroah-Hartman wrote:
+> > From: Johan Hovold <johan@kernel.org>
 > > 
-> > Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
-> > Cc: stable <stable@vger.kernel.org>     # 4.8
-> > Cc: Martin Kepplinger <martink@posteo.de>
+> > [ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
+> > 
+> > Make sure to always use the descriptors of the current alternate setting
+> > to avoid future issues when accessing fields that may differ between
+> > settings.
+> > 
 > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > Acked-by: Vladis Dronov <vdronov@redhat.com>
+> > Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  drivers/input/tablet/aiptek.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
+> > index 06d0ffef4a171..e08b0ef078e81 100644
+> > --- a/drivers/input/tablet/aiptek.c
+> > +++ b/drivers/input/tablet/aiptek.c
+> > @@ -1713,7 +1713,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
+> >  
+> >  	aiptek->inputdev = inputdev;
+> >  	aiptek->intf = intf;
+> > -	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
+> > +	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
+> >  	aiptek->inDelay = 0;
+> >  	aiptek->endDelay = 0;
+> >  	aiptek->previousJitterable = 0;
 > 
-> Looks like the stable tag was removed when this one was applied, and
-> similar for patches 2, 4 and 7 of this series (commits 3111491fca4f,
-> a8eeb74df5a6, 6b32391ed675 upstream).
-> 
-> While the last three are mostly an issue for the syzbot fuzzer, we have
-> started backporting those as well.
-> 
-> This one (bcfcb7f9b480) is more clear cut as it can be used to trigger a
-> NULL-deref.
-> 
-> I only noticed because Sasha picked up one of the other patches in the
-> series which was never intended for stable.
+> I asked Sasha to drop this one directly when he added it, so it's
+> probable gone from all the stable queues by now.
 
-Did I end up catching all of these properly?  I've had to expand my
-search for some patches like this that do not explicitly have the cc:
-stable mark on them as not all subsystems do this well (if at all.)
+Oops, no, let me go drop it.
 
-And there's also Sasha's work in digging up patches based on patterns of
-fixes, which also is needed because of this "problem".
+> But I'm still curious how this ended up being selected for stable in the
+> first place? There's no fixes or stable tag in the commit, and I never
+> received a mail from the AUTOSEL scripts.
+
+I don't know, there was a bunch of last-minute patches picked up for
+this round based on some "fixes needed due to other fixes".
 
 thanks,
 
