@@ -2,127 +2,249 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC93C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B49C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43D22087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iu0Id/we"
+	by mail.kernel.org (Postfix) with ESMTP id 54FAF2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgBDGll (ORCPT
+        id S1726832AbgBDGqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:41:41 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42677 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgBDGll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:41:41 -0500
-Received: by mail-pg1-f196.google.com with SMTP id w21so3392470pgl.9;
-        Mon, 03 Feb 2020 22:41:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=yaKe1siexgkghfuXyyVMtu7FqrPaWKb5BcT/yW/rvqU=;
-        b=iu0Id/we7thuNm03dUaMlyf4jqnKVPQG1JuqxwLwkHPLkPJSyAMl/d9dA0g9eya/8J
-         qWDf8vf0J+QM8EXG4cqHrZAZdVlXxybScgwFi8ZjCTPRps7RYVglw+XvUndPNVQupqny
-         j1H67WjnJ8X2PxOc3XD7h8AvyNJ9BFaFMb8mVtuSC13XNxr5hON63Y96TvygYV+axq8o
-         PZcieNKw37aQEcQRX14WfGZR8HGz+AewTQsCF6p/dR+dWX//G9LvCVLmemlTqEOX/Pz7
-         vsNT0sTVX96pipG9y0uYGNjNlSPa74PNo6GfNhsd+lb4lzOuMvif2pCUGMyRkNuZNP7x
-         GznQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=yaKe1siexgkghfuXyyVMtu7FqrPaWKb5BcT/yW/rvqU=;
-        b=AL9CbbXJL8QR49dKiw4Uk/2Up/REv9nahabsTWmmtaT5W6GrOLapdzPcoHkQG6WvZb
-         PWmeUUxckH5WQUuhoZwcBZ50Sgkw8NhXbb+1U35yzpbfLJPh4Ul7KGymm44bzg2AvpLc
-         EvnsgCNO/iClds/bUvuZ8YMIUXaLWmaT68yEsvBtqIkJKjaQSBb3brgkqepmF+BFil7x
-         jD1/zEdGTuX/KZe6HSPwm15NGzVFRJkNjBho5oVhsHZ+eJ4rFMSin5ZFcQe0ZmjmFAm9
-         leDmj7wONiyWQCW/al/rCouwkTnKWSFRENjg4Mr7VAnkDaehQuqO4ray1EjA6do9RSCP
-         gROA==
-X-Gm-Message-State: APjAAAWeoamc7qWUAJ61loLL7qTO6IV3LstVh7JFcaoH6CLBoKfYouPC
-        a9sDh7bM9tJruQMk8k4f53o=
-X-Google-Smtp-Source: APXvYqzkD7oRT/xhxds+G4gJnMatFwe0kUy0+D+knfi/41Azmd6utM5/Dsy6nF0wRcwHVn4tzM+v6Q==
-X-Received: by 2002:a62:1dca:: with SMTP id d193mr29801977pfd.140.1580798499088;
-        Mon, 03 Feb 2020 22:41:39 -0800 (PST)
-Received: from localhost.localdomain ([106.254.212.20])
-        by smtp.gmail.com with ESMTPSA id v7sm22547213pfn.61.2020.02.03.22.41.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 22:41:38 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     sj38.park@gmail.com
-Cc:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if .kunitconfig is modified
-Date:   Tue,  4 Feb 2020 07:41:29 +0100
-Message-Id: <20200204064129.4947-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200126015924.4198-1-sj38.park@gmail.com> (raw)
+        Tue, 4 Feb 2020 01:46:20 -0500
+Received: from mga18.intel.com ([134.134.136.126]:38892 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgBDGqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 01:46:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 22:46:19 -0800
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="224200809"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.164]) ([10.255.30.164])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 03 Feb 2020 22:46:16 -0800
+Subject: Re: [PATCH v2 4/6] kvm: vmx: Extend VMX's #AC handding for split lock
+ in guest
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Laight <David.Laight@aculab.com>
+References: <20200203151608.28053-1-xiaoyao.li@intel.com>
+ <20200203151608.28053-5-xiaoyao.li@intel.com>
+ <20200203211458.GG19638@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <2b95a6ef-828d-768c-f9c6-2e798485717e@intel.com>
+Date:   Tue, 4 Feb 2020 14:46:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200203211458.GG19638@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping?
-
-
-Thanks,
-SeongJae Park
-
-On Sun, 26 Jan 2020 01:59:24 +0000 sj38.park@gmail.com wrote:
-
-> From: SeongJae Park <sjpark@amazon.de>
+On 2/4/2020 5:14 AM, Sean Christopherson wrote:
+> On Mon, Feb 03, 2020 at 11:16:06PM +0800, Xiaoyao Li wrote:
+>> There are two types of #AC can be generated in Intel CPUs:
+>>   1. legacy alignment check #AC;
+>>   2. split lock #AC;
+>>
+>> Legacy alignment check #AC can be injected to guest if guest has enabled
+>> alignemnet check.
+>>
+>> When host enables split lock detection, i.e., split_lock_detect != off,
+>> guest will receive an unexpected #AC when there is a split lock happens
+>> since KVM doesn't virtualize this feature to guest hardware value of
+>> MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit stays unchanged when vcpu is running.
+>>
+>> Since old guests lack split_lock #AC handler and may have split lock buges.
+>> To make them survive from split lock, applying the similar policy
+>> as host's split lock detect configuration:
+>>   - host split lock detect is sld_warn:
+>>     warn the split lock happened in guest, and disabling split lock
+>>     detect during vcpu is running to allow the guest to continue running.
+>>   - host split lock detect is sld_fatal:
+>>     forwarding #AC to userspace, somewhat similar as sending SIGBUS.
+>>
+>> Please note:
+>> 1. If sld_warn and SMT is enabled, the split lock in guest's vcpu
+>> leads to disable split lock detect on the sibling CPU thread during
+>> the vcpu is running.
+>>
+>> 2. When host is sld_warn, it allows guest to generate split lock which also
+>> opens the door for malicious guest to do DoS attack. It is same that in
+>> sld_warn mode, userspace application can do DoS attack.
+>>
+>> 3. If want to prevent DoS attack from guest, host must use sld_fatal mode.
+>>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>>   arch/x86/kvm/vmx/vmx.c | 48 +++++++++++++++++++++++++++++++++++++++---
+>>   arch/x86/kvm/vmx/vmx.h |  3 +++
+>>   2 files changed, 48 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index c475fa2aaae0..93e3370c5f84 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -4233,6 +4233,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>>   
+>>   	vmx->msr_ia32_umwait_control = 0;
+>>   
+>> +	vmx->disable_split_lock_detect = false;
+>> +
 > 
-> Deletions of configs in the '.kunitconfig' is not applied because kunit
-> rebuilds '.config' only if the '.config' is not a subset of the
-> '.kunitconfig'.  To allow the deletions to applied, this commit modifies
-> the '.config' rebuild condition to addtionally check the modified times
-> of those files.
+> I see no reason to give special treatment to RESET/INIT, i.e. leave the
+> flag set.  vCPUs are zeroed on allocation.
+
+So when guest reboots, it doesn't need to reset it to false?
+I am not clear about difference between RESET and INIT, so I didn't 
+differentiate them into different case with init_event
+
+>>   	vcpu->arch.microcode_version = 0x100000000ULL;
+>>   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
+>>   	vmx->hv_deadline_tsc = -1;
+>> @@ -4557,6 +4559,12 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
+>>   	return 1;
+>>   }
+>>   
+>> +static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
+>> +	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
+>> +}
+>> +
+>>   static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>>   {
+>>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>> @@ -4622,9 +4630,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>>   		return handle_rmode_exception(vcpu, ex_no, error_code);
+>>   
+>>   	switch (ex_no) {
+>> -	case AC_VECTOR:
+>> -		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
+>> -		return 1;
+>>   	case DB_VECTOR:
+>>   		dr6 = vmcs_readl(EXIT_QUALIFICATION);
+>>   		if (!(vcpu->guest_debug &
+>> @@ -4653,6 +4658,33 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>>   		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
+>>   		kvm_run->debug.arch.exception = ex_no;
+>>   		break;
+>> +	case AC_VECTOR:
+>> +		/*
+>> +		 * Inject #AC back to guest only when legacy alignment check
+>> +		 * enabled.
+>> +		 * Otherwise, it must be an unexpected split-lock #AC for guest
+>> +		 * since KVM keeps hardware SPLIT_LOCK_DETECT bit unchanged
+>> +		 * when vcpu is running.
+>> +		 *  - If sld_state == sld_warn, treat it similar as user space
+>> +		 *    process that warn and allow it to continue running.
+>> +		 *    In this case, setting vmx->diasble_split_lock_detect to
+>> +		 *    true so that it will toggle MSR_TEST.SPLIT_LOCK_DETECT
+>> +		 *    bit during every following VM Entry and Exit;
+>> +		 *  - If sld_state == sld_fatal, it forwards #AC to userspace,
+>> +		 *    similar as sending SIGBUS.
+>> +		 */
+>> +		if (guest_cpu_alignment_check_enabled(vcpu) ||
+>> +		    WARN_ON(get_split_lock_detect_state() == sld_off)) {
 > 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> ---
->  tools/testing/kunit/kunit_kernel.py | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+> Eh, I'd omit the WARN.  And invert the ordering to avoid multiple VMREADs
+> when SLD is disabled, which will be the common case.
 > 
-> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-> index cc5d844ecca1..a3a5d6c7e66d 100644
-> --- a/tools/testing/kunit/kunit_kernel.py
-> +++ b/tools/testing/kunit/kunit_kernel.py
-> @@ -111,17 +111,22 @@ class LinuxSourceTree(object):
->  		return True
->  
->  	def build_reconfig(self, build_dir):
-> -		"""Creates a new .config if it is not a subset of the .kunitconfig."""
-> +		"""Creates a new .config if it is not a subset of, or older than the .kunitconfig."""
->  		kconfig_path = get_kconfig_path(build_dir)
->  		if os.path.exists(kconfig_path):
->  			existing_kconfig = kunit_config.Kconfig()
->  			existing_kconfig.read_from_file(kconfig_path)
-> -			if not self._kconfig.is_subset_of(existing_kconfig):
-> -				print('Regenerating .config ...')
-> -				os.remove(kconfig_path)
-> -				return self.build_config(build_dir)
-> -			else:
-> +			subset = self._kconfig.is_subset_of(existing_kconfig)
-> +
-> +			kunitconfig_mtime = os.path.getmtime(kunitconfig_path)
-> +			kconfig_mtime = os.path.getmtime(kconfig_path)
-> +			older = kconfig_mtime < kunitconfig_mtime
-> +
-> +			if subset and not older:
->  				return True
-> +			print('Regenerating .config ...')
-> +			os.remove(kconfig_path)
-> +			return self.build_config(build_dir)
->  		else:
->  			print('Generating .config ...')
->  			return self.build_config(build_dir)
-> -- 
-> 2.17.1
+>> +			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
+>> +			return 1;
+>> +		}
+>> +		if (get_split_lock_detect_state() == sld_warn) {
+>> +			pr_warn("kvm: split lock #AC happened in %s [%d]\n",
+>> +				current->comm, current->pid);
+> 
+> Set TIF_SLD and the MSR bit, then __switch_to_xtra() will automatically
+> handle writing the MSR when necessary.
+
+Right, we can do this.
+
+However, if using TIF_SLD and __switch_to_xtra() to switch MSR bit. Once 
+there is a split lock in guest, it set TIF_SLD for the vcpu thread, so 
+it loses the capability to find and warn the split locks in the user 
+space thread, e.g., QEMU vcpu thread, and also loses the capability to 
+find the split lock in KVM.
+
+If it's not a problem, I agree to use TIF_SLD.
+
+> Even better would be to export handle_user_split_lock() and call that
+> directly.  The EFLAGS.AC logic in handle_user_split_lock() can be moved out
+> to do_alignment_check() to avoid that complication; arguably that should be
+> done in the initial SLD patch.
+
+the warning message of handle_user_split_lock() contains the RIP of 
+userspace application. If use it here, what RIP should we use? the guest 
+RIP of the faulting instruction?
+
+>> +			vmx->disable_split_lock_detect = true;
+>> +			return 1;
+>> +		}
+>> +		/* fall through*/
+>>   	default:
+>>   		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
+>>   		kvm_run->ex.exception = ex_no;
+>> @@ -6530,6 +6562,11 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>   	 */
+>>   	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
+>>   
+>> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
+>> +	    unlikely(vmx->disable_split_lock_detect) &&
+>> +	    !test_tsk_thread_flag(current, TIF_SLD))
+>> +		split_lock_detect_set(false);
+>> +
+>>   	/* L1D Flush includes CPU buffer clear to mitigate MDS */
+>>   	if (static_branch_unlikely(&vmx_l1d_should_flush))
+>>   		vmx_l1d_flush(vcpu);
+>> @@ -6564,6 +6601,11 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>   
+>>   	x86_spec_ctrl_restore_host(vmx->spec_ctrl, 0);
+>>   
+>> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
+>> +	    unlikely(vmx->disable_split_lock_detect) &&
+>> +	    !test_tsk_thread_flag(current, TIF_SLD))
+>> +		split_lock_detect_set(true);
+> 
+> Manually calling split_lock_detect_set() in vmx_vcpu_run() is unnecessary.
+> The MSR only needs to be written on the initial #AC, after that KVM can
+> rely on the stickiness of TIF_SLD to ensure the MSR is set correctly when
+> control transfer to/from this vCPU.
+> 
+>> +
+>>   	/* All fields are clean at this point */
+>>   	if (static_branch_unlikely(&enable_evmcs))
+>>   		current_evmcs->hv_clean_fields |=
+>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+>> index 7f42cf3dcd70..912eba66c5d5 100644
+>> --- a/arch/x86/kvm/vmx/vmx.h
+>> +++ b/arch/x86/kvm/vmx/vmx.h
+>> @@ -274,6 +274,9 @@ struct vcpu_vmx {
+>>   
+>>   	bool req_immediate_exit;
+>>   
+>> +	/* Disable split-lock detection when running the vCPU */
+>> +	bool disable_split_lock_detect;
+>> +
+>>   	/* Support for PML */
+>>   #define PML_ENTITY_NUM		512
+>>   	struct page *pml_pg;
+>> -- 
+>> 2.23.0
+>>
+
