@@ -2,135 +2,100 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DEEC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BFAC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F1120674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FCF20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QvXmD12j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIRI49xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgBDLUZ (ORCPT
+        id S1727299AbgBDLVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:20:25 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17827 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgBDLTm (ORCPT
+        Tue, 4 Feb 2020 06:21:09 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42964 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbgBDLVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:19:42 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e39533f0000>; Tue, 04 Feb 2020 03:19:27 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 03:19:41 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 03:19:41 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 11:19:41 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 11:19:41 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e39534a0000>; Tue, 04 Feb 2020 03:19:40 -0800
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 13/19] arm64: tegra: update OTG port entries for jetson-tx1
-Date:   Tue, 4 Feb 2020 16:46:59 +0530
-Message-ID: <1580815025-10915-14-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
-References: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 4 Feb 2020 06:21:08 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so9306047pfz.9;
+        Tue, 04 Feb 2020 03:21:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=etkzxQdonYJKMTHRqSVIxyc50MlvlU1LrQeOV4a4eFk=;
+        b=PIRI49xc04/X0a8DT1CIRCvr2/mgyzDfnaH9DdnMmIZbmCYVnMSpJhynEmGudh5hDO
+         kVywtrYnr1vRzyqzoru71Fes/x3ooibD9Uqd895xrv9y0yN5ECuVgYh6i0NCQRqUDhyJ
+         qO/t/LY+TELglPmEJCIFcolOV8ow1gOutzm2X7/cKDcQupCEEfZVUVo1/YSCyQdUwDSz
+         5/9f29STvTaZmVDO19GCRyVvBa9rXdFAKdLOnMmVgQYCbkdZYg1fmqJP1iBZsKNeqLWy
+         HfBK1sK9PaokmKWzOFGeMbuUZ+orx+WcSN+ZMje9YdGfzp8Kv7GKh8Ax/rt/3m6aqsWh
+         7GoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=etkzxQdonYJKMTHRqSVIxyc50MlvlU1LrQeOV4a4eFk=;
+        b=pc6gDTN3mOiBahi3MRqt7tt6mW8pSttBQrVR9VHuYfSPdQKnVnAb12UkQLaOTULtaH
+         tOopDofcD57e8xFi5HsZBFmzHVsTaAQQKduN4L8sxzOgH4zDqfxW+vgTeJFvKblGjEru
+         rdND7K8r+BKiG84kW0wQBWmmCpCthkLXN0ySlrJ/9u7GtRWTgH2x0SbpRduOvpK9OUIg
+         jDWPB6df1Ljw+SDTH2wGzOPvcUeg61HIRrKIxMIRseWUZh9D/yErNB0UmzcrZDd08Uo8
+         mcP4BdwJmwYKAKqV5LxAFMwtKWCb37JDAn40BBkjQC7Ft/FBPfkQjRkhMg9W5ysSwkEs
+         XOdg==
+X-Gm-Message-State: APjAAAWYrhQv8xUaySIOiI4DRATs/38lJT1yrLIdFxa4ExLc71Vv/uwa
+        EIvqM3p+FI3/Hm0kSWEl0s9QuhpYj7t05Ceq6qc=
+X-Google-Smtp-Source: APXvYqwt7q/UzXE/AqPSMjFYF/rze2eiuvxrpzsXScsHqjQIuEpbdTYlvnclZB19Uhn2efeEopSNoRVRDT2HM64mxy4=
+X-Received: by 2002:a65:4685:: with SMTP id h5mr32235446pgr.203.1580815268189;
+ Tue, 04 Feb 2020 03:21:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580815167; bh=A8BoHnAqalz3GaOqlgeziGgtfXKIEfdQonSYk61J5Qs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=QvXmD12jaATNIGJ8JbrBvKa3rSB3EcC/OTvh/rrk8r5jtDRKsdRiIPMtmc2KEcMCC
-         FWMdsGCrNakCjK4WoiBbT2TY/HUuFeYPP3PNN6bCRh00R+KkmK0bK7URrgwRaDqTrR
-         CHoirU4LGnK6xYZf5/i1G57vqw97L/rocDK644Q1/b/1LoLm/4CY2qE6xB/+X0vkb6
-         R63ueEaOqhuC8fJToNDsb0t8Lb9DoCCAMmIQ1bah2kXuA/ctw2ElQJAvO+6xP0JyK7
-         HZMHH2eqioLwsc0n0YkxP8xIJLLBcO5xEYhG693zmUlodsEYDmq7Awcc/etYPEXi8k
-         8paoW7RUmosjQ==
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <20200204062118.GS2841@vkoul-mobl>
+In-Reply-To: <20200204062118.GS2841@vkoul-mobl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Feb 2020 13:21:00 +0200
+Message-ID: <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Populate OTG vbus regulator. Add usb-role-switch entry to USB 2-0 port
-and corresponding connector details.
+On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 03-02-20, 12:37, Andy Shevchenko wrote:
+> > On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >
+> > > dma_request_slave_channel_reason() no longer have user in mainline, it
+> > > can be removed.
+> > >
+> > > Advise users of dma_request_slave_channel() and
+> > > dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+> >
+> > How? There are legacy ARM boards you have to care / remove before.
+> > DMAengine subsystem makes a p*s off decisions without taking care of
+> > (I'm talking now about dma release callback, for example) end users.
+>
+> Can you elaborate issue you are seeing with dma_release callback?
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
-V2-V4:
- - No changes in this version
----
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index b009507..18c0610 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1336,7 +1336,6 @@
- 		       <&{/padctl@7009f000/pads/pcie/lanes/pcie-5}>;
- 		phy-names = "usb2-0", "usb2-1", "usb2-2", "usb2-3", "usb3-0",
- 			    "usb3-1";
--
- 		dvddio-pex-supply = <&vdd_pex_1v05>;
- 		hvddio-pex-supply = <&vdd_1v8>;
- 		avdd-usb-supply = <&vdd_3v3_sys>;
-@@ -1440,7 +1439,19 @@
- 		ports {
- 			usb2-0 {
- 				status = "okay";
-+				vbus-supply = <&vdd_usb_vbus_otg>;
- 				mode = "otg";
-+
-+				usb-role-switch;
-+				connector {
-+					compatible = "usb-b-connector",
-+						     "gpio-usb-b-connector";
-+					label = "micro-USB";
-+					type = "micro";
-+					vbus-gpio = <&gpio TEGRA_GPIO(Z, 0)
-+						     GPIO_ACTIVE_LOW>;
-+					id-gpio = <&pmic 0 0>;
-+				};
- 			};
- 
- 			usb2-1 {
-@@ -1606,6 +1617,17 @@
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
- 
-+		vdd_usb_vbus_otg: regulator@11 {
-+			compatible = "regulator-fixed";
-+			reg = <9>;
-+			regulator-name = "USB_VBUS_EN0";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio TEGRA_GPIO(CC, 4) GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			vin-supply = <&vdd_5v0_sys>;
-+		};
-+
- 		vdd_hdmi: regulator@10 {
- 			compatible = "regulator-fixed";
- 			reg = <10>;
+[    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
+defined so it is not safe to unbind this driver while in use
+
+It's not limited to that driver, but actually all I'm maintaining.
+
+Users are not happy!
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
