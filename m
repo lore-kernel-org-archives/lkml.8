@@ -2,175 +2,96 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE32C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12138C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77F22166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB01321744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RjXsSo/H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvogxxIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgBDOnK (ORCPT
+        id S1727330AbgBDOoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:43:10 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36187 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727250AbgBDOnJ (ORCPT
+        Tue, 4 Feb 2020 09:44:01 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51123 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBDOoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:43:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580827388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=7XjqhOH1UGELHXnssSX+yq7nR4COpJLO81dnjqyykbU=;
-        b=RjXsSo/HoYsmYt9Vap3gxdO23tRdFmvAb5CUah6zaZ3m0tHbSypRWsL9Qb3rskT1Ta2v/F
-        SK7BTpA2unowwM8uitjRFhG5CumoBcf/kQ2ksP5alQbkU1XUNC46iDg3f9DtX1h7USnrcd
-        WphgNONzSskkBznCyETY/3w5aWbULhk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-IKNGDIzVPl62Od7quoI_6A-1; Tue, 04 Feb 2020 09:43:02 -0500
-X-MC-Unique: IKNGDIzVPl62Od7quoI_6A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 294CA7A5B8;
-        Tue,  4 Feb 2020 14:43:00 +0000 (UTC)
-Received: from [10.36.117.121] (ovpn-117-121.ams2.redhat.com [10.36.117.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F29B9845A0;
-        Tue,  4 Feb 2020 14:42:56 +0000 (UTC)
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200204142516.GD26758@MiWiFi-R3L-srv>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
-Date:   Tue, 4 Feb 2020 15:42:56 +0100
+        Tue, 4 Feb 2020 09:44:00 -0500
+Received: by mail-pj1-f66.google.com with SMTP id r67so1469332pjb.0;
+        Tue, 04 Feb 2020 06:44:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8n810gaGJvuL2/9scbf9Fe+76HM2g6iAgGCEUyKkt88=;
+        b=HvogxxIGZLajYutQIqHhjSNzgdIWOdt53DrmV6sIFa97n81BzHiHQMzQ4kP/ePA06V
+         SHDbpcwL3TH0Ca7ZQSn0IUSD368G/6seVWzjCirotXdECqKUq6rDWqAq9usPrfp2e7nM
+         w3hWUTW1igTD8tX7qtLTXTZ1yTDeiJV/i57jes1D8k+teYxlIWrm58yMhFK6m6Rsg2j2
+         hA0p07ZNmhqp7SynDYELfXJhpXbUgoYNqt3Ydok3o12WcXvOalvR6rLiaSPcFX00GYUW
+         KThToPYxWFnrF665HgRLHsKyXwUmiPv/gzUNxA7ohlNMPrMAmONihXECPOWVRQLgqKfk
+         ATnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8n810gaGJvuL2/9scbf9Fe+76HM2g6iAgGCEUyKkt88=;
+        b=b5bObNLbdePqR34YN2s3ho/G/w411SY77WJztrzLsRP9frAQp9BVRhvbEyfB0GsQ7D
+         nwtLzbOk5miD+95dIj4vIYZal88V6RvWxJEIaxQc2IiwGEugmgPk3SgdRTKjKYNjUxYG
+         meIZYy/hh/id8i1uFoRLxjUz3PJX5kcB6IAB0Vrft5PXrTKOaTOiIBR7y8rqDcHPAS7L
+         fDDJgdpLqppdrQzoThMwU3ynWrHXu1vic0Ug+ENfy9H9RpOETlCtPMXMot7K4qnXjKW9
+         oEKt5EqNc1v0OHtdpbgPu8VSkgWNOBku/M8JTkBP2mdHWt9FsMsAKin1kMG1yjw0xjQi
+         A2RQ==
+X-Gm-Message-State: APjAAAUrQx9pU2U8i4mRhxMDk8uwH8qiKiP5B70lljrAi9GKh125cSLN
+        xut8nh4eKR+vNu7xoG8YJvcR22Fp
+X-Google-Smtp-Source: APXvYqxthy5HpgQTLe7bGeZlbz4t/D9rqFcBLoDbg3oaO7UibdPjMnWH0TfWPdt9HHmk27jaa+7q6w==
+X-Received: by 2002:a17:90a:cc02:: with SMTP id b2mr6565751pju.137.1580827439993;
+        Tue, 04 Feb 2020 06:43:59 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l12sm2860348pgj.16.2020.02.04.06.43.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 06:43:59 -0800 (PST)
+Subject: Re: [PATCH 4.4 00/53] 4.4.213-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200203161902.714326084@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3bd0423b-478e-d626-88e7-5d62167ee7e0@roeck-us.net>
+Date:   Tue, 4 Feb 2020 06:43:58 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200204142516.GD26758@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.02.20 15:25, Baoquan He wrote:
-> On 10/06/19 at 10:56am, David Hildenbrand wrote:
->> If we have holes, the holes will automatically get detected and removed
->> once we remove the next bigger/smaller section. The extra checks can
->> go.
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  mm/memory_hotplug.c | 34 +++++++---------------------------
->>  1 file changed, 7 insertions(+), 27 deletions(-)
->>
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index f294918f7211..8dafa1ba8d9f 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->>  		if (pfn) {
->>  			zone->zone_start_pfn = pfn;
->>  			zone->spanned_pages = zone_end_pfn - pfn;
->> +		} else {
->> +			zone->zone_start_pfn = 0;
->> +			zone->spanned_pages = 0;
->>  		}
->>  	} else if (zone_end_pfn == end_pfn) {
->>  		/*
->> @@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->>  					       start_pfn);
->>  		if (pfn)
->>  			zone->spanned_pages = pfn - zone_start_pfn + 1;
->> +		else {
->> +			zone->zone_start_pfn = 0;
->> +			zone->spanned_pages = 0;
+On 2/3/20 8:18 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.213 release.
+> There are 53 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Thinking in which case (zone_start_pfn != start_pfn) and it comes here.
+> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> Anything received after that time might be too late.
+> 
 
-Could only happen in case the zone_start_pfn would have been "out of the
-zone already". If you ask me: unlikely :)
+arm:{allmodconfig, omap2plus_defconfig, imx_v6_v7_defconfig}"
 
-This change at least maintains the same result as before (where the
-all-holes check would have caught it).
+arch/arm/kernel/hyp-stub.S: Assembler messages:
+arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not support `ubfx r7,r7,#16,#4' in ARM mode
 
--- 
-Thanks,
-
-David / dhildenb
-
+Guenter
