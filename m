@@ -2,306 +2,181 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2737DC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6257EC3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E548C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580823007;
-	bh=l33RWzyOhunOQWWxKiqXr9cBwMNqhBEmiBxmnBqfDNg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=B6VseNovwShgSc6DA6um5IKIaW56Cf4MkmVW+Mgtwo98duRxzhpR5szNDS7r+Kntl
-	 SM1kLrEJ4CXZ5ffIvGhM14uvvLErqC9THoObfE35gPgnLePbW/DdvC3uXi3wlGSxBZ
-	 1x6A6CMNZlG7ofpe7IbiRu8P+hze5EKYUuRdevh8=
+	by mail.kernel.org (Postfix) with ESMTP id 42C1A21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgBDNaG (ORCPT
+        id S1727234AbgBDNhf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:30:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbgBDNaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:30:06 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7801D20661;
-        Tue,  4 Feb 2020 13:30:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580823005;
-        bh=l33RWzyOhunOQWWxKiqXr9cBwMNqhBEmiBxmnBqfDNg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YMzcYedveQftwneHDJTjxLnvNfxZckkVKdX6AozQXlQwz52nSDSkgd2LQt9gKA1CZ
-         RCt6cvvaU9/RuR6maJMrUSPoTPj4asOxr3ETY/hY10LlP/kaIW25Krw0wEOpTDOYjZ
-         JvuYEN5K0h4/m73xns8GjpY2RvmqSk8KixjoxjG4=
-Message-ID: <0ab59ba87c07ffec6a05b2ed39bc0c112bcf5863.camel@kernel.org>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
- copy_file_range
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 04 Feb 2020 08:30:03 -0500
-In-Reply-To: <20200203165117.5701-2-lhenriques@suse.com>
-References: <20200203165117.5701-1-lhenriques@suse.com>
-         <20200203165117.5701-2-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 4 Feb 2020 08:37:35 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2363 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727174AbgBDNhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 08:37:34 -0500
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id AD56E374ACE0C262B18F;
+        Tue,  4 Feb 2020 13:37:32 +0000 (GMT)
+Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 4 Feb 2020 13:37:32 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 4 Feb 2020 14:37:31 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Tue, 4 Feb 2020 14:37:31 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+CC:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+Thread-Topic: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+Thread-Index: AQHV14mgGDRCXCHq1UG77eo7NcEnk6gLEMcg
+Date:   Tue, 4 Feb 2020 13:37:31 +0000
+Message-ID: <01986ba728014571a3907fef9c69ff2c@huawei.com>
+References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
+ <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
+In-Reply-To: <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 16:51 +0000, Luis Henriques wrote:
-> Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
-> operations, waiting for each request to complete before sending the next
-> one.  This patch modifies copy_file_range so that all the 'copy-from'
-> operations are sent in bulk and waits for its completion at the end.  This
-> will allow significant speed-ups, specially when sending requests for
-> different target OSDs.
+> -----Original Message-----
+> From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> Sent: Thursday, January 30, 2020 5:23 PM
+> To: linux-integrity@vger.kernel.org
+> Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
+> <James.Bottomley@HansenPartnership.com>; linux-
+> kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
+> Subject: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
+> on different TPM banks
 > 
-
-Looks good overall. A few nits below:
-
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
+> assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
+> could support multiple TPM PCR banks, allowing firmware to configure and
+> enable different banks.
+> 
+> Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
+> the boot-aggregate, use the same hash algorithm for reading the TPM PCRs
+> as
+> for calculating the boot aggregate digest.  Preference is given to the
+> configured IMA default hash algorithm.
+> 
+> For TPM 1.2 SHA1 is the only supported hash algorithm.
+> 
+> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 > ---
->  fs/ceph/file.c                  | 45 +++++++++++++++++++++-----
->  include/linux/ceph/osd_client.h |  6 +++-
->  net/ceph/osd_client.c           | 56 +++++++++++++++++++++++++--------
->  3 files changed, 85 insertions(+), 22 deletions(-)
+>  security/integrity/ima/ima_crypto.c | 45
+> ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 44 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index 1e6cdf2dfe90..b9d8ffafb8c5 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -1943,12 +1943,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
->  	struct ceph_object_locator src_oloc, dst_oloc;
->  	struct ceph_object_id src_oid, dst_oid;
-> +	struct ceph_osd_request *req;
->  	loff_t endoff = 0, size;
->  	ssize_t ret = -EIO;
->  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
->  	u32 src_objlen, dst_objlen, object_size;
->  	int src_got = 0, dst_got = 0, err, dirty;
-> +	unsigned int max_copies, copy_count, reqs_complete = 0;
->  	bool do_final_copy = false;
-> +	LIST_HEAD(osd_reqs);
->  
->  	if (src_inode->i_sb != dst_inode->i_sb) {
->  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> @@ -2083,6 +2086,13 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  			goto out_caps;
->  	}
->  	object_size = src_ci->i_layout.object_size;
-> +
-> +	/*
-> +	 * Throttle the object copies: max_copies holds the number of allowed
-> +	 * in-flight 'copy-from' requests before waiting for their completion
-> +	 */
-> +	max_copies = (src_fsc->mount_options->wsize / object_size) * 4;
-
-A note about why you chose to multiply by a factor of 4 here would be
-good. In another year or two, we won't remember.
-
-> +	copy_count = max_copies;
->  	while (len >= object_size) {
->  		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
->  					      object_size, &src_objnum,
-> @@ -2097,7 +2107,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  		ceph_oid_printf(&dst_oid, "%llx.%08llx",
->  				dst_ci->i_vino.ino, dst_objnum);
->  		/* Do an object remote copy */
-> -		err = ceph_osdc_copy_from(
-> +		req = ceph_osdc_copy_from(
->  			&src_fsc->client->osdc,
->  			src_ci->i_vino.snap, 0,
->  			&src_oid, &src_oloc,
-> @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
->  			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
->  			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> -		if (err) {
-> -			if (err == -EOPNOTSUPP) {
-> -				src_fsc->have_copy_from2 = false;
-> -				pr_notice("OSDs don't support 'copy-from2'; "
-> -					  "disabling copy_file_range\n");
-> -			}
-> +		if (IS_ERR(req)) {
-> +			err = PTR_ERR(req);
->  			dout("ceph_osdc_copy_from returned %d\n", err);
-> +
-> +			/* wait for all queued requests */
-> +			ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> +			ret += reqs_complete * object_size; /* Update copied bytes */
->  			if (!ret)
->  				ret = err;
->  			goto out_caps;
->  		}
-> +		list_add(&req->r_private_item, &osd_reqs);
->  		len -= object_size;
->  		src_off += object_size;
->  		dst_off += object_size;
-> -		ret += object_size;
-> +		/*
-> +		 * Wait requests if we've reached the maximum requests allowed
-
-"Wait for requests..."
-
-> +		 * or if this was the last copy
-> +		 */
-> +		if ((--copy_count == 0) || (len < object_size)) {
-> +			err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> +			ret += reqs_complete * object_size; /* Update copied bytes */
-> +			if (err) {
-> +				if (err == -EOPNOTSUPP) {
-> +					src_fsc->have_copy_from2 = false;
-> +					pr_notice("OSDs don't support 'copy-from2'; "
-> +						  "disabling copy_file_range\n");
-> +				}
-> +				if (!ret)
-> +					ret = err;
-> +				goto out_caps;
-> +			}
-> +			copy_count = max_copies;
-> +		}
->  	}
->  
->  	if (len)
-> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> index 5a62dbd3f4c2..0121767cd65e 100644
-> --- a/include/linux/ceph/osd_client.h
-> +++ b/include/linux/ceph/osd_client.h
-> @@ -496,6 +496,9 @@ extern int ceph_osdc_start_request(struct ceph_osd_client *osdc,
->  extern void ceph_osdc_cancel_request(struct ceph_osd_request *req);
->  extern int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
->  				  struct ceph_osd_request *req);
-> +extern int ceph_osdc_wait_requests(struct list_head *osd_reqs,
-> +				   unsigned int *reqs_complete);
-> +
->  extern void ceph_osdc_sync(struct ceph_osd_client *osdc);
->  
->  extern void ceph_osdc_flush_notifies(struct ceph_osd_client *osdc);
-> @@ -526,7 +529,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
->  				struct timespec64 *mtime,
->  				struct page **pages, int nr_pages);
->  
-> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> +struct ceph_osd_request *ceph_osdc_copy_from(
-> +			struct ceph_osd_client *osdc,
->  			u64 src_snapid, u64 src_version,
->  			struct ceph_object_id *src_oid,
->  			struct ceph_object_locator *src_oloc,
-> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> index b68b376d8c2f..df9f342f860a 100644
-> --- a/net/ceph/osd_client.c
-> +++ b/net/ceph/osd_client.c
-> @@ -4531,6 +4531,35 @@ int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
+> diff --git a/security/integrity/ima/ima_crypto.c
+> b/security/integrity/ima/ima_crypto.c
+> index 7967a6904851..a020aaefdea8 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -656,13 +656,34 @@ static void __init ima_pcrread(u32 idx, struct
+> tpm_digest *d)
+>  		pr_err("Error Communicating to TPM chip\n");
 >  }
->  EXPORT_SYMBOL(ceph_osdc_wait_request);
->  
-> +/*
-> + * wait for all requests to complete in list @osd_reqs, returning the number of
-> + * successful completions in @reqs_complete
-> + */
-
-Maybe consider just having it return a positive reqs_complete value or a
-negative error code, and drop the reqs_complete pointer argument? It'd
-also be good to note what this function returns.
-
-> +int ceph_osdc_wait_requests(struct list_head *osd_reqs,
-> +			    unsigned int *reqs_complete)
+> 
+> +static enum hash_algo get_hash_algo(const char *algname)
 > +{
-> +	struct ceph_osd_request *req;
-> +	int ret = 0, err;
-> +	unsigned int counter = 0;
+> +	int i;
 > +
-> +	while (!list_empty(osd_reqs)) {
-> +		req = list_first_entry(osd_reqs,
-> +				       struct ceph_osd_request,
-> +				       r_private_item);
-> +		list_del_init(&req->r_private_item);
-> +		err = ceph_osdc_wait_request(req->r_osdc, req);
-
-ceph_osdc_wait_request calls wait_request_timeout, which uses a killable
-sleep. That's better than uninterruptible sleep, but maybe it'd be good
-to use an interruptible sleep here instead? Having to send fatal signals
-when things are stuck kind of sucks.
-
-> +		if (!err)
-> +			counter++;
-> +		else if (!ret)
-> +			ret = err;
-> +		ceph_osdc_put_request(req);
+> +	for (i = 0; i < HASH_ALGO__LAST; i++) {
+> +		if (strcmp(algname, hash_algo_name[i]) == 0)
+> +			break;
 > +	}
-> +	*reqs_complete = counter;
 > +
-> +	return ret;
+> +	return i;
 > +}
-> +EXPORT_SYMBOL(ceph_osdc_wait_requests);
 > +
 >  /*
->   * sync - wait for all in-flight requests to flush.  avoid starvation.
+> - * Calculate the boot aggregate hash
+> + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
+> + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but
+> with
+> + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
+> + * allowing firmware to configure and enable different banks.
+> + *
+> + * Knowing which TPM bank is read to calculate the boot_aggregate digest
+> + * needs to be conveyed to a verifier.  For this reason, use the same
+> + * hash algorithm for reading the TPM PCRs as for calculating the boot
+> + * aggregate digest as stored in the measurement list.
 >   */
-> @@ -5346,23 +5375,24 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
->  	return 0;
->  }
->  
-> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> -			u64 src_snapid, u64 src_version,
-> -			struct ceph_object_id *src_oid,
-> -			struct ceph_object_locator *src_oloc,
-> -			u32 src_fadvise_flags,
-> -			struct ceph_object_id *dst_oid,
-> -			struct ceph_object_locator *dst_oloc,
-> -			u32 dst_fadvise_flags,
-> -			u32 truncate_seq, u64 truncate_size,
-> -			u8 copy_from_flags)
-> +struct ceph_osd_request *ceph_osdc_copy_from(
-> +		struct ceph_osd_client *osdc,
-> +		u64 src_snapid, u64 src_version,
-> +		struct ceph_object_id *src_oid,
-> +		struct ceph_object_locator *src_oloc,
-> +		u32 src_fadvise_flags,
-> +		struct ceph_object_id *dst_oid,
-> +		struct ceph_object_locator *dst_oloc,
-> +		u32 dst_fadvise_flags,
-> +		u32 truncate_seq, u64 truncate_size,
-> +		u8 copy_from_flags)
+>  static int __init ima_calc_boot_aggregate_tfm(char *digest,
+>  					      struct crypto_shash *tfm)
 >  {
->  	struct ceph_osd_request *req;
->  	int ret;
->  
->  	req = ceph_osdc_alloc_request(osdc, NULL, 1, false, GFP_KERNEL);
->  	if (!req)
-> -		return -ENOMEM;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	req->r_flags = CEPH_OSD_FLAG_WRITE;
->  
-> @@ -5381,11 +5411,11 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
->  		goto out;
->  
->  	ceph_osdc_start_request(osdc, req, false);
-> -	ret = ceph_osdc_wait_request(osdc, req);
-> +	return req;
->  
->  out:
->  	ceph_osdc_put_request(req);
-> -	return ret;
-> +	return ERR_PTR(ret);
->  }
->  EXPORT_SYMBOL(ceph_osdc_copy_from);
->  
+>  	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
+> +	enum hash_algo crypto_id;
+>  	int rc;
+>  	u32 i;
+>  	SHASH_DESC_ON_STACK(shash, tfm);
+> @@ -673,6 +694,28 @@ static int __init ima_calc_boot_aggregate_tfm(char
+> *digest,
+>  	if (rc != 0)
+>  		return rc;
+> 
+> +	crypto_id = get_hash_algo(crypto_shash_alg_name(tfm));
+> +	if (crypto_id == HASH_ALGO__LAST) {
+> +		pr_devel("unknown hash algorithm (%s), failing to read
+> PCRs.\n",
+> +			 crypto_shash_alg_name(tfm));
+> +		return 0;
+> +	}
+> +
+> +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+> +		if (ima_tpm_chip->allocated_banks[i].crypto_id ==
+> crypto_id) {
+> +			d.alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
+> +			break;
+> +		}
+> +	}
+> +	if (i == ima_tpm_chip->nr_allocated_banks) {
+> +		pr_devel("TPM %s bank not allocated, failing to read
+> PCRs.\n",
+> +			 crypto_shash_alg_name(tfm));
+> +		return 0;
+> +	}
+> +
+> +	pr_devel("calculating the boot-aggregregate based on TPM
+> bank: %04x\n",
+> +		  d.alg_id);
+> +
+>  	/* cumulative sha1 over tpm registers 0-7 */
+>  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+>  		ima_pcrread(i, &d);
 
--- 
-Jeff Layton <jlayton@kernel.org>
+The third argument of crypto_shash_update() should be
+crypto_shash_digestsize(tfm).
 
+Roberto
+
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
