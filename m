@@ -2,86 +2,95 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9173EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D779C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65FDC2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B4920730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBDMwv (ORCPT
+        id S1727299AbgBDMx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:52:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33543 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbgBDMwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:52:51 -0500
-Received: from [212.187.182.162] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iyxgz-0005I1-MG; Tue, 04 Feb 2020 13:52:37 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 07DCE100720; Tue,  4 Feb 2020 12:52:31 +0000 (GMT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>
-Cc:     Mark D Rustad <mrustad@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu\, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Shankar\, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v17] x86/split_lock: Enable split lock detection by kernel
-In-Reply-To: <20200204000449.GA28014@linux.intel.com>
-References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com> <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com> <8CC9FBA7-D464-4E58-8912-3E14A751D243@gmail.com> <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com> <20200204000449.GA28014@linux.intel.com>
-Date:   Tue, 04 Feb 2020 12:52:31 +0000
-Message-ID: <87v9omy0og.fsf@nanos.tec.linutronix.de>
+        Tue, 4 Feb 2020 07:53:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:36642 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727197AbgBDMx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 07:53:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F0DA30E;
+        Tue,  4 Feb 2020 04:53:27 -0800 (PST)
+Received: from [10.1.30.218] (e107114-lin.cambridge.arm.com [10.1.30.218])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7048A3F52E;
+        Tue,  4 Feb 2020 04:53:25 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Subject: Suspect broken frequency transitions on SDM845
+To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, Ionela Voinescu <ionela.voinescu@arm.com>,
+        Quentin Perret <qperret@google.com>
+Message-ID: <eb8c48fb-c9b1-79c1-21b3-cd41ea37e2c6@arm.com>
+Date:   Tue, 4 Feb 2020 13:53:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi folks,
 
-> On Sun, Jan 26, 2020 at 12:05:35PM -0800, Luck, Tony wrote:
->
-> ...
->
->> +bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->
-> No reason to take the error code unless there's a plan to use it.
->
->> +{
->> +	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
->> +		return false;
->
-> Any objection to moving the EFLAGS.AC up to do_alignment_check()?  And
-> take "unsigned long rip" instead of @regs?
->
-> That would allow KVM to reuse handle_user_split_lock() for guest faults
-> without any changes (other than exporting).
->
-> E.g. do_alignment_check() becomes:
->
-> 	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
-> 		return;
+We have a simple sanity test that asserts higher frequency leads to more
+work done. It's fairly straightforward - we use the userspace governor,
+go through increasing frequencies, run sysbench each time and assert the
+values we get are increasing monotonically. We do that for one CPU of each
+"type" (i.e. once for a LITTLE and once for a big).
 
-No objections.
+We've been getting some sporadic failures on the big CPUs of a Pixel3
+running mainline [1], here is an example of a correct run (CPU4):
 
-Thanks,
+| frequency (kHz) | sysbench events |
+|-----------------+-----------------|
+|          825600 |             236 |
+|         1286400 |             369 |
+|         1689600 |             483 |
+|         2092800 |             600 |
+|         2476800 |             711 |
 
-        tglx
+and here is a failed one (still CPU4):
+
+| frequency (kHz) | sysbench events |
+|-----------------+-----------------|
+|          825600 |             234 |
+|         1286400 |             369 |
+|         1689600 |             449 |
+|         2092800 |             600 |
+|         2476800 |             355 |
+
+
+We've encountered something like this in the past with the exact same
+test on h960 [2] but it is much harder to reproduce reliably this time
+around.
+
+I haven't found much time to dig into this; I did get a run of ~100 
+iterations with about ~15 failures, but nothing cpufreq related showed up in
+dmesg. I briefly suspected fast-switch, but it's only used by schedutil, so
+in this test I would expect the frequency transition to be complete before we
+even try to start executing sysbench.
+
+If anyone has the time and will to look into this, that would be much
+appreciated.
+
+[1]: https://git.linaro.org/people/amit.pundir/linux.git/log/?h=blueline-mainline-tracking
+[2]: https://lore.kernel.org/lkml/d3ede0ab-b635-344c-faba-a9b1531b7f05@arm.com/
+
+Cheers,
+Valentin
