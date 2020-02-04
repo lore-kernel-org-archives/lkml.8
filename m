@@ -2,69 +2,78 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1848C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B2920730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D1820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBDL6g convert rfc822-to-8bit (ORCPT
+        id S1727183AbgBDMAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:58:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59050 "EHLO mx2.suse.de"
+        Tue, 4 Feb 2020 07:00:53 -0500
+Received: from mga05.intel.com ([192.55.52.43]:55649 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgBDL6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:58:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BF1DDADFF;
-        Tue,  4 Feb 2020 11:58:33 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 12:58:33 +0100
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     David Miller <davem@davemloft.net>
-Cc:     ralf@linux-mips.org, paulburton@kernel.org,
-        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: sgi: ioc3-eth: Remove leftover free_irq()
-Message-Id: <20200204125833.f4fd62590d0539cf87527286@suse.de>
-In-Reply-To: <20200204.124455.1858606436930758654.davem@davemloft.net>
-References: <20200204113628.13654-1-tbogendoerfer@suse.de>
-        <20200204.124455.1858606436930758654.davem@davemloft.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        id S1727097AbgBDMAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 07:00:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 04:00:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,401,1574150400"; 
+   d="scan'208";a="279039776"
+Received: from kirillbx-mobl.ccr.corp.intel.com (HELO localhost) ([10.251.84.125])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Feb 2020 04:00:49 -0800
+Date:   Tue, 4 Feb 2020 14:00:48 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Alexander Steffen <Alexander.Steffen@infineon.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v7 4/6] tpm: tpm_tis_spi: Support cr50 devices
+Message-ID: <20200204120048.GA28552@linux.intel.com>
+References: <20190920183240.181420-1-swboyd@chromium.org>
+ <20190920183240.181420-5-swboyd@chromium.org>
+ <007dfd87-5170-684a-26dc-9e7533d42034@infineon.com>
+ <5e38bcbd.1c69fb81.a383.c572@mx.google.com>
+ <9064d7e2-d0ae-0cf0-294f-a795da336a6f@infineon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9064d7e2-d0ae-0cf0-294f-a795da336a6f@infineon.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Feb 2020 12:44:55 +0100 (CET)
-David Miller <davem@davemloft.net> wrote:
-
-> From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> Date: Tue,  4 Feb 2020 12:36:28 +0100
+On Tue, Feb 04, 2020 at 08:15:49AM +0100, Alexander Steffen wrote:
+> The scripts are effectively using modprobe/rmmod/etc. and those need the
+> name. modprobe can be fixed by defining an alias, but this does not work for
+> rmmod. Many other things also depend on the name, e.g. module blacklisting
+> or the output of lsmod, where people might now get confused by the
+> difference between "tpm_tis_spi_mod" and "tpm_tis_i2c". Also, there are many
+> tutorials out there, that explicitly tell users to run something like
+> "modprobe tpm_tis_spi", which won't work anymore now.
 > 
-> > Commit 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip") moved
-> > request_irq() from ioc3_open into probe function, but forgot to remove
-> > free_irq() from ioc3_close.
-> > 
-> > Fixes: 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip")
-> > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> 
-> ioc3_open() still has the request_irq() in my tree.
+> So, if there is a good reason to break compatibility, I'm fine with that.
+> But in this case, isn't there some way to achieve the desired functionality
+> without changing the name? Even if it is a little more complex than the
+> three-line change above, that would probably be worth it.
 
-then I guess you don't have commit 0ce5ebd24d25 in your tree. My Patch is
-against linus/master, where it is already applied. Should I rebase against your
-net tree, when the commit shows up ?
+Nope, you're right. I'll work out a fix for this and
+add you as reported-by.
 
-Thomas.
-
--- 
-SUSE Software Solutions Germany GmbH
-HRB 36809 (AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+/Jarkko
