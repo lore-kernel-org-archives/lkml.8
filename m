@@ -1,101 +1,95 @@
 Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C9CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9672DC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9BC218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWN5OWH1"
+	by mail.kernel.org (Postfix) with ESMTP id 5DB2721D7E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580810422;
+	bh=i4/pV3yXt1Xq5NaSU6N3KYYw34q7CC7h07LBX1XrFKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ihlRgvYUAx1nD2+0C5/if5Nahk/7hkiuF0WYMnsLVlPnRAikorLerebdMqKlOzS25
+	 wrgjq/p35K8w2osmX4SACUzmWO5bdW4bVwyypM7ve91hNraZoLD5OzopsEHN6zdvbY
+	 PWrZ3wbI1g7IGdEhJDAVzSiCQ7DRjw+6xg3r/iO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgBDJ7d (ORCPT
+        id S1726855AbgBDKAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:59:33 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37769 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgBDJ7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:59:32 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q84so17865432oic.4
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:59:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+c+P5I8NbJ7KvdrmDqQ1PdrpFMV6E9xgMXllp3DgFLA=;
-        b=YWN5OWH1S+jW+ZqO/FK8CvZv2YTPZFFL80xYclXzWSuEBS/j9zlXfKRT/95NASNAsA
-         EF4CKDRfiQ/bxt2ew7Nj1WHCirmfvvPYGt4DeUpqvS6eQcht+lIjifTYzfiQ49bN/S5u
-         mz0b6eKSExwqYZMFuQ/B8butBOClBl+dKDHjwmr+DyYE3RFzACqlXvFNl9g3a3ObMFQs
-         1VdjLXXa6cErYEcgbMjKmBCK3XGQi4l6l7uVAX+HDoLNmEJ6rknaiJxLI+eYT8RkD8bc
-         Gjjgq4P55PEfDgoCveJxVsGwjJrG0OoOQvo70ZDYYVeml2p8+J9iFwIETqLI1HHy4emO
-         ulyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+c+P5I8NbJ7KvdrmDqQ1PdrpFMV6E9xgMXllp3DgFLA=;
-        b=dWMH4NpCuOayONcdaO+O+BzzLwiaE2ckW+nTzZ4/nLBvy2SkN+D2XdZXO34MgLqENx
-         3Zux2KsDaM5XGukbXsZu4e6mfl/ASYXqmbaKZ94eOMLvDtIKtBu7G1GRZioU3ln+FIKG
-         QpRGytYek7hLZryCgjFCjrXlIVZh+49sDuaCbJQB6DpdGF8uPQeYBcx5sCwrLJZVGGV5
-         0VQ5nIPCl2TMlq6caGwgFo0QSk3NBKutCJJUtaeN9N4s2QmLq7lwcXOKdqPjpt9WiIbP
-         YC/AP9wj83y+dIZD1y7N00AtUS/rSnwt/+0Py0NZvRJbQDtGUpVOUOsy+se2n0eO8OSQ
-         XcJg==
-X-Gm-Message-State: APjAAAW2VXIT5SwZUPDzwvNrXtE8RBdQ4LJEBAGlBNKdTW44Jg+LU90i
-        ik/2D97N24wD+/lFvMtYRRaa32iaAlmveQDBoFw=
-X-Google-Smtp-Source: APXvYqxL3ONJ+g0dPYwUeiEo11NnyVisJS5Mv5bE0bNlew27R5M77w1CkIdMs3uy8iVQnVmmTuPvR1D66Uz4c0k1K78=
-X-Received: by 2002:aca:ddc2:: with SMTP id u185mr2963896oig.24.1580810371921;
- Tue, 04 Feb 2020 01:59:31 -0800 (PST)
+        Tue, 4 Feb 2020 05:00:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgBDKAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 05:00:21 -0500
+Received: from localhost (unknown [212.187.182.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398F3217BA;
+        Tue,  4 Feb 2020 10:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580810420;
+        bh=i4/pV3yXt1Xq5NaSU6N3KYYw34q7CC7h07LBX1XrFKI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WcZprKCXPGJibCXsrLvxeuo1CW7VAvOY7oSXtV1zu8WkgBtiFdtvj6hdD97dmZyH4
+         c/SHnqYnyNp9da4tCocaDR/ZG+4kOJWSm+pH/u5z+8YA3yXKHgWbfgC3lx5cTmHK02
+         n+HpahEMU8dyzKY5EbnkoaewR/3Al7PnMd0MnJqM=
+Date:   Tue, 4 Feb 2020 10:00:16 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Denis Efremov <efremov@linux.com>
+Subject: Re: [PATCH 5.4 117/203] rsi: fix potential null dereference in
+ rsi_probe()
+Message-ID: <20200204100016.GA1088789@kroah.com>
+References: <20200116231745.218684830@linuxfoundation.org>
+ <20200116231755.604943633@linuxfoundation.org>
+ <20200204083332.GE26725@localhost>
 MIME-Version: 1.0
-References: <20200204090022.123261-1-gch981213@gmail.com> <20200204094647.GS1778@kadam>
-In-Reply-To: <20200204094647.GS1778@kadam>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Tue, 4 Feb 2020 17:59:21 +0800
-Message-ID: <CAJsYDV+b1bqc3b87Amo8p2UzVi4fpbRv6ytus8A5Y0r4K-X0hw@mail.gmail.com>
-Subject: Re: [PATCH] staging: mt7621-dts: add dt node for 2nd/3rd uart on mt7621
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        NeilBrown <neil@brown.name>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204083332.GE26725@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Tue, Feb 04, 2020 at 09:33:32AM +0100, Johan Hovold wrote:
+> On Fri, Jan 17, 2020 at 12:17:14AM +0100, Greg Kroah-Hartman wrote:
+> > From: Denis Efremov <efremov@linux.com>
+> > 
+> > commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0 upstream.
+> > 
+> > The id pointer can be NULL in rsi_probe(). It is checked everywhere except
+> > for the else branch in the idProduct condition. The patch adds NULL check
+> > before the id dereference in the rsi_dbg() call.
+> > 
+> > Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
+> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> > Cc: Siva Rebbagondla <siva8118@gmail.com>
+> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> > Signed-off-by: Denis Efremov <efremov@linux.com>
+> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> This commit is bogus and was reverted shortly after it was applied in
+> order to prevent autosel from picking it up for stable (reverted by
+> c5dcf8f0e850 ("Revert "rsi: fix potential null dereference in
+> rsi_probe()"")).
+> 
+> The revert has now been picked up by Sasha, but shouldn't an
+> explicit revert in the same pull-request prevent a bad patch from being
+> backported in the first place? Seems like something that could be
+> scripted. But perhaps the net-stable oddities come into play here.
 
-On Tue, Feb 4, 2020 at 5:47 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> Please use ./scripts/get_maintainer.pl to pick the CC list and resend.
->
-> The MAINTAINERS file says Matthias Brugger is supposed to be CC'd and
-> a couple other email lists.
+This was my fault, I picked it up, and didn't run a "has this patch been
+reverted" type search on them.  I'll add that to my workflow, sorry.
 
-According to get_maintainer.pl,  Matthias Brugger is the maintainer of
-Mediatek ARM SoC:
-
-Matthias Brugger <matthias.bgg@gmail.com> (maintainer:ARM/Mediatek SoC support)
-linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC support)
-linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC support)
-
-I specifically removed the above 3 addresses because they are all for
-Mediatek ARM chips
-while mt7621 is a mips chip and belongs to ralink target under
-/arch/mips/mach-ralink.
-Code contribution for mt7621 goes through linux-mips instead of
-linux-arm or linux-mediatek,
-
-I thinks this is an incorrect setup of get_maintainer.pl and should be
-corrected.
-
-Regards,
-Chuanhong Guo
+greg k-h
