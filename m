@@ -2,109 +2,96 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD61C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B46C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50DA52192A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PPJ1YOge"
+	by mail.kernel.org (Postfix) with ESMTP id 7D12721D7E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580810739;
+	bh=sVWw5io65CFud55R48cwmbeybCwucc32GqEz2clXunY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KtUBhAdfTkvjYCxEkTWJwetmA9h8zMnRvTqnRum8OR1cznesjHpq9eLy6gSBqxGR2
+	 UVK8CqZyERtZHRTDUsr246GLrwNTT/UZn8FbNNwHbn0h7h0HOYB19i8P2BPc/NZUvN
+	 QGbUc7SORnop5osMOaxN5vJtij5Z/4pmomrlWu34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgBDKFA (ORCPT
+        id S1727112AbgBDKFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:05:00 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:33525 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgBDKFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:05:00 -0500
-Received: by mail-qv1-f66.google.com with SMTP id z3so8287112qvn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:04:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vIq07h0Q4Xacts0Z8nGndxELy+JbkoofTPHFyoyLP7k=;
-        b=PPJ1YOgen/v+popaeR1IlDfTIc4vqCR1n08a0ESdIof9DQcNCYRAMrdpOXVhcrej1w
-         F3of+b2a/FKKgGMwH/k54gHGxPi3/fswcLiHYxdMpW5Q1uERpYmnN4IzvqPlH7+ukwNh
-         yisYGgzeZgPUgntSZIHoGxueP6CiPlKbU6u43wcRCqJXJChNBYo3qpN6U9yv8Whn1cEU
-         bOlXVaB5uDUfs2TAhyP67bYQ3CVacdeuTPZw5ohRptomczy+8VXcPlH7/qhvzpfn8yNr
-         OrBxH8yamzwx93scetaVROFRkRvcYZKDJAQ5ZhFNqHXZmBUh2AlKEuidIADLKH6NTUmY
-         b8DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vIq07h0Q4Xacts0Z8nGndxELy+JbkoofTPHFyoyLP7k=;
-        b=OeZ3Uo5juKjQfbA26dZ7yq3ikuSU4/i31QgmJZFKhB8lwxj2CWAcNwLofkoT72f7hJ
-         yrA1TvgfmiWDVeDqdJXS8f7ht+6CRtixT5VtGuIb2eaPNYVnGBOB6le6lx6o+/Hd/YAp
-         ipGPtoNEsXk4uaOMUgDUlWgHni5pf36UW6OGHxEjrVuEYnCF/XgJXloG/zgQApyEF5/a
-         YkbdkeuhqJFhYbkIZXhbyELWyS7SOrz3mWOfC0aDFBCccBUWMzm6TEv0ykBxmGFsMkcI
-         hXid4sxg9LmvrjXKUAFp+KhIV34mlbr3twwAlejsvocwnnhzEyWRzEidOW5zY3NiJeAc
-         G63A==
-X-Gm-Message-State: APjAAAVfdMhMbl60bZj3v/H69bNeYCz6KtXpyj1pKyfva4GSQ6fkOS+u
-        1KlQs82yTpc3yLJJIjps5lfQdyG18qhj6MUIKTRzpA==
-X-Google-Smtp-Source: APXvYqyfaW5WxVPRXst4b1KcTfegqhcamsfX0I4Imb0RailcutLwVqwRTH2tK+IgHTszdeoqagKyGzZqaiE97XAyo3Y=
-X-Received: by 2002:ad4:55e8:: with SMTP id bu8mr27366613qvb.61.1580810697768;
- Tue, 04 Feb 2020 02:04:57 -0800 (PST)
+        Tue, 4 Feb 2020 05:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgBDKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 05:05:38 -0500
+Received: from localhost (unknown [212.187.182.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DDCA2192A;
+        Tue,  4 Feb 2020 10:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580810738;
+        bh=sVWw5io65CFud55R48cwmbeybCwucc32GqEz2clXunY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ax84ru3DK2QxnRTnncBb96xb4kYi7b9Nl02GW0bc1uYLwCNmBIZKvAejB5unuRIbP
+         swUYQujkGap5VWVJB/accBIEXOfyiz0/V9EXV6CS0OpVIqIrjk8o/j6nyJfou35mT8
+         Ps/R7s0IwOQNnQffVe81oqnurYtgOu/hAz+uqYaw=
+Date:   Tue, 4 Feb 2020 10:02:32 +0000
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH 1/7] Input: pegasus_notetaker: fix endpoint sanity check
+Message-ID: <20200204100232.GB1088789@kroah.com>
+References: <20191210113737.4016-1-johan@kernel.org>
+ <20191210113737.4016-2-johan@kernel.org>
+ <20200204082441.GD26725@localhost>
 MIME-Version: 1.0
-References: <20200120104626.30518-1-warthog618@gmail.com> <CAMpxmJWCwtnuB4T3_no59cVvPS5gy6QwOBV3i4FU4N6hmYugEw@mail.gmail.com>
- <20200129123349.GA3801@sol>
-In-Reply-To: <20200129123349.GA3801@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 4 Feb 2020 11:04:46 +0100
-Message-ID: <CAMpxmJU0d=e6ZrSd5Sp0q4xFz9PYo4Zwm=e2AsL8f-pEodZfng@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: remove unnecessary argument from set_config call
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204082441.GD26725@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 29 sty 2020 o 13:33 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
->
-> On Wed, Jan 29, 2020 at 11:55:49AM +0100, Bartosz Golaszewski wrote:
-> > pon., 20 sty 2020 o 11:46 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
-> > >
-> > > Remove unnecessary argument when setting PIN_CONFIG_BIAS_DISABLE.
-> > >
-> > > Fixes: 2148ad7790ea ("gpiolib: add support for disabling line bias")
-> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > ---
-> > >
-> > > No argument is expected by pinctrl, so removing it should be harmless=
-.
-> > >
-> >
-> > This doesn't really fix any bug, does it? If not, then I'll just take
-> > it for v5.7 after the merge window.
-> >
->
-> This is just fixing what I suspect was a cut-and-paste error on my part
-> that wasn't picked up during review - until I had a closer look
-> following Geert and Andy's recent comments on some of your proposed
-> changes.  So it is just a tidy up.
->
-> It could only a problem if a pinctrl is making use of the unnecessary
-> argument, and there are no such pinctrls that I am aware of.
->
-> Merge it in whenever it is convenient.
->
-> Cheers,
-> Kent.
+On Tue, Feb 04, 2020 at 09:24:41AM +0100, Johan Hovold wrote:
+> On Tue, Dec 10, 2019 at 12:37:31PM +0100, Johan Hovold wrote:
+> > The driver was checking the number of endpoints of the first alternate
+> > setting instead of the current one, something which could be used by a
+> > malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
+> > dereference.
+> > 
+> > Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
+> > Cc: stable <stable@vger.kernel.org>     # 4.8
+> > Cc: Martin Kepplinger <martink@posteo.de>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> 
+> Looks like the stable tag was removed when this one was applied, and
+> similar for patches 2, 4 and 7 of this series (commits 3111491fca4f,
+> a8eeb74df5a6, 6b32391ed675 upstream).
+> 
+> While the last three are mostly an issue for the syzbot fuzzer, we have
+> started backporting those as well.
+> 
+> This one (bcfcb7f9b480) is more clear cut as it can be used to trigger a
+> NULL-deref.
+> 
+> I only noticed because Sasha picked up one of the other patches in the
+> series which was never intended for stable.
 
-I'm picking up various early fixes for v5.6 so I'll go ahead and apply
-it while at it.
+Did I end up catching all of these properly?  I've had to expand my
+search for some patches like this that do not explicitly have the cc:
+stable mark on them as not all subsystems do this well (if at all.)
 
-Bart
+And there's also Sasha's work in digging up patches based on patterns of
+fixes, which also is needed because of this "problem".
+
+thanks,
+
+greg k-h
