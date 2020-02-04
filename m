@@ -2,152 +2,100 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58678C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8428C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B052086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9627A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgBDFfy (ORCPT
+        id S1727100AbgBDFgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 00:35:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:62720 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbgBDFfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 00:35:54 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 21:35:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="403678791"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 03 Feb 2020 21:35:52 -0800
-Date:   Mon, 3 Feb 2020 21:35:52 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v2 6/6] x86: vmx: virtualize split lock detection
-Message-ID: <20200204053552.GA31665@linux.intel.com>
-References: <20200203151608.28053-1-xiaoyao.li@intel.com>
- <20200203151608.28053-7-xiaoyao.li@intel.com>
- <20200203214212.GH19638@linux.intel.com>
- <addf50c8-f683-9176-d6e4-51bc217dcc92@intel.com>
+        Tue, 4 Feb 2020 00:36:18 -0500
+Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:54753 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726189AbgBDFgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 00:36:17 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 71695182CED34;
+        Tue,  4 Feb 2020 05:36:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: smash54_53b153a945116
+X-Filterd-Recvd-Size: 2936
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  4 Feb 2020 05:36:15 +0000 (UTC)
+Message-ID: <7040e0501f1a04cf09195bdccfcfb05df25962ec.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+From:   Joe Perches <joe@perches.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        isdn4linux@listserv.isdn4linux.de, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 03 Feb 2020 21:35:04 -0800
+In-Reply-To: <alpine.DEB.2.21.2002040550540.3062@felia>
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+         <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net>
+         <CAHp75VdVXqz7fab4MKH2jZozx4NGGkQnJyTWHDKCdgSwD2AtpA@mail.gmail.com>
+         <ce81e9b1ac6ede9f7a16823175192ef69613ec07.camel@perches.com>
+         <CAHp75VdaaOW0ktt4eo4NsLFu2QT1K1mHK8DZeycOPhbvcMq4wQ@mail.gmail.com>
+         <alpine.DEB.2.21.2002040550540.3062@felia>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <addf50c8-f683-9176-d6e4-51bc217dcc92@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:52:01AM +0800, Xiaoyao Li wrote:
-> On 2/4/2020 5:42 AM, Sean Christopherson wrote:
-> >On Mon, Feb 03, 2020 at 11:16:08PM +0800, Xiaoyao Li wrote:
-> >>
-> >>Only when host is sld_off, can guest control the hardware value of
-> >>MSR_TEST_CTL, i.e., KVM loads guest's value into hardware when vcpu is
-> >>running.
-
-...
-
-> Right, SLD is exposed to the guest only when host is sld_off makes thing
-> much simpler. But this seems only meaning for using guest for debugging or
-> testing?
-
-Ah, I misunderstood.  I thought the above quote was saying SLD would be
-exposed to the guest if it's off in the host, i.e. intended only to reword
-the changelog.
-
-Per our offline discussion:
-
-  sld_fatal - MSR_TEST_CTL.SDL is forced on and is sticky from the guest's
-              perspective (so the guest can detect a forced fatal mode).
-
-  sld_warn - SLD is exposed to the guest.  MSR_TEST_CTL.SDL is left on
-             until an #AC is intercepted with MSR_TEST_CTL.SDL=0 in the
-             guest, at which point normal sld_warn rules apply.  If a vCPU
-             associated with the task does VM-Enter with MSR_TEST_CTL.SDL=1,
-             TIF_SLD is reset and the cycle begins anew.
-
-  sld_off - When set by the guest, MSR_TEST_CTL.SLD is set on VM-Entry
-            and cleared on VM-Exit.
-
-Side topic, this means we need more than is_split_lock_detect_enabled(),
-but it's probably still a good idea to hide the enum, e.g. have
-is_sld_enabled() and is_sld_fatal() wrappers.
- 
-> >Reiterating everything that was implemented in previous patches does more
-> >harm than good.
-
-...
-
-> >>@@ -1934,6 +1960,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >>  	u32 index;
-> >>  	switch (msr_index) {
-> >>+	case MSR_TEST_CTRL:
-> >>+		if (!msr_info->host_initiated &&
-> >>+		    (!guest_has_feature_split_lock_detect(vcpu) ||
-> >>+		     data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
-> >>+			return 1;
-> >>+		if (data & MSR_TEST_CTRL_SPLIT_LOCK_DETECT)
-> >>+			vmx->disable_split_lock_detect = false;
-> >
-> >Pretty sure disable_split_lock_detect won't exist, but if it does, don't
-> >reuse it for emulating guest behavior.  Keep the two things separate, i.e.
-> >use vmx->msr_test_ctrl to track guest state and use the disable_sld to
-> >track when the feature has been disabled for an ignorant guest.
+On Tue, 2020-02-04 at 06:08 +0100, Lukas Bulwahn wrote:
 > 
-> My thought was that when both host and guest are sld_warn.
-> If there is a split lock in guest user space,
->  1. #AC trapped in kvm, and re-injected to guest due to guest's MSR bit set;
->  2. Guest clears MSR bit but hardware bit not cleared, re-execute the
-> instruction
->  3. #AC trapped again, vmx->disable_sld set to true, vm-enter to guest with
-> hardware MSR bit cleared, re-execute the instruction
->  4. After guest user space application finishes/ or scheduled, guest set MSR
-> bit, here we'd better clear vmx->disable_sld, otherwise hardware MSR bit
-> keeps cleared for this vcpu thread.
+> On Mon, 3 Feb 2020, Andy Shevchenko wrote:
+> 
+> > On Mon, Feb 3, 2020 at 1:08 PM Joe Perches <joe@perches.com> wrote:
+> > > On Mon, 2020-02-03 at 12:13 +0200, Andy Shevchenko wrote:
+> > > > On Sun, Feb 2, 2020 at 10:45 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> > 
+> > ...
+> > 
+> > > > I'm not sure it's ready. I think parse-maintainers.pl will change few
+> > > > lines here.
+> > > 
+> > > parse-maintainers would change a _lot_ of the MAINTAINERS file
+> > > by reordering section letters.
+> > 
+> > I think it's quite easy to find out if it had changed the record in question.
+> > 
+> I checked it and it does change a bit. My patch adds to a list of file 
+> entries sorted by "relevance" (not alphabetically) two further minor (by 
+> relevance) entries, i.e., Kconfig and Makefile, to the end of that list.
+> 
+> The other reorderings would have already applied to the original state; 
+> rather than trying to "fix" this locally for this one patch here, I would 
+> prefer to understand why the discussion on splitting the MAINTAINERS file,
+> summarized at https://lwn.net/Articles/730509/, got stuck and how I can 
+> contribute to that. If that bigger change would happen, we could 
+> automatically clean up all the entries when the things are splitted, 
+> rather than sending reordering patches to the maintainers that then spend 
+> time on trying to merge that all back together.
 
-Ya, all that works.  But I don't think KVM needs to context switch
-MSR_TEST_CTRL in any mode except sld_off.  For sld_fatal, it's simply on.
-For sld_warn, it's only disabled when TIF_SLD=1, i.e. after a warning #AC.
+Realistically, ISDN is all but dead.
 
-I suppose there's a corner case where userspace is multiplexing vCPUs on
-tasks, in which case we could end up with TIF_SLD=1 and MSR_TEST_CTRL.SLD=1.
-KVM still doesn't need a separate flag, e.g.:
+Perhaps it'd be better to change the entries here to:
 
-        if (static_cpu_has(...) && vmx->msr_test_control) {
-                if (test_thread_flag(TIF_SLD))
-                        sld_turn_back_on();
-                else if (!is_split_lock_detect_enabled())
-                        wrmsrl(MSR_TEST_CTL,
-                               this_cpu_read(msr_test_ctl_val) |
-                               vmx->msr_test_ctl);
-	}
-
-        __vmx_vcpu_run();
-
-        if (static_cpu_has(...) && vmx->msr_test_control &&
-            !is_split_lock_detect_enabled())
-                wrmsrl(MSR_TEST_CTL, this_cpu_read(msr_test_ctl_val));
+F:	drivers/isdn/
+X:	drivers/isdn/capi/
 
 
 
 
-> Also, this makes a difference for guest user space application that when it
-> scheduled out then scheduled in, the MSR bit is set again while in bare
-> metal it keeps cleared. That's why I use pr_warn_ratelimited() in #AC
-> interceptor.
+
