@@ -2,192 +2,164 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3861C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A670BC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA1F2084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E551217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:58:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5VDOtm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgBDR6Q (ORCPT
+        id S1727490AbgBDR6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:58:16 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:35083 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbgBDR6P (ORCPT
+        Tue, 4 Feb 2020 12:58:38 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:39573 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbgBDR6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:58:15 -0500
-Received: by mail-io1-f72.google.com with SMTP id x10so12280779iob.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:58:13 -0800 (PST)
+        Tue, 4 Feb 2020 12:58:38 -0500
+Received: by mail-vs1-f65.google.com with SMTP id p14so11963273vsq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:58:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tzVO/i3RlK8wTW0CtIUDqXR3obK88NMKP/u+iDd4rUQ=;
+        b=O5VDOtm/ib9l1nZlkLp5aAjoHDGmbe/pDbvrnrOFQxx0ugJzt1szBuYP/xwnZgETip
+         P7HAfIEw3unJXYEVS4ie/bxig8VQ0AorpiyBzWFvlFBu2KjH3y4NnS7MNtts3L5btYIC
+         ij6sGv8mGSatOqli5mxV83kZVF3PE/4COaxgB7LSHF5HBP1q8UWGxi8IFnO4JFFHivpB
+         4P+JhkKMxD2r24UnI3YkDjuXSbSgbHBTDZuRqnMayX0j18RWJJ47chbBK1li9ZMqSFeQ
+         hiZrZN3Z8qSqzz9dE8/gSy8tALakqrzvM01IHNEFKAhrSTNr8tFlilhaAGg4OUOCOCvD
+         kdwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Um3Xpzx3vG7vvdGcvA/0vPPxMKJre/Qdw6/82ARcNPc=;
-        b=jbehFsWF+h8P58/R43U1c8Ar1i7OIIoexq3FsN5oDFq8yoz4hSvxx0DJ4JLLfzsSq0
-         aRn61Noc0J/e6S7y2NlPuXYyGJBC7W9tSRKOjV/sXMu6lyNYj+QkFKFTBtLCFFAq6/34
-         POMbSAm/w5WKGZllNw6NRM3qP0OGIgejCa8sLxPj43Q4BoeGVeLFrBzIaLdW0CipJPR6
-         wiJZ8YjiGvjHFa3H4HTmN6R/ELG4QdZ/9RhdqNRg+Aepr3ZtwaK88kdJGPHqSJ0iJPKR
-         4hm3NfnLsPCpjCpkQ16Urw2tC4Bk7AXpvEeoj2b4P+Lkzzqtea9xQkioebKgTqSSB5+U
-         4MYA==
-X-Gm-Message-State: APjAAAVVc5nPqaXrlcZOFAa+xKqTlVY/2GSUJ4wZSLTGldlY7Bw73xu/
-        95PcM7YV77AMUERiwZe8osRybW/v70LtPhNKRUceHOdvHcz8
-X-Google-Smtp-Source: APXvYqz/k4Imyeeca95alZX24eMTHmjPtFwnVqBqXMpEoIKiVc1JLT2fCo9+2dodxN3LxxIeANc25wcdden+gG5lgaAfBgztARLH
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tzVO/i3RlK8wTW0CtIUDqXR3obK88NMKP/u+iDd4rUQ=;
+        b=Un0GDgs8yWiQlTLR7pywxrZTusLLk5yOcUyNvUXY44YHwbe6FhRRT6cCTgl1mb5IUD
+         7daBvit+ozSL3TfEgsPmPLLO2eUWlAWXKJgt1mxQ/PFgEIFSHklVtelLgWLWnquBxHL6
+         hbCwT/DLr93zlHEbJvqkDgxxX4BxBXMHAX0fYnuw1vlvpqwG+FvOA70d54pPeCqLb3HD
+         qw8YQKobutYCZSNXMgpbFhnFj9WKjd7dnSrOythc3g3jcAcc3N7qOeENIIP/pm92aSXf
+         QYQ1gsaoyeOkCXwUp2hvsohCiUJzdwmLWGPx8dft4VbNYCbQEgpCNZ5F1yIyrrIg1r+w
+         sNPg==
+X-Gm-Message-State: APjAAAVsQ7nTotViCUApy1qSbDjicSoHn9zeojeVuTp8zmCIgr+/k6QO
+        sCRdfA0jt7AlljKHWEkBM976F6NzmoA+L4UCYaz/sg==
+X-Google-Smtp-Source: APXvYqy8K0HZyom2Se94kPkPrPAC4jNuAoEYRybckINHoKbQmKOYiKuIMKD8CqYzd04t+SoQUijdLLODpClkxzUnst0=
+X-Received: by 2002:a05:6102:757:: with SMTP id v23mr19931507vsg.35.1580839116928;
+ Tue, 04 Feb 2020 09:58:36 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8e51:: with SMTP id q78mr23341440iod.179.1580839093292;
- Tue, 04 Feb 2020 09:58:13 -0800 (PST)
-Date:   Tue, 04 Feb 2020 09:58:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009a59d2059dc3c8e9@google.com>
-Subject: memory leak in tcindex_set_parms
-From:   syzbot <syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+References: <20200115013751.249588-1-swboyd@chromium.org>
+In-Reply-To: <20200115013751.249588-1-swboyd@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 4 Feb 2020 18:58:00 +0100
+Message-ID: <CAPDyKFrQoWaj6uc4Ej_0sUk01X=denmu=v6vq-KgNePbNxkwmw@mail.gmail.com>
+Subject: Re: [PATCH] drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 15 Jan 2020 at 02:37, Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> This tracepoint is hit now that we call into the rpmh code from the cpu
+> idle path. Let's move this to be an rcuidle tracepoint so that we avoid
+> the RCU idle splat below
+>
+>  =============================
+>  WARNING: suspicious RCU usage
+>  5.4.10 #68 Tainted: G S
+>  -----------------------------
+>  drivers/soc/qcom/trace-rpmh.h:72 suspicious rcu_dereference_check() usage!
+>
+>  other info that might help us debug this:
+>
+>  RCU used illegally from idle CPU!
+>  rcu_scheduler_active = 2, debug_locks = 1
+>  RCU used illegally from extended quiescent state!
+>  5 locks held by swapper/2/0:
+>   #0: ffffff81745d6ee8 (&(&genpd->slock)->rlock){+.+.}, at: genpd_lock_spin+0x1c/0x2c
+>   #1: ffffff81745da6e8 (&(&genpd->slock)->rlock/1){....}, at: genpd_lock_nested_spin+0x24/0x34
+>   #2: ffffff8174f2ca20 (&(&genpd->slock)->rlock/2){....}, at: genpd_lock_nested_spin+0x24/0x34
+>   #3: ffffff8174f2c300 (&(&drv->client.cache_lock)->rlock){....}, at: rpmh_flush+0x48/0x24c
+>   #4: ffffff8174f2c150 (&(&tcs->lock)->rlock){+.+.}, at: rpmh_rsc_write_ctrl_data+0x74/0x270
+>
+>  stack backtrace:
+>  CPU: 2 PID: 0 Comm: swapper/2 Tainted: G S                5.4.10 #68
+>  Call trace:
+>   dump_backtrace+0x0/0x174
+>   show_stack+0x20/0x2c
+>   dump_stack+0xc8/0x124
+>   lockdep_rcu_suspicious+0xe4/0x104
+>   __tcs_buffer_write+0x230/0x2d0
+>   rpmh_rsc_write_ctrl_data+0x210/0x270
+>   rpmh_flush+0x84/0x24c
+>   rpmh_domain_power_off+0x78/0x98
+>   _genpd_power_off+0x40/0xc0
+>   genpd_power_off+0x168/0x208
+>   genpd_power_off+0x1e0/0x208
+>   genpd_power_off+0x1e0/0x208
+>   genpd_runtime_suspend+0x1ac/0x220
+>   __rpm_callback+0x70/0xfc
+>   rpm_callback+0x34/0x8c
+>   rpm_suspend+0x218/0x4a4
+>   __pm_runtime_suspend+0x88/0xac
+>   psci_enter_domain_idle_state+0x3c/0xb4
+>   cpuidle_enter_state+0xb8/0x284
+>   cpuidle_enter+0x38/0x4c
+>   call_cpuidle+0x3c/0x68
+>   do_idle+0x194/0x260
+>   cpu_startup_entry+0x24/0x28
+>   secondary_start_kernel+0x150/0x15c
+>
+> Fixes: a65a397f2451 ("cpuidle: psci: Add support for PM domains by using genpd")
+> Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-syzbot found the following crash on:
+Sorry for the delay and many thanks for fixing this!
 
-HEAD commit:    322bf2d3 Merge branch 'for-5.6' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1111f8e6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8d0490614a000a37
-dashboard link: https://syzkaller.appspot.com/bug?extid=f0bbb2287b8993d4fa74
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17db90f6e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a94511e00000
+> ---
+>
+> I think the commit that this is "Fixes"ing is a stable commit, but I'm
+> not positive.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com
+Correct, the commit is in Linus' tree by now.
 
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811ee18c00 (size 256):
-  comm "syz-executor278", pid 7255, jiffies 4294941828 (age 13.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000004705b10>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<0000000004705b10>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<0000000004705b10>] slab_alloc mm/slab.c:3320 [inline]
-    [<0000000004705b10>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-    [<000000005a926de7>] kmalloc include/linux/slab.h:556 [inline]
-    [<000000005a926de7>] kmalloc_array include/linux/slab.h:597 [inline]
-    [<000000005a926de7>] kcalloc include/linux/slab.h:609 [inline]
-    [<000000005a926de7>] tcf_exts_init include/net/pkt_cls.h:210 [inline]
-    [<000000005a926de7>] tcindex_set_parms+0xac/0x970 net/sched/cls_tcindex.c:313
-    [<000000004198237d>] tcindex_change+0xd8/0x110 net/sched/cls_tcindex.c:519
-    [<00000000f90be4e9>] tc_new_tfilter+0x566/0xf50 net/sched/cls_api.c:2103
-    [<00000000bdffab68>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5429
-    [<000000008de6f6fa>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000637db501>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
-    [<00000000cb1396a7>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000cb1396a7>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<000000003d9f7439>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<0000000004922ee9>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<0000000004922ee9>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<00000000bbc6917f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
-    [<00000000d3ae3854>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000000c5372b>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
-    [<00000000db15859a>] __do_sys_sendmsg net/socket.c:2439 [inline]
-    [<00000000db15859a>] __se_sys_sendmsg net/socket.c:2437 [inline]
-    [<00000000db15859a>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
-    [<00000000a5a1c036>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<00000000e73613df>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-BUG: memory leak
-unreferenced object 0xffff88811ee18900 (size 256):
-  comm "syz-executor278", pid 7255, jiffies 4294941828 (age 13.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000004705b10>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<0000000004705b10>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<0000000004705b10>] slab_alloc mm/slab.c:3320 [inline]
-    [<0000000004705b10>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-    [<0000000036dbc592>] kmalloc include/linux/slab.h:556 [inline]
-    [<0000000036dbc592>] kmalloc_array include/linux/slab.h:597 [inline]
-    [<0000000036dbc592>] kcalloc include/linux/slab.h:609 [inline]
-    [<0000000036dbc592>] tcf_exts_init include/net/pkt_cls.h:210 [inline]
-    [<0000000036dbc592>] tcindex_alloc_perfect_hash net/sched/cls_tcindex.c:287 [inline]
-    [<0000000036dbc592>] tcindex_alloc_perfect_hash+0x8f/0xf0 net/sched/cls_tcindex.c:277
-    [<0000000088e6ec51>] tcindex_set_parms+0x831/0x970 net/sched/cls_tcindex.c:405
-    [<000000004198237d>] tcindex_change+0xd8/0x110 net/sched/cls_tcindex.c:519
-    [<00000000f90be4e9>] tc_new_tfilter+0x566/0xf50 net/sched/cls_api.c:2103
-    [<00000000bdffab68>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5429
-    [<000000008de6f6fa>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000637db501>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
-    [<00000000cb1396a7>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000cb1396a7>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<000000003d9f7439>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<0000000004922ee9>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<0000000004922ee9>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<00000000bbc6917f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
-    [<00000000d3ae3854>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000000c5372b>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
-    [<00000000db15859a>] __do_sys_sendmsg net/socket.c:2439 [inline]
-    [<00000000db15859a>] __se_sys_sendmsg net/socket.c:2437 [inline]
-    [<00000000db15859a>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
-    [<00000000a5a1c036>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
+Kind regards
+Uffe
 
-BUG: memory leak
-unreferenced object 0xffff88811ee18800 (size 256):
-  comm "syz-executor278", pid 7255, jiffies 4294941828 (age 13.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000004705b10>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<0000000004705b10>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<0000000004705b10>] slab_alloc mm/slab.c:3320 [inline]
-    [<0000000004705b10>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-    [<0000000036dbc592>] kmalloc include/linux/slab.h:556 [inline]
-    [<0000000036dbc592>] kmalloc_array include/linux/slab.h:597 [inline]
-    [<0000000036dbc592>] kcalloc include/linux/slab.h:609 [inline]
-    [<0000000036dbc592>] tcf_exts_init include/net/pkt_cls.h:210 [inline]
-    [<0000000036dbc592>] tcindex_alloc_perfect_hash net/sched/cls_tcindex.c:287 [inline]
-    [<0000000036dbc592>] tcindex_alloc_perfect_hash+0x8f/0xf0 net/sched/cls_tcindex.c:277
-    [<0000000088e6ec51>] tcindex_set_parms+0x831/0x970 net/sched/cls_tcindex.c:405
-    [<000000004198237d>] tcindex_change+0xd8/0x110 net/sched/cls_tcindex.c:519
-    [<00000000f90be4e9>] tc_new_tfilter+0x566/0xf50 net/sched/cls_api.c:2103
-    [<00000000bdffab68>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5429
-    [<000000008de6f6fa>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000637db501>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
-    [<00000000cb1396a7>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000cb1396a7>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<000000003d9f7439>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<0000000004922ee9>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<0000000004922ee9>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<00000000bbc6917f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
-    [<00000000d3ae3854>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000000c5372b>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
-    [<00000000db15859a>] __do_sys_sendmsg net/socket.c:2439 [inline]
-    [<00000000db15859a>] __se_sys_sendmsg net/socket.c:2437 [inline]
-    [<00000000db15859a>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
-    [<00000000a5a1c036>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>
+>  drivers/soc/qcom/rpmh-rsc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index e278fc11fe5c..b71822131f59 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -277,7 +277,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
+>                 write_tcs_cmd(drv, RSC_DRV_CMD_MSGID, tcs_id, j, msgid);
+>                 write_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j, cmd->addr);
+>                 write_tcs_cmd(drv, RSC_DRV_CMD_DATA, tcs_id, j, cmd->data);
+> -               trace_rpmh_send_msg(drv, tcs_id, j, msgid, cmd);
+> +               trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
+>         }
+>
+>         write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
+> --
+> Sent by a computer, using git, on the internet
+>
