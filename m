@@ -2,134 +2,125 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03141C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC9C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56192087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdpVUwZQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0465621775
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgBDJBA (ORCPT
+        id S1726603AbgBDJEy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:01:00 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46752 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBDJA7 (ORCPT
+        Tue, 4 Feb 2020 04:04:54 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:33201 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgBDJEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:00:59 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so9306099pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:00:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i1Hdx03KpzIJqjLnNBsm/Ab9J3/wfB5FKXcb0BZf37c=;
-        b=gdpVUwZQGp+PFX0HmzPpHsr4OR52mtM9cPrby2RkLoy7VLucoantTtPRh03D0ZUOlE
-         BLGIVReOeQg5bSr2Grqo3YwCT1UedIVL/pxIAKiqlEV6QNQg6uDX6vqEDBeXZmfgFo0d
-         a+REiyWTR2zoLWiPecytEmSUk0b23jcouNhfd7oTD2LBwQx0rTivE7FD2AK3E3E70k2S
-         P842xQek2LaQswjaKu/z4l87jd/LkK8bBTBO2bOyGCYaDeHQ6r/9/odzEPMvw/Xq0AXU
-         c6btJ32pKbFAuo7jzbyEh0rqCgwAUVl0uos1qUVDf/dC+Y2Bg3kfE3TSDDgCWABHpCZY
-         8EIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i1Hdx03KpzIJqjLnNBsm/Ab9J3/wfB5FKXcb0BZf37c=;
-        b=n2lprgOEz37/Toyj/uN+psGKP33ryRlYDDP4xAcevN0wr0PB4BRsnaufKu+WRNgGVa
-         s3jaa+35uUiMcL9GohpgNdvl0uNTzGkFCbiCdgrtx5zkB0G5wqzleG8YyDiq8GXAskOB
-         UopYJXS40rn5u+88NMP8EQrYXj8Bpo02ZKRWMRSWE+IqFOscypeNI0Zjy1VGOAShZHSY
-         AROr9AmWGfHgWYshVUkb89bOTvTkkSEfM5y3KrqgU8TlE5LoqUVAOAhsAhPrA3IawE1u
-         2A3oKkk/P0S+HlY5ZKrj03HAFCCuvJgIhFflJLBpwovn+c4YtBM23u78f9S0ZlbdJJIX
-         /fpw==
-X-Gm-Message-State: APjAAAXVb9BdnxHx1FGkcScfgquqIItSPaTzhNPWld79g1ClXJTzwRTy
-        2UMmVe/PHycUZ4/NJ2psCfQ=
-X-Google-Smtp-Source: APXvYqzXibLzgNJBHrGQYFI65lIG3QOgtpQMXx/kNDGLspr7gjJTVVudOKHU6y5WxUiy9RozMCMLcQ==
-X-Received: by 2002:a62:8601:: with SMTP id x1mr29872722pfd.0.1580806858980;
-        Tue, 04 Feb 2020 01:00:58 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:959:d990::fa3])
-        by smtp.gmail.com with ESMTPSA id 72sm23144151pfw.7.2020.02.04.01.00.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 01:00:58 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     devel@driverdev.osuosl.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        NeilBrown <neil@brown.name>, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: mt7621-dts: add dt node for 2nd/3rd uart on mt7621
-Date:   Tue,  4 Feb 2020 16:59:31 +0800
-Message-Id: <20200204090022.123261-1-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 4 Feb 2020 04:04:54 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 379BFCED24;
+        Tue,  4 Feb 2020 10:14:13 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v2 1/2] Bluetooth: hci_qca: Enable clocks required for BT
+ SOC
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200203195632.GM3948@builder>
+Date:   Tue, 4 Feb 2020 10:04:51 +0100
+Cc:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        robh@kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
+        yshavit@google.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <FA054FF0-C1EF-4749-96C3-A86ECD064FE9@holtmann.org>
+References: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
+ <20200203195632.GM3948@builder>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 3 uarts on mt7621. This patch adds device tree node for
-2nd and 2rd ones.
+Hi Bjorn,
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
- drivers/staging/mt7621-dts/mt7621.dtsi | 38 ++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+>> Instead of relying on other subsytem to turn ON clocks
+>> required for BT SoC to operate, voting them from the driver.
+>> 
+>> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+>> ---
+>> v2:
+>>   * addressed forward declarations
+>>   * updated with devm_clk_get_optional()
+>> 
+>> ---
+>> drivers/bluetooth/hci_qca.c | 25 +++++++++++++++++++++++++
+>> 1 file changed, 25 insertions(+)
+>> 
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index d6e0c99..73706f3 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -1738,6 +1738,15 @@ static int qca_power_off(struct hci_dev *hdev)
+>> 	return 0;
+>> }
+>> 
+>> +static int qca_setup_clock(struct clk *clk, bool enable)
+>> +{
+>> +	if (enable)
+>> +		return clk_prepare_enable(clk);
+>> +
+>> +	clk_disable_unprepare(clk);
+>> +	return 0;
+>> +}
+> 
+> As Marcel requested, inline these.
+> 
+>> +
+>> static int qca_regulator_enable(struct qca_serdev *qcadev)
+>> {
+>> 	struct qca_power *power = qcadev->bt_power;
+>> @@ -1755,6 +1764,13 @@ static int qca_regulator_enable(struct qca_serdev *qcadev)
+>> 
+>> 	power->vregs_on = true;
+>> 
+>> +	ret = qca_setup_clock(qcadev->susclk, true);
+>> +	if (ret) {
+>> +		/* Turn off regulators to overcome power leakage */
+> 
+> You can omit this comment as well, as the name of the function you call
+> is aptly named.
+> 
+>> +		qca_regulator_disable(qcadev);
+>> +		return ret;
+> 
+> Just return ret below instead.
+> 
+>> +	}
+>> +
+>> 	return 0;
+>> }
+>> 
+>> @@ -1773,6 +1789,9 @@ static void qca_regulator_disable(struct qca_serdev *qcadev)
+>> 
+>> 	regulator_bulk_disable(power->num_vregs, power->vreg_bulk);
+>> 	power->vregs_on = false;
+>> +
+>> +	if (qcadev->susclk)
+> 
+> In the enable path you (correctly) rely on passing NULL to the clock
+> code, so do the same here.
 
-diff --git a/drivers/staging/mt7621-dts/mt7621.dtsi b/drivers/staging/mt7621-dts/mt7621.dtsi
-index d89d68ffa7bc..cee23710d03b 100644
---- a/drivers/staging/mt7621-dts/mt7621.dtsi
-+++ b/drivers/staging/mt7621-dts/mt7621.dtsi
-@@ -166,6 +166,44 @@ uartlite: uartlite@c00 {
- 			no-loopback-test;
- 		};
- 
-+		uartlite2: uartlite@d00 {
-+			compatible = "ns16550a";
-+			reg = <0xd00 0x100>;
-+
-+			clock-frequency = <50000000>;
-+
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			no-loopback-test;
-+
-+			status = "disabled";
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins>;
-+		};
-+
-+		uartlite3: uartlite@e00 {
-+			compatible = "ns16550a";
-+			reg = <0xe00 0x100>;
-+
-+			clock-frequency = <50000000>;
-+
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			no-loopback-test;
-+
-+			status = "disabled";
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart3_pins>;
-+		};
-+
- 		spi0: spi@b00 {
- 			status = "disabled";
- 
--- 
-2.24.1
+I already pushed the patch, but I am happy to accept a cleanup patch.
+
+Regards
+
+Marcel
 
