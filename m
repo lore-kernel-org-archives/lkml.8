@@ -2,133 +2,93 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC23C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F047C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93B620674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l1lYopHx"
+	by mail.kernel.org (Postfix) with ESMTP id 3B61F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgBDOvY (ORCPT
+        id S1727365AbgBDOwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:51:24 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8010 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBDOvX (ORCPT
+        Tue, 4 Feb 2020 09:52:14 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53835 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbgBDOwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:51:23 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3984dc0000>; Tue, 04 Feb 2020 06:51:08 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 06:51:22 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 06:51:22 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 14:51:20 +0000
-Subject: Re: [PATCH v7 10/19] dmaengine: tegra-apb: Remove assumptions about
- unavailable runtime PM
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200202222854.18409-1-digetx@gmail.com>
- <20200202222854.18409-11-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <9671058d-6fe1-2d1b-9aca-3d943dafeb04@nvidia.com>
-Date:   Tue, 4 Feb 2020 14:51:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 09:52:13 -0500
+Received: from [187.32.88.249] (helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1iyzYe-0002qd-S8; Tue, 04 Feb 2020 14:52:09 +0000
+Date:   Tue, 4 Feb 2020 11:51:53 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] KVM: Pre-allocate 1 cpumask variable per cpu for both pv
+ tlb and pv ipis
+Message-ID: <20200204145059.GJ40679@calabresa>
+References: <CANRm+CwwYoSLeA3Squp-_fVZpmYmxEfqOB+DGoQN4Y_iMT347w@mail.gmail.com>
+ <878slio6hp.fsf@vitty.brq.redhat.com>
+ <CANRm+CzkN9oYf4UqWYp2SHFii02=pvVLbW4oNkLmPan7ZroDZA@mail.gmail.com>
+ <20200204142733.GI40679@calabresa>
+ <871rrao1mr.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200202222854.18409-11-digetx@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580827868; bh=YlB0hyncMtxlGcVgLfgkMbZcAfow8+8s3gntXqlFKj4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=l1lYopHxJTiQVZHrcoIoFS9qJz9QFl4Iru3uJPuZDnSVNC8uO8unKQBdKBXULfdMS
-         jY8m9B3Bsi3ZBFw/zo12zaM2o2TCJeHRmwwchA+ji59PS4T4Nw4C39+iYZVPzpbNTK
-         1un1yIfem1domNld3YOiyqa70T/gZH8ium8P9k3OSmPJCc5FMulz/QF8MimIdfM5YD
-         WK28AKg/uxxpb1rKhaeJxMLamu2zEAVV4nyhkOha8512sTM4OS1yGjsk9pm42fboW7
-         CTHItkJdPzzKhy6zO4IdA1V7AMI9YXdwGB7mLpvgOmnz90LilRAN73XqCdkaGtm9Tt
-         bcKPoTltg8RnQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rrao1mr.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 02/02/2020 22:28, Dmitry Osipenko wrote:
-> The runtime PM is always available on all Tegra SoCs since the commit
-> 40b2bb1b132a ("ARM: tegra: enforce PM requirement"), so there is no
-> need to handle the case of unavailable RPM in the code anymore.
+On Tue, Feb 04, 2020 at 03:42:04PM +0100, Vitaly Kuznetsov wrote:
+> Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
+> >> > >      /*
+> >> > > @@ -624,6 +625,7 @@ static void __init kvm_guest_init(void)
+> >> > >          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+> >> > >          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+> >> > >          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+> >> > > +        pr_info("KVM setup pv remote TLB flush\n");
+> >> > >      }
+> >> > >
+> >
+> > I am more concerned about printing the "KVM setup pv remote TLB flush" message,
+> > not only when KVM pv is used, but pv TLB flush is not going to be used, but
+> > also when the system is not even paravirtualized.
 > 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 7158bd3145c4..22b88ccff05d 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -1429,11 +1429,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  	spin_lock_init(&tdma->global_lock);
->  
->  	pm_runtime_enable(&pdev->dev);
-> -	if (!pm_runtime_enabled(&pdev->dev))
-> -		ret = tegra_dma_runtime_resume(&pdev->dev);
-> -	else
-> -		ret = pm_runtime_get_sync(&pdev->dev);
->  
-> +	ret = pm_runtime_get_sync(&pdev->dev);
->  	if (ret < 0)
->  		goto err_pm_disable;
->  
-> @@ -1546,8 +1543,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  
->  err_pm_disable:
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!pm_runtime_status_suspended(&pdev->dev))
-> -		tegra_dma_runtime_suspend(&pdev->dev);
->  
->  	return ret;
->  }
-> @@ -1557,10 +1552,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
->  	struct tegra_dma *tdma = platform_get_drvdata(pdev);
->  
->  	dma_async_device_unregister(&tdma->dma_dev);
-> -
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!pm_runtime_status_suspended(&pdev->dev))
-> -		tegra_dma_runtime_suspend(&pdev->dev);
->  
->  	return 0;
->  }
+> Huh? In Wanpeng's patch this print is under
+> 
+> 	if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
+> 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+> 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
+> 
+> and if you mean another patch we descussed before which was adding
+>  (!kvm_para_available() || nopv) check than it's still needed. Or,
+> alternatively, we can make kvm_para_has_feature() check for that.
+> 
+> -- 
+> Vitaly
 > 
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Yes, that's what I mean. Though not printing that when allocating the cpumasks
+would fix this particular symptom, anyway.
 
-Cheers
-Jon
+But yes, it doesn't make sense to do all those feature checks when there is no
+paravirtualization.
 
--- 
-nvpublic
+I believe we are in agreement.
+
+Cascardo.
