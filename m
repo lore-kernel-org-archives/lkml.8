@@ -2,183 +2,102 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F44FC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF549C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3761D2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DD82082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="az91qY8K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ff+T2yYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgBDSGX (ORCPT
+        id S1727466AbgBDSM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:06:23 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35026 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbgBDSGX (ORCPT
+        Tue, 4 Feb 2020 13:12:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49503 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727361AbgBDSMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 13:06:23 -0500
-Received: by mail-il1-f193.google.com with SMTP id g12so16723842ild.2;
-        Tue, 04 Feb 2020 10:06:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mc62ZSJ2FyEbetH4nweBkjrAs6Ck5WUQW5hhZvQRO50=;
-        b=az91qY8K3YfCW0QGFi1FZ/pBdRYotv9Le+rXXqWUZQNr/OGWLGYifvJwzO97uDlxNF
-         EHB6INZm/VLtEkppIfPqkV+vJxyUYszv1d5Aevlx+zUCD2vY3eGVxArvUTN19rdJUaEc
-         CHL2j/uXpkPq183F50rozETD9JOHr27NNlbnmdb6+ZFnRb+RVDVr2ssZewHcaO8CKJGf
-         lOPCjfrKyUrmT2cb/+lOG5eREU2aILHuKjjM+4VQVeh15UXRJg8xX7r4QmKPYtCE1E/t
-         OhpQOzWbOXYq/fGb+BPpr6lViSL5aKf1Vwoy9NvsEiVXV3YuNlaHyU78vvOIvfnSYjgT
-         iAkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mc62ZSJ2FyEbetH4nweBkjrAs6Ck5WUQW5hhZvQRO50=;
-        b=KjDVjws+P3bwn3w+dn9Y75Gk8n+D4RVeTTrheLwEXXh4d3VZzadnl+B0BK+I/IlLzO
-         wMWfPnz7PCiivh4oZXPMb2zAMeom4/mkOjXVEZ3goTeff+UcPfO6M8jLIEvd2GuqIdkl
-         YD1aMPUkFcm+m308GS6kF7qXKrOseGNkNnRbvrpNNAdNyfR4C079lO+OnaTV4Oawufd6
-         JhkDJHLjKi73yy6MPStjql9y2tVSpzMv5/unhrbv5809yXUxw+7AIHq30oj6v7HJb3p1
-         Kea/IG2VMfXxBTK81kSeG2a0DFzKSHHOlywsAhLOjjNvwzStwFtTFA8wVBEruAg73ARp
-         edSA==
-X-Gm-Message-State: APjAAAXDSvcj5Oa4Du6Z3zU15PH5VThd+mfCnnQhNMvEpN94bZR5T4Sd
-        5CyR27CE9q5SEmVzBmHR2hIF8laU4iC2sFO7JXA=
-X-Google-Smtp-Source: APXvYqxKyl971a5Xqlv2EwzvWwPfaoP5Bparz3CeO839snzSqpxb29ZVRbO7MW2JMyg+DfmWnqO+CoAF5YT0aGoBJvw=
-X-Received: by 2002:a92:b749:: with SMTP id c9mr21417293ilm.143.1580839582327;
- Tue, 04 Feb 2020 10:06:22 -0800 (PST)
+        Tue, 4 Feb 2020 13:12:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580839941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bzg9bDZQ96CGaLiNh7lVZC6J4F7OP3CKfbn8hB4NuvU=;
+        b=Ff+T2yYcEYLooq5WKsUxhMua2yWhvki8kryi3e1zL0bRD6mbMPD5vvQ0UUG8JBRBmaiiuP
+        xpxx1LfcPSXtATlkkgft6olZAKeAlNZ3ewJ+wSR0MYDEM0PlJxo6C6cQWiuqokCzymcMM5
+        Ja78S79NKQH4WBSXfWoOdwIgGqOP050=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-E-q9i6prMwOivKPvmq3UPw-1; Tue, 04 Feb 2020 13:12:17 -0500
+X-MC-Unique: E-q9i6prMwOivKPvmq3UPw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B46818A6EC1;
+        Tue,  4 Feb 2020 18:12:15 +0000 (UTC)
+Received: from x2.localnet (ovpn-116-11.phx2.redhat.com [10.3.116.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9117C19C69;
+        Tue,  4 Feb 2020 18:12:03 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
+Date:   Tue, 04 Feb 2020 13:12:02 -0500
+Message-ID: <35934535.C1y6eIYgqz@x2>
+Organization: Red Hat
+In-Reply-To: <CAHC9VhRHfjuv5yyn+nQ2LbHtcezBcjKtOQ69ssYrXOiExuCjBw@mail.gmail.com>
+References: <cover.1577736799.git.rgb@redhat.com> <3665686.i1MIc9PeWa@x2> <CAHC9VhRHfjuv5yyn+nQ2LbHtcezBcjKtOQ69ssYrXOiExuCjBw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200203165117.5701-1-lhenriques@suse.com> <20200203165117.5701-2-lhenriques@suse.com>
- <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com> <20200204151158.GA15992@suse.com>
-In-Reply-To: <20200204151158.GA15992@suse.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 4 Feb 2020 19:06:36 +0100
-Message-ID: <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in copy_file_range
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
-> ...
-> > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > -               if (err) {
-> > > -                       if (err == -EOPNOTSUPP) {
-> > > -                               src_fsc->have_copy_from2 = false;
-> > > -                               pr_notice("OSDs don't support 'copy-from2'; "
-> > > -                                         "disabling copy_file_range\n");
-> > > -                       }
-> > > +               if (IS_ERR(req)) {
-> > > +                       err = PTR_ERR(req);
-> > >                         dout("ceph_osdc_copy_from returned %d\n", err);
-> > > +
-> > > +                       /* wait for all queued requests */
-> > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> >
-> > Hi Luis,
-> >
-> > Looks like ret is still incremented unconditionally?  What happens
-> > if there are three OSD requests on the list and the first fails but
-> > the second and the third succeed?  As is, ceph_osdc_wait_requests()
-> > will return an error with reqs_complete set to 2...
-> >
-> > >                         if (!ret)
-> > >                                 ret = err;
-> >
-> > ... and we will return 8M instead of an error.
->
-> Right, my assumption was that if a request fails, all subsequent requests
-> would also fail.  This would allow ret to be updated with the number of
-> successful requests (x object size), even if the OSDs replies were being
-> delivered in a different order.  But from your comment I see that my
-> assumption is incorrect.
->
-> In that case, when shall ret be updated with the number of bytes already
-> written?  Only after a successful call to ceph_osdc_wait_requests()?
+On Tuesday, February 4, 2020 10:52:36 AM EST Paul Moore wrote:
+> On Tue, Feb 4, 2020 at 10:47 AM Steve Grubb <sgrubb@redhat.com> wrote:
+> > On Tuesday, February 4, 2020 8:19:44 AM EST Richard Guy Briggs wrote:
+> > > > The established pattern is that we print -1 when its unset and "?"
+> > > > when
+> > > > its totalling missing. So, how could this be invalid? It should be
+> > > > set
+> > > > or not. That is unless its totally missing just like when we do not
+> > > > run
+> > > > with selinux enabled and a context just doesn't exist.
+> > > 
+> > > Ok, so in this case it is clearly unset, so should be -1, which will be
+> > > a
+> > > 20-digit number when represented as an unsigned long long int.
+> > > 
+> > > Thank you for that clarification Steve.
+> > 
+> > It is literally a  -1.  ( 2 characters)
+> 
+> Well, not as Richard has currently written the code, it is a "%llu".
+> This was why I asked the question I did; if we want the "-1" here we
+> probably want to special case that as I don't think we want to display
+> audit container IDs as signed numbers in general.
 
-I mentioned this in the previous email: you probably want to change
-ceph_osdc_wait_requests() so that the counter isn't incremented after
-an error is encountered.
+OK, then go with the long number, we'll fix it in the interpretation. I guess 
+we do the same thing for auid.
 
-> I.e. only after each throttling cycle, when we don't have any requests
-> pending completion?  In this case, I can simply drop the extra
-> reqs_complete parameter to the ceph_osdc_wait_requests.
->
-> In your example the right thing to do would be to simply return an error,
-> I guess.  But then we're assuming that we're loosing space in the storage,
-> as we may have created objects that won't be reachable anymore.
+-Steve
 
-Well, that is what I'm getting at -- this needs a lot more
-consideration.  How errors are dealt with, how file metadata is
-updated, when do we fall back to plain copy, etc.  Generating stray
-objects is bad but way better than reporting that e.g. 0..12M were
-copied when only 0..4M and 8M..12M were actually copied, leaving
-the user one step away from data loss.  One option is to revert to
-issuing copy-from requests serially when an error is encountered.
-Another option is to fall back to plain copy on any error.  Or perhaps
-we just don't bother with the complexity of parallel copy-from requests
-at all...
 
-Of course, no matter what we do for parallel copy-from requests, the
-existing short copy bug needs to be fixed separately.
-
->
-> >
-> > >                         goto out_caps;
-> > >                 }
-> > > +               list_add(&req->r_private_item, &osd_reqs);
-> > >                 len -= object_size;
-> > >                 src_off += object_size;
-> > >                 dst_off += object_size;
-> > > -               ret += object_size;
-> > > +               /*
-> > > +                * Wait requests if we've reached the maximum requests allowed
-> > > +                * or if this was the last copy
-> > > +                */
-> > > +               if ((--copy_count == 0) || (len < object_size)) {
-> > > +                       err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> >
-> > Same here.
-> >
-> > > +                       if (err) {
-> > > +                               if (err == -EOPNOTSUPP) {
-> > > +                                       src_fsc->have_copy_from2 = false;
-> >
-> > Since EOPNOTSUPP is special in that it triggers the fallback, it
-> > should be returned even if something was copied.  Think about a
-> > mixed cluster, where some OSDs support copy-from2 and some don't.
-> > If the range is split between such OSDs, copy_file_range() will
-> > always return short if the range happens to start on a new OSD.
->
-> IMO, if we managed to copy some objects, we still need to return the
-> number of bytes copied.  Because, since this return value will be less
-> then the expected amount of bytes, the application will retry the
-> operation.  And at that point, since we've set have_copy_from2 to 'false',
-> the default VFS implementation will be used.
-
-Ah, yeah, given have_copy_from2 guard, this particular corner case is
-fine.
-
-Thanks,
-
-                Ilya
