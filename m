@@ -2,99 +2,113 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917F9C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682EE21741
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:47:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XxT3YHCd"
+	by mail.kernel.org (Postfix) with ESMTP id DFC8D21741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580809662;
+	bh=qqCO45tLyXv//k090GJiiuFH5iCsSgUZxI4IZouLnsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u73YTIcJMWX0oGwDW8QlLyH00+vhD/QJSF6Ds2McPEKFFVL4TvcJY6XF85uwPELFx
+	 7hcw0SSEa2ufk9nQg2INkAy5EOAekWiPZ5SbbX+8Dhr+GTei6fvNLR2PY92MU2OSI5
+	 N2Q19jvSIRvQx1I/IVcVfzRu7JDNxkOlKN02ZRXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgBDJrL (ORCPT
+        id S1727164AbgBDJrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:47:11 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42734 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgBDJrL (ORCPT
+        Tue, 4 Feb 2020 04:47:42 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35717 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgBDJrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:47:11 -0500
-Received: by mail-io1-f68.google.com with SMTP id s6so9775917iol.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:47:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DWB0fGs6D7ucbUTFnrtpqXtN60QWiVsKTSoTpOV+cwQ=;
-        b=XxT3YHCdjUeV5vaM9x2BVAz/ipXOX9X2gkgzuN5lR69WqotmvgDPxkKRusp86NCvLT
-         dgUArE8KvG37XY+rkm8XKJJRhKkXxxriRnFPXMjaDgonyEbcF8tb8NVNo1bEiC2UwpNv
-         hzYCORrrcRkAsi15WzajfZU7DIkuqxrqQFmB0tUiQDH49BJ8aimRdfzPKcVClNwOF1gQ
-         rdfBiMYLew5Ps145UHkfySJBjuKiVfYs7vVquH632OoC4frSXWRUGooWjLUxnpLIixlY
-         sfSL2FCMuh0vr02kit4yuMkH0kXDf6PdmyLfnnyBmePpBjYTXFdrJAR8fWTn4CKgpG2z
-         ra0g==
+        Tue, 4 Feb 2020 04:47:41 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z18so11754491lfe.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:47:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DWB0fGs6D7ucbUTFnrtpqXtN60QWiVsKTSoTpOV+cwQ=;
-        b=CZ8XEbnRGiOBj5oKiyezO6yygb73karKIogwXtuDtMpTibtvJH7qUxnPTzFDdRDtZW
-         DHzG35vC5p7kg8JGYpqAfiFy5U8JTZ3QkeQmXpTOrOU4h2KtZ/lqfHhK9aGva7tNCPB1
-         aZeutQYDNC0iem5mjr8Ndn8IAWd9zdhlWvwrHkIwECJrg1NRSuV/4gCTiJT5aemMyCO8
-         xw6e3ORcatP4Tl3bCzxW/JS/h1FEcoo8iu8rgSgQL23Mvo/NCvulEQm5v4TsjZpn2KFl
-         wYzz/HfKzBKeVYLb+zIoLW7168mK9vWcHwuDdT+k9l7XpDCGiL72kuN15K6Zh6581zYX
-         NwEQ==
-X-Gm-Message-State: APjAAAWnao0HWilFqom+YogJkMwXNOazZkxomFxxTnI1DKUhjxCt7RJN
-        J/YSKPdZIFAvOj29hvjlWjWSqiCakIJsAp1gXWwUW7TD
-X-Google-Smtp-Source: APXvYqyDTCKV1001Mtg+D0euI9fs/vBcJls8wPjmIXSoroJPOS7q+Flq1f6VsazCkXXWHcCrfHdrncKW81QHHYS0ZC8=
-X-Received: by 2002:a05:6602:2352:: with SMTP id r18mr21945815iot.220.1580809630802;
- Tue, 04 Feb 2020 01:47:10 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6L54LVO9TvXxaJUND81Bx/qLlmxq42uCrN3lAcDoSms=;
+        b=b/osIeYqbEgY+nKVlM9kE8bpWmiwBdLDJGLuhwYXSlkik23+QmJmDM5c3LtU5xl3gG
+         q77ocJA+3cq5OZIXDA+mOQ+VVB3fjyYRs8exALjP5HTcPfQJXO4fE0k9clAK9jlSPhmG
+         w4OB1ORfFsCaSV78oeYano4UKe655zT7hE3OERa713AgNGG4sRYhTCq9D9ymwQQUBmmM
+         mtuxLGAqHRM37Y4xJjL7WhbmrAeiKnxit3e+1rqz7SKmZHiZDvI745NtdkICFx7p6AQw
+         mes31F2epihms7rk2/fKDp4LbEIBe+QkZP8m1uWlhyEeb4FrrbFtiHCjLCRXTlZgqlwd
+         Z4sA==
+X-Gm-Message-State: APjAAAVvH/Co6vGfawFxIkmcr2Bn1FuPNiZZ0fWa5zRK9aEuGB4znpIA
+        r/KpMKoZbpd1kXdI21yo9B8=
+X-Google-Smtp-Source: APXvYqyIbJSw+Sx6yeQ9gVTr/+qxk9LEkrfSKMjVWWS4SZzGC9cNh2zqf5bZ8fXCY2jQlxbm8JVE0Q==
+X-Received: by 2002:ac2:599c:: with SMTP id w28mr14738010lfn.78.1580809659847;
+        Tue, 04 Feb 2020 01:47:39 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id w9sm11187437ljh.106.2020.02.04.01.47.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 01:47:39 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iyuo8-0003Is-IY; Tue, 04 Feb 2020 10:47:48 +0100
+Date:   Tue, 4 Feb 2020 10:47:48 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Loic Poulain <loic.poulain@linaro.org>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty_port: Restore tty port default ops on unregistering
+Message-ID: <20200204094748.GG26725@localhost>
+References: <1580285224-7712-1-git-send-email-loic.poulain@linaro.org>
 MIME-Version: 1.0
-References: <20200203133026.22930-1-brgl@bgdev.pl> <20200203191451.GA19076@roeck-us.net>
-In-Reply-To: <20200203191451.GA19076@roeck-us.net>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 4 Feb 2020 10:46:59 +0100
-Message-ID: <CAMRc=McoG=uRJi0W+KV89bORNbGHOw7F=+hdbbEimANJGAYd7w@mail.gmail.com>
-Subject: Re: [PATCH 0/3] gpiolib: fix a regression introduced by gpio_do_set_config()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580285224-7712-1-git-send-email-loic.poulain@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 3 lut 2020 o 20:14 Guenter Roeck <linux@roeck-us.net> napisa=C5=82(a)=
-:
->
-> On Mon, Feb 03, 2020 at 02:30:23PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > These three patches fix a regression introduced by commit d90f36851d65
-> > ("gpiolib: have a single place of calling set_config()"). We first need
-> > to revert patches that came on top of it, then apply the actual fix.
-> >
-> > Bartosz Golaszewski (3):
-> >   Revert "gpiolib: Remove duplicated function gpio_do_set_config()"
-> >   Revert "gpiolib: remove set but not used variable 'config'"
-> >   gpiolib: fix gpio_do_set_config()
-> >
->
-> For the series:
->
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
->
+On Wed, Jan 29, 2020 at 09:07:04AM +0100, Loic Poulain wrote:
+> When a port is unregistered from serdev, its serdev specific client_ops
+> pointer is nullified, which can lead to future null pointer dereference.
+> Fix that by restoring default client_ops when port is unregistered from
+> serdev.
 
-Applied the patches. I'll send them to Linus W shortly.
+Hmm, yeah, this seems like something we should fix as 8250 appears to
+allow reregistering ports, but...
 
-Bartosz
+> port registering/unregistering can happen several times, at least it
+> happens when statically registered 8250 ISA port are replaced at boot
+> time by e.g. device-tree defined 8250 ports.
+
+How did the serdev controller get registered in the first place here if
+you're talking about statically registered 8250 ISA ports (i.e. where is
+the client defined)?
+
+Did you actually ever hit this one?
+
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> ---
+>  drivers/tty/tty_port.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+> index 044c3cb..bf893da 100644
+> --- a/drivers/tty/tty_port.c
+> +++ b/drivers/tty/tty_port.c
+> @@ -203,8 +203,10 @@ void tty_port_unregister_device(struct tty_port *port,
+>  	int ret;
+>  
+>  	ret = serdev_tty_port_unregister(port);
+> -	if (ret == 0)
+> +	if (ret == 0) {
+> +		port->client_ops = &default_client_ops;
+>  		return;
+> +	}
+>  
+>  	tty_unregister_device(driver, index);
+>  }
+
+Johan
