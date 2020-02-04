@@ -2,135 +2,138 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9EDC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54FAC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6B02082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DEA2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dtRi21nm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQnUHfdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgBDWCO (ORCPT
+        id S1727635AbgBDWC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:02:14 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:60190 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgBDWCO (ORCPT
+        Tue, 4 Feb 2020 17:02:58 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44633 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727461AbgBDWC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:02:14 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014Ln1OY001911;
-        Tue, 4 Feb 2020 22:01:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=IgGcgFx4W8iUI2PM0KnTJ1kV8040cTbRidDGiGCct20=;
- b=dtRi21nm+zTqB4vWCjowrSuk4i5eYhjiJQiv79sdwh7Om6c9xl0hrHnoEXWIEiN/0JDl
- 2p+l1o/wq2zAP/OJ5W4IgE9jgGuzkdkCqY+mKDGOTIfobSekq12k4LGxfAAwGHsHBs+u
- g8iHdVQmyARPlKTw4oRBHveWo/uqxuvSbS9fwjt2QxMLZYzXfVsQY3jADoPWyVeYUniu
- pTkreDQC9yioReGvNr56lKNFHuvOktx0tO+pR1UQGMoaVsrexyGzy4vdxrlNqdaUqY72
- W/0upwEnOFM8g+MF0PCQP9R56vqlpvDm0o+sNemNLe8vzCAiFB13H6eFBm1D7TX04/Ot PA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xw0ru9rdr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 22:01:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014Ln0WR164755;
-        Tue, 4 Feb 2020 22:01:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2xxvusr9vb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 22:01:04 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014M12rR005078;
-        Tue, 4 Feb 2020 22:01:02 GMT
-Received: from dhcp-10-132-97-93.usdhcp.oraclecorp.com (/10.132.97.93)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 14:01:01 -0800
-Subject: Re: [PATCH] KVM: nVMX: Remove stale comment from
- nested_vmx_load_cr3()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200204153259.16318-1-sean.j.christopherson@intel.com>
- <dcee13f5-f447-9ab4-4803-e3c4f42fb011@oracle.com>
- <20200204203607.GB5663@linux.intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <14d6b39b-b907-d1f3-8f15-9b1df0718082@oracle.com>
-Date:   Tue, 4 Feb 2020 14:01:00 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Tue, 4 Feb 2020 17:02:58 -0500
+Received: by mail-pg1-f196.google.com with SMTP id g3so4653251pgs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=cw7uphHP9U6UP+lxamhBKouzCmQh7IsOGgJhwnSNEpw=;
+        b=uQnUHfdRIINQILC2vRhlGkfEXV7/liBdS6QaMg0YF6q1CGpK6rMZpNPZG9zXgQeeIQ
+         2tXaPr0DFInuRmBMRG5JRCe7d4jcpjLg9zsCbVTrvmUQdCtfZ+i9QSZxpPrbjkh1IWnh
+         Zxq3X4+r+nhA/VVK+ExH5EGCsE2wFdJ0d6tIIt3WYMhaB2mbHgb3pezQPrlkzhh9XkfZ
+         uU0RIShMQBqMG+ue5S0Tawxj5xXrADcyBwyi7RD/9T7ZCDfTkZlBwljmVQSSjNQ8MTrt
+         AwICamJr2Vze485Ve9ATOP5OEQ8F+XAhiMfyYcOAT+D1pHEHZ/cq3euRl0FO+pcpGD7P
+         sVdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=cw7uphHP9U6UP+lxamhBKouzCmQh7IsOGgJhwnSNEpw=;
+        b=M5zeouMh4xOQvA+AQXXg1wiGZFEYPuR89k9G80J2ankiX7KAcVFuaImQ++tJq3M7Or
+         vPvTy6qZddR2O9nciK/HXA0Z+uCun+38Icj+vzCesGMuysRl1vUVFtDNXALhnaMFLb4v
+         lpL4Av+X2M8YH9Xnq5BOdc0epXDfyrrjpHdpRrjtkU5N4dQwVIYxO48tG55AWpy07HVJ
+         Didbd4Is4ERkOI8y23YdkTw5760PPIPuU+85TKplhM4HVsjHP6Sa4Er3SrE8IuPIPgyI
+         0JOREGCSkdazWOa/Fdtk3+VHhbNbAfYI79eHF2TFMhhvO4c6AXdqGaQkkZeZg6kRvP1G
+         Vexg==
+X-Gm-Message-State: APjAAAUwjcFlYqhvxP9r8le91ayyL5txze2YfKoN2DqXTEkQowckieUm
+        L5U9ZxZmx5cv8wR3Hs2iAoE=
+X-Google-Smtp-Source: APXvYqzgNdF5P9pxxeKfQGmx7wbYhoI8qMqKyh9CCxGBAM9YByTCjdKgzhIZdEPwZrbPHr5B5wCJtQ==
+X-Received: by 2002:a63:120f:: with SMTP id h15mr4104893pgl.235.1580853777898;
+        Tue, 04 Feb 2020 14:02:57 -0800 (PST)
+Received: from [192.168.0.16] ([97.115.141.236])
+        by smtp.gmail.com with ESMTPSA id gx2sm4698984pjb.18.2020.02.04.14.02.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 14:02:57 -0800 (PST)
+Subject: Re: [PATCH] kbuild: Include external modules compile flags
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dev@openvswitch.org, dsahern@gmail.com
+References: <1580161806-8037-1-git-send-email-gvrose8192@gmail.com>
+ <CAK7LNAQyh9CFgKd1DtAPFW8DuHNp1gn8YABuP8-LsF=hHK2DFw@mail.gmail.com>
+ <f6ffa0d0-8214-8fc0-4fe9-4b70a1581d3e@gmail.com>
+ <677aff5a-a52e-08ae-f341-547af08f7566@gmail.com>
+ <CAK7LNARsBQm8jTs6PZDHAVFX4GZ_=Ls-5MOutNJFOHBN29Gd5w@mail.gmail.com>
+From:   Gregory Rose <gvrose8192@gmail.com>
+Message-ID: <660c4df3-16c8-4b06-9f06-cd847871e7ad@gmail.com>
+Date:   Tue, 4 Feb 2020 14:02:55 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200204203607.GB5663@linux.intel.com>
+In-Reply-To: <CAK7LNARsBQm8jTs6PZDHAVFX4GZ_=Ls-5MOutNJFOHBN29Gd5w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002040150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002040150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 02/04/2020 12:36 PM, Sean Christopherson wrote:
-> On Tue, Feb 04, 2020 at 11:57:39AM -0800, Krish Sadhukhan wrote:
->> On 2/4/20 7:32 AM, Sean Christopherson wrote:
->>> The blurb pertaining to the return value of nested_vmx_load_cr3() no
->>> longer matches reality, remove it entirely as the behavior it is
->>> attempting to document is quite obvious when reading the actual code.
->>>
->>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> ---
->>>   arch/x86/kvm/vmx/nested.c | 2 --
->>>   1 file changed, 2 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->>> index 7608924ee8c1..0c9b847f7a25 100644
->>> --- a/arch/x86/kvm/vmx/nested.c
->>> +++ b/arch/x86/kvm/vmx/nested.c
->>> @@ -1076,8 +1076,6 @@ static bool nested_cr3_valid(struct kvm_vcpu *vcpu, unsigned long val)
->>>   /*
->>>    * Load guest's/host's cr3 at nested entry/exit. nested_ept is true if we are
->>>    * emulating VM entry into a guest with EPT enabled.
->>> - * Returns 0 on success, 1 on failure. Invalid state exit qualification code
->>> - * is assigned to entry_failure_code on failure.
->>>    */
->>>   static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
->>>   			       u32 *entry_failure_code)
->> I think it's worth keeping the last part which is " Exit qualification code
->> is assigned to entry_failure_code on failure." because "Entry Failure" and
->> "Exit Qualification" might sound bit confusing until you actually look at
->> the caller nested_vmx_enter_non_root_mode().
-> Hmm, something like this?
+On 2/1/2020 10:07 PM, Masahiro Yamada wrote:
+> On Thu, Jan 30, 2020 at 3:09 AM Gregory Rose <gvrose8192@gmail.com> wrote:
+>>
+>> On 1/28/2020 7:37 AM, Gregory Rose wrote:
+>>> On 1/27/2020 7:35 PM, Masahiro Yamada wrote:
+>>>> On Tue, Jan 28, 2020 at 6:50 AM Greg Rose <gvrose8192@gmail.com> wrote:
+>>>>> Since this commit:
+>>>>> 'commit 9b9a3f20cbe0 ("kbuild: split final module linking out into
+>>>>> Makefile.modfinal")'
+>>>>> at least one out-of-tree external kernel module build fails
+>>>>> during the modfinal make phase because Makefile.modfinal does
+>>>>> not include the ccflags-y variable from the exernal module's Kbuild.
+>>>> ccflags-y is passed only for compiling C files in that directory.
+>>>>
+>>>> It is not used for compiling *.mod.c
+>>>> This is true for both in-kernel and external modules.
+>>>>
+>>>> So, ccflags-y is not a good choice
+>>>> for passing such flags that should be globally effective.
+>>>>
+>>>>
+>>>> Maybe, KCFLAGS should work.
+>>>>
+>>>>
+>>>> module:
+>>>>          $(MAKE) KCFLAGS=...  M=$(PWD) -C /lib/modules/$(uname
+>>>> -r)/build modules
+>>>>
+>> Hi Masahiro,
+>>
+>> I'm unable to get that to work.  KCFLAGS does not seem to be used in
+>> Makefile.modfinal.
 >
-> /*
->   * Load guest's/host's cr3 at nested entry/exit.  @nested_ept is true if we are
->   * emulating VM-Entry into a guest with EPT enabled.  On failure, the expected
->   * Exit Qualification (for a VM-Entry consistency check VM-Exit) is assigned to
->   * @entry_failure_code.
->   */
-It  works.
+> I quickly tested it, and confirmed
+> KCFLAGS works for external modules, too.
+>
+>
+> Makefile.modfinal includes scripts/Makefile.lib
+>
+>
+> So,  c_flags contains $(KCFLAGS)
+>
+>   c_flags -> KBUILD_CFLAGS -> KCFLAGS
+>
 
-With that,
+Hi Masahiro,
 
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+I must have missed  something then - again, my unfamiliarity with the 
+Linux Makefiles is probably tripping me up.  I'll
+dig around and see if I can get that working.
+
+Thanks for your help,
+
+- Greg
+
