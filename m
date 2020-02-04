@@ -2,95 +2,140 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7D3C3524F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05913C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3FE02084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB6220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IbZjKwym"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iXUE6ebm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgBDGCC (ORCPT
+        id S1726785AbgBDGDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:02:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54861 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725976AbgBDGCB (ORCPT
+        Tue, 4 Feb 2020 01:03:15 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40056 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgBDGDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:02:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580796120;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RjdsRkXe77yTljkA9sXafvBdByUVdvxrTgCwvbrVV0w=;
-        b=IbZjKwymJRgcTd3G6CGpLYAAv/ZFkF/CWUlC6k+vRLFkS2YTObk0LNK01tDBooKAUPWT5K
-        M384Klin7NjILn5tULnraagONCrQx9R5wNKPiT6m6BmgtQBMB2kRpxVLeD0UKTT+wUp02O
-        JRZusD1TMGIr4V9rW38iELK/zhKy2gw=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-p_ZlYpiwO1mWy-PPDyk-rw-1; Tue, 04 Feb 2020 01:01:58 -0500
-X-MC-Unique: p_ZlYpiwO1mWy-PPDyk-rw-1
-Received: by mail-qt1-f200.google.com with SMTP id g26so11623513qts.16
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 22:01:58 -0800 (PST)
+        Tue, 4 Feb 2020 01:03:14 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a142so17325907oii.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 22:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XMN+K684Z/eVZ2yqWGF8j0z6j6M569qkTkBF8k40oto=;
+        b=iXUE6ebm4DNRaybXe8E5MJV+zuFNTp8YtrjhZBJpVahnRtRlo/wlsroYUWsbzOcqpB
+         ZrD9bBlQE23F5TGK2maz/caplkgCljAVe/NWWPzOTvJESIZqSQ0tLvEinV0j79S2sgCh
+         NqGXfWe/nIqgwPvone2XLITAudSxoARaNlFO2Rw7eFWcs0zfv+F6Qw4SfiTNwxppZVXg
+         yX32n16CFb5WLXAm05/f0NiNfKnbSCdfAsBJC1tdAgIWD7NHiUe9pDBtj8WHq4e7pY61
+         0wZn9jjAC0bAWM31CCckaMxVAePFzTxouLcpqwRCJaT/8E98hn+W/cygJo9iH7G5hRsH
+         IfGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RjdsRkXe77yTljkA9sXafvBdByUVdvxrTgCwvbrVV0w=;
-        b=HhpNm1bpB0IGIzwkA3Z9FqI/k7j41kwxC8/E5YMjJHoUNd/VCivMUPMF9obftvEAHk
-         GZFt644vzc+uaXhVMY3xY+ZS5yjbgQNihjERTvXyn6JcwehYrEG6+r5r3mAWzb23klfi
-         Z9FMM/XthNNE7ePMl7ODrMIbF6/DvHilCh/dD3h+I4+wF2jq7vLlP+vdWlRI3Ps5DfEX
-         2BQlf2iMPHG+lm5T1addToZ44PHlTcIgP2uUaRWTxPxNvnJT1nfshdzLYOcOvrXb+7M1
-         Gz4BnSwLJfcHKs2Iz+LblefBmBCWa9rh9yotfgdVt5YkyZLKhPhdt9y/Q5jNbLLOTy/0
-         qFLg==
-X-Gm-Message-State: APjAAAXhc7TfDjkl6Zw4ljkzVmcRbfguDzRu9guzCeOsh+oL7mDsLz/n
-        r7C1fGZ5fbBl13GYb8RyrLRmlzXj+RlBouwQF7c0hBPcEmq6/MyTDxv25MNjusJc533XsF0jsW2
-        TaKsM0bKxYynKwwoCaQG3Ozg5
-X-Received: by 2002:a05:620a:102c:: with SMTP id a12mr25836903qkk.95.1580796117493;
-        Mon, 03 Feb 2020 22:01:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwdvK3Ipy2qMCfUzq1ylzYT9IbitByfrekyORfLE2eptvuEIqJ12IuGLk9Wtkttgxshu+/I4A==
-X-Received: by 2002:a05:620a:102c:: with SMTP id a12mr25836873qkk.95.1580796117247;
-        Mon, 03 Feb 2020 22:01:57 -0800 (PST)
-Received: from redhat.com (bzq-109-64-11-187.red.bezeqint.net. [109.64.11.187])
-        by smtp.gmail.com with ESMTPSA id u24sm10612793qkm.40.2020.02.03.22.01.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XMN+K684Z/eVZ2yqWGF8j0z6j6M569qkTkBF8k40oto=;
+        b=T3mOpRA/6hq+Ha+xxvV1WpVV64C3JMS+1AZw1F2rsEWNJ1bGsagKD6AFPDIO1BVH8R
+         g2pDgiejJvSPqyRNy2Jnw/0np2YiKqqe9PWyeKYeIg53VwnievX5xzP0YYbgtvHE+zPv
+         228GhG8rCEYk1jBRJbyynIlNiqpVHhPHm1zbep5BxQUmY3vjKRLwHIdPOr31U+stb+n4
+         N4xi/3uRH5DlrAzWRHy5Yy5rSueIES6AANOowiKBo4ElqJm6tUwNDXMI64O/U+mbd1D0
+         UtP/saHj7y9e1+LuM+OFKgV/CvMVEaLShl99pIVaWdPIRedG5a48F1yGJJJH+X0uEVK1
+         uLog==
+X-Gm-Message-State: APjAAAUTmJPfGLq6dXNvOm1YtdXfjV0uphGRp76/fQ1AVsD6+8mXYdu7
+        8RhkURAZOjHTK1hh/jdlRS3ln2bP
+X-Google-Smtp-Source: APXvYqzmORnsr5YKAbx545QjhZhcUKYFi/BJlFYlcOrBRtot49y/1d6gwfVV0ShbmWEKuNCpqRV6Nw==
+X-Received: by 2002:aca:fc0c:: with SMTP id a12mr2264517oii.118.1580796193543;
+        Mon, 03 Feb 2020 22:03:13 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id d131sm6501708oia.36.2020.02.03.22.03.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 22:01:56 -0800 (PST)
-Date:   Tue, 4 Feb 2020 01:01:48 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
-        rob.miller@broadcom.com, haotian.wang@sifive.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com,
-        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
-        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-Message-ID: <20200204005306-mutt-send-email-mst@kernel.org>
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+        Mon, 03 Feb 2020 22:03:11 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ASoC: wcd934x: Remove some unnecessary NULL checks
+Date:   Mon,  3 Feb 2020 23:01:44 -0700
+Message-Id: <20200204060143.23393-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
-> 5) generate diffs of memory table and using IOMMU API to setup the dma
-> mapping in this method
+Clang warns:
 
-Frankly I think that's a bunch of work. Why not a MAP/UNMAP interface?
+../sound/soc/codecs/wcd934x.c:1886:11: warning: address of array
+'wcd->rx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
+        if (wcd->rx_chs) {
+        ~~  ~~~~~^~~~~~
+../sound/soc/codecs/wcd934x.c:1894:11: warning: address of array
+'wcd->tx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
+        if (wcd->tx_chs) {
+        ~~  ~~~~~^~~~~~
+2 warnings generated.
 
+Arrays that are in the middle of a struct are never NULL so they don't
+need a check like this.
+
+Fixes: a61f3b4f476e ("ASoC: wcd934x: add support to wcd9340/wcd9341 codec")
+Link: https://github.com/ClangBuiltLinux/linux/issues/854
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+Also, turns out this was fixed in the wcd9335 driver in
+commit d22b4117538d ("ASoC: wcd9335: remove some unnecessary
+NULL checks")...
+
+ sound/soc/codecs/wcd934x.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
+index 158e878abd6c..e780ecd554d2 100644
+--- a/sound/soc/codecs/wcd934x.c
++++ b/sound/soc/codecs/wcd934x.c
+@@ -1883,20 +1883,16 @@ static int wcd934x_set_channel_map(struct snd_soc_dai *dai,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (wcd->rx_chs) {
+-		wcd->num_rx_port = rx_num;
+-		for (i = 0; i < rx_num; i++) {
+-			wcd->rx_chs[i].ch_num = rx_slot[i];
+-			INIT_LIST_HEAD(&wcd->rx_chs[i].list);
+-		}
++	wcd->num_rx_port = rx_num;
++	for (i = 0; i < rx_num; i++) {
++		wcd->rx_chs[i].ch_num = rx_slot[i];
++		INIT_LIST_HEAD(&wcd->rx_chs[i].list);
+ 	}
+ 
+-	if (wcd->tx_chs) {
+-		wcd->num_tx_port = tx_num;
+-		for (i = 0; i < tx_num; i++) {
+-			wcd->tx_chs[i].ch_num = tx_slot[i];
+-			INIT_LIST_HEAD(&wcd->tx_chs[i].list);
+-		}
++	wcd->num_tx_port = tx_num;
++	for (i = 0; i < tx_num; i++) {
++		wcd->tx_chs[i].ch_num = tx_slot[i];
++		INIT_LIST_HEAD(&wcd->tx_chs[i].list);
+ 	}
+ 
+ 	return 0;
 -- 
-MST
+2.25.0
 
