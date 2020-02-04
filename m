@@ -2,147 +2,130 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438B2C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ADAC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129E921744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2165217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8LrnKJJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRwCOSuR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgBDMlS (ORCPT
+        id S1727185AbgBDMnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:41:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44851 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727126AbgBDMlR (ORCPT
+        Tue, 4 Feb 2020 07:43:12 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38154 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgBDMnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:41:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580820076;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=kkwmqU8ouKlrmlUpwSyjFFOqHtkPdBPv4d9RidZ3GCg=;
-        b=V8LrnKJJuHLHzyVt8q3lYOndZEkvsMLasOeP6oFX3CsRLSF7def1+38SNpMOq16QcGUeFa
-        pp349bfvB0M6fED35O1CEXmkpBs1bUe1i6ziqFQHZXp4WDVGhWmg7mdLvMnsDx7NkICmRS
-        CZvKqLJv6OgrXJLMYRjJA76DyfiNPmk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-236-krWsps6ZNm2p0BQ0dVOmYQ-1; Tue, 04 Feb 2020 07:41:12 -0500
-X-MC-Unique: krWsps6ZNm2p0BQ0dVOmYQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 550AD8010E7;
-        Tue,  4 Feb 2020 12:41:10 +0000 (UTC)
-Received: from [10.36.117.121] (ovpn-117-121.ams2.redhat.com [10.36.117.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 547BD86C4A;
-        Tue,  4 Feb 2020 12:41:07 +0000 (UTC)
-Subject: Re: [PATCH v6 10/10] mm/memory_hotplug: Cleanup __remove_pages()
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-11-david@redhat.com> <20200204094652.GE6494@linux>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <5d698f94-af18-0714-bc97-14b6c520572c@redhat.com>
-Date:   Tue, 4 Feb 2020 13:41:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 4 Feb 2020 07:43:11 -0500
+Received: by mail-pl1-f193.google.com with SMTP id t6so7240917plj.5;
+        Tue, 04 Feb 2020 04:43:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oK7WxSDye40Q4exQOmSbaOEE2awt0AmOHfgQ/uSgZ+c=;
+        b=JRwCOSuR2tp+0d28muTxd7Vm+g5fQiqscXD0GrBsRFOfkbwQp+A9AiPdYYlpQkvW19
+         DeLV4Gbxc4vJ7+v5DVFOEg8iVWfXLwCkpTlOW8H6++hgzLxiL0KaqBvUuFXOx90kcg/y
+         nwQNwYmqpe3QJ1rsmbTfiy9Zm/sBVKoYgowdZ0B/7dUdDyyoVLi01e0ayIhph0m60zTR
+         PDPzeSghMahwuKCA1re4pyG7BFoKiAHpXFhuAtJ37ciMdADdUpo7AvKvpb7g6m8lQsuU
+         4pR8PwmzY82D509Hke/UAhFsW9FROXSDLPctvIOQiO5GvScgakpOGzjZCswOthVU6Bw8
+         9mRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oK7WxSDye40Q4exQOmSbaOEE2awt0AmOHfgQ/uSgZ+c=;
+        b=fva/RjobqzToZHVWrb+Z8Np9E4Rd9Ai9BHnFlEaACiCWXQXwj5nx4at8kSpI1GV2Ca
+         72y2INl0h742mxxqNjJknjgIZ6qFkxDb6prVhgSGt1jyjJYurr+QzJr0Y736eaE6a2+a
+         zLuzv2iXvKOf2YF8+MvR2s14mhFc3VLJZwlgaJE1s9hMISU42Jb8T5U0EwDG/R47pqan
+         wXAhNKhaIVrCv6wt0kdobeeskWEX86i03N2YNIFs57gOQmNiyGgAuza+xIRJeiR07X90
+         skaZX948Iy9HseFtqGB9kO56D6UKVEZe8Fx0l867ZZlVlE5NI2xr2m7dtZTHcQTrzlcl
+         0bSQ==
+X-Gm-Message-State: APjAAAXux2gnw2yiPoYYeBRF2edClwZwNsmlcZ8h62qNgNyyY01wIwUw
+        Ac981uQNQl+O7EgmKkQff+Y=
+X-Google-Smtp-Source: APXvYqzMyByEtQrwQXHneoNt7j6f1bwKwikmbbZDpMd2+UB0JSbapMDRb7NVdrxaDdHv8J5sXv6rDQ==
+X-Received: by 2002:a17:902:82cc:: with SMTP id u12mr27257199plz.342.1580820190632;
+        Tue, 04 Feb 2020 04:43:10 -0800 (PST)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id r66sm25316910pfc.74.2020.02.04.04.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 04:43:09 -0800 (PST)
+Date:   Tue, 4 Feb 2020 20:43:01 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: Fix build error for
+ cpu-idle-cooling.rst and client.rst
+Message-ID: <20200204124301.g5acaod54bellxzm@mail.google.com>
+References: <20200203140223.10298-1-changbin.du@gmail.com>
+ <20200203152255.GQ2841@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <20200204094652.GE6494@linux>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203152255.GQ2841@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.02.20 10:46, Oscar Salvador wrote:
-> On Sun, Oct 06, 2019 at 10:56:46AM +0200, David Hildenbrand wrote:
->> Let's drop the basically unused section stuff and simplify.
->>
->> Also, let's use a shorter variant to calculate the number of pages to
->> the next section boundary.
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->=20
-> I have to confess that it took me while to wrap around my head
-> with the new min() change, but looks ok:
+On Mon, Feb 03, 2020 at 08:52:55PM +0530, Vinod Koul wrote:
+> On 03-02-20, 22:02, Changbin Du wrote:
+> > This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
+> > 
+> > Sphinx parallel build error:
+> > docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
+> > 
+> > Sphinx parallel build error:
+> > docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > 
+> > ---
+> > v2: rebase.
+> > ---
+> >  Documentation/driver-api/dmaengine/client.rst | 14 +++++++---
+> >  .../driver-api/thermal/cpu-idle-cooling.rst   | 27 ++++++++++---------
+> >  Documentation/driver-api/thermal/index.rst    |  1 +
+> >  3 files changed, 26 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+> > index a9a7a3c84c63..2104830a99ae 100644
+> > --- a/Documentation/driver-api/dmaengine/client.rst
+> > +++ b/Documentation/driver-api/dmaengine/client.rst
+> > @@ -151,8 +151,8 @@ The details of these operations are:
+> >       Note that callbacks will always be invoked from the DMA
+> >       engines tasklet, never from interrupt context.
+> >  
+> > -  Optional: per descriptor metadata
+> > -  ---------------------------------
+> > +  **Optional: per descriptor metadata**
+> 
+> I have already fixed it up and it is linux-next (thru dmaengine tree)
+> 
+> Can you please send rest of client.rst changes to me as well
+>
+No problem. But I think here it should not create a new section, so instead I
+made it bold.
 
-It's a pattern commonly used in compilers and emulators to calculate the
-number of bytes to the next block/alignment. (we're missing a macro
-(like we have ALIGN_UP/IS_ALIGNED) for that - but it's hard to come up
-with a good name (e.g., SIZE_TO_NEXT_ALIGN) .
+> Thanks
+> -- 
+> ~Vinod
 
---=20
-Thanks,
 
-David / dhildenb
 
+-- 
+Cheers,
+Changbin Du
