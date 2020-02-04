@@ -2,129 +2,205 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1783AC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A92C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE14F2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B342721744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qDFRSO55"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ff+vWcmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgBDIT1 (ORCPT
+        id S1727119AbgBDIVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:19:27 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:32914 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgBDIT1 (ORCPT
+        Tue, 4 Feb 2020 03:21:52 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47448 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgBDIVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 03:19:27 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m7so708305pjs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 00:19:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e7VapZs7ToFtGQHirc2gqfuZaDOEBKykkyxeoFQPPr0=;
-        b=qDFRSO55Rv/R04oSblvygRyyFRoB6x6wb+su1cgyo/BppoM0+ZDgs8RozwgkK78Sci
-         ghPLeZFFf9kILD6GN0VLX2rpGOVtNip/n8BJEM708QGzL5965uow7Dp+dAorskXuSKkd
-         kcn9QHnmSeaZkVwiPSATgkTv8F9ZlkKyJQbYDy3F5BJFrbb4zlsvmlOaGPXaJgwfqoS4
-         m7OCdxGsCX/2yHJF65AXCxiler2uuqrKAaz6asOH0fvHc1zwYKC7ltO/LKQkLyK6f5hc
-         qu8bXKEK7Qek05xniIc0pewDBxQqbEGS/GplfUOEldjkJJTPWVKvHHvAbehYWChMP6MW
-         WtYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e7VapZs7ToFtGQHirc2gqfuZaDOEBKykkyxeoFQPPr0=;
-        b=cLbkqDKOg4o5UVCdelb9enVMMMIE7+Iq51UtdnlQCylMGl5UErFIixlm5PzgqOt2MF
-         97qEyd+ohMb5jm64+tGt61MRO4JyGdtrq6aB9PaBoMmdsHux7VmxGY69fSUS3zfV8OIk
-         CfiNmDZXBMuHISkIbCA1rHSOssRyk6w91j6be5G+qoeAk0X5TM7OKbwCHwT8ZtUe5p2K
-         eSp6Av02HiqzKUJ7fJiEaFfA/cgcDpx+D5sMbPR2foN+WGZF3H6n8k4uaofxPyC4qdpx
-         0cgTn56KkUBOm0164rBWW5BGnjXyMD4gSTVqlvf1OJusP3yU0uKfXNl9ZwNYbeewN0Vl
-         PcQg==
-X-Gm-Message-State: APjAAAUko025rcNJzMud7wq3xMCoXXK++upJdDvTfI6egIAdLz/26Fws
-        T/oGk2YfhBd5UjF3N9qydkls
-X-Google-Smtp-Source: APXvYqwc3F+ajrWjrRQ9TQ7Nc/U7oGxap8lGBbplh9eigm6PnJygpBlf7IQd9svy86r/SV0NWozUhA==
-X-Received: by 2002:a17:902:b909:: with SMTP id bf9mr27151608plb.96.1580804366289;
-        Tue, 04 Feb 2020 00:19:26 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:184:5239:5cf8:8075:e072:4b02])
-        by smtp.gmail.com with ESMTPSA id z29sm22684879pgc.21.2020.02.04.00.19.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 00:19:25 -0800 (PST)
-Date:   Tue, 4 Feb 2020 13:49:16 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, smohanad@codeaurora.org,
-        jhugo@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 14/16] net: qrtr: Add MHI transport layer
-Message-ID: <20200204081914.GB7452@Mani-XPS-13-9360>
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-15-manivannan.sadhasivam@linaro.org>
- <20200203101225.43bd27bc@cakuba.hsd1.ca.comcast.net>
+        Tue, 4 Feb 2020 03:21:52 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0148LedE106347;
+        Tue, 4 Feb 2020 02:21:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580804500;
+        bh=cdRcHIYmGTk/Lxu45I64Xr0pKK1z8aQrkVi5WMDxmYY=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=ff+vWcmQviCPynq90OM6xs1y0zx4ibzBOnMqqEZZxoxJabWduWTXEg1qrzqIp05I1
+         CUZdXO/Xue7Iiuy8fgdzvuxPOEp2BbEm+cIwrLqUlIJa6dvQH238HfvLmBTv2HWGxF
+         o5Ox7OsNXF0gdgBt+EOD0NaBgN3B5uzB1thaFRTg=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0148Lek3029462;
+        Tue, 4 Feb 2020 02:21:40 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
+ 2020 02:21:40 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 4 Feb 2020 02:21:40 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0148Lbad104400;
+        Tue, 4 Feb 2020 02:21:38 -0600
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
+ dma_request_slave_chan()
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+ <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com>
+ <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
+ <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+ <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
+ <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
+ <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com>
+ <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
+ <CAMuHMdUYcSPoK8NOSdMzU_Jtg84aPMNKeGnacnF7=aidV4eqvw@mail.gmail.com>
+ <b0a0e1ca-a2c4-5144-d02e-efbf04b88a6e@ti.com>
+Message-ID: <eab36657-5f03-456d-79da-93bd026cda72@ti.com>
+Date:   Tue, 4 Feb 2020 10:21:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203101225.43bd27bc@cakuba.hsd1.ca.comcast.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b0a0e1ca-a2c4-5144-d02e-efbf04b88a6e@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub,
 
-On Mon, Feb 03, 2020 at 10:12:25AM -0800, Jakub Kicinski wrote:
-> On Fri, 31 Jan 2020 19:20:07 +0530, Manivannan Sadhasivam wrote:
-> > +/* From QRTR to MHI */
-> > +static void qcom_mhi_qrtr_ul_callback(struct mhi_device *mhi_dev,
-> > +				      struct mhi_result *mhi_res)
-> > +{
-> > +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
-> > +	struct qrtr_mhi_pkt *pkt;
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&qdev->ul_lock, flags);
-> > +	pkt = list_first_entry(&qdev->ul_pkts, struct qrtr_mhi_pkt, node);
-> > +	list_del(&pkt->node);
-> > +	complete_all(&pkt->done);
-> > +
-> > +	kref_put(&pkt->refcount, qrtr_mhi_pkt_release);
+
+On 04/02/2020 10.15, Peter Ujfalusi wrote:
+> Hi Geert,
 > 
-> Which kref_get() does this pair with?
+> On 04/02/2020 10.01, Geert Uytterhoeven wrote:
+>> Hi Peter,
+>>
+>> On Tue, Feb 4, 2020 at 7:52 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>> On 03/02/2020 22.34, Geert Uytterhoeven wrote:
+>>>> On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
+>>>> <glaubitz@physik.fu-berlin.de> wrote:
+>>>>> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
+>>>>>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
+>>>>>
+>>>>> FWIW, there is a patch set by Yoshinori Sato to add device tree support
+>>>>> for classical SuperH hardware. It was never merged, unfortunately :(.
+>>>>
+>>>> True.
+>>>>
+>>>>>> Anyone who cares for DMA on SuperH?
+>>>>>
+>>>>> What is DMA used for on SuperH? Wouldn't dropping it cut support for
+>>>>> essential hardware features?
+>>>>
+>>>> It may make a few things slower.
+>>>
+>>> I would not drop DMA support but I would suggest to add dma_slave_map
+>>> for non DT boot so the _compat() can be dropped.
+>>
+>> Which is similar in spirit to gpiod_lookup and clk_register_clkdev(),
+>> right?
 > 
-> Looks like qcom_mhi_qrtr_send() will release a reference after
-> completion, too.
+> Yes, it is similar:
+> 
+> /* OMAP730, OMAP850 */
+> static const struct dma_slave_map omap7xx_sdma_map[] = {
+> 	{ "omap-mcbsp.1", "tx", SDMA_FILTER_PARAM(8) },
+> 	{ "omap-mcbsp.1", "rx", SDMA_FILTER_PARAM(9) },
+> 	{ "omap-mcbsp.2", "tx", SDMA_FILTER_PARAM(10) },
+> 	{ "omap-mcbsp.2", "rx", SDMA_FILTER_PARAM(11) },
+> 	{ "mmci-omap.0", "tx", SDMA_FILTER_PARAM(21) },
+> 	{ "mmci-omap.0", "rx", SDMA_FILTER_PARAM(22) },
+> 	{ "omap_udc", "rx0", SDMA_FILTER_PARAM(26) },
+> 	{ "omap_udc", "rx1", SDMA_FILTER_PARAM(27) },
+> 	{ "omap_udc", "rx2", SDMA_FILTER_PARAM(28) },
+> 	{ "omap_udc", "tx0", SDMA_FILTER_PARAM(29) },
+> 	{ "omap_udc", "tx1", SDMA_FILTER_PARAM(30) },
+> 	{ "omap_udc", "tx2", SDMA_FILTER_PARAM(31) },
+> };
+> 
+> "device name", "channel name", "parameter for filter"
+
+fwiw for EDMA on daVinci we have these (for da850):
+static const struct dma_slave_map da850_edma0_map[] = {
+	{ "davinci-mcasp.0", "rx", EDMA_FILTER_PARAM(0, 0) },
+	{ "davinci-mcasp.0", "tx", EDMA_FILTER_PARAM(0, 1) },
+	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 2) },
+	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 3) },
+	{ "davinci-mcbsp.1", "rx", EDMA_FILTER_PARAM(0, 4) },
+	{ "davinci-mcbsp.1", "tx", EDMA_FILTER_PARAM(0, 5) },
+	{ "spi_davinci.0", "rx", EDMA_FILTER_PARAM(0, 14) },
+	{ "spi_davinci.0", "tx", EDMA_FILTER_PARAM(0, 15) },
+	{ "da830-mmc.0", "rx", EDMA_FILTER_PARAM(0, 16) },
+	{ "da830-mmc.0", "tx", EDMA_FILTER_PARAM(0, 17) },
+	{ "spi_davinci.1", "rx", EDMA_FILTER_PARAM(0, 18) },
+	{ "spi_davinci.1", "tx", EDMA_FILTER_PARAM(0, 19) },
+};
+
+static const struct dma_slave_map da850_edma1_map[] = {
+	{ "da830-mmc.1", "rx", EDMA_FILTER_PARAM(1, 28) },
+	{ "da830-mmc.1", "tx", EDMA_FILTER_PARAM(1, 29) },
+};
+
+and in the DMA driver:
+	ecc->dma_slave.filter.map = info->slave_map;
+	ecc->dma_slave.filter.mapcnt = info->slavecnt;
+	ecc->dma_slave.filter.fn = edma_filter_fn;
+
+When I added the dma_slave_map support it was done in a way that it
+could be used by anyone having the same issue as we were facing with
+legacy daVinci and OMAP1 boards (no DT support in sight).
+
+Drivers do not need to care about legacy/DT boot.
+
+> 
+> The in the DMA driver (omap-dma.c):
+> 	od->ddev.filter.map = od->plat->slave_map;
+> 	od->ddev.filter.mapcnt = od->plat->slavecnt;
+> 	od->ddev.filter.fn = omap_dma_filter_fn;
+> 
+> When things are converted the filter function no longer needs to be
+> exported, it is local to the DMA driver.
+> 
+>>
+>>> Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
+>>> difference offloading data movement from the CPU.
+>>
+>> Assumed it is actually used...
+> 
+> Right, imho (again) we should not decide if given SoC needs it or not.
+> It is up to the drivers to use it or not, but with the dma_slave_map
+> there is no difference between DT or legacy boot handling towards DMA.
+> 
+>> Gr{oetje,eeting}s,
+>>
+>>                         Geert
+>>
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 > 
 
-Yikes, there is some issue here...
+- Péter
 
-Acutally the issue is not in what you referred above but the overall kref
-handling itself. Please see below.
-
-kref_put() should be present in qcom_mhi_qrtr_ul_callback() as it will
-decrement the refcount which got incremented in qcom_mhi_qrtr_send(). It
-should be noted that kref_init() will fix the refcount to 1 and kref_get() will
-increment to 2. So for properly releasing the refcount to 0, we need to call
-kref_put() twice.
-
-So if all goes well, the refcount will get decremented twice in
-qcom_mhi_qrtr_ul_callback() as well as in qcom_mhi_qrtr_send() and we are good.
-
-But, if the transfer has failed ie., when qcom_mhi_qrtr_ul_callback() doesn't
-get called, then we are leaking the refcount. I need to rework the kref handling
-code in next iteration.
-
-Thanks for triggering this!
-
-Regards,
-Mani
-
-> > +	spin_unlock_irqrestore(&qdev->ul_lock, flags);
-> > +}
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
