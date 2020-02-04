@@ -2,171 +2,117 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0BEC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48CCC3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320CE20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B459B20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXAnnJyO"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="rJteDZ77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgBDT5E (ORCPT
+        id S1727546AbgBDT64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:57:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46741 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbgBDT5E (ORCPT
+        Tue, 4 Feb 2020 14:58:56 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41466 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbgBDT6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:57:04 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so24596825wrl.13;
-        Tue, 04 Feb 2020 11:57:00 -0800 (PST)
+        Tue, 4 Feb 2020 14:58:55 -0500
+Received: by mail-qt1-f196.google.com with SMTP id l19so15332374qtq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:58:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=K+yNaJp7oUZoKhcclI8Dxuk5xvWQ6/1nUWlWmNYelU0=;
-        b=uXAnnJyOP3XxbaFXyIjwMr/FV8i/RpKXVy2RiVCpSLtnNyTqPeIFDZRRue+N0MZBU0
-         VcTurBFWNZJ4CJMSjwV55oquji6gpM6krYS/OvlNS5a7zmBy4HlpgVjXlQm8xkEqlihi
-         Jd+kXnkQnb3USQ3SC/KeOd92X+zxtTp6dThrLWPx6wUN7kHYro3z01pYcKl52kGB9Cac
-         lhbg8e2VAB4kLuG7N0Y/Hn+LwTsIEJWad645iKYAc8SpAegb0Uvo+WloIG5nPwOjH79O
-         dWR3P8WAi775jXVu9D5FtzyM8WB4jTcWRGbMFH1haEIUxGnDkN8aoRxRX8TP2cbZ+VLx
-         +RpA==
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=nUYiDfAhgCZXRYErtoRQy6/rVWr7Gr3L/ebDcQHtW8c=;
+        b=rJteDZ77rao5hGEilyGPjz2uLvmX8nHdHJNyj2fs0bRbiulWazSW29HRjw63ZRbMSf
+         YOOaGro7M76kDhN4Pz8lQrpWqWnBaPpT9idY4uJoSenhaB+gJ1JRMexyeo06S+2aw2gb
+         N4EJZjiOwtvpE+nFn5BkwAbfkp+8K5VhwRdXCPoUnpfRczgprwqze5jtEZJlBhK2DCtq
+         YSOIAIgdtKzYH8bdDy4H4r/xQARIpX0ec7j1YFcnVZHmx12YjtNWwXNPHsQejHEGqP1z
+         LqiNMp5vIF2kBmOlrsy/LXnI2ZD0klA2C95GIVh1DOlQ0VeqogrNUfFUcw4Scbhj36he
+         RYRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=K+yNaJp7oUZoKhcclI8Dxuk5xvWQ6/1nUWlWmNYelU0=;
-        b=agRP0pbHno2LtoCKkQ9plNKVM2WZySnEBetr3/u0OYkzPHTeTtCd/H53xl+1BDfsZS
-         szB8+rYpYsvhTjEOV6CM/0fZZGMX212eNGIxzXQnxUwB/idivKCMBpjo2BeHgn8SdLtj
-         b8Iz9xNqWfkxUVNUaEYn6ikHPDYNxQ3010VCVhGD0qj+qUQtuCVJzqKMcEmDvhpcbmIG
-         31g4TqOAKpLePj5Nxp666JIjqq3mYgfQTerwqgYvZ13tEhcFOZ/OfxVtB5fIO6tRiXEI
-         IzIBthqTAWAIbYr3w02IW3p/dS0kGRBt+wQVWtsCY5GJHtqJnlKx26viHwMZ8TN/qf/D
-         atuQ==
-X-Gm-Message-State: APjAAAV/1OR4/ej3MaRwfwEndykFha5tKig3jMEcuqgWqKNuWCAzDKXo
-        tQeYti5Ytvkte9EGECaOgo8=
-X-Google-Smtp-Source: APXvYqyQx0W0FqnaW4/+81tXXRCLubnvr11FkS+hNIAt/oe7kUrrRQ2gZyVssaB/xpy/R9AFRNQ7hg==
-X-Received: by 2002:a5d:5221:: with SMTP id i1mr22164042wra.44.1580846220291;
-        Tue, 04 Feb 2020 11:57:00 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id z6sm29710177wrw.36.2020.02.04.11.56.59
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=nUYiDfAhgCZXRYErtoRQy6/rVWr7Gr3L/ebDcQHtW8c=;
+        b=ejMEfus6/1tPrxeQzMAz6JGHpiq37qEEMB3l56P/g/N/pcBpADiJ35Xtt0H42cpu2m
+         6s/WsSbB/wSvIpMCLYAfObpmx093H80lzhqTtgE0/NEQkBDw/LQIDoFIfyc87FV3c3Ww
+         q4ewPM9Gn23ug26G2GndV+8A/9NCxbLdqZe6VyjOIckQl+9BvBAaBHnau9zoHjG4C4HK
+         odH9xz9JyJU3K+teKuAgKXG8rCU2p0Klcmdp0v53iM47QxPp4SaOywdZy3wArjOerSH3
+         aaEly2MCwDKuFHLSL54qf+qtUY0etiMj+PRVGbRK+Wp9KeRW+yVUIvHgsSCxnafhSJxM
+         MG9w==
+X-Gm-Message-State: APjAAAXUA/+/fyluycFN6kK5LjGF0kP1Lj/M9Zeu7S9B55TMWqT9w8lU
+        DWGS5NcSD8sv31zCxWE62/xJ8g==
+X-Google-Smtp-Source: APXvYqwWXd+xCIFH82pgvzLUel/qSAxcq02npWNuT+UV/0x2XRvUupDPcFmEm6BmLWUk12NmYXKi3w==
+X-Received: by 2002:ac8:70d3:: with SMTP id g19mr29789882qtp.209.1580846334248;
+        Tue, 04 Feb 2020 11:58:54 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
+        by smtp.gmail.com with ESMTPSA id o187sm11852053qkf.26.2020.02.04.11.58.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 11:56:59 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] watchdog: qcom-wdt: disable pretimeout on timer platform
-Date:   Tue,  4 Feb 2020 20:56:48 +0100
-Message-Id: <20200204195648.23350-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 04 Feb 2020 11:58:53 -0800 (PST)
+Message-ID: <ef94a7c141479622ecc499dba4da0583a4ea315e.camel@ndufresne.ca>
+Subject: Re: [PATCH for v5.6] hantro: Fix broken media controller links
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        Hans Verkuil <hverkuil@xs4all.nl>, stable@vger.kernel.org
+Date:   Tue, 04 Feb 2020 14:58:51 -0500
+In-Reply-To: <20200204193837.16021-1-ezequiel@collabora.com>
+References: <20200204193837.16021-1-ezequiel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platform like ipq806x doesn't support pretimeout and define
-some interrupts used by qcom,msm-timer. Change the driver to check
-and use pretimeout only on qcom,kpss-wdt as it's the only platform
-that actually supports it.
+Le mardi 04 février 2020 à 16:38 -0300, Ezequiel Garcia a écrit :
+> The driver currently creates a broken topology,
+> with a source-to-source link and a sink-to-sink
+> link instead of two source-to-sink links.
+> 
+> Reported-by: Nicolas Dufresne <nicolas@ndufresne.ca>
+> Cc: <stable@vger.kernel.org>      # for v5.3 and up
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/watchdog/qcom-wdt.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-index a494543d3ae1..d13c75028985 100644
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -40,6 +40,11 @@ static const u32 reg_offset_data_kpss[] = {
- 	[WDT_BITE_TIME] = 0x14,
- };
- 
-+struct qcom_wdt_match_data {
-+	const u32 *offset;
-+	bool pretimeout;
-+};
-+
- struct qcom_wdt {
- 	struct watchdog_device	wdd;
- 	unsigned long		rate;
-@@ -179,19 +184,29 @@ static void qcom_clk_disable_unprepare(void *data)
- 	clk_disable_unprepare(data);
- }
- 
-+static const struct qcom_wdt_match_data match_data_apcs_tmr = {
-+	.offset = reg_offset_data_apcs_tmr,
-+	.pretimeout = false,
-+};
-+
-+static const struct qcom_wdt_match_data match_data_kpss = {
-+	.offset = reg_offset_data_kpss,
-+	.pretimeout = true,
-+};
-+
- static int qcom_wdt_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct qcom_wdt *wdt;
- 	struct resource *res;
- 	struct device_node *np = dev->of_node;
--	const u32 *regs;
-+	const struct qcom_wdt_match_data *data;
- 	u32 percpu_offset;
- 	int irq, ret;
- 	struct clk *clk;
- 
--	regs = of_device_get_match_data(dev);
--	if (!regs) {
-+	data = of_device_get_match_data(dev);
-+	if (!data) {
- 		dev_err(dev, "Unsupported QCOM WDT module\n");
- 		return -ENODEV;
- 	}
-@@ -247,7 +262,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 
- 	/* check if there is pretimeout support */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq > 0) {
-+	if (data->pretimeout && irq > 0) {
- 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
- 				       IRQF_TRIGGER_RISING,
- 				       "wdt_bark", &wdt->wdd);
-@@ -267,7 +282,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	wdt->wdd.min_timeout = 1;
- 	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
- 	wdt->wdd.parent = dev;
--	wdt->layout = regs;
-+	wdt->layout = data->offset;
- 
- 	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
- 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-@@ -311,9 +326,9 @@ static int __maybe_unused qcom_wdt_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(qcom_wdt_pm_ops, qcom_wdt_suspend, qcom_wdt_resume);
- 
- static const struct of_device_id qcom_wdt_of_table[] = {
--	{ .compatible = "qcom,kpss-timer", .data = reg_offset_data_apcs_tmr },
--	{ .compatible = "qcom,scss-timer", .data = reg_offset_data_apcs_tmr },
--	{ .compatible = "qcom,kpss-wdt", .data = reg_offset_data_kpss },
-+	{ .compatible = "qcom,kpss-timer", .data = &match_data_apcs_tmr },
-+	{ .compatible = "qcom,scss-timer", .data = &match_data_apcs_tmr },
-+	{ .compatible = "qcom,kpss-wdt", .data = &match_data_kpss },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
--- 
-2.24.0
+> ---
+>  drivers/staging/media/hantro/hantro_drv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_drv.c
+> b/drivers/staging/media/hantro/hantro_drv.c
+> index 448493a08805..840b96bee082 100644
+> --- a/drivers/staging/media/hantro/hantro_drv.c
+> +++ b/drivers/staging/media/hantro/hantro_drv.c
+> @@ -556,13 +556,13 @@ static int hantro_attach_func(struct hantro_dev *vpu,
+>  		goto err_rel_entity1;
+>  
+>  	/* Connect the three entities */
+> -	ret = media_create_pad_link(&func->vdev.entity, 0, &func->proc, 1,
+> +	ret = media_create_pad_link(&func->vdev.entity, 0, &func->proc, 0,
+
+As for the m2m comment, some local define to name the pad index would make this
+readable.
+
+>  				    MEDIA_LNK_FL_IMMUTABLE |
+>  				    MEDIA_LNK_FL_ENABLED);
+>  	if (ret)
+>  		goto err_rel_entity2;
+>  
+> -	ret = media_create_pad_link(&func->proc, 0, &func->sink, 0,
+> +	ret = media_create_pad_link(&func->proc, 1, &func->sink, 0,
+>  				    MEDIA_LNK_FL_IMMUTABLE |
+>  				    MEDIA_LNK_FL_ENABLED);
+>  	if (ret)
 
