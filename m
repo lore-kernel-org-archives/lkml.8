@@ -2,137 +2,109 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5164BC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE9CC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F642084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d5ua419j"
+	by mail.kernel.org (Postfix) with ESMTP id EFF7D2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgBDJPf (ORCPT
+        id S1726675AbgBDJRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:15:35 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39209 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726230AbgBDJPf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:15:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580807734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XcERBKLD0pNCQ+9nUGC0SljdPFd4QEpox0vzFppf7MM=;
-        b=d5ua419jZMbtRQrhij4WHL+mkTxscGL07z5thCilmmKc01yLecTfolTMtxpgBBDV69voOD
-        rCn6J7wr8J+r7oOM8HaOsUUUZlUz2y5QEGa1IGrEIKMw3kIB//ALDSNKeSuKSNQkkba3/g
-        /PmORZVJL4rMrniJNTIYbUZ+BxzWAsU=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-n8tfOhinN6-c04k1SjyNDQ-1; Tue, 04 Feb 2020 04:15:30 -0500
-X-MC-Unique: n8tfOhinN6-c04k1SjyNDQ-1
-Received: by mail-qk1-f197.google.com with SMTP id y6so11418093qki.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:15:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XcERBKLD0pNCQ+9nUGC0SljdPFd4QEpox0vzFppf7MM=;
-        b=U+bX8h+Q+AG4Q/6JK55TOFjyEJdSE4RvT0lS2E8PHhEMQDTzgzp/20p03Ms8DAaokA
-         oYwEJHPYXaInWeUIZOndi03NHW9eHZq8HWnDvpLdD1UKZSxhRRd3J+vdaEp5yXeUUO/4
-         arMx/8VVxm8q6pn4ZRAcVFwYEz51NMrjPJDg+ifbhkSdrA5Yu2zuajZEv7tqH2uMf0zX
-         Vn2UpdDFyg6Qqqc4oj24DBztZgAyD/Jpi6j+LJVrlDNM1v568C5pT6rE+1+OD74JuNi7
-         GWEGjIZTFBOnVPinL9jFrUbLNKL7bQT6KxNDk8GoxYhBbV+EnLuZor/Kbm6+3J7Gos4P
-         Q6zw==
-X-Gm-Message-State: APjAAAVipMP1w9PFpMu/D45qNTBIcBjP8alZnBoLsuWjGwPnNmnykz72
-        Mdr0eHKi2FDENPluqEgQUfz9+c5tF6fhtMwcelHo8/2mqaZa1JAiFfwYfaVA/GFvXe6BH87dZAx
-        nERBMfNQlG3btzop6VEzKR5Sf
-X-Received: by 2002:a37:9ce:: with SMTP id 197mr27871956qkj.194.1580807728555;
-        Tue, 04 Feb 2020 01:15:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwKvgkclu5BLnLevhgiDeKWmCIEv4uhSFnYEH08g1U+qD+zdZhxrHLCADZ7VXCufD1Ywynifw==
-X-Received: by 2002:a37:9ce:: with SMTP id 197mr27871932qkj.194.1580807728267;
-        Tue, 04 Feb 2020 01:15:28 -0800 (PST)
-Received: from redhat.com (bzq-109-64-11-187.red.bezeqint.net. [109.64.11.187])
-        by smtp.gmail.com with ESMTPSA id t7sm10703873qkm.136.2020.02.04.01.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 01:15:27 -0800 (PST)
-Date:   Tue, 4 Feb 2020 04:15:22 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     LABBE Corentin <clabbe@baylibre.com>
-Cc:     arei.gonglei@huawei.com, jasowang@redhat.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        virtualization@lists.linux-foundation.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [CRASH] crypto: virtio: crash when modprobing tcrypt on 5.5-rc7
- / next-20200122
-Message-ID: <20200204041419-mutt-send-email-mst@kernel.org>
-References: <20200123101000.GB24255@Red>
+        Tue, 4 Feb 2020 04:17:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49496 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgBDJRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:17:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9DE97AC65;
+        Tue,  4 Feb 2020 09:17:46 +0000 (UTC)
+Message-ID: <08e2b640f0a7713d905295fc4f75df49617be6c1.camel@suse.de>
+Subject: Re: [PATCH] pwm: bcm2835: Dynamically allocate base
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        Bart Tanghe <bart.tanghe@thomasmore.be>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Date:   Tue, 04 Feb 2020 10:17:43 +0100
+In-Reply-To: <20200203213536.32226-1-f.fainelli@gmail.com>
+References: <20200203213536.32226-1-f.fainelli@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-EbQc4kroDO+Hs5CLjdIl"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123101000.GB24255@Red>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 11:10:00AM +0100, LABBE Corentin wrote:
-> Hello
-> 
-> When modprobing tcrypt on qemu 4.1.0 I get a kernel panic on 5.5-rc7 and next-20200122
-> qemu is started by:
-> /usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=e1000,macaddr=52:54:00:12:34:58 -net tap -m 512 -monitor none -object cryptodev-backend-builtin,id=cryptodev0 -device virtio-crypto-pci,id=crypto0,cryptodev=cryptodev0 -append 'console=ttyS0 root=/dev/ram0 ip=dhcp' -kernel /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/kernel/bzImage -initrd /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/ramdisk/rootfs.cpio.gz -drive format=qcow2,file=/var/lib/lava/dispatcher/tmp/41332/apply-overlay-guest-icy4k1ol/lava-guest.qcow2,media=disk,if=ide,id=lavatest
-> 
-> [  112.771925] general protection fault: 0000 [#1] SMP PTI
-> [  112.772686] CPU: 0 PID: 126 Comm: virtio0-engine Not tainted 5.5.0-rc7+ #1
-> [  112.773576] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-> [  112.775319] RIP: 0010:sg_next+0x0/0x20
-> [  112.775821] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
-> [  112.778330] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
-> [  112.779071] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
-> [  112.780081] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
-> [  112.781081] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
-> [  112.782079] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
-> [  112.783079] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
-> [  112.784077] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
-> [  112.785202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  112.786030] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
-> [  112.787034] Call Trace:
-> [  112.787393]  virtqueue_add_sgs+0x4c/0x90
-> [  112.787998]  virtio_crypto_skcipher_crypt_req+0x310/0x3e0
-> [  112.788817]  crypto_pump_work+0x10c/0x240
-> [  112.789420]  ? __kthread_init_worker+0x50/0x50
-> [  112.790082]  kthread_worker_fn+0x89/0x180
-> [  112.790690]  kthread+0x10e/0x130
-> [  112.791182]  ? kthread_park+0x80/0x80
-> [  112.791736]  ret_from_fork+0x35/0x40
-> [  112.792282] Modules linked in: cts lzo salsa20_generic camellia_x86_64 camellia_generic fcrypt pcbc tgr192 anubis wp512 khazad tea michael_mic arc4 cast6_generic cast5_generic cast_common deflate sha512_ssse3 sha512_generic cfb ofb serpent_sse2_x86_64 serpent_generic lrw twofish_x86_64_3way twofish_x86_64 crypto_simd cryptd glue_helper twofish_generic twofish_common blowfish_x86_64 blowfish_generic blowfish_common md4 tcrypt(+)
-> [  112.797652] ---[ end trace 4a8142d4a08c2518 ]---
-> [  112.798320] RIP: 0010:sg_next+0x0/0x20
-> [  112.798865] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
-> [  112.801452] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
-> [  112.802189] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
-> [  112.803190] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
-> [  112.804192] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
-> [  112.805201] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
-> [  112.806195] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
-> [  112.807222] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
-> [  112.808352] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  112.809169] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
-> 
-> I have tested also 5.4.14 
-> and I got random freeze with:
-> qemu-system-x86_64: virtio: zero sized buffers are not allowed
-> 
-> Regards
 
-Cc: Gonglei <arei.gonglei@huawei.com>
+--=-EbQc4kroDO+Hs5CLjdIl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-MST
+On Mon, 2020-02-03 at 13:35 -0800, Florian Fainelli wrote:
+> The newer 2711 and 7211 chips have two PWM controllers and failure to
+> dynamically allocate the PWM base would prevent the second PWM
+> controller instance being probed for succeeding with an -EEXIST error
+> from alloc_pwms().
+>=20
+> Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+>  drivers/pwm/pwm-bcm2835.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+> index 91e24f01b54e..d78f86f8e462 100644
+> --- a/drivers/pwm/pwm-bcm2835.c
+> +++ b/drivers/pwm/pwm-bcm2835.c
+> @@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *=
+pdev)
+> =20
+>  	pc->chip.dev =3D &pdev->dev;
+>  	pc->chip.ops =3D &bcm2835_pwm_ops;
+> +	pc->chip.base =3D -1;
+>  	pc->chip.npwm =3D 2;
+>  	pc->chip.of_xlate =3D of_pwm_xlate_with_flags;
+>  	pc->chip.of_pwm_n_cells =3D 3;
+
+
+--=-EbQc4kroDO+Hs5CLjdIl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl45NrcACgkQlfZmHno8
+x/6nWwf/bExOZqkMvtRTNZmYHlMDm/EcuWxY09oRB9bF+sIaJZVAbkj1+gTil1cr
+ATdzExmfH0rifiRTbUNV8FaRVhVVYgy0NW+uSmz/+z/pCJ6utDfhPXrkc9nR0tCk
+5QrrBVZBPwxQB6VY1nFPSXYQlhR0F7AitIjoCH+ITRPIbCC8fCzamU+COu9vxDuw
+QWVA/tYIwTqAV9DKFg31H1SJqhphepSjZ4OTUTO3Yq1H+abKiYUGtS9QYO0I8JI6
+23yFymYMBAW53C68ZX9rsg4A//bg/vwDEwP2MgKOXcrmicLZs4s4vx1CyZu6VrGn
+2YmNKpAeZ0qy2PRhqdluWH6RM5JNQA==
+=tBu+
+-----END PGP SIGNATURE-----
+
+--=-EbQc4kroDO+Hs5CLjdIl--
 
