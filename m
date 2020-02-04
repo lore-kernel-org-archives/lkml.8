@@ -2,89 +2,84 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ADFC3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5EAC3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AF32087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnYCn+j6"
+	by mail.kernel.org (Postfix) with ESMTP id 3AD0E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 06:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgBDGqg (ORCPT
+        id S1727244AbgBDGq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 01:46:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41529 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726887AbgBDGqf (ORCPT
+        Tue, 4 Feb 2020 01:46:59 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34171 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgBDGq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 01:46:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580798794;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lRmh1aVKkLxdGY5o4e9g8sJUX2Z2AYQmtRAb6n2qp1c=;
-        b=VnYCn+j6NcOkVwEKyfrJyFkQwg3GAB14N9jAMAHNuZlssCm9ioDy5J9xr0CfYh//W5VTIq
-        BDbHcUvteW1d+0qk3GeVSMW6ed/ds60p0d7TqbRnbtr+CsxlUBkIR1cSWGqTXbx9xMje43
-        k3xDBTVH3npTc6kugs0hwkGwikZrG/4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-FSR9JKk9NNGNNcjsuyGcpA-1; Tue, 04 Feb 2020 01:46:33 -0500
-X-MC-Unique: FSR9JKk9NNGNNcjsuyGcpA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36F508010E6;
-        Tue,  4 Feb 2020 06:46:30 +0000 (UTC)
-Received: from [10.72.12.170] (ovpn-12-170.pek2.redhat.com [10.72.12.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 21E881001B23;
-        Tue,  4 Feb 2020 06:46:17 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
-        rob.miller@broadcom.com, haotian.wang@sifive.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com,
-        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
-        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
- <20200204005306-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <cf485e7f-46e3-20d3-8452-e3058b885d0a@redhat.com>
-Date:   Tue, 4 Feb 2020 14:46:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 4 Feb 2020 01:46:59 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iyrz3-00065e-8W; Tue, 04 Feb 2020 07:46:53 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iyrz1-000841-JM; Tue, 04 Feb 2020 07:46:51 +0100
+Date:   Tue, 4 Feb 2020 07:46:51 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Bart Tanghe <bart.tanghe@thomasmore.be>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] pwm: bcm2835: Dynamically allocate base
+Message-ID: <20200204064651.jaxyftjj346xrdml@pengutronix.de>
+References: <20200203213536.32226-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204005306-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200203213536.32226-1-f.fainelli@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hallo Florian,
 
-On 2020/2/4 =E4=B8=8B=E5=8D=882:01, Michael S. Tsirkin wrote:
-> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
->> 5) generate diffs of memory table and using IOMMU API to setup the dma
->> mapping in this method
-> Frankly I think that's a bunch of work. Why not a MAP/UNMAP interface?
->
+On Mon, Feb 03, 2020 at 01:35:35PM -0800, Florian Fainelli wrote:
+> The newer 2711 and 7211 chips have two PWM controllers and failure to
+> dynamically allocate the PWM base would prevent the second PWM
+> controller instance being probed for succeeding with an -EEXIST error
+> from alloc_pwms().
+> 
+> Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Sure, so that basically VHOST_IOTLB_UPDATE/INVALIDATE I think?
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Thanks
+Best regards
+Uwe
 
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
