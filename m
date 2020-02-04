@@ -2,274 +2,281 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB11C3524F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BEAC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2747521582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B64A21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lV5VFbmY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKhi5bDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBDXmP (ORCPT
+        id S1727770AbgBDXnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:42:15 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8773 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbgBDXlV (ORCPT
+        Tue, 4 Feb 2020 18:43:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57861 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727534AbgBDXnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:41:21 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3a01070000>; Tue, 04 Feb 2020 15:40:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 15:41:19 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 15:41:19 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 23:41:18 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 23:41:18 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3a011e0000>; Tue, 04 Feb 2020 15:41:18 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v4 00/12] mm/gup: track FOLL_PIN pages
-Date:   Tue, 4 Feb 2020 15:41:05 -0800
-Message-ID: <20200204234117.2974687-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 4 Feb 2020 18:43:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580859800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=meSIjZ0BPANUIdkHYD3G5hsrkblgpeJ+gepMEAOzVvI=;
+        b=BKhi5bDG2mF3FHSeaxsf5MZrQaBvHFsMJqmGTfn8GeZBVsPZghZ9CD5pA3nA73JflNV6xU
+        oevjCXGgbiMpfvnuWRYgG1knOlN4EnEzkoPTmuHjK0SfdyWnh0k5pDCYtAo0wX+r6nqgT0
+        x6Lz2U8Vozb+bULjwcI/rB6LEJJKo3U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-9ztUGwJdM76hyVQc14z62A-1; Tue, 04 Feb 2020 18:43:17 -0500
+X-MC-Unique: 9ztUGwJdM76hyVQc14z62A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83704184AEA6;
+        Tue,  4 Feb 2020 23:43:14 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B33B5D9E2;
+        Tue,  4 Feb 2020 23:43:01 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 18:42:58 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V8 11/16] audit: add support for containerid to
+ network namespaces
+Message-ID: <20200204234258.uwaqk3s3c42fxews@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com>
+ <2954ed671a7622ddf3abdb8854dbba2ad13e9f33.1577736799.git.rgb@redhat.com>
+ <CAHC9VhRw3Fj9-hi+Vj8JJb_GXM4B9N5hRXa9H6aQkuuFqJJ15w@mail.gmail.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580859655; bh=SerRmArPZCX0Ib3dFIlBTJEtpu68p9opHJ6UlhBBIjA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=lV5VFbmYCWujBf0UXRtyEk8TnmsXoFkF0F1UiBuyQ9nMSCTY1Xrywj+bjfJNDgf/Q
-         qvsYeCkopv9SIrOxW5mnNm/WnvICACvZ3mjzfQ1VuxxWOMKcFOPtJu4/wfYQGyczS+
-         It1/quzbGLH7S3IddoDnt2SJURKwSN4IcCDPaqPbJ4rMh/G6lFsjB++bsa0CHRNofy
-         suc8PGodR9XVMjVGnt7eEdMK3ugMaaeerRWddHSBX0aFNCghSf3yzx87BgFST4O6hH
-         Tep/brUZbtKTvUwngCEeX8HEavrISVnF3qnawWsI4SPAa01hZeY4I4IJ+shoz5jeYe
-         w2GxbvujPI4Jw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhRw3Fj9-hi+Vj8JJb_GXM4B9N5hRXa9H6aQkuuFqJJ15w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020-01-22 16:28, Paul Moore wrote:
+> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > This also adds support to qualify NETFILTER_PKT records.
+> >
+> > Audit events could happen in a network namespace outside of a task
+> > context due to packets received from the net that trigger an auditing
+> > rule prior to being associated with a running task.  The network
+> > namespace could be in use by multiple containers by association to the
+> > tasks in that network namespace.  We still want a way to attribute
+> > these events to any potential containers.  Keep a list per network
+> > namespace to track these audit container identifiiers.
+> >
+> > Add/increment the audit container identifier on:
+> > - initial setting of the audit container identifier via /proc
+> > - clone/fork call that inherits an audit container identifier
+> > - unshare call that inherits an audit container identifier
+> > - setns call that inherits an audit container identifier
+> > Delete/decrement the audit container identifier on:
+> > - an inherited audit container identifier dropped when child set
+> > - process exit
+> > - unshare call that drops a net namespace
+> > - setns call that drops a net namespace
+> >
+> > Add audit container identifier auxiliary record(s) to NETFILTER_PKT
+> > event standalone records.  Iterate through all potential audit container
+> > identifiers associated with a network namespace.
+> >
+> > Please see the github audit kernel issue for contid net support:
+> >   https://github.com/linux-audit/audit-kernel/issues/92
+> > Please see the github audit testsuiite issue for the test case:
+> >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > Please see the github audit wiki for the feature overview:
+> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > ---
+> >  include/linux/audit.h    |  24 +++++++++
+> >  kernel/audit.c           | 132 ++++++++++++++++++++++++++++++++++++++++++++++-
+> >  kernel/nsproxy.c         |   4 ++
+> >  net/netfilter/nft_log.c  |  11 +++-
+> >  net/netfilter/xt_AUDIT.c |  11 +++-
+> >  5 files changed, 176 insertions(+), 6 deletions(-)
+> 
+> ...
+> 
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index 5531d37a4226..ed8d5b74758d 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/sched.h>
+> >  #include <linux/ptrace.h>
+> >  #include <uapi/linux/audit.h>
+> > +#include <linux/refcount.h>
+> >
+> >  #define AUDIT_INO_UNSET ((unsigned long)-1)
+> >  #define AUDIT_DEV_UNSET ((dev_t)-1)
+> > @@ -121,6 +122,13 @@ struct audit_task_info {
+> >
+> >  extern struct audit_task_info init_struct_audit;
+> >
+> > +struct audit_contobj_netns {
+> > +       struct list_head        list;
+> > +       u64                     id;
+> 
+> Since we now track audit container IDs in their own structure, why not
+> link directly to the audit container ID object (and bump the
+> refcount)?
 
-Here's an update after the latest round of reviews from Kirill and Jan.
+Ok, I've done this but at first I had doubts about the complexity.
 
-There is a git repo and branch, for convenience in reviewing:
+> > +       refcount_t              refcount;
+> > +       struct rcu_head         rcu;
+> > +};
+> > +
+> >  extern int is_audit_feature_set(int which);
+> >
+> >  extern int __init audit_register_class(int class, unsigned *list);
+> > @@ -225,6 +233,12 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+> >  }
+> >
+> >  extern void audit_log_container_id(struct audit_context *context, u64 contid);
+> > +extern void audit_netns_contid_add(struct net *net, u64 contid);
+> > +extern void audit_netns_contid_del(struct net *net, u64 contid);
+> > +extern void audit_switch_task_namespaces(struct nsproxy *ns,
+> > +                                        struct task_struct *p);
+> > +extern void audit_log_netns_contid_list(struct net *net,
+> > +                                       struct audit_context *context);
+> >
+> >  extern u32 audit_enabled;
+> >
+> > @@ -297,6 +311,16 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+> >
+> >  static inline void audit_log_container_id(struct audit_context *context, u64 contid)
+> >  { }
+> > +static inline void audit_netns_contid_add(struct net *net, u64 contid)
+> > +{ }
+> > +static inline void audit_netns_contid_del(struct net *net, u64 contid)
+> > +{ }
+> > +static inline void audit_switch_task_namespaces(struct nsproxy *ns,
+> > +                                               struct task_struct *p)
+> > +{ }
+> > +static inline void audit_log_netns_contid_list(struct net *net,
+> > +                                              struct audit_context *context)
+> > +{ }
+> >
+> >  #define audit_enabled AUDIT_OFF
+> >
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index d4e6eafe5644..f7a8d3288ca0 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -59,6 +59,7 @@
+> >  #include <linux/freezer.h>
+> >  #include <linux/pid_namespace.h>
+> >  #include <net/netns/generic.h>
+> > +#include <net/net_namespace.h>
+> >
+> >  #include "audit.h"
+> >
+> > @@ -86,9 +87,13 @@
+> >  /**
+> >   * struct audit_net - audit private network namespace data
+> >   * @sk: communication socket
+> > + * @contid_list: audit container identifier list
+> > + * @contid_list_lock audit container identifier list lock
+> >   */
+> >  struct audit_net {
+> >         struct sock *sk;
+> > +       struct list_head contid_list;
+> > +       spinlock_t contid_list_lock;
+> >  };
+> >
+> >  /**
+> > @@ -305,8 +310,11 @@ struct audit_task_info init_struct_audit = {
+> >  void audit_free(struct task_struct *tsk)
+> >  {
+> >         struct audit_task_info *info = tsk->audit;
+> > +       struct nsproxy *ns = tsk->nsproxy;
+> >
+> >         audit_free_syscall(tsk);
+> > +       if (ns)
+> > +               audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
+> >         /* Freeing the audit_task_info struct must be performed after
+> >          * audit_log_exit() due to need for loginuid and sessionid.
+> >          */
+> > @@ -409,6 +417,120 @@ static struct sock *audit_get_sk(const struct net *net)
+> >         return aunet->sk;
+> >  }
+> >
+> > +void audit_netns_contid_add(struct net *net, u64 contid)
+> > +{
+> > +       struct audit_net *aunet;
+> > +       struct list_head *contid_list;
+> > +       struct audit_contobj_netns *cont;
+> > +
+> > +       if (!net)
+> > +               return;
+> > +       if (!audit_contid_valid(contid))
+> > +               return;
+> > +       aunet = net_generic(net, audit_net_id);
+> > +       if (!aunet)
+> > +               return;
+> > +       contid_list = &aunet->contid_list;
+> > +       rcu_read_lock();
+> > +       list_for_each_entry_rcu(cont, contid_list, list)
+> > +               if (cont->id == contid) {
+> > +                       spin_lock(&aunet->contid_list_lock);
+> > +                       refcount_inc(&cont->refcount);
+> > +                       spin_unlock(&aunet->contid_list_lock);
+> > +                       goto out;
+> > +               }
+> > +       cont = kmalloc(sizeof(*cont), GFP_ATOMIC);
+> > +       if (cont) {
+> > +               INIT_LIST_HEAD(&cont->list);
+> > +               cont->id = contid;
+> > +               refcount_set(&cont->refcount, 1);
+> > +               spin_lock(&aunet->contid_list_lock);
+> > +               list_add_rcu(&cont->list, contid_list);
+> > +               spin_unlock(&aunet->contid_list_lock);
+> > +       }
+> > +out:
+> > +       rcu_read_unlock();
+> > +}
+> 
+> See my comments about refcount_t, spinlocks, and list manipulation
+> races from earlier in the patchset; the same thing applies to the
+> function above.
 
-    git@github.com:johnhubbard/linux.git  track_user_pages_v4
+This was some of the complexity that concerned me, but switching to rcu
+read locks helped.  In this case, since a stale list would cause an
+update issue and these counts aren't used or updated anywere else,
+switching to an int makes sense.
 
-I'm particularly pleased that the /proc/vmstat items are now available
-in all configurations, seeing as how I was looking (in vain) for that
-information during a recent investigation of a remotely reported
-problem.
+> paul moore
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v3:
+- RGB
 
-* Rebased onto latest linux.git
-
-* Added ACKs and reviewed-by's from Kirill Shutemov and Jan Kara.
-
-* /proc/vmstat:
-    * Renamed items, after realizing that I hate the previous names:
-         nr_foll_pin_requested --> nr_foll_pin_acquired
-         nr_foll_pin_returned  --> nr_foll_pin_released
-
-    * Removed the CONFIG_DEBUG_VM guard, and collapsed away a wrapper
-      routine: now just calls mod_node_page_state() directly.
-
-* Tweaked the WARN_ON_ONCE() statements in mm/hugetlb.c to be more
-  informative, and added comments above them as well.
-
-* Fixed gup_benchmark: signed int --> unsigned long.
-
-* One or two minor formatting changes.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v2:
-
-* Rebased onto linux.git, because the akpm tree for 5.6 has been merged.
-
-* Split the tracking patch into even more patches, as requested.
-
-* Merged Matthew Wilcox's dump_page() changes into mine, as part of the
-  first patch.
-
-* Renamed: page_dma_pinned() --> page_maybe_dma_pinned(), in response to
-  Kirill Shutemov's review.
-
-* Moved a WARN to the top of a routine, and fixed a typo in the commit
-  description of patch #7, also as suggested by Kirill.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v1:
-
-* Split the tracking patch into 6 smaller patches
-
-* Rebased onto today's linux-next/akpm (there weren't any conflicts).
-
-* Fixed an "unsigned int" vs. "int" problem in gup_benchmark, reported
-  by Nathan Chancellor. (I don't see it in my local builds, probably
-  because they use gcc, but an LLVM test found the mismatch.)
-
-* Fixed a huge page pincount problem (add/subtract vs.
-  increment/decrement), spotted by Jan Kara.
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-There is a reasonable case to be made for merging two of the patches
-(patches 7 and 8), given that patch 7 provides tracking that has upper
-limits on the number of pins that can be done with huge pages. Let me
-know if anyone wants those merged, but unless there is some weird chance
-of someone grabbing patch 7 and not patch 8, I don't really see the
-need. Meanwhile, it's easier to review in this form.
-
-Also, patch 3 has been revived. Earlier reviewers asked for it to be
-merged into the tracking patch (one cannot please everyone, heh), but
-now it's back out on it's own.
-
-This activates tracking of FOLL_PIN pages. This is in support of fixing
-the get_user_pages()+DMA problem described in [1]-[4].
-
-FOLL_PIN support is now in the main linux tree. However, the
-patch to use FOLL_PIN to track pages was *not* submitted, because Leon
-saw an RDMA test suite failure that involved (I think) page refcount
-overflows when huge pages were used.
-
-This patch definitively solves that kind of overflow problem, by adding
-an exact pincount, for compound pages (of order > 1), in the 3rd struct
-page of a compound page. If available, that form of pincounting is used,
-instead of the GUP_PIN_COUNTING_BIAS approach. Thanks again to Jan Kara
-for that idea.
-
-Other interesting changes:
-
-* dump_page(): added one, or two new things to report for compound
-  pages: head refcount (for all compound pages), and map_pincount (for
-  compound pages of order > 1).
-
-* Documentation/core-api/pin_user_pages.rst: removed the "TODO" for the
-  huge page refcount upper limit problems, and added notes about how it
-  works now. Also added a note about the dump_page() enhancements.
-
-* Added some comments in gup.c and mm.h, to explain that there are two
-  ways to count pinned pages: exact (for compound pages of order > 1)
-  and fuzzy (GUP_PIN_COUNTING_BIAS: for all other pages).
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-General notes about the tracking patch:
-
-This is a prerequisite to solving the problem of proper interactions
-between file-backed pages, and [R]DMA activities, as discussed in [1],
-[2], [3], [4] and in a remarkable number of email threads since about
-2017. :)
-
-In contrast to earlier approaches, the page tracking can be
-incrementally applied to the kernel call sites that, until now, have
-been simply calling get_user_pages() ("gup"). In other words, opt-in by
-changing from this:
-
-    get_user_pages() (sets FOLL_GET)
-    put_page()
-
-to this:
-    pin_user_pages() (sets FOLL_PIN)
-    unpin_user_page()
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Next steps:
-
-* Convert more subsystems from get_user_pages() to pin_user_pages().
-* Work with Ira and others to connect this all up with file system
-  leases.
-
-[1] Some slow progress on get_user_pages() (Apr 2, 2019):
-    https://lwn.net/Articles/784574/
-
-[2] DMA and get_user_pages() (LPC: Dec 12, 2018):
-    https://lwn.net/Articles/774411/
-
-[3] The trouble with get_user_pages() (Apr 30, 2018):
-    https://lwn.net/Articles/753027/
-
-[4] LWN kernel index: get_user_pages()
-    https://lwn.net/Kernel/Index/#Memory_management-get_user_pages
-
-John Hubbard (12):
-  mm: dump_page(): better diagnostics for compound pages
-  mm/gup: split get_user_pages_remote() into two routines
-  mm/gup: pass a flags arg to __gup_device_* functions
-  mm: introduce page_ref_sub_return()
-  mm/gup: pass gup flags to two more routines
-  mm/gup: require FOLL_GET for get_user_pages_fast()
-  mm/gup: track FOLL_PIN pages
-  mm/gup: page->hpage_pinned_refcount: exact pin counts for huge pages
-  mm: dump_page(): better diagnostics for huge pinned pages
-  mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN) reporting
-  mm/gup_benchmark: support pin_user_pages() and related calls
-  selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN
-    coverage
-
- Documentation/core-api/pin_user_pages.rst  |  59 ++-
- include/linux/mm.h                         | 108 ++++-
- include/linux/mm_types.h                   |   7 +-
- include/linux/mmzone.h                     |   2 +
- include/linux/page_ref.h                   |   9 +
- mm/debug.c                                 |  61 ++-
- mm/gup.c                                   | 448 ++++++++++++++++-----
- mm/gup_benchmark.c                         |  71 +++-
- mm/huge_memory.c                           |  29 +-
- mm/hugetlb.c                               |  60 ++-
- mm/page_alloc.c                            |   2 +
- mm/rmap.c                                  |   6 +
- mm/vmstat.c                                |   2 +
- tools/testing/selftests/vm/gup_benchmark.c |  15 +-
- tools/testing/selftests/vm/run_vmtests     |  22 +
- 15 files changed, 721 insertions(+), 180 deletions(-)
-
---=20
-2.25.0
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
