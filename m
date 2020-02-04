@@ -2,214 +2,215 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2779C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F50BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CF3217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BABD217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgU6iCvG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jK9ZUoaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgBDXRQ (ORCPT
+        id S1727727AbgBDXRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:17:16 -0500
-Received: from mail-yw1-f49.google.com ([209.85.161.49]:40534 "EHLO
-        mail-yw1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbgBDXRP (ORCPT
+        Tue, 4 Feb 2020 18:17:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51826 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727686AbgBDXRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:17:15 -0500
-Received: by mail-yw1-f49.google.com with SMTP id i126so594797ywe.7;
-        Tue, 04 Feb 2020 15:17:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YdkJ2HHqkFeV4MfBlikH3/s69MOb8K9EarZU9wY8Wfo=;
-        b=GgU6iCvG42Zqnm59Ohy4IAYVurS/XyB11MQ7DZ5ABPgTHF/mRAAlXksAMQPXiptV5Z
-         M+TyJvm0YNYFEtpYN1JyRmRobbIlvNOB6Q2hKnJCx8Jc6RQS9mceFuyj88XzV8w2eLYw
-         XS2170EWXX9NHuVWUPGt3Rw5eZGYjLhscAM7ctNuyrygyqMBq9WQwOF6XViU3sCql/Tm
-         ouRXrVlhOhaQTgmmILkApEOZmx4OebkacXZzk7A4IkyCSjSl1B1jSMO2SjWoSuPNHq2h
-         68YCUBmZo0eYkJE6GmWStK4vAtFq/2DkkAXQllhtIBNw4KwS8fo+Ic/WZ32x3tyBRnEm
-         Oihw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YdkJ2HHqkFeV4MfBlikH3/s69MOb8K9EarZU9wY8Wfo=;
-        b=nibJq56vkn2beU+HK88S5Pe46sBmhUbN8Sh5/gRXiUdkF8j4VuWHtS70WhO6PrVRL+
-         9o2e3WYie/jFgv+wqOEKo/eTic+DQM7S2GzGTosYSKqkA/knCtwsYI9bq7Ma/Mhyi/qu
-         MT92ysimDEhllmRU/pKXmJWtPZswhQ3U8g8rcZfrQ6PDOemfSeUzYT/S7lqH18eY5G6M
-         fnsARFehSVgis1LwFbsIo35IlgcPnh3oY8AMKJoAMCM11A4GlC5AooYuMrSvKvx8VLKb
-         7q5adsmXTxDhc4clLNV/IpSxls7Z7h1hgIO2GScXeTLAhl28mt89CgIu6CXXFto4/Vos
-         r26g==
-X-Gm-Message-State: APjAAAUmh4JwVoQWQNRtkldh2dHLDh9pCxmml+88WybHTDxvF8wn9pR/
-        kCRmgkS3B96jtMweVSD3G6k=
-X-Google-Smtp-Source: APXvYqwT9wwXLR/3DoaUcImGoKvAUaPC2hvqP+ba1hWptBKiDXitI2/2JMF0e416IAJbgP6bR07QSA==
-X-Received: by 2002:a05:6902:725:: with SMTP id l5mr19608845ybt.91.1580858233993;
-        Tue, 04 Feb 2020 15:17:13 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id w128sm10582615ywf.72.2020.02.04.15.17.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Feb 2020 15:17:13 -0800 (PST)
-Subject: Re: [PATCH v2 2/7] arch: um: add linker section for KUnit test suites
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-3-brendanhiggins@google.com>
- <e060bdfc-5cdb-fb62-48b0-cc54c7bc72ce@gmail.com>
- <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <1da1538d-2e4c-0ed0-5fae-6f9033230c46@gmail.com>
-Date:   Tue, 4 Feb 2020 17:17:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 4 Feb 2020 18:17:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580858264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fXkSZIYg+CxNFfkQFswaGct5gf6MoWDvY2IKAJ/JqLk=;
+        b=jK9ZUoaz4n5KUOrgmPCSgdOT9J2YmYiQBNfr66cirFnCaaTGBmHvUQ5RBvoap++g0Bmwjy
+        XTb5iS2SSerW4ebRGVVo3FfCa1yIBDwCEyUPO4xA/2iRx6b52dclQfOimcYI9AbEg9Sev1
+        ikLmXvrLDMiVPVHdlTju9tO117WAl9U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-vjVLerJNNjCAcy2yIZMWIg-1; Tue, 04 Feb 2020 18:17:39 -0500
+X-MC-Unique: vjVLerJNNjCAcy2yIZMWIg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78A7A802562;
+        Tue,  4 Feb 2020 23:17:38 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9059590A6;
+        Tue,  4 Feb 2020 23:17:37 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 16:17:37 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
+Message-ID: <20200204161737.34696b91@w520.home>
+In-Reply-To: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 4:30 PM, Brendan Higgins wrote:
-> On Tue, Feb 4, 2020 at 1:59 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 1/30/20 5:08 PM, Brendan Higgins wrote:
->>> Add a linker section to UML where KUnit can put references to its test
->>> suites. This patch is an early step in transitioning to dispatching all
->>> KUnit tests from a centralized executor rather than having each as its
->>> own separate late_initcall.
->>
->> All architectures please.
-> 
-> I *am* supporting all architectures with this patchset.
-> 
-> The first patch in this series adds support to all architectures
-> except UML (admittedly I only tried x86 and ARM, 32 bit and 64 bit for
 
-Right you are.  My mind did not span from patch 1 to patch 2. Apologies for
-the noise.
+Promised example QEMU test case...
 
+commit 3557c63bcb286c71f3f7242cad632edd9e297d26
+Author: Alex Williamson <alex.williamson@redhat.com>
+Date:   Tue Feb 4 13:47:41 2020 -0700
 
-> both, but I am pretty sure someone tried it for POWER and something
-> else, so maybe I should try it with others before submission). A patch
-> specific for UML, this patch, was needed because UML is a special
-> snowflake and has a bunch of special linker scripts that don't make
-> the change in vmlinux.lds.h (the previous patch) sufficient.
-> 
->> The early versions of Kunit documented reliance on UML.  Discussion lead to
->> the conclusion that real architectures and real hardware would be supported.
-> 
-> I am *very* aware.
-> 
-> I would never intentionally break support for other architectures. I
-> know it is very important to you, Alan, and others.
-> 
->> This like this are what make me reluctant to move devicetree unittests to
->> KUnit.
-> 
-> Hopefully I can reassure you then:
-> 
-> With Alan as a regular contributor who cares very much about non-UML
-> architectures, it would be very unlikely for me to accidentally break
-> support for other architectures without us finding out before a
-> release.
-> 
-> I also periodically test KUnit on linux-next on x86-64. I have gotten
-> bugs for other architectures from Arnd Bergmann and one of the m86k
-> maintainers who seems to play around with it as well.
-> 
-> So yeah, other people care about this too, and I would really not want
-> to make any of them unhappy.
+    vfio-pci: QEMU support for vfio-pci VF tokens
+    
+    Example support for using a vf_token to gain access to a device as
+    well as using the VFIO_DEVICE_FEATURE interface to set the VF token.
+    Note that the kernel will disregard the additional option where it's
+    not required, such as opening the PF with no VF users, so we can
+    always provide it.
+    
+    NB. It's unclear whether there's value to this QEMU support without
+    further exposure of SR-IOV within a VM.  This is meant mostly as a
+    test case where the real initial users will likely be DPDK drivers.
+    
+    Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-Thanks for the extra reassurance.
+diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
+index 337a173ce7c6..b755b4caa870 100644
+--- a/hw/vfio/pci.c
++++ b/hw/vfio/pci.c
+@@ -2816,12 +2816,45 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
+         goto error;
+     }
+ 
+-    ret = vfio_get_device(group, vdev->vbasedev.name, &vdev->vbasedev, errp);
++    if (!qemu_uuid_is_null(&vdev->vf_token)) {
++        char *uuid = qemu_uuid_unparse_strdup(&vdev->vf_token);
++
++        tmp = g_strdup_printf("%s vf_token=%s", vdev->vbasedev.name, uuid);
++        g_free(uuid);
++    } else {
++        tmp = g_strdup_printf("%s", vdev->vbasedev.name);
++    }
++
++    ret = vfio_get_device(group, tmp, &vdev->vbasedev, errp);
++
++    g_free(tmp);
++
+     if (ret) {
+         vfio_put_group(group);
+         goto error;
+     }
+ 
++    if (!qemu_uuid_is_null(&vdev->vf_token)) {
++        struct vfio_device_feature *feature;
++
++        feature = g_malloc0(sizeof(*feature) + 16);
++        feature->argsz = sizeof(*feature) + 16;
++        feature->flags = VFIO_DEVICE_FEATURE_PROBE | VFIO_DEVICE_FEATURE_SET |
++                         VFIO_DEVICE_FEATURE_PCI_VF_TOKEN;
++
++        if (!ioctl(vdev->vbasedev.fd, VFIO_DEVICE_FEATURE, feature)) {
++            feature->flags &= ~VFIO_DEVICE_FEATURE_PROBE;
++            memcpy(&feature->data, vdev->vf_token.data, 16);
++            if (ioctl(vdev->vbasedev.fd, VFIO_DEVICE_FEATURE, feature)) {
++                g_free(feature);
++                error_setg_errno(errp, errno, "failed to set vf_token UUID");
++                goto error;
++            }
++        }
++
++        g_free(feature);
++    }
++
+     vfio_populate_device(vdev, &err);
+     if (err) {
+         error_propagate(errp, err);
+@@ -3149,6 +3182,7 @@ static void vfio_instance_init(Object *obj)
+ static Property vfio_pci_dev_properties[] = {
+     DEFINE_PROP_PCI_HOST_DEVADDR("host", VFIOPCIDevice, host),
+     DEFINE_PROP_STRING("sysfsdev", VFIOPCIDevice, vbasedev.sysfsdev),
++    DEFINE_PROP_UUID_NODEFAULT("vf_token", VFIOPCIDevice, vf_token),
+     DEFINE_PROP_ON_OFF_AUTO("display", VFIOPCIDevice,
+                             display, ON_OFF_AUTO_OFF),
+     DEFINE_PROP_UINT32("xres", VFIOPCIDevice, display_xres, 0),
+diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
+index 35626cd63e9d..7f25672d7500 100644
+--- a/hw/vfio/pci.h
++++ b/hw/vfio/pci.h
+@@ -18,6 +18,7 @@
+ #include "qemu/event_notifier.h"
+ #include "qemu/queue.h"
+ #include "qemu/timer.h"
++#include "qemu/uuid.h"
+ 
+ #define PCI_ANY_ID (~0)
+ 
+@@ -170,6 +171,7 @@ typedef struct VFIOPCIDevice {
+     VFIODisplay *dpy;
+     Error *migration_blocker;
+     Notifier irqchip_change_notifier;
++    QemuUUID vf_token;
+ } VFIOPCIDevice;
+ 
+ uint32_t vfio_pci_read_config(PCIDevice *pdev, uint32_t addr, int len);
+diff --git a/linux-headers/linux/vfio.h b/linux-headers/linux/vfio.h
+index fb10370d2928..9bc28cc1d272 100644
+--- a/linux-headers/linux/vfio.h
++++ b/linux-headers/linux/vfio.h
+@@ -707,6 +707,43 @@ struct vfio_device_ioeventfd {
+ 
+ #define VFIO_DEVICE_IOEVENTFD		_IO(VFIO_TYPE, VFIO_BASE + 16)
+ 
++/**
++ * VFIO_DEVICE_FEATURE - _IORW(VFIO_TYPE, VFIO_BASE + 17,
++ *			       struct vfio_device_feature
++ *
++ * Get, set, or probe feature data of the device.  The feature is selected
++ * using the FEATURE_MASK portion of the flags field.  Support for a feature
++ * can be probed by setting both the FEATURE_MASK and PROBE bits.  A probe
++ * may optionally include the GET and/or SET bits to determine read vs write
++ * access of the feature respectively.  Probing a feature will return success
++ * if the feature is supporedt and all of the optionally indicated GET/SET
++ * methods are supported.  The format of the data portion of the structure is
++ * specific to the given feature.  The data portion is not required for
++ * probing.
++ *
++ * Return 0 on success, -errno on failure.
++ */
++struct vfio_device_feature {
++	__u32	argsz;
++	__u32	flags;
++#define VFIO_DEVICE_FEATURE_MASK	(0xffff) /* 16-bit feature index */
++#define VFIO_DEVICE_FEATURE_GET		(1 << 16) /* Get feature into data[] */
++#define VFIO_DEVICE_FEATURE_SET		(1 << 17) /* Set feature from data[] */
++#define VFIO_DEVICE_FEATURE_PROBE	(1 << 18) /* Probe feature support */
++	__u8	data[];
++};
++
++#define VFIO_DEVICE_FEATURE		_IO(VFIO_TYPE, VFIO_BASE + 17)
++
++/*
++ * Provide support for setting a PCI VF Token, which is used as a shared
++ * secret between PF and VF drivers.  This feature may only be set on a
++ * PCI SR-IOV PF when SR-IOV is enabled on the PF and there are no existing
++ * open VFs.  Data provided when setting this feature is a 16-byte array
++ * (__u8 b[16]), representing a UUID.
++ */
++#define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN	(0)
++
+ /* -------- API for Type1 VFIO IOMMU -------- */
+ 
+ /**
 
-
-> 
->> Can you please add a section to the KUnit documentation that lists things
->> like the expectations, requirements, limitations, etc for a test case that
->> is run by KUnit?  Some examples that pop to mind from recent discussions
->> and my own experiences:
->>
->>   - Each test case is invoked after late_init is complete.
->>       + Exception: the possible value of being able to run a unit test
->>         at a specific runlevel has been expressed.  If an actual unit
->>         test can be shown to require running earlier, this restriction
->>         will be re-visited.
->>
->>   - Each test case must be idempotent.  Each test case may be called
->>     multiple times, and must generate the same result each time it
->>     is called.
->>       + Exception 1: a test case can be declared to not be idempotent
->>         [[ mechanism TBD ]], in which case KUnit will not call the
->>         test case a second time without the kernel rebooting.
->>       + Exception 2: hardware may not be deterministic, so a test that
->>         always passes or fails when run under UML may not always to
->>         so on real hardware.  <--- sentence copied from
->>         Documentation/dev-tools/kunit/usage.rst
->>           [[ This item and 1st exception do not exist yet, but will exist
->>           in some form if the proposed proc filesystem interface is
->>           added. ]]
->>
->>   - KUnit provides a helpful wrapper to simplify building a UML kernel
->>     containing the KUnit test cases, booting the UML kernel, and
->>     formatting the output from the test cases.  This wrapper MUST NOT
->>     be required to run the test cases or to determine a test result.
->>     The formatting may provide additional analysis and improve
->>     readability of a test result.
->>
->>   - .... There is more that belongs here, but I'm getting side tracked
->>     here, when I'm trying to instead convert devicetree unittests to
->>     KUnit and want to get back to that.
-> 
-> Sure, I think that's a great start! Thanks for that. I hope you don't
-> mind if I copy and paste some of it.
-
-Please do.  And no need to credit me.
-
-
-> It kind of sounds like you are talking about more of a requirements
-> doc than the design doc I was imagining in my reply to you on the
-> cover letter, which is fine. The documentation is primarily for people
-> other than me, so whatever you and others think is useful, I will do.
-> 
-
-I wasn't really sure what to label it as.  My inspiration was based
-a little bit on reading through the Linux 5.5 KUnit source and
-documentation, and trying to understand the expectations of the
-KUnit framework and what the test cases have to either obey or
-can expect.
-
-I think there is a lot of history that you know, but is only visible
-to test implementors if they read through the past couple of years
-email threads.
-
--Frank
