@@ -2,140 +2,135 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBAAC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F51BC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783F52087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3516A20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 20:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="HZwrwG0u"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jHdZ82tk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgBDUGR (ORCPT
+        id S1727593AbgBDUGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 15:06:17 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55563 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbgBDUGR (ORCPT
+        Tue, 4 Feb 2020 15:06:22 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:34720 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbgBDUGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 15:06:17 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 96BF0891A9;
-        Wed,  5 Feb 2020 09:06:14 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580846774;
-        bh=a5bfvDdo0Iqxg0a4W2z8IHYNemytdwyb6t4ZT4MRLj4=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=HZwrwG0uCemJ2z/L8HxjmcbR4wspKokPBnPe/RpvhGIwSAQo0cLQjZxZAKnvmIkXh
-         podzK35EQKYY9vCkTOXftVHlAP3WBlScKOJBppUOCev849KOSleGrI7K9Vc7GHjAUJ
-         +zyPAB8XtedY0xPQFJ4YXPT50DsiIqK3Iio8NJiMbdwDJ1gU7u3gj2yVT3parfHpO6
-         StpQ1mS0ns74zJRw3wp38JlCO2bfqfL2SqNh/oRzqYOMtVtILXFrCHjzcLdT4oOH6F
-         bUXcOjUSS6Qb9vAVuXRY8P5LEhDC2V2OXOJlwRDnz4dAJ40/nm2Xm081FPfT4w1iWs
-         MNxJ+kJPFnFbg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e39ceb60001>; Wed, 05 Feb 2020 09:06:14 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb 2020 09:06:14 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Wed, 5 Feb 2020 09:06:14 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "bobdc9664@seznam.cz" <bobdc9664@seznam.cz>,
-        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "brandonbonaby94@gmail.com" <brandonbonaby94@gmail.com>,
-        "sandro@volery.com" <sandro@volery.com>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "ddaney@caviumnetworks.com" <ddaney@caviumnetworks.com>,
-        "ynezz@true.cz" <ynezz@true.cz>,
-        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>,
-        "ivalery111@gmail.com" <ivalery111@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] staging: octeon: delete driver
-Thread-Topic: [PATCH 1/2] staging: octeon: delete driver
-Thread-Index: AQHV2w/iRX+gXMaeSEy4Ak2F6OvwO6gJxAWAgADZBoA=
-Date:   Tue, 4 Feb 2020 20:06:14 +0000
-Message-ID: <1a90dc4c62c482ed6a44de70962996b533d6f627.camel@alliedtelesis.co.nz>
-References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
-         <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net>
-         <da150cdb160b5d1b58ad1ea2674cc93c1fc6aadc.camel@alliedtelesis.co.nz>
-         <20200204070927.GA966981@kroah.com>
-In-Reply-To: <20200204070927.GA966981@kroah.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:f95d:4478:4d90:53fe]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <40E690E094F8DD41988D46F5A075A46C@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 4 Feb 2020 15:06:19 -0500
+Received: by mail-qv1-f66.google.com with SMTP id o18so9209757qvf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 12:06:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=eDRuTAeCj1MHHosvk4b6Yc2l7JwwYq0uP+9wzC8UJyc=;
+        b=jHdZ82tkjU44GYaoSJcSJnAuerupeTCEalGxxiMGOm2TE+edZauIN/0jgv6JpjmfWU
+         r4YWYZREABtSI2sY70AC1do1uL+lfYnjjGV7d4ypjxje3R5yi3wGXrSaEStUgUxx/H7a
+         Zs+XypuyYT9IwBIwGxGyU1ILYhHwxsurhx+jCbgauaiKj1gKMa5zoi3a5SVqEeSuYMKR
+         kkcQ12mcyGK9wupmghUF5ZxXUt3whff1VJAW89eraeYz4jhbhkMcMI4z6giNZQuHouGC
+         QfAu/3KZB/QTifmP3Ej3doaHBBA+f3Bm7/9f790Bav3tUIarB0XDpZ7Ztlu3RYP8qvyC
+         ywGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eDRuTAeCj1MHHosvk4b6Yc2l7JwwYq0uP+9wzC8UJyc=;
+        b=PtfnSJXDN38ENTVXeZ+OVAyKmE0SBnqLInAwGmqwfPGUhhun6DkcpQycWSms+PrHV/
+         zYfmLxPVS/3YrHVRFv5CttfT2Sku7/bYtIDctf9sHHDphbKWSyof/Smuzq93H9Ob522f
+         HFqPvK/3nZwG7cks0meFvh8AT/LiXU3c4OR31lD8rBZbQ2rlHjvKSe3eSBYsnOqU3ELy
+         EEmZfAbDIDSyXofxoiXUvpKsAfxSeLhIrqcfK1UOYPrLa+XpWiR2htq6+t2aIHX0Z0/A
+         0K9KDu3bi649lfSfpDDT+elq9t1SwGKjmtrVlnX+2oouZrYqqJmdQHbfe0T0wDg5w4SB
+         BtjQ==
+X-Gm-Message-State: APjAAAXSBb7Fm6qZt9OOYXKpM9G8ri28vXB32A5+x3D6HZRs+4AOXUbC
+        gsy+2GjTDZebbx0OMhtLV8Q4cw==
+X-Google-Smtp-Source: APXvYqxHv4MH/oj4+8kAjRtHzNst+7K1fMtll3CmFwq7IZTOFrB0vrDOekKDeuU+Lvqu2kMkYNLUCg==
+X-Received: by 2002:a0c:eacb:: with SMTP id y11mr30196671qvp.68.1580846778526;
+        Tue, 04 Feb 2020 12:06:18 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u21sm5895241qke.102.2020.02.04.12.06.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 12:06:18 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tytso@mit.edu
+Cc:     adilger.kernel@dilger.ca, elver@google.com,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] ext4: fix a data race in EXT4_I(inode)->i_disksize
+Date:   Tue,  4 Feb 2020 15:06:03 -0500
+Message-Id: <1580846763-13731-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAyLTA0IGF0IDA3OjA5ICswMDAwLCBncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZyB3cm90ZToNCj4gT24gVHVlLCBGZWIgMDQsIDIwMjAgYXQgMDQ6MDI6MTVBTSArMDAwMCwg
-Q2hyaXMgUGFja2hhbSB3cm90ZToNCj4gPiBJJ2xsIHBpcGUgdXAgb24gdGhpcyB0aHJlYWQgdG9v
-DQo+ID4gDQo+ID4gT24gVHVlLCAyMDE5LTEyLTEwIGF0IDAyOjQyIC0wODAwLCBHdWVudGVyIFJv
-ZWNrIHdyb3RlOg0KPiA+ID4gT24gMTIvMTAvMTkgMToxNSBBTSwgR3JlZyBLcm9haC1IYXJ0bWFu
-IHdyb3RlOg0KPiA+ID4gPiBUaGlzIGRyaXZlciBoYXMgYmVlbiBpbiB0aGUgdHJlZSBzaW5jZSAy
-MDA5IHdpdGggbm8gcmVhbCBtb3ZlbWVudCB0byBnZXQNCj4gPiA+ID4gaXQgb3V0LiAgTm93IGl0
-IGlzIHN0YXJ0aW5nIHRvIGNhdXNlIGJ1aWxkIGlzc3VlcyBhbmQgb3RoZXIgcHJvYmxlbXMgZm9y
-DQo+ID4gPiA+IHBlb3BsZSB3aG8gd2FudCB0byBmaXggY29kaW5nIHN0eWxlIHByb2JsZW1zLCBi
-dXQgY2FuIG5vdCBhY3R1YWxseSBidWlsZA0KPiA+ID4gPiBpdC4NCj4gPiA+ID4gDQo+ID4gPiA+
-IEFzIG5vdGhpbmcgaXMgaGFwcGVuaW5nIGhlcmUsIGp1c3QgZGVsZXRlIHRoZSBtb2R1bGUgZW50
-aXJlbHkuDQo+ID4gPiA+IA0KPiA+ID4gPiBSZXBvcnRlZC1ieTogR3VlbnRlciBSb2VjayA8bGlu
-dXhAcm9lY2stdXMubmV0Pg0KPiA+ID4gPiBDYzogRGF2aWQgRGFuZXkgPGRkYW5leUBjYXZpdW1u
-ZXR3b3Jrcy5jb20+DQo+ID4gPiA+IENjOiAiRGF2aWQgUy4gTWlsbGVyIiA8ZGF2ZW1AZGF2ZW1s
-b2Z0Lm5ldD4NCj4gPiA+ID4gQ2M6ICJNYXR0aGV3IFdpbGNveCAoT3JhY2xlKSIgPHdpbGx5QGlu
-ZnJhZGVhZC5vcmc+DQo+ID4gPiA+IENjOiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5u
-ZXQ+DQo+ID4gPiA+IENjOiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20+DQo+ID4g
-PiA+IENjOiBBYXJvIEtvc2tpbmVuIDxhYXJvLmtvc2tpbmVuQGlraS5maT4NCj4gPiA+ID4gQ2M6
-IFdhbWJ1aSBLYXJ1Z2EgPHdhbWJ1aS5rYXJ1Z2F4QGdtYWlsLmNvbT4NCj4gPiA+ID4gQ2M6IEp1
-bGlhIExhd2FsbCA8anVsaWEubGF3YWxsQGxpcDYuZnI+DQo+ID4gPiA+IENjOiBGbG9yaWFuIFdl
-c3RwaGFsIDxmd0BzdHJsZW4uZGU+DQo+ID4gPiA+IENjOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdl
-ZXJ0QGxpbnV4LW02OGsub3JnPg0KPiA+ID4gPiBDYzogQnJhbmRlbiBCb25hYnkgPGJyYW5kb25i
-b25hYnk5NEBnbWFpbC5jb20+DQo+ID4gPiA+IENjOiAiUGV0ciDFoHRldGlhciIgPHluZXp6QHRy
-dWUuY3o+DQo+ID4gPiA+IENjOiBTYW5kcm8gVm9sZXJ5IDxzYW5kcm9Adm9sZXJ5LmNvbT4NCj4g
-PiA+ID4gQ2M6IFBhdWwgQnVydG9uIDxwYXVsYnVydG9uQGtlcm5lbC5vcmc+DQo+ID4gPiA+IENj
-OiBEYW4gQ2FycGVudGVyIDxkYW4uY2FycGVudGVyQG9yYWNsZS5jb20+DQo+ID4gPiA+IENjOiBH
-aW92YW5uaSBHaGVyZG92aWNoIDxib2JkYzk2NjRAc2V6bmFtLmN6Pg0KPiA+ID4gPiBDYzogVmFs
-ZXJ5IEl2YW5vdiA8aXZhbGVyeTExMUBnbWFpbC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
-IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+ID4gPiAN
-Cj4gPiA+IEFja2VkLWJ5OiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+DQo+ID4g
-DQo+ID4gUGxlYXNlIGNhbiB3ZSBrZWVwIHRoaXMgZHJpdmVyLiBXZSBkbyBoYXZlIHBsYXRmb3Jt
-cyB1c2luZyBpdCBhbmQgd2UNCj4gPiB3b3VsZCBsaWtlIGl0IHRvIHN0YXkgYXJvdW5kLg0KPiA+
-IA0KPiA+IENsZWFybHkgd2UnbGwgbmVlZCB0byBzb3J0IHRoaW5ncyBvdXQgdG8gYSBwb2ludCB3
-aGVyZSB0aGV5IGJ1aWxkDQo+ID4gc3VjY2Vzc2Z1bGx5LiBXZSd2ZSBiZWVuIGhvcGluZyB0byBz
-ZWUgdGhpcyBtb3ZlIG91dCBvZiBzdGFnaW5nIGV2ZXINCj4gPiBzaW5jZSB3ZSBzZWxlY3RlZCBD
-YXZpdW0gYXMgYSB2ZW5kb3IuDQo+IA0KPiBHcmVhdCwgY2FuIHlvdSBzZW5kIG1lIGEgcGF0Y2hz
-ZXQgdGhhdCByZXZlcnRzIHRoaXMgYW5kIGZpeGVzIHRoZSBidWlsZA0KPiBpc3N1ZXMgYW5kIGFj
-Y2VwdCBtYWludGFpbmVyc2hpcCBvZiB0aGUgY29kZT8NCj4gDQoNClllcCB3aWxsIGRvLg0KDQpP
-biBUdWUsIDIwMjAtMDItMDQgYXQgMTA6MjEgKzAzMDAsIERhbiBDYXJwZW50ZXIgd3JvdGU6DQo+
-IE15IGFkdmljZSBpcyB0byBkZWxldGUgYWxsIHRoZSBDT01QSUxFX1RFU1QgY29kZS4gIFRoYXQg
-c3R1ZmYgd2FzIGENCj4gY29uc3RhbnQgc291cmNlIG9mIGNvbmZ1c2lvbiBhbmQgaGVhZGFjaGVz
-Lg0KDQpJIHdhcyBhbHNvIGdvaW5nIHRvIHN1Z2dlc3QgdGhpcy4gU2luY2UgdGhlIENPTVBJTEVf
-VEVTVCBoYXMgYmVlbiBhDQpzb3VyY2Ugb2YgdHJvdWJsZSBJIHdhcyBnb2luZyB0byBwcm9wb3Nl
-IGRyb3BwaW5nIHRoZSB8fCBDT01QSUxFX1RFU1QNCmZyb20gdGhlIEtjb25maWcgZm9yIHRoZSBv
-Y3Rlb24gZHJpdmVycy4NCg==
+EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+KCSAN,
+
+ BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+
+ write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+  ext4_write_end+0x4e3/0x750 [ext4]
+  ext4_update_i_disksize at fs/ext4/ext4.h:3032
+  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+  generic_perform_write+0x208/0x2a0
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+  ext4_writepages+0x10ac/0x1d00 [ext4]
+  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+  do_writepages+0x5e/0x130
+  __writeback_single_inode+0xeb/0xb20
+  writeback_sb_inodes+0x429/0x900
+  __writeback_inodes_wb+0xc4/0x150
+  wb_writeback+0x4bd/0x870
+  wb_workfn+0x6b4/0x960
+  process_one_work+0x54c/0xbe0
+  worker_thread+0x80/0x650
+  kthread+0x1e0/0x200
+  ret_from_fork+0x27/0x50
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: writeback wb_workfn (flush-7:0)
+
+Since only the read is operating as lockless (outside of the
+"i_data_sem"), a load tearing could introduce a logic bug. Fix it by
+adding READ_ONCE() for the read.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ fs/ext4/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 3313168b680f..6f9862bf63f1 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2465,7 +2465,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+ 	 * truncate are avoided by checking i_size under i_data_sem.
+ 	 */
+ 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
+-	if (disksize > EXT4_I(inode)->i_disksize) {
++	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+ 		int err2;
+ 		loff_t i_size;
+ 
+-- 
+1.8.3.1
+
