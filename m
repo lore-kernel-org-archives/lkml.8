@@ -2,102 +2,92 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761E1C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEA1C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373CA20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BAQbYNF/"
+	by mail.kernel.org (Postfix) with ESMTP id D3C9F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBDLKj (ORCPT
+        id S1727226AbgBDLLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:10:39 -0500
-Received: from mout.gmx.net ([212.227.17.21]:36971 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbgBDLKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:10:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1580814629;
-        bh=w+SKvp56UKIMNMDCt6NqCccXI38PRnIdXVD4TjA0chE=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-        b=BAQbYNF/lO4xuQOi+ii/UXoh8CHY+aS+yuhsPgoqmxZT5BtUlSPYKxRKvNeixvRNU
-         p+u5wTIgRwDnQall5/NWBiDhECr4wkw1gTKEC56AA20NCz5vd01x0SNptwUaXWcWfY
-         MZurp4KnmotZ/AnAMrV15MQ+SWNpzP9vKu9Xfo5E=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from homer.simpson.net ([185.191.216.162]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3KPq-1jhaad0CVm-010LEc; Tue, 04
- Feb 2020 12:10:29 +0100
-Message-ID: <1580814626.22602.26.camel@gmx.de>
-Subject: Re: [PATCH RT] mm/memcontrol: Move misplaced
- local_unlock_irqrestore()
-From:   Mike Galbraith <efault@gmx.de>
-To:     Matt Fleming <matt@codeblueprint.co.uk>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Daniel Wagner <wagi@monom.org>
-Date:   Tue, 04 Feb 2020 12:10:26 +0100
-In-Reply-To: <20200204093519.GC4303@codeblueprint.co.uk>
-References: <20200126211945.28116-1-matt@codeblueprint.co.uk>
-         <20200203181746.htlca2aynoqidm3o@linutronix.de>
-         <20200204093519.GC4303@codeblueprint.co.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ysEKcjmRuZGpGf3+qTb6S9467Hf2cCE8lzqPowAFHDHKg/QVcAH
- FRrbdaPp0sLBPxQ11Cf9xrylGHLWRQPBL3RhEB9fUVTGHw0PfNKE5r38iyxJgVUq7QOSuRe
- GCtGUVWUG9Pc1GfnLvDFh0EZQgnDgeJ9tXu1Xk/uZ1gGjavlnLkQLUnN171Kp8S6iZGODwv
- SDCR2Hv1yfdbNeJrsvOaA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1pksGFDYPTw=:WE4KbA4xnHh4KjvkjTpNwL
- DWWbWkYgACzuHUEoQSWukuASdfY02ob1H+Vcie2oVfXlJL4ACiqB7H08sMBrkXwyT/YEzi+k0
- 11wriJYNtX87dpywUqrQiqlcMHbunlmMcg1mYTsjA+c2yh+S2DInHQOP08SmzJ67Nibc/wMrY
- rXVOv3uGkxrzOyQF2qpGCFHzp5taapT2J1qBF2SA7qPA8umBiPUemKIaoKtggZcX71oYc9mmt
- s82vWesIfjvLbWo2clL+pj3U1zghJ0n0CTKPDIRmgVpik2a7qf2Jtkcq+8ZnyQBf6GPIhp0XV
- Z9rJMtDND9R+oos6Zy69Qbz2VTDZs+9dS1sIYHjX9R10nt1sum9DDKYpM9zJ6l1JEYqTAjnTX
- CDWuzljp0DttSTxvvVsL59Vy7UGb0aZu1ztvE+Ug9wM5xV/jgzZvxO8pV+ADcRA+xh0ZPz6fK
- hms5Lj+ytSGa/5IvOTCwMdpcvE0UQIUnQgdCY0rg6noYjfuyI1cN1FSxVy/fjEwstKd8/1nh5
- BIODofxU0mL9GwCNiTyf2ByASq+sLvwgeFiFEV7H6weT/u8SzJgy4sHTSfnTAV8qTvBvFiPjA
- ocF2CbtN04Ru9A3uuWN6kkVgFYyfIOOA1/YDXkvGQ+p9V7aKBHBQNIDqQtzZKSNcqrPceArAZ
- D8RjvjE9orWuwXfvD2+hcn2Qc/Cq0mrpN8Us1+IBeZwbVYmCMkC0z/YYC0+WR9SCeEloklnTT
- 7B+0XSVV6ddG23eTUuTarYywJal+Qm6BibVfzHH6TeYz/PkYKaY04NhloUEuBkG5FwTwuYtn2
- UZjfFX7Chm0HdGj13DVQs6vkJUajoe/NHlyA8PGZng7qwwx4vcIzAxtM2wqTNfe3+2/Wd/rOe
- GvrAEOn5dCLRjX24hVA5FAJ92QzYoA+XR6qwQ77CfjgYTR43J4XEcxuV1qjot7930lHwyGTBT
- Tlvh9Zgt910lrj8Qur57lrhP4R/EAI8TJEjeSFIdQCJrdzv+G7krM5hjM3OKhl8mo+QnwxSPA
- 0Cdv4or0LezIUkRE/q79EJ3HH3i8zQpfM+QXyzyQcufQX4yoUAjhm3Awc3Af1TMRSfXGi48nK
- obIuLLkseTmdAjujqPhncov8A9klb4mAYoyJhkkRlIhpuFwTWS9VjJocaOl3erkmXkTNPi2l5
- Bc+PDne8M+0iunyxY6IGsyzWz5sImKd9XgChZehdN1Eo7Ky52ReHfN1rCf7flf25Ho/j4mwZJ
- 2tKY0FTpwWFH+Ovpc
+        Tue, 4 Feb 2020 06:11:08 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:33984 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726908AbgBDLLH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 06:11:07 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Tp7qDKM_1580814664;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tp7qDKM_1580814664)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Feb 2020 19:11:05 +0800
+Subject: Re: [PATCH] tracing: remove unused ret
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+References: <1579586083-45359-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200121173549.3de146d5@gandalf.local.home>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <e47edc57-b6a4-1d95-31fe-6d649c7f51f0@linux.alibaba.com>
+Date:   Tue, 4 Feb 2020 19:11:04 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200121173549.3de146d5@gandalf.local.home>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-04 at 09:35 +0000, Matt Fleming wrote:
-> On Mon, 03 Feb, at 07:17:46PM, Sebastian Andrzej Siewior wrote:
-> > On 2020-01-26 21:19:45 [+0000], Matt Fleming wrote:
-> > > There's no need to leave interrupts disabled when calling css_put_ma=
-ny().
-> >
-> > For RT the interrupts are never actually disabled and for !RT they are
-> > disabled with or without the change.
-> > The comment about the disable function mentions just the counters and
-> > css_put_many()'s callback just invokes a worker so it is probably save
-> > to move the function as suggested.
-> >
-> > May I ask how on earth you managed to open that file on a Sunday
-> > evening?
->
-> We're carrying it in some of our older SUSE RT kernels and I'd really
-> like to get it upstream or sent to /dev/null ;)
 
-My recollection of the reason for that patchlet existing was simply
-because while rummaging around one day, unlock placement offended my
-eye a bit, so I did a dinky on the spot correction.
 
-	-Mike
+ÔÚ 2020/1/22 ÉÏÎç6:35, Steven Rostedt Ð´µÀ:
+> On Tue, 21 Jan 2020 13:54:43 +0800
+> Alex Shi <alex.shi@linux.alibaba.com> wrote:
+> 
+>> No body care the variable 'ret' in function unregister_field_var_hists,
+>> better to remove it.
+>>
+>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+>> Cc: Steven Rostedt <rostedt@goodmis.org> 
+>> Cc: Ingo Molnar <mingo@redhat.com> 
+>> Cc: linux-kernel@vger.kernel.org 
+>> ---
+>>  kernel/trace/trace_events_hist.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+>> index f62de5f43e79..0acfac95ca2a 100644
+>> --- a/kernel/trace/trace_events_hist.c
+>> +++ b/kernel/trace/trace_events_hist.c
+>> @@ -5712,12 +5712,11 @@ static void unregister_field_var_hists(struct hist_trigger_data *hist_data)
+>>  	struct trace_event_file *file;
+>>  	unsigned int i;
+>>  	char *cmd;
+>> -	int ret;
+>>  
+>>  	for (i = 0; i < hist_data->n_field_var_hists; i++) {
+>>  		file = hist_data->field_var_hists[i]->hist_data->event_file;
+>>  		cmd = hist_data->field_var_hists[i]->cmd;
+>> -		ret = event_hist_trigger_func(&trigger_hist_cmd, file,
+>> +		event_hist_trigger_func(&trigger_hist_cmd, file,
+> 
+> I pulled in some of your other patches (removing unused macros), but
+> these that remove 'ret' I prefer not to take. Yes, we currently do not
+> use ret here, but the compiler will easily remove its existence. I'm
+> thinking if anything, we should report an error if they do return
+> something other than success.
+> 
+> -- Steve
+> 
+
+Pretty make sense. :)
+
+Thanks!
+Alex
+
