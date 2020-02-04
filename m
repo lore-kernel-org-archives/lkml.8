@@ -2,85 +2,123 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B152FC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE38C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C10B2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EBD52082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5YY69YG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgBDWZt (ORCPT
+        id S1727661AbgBDW0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:25:49 -0500
-Received: from mga09.intel.com ([134.134.136.24]:12421 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbgBDWZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:25:49 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 14:25:49 -0800
-X-IronPort-AV: E=Sophos;i="5.70,403,1574150400"; 
-   d="scan'208";a="403944584"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 14:25:48 -0800
-Date:   Tue, 4 Feb 2020 14:25:47 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: What should we do with match_option()?
-Message-ID: <20200204222547.GA21277@agluck-desk2.amr.corp.intel.com>
+        Tue, 4 Feb 2020 17:26:43 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43103 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbgBDW0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 17:26:43 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so31732oth.10;
+        Tue, 04 Feb 2020 14:26:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2tyk/h0a5VJnd8kvdMaFB4WsulH8yL9zaxL85u/nukc=;
+        b=Y5YY69YGmf1AuiAIVEdeg9efVXKtwUiLSWDTlS4u85rN66z2oPsoNfZrKOtt8NQ1pb
+         ib57GeSglPL8JIi1AyRkEoSqvOVK+UGOMvhUFVac7mTV2ZuHI+V2apWsj1l3dCCR53Ul
+         ULFjbyc9n9PBKdVb6CxAeyxnWIRnGyLwSRLaQ/AQX2xx2Sx4f6rfeWX+6YSEvUa4Jaww
+         61ypQjYuNt7BbnpCC9pCTuotlMohUManQAb76dB6zeA/1CRUgAfqPGTdMrXCkcOysCol
+         4Relm91jgvfGu4OYAxin8RzqSbk7n/SiYt9X7dsvy/ja6CNfkdIya+hGa9IUVLBYECKP
+         WgrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2tyk/h0a5VJnd8kvdMaFB4WsulH8yL9zaxL85u/nukc=;
+        b=MGRKhnhOHG0jp0GiA60bkoZbsORCGq0FCUJKvmZUwsCCbLRuoXG3aiDGuybbjPusNf
+         SUJj0FOxEC/+/uGG7NgXtk83AcLWUXxEX9l/Az6aFQeBEwD1YKFW9I5Yv9RHgu0EPons
+         DJVEdDCf4tYYqh2IzynUe3P6fb/tCjrmrVd9VXiaBSGmIxP2GP0mB+lYo6v0UxvZyYuP
+         iUsqivjs9A/brLmjl5rnEfLZDGL05ccJo+dRDJp+t1JNYr/VLo1aX3ft02rWHGUKcb+8
+         fq1SwLdP8NbLHUqDM1YisaEJP6lF9C5gy6KyiEWs66QvuOslLxua3iFSUIoKQKYeRa1/
+         2+/Q==
+X-Gm-Message-State: APjAAAVmrx+l5M1L4TOEk9t0LUr4xkE2R5NDf4rxAg/tDaHhHq55nxqj
+        /jEIQcCF9a0c8IyUaT553Gnh2J8jMpSupIiTWNM=
+X-Google-Smtp-Source: APXvYqwuANOUUIinBL/+HHdNFA1M9bXhsUTaNEdZlWqhfHxTpT2F9t9pxfN2u8NSAiKzShjrVrUu2K35fxS7kCYyF7s=
+X-Received: by 2002:a9d:67cc:: with SMTP id c12mr17600533otn.319.1580855202068;
+ Tue, 04 Feb 2020 14:26:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <0000000000009a59d2059dc3c8e9@google.com> <a1673e4f-6382-d7df-6942-6e4ffd2b81ce@gmail.com>
+ <20200204.222245.1920371518669295397.davem@davemloft.net>
+In-Reply-To: <20200204.222245.1920371518669295397.davem@davemloft.net>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 4 Feb 2020 14:26:30 -0800
+Message-ID: <CAM_iQpVE=B+LDpG=DpiHh_ydUxxhTj_ge-20zgdB4J1OqAfCtQ@mail.gmail.com>
+Subject: Re: memory leak in tcindex_set_parms
+To:     David Miller <davem@davemloft.net>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Back at the beginning of 2018 David Woodhouse added the inline
-function match_option() to aid is parsing boot arguments:
+On Tue, Feb 4, 2020 at 1:22 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Eric Dumazet <eric.dumazet@gmail.com>
+> Date: Tue, 4 Feb 2020 10:03:16 -0800
+>
+> >
+> >
+> > On 2/4/20 9:58 AM, syzbot wrote:
+> >> Hello,
+> >>
+> >> syzbot found the following crash on:
+> >>
+> >> HEAD commit:    322bf2d3 Merge branch 'for-5.6' of git://git.kernel.org/pu..
+> >> git tree:       upstream
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=1111f8e6e00000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=8d0490614a000a37
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=f0bbb2287b8993d4fa74
+> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17db90f6e00000
+> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a94511e00000
+> >>
+> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >> Reported-by: syzbot+f0bbb2287b8993d4fa74@syzkaller.appspotmail.com
+> >>
+> >>
+> >
+> > Might have been fixed already ?
+> >
+> > commit 599be01ee567b61f4471ee8078870847d0a11e8e    net_sched: fix an OOB access in cls_tcindex
+>
+> My reaction was actually that this bug is caused by this commit :)
 
-da285121560e ("x86/spectre: Add boot time option to select Spectre v2 mitigation")
+I think it is neither of the cases, I will test the following change:
 
-More recently PeterZ used match_option() in some pseudo-code to help
-get the split-lock patches un-jammed.  I cleaned that up a bit and
-the patch is now sitting in TIP ready for the next merge window.
+diff --git a/net/sched/cls_tcindex.c b/net/sched/cls_tcindex.c
+index 09b7dc5fe7e0..2495b15ca78c 100644
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -454,6 +454,7 @@ tcindex_set_parms(struct net *net, struct
+tcf_proto *tp, unsigned long base,
+        oldp = p;
+        r->res = cr;
+        tcf_exts_change(&r->exts, &e);
++       tcf_exts_destroy(&e);
 
-But Boris noticed that I'd copy/pasted the inline function defintion,
-and I promised to look at resolving the duplication.
-
-My first instinct was to just delete both instances from ".c" files
-and move it to <linux/string.h>. But net/netfilter/xt_dccp.c has its
-own function with this name (that does something different).
-
-So I looked a bit more closely at what it actually does ... and now
-I'm not really sure what problem it is solving.
-
-The issue seems to be that cmdline_find_option() might truncate the
-value of the option string to fit in the user supplied buffer. If that
-happens, the value in the buffer is guaranteed NUL terminated and
-cmdline_find_option() returns the length of the full string.
-
-match_option() checks to see if that return value matches the length
-of the option being checked, and fails if it doesn't match. Which
-prevents the truncated string from giving a false match against the
-option string being checked.
-
-But this seems to be a belt, braces (USA=suspenders) and stapling the
-waistband of trousers (USA=pants) to your body approach.
-
-If the user supplies a large enough buffer to cmdline_find_option()
-for any of the legal options Then the resulting "arg" will not be
-truncated for anything legal. So we should be able to just use
-"strcmp()" to see which of the options is matched.
-
-So should we promote match_option() to <linux/string.h>? Or
-drop it and just use strcmp() instead?
-
--Tony
+        rcu_assign_pointer(tp->root, cp);
