@@ -2,279 +2,318 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F1CC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0D1C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC2D20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="T3LmiWCz"
+	by mail.kernel.org (Postfix) with ESMTP id 573F7218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgBDKbY (ORCPT
+        id S1726763AbgBDKcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:31:24 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39793 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgBDKbY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:31:24 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so22280894wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=yrtra2ee+KLVOttd4bXZYdK9YXYtwBJf0l2O9Xpk63w=;
-        b=T3LmiWCzexeHLHNbYatPJHQ1Jzu/Dfe6b91IWZnWDttMbj7NlluOZ4VbcqwqVz7//x
-         LG9uDNGgWBZWg6kdJcgRrp/tWhBSC7AtLVjAG38MV1e2YuhzfYkHbTb8bESg5pYUn2g6
-         mTBy8LOv0U8zO988akhwj5miebzX2id3YKATYKcicNb+fmzgXCtiFtRUBsbnZ+4qqtyq
-         NphLTD94p3e2yfpafymvvbenC5CBwsTGmjNOQovWOOBASmREc66RhowyuOpGicGWWVAa
-         iXSNU7q8H8k/8FTuBEfHRg+VPRJWUTbCZa1jwb6Cepv2+g5QlBqWa2XjyOicuaFnEHHV
-         Lo7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=yrtra2ee+KLVOttd4bXZYdK9YXYtwBJf0l2O9Xpk63w=;
-        b=SYIZuITZMKx/iOb9UBAn/d8ZCK19O3NUdqkVeWU1g34DSIYolmVHyQ6uNzGopxP4Ex
-         ikHpS3VIdzWytK6Tqn0L2pK1zT6jBTCqmsm4vpyvHoyfNkLKGk1zo3vVTRFIow/OUGNK
-         I4g/MrioeYtPPOhezvdb9gIi7wXrXQgf/Iz8ye5+LpFhcckhs2HPJp93MEIipblYG7O7
-         4FQvEsn9DHZGZPDW9wLuGTKXwdSfmMMxGLy7VaTzi8qGLY18nmjtF3roRocE9EeNBSlw
-         +vUtnJ2FMbDamFOnlEBFMnglbWIBAb8EEUNOnXt2DCPp6Hga1e2UE1HH9vUZu+/dL/7Y
-         UHCQ==
-X-Gm-Message-State: APjAAAWK9lUqzI6BhnxdchJ0MijV8uZMEUY/1C9Z/SDuYLFwC+2t28/E
-        drGX6sThg70M7OHvEOKzl48O9Q==
-X-Google-Smtp-Source: APXvYqzbzEy2S2mIksTlB/Be+HGMhTUe5EtNkl2cNi6/3J3nu2RvrRvZ8lWYtbHpC136cTDN5i5+Ig==
-X-Received: by 2002:adf:ea8a:: with SMTP id s10mr20395994wrm.278.1580812278888;
-        Tue, 04 Feb 2020 02:31:18 -0800 (PST)
-Received: from [173.194.76.109] ([149.199.62.130])
-        by smtp.gmail.com with ESMTPSA id r5sm29620132wrt.43.2020.02.04.02.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 02:31:17 -0800 (PST)
-Subject: Re: [PATCH v2 0/2] microblaze: Enable CMA
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        x86@kernel.org, Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        Tue, 4 Feb 2020 05:32:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726479AbgBDKcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 05:32:03 -0500
+Received: from oasis.local.home (unknown [212.187.182.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2A6020674;
+        Tue,  4 Feb 2020 10:31:59 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 05:31:55 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guo Ren <ren_guo@c-sky.com>
-References: <cover.1579248206.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <5706978d-4c9a-1123-c34b-e19e2b8aa37f@monstr.eu>
-Date:   Tue, 4 Feb 2020 11:30:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [GIT PULL] tracing: Changes for 5.6
+Message-ID: <20200204053155.127c3f1e@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T
-Content-Type: multipart/mixed; boundary="BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org,
- monstr@monstr.eu, git@xilinx.com, Christoph Hellwig <hch@lst.de>
-Cc: Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Mike Rapoport <rppt@linux.ibm.com>,
- Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
- Borislav Petkov <bp@alien8.de>, Linus Walleij <linus.walleij@linaro.org>,
- linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Catalin Marinas <catalin.marinas@arm.com>, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
- Palmer Dabbelt <palmer@dabbelt.com>, x86@kernel.org,
- Guo Ren <guoren@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>,
- Wesley Terpstra <wesley@sifive.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ralf Baechle <ralf@linux-mips.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Andrew Morton <akpm@linux-foundation.org>,
- Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Christian Borntraeger
- <borntraeger@de.ibm.com>, Deepa Dinamani <deepa.kernel@gmail.com>,
- Chris Zankel <chris@zankel.net>, Manish Narani <manish.narani@xilinx.com>,
- Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
- linux-arm-kernel@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>,
- Vasily Gorbik <gor@linux.ibm.com>, James Hogan <jhogan@kernel.org>,
- Masahiro Yamada <yamada.masahiro@socionext.com>,
- Heiko Carstens <heiko.carstens@de.ibm.com>, Guo Ren <ren_guo@c-sky.com>
-Message-ID: <5706978d-4c9a-1123-c34b-e19e2b8aa37f@monstr.eu>
-Subject: Re: [PATCH v2 0/2] microblaze: Enable CMA
-References: <cover.1579248206.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
 
---BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Linus,
 
-On 17. 01. 20 9:03, Michal Simek wrote:
-> Hi,
->=20
-> the patchset enable CMA on Microblaze. Based on Christoph request I hav=
-e
-> created the first patch which makes dma-continugous.h mandatory for all=
+Tracing updates:
 
-> archs before Microblaze wiring.
->=20
-> Thanks,
-> Michal
->=20
-> Changes in v2:
-> - New patch suggested by Christoph
-> - Align commit message
-> - Remove adding dma-contigous.h via Kbuild because it is done by previo=
-us
->   patch
->=20
-> Michal Simek (2):
->   asm-generic: Make dma-contiguous.h a mandatory include/asm header
->   microblaze: Wire CMA allocator
->=20
->  arch/arm64/include/asm/Kbuild         | 1 -
->  arch/csky/include/asm/Kbuild          | 1 -
->  arch/microblaze/Kconfig               | 1 +
->  arch/microblaze/configs/mmu_defconfig | 2 ++
->  arch/microblaze/mm/init.c             | 4 ++++
->  arch/mips/include/asm/Kbuild          | 1 -
->  arch/riscv/include/asm/Kbuild         | 1 -
->  arch/s390/include/asm/Kbuild          | 1 -
->  arch/x86/include/asm/Kbuild           | 1 -
->  arch/xtensa/include/asm/Kbuild        | 1 -
->  include/asm-generic/Kbuild            | 1 +
->  11 files changed, 8 insertions(+), 7 deletions(-)
->=20
+ - Added new "bootconfig".
+   Looks for a file appended to initrd to add boot config options.
+   This has been discussed thoroughly at Linux Plumbers.
+   Very useful for adding kprobes at bootup.
 
-Applied.
+ - Created dynamic event creation.
+   Merges common code between creating synthetic events and
+     kprobe events.
 
-Thanks,
-Michal
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+ - Rename perf "ring_buffer" structure to "perf_buffer"
+
+ - Rename ftrace "ring_buffer" structure to "trace_buffer"
+   Had to rename existing "trace_buffer" to "array_buffer"
+
+ - Allow trace_printk() to work withing (some) tracing code.
+
+ - Sort of tracing configs to be a little better organized
+
+ - Various other small fixes and clean ups
 
 
+Please pull the latest trace-v5.6 tree, which can be found at:
 
---BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ--
 
---pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.6
 
------BEGIN PGP SIGNATURE-----
+Tag SHA1: e8b1f8525eeac87b9db3051f347e3defd8e2fb8b
+Head SHA1: 2b90927c77c973771cc658d639724d5b247a83eb
 
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXjlH4AAKCRDKSWXLKUoM
-IXg5AJ9J98El4wJeR5l37eVkp19mJ5smqwCdGPO/rvmeDwYSeGZMMaNPcnZNHRA=
-=bdA8
------END PGP SIGNATURE-----
 
---pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T--
+Alex Shi (5):
+      ftrace: Remove abandoned macros
+      ftrace: Remove NR_TO_INIT macro
+      ring-buffer: Remove abandoned macro RB_MISSED_FLAGS
+      tracing: Remove unused TRACE_SEQ_BUF_USED
+      trace/kprobe: Remove unused MAX_KPROBE_CMDLINE_SIZE
+
+Colin Ian King (1):
+      tools: bootconfig: Fix spelling mistake "faile" -> "failed"
+
+Dan Carpenter (2):
+      tracing/boot: Fix an IS_ERR() vs NULL bug
+      tracing: Remove unneeded NULL check
+
+Fabian Frederick (1):
+      ring-bufer: kernel-doc warning fixes
+
+Hou Pengyang (1):
+      tracing: Fix comments about trace/ftrace.h
+
+Josef Bacik (1):
+      tracing: Set kernel_stack's caller size properly
+
+Luis Henriques (1):
+      tracing: Fix tracing_stat return values in error handling paths
+
+Masami Hiramatsu (28):
+      bootconfig: Add Extra Boot Config support
+      bootconfig: Load boot config from the tail of initrd
+      tools: bootconfig: Add bootconfig command
+      tools: bootconfig: Add bootconfig test script
+      proc: bootconfig: Add /proc/bootconfig to show boot config list
+      init/main.c: Alloc initcall_command_line in do_initcall() and free it
+      bootconfig: init: Allow admin to use bootconfig for kernel command line
+      bootconfig: init: Allow admin to use bootconfig for init command line
+      Documentation: bootconfig: Add a doc for extended boot config
+      tracing: Apply soft-disabled and filter to tracepoints printk
+      tracing: kprobes: Output kprobe event to printk buffer
+      tracing: kprobes: Register to dynevent earlier stage
+      tracing: Accept different type for synthetic event fields
+      tracing: Add NULL trace-array check in print_synth_event()
+      tracing/boot: Add boot-time tracing
+      tracing/boot: Add per-event settings
+      tracing/boot Add kprobe event support
+      tracing/boot: Add synthetic event support
+      tracing/boot: Add instance node support
+      tracing/boot: Add cpu_mask option support
+      tracing/boot: Add function tracer filter options
+      Documentation: tracing: Add boot-time tracing document
+      tracing: trigger: Replace unneeded RCU-list traversals
+      bootconfig: Fix Kconfig help message for BOOT_CONFIG
+      Documentation: bootconfig: Fix typos in bootconfig documentation
+      Documentation: tracing: Fix typos in boot-time tracing documentation
+      tracing/boot: Include required headers and sort it alphabetically
+      tracing/boot: Move external function declarations to kernel/trace/trace.h
+
+Mathieu Desnoyers (1):
+      tracing: Fix sched switch start/stop refcount racy updates
+
+Mauro Carvalho Chehab (1):
+      docs: tracing: Fix a broken label
+
+Steven Rostedt (VMware) (13):
+      perf: Make struct ring_buffer less ambiguous
+      tracing: Rename trace_buffer to array_buffer
+      tracing: Make struct ring_buffer less ambiguous
+      ring-buffer: Fix kernel doc for rb_update_event()
+      tracing: Allow trace_printk() to nest in other tracing code
+      tracing: Fix uninitialized buffer var on early exit to trace_vbprintk()
+      tracing: Fix very unlikely race of registering two stat tracers
+      tracing: Decrement trace_array when bootconfig creates an instance
+      tracing: Use pr_err() instead of WARN() for memory failures
+      tracing: Move all function tracing configs together
+      tracing: Move tracing test module configs together
+      tracing: Move mmio tracer config up with the other tracers
+      tracing: Move tracing selftests to bottom of menu
+
+Tom Zanussi (21):
+      tracing: Simplify assignment parsing for hist triggers
+      tracing: Add hist trigger error messages for sort specification
+      tracing: Add 'hist:' to hist trigger error log error string
+      tracing: Add new testcases for hist trigger parsing errors
+      tracing: Add trace_array_find/_get() to find instance trace arrays
+      tracing: Add trace_get/put_event_file()
+      tracing: Add synth_event_delete()
+      tracing: Add dynamic event command creation interface
+      tracing: Add synthetic event command generation functions
+      tracing: Add synth_event_trace() and related functions
+      tracing: Add synth event generation test module
+      tracing: Add kprobe event command generation functions
+      tracing: Change trace_boot to use kprobe_event interface
+      tracing: Add kprobe event command generation test module
+      tracing: Documentation for in-kernel synthetic event API
+      tracing: Change trace_boot to use synth_event interface
+      tracing: Fix now invalid var_ref_vals assumption in trace action
+      tracing: Consolidate some synth_event_trace code
+      tracing: Remove check_arg() callbacks from dynevent args
+      tracing: Remove useless code in dynevent_arg_pair_add()
+      tracing: Use seq_buf for building dynevent_cmd string
+
+Vasily Averin (3):
+      ftrace: fpid_next() should increase position index
+      tracing: eval_map_next() should always increase position index
+      trigger_next should increase position index
+
+----
+ Documentation/admin-guide/bootconfig.rst           |  188 ++++
+ Documentation/admin-guide/index.rst                |    1 +
+ Documentation/trace/boottime-trace.rst             |  184 ++++
+ Documentation/trace/events.rst                     |  515 ++++++++++
+ Documentation/trace/index.rst                      |    1 +
+ Documentation/trace/kprobetrace.rst                |    1 +
+ MAINTAINERS                                        |    9 +
+ drivers/oprofile/cpu_buffer.c                      |    2 +-
+ fs/proc/Makefile                                   |    1 +
+ fs/proc/bootconfig.c                               |   89 ++
+ include/linux/bootconfig.h                         |  224 ++++
+ include/linux/perf_event.h                         |    6 +-
+ include/linux/ring_buffer.h                        |  110 +-
+ include/linux/trace_events.h                       |  131 ++-
+ include/trace/trace_events.h                       |   11 +-
+ init/Kconfig                                       |   14 +
+ init/main.c                                        |  213 +++-
+ kernel/events/core.c                               |   42 +-
+ kernel/events/internal.h                           |   34 +-
+ kernel/events/ring_buffer.c                        |   54 +-
+ kernel/trace/Kconfig                               |  360 ++++---
+ kernel/trace/Makefile                              |    3 +
+ kernel/trace/blktrace.c                            |    8 +-
+ kernel/trace/ftrace.c                              |   22 +-
+ kernel/trace/kprobe_event_gen_test.c               |  225 ++++
+ kernel/trace/ring_buffer.c                         |  135 +--
+ kernel/trace/ring_buffer_benchmark.c               |    2 +-
+ kernel/trace/synth_event_gen_test.c                |  523 ++++++++++
+ kernel/trace/trace.c                               |  453 +++++----
+ kernel/trace/trace.h                               |   69 +-
+ kernel/trace/trace_boot.c                          |  334 ++++++
+ kernel/trace/trace_branch.c                        |    6 +-
+ kernel/trace/trace_dynevent.c                      |  212 ++++
+ kernel/trace/trace_dynevent.h                      |   32 +
+ kernel/trace/trace_entries.h                       |    2 +-
+ kernel/trace/trace_events.c                        |  106 +-
+ kernel/trace/trace_events_hist.c                   | 1071 ++++++++++++++++++--
+ kernel/trace/trace_events_trigger.c                |   27 +-
+ kernel/trace/trace_functions.c                     |    8 +-
+ kernel/trace/trace_functions_graph.c               |   14 +-
+ kernel/trace/trace_hwlat.c                         |    2 +-
+ kernel/trace/trace_irqsoff.c                       |    8 +-
+ kernel/trace/trace_kdb.c                           |    8 +-
+ kernel/trace/trace_kprobe.c                        |  238 ++++-
+ kernel/trace/trace_mmiotrace.c                     |   12 +-
+ kernel/trace/trace_output.c                        |    2 +-
+ kernel/trace/trace_sched_switch.c                  |    4 +-
+ kernel/trace/trace_sched_wakeup.c                  |   20 +-
+ kernel/trace/trace_selftest.c                      |   26 +-
+ kernel/trace/trace_seq.c                           |    3 -
+ kernel/trace/trace_stat.c                          |   31 +-
+ kernel/trace/trace_syscalls.c                      |    8 +-
+ kernel/trace/trace_uprobe.c                        |    2 +-
+ lib/Kconfig                                        |    3 +
+ lib/Makefile                                       |    2 +
+ lib/bootconfig.c                                   |  803 +++++++++++++++
+ tools/Makefile                                     |   11 +-
+ tools/bootconfig/.gitignore                        |    1 +
+ tools/bootconfig/Makefile                          |   23 +
+ tools/bootconfig/include/linux/bootconfig.h        |    7 +
+ tools/bootconfig/include/linux/bug.h               |   12 +
+ tools/bootconfig/include/linux/ctype.h             |    7 +
+ tools/bootconfig/include/linux/errno.h             |    7 +
+ tools/bootconfig/include/linux/kernel.h            |   18 +
+ tools/bootconfig/include/linux/printk.h            |   17 +
+ tools/bootconfig/include/linux/string.h            |   32 +
+ tools/bootconfig/main.c                            |  353 +++++++
+ .../samples/bad-array-space-comment.bconf          |    5 +
+ tools/bootconfig/samples/bad-array.bconf           |    2 +
+ tools/bootconfig/samples/bad-dotword.bconf         |    4 +
+ tools/bootconfig/samples/bad-empty.bconf           |    1 +
+ tools/bootconfig/samples/bad-keyerror.bconf        |    2 +
+ tools/bootconfig/samples/bad-longkey.bconf         |    1 +
+ tools/bootconfig/samples/bad-manywords.bconf       |    1 +
+ tools/bootconfig/samples/bad-no-keyword.bconf      |    2 +
+ tools/bootconfig/samples/bad-nonprintable.bconf    |    2 +
+ tools/bootconfig/samples/bad-spaceword.bconf       |    2 +
+ tools/bootconfig/samples/bad-tree.bconf            |    5 +
+ tools/bootconfig/samples/bad-value.bconf           |    3 +
+ tools/bootconfig/samples/escaped.bconf             |    3 +
+ .../samples/good-array-space-comment.bconf         |    4 +
+ .../samples/good-comment-after-value.bconf         |    1 +
+ tools/bootconfig/samples/good-printables.bconf     |    2 +
+ tools/bootconfig/samples/good-simple.bconf         |   11 +
+ tools/bootconfig/samples/good-single.bconf         |    4 +
+ .../samples/good-space-after-value.bconf           |    1 +
+ tools/bootconfig/samples/good-tree.bconf           |   12 +
+ tools/bootconfig/test-bootconfig.sh                |  105 ++
+ .../test.d/trigger/trigger-hist-syntax-errors.tc   |   32 +
+ 89 files changed, 6464 insertions(+), 843 deletions(-)
+ create mode 100644 Documentation/admin-guide/bootconfig.rst
+ create mode 100644 Documentation/trace/boottime-trace.rst
+ create mode 100644 fs/proc/bootconfig.c
+ create mode 100644 include/linux/bootconfig.h
+ create mode 100644 kernel/trace/kprobe_event_gen_test.c
+ create mode 100644 kernel/trace/synth_event_gen_test.c
+ create mode 100644 kernel/trace/trace_boot.c
+ create mode 100644 lib/bootconfig.c
+ create mode 100644 tools/bootconfig/.gitignore
+ create mode 100644 tools/bootconfig/Makefile
+ create mode 100644 tools/bootconfig/include/linux/bootconfig.h
+ create mode 100644 tools/bootconfig/include/linux/bug.h
+ create mode 100644 tools/bootconfig/include/linux/ctype.h
+ create mode 100644 tools/bootconfig/include/linux/errno.h
+ create mode 100644 tools/bootconfig/include/linux/kernel.h
+ create mode 100644 tools/bootconfig/include/linux/printk.h
+ create mode 100644 tools/bootconfig/include/linux/string.h
+ create mode 100644 tools/bootconfig/main.c
+ create mode 100644 tools/bootconfig/samples/bad-array-space-comment.bconf
+ create mode 100644 tools/bootconfig/samples/bad-array.bconf
+ create mode 100644 tools/bootconfig/samples/bad-dotword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-empty.bconf
+ create mode 100644 tools/bootconfig/samples/bad-keyerror.bconf
+ create mode 100644 tools/bootconfig/samples/bad-longkey.bconf
+ create mode 100644 tools/bootconfig/samples/bad-manywords.bconf
+ create mode 100644 tools/bootconfig/samples/bad-no-keyword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-nonprintable.bconf
+ create mode 100644 tools/bootconfig/samples/bad-spaceword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-tree.bconf
+ create mode 100644 tools/bootconfig/samples/bad-value.bconf
+ create mode 100644 tools/bootconfig/samples/escaped.bconf
+ create mode 100644 tools/bootconfig/samples/good-array-space-comment.bconf
+ create mode 100644 tools/bootconfig/samples/good-comment-after-value.bconf
+ create mode 100644 tools/bootconfig/samples/good-printables.bconf
+ create mode 100644 tools/bootconfig/samples/good-simple.bconf
+ create mode 100644 tools/bootconfig/samples/good-single.bconf
+ create mode 100644 tools/bootconfig/samples/good-space-after-value.bconf
+ create mode 100644 tools/bootconfig/samples/good-tree.bconf
+ create mode 100755 tools/bootconfig/test-bootconfig.sh
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-errors.tc
+---------------------------
