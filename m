@@ -4,92 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CBAC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B49C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F54B2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580854032;
-	bh=k8760NdkFFLl7agVWsaklTQ7Hhbh2PyfZJys3HCekg0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1dgDZPy9H4oHN/1cMeNjWxwo29QVxEKbyJBQrJQyAVi9itW9FaI0o0BGBJKmm6Y7z
-	 EilpLArp/KJlMl3sfOcMyXU86BgdMYMtB9i5Da/DXHZ4YCFls/RsKIyVr2gqxJBuf3
-	 sTPHBkGt+p2sbwXUwc2g9AditcxRQQzkAw6JnBPU=
+	by mail.kernel.org (Postfix) with ESMTP id 8DA5A2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JAsE2pvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgBDWHL (ORCPT
+        id S1727587AbgBDWLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:07:11 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40991 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgBDWHL (ORCPT
+        Tue, 4 Feb 2020 17:11:23 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44149 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbgBDWLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:07:11 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so13334427lfp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:07:08 -0800 (PST)
+        Tue, 4 Feb 2020 17:11:23 -0500
+Received: by mail-ed1-f66.google.com with SMTP id g19so167674eds.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:11:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OE7fkKCLMto6NerQgkQtEvSNImJtUAlQc4A49qSBAVo=;
-        b=b8RsIByYH8kijYJwSsPvxVSEwm8cGtvywbwpqvWqXmTgkaP0N6uhskkeoddAgemo1b
-         HgtrnvQmfpX5AuLO9VR7O0gmm9w4JOsX/7xG11LV3HDLxyeeXDssC3NJH8JQzQ9A6f9m
-         s0jxnwb8m77FJM4rJQeCMncqpMOPzPStRZ9cM=
+        bh=r1c8Sx/+v2lfjleperyhTLWYQbP5AjrZMIJnYtSmPQU=;
+        b=JAsE2pvS4+eX7xyYLMmX23TdtQBQmxYCgHdJ21FAV72iuMv8HzM1+LlI1mpCrxJMIs
+         Z1Y8Jctbh8mly6rjWTfp6xJuCiS3i3bw4WSoQ7hc+Nw+j58Wcw0Ed7wph4rQhruGbfKe
+         /RRfs9+p3C3rNRcC3Md74U3MqKJidO7e/0Ro4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OE7fkKCLMto6NerQgkQtEvSNImJtUAlQc4A49qSBAVo=;
-        b=OUxwyuBypdCJtZS06q5B4FGNCX0qzFV4mNE4vozADVdJbHBPm2MmGItqSlS6SRVtON
-         cONClaObHIyP3Z/irpPbCYaNVK2+lLW284POJnu5B1+10Ow+2cZx5vrjq+WZTrrjFXk4
-         t7A7PFx3CnUZCUkZvMERhcqF3TpYvjCkAb+nODZktm4tpbUq/Vt0yCgVwHZFAqw0DiVj
-         FL2pHCFSkShpWfdNHpOqoum/Ff/PQWVutbN0MfdiBXOYMCH6ulbJK1JFH3vbJo+YqglA
-         FrPy20Yigkn32zBtm4zSTY1VbDk9XnY1yfpiCG8wybVOp1DICfLLQNUEhiGL6AIM/NVZ
-         7J3w==
-X-Gm-Message-State: APjAAAW8VMk1SMo70XJzRKMXRgQs8mlMwyFM8CHTIry5r51yqO3tmlas
-        7BaAROugdpu6JfJHMhQU9c1dyEU+zCagsw==
-X-Google-Smtp-Source: APXvYqwX6dQNkfweSsqtYMapTmgh/dN0Twi/LUgoho2zHmkiuckSM5PR+quqUDvMTa5sGHD/+4iiRA==
-X-Received: by 2002:a19:6449:: with SMTP id b9mr16071243lfj.5.1580854027584;
-        Tue, 04 Feb 2020 14:07:07 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id f5sm11213922lfh.32.2020.02.04.14.07.06
+        bh=r1c8Sx/+v2lfjleperyhTLWYQbP5AjrZMIJnYtSmPQU=;
+        b=VI9A1ecwPcFdYxABuj3T2jpqURw5TITMq9drH+3/WImY9kd2bcAyTjVzNoRYD/VUTG
+         RwZ4vlFaVNArPXIBkp+mLd+8UzXJZOiDUv8GAViPFkaPdaFbhQxptJr9nhvNi+YGldUO
+         FEYx6NecejbQySb6yByFuOF9YY8Oq+MeoQl+LoEQHunJ+fhyWNLAzKLTbWhYjPu0QoPi
+         CB5Z8psuByQGtNQXD3iww9N2RezcDJsfJZSvWxTEWr8xp3XFJAP3NT6HBM1ADd9iJx/q
+         80IvHw4JyWnyny9NJqxfVucYpU4C+PbmOM1m97ocRo1iyatP4BuRUHRWnonYkQ2f+hxw
+         4/Uw==
+X-Gm-Message-State: APjAAAWx4rmqY8bMuTZ896F1ir+h7LY+mBtEyDOHNO7i47g4Q/APVFgO
+        t3SVCBEUjuL7VV6yclWlhNzHt+lcg0A=
+X-Google-Smtp-Source: APXvYqzp0pqY3MYG2HmGFDAiAl7Pl8qSrYWMMrwm+/dvzdutnzusZDBFdCwdA639/2p3KVvrNJIbKw==
+X-Received: by 2002:a50:ee96:: with SMTP id f22mr2325191edr.272.1580854279535;
+        Tue, 04 Feb 2020 14:11:19 -0800 (PST)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id da13sm1141596edb.63.2020.02.04.14.11.18
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 14:07:06 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id y6so300331lji.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:07:06 -0800 (PST)
-X-Received: by 2002:a2e:3a13:: with SMTP id h19mr18847443lja.16.1580854026390;
- Tue, 04 Feb 2020 14:07:06 -0800 (PST)
+        Tue, 04 Feb 2020 14:11:18 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id c26so183837eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:11:18 -0800 (PST)
+X-Received: by 2002:aa7:c241:: with SMTP id y1mr2375799edo.354.1580854277802;
+ Tue, 04 Feb 2020 14:11:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20200204110446.2c2616cd@oasis.local.home>
-In-Reply-To: <20200204110446.2c2616cd@oasis.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 4 Feb 2020 22:06:50 +0000
-X-Gmail-Original-Message-ID: <CAHk-=whP+RHwN+h9fAE8LJk6m1f=B6G1mrnfiOSpZ22aJrwdCA@mail.gmail.com>
-Message-ID: <CAHk-=whP+RHwN+h9fAE8LJk6m1f=B6G1mrnfiOSpZ22aJrwdCA@mail.gmail.com>
-Subject: Re: [PATCH v3] bootconfig: Only load bootconfig if "bootconfig" is on
- the kernel cmdline
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
+References: <20200204215014.257377-1-zwisler@google.com> <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
+In-Reply-To: <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
+From:   Ross Zwisler <zwisler@chromium.org>
+Date:   Tue, 4 Feb 2020 15:11:06 -0700
+X-Gmail-Original-Message-ID: <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
+Message-ID: <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
+Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
+To:     Raul Rangel <rrangel@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Mattias Nissler <mnissler@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Benjamin Gordon <bmgordon@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 4:04 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> +not_found:
-> +       pr_err("config=bootconfig on command line, but no bootconfig found\n");
+On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com> wrote:
+> > --- a/include/uapi/linux/mount.h
+> > +++ b/include/uapi/linux/mount.h
+> > @@ -34,6 +34,7 @@
+> >  #define MS_I_VERSION   (1<<23) /* Update inode I_version field */
+> >  #define MS_STRICTATIME (1<<24) /* Always perform atime updates */
+> >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]times lazily */
+> > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
+> Doesn't this conflict with MS_SUBMOUNT below?
+> >
+> >  /* These sb flags are internal to the kernel */
+> >  #define MS_SUBMOUNT     (1<<26)
 
-The error message didn't get updated for the updated command line syntax.
-
-             Linus
+Yep.  Thanks for the catch, v6 on it's way.
