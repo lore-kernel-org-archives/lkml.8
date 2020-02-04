@@ -2,79 +2,150 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA65AC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EFDC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD09C2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5657C2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="auyatp5j"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nsFcX+Uk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbgBDWbv (ORCPT
+        id S1727636AbgBDWdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:31:51 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]:35623 "EHLO
-        mail-qk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbgBDWbv (ORCPT
+        Tue, 4 Feb 2020 17:33:41 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44318 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBDWdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:31:51 -0500
-Received: by mail-qk1-f174.google.com with SMTP id q15so19783574qki.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:31:50 -0800 (PST)
+        Tue, 4 Feb 2020 17:33:41 -0500
+Received: by mail-ot1-f65.google.com with SMTP id h9so43776otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:33:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=MGVGB2Yy9x4+QsZMk3BaiFAAfgnqpri3gvi7Vh3Ozkk=;
-        b=auyatp5jP6/4Z+MEJpp8p4b8r3/aC+EWelvmhPMWDJKkBXkVaWMapZL2y/liZ5olOv
-         ho0DAb+/A/s6TuGvsZxxqkg9o8OaSD09MZZ/CJNVuqWgLzLO0EoiSfgBRx6T8AkThzEN
-         9t3y90F9w62BvrMVB8usjyfdDPT3i3Y+YKEnE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r4vakGMhq6osED8dfnagmL3LnH1bwD9GWqExnkD8isg=;
+        b=nsFcX+UkIOs3W64Y+ii8sN4utrUNClWWK5j8fLw1Ozps4Upa29eosAErByGTJMMSqn
+         Uf54fKPlPvLy5rfQ9BS358JoA3gtI3jRPeOyoIzrFbZSX8/bmN5BY7kBdDXJ6C8KwkR0
+         9i8ASESnQJDGufhIdNEgD9F9netV75Xy/p+TGbhvSsb6/ewtPCOO2S64aoJ9fnpC7UKY
+         jFombvtN7ivWbvbzKzGqbC8qRE58Ytm3Yjx1iGJNsOFNfC8IrPVmU6sPiPncRg2RYTMw
+         pYaT+e7IB6zBYtbxpTG8uREOPXipUZkLdLF+1xsoG8xZvthYb28fCvuwZokw362nmqfi
+         y07g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=MGVGB2Yy9x4+QsZMk3BaiFAAfgnqpri3gvi7Vh3Ozkk=;
-        b=BJqCqEGwL5z23Dxw5Q7xycbbJJvExSjlgMe/rQN+gZAu04OT481OT8EaEyWCw0r4W6
-         6tG714wnAo7qQ8ooHRDnlYz8xGhuMDfdua4hr0TmiDlJloXC4yusVpP4SLZlQnQCwr+H
-         N0qJr5V+BoDXWguwambD2v3RyQbJbKrAO6jBcKU5fONdaoswWOwvP+6qHcK9ISOeuAak
-         Uf9DuvOp62L48qffOUS+c3mtaE/BybElpcVHsBHbf0DL7AJDy4RbMQjMHsf/MiI20ggV
-         k2chgOisrRTfQICtIF9q/h/RW+bqWd8tyzG2ya+yXTadafF86WOzcCEYU5bDSY1DXTfb
-         lyfg==
-X-Gm-Message-State: APjAAAXm+0fC2B+HWe2x/lhTwv4aHI4FBl+i4b8GKMIvvuWcZP8dy6ap
-        dhXVoftanvoOHdiBQ551GoO+wRykUi7bC2jOJyPYe1Qt2gk=
-X-Google-Smtp-Source: APXvYqwBoywevZOECFpmhWNBuJJe7BfGTIGpYW3emnpxmqpzT9OMLWwzrKEhkaO/ErccoEAPdG3StIxChqg8Rp6/20s=
-X-Received: by 2002:ae9:c317:: with SMTP id n23mr30663121qkg.356.1580855510123;
- Tue, 04 Feb 2020 14:31:50 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r4vakGMhq6osED8dfnagmL3LnH1bwD9GWqExnkD8isg=;
+        b=qmUnfbTuy49yyu4cxWX/rcQZBoqiXZD3O9qvCUcnznFltl1frS8qLrZHtGb1y5aiJr
+         DTLkCNvCR92M7l7V8F33eyP8mQidXocq4EH2D6ooeGoc9KSqJlsz56ptNnT6qt6yT/7a
+         5518VHpYQ9TKABLMeX1UzIXC6N9M13O7otaz2i1Xj7u1vvXQxqEWgtoURC8BG4dhERpK
+         MmYovBWbbunGiFQBmr1JD/RahA/wkgdb+FTLSKlEwx/oou48ML7piWy9QrByzfIABs/+
+         CY5rZmkcLTiPf9cwxqy2fq1gKLMFxVvNuvV/CrJZT2L9jndglWGRAv2fYqkCvZ/gbKSJ
+         6qHw==
+X-Gm-Message-State: APjAAAWhUwFXqzcO1QmpdFwKmh6TfEOUh56gPA8O7J6KXD7NWFvtubFC
+        t61LIGKJeMUUuNdeNvXurzNozwfjeWWNHDE9AJ4Qyg==
+X-Google-Smtp-Source: APXvYqwAB6r7PiMCLRtXLPkmBSmepkc4OT2+jLlJkQ9zZgPfaqu9E0ylfzzT6UFq8J3qZq5LgZpjdufN9HeUGzf+FTk=
+X-Received: by 2002:a9d:7b4e:: with SMTP id f14mr23746990oto.355.1580855620419;
+ Tue, 04 Feb 2020 14:33:40 -0800 (PST)
 MIME-Version: 1.0
-From:   Watson Ladd <watson@cloudflare.com>
-Date:   Tue, 4 Feb 2020 14:31:39 -0800
-Message-ID: <CAN2QdAFiLAwsBdPAmR6K3kg3jzZ-ek2oESe1UnVrbjUvGfd2MQ@mail.gmail.com>
-Subject: Additional interface to kernel timekeeping for leapsecond clarity
-To:     linux-kernel@vger.kernel.org
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-8-almasrymina@google.com> <0fa5d77c-d115-1e30-cb17-d6a48c916922@linux.ibm.com>
+ <CAHS8izPobKi_w8R4pTt_UyfxzBJJYuNUw+Z6hgFfvZ1Xma__YA@mail.gmail.com>
+In-Reply-To: <CAHS8izPobKi_w8R4pTt_UyfxzBJJYuNUw+Z6hgFfvZ1Xma__YA@mail.gmail.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Tue, 4 Feb 2020 14:33:29 -0800
+Message-ID: <CAHS8izNmSYumXpYXT1d8tAm36=-BRjXqdCDjLB6UNMwn5xhPZg@mail.gmail.com>
+Subject: Re: [PATCH v11 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation tests
+To:     Sandipan Das <sandipan@linux.ibm.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On Tue, Feb 4, 2020 at 12:36 PM Mina Almasry <almasrymina@google.com> wrote:
+>
+> On Tue, Feb 4, 2020 at 8:26 AM Sandipan Das <sandipan@linux.ibm.com> wrote:
+> >
+> >
+> > There are still a couple of places where 2MB page size is being used.
+> > These are my workarounds to get the tests running on ppc64.
+> >
+>
+> Thanks for the changes!
+>
+> > Also I had missed running charge_reserved_hugetlb.sh the last time.
+> > Right now, it stops at the following scenario.
+> >
+> > Test normal case with write.
+> > private=, populate=, method=2, reserve=
+> > nr hugepages = 10
+> > writing cgroup limit: 83886080
+> > writing reseravation limit: 83886080
+> >
+> > Starting:
+> > hugetlb_usage=0
+> > reserved_usage=0
+> > expect_failure is 0
+> > Putting task in cgroup 'hugetlb_cgroup_test'
+> > Method is 2
+> > Executing ./write_to_hugetlbfs -p /mnt/huge/test -s 83886080 -w  -m 2  -l
+> > Writing to this path: /mnt/huge/test
+> > Writing this size: 83886080
+> > Not populating.
+> > Using method=2
+> > Shared mapping.
+> > RESERVE mapping.
+> > Allocating using SHM.
+> > shmid: 0x5, shmget key:0
+> > shmaddr: 0x7dfffb000000
+> > Writing to memory.
+> > Starting the writes:
+> > .write_result is 0
+> > .After write:
+> > hugetlb_usage=16777216
+> > reserved_usage=83886080
+> > ....kiling write_to_hugetlbfs
+> > ...Received 2.
+> > Deleting the memory
+> > Done deleting the memory
+> > 16777216
+> > 83886080
+> > Memory charged to hugtlb=16777216
+> > Memory charged to reservation=83886080
+> > expected (83886080) != actual (16777216): Reserved memory charged to hugetlb cgroup.
+> > CLEANUP DONE
+> >
+> >
+>
+> So the problem in this log seems to be that this log line is missing:
+>     echo Waiting for hugetlb memory to reach size $size.
+>
+> The way the test works is that it starts a process that writes the
+> hugetlb memory, then it *should* wait until the memory is written,
+> then it should record the cgroup accounting and kill the process. It
+> seems from your log that the wait doesn't happen, so the test
+> continues before the background process has had time to write the
+> memory properly. Essentially wait_for_hugetlb_memory_to_get_written()
+> never gets called in your log.
+>
+> Can you try this additional attached diff on top of your changes? I
+> attached the diff and pasted the same here, hopefully one works for
+> you:
+>
 
-I'm writing because I'm interested in adding a system call to linux
-and other free operating systems that will return the current time in
-a structure that will include a flag for whether or not there is a
-leap second when the result is taken. While adjtimex exists, it's a
-very heavy interface to this functionality. This is necessary for
-computing the Modified Julian Day+microseconds since midnight in
-userspace, something of interest for roughtime.
-
-ntp_gettimex doesn't quite do this either: the TAI offset doesn't let
-one compute the Modified Julian day without an almanac. To the best of
-my knowledge this doesn't exist yet, but I would be happy to be proven
-wrong.
-
-Adding this would make it possible to adapt userspace to the harsh
-realities of UTC.
-
-Sincerely,
-Watson Ladd
+I got my hands on a machine with 16MB default hugepage size and
+charge_reserved_hugetlb.sh passes now after my changes. Please let me
+know if you still run into issues.
