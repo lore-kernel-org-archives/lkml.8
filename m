@@ -1,88 +1,103 @@
 Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0228C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A4FC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894012087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2FF21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KvUEDJeo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/TEcCQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgBDRQc (ORCPT
+        id S1727480AbgBDRSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:16:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38322 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727379AbgBDRQc (ORCPT
+        Tue, 4 Feb 2020 12:18:22 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35205 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbgBDRSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:16:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3NMwJ5AxeA2DxLtwDwGHd3oNGbv+NT9nGn8qTgTw24Y=; b=KvUEDJeoNCmLGpgVORZ1wzUvhJ
-        wIAGhqJxfoOzPQ81fRuNGE10yA3XKfb/XFoGImLuak/cMOfZTUmObg0Isl2d2H0xUOSKupB0K5WcM
-        sKxT2uMCKsc4W81B/oIY7Nq/C5eF5mKX/mpXbcr6o6ZfTyX9aekNmNh3gtOEhVHyRyRFOjLmBOoAV
-        w/5nCLaExb6rBxUuDMer/dCqVGMYPxFJFfEgIYZLwmM129d6OhQkvQzzrkTlvB2JCwmIwlAncUOBt
-        f+hfqZM2PPSztiwr4r/vdc/oOP6H8o9d+EufWbh/gPVAF/VnEbBn1Z6Mr84omAyvjNDVJTZNQSeyL
-        y2yx+ifA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iz1oN-0000iE-LX; Tue, 04 Feb 2020 17:16:31 +0000
-Date:   Tue, 4 Feb 2020 09:16:31 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     dsterba@suse.cz, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com
-Subject: Re: [PATCH v4 00/12] Change readahead API
-Message-ID: <20200204171631.GM8731@bombadil.infradead.org>
-References: <20200201151240.24082-1-willy@infradead.org>
- <20200204153227.GF2654@twin.jikos.cz>
+        Tue, 4 Feb 2020 12:18:21 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so7537762plt.2;
+        Tue, 04 Feb 2020 09:18:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8WA4B8voYuCqjA49yDhyby9CytQRBltptTuc0mFVDB0=;
+        b=i/TEcCQbDUGSSKGsElwHSq54Ei9p+UPPHAroRRiKhzyQcKb18av8K+Rws/gSW6lefp
+         ApWRlFhfKkPziUStpASC8O+6Jmy9T14tm282XgoWAEVQVK5ha/Cgm5mA8AAt52KZk7Wq
+         1+S2XxiBvQktBd4FwiX5vicwuWyS3VG9G4Xw9UdHM9uaxESqNpsUvt9uj+JMk/8R6eVY
+         LtevVTzxFnna6IT7q3dFb0M8unbvxwpU/cgK59JCzsK0oV0FfqwtEs4tQe9ntEO8NVMT
+         doOXbEr0/jH7M7inLObcPcOpolVIHCPPFWdodI8XxZZfGoii8/aQz1idRcXsoIkXzB99
+         biHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8WA4B8voYuCqjA49yDhyby9CytQRBltptTuc0mFVDB0=;
+        b=gxioVCjNii9rQ+qCxfKSjiYYYu/o2JzKTSdBXBIHO/L4oN0bkZNbkKPBvI9HIymEAB
+         mW6gI9hRT9SLKwiSoxC0Xn+B6q0HVj2LFrwDg4G/hQdDGlOt9bYwVtLB1xWOCGbFu8Tf
+         EYKWgPxt7etwPNnqmaIX99p6gcK5bvhRszTiyCpx+x4SrOYKgKn8ECdyfzztYmuDReIR
+         ex/CzfCjsz3dyTGG/Vdk9dJsPZfX/cw01smIrjurKsdmlOIskLXTrVRD+ttyLLK6sFl+
+         pJyHVp8gn2bnBuuKCqvdJw1DeWKr8WE972desdyx+qiM8gjblSI2Uow/lNTC27TTuqP9
+         OD4g==
+X-Gm-Message-State: APjAAAVMyqPM+9p3W2gSEVsAq6gUqE0FjBZUG1iQhXpOjhVIPNEylAQe
+        0YGQFX8E3/IUSHvSl/kwwUYMAFV7
+X-Google-Smtp-Source: APXvYqzhgJb+zRV/6iVwZ+a2O3QT0RQujqiuzJyLoToCYMxIfvW/xtObYdGDNiW5LTDemh9ykMvVlw==
+X-Received: by 2002:a17:90a:5d18:: with SMTP id s24mr51385pji.141.1580836700529;
+        Tue, 04 Feb 2020 09:18:20 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d23sm24465383pfo.176.2020.02.04.09.18.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Feb 2020 09:18:19 -0800 (PST)
+Date:   Tue, 4 Feb 2020 09:18:18 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/53] 4.4.213-stable review
+Message-ID: <20200204171818.GA10163@roeck-us.net>
+References: <20200203161902.714326084@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204153227.GF2654@twin.jikos.cz>
+In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 04:32:27PM +0100, David Sterba wrote:
-> On Sat, Feb 01, 2020 at 07:12:28AM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > I would particularly value feedback on this from the gfs2 and ocfs2
-> > maintainers.  They have non-trivial changes, and a review on patch 5
-> > would be greatly appreciated.
-> > 
-> > This series adds a readahead address_space operation to eventually
-> > replace the readpages operation.  The key difference is that
-> > pages are added to the page cache as they are allocated (and
-> > then looked up by the filesystem) instead of passing them on a
-> > list to the readpages operation and having the filesystem add
-> > them to the page cache.  It's a net reduction in code for each
-> > implementation, more efficient than walking a list, and solves
-> > the direct-write vs buffered-read problem reported by yu kuai at
-> > https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
-> > 
-> > v4:
-> >  - Rebase on current Linus (a62aa6f7f50a ("Merge tag 'gfs2-for-5.6'"))
+On Mon, Feb 03, 2020 at 04:18:52PM +0000, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.213 release.
+> There are 53 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I've tried to test the patchset but haven't got very far, it crashes at boot
-> ritht after VFS mounts the root. The patches are from mailinglist, applied on
-> current master, bug I saw the same crash with the git branch in your
-> repo (probably v1).
+> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> Anything received after that time might be too late.
+> 
 
-Yeah, I wasn't able to test at the time due to what turned out to be
-the hpet bug in Linus' tree.  Now that's fixed, I've found & fixed a
-couple more bugs.  There'll be a v5 once I fix the remaining problem
-(looks like a missing page unlock somewhere).
+Build results:
+	total: 170 pass: 167 fail: 3
+Failed builds:
+	arm:allmodconfig
+	arm:omap2plus_defconfig
+	arm:imx_v6_v7_defconfig
+Qemu test results:
+	total: 325 pass: 322 fail: 3
+Failed tests:
+	arm:kzm:imx_v6_v7_defconfig:nodrm:mem128:initrd
+	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:mem256:imx6ul-14x14-evk:initrd
+	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:sd:mem256:imx6ul-14x14-evk:rootfs
 
+Errors as already reported.
+
+Guenter
