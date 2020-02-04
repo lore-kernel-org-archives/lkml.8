@@ -2,290 +2,170 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BBCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FA4C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D3821744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5B420730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:16:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bOvS0LL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgBDQQD (ORCPT
+        id S1727456AbgBDQQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:16:03 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25863 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727433AbgBDQQD (ORCPT
+        Tue, 4 Feb 2020 11:16:30 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39096 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbgBDQQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:16:03 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Feb 2020 21:45:58 +0530
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Feb 2020 21:45:33 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id ED47821447; Tue,  4 Feb 2020 21:45:31 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, robh@kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, tientzu@chromium.org,
-        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: hci_qca: Bug fixes while collecting controller memory dump
-Date:   Tue,  4 Feb 2020 21:45:29 +0530
-Message-Id: <1580832929-2067-1-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 4 Feb 2020 11:16:29 -0500
+Received: by mail-qt1-f194.google.com with SMTP id c5so14724664qtj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 08:16:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pAy8jLtbMbimG8GilZh7LrbVrb27NyycDZqZCxpoHs8=;
+        b=bOvS0LL/h3dhQAj52To9GrwAyqFdTm62vOnjl1p+9e7L19APZ5V84zcaLdt26gQ7n+
+         Lv4DXKhGE9uhyrbgWCbUVizjcOiW8iyVo/TfxharjTyJru/Rk0avd9BcxFuJlRf1xaUR
+         mPFYBG6cfn+QbaX3enxmlbTlL84TJxNNVBQWEgpaVg0HfgxlifYnTLLt+vaCVdNY/uC5
+         PtiUWdr3Pb8aryX1lq3IeaBFwxsD7ls17Eih7+CaL+O8qAJJlTQd02nXY04wI3p+B7r1
+         BTW2HVkEDH5t6Dr5xPhV8mizRrdQk/yKPadT4+Ooc89vLuRS4oIqfEbRXQpyrV5j0e2x
+         eZCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pAy8jLtbMbimG8GilZh7LrbVrb27NyycDZqZCxpoHs8=;
+        b=B1I3l2o8fF5rHZ8VjlE9Ird6C0yb7IU2GvAkT09XYFnXMrrlNbO0uvi4LfRojJQArW
+         5CUM0/O7ReWp0r96D+f/q7pTKoAe/5pgTAMZZ7DzQNMiGVwAV31YBS7BpjK64DrjWTcK
+         BZAB8N0ar7+rreK73NgO26KKkxhDP+7WbJybnEkzvt09EyTqLC0PY8GcHcHhoidDCE77
+         87AnmLXihTXed2kKd40LxywgBWpbaezYwUjdwe73EMqHP8AMFPoiGrxl7fTzZPVLMqbB
+         Yl8RZIcczHYcxM2N1sDliUuOMAl6nqPuDlPwd8Lkb7mhsEIucgP+klKdSHMpSPNq9pYS
+         Y4DQ==
+X-Gm-Message-State: APjAAAVVUGaB03G7E7tbrfYe/PtXFPuvUtrb9d/0SaJR3ddmTMvjg40O
+        H6ohprNnA1J0h9e7bUYv1Of7XWlHfJk4Sg==
+X-Google-Smtp-Source: APXvYqz7uA5dN7UDMN36zGgMX2aZZ08vO0ZNAvSjII3gVrZwym/G8T5QvFz2fuPqIyNkyulRVDp+XA==
+X-Received: by 2002:ac8:7281:: with SMTP id v1mr29023219qto.79.1580832988769;
+        Tue, 04 Feb 2020 08:16:28 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id b24sm11753939qto.71.2020.02.04.08.16.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 08:16:28 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     davem@davemloft.net
+Cc:     kuba@kernel.org, elver@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] skbuff: fix a data race in skb_queue_len()
+Date:   Tue,  4 Feb 2020 11:15:45 -0500
+Message-Id: <1580832945-28331-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will fix the below issues
-   1.Fixed race conditions while accessing memory dump state flags.
-   2.Updated with actual context of timer in hci_memdump_timeout()
-   3.Updated injecting hardware error event if the dumps failed to receive.
-   4.Once timeout is triggered, stopping the memory dump collections.
+sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
 
-Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
-Reported-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+ BUG: KCSAN: data-race in __skb_try_recv_from_queue / unix_dgram_sendmsg
+
+ read to 0xffff8a1b1d8a81c0 of 4 bytes by task 5371 on cpu 96:
+  unix_dgram_sendmsg+0x9a9/0xb70 include/linux/skbuff.h:1821
+				 net/unix/af_unix.c:1761
+  ____sys_sendmsg+0x33e/0x370
+  ___sys_sendmsg+0xa6/0xf0
+  __sys_sendmsg+0x69/0xf0
+  __x64_sys_sendmsg+0x51/0x70
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ write to 0xffff8a1b1d8a81c0 of 4 bytes by task 1 on cpu 99:
+  __skb_try_recv_from_queue+0x327/0x410 include/linux/skbuff.h:2029
+  __skb_try_recv_datagram+0xbe/0x220
+  unix_dgram_recvmsg+0xee/0x850
+  ____sys_recvmsg+0x1fb/0x210
+  ___sys_recvmsg+0xa2/0xf0
+  __sys_recvmsg+0x66/0xf0
+  __x64_sys_recvmsg+0x51/0x70
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Since only the read is operating as lockless, it could introduce a logic
+bug in unix_recvq_full() due to the load tearing. Fix it by adding
+a lockless variant of skb_queue_len() and unix_recvq_full() where
+READ_ONCE() is on the read while WRITE_ONCE() is on the write similar to
+the commit d7d16a89350a ("net: add skb_queue_empty_lockless()").
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/bluetooth/hci_qca.c | 104 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 90 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index eacc65b..ea956c3 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -69,7 +69,8 @@ enum qca_flags {
- 	QCA_IBS_ENABLED,
- 	QCA_DROP_VENDOR_EVENT,
- 	QCA_SUSPENDING,
--	QCA_MEMDUMP_COLLECTION
-+	QCA_MEMDUMP_COLLECTION,
-+	QCA_HW_ERROR_EVENT
- };
+v2: add lockless variant helpers and WRITE_ONCE().
+
+ include/linux/skbuff.h | 14 +++++++++++++-
+ net/unix/af_unix.c     |  9 ++++++++-
+ 2 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 3d13a4b717e9..de5eade20e52 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1822,6 +1822,18 @@ static inline __u32 skb_queue_len(const struct sk_buff_head *list_)
+ }
  
- 
-@@ -150,6 +151,7 @@ struct qca_data {
- 	struct completion drop_ev_comp;
- 	wait_queue_head_t suspend_wait_q;
- 	enum qca_memdump_states memdump_state;
-+	spinlock_t hci_memdump_lock;
- 
- 	/* For debugging purpose */
- 	u64 ibs_sent_wacks;
-@@ -524,19 +526,19 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
- 
- static void hci_memdump_timeout(struct timer_list *t)
+ /**
++ *	skb_queue_len	- get queue length
++ *	@list_: list to measure
++ *
++ *	Return the length of an &sk_buff queue.
++ *	This variant can be used in lockless contexts.
++ */
++static inline __u32 skb_queue_len_lockless(const struct sk_buff_head *list_)
++{
++	return READ_ONCE(list_->qlen);
++}
++
++/**
+  *	__skb_queue_head_init - initialize non-spinlock portions of sk_buff_head
+  *	@list: queue to initialize
+  *
+@@ -2026,7 +2038,7 @@ static inline void __skb_unlink(struct sk_buff *skb, struct sk_buff_head *list)
  {
--	struct qca_data *qca = from_timer(qca, t, tx_idle_timer);
-+	struct qca_data *qca = from_timer(qca, t, memdump_timer);
- 	struct hci_uart *hu = qca->hu;
--	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
--	char *memdump_buf = qca_memdump->memdump_buf_tail;
-+	unsigned long flags;
+ 	struct sk_buff *next, *prev;
  
--	bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
--	/* Inject hw error event to reset the device and driver. */
--	hci_reset_dev(hu->hdev);
--	vfree(memdump_buf);
--	kfree(qca_memdump);
-+	spin_lock_irqsave(&qca->hci_memdump_lock, flags);
- 	qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
-+	if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
-+		/* Inject hw error event to reset the device and driver. */
-+		hci_reset_dev(hu->hdev);
-+	}
-+
- 	del_timer(&qca->memdump_timer);
--	cancel_work_sync(&qca->ctrl_memdump_evt);
-+	spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
+-	list->qlen--;
++	WRITE_ONCE(list->qlen, list->qlen - 1);
+ 	next	   = skb->next;
+ 	prev	   = skb->prev;
+ 	skb->next  = skb->prev = NULL;
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 321af97c7bbe..349e7fbfbc67 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -194,6 +194,12 @@ static inline int unix_recvq_full(struct sock const *sk)
+ 	return skb_queue_len(&sk->sk_receive_queue) > sk->sk_max_ack_backlog;
  }
  
- /* Initialize protocol */
-@@ -558,6 +560,7 @@ static int qca_open(struct hci_uart *hu)
- 	skb_queue_head_init(&qca->tx_wait_q);
- 	skb_queue_head_init(&qca->rx_memdump_q);
- 	spin_lock_init(&qca->hci_ibs_lock);
-+	spin_lock_init(&qca->hci_memdump_lock);
- 	qca->workqueue = alloc_ordered_workqueue("qca_wq", 0);
- 	if (!qca->workqueue) {
- 		BT_ERR("QCA Workqueue not initialized properly");
-@@ -960,14 +963,25 @@ static void qca_controller_memdump(struct work_struct *work)
- 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
- 	u16 seq_no;
- 	u32 dump_size;
-+	unsigned long flags;
- 
- 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
- 
-+		spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-+		/* Skip processing the received packets if timeout detected. */
-+		if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-+			spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
-+			return;
-+		}
++static inline int unix_recvq_full_lockless(struct sock const *sk)
++{
++	return skb_queue_len_lockless(&sk->sk_receive_queue) >
++		sk->sk_max_ack_backlog;
++}
 +
- 		if (!qca_memdump) {
- 			qca_memdump = kzalloc(sizeof(struct qca_memdump_data),
- 					      GFP_ATOMIC);
--			if (!qca_memdump)
-+			if (!qca_memdump) {
-+				spin_unlock_irqrestore(&qca->hci_memdump_lock,
-+								flags);
- 				return;
-+			}
- 
- 			qca->qca_memdump = qca_memdump;
- 		}
-@@ -992,6 +1006,8 @@ static void qca_controller_memdump(struct work_struct *work)
- 			if (!(dump_size)) {
- 				bt_dev_err(hu->hdev, "Rx invalid memdump size");
- 				kfree_skb(skb);
-+				spin_unlock_irqrestore(&qca->hci_memdump_lock,
-+							flags);
- 				return;
- 			}
- 
-@@ -1001,7 +1017,24 @@ static void qca_controller_memdump(struct work_struct *work)
- 				  msecs_to_jiffies(MEMDUMP_TIMEOUT_MS)));
- 
- 			skb_pull(skb, sizeof(dump_size));
-+
-+			/* vmalloc() might go to sleep while trying to allocate
-+			 * memory.As calling sleep function under spin lock is
-+			 * not allowed so unlocking spin lock and will be locked
-+			 * again after vmalloc().
-+			 */
-+			spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
- 			memdump_buf = vmalloc(dump_size);
-+			spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-+			/* Skip processing the received packets if timeout
-+			 * detected.
-+			 */
-+			if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-+				spin_unlock_irqrestore(&qca->hci_memdump_lock,
-+							flags);
-+				return;
-+			}
-+
- 			qca_memdump->memdump_buf_head = memdump_buf;
- 			qca_memdump->memdump_buf_tail = memdump_buf;
- 		}
-@@ -1016,6 +1049,7 @@ static void qca_controller_memdump(struct work_struct *work)
- 			kfree(qca_memdump);
- 			kfree_skb(skb);
- 			qca->qca_memdump = NULL;
-+			spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
- 			return;
- 		}
- 
-@@ -1044,18 +1078,37 @@ static void qca_controller_memdump(struct work_struct *work)
- 			bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
- 				   qca_memdump->received_dump);
- 			memdump_buf = qca_memdump->memdump_buf_head;
-+
-+			/* dev_coredumpv() might go to sleep.As calling sleep
-+			 * function under spin lock is not allowed so unlocking
-+			 * spin lock and will be locked again after
-+			 * dev_coredumpv().
-+			 */
-+			spin_unlock_irqrestore(&qca->hci_memdump_lock,
-+						flags);
- 			dev_coredumpv(&hu->serdev->dev, memdump_buf,
- 				      qca_memdump->received_dump, GFP_KERNEL);
-+			spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-+			if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-+				spin_unlock_irqrestore(&qca->hci_memdump_lock,
-+							flags);
-+				return;
-+			}
-+
- 			del_timer(&qca->memdump_timer);
- 			kfree(qca->qca_memdump);
- 			qca->qca_memdump = NULL;
- 			qca->memdump_state = QCA_MEMDUMP_COLLECTED;
-+			clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
- 		}
-+
-+		spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
- 	}
- 
- }
- 
--int qca_controller_memdump_event(struct hci_dev *hdev, struct sk_buff *skb)
-+static int qca_controller_memdump_event(struct hci_dev *hdev,
-+					struct sk_buff *skb)
+ struct sock *unix_peer_get(struct sock *s)
  {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
-@@ -1408,19 +1461,25 @@ static void qca_wait_for_dump_collection(struct hci_dev *hdev)
- 	struct qca_data *qca = hu->priv;
- 	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
- 	char *memdump_buf = NULL;
-+	unsigned long flags;
+ 	struct sock *peer;
+@@ -1758,7 +1764,8 @@ static int unix_dgram_sendmsg(struct socket *sock, struct msghdr *msg,
+ 	 * - unix_peer(sk) == sk by time of get but disconnected before lock
+ 	 */
+ 	if (other != sk &&
+-	    unlikely(unix_peer(other) != sk && unix_recvq_full(other))) {
++	    unlikely(unix_peer(other) != sk &&
++	    unix_recvq_full_lockless(other))) {
+ 		if (timeo) {
+ 			timeo = unix_wait_for_peer(other, timeo);
  
- 	wait_on_bit_timeout(&qca->flags, QCA_MEMDUMP_COLLECTION,
- 			    TASK_UNINTERRUPTIBLE, MEMDUMP_TIMEOUT_MS);
- 
- 	clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
--	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-+	if (qca->memdump_state == QCA_MEMDUMP_IDLE ||
-+	    qca->memdump_state == QCA_MEMDUMP_COLLECTING) {
- 		bt_dev_err(hu->hdev, "Clearing the buffers due to timeout");
-+		spin_lock_irqsave(&qca->hci_memdump_lock, flags);
- 		if (qca_memdump)
--			memdump_buf = qca_memdump->memdump_buf_tail;
-+			memdump_buf = qca_memdump->memdump_buf_head;
- 		vfree(memdump_buf);
- 		kfree(qca_memdump);
-+		qca->qca_memdump = NULL;
- 		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
- 		del_timer(&qca->memdump_timer);
-+		skb_queue_purge(&qca->rx_memdump_q);
-+		spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
- 		cancel_work_sync(&qca->ctrl_memdump_evt);
- 	}
- }
-@@ -1429,7 +1488,11 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
-+	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
-+	char *memdump_buf = NULL;
-+	unsigned long flags;
- 
-+	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
- 	bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
- 
- 	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-@@ -1448,7 +1511,20 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 		 */
- 		bt_dev_info(hdev, "waiting for dump to complete");
- 		qca_wait_for_dump_collection(hdev);
-+	} else if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-+		bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
-+		spin_lock_irqsave(&qca->hci_memdump_lock, flags);
-+		if (qca_memdump)
-+			memdump_buf = qca_memdump->memdump_buf_head;
-+		vfree(memdump_buf);
-+		kfree(qca_memdump);
-+		qca->qca_memdump = NULL;
-+		skb_queue_purge(&qca->rx_memdump_q);
-+		spin_unlock_irqrestore(&qca->hci_memdump_lock, flags);
-+		cancel_work_sync(&qca->ctrl_memdump_evt);
- 	}
-+
-+	clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
- }
- 
- static void qca_cmd_timeout(struct hci_dev *hdev)
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+1.8.3.1
 
