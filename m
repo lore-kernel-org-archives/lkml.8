@@ -5,63 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D409BC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E486C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A612084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F12A2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h5TaUxzT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RwEj7LpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbgBDT2t (ORCPT
+        id S1727564AbgBDT2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:28:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31005 "EHLO
+        Tue, 4 Feb 2020 14:28:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48025 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727331AbgBDT2t (ORCPT
+        with ESMTP id S1727331AbgBDT2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:28:49 -0500
+        Tue, 4 Feb 2020 14:28:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580844528;
+        s=mimecast20190719; t=1580844531;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9jN9F1jju3DTsHk55X7khAIcnUVHNVuohHBr9YCstd0=;
-        b=h5TaUxzT3cCt5m7/SjSJbqSpL7xhY1jWozBsZs9YQZtnm6CkoCO21vzN0mdfIdlF3j3rJ4
-        eYG4TGC+jvQPFeE+HtlEEiVQxcmB05xHDMwTFykR452yMOrjadB0TFd+gAheo8ptsB/UFi
-        bPr7Gs0IhkFv/ErxP98Gx+kVWtzcCsg=
+        bh=aD4sh7+q1QcXfGlCHQJDWJrnzcBICIJB57lOc03qehU=;
+        b=RwEj7LpF41jPma743xZK2iNgRjVqTbiRrJqMOhevbzlUup4DtAJWO7JHdA34avP+qyMNBD
+        Yd09GwoH8yM/nrOyv5ON4emqWXxUvsTd7l2zzgMap6f8TTp01RNARXfEo2yy6a8976XmjH
+        KTDlaSf1+bE+mrx1U/wNtlm053zlyl8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-MB4oF2nKOa63n1nomfd_3Q-1; Tue, 04 Feb 2020 14:28:38 -0500
-X-MC-Unique: MB4oF2nKOa63n1nomfd_3Q-1
+ us-mta-2-tk8T_SkEO-yxls4-uZb5UA-1; Tue, 04 Feb 2020 14:28:49 -0500
+X-MC-Unique: tk8T_SkEO-yxls4-uZb5UA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 599EB1005F74;
-        Tue,  4 Feb 2020 19:28:36 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE8841005F6E;
+        Tue,  4 Feb 2020 19:28:46 +0000 (UTC)
 Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F371D85750;
-        Tue,  4 Feb 2020 19:28:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E27B185750;
+        Tue,  4 Feb 2020 19:28:44 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
 Cc:     Jani Nikula <jani.nikula@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Lee Shawn C <shawn.c.lee@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Imre Deak <imre.deak@intel.com>,
+        Ramalingam C <ramalingam.c@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] Revert "drm/i915: Don't use VBT for detecting DPCD backlight controls"
-Date:   Tue,  4 Feb 2020 14:28:09 -0500
-Message-Id: <20200204192823.111404-2-lyude@redhat.com>
+Subject: [PATCH 2/4] drm/dp: Introduce EDID-based quirks
+Date:   Tue,  4 Feb 2020 14:28:10 -0500
+Message-Id: <20200204192823.111404-3-lyude@redhat.com>
 In-Reply-To: <20200204192823.111404-1-lyude@redhat.com>
 References: <20200204192823.111404-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -72,60 +78,269 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d2a4bb6f8bc8cf2d788adf7e59b5b52fe3a3333c.
+The whole point of using OUIs is so that we can recognize certain
+devices and potentially apply quirks for them. Normally this should work
+quite well, but there appears to be quite a number of laptop panels out
+there that will fill the OUI but not the device ID. As such, for devices
+like this I can't imagine it's a very good idea to try relying on OUIs
+for applying quirks. As well, some laptop vendors have confirmed to us
+that their panels have this exact issue.
 
-So, turns out that this ended up just breaking things. While many
-laptops incorrectly advertise themselves as supporting PWM backlight
-controls, they actually will only work with DPCD backlight controls.
-Unfortunately, it also seems there are a number of systems which
-advertise DPCD backlight controls in their eDP DPCD but don't actually
-support them. Talking with some laptop manufacturers has shown it might
-be possible to probe this support via the EDID (!?!?) but I haven't been
-able to confirm that this would work on any other manufacturer's
-systems.
-
-So in the mean time, we'll just revert this commit for now and go back
-to the old way of doing things. Additionally, let's print out an info
-message into the kernel log so that it's a little more obvious if a
-system needs DPCD backlight controls enabled through a quirk (which
-we'll introduce in the next commit).
+So, let's introduce the ability to apply DP quirks based on EDID
+identification. We reuse the same quirk bits for OUI-based quirks, so
+that callers can simply check all possible quirks using
+drm_dp_has_quirk().
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Cc: Jani Nikula <jani.nikula@intel.com>
 ---
- drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_dp_helper.c               | 61 +++++++++++++++++++
+ drivers/gpu/drm/drm_dp_mst_topology.c         |  3 +-
+ .../drm/i915/display/intel_display_types.h    |  1 +
+ drivers/gpu/drm/i915/display/intel_dp.c       | 11 ++--
+ drivers/gpu/drm/i915/display/intel_dp_mst.c   |  2 +-
+ drivers/gpu/drm/i915/display/intel_psr.c      |  2 +-
+ include/drm/drm_dp_helper.h                   | 11 +++-
+ 7 files changed, 81 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/driv=
-ers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-index e86feebef299..48276237b362 100644
---- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-@@ -328,16 +328,15 @@ intel_dp_aux_display_control_capable(struct intel_c=
-onnector *connector)
- int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_conn=
-ector)
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_hel=
+per.c
+index 5a103e9b3c86..db23308f4d8b 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -1221,6 +1221,67 @@ drm_dp_get_quirks(const struct drm_dp_dpcd_ident *=
+ident, bool is_branch)
+ #undef DEVICE_ID_ANY
+ #undef DEVICE_ID
+=20
++struct edid_quirk {
++	u8 mfg_id[2];
++	u8 prod_id[2];
++	u32 quirks;
++};
++
++#define MFG(first, second) { (first), (second) }
++#define PROD_ID(first, second) { (first), (second) }
++
++/*
++ * Some devices have unreliable OUIDs where they don't set the device ID
++ * correctly, and as a result we need to use the EDID for finding additi=
+onal
++ * DP quirks in such cases.
++ */
++static const struct edid_quirk edid_quirk_list[] =3D {
++};
++
++#undef MFG
++#undef PROD_ID
++
++/**
++ * drm_dp_get_edid_quirks() - Check the EDID of a DP device to find addi=
+tional
++ * DP-specific quirks
++ * @edid: The EDID to check
++ *
++ * While OUIDs are meant to be used to recognize a DisplayPort device, a=
+ lot
++ * of manufacturers don't seem to like following standards and neglect t=
+o fill
++ * the dev-ID in, making it impossible to only use OUIDs for determining
++ * quirks in some cases. This function can be used to check the EDID and=
+ look
++ * up any additional DP quirks. The bits returned by this function corre=
+spond
++ * to the quirk bits in &drm_dp_quirk.
++ *
++ * Returns: a bitmask of quirks, if any. The driver can check this using
++ * drm_dp_has_quirk().
++ */
++u32 drm_dp_get_edid_quirks(const struct edid *edid)
++{
++	const struct edid_quirk *quirk;
++	u32 quirks =3D 0;
++	int i;
++
++	if (!edid)
++		return 0;
++
++	for (i =3D 0; i < ARRAY_SIZE(edid_quirk_list); i++) {
++		quirk =3D &edid_quirk_list[i];
++		if (memcmp(quirk->mfg_id, edid->mfg_id,
++			   sizeof(edid->mfg_id)) =3D=3D 0 &&
++		    memcmp(quirk->prod_id, edid->prod_code,
++			   sizeof(edid->prod_code)) =3D=3D 0)
++			quirks |=3D quirk->quirks;
++	}
++
++	DRM_DEBUG_KMS("DP sink: EDID mfg %*phD prod-ID %*phD quirks: 0x%04x\n",
++		      (int)sizeof(edid->mfg_id), edid->mfg_id,
++		      (int)sizeof(edid->prod_code), edid->prod_code, quirks);
++
++	return quirks;
++}
++EXPORT_SYMBOL(drm_dp_get_edid_quirks);
++
+ /**
+  * drm_dp_read_desc - read sink/branch descriptor from DPCD
+  * @aux: DisplayPort AUX channel
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
+dp_mst_topology.c
+index a811247cecfe..68247670427a 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -5452,7 +5452,8 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(stru=
+ct drm_dp_mst_port *port)
+ 	if (drm_dp_read_desc(port->mgr->aux, &desc, true))
+ 		return NULL;
+=20
+-	if (drm_dp_has_quirk(&desc, DP_DPCD_QUIRK_DSC_WITHOUT_VIRTUAL_DPCD) &&
++	if (drm_dp_has_quirk(&desc, 0,
++			     DP_DPCD_QUIRK_DSC_WITHOUT_VIRTUAL_DPCD) &&
+ 	    port->mgr->dpcd[DP_DPCD_REV] >=3D DP_DPCD_REV_14 &&
+ 	    port->parent =3D=3D port->mgr->mst_primary) {
+ 		u8 downstreamport;
+diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers=
+/gpu/drm/i915/display/intel_display_types.h
+index 7c6133a9c51b..eebf02ff4ed2 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_types.h
++++ b/drivers/gpu/drm/i915/display/intel_display_types.h
+@@ -1231,6 +1231,7 @@ struct intel_dp {
+ 	int max_link_rate;
+ 	/* sink or branch descriptor */
+ 	struct drm_dp_desc desc;
++	u32 edid_quirks;
+ 	struct drm_dp_aux aux;
+ 	u32 aux_busy_last_status;
+ 	u8 train_set[4];
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i9=
+15/display/intel_dp.c
+index f4dede6253f8..245e21d1cadd 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -2386,7 +2386,7 @@ intel_dp_compute_config(struct intel_encoder *encod=
+er,
+ 	struct intel_connector *intel_connector =3D intel_dp->attached_connecto=
+r;
+ 	struct intel_digital_connector_state *intel_conn_state =3D
+ 		to_intel_digital_connector_state(conn_state);
+-	bool constant_n =3D drm_dp_has_quirk(&intel_dp->desc,
++	bool constant_n =3D drm_dp_has_quirk(&intel_dp->desc, 0,
+ 					   DP_DPCD_QUIRK_CONSTANT_N);
+ 	int ret =3D 0, output_bpp;
+=20
+@@ -4499,7 +4499,8 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+ 	 * it don't care about read it here and in intel_edp_init_dpcd().
+ 	 */
+ 	if (!intel_dp_is_edp(intel_dp) &&
+-	    !drm_dp_has_quirk(&intel_dp->desc, DP_DPCD_QUIRK_NO_SINK_COUNT)) {
++	    !drm_dp_has_quirk(&intel_dp->desc, 0,
++			      DP_DPCD_QUIRK_NO_SINK_COUNT)) {
+ 		u8 count;
+ 		ssize_t r;
+=20
+@@ -5666,6 +5667,7 @@ intel_dp_set_edid(struct intel_dp *intel_dp)
+=20
+ 	intel_dp->has_audio =3D drm_detect_monitor_audio(edid);
+ 	drm_dp_cec_set_edid(&intel_dp->aux, edid);
++	intel_dp->edid_quirks =3D drm_dp_get_edid_quirks(edid);
+ }
+=20
+ static void
+@@ -5678,6 +5680,7 @@ intel_dp_unset_edid(struct intel_dp *intel_dp)
+ 	intel_connector->detect_edid =3D NULL;
+=20
+ 	intel_dp->has_audio =3D false;
++	intel_dp->edid_quirks =3D 0;
+ }
+=20
+ static int
+@@ -7409,8 +7412,8 @@ static bool intel_edp_init_connector(struct intel_d=
+p *intel_dp,
+ 	edid =3D drm_get_edid(connector, &intel_dp->aux.ddc);
+ 	if (edid) {
+ 		if (drm_add_edid_modes(connector, edid)) {
+-			drm_connector_update_edid_property(connector,
+-								edid);
++			drm_connector_update_edid_property(connector, edid);
++			intel_dp->edid_quirks =3D drm_dp_get_edid_quirks(edid);
+ 		} else {
+ 			kfree(edid);
+ 			edid =3D ERR_PTR(-EINVAL);
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/dr=
+m/i915/display/intel_dp_mst.c
+index b8aee506d595..82843272a873 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -50,7 +50,7 @@ static int intel_dp_mst_compute_link_config(struct inte=
+l_encoder *encoder,
+ 	const struct drm_display_mode *adjusted_mode =3D
+ 		&crtc_state->hw.adjusted_mode;
+ 	void *port =3D connector->port;
+-	bool constant_n =3D drm_dp_has_quirk(&intel_dp->desc,
++	bool constant_n =3D drm_dp_has_quirk(&intel_dp->desc, 0,
+ 					   DP_DPCD_QUIRK_CONSTANT_N);
+ 	int bpp, slots =3D -EINVAL;
+=20
+diff --git a/drivers/gpu/drm/i915/display/intel_psr.c b/drivers/gpu/drm/i=
+915/display/intel_psr.c
+index db3d1561e9bf..377828dd2884 100644
+--- a/drivers/gpu/drm/i915/display/intel_psr.c
++++ b/drivers/gpu/drm/i915/display/intel_psr.c
+@@ -287,7 +287,7 @@ void intel_psr_init_dpcd(struct intel_dp *intel_dp)
+ 	drm_dbg_kms(&dev_priv->drm, "eDP panel supports PSR version %x\n",
+ 		    intel_dp->psr_dpcd[0]);
+=20
+-	if (drm_dp_has_quirk(&intel_dp->desc, DP_DPCD_QUIRK_NO_PSR)) {
++	if (drm_dp_has_quirk(&intel_dp->desc, 0, DP_DPCD_QUIRK_NO_PSR)) {
+ 		drm_dbg_kms(&dev_priv->drm,
+ 			    "PSR support not currently available for this panel\n");
+ 		return;
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 262faf9e5e94..7f5dd2ee4a94 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1495,13 +1495,16 @@ struct drm_dp_desc {
+=20
+ int drm_dp_read_desc(struct drm_dp_aux *aux, struct drm_dp_desc *desc,
+ 		     bool is_branch);
++u32 drm_dp_get_edid_quirks(const struct edid *edid);
+=20
+ /**
+  * enum drm_dp_quirk - Display Port sink/branch device specific quirks
+  *
+  * Display Port sink and branch devices in the wild have a variety of bu=
+gs, try
+  * to collect them here. The quirks are shared, but it's up to the drive=
+rs to
+- * implement workarounds for them.
++ * implement workarounds for them. Note that because some devices have
++ * unreliable OUIDs, the EDID of sinks should also be checked for quirks=
+ using
++ * drm_dp_get_edid_quirks().
+  */
+ enum drm_dp_quirk {
+ 	/**
+@@ -1537,14 +1540,16 @@ enum drm_dp_quirk {
+ /**
+  * drm_dp_has_quirk() - does the DP device have a specific quirk
+  * @desc: Device decriptor filled by drm_dp_read_desc()
++ * @edid_quirks: Optional quirk bitmask filled by drm_dp_get_edid_quirks=
+()
+  * @quirk: Quirk to query for
+  *
+  * Return true if DP device identified by @desc has @quirk.
+  */
+ static inline bool
+-drm_dp_has_quirk(const struct drm_dp_desc *desc, enum drm_dp_quirk quirk=
+)
++drm_dp_has_quirk(const struct drm_dp_desc *desc, u32 edid_quirks,
++		 enum drm_dp_quirk quirk)
  {
- 	struct intel_panel *panel =3D &intel_connector->panel;
--	enum intel_backlight_type type =3D
--		to_i915(intel_connector->base.dev)->vbt.backlight.type;
-+	struct drm_i915_private *dev_priv =3D to_i915(intel_connector->base.dev=
-);
+-	return desc->quirks & BIT(quirk);
++	return (desc->quirks | edid_quirks) & BIT(quirk);
+ }
 =20
- 	if (i915_modparams.enable_dpcd_backlight =3D=3D 0 ||
- 	    (i915_modparams.enable_dpcd_backlight =3D=3D -1 &&
--	     !intel_dp_aux_display_control_capable(intel_connector)))
-+	    dev_priv->vbt.backlight.type !=3D INTEL_BACKLIGHT_VESA_EDP_AUX_INTE=
-RFACE))
- 		return -ENODEV;
-=20
--	if (type !=3D INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
--		DRM_DEBUG_DRIVER("Ignoring VBT backlight type\n");
-+	if (!intel_dp_aux_display_control_capable(intel_connector))
-+		return -ENODEV;
-=20
- 	panel->backlight.setup =3D intel_dp_aux_setup_backlight;
- 	panel->backlight.enable =3D intel_dp_aux_enable_backlight;
+ #ifdef CONFIG_DRM_DP_CEC
 --=20
 2.24.1
 
