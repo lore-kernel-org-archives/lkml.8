@@ -2,62 +2,214 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C282C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2779C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771AC21582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CF3217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgU6iCvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgBDXQ3 (ORCPT
+        id S1727710AbgBDXRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:16:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:43176 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgBDXQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:16:29 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 15:16:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,403,1574150400"; 
-   d="scan'208";a="264021590"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Feb 2020 15:16:28 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 2ED9C3003A2; Tue,  4 Feb 2020 15:16:28 -0800 (PST)
-Date:   Tue, 4 Feb 2020 15:16:28 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Hagen Paul Pfeifer <hagen@jauu.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf script: introduce deltatime option
-Message-ID: <20200204231628.GF302770@tassilo.jf.intel.com>
-References: <20200204173709.489161-1-hagen@jauu.net>
+        Tue, 4 Feb 2020 18:17:16 -0500
+Received: from mail-yw1-f49.google.com ([209.85.161.49]:40534 "EHLO
+        mail-yw1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbgBDXRP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 18:17:15 -0500
+Received: by mail-yw1-f49.google.com with SMTP id i126so594797ywe.7;
+        Tue, 04 Feb 2020 15:17:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YdkJ2HHqkFeV4MfBlikH3/s69MOb8K9EarZU9wY8Wfo=;
+        b=GgU6iCvG42Zqnm59Ohy4IAYVurS/XyB11MQ7DZ5ABPgTHF/mRAAlXksAMQPXiptV5Z
+         M+TyJvm0YNYFEtpYN1JyRmRobbIlvNOB6Q2hKnJCx8Jc6RQS9mceFuyj88XzV8w2eLYw
+         XS2170EWXX9NHuVWUPGt3Rw5eZGYjLhscAM7ctNuyrygyqMBq9WQwOF6XViU3sCql/Tm
+         ouRXrVlhOhaQTgmmILkApEOZmx4OebkacXZzk7A4IkyCSjSl1B1jSMO2SjWoSuPNHq2h
+         68YCUBmZo0eYkJE6GmWStK4vAtFq/2DkkAXQllhtIBNw4KwS8fo+Ic/WZ32x3tyBRnEm
+         Oihw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YdkJ2HHqkFeV4MfBlikH3/s69MOb8K9EarZU9wY8Wfo=;
+        b=nibJq56vkn2beU+HK88S5Pe46sBmhUbN8Sh5/gRXiUdkF8j4VuWHtS70WhO6PrVRL+
+         9o2e3WYie/jFgv+wqOEKo/eTic+DQM7S2GzGTosYSKqkA/knCtwsYI9bq7Ma/Mhyi/qu
+         MT92ysimDEhllmRU/pKXmJWtPZswhQ3U8g8rcZfrQ6PDOemfSeUzYT/S7lqH18eY5G6M
+         fnsARFehSVgis1LwFbsIo35IlgcPnh3oY8AMKJoAMCM11A4GlC5AooYuMrSvKvx8VLKb
+         7q5adsmXTxDhc4clLNV/IpSxls7Z7h1hgIO2GScXeTLAhl28mt89CgIu6CXXFto4/Vos
+         r26g==
+X-Gm-Message-State: APjAAAUmh4JwVoQWQNRtkldh2dHLDh9pCxmml+88WybHTDxvF8wn9pR/
+        kCRmgkS3B96jtMweVSD3G6k=
+X-Google-Smtp-Source: APXvYqwT9wwXLR/3DoaUcImGoKvAUaPC2hvqP+ba1hWptBKiDXitI2/2JMF0e416IAJbgP6bR07QSA==
+X-Received: by 2002:a05:6902:725:: with SMTP id l5mr19608845ybt.91.1580858233993;
+        Tue, 04 Feb 2020 15:17:13 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id w128sm10582615ywf.72.2020.02.04.15.17.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 15:17:13 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] arch: um: add linker section for KUnit test suites
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+References: <20200130230812.142642-1-brendanhiggins@google.com>
+ <20200130230812.142642-3-brendanhiggins@google.com>
+ <e060bdfc-5cdb-fb62-48b0-cc54c7bc72ce@gmail.com>
+ <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <1da1538d-2e4c-0ed0-5fae-6f9033230c46@gmail.com>
+Date:   Tue, 4 Feb 2020 17:17:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204173709.489161-1-hagen@jauu.net>
+In-Reply-To: <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 06:37:09PM +0100, Hagen Paul Pfeifer wrote:
-> For some kind of analysis a deltatime output is more human friendly and reduce
-> the cognitive load for further analysis.
+On 2/4/20 4:30 PM, Brendan Higgins wrote:
+> On Tue, Feb 4, 2020 at 1:59 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 1/30/20 5:08 PM, Brendan Higgins wrote:
+>>> Add a linker section to UML where KUnit can put references to its test
+>>> suites. This patch is an early step in transitioning to dispatching all
+>>> KUnit tests from a centralized executor rather than having each as its
+>>> own separate late_initcall.
+>>
+>> All architectures please.
 > 
-> The following output demonstrate the new option "deltatime": calculate
-> the time difference in relation to the previous event.
+> I *am* supporting all architectures with this patchset.
 > 
-> $ perf script --deltatime
+> The first patch in this series adds support to all architectures
+> except UML (admittedly I only tried x86 and ARM, 32 bit and 64 bit for
 
-It's already implemented as --reltime
+Right you are.  My mind did not span from patch 1 to patch 2. Apologies for
+the noise.
 
--Andi
+
+> both, but I am pretty sure someone tried it for POWER and something
+> else, so maybe I should try it with others before submission). A patch
+> specific for UML, this patch, was needed because UML is a special
+> snowflake and has a bunch of special linker scripts that don't make
+> the change in vmlinux.lds.h (the previous patch) sufficient.
+> 
+>> The early versions of Kunit documented reliance on UML.  Discussion lead to
+>> the conclusion that real architectures and real hardware would be supported.
+> 
+> I am *very* aware.
+> 
+> I would never intentionally break support for other architectures. I
+> know it is very important to you, Alan, and others.
+> 
+>> This like this are what make me reluctant to move devicetree unittests to
+>> KUnit.
+> 
+> Hopefully I can reassure you then:
+> 
+> With Alan as a regular contributor who cares very much about non-UML
+> architectures, it would be very unlikely for me to accidentally break
+> support for other architectures without us finding out before a
+> release.
+> 
+> I also periodically test KUnit on linux-next on x86-64. I have gotten
+> bugs for other architectures from Arnd Bergmann and one of the m86k
+> maintainers who seems to play around with it as well.
+> 
+> So yeah, other people care about this too, and I would really not want
+> to make any of them unhappy.
+
+Thanks for the extra reassurance.
+
+
+> 
+>> Can you please add a section to the KUnit documentation that lists things
+>> like the expectations, requirements, limitations, etc for a test case that
+>> is run by KUnit?  Some examples that pop to mind from recent discussions
+>> and my own experiences:
+>>
+>>   - Each test case is invoked after late_init is complete.
+>>       + Exception: the possible value of being able to run a unit test
+>>         at a specific runlevel has been expressed.  If an actual unit
+>>         test can be shown to require running earlier, this restriction
+>>         will be re-visited.
+>>
+>>   - Each test case must be idempotent.  Each test case may be called
+>>     multiple times, and must generate the same result each time it
+>>     is called.
+>>       + Exception 1: a test case can be declared to not be idempotent
+>>         [[ mechanism TBD ]], in which case KUnit will not call the
+>>         test case a second time without the kernel rebooting.
+>>       + Exception 2: hardware may not be deterministic, so a test that
+>>         always passes or fails when run under UML may not always to
+>>         so on real hardware.  <--- sentence copied from
+>>         Documentation/dev-tools/kunit/usage.rst
+>>           [[ This item and 1st exception do not exist yet, but will exist
+>>           in some form if the proposed proc filesystem interface is
+>>           added. ]]
+>>
+>>   - KUnit provides a helpful wrapper to simplify building a UML kernel
+>>     containing the KUnit test cases, booting the UML kernel, and
+>>     formatting the output from the test cases.  This wrapper MUST NOT
+>>     be required to run the test cases or to determine a test result.
+>>     The formatting may provide additional analysis and improve
+>>     readability of a test result.
+>>
+>>   - .... There is more that belongs here, but I'm getting side tracked
+>>     here, when I'm trying to instead convert devicetree unittests to
+>>     KUnit and want to get back to that.
+> 
+> Sure, I think that's a great start! Thanks for that. I hope you don't
+> mind if I copy and paste some of it.
+
+Please do.  And no need to credit me.
+
+
+> It kind of sounds like you are talking about more of a requirements
+> doc than the design doc I was imagining in my reply to you on the
+> cover letter, which is fine. The documentation is primarily for people
+> other than me, so whatever you and others think is useful, I will do.
+> 
+
+I wasn't really sure what to label it as.  My inspiration was based
+a little bit on reading through the Linux 5.5 KUnit source and
+documentation, and trying to understand the expectations of the
+KUnit framework and what the test cases have to either obey or
+can expect.
+
+I think there is a lot of history that you know, but is only visible
+to test implementors if they read through the past couple of years
+email threads.
+
+-Frank
