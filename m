@@ -2,129 +2,155 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5ACC3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533CBC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B052166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C5C2084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ni7Aww9W"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PssQbLXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBDTYi (ORCPT
+        id S1727522AbgBDTZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:24:38 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43875 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbgBDTYi (ORCPT
+        Tue, 4 Feb 2020 14:25:13 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:53812 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbgBDTZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:24:38 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u131so10137357pgc.10;
-        Tue, 04 Feb 2020 11:24:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a5Iw4+7GJ6slzzgm0iCqz2HJ63btbwexeYhU6/Y4dIs=;
-        b=ni7Aww9WoUSs0GKXVt/SoJpWmFbM6lLHH7xWWJFszpNJ36iL47jCP2G4/ebJdwec5w
-         Mgl3NWNH3cF+WPgRAcEGgLjtlDF+4quyk3LbK7QdJsZLJAZk7yt3fJVFV6IcUQrYBwM4
-         CrEEVIG0iMRUs+8mSAg9p0DhDq01pGqppy6edxKNEuqkQ6XdeKBuRBJNK7bU6JNGopIM
-         VUideZrJ23HI4cy9ZWH4jwjHiDGvH2tNleIKPeD1IHuhbY2DbS+nSnXn7UHGietDXl6K
-         mCLBDbKGCG+I3UbrCkg7wiDPIRt37uk9H2F4ITdKMs7bho3uOO50Ly9dRo/hr3Q/obrb
-         WsCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a5Iw4+7GJ6slzzgm0iCqz2HJ63btbwexeYhU6/Y4dIs=;
-        b=d/VbbW2Wsp+cb7awkKvd98CQE+xasCYcbHF4aPY5l6w+eGqETa56VSDKt4wx9Pc4h8
-         Pfohm/4GtyYU03KaEeZ7DBMkkjZZfHCs9Zm2StmBMIFBLPrIwzeXvi4KYVzPgdo/jTP6
-         ARy5P8RSMAA3a+1k9oM9b//lc6cVZbOd4PXy5KehLAx7AwNrhhig/e/ku0AH58FiyQBU
-         qzT7oYDtG/kzd6NADUw6Q38v/afbMtGMVtKdB3XNwzma/x+GK91fZ02FXUkGUoiGpv/5
-         CQB6VxInWvwg1+YZwadEL5EjMtcUKUwp3oPUV9EONg23tZlnqWmYKo/2cCdwXt3A4yqW
-         Y9AA==
-X-Gm-Message-State: APjAAAWKl1qVnOJipY+J7sQNgdm7/gjnlODMWVFctqEGwiEOC7v870TB
-        ojjDGER6R4menbquNJUMbtE=
-X-Google-Smtp-Source: APXvYqwcjcyt+DmTT67Ups20XbX66rYF8BCFLWq3BFTc7Exiz2ocFGi39oCvSmvE1Cbp4XuO83wbhg==
-X-Received: by 2002:a62:1b07:: with SMTP id b7mr32923122pfb.186.1580844277137;
-        Tue, 04 Feb 2020 11:24:37 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id fh24sm4333677pjb.24.2020.02.04.11.24.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 11:24:36 -0800 (PST)
-Date:   Tue, 4 Feb 2020 11:24:34 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Martin Kepplinger <martink@posteo.de>
-Subject: Re: [PATCH 1/7] Input: pegasus_notetaker: fix endpoint sanity check
-Message-ID: <20200204192434.GH184237@dtor-ws>
-References: <20191210113737.4016-1-johan@kernel.org>
- <20191210113737.4016-2-johan@kernel.org>
- <20200204082441.GD26725@localhost>
- <20200204100232.GB1088789@kroah.com>
- <20200204101435.GH26725@localhost>
+        Tue, 4 Feb 2020 14:25:13 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014JNPJc076640;
+        Tue, 4 Feb 2020 19:24:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=E7izVF8VHlOuaprUDzyes2uRr9PaxAogt9I1VIGvP50=;
+ b=PssQbLXoxhz7QRcrzseSJMDq79/3pQpl0sS5Pa1f8B8ovJl3YBEwxy2KmtaIL6oxEiEs
+ MJRxYiQnbVCNMxk9cD0TMBoOoE/dye+2NVnkiHpiL8O4kJfdIeCVdSowVB6UUAMxI9No
+ zBjJH5pRgBRM+Aw/saxMEEQV4dQ55pAb8W5zpFY3QancPdrzuqWEOFg1rL6VMpXfjEUI
+ bHEtHwdNQRNcly/U2V88aw4XzU0ERNJD8JrPsD3B9UCm2Z/SOu38POxlqPVSdn6SSiwn
+ 9dkeR8ZeS1ApgWjvudwpD8zvGn/f+Qnr56we5+hsjXWSn4EW1RwLymng0Gj5qVOY0Srx BQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xw0ru8xvx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 19:24:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014JOJAe010226;
+        Tue, 4 Feb 2020 19:24:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xxvusfhs0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 19:24:48 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014JOjqi016183;
+        Tue, 4 Feb 2020 19:24:46 GMT
+Received: from [10.175.207.61] (/10.175.207.61)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Feb 2020 11:24:45 -0800
+Subject: Re: [PATCH RFC 10/10] nvdimm/e820: add multiple namespaces support
+To:     Barret Rhoden <brho@google.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Nikita Leshenko <nikita.leshchenko@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+References: <20200110190313.17144-1-joao.m.martins@oracle.com>
+ <20200110190313.17144-11-joao.m.martins@oracle.com>
+ <e605fed8-46f5-6a07-11e6-2cc079a1159b@google.com>
+ <CAPcyv4iiSsEOsfEwLQcV3bNDjBSxw1OgWoBdEWPQEymq6=xm-A@mail.gmail.com>
+ <ae788015-616f-96e6-3a0e-39c1911c4b01@google.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <6fc0d900-3df7-d09a-9b6a-dc6a82823d94@oracle.com>
+Date:   Tue, 4 Feb 2020 19:24:39 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204101435.GH26725@localhost>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ae788015-616f-96e6-3a0e-39c1911c4b01@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002040130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002040130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 11:14:35AM +0100, Johan Hovold wrote:
-> On Tue, Feb 04, 2020 at 10:02:32AM +0000, Greg Kroah-Hartman wrote:
-> > On Tue, Feb 04, 2020 at 09:24:41AM +0100, Johan Hovold wrote:
-> > > On Tue, Dec 10, 2019 at 12:37:31PM +0100, Johan Hovold wrote:
-> > > > The driver was checking the number of endpoints of the first alternate
-> > > > setting instead of the current one, something which could be used by a
-> > > > malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
-> > > > dereference.
-> > > > 
-> > > > Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
-> > > > Cc: stable <stable@vger.kernel.org>     # 4.8
-> > > > Cc: Martin Kepplinger <martink@posteo.de>
-> > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > 
-> > > Looks like the stable tag was removed when this one was applied, and
-> > > similar for patches 2, 4 and 7 of this series (commits 3111491fca4f,
-> > > a8eeb74df5a6, 6b32391ed675 upstream).
-> > > 
-> > > While the last three are mostly an issue for the syzbot fuzzer, we have
-> > > started backporting those as well.
-> > > 
-> > > This one (bcfcb7f9b480) is more clear cut as it can be used to trigger a
-> > > NULL-deref.
-> > > 
-> > > I only noticed because Sasha picked up one of the other patches in the
-> > > series which was never intended for stable.
-> > 
-> > Did I end up catching all of these properly?  I've had to expand my
-> > search for some patches like this that do not explicitly have the cc:
-> > stable mark on them as not all subsystems do this well (if at all.)
+On 2/4/20 6:20 PM, Barret Rhoden wrote:
+> Hi -
 > 
-> No, sorry, should have been more clear on that point; these four were
-> never picked up for stable it seems.
+> On 2/4/20 11:44 AM, Dan Williams wrote:
+>> On Tue, Feb 4, 2020 at 7:30 AM Barret Rhoden <brho@google.com> wrote:
+>>>
+>>> Hi -
+>>>
+>>> On 1/10/20 2:03 PM, Joao Martins wrote:
+>>>> User can define regions with 'memmap=size!offset' which in turn
+>>>> creates PMEM legacy devices. But because it is a label-less
+>>>> NVDIMM device we only have one namespace for the whole device.
+>>>>
+>>>> Add support for multiple namespaces by adding ndctl control
+>>>> support, and exposing a minimal set of features:
+>>>> (ND_CMD_GET_CONFIG_SIZE, ND_CMD_GET_CONFIG_DATA,
+>>>> ND_CMD_SET_CONFIG_DATA) alongside NDD_ALIASING because we can
+>>>> store labels.
+>>>
+>>> FWIW, I like this a lot.  If we move away from using memmap in favor of
+>>> efi_fake_mem, ideally we'd have the same support for full-fledged
+>>> pmem/dax regions and namespaces that this patch brings.
+>>
+>> No, efi_fake_mem only supports creating dax-regions. What's the use
+>> case that can't be satisfied by just specifying multiple memmap=
+>> ranges?
 > 
-> I was a bit surprised to see the stable-tags be removed from the
-> original submissions here, even if I know the net-maintainers do this
-> routinely, and any maintainer can of course override a submitters
-> judgement.
+> I'd like to be able to create and destroy dax regions on the fly.  In 
+> particular, I want to run guest VMs using the dax files for guest 
+> memory, but I don't know at boot time how many VMs I'll have, or what 
+> their sizes are.  Ideally, I'd have separate files for each VM, instead 
+> of a single /dev/dax.
+> 
+> I currently do this with fs-dax with one big memmap region (ext4 on 
+> /dev/pmem0), and I use the file system to handle the 
+> creation/destruction/resizing and metadata management.  But since fs-dax 
+> won't work with device pass-through, I started looking at dev-dax, with 
+> the expectation that I'd need some software to manage the memory (i.e. 
+> allocation).  That led me to ndctl, which seems to need namespace labels 
+> to have the level of control I was looking for.
+> 
 
-Sorry, dropping stable tags was not intentional. I was trying to improve
-my tooling and drop the CC noise from the changelogs, but my script got
-too eager and removed "Cc: stable" as well. I believe my tool should be
-fixed now and it should not happen again.
+Indeed this is the intent of the patch.
 
-Thanks.
+As Barret mentioned, memmap= is limited to the one namespace covering the entire
+region, and this would fix it (regardless of namespace mode). Otherwise we gotta
+know in advance the amount of guests and its exact sizes, which would be
+somewhat unflexible.
 
--- 
-Dmitry
+But given that it's 'pmem emulation' I thought it was OK to twist the label-less
+aspect of nd_e820 (unless there's hardware out there which does this?).
+
+If Dan agrees, I can continue with the patch.
