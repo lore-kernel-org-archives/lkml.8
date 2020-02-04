@@ -2,125 +2,76 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E962BC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E76C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DDF2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCXOdwFB"
+	by mail.kernel.org (Postfix) with ESMTP id 0D293217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgBDThS (ORCPT
+        id S1727562AbgBDTit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:37:18 -0500
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:50321 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBDThR (ORCPT
+        Tue, 4 Feb 2020 14:38:49 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42872 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbgBDTit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:37:17 -0500
-Received: by mail-vk1-f202.google.com with SMTP id s205so6210128vka.17
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bOYykdGyEwLVePDzOkgL79k9V9HNutxercPdQBvYEZo=;
-        b=WCXOdwFBOV7WwP9es+bVVn5HvO3QP22jf7symCGYwMS4Sp9u0zhxgUkFk9qJEw4OS5
-         VnLPfRuK0QM30SywQiZS0JOjnIKg7dPsB2Er5SEw+qnP697/xol5eVrZk2xZYC7inZq2
-         A9/z6fnSE2S9meQxw5N6my263ukaH4+lsy5u/otGczNaoPwQk4CilolFvt2ZvKViwnNU
-         yLOpnZyIAmGmsOEhbC06KpiYUqrrLtud5RSOcOR5TG9GyT6QJ0WRnrAknRSDSeLq+oIc
-         JKucULGK4Jmc8uXjn+3td9SX3R6GEKZr9LtRJs8V82Z+3HYhdAesGXYS2e72RsX/rjaI
-         fAeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bOYykdGyEwLVePDzOkgL79k9V9HNutxercPdQBvYEZo=;
-        b=iCSok5u/9zvL7ayOI9kBHIHkqySGqe89GnDQxaGpIXOJgQU7HqgR7XMp+th+JqNBkM
-         9+uFYg2M5wEVVmShzvx/9CZ4YDIY6d1J7ZZnjEIve+BN01TcaZOzhtAmGst5yYBzT3sd
-         H3vkRqSAABPz1xjj+UOIawDqO0SNuxEYrUuqJvC0X+r1aFdCUJ1A80bxCGQw4gARWwbl
-         RFk9h0d+x7oXvRIFk1+sXDZyO2BMLC0B5r/+kfPDqU43UhhuKFdj6PeemkArDE4xErAk
-         l4ih9gLrV7aAZO8khrr5t2HMJQqhBdV04G2K6r3IMBseei3+AjW9/UkEGqZo3Y8Sa2Aq
-         sMWA==
-X-Gm-Message-State: APjAAAWhgYrvpp9HTHvtVX8lE97Xs/0Bg84II/OG8bwaU6zHxPsXw0i0
-        N2w1zvoWfUL2AEEkyMEsyaTWa2qDqA==
-X-Google-Smtp-Source: APXvYqxsBJ450rR2WsKYmQiAz1XK7OefPHziYVK/Ufte9i3SQvIef9RFobk/w4jMq3ocySVNfwD+zihNnw==
-X-Received: by 2002:a1f:3a8a:: with SMTP id h132mr18646495vka.95.1580845034920;
- Tue, 04 Feb 2020 11:37:14 -0800 (PST)
-Date:   Tue,  4 Feb 2020 11:37:11 -0800
-In-Reply-To: <CAKUOC8Xvxa8nixstFOdjuf7_sCZNV6EqSDxTAQZjLhvf86LESA@mail.gmail.com>
-Message-Id: <20200204193711.257285-1-sqazi@google.com>
-Mime-Version: 1.0
-References: <CAKUOC8Xvxa8nixstFOdjuf7_sCZNV6EqSDxTAQZjLhvf86LESA@mail.gmail.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] block: Limit number of items taken from the I/O scheduler in
- one go
-From:   Salman Qazi <sqazi@google.com>
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>, Salman Qazi <sqazi@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Feb 2020 14:38:49 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 620C628BA6C
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, stable@vger.kernel.org
+Subject: [PATCH for v5.6] hantro: Fix broken media controller links
+Date:   Tue,  4 Feb 2020 16:38:37 -0300
+Message-Id: <20200204193837.16021-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flushes bypass the I/O scheduler and get added to hctx->dispatch
-in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
-hctx->run_work work item and is past the point in
-blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
+The driver currently creates a broken topology,
+with a source-to-source link and a sink-to-sink
+link instead of two source-to-sink links.
 
-The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
-because the I/O scheduler can feed an arbitrary number of commands.
-
-Since we have only one hctx->run_work, the commands waiting in
-hctx->dispatch will wait an arbitrary length of time for run_work to be
-rerun.
-
-A similar phenomenon exists with dispatches from the software queue.
-
-The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
-blk_mq_do_dispatch_ctx and return from the run_work handler and let it
-rerun.
-
-Signed-off-by: Salman Qazi <sqazi@google.com>
+Reported-by: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: <stable@vger.kernel.org>      # for v5.3 and up
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
- block/blk-mq-sched.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/staging/media/hantro/hantro_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index ca22afd47b3d..d1b8b31bc3d4 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -97,6 +97,9 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- 		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
- 			break;
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 448493a08805..840b96bee082 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -556,13 +556,13 @@ static int hantro_attach_func(struct hantro_dev *vpu,
+ 		goto err_rel_entity1;
  
-+		if (!list_empty_careful(&hctx->dispatch))
-+			break;
-+
- 		if (!blk_mq_get_dispatch_budget(hctx))
- 			break;
+ 	/* Connect the three entities */
+-	ret = media_create_pad_link(&func->vdev.entity, 0, &func->proc, 1,
++	ret = media_create_pad_link(&func->vdev.entity, 0, &func->proc, 0,
+ 				    MEDIA_LNK_FL_IMMUTABLE |
+ 				    MEDIA_LNK_FL_ENABLED);
+ 	if (ret)
+ 		goto err_rel_entity2;
  
-@@ -140,6 +143,9 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
- 	do {
- 		struct request *rq;
- 
-+		if (!list_empty_careful(&hctx->dispatch))
-+			break;
-+
- 		if (!sbitmap_any_bit_set(&hctx->ctx_map))
- 			break;
- 
+-	ret = media_create_pad_link(&func->proc, 0, &func->sink, 0,
++	ret = media_create_pad_link(&func->proc, 1, &func->sink, 0,
+ 				    MEDIA_LNK_FL_IMMUTABLE |
+ 				    MEDIA_LNK_FL_ENABLED);
+ 	if (ret)
 -- 
-2.25.0.341.g760bfbb309-goog
+2.25.0
 
