@@ -2,109 +2,112 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBB2C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198B3C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED4F2084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pftp3HPW"
+	by mail.kernel.org (Postfix) with ESMTP id E9A2A2084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBDMaM (ORCPT
+        id S1727228AbgBDMam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:30:12 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36807 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbgBDMaM (ORCPT
+        Tue, 4 Feb 2020 07:30:42 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33518 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgBDMam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:30:12 -0500
-Received: by mail-vk1-f193.google.com with SMTP id i4so5100816vkc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 04:30:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fBxb8ipzgRQ+TPw0PfltDu/6A8Y/sJwOnRag8CswWiQ=;
-        b=pftp3HPWFrzJ+nM082RVEP/3qxqGrCrrK63HgxZatNhHJMQt4swrhizc6zxRaMif/Y
-         68MEqB/3xmL7bnMCXkIDVy1s70kEISAp7/DxndS64RxliiDeJaPayvbZTd7rLnsXUffI
-         TcdQEwiuZykgI3odG8um786U0m7zR8BoZJ0TlGFCt6GLVe9AmffcCgYX8B1BPn1Tpv1i
-         bkpWBCFGAQ7N6T+Jd2+etjSuts4n/eg+eq23HaSu41jbUJFTz8gVFBPQepZksDel2PSs
-         G4L7fAtaKe7OJFSjENVVnY/4AiDGlxWs+x26QUfOdgTbnIc9xYPsQZXhgXxdS2TyPmlC
-         uMLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fBxb8ipzgRQ+TPw0PfltDu/6A8Y/sJwOnRag8CswWiQ=;
-        b=UcO+db651GIJBFnc2jM6e4NncQX6xM5KowtzGOZ/LitwgcNI3WpA8hoUGgzJj0nih0
-         AxnudIKMh37t/yf4hdjay6/rYSO/Pyv1ok9gHn7gtkJjb+WIc3CVxOPbmwZirV7luziW
-         XmabcapHkkiM+lltyK3Ng4cVF8GSbPfyGWi9RSlHzrkXQ17j8KZeVne1s2C0eVYrZJLm
-         Bj+JsV1JZdNSlJ4bgqtO2wGEHW2+sSGEK+IzvBlootNPhdJCrGMfbUCubBIJnm/PZrjq
-         9/ZKtT7K3ybZqQYi3DfFkpUEWE2OptlkwRc5HCGp0D+TmO5yQVGZ1xbwZ/k02+jq9y+S
-         okPw==
-X-Gm-Message-State: APjAAAX0l7vsunMQk3wRvubh8TfH542Dmzk2QFAViBokhR3o5C/TJeT+
-        DkBzUA6AuWcZg+wlr+WHARKWnnkjzQlZXGITlm1d+Q==
-X-Google-Smtp-Source: APXvYqxYGFqnJQo7zKASrHj0432bv9Emj2fu3sw1yKpzLrKSeqw4SjD1C/fS2qFnfju3rbOTUHqFJn5eaw1Ppq9t95c=
-X-Received: by 2002:a1f:914b:: with SMTP id t72mr17403010vkd.101.1580819410057;
- Tue, 04 Feb 2020 04:30:10 -0800 (PST)
+        Tue, 4 Feb 2020 07:30:42 -0500
+Received: from [212.187.182.162] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iyxLi-0004nq-H1; Tue, 04 Feb 2020 13:30:38 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 780AB100720; Tue,  4 Feb 2020 12:30:32 +0000 (GMT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Matija Glavinic Pecotic <matija.glavinic-pecotic.ext@nokia.com>,
+        linux-kernel@vger.kernel.org
+Cc:     "Sverdlin\, Alexander \(Nokia - DE\/Ulm\)" 
+        <alexander.sverdlin@nokia.com>
+Subject: Re: [PATCH RESEND] cpu/hotplug: Wait for cpu_hotplug to be enabled in cpu_up/down
+In-Reply-To: <77570af6-733a-58e7-6975-b533a42daa4c@nokia.com>
+References: <d950a169-941e-7caa-608a-df97a127c95d@nokia.com> <87o8uf1r3w.fsf@nanos.tec.linutronix.de> <77570af6-733a-58e7-6975-b533a42daa4c@nokia.com>
+Date:   Tue, 04 Feb 2020 12:30:32 +0000
+Message-ID: <87y2tiy1p3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1579602095-30060-1-git-send-email-manish.narani@xilinx.com>
- <1579602095-30060-5-git-send-email-manish.narani@xilinx.com>
- <99fd3904-37fa-f070-f7ac-e1dcb5bf43de@intel.com> <0d7e7a44-91dc-baef-5dcf-4ff683e98581@xilinx.com>
-In-Reply-To: <0d7e7a44-91dc-baef-5dcf-4ff683e98581@xilinx.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 4 Feb 2020 13:29:34 +0100
-Message-ID: <CAPDyKFosDoABbHaoEtyay-uMKpq6QXsoby631gK-1f6iAS0mgg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] sdhci: arasan: Remove quirk for broken base clock
-To:     Michal Simek <michal.simek@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, jolly.shah@xilinx.com,
-        rajan.vaja@xilinx.com, nava.manne@xilinx.com,
-        tejas.patel@xilinx.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Feb 2020 at 12:42, Michal Simek <michal.simek@xilinx.com> wrote:
->
-> On 03. 02. 20 12:31, Adrian Hunter wrote:
-> > On 21/01/20 12:21 pm, Manish Narani wrote:
-> >> This patch removes quirk which indicates a broken base clock. This was
-> >> making the kernel report wrong base clock of ~187MHz instead of 200MHz
-> >> even as the measurement on the hardware was showing 200MHz.
-> >>
-> >> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> >> State: pending
-> >
-> > Huh?
->
-> It shouldn't be here. It is internal patch labeling.
-> Manish: Please send v2 with all lines you got and remove this above.
+Matija,
 
-No need for a resend, I can fix this before applying, which will be
-when rc1 is out.
+Matija Glavinic Pecotic <matija.glavinic-pecotic.ext@nokia.com> writes:
+> On 02/03/2020 07:08 PM, Thomas Gleixner wrote:
+> EBUSY existing and being commonly used doesnt justify it in every 
+> situation. We do not have problem only in userspace, but kernel as well, 
+> no user of cpu_up/down takes into account of possible temporal
 
+There is no point in caring about this, simply because if you look at
+the 5 callsites on x86:
+
+    - Three are debug stuff which handle the error return and do not care
+      about whether its EBUSY or not
+
+    - One is the boot time cpu onlining which ignores any error code on
+      purpose because there are enough reasons why this can fail and we
+      want at least get up to init.
+
+    - The last one is the sysfs interface which you are tripping over.
+
+> unavailability. Going into extreme, we could start returning EBUSY 
+> whenever we have resource/facility taken which would made every 
+> interface candidate for returning it. As I see it, EBUSY has its place 
+> in nonblocking APIs. Others should try (hard) not to return it. Handling 
+> it is further topic of its own. How large the timeout to quit? Let's say 
+> that we know that for cpu, it is 10 seconds which I proposed. Passing 
+> responsibility to select tmo to the users will spread out that policy to 
+> each subsystem of its own, yielding to situations where it will for 
+> someone work, for others not, depending on the tmo chosen.
+
+We don't know whats the proper timeout for everyone. You picked one and
+it fits your expectation, but its bound to break other peoples
+expectations.
+
+That's the exact reason why these kind of heuristics are bad and
+horrible and should be avoided in general.
+
+>> I have no idea why you need to offline/online CPUs to partition a
+>> system. There are surely more sensible ways to do that, but that's not
+>> part of this discussion.
 >
-> >
-> > Otherwise:
-> >
-> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> I'd be happy to make it part.
 >
-> These patches requires firmware changes. Feel free to take it directly
-> via your tree. If you want me to take it via arm-soc tree please let me
-> know.
+> We are using partrt from 
+> https://github.com/OpenEneaLinux/rt-tools/tree/master/partrt, 
+> cpu_up/down is part of it, AFAIK, it is there to force timer migration 
+> and doesnt have any other (known to me) usage. In the meantime since we 
+> started with core isolation, we changed how we treat isolated cores. We 
+> are now starting with isolcpus=cpu-list nohz_full=cpu-list 
+> rcu_nocbs=cpu-list, and we are atm at Linux 4.19. Earlier we had 
+> different setup where we wanted to use cores in the startup, partition 
+> later, however that showed to be problematic and not in line with how 
+> things are going in the area.
+>
+> Do you think we do not need toggle them under these conditions?
 
-Thanks, I pick them up via my mmc tree then.
+If you have that isolation thingies on the kernel command line there is
+no point in doing the cpu up/down dance. It's not providing you anything
+useful except steering interrupts away which you can do on the kernel
+command line as well with 'irqaffinity=...'.
 
-Kind regards
-Uffe
+Thanks,
+
+        tglx
