@@ -2,96 +2,115 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33B6C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF145C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7797720674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8874F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="t2tBPBb+"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="JSngqOY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgBDRn0 (ORCPT
+        id S1727534AbgBDRoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:43:26 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:35406 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727392AbgBDRn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:43:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=YkN8EICzEFNet3xsTGFEzCoFMZb0DnoCsILuNX9tis8=; b=t2tBPBb+2JKDwwrM0AfTALYPGt
-        3oEGx2P5EMacRxNuchFRj5zXvINXH73V5ZOHHacc/OUNKDErReuozxsGC6zauB4WsDrQT8Ad0Rquj
-        s1w3V02NrpptvykNnflDazp37e7pZBDbUk53WK5eXbKBSv2LPgcmaTFzCl+bDegKKKzs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iz2EI-0000gR-CJ; Tue, 04 Feb 2020 18:43:18 +0100
-Date:   Tue, 4 Feb 2020 18:43:18 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200204174318.GB1364@lunn.ch>
-References: <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
- <20200127161132.GX25745@shell.armlinux.org.uk>
- <20200127162206.GJ13647@lunn.ch>
- <c3e863b8-2143-fee3-bb0b-65699661d7ab@gmail.com>
- <BN8PR12MB3266B69DA09E1CC215843C3CD30A0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200204172603.GS25745@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204172603.GS25745@shell.armlinux.org.uk>
+        Tue, 4 Feb 2020 12:44:25 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:55282 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbgBDRoY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 12:44:24 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 1A23327E058F;
+        Tue,  4 Feb 2020 18:44:22 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Ys8Ffw7v27r6; Tue,  4 Feb 2020 18:44:21 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id C1C4227E158A;
+        Tue,  4 Feb 2020 18:44:21 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu C1C4227E158A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1580838261;
+        bh=bHc8ecf+O1GHjcUaIbdPBRw5CR726pP6ptPTXIyMhg0=;
+        h=From:To:Date:Message-Id;
+        b=JSngqOY3TgTe/kh+Rip/yR8PGrKQ9/gorw3B3e/Ho8DDu4cNz/+18TV+4crNZDs8P
+         Z25QO+vKUa6R2mZvYSLNCeklUedzIWCKptn1/L3mY6zwBrEZJRV7FhXF0R9CBdoUA7
+         GXJ2hgLiTOeuxntW2CbTZ8jXti+NzN7rqN+v5gVs=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ak2UB6XEtKtu; Tue,  4 Feb 2020 18:44:21 +0100 (CET)
+Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id A45BE27E058F;
+        Tue,  4 Feb 2020 18:44:21 +0100 (CET)
+From:   Clement Leger <cleger@kalray.eu>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-remoteproc@vger.kernel.org
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Clement Leger <cleger@kalray.eu>
+Subject: [PATCH v3 0/2] remoteproc: Add elf64 support to elf loader
+Date:   Tue,  4 Feb 2020 18:44:10 +0100
+Message-Id: <20200204174412.16814-1-cleger@kalray.eu>
+X-Mailer: git-send-email 2.15.0.276.g89ea799
+In-Reply-To: <20200129163013.GA16538@xps15>
+References: <20200129163013.GA16538@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There, there is one MAC, but there are multiple different PCS - one
-> for SGMII and 1000base-X, another for 10G, another for 25G, etc.
-> These PCS are accessed via a MDIO adapter embedded in each of the
-> MAC hardware blocks.
+This serie add support for elf64 in remoteproc elf loader. 
+First patch modifies the type of len argument (in da_to_va) in order
+to allow loading elf64 segment with a u64 size.
+Second patch is the actual modification in the elf loader to support
+elf64 type by using a set of generic macros.
 
-Hi Russell
+Changes from V2:
+ - da_to_va len type changed from int to u64
+ - Add check for elf64 header size
+ - Add comments for name table parsing
+ - Fix typo in "accommodate"
 
-Marvell mv88e6390X switches are like this is a well. There is a PCS
-for SGMII and 1000Base-X, and a second one for 10G. And it dynamically
-swaps between them depending on the port mode, the so called cmode.
+Clement Leger (2):
+  remoteproc: Use u64 len for da_to_va
+  remoteproc: Add elf64 support in elf loader
 
-So a generic solution is required, and please take your time to build
-one.
+ Documentation/remoteproc.txt               |   2 +-
+ drivers/remoteproc/imx_rproc.c             |   9 +-
+ drivers/remoteproc/keystone_remoteproc.c   |   2 +-
+ drivers/remoteproc/qcom_q6v5_adsp.c        |   2 +-
+ drivers/remoteproc/qcom_q6v5_mss.c         |   2 +-
+ drivers/remoteproc/qcom_q6v5_pas.c         |   2 +-
+ drivers/remoteproc/qcom_q6v5_wcss.c        |   2 +-
+ drivers/remoteproc/qcom_wcnss.c            |   2 +-
+ drivers/remoteproc/remoteproc_core.c       |   2 +-
+ drivers/remoteproc/remoteproc_elf_loader.c | 147 ++++++++++++++++++-----------
+ drivers/remoteproc/remoteproc_elf_loader.h |  69 ++++++++++++++
+ drivers/remoteproc/remoteproc_internal.h   |   4 +-
+ drivers/remoteproc/st_remoteproc.c         |   2 +-
+ drivers/remoteproc/st_slim_rproc.c         |   4 +-
+ drivers/remoteproc/wkup_m3_rproc.c         |   2 +-
+ include/linux/remoteproc.h                 |   6 +-
+ 16 files changed, 184 insertions(+), 75 deletions(-)
+ create mode 100644 drivers/remoteproc/remoteproc_elf_loader.h
 
-> It's not production-ready yet, but I will continue working on it
-> over the coming week.
+-- 
+2.15.0.276.g89ea799
 
-I'm happy to test when you are ready.
-
-Thanks for working on this,
-
-       Andrew
