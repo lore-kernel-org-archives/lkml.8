@@ -2,176 +2,248 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F012BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6383CC3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69B421582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6AkK9qW"
+	by mail.kernel.org (Postfix) with ESMTP id 362B62082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgBDQZT (ORCPT
+        id S1727363AbgBDQ0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:25:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39287 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbgBDQZS (ORCPT
+        Tue, 4 Feb 2020 11:26:52 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30678 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727297AbgBDQ0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:25:18 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so7472481plp.6;
-        Tue, 04 Feb 2020 08:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O/sCeixAp7RG7twZulDcz878W1v+r0QG4QBn97QB9rg=;
-        b=g6AkK9qWCKU3Yfgak1ZzxPplEEuZm5WS9jkpqbTozPyu4F7s75YCaIkpQxTl6+N9Qr
-         BKac/0+fytPBY0MZtL8uGnvRDrp5/+RZhDqknJ6j99aQERefyozvFNfyqbvKohuPq7xl
-         sJtSJ8iO3UOenan3dBTZiFd6Q+zfZtpOeiYP4EWC7HDE0znJQlisO9I9DmtQNB8/7n6z
-         dqyc59QzAGmcgUgBqyPUOLbyewRSFVNmi97x5WoCwcy6HXhjuurxQOGnpk6h/+PyJPC9
-         P/jSItGYGXkxwOgJ0DI6HXeAOHPF9o5skHRRgCnPZ7/EkbyMvn9FeW0QoigWIsEq9bq1
-         Tl/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O/sCeixAp7RG7twZulDcz878W1v+r0QG4QBn97QB9rg=;
-        b=JSiKW5cUExXErgNWshQMMJDYNVakWgiCwSwzh1QyftKFCQLQ6g1KlhjRyoz9Z4YZRx
-         p77Q6T/xUrLWv/MzzaF1f5Z8t9oWKyn7LbIXgU1i+KsJzG2CrcHNiQI3u4pD5PE1jNaR
-         n5J1h0HqDJzvvET/p2reYfx1OCLd7F22QCImim6yFrYggmPUrG6vNbL1MwV6xGnCDlnW
-         kHJWhDqDg+ZsfNt5pLO5399se8khScymbdJjTwlVmLCeux5lRl8ptEonCBj7+sPzW64R
-         GFqWzResEx3tuiEsuSPaDFLB6JWBshm3NchKVezzOObxmaox1snYTfVO3cir1a4LSsft
-         PFGg==
-X-Gm-Message-State: APjAAAX2yur7HUm1TzoPnNdkWd96O7CcWjuz6/1nn77mucUAx7IQwaka
-        J7Q3ICUnJDqEIberjZSPc9k=
-X-Google-Smtp-Source: APXvYqxsd7qC0DJSURNNHya+EzrexA8llJ52xqkcSMF38z9LBvQk/VZwgInLjeqfMdyHtNnlg5CCeQ==
-X-Received: by 2002:a17:902:968c:: with SMTP id n12mr30840031plp.144.1580833518073;
-        Tue, 04 Feb 2020 08:25:18 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c68sm25237454pfc.156.2020.02.04.08.25.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 08:25:17 -0800 (PST)
-Date:   Tue, 4 Feb 2020 08:25:16 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     ansuelsmth@gmail.com
-Cc:     'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Wim Van Sebroeck' <wim@linux-watchdog.org>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: R: [PATCH 1/3] watchdog: qcom-wdt: add option to skip pretimeout
-Message-ID: <20200204162516.GA22814@roeck-us.net>
-References: <20200204152104.13278-1-ansuelsmth@gmail.com>
- <20200204160824.GA17320@roeck-us.net>
- <035201d5db76$78f56670$6ae03350$@gmail.com>
+        Tue, 4 Feb 2020 11:26:51 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014GGGcn107797
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2020 11:26:50 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xybyxreud-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 11:26:50 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sandipan@linux.ibm.com>;
+        Tue, 4 Feb 2020 16:26:48 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Feb 2020 16:26:44 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014GQhfj59769072
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Feb 2020 16:26:43 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7DD811C04C;
+        Tue,  4 Feb 2020 16:26:42 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14F9411C04A;
+        Tue,  4 Feb 2020 16:26:40 +0000 (GMT)
+Received: from [9.199.41.160] (unknown [9.199.41.160])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Feb 2020 16:26:39 +0000 (GMT)
+Subject: Re: [PATCH v11 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ tests
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     mike.kravetz@oracle.com, shuah@kernel.org, rientjes@google.com,
+        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-8-almasrymina@google.com>
+From:   Sandipan Das <sandipan@linux.ibm.com>
+Date:   Tue, 4 Feb 2020 21:56:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <035201d5db76$78f56670$6ae03350$@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200203232248.104733-8-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020416-4275-0000-0000-0000039DE5A1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020416-4276-0000-0000-000038B20D7F
+Message-Id: <0fa5d77c-d115-1e30-cb17-d6a48c916922@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-04_05:2020-02-04,2020-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2002040108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 05:16:34PM +0100, ansuelsmth@gmail.com wrote:
-> If something like this is used, msm-timer require interrupts. Without this
-> configuration, the device is unbootable as the system froze on system
-> bootup.
+Hi Mina,
+
+On 04/02/20 4:52 am, Mina Almasry wrote:
+> The tests use both shared and private mapped hugetlb memory, and
+> monitors the hugetlb usage counter as well as the hugetlb reservation
+> counter. They test different configurations such as hugetlb memory usage
+> via hugetlbfs, or MAP_HUGETLB, or shmget/shmat, and with and without
+> MAP_POPULATE.
 > 
-> timer@200a000 {
-> 			compatible = "qcom,kpss-timer", "qcom,msm-timer";
-> 			interrupts = <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 5 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>;
-> 			no-pretimeout;
-> 			reg = <0x0200a000 0x100>;
-> 			clock-frequency = <25000000>,
-> 					  <32768>;
-> 			clocks = <&sleep_clk>;
-> 			clock-names = "sleep";
-> 			cpu-offset = <0x80000>;
-> 		};
+> Also add test for hugetlb reservation reparenting, since this is
+> a subtle issue.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Cc: sandipan@linux.ibm.com
+> 
+> ---
+> 
+> Changes in v11:
+> - Modify test to not assume 2MB hugepage size.
+> - Updated resv.* to rsvd.*
+> Changes in v10:
+> - Updated tests to resv.* name changes.
+> Changes in v9:
+> - Added tests for hugetlb reparenting.
+> - Make tests explicitly support cgroup v1 and v2 via script argument.
+> Changes in v6:
+> - Updates tests for cgroups-v2 and NORESERVE allocations.
 > 
 
-I think this is all wrong; the new property shows up in a node which
-is completely unrelated to a watchdog. Maybe it wasn't such a good idea
-to tie the watchdog to the timer node. At the very least, the situation
-should be handled in the driver via of_table flags. If the situation can't
-be handled that way, something is even more wrong. In that case it might
-be better to revert commit 36375491a439 until that is sorted out properly.
+There are still a couple of places where 2MB page size is being used.
+These are my workarounds to get the tests running on ppc64.
 
-Guenter
+diff --git a/tools/testing/selftests/vm/hugetlb_reparenting_test.sh b/tools/testing/selftests/vm/hugetlb_reparenting_test.sh
+index 2be672c2b311..d11d1febccc3 100755
+--- a/tools/testing/selftests/vm/hugetlb_reparenting_test.sh
++++ b/tools/testing/selftests/vm/hugetlb_reparenting_test.sh
+@@ -29,6 +29,15 @@ if [[ ! -e $CGROUP_ROOT ]]; then
+   fi
+ fi
+ 
++function get_machine_hugepage_size() {
++  hpz=$(grep -i hugepagesize /proc/meminfo)
++  kb=${hpz:14:-3}
++  mb=$(($kb / 1024))
++  echo $mb
++}
++
++MB=$(get_machine_hugepage_size)
++
+ function cleanup() {
+   echo cleanup
+   set +e
+@@ -67,7 +76,7 @@ function assert_state() {
+   fi
+ 
+   local actual_a_hugetlb
+-  actual_a_hugetlb="$(cat "$CGROUP_ROOT"/a/hugetlb.2MB.$usage_file)"
++  actual_a_hugetlb="$(cat "$CGROUP_ROOT"/a/hugetlb.${MB}MB.$usage_file)"
+   if [[ $actual_a_hugetlb -lt $(($expected_a_hugetlb - $tolerance)) ]] ||
+     [[ $actual_a_hugetlb -gt $(($expected_a_hugetlb + $tolerance)) ]]; then
+     echo actual a hugetlb = $((${actual_a_hugetlb%% *} / 1024 / 1024)) MB
+@@ -95,7 +104,7 @@ function assert_state() {
+   fi
+ 
+   local actual_b_hugetlb
+-  actual_b_hugetlb="$(cat "$CGROUP_ROOT"/a/b/hugetlb.2MB.$usage_file)"
++  actual_b_hugetlb="$(cat "$CGROUP_ROOT"/a/b/hugetlb.${MB}MB.$usage_file)"
+   if [[ $actual_b_hugetlb -lt $(($expected_b_hugetlb - $tolerance)) ]] ||
+     [[ $actual_b_hugetlb -gt $(($expected_b_hugetlb + $tolerance)) ]]; then
+     echo actual b hugetlb = $((${actual_b_hugetlb%% *} / 1024 / 1024)) MB
+@@ -152,7 +161,7 @@ write_hugetlbfs() {
+ 
+ set -e
+ 
+-size=$((2 * 1024 * 1024 * 25)) # 50MB = 25 * 2MB hugepages.
++size=$((${MB} * 1024 * 1024 * 25)) # 50MB = 25 * 2MB hugepages.
+ 
+ cleanup
 
-> > On Tue, Feb 04, 2020 at 04:21:01PM +0100, Ansuel Smith wrote:
-> > > Some platform like ipq806x doesn't support pretimeout.
-> > > As the driver check if there are available interrupts and ipq806x
-> > > use msm-timer that require interrupts, the watchdog fail to probe
-> > > as request_irq tries to use a ppi interrupt. Add an option to skip
-> > > pretimeout setup and use the normal watchdog probe.
-> > >
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > ---
-> > >  drivers/watchdog/qcom-wdt.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> > > index a494543d3ae1..e689e97e883e 100644
-> > > --- a/drivers/watchdog/qcom-wdt.c
-> > > +++ b/drivers/watchdog/qcom-wdt.c
-> > > @@ -189,6 +189,7 @@ static int qcom_wdt_probe(struct platform_device
-> > *pdev)
-> > >  	u32 percpu_offset;
-> > >  	int irq, ret;
-> > >  	struct clk *clk;
-> > > +	bool nopretimeout;
-> > >
-> > >  	regs = of_device_get_match_data(dev);
-> > >  	if (!regs) {
-> > > @@ -204,6 +205,8 @@ static int qcom_wdt_probe(struct platform_device
-> > *pdev)
-> > >  	if (!res)
-> > >  		return -ENOMEM;
-> > >
-> > > +	nopretimeout = of_property_read_bool(np, "no-pretimeout");
-> > > +
-> > >  	/* We use CPU0's DGT for the watchdog */
-> > >  	if (of_property_read_u32(np, "cpu-offset", &percpu_offset))
-> > >  		percpu_offset = 0;
-> > > @@ -247,7 +250,7 @@ static int qcom_wdt_probe(struct platform_device
-> > *pdev)
-> > >
-> > >  	/* check if there is pretimeout support */
-> > >  	irq = platform_get_irq(pdev, 0);
-> > > -	if (irq > 0) {
-> > > +	if (!nopretimeout && irq > 0) {
-> > 
-> > That is unnecessary; such platforms should simply not provide an
-> interrupt.
-> > Or, in other words, what is the point of assigning an interrupt to be used
-> > for pretimeout if the platform doesn't support it ? And then to add yet
-> > another attribute to tell the driver not to use it ?
-> > 
-> > Guenter
-> > 
-> > >  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
-> > >  				       IRQF_TRIGGER_RISING,
-> > >  				       "wdt_bark", &wdt->wdd);
-> > > --
-> > > 2.24.0
-> > >
-> 
+diff --git a/tools/testing/selftests/vm/charge_reserved_hugetlb.sh b/tools/testing/selftests/vm/charge_reserved_hugetlb.sh
+index fa82a66e497a..ca98ad229b75 100755
+--- a/tools/testing/selftests/vm/charge_reserved_hugetlb.sh
++++ b/tools/testing/selftests/vm/charge_reserved_hugetlb.sh
+@@ -226,7 +226,7 @@ function write_hugetlbfs_and_get_usage() {
+ function cleanup_hugetlb_memory() {
+   set +e
+   local cgroup="$1"
+-  if [[ "$(pgrep write_to_hugetlbfs)" != "" ]]; then
++  if [[ "$(pgrep -f write_to_hugetlbfs)" != "" ]]; then
+     echo kiling write_to_hugetlbfs
+     killall -2 write_to_hugetlbfs
+     wait_for_hugetlb_memory_to_get_depleted $cgroup
+@@ -264,7 +264,7 @@ function run_test() {
+   setup_cgroup "hugetlb_cgroup_test" "$cgroup_limit" "$reservation_limit"
+ 
+   mkdir -p /mnt/huge
+-  mount -t hugetlbfs -o pagesize=2M,size=256M none /mnt/huge
++  mount -t hugetlbfs -o pagesize=${MB}M,size=256M none /mnt/huge
+ 
+   write_hugetlbfs_and_get_usage "hugetlb_cgroup_test" "$size" "$populate" \
+     "$write" "/mnt/huge/test" "$method" "$private" "$expect_failure" \
+@@ -318,7 +318,7 @@ function run_multiple_cgroup_test() {
+   setup_cgroup "hugetlb_cgroup_test2" "$cgroup_limit2" "$reservation_limit2"
+ 
+   mkdir -p /mnt/huge
+-  mount -t hugetlbfs -o pagesize=2M,size=256M none /mnt/huge
++  mount -t hugetlbfs -o pagesize=${MB}M,size=256M none /mnt/huge
+ 
+   write_hugetlbfs_and_get_usage "hugetlb_cgroup_test1" "$size1" \
+     "$populate1" "$write1" "/mnt/huge/test1" "$method" "$private" \
+
+---
+
+Also I had missed running charge_reserved_hugetlb.sh the last time.
+Right now, it stops at the following scenario.
+
+Test normal case with write.
+private=, populate=, method=2, reserve=
+nr hugepages = 10
+writing cgroup limit: 83886080
+writing reseravation limit: 83886080
+
+Starting:
+hugetlb_usage=0
+reserved_usage=0
+expect_failure is 0
+Putting task in cgroup 'hugetlb_cgroup_test'
+Method is 2
+Executing ./write_to_hugetlbfs -p /mnt/huge/test -s 83886080 -w  -m 2  -l
+Writing to this path: /mnt/huge/test
+Writing this size: 83886080
+Not populating.
+Using method=2
+Shared mapping.
+RESERVE mapping.
+Allocating using SHM.
+shmid: 0x5, shmget key:0
+shmaddr: 0x7dfffb000000
+Writing to memory.
+Starting the writes:
+.write_result is 0
+.After write:
+hugetlb_usage=16777216
+reserved_usage=83886080
+....kiling write_to_hugetlbfs
+...Received 2.
+Deleting the memory
+Done deleting the memory
+16777216
+83886080
+Memory charged to hugtlb=16777216
+Memory charged to reservation=83886080
+expected (83886080) != actual (16777216): Reserved memory charged to hugetlb cgroup.
+CLEANUP DONE
+
+
+The other test script (hugetlb_reparenting_test.sh) passes.
+Did not observe anything unusual with hugepage accounting
+either.
+
+
+- Sandipan
+
