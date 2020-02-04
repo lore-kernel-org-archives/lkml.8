@@ -2,295 +2,133 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673F4C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4796CC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADAD2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BAB82082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b6bdvDJL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7mC3YM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgBDQ2Y (ORCPT
+        id S1727358AbgBDQ3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:28:24 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:59834 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727297AbgBDQ2Y (ORCPT
+        Tue, 4 Feb 2020 11:29:21 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38078 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgBDQ3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:28:24 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014GQw4a022633;
-        Tue, 4 Feb 2020 17:27:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=lrkJdFhk0w2SI0yUduK2QETXD0KDPe3eLk4dA/4Jsak=;
- b=b6bdvDJLivtX1SSiz6qKgSkshn0AdEVVw0WPQN7Q73muNrPdXo4gQNJM3jwLqG7GxMnU
- Q7ZEbe8AKFYbyi8dxk2/7wLBOrpRjvHfvRt+KQrxvtsuyydHID0waj8k64JTpV6N8VBg
- oHTFZjGixWIIioFyJdYbFLyL3f911fXML+oAiYdhu3D2R36y6b3gfq/2+2t8qZf0jS1t
- 1xhq7H2QvXEv29IzpEMZR23pmHZ/jYbvsT6/0HszE6Z6NK/ZMbTd7pHezCsHvAM4GDvo
- /Imqb/zTvFiZeVPvUfb7M5ws/TI4ZxFdXHGrKUORIW4Eb1AXlvM6tLnC8eOrlNoFxo/l HA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xvyp636qd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 17:27:56 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AA14010002A;
-        Tue,  4 Feb 2020 17:27:51 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B7542A5EC1;
-        Tue,  4 Feb 2020 17:27:51 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.46) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 17:27:50 +0100
-Subject: Re: [PATCH v2 1/2] remoteproc: Use u64 len for da_to_va
-To:     Clement Leger <cleger@kalray.eu>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20200129163013.GA16538@xps15>
- <20200204143343.7011-1-cleger@kalray.eu>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <81ef1572-1913-e9a8-5002-f7d565d6ac37@st.com>
-Date:   Tue, 4 Feb 2020 17:27:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 11:29:20 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 21so1431318qki.5;
+        Tue, 04 Feb 2020 08:29:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VZqxpmTLq7ANIHnvv08b9chlQb5uC3TxYbMtrp/5w/o=;
+        b=P7mC3YM7jj2f3uNL632XGxBaFJJoe0ox5kkHZscoXgKtvKasu0s6SLFHyY8s+P8fmY
+         ipfpYQE4vICNNdNe31JjXaxmFzQrQGyy9Le9fpIsB4jI3doRTLqxhwBSjL4q55bslykQ
+         Jb6rAYUbQ7+PNDdntPG6PsUh+qcIc0Czq825LlDuj6J8UnXcT1iqQ6T6NneFYiWduYvd
+         UPGIGnbQbYhqMkzzqz3lltKABNKIN1Sa0Gijnbrh6+GOPf+65KqOqsoY3y6Iwy0AOl2o
+         XKkvZ/Re1uk3p6T1qJ9LImqdjCW9iDKWjCajN54KxLqmIYnWVV6gN4inySNvW2BXXEuV
+         L+HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VZqxpmTLq7ANIHnvv08b9chlQb5uC3TxYbMtrp/5w/o=;
+        b=rafAfEWcde6/YAv2m3PbTAaBhzCscYozFPYyiDWqq6CooqlMhed3EF2C4nl59V76fR
+         4JJGDmLBHzmY4UH00MNTspn5aBdbpSoTUI9dYqoPZe8yF28MWS5bfcFOlgItA8lBwV4S
+         e8jR5aSjVu436EVATfaE1JLRPUO4WZCzaAP4GHkn6RykrEO4eHpZYLm+CtGUd+Cv8DaT
+         mJzGGoe13fDulOhV67tYuIFUqUACW8jqOA2d4STPbtYlkCoC2Sb9TPqP/Waa439nEnQO
+         uVJsLLf8DTSIM4VFm6KaKCfddHOR6BBwSSjfLJQkwZHosZjPidhMEP0qHHLADyA2lfha
+         IKNA==
+X-Gm-Message-State: APjAAAUPx5nUgusikNNMrYKsRL1PgLp7XiEp5LsbB9lLi2sPiiXK+xwF
+        zGix2NAXF1sF5CSXo+QjUDk=
+X-Google-Smtp-Source: APXvYqxGCq/00mpT8oEFtbR3y+FwAI8o4XxX+HqIN4I8TuP7bhFs05wjJkEcL3lgRs4M3OZRRyKBwA==
+X-Received: by 2002:a05:620a:16a4:: with SMTP id s4mr28708125qkj.488.1580833759694;
+        Tue, 04 Feb 2020 08:29:19 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id w134sm11606629qka.127.2020.02.04.08.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 08:29:19 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 4 Feb 2020 11:29:17 -0500
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH] initramfs: don't double-compress built-in initramfs if
+ the kernel is compressed
+Message-ID: <20200204162917.GA1772390@rani.riverdale.lan>
+References: <20200203200656.GA455151@rani.riverdale.lan>
+ <20200203211644.39847-1-nivedita@alum.mit.edu>
+ <CAK7LNAQq7ah1yLOr-fgH-Oo7_NHzvYiy6huY1=4DxJoCGi+cmw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204143343.7011-1-cleger@kalray.eu>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_05:2020-02-04,2020-02-04 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQq7ah1yLOr-fgH-Oo7_NHzvYiy6huY1=4DxJoCGi+cmw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clément,
+On Tue, Feb 04, 2020 at 11:22:19AM +0900, Masahiro Yamada wrote:
+> Hi.
+> 
+> On Tue, Feb 4, 2020 at 6:16 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > If the kernel is going to be compressed anyway, there is no point in
+> > double-compressing the built-in initramfs. Hide the built-in initramfs
+> > compression choice in this case.
+> >
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> 
+> Double-compression slightly reduces the data size.
+> And, keeping the bare vmlinux small is beneficial, IMHO.
+> 
 
-Is it v2 or V3? 
-I also suggest you add a cover letter when you post more than one patch in a thread.
+Ok. In my setup (kernel is compressed by xz), none for the builtin
+initramfs is optimal by a measurable amount, but I that will depend on
+config/initramfs contents/compression methods, so might well not be true
+in general. Maybe add a note to the help text?
 
-On 2/4/20 3:33 PM, Clement Leger wrote:
-> With upcoming changes in elf loader for elf64 support, section size will
-> be a u64. When used with da_to_va, this will potentially lead to
-> overflow if using the current "int" type for len argument. Change
-> da_to_va prototype to use a u64 for len and fix all users of this
-> function.
-> 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> ---
-> V2:
->  - Change len type from int to u64
-> 
->  drivers/remoteproc/imx_rproc.c           | 5 +++--
->  drivers/remoteproc/keystone_remoteproc.c | 2 +-
->  drivers/remoteproc/qcom_q6v5_adsp.c      | 2 +-
->  drivers/remoteproc/qcom_q6v5_mss.c       | 2 +-
->  drivers/remoteproc/qcom_q6v5_pas.c       | 2 +-
->  drivers/remoteproc/qcom_q6v5_wcss.c      | 2 +-
->  drivers/remoteproc/qcom_wcnss.c          | 2 +-
->  drivers/remoteproc/remoteproc_core.c     | 2 +-
->  drivers/remoteproc/remoteproc_internal.h | 2 +-
->  drivers/remoteproc/st_slim_rproc.c       | 2 +-
->  drivers/remoteproc/wkup_m3_rproc.c       | 2 +-
->  include/linux/remoteproc.h               | 2 +-
->  12 files changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 3e72b6f38d4b..7ec79be5eb5d 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -208,7 +208,7 @@ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
->  	return -ENOENT;
->  }
->  
-> -static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
-I wonder if you could use size_t instead?
-Does it make sense for 32-bit system to have a physical address space higher?
-it's an open question I won't pretend to have the answer...:)
+none    7030816 arch/x86/boot/bzImage
+gz      7382144 arch/x86/boot/bzImage
+bz2     7353696 arch/x86/boot/bzImage
+lzma    7118176 arch/x86/boot/bzImage
+xz      7126400 arch/x86/boot/bzImage
+lzo     7379360 arch/x86/boot/bzImage
+lz4     7335712 arch/x86/boot/bzImage
+
+
+diff --git a/usr/Kconfig b/usr/Kconfig
+index a6b68503d177..b68910b225fc 100644
+--- a/usr/Kconfig
++++ b/usr/Kconfig
+@@ -125,6 +125,12 @@ choice
+ 	  low on RAM, since it reduces the memory consumption during
+ 	  boot.
  
-
->  {
->  	struct imx_rproc *priv = rproc->priv;
->  	void *va = NULL;
-> @@ -235,7 +235,8 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-len type to update
-
-Regards,
-Arnaud
->  		}
->  	}
->  
-> -	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da, len, va);
-> +	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%llx va = 0x%p\n", da, len,
-> +		va);
->  
->  	return va;
->  }
-> diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
-> index 5c4658f00b3d..25c01df47eba 100644
-> --- a/drivers/remoteproc/keystone_remoteproc.c
-> +++ b/drivers/remoteproc/keystone_remoteproc.c
-> @@ -246,7 +246,7 @@ static void keystone_rproc_kick(struct rproc *rproc, int vqid)
->   * can be used either by the remoteproc core for loading (when using kernel
->   * remoteproc loader), or by any rpmsg bus drivers.
->   */
-> -static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct keystone_rproc *ksproc = rproc->priv;
->  	void __iomem *va = NULL;
-> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-> index e953886b2eb7..7518e67a49e5 100644
-> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> @@ -270,7 +270,7 @@ static int adsp_stop(struct rproc *rproc)
->  	return ret;
->  }
->  
-> -static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 471128a2e723..248febde6fc1 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -1148,7 +1148,7 @@ static int q6v5_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *q6v5_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct q6v5 *qproc = rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index db4b3c4bacd7..cf2cd609c90d 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -159,7 +159,7 @@ static int adsp_stop(struct rproc *rproc)
->  	return ret;
->  }
->  
-> -static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-> index f93e1e4a1cc0..3a6b82a16961 100644
-> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-> @@ -406,7 +406,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct q6v5_wcss *wcss = rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-> index dc135754bb9c..f893219e45a8 100644
-> --- a/drivers/remoteproc/qcom_wcnss.c
-> +++ b/drivers/remoteproc/qcom_wcnss.c
-> @@ -287,7 +287,7 @@ static int wcnss_stop(struct rproc *rproc)
->  	return ret;
->  }
->  
-> -static void *wcnss_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *wcnss_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 307df98347ba..9e6d3c6a60ee 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -185,7 +185,7 @@ EXPORT_SYMBOL(rproc_va_to_pa);
->   * here the output of the DMA API for the carveouts, which should be more
->   * correct.
->   */
-> -void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct rproc_mem_entry *carveout;
->  	void *ptr = NULL;
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 493ef9262411..004867061721 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -50,7 +50,7 @@ void rproc_exit_sysfs(void);
->  void rproc_free_vring(struct rproc_vring *rvring);
->  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->  
-> -void *rproc_da_to_va(struct rproc *rproc, u64 da, int len);
-> +void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len);
->  phys_addr_t rproc_va_to_pa(void *cpu_addr);
->  int rproc_trigger_recovery(struct rproc *rproc);
->  
-> diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-> index 04492fead3c8..2fd14afb3157 100644
-> --- a/drivers/remoteproc/st_slim_rproc.c
-> +++ b/drivers/remoteproc/st_slim_rproc.c
-> @@ -174,7 +174,7 @@ static int slim_rproc_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct st_slim_rproc *slim_rproc = rproc->priv;
->  	void *va = NULL;
-> diff --git a/drivers/remoteproc/wkup_m3_rproc.c b/drivers/remoteproc/wkup_m3_rproc.c
-> index 3984e585c847..0e8082948489 100644
-> --- a/drivers/remoteproc/wkup_m3_rproc.c
-> +++ b/drivers/remoteproc/wkup_m3_rproc.c
-> @@ -80,7 +80,7 @@ static int wkup_m3_rproc_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct wkup_m3_rproc *wkupm3 = rproc->priv;
->  	void *va = NULL;
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad66683ad0..f84bd5fe0211 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -374,7 +374,7 @@ struct rproc_ops {
->  	int (*start)(struct rproc *rproc);
->  	int (*stop)(struct rproc *rproc);
->  	void (*kick)(struct rproc *rproc, int vqid);
-> -	void * (*da_to_va)(struct rproc *rproc, u64 da, int len);
-> +	void * (*da_to_va)(struct rproc *rproc, u64 da, u64 len);
->  	int (*parse_fw)(struct rproc *rproc, const struct firmware *fw);
->  	int (*handle_rsc)(struct rproc *rproc, u32 rsc_type, void *rsc,
->  			  int offset, int avail);
-> 
++	  Note that if the kernel itself is compressed, the builtin initramfs
++	  will be compressed twice, first by the algorithm selected here, and
++	  then by the kernel compression method chosen. This may increase the
++	  final image size, so you should test whether compressing the builtin
++	  initramfs provides any savings.
++
+ 	  Keep in mind that your build system needs to provide the appropriate
+ 	  compression tool to compress the generated initram cpio file for
+ 	  embedding.
