@@ -2,233 +2,186 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52317C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55936C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A12D20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F0720730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hLLflGjl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nmTN3EPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgBDM5N (ORCPT
+        id S1727207AbgBDM65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:57:13 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43092 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727126AbgBDM5N (ORCPT
+        Tue, 4 Feb 2020 07:58:57 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38426 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBDM64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580821032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QUc1Zczmgm9nQV8lLS+0yNUCGflG/6zOwM+BqXBaIpE=;
-        b=hLLflGjliC49sMfIbfV8HwY+DInYAzxKoJkzg4kdNyx6vVZpIQT5Sdu7v1QDS9Ek3yo54P
-        gkGhAwR7H12LuhXxNIocOeYjaluDqT1JOJRJKyXx5EC6xNqNhmdY7wFaQrqb5GAZ5fhRz1
-        G2ffKTc/2JJt6O2vY6fN/71MdmehSCE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-XB0mtUi1OAeOuw7z5OGPxQ-1; Tue, 04 Feb 2020 07:57:09 -0500
-X-MC-Unique: XB0mtUi1OAeOuw7z5OGPxQ-1
-Received: by mail-wr1-f72.google.com with SMTP id n23so3569252wra.20
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 04:57:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=QUc1Zczmgm9nQV8lLS+0yNUCGflG/6zOwM+BqXBaIpE=;
-        b=brslPN+jNpoWDK3uF0eGRl9p6XAaFuQ16YpWFbAGmqJzLoQnBl5UeoAqInZl2Mbx/W
-         821RGAOaats8XbZkErNPwYkUhNzcSdZgV9ZKiRZIHLaPpOljM1mkIKatkjyOstOKEBsH
-         cM3nS95ZT0j8XK+VOJ4OmzUkLEBwLAzlabaSvbM+9Kbd/IYbKFfuZAloflIZpkpXWXhQ
-         DITkCD8QSo4/xBIhZQdoNATwXLmV+Jr4M2GKVrNgc4LDcm251417EqDtL3Jn/jZhhRnT
-         PlNuWkU6JuqSByJe3GyCrbxGd0kyLxHpExvDWASILpuffARR0xASY40Lwo3xb3/UuUEL
-         5B0Q==
-X-Gm-Message-State: APjAAAX97+8uCw617X6LHcVgyT35Xcj0NmDSgzG403PM0b8pcd41F6OE
-        dTSCbbH7c2XM+J6UwELiWQWFofcgvzPfsKqZvxjMa3vIHNqKB2lOOQaiOcOByf1y1OCGm1sykDb
-        KTDE3XNLFYpn1Vmsg/lCad6tz
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr20992778wrp.238.1580821027971;
-        Tue, 04 Feb 2020 04:57:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyRZZSjvon8ionEzjdZOIwMzpjS55ShQuUVAd+xkIJ0MG4jCofXi7E5DepoIDnT6c5w5yVUrA==
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr20992759wrp.238.1580821027774;
-        Tue, 04 Feb 2020 04:57:07 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t131sm3790960wmb.13.2020.02.04.04.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 04:57:07 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
-In-Reply-To: <CANRm+CwwYoSLeA3Squp-_fVZpmYmxEfqOB+DGoQN4Y_iMT347w@mail.gmail.com>
-References: <CANRm+CwwYoSLeA3Squp-_fVZpmYmxEfqOB+DGoQN4Y_iMT347w@mail.gmail.com>
-Date:   Tue, 04 Feb 2020 13:57:06 +0100
-Message-ID: <878slio6hp.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 4 Feb 2020 07:58:56 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200204125854euoutp02d0f653d63134eff5f933ed7840cd38d5~wNHJGACug2459424594euoutp02t
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2020 12:58:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200204125854euoutp02d0f653d63134eff5f933ed7840cd38d5~wNHJGACug2459424594euoutp02t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580821134;
+        bh=OpcxaeFkkMnFoF4KDR3jWlSTbVAXsa0PzMZkJ48/Klw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=nmTN3EPJbeOEiyv73LIhyH7Ssbv9xllRlaDl5KXSJJ8eugDoIf7LruXQuhgHC+I+J
+         iQpy5lb0Ya6Kip9ztltpgTDVum05kvtsvfPyhVZxSumC6FYpVuXcPvsHYlIeKF+ahQ
+         0QcU8krZTDbiGdn81UKsiMc69NVpC6CfL9PoxvL4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200204125854eucas1p2e5152ed7218c2f4cd6418263e191357f~wNHI1sifg1929819298eucas1p2m;
+        Tue,  4 Feb 2020 12:58:54 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id E0.6D.60698.E8A693E5; Tue,  4
+        Feb 2020 12:58:54 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd~wNHIiIUV_2294722947eucas1p1f;
+        Tue,  4 Feb 2020 12:58:54 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200204125854eusmtrp26c0f7ebe3f233d77e4b723f80a75975d~wNHIhiFL30906509065eusmtrp2r;
+        Tue,  4 Feb 2020 12:58:54 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-60-5e396a8e5ab9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 6A.C8.08375.D8A693E5; Tue,  4
+        Feb 2020 12:58:53 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200204125853eusmtip1a0d64063c1b54e266cf56a375ebb3b8a~wNHIMWkkz0624506245eusmtip1D;
+        Tue,  4 Feb 2020 12:58:53 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     devicetree-compiler@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] libfdt: place new nodes & properties after the parent's
+ ones
+Date:   Tue,  4 Feb 2020 13:58:44 +0100
+Message-Id: <20200204125844.19955-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsWy7djPc7p9WZZxBpNfCFpsnLGe1eLDwW1M
+        Fpd3zWGzWHvkLrsDi0ffllWMHp83yQUwRXHZpKTmZJalFunbJXBlPGj+xFLwR6Ri5YXjjA2M
+        dwW6GDk5JARMJK6s/s7UxcjFISSwglHi5oYnbBDOF0aJ+c+bmSGcz4wSi7bvYodpmfjtNVTL
+        ckaJxXs7meFaXn+dwAJSxSZgKNH1tosNxBYRUJd4MO0EWAezQCujxIMrF8ESwgL+EuuWzGIG
+        sVkEVCXW7pnICmLzCthKrJw/A2qdvMTqDQfANkgIrGGT2PL+OgtEwkXi8eLfULawxKvjW6Aa
+        ZCT+75zPBNHQzCjx8Nxadginh1HictMMRogqa4k7534BncEBdJOmxPpd+hBhR4lD79uZQMIS
+        AnwSN94KgoSZgcxJ26YzQ4R5JTrahCCq1SRmHV8Ht/bghUvMELaHxI1Hd8B+FBKIlXj5ZB3r
+        BEa5WQi7FjAyrmIUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAiM6tP/jn/dwbjvT9IhRgEO
+        RiUeXg1Hizgh1sSy4srcQ4wSHMxKIrzn9S3jhHhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZ
+        KySQnliSmp2aWpBaBJNl4uCUamAs/v4iYOL0ziLBBOZv2gwak1Wu/pnYOE3+6p7maA6WFapH
+        eG3mvT0Q7+T16Z73t3tVuYVTJmw737pnwkHLRZ/rlH7eN0nQ2vxsgtKGZ47qIlqaj09pdP14
+        e6gg9X9PyKLZ9eXfF5q+O/U2Id4xZJnylYcSsf1VPz9X3JrQ8zzVWDH02ZfNqR7lSizFGYmG
+        WsxFxYkAXKsmouYCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBLMWRmVeSWpSXmKPExsVy+t/xu7q9WZZxBrs+mltsnLGe1eLDwW1M
+        Fpd3zWGzWHvkLrsDi0ffllWMHp83yQUwRenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hka
+        m8daGZkq6dvZpKTmZJalFunbJehlPGj+xFLwR6Ri5YXjjA2MdwW6GDk5JARMJCZ+e83UxcjF
+        ISSwlFHiTPcxRoiEjMTJaQ2sELawxJ9rXWwQRZ8YJdrOTWICSbAJGEp0vQVJcHKICKhLPJh2
+        AmwSs0A7o8TfzjXsIAlhAV+Jxd86wIpYBFQl1u6ZCDaVV8BWYuX8GewQG+QlVm84wDyBkWcB
+        I8MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwFDaduzn5h2MlzYGH2IU4GBU4uG9YGcRJ8Sa
+        WFZcmXuIUYKDWUmE97y+ZZwQb0piZVVqUX58UWlOavEhRlOg5ROZpUST84FhnlcSb2hqaG5h
+        aWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgbF4ZZ5xScbq6u5eqak3l77adcg5
+        a25cMaf9zsgn1+f/jAiOkPKd0LIj8KFys6l7y/vwv0YVW57mpOT+NCg7fuXm396IVW5bb5zm
+        5q4o/S/6SFtu6yOD/Q0dURw6Gaf+XDp1acG02b6KSTd/yXh+vXoy0lD49KOd5awvi/maeXVT
+        t/TFhL/ZLKDEUpyRaKjFXFScCACua4WpOwIAAA==
+X-CMS-MailID: 20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd
+References: <CGME20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+While applying dt-overlays using libfdt code, the order of the applied
+properties and sub-nodes is reversed. This should not be a problem in
+ideal world (mainline), but this matters for some vendor specific/custom
+dtb files. This can be easily fixed by the little change to libfdt code:
+any new properties and sub-nodes should be added after the parent's node
+properties and subnodes.
 
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Nick Desaulniers Reported:
->
->   When building with:
->   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
->   The following warning is observed:
->   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
->   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
->   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
->   vector)
->               ^
->   Debugging with:
->   https://github.com/ClangBuiltLinux/frame-larger-than
->   via:
->   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
->     kvm_send_ipi_mask_allbutself
->   points to the stack allocated `struct cpumask newmask` in
->   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
->   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
->   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
->   8192, making a single instance of a `struct cpumask` 1024 B.
->
-> This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
-> both pv tlb and pv ipis..
->
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
->  1 file changed, 21 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 81045aab..b1e8efa 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -425,6 +425,8 @@ static void __init sev_map_percpu_data(void)
->      }
->  }
->
-> +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
-> +
->  #ifdef CONFIG_SMP
->  #define KVM_IPI_CLUSTER_SIZE    (2 * BITS_PER_LONG)
->
-> @@ -490,12 +492,12 @@ static void kvm_send_ipi_mask(const struct
-> cpumask *mask, int vector)
->  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
-> int vector)
->  {
->      unsigned int this_cpu = smp_processor_id();
-> -    struct cpumask new_mask;
-> +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
->      const struct cpumask *local_mask;
->
-> -    cpumask_copy(&new_mask, mask);
-> -    cpumask_clear_cpu(this_cpu, &new_mask);
-> -    local_mask = &new_mask;
-> +    cpumask_copy(new_mask, mask);
-> +    cpumask_clear_cpu(this_cpu, new_mask);
-> +    local_mask = new_mask;
->      __send_ipi_mask(local_mask, vector);
->  }
->
-> @@ -575,7 +577,6 @@ static void __init kvm_apf_trap_init(void)
->      update_intr_gate(X86_TRAP_PF, async_page_fault);
->  }
->
-> -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
->
->  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
->              const struct flush_tlb_info *info)
-> @@ -583,7 +584,7 @@ static void kvm_flush_tlb_others(const struct
-> cpumask *cpumask,
->      u8 state;
->      int cpu;
->      struct kvm_steal_time *src;
-> -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
-> +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
->
->      cpumask_copy(flushmask, cpumask);
->      /*
-> @@ -624,6 +625,7 @@ static void __init kvm_guest_init(void)
->          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
->          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
->          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> +        pr_info("KVM setup pv remote TLB flush\n");
->      }
->
->      if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> @@ -732,23 +734,30 @@ static __init int activate_jump_labels(void)
->  }
->  arch_initcall(activate_jump_labels);
->
-> -static __init int kvm_setup_pv_tlb_flush(void)
-> +static __init int kvm_alloc_cpumask(void)
->  {
->      int cpu;
-> +    bool alloc = false;
->
->      if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
->          !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-> -        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
-> +        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
-> +        alloc = true;
-> +
-> +#if defined(CONFIG_SMP)
-> +    if (!alloc && kvm_para_has_feature(KVM_FEATURE_PV_SEND_IPI))
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ libfdt/fdt_rw.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-'!alloc' check is superfluous.
-
-> +        alloc = true;
-> +#endif
-> +
-> +    if (alloc)
->          for_each_possible_cpu(cpu) {
-> -            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
-> +            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
->                  GFP_KERNEL, cpu_to_node(cpu));
->          }
-> -        pr_info("KVM setup pv remote TLB flush\n");
-> -    }
->
->      return 0;
->  }
-> -arch_initcall(kvm_setup_pv_tlb_flush);
-> +arch_initcall(kvm_alloc_cpumask);
-
-Honestly, I'd simplify the check in kvm_alloc_cpumask() as
-
-if (!kvm_para_available())
-	return;
-
-and allocated masks for all other cases.
-
->
->  #ifdef CONFIG_PARAVIRT_SPINLOCKS
->
-> --
-> 1.8.3.1
->
-
+diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
+index 8795947..88c5930 100644
+--- a/libfdt/fdt_rw.c
++++ b/libfdt/fdt_rw.c
+@@ -189,19 +189,27 @@ static int fdt_add_property_(void *fdt, int nodeoffset, const char *name,
+ 			     int len, struct fdt_property **prop)
+ {
+ 	int proplen;
+-	int nextoffset;
++	int offset, nextoffset;
+ 	int namestroff;
+ 	int err;
+ 	int allocated;
++	uint32_t tag;
+ 
+ 	if ((nextoffset = fdt_check_node_offset_(fdt, nodeoffset)) < 0)
+ 		return nextoffset;
+ 
++	/* Try to place the new property after the parent's properties */
++	fdt_next_tag(fdt, nodeoffset, &nextoffset); /* skip the BEGIN_NODE */
++	do {
++		offset = nextoffset;
++		tag = fdt_next_tag(fdt, offset, &nextoffset);
++	} while ((tag == FDT_PROP) || (tag == FDT_NOP));
++
+ 	namestroff = fdt_find_add_string_(fdt, name, &allocated);
+ 	if (namestroff < 0)
+ 		return namestroff;
+ 
+-	*prop = fdt_offset_ptr_w_(fdt, nextoffset);
++	*prop = fdt_offset_ptr_w_(fdt, offset);
+ 	proplen = sizeof(**prop) + FDT_TAGALIGN(len);
+ 
+ 	err = fdt_splice_struct_(fdt, *prop, 0, proplen);
+@@ -321,6 +329,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
+ 	struct fdt_node_header *nh;
+ 	int offset, nextoffset;
+ 	int nodelen;
++	int depth = 0;
+ 	int err;
+ 	uint32_t tag;
+ 	fdt32_t *endtag;
+@@ -333,12 +342,21 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
+ 	else if (offset != -FDT_ERR_NOTFOUND)
+ 		return offset;
+ 
+-	/* Try to place the new node after the parent's properties */
++	/* Try to place the new node after the parent's subnodes */
+ 	fdt_next_tag(fdt, parentoffset, &nextoffset); /* skip the BEGIN_NODE */
+ 	do {
++again:
+ 		offset = nextoffset;
+ 		tag = fdt_next_tag(fdt, offset, &nextoffset);
+-	} while ((tag == FDT_PROP) || (tag == FDT_NOP));
++		if (depth && tag == FDT_END_NODE) {
++			depth--;
++			goto again;
++		}
++		if (tag == FDT_BEGIN_NODE) {
++			depth++;
++			goto again;
++		}
++	} while (depth || (tag == FDT_PROP) || (tag == FDT_NOP));
+ 
+ 	nh = fdt_offset_ptr_w_(fdt, offset);
+ 	nodelen = sizeof(*nh) + FDT_TAGALIGN(namelen+1) + FDT_TAGSIZE;
 -- 
-Vitaly
+2.17.1
 
