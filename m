@@ -6,64 +6,65 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5480C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF63BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850242166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3B02087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBDMBf (ORCPT
+        id S1727228AbgBDMBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:01:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33345 "EHLO ozlabs.org"
+        Tue, 4 Feb 2020 07:01:37 -0500
+Received: from ozlabs.org ([203.11.71.1]:51413 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgBDMBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:01:34 -0500
+        id S1727148AbgBDMBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 07:01:36 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48BjwD2PG2zB3ws; Tue,  4 Feb 2020 23:01:31 +1100 (AEDT)
+        id 48BjwG5Y3xzB3wq; Tue,  4 Feb 2020 23:01:34 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 43e76cd368fbb67e767da5363ffeaa3989993c8c
-In-Reply-To: <20200118170335.21440-1-alex@ghiti.fr>
-To:     Alexandre Ghiti <alex@ghiti.fr>,
+X-powerpc-patch-commit: 9933819099c4600b41a042f27a074470a43cf6b9
+In-Reply-To: <6d02c3ae6ad77af34392e98117e44c2bf6d13ba1.1580121710.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
+        Paul Mackerras <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: [PATCH v2] powerpc: Do not consider weak unresolved symbol relocations as bad
-Message-Id: <48BjwD2PG2zB3ws@ozlabs.org>
-Date:   Tue,  4 Feb 2020 23:01:31 +1100 (AEDT)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/32s: Fix CPU wake-up from sleep mode
+Message-Id: <48BjwG5Y3xzB3wq@ozlabs.org>
+Date:   Tue,  4 Feb 2020 23:01:34 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-01-18 at 17:03:35 UTC, Alexandre Ghiti wrote:
-> Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
-> symbols that may be unresolved at link time which result in an absolute
-> relocation to 0. relocs_check.sh emits the following warning:
+On Mon, 2020-01-27 at 10:42:04 UTC, Christophe Leroy wrote:
+> Commit f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and
+> rename TI_CPU") broke the CPU wake-up from sleep mode (i.e. when
+> _TLF_SLEEPING is set) by delaying the tovirt(r2, r2).
 > 
-> "WARNING: 2 bad relocations
-> c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
-> c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
+> This is because r2 is not restored by fast_exception_return. It used
+> to work (by chance ?) because CPU wake-up interrupt never comes from
+> user, so r2 is expected to point to 'current' on return.
 > 
-> whereas those relocations are legitimate even for a relocatable kernel
-> compiled with -pie option.
+> Commit e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access
+> Protection") broke it even more by clobbering r0 which is not
+> restored by fast_exception_return either.
 > 
-> relocs_check.sh already excluded some weak unresolved symbols explicitly:
-> remove those hardcoded symbols and add some logic that parses the symbols
-> using nm, retrieves all the weak unresolved symbols and excludes those from
-> the list of the potential bad relocations.
+> Use r6 instead of r0. This is possible because r3-r6 are restored by
+> fast_exception_return and only r3-r5 are used for exception arguments.
 > 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> For r2 it could be converted back to virtual address, but stay on the
+> safe side and restore it from the stack instead. It should be live
+> in the cache at that moment, so loading from the stack should make
+> no difference compared to converting it from phys to virt.
+> 
+> Fixes: f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and rename TI_CPU")
+> Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/43e76cd368fbb67e767da5363ffeaa3989993c8c
+https://git.kernel.org/powerpc/c/9933819099c4600b41a042f27a074470a43cf6b9
 
 cheers
