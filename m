@@ -2,94 +2,114 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC787C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB93DC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BC921582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32272166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WZKR3cRP"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="iVIquOkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgBDFsa (ORCPT
+        id S1726552AbgBDFy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 00:48:30 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55110 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbgBDFsa (ORCPT
+        Tue, 4 Feb 2020 00:54:58 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42613 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgBDFy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 00:48:30 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580795309; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=EiJMFgPyy3YCvZepEl1JHjLk0/TYtHhRCO/RQKlEbqc=; b=WZKR3cRPStFiBDXr5RqkgukmHOKY0BEt6LqwSy0QH+Pw1OTsbdOJS4rvO6rAAmi7zbnRF+f7
- xPfITXmSyr3H4+0BNy1ihfZpydNbzhDo6FNFs3qnnXR+LymVOfT2STYpU7aDlCOdQrUYELIz
- 0BTJXo5Vtd2uuZz2gMtf1Wp7xh0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3905a7.7f7b07398490-smtp-out-n02;
- Tue, 04 Feb 2020 05:48:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 22BACC4479C; Tue,  4 Feb 2020 05:48:23 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DAFADC433CB;
-        Tue,  4 Feb 2020 05:48:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DAFADC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
- <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
- <20200121234452.GW89495@google.com>
- <948c046a-5e95-104c-0bc0-f3615edddeca@codeaurora.org>
-Message-ID: <f844cc35-8310-75e6-0151-a44be4bb657b@codeaurora.org>
-Date:   Tue, 4 Feb 2020 11:18:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 4 Feb 2020 00:54:58 -0500
+Received: by mail-qk1-f196.google.com with SMTP id q15so16781612qke.9;
+        Mon, 03 Feb 2020 21:54:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p7n4zoUIIiZA2ALJJ4mJ57lt2Tcsn0/OESnXuVktsWY=;
+        b=iVIquOkE279Q+7leFvYOkIFSqSRBJPoOawRF8kQpKRY1g1IVeYzB53msqcbdBWFHuk
+         2VKjw/GtlEhJxzocBgubpF/H/yMargA5Txm2lTb8KCXoviEE+uJp3lC4f+4eqacg0pDq
+         NKAdbraEwRWewqIh8YdXUBf/heEP4vlAfXjac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p7n4zoUIIiZA2ALJJ4mJ57lt2Tcsn0/OESnXuVktsWY=;
+        b=dV9+Cl/9GHw52nTQL3CP9XPx10v12k5r9e6y9TXsKPpfGcYCXiUZRsj7YllJQ+XjTM
+         L9jbjyubTrKINjOti1rdZ5A8vRufDB7BibRemv3Z6Ki119fDDgXtjcvrtAh+YRHT1hnf
+         1ooOuMHV8Xf03nlVY/tgc+DquNfMrw6RHD3troQ60iA3eJuECtvG5Bsfkd2+znLhc/3B
+         KiYY7xxdknrHN+kT9qsDOXCpS0Kb+zWrkY3XG4dyoxNKAxSWhAeYMmHZRUzrAn5EW5Ah
+         yNf6y4PQRObEVh6+6BgiMgT6EUcVneDNQ60IKL0vx4SHGc3A9dGzaOfXJorNgW3jyUQg
+         V3Rg==
+X-Gm-Message-State: APjAAAXNF+ppSWQe6Vt8T6fksbchS3u+cmtlYCBKorxUzRaueaYs5rM/
+        eaxhlVLoYN6XUpbi42yElDiAjeWyGba1NSl2UrbQnqMR
+X-Google-Smtp-Source: APXvYqzF7uxnpiHtFepL2gYUO8yy3dYQIdv2llaISfPr13fI0OQDLILTDeVHgt8XFYYHzXLAZwTJy/dPVgzXJUE43Ec=
+X-Received: by 2002:ae9:e702:: with SMTP id m2mr26659032qka.208.1580795697026;
+ Mon, 03 Feb 2020 21:54:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <948c046a-5e95-104c-0bc0-f3615edddeca@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20200202163939.13326-1-linux@roeck-us.net>
+In-Reply-To: <20200202163939.13326-1-linux@roeck-us.net>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 4 Feb 2020 05:54:44 +0000
+Message-ID: <CACPK8XeLWZT-VvuErtz6oE1tv1dhwwOnpZbV7PVr2PxgT2fopA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: aspeed: tacoma: Enable eMMC controller
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Sun, 2 Feb 2020 at 16:39, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Enabling emmc without enabling its controller doesn't do any good.
+> Enable its controller as well to make it work.
+>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-this change is part of series @ 
-https://patchwork.kernel.org/cover/11362717/
+Thanks Guenter. The description in aspeed-g6.dtsi changed at some
+point and Tacoma was not updated.
 
-Thanks,
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+> index ff49ec76fa7c..47293a5e0c59 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+> @@ -132,6 +132,10 @@
+>         use-ncsi;
+>  };
+>
+> +&emmc_controller {
+> +       status = "okay";
+> +};
+> +
+>  &emmc {
+>         status = "okay";
+>  };
 
-Maulik
+This node is redundant, as it is not disabled in the dtsi.
 
+Andrew, should we add disabled to the emmc node?
 
-On 1/25/2020 9:09 PM, Maulik Shah wrote:
-> Hi Matthias,
+Or remove the label completely, and just have emmc_controller?
+
+Cheers,
+
+Joel
+
+> --
+> 2.17.1
 >
-> Yes, i will post new version very soon.
->
-> Thanks,
->
-> Maulik
->
->
->
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
