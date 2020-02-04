@@ -2,165 +2,204 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC08C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206E4C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68D22087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Y5jKMthK"
+	by mail.kernel.org (Postfix) with ESMTP id EA8B32082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgBDR0W (ORCPT
+        id S1727472AbgBDR1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:26:22 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:53354 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBDR0V (ORCPT
+        Tue, 4 Feb 2020 12:27:53 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727310AbgBDR1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:26:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fuRn3g8vdxzS8ojzL5QRRJS2jUGnGpT8caDLxsYatmQ=; b=Y5jKMthKHAI9FOfanUN9jkW1Y
-        Gk917K+zqz+3pxHIwKpA/gA8LKkfx3JpVX/51xPKVjM7pnsnQELGv0vlKNhzRfNfc78YwkX6V/9kd
-        Tdetkbe82pfXqFef4AKCD8RTa5ROsYvfoYt5ElgZRie3BFFfvVbQxSPWVk6d9s0vHfeIMDdGi+1qj
-        VdpFKdj+pwfMAMBJgly0tjVNdDsqIcLpmqIIjSgx+xYAJrNohJmnPlCLiyY1PE5gpsQQ8+LyFtfOO
-        S/U6a8zegLN9OrzkZWLXvf+7V6Es9zU+sGRX5vpD5hspoPYo6O0BzUrPtSzgzQfs40UOI/ztwQdpX
-        U/NNZVRtQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47580)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iz1xh-0003Mr-Eh; Tue, 04 Feb 2020 17:26:09 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iz1xb-00015C-Tp; Tue, 04 Feb 2020 17:26:03 +0000
-Date:   Tue, 4 Feb 2020 17:26:03 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tue, 4 Feb 2020 12:27:52 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014HO9sn008388
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2020 12:27:52 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxgjy7fs3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 12:27:51 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 4 Feb 2020 17:27:49 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Feb 2020 17:27:46 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014HRjJL54263904
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Feb 2020 17:27:45 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D3F24C04A;
+        Tue,  4 Feb 2020 17:27:45 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AED4E4C040;
+        Tue,  4 Feb 2020 17:27:44 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.206.251])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Feb 2020 17:27:44 +0000 (GMT)
+Subject: Re: [PATCH v3 2/2] ima: support calculating the boot_aggregate
+ based on different TPM banks
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200204172603.GS25745@shell.armlinux.org.uk>
-References: <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
- <20200127161132.GX25745@shell.armlinux.org.uk>
- <20200127162206.GJ13647@lunn.ch>
- <c3e863b8-2143-fee3-bb0b-65699661d7ab@gmail.com>
- <BN8PR12MB3266B69DA09E1CC215843C3CD30A0@BN8PR12MB3266.namprd12.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN8PR12MB3266B69DA09E1CC215843C3CD30A0@BN8PR12MB3266.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Tue, 04 Feb 2020 12:27:44 -0500
+In-Reply-To: <01986ba728014571a3907fef9c69ff2c@huawei.com>
+References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
+         <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
+         <01986ba728014571a3907fef9c69ff2c@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020417-0016-0000-0000-000002E3A4E3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020417-0017-0000-0000-0000334681A5
+Message-Id: <1580837264.5585.78.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-04_06:2020-02-04,2020-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2002040114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 11:12:05AM +0000, Jose Abreu wrote:
-> Hi Russell,
+On Tue, 2020-02-04 at 13:37 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Thursday, January 30, 2020 5:23 PM
+> > To: linux-integrity@vger.kernel.org
+> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
+> > <James.Bottomley@HansenPartnership.com>; linux-
+> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
+> > Subject: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
+> > on different TPM banks
+> > 
+> > Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
+> > assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
+> > could support multiple TPM PCR banks, allowing firmware to configure and
+> > enable different banks.
+> > 
+> > Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
+> > the boot-aggregate, use the same hash algorithm for reading the TPM PCRs
+> > as
+> > for calculating the boot aggregate digest.  Preference is given to the
+> > configured IMA default hash algorithm.
+> > 
+> > For TPM 1.2 SHA1 is the only supported hash algorithm.
+> > 
+> > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
+> >  security/integrity/ima/ima_crypto.c | 45
+> > ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/security/integrity/ima/ima_crypto.c
+> > b/security/integrity/ima/ima_crypto.c
+> > index 7967a6904851..a020aaefdea8 100644
+> > --- a/security/integrity/ima/ima_crypto.c
+> > +++ b/security/integrity/ima/ima_crypto.c
+> > @@ -656,13 +656,34 @@ static void __init ima_pcrread(u32 idx, struct
+> > tpm_digest *d)
+> >  		pr_err("Error Communicating to TPM chip\n");
+> >  }
+> > 
+> > +static enum hash_algo get_hash_algo(const char *algname)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < HASH_ALGO__LAST; i++) {
+> > +		if (strcmp(algname, hash_algo_name[i]) == 0)
+> > +			break;
+> > +	}
+> > +
+> > +	return i;
+> > +}
+> > +
+> >  /*
+> > - * Calculate the boot aggregate hash
+> > + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
+> > + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but
+> > with
+> > + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
+> > + * allowing firmware to configure and enable different banks.
+> > + *
+> > + * Knowing which TPM bank is read to calculate the boot_aggregate digest
+> > + * needs to be conveyed to a verifier.  For this reason, use the same
+> > + * hash algorithm for reading the TPM PCRs as for calculating the boot
+> > + * aggregate digest as stored in the measurement list.
+> >   */
+> >  static int __init ima_calc_boot_aggregate_tfm(char *digest,
+> >  					      struct crypto_shash *tfm)
+> >  {
+> >  	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
+> > +	enum hash_algo crypto_id;
+> >  	int rc;
+> >  	u32 i;
+> >  	SHASH_DESC_ON_STACK(shash, tfm);
+> > @@ -673,6 +694,28 @@ static int __init ima_calc_boot_aggregate_tfm(char
+> > *digest,
+> >  	if (rc != 0)
+> >  		return rc;
+> > 
+> > +	crypto_id = get_hash_algo(crypto_shash_alg_name(tfm));
+> > +	if (crypto_id == HASH_ALGO__LAST) {
+> > +		pr_devel("unknown hash algorithm (%s), failing to read
+> > PCRs.\n",
+> > +			 crypto_shash_alg_name(tfm));
+> > +		return 0;
+> > +	}
+> > +
+> > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+> > +		if (ima_tpm_chip->allocated_banks[i].crypto_id ==
+> > crypto_id) {
+> > +			d.alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
+> > +			break;
+> > +		}
+> > +	}
+> > +	if (i == ima_tpm_chip->nr_allocated_banks) {
+> > +		pr_devel("TPM %s bank not allocated, failing to read
+> > PCRs.\n",
+> > +			 crypto_shash_alg_name(tfm));
+> > +		return 0;
+> > +	}
+> > +
+> > +	pr_devel("calculating the boot-aggregregate based on TPM
+> > bank: %04x\n",
+> > +		  d.alg_id);
+> > +
+> >  	/* cumulative sha1 over tpm registers 0-7 */
+> >  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+> >  		ima_pcrread(i, &d);
 > 
-> Please check bellow for another possibility. On this one I moved almost 
-> everything to PHYLINK, except the HW related logic which is still in XPCS 
-> module.
-> 
-> https://github.com/joabreu/linux/commits/stmmac-next
+> The third argument of crypto_shash_update() should be
+> crypto_shash_digestsize(tfm).
 
-I think this is going a little too far; it has the effect of limiting
-phylink to using one PCS, but a device may have multiple PCS attached
-to the MAC subsystem.
+Thanks!  At this point we know the hash algorithm, so we could use
+hash_digest_size[].
 
-I know that mvpp2's network interfaces are a bit like that - there is
-the 10/100/1G/2.5G MAC+PCS subsystem, and an entirely separate 10G
-MAC+XPCS/MPCS subsystem which are switched between on the fly.
+Mimi
 
-Similar is true on the LX2160A (which is what I've been working on
-over the last week, having dug out some additional information on it
-that was hidden inside the PDFs - reference manual PDFs within other
-reference manual PDFs is not a nice way to provide documentation -
-unless you stumble over the internal link to the file in the outer
-PDF, you have no idea that the sub-documentation even exists.)
-
-There, there is one MAC, but there are multiple different PCS - one
-for SGMII and 1000base-X, another for 10G, another for 25G, etc.
-These PCS are accessed via a MDIO adapter embedded in each of the
-MAC hardware blocks.
-
-LX2160A provides some additional complexities at the moment as we
-don't yet know whether it's possible to reconfigure the Serdes on
-the fly to switch between the various speeds, so we can't get
-dynamically switch between (SGMII, 1000base-X), 10G, 25G, 40G,
-100G - but a request has been put into NXP before Christmas to see
-what would be possible.
-
-So, right now I don't like the idea that we have this probing
-mechanism bolted into phylink for PCS PHYs - I think that's a
-decision that the MAC driver needs to be making.
-
-Now, you've introduced this phylink_pcs_ops thing - which is similar
-to a patch that I've had in my tree for a few weeks while working on
-this issue.  As I've already said to you, the issue you currently
-have affects multiple people, and I've been working on solving it
-in a way that *isn't* specific to one particular hardware - but with
-an overview of all the problems that everyone has.
-
-Plus, it's not like we need to rush - we're in the middle of a merge
-window right now, so we have about three months before the code will
-ultimately be merged into mainline.  We might as well use that time
-to work out a solution that doesn't mess up someone else.
-
-Much of the prototype stuff for the LX2160A, including some revised
-patches I've sent out during January, are available in my "cex7" and
-"phy" branches - but not yet the mac_ops vs pcs_ops bits, which I'm
-still working on.  What is in the "cex7" branch is fairly close to
-being split into separate MAC / PCS operations, but I haven't yet
-moved out my MAC / PCS operations split patches yet.
-
-Now, one of the important changes which may not be obvious from those
-branches is the way we pass the link state to the MAC and PCS.
-Currently, that was only available via mac_config(), which assumes an
-integrated MAC / PCS solution - mac_config() will not be called
-(intentionally) for in-band links where no PHY is attached, and I don't
-want to change that for several reasons.  Instead, the link_up()
-methods get passed the resolved state, and this is the state that a
-split MAC / PCS setup should be using to configure the MAC or PCS
-when the link comes up.  All fields are guaranteed to be the resolved
-state, so no SPEED_UNKNOWN / DUPLEX_UNKNOWN issues unless something
-has gone wrong elsewhere - which is one of the other reasons for this,
-various users have been having issues due to those passed to
-mac_config().
-
-It's not production-ready yet, but I will continue working on it
-over the coming week.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
