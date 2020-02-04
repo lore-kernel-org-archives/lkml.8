@@ -2,124 +2,123 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E7EC3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEF8C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5370620732
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5626420732
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:04:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vME2AL3u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9P02RW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgBDECX (ORCPT
+        id S1727170AbgBDEEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 23:02:23 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:54398 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgBDECX (ORCPT
+        Mon, 3 Feb 2020 23:04:50 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38708 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbgBDEEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 23:02:23 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7171F806B7;
-        Tue,  4 Feb 2020 17:02:16 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580788936;
-        bh=GVICFMVv+OG1qT2yIAqlw6peE0/CznmHrqPWWkf8h6o=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=vME2AL3ujpzy3c6aaagAT2oJhN1OjcA175utdGlwIT+Pa6BGGWWxA3olMu9YV1UYa
-         e292mzhmQpIpGBxoNFNsGYvYOqPhtFLtczbQ0fhrddYgI+qUjUGMm/UhGA8DvpzvRG
-         s6OcF1omO2MRsa0ShP8H+38GpCTspbC0I9LTOxye4frC0MllOPkV4VmVS3VcvD5MkQ
-         zAorIQo50I1UGhmDYNAyEhGNN7hmls/AjLv8QOww6jeg83hF690hsKR4rG5qw684f3
-         0k1PeHYNLzRx1q2O83et+q0GEhm9KqTKBahBuz1HqBG2qYEtuEbmtg40kAK5f/mHzf
-         M6My3vvUJz59w==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e38ecc80001>; Tue, 04 Feb 2020 17:02:16 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1473.3; Tue, 4 Feb 2020 17:02:16 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Tue, 4 Feb 2020 17:02:16 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "bobdc9664@seznam.cz" <bobdc9664@seznam.cz>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "brandonbonaby94@gmail.com" <brandonbonaby94@gmail.com>,
-        "sandro@volery.com" <sandro@volery.com>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "ddaney@caviumnetworks.com" <ddaney@caviumnetworks.com>,
-        "ynezz@true.cz" <ynezz@true.cz>,
-        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>,
-        "ivalery111@gmail.com" <ivalery111@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] staging: octeon: delete driver
-Thread-Topic: [PATCH 1/2] staging: octeon: delete driver
-Thread-Index: AQHV2w/iRX+gXMaeSEy4Ak2F6OvwOw==
-Date:   Tue, 4 Feb 2020 04:02:15 +0000
-Message-ID: <da150cdb160b5d1b58ad1ea2674cc93c1fc6aadc.camel@alliedtelesis.co.nz>
-References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
-         <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net>
-In-Reply-To: <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:4cc:2ac4:9aa5:522d]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <271EE2F0515A624EA1A9CE5E1BE0D5DE@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Mon, 3 Feb 2020 23:04:50 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a9so1810703wmj.3;
+        Mon, 03 Feb 2020 20:04:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=T86mG0bltjiPTMfNeP1GOcuNJTtwAcIRWIfAg+3wbfQ=;
+        b=J9P02RW6Y4diY3q5hZmw8DyihPLh54rTCa88cyaE0GFWGYu9sZf0TeOh4Qxyeb8BMO
+         +s6h5ZYt524Es6UeBcRmBKLWZzGF72TMyXyoo8qZ2WjCT9zNpEglZ6uHsXgN2bV0wqF4
+         aOGIPrOv/IrXDwsnPy1qX7UhVHCvckX9iSIL5RARnNfHEIISv1DHTOFvkODI90WMTTQz
+         LLg/E0BanSUXMq3terW3K7I85yLvGz15P+3ozEiGOrd1IwwpufQJZPOo+4ja08EC4DXq
+         hE64rm17+Qaxw23NhOu0RjOZKfwev34V+BtbhP5LNOlYjO6hGspEVlGmkEsREgLAax3b
+         PH+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T86mG0bltjiPTMfNeP1GOcuNJTtwAcIRWIfAg+3wbfQ=;
+        b=moTauuhSH6lquUIlzqvILpc31RGKyK+x6RsTTiS5jlpjIqS4dN8Hhj9Fu13u2tKOY9
+         eoRMeaW8JiW8GV/1Nrje0FfJJsLInfTerU0zDG0TBK+z2UNGuCvlnS7R41DFAXqoP4FT
+         warhbsXs+1B3gVWthODHW2ZZQFbhdaBTN+3eW09l3PMmE414fm2MnvjjZsmcNU0bBOxK
+         9Y+yjHAgGCvcJSoS7r3bdTJZ1NS6WoEYue8ZXZp6EOq8bZkmVTJsVoMW7UvDFRFPJUnm
+         WUwix3SNklLrSnADLDV90XQJVIqDGo0n4AaUf+qpx1STq+Qa0LK7RGFPF6v88kWbkNWw
+         JLpw==
+X-Gm-Message-State: APjAAAUKjrJ9Oz09GtlcQQ9KX3RFIDsxKR+piuFdTc5lrAIU0U+GPRpT
+        hZeo4DpkvSzvx+dYiG0HNcc=
+X-Google-Smtp-Source: APXvYqy3zZLu0ZuoHgUuoiFa0e/pa0wnDN4n9oVpraD2cQHHCy2xseb2CJdY42n/cf6BN8oyJoRZyA==
+X-Received: by 2002:a1c:9ac6:: with SMTP id c189mr2990359wme.59.1580789087566;
+        Mon, 03 Feb 2020 20:04:47 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2daa:dc00:2c0a:8928:125e:2b0f])
+        by smtp.gmail.com with ESMTPSA id z19sm1914623wmi.35.2020.02.03.20.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 20:04:46 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Micah Morton <mortonm@chromium.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH SECOND RESEND] MAINTAINERS: fix style in SAFESETID SECURITY MODULE
+Date:   Tue,  4 Feb 2020 05:04:34 +0100
+Message-Id: <20200204040434.7173-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSdsbCBwaXBlIHVwIG9uIHRoaXMgdGhyZWFkIHRvbw0KDQpPbiBUdWUsIDIwMTktMTItMTAgYXQg
-MDI6NDIgLTA4MDAsIEd1ZW50ZXIgUm9lY2sgd3JvdGU6DQo+IE9uIDEyLzEwLzE5IDE6MTUgQU0s
-IEdyZWcgS3JvYWgtSGFydG1hbiB3cm90ZToNCj4gPiBUaGlzIGRyaXZlciBoYXMgYmVlbiBpbiB0
-aGUgdHJlZSBzaW5jZSAyMDA5IHdpdGggbm8gcmVhbCBtb3ZlbWVudCB0byBnZXQNCj4gPiBpdCBv
-dXQuICBOb3cgaXQgaXMgc3RhcnRpbmcgdG8gY2F1c2UgYnVpbGQgaXNzdWVzIGFuZCBvdGhlciBw
-cm9ibGVtcyBmb3INCj4gPiBwZW9wbGUgd2hvIHdhbnQgdG8gZml4IGNvZGluZyBzdHlsZSBwcm9i
-bGVtcywgYnV0IGNhbiBub3QgYWN0dWFsbHkgYnVpbGQNCj4gPiBpdC4NCj4gPiANCj4gPiBBcyBu
-b3RoaW5nIGlzIGhhcHBlbmluZyBoZXJlLCBqdXN0IGRlbGV0ZSB0aGUgbW9kdWxlIGVudGlyZWx5
-Lg0KPiA+IA0KPiA+IFJlcG9ydGVkLWJ5OiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5u
-ZXQ+DQo+ID4gQ2M6IERhdmlkIERhbmV5IDxkZGFuZXlAY2F2aXVtbmV0d29ya3MuY29tPg0KPiA+
-IENjOiAiRGF2aWQgUy4gTWlsbGVyIiA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD4NCj4gPiBDYzogIk1h
-dHRoZXcgV2lsY294IChPcmFjbGUpIiA8d2lsbHlAaW5mcmFkZWFkLm9yZz4NCj4gPiBDYzogR3Vl
-bnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0Pg0KPiA+IENjOiBZdWVIYWliaW5nIDx5dWVo
-YWliaW5nQGh1YXdlaS5jb20+DQo+ID4gQ2M6IEFhcm8gS29za2luZW4gPGFhcm8ua29za2luZW5A
-aWtpLmZpPg0KPiA+IENjOiBXYW1idWkgS2FydWdhIDx3YW1idWkua2FydWdheEBnbWFpbC5jb20+
-DQo+ID4gQ2M6IEp1bGlhIExhd2FsbCA8anVsaWEubGF3YWxsQGxpcDYuZnI+DQo+ID4gQ2M6IEZs
-b3JpYW4gV2VzdHBoYWwgPGZ3QHN0cmxlbi5kZT4NCj4gPiBDYzogR2VlcnQgVXl0dGVyaG9ldmVu
-IDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gPiBDYzogQnJhbmRlbiBCb25hYnkgPGJyYW5kb25i
-b25hYnk5NEBnbWFpbC5jb20+DQo+ID4gQ2M6ICJQZXRyIMWgdGV0aWFyIiA8eW5lenpAdHJ1ZS5j
-ej4NCj4gPiBDYzogU2FuZHJvIFZvbGVyeSA8c2FuZHJvQHZvbGVyeS5jb20+DQo+ID4gQ2M6IFBh
-dWwgQnVydG9uIDxwYXVsYnVydG9uQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IERhbiBDYXJwZW50ZXIg
-PGRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbT4NCj4gPiBDYzogR2lvdmFubmkgR2hlcmRvdmljaCA8
-Ym9iZGM5NjY0QHNlem5hbS5jej4NCj4gPiBDYzogVmFsZXJ5IEl2YW5vdiA8aXZhbGVyeTExMUBn
-bWFpbC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hA
-bGludXhmb3VuZGF0aW9uLm9yZz4NCj4gDQo+IEFja2VkLWJ5OiBHdWVudGVyIFJvZWNrIDxsaW51
-eEByb2Vjay11cy5uZXQ+DQoNClBsZWFzZSBjYW4gd2Uga2VlcCB0aGlzIGRyaXZlci4gV2UgZG8g
-aGF2ZSBwbGF0Zm9ybXMgdXNpbmcgaXQgYW5kIHdlDQp3b3VsZCBsaWtlIGl0IHRvIHN0YXkgYXJv
-dW5kLg0KDQpDbGVhcmx5IHdlJ2xsIG5lZWQgdG8gc29ydCB0aGluZ3Mgb3V0IHRvIGEgcG9pbnQg
-d2hlcmUgdGhleSBidWlsZA0Kc3VjY2Vzc2Z1bGx5LiBXZSd2ZSBiZWVuIGhvcGluZyB0byBzZWUg
-dGhpcyBtb3ZlIG91dCBvZiBzdGFnaW5nIGV2ZXINCnNpbmNlIHdlIHNlbGVjdGVkIENhdml1bSBh
-cyBhIHZlbmRvci4NCg==
+Commit fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
+slips in some formatting with spaces instead of tabs, which
+./scripts/checkpatch.pl -f MAINTAINERS complains about:
+
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14394: FILE: MAINTAINERS:14394:
+  +M:     Micah Morton <mortonm@chromium.org>
+
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14395: FILE: MAINTAINERS:14395:
+  +S:     Supported
+
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14396: FILE: MAINTAINERS:14396:
+  +F:     security/safesetid/
+
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14397: FILE: MAINTAINERS:14397:
+  +F:     Documentation/admin-guide/LSM/SafeSetID.rst
+
+Fixes: fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+applies cleanly on current master and next-20200203
+Micah, please pick this patch.
+
+ MAINTAINERS | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1f77fb8cdde3..83c7879aa4b2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14578,10 +14578,10 @@ F:	drivers/media/pci/saa7146/
+ F:	include/media/drv-intf/saa7146*
+ 
+ SAFESETID SECURITY MODULE
+-M:     Micah Morton <mortonm@chromium.org>
+-S:     Supported
+-F:     security/safesetid/
+-F:     Documentation/admin-guide/LSM/SafeSetID.rst
++M:	Micah Morton <mortonm@chromium.org>
++S:	Supported
++F:	security/safesetid/
++F:	Documentation/admin-guide/LSM/SafeSetID.rst
+ 
+ SAMSUNG AUDIO (ASoC) DRIVERS
+ M:	Krzysztof Kozlowski <krzk@kernel.org>
+-- 
+2.17.1
+
