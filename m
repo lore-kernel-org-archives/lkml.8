@@ -2,136 +2,107 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BA6C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD721C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEE221744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C2421927
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 22:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="icGZp+gW"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qhm990Wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgBDWfl (ORCPT
+        id S1727647AbgBDWpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 17:35:41 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35921 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbgBDWfk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 17:35:40 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so62497pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 14:35:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wW0tjd+cBxeR6/lhPUUjx0fEpBoP1LYYTT0FsIiI1ho=;
-        b=icGZp+gWX8+ra8EaRzj0omZeGdmp0NxlbomRJ1M8RaU/WQNP+zqgYuJZSPFcaiWcnZ
-         2pCWkyEpTMGGCi9alcZbNMp01PJ6HAZzwmE6trVB6wWJfukGW4fmAYtsgfiXedtOqqRT
-         bmFSWApPulYRdVfiU3CIZn8jePJi3U2HzSVo++6ZSgzVHry0vhZ3v1h/qeuxOx83W3He
-         S2QBe7oA9erOEncvfIOndMP6l3GHqBJB+9L+ElZ0vc5VnS5GueU9EJ3BnmcLAsA1zQb2
-         zG+yXK+320g1OiPoDFO6spKz5/W1GSM7NskP7wp/j9iQ7LQ71cVXLbv42DtWh8/5ZB7g
-         33Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wW0tjd+cBxeR6/lhPUUjx0fEpBoP1LYYTT0FsIiI1ho=;
-        b=JJjxURX5lpI4BmuywhAgJt9nMMFrKUmylWbeL4k4uYqg3m6kaL8gIfIdaTKcslfOFC
-         R8Msdh0B+M5M6VCQQ9Aiauw+5AfWa2IXBGUppZlm33Z46oWYwzqFwzX1bm1tgT/v6fmn
-         /vG+bt6CvVjOFcCYhJs7Q2qAXbgDCj8xboZtGwU/vmX1amHAlAee17x1TzQv0cIcfuz4
-         uRv3PrJVmMwXP8o/YrJ1XIwsz57C+rnrea719qHVjTIDj3VG/IKLHmDvdeEsE6K01UVa
-         K+eLwBDBi8wZHtv+hw3BrNbcx3RJwO8gVQD57LaDGw3lxj90NnIQzVLNSYlT+PZBMpeH
-         iCEg==
-X-Gm-Message-State: APjAAAVEVBgHRVtt9zSfXBmdo1cnOwJ5GO60cvj5k0BSbEmhHh4TWggi
-        VTPx/2wJqtqTRKJHK/EFWo7uCFUrjnEnb5CRUeqM1g==
-X-Google-Smtp-Source: APXvYqy0w6xoiM6E9N7yfGOvN2yylEfVSD+LT3cHC469AG7ZzC1NJLwbAZS26Rmu1su+jZ8vZlXD5Lh2v7ZgeQA4us4=
-X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr32717392plm.232.1580855739838;
- Tue, 04 Feb 2020 14:35:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-4-brendanhiggins@google.com> <11977708-bb18-e322-db7a-9f21d7cdec54@gmail.com>
-In-Reply-To: <11977708-bb18-e322-db7a-9f21d7cdec54@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 4 Feb 2020 14:35:28 -0800
-Message-ID: <CAFd5g47d3=drrSAOMpn_BOf8Gw94mfdJ6NrmroRf4a__=PCEWg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] kunit: test: create a single centralized executor
- for all tests
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
+        Tue, 4 Feb 2020 17:45:06 -0500
+Received: from ozlabs.org ([203.11.71.1]:34401 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbgBDWpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 17:45:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48C0Bk6P1yz9sRG;
+        Wed,  5 Feb 2020 09:45:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580856303;
+        bh=XjnKhWUeT2aA272cve5msZ/Tda9nKnRkTA8Pr4oy1n4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Qhm990WxfqRRwkRtSwa0SJBCa904qwiBhhS9hBAqPBr+d2VXcSzRmh4fvTLT1vR+B
+         aoZpL0sKPjqjInpcQVSziNADhfNfTJWRFJcZHK9CmQlHuR9wtBH3JvlKDrp7mfTVKm
+         EKYdM/JScO6FjxLxGhheXl8EtrP2xApE8SbxxNlXY1cjTuR6s1Q93WVi+Uc4Zf50TD
+         ftki6fCnGiYruBRdxrvba+MEB77Vc3fHo7+tqDtxzFDF2f+VU+fryYVQPRPMLw3dn+
+         BaAlv+9/H/Rin07MStjg+9MTtFp7KB56YXxxFPxvZoueV5WcZIbi+1gIqJxpglBM5Z
+         cL41glO29ZoUw==
+Date:   Wed, 5 Feb 2020 09:44:56 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Frank Min <Frank.Min@amd.com>
+Subject: linux-next: build warning after merge of the amdgpu tree
+Message-ID: <20200205094456.7f41ec4e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/+4nzSf1pdYqPUBdli9k.RjM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 2:27 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 1/30/20 5:08 PM, Brendan Higgins wrote:
-> > From: Alan Maguire <alan.maguire@oracle.com>
-> >
-> > Add a centralized executor to dispatch tests rather than relying on
-> > late_initcall to schedule each test suite separately.  Centralized
-> > execution is for built-in tests only; modules will execute tests
-> > when loaded.
-> >
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Co-developed-by: Iurii Zaikin <yzaikin@google.com>
-> > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
-> > Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >  include/kunit/test.h | 73 +++++++++++++++++++++++++++-----------------
-> >  lib/kunit/Makefile   |  3 +-
-> >  lib/kunit/executor.c | 36 ++++++++++++++++++++++
-> >  3 files changed, 83 insertions(+), 29 deletions(-)
-> >  create mode 100644 lib/kunit/executor.c
-> >
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 2dfb550c6723a..8a02f93a6b505 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
->
-> The following fragment does not match the test.h in Linux 5.5 or 5.4-rc1 (as one
-> possible earlier version).  And we are not to Linux 5.5-rc1 yet.  (Simple way
-> to check for the mis-match - 5.5 has kunit_test_suite() instead of
-> kunit_test_suites().)
->
-> I know that there is an alternate tree where some of the development occurs.
-> Can you please add a link in MAINTAINERS?  And please note (at least in
-> patch 0) what tree the series is developed against?
+--Sig_/+4nzSf1pdYqPUBdli9k.RjM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yep, I was planning on sending an update to the MAINTAINERS with that
-and some other updates soon.
+Hi all,
 
-In future revisions, I will put a link to the tree I developed
-against. In the meantime, we send pull-requests from here:
+After merging the amdgpu tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=kunit
+drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c: In function 'amdgpu_xgmi_remove_d=
+evice':
+drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:466:3: warning: 'return' with no v=
+alue, in function returning non-void [-Wreturn-type]
+  466 |   return;
+      |   ^~~~~~
+drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:461:5: note: declared here
+  461 | int amdgpu_xgmi_remove_device(struct amdgpu_device *adev)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:470:3: warning: 'return' with no v=
+alue, in function returning non-void [-Wreturn-type]
+  470 |   return;
+      |   ^~~~~~
+drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:461:5: note: declared here
+  461 | int amdgpu_xgmi_remove_device(struct amdgpu_device *adev)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-And that is what I used as my development base for this series.
+Introduced by commit
+
+  2fe4750e8506 ("drm/amdgpu: move xgmi init/fini to xgmi_add/remove_device =
+call")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+4nzSf1pdYqPUBdli9k.RjM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl458+gACgkQAVBC80lX
+0GxITwf/cH9GSswlD1acan05JLq1aabo0qjT7kk5myR7hvtjwt1e9UQnPzTVp+hN
+mzyV9+MpqOdn3WetotHQnSccPIIVTh2/bj8X9BXtDj8huv9EtV9/SAfHlvUUWHDy
+qJluJeySzqMOWtZWCj9x5l41Pq6BIXv1UZ3oBjn/49+UkvrdcyPGx5qpGQJW97XT
+Uv6RmP6VmSfSWXC5Am9R3qWem9Tph2QeBcbn25mfWVKjzsvgpF3GgqcnWlFLXfd7
+WdRh0z9TCMgkh4BwKtDPT5YVsbJMQQQVIhPZZc54y0YmkdhcE60zEWdxu4VRe5Ke
+edmxd2/vqT/UWyFyc0YSYi7Rm+xGpg==
+=+ka6
+-----END PGP SIGNATURE-----
+
+--Sig_/+4nzSf1pdYqPUBdli9k.RjM--
