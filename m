@@ -2,118 +2,64 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F36EC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46475C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A6E21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580805208;
-	bh=KpMXBC/6WkTeVVdMseUh6mU3y0/1T4+PTjIYFzFCE2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xC1c0IzBFCjhJbHDCGX2dCZf70xspVWSt27WXMqq6gkZwUpG8qSBIMQ9Elubrb8tM
-	 OCPN98wjWh+EWz+h8f4DhrBO9jU8u1DlKzTB+oo/g8/WH1Fwtc11d4HD9dP6m0Dac0
-	 keZ28/rGIDbj/rCvsL06A+Lnaj4LvSeLawmwJXYk=
+	by mail.kernel.org (Postfix) with ESMTP id 113822166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgBDId1 (ORCPT
+        id S1726688AbgBDId6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:33:27 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42600 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgBDId1 (ORCPT
+        Tue, 4 Feb 2020 03:33:58 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40984 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgBDId5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 03:33:27 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y19so11580138lfl.9;
-        Tue, 04 Feb 2020 00:33:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8DO+mGDd2sVt5YxyY/YYwABJQxNuUfjHg9DqBr31WD8=;
-        b=AMnFVGS082Xu+jVLWsHqPqikDHmHistgBgpdTCznf5utbvfRylK9yBsASQWY55ePLo
-         XHQivgXEa7gOoIIZaHKgc0e3xg5X00VZE+MCbslLE4do8mo9ZTthtXD9UuWLyvJwW66B
-         3DKm+ES8nUw5npsoaVCm8VjN62ONcP96ic101e9eCHCv9R/kd6yW2SCB9tJSz5kE9LBZ
-         oxhhfN4xxVER/EgAN8VxsIMy7MzkxxOJFK0Vts1Hm0AT1JdY+jIwphpekEb0ZxJ/YCoT
-         8W4xwHQhvPn+WbCXn705hcObAMEyJcZH9CtPwqeDH6MwK/rS97UMurE7w4SixrlqQWQC
-         oCgQ==
-X-Gm-Message-State: APjAAAXddzLUUSJOTE+cFqbU4X1P69WvpBAEsoHnm4+vClSVp1cslk4b
-        WwhrvGuwgQ0KmQaO0G6AmL4=
-X-Google-Smtp-Source: APXvYqx57PfajZ51uAxyTh/39jBSBUfBp4nFXJXPoPpIVX52VhlNHoSlhGlqc/gieGZyJIoFj862xA==
-X-Received: by 2002:ac2:555c:: with SMTP id l28mr14264850lfk.52.1580805203770;
-        Tue, 04 Feb 2020 00:33:23 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id h9sm6045753ljg.3.2020.02.04.00.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 00:33:23 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iyteG-0008Mm-B8; Tue, 04 Feb 2020 09:33:32 +0100
-Date:   Tue, 4 Feb 2020 09:33:32 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Denis Efremov <efremov@linux.com>
-Subject: Re: [PATCH 5.4 117/203] rsi: fix potential null dereference in
- rsi_probe()
-Message-ID: <20200204083332.GE26725@localhost>
-References: <20200116231745.218684830@linuxfoundation.org>
- <20200116231755.604943633@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116231755.604943633@linuxfoundation.org>
+        Tue, 4 Feb 2020 03:33:57 -0500
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DB144155604AB;
+        Tue,  4 Feb 2020 00:33:55 -0800 (PST)
+Date:   Tue, 04 Feb 2020 09:33:54 +0100 (CET)
+Message-Id: <20200204.093354.137606525383512342.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     aelior@marvell.com, michal.kalderon@marvell.com,
+        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        hulkci@huawei.com
+Subject: Re: [PATCH net-next] qed: Remove set but not used variable 'p_link'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200204022442.109809-1-yuehaibing@huawei.com>
+References: <20200204022442.109809-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Feb 2020 00:33:57 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 12:17:14AM +0100, Greg Kroah-Hartman wrote:
-> From: Denis Efremov <efremov@linux.com>
-> 
-> commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0 upstream.
-> 
-> The id pointer can be NULL in rsi_probe(). It is checked everywhere except
-> for the else branch in the idProduct condition. The patch adds NULL check
-> before the id dereference in the rsi_dbg() call.
-> 
-> Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
-> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> Cc: Siva Rebbagondla <siva8118@gmail.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Tue, 4 Feb 2020 02:24:41 +0000
 
-This commit is bogus and was reverted shortly after it was applied in
-order to prevent autosel from picking it up for stable (reverted by
-c5dcf8f0e850 ("Revert "rsi: fix potential null dereference in
-rsi_probe()"")).
-
-The revert has now been picked up by Sasha, but shouldn't an
-explicit revert in the same pull-request prevent a bad patch from being
-backported in the first place? Seems like something that could be
-scripted. But perhaps the net-stable oddities come into play here.
-
-> ---
->  drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> --- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-> +++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-> @@ -793,7 +793,7 @@ static int rsi_probe(struct usb_interfac
->  		adapter->device_model = RSI_DEV_9116;
->  	} else {
->  		rsi_dbg(ERR_ZONE, "%s: Unsupported RSI device id 0x%x\n",
-> -			__func__, id->idProduct);
-> +			__func__, id ? id->idProduct : 0x0);
->  		goto err1;
->  	}
+> drivers/net/ethernet/qlogic/qed/qed_cxt.c: In function 'qed_qm_init_pf':
+> drivers/net/ethernet/qlogic/qed/qed_cxt.c:1401:29: warning:
+>  variable 'p_link' set but not used [-Wunused-but-set-variable]
+> 
+> commit 92fae6fb231f ("qed: FW 8.42.2.0 Queue Manager changes")
+> leave behind this unused variable.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Johan
+Applied, thank you.
