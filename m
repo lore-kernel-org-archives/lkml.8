@@ -2,93 +2,171 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDB5C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0BEC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52E82082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320CE20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EiSNzbCv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXAnnJyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgBDTnx (ORCPT
+        id S1727519AbgBDT5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:43:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28209 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727412AbgBDTnw (ORCPT
+        Tue, 4 Feb 2020 14:57:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46741 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbgBDT5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:43:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580845431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lsoNUoMV4vBOi3CPpbacYms7z1QF2+WViGfskW8UZPY=;
-        b=EiSNzbCv9eWEE9+DP/yPZyuYnyLoqFWZ+SqQ+0/TKuqq2trzSBDyr9+hFG4nYWccBoDswR
-        si8fsgwfRKVoFTXGjNH/lb4aFbtbjYqqb6+9WJL3uGra7H6MDajnSVS/eNcSJYRZBGNU4g
-        mbCfQ2zzAOZ/S7aS338qthAaJ7olqus=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-XskHuP98NoCY9FAlBtCTVA-1; Tue, 04 Feb 2020 14:43:49 -0500
-X-MC-Unique: XskHuP98NoCY9FAlBtCTVA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBF878018A5;
-        Tue,  4 Feb 2020 19:43:47 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A585A100164D;
-        Tue,  4 Feb 2020 19:43:37 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     linux-input@vger.kernel.org
-Cc:     stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Alexander Mikhaylenko <exalm7659@gmail.com>,
-        Enrico Weigelt <info@metux.net>, Joe Perches <joe@perches.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nick Black <dankamongmen@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Tue, 4 Feb 2020 14:57:04 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so24596825wrl.13;
+        Tue, 04 Feb 2020 11:57:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K+yNaJp7oUZoKhcclI8Dxuk5xvWQ6/1nUWlWmNYelU0=;
+        b=uXAnnJyOP3XxbaFXyIjwMr/FV8i/RpKXVy2RiVCpSLtnNyTqPeIFDZRRue+N0MZBU0
+         VcTurBFWNZJ4CJMSjwV55oquji6gpM6krYS/OvlNS5a7zmBy4HlpgVjXlQm8xkEqlihi
+         Jd+kXnkQnb3USQ3SC/KeOd92X+zxtTp6dThrLWPx6wUN7kHYro3z01pYcKl52kGB9Cac
+         lhbg8e2VAB4kLuG7N0Y/Hn+LwTsIEJWad645iKYAc8SpAegb0Uvo+WloIG5nPwOjH79O
+         dWR3P8WAi775jXVu9D5FtzyM8WB4jTcWRGbMFH1haEIUxGnDkN8aoRxRX8TP2cbZ+VLx
+         +RpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K+yNaJp7oUZoKhcclI8Dxuk5xvWQ6/1nUWlWmNYelU0=;
+        b=agRP0pbHno2LtoCKkQ9plNKVM2WZySnEBetr3/u0OYkzPHTeTtCd/H53xl+1BDfsZS
+         szB8+rYpYsvhTjEOV6CM/0fZZGMX212eNGIxzXQnxUwB/idivKCMBpjo2BeHgn8SdLtj
+         b8Iz9xNqWfkxUVNUaEYn6ikHPDYNxQ3010VCVhGD0qj+qUQtuCVJzqKMcEmDvhpcbmIG
+         31g4TqOAKpLePj5Nxp666JIjqq3mYgfQTerwqgYvZ13tEhcFOZ/OfxVtB5fIO6tRiXEI
+         IzIBthqTAWAIbYr3w02IW3p/dS0kGRBt+wQVWtsCY5GJHtqJnlKx26viHwMZ8TN/qf/D
+         atuQ==
+X-Gm-Message-State: APjAAAV/1OR4/ej3MaRwfwEndykFha5tKig3jMEcuqgWqKNuWCAzDKXo
+        tQeYti5Ytvkte9EGECaOgo8=
+X-Google-Smtp-Source: APXvYqyQx0W0FqnaW4/+81tXXRCLubnvr11FkS+hNIAt/oe7kUrrRQ2gZyVssaB/xpy/R9AFRNQ7hg==
+X-Received: by 2002:a5d:5221:: with SMTP id i1mr22164042wra.44.1580846220291;
+        Tue, 04 Feb 2020 11:57:00 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id z6sm29710177wrw.36.2020.02.04.11.56.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 11:56:59 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: synaptics - switch T470s to RMI4 by default
-Date:   Tue,  4 Feb 2020 14:43:21 -0500
-Message-Id: <20200204194322.112638-1-lyude@redhat.com>
+Subject: [PATCH v2] watchdog: qcom-wdt: disable pretimeout on timer platform
+Date:   Tue,  4 Feb 2020 20:56:48 +0100
+Message-Id: <20200204195648.23350-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This supports RMI4 and everything seems to work, including the touchpad
-buttons. So, let's enable this by default.
+Some platform like ipq806x doesn't support pretimeout and define
+some interrupts used by qcom,msm-timer. Change the driver to check
+and use pretimeout only on qcom,kpss-wdt as it's the only platform
+that actually supports it.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/watchdog/qcom-wdt.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synapt=
-ics.c
-index 1ae6f8bba9ae..8cb8475657ca 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -169,6 +169,7 @@ static const char * const smbus_pnp_ids[] =3D {
- 	"LEN004a", /* W541 */
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
-+	"LEN006c", /* T470s */
- 	"LEN0071", /* T480 */
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
---=20
-2.24.1
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index a494543d3ae1..d13c75028985 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -40,6 +40,11 @@ static const u32 reg_offset_data_kpss[] = {
+ 	[WDT_BITE_TIME] = 0x14,
+ };
+ 
++struct qcom_wdt_match_data {
++	const u32 *offset;
++	bool pretimeout;
++};
++
+ struct qcom_wdt {
+ 	struct watchdog_device	wdd;
+ 	unsigned long		rate;
+@@ -179,19 +184,29 @@ static void qcom_clk_disable_unprepare(void *data)
+ 	clk_disable_unprepare(data);
+ }
+ 
++static const struct qcom_wdt_match_data match_data_apcs_tmr = {
++	.offset = reg_offset_data_apcs_tmr,
++	.pretimeout = false,
++};
++
++static const struct qcom_wdt_match_data match_data_kpss = {
++	.offset = reg_offset_data_kpss,
++	.pretimeout = true,
++};
++
+ static int qcom_wdt_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct qcom_wdt *wdt;
+ 	struct resource *res;
+ 	struct device_node *np = dev->of_node;
+-	const u32 *regs;
++	const struct qcom_wdt_match_data *data;
+ 	u32 percpu_offset;
+ 	int irq, ret;
+ 	struct clk *clk;
+ 
+-	regs = of_device_get_match_data(dev);
+-	if (!regs) {
++	data = of_device_get_match_data(dev);
++	if (!data) {
+ 		dev_err(dev, "Unsupported QCOM WDT module\n");
+ 		return -ENODEV;
+ 	}
+@@ -247,7 +262,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 
+ 	/* check if there is pretimeout support */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq > 0) {
++	if (data->pretimeout && irq > 0) {
+ 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+ 				       IRQF_TRIGGER_RISING,
+ 				       "wdt_bark", &wdt->wdd);
+@@ -267,7 +282,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	wdt->wdd.min_timeout = 1;
+ 	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+ 	wdt->wdd.parent = dev;
+-	wdt->layout = regs;
++	wdt->layout = data->offset;
+ 
+ 	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+ 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+@@ -311,9 +326,9 @@ static int __maybe_unused qcom_wdt_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(qcom_wdt_pm_ops, qcom_wdt_suspend, qcom_wdt_resume);
+ 
+ static const struct of_device_id qcom_wdt_of_table[] = {
+-	{ .compatible = "qcom,kpss-timer", .data = reg_offset_data_apcs_tmr },
+-	{ .compatible = "qcom,scss-timer", .data = reg_offset_data_apcs_tmr },
+-	{ .compatible = "qcom,kpss-wdt", .data = reg_offset_data_kpss },
++	{ .compatible = "qcom,kpss-timer", .data = &match_data_apcs_tmr },
++	{ .compatible = "qcom,scss-timer", .data = &match_data_apcs_tmr },
++	{ .compatible = "qcom,kpss-wdt", .data = &match_data_kpss },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
+-- 
+2.24.0
 
