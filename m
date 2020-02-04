@@ -2,243 +2,150 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD67C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31188C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25D220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFEF20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:31:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pw47cjdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgBDPas (ORCPT
+        id S1727398AbgBDPbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:30:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55088 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbgBDPar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:30:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 611DFAAFD;
-        Tue,  4 Feb 2020 15:30:44 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 15:30:50 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
- copy_file_range
-Message-ID: <20200204153050.GA18215@suse.com>
-References: <20200203165117.5701-1-lhenriques@suse.com>
- <20200203165117.5701-2-lhenriques@suse.com>
- <0ab59ba87c07ffec6a05b2ed39bc0c112bcf5863.camel@kernel.org>
+        Tue, 4 Feb 2020 10:31:50 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36350 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbgBDPbt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:31:49 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014FQg6m037549;
+        Tue, 4 Feb 2020 15:31:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
+ cc : message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=rdhxp4sZ+odDvboe4BcMy7m7ry7TPB1rb7axMCM+iyo=;
+ b=pw47cjdHWEuTYMWhy3Li36ZhjoZLOFoby/nZ6f3MYNXY0TeamciIsu2qtXYK3ImDJIKF
+ bkiqki9zmuf6TfVjuEUErUjQfTXWEh+yKli28QmpLEU99cCe09agooutsLjyFaRmFk9z
+ BTIF21Chk9BSGkdyNwLTQMvo+vIR9tSVt+tzvIdpOsHobJYV5xHbchfqE9KtXc37kdrT
+ 75Q6aKNLQJWBs14/zTis54iN37x/Ycstccq6AoTdcoshF4o4r0IG1WDHsZSh2H0RIaZF
+ b7gJ5DbiJHH+fLiNVlT7cyGRY5HN64UxgcHvAKbMz97fBMy0Ira6jLtOdwlRCxU2S0F7 RQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xwyg9kmky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 15:31:37 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014FOFFV106123;
+        Tue, 4 Feb 2020 15:31:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xxvus0vgh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 15:31:37 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014FVaoi019276;
+        Tue, 4 Feb 2020 15:31:36 GMT
+Received: from [192.168.0.189] (/68.201.65.98)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Feb 2020 07:31:36 -0800
+From:   Dave Kleikamp <dave.kleikamp@oracle.com>
+Subject: [GIT PULL] jfs update for v5.6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mozilla-News-Host: news://news.gmane.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "jfs-discussion@lists.sourceforge.net" 
+        <jfs-discussion@lists.sourceforge.net>
+Autocrypt: addr=dave.kleikamp@oracle.com; keydata=
+ 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
+ rnNNL3zBkwD3nWcTxFnX
+Message-ID: <ce930730-248c-7e5c-dbf6-7ba5a2db07b0@oracle.com>
+Date:   Tue, 4 Feb 2020 09:31:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ab59ba87c07ffec6a05b2ed39bc0c112bcf5863.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=663
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002040106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=719 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002040106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 08:30:03AM -0500, Jeff Layton wrote:
-> On Mon, 2020-02-03 at 16:51 +0000, Luis Henriques wrote:
-> > Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
-> > operations, waiting for each request to complete before sending the next
-> > one.  This patch modifies copy_file_range so that all the 'copy-from'
-> > operations are sent in bulk and waits for its completion at the end.  This
-> > will allow significant speed-ups, specially when sending requests for
-> > different target OSDs.
-> > 
-> 
-> Looks good overall. A few nits below:
-> 
-> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > ---
-> >  fs/ceph/file.c                  | 45 +++++++++++++++++++++-----
-> >  include/linux/ceph/osd_client.h |  6 +++-
-> >  net/ceph/osd_client.c           | 56 +++++++++++++++++++++++++--------
-> >  3 files changed, 85 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > index 1e6cdf2dfe90..b9d8ffafb8c5 100644
-> > --- a/fs/ceph/file.c
-> > +++ b/fs/ceph/file.c
-> > @@ -1943,12 +1943,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
-> >  	struct ceph_object_locator src_oloc, dst_oloc;
-> >  	struct ceph_object_id src_oid, dst_oid;
-> > +	struct ceph_osd_request *req;
-> >  	loff_t endoff = 0, size;
-> >  	ssize_t ret = -EIO;
-> >  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
-> >  	u32 src_objlen, dst_objlen, object_size;
-> >  	int src_got = 0, dst_got = 0, err, dirty;
-> > +	unsigned int max_copies, copy_count, reqs_complete = 0;
-> >  	bool do_final_copy = false;
-> > +	LIST_HEAD(osd_reqs);
-> >  
-> >  	if (src_inode->i_sb != dst_inode->i_sb) {
-> >  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> > @@ -2083,6 +2086,13 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >  			goto out_caps;
-> >  	}
-> >  	object_size = src_ci->i_layout.object_size;
-> > +
-> > +	/*
-> > +	 * Throttle the object copies: max_copies holds the number of allowed
-> > +	 * in-flight 'copy-from' requests before waiting for their completion
-> > +	 */
-> > +	max_copies = (src_fsc->mount_options->wsize / object_size) * 4;
-> 
-> A note about why you chose to multiply by a factor of 4 here would be
-> good. In another year or two, we won't remember.
+The following changes since commit d96d875ef5dd372f533059a44f98e92de9cf0d42:
 
-Sure, but to be honest I just picked an early suggestion from Ilya :-)
-In practice it means that, by default, 64 will be the maximum requests
-in-flight.  I tested this value, and it looked OK although in the (very
-humble) test cluster I've used a value of 16 (i.e. dropping the factor of
-4) wasn't much worst.
+  Merge tag 'fixes_for_v5.5-rc8' of
+git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs (2020-01-20
+11:24:13 -0800)
 
-> > +	copy_count = max_copies;
-> >  	while (len >= object_size) {
-> >  		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
-> >  					      object_size, &src_objnum,
-> > @@ -2097,7 +2107,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >  		ceph_oid_printf(&dst_oid, "%llx.%08llx",
-> >  				dst_ci->i_vino.ino, dst_objnum);
-> >  		/* Do an object remote copy */
-> > -		err = ceph_osdc_copy_from(
-> > +		req = ceph_osdc_copy_from(
-> >  			&src_fsc->client->osdc,
-> >  			src_ci->i_vino.snap, 0,
-> >  			&src_oid, &src_oloc,
-> > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >  			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> >  			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> >  			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > -		if (err) {
-> > -			if (err == -EOPNOTSUPP) {
-> > -				src_fsc->have_copy_from2 = false;
-> > -				pr_notice("OSDs don't support 'copy-from2'; "
-> > -					  "disabling copy_file_range\n");
-> > -			}
-> > +		if (IS_ERR(req)) {
-> > +			err = PTR_ERR(req);
-> >  			dout("ceph_osdc_copy_from returned %d\n", err);
-> > +
-> > +			/* wait for all queued requests */
-> > +			ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > +			ret += reqs_complete * object_size; /* Update copied bytes */
-> >  			if (!ret)
-> >  				ret = err;
-> >  			goto out_caps;
-> >  		}
-> > +		list_add(&req->r_private_item, &osd_reqs);
-> >  		len -= object_size;
-> >  		src_off += object_size;
-> >  		dst_off += object_size;
-> > -		ret += object_size;
-> > +		/*
-> > +		 * Wait requests if we've reached the maximum requests allowed
-> 
-> "Wait for requests..."
-> 
-> > +		 * or if this was the last copy
-> > +		 */
-> > +		if ((--copy_count == 0) || (len < object_size)) {
-> > +			err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > +			ret += reqs_complete * object_size; /* Update copied bytes */
-> > +			if (err) {
-> > +				if (err == -EOPNOTSUPP) {
-> > +					src_fsc->have_copy_from2 = false;
-> > +					pr_notice("OSDs don't support 'copy-from2'; "
-> > +						  "disabling copy_file_range\n");
-> > +				}
-> > +				if (!ret)
-> > +					ret = err;
-> > +				goto out_caps;
-> > +			}
-> > +			copy_count = max_copies;
-> > +		}
-> >  	}
-> >  
-> >  	if (len)
-> > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> > index 5a62dbd3f4c2..0121767cd65e 100644
-> > --- a/include/linux/ceph/osd_client.h
-> > +++ b/include/linux/ceph/osd_client.h
-> > @@ -496,6 +496,9 @@ extern int ceph_osdc_start_request(struct ceph_osd_client *osdc,
-> >  extern void ceph_osdc_cancel_request(struct ceph_osd_request *req);
-> >  extern int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
-> >  				  struct ceph_osd_request *req);
-> > +extern int ceph_osdc_wait_requests(struct list_head *osd_reqs,
-> > +				   unsigned int *reqs_complete);
-> > +
-> >  extern void ceph_osdc_sync(struct ceph_osd_client *osdc);
-> >  
-> >  extern void ceph_osdc_flush_notifies(struct ceph_osd_client *osdc);
-> > @@ -526,7 +529,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
-> >  				struct timespec64 *mtime,
-> >  				struct page **pages, int nr_pages);
-> >  
-> > -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> > +struct ceph_osd_request *ceph_osdc_copy_from(
-> > +			struct ceph_osd_client *osdc,
-> >  			u64 src_snapid, u64 src_version,
-> >  			struct ceph_object_id *src_oid,
-> >  			struct ceph_object_locator *src_oloc,
-> > diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> > index b68b376d8c2f..df9f342f860a 100644
-> > --- a/net/ceph/osd_client.c
-> > +++ b/net/ceph/osd_client.c
-> > @@ -4531,6 +4531,35 @@ int ceph_osdc_wait_request(struct ceph_osd_client *osdc,
-> >  }
-> >  EXPORT_SYMBOL(ceph_osdc_wait_request);
-> >  
-> > +/*
-> > + * wait for all requests to complete in list @osd_reqs, returning the number of
-> > + * successful completions in @reqs_complete
-> > + */
-> 
-> Maybe consider just having it return a positive reqs_complete value or a
-> negative error code, and drop the reqs_complete pointer argument? It'd
-> also be good to note what this function returns.
+are available in the Git repository at:
 
-In my (flawed) design I wanted to know that there was an error in a
-request but also how many successful requests.  But after the last review
-from Ilya I'll probably need to revisit this anyway.
+  git://github.com/kleikamp/linux-shaggy.git tags/jfs-5.6
 
-> > +int ceph_osdc_wait_requests(struct list_head *osd_reqs,
-> > +			    unsigned int *reqs_complete)
-> > +{
-> > +	struct ceph_osd_request *req;
-> > +	int ret = 0, err;
-> > +	unsigned int counter = 0;
-> > +
-> > +	while (!list_empty(osd_reqs)) {
-> > +		req = list_first_entry(osd_reqs,
-> > +				       struct ceph_osd_request,
-> > +				       r_private_item);
-> > +		list_del_init(&req->r_private_item);
-> > +		err = ceph_osdc_wait_request(req->r_osdc, req);
-> 
-> ceph_osdc_wait_request calls wait_request_timeout, which uses a killable
-> sleep. That's better than uninterruptible sleep, but maybe it'd be good
-> to use an interruptible sleep here instead? Having to send fatal signals
-> when things are stuck kind of sucks.
+for you to fetch changes up to 802a5017ffb27ade616d0fe605f699a3c6303aa3:
 
-Good point.  It looks like Zheng changed this to a killable sleep in
-commit 0e76abf21e76 ("libceph: make ceph_osdc_wait_request()
-uninterruptible").  I guess you're suggesting to add a new function
-(wait_request_uninterruptible_timeout) that would be used only here,
-right?
+  jfs: remove unused MAXL2PAGES (2020-01-21 10:06:55 -0600)
 
-Cheers,
---
-Luís
+----------------------------------------------------------------
+Trivial cleanup for jfs
+
+----------------------------------------------------------------
+Alex Shi (1):
+      jfs: remove unused MAXL2PAGES
+
+ fs/jfs/jfs_dmap.c | 1 -
+ 1 file changed, 1 deletion(-)
