@@ -2,453 +2,157 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E62C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C01BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74ECD20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:37:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="JxGzYAkA"
+	by mail.kernel.org (Postfix) with ESMTP id 3B81C20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgBDLhO (ORCPT
+        id S1727210AbgBDLhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:37:14 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36936 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgBDLhO (ORCPT
+        Tue, 4 Feb 2020 06:37:53 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:47732 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727004AbgBDLhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:37:14 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so3212754wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 03:37:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0bC2bcoiGho2oxF4KDoXZamG9BIMvpD7fMbOpQnDppA=;
-        b=JxGzYAkAsTK92ICt6C0cUUHZoz8Iu/HQ5YtxeqliEjA0Tv2WhmEtp50Ki7gf1EFnIf
-         ehm2Vs1LTTdEkUWWsU03RG9VBr2TyiuetjBWsBH7ZhdW/UoNoD1UunKdk09bWDdIy+/d
-         7BWXwqtUPTiFZoWb5MZSX+urtbDvFRrGLOR8UnuVMfzKgUDS0xo8xcqtidjgMqZx8kI/
-         1tbBcdHuCWb2bKhUixjlavAAtQhgp1EScb9fI42ys/Ay0FND6Crrg2ApfyIo0++12J0C
-         fihsWkNrYTu5BUddcS6d630eybaXi2CwIasqCdWL2GdW5FLLAzoxyq9Tqc1K+NKYylKY
-         wu9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0bC2bcoiGho2oxF4KDoXZamG9BIMvpD7fMbOpQnDppA=;
-        b=GwrlpWzVaxmUom+HVBO4dpBHiilBzZ3U6RMPGZX8tpnicIkexYDnA7t/OYjc52OUdG
-         tq3IItOD0X8JFaGKbE43P/87uIaSae5BfRC7vC41upndvf8F5PE09BK2QbnL9Ck15W4n
-         jvYAz9V9PLMBgAyo6HETBgXMYYTd6NgxtFjUHoKo0pd84jX+aMdJfFPeeb9xA+oG0K58
-         uLYSKftt4CLAeBY64Un5uhm62UWJ3X6ZHNU4+vnkEumwQx5ug5WRO6imNoZwNPD1xmHC
-         rsyCvpP73EwbHzgleUnIqDYWXl3y3aiRpgulrPyyyFXZWGCLuZ91zs7RJQX06QGjdJhw
-         9L6g==
-X-Gm-Message-State: APjAAAXTbqV+0tflFhsVX+y+BDl5/sE0USkuL+nH2QvPuYIA6j9oJ/2B
-        jIT2gwCX1HUbObgYDZMQx/QttGKQCPDucjoY73TqZPKWURk=
-X-Google-Smtp-Source: APXvYqx7t5YGKZSLk5SDMRJco4TZDHrob603dz1VYrGoy9nqdNURiAbAl/QTslcBwnv2Ygbh/e0iqxYyu1arPFi3dO0=
-X-Received: by 2002:a1c:9c87:: with SMTP id f129mr5700135wme.26.1580816228946;
- Tue, 04 Feb 2020 03:37:08 -0800 (PST)
+        Tue, 4 Feb 2020 06:37:53 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tp7qFmm_1580816261;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tp7qFmm_1580816261)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Feb 2020 19:37:47 +0800
+Subject: Re: [PATCH] OCFS2: remove unused macros
+To:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     ChenGang <cg.chen@huawei.com>, ocfs2-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org
+References: <1579577827-251796-1-git-send-email-alex.shi@linux.alibaba.com>
+ <a12fc48c-3165-3519-c2b2-399b06c8b5c6@linux.alibaba.com>
+ <580ee0d1-edce-3161-dbd9-91c763412681@linux.alibaba.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <65a62f56-9ed9-df30-3025-73d9f63eefb6@linux.alibaba.com>
+Date:   Tue, 4 Feb 2020 19:37:41 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200123201414.8933-1-alex@ghiti.fr> <CANXhq0qY6eRQF3igyMAy1jgApOFqpoXwTtCfgGD-_fr4esRhaA@mail.gmail.com>
- <39ffe627-d358-e1bd-dff2-653baca1fe37@ghiti.fr> <CANXhq0qcMtw3qa5Wx3YG9vY0P6LDAJayxEYv+xqg3N2SL3QKCA@mail.gmail.com>
-In-Reply-To: <CANXhq0qcMtw3qa5Wx3YG9vY0P6LDAJayxEYv+xqg3N2SL3QKCA@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 4 Feb 2020 17:06:58 +0530
-Message-ID: <CAAhSdy0W__-T6JOVfjJ_FdMB+8UAo-HoOiwRz809-Q-8hoH+1A@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Introduce CONFIG_RELOCATABLE
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Alex Ghiti <alex@ghiti.fr>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <580ee0d1-edce-3161-dbd9-91c763412681@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 4:59 PM Zong Li <zong.li@sifive.com> wrote:
->
-> On Fri, Jan 31, 2020 at 4:02 AM Alex Ghiti <alex@ghiti.fr> wrote:
-> >
-> > Hi Zong,
-> >
-> > On 1/29/20 11:13 PM, Zong Li wrote:
-> > > On Fri, Jan 24, 2020 at 4:14 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
-> > >> This config allows to compile the kernel as PIE and to relocate it at any
-> > >> virtual address at runtime: this paves the way to KASLR and to 4-level
-> > >> page table folding at runtime. Runtime relocation is possible since
-> > >> relocation metadata are embedded into the kernel.
-> > >>
-> > >> Note that relocating at runtime introduces an overhead even if the kernel
-> > >> is loaded at the same address it was linked at and that the compiler
-> > >> options are those used in arm64 which uses the same RELA relocation format.
-> > >>
-> > >> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> > >> ---
-> > >>   arch/riscv/Kconfig              | 11 ++++
-> > >>   arch/riscv/Makefile             |  5 +-
-> > >>   arch/riscv/boot/loader.lds.S    |  2 +-
-> > >>   arch/riscv/include/asm/page.h   |  5 +-
-> > >>   arch/riscv/kernel/head.S        |  3 +-
-> > >>   arch/riscv/kernel/vmlinux.lds.S | 10 ++--
-> > >>   arch/riscv/mm/Makefile          |  4 ++
-> > >>   arch/riscv/mm/init.c            | 92 ++++++++++++++++++++++++++++-----
-> > >>   8 files changed, 110 insertions(+), 22 deletions(-)
-> > >>
-> > >> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > >> index fa7dc03459e7..c652b4b850ce 100644
-> > >> --- a/arch/riscv/Kconfig
-> > >> +++ b/arch/riscv/Kconfig
-> > >> @@ -163,6 +163,17 @@ config PGTABLE_LEVELS
-> > >>          default 3 if 64BIT
-> > >>          default 2
-> > >>
-> > >> +config RELOCATABLE
-> > >> +       bool
-> > >> +       help
-> > >> +          This builds a kernel as a Position Independent Executable (PIE),
-> > >> +          which retains all relocation metadata required to relocate the
-> > >> +          kernel binary at runtime to a different virtual address than the
-> > >> +          address it was linked at.
-> > >> +          Since RISCV uses the RELA relocation format, this requires a
-> > >> +          relocation pass at runtime even if the kernel is loaded at the
-> > >> +          same address it was linked at.
-> > >> +
-> > >>   source "arch/riscv/Kconfig.socs"
-> > >>
-> > >>   menu "Platform type"
-> > >> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> > >> index b9009a2fbaf5..5a115cf6a9c1 100644
-> > >> --- a/arch/riscv/Makefile
-> > >> +++ b/arch/riscv/Makefile
-> > >> @@ -9,7 +9,10 @@
-> > >>   #
-> > >>
-> > >>   OBJCOPYFLAGS    := -O binary
-> > >> -LDFLAGS_vmlinux :=
-> > >> +ifeq ($(CONFIG_RELOCATABLE),y)
-> > >> +LDFLAGS_vmlinux := -shared -Bsymbolic -z notext -z norelro
-> > >> +KBUILD_CFLAGS += -fPIE
-> > >> +endif
-> > >>   ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
-> > >>          LDFLAGS_vmlinux := --no-relax
-> > >>   endif
-> > >> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
-> > >> index 47a5003c2e28..a9ed218171aa 100644
-> > >> --- a/arch/riscv/boot/loader.lds.S
-> > >> +++ b/arch/riscv/boot/loader.lds.S
-> > >> @@ -7,7 +7,7 @@ ENTRY(_start)
-> > >>
-> > >>   SECTIONS
-> > >>   {
-> > >> -       . = PAGE_OFFSET;
-> > >> +       . = CONFIG_PAGE_OFFSET;
-> > >>
-> > >>          .payload : {
-> > >>                  *(.payload)
-> > >> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-> > >> index ac699246ae7e..27c95da68ecb 100644
-> > >> --- a/arch/riscv/include/asm/page.h
-> > >> +++ b/arch/riscv/include/asm/page.h
-> > >> @@ -31,9 +31,9 @@
-> > >>    * When not using MMU this corresponds to the first free page in
-> > >>    * physical memory (aligned on a page boundary).
-> > >>    */
-> > >> -#define PAGE_OFFSET            _AC(CONFIG_PAGE_OFFSET, UL)
-> > >> +#define PAGE_OFFSET            kernel_load_addr
-> > >>
-> > >> -#define KERN_VIRT_SIZE (-PAGE_OFFSET)
-> > >> +#define KERN_VIRT_SIZE         (-_AC(CONFIG_PAGE_OFFSET, UL))
-> > >>
-> > >>   #ifndef __ASSEMBLY__
-> > >>
-> > >> @@ -97,6 +97,7 @@ extern unsigned long pfn_base;
-> > >>   #define ARCH_PFN_OFFSET                (PAGE_OFFSET >> PAGE_SHIFT)
-> > >>   #endif /* CONFIG_MMU */
-> > >>
-> > >> +extern unsigned long kernel_load_addr;
-> > >>   extern unsigned long max_low_pfn;
-> > >>   extern unsigned long min_low_pfn;
-> > >>
-> > >> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > >> index 2227db63f895..5042b2b48a06 100644
-> > >> --- a/arch/riscv/kernel/head.S
-> > >> +++ b/arch/riscv/kernel/head.S
-> > >> @@ -126,7 +126,8 @@ clear_bss_done:
-> > >>   #ifdef CONFIG_MMU
-> > >>   relocate:
-> > >>          /* Relocate return address */
-> > >> -       li a1, PAGE_OFFSET
-> > >> +       la a1, kernel_load_addr
-> > >> +       REG_L a1, 0(a1)
-> > >>          la a2, _start
-> > >>          sub a1, a1, a2
-> > >>          add ra, ra, a1
-> > >> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> > >> index 12f42f96d46e..5095aee7c37e 100644
-> > >> --- a/arch/riscv/kernel/vmlinux.lds.S
-> > >> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> > >> @@ -4,7 +4,7 @@
-> > >>    * Copyright (C) 2017 SiFive
-> > >>    */
-> > >>
-> > >> -#define LOAD_OFFSET PAGE_OFFSET
-> > >> +#define LOAD_OFFSET CONFIG_PAGE_OFFSET
-> > >>   #include <asm/vmlinux.lds.h>
-> > >>   #include <asm/page.h>
-> > >>   #include <asm/cache.h>
-> > >> @@ -70,9 +70,11 @@ SECTIONS
-> > >>
-> > >>          EXCEPTION_TABLE(0x10)
-> > >>
-> > >> -       .rel.dyn : {
-> > >> -               *(.rel.dyn*)
-> > >> -       }
-> > >> +        .rela.dyn : ALIGN(8) {
-> > >> +               __rela_dyn_start = .;
-> > >> +                *(.rela .rela*)
-> > >> +               __rela_dyn_end = .;
-> > >> +        }
-> > >>
-> > >>          _end = .;
-> > >>
-> > >> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> > >> index a1bd95c8047a..dcd3d806243f 100644
-> > >> --- a/arch/riscv/mm/Makefile
-> > >> +++ b/arch/riscv/mm/Makefile
-> > >> @@ -1,6 +1,10 @@
-> > >>   # SPDX-License-Identifier: GPL-2.0-only
-> > >>
-> > >>   CFLAGS_init.o := -mcmodel=medany
-> > >> +ifdef CONFIG_RELOCATABLE
-> > >> +CFLAGS_init.o += -fno-pie
-> > >> +endif
-> > >> +
-> > >>   ifdef CONFIG_FTRACE
-> > >>   CFLAGS_REMOVE_init.o = -pg
-> > >>   endif
-> > >> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > >> index 965a8cf4829c..ac9a9f69abc0 100644
-> > >> --- a/arch/riscv/mm/init.c
-> > >> +++ b/arch/riscv/mm/init.c
-> > >> @@ -12,6 +12,9 @@
-> > >>   #include <linux/sizes.h>
-> > >>   #include <linux/of_fdt.h>
-> > >>   #include <linux/libfdt.h>
-> > >> +#ifdef CONFIG_RELOCATABLE
-> > >> +#include <linux/elf.h>
-> > >> +#endif
-> > >>
-> > >>   #include <asm/fixmap.h>
-> > >>   #include <asm/tlbflush.h>
-> > >> @@ -28,6 +31,9 @@ EXPORT_SYMBOL(empty_zero_page);
-> > >>   extern char _start[];
-> > >>   void *dtb_early_va;
-> > >>
-> > >> +unsigned long kernel_load_addr = _AC(CONFIG_PAGE_OFFSET, UL);
-> > >> +EXPORT_SYMBOL(kernel_load_addr);
-> > >> +
-> > >>   static void __init zone_sizes_init(void)
-> > >>   {
-> > >>          unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> > >> @@ -132,7 +138,8 @@ void __init setup_bootmem(void)
-> > >>                  phys_addr_t end = reg->base + reg->size;
-> > >>
-> > >>                  if (reg->base <= vmlinux_end && vmlinux_end <= end) {
-> > >> -                       mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
-> > >> +                       mem_size = min(reg->size,
-> > >> +                                      (phys_addr_t)-kernel_load_addr);
-> > >>
-> > >>                          /*
-> > >>                           * Remove memblock from the end of usable area to the
-> > >> @@ -269,7 +276,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
-> > >>          if (mmu_enabled)
-> > >>                  return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
-> > >>
-> > >> -       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
-> > >> +       pmd_num = (va - kernel_load_addr) >> PGDIR_SHIFT;
-> > >>          BUG_ON(pmd_num >= NUM_EARLY_PMDS);
-> > >>          return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
-> > >>   }
-> > >> @@ -370,6 +377,54 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
-> > >>   #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
-> > >>   #endif
-> > >>
-> > >> +#ifdef CONFIG_RELOCATABLE
-> > >> +extern unsigned long __rela_dyn_start, __rela_dyn_end;
-> > >> +
-> > >> +#ifdef CONFIG_64BIT
-> > >> +#define Elf_Rela Elf64_Rela
-> > >> +#define Elf_Addr Elf64_Addr
-> > >> +#else
-> > >> +#define Elf_Rela Elf32_Rela
-> > >> +#define Elf_Addr Elf32_Addr
-> > >> +#endif
-> > >> +
-> > >> +void __init relocate_kernel(uintptr_t load_pa)
-> > >> +{
-> > >> +       Elf_Rela *rela = (Elf_Rela *)&__rela_dyn_start;
-> > >> +       uintptr_t link_addr = _AC(CONFIG_PAGE_OFFSET, UL);
-> > >> +       /*
-> > >> +        * This holds the offset between the linked virtual address and the
-> > >> +        * relocated virtual address.
-> > >> +        */
-> > >> +       uintptr_t reloc_offset = kernel_load_addr - link_addr;
-> > >> +       /*
-> > >> +        * This holds the offset between linked virtual address and physical
-> > >> +        * address whereas va_pa_offset holds the offset between relocated
-> > >> +        * virtual address and physical address.
-> > >> +        */
-> > >> +       uintptr_t va_link_pa_offset = link_addr - load_pa;
-> > >> +
-> > >> +       for ( ; rela < (Elf_Rela *)&__rela_dyn_end; rela++) {
-> > >> +               Elf_Addr addr = (rela->r_offset - va_link_pa_offset);
-> > >> +               Elf_Addr relocated_addr = rela->r_addend;
-> > >> +
-> > >> +               if (rela->r_info != R_RISCV_RELATIVE)
-> > >> +                       continue;
-> > >> +
-> > >> +               /*
-> > >> +                * Make sure to not relocate vdso symbols like rt_sigreturn
-> > >> +                * which are linked from the address 0 in vmlinux since
-> > >> +                * vdso symbol addresses are actually used as an offset from
-> > >> +                * mm->context.vdso in VDSO_OFFSET macro.
-> > >> +                */
-> > >> +               if (relocated_addr >= link_addr)
-> > >> +                       relocated_addr += reloc_offset;
-> > >> +
-> > >> +               *(Elf_Addr *)addr = relocated_addr;
-> > >> +       }
-> > >> +}
-> > >> +#endif
-> > >> +
-> > >>   asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> > >>   {
-> > >>          uintptr_t va, end_va;
-> > >> @@ -377,9 +432,20 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> > >>          uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
-> > >>          uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
-> > >>
-> > >> -       va_pa_offset = PAGE_OFFSET - load_pa;
-> > >> +       va_pa_offset = kernel_load_addr - load_pa;
-> > >>          pfn_base = PFN_DOWN(load_pa);
-> > >>
-> > >> +#ifdef CONFIG_RELOCATABLE
-> > >> +       /*
-> > >> +        * Early page table uses only one PGDIR, which makes it possible
-> > >> +        * to map 1GB aligned on 1GB: if the relocation offset makes the kernel
-> > >> +        * cross over a 1G boundary, raise a bug since a part of the kernel
-> > >> +        * would not get mapped.
-> > >> +        */
-> > >> +       BUG_ON(SZ_1G - (kernel_load_addr & (SZ_1G - 1)) < load_sz);
-> > >> +       relocate_kernel(load_pa);
-> > >> +#endif
-> > >> +
-> > >>          /*
-> > >>           * Enforce boot alignment requirements of RV32 and
-> > >>           * RV64 by only allowing PMD or PGD mappings.
-> > >> @@ -387,7 +453,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> > >>          BUG_ON(map_size == PAGE_SIZE);
-> > >>
-> > >>          /* Sanity check alignment and size */
-> > >> -       BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
-> > >> +       BUILD_BUG_ON((_AC(CONFIG_PAGE_OFFSET, UL) % PGDIR_SIZE) != 0);
-> > >>          BUG_ON((load_pa % map_size) != 0);
-> > >>          BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
-> > >>
-> > >> @@ -400,13 +466,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> > >>          create_pmd_mapping(fixmap_pmd, FIXADDR_START,
-> > >>                             (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
-> > >>          /* Setup trampoline PGD and PMD */
-> > >> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
-> > >> +       create_pgd_mapping(trampoline_pg_dir, kernel_load_addr,
-> > >>                             (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
-> > >> -       create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
-> > >> +       create_pmd_mapping(trampoline_pmd, kernel_load_addr,
-> > >>                             load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
-> > >>   #else
-> > >>          /* Setup trampoline PGD */
-> > >> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
-> > >> +       create_pgd_mapping(trampoline_pg_dir, kernel_load_addr,
-> > >>                             load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
-> > >>   #endif
-> > >>
-> > >> @@ -415,10 +481,10 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> > >>           * us to reach paging_init(). We map all memory banks later
-> > >>           * in setup_vm_final() below.
-> > >>           */
-> > >> -       end_va = PAGE_OFFSET + load_sz;
-> > >> -       for (va = PAGE_OFFSET; va < end_va; va += map_size)
-> > >> +       end_va = kernel_load_addr + load_sz;
-> > >> +       for (va = kernel_load_addr; va < end_va; va += map_size)
-> > >>                  create_pgd_mapping(early_pg_dir, va,
-> > >> -                                  load_pa + (va - PAGE_OFFSET),
-> > >> +                                  load_pa + (va - kernel_load_addr),
-> > >>                                     map_size, PAGE_KERNEL_EXEC);
-> > >>
-> > >>          /* Create fixed mapping for early FDT parsing */
-> > >> @@ -457,9 +523,9 @@ static void __init setup_vm_final(void)
-> > >>                          break;
-> > >>                  if (memblock_is_nomap(reg))
-> > >>                          continue;
-> > >> -               if (start <= __pa(PAGE_OFFSET) &&
-> > >> -                   __pa(PAGE_OFFSET) < end)
-> > >> -                       start = __pa(PAGE_OFFSET);
-> > >> +               if (start <= __pa(kernel_load_addr) &&
-> > >> +                   __pa(kernel_load_addr) < end)
-> > >> +                       start = __pa(kernel_load_addr);
-> > > Here should use __pa_symbol() instead of __pa() for kernel symbols.
-> >
-> >
-> > I'll add it to the v2 too, thanks.
-> >
-> >
-> > > I'm working on KASLR on top of this patch, it's work to me.
-> >
-> >
-> > If I can help, don't hesitate, even if it is simply for testing :)
-> >
-> >
-> > >
-> > > Reviewed-by: Zong Li <zong.li@sifive.com>
-> > > Tested-by: Zong Li <zong.li@sifive.com>
-> >
-> >
-> > Thanks for that,
-> >
-> > Alex
-> >
-> >
-> > >
-> > >>                  map_size = best_map_size(start, end - start);
-> > >>                  for (pa = start; pa < end; pa += map_size) {
-> > >> --
-> > >> 2.20.1
-> > >>
->
-> Hi all,
->
-> I find that there is a risk when building kernel as PIE. The problem
-> is that hart_lottery will be put in .bss section rather than .sdata
-> section, so the value of hart_lottery will be cleared by main hart. I
-> post a patch to mark hart_lottery as sdata section by using gcc
-> attribution.
->
-> Please refer to https://patchwork.kernel.org/patch/11364457/.
 
-The CONFIG_RELOCATION has performance impact hence it is will
-not be enabled by default.
 
-Also, we are moving away from fragile lottery based HART bring up
-to SBI HSM based HART bring up. I am sure by next year the lottery
-based HART bring-up will be obsolete and eventually we might even
-remove it altogether from Linux RISC-V kernel.
+On 20/2/4 19:08, Alex Shi wrote:
+> 
+> 
+> 在 2020/1/26 上午9:43, Joseph Qi 写道:
+>>
+>>
+>> On 20/1/21 11:37, Alex Shi wrote:
+>>> O2HB_DEFAULT_BLOCK_BITS/DLM_THREAD_MAX_ASTS/DLM_MIGRATION_RETRY_MS and
+>>> OCFS2_MAX_RESV_WINDOW_BITS/OCFS2_MIN_RESV_WINDOW_BITS are
+>>> never used from they were introduced to kernel. so better to remove
+>>> them.
+>>>
+>>>  
+>>> -#define DLM_MIGRATION_RETRY_MS  100
+>>> -
+>> It is no longer used since commit 66effd3c6812 ("ocfs2/dlm: Do not
+>> migrate resource to a node that is leaving the domain").
+> 
+> Thanks for point out. how about the following revised patch?
+> 
+> Since a trival patch don't need much reviewer, I removed some Ccs.
+> 
+> Thanks
+> Alex
+> 
+> ---
+> 
+> From 3bf7bf5a82a6a2275db49ba029d48fdd5c09332c Mon Sep 17 00:00:00 2001
+> From: Alex Shi <alex.shi@linux.alibaba.com>
+> Date: Tue, 21 Jan 2020 11:14:29 +0800
+> Subject: [PATCH v2] OCFS2: remove unused macros
+> 
+> DLM_MIGRATION_RETRY_MS is no longer used since commit 66effd3c6812
+> ("ocfs2/dlm: Do not migrate resource to a node that is leaving the domain").
+> 
+> And the others are never used since they were introduced. Let's remove
+> them.
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: ocfs2-devel@oss.oracle.com
+> Cc: linux-kernel@vger.kernel.org
 
-Regards,
-Anup
+Looks good.
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> ---
+>  fs/ocfs2/cluster/heartbeat.c | 2 --
+>  fs/ocfs2/dlm/dlmmaster.c     | 2 --
+>  fs/ocfs2/dlm/dlmthread.c     | 1 -
+>  fs/ocfs2/reservations.c      | 3 ---
+>  4 files changed, 8 deletions(-)
+> 
+> diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
+> index a368350d4c27..78cb48d6a596 100644
+> --- a/fs/ocfs2/cluster/heartbeat.c
+> +++ b/fs/ocfs2/cluster/heartbeat.c
+> @@ -101,8 +101,6 @@ struct o2hb_debug_buf {
+>  
+>  static struct o2hb_callback *hbcall_from_type(enum o2hb_callback_type type);
+>  
+> -#define O2HB_DEFAULT_BLOCK_BITS       9
+> -
+>  enum o2hb_heartbeat_modes {
+>  	O2HB_HEARTBEAT_LOCAL		= 0,
+>  	O2HB_HEARTBEAT_GLOBAL,
+> diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
+> index 74b768ca1cd8..123b6873d9fa 100644
+> --- a/fs/ocfs2/dlm/dlmmaster.c
+> +++ b/fs/ocfs2/dlm/dlmmaster.c
+> @@ -2751,8 +2751,6 @@ static int dlm_migrate_lockres(struct dlm_ctxt *dlm,
+>  	return ret;
+>  }
+>  
+> -#define DLM_MIGRATION_RETRY_MS  100
+> -
+>  /*
+>   * Should be called only after beginning the domain leave process.
+>   * There should not be any remaining locks on nonlocal lock resources,
+> diff --git a/fs/ocfs2/dlm/dlmthread.c b/fs/ocfs2/dlm/dlmthread.c
+> index 61c51c268460..2dd9727537fe 100644
+> --- a/fs/ocfs2/dlm/dlmthread.c
+> +++ b/fs/ocfs2/dlm/dlmthread.c
+> @@ -680,7 +680,6 @@ static void dlm_flush_asts(struct dlm_ctxt *dlm)
+>  
+>  #define DLM_THREAD_TIMEOUT_MS (4 * 1000)
+>  #define DLM_THREAD_MAX_DIRTY  100
+> -#define DLM_THREAD_MAX_ASTS   10
+>  
+>  static int dlm_thread(void *data)
+>  {
+> diff --git a/fs/ocfs2/reservations.c b/fs/ocfs2/reservations.c
+> index 0249e8ca1028..bf3842e34fb9 100644
+> --- a/fs/ocfs2/reservations.c
+> +++ b/fs/ocfs2/reservations.c
+> @@ -33,9 +33,6 @@
+>  
+>  static DEFINE_SPINLOCK(resv_lock);
+>  
+> -#define	OCFS2_MIN_RESV_WINDOW_BITS	8
+> -#define	OCFS2_MAX_RESV_WINDOW_BITS	1024
+> -
+>  int ocfs2_dir_resv_allowed(struct ocfs2_super *osb)
+>  {
+>  	return (osb->osb_resv_level && osb->osb_dir_resv_level);
+> 
