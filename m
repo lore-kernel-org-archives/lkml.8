@@ -2,152 +2,104 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E31C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06985C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 03:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809A320732
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 02:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F3F21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 03:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XVafVv2F"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qpd77wEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgBDC53 (ORCPT
+        id S1727112AbgBDDDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 21:57:29 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38937 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbgBDC5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 21:57:25 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so6648026plp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 18:57:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QggxwG9xXj9/Y8aTLUoH0ga4g8iQi+a/2zxkwKUkbVk=;
-        b=XVafVv2FGd5SwvcOmpasGzgMAcJ0QWnLsWBGTqB9pizESHAispXx4sC7Jb10NDMUYo
-         H2OK7XfQiWozQxXr5Ewhm3UycEJTq0kdAH2QB+8JHzciaEJTVx/sS21Pag1mdLwtNKD0
-         8z4VHvNvtsFWkqfB5taldMN3QBu50CAZzJQZE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QggxwG9xXj9/Y8aTLUoH0ga4g8iQi+a/2zxkwKUkbVk=;
-        b=LaSg3vrbpPJmZ1AptjMqfne4Pox00jfX1ssL+7F8+ixNM5jmjE7M0zptDZkHygqLfN
-         bvoa0sLbLXCKaOcud7mISLwiquEE9deWqcsFZJcXYlUqTUtxoY23K3nJv2X9ZDMJgkqH
-         4DLdLggWHsbctsAnA6I/cz7kw0bnj8fO1c5onPNRDEQHs2up8ftlo99sXqUSatFlr0Mc
-         +TVgLGkaWRe+4p21ukbSRlIr0VJ880QkM9gtR6BhcNSvFc2iPKF5nu4LxKuztZOk+S7L
-         yf57L0eaDc0rz1RodvfPcyiNljmUBs9wFsimWAY0Yp3p/v0ibm14nJH2z11JAkRdJfZx
-         XE8Q==
-X-Gm-Message-State: APjAAAXIWxJG2DTNEKK8X/oHBQG+n3lxRAuCcbtL9n/6tAScwCVwLp9w
-        ByUcK9dq4cQ5TANp8A8nHUq0Ow==
-X-Google-Smtp-Source: APXvYqw4EPSp/jHl1ZP1MjHFiCpedVdzBc7i6MSfYRUBK4L0qMuQu2sYSCzXYdECmOkCL1RgPljgCA==
-X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr17785871plo.259.1580785044745;
-        Mon, 03 Feb 2020 18:57:24 -0800 (PST)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id e1sm22491971pfl.98.2020.02.03.18.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 18:57:24 -0800 (PST)
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [RFC][PATCHv2 10/12] videobuf2: add begin/end cpu_access callbacks to dma-contig
-Date:   Tue,  4 Feb 2020 11:56:39 +0900
-Message-Id: <20200204025641.218376-11-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200204025641.218376-1-senozhatsky@chromium.org>
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
+        Mon, 3 Feb 2020 22:03:07 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45087 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726992AbgBDDDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 22:03:07 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48BTyw3cLWz9sXF;
+        Tue,  4 Feb 2020 14:03:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580785385;
+        bh=f4bKvAY3IkHW8E8G+srPYzm7WFzsms2KBAcbUO6YL3w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Qpd77wEBG27F6ykwMDIDYYGkGsOpSZJb8GsFIjpRx0iKH/BdckBgTonmhy43H3mUX
+         qeBtLcGTLoWv2KIHDkA0W8lyxPvrq8J/kTEY11aPV20ULJjyR7ZRSDF1ec0ZoCrZ8w
+         mDUrGN4syThVbvAogczYxAd8ddjnkf4wCSDqMY2E6IzIRl4PbNEL0d+YLgJTXYKoEL
+         cQbwc8ZXKRxpp72H5IQ4PxpWMPo2UAYX9gk33ymD/HLnwezQs+wXv0TBm2fQWRbOVM
+         B6N6mJGl+v68Qsz4kpTpBEOwsWHrtHNRQhEgnukHfCQv5nNZm9dgSGqPiud6WBZtp0
+         Y9CbmXf8a9BhA==
+Date:   Tue, 4 Feb 2020 14:03:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: linux-next: build failure after merge of the mfd tree
+Message-ID: <20200204140300.7537283c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/6Nr7eXC_NyQrqlGVH.I9iir";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide begin_cpu_access() and end_cpu_access() callbacks for
-cache synchronisation on exported buffers.
+--Sig_/6Nr7eXC_NyQrqlGVH.I9iir
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The patch also adds a new helper function - vb2_dc_buffer_consistent(),
-which returns true is if the buffer is consistent (DMA_ATTR_NON_CONSISTENT
-bit cleared), so then we don't need to sync anything.
+Hi all,
 
-Change-Id: I653ee20302014920b4705f3eba27c0b1232ab89d
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- .../common/videobuf2/videobuf2-dma-contig.c   | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+After merging the mfd tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-index d0c9dffe49e5..a387260fb321 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -42,6 +42,11 @@ struct vb2_dc_buf {
- 	struct dma_buf_attachment	*db_attach;
- };
- 
-+static inline bool vb2_dc_buffer_consistent(unsigned long attr)
-+{
-+	return !(attr & DMA_ATTR_NON_CONSISTENT);
-+}
-+
- /*********************************************/
- /*        scatterlist table functions        */
- /*********************************************/
-@@ -335,6 +340,32 @@ static void vb2_dc_dmabuf_ops_release(struct dma_buf *dbuf)
- 	vb2_dc_put(dbuf->priv);
- }
- 
-+static int vb2_dc_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-+					      enum dma_data_direction direction)
-+{
-+	struct vb2_dc_buf *buf = dbuf->priv;
-+	struct sg_table *sgt = buf->dma_sgt;
-+
-+	if (vb2_dc_buffer_consistent(buf->attrs))
-+		return 0;
-+
-+	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-+	return 0;
-+}
-+
-+static int vb2_dc_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
-+					    enum dma_data_direction direction)
-+{
-+	struct vb2_dc_buf *buf = dbuf->priv;
-+	struct sg_table *sgt = buf->dma_sgt;
-+
-+	if (vb2_dc_buffer_consistent(buf->attrs))
-+		return 0;
-+
-+	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-+	return 0;
-+}
-+
- static void *vb2_dc_dmabuf_ops_vmap(struct dma_buf *dbuf)
- {
- 	struct vb2_dc_buf *buf = dbuf->priv;
-@@ -353,6 +384,8 @@ static const struct dma_buf_ops vb2_dc_dmabuf_ops = {
- 	.detach = vb2_dc_dmabuf_ops_detach,
- 	.map_dma_buf = vb2_dc_dmabuf_ops_map,
- 	.unmap_dma_buf = vb2_dc_dmabuf_ops_unmap,
-+	.begin_cpu_access = vb2_dc_dmabuf_ops_begin_cpu_access,
-+	.end_cpu_access = vb2_dc_dmabuf_ops_end_cpu_access,
- 	.vmap = vb2_dc_dmabuf_ops_vmap,
- 	.mmap = vb2_dc_dmabuf_ops_mmap,
- 	.release = vb2_dc_dmabuf_ops_release,
--- 
-2.25.0.341.g760bfbb309-goog
+ld: sound/soc/codecs/wcd934x.o:(.toc+0x0): undefined reference to `of_clk_s=
+rc_simple_get'
+ld: sound/soc/codecs/wcd934x.o: in function `.wcd934x_codec_probe':
+wcd934x.c:(.text.wcd934x_codec_probe+0x3d4): undefined reference to `.__clk=
+_get_name'
+ld: wcd934x.c:(.text.wcd934x_codec_probe+0x438): undefined reference to `.c=
+lk_hw_register'
+ld: wcd934x.c:(.text.wcd934x_codec_probe+0x474): undefined reference to `.o=
+f_clk_add_provider'
 
+Caused by commit
+
+  6ac7e4d7ad70 ("mfd: wcd934x: Add support to wcd9340/wcd9341 codec")
+
+Unfortunately that commit is now in Linus' tree (and was never in
+linux-next).
+
+I marked CONFIG_MFD_STMFX as BROKEN for now.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6Nr7eXC_NyQrqlGVH.I9iir
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl443uQACgkQAVBC80lX
+0GxZswf/cp+SmpQRyGcIquTeIQknXyRR+bRIj60qb0CeYYyuYiEw8bG2QUbc3sbO
+zTOGZmn6dzC4u0RDSZF9haC3DXfa6Gp0lolc9s3hk9QPTYo4TczSLeqjLGvhDjze
+chbhJ69feTEuhDY+J/2IwOwRujtIzXJ24R5UQENWFwlN3rIh6GemvLem5+Jh4hkt
+rzktHjgqOHJsPOvLP5CuHY0E9UsfSwRfucDJVkwrlq83YvB/46dywb8KFAnAQ6eW
+iRW4Y2Lqz7QmlHIgR3y8kykoxAeQQylnsuS4zlMiHtzaUqPN/KFb5o0cC6zCCMeH
+eJ8dOXv7G95CGGxL0qYQPGnX0VJ8AA==
+=PrLd
+-----END PGP SIGNATURE-----
+
+--Sig_/6Nr7eXC_NyQrqlGVH.I9iir--
