@@ -2,281 +2,122 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BEAC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBAEC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B64A21582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32C521582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKhi5bDG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtqHVulX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgBDXnX (ORCPT
+        id S1727687AbgBDXti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:43:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57861 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727534AbgBDXnV (ORCPT
+        Tue, 4 Feb 2020 18:49:38 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41382 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgBDXth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:43:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580859800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=meSIjZ0BPANUIdkHYD3G5hsrkblgpeJ+gepMEAOzVvI=;
-        b=BKhi5bDG2mF3FHSeaxsf5MZrQaBvHFsMJqmGTfn8GeZBVsPZghZ9CD5pA3nA73JflNV6xU
-        oevjCXGgbiMpfvnuWRYgG1knOlN4EnEzkoPTmuHjK0SfdyWnh0k5pDCYtAo0wX+r6nqgT0
-        x6Lz2U8Vozb+bULjwcI/rB6LEJJKo3U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-9ztUGwJdM76hyVQc14z62A-1; Tue, 04 Feb 2020 18:43:17 -0500
-X-MC-Unique: 9ztUGwJdM76hyVQc14z62A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83704184AEA6;
-        Tue,  4 Feb 2020 23:43:14 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B33B5D9E2;
-        Tue,  4 Feb 2020 23:43:01 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 18:42:58 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 11/16] audit: add support for containerid to
- network namespaces
-Message-ID: <20200204234258.uwaqk3s3c42fxews@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <2954ed671a7622ddf3abdb8854dbba2ad13e9f33.1577736799.git.rgb@redhat.com>
- <CAHC9VhRw3Fj9-hi+Vj8JJb_GXM4B9N5hRXa9H6aQkuuFqJJ15w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhRw3Fj9-hi+Vj8JJb_GXM4B9N5hRXa9H6aQkuuFqJJ15w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Tue, 4 Feb 2020 18:49:37 -0500
+Received: by mail-pl1-f195.google.com with SMTP id t14so64439plr.8;
+        Tue, 04 Feb 2020 15:49:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qD7p9omT3ZqLHQdscsqkNZErSP6L23JqC4boqGiD0ds=;
+        b=EtqHVulXx99URS3Qe05lW8Lufh6T7pcjz/KReLzLTuFZSbtVzZaf2lrMZI4wFiApPl
+         bD+ggX05doVz354UPhFih4X+p4n34bjwn6de8Z+BcQm8zWJdRmNnAHRuONj/FUI1tjyL
+         iUfNcGHJqDaclN9NFsMaKYb0eyF0vglFqcZmIQYZKSKeO765QpmIAsGkGffo3f+MVPkw
+         fWPcI0cUWUGwgu16ALmpk6C0kyYdHaMVZi5Rk/UcqEnlm/XiSDfVskhmaq0Y5tuWEtxM
+         w0N9BZodkCGw0bo3dFPXdRk7qnxnnHhU3KPxLZK0/3886wX/eYn+Rx6p2MdkH2bbzQ/c
+         hICw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qD7p9omT3ZqLHQdscsqkNZErSP6L23JqC4boqGiD0ds=;
+        b=hhvQfjBUVEQMIAy7aKbroqVktgA0l7GJcQT9DIRoqBkZyEHZ7j8aCR6v4oug6APF7S
+         3FqOJOKRwMc3gxL483DtcEzkAPguBM6eoIzF8OOiqMwfbsIkQo4mAqQSpbnr8Qutf5Xz
+         JVoviO++BJ8vDMRvFYqr0Uw+sfGtyMssP1oCNFsnUML8mLDba1L9V3Y0QTbDnm9fP7GF
+         KRZjDHuJq61TOtKDWFVUe0Ie3lGOrKvlF/sCLoSkpNIlgZjE/+q+5LKtP8SS2/1Qy8/N
+         NUY0mSrWM6i3pOlBFL/OZ8VW9sDOpS3Wzxuq69rCKM2GQG4typJEtr0ChiiyJ71K1gAa
+         8BRg==
+X-Gm-Message-State: APjAAAWZKDQbMHkyg8xpNULVV0CTHwa9yBI5zb9lB6YheCBU7dMCwX/w
+        tzm3knx3pD5nXRfZXQNNIXAgw47Q
+X-Google-Smtp-Source: APXvYqyBLewVzoOQa5qiRdOx7sM6iJnyGsUH+B0sJ4Kxn/9oyCmHZ7AwNaBh982pcio1KFv+l18nHg==
+X-Received: by 2002:a17:902:8688:: with SMTP id g8mr32079519plo.277.1580860176419;
+        Tue, 04 Feb 2020 15:49:36 -0800 (PST)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 15:49:35 -0800 (PST)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 01/17] media: entity: Pass entity to get_fwnode_pad operation
+Date:   Tue,  4 Feb 2020 15:49:02 -0800
+Message-Id: <20200204234918.20425-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200204234918.20425-1-slongerbeam@gmail.com>
+References: <20200204234918.20425-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 16:28, Paul Moore wrote:
-> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > This also adds support to qualify NETFILTER_PKT records.
-> >
-> > Audit events could happen in a network namespace outside of a task
-> > context due to packets received from the net that trigger an auditing
-> > rule prior to being associated with a running task.  The network
-> > namespace could be in use by multiple containers by association to the
-> > tasks in that network namespace.  We still want a way to attribute
-> > these events to any potential containers.  Keep a list per network
-> > namespace to track these audit container identifiiers.
-> >
-> > Add/increment the audit container identifier on:
-> > - initial setting of the audit container identifier via /proc
-> > - clone/fork call that inherits an audit container identifier
-> > - unshare call that inherits an audit container identifier
-> > - setns call that inherits an audit container identifier
-> > Delete/decrement the audit container identifier on:
-> > - an inherited audit container identifier dropped when child set
-> > - process exit
-> > - unshare call that drops a net namespace
-> > - setns call that drops a net namespace
-> >
-> > Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-> > event standalone records.  Iterate through all potential audit container
-> > identifiers associated with a network namespace.
-> >
-> > Please see the github audit kernel issue for contid net support:
-> >   https://github.com/linux-audit/audit-kernel/issues/92
-> > Please see the github audit testsuiite issue for the test case:
-> >   https://github.com/linux-audit/audit-testsuite/issues/64
-> > Please see the github audit wiki for the feature overview:
-> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > ---
-> >  include/linux/audit.h    |  24 +++++++++
-> >  kernel/audit.c           | 132 ++++++++++++++++++++++++++++++++++++++++++++++-
-> >  kernel/nsproxy.c         |   4 ++
-> >  net/netfilter/nft_log.c  |  11 +++-
-> >  net/netfilter/xt_AUDIT.c |  11 +++-
-> >  5 files changed, 176 insertions(+), 6 deletions(-)
-> 
-> ...
-> 
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 5531d37a4226..ed8d5b74758d 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/ptrace.h>
-> >  #include <uapi/linux/audit.h>
-> > +#include <linux/refcount.h>
-> >
-> >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > @@ -121,6 +122,13 @@ struct audit_task_info {
-> >
-> >  extern struct audit_task_info init_struct_audit;
-> >
-> > +struct audit_contobj_netns {
-> > +       struct list_head        list;
-> > +       u64                     id;
-> 
-> Since we now track audit container IDs in their own structure, why not
-> link directly to the audit container ID object (and bump the
-> refcount)?
+Add a missing pointer to the entity in the media_entity operation
+get_fwnode_pad. There are no implementers of this op yet, but a future
+entity that does so will almost certainly need a reference to itself
+to carry out the work.
 
-Ok, I've done this but at first I had doubts about the complexity.
+Fixes: ae45cd5efc120 ("[media] media: entity: Add get_fwnode_pad entity
+operation")
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+---
+ drivers/media/mc/mc-entity.c | 2 +-
+ include/media/media-entity.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-> > +       refcount_t              refcount;
-> > +       struct rcu_head         rcu;
-> > +};
-> > +
-> >  extern int is_audit_feature_set(int which);
-> >
-> >  extern int __init audit_register_class(int class, unsigned *list);
-> > @@ -225,6 +233,12 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
-> >  }
-> >
-> >  extern void audit_log_container_id(struct audit_context *context, u64 contid);
-> > +extern void audit_netns_contid_add(struct net *net, u64 contid);
-> > +extern void audit_netns_contid_del(struct net *net, u64 contid);
-> > +extern void audit_switch_task_namespaces(struct nsproxy *ns,
-> > +                                        struct task_struct *p);
-> > +extern void audit_log_netns_contid_list(struct net *net,
-> > +                                       struct audit_context *context);
-> >
-> >  extern u32 audit_enabled;
-> >
-> > @@ -297,6 +311,16 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
-> >
-> >  static inline void audit_log_container_id(struct audit_context *context, u64 contid)
-> >  { }
-> > +static inline void audit_netns_contid_add(struct net *net, u64 contid)
-> > +{ }
-> > +static inline void audit_netns_contid_del(struct net *net, u64 contid)
-> > +{ }
-> > +static inline void audit_switch_task_namespaces(struct nsproxy *ns,
-> > +                                               struct task_struct *p)
-> > +{ }
-> > +static inline void audit_log_netns_contid_list(struct net *net,
-> > +                                              struct audit_context *context)
-> > +{ }
-> >
-> >  #define audit_enabled AUDIT_OFF
-> >
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index d4e6eafe5644..f7a8d3288ca0 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -59,6 +59,7 @@
-> >  #include <linux/freezer.h>
-> >  #include <linux/pid_namespace.h>
-> >  #include <net/netns/generic.h>
-> > +#include <net/net_namespace.h>
-> >
-> >  #include "audit.h"
-> >
-> > @@ -86,9 +87,13 @@
-> >  /**
-> >   * struct audit_net - audit private network namespace data
-> >   * @sk: communication socket
-> > + * @contid_list: audit container identifier list
-> > + * @contid_list_lock audit container identifier list lock
-> >   */
-> >  struct audit_net {
-> >         struct sock *sk;
-> > +       struct list_head contid_list;
-> > +       spinlock_t contid_list_lock;
-> >  };
-> >
-> >  /**
-> > @@ -305,8 +310,11 @@ struct audit_task_info init_struct_audit = {
-> >  void audit_free(struct task_struct *tsk)
-> >  {
-> >         struct audit_task_info *info = tsk->audit;
-> > +       struct nsproxy *ns = tsk->nsproxy;
-> >
-> >         audit_free_syscall(tsk);
-> > +       if (ns)
-> > +               audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
-> >         /* Freeing the audit_task_info struct must be performed after
-> >          * audit_log_exit() due to need for loginuid and sessionid.
-> >          */
-> > @@ -409,6 +417,120 @@ static struct sock *audit_get_sk(const struct net *net)
-> >         return aunet->sk;
-> >  }
-> >
-> > +void audit_netns_contid_add(struct net *net, u64 contid)
-> > +{
-> > +       struct audit_net *aunet;
-> > +       struct list_head *contid_list;
-> > +       struct audit_contobj_netns *cont;
-> > +
-> > +       if (!net)
-> > +               return;
-> > +       if (!audit_contid_valid(contid))
-> > +               return;
-> > +       aunet = net_generic(net, audit_net_id);
-> > +       if (!aunet)
-> > +               return;
-> > +       contid_list = &aunet->contid_list;
-> > +       rcu_read_lock();
-> > +       list_for_each_entry_rcu(cont, contid_list, list)
-> > +               if (cont->id == contid) {
-> > +                       spin_lock(&aunet->contid_list_lock);
-> > +                       refcount_inc(&cont->refcount);
-> > +                       spin_unlock(&aunet->contid_list_lock);
-> > +                       goto out;
-> > +               }
-> > +       cont = kmalloc(sizeof(*cont), GFP_ATOMIC);
-> > +       if (cont) {
-> > +               INIT_LIST_HEAD(&cont->list);
-> > +               cont->id = contid;
-> > +               refcount_set(&cont->refcount, 1);
-> > +               spin_lock(&aunet->contid_list_lock);
-> > +               list_add_rcu(&cont->list, contid_list);
-> > +               spin_unlock(&aunet->contid_list_lock);
-> > +       }
-> > +out:
-> > +       rcu_read_unlock();
-> > +}
-> 
-> See my comments about refcount_t, spinlocks, and list manipulation
-> races from earlier in the patchset; the same thing applies to the
-> function above.
-
-This was some of the complexity that concerned me, but switching to rcu
-read locks helped.  In this case, since a stale list would cause an
-update issue and these counts aren't used or updated anywere else,
-switching to an int makes sense.
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
+index 7c429ce98bae..c333320f790a 100644
+--- a/drivers/media/mc/mc-entity.c
++++ b/drivers/media/mc/mc-entity.c
+@@ -386,7 +386,7 @@ int media_entity_get_fwnode_pad(struct media_entity *entity,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = entity->ops->get_fwnode_pad(&endpoint);
++	ret = entity->ops->get_fwnode_pad(entity, &endpoint);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 8cb2c504a05c..cde80ad029b7 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -212,7 +212,8 @@ struct media_pad {
+  *    mutex held.
+  */
+ struct media_entity_operations {
+-	int (*get_fwnode_pad)(struct fwnode_endpoint *endpoint);
++	int (*get_fwnode_pad)(struct media_entity *entity,
++			      struct fwnode_endpoint *endpoint);
+ 	int (*link_setup)(struct media_entity *entity,
+ 			  const struct media_pad *local,
+ 			  const struct media_pad *remote, u32 flags);
+-- 
+2.17.1
 
