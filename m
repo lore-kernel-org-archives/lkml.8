@@ -2,172 +2,167 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ADEC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEAFC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B96220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A6E21927
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZsEAf/Yc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYLDIsOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgBDNiH (ORCPT
+        id S1727275AbgBDNjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:38:07 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35775 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbgBDNiH (ORCPT
+        Tue, 4 Feb 2020 08:39:03 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23482 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727215AbgBDNjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:38:07 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so18648037ljb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 05:38:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=n/m3NWqGbb+4HJdRKqiqsaJ6PjbAVsfkhoBTq4U1QkY=;
-        b=ZsEAf/YcuhuC44t1ZiPkUVNIPYrzUBgrLcwUxSs5WZbsDV0/kcBnFDTtwUUSC4wd9M
-         oVGZQ0ybNKKbsoKtrbUPx7o9F1PvsVeM6SpsqzuCtCH0awXYQ3huy0yoPHRFkdkG9nIp
-         hSxKXj+/rTvjVD91QSR6SIWyh5NjnACCQP6d6RY4NQYBfmQdY2pTsSAupGaYdAB8C8YW
-         f1rxCZVTIcSuSwfQXwpKqH8M+hWvSGxUfftdHcteMV3b15UMFTIGPvv5bO4KitSQzhLW
-         RWRh/2Z9EKCfqEf0cck22t893sJxz/BBOJC8WsFY+P9QmLy6V4BYvob5Ug4hDNxXOo2E
-         A+ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n/m3NWqGbb+4HJdRKqiqsaJ6PjbAVsfkhoBTq4U1QkY=;
-        b=MBus7NrGkXolpw+bb7LVrwJXSiB25xLiCL9M/JuSRaKupNFH/hKk+/4/8gh0ZGPP2t
-         50HrUK6r9DQVv/9Q377sdT7dHHMpzdwm0z2zk/75JQKL7BOyve/7BUpp3+gmgfH5JhZt
-         gsGTZU6v8itjVqdGVXMbrpoV4TrqU3Y1Ac88wRid+1CqnrVrTHXcyGGZyOznr8rFxUyJ
-         mDNggnFSWH4+wmEJl5dltl4l+BrejwO03nz4y3fNPkhFJgEvcNSIlAQ/hyK3vGLfRAvD
-         7rAEcox6zGVPx0Ekp8SIrIO5Qs9ezcqLQNJrM+iJIXeR4f9s4MP+KklDNFACVGyc7SuQ
-         7JXA==
-X-Gm-Message-State: APjAAAUgTuxe+kWnz1c0Swio90J97YL19zvQCGvkQAoUB1kjyKq7Um/F
-        vGo/iYYLV4aorMUIzALH2O9GOaxGu9w9DzokzB3ZmU2p8JQ=
-X-Google-Smtp-Source: APXvYqzg70xarq/GVtWcCSLMMbK2uqnzbVPl7WsHYDFsLM43Rs6i4lwnDKroDPpkgGAnKIvpcLpStWwMNbxGN+RQR6E=
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr16664224lja.165.1580823483575;
- Tue, 04 Feb 2020 05:38:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20200203161912.158976871@linuxfoundation.org>
-In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 4 Feb 2020 19:07:52 +0530
-Message-ID: <CA+G9fYtJFiCNG2Z6hhgx=wzWDxhHaeP_zegynYG1eZx-Ejwvfg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/70] 4.19.102-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tue, 4 Feb 2020 08:39:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580823541;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=uFqUbMVoFz/oJmEdc8HXPV/ptEa7y/kovjPMU9k79u0=;
+        b=IYLDIsOiDqVaGofPc4hj7K7jPvdrRTPAUPSptna9DAFBXqccSWnHU47xGRx4du/TCi6f+/
+        G09fe7bdmoKxWpLZG/mXAloFgJn38GNoi+GT3ELtyU+10kgCWMROLZrRWrGBPTSfWA+2FD
+        bLPTGyS6gjSdn++tL1H/NCSsbiznkN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-NI4IQWmkP1SOJf1agBVp9g-1; Tue, 04 Feb 2020 08:38:57 -0500
+X-MC-Unique: NI4IQWmkP1SOJf1agBVp9g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3939D1857342;
+        Tue,  4 Feb 2020 13:38:55 +0000 (UTC)
+Received: from [10.36.117.121] (ovpn-117-121.ams2.redhat.com [10.36.117.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EE935DA84;
+        Tue,  4 Feb 2020 13:38:51 +0000 (UTC)
+Subject: Re: [PATCH v6 10/10] mm/memory_hotplug: Cleanup __remove_pages()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Oscar Salvador <osalvador@suse.de>, linux-s390@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Wei Yang <richardw.yang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linuxppc-dev@lists.ozlabs.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-11-david@redhat.com> <20200204094652.GE6494@linux>
+ <5d698f94-af18-0714-bc97-14b6c520572c@redhat.com>
+ <20200204131353.GJ22482@gate.crashing.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <0e2f700c-b01b-8c16-99c2-2648967fc203@redhat.com>
+Date:   Tue, 4 Feb 2020 14:38:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200204131353.GJ22482@gate.crashing.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Feb 2020 at 22:01, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.102 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.102-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 04.02.20 14:13, Segher Boessenkool wrote:
+> On Tue, Feb 04, 2020 at 01:41:06PM +0100, David Hildenbrand wrote:
+>> On 04.02.20 10:46, Oscar Salvador wrote:
+>>> I have to confess that it took me while to wrap around my head
+>>> with the new min() change, but looks ok:
+>>
+>> It's a pattern commonly used in compilers and emulators to calculate t=
+he
+>> number of bytes to the next block/alignment. (we're missing a macro
+>> (like we have ALIGN_UP/IS_ALIGNED) for that - but it's hard to come up
+>> with a good name (e.g., SIZE_TO_NEXT_ALIGN) .
+>=20
+> You can just write the easy to understand
+>=20
+>   ...  ALIGN_UP(x) - x  ...
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+you mean
 
-Summary
-------------------------------------------------------------------------
+ALIGN_UP(x, PAGES_PER_SECTION) - x
 
-kernel: 4.19.102-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 32591972abd801a21846d4d355bc4e70784d02c6
-git describe: v4.19.101-74-g32591972abd8
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.101-74-g32591972abd8
+but ...
 
-No regressions (compared to build v4.19.101)
+>=20
+> which is better *without* having a separate name.  Does that not
+> generate good machine code for you?
 
-No fixes (compared to build v4.19.101)
+1. There is no ALIGN_UP. "SECTION_ALIGN_UP(x) - x" would be possible
+2. It would be wrong if x is already aligned.
 
-Ran 12112 total tests in the following environments and test suites.
+e.g., let's use 4096 for simplicity as we all know that value by heart
+(for both x and the block size).
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+a) -(4096 | -4096) -> 4096
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-open-posix-tests
+b) #define ALIGN_UP(x, a) ((x + a - 1) & -(a))
+
+ALIGN_UP(4096, 4096) - 4096 -> 0
+
+Not as easy as it seems ...
 
 --=20
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+
+David / dhildenb
+
