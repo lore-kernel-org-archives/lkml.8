@@ -4,98 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BFAC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1544EC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FCF20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CB9217BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIRI49xc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeAfttWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgBDLVJ (ORCPT
+        id S1727136AbgBDLWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:21:09 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42964 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgBDLVI (ORCPT
+        Tue, 4 Feb 2020 06:22:17 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35969 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbgBDLWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:21:08 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so9306047pfz.9;
-        Tue, 04 Feb 2020 03:21:08 -0800 (PST)
+        Tue, 4 Feb 2020 06:22:16 -0500
+Received: by mail-pj1-f67.google.com with SMTP id gv17so1245449pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 03:22:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=etkzxQdonYJKMTHRqSVIxyc50MlvlU1LrQeOV4a4eFk=;
-        b=PIRI49xc04/X0a8DT1CIRCvr2/mgyzDfnaH9DdnMmIZbmCYVnMSpJhynEmGudh5hDO
-         kVywtrYnr1vRzyqzoru71Fes/x3ooibD9Uqd895xrv9y0yN5ECuVgYh6i0NCQRqUDhyJ
-         qO/t/LY+TELglPmEJCIFcolOV8ow1gOutzm2X7/cKDcQupCEEfZVUVo1/YSCyQdUwDSz
-         5/9f29STvTaZmVDO19GCRyVvBa9rXdFAKdLOnMmVgQYCbkdZYg1fmqJP1iBZsKNeqLWy
-         HfBK1sK9PaokmKWzOFGeMbuUZ+orx+WcSN+ZMje9YdGfzp8Kv7GKh8Ax/rt/3m6aqsWh
-         7GoQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1W+3zsnEU6ZNkubtrp4GhFh9NK/nPnnv+lTC1XegvP8=;
+        b=OeAfttWgeChdF9jpkkVhU+wvcxHefjsWiwdrj2bhSZJT0Dr1h7Haz2ILIGKxW1pati
+         jWehdM8enEg1fnOfj9k14OETsvT058yy816xDBSWLLtwX+6W1U5uxSs+Ky/n54JVHLza
+         myy+gxjwYaoR9mx27dDhk7ftGOgtfkSEeGOqu/l/8TTSEDXHy2danjBrVVObAhyab/l4
+         fONNsjAJMbhlGJu5zMdNxQRoky60xsHUA6R9Z4Hth10regafKyM62/8owbTUUwJ2IePx
+         K8LLcFp79iMIdloo7KQX5AWzEXfzXU1IJms7gbAYpmL9bFSNOuCfi6eWUWztTNeNQsr2
+         9wLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=etkzxQdonYJKMTHRqSVIxyc50MlvlU1LrQeOV4a4eFk=;
-        b=pc6gDTN3mOiBahi3MRqt7tt6mW8pSttBQrVR9VHuYfSPdQKnVnAb12UkQLaOTULtaH
-         tOopDofcD57e8xFi5HsZBFmzHVsTaAQQKduN4L8sxzOgH4zDqfxW+vgTeJFvKblGjEru
-         rdND7K8r+BKiG84kW0wQBWmmCpCthkLXN0ySlrJ/9u7GtRWTgH2x0SbpRduOvpK9OUIg
-         jDWPB6df1Ljw+SDTH2wGzOPvcUeg61HIRrKIxMIRseWUZh9D/yErNB0UmzcrZDd08Uo8
-         mcP4BdwJmwYKAKqV5LxAFMwtKWCb37JDAn40BBkjQC7Ft/FBPfkQjRkhMg9W5ysSwkEs
-         XOdg==
-X-Gm-Message-State: APjAAAWYrhQv8xUaySIOiI4DRATs/38lJT1yrLIdFxa4ExLc71Vv/uwa
-        EIvqM3p+FI3/Hm0kSWEl0s9QuhpYj7t05Ceq6qc=
-X-Google-Smtp-Source: APXvYqwt7q/UzXE/AqPSMjFYF/rze2eiuvxrpzsXScsHqjQIuEpbdTYlvnclZB19Uhn2efeEopSNoRVRDT2HM64mxy4=
-X-Received: by 2002:a65:4685:: with SMTP id h5mr32235446pgr.203.1580815268189;
- Tue, 04 Feb 2020 03:21:08 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1W+3zsnEU6ZNkubtrp4GhFh9NK/nPnnv+lTC1XegvP8=;
+        b=ja80OpgmTxeRjUld+5JcvSeXijhXSEbiPl2kyqnAqsd6oVX/FKYEgkQo1hTGj1DkRW
+         6m5uqMqvPz1XVnra9wPNlYiNV81hOL9J9fP7qCrKDhhClk+GjT/SEy9sr1bkOwurLtTQ
+         vIbvbTPiLWVQ7zRkVtYRV7fEVtwK6S/PINp8FgNTY5Ac+5mOmgNEybWlydRVJP177yUp
+         uzfNnu0hmLDcsasmLwDTW3EfdyQ1I9SaX4a/GaIi3NMltRJ2HQYCTlgZgXEDdhc9Zpod
+         T5M+cfMpX8Ff+ZwVSOX+HVDGYvJ0I2wAaCNzoko2JOHxtJg6n7XPBznkJcjc9IL7zRxe
+         Ud0Q==
+X-Gm-Message-State: APjAAAVOTV9JETa5pspPX1e75+Gk45JRH3KyrLTMurUHCYtVv6xuco+O
+        9DVmtbvE1MgU2DEkaYgzaq8=
+X-Google-Smtp-Source: APXvYqxiY99hRz0Z6ZPw4flyNky2QRyCA5rtWeXn3U1HJyW3z3hjSBngmChiLfN+jOENx+SaSwVs+A==
+X-Received: by 2002:a17:90a:8a08:: with SMTP id w8mr5823926pjn.125.1580815336037;
+        Tue, 04 Feb 2020 03:22:16 -0800 (PST)
+Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
+        by smtp.gmail.com with ESMTPSA id z14sm22336409pgj.43.2020.02.04.03.22.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 03:22:14 -0800 (PST)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 4 Feb 2020 20:22:11 +0900
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1] printk: Declare log_wait as external variable
+Message-ID: <20200204112211.GA2009@jagdpanzerIV.localdomain>
+References: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
+ <20200204021620.GD41358@google.com>
+ <20200204090533.GM32742@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <20200204062118.GS2841@vkoul-mobl>
-In-Reply-To: <20200204062118.GS2841@vkoul-mobl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Feb 2020 13:21:00 +0200
-Message-ID: <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204090533.GM32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 03-02-20, 12:37, Andy Shevchenko wrote:
-> > On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >
-> > > dma_request_slave_channel_reason() no longer have user in mainline, it
-> > > can be removed.
-> > >
-> > > Advise users of dma_request_slave_channel() and
-> > > dma_request_slave_channel_compat() to move to dma_request_slave_chan()
-> >
-> > How? There are legacy ARM boards you have to care / remove before.
-> > DMAengine subsystem makes a p*s off decisions without taking care of
-> > (I'm talking now about dma release callback, for example) end users.
->
-> Can you elaborate issue you are seeing with dma_release callback?
+On (20/02/04 11:05), Andy Shevchenko wrote:
+> > > --- a/kernel/printk/printk.c
+> > > +extern wait_queue_head_t log_wait;	/* Used in fs/proc/kmsg.c */
+> > >  DECLARE_WAIT_QUEUE_HEAD(log_wait);
+> > > +#else
+> > > +static DECLARE_WAIT_QUEUE_HEAD(log_wait);
+> > > +#endif /* CONFIG_PROC_FS */
+> > 
+> > [..]
+> > 
+> > Since we are now introducing CONFIG_PROC_FS dependency to printk (and
+> > proc/kmsg already has CONFIG_PRINTK dependency),
+> 
+> I'm not sure I understood. The above does not introduce any dependencies.
 
+kernel/printk/printk.c
+ +#ifdef CONFIG_PROC_FS
+ ..
 
-[    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
-defined so it is not safe to unbind this driver while in use
+Not exactly "dependency"... what is the correct word here.
 
-It's not limited to that driver, but actually all I'm maintaining.
-
-Users are not happy!
-
--- 
-With Best Regards,
-Andy Shevchenko
+	-ss
