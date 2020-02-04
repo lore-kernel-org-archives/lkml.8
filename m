@@ -8,68 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBAEC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1363FC3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32C521582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF46121582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtqHVulX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQoE2aYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbgBDXti (ORCPT
+        id S1727789AbgBDXtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:49:38 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41382 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgBDXth (ORCPT
+        Tue, 4 Feb 2020 18:49:46 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38416 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgBDXto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:49:37 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t14so64439plr.8;
-        Tue, 04 Feb 2020 15:49:37 -0800 (PST)
+        Tue, 4 Feb 2020 18:49:44 -0500
+Received: by mail-pl1-f194.google.com with SMTP id t6so70818plj.5;
+        Tue, 04 Feb 2020 15:49:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qD7p9omT3ZqLHQdscsqkNZErSP6L23JqC4boqGiD0ds=;
-        b=EtqHVulXx99URS3Qe05lW8Lufh6T7pcjz/KReLzLTuFZSbtVzZaf2lrMZI4wFiApPl
-         bD+ggX05doVz354UPhFih4X+p4n34bjwn6de8Z+BcQm8zWJdRmNnAHRuONj/FUI1tjyL
-         iUfNcGHJqDaclN9NFsMaKYb0eyF0vglFqcZmIQYZKSKeO765QpmIAsGkGffo3f+MVPkw
-         fWPcI0cUWUGwgu16ALmpk6C0kyYdHaMVZi5Rk/UcqEnlm/XiSDfVskhmaq0Y5tuWEtxM
-         w0N9BZodkCGw0bo3dFPXdRk7qnxnnHhU3KPxLZK0/3886wX/eYn+Rx6p2MdkH2bbzQ/c
-         hICw==
+        bh=72xnFHPEyLcodGDkHs6BcIOyiqauoZxf30bRgRrtTFY=;
+        b=BQoE2aYg+S0CCCMxIZ0jWCqQjys5A76hZUcTbp30Q00N3hQz77rIsJc1QBKLbNOKxn
+         kMCBfLVe6TA1ymqnIHtkBTnC0MFWfN+vRMIBOw2I43y1qOONMBg38jk285bH9TQDXB3r
+         X7nvHi8CO+1gZ8CFaGdVqZ4IOx3p7TDuLs7TCSYfMfjbHAai370POhJEH5ETshMV9Gic
+         l411WnVgfKpsYjgXv+WC5rqPBSyMXbqKOD0HA7xZW3Zz9bSC26r9n4qUcgXNxshYPTel
+         MD11HclsYCfnd1ZyofkA9YfiUcQLzSgEIqB+TXbouxYhEbl0WqvWJPKVn76ec6D/MVcX
+         Q+rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qD7p9omT3ZqLHQdscsqkNZErSP6L23JqC4boqGiD0ds=;
-        b=hhvQfjBUVEQMIAy7aKbroqVktgA0l7GJcQT9DIRoqBkZyEHZ7j8aCR6v4oug6APF7S
-         3FqOJOKRwMc3gxL483DtcEzkAPguBM6eoIzF8OOiqMwfbsIkQo4mAqQSpbnr8Qutf5Xz
-         JVoviO++BJ8vDMRvFYqr0Uw+sfGtyMssP1oCNFsnUML8mLDba1L9V3Y0QTbDnm9fP7GF
-         KRZjDHuJq61TOtKDWFVUe0Ie3lGOrKvlF/sCLoSkpNIlgZjE/+q+5LKtP8SS2/1Qy8/N
-         NUY0mSrWM6i3pOlBFL/OZ8VW9sDOpS3Wzxuq69rCKM2GQG4typJEtr0ChiiyJ71K1gAa
-         8BRg==
-X-Gm-Message-State: APjAAAWZKDQbMHkyg8xpNULVV0CTHwa9yBI5zb9lB6YheCBU7dMCwX/w
-        tzm3knx3pD5nXRfZXQNNIXAgw47Q
-X-Google-Smtp-Source: APXvYqyBLewVzoOQa5qiRdOx7sM6iJnyGsUH+B0sJ4Kxn/9oyCmHZ7AwNaBh982pcio1KFv+l18nHg==
-X-Received: by 2002:a17:902:8688:: with SMTP id g8mr32079519plo.277.1580860176419;
-        Tue, 04 Feb 2020 15:49:36 -0800 (PST)
+        bh=72xnFHPEyLcodGDkHs6BcIOyiqauoZxf30bRgRrtTFY=;
+        b=DtgAcq6xJVF0DU/TuAlp5IWXwiWwVE+Aupl74+xhKwagb2Vtl0W260VDYb+NNTLAU3
+         dwpsNeZTkziRnzJzKhdGz73V2Pue1F0kun5u3rjZFGvD91UwuV/viPiTW85yHpdVUkeB
+         tfWzYKijT5u5UmQ1x896dSotvbGe2u7Swti/5PERpJE56VfFle8VvXwnjoanrOo+mL6G
+         77wagXzopuJDN+f36lhjduGh4DxpOSv2qBP6l6IrylgRHxKs5v/p5/urss6dguJZ6oMu
+         jG5JVB4UQFybvhFfHSGYOjD7PkabBxoFy+/nsXfo7hk49aY+LPt3IPb9pHhQcMYJlkgE
+         /jmA==
+X-Gm-Message-State: APjAAAVhRlpPEWwOzOb8FIvzQKcbPOkz8ylt4cvwQsRVp0JhTLyWjL7O
+        qPks3uQi9iK2S01W+T5bbe4pkFit
+X-Google-Smtp-Source: APXvYqx/lfvQjl0NuwmTSmHbb4rgUdlAX9w43sbHEMtjKlW115UDhnyIPhaLx4OtBJm3tPnV5HChsQ==
+X-Received: by 2002:a17:902:8498:: with SMTP id c24mr17839937plo.233.1580860183328;
+        Tue, 04 Feb 2020 15:49:43 -0800 (PST)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.35
+        by smtp.googlemail.com with ESMTPSA id u2sm24607929pgj.7.2020.02.04.15.49.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 15:49:35 -0800 (PST)
+        Tue, 04 Feb 2020 15:49:42 -0800 (PST)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 01/17] media: entity: Pass entity to get_fwnode_pad operation
-Date:   Tue,  4 Feb 2020 15:49:02 -0800
-Message-Id: <20200204234918.20425-2-slongerbeam@gmail.com>
+Subject: [PATCH v3 05/17] media: video-mux: Implement get_fwnode_pad op
+Date:   Tue,  4 Feb 2020 15:49:06 -0800
+Message-Id: <20200204234918.20425-6-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200204234918.20425-1-slongerbeam@gmail.com>
 References: <20200204234918.20425-1-slongerbeam@gmail.com>
@@ -78,46 +73,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a missing pointer to the entity in the media_entity operation
-get_fwnode_pad. There are no implementers of this op yet, but a future
-entity that does so will almost certainly need a reference to itself
-to carry out the work.
+Implement get_fwnode_pad operation. If the endpoint is owned by the video
+mux, return the endpoint's port number. The video mux maps fwnode port
+numbers and pad indexes 1:1.
 
-Fixes: ae45cd5efc120 ("[media] media: entity: Add get_fwnode_pad entity
-operation")
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/media/mc/mc-entity.c | 2 +-
- include/media/media-entity.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/video-mux.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
-index 7c429ce98bae..c333320f790a 100644
---- a/drivers/media/mc/mc-entity.c
-+++ b/drivers/media/mc/mc-entity.c
-@@ -386,7 +386,7 @@ int media_entity_get_fwnode_pad(struct media_entity *entity,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index 3d2a5c2b4c08..c1c477e4e33f 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -94,9 +94,38 @@ static int video_mux_link_setup(struct media_entity *entity,
+ 	return ret;
+ }
  
--	ret = entity->ops->get_fwnode_pad(&endpoint);
-+	ret = entity->ops->get_fwnode_pad(entity, &endpoint);
- 	if (ret < 0)
- 		return ret;
++static int video_mux_get_fwnode_pad(struct media_entity *entity,
++				    struct fwnode_endpoint *endpoint)
++{
++	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
++	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
++	struct fwnode_handle *vmux_fwnode = dev_fwnode(vmux->subdev.dev);
++	struct fwnode_handle *vmux_ep;
++
++	/*
++	 * If the endpoint is one of ours, return the endpoint's port
++	 * number. This device maps port numbers and pad indexes 1:1.
++	 */
++	fwnode_graph_for_each_endpoint(vmux_fwnode, vmux_ep) {
++		if (endpoint->local_fwnode == vmux_ep) {
++			struct fwnode_endpoint fwep;
++			int ret;
++
++			ret = fwnode_graph_parse_endpoint(vmux_ep, &fwep);
++
++			fwnode_handle_put(vmux_ep);
++
++			return ret ? ret : fwep.port;
++		}
++	}
++
++	return -ENXIO;
++}
++
+ static const struct media_entity_operations video_mux_ops = {
+ 	.link_setup = video_mux_link_setup,
+ 	.link_validate = v4l2_subdev_link_validate,
++	.get_fwnode_pad = video_mux_get_fwnode_pad,
+ };
  
-diff --git a/include/media/media-entity.h b/include/media/media-entity.h
-index 8cb2c504a05c..cde80ad029b7 100644
---- a/include/media/media-entity.h
-+++ b/include/media/media-entity.h
-@@ -212,7 +212,8 @@ struct media_pad {
-  *    mutex held.
-  */
- struct media_entity_operations {
--	int (*get_fwnode_pad)(struct fwnode_endpoint *endpoint);
-+	int (*get_fwnode_pad)(struct media_entity *entity,
-+			      struct fwnode_endpoint *endpoint);
- 	int (*link_setup)(struct media_entity *entity,
- 			  const struct media_pad *local,
- 			  const struct media_pad *remote, u32 flags);
+ static int video_mux_s_stream(struct v4l2_subdev *sd, int enable)
 -- 
 2.17.1
 
