@@ -2,69 +2,115 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8865CC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E43C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650A82087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1802E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 16:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHLsOV9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgBDQPK (ORCPT
+        id S1727430AbgBDQPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:15:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58432 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbgBDQPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 11:15:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 10B14B9E5;
-        Tue,  4 Feb 2020 16:15:07 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5275CDA80D; Tue,  4 Feb 2020 17:14:53 +0100 (CET)
-Date:   Tue, 4 Feb 2020 17:14:52 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] btrfs: ref-verify: fix memory leaks
-Message-ID: <20200204161451.GG2654@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Wenwen Wang <wenwen@cs.uga.edu>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200201203838.19198-1-wenwen@cs.uga.edu>
+        Tue, 4 Feb 2020 11:15:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34594 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727379AbgBDQPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 11:15:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580832951;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fGtFHIbquXcvehIzmocD/BNz/hYF+HSP4Jj3wEbCF8g=;
+        b=DHLsOV9P8e/GnZ+BReQPRuf4gOOZWXlcYVFucSzqGXagrKuFuifJbh5WWQuplbwIJq/dc/
+        DKHy/xdWWUqIHi7A5Gf7HV+w6AJMRJSEr6v9e2VRrIIyu9taKzSLC8s+DFmZ8gAtZz0l4G
+        ZDTRfQP7AofZCCI/VL9cZBdL2ynu26w=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-L_6tKLn1MhGUI3GkaN11eg-1; Tue, 04 Feb 2020 11:15:47 -0500
+X-MC-Unique: L_6tKLn1MhGUI3GkaN11eg-1
+Received: by mail-wm1-f71.google.com with SMTP id n17so1681048wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 08:15:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=fGtFHIbquXcvehIzmocD/BNz/hYF+HSP4Jj3wEbCF8g=;
+        b=mHiP+XInuqzmXKMvCEdEoNwcPojVOr1GJT4+OD4j/ug20vb/lsyhEo73z5h2faP/1Z
+         T6CR10Dr3PNzW5W+25IknPD3MzTCsDco5G5xK1bLXJhMLa5rU0ka6ui7FtIvPEiCfEjq
+         YLiFum/hB6qgdA66Dka7kjI0OMa5GAEeovqXMT4w98w0j76/QpuGJW1UN+jwisJqdvHA
+         pzfmSe4sNyS09u73l5uVApCvhuFuGbTgSWQ7WM3rabIr/Hdi/qRr//rynZrgWKUawMqk
+         BOPzbFUOnDyU1S9iB4lpBuboV9GI+WCwjiJWov3cVy7rHre83BMOBnNO1+oqb/mVNRvh
+         YYgw==
+X-Gm-Message-State: APjAAAWqbblqsqDa1DoEE+2BkkGtB6AmIJ9ozlrHx8hWTVFz3pFlC1vW
+        mNN1l6u/shTSzPq68uQpg4/mmavtaOE036SE0jFKsWZ5kV6jQzecg58ySF8tUAbR1WjyCylRDKP
+        nKW6WtIf6ESUMZq3FWURBGIq5
+X-Received: by 2002:adf:b60f:: with SMTP id f15mr24153897wre.372.1580832946425;
+        Tue, 04 Feb 2020 08:15:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyXWw5RfxHgVOOaGGG4vnuzrBJpumSAQo4wPDeegi3aQlAvW2b1XwNbmHXYeZOpig4eHyp3dQ==
+X-Received: by 2002:adf:b60f:: with SMTP id f15mr24153877wre.372.1580832946262;
+        Tue, 04 Feb 2020 08:15:46 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id v8sm30682747wrw.2.2020.02.04.08.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 08:15:45 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] KVM: nVMX: Remove stale comment from nested_vmx_load_cr3()
+In-Reply-To: <20200204153259.16318-1-sean.j.christopherson@intel.com>
+References: <20200204153259.16318-1-sean.j.christopherson@intel.com>
+Date:   Tue, 04 Feb 2020 17:15:44 +0100
+Message-ID: <87imkmmiq7.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200201203838.19198-1-wenwen@cs.uga.edu>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 08:38:38PM +0000, Wenwen Wang wrote:
-> In btrfs_ref_tree_mod(), 'ref' and 'ra' are allocated through kzalloc() and
-> kmalloc(), respectively. In the following code, if an error occurs, the
-> execution will be redirected to 'out' or 'out_unlock' and the function will
-> be exited. However, on some of the paths, 'ref' and 'ra' are not
-> deallocated, leading to memory leaks. For example, if 'action' is
-> BTRFS_ADD_DELAYED_EXTENT, add_block_entry() will be invoked. If the return
-> value indicates an error, the execution will be redirected to 'out'. But,
-> 'ref' is not deallocated on this path, causing a memory leak.
-> 
-> To fix the above issues, deallocate both 'ref' and 'ra' before exiting from
-> the function when an error is encountered.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Right, the kfrees are missing. The whole function needs to be
-restructured otherwise it's too easy to get lost in the conditions and
-what needs to be cleaned up after errors but that's for a separate
-patch. Added to devel queue, thanks.
+> The blurb pertaining to the return value of nested_vmx_load_cr3() no
+> longer matches reality, remove it entirely as the behavior it is
+> attempting to document is quite obvious when reading the actual code.
+
+"And if it doesn't seem that obvious just try staring at it for a few
+years, do some small (60-70 patches) refactorings and fix several dozens
+of bugs. It will." :-)
+
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 7608924ee8c1..0c9b847f7a25 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1076,8 +1076,6 @@ static bool nested_cr3_valid(struct kvm_vcpu *vcpu, unsigned long val)
+>  /*
+>   * Load guest's/host's cr3 at nested entry/exit. nested_ept is true if we are
+>   * emulating VM entry into a guest with EPT enabled.
+> - * Returns 0 on success, 1 on failure. Invalid state exit qualification code
+> - * is assigned to entry_failure_code on failure.
+>   */
+>  static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
+>  			       u32 *entry_failure_code)
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
