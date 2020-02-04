@@ -2,113 +2,118 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D92C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F36EC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458B320730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fcqkr51i"
+	by mail.kernel.org (Postfix) with ESMTP id 20A6E21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580805208;
+	bh=KpMXBC/6WkTeVVdMseUh6mU3y0/1T4+PTjIYFzFCE2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xC1c0IzBFCjhJbHDCGX2dCZf70xspVWSt27WXMqq6gkZwUpG8qSBIMQ9Elubrb8tM
+	 OCPN98wjWh+EWz+h8f4DhrBO9jU8u1DlKzTB+oo/g8/WH1Fwtc11d4HD9dP6m0Dac0
+	 keZ28/rGIDbj/rCvsL06A+Lnaj4LvSeLawmwJXYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbgBDI2v (ORCPT
+        id S1727177AbgBDId1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:28:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55053 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727124AbgBDI2v (ORCPT
+        Tue, 4 Feb 2020 03:33:27 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42600 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgBDId1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 03:28:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580804930;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JipmoOe2nr0hGxD7C+f101bb7FTOHzYyEwpTEYgv7tg=;
-        b=fcqkr51i4XIx1miBuekqjS7AzBreBOE17Z77lH4I447ZVrALMhWuJCSZQ5m2dH+dZ8m/zd
-        kqWBHzIjzPUUhw94RinUWbgv0cp8DwLCS9/4widvBxm+g2+DA+IHo4qTdz0KHvhpA4W3Zi
-        pFgG0KTIXgg4dZ6ehlPHl+S9uHcfZQ4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-Dqa5HkEuOly10_ZneL--TQ-1; Tue, 04 Feb 2020 03:28:48 -0500
-X-MC-Unique: Dqa5HkEuOly10_ZneL--TQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBA80800D54;
-        Tue,  4 Feb 2020 08:28:45 +0000 (UTC)
-Received: from [10.72.12.170] (ovpn-12-170.pek2.redhat.com [10.72.12.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B4F290F49;
-        Tue,  4 Feb 2020 08:28:28 +0000 (UTC)
-Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
-To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>, mst@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jakub.kicinski@netronome.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-6-jasowang@redhat.com>
- <1b86d188-0666-f6ab-e3b3-bec1cfbd0c76@linux.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <cca7901b-51dd-4f4b-5c30-c42577ad5194@redhat.com>
-Date:   Tue, 4 Feb 2020 16:28:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 4 Feb 2020 03:33:27 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y19so11580138lfl.9;
+        Tue, 04 Feb 2020 00:33:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8DO+mGDd2sVt5YxyY/YYwABJQxNuUfjHg9DqBr31WD8=;
+        b=AMnFVGS082Xu+jVLWsHqPqikDHmHistgBgpdTCznf5utbvfRylK9yBsASQWY55ePLo
+         XHQivgXEa7gOoIIZaHKgc0e3xg5X00VZE+MCbslLE4do8mo9ZTthtXD9UuWLyvJwW66B
+         3DKm+ES8nUw5npsoaVCm8VjN62ONcP96ic101e9eCHCv9R/kd6yW2SCB9tJSz5kE9LBZ
+         oxhhfN4xxVER/EgAN8VxsIMy7MzkxxOJFK0Vts1Hm0AT1JdY+jIwphpekEb0ZxJ/YCoT
+         8W4xwHQhvPn+WbCXn705hcObAMEyJcZH9CtPwqeDH6MwK/rS97UMurE7w4SixrlqQWQC
+         oCgQ==
+X-Gm-Message-State: APjAAAXddzLUUSJOTE+cFqbU4X1P69WvpBAEsoHnm4+vClSVp1cslk4b
+        WwhrvGuwgQ0KmQaO0G6AmL4=
+X-Google-Smtp-Source: APXvYqx57PfajZ51uAxyTh/39jBSBUfBp4nFXJXPoPpIVX52VhlNHoSlhGlqc/gieGZyJIoFj862xA==
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr14264850lfk.52.1580805203770;
+        Tue, 04 Feb 2020 00:33:23 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id h9sm6045753ljg.3.2020.02.04.00.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 00:33:23 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iyteG-0008Mm-B8; Tue, 04 Feb 2020 09:33:32 +0100
+Date:   Tue, 4 Feb 2020 09:33:32 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Denis Efremov <efremov@linux.com>
+Subject: Re: [PATCH 5.4 117/203] rsi: fix potential null dereference in
+ rsi_probe()
+Message-ID: <20200204083332.GE26725@localhost>
+References: <20200116231745.218684830@linuxfoundation.org>
+ <20200116231755.604943633@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <1b86d188-0666-f6ab-e3b3-bec1cfbd0c76@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116231755.604943633@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 17, 2020 at 12:17:14AM +0100, Greg Kroah-Hartman wrote:
+> From: Denis Efremov <efremov@linux.com>
+> 
+> commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0 upstream.
+> 
+> The id pointer can be NULL in rsi_probe(). It is checked everywhere except
+> for the else branch in the idProduct condition. The patch adds NULL check
+> before the id dereference in the rsi_dbg() call.
+> 
+> Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
+> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> Cc: Siva Rebbagondla <siva8118@gmail.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-On 2020/2/4 =E4=B8=8B=E5=8D=884:21, Zhu Lingshan wrote:
->> +static const struct dma_map_ops vdpasim_dma_ops =3D {
->> +=C2=A0=C2=A0=C2=A0 .map_page =3D vdpasim_map_page,
->> +=C2=A0=C2=A0=C2=A0 .unmap_page =3D vdpasim_unmap_page,
->> +=C2=A0=C2=A0=C2=A0 .alloc =3D vdpasim_alloc_coherent,
->> +=C2=A0=C2=A0=C2=A0 .free =3D vdpasim_free_coherent,
->> +};
->> +
->
-> Hey Jason,
->
-> IMHO, it would be nice if dma_ops of the parent device could be=20
-> re-used. vdpa_device is expecting to represent a physical device=20
-> except this simulator, however, there are not enough information in=20
-> vdpa_device.dev to indicating which kind physical device it attached=20
-> to. Namely get_arch_dma_ops(struct bus type) can not work on=20
-> vdpa_device.dev. Then it seems device drivers need to implement a wrap=20
-> of dma_ops of parent devices. Can this work be done in the vdpa=20
-> framework since it looks like a common task? Can=20
-> "vd_dev->vdev.dev.parent =3D vdpa->dev->parent;" in virtio_vdpa_probe()=
-=20
-> do the work?
->
-> Thanks,
-> BR
-> Zhu Lingshan=20
+This commit is bogus and was reverted shortly after it was applied in
+order to prevent autosel from picking it up for stable (reverted by
+c5dcf8f0e850 ("Revert "rsi: fix potential null dereference in
+rsi_probe()"")).
 
+The revert has now been picked up by Sasha, but shouldn't an
+explicit revert in the same pull-request prevent a bad patch from being
+backported in the first place? Seems like something that could be
+scripted. But perhaps the net-stable oddities come into play here.
 
-Good catch.
+> ---
+>  drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/net/wireless/rsi/rsi_91x_usb.c
+> +++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+> @@ -793,7 +793,7 @@ static int rsi_probe(struct usb_interfac
+>  		adapter->device_model = RSI_DEV_9116;
+>  	} else {
+>  		rsi_dbg(ERR_ZONE, "%s: Unsupported RSI device id 0x%x\n",
+> -			__func__, id->idProduct);
+> +			__func__, id ? id->idProduct : 0x0);
+>  		goto err1;
+>  	}
 
-I think we can.
-
-Thanks
-
+Johan
