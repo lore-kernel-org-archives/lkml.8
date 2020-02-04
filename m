@@ -2,81 +2,108 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379E3C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B00FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0518F20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7FF20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:00:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xozb6KLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbgBDPAR (ORCPT
+        id S1727413AbgBDPA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:00:17 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52392 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbgBDPAR (ORCPT
+        Tue, 4 Feb 2020 10:00:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31549 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727258AbgBDPA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:00:17 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyzgV-007F28-EN; Tue, 04 Feb 2020 15:00:15 +0000
-Date:   Tue, 4 Feb 2020 15:00:15 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [put pull] timestamp stuff
-Message-ID: <20200204150015.GR23230@ZenIV.linux.org.uk>
+        Tue, 4 Feb 2020 10:00:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580828456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+Ut4XoP/Hrpe2MidinxPjS+a6EQ5ccTH+FceX9o7das=;
+        b=Xozb6KLMbVX7SWCN3L5maI0ek3U8Ek3fpHTUgBynbg/mJg7gUzxOnhC6pwZRhpFGR4nt+L
+        IB+M7oFJeHCYEda2zHt8dQieZc14imTbPDaoozPQAwPAgBSdgRpTQ8S8zl9etFsrq2PlSI
+        v04/EsV6t84IyPbH1MYxuKLEsz4/Cw4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-393-89EjOiL0NGml79LQGV0gQg-1; Tue, 04 Feb 2020 10:00:52 -0500
+X-MC-Unique: 89EjOiL0NGml79LQGV0gQg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 658E518FE866;
+        Tue,  4 Feb 2020 15:00:51 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8F2584D90;
+        Tue,  4 Feb 2020 15:00:44 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, vkuznets@redhat.com
+Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
+Subject: [PATCH v3 0/3] selftests: KVM: AMD Nested SVM test infrastructure
+Date:   Tue,  4 Feb 2020 16:00:37 +0100
+Message-Id: <20200204150040.2465-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	More 64bit timestamp work
+Add the basic infrastructure needed to test AMD nested SVM.
+Also add a first basic vmcall test.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+Best regards
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+Eric
 
-are available in the git repository at:
+This series can be found at:
+https://github.com/eauger/linux/tree/v5.5-amd-svm-v3
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git imm.timestamp
+History:
+v2 -> v3:
+- Took into account Vitaly's comment:
+  - added "selftests: KVM: Replace get_gdt/idt_base() by
+    get_gdt/idt()"
+  - svm.h now is a copy of arch/x86/include/asm/svm.h
+  - avoid duplicates
 
-for you to fetch changes up to f0f3588f7a95bb8e02b0f8f5138efb7064665730:
+v1 -> v2:
+- split into 2 patches
+- remove the infrastructure to run low-level sub-tests and only
+  keep vmmcall's one.
+- move struct regs into processor.h
+- force vmcb_gpa into rax in run_guest()
 
-  kernfs: don't bother with timestamp truncation (2019-12-08 19:10:57 -0500)
 
-----------------------------------------------------------------
-Al Viro (1):
-      kernfs: don't bother with timestamp truncation
+Eric Auger (3):
+  selftests: KVM: Replace get_gdt/idt_base() by get_gdt/idt()
+  selftests: KVM: AMD Nested test infrastructure
+  selftests: KVM: SVM: Add vmcall test
 
-Amir Goldstein (1):
-      utimes: Clamp the timestamps in notify_change()
+ tools/testing/selftests/kvm/Makefile          |   3 +-
+ .../selftests/kvm/include/x86_64/processor.h  |  28 +-
+ .../selftests/kvm/include/x86_64/svm.h        | 297 ++++++++++++++++++
+ .../selftests/kvm/include/x86_64/svm_util.h   |  36 +++
+ tools/testing/selftests/kvm/lib/x86_64/svm.c  | 159 ++++++++++
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  |   6 +-
+ .../selftests/kvm/x86_64/svm_vmcall_test.c    |  85 +++++
+ 7 files changed, 606 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
+ create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
+ create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
+ create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
 
-Deepa Dinamani (6):
-      fs: fat: Eliminate timespec64_trunc() usage
-      fs: cifs: Delete usage of timespec64_trunc
-      fs: ceph: Delete timespec64_trunc() usage
-      fs: ubifs: Eliminate timespec64_trunc() usage
-      fs: Delete timespec64_trunc()
-      fs: Do not overload update_time
+--=20
+2.20.1
 
- fs/attr.c            | 23 +++++++++++------------
- fs/ceph/mds_client.c |  4 +---
- fs/cifs/inode.c      | 13 +++++++------
- fs/configfs/inode.c  |  9 +++------
- fs/f2fs/file.c       | 18 ++++++------------
- fs/fat/misc.c        | 10 +++++++++-
- fs/inode.c           | 33 +++------------------------------
- fs/kernfs/inode.c    |  6 +++---
- fs/ntfs/inode.c      | 18 ++++++------------
- fs/ubifs/file.c      | 18 ++++++------------
- fs/ubifs/sb.c        | 11 ++++-------
- fs/utimes.c          |  4 ++--
- include/linux/fs.h   |  1 -
- 13 files changed, 61 insertions(+), 107 deletions(-)
