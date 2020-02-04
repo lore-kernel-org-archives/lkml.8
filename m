@@ -2,127 +2,138 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D67AC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D30C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251A421582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580811532;
-	bh=XSjPltZDml0pHhQDIxXfkHVy7n79R52KyDFEjImPggU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p0q19qgc9Y3EDU3T/h/eTYh/yu3wpWUdF3QRivDS2BhUhqmVcSQn4Xd2rwqaQYBYe
-	 69BiInXY8B5QfTUyOSGQkV8oOKyHF8voNlenESgg/ow8cMcAU2DzMI2/AzuO8n6J6K
-	 Uj06BevKbKuFJqk/oSuKGTytVjBdirRur+4N6U6s=
+	by mail.kernel.org (Postfix) with ESMTP id 1BFA821741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgBDKSv (ORCPT
+        id S1726887AbgBDKXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:18:51 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44180 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgBDKSv (ORCPT
+        Tue, 4 Feb 2020 05:23:09 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:40793 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgBDKXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:18:51 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so17936465ljj.11;
-        Tue, 04 Feb 2020 02:18:49 -0800 (PST)
+        Tue, 4 Feb 2020 05:23:08 -0500
+Received: by mail-yw1-f68.google.com with SMTP id i126so17082701ywe.7;
+        Tue, 04 Feb 2020 02:23:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QA9HPiPbuM4UHxdBV/KaiKxSA4ykX+SAvXggwSMLDg8=;
-        b=T49sjA7IVhZ3+uGbC4aY2XHFnljFEoda1YYVxJpyq3azzzI5AOpeQf4V4JsoS3IGld
-         +UFY377gBpSagUeBE52PqJ13f55YLe83z0Nmb407SITR/YTIh9Nlxc1nY57XhSHjOehW
-         fH5wsTi1rS2HRHi6IyaHSzFRfmstuNgZxUTLuoigOgZHtZl+QXqdLFxvGa76BBT9OreA
-         U4lVedr7t0cn5HjtziNMwW/AT3m8WFdS7D5lodHlMAnYmYrr4QTAqKiUDVPjrJq7qTXH
-         JxrKmcagzQsAhLaXpxswhXsb10bxUMiqpHi4JCG4ahQ29nHvcuXW22MM9nw/NdgE8YhV
-         Fakw==
-X-Gm-Message-State: APjAAAUcvBu770u80BbNEbz4sYyweepwqckO3Nfon81Sq0CssFaZW2gl
-        6WNLDbstQU2hFNXhaMU/HNI=
-X-Google-Smtp-Source: APXvYqyztY+5ijDrHtyvYSbwGDigg67WKXUahFCofHM0sleA0A6OTiQlMXGjH1SAiWMBH3WZwdoaqA==
-X-Received: by 2002:a2e:a491:: with SMTP id h17mr16898840lji.101.1580811527179;
-        Tue, 04 Feb 2020 02:18:47 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id d22sm10250256lfi.49.2020.02.04.02.18.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 02:18:46 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iyvIF-0003Yx-MZ; Tue, 04 Feb 2020 11:18:55 +0100
-Date:   Tue, 4 Feb 2020 11:18:55 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 65/90] Input: aiptek - use descriptors of current
- altsetting
-Message-ID: <20200204101855.GI26725@localhost>
-References: <20200203161917.612554987@linuxfoundation.org>
- <20200203161925.451117468@linuxfoundation.org>
- <20200204081155.GC26725@localhost>
- <20200204100332.GC1088789@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ame2St7R2ib9vif6sJlaCy1rx6/8/ldNpQWNjiVIi50=;
+        b=D6Kq8UrQHA9xagiQ1dY7lEia6G5YE4Oa2Rg7UnFzMqK0vr+To1KarbfKNmKas50AuY
+         4U+jHn2nlq0iPPlcMj0yMkTPIHroMNaGHOhC+blQQC0I0n7kP6YUKPl8VCtwbtohwkw+
+         dieNBWWI7+tjHrYLWgjQytvyGoUVRVadIWVjP82VUAaNd8LWpykcMNQx5LIwR4LRYUB5
+         aM5aPdXMua4b0ReuN2GOX+KJ4yEh10RGs10jIvZzD8CYGY3LCV8P8DolE3yEWhGnWBAx
+         b0XN0m99VC2f7QPnSy4Nku3kkkeK9Bo+zm8jMuJe/a4nqeiX53L40gqtKQw9xRGw+/Bz
+         RhYQ==
+X-Gm-Message-State: APjAAAXyiPkE6vlAzv+IbHWrgjvD2YDwpmHg8kyQpJRpNozHDo8bMZcd
+        yK/V9N4U3iBslO0m31qCNn1Hof3uGip3y5Je2NX6MKK1
+X-Google-Smtp-Source: APXvYqxX+4U5wGvE7gvRLyu6Gq9/3IKnaNmNNqa/K8kJSrDSXw/RBAUlqwVwu7MwXh9+vKQRs2abA0zuomrHCb4KZY8=
+X-Received: by 2002:a81:910e:: with SMTP id i14mr4526623ywg.84.1580811786475;
+ Tue, 04 Feb 2020 02:23:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204100332.GC1088789@kroah.com>
+References: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
+ <1580735882-7429-2-git-send-email-harini.katakam@xilinx.com>
+ <20200204.103718.1343105885567379294.davem@davemloft.net> <BN7PR02MB5121912B4AE8633C50D6DE98C9030@BN7PR02MB5121.namprd02.prod.outlook.com>
+In-Reply-To: <BN7PR02MB5121912B4AE8633C50D6DE98C9030@BN7PR02MB5121.namprd02.prod.outlook.com>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Tue, 4 Feb 2020 15:52:55 +0530
+Message-ID: <CAFcVECKXp-s-vteTzmqSDCR0ajugiDK_tnBmacea5NA+Fu02Ng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] net: macb: Remove unnecessary alignment check for TSO
+To:     David Miller <davem@davemloft.net>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Harini Katakam <harinikatakamlinux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:03:32AM +0000, Greg Kroah-Hartman wrote:
-> On Tue, Feb 04, 2020 at 09:11:55AM +0100, Johan Hovold wrote:
-> > On Mon, Feb 03, 2020 at 04:20:08PM +0000, Greg Kroah-Hartman wrote:
-> > > From: Johan Hovold <johan@kernel.org>
-> > > 
-> > > [ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
-> > > 
-> > > Make sure to always use the descriptors of the current alternate setting
-> > > to avoid future issues when accessing fields that may differ between
-> > > settings.
-> > > 
-> > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > Acked-by: Vladis Dronov <vdronov@redhat.com>
-> > > Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+Hi David,
+
+> > -----Original Message-----
+> > From: David Miller [mailto:davem@davemloft.net]
+> > Sent: Tuesday, February 4, 2020 3:07 PM
+> > To: Harini Katakam <harinik@xilinx.com>
+> > Cc: nicolas.ferre@microchip.com; claudiu.beznea@microchip.com;
+> > kuba@kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > Michal Simek <michals@xilinx.com>; harinikatakamlinux@gmail.com
+> > Subject: Re: [PATCH v2 1/2] net: macb: Remove unnecessary alignment check
+> > for TSO
+> >
+> > From: Harini Katakam <harini.katakam@xilinx.com>
+> > Date: Mon,  3 Feb 2020 18:48:01 +0530
+> >
+> > > The IP TSO implementation does NOT require the length to be a multiple
+> > > of 8. That is only a requirement for UFO as per IP documentation.
+> > >
+> > > Fixes: 1629dd4f763c ("cadence: Add LSO support.")
+> > > Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
 > > > ---
-> > >  drivers/input/tablet/aiptek.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-> > > index 06d0ffef4a171..e08b0ef078e81 100644
-> > > --- a/drivers/input/tablet/aiptek.c
-> > > +++ b/drivers/input/tablet/aiptek.c
-> > > @@ -1713,7 +1713,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
-> > >  
-> > >  	aiptek->inputdev = inputdev;
-> > >  	aiptek->intf = intf;
-> > > -	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
-> > > +	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
-> > >  	aiptek->inDelay = 0;
-> > >  	aiptek->endDelay = 0;
-> > >  	aiptek->previousJitterable = 0;
-> > 
-> > I asked Sasha to drop this one directly when he added it, so it's
-> > probable gone from all the stable queues by now.
-> 
-> Oops, no, let me go drop it.
-> 
-> > But I'm still curious how this ended up being selected for stable in the
-> > first place? There's no fixes or stable tag in the commit, and I never
-> > received a mail from the AUTOSEL scripts.
-> 
-> I don't know, there was a bunch of last-minute patches picked up for
-> this round based on some "fixes needed due to other fixes".
+> > > v2:
+> > > Added Fixes tag
+> >
+> > Several problems with this.
+> >
+> > The subject talks about alignemnt check, but you are not changing the alignment
+> > check.  Instead you are modifying the linear buffer
+> > check:
 
-Ah, yeah, could be dependencies otherwise, but then you usually send a
-notice about that. And in this case this is the last commit to this
-particular driver in Linus's tree too.
+Thanks for the review. Everything below that line becomes unused
+when alignment check is removed. More details below.
 
-Johan
+> >
+> > > @@ -1792,7 +1792,7 @@ static netdev_features_t
+> > macb_features_check(struct sk_buff *skb,
+> > >     /* Validate LSO compatibility */
+> > >
+> > >     /* there is only one buffer */
+> > > -   if (!skb_is_nonlinear(skb))
+> > > +   if (!skb_is_nonlinear(skb) || (ip_hdr(skb)->protocol !=
+> > > +IPPROTO_UDP))
+> > >             return features;
+> >
+> > So either your explanation is wrong or the code change is wrong.
+
+Alignment check is not required for TSO and is ONLY required for UFO.
+So, if NOT(UDP), just return.
+
+macb_features_check()
+{
+If existing linear check (or) if !UDP
+    no need to change features, just return
+
+Alignment check implementation which is only necessary for UDP.
+}
+
+> >
+> > Furthermore, if you add this condition then there is now dead code below this.
+> > The code that checks for example:
+> >
+> >       /* length of header */
+> >       hdrlen = skb_transport_offset(skb);
+> >       if (ip_hdr(skb)->protocol == IPPROTO_TCP)
+> >               hdrlen += tcp_hdrlen(skb);
+> >
+> > will never trigger this IPPROTO_TCP condition after your change.
+
+Yes, this is dead code now. I'll remove it.
+
+> >
+> > A lot of things about this patch do not add up.
+
+Please let me know if you have any further concerns.
+
+Regards,
+Harini
