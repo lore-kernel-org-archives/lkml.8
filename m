@@ -2,129 +2,249 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2599C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD782C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C3321582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D4A21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="AG37JdEO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pFUVVWD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbgBDHPz (ORCPT
+        id S1727256AbgBDHRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 02:15:55 -0500
-Received: from smtp11.infineon.com ([217.10.52.105]:32862 "EHLO
-        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgBDHPw (ORCPT
+        Tue, 4 Feb 2020 02:17:05 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39603 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgBDHRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 02:15:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1580800551; x=1612336551;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=vy6Ddq0vXz9Y5TufB3qaLwzoOVYEkADh/pF7udwUMrc=;
-  b=AG37JdEOLC5NJ7mNQlt93tOsKoQHNQ7M5PUlhHrU5KjLBeb9Ly0nWdB0
-   G5421JzUORjYvpYiBROXyWUI7s599G7kCItNjM3PsP8oEqwjqLrsPezCf
-   uFuEj7Ujn+a/l1oI4HBj7JfN2kDOtx+diq/tbAe0NWF8OdbidLExcFHA6
-   I=;
-IronPort-SDR: /SGB50JXpvJZ6Nh3h1lC8eJ3ltsJLOcDg5lww6M5CbSR/k0QPZ9NNyZfLehjUho/9WjL5DtkUD
- Gnr4hB45K7dLXBii0GJfx1yeQP9Kf+SE1bcG3JxS5zyCmar/Q9WgO9/PHVcUL5yyBP4hXcdkvy
- kqpfb8cxWjJX95L6O8CqOHGK3FZ0vaSRiVmaHvkrnkP5ICh3mVvcP1Xjx1atzJJv/xYbuyQhv+
- YTx/UPnc82sSGkm65e/Db1WDDZmcgz5ATHEWo/tGCU/HuGanUW5VbWZJq0aDr6UI0VTrZ/5p6Q
- Hb4=
-X-SBRS: None
-X-IronPort-AV: E=McAfee;i="6000,8403,9520"; a="148057991"
-X-IronPort-AV: E=Sophos;i="5.70,398,1574118000"; 
-   d="scan'208";a="148057991"
-Received: from unknown (HELO mucxv003.muc.infineon.com) ([172.23.11.20])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 08:15:50 +0100
-Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
-        by mucxv003.muc.infineon.com (Postfix) with ESMTPS;
-        Tue,  4 Feb 2020 08:15:50 +0100 (CET)
-Received: from [10.154.32.73] (172.23.8.247) by MUCSE708.infineon.com
- (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1713.5; Tue, 4 Feb
- 2020 08:15:49 +0100
-Subject: Re: [PATCH v7 4/6] tpm: tpm_tis_spi: Support cr50 devices
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>
-CC:     Andrey Pronin <apronin@chromium.org>,
-        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-References: <20190920183240.181420-1-swboyd@chromium.org>
- <20190920183240.181420-5-swboyd@chromium.org>
- <007dfd87-5170-684a-26dc-9e7533d42034@infineon.com>
- <5e38bcbd.1c69fb81.a383.c572@mx.google.com>
-From:   Alexander Steffen <Alexander.Steffen@infineon.com>
-Message-ID: <9064d7e2-d0ae-0cf0-294f-a795da336a6f@infineon.com>
-Date:   Tue, 4 Feb 2020 08:15:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 4 Feb 2020 02:17:04 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so6895568plp.6;
+        Mon, 03 Feb 2020 23:17:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ilfu3WmKSVrH6Kay2DlwZBIEnaGW/2gaQGQqUnhH9hk=;
+        b=pFUVVWD73rNuHHpblzOfrscS+2bxtu6qIh6DZl+zrryQNRN5p1SEsdWjc2Sz4809iS
+         Tx1UqSf82dVdUZIq40auQ3cATkRuyVPHMQMgPrToXY32ZFx+dnN0tpoXktM+sFOkAndb
+         3qHh4e4++2fbz2lYgLy2pudPQTPOEnoIyK6OChdA5vpFn60OnqQnLz4KV4/RYteLFCX9
+         LZXlwchAx9/9zlJ3NmtlwmwF0rLDOOkc7BF2wuCyM1/w9mtHb2/O+VEPy6woTLiQ5gPy
+         tMKYNXAOiLtMU8XHjiB0xvN8E1lXjMBiLbs5pHQqcJNA/GoY2QQ+H5XKiWLawbdmTIR6
+         gsdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ilfu3WmKSVrH6Kay2DlwZBIEnaGW/2gaQGQqUnhH9hk=;
+        b=phM2o1qYGcl3stW7vsZ1KE95Q9ikEqGKBiURAQuWptjmGWQ38st8J5QexbOHxyqPn2
+         IUUctXCB+dboYyfpLQvf1m0V0WQp2JrLQ7wHLxVy080Vpk5+QrjdFx1tlUpByUyoKxAm
+         +ueXKbPW70sGISvsfRLc/c+1jqd70hKDCNBrhdAFm4YfNwjBmgGhKu5R+igus68awWw+
+         uRKuYUdilC0feLDvZ4xriNgX/TDRS3RNmGqZ1ez8BDVuy63XxPULqP/3nh6YbW7AEVHs
+         x2X6DvHhLL7ROAJrrjX4dr+PDfFAjq9LKd9URe+c4cwQkLBUtD0I/ktqhZzRHjHjPbJg
+         GEvw==
+X-Gm-Message-State: APjAAAUK2EHeyKSgt1AFMnaZN0TVZPuGpHnIym7T3G6YJCo1PV7oCXYf
+        WFAOXosxz399OdS79Y4iabvh+U0jbTT9Tg==
+X-Google-Smtp-Source: APXvYqzU+olYyf72/JexE1NOLO+sa3FwkTxIL5iLLtGkCcjAYdUhxvXHsxP9wipTCCin1BcTEQKNAw==
+X-Received: by 2002:a17:902:341:: with SMTP id 59mr29290084pld.29.1580800623869;
+        Mon, 03 Feb 2020 23:17:03 -0800 (PST)
+Received: from localhost.localdomain ([103.202.217.14])
+        by smtp.gmail.com with ESMTPSA id v10sm22016045pgk.24.2020.02.03.23.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 23:17:03 -0800 (PST)
+From:   Yuya Kusakabe <yuya.kusakabe@gmail.com>
+To:     jasowang@redhat.com
+Cc:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
+        mst@redhat.com, songliubraving@fb.com, yhs@fb.com, kuba@kernel.org,
+        andriin@fb.com, yuya.kusakabe@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH bpf-next v4] virtio_net: add XDP meta data support
+Date:   Tue,  4 Feb 2020 16:16:55 +0900
+Message-Id: <20200204071655.94474-1-yuya.kusakabe@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <8da1b560-3128-b885-b453-13de5c7431fb@redhat.com>
+References: <8da1b560-3128-b885-b453-13de5c7431fb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <5e38bcbd.1c69fb81.a383.c572@mx.google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.8.247]
-X-ClientProxiedBy: MUCSE713.infineon.com (172.23.7.71) To
- MUCSE708.infineon.com (172.23.7.82)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.02.2020 01:37, Stephen Boyd wrote:
-> Quoting Alexander Steffen (2020-02-03 01:13:29)
->> On 20.09.2019 20:32, Stephen Boyd wrote:
->>> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
->>> index a01c4cab902a..c96439f11c85 100644
->>> --- a/drivers/char/tpm/Makefile
->>> +++ b/drivers/char/tpm/Makefile
->>> @@ -21,7 +21,9 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
->>>    tpm-$(CONFIG_OF) += eventlog/of.o
->>>    obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
->>>    obj-$(CONFIG_TCG_TIS) += tpm_tis.o
->>> -obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
->>> +obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi_mod.o
->>> +tpm_tis_spi_mod-y := tpm_tis_spi.o
->>> +tpm_tis_spi_mod-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
->>>    obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
->>>    obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
->>>    obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
->>
->> This renames the driver module from tpm_tis_spi to tpm_tis_spi_mod, was
->> this done intentionally? When trying to upgrade the kernel, this just
->> broke my test system, since all scripts expect to be able to load
->> tpm_tis_spi, which does not exist anymore with that change.
->>
-> 
-> I mentioned this during the review of this patch set. I thought nobody
-> would care, given that it's just a module name.
-> 
-> Can your scripts load the module based on something besides the module
-> name? Perhaps by using device attributes instead?
+Implement support for transferring XDP meta data into skb for
+virtio_net driver; before calling into the program, xdp.data_meta points
+to xdp.data and copy vnet header to the front of xdp.data_hard_start
+to avoid overwriting it, where on program return with pass verdict,
+we call into skb_metadata_set().
 
-The scripts are effectively using modprobe/rmmod/etc. and those need the 
-name. modprobe can be fixed by defining an alias, but this does not work 
-for rmmod. Many other things also depend on the name, e.g. module 
-blacklisting or the output of lsmod, where people might now get confused 
-by the difference between "tpm_tis_spi_mod" and "tpm_tis_i2c". Also, 
-there are many tutorials out there, that explicitly tell users to run 
-something like "modprobe tpm_tis_spi", which won't work anymore now.
+Fixes: de8f3a83b0a0 ("bpf: add meta pointer for direct access")
+Signed-off-by: Yuya Kusakabe <yuya.kusakabe@gmail.com>
+---
+ drivers/net/virtio_net.c | 47 ++++++++++++++++++++++++++++------------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
-So, if there is a good reason to break compatibility, I'm fine with 
-that. But in this case, isn't there some way to achieve the desired 
-functionality without changing the name? Even if it is a little more 
-complex than the three-line change above, that would probably be worth it.
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index 2fe7a3188282..5fdd6ea0e3f1 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -371,7 +371,7 @@ static struct sk_buff *page_to_skb(struct virtnet_info *vi,
+ 				   struct receive_queue *rq,
+ 				   struct page *page, unsigned int offset,
+ 				   unsigned int len, unsigned int truesize,
+-				   bool hdr_valid)
++				   bool hdr_valid, unsigned int metasize)
+ {
+ 	struct sk_buff *skb;
+ 	struct virtio_net_hdr_mrg_rxbuf *hdr;
+@@ -393,7 +393,7 @@ static struct sk_buff *page_to_skb(struct virtnet_info *vi,
+ 	else
+ 		hdr_padded_len = sizeof(struct padded_vnet_hdr);
+ 
+-	if (hdr_valid)
++	if (hdr_valid && !metasize)
+ 		memcpy(hdr, p, hdr_len);
+ 
+ 	len -= hdr_len;
+@@ -405,6 +405,11 @@ static struct sk_buff *page_to_skb(struct virtnet_info *vi,
+ 		copy = skb_tailroom(skb);
+ 	skb_put_data(skb, p, copy);
+ 
++	if (metasize) {
++		__skb_pull(skb, metasize);
++		skb_metadata_set(skb, metasize);
++	}
++
+ 	len -= copy;
+ 	offset += copy;
+ 
+@@ -644,6 +649,7 @@ static struct sk_buff *receive_small(struct net_device *dev,
+ 	unsigned int delta = 0;
+ 	struct page *xdp_page;
+ 	int err;
++	unsigned int metasize = 0;
+ 
+ 	len -= vi->hdr_len;
+ 	stats->bytes += len;
+@@ -683,10 +689,15 @@ static struct sk_buff *receive_small(struct net_device *dev,
+ 
+ 		xdp.data_hard_start = buf + VIRTNET_RX_PAD + vi->hdr_len;
+ 		xdp.data = xdp.data_hard_start + xdp_headroom;
+-		xdp_set_data_meta_invalid(&xdp);
+ 		xdp.data_end = xdp.data + len;
++		xdp.data_meta = xdp.data;
+ 		xdp.rxq = &rq->xdp_rxq;
+ 		orig_data = xdp.data;
++		/* Copy the vnet header to the front of data_hard_start to avoid
++		 * overwriting it by XDP meta data.
++		 */
++		memcpy(xdp.data_hard_start - vi->hdr_len,
++		       xdp.data - vi->hdr_len, vi->hdr_len);
+ 		act = bpf_prog_run_xdp(xdp_prog, &xdp);
+ 		stats->xdp_packets++;
+ 
+@@ -695,9 +706,11 @@ static struct sk_buff *receive_small(struct net_device *dev,
+ 			/* Recalculate length in case bpf program changed it */
+ 			delta = orig_data - xdp.data;
+ 			len = xdp.data_end - xdp.data;
++			metasize = xdp.data - xdp.data_meta;
+ 			break;
+ 		case XDP_TX:
+ 			stats->xdp_tx++;
++			xdp.data_meta = xdp.data;
+ 			xdpf = convert_to_xdp_frame(&xdp);
+ 			if (unlikely(!xdpf))
+ 				goto err_xdp;
+@@ -736,10 +749,12 @@ static struct sk_buff *receive_small(struct net_device *dev,
+ 	skb_reserve(skb, headroom - delta);
+ 	skb_put(skb, len);
+ 	if (!delta) {
+-		buf += header_offset;
+-		memcpy(skb_vnet_hdr(skb), buf, vi->hdr_len);
++		memcpy(skb_vnet_hdr(skb), buf + VIRTNET_RX_PAD, vi->hdr_len);
+ 	} /* keep zeroed vnet hdr since packet was changed by bpf */
+ 
++	if (metasize)
++		skb_metadata_set(skb, metasize);
++
+ err:
+ 	return skb;
+ 
+@@ -760,8 +775,8 @@ static struct sk_buff *receive_big(struct net_device *dev,
+ 				   struct virtnet_rq_stats *stats)
+ {
+ 	struct page *page = buf;
+-	struct sk_buff *skb = page_to_skb(vi, rq, page, 0, len,
+-					  PAGE_SIZE, true);
++	struct sk_buff *skb =
++		page_to_skb(vi, rq, page, 0, len, PAGE_SIZE, true, 0);
+ 
+ 	stats->bytes += len - vi->hdr_len;
+ 	if (unlikely(!skb))
+@@ -793,6 +808,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
+ 	unsigned int truesize;
+ 	unsigned int headroom = mergeable_ctx_to_headroom(ctx);
+ 	int err;
++	unsigned int metasize = 0;
+ 
+ 	head_skb = NULL;
+ 	stats->bytes += len - vi->hdr_len;
+@@ -839,8 +855,8 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
+ 		data = page_address(xdp_page) + offset;
+ 		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
+ 		xdp.data = data + vi->hdr_len;
+-		xdp_set_data_meta_invalid(&xdp);
+ 		xdp.data_end = xdp.data + (len - vi->hdr_len);
++		xdp.data_meta = xdp.data;
+ 		xdp.rxq = &rq->xdp_rxq;
+ 
+ 		act = bpf_prog_run_xdp(xdp_prog, &xdp);
+@@ -852,8 +868,9 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
+ 			 * adjustments. Note other cases do not build an
+ 			 * skb and avoid using offset
+ 			 */
+-			offset = xdp.data -
+-					page_address(xdp_page) - vi->hdr_len;
++			metasize = xdp.data - xdp.data_meta;
++			offset = xdp.data - page_address(xdp_page) -
++				 vi->hdr_len - metasize;
+ 
+ 			/* recalculate len if xdp.data or xdp.data_end were
+ 			 * adjusted
+@@ -863,14 +880,15 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
+ 			if (unlikely(xdp_page != page)) {
+ 				rcu_read_unlock();
+ 				put_page(page);
+-				head_skb = page_to_skb(vi, rq, xdp_page,
+-						       offset, len,
+-						       PAGE_SIZE, false);
++				head_skb = page_to_skb(vi, rq, xdp_page, offset,
++						       len, PAGE_SIZE, false,
++						       metasize);
+ 				return head_skb;
+ 			}
+ 			break;
+ 		case XDP_TX:
+ 			stats->xdp_tx++;
++			xdp.data_meta = xdp.data;
+ 			xdpf = convert_to_xdp_frame(&xdp);
+ 			if (unlikely(!xdpf))
+ 				goto err_xdp;
+@@ -921,7 +939,8 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
+ 		goto err_skb;
+ 	}
+ 
+-	head_skb = page_to_skb(vi, rq, page, offset, len, truesize, !xdp_prog);
++	head_skb = page_to_skb(vi, rq, page, offset, len, truesize, !xdp_prog,
++			       metasize);
+ 	curr_skb = head_skb;
+ 
+ 	if (unlikely(!curr_skb))
+-- 
+2.24.1
 
-Alexander
