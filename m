@@ -2,169 +2,143 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D476C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F6FC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343E42084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975012084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twGL3b5G"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="om0IxymU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgBDVjc (ORCPT
+        id S1727500AbgBDVnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 16:39:32 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42234 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbgBDVjc (ORCPT
+        Tue, 4 Feb 2020 16:43:49 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40509 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgBDVnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 16:39:32 -0500
-Received: by mail-io1-f66.google.com with SMTP id s6so12304843iol.9;
-        Tue, 04 Feb 2020 13:39:31 -0800 (PST)
+        Tue, 4 Feb 2020 16:43:49 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i6so18663868otr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 13:43:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dydgjTyaJw1lE7+CLwXVBOUB8QdYklx/X7Rq/lOF/AU=;
-        b=twGL3b5GakxrJn76KTsPIP+nJ3JOC7XwO/E8F0KFmQFHpxPU1c/qlTv9pLYxf+Aznj
-         GbB3sv3S6tIDbYG8e72jTfpv6hvjnD8yZMOAYKmpQwJVZkZ/FEKjc0EDgeZKRNM+t2m8
-         phnzQlgqHYCeX8vY35Wz4r4CLjscwLlWQY8O7fHq8nHx4CAUXEJFZf1nKbUGihoDY2DM
-         BcsDMvW/k4Bp4hSweff2VuzZ+X1+mCoo+yhPwPa6E1uiSVX+LS85IfNcMxCoLcX+UroH
-         NQ4bvKFnlVEfGJkfD4tnf1yvq056X7zVmuMSADW04vJqCvdl4mHfSy8MGR01vlnILusT
-         hHVA==
+        bh=h4sd+ZATda3xgd2Cabp+ey5GfoagpPrGA3dH0HD9uD4=;
+        b=om0IxymUwPkvWyb01X9tGRJ2/DQx9Zp+ONzq9K7omFBcxtLbIr+tzBJigBSQmHj8ji
+         gecf238XvqhNWCuCqz2KAnrN3hTNL031wGf8u0cF3krNJjO2TYR57Dh5Iw9/Q50LRnkl
+         QuE9a58jgymDElHyDs9NcX4/me9PQ561Fcz/F9UKFm3td3WJmgu2NBt2/IM50iZA2jYR
+         ynmSHN6PcWaa83ih4P3Dpic9Y+SrcIIVXw5jNyh5WQPZRLL9gyDTVPllEJgs5elyQq2f
+         f0vXXrc67OfZVvCrI/PryDxZ6ot5Kg/9J5OGoqR0kSXlTMTH4V1nKwTKuhVR/rFzH6xV
+         XGow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dydgjTyaJw1lE7+CLwXVBOUB8QdYklx/X7Rq/lOF/AU=;
-        b=MjfyL60gnxmhlQEP08mkWaLGnpRrPFrNOS6KHw8h+Ks4oV5kZhXDjB75ucngC7wkjv
-         4kBG8AGzYYLgknaFHyHODLY0Knk/icJI16AP6nDGqkwCfeyOFbC+dNlqXHW9IoWlfMzC
-         MiahaBX7NGnZI5ohoRWHUoCtRG8epl3JOvRip49321EcRHCq6nCY47L+gXtwJQB6Ex48
-         rrgz8R3jcbBWVE4XjvSNZiZlUKDYKhcHosPQLhSsmOh79Hdb9f7FpMwfSs+4QXb7ExUy
-         51Wsh0D/IKAYXyX+AbiwLKtEeoLFu/+fPqbdf8DLFA/W8/RW14brui2W8oLhDrTkvbrK
-         2obg==
-X-Gm-Message-State: APjAAAXDFJv15BMW7U7pOCK+ZttPe5HdvHzg3721/uZsYrfesL40M3r4
-        SA3ufg1QvTG78c2kJJMdkZ5Qv0lz8NG67FGdk5g=
-X-Google-Smtp-Source: APXvYqxonTeXtFQSY1omCeYNopATltoEMyCIhMr5VPl+V7qXRk6+VEnUHNJ9Cqi19RTOhKXyBvMRLv3C53GvLFOLaZU=
-X-Received: by 2002:a6b:7215:: with SMTP id n21mr26136536ioc.131.1580852371389;
- Tue, 04 Feb 2020 13:39:31 -0800 (PST)
+        bh=h4sd+ZATda3xgd2Cabp+ey5GfoagpPrGA3dH0HD9uD4=;
+        b=baYSCf39LY11J8m2WUAa2u5d+pTQiRqlatmRN778z5GxKe3aO5DjBCgOMjASCp8v/v
+         JYrg/ogJZaT60blefXr1kDYp86AbZIMvRgSoVAXWGBNff/ENEIgW6ZFIJTB6RLRRUR8S
+         CCf3ZFyydmdyYj1NZeZoWijKxpGAC2pGDu0zcPCadqnxSP0haZQO9gy/ODkE9X9DNINd
+         L8lh/Zvyal7psf/Vpd2TUjXijIhr8FItrpTkaIIeT9ZYVUjHsk6q9e8xSe1ee0/lLzaK
+         y3l3hsKNGFVEY2bn637AAUkkYknwN4Kx2bu+DjJhSSy5np8cJ8W96g1qS4talFzeniX7
+         dJ3A==
+X-Gm-Message-State: APjAAAVeqJgp9GIxt3eoKIJtnvLHGrXhp3VD2qDoeQN8SKekolzc1RBP
+        xVbem65XUC0nhr84ZY5Nenc1uFbNv05XLcnN6Jv2VA==
+X-Google-Smtp-Source: APXvYqyzRa/EgbcHWU5oWYs3EwkkIOeOuYIq70nRVJ+YY8OVe8Drtam8ArdPOslMqNhBe4zCRcUBk63gv56UchKAyW4=
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr24222626otk.363.1580852628908;
+ Tue, 04 Feb 2020 13:43:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20200203165117.5701-1-lhenriques@suse.com> <20200203165117.5701-2-lhenriques@suse.com>
- <0ab59ba87c07ffec6a05b2ed39bc0c112bcf5863.camel@kernel.org>
- <20200204153050.GA18215@suse.com> <0834b616a1c13570bffdf598034f09695362eb00.camel@kernel.org>
-In-Reply-To: <0834b616a1c13570bffdf598034f09695362eb00.camel@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 4 Feb 2020 22:39:45 +0100
-Message-ID: <CAOi1vP8bQ2tTkHw62FVyVXZ3H5iBhSuOv9CeMo_dYVmv0mqtSA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in copy_file_range
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200110190313.17144-1-joao.m.martins@oracle.com>
+ <20200110190313.17144-11-joao.m.martins@oracle.com> <e605fed8-46f5-6a07-11e6-2cc079a1159b@google.com>
+ <CAPcyv4iiSsEOsfEwLQcV3bNDjBSxw1OgWoBdEWPQEymq6=xm-A@mail.gmail.com> <ae788015-616f-96e6-3a0e-39c1911c4b01@google.com>
+In-Reply-To: <ae788015-616f-96e6-3a0e-39c1911c4b01@google.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 4 Feb 2020 13:43:37 -0800
+Message-ID: <CAPcyv4ibWZgCSTqnYLicVR3vXeNKwuWSnV5K8fCwvyhz_h=0GQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 10/10] nvdimm/e820: add multiple namespaces support
+To:     Barret Rhoden <brho@google.com>
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Nikita Leshenko <nikita.leshchenko@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 8:42 PM Jeff Layton <jlayton@kernel.org> wrote:
+On Tue, Feb 4, 2020 at 10:20 AM Barret Rhoden <brho@google.com> wrote:
 >
-> On Tue, 2020-02-04 at 15:30 +0000, Luis Henriques wrote:
-> > On Tue, Feb 04, 2020 at 08:30:03AM -0500, Jeff Layton wrote:
-> > > On Mon, 2020-02-03 at 16:51 +0000, Luis Henriques wrote:
-> > > > Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
-> > > > operations, waiting for each request to complete before sending the next
-> > > > one.  This patch modifies copy_file_range so that all the 'copy-from'
-> > > > operations are sent in bulk and waits for its completion at the end.  This
-> > > > will allow significant speed-ups, specially when sending requests for
-> > > > different target OSDs.
-> > > >
-> > >
-> > > Looks good overall. A few nits below:
-> > >
-> > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > > ---
-> > > >  fs/ceph/file.c                  | 45 +++++++++++++++++++++-----
-> > > >  include/linux/ceph/osd_client.h |  6 +++-
-> > > >  net/ceph/osd_client.c           | 56 +++++++++++++++++++++++++--------
-> > > >  3 files changed, 85 insertions(+), 22 deletions(-)
-> > > >
-> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > > index 1e6cdf2dfe90..b9d8ffafb8c5 100644
-> > > > --- a/fs/ceph/file.c
-> > > > +++ b/fs/ceph/file.c
-> > > > @@ -1943,12 +1943,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > >   struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
-> > > >   struct ceph_object_locator src_oloc, dst_oloc;
-> > > >   struct ceph_object_id src_oid, dst_oid;
-> > > > + struct ceph_osd_request *req;
-> > > >   loff_t endoff = 0, size;
-> > > >   ssize_t ret = -EIO;
-> > > >   u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
-> > > >   u32 src_objlen, dst_objlen, object_size;
-> > > >   int src_got = 0, dst_got = 0, err, dirty;
-> > > > + unsigned int max_copies, copy_count, reqs_complete = 0;
-> > > >   bool do_final_copy = false;
-> > > > + LIST_HEAD(osd_reqs);
-> > > >
-> > > >   if (src_inode->i_sb != dst_inode->i_sb) {
-> > > >           struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> > > > @@ -2083,6 +2086,13 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > >                   goto out_caps;
-> > > >   }
-> > > >   object_size = src_ci->i_layout.object_size;
-> > > > +
-> > > > + /*
-> > > > +  * Throttle the object copies: max_copies holds the number of allowed
-> > > > +  * in-flight 'copy-from' requests before waiting for their completion
-> > > > +  */
-> > > > + max_copies = (src_fsc->mount_options->wsize / object_size) * 4;
-> > >
-> > > A note about why you chose to multiply by a factor of 4 here would be
-> > > good. In another year or two, we won't remember.
+> Hi -
+>
+> On 2/4/20 11:44 AM, Dan Williams wrote:
+> > On Tue, Feb 4, 2020 at 7:30 AM Barret Rhoden <brho@google.com> wrote:
+> >>
+> >> Hi -
+> >>
+> >> On 1/10/20 2:03 PM, Joao Martins wrote:
+> >>> User can define regions with 'memmap=size!offset' which in turn
+> >>> creates PMEM legacy devices. But because it is a label-less
+> >>> NVDIMM device we only have one namespace for the whole device.
+> >>>
+> >>> Add support for multiple namespaces by adding ndctl control
+> >>> support, and exposing a minimal set of features:
+> >>> (ND_CMD_GET_CONFIG_SIZE, ND_CMD_GET_CONFIG_DATA,
+> >>> ND_CMD_SET_CONFIG_DATA) alongside NDD_ALIASING because we can
+> >>> store labels.
+> >>
+> >> FWIW, I like this a lot.  If we move away from using memmap in favor of
+> >> efi_fake_mem, ideally we'd have the same support for full-fledged
+> >> pmem/dax regions and namespaces that this patch brings.
 > >
-> > Sure, but to be honest I just picked an early suggestion from Ilya :-)
-> > In practice it means that, by default, 64 will be the maximum requests
-> > in-flight.  I tested this value, and it looked OK although in the (very
-> > humble) test cluster I've used a value of 16 (i.e. dropping the factor of
-> > 4) wasn't much worst.
-> >
+> > No, efi_fake_mem only supports creating dax-regions. What's the use
+> > case that can't be satisfied by just specifying multiple memmap=
+> > ranges?
 >
-> What happens if you ramp it up to be even more greedy? Does that speed
-> things up? It might be worth doing some experimentation with a tunable
-> too?
+> I'd like to be able to create and destroy dax regions on the fly.  In
+> particular, I want to run guest VMs using the dax files for guest
+> memory, but I don't know at boot time how many VMs I'll have, or what
+> their sizes are.  Ideally, I'd have separate files for each VM, instead
+> of a single /dev/dax.
 >
-> In any case though, we need to consider what the ideal default would be.
-> I'm now wondering whether the wsize is the right thing to base this on.
-> If you have a 1000 OSD cluster, then even 64 actually sounds a bit weak.
+> I currently do this with fs-dax with one big memmap region (ext4 on
+> /dev/pmem0), and I use the file system to handle the
+> creation/destruction/resizing and metadata management.  But since fs-dax
+> won't work with device pass-through, I started looking at dev-dax, with
+> the expectation that I'd need some software to manage the memory (i.e.
+> allocation).  That led me to ndctl, which seems to need namespace labels
+> to have the level of control I was looking for.
+
+Ah, got it, you only ended up at wanting namespace labels because
+there was no other way to carve up device-dax. That's changing as part
+of the efi_fake_mem= enabling and I have a patch set in the works to
+allow discontiguous sub-divisions of a device-dax range. Note that is
+this branch rebases frequently:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending
+
+
 >
-> I wonder whether it should it be calculated on the fly from some
-> function of the number OSDs or PGs in the data pool? Maybe even
-> something like:
+> Thanks,
 >
->     (number of PGs) / 2
-
-That can easily generate thousands of in-flight requests...
-
-The OSD cluster may serve more than one filesystem, each of which may
-serve more than one user.  Zooming out, it's pretty common to have the
-same cluster provide both block and file storage.  Allowing a single
-process to overrun the entire cluster is a bad idea, especially when
-it is something as routine as cp.
-
-I suggested that factor be between 1 and 4.  My suggestion was based
-on BLKDEV_MAX_RQ (128): anything above that is just unreasonable for
-a single syscall and it needs to be cut by at least half because there
-is no actual queue to limit the overall number of in-flight requests
-for the filesystem.
-
-Thanks,
-
-                Ilya
+> Barret
+>
