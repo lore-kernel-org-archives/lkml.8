@@ -1,85 +1,101 @@
 Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D3BC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C9CC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C74D217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9BC218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:59:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWN5OWH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgBDJzE (ORCPT
+        id S1726675AbgBDJ7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:55:04 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2362 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726189AbgBDJzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:55:04 -0500
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 2001ED00F51BCB16E63F;
-        Tue,  4 Feb 2020 09:55:02 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 4 Feb 2020 09:55:01 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 4 Feb 2020
- 09:55:01 +0000
-Subject: Re: About irq_create_affinity_masks() for a platform device driver
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        chenxiang <chenxiang66@hisilicon.com>
-References: <84a9411b-4ae3-1928-3d35-1666f2687ec8@huawei.com>
- <87o8uveoye.fsf@nanos.tec.linutronix.de>
- <4b447127-737e-a729-4dc7-82fc8b68af77@huawei.com>
- <19dc0422-5536-5565-e29f-ccfbcb8525d3@huawei.com>
- <87ftfvuww7.fsf@nanos.tec.linutronix.de>
- <2b381b20-512a-27a5-38d7-2f6a673bb621@huawei.com>
- <871rrazp31.fsf@nanos.tec.linutronix.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f680ca16-8c33-a632-8777-084d424d456b@huawei.com>
-Date:   Tue, 4 Feb 2020 09:55:00 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 4 Feb 2020 04:59:33 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37769 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgBDJ7c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:59:32 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q84so17865432oic.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 01:59:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+c+P5I8NbJ7KvdrmDqQ1PdrpFMV6E9xgMXllp3DgFLA=;
+        b=YWN5OWH1S+jW+ZqO/FK8CvZv2YTPZFFL80xYclXzWSuEBS/j9zlXfKRT/95NASNAsA
+         EF4CKDRfiQ/bxt2ew7Nj1WHCirmfvvPYGt4DeUpqvS6eQcht+lIjifTYzfiQ49bN/S5u
+         mz0b6eKSExwqYZMFuQ/B8butBOClBl+dKDHjwmr+DyYE3RFzACqlXvFNl9g3a3ObMFQs
+         1VdjLXXa6cErYEcgbMjKmBCK3XGQi4l6l7uVAX+HDoLNmEJ6rknaiJxLI+eYT8RkD8bc
+         Gjjgq4P55PEfDgoCveJxVsGwjJrG0OoOQvo70ZDYYVeml2p8+J9iFwIETqLI1HHy4emO
+         ulyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+c+P5I8NbJ7KvdrmDqQ1PdrpFMV6E9xgMXllp3DgFLA=;
+        b=dWMH4NpCuOayONcdaO+O+BzzLwiaE2ckW+nTzZ4/nLBvy2SkN+D2XdZXO34MgLqENx
+         3Zux2KsDaM5XGukbXsZu4e6mfl/ASYXqmbaKZ94eOMLvDtIKtBu7G1GRZioU3ln+FIKG
+         QpRGytYek7hLZryCgjFCjrXlIVZh+49sDuaCbJQB6DpdGF8uPQeYBcx5sCwrLJZVGGV5
+         0VQ5nIPCl2TMlq6caGwgFo0QSk3NBKutCJJUtaeN9N4s2QmLq7lwcXOKdqPjpt9WiIbP
+         YC/AP9wj83y+dIZD1y7N00AtUS/rSnwt/+0Py0NZvRJbQDtGUpVOUOsy+se2n0eO8OSQ
+         XcJg==
+X-Gm-Message-State: APjAAAW2VXIT5SwZUPDzwvNrXtE8RBdQ4LJEBAGlBNKdTW44Jg+LU90i
+        ik/2D97N24wD+/lFvMtYRRaa32iaAlmveQDBoFw=
+X-Google-Smtp-Source: APXvYqxL3ONJ+g0dPYwUeiEo11NnyVisJS5Mv5bE0bNlew27R5M77w1CkIdMs3uy8iVQnVmmTuPvR1D66Uz4c0k1K78=
+X-Received: by 2002:aca:ddc2:: with SMTP id u185mr2963896oig.24.1580810371921;
+ Tue, 04 Feb 2020 01:59:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <871rrazp31.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20200204090022.123261-1-gch981213@gmail.com> <20200204094647.GS1778@kadam>
+In-Reply-To: <20200204094647.GS1778@kadam>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Tue, 4 Feb 2020 17:59:21 +0800
+Message-ID: <CAJsYDV+b1bqc3b87Amo8p2UzVi4fpbRv6ytus8A5Y0r4K-X0hw@mail.gmail.com>
+Subject: Re: [PATCH] staging: mt7621-dts: add dt node for 2nd/3rd uart on mt7621
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        NeilBrown <neil@brown.name>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi!
 
-> 
->> And if we were to go this way, then we don't need to add the pointer in
->> struct platform_device to hold affinity mask descriptors as we're using
->> them immediately. Or even have a single function to do it all in the irq
->> code (create the masks and update the affinity desc).
->>
->> And since we're just updating the masks, I figure we shouldn't need to
->> add acpi_irq_get_count(), which I invented to get the irq count (without
->> creating the IRQ mapping).
-> Yes, you can create and apply the masks after setting up the interrupts.
-> 
+On Tue, Feb 4, 2020 at 5:47 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> Please use ./scripts/get_maintainer.pl to pick the CC list and resend.
+>
+> The MAINTAINERS file says Matthias Brugger is supposed to be CC'd and
+> a couple other email lists.
 
-So my original concern was that the changes here would be quite 
-disruptive, but that does not look to be the case.
+According to get_maintainer.pl,  Matthias Brugger is the maintainer of
+Mediatek ARM SoC:
 
-I need a couple of more things to go into the kernel before I can safely 
-switch to use managed interrupts in the LLDD, like "blk-mq: improvement 
-CPU hotplug" series, so I will need to wait on that for the moment.
+Matthias Brugger <matthias.bgg@gmail.com> (maintainer:ARM/Mediatek SoC support)
+linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC support)
+linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC support)
 
-Thanks,
-John
+I specifically removed the above 3 addresses because they are all for
+Mediatek ARM chips
+while mt7621 is a mips chip and belongs to ralink target under
+/arch/mips/mach-ralink.
+Code contribution for mt7621 goes through linux-mips instead of
+linux-arm or linux-mediatek,
+
+I thinks this is an incorrect setup of get_maintainer.pl and should be
+corrected.
+
+Regards,
+Chuanhong Guo
