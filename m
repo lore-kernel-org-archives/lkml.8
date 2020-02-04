@@ -2,171 +2,160 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D394C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAD8C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2309217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF6C2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOcBN9St"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llCdtAB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgBDSpV (ORCPT
+        id S1727480AbgBDSqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:45:21 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39794 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbgBDSpU (ORCPT
+        Tue, 4 Feb 2020 13:46:53 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36690 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbgBDSqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 13:45:20 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so4961128wme.4;
-        Tue, 04 Feb 2020 10:45:19 -0800 (PST)
+        Tue, 4 Feb 2020 13:46:52 -0500
+Received: by mail-yw1-f66.google.com with SMTP id n184so18766515ywc.3;
+        Tue, 04 Feb 2020 10:46:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GMFlsR7qx6bXagNyx7Jox688AU9bV//h/0L/xQvnsPg=;
-        b=fOcBN9StwGkaLrKF+J/rKCMTCwU0dw6sZohy0g7LtyYkHUaa4UIc6rHsycYiVpKZhE
-         OR3B+3AUPQottL62OyLos7vQEBed5nURTV/jZ1HYiNmv7b77oRKJpBxB5Nf6E/FvLqwK
-         bhgxKtasWzYxdQVYbD78nlY7B4BrWlf7/I8I5qCU2v9JoDb27c34eB010ueIQ33AJsIk
-         IvQ19BEtA/quV7pBKKkdvyC4A9b0xf2PDO7AojyMPQ42nlHk301mhqDNzLuJ8wECIRYM
-         KRvAimac4WuZopJmls/K95DpUhoztPgB08WI0vWjAOoa5w/JxuAEHyGg535YuN/0Gndy
-         x1AQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xqzKkZZwYD8UmTNylzK68UHhE3Ou2TiZoSu6psgptxc=;
+        b=llCdtAB8qGVONkL1WDs486cYwq+0N9bCKpYycyW0QBpVz93Ee8uWtEQNHghzDtGGW3
+         VRMBr1Y0qOS1SmI6D5ub9m3PmBbp40ycsvjSzeCR2yVbs0FVTzrGcJ8BCYdJHFcgz/8f
+         xyA4nkFPh069H3Atlfsb17vQV+lkb+h+NUxFVwlCOdlN5EgwwRGGrFl3iY8OLHBRn4Iy
+         SkReHiQi4RGOrUY4tO3n++mqi70SKo+inieoEgT0V5gmNCYQdAwcATJ2YSGSlRA770MD
+         Fx8RlM+twW1y7tWzNceS8P4T/c+UXbpsGD7Juf2Wk8pxw7JU/CDUYBpj0PxArDpX+NIH
+         YozA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GMFlsR7qx6bXagNyx7Jox688AU9bV//h/0L/xQvnsPg=;
-        b=REv1Y5qnnXXueC4Gu3rLasNIFVOFE/PFTYhmNa7Qd1xTmvLgUvpyu47z5ZRO5a5KUt
-         zw34jHrR0LxQEb+KRaEIwaKnzLTmfs9svriUP4AKGowzRGI9+T7ON+/SRWfh+UwuqSo5
-         oUMqrg7IfqoNNoUglubIbEJU/Kiid+ru1sZcMbkoQWG9lksWDoJMOjw/pwN5+86r41zm
-         MnL6IwfIHLXTUbY0zUsym246AL4Thzpbxzf952ZJVUWsUokJJ7/dkEYl5oCR+0xE5XU1
-         H89ldVlxy/lmYJGgz3qWZNhBH1w7WZiuad6RN58fOCgYMqfeNI+km4nxQvG/y5F2JL8d
-         zWAg==
-X-Gm-Message-State: APjAAAX/5BQGOckAK5czZaPYkxamXn9QkQX0w91F+LZNwsIaAOyMjc5K
-        zAkPvgeOi5IElzCrsgDyLGk=
-X-Google-Smtp-Source: APXvYqzpyJ2XJn3Vu5i3/57l1+hlgEKhgUhyGoqkcsutpcrYkMih0C3gFUT4rldnXNmvcxNUQhstrA==
-X-Received: by 2002:a05:600c:146:: with SMTP id w6mr424786wmm.180.1580841918481;
-        Tue, 04 Feb 2020 10:45:18 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id s1sm23254118wro.66.2020.02.04.10.45.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 10:45:17 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] watchdog: qcom-wdt: disable pretimeout on timer platform
-Date:   Tue,  4 Feb 2020 19:43:22 +0100
-Message-Id: <20200204184322.22744-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xqzKkZZwYD8UmTNylzK68UHhE3Ou2TiZoSu6psgptxc=;
+        b=CyICAuKFoqPOKD2V/CrBFk/ktw8qQc+T+9dknS/NDtUPNRrG2V1HjeK6Sx+JA35EIy
+         R6uE6czlW08hrvgn1JdZC5mLA3rNU7br+qyyRfdE1+IOSiUlkQNLIdSFmc3AGz34jdMO
+         grluZarHaMkj/t/FP4BKUKu1ApGugLsGENVrSq1PwwEUmxMxZefhiiIEZ1iW4zvM8eeW
+         n+FuelG+ne1aHjG4oFE7OPpnXz0Wc6o+34x9bBrmo93duvyMRY5EC5Kj+KPY5+L+VWef
+         Om8YlbdqBycRkiLl3SC/XVlQXYqrx5o+HmTtQ4YjgibS7nU3mCcDVqvtyFla9j23Thya
+         fI4g==
+X-Gm-Message-State: APjAAAWHGsX37Rawj8hxcHV0trQpxVHZlfSpmC/KagUUafevnmyNXdKP
+        590ac/ipfEUFBIWG2JGZ3PoYGwbSdE7y2rpXfP0=
+X-Google-Smtp-Source: APXvYqyznM3JSsctyFV3LHXcVYtUQMGI945FYzOeF2DwokU04zfTUxXR2Y+b0OsjyVtyk++tp0VZYurDxaRh5YBoKq4=
+X-Received: by 2002:a81:3754:: with SMTP id e81mr7045993ywa.404.1580842011687;
+ Tue, 04 Feb 2020 10:46:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200131153440.20870-1-calvin.johnson@nxp.com>
+ <20200131153440.20870-4-calvin.johnson@nxp.com> <6501a53b-40aa-5374-3c4a-6b21824f82fd@gmail.com>
+In-Reply-To: <6501a53b-40aa-5374-3c4a-6b21824f82fd@gmail.com>
+From:   Calvin Johnson <linux.cj@gmail.com>
+Date:   Wed, 5 Feb 2020 00:16:39 +0530
+Message-ID: <CAEhpT-VfWhha3B6qS6wFu-PQP9+zb4gxt7=nsrA58cecX21Dog@mail.gmail.com>
+Subject: Re: [PATCH v1 3/7] net/fsl: add ACPI support for mdio bus
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Calvin Johnson <calvin.johnson@nxp.com>,
+        Jon Nettleton <jon@solid-run.com>, linux@armlinux.org.uk,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        cristian.sovaiala@nxp.com, laurentiu.tudor@nxp.com,
+        ioana.ciornei@nxp.com, V.Sethi@nxp.com, pankaj.bansal@nxp.com,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platform like ipq806x doesn't support pretimeout and define
-some interrupts used by qcom,msm-timer. Change the driver to check
-and use pretimeout only on qcom,kpss-wdt as it's the only platform
-that actually supports it.
+On Sun, Feb 02, 2020 at 07:44:40PM -0800, Florian Fainelli wrote:
+>
+>
+> On 1/31/2020 7:34 AM, Calvin Johnson wrote:
+> > From: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> >
+> > Add ACPI support for MDIO bus registration while maintaining
+> > the existing DT support.
+> >
+> > Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> > ---
+>
+> [snip]
+>
+> >     bus = mdiobus_alloc_size(sizeof(struct mdio_fsl_priv));
+> > @@ -263,25 +265,41 @@ static int xgmac_mdio_probe(struct platform_device *pdev)
+> >     bus->read = xgmac_mdio_read;
+> >     bus->write = xgmac_mdio_write;
+> >     bus->parent = &pdev->dev;
+> > -   snprintf(bus->id, MII_BUS_ID_SIZE, "%llx", (unsigned long long)res.start);
+> > +   snprintf(bus->id, MII_BUS_ID_SIZE, "%llx",
+> > +            (unsigned long long)res->start);
+>
+> You could omit this clean up change.
+Sure, will avoid split to newline.
+> >
+> >     /* Set the PHY base address */
+> >     priv = bus->priv;
+> > -   priv->mdio_base = of_iomap(np, 0);
+> > +   priv->mdio_base = devm_ioremap_resource(&pdev->dev, res);
+> >     if (!priv->mdio_base) {
+>
+> This probably needs to become IS_ERR() instead of a plain NULL check
+Ok. Will take care in v2.
+>
+> >             ret = -ENOMEM;
+> >             goto err_ioremap;
+> >     }
+> >
+> > -   priv->is_little_endian = of_property_read_bool(pdev->dev.of_node,
+> > -                                                  "little-endian");
+> > -
+> > -   priv->has_a011043 = of_property_read_bool(pdev->dev.of_node,
+> > -                                             "fsl,erratum-a011043");
+> > -
+> > -   ret = of_mdiobus_register(bus, np);
+> > -   if (ret) {
+> > -           dev_err(&pdev->dev, "cannot register MDIO bus\n");
+> > +   if (is_of_node(pdev->dev.fwnode)) {
+> > +           priv->is_little_endian = of_property_read_bool(pdev->dev.of_node,
+> > +                                                          "little-endian");
+> > +
+> > +           priv->has_a011043 = of_property_read_bool(pdev->dev.of_node,
+> > +                                                     "fsl,erratum-a011043");
+> > +
+> > +           ret = of_mdiobus_register(bus, np);
+> > +           if (ret) {
+> > +                   dev_err(&pdev->dev, "cannot register MDIO bus\n");
+> > +                   goto err_registration;
+> > +           }
+> > +   } else if (is_acpi_node(pdev->dev.fwnode)) {
+> > +           priv->is_little_endian =
+> > +                   fwnode_property_read_bool(pdev->dev.fwnode,
+> > +                                             "little-endian");
+> > +           ret = fwnode_mdiobus_register(bus, pdev->dev.fwnode);
+> > +           if (ret) {
+> > +                   dev_err(&pdev->dev, "cannot register MDIO bus\n");
+> > +                   goto err_registration;
+> > +           }
+>
+> The little-endian property read can be moved out of the DT/ACPI paths
+> and you can just use device_property_read_bool() for that purpose.
+> Having both fwnode_mdiobus_register() and of_mdiobus_register() looks
+> fairly redundant, you could quite easily introduce a wrapper:
+> device_mdiobus_register() which internally takes the appropriate DT/ACPI
+> paths as needed.
+Had some difficulty with DT while using fwnode APIs. Will resolve them
+and provide better integrated code.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/watchdog/qcom-wdt.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+Thanks
 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-index a494543d3ae1..195fe49ca32e 100644
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -40,6 +40,11 @@ static const u32 reg_offset_data_kpss[] = {
- 	[WDT_BITE_TIME] = 0x14,
- };
- 
-+struct qcom_wdt_match_data {
-+	const u32 *offset;
-+	bool pretimeout;
-+};
-+
- struct qcom_wdt {
- 	struct watchdog_device	wdd;
- 	unsigned long		rate;
-@@ -179,19 +184,29 @@ static void qcom_clk_disable_unprepare(void *data)
- 	clk_disable_unprepare(data);
- }
- 
-+static const struct qcom_wdt_match_data match_data_apcs_tmr = {
-+	.offset = reg_offset_data_apcs_tmr,
-+	.pretimeout = false,
-+};
-+
-+static const struct qcom_wdt_match_data match_data_kpss = {
-+	.offset = reg_offset_data_kpss,
-+	.pretimeout = true,
-+};
-+
- static int qcom_wdt_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct qcom_wdt *wdt;
- 	struct resource *res;
- 	struct device_node *np = dev->of_node;
--	const u32 *regs;
-+	const struct qcom_wdt_match_data *data;
- 	u32 percpu_offset;
- 	int irq, ret;
- 	struct clk *clk;
- 
--	regs = of_device_get_match_data(dev);
--	if (!regs) {
-+	data = of_device_get_match_data(dev);
-+	if (!data && !data->offset) {
- 		dev_err(dev, "Unsupported QCOM WDT module\n");
- 		return -ENODEV;
- 	}
-@@ -247,7 +262,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 
- 	/* check if there is pretimeout support */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq > 0) {
-+	if (data->pretimeout && irq > 0) {
- 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
- 				       IRQF_TRIGGER_RISING,
- 				       "wdt_bark", &wdt->wdd);
-@@ -267,7 +282,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	wdt->wdd.min_timeout = 1;
- 	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
- 	wdt->wdd.parent = dev;
--	wdt->layout = regs;
-+	wdt->layout = data->offset;
- 
- 	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
- 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-@@ -311,9 +326,9 @@ static int __maybe_unused qcom_wdt_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(qcom_wdt_pm_ops, qcom_wdt_suspend, qcom_wdt_resume);
- 
- static const struct of_device_id qcom_wdt_of_table[] = {
--	{ .compatible = "qcom,kpss-timer", .data = reg_offset_data_apcs_tmr },
--	{ .compatible = "qcom,scss-timer", .data = reg_offset_data_apcs_tmr },
--	{ .compatible = "qcom,kpss-wdt", .data = reg_offset_data_kpss },
-+	{ .compatible = "qcom,kpss-timer", .data = &match_data_apcs_tmr },
-+	{ .compatible = "qcom,scss-timer", .data = &match_data_apcs_tmr },
-+	{ .compatible = "qcom,kpss-wdt", .data = &match_data_kpss },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
--- 
-2.24.0
-
+Calvin
