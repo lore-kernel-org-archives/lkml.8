@@ -2,117 +2,113 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C94C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D92C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4435E20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580804676;
-	bh=pNoJtIxAgiR6/eABxhzVUcGSlcFpbLqJzca56ppNR/c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QNnfSjCNxsQXDi5XfAJL4qomUNvgFnyFqFvu+FGoHSfyuiHHcwbbsvT1rYYHP1+u0
-	 TzAqLVO1Ri8XB5zAXGImH61gy7g8bexM+x0oxaM34p/K7Z57Q56Em5GvBsowiquHbK
-	 DsNKpt4pG96JFKduS0k2D8ijN3Oq7IPZ7TcT8pK8=
+	by mail.kernel.org (Postfix) with ESMTP id 458B320730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 08:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fcqkr51i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgBDIYf (ORCPT
+        id S1727205AbgBDI2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:24:35 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36356 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgBDIYf (ORCPT
+        Tue, 4 Feb 2020 03:28:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55053 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727124AbgBDI2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 03:24:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f24so11581238lfh.3;
-        Tue, 04 Feb 2020 00:24:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E6T1KOOke4/c747RNor42t/cZnyazvkZ3EY6Urb5I3I=;
-        b=mSRQsscU0xBPZIchK/X3YiAiekPaUYkwqordB7xA6oZRZ8DBnROSyLG5lWtylPidaw
-         5OUigektmD9fRVUwxSyPu3tXz1BMJMPwUTLJ699P15Y9ATPj8HJAyhMJMWwvovevLgqb
-         Gp0lkCYXnOGhryLX61rfQP4uRaBzPCZIA2Y7lFwsD2A/y5Z9EOBpCZYzehx3FrC747k/
-         98oVuTRBuIl8p+KWBvYZ+zN2gUGlJoJcePeClL+gw3TSCNS4FDU+qqBWDE1R2U/qbeh0
-         soDlu/6xN79t2z7jRBK4jmlx6ffnJv3XV+qVZA3xZZC1hQIZw9FF05MexOVdVpw5WgXR
-         0/kQ==
-X-Gm-Message-State: APjAAAU855vUymFZxUeV2Mj9edcJP+/Svsnk+KLYPLkEfaMcveXUFTb7
-        NvU2aP+oOYBHwfdWe0/xyIQ=
-X-Google-Smtp-Source: APXvYqxlKfcco2CZ6OmZ++hYA9pV0igvVPF/VyC2dwjPLoS7uc3OKJzegAJFxxgfc6cWfFbmSfpIDA==
-X-Received: by 2002:ac2:46dc:: with SMTP id p28mr14269160lfo.23.1580804672704;
-        Tue, 04 Feb 2020 00:24:32 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id v7sm10192776lfa.10.2020.02.04.00.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 00:24:32 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iytVh-0008Ia-6v; Tue, 04 Feb 2020 09:24:41 +0100
-Date:   Tue, 4 Feb 2020 09:24:41 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, stable@vger.kernel.org
-Cc:     linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Martin Kepplinger <martink@posteo.de>
-Subject: Re: [PATCH 1/7] Input: pegasus_notetaker: fix endpoint sanity check
-Message-ID: <20200204082441.GD26725@localhost>
-References: <20191210113737.4016-1-johan@kernel.org>
- <20191210113737.4016-2-johan@kernel.org>
+        Tue, 4 Feb 2020 03:28:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580804930;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JipmoOe2nr0hGxD7C+f101bb7FTOHzYyEwpTEYgv7tg=;
+        b=fcqkr51i4XIx1miBuekqjS7AzBreBOE17Z77lH4I447ZVrALMhWuJCSZQ5m2dH+dZ8m/zd
+        kqWBHzIjzPUUhw94RinUWbgv0cp8DwLCS9/4widvBxm+g2+DA+IHo4qTdz0KHvhpA4W3Zi
+        pFgG0KTIXgg4dZ6ehlPHl+S9uHcfZQ4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-Dqa5HkEuOly10_ZneL--TQ-1; Tue, 04 Feb 2020 03:28:48 -0500
+X-MC-Unique: Dqa5HkEuOly10_ZneL--TQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBA80800D54;
+        Tue,  4 Feb 2020 08:28:45 +0000 (UTC)
+Received: from [10.72.12.170] (ovpn-12-170.pek2.redhat.com [10.72.12.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B4F290F49;
+        Tue,  4 Feb 2020 08:28:28 +0000 (UTC)
+Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
+To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>, mst@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jakub.kicinski@netronome.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-6-jasowang@redhat.com>
+ <1b86d188-0666-f6ab-e3b3-bec1cfbd0c76@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <cca7901b-51dd-4f4b-5c30-c42577ad5194@redhat.com>
+Date:   Tue, 4 Feb 2020 16:28:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210113737.4016-2-johan@kernel.org>
+In-Reply-To: <1b86d188-0666-f6ab-e3b3-bec1cfbd0c76@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:37:31PM +0100, Johan Hovold wrote:
-> The driver was checking the number of endpoints of the first alternate
-> setting instead of the current one, something which could be used by a
-> malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
-> dereference.
-> 
-> Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
-> Cc: stable <stable@vger.kernel.org>     # 4.8
-> Cc: Martin Kepplinger <martink@posteo.de>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-Looks like the stable tag was removed when this one was applied, and
-similar for patches 2, 4 and 7 of this series (commits 3111491fca4f,
-a8eeb74df5a6, 6b32391ed675 upstream).
+On 2020/2/4 =E4=B8=8B=E5=8D=884:21, Zhu Lingshan wrote:
+>> +static const struct dma_map_ops vdpasim_dma_ops =3D {
+>> +=C2=A0=C2=A0=C2=A0 .map_page =3D vdpasim_map_page,
+>> +=C2=A0=C2=A0=C2=A0 .unmap_page =3D vdpasim_unmap_page,
+>> +=C2=A0=C2=A0=C2=A0 .alloc =3D vdpasim_alloc_coherent,
+>> +=C2=A0=C2=A0=C2=A0 .free =3D vdpasim_free_coherent,
+>> +};
+>> +
+>
+> Hey Jason,
+>
+> IMHO, it would be nice if dma_ops of the parent device could be=20
+> re-used. vdpa_device is expecting to represent a physical device=20
+> except this simulator, however, there are not enough information in=20
+> vdpa_device.dev to indicating which kind physical device it attached=20
+> to. Namely get_arch_dma_ops(struct bus type) can not work on=20
+> vdpa_device.dev. Then it seems device drivers need to implement a wrap=20
+> of dma_ops of parent devices. Can this work be done in the vdpa=20
+> framework since it looks like a common task? Can=20
+> "vd_dev->vdev.dev.parent =3D vdpa->dev->parent;" in virtio_vdpa_probe()=
+=20
+> do the work?
+>
+> Thanks,
+> BR
+> Zhu Lingshan=20
 
-While the last three are mostly an issue for the syzbot fuzzer, we have
-started backporting those as well.
 
-This one (bcfcb7f9b480) is more clear cut as it can be used to trigger a
-NULL-deref.
+Good catch.
 
-I only noticed because Sasha picked up one of the other patches in the
-series which was never intended for stable.
+I think we can.
 
-> ---
->  drivers/input/tablet/pegasus_notetaker.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/tablet/pegasus_notetaker.c b/drivers/input/tablet/pegasus_notetaker.c
-> index a1f3a0cb197e..38f087404f7a 100644
-> --- a/drivers/input/tablet/pegasus_notetaker.c
-> +++ b/drivers/input/tablet/pegasus_notetaker.c
-> @@ -275,7 +275,7 @@ static int pegasus_probe(struct usb_interface *intf,
->  		return -ENODEV;
->  
->  	/* Sanity check that the device has an endpoint */
-> -	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
-> +	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
->  		dev_err(&intf->dev, "Invalid number of endpoints\n");
->  		return -EINVAL;
->  	}
+Thanks
 
-Johan
