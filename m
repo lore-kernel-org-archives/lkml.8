@@ -2,129 +2,81 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF8BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F066C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAC4217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E37A21927
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ixgagomz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgBDMrY (ORCPT
+        id S1727215AbgBDMrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:47:24 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50844 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgBDMrY (ORCPT
+        Tue, 4 Feb 2020 07:47:51 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46096 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgBDMrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:47:24 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E74F31C0141; Tue,  4 Feb 2020 13:47:21 +0100 (CET)
-Date:   Tue, 4 Feb 2020 13:47:21 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>
-Subject: Re: [PATCH 4.4 00/53] 4.4.213-stable review
-Message-ID: <20200204124721.GB6903@duo.ucw.cz>
-References: <20200203161902.714326084@linuxfoundation.org>
- <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+        Tue, 4 Feb 2020 07:47:51 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 014ClnAv107979;
+        Tue, 4 Feb 2020 06:47:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580820469;
+        bh=P9x1aKSTPkxt8ox7A7M8oBeeGqzeXPx6rRSYJ/eVTck=;
+        h=From:To:CC:Subject:Date;
+        b=ixgagomzmJY8lXOnho4tIUH7II0iBQR+kQyarz/4Iv5Ut0XVO8pxvisVRVhW+3nXC
+         q/WfokUm34iL7fc76G2kKrt/kc2lW/PiCNGrDdkH+9E8zaT4AOjl6fLBVsFO14ddK6
+         TxMJfDD6Nt83nXn6uruNN6AxUhG1RFyI9GQZYu2A=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 014ClnF5014117;
+        Tue, 4 Feb 2020 06:47:49 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
+ 2020 06:47:48 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 4 Feb 2020 06:47:48 -0600
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 014ClgcY095019;
+        Tue, 4 Feb 2020 06:47:45 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>, <linux-spi@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] spi: spi-omap2-mcspi: Add DMA support for AM65x
+Date:   Tue, 4 Feb 2020 18:18:14 +0530
+Message-ID: <20200204124816.16735-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series adds DMA support for McSPI on AM65x.
+First patch addresses a limitationn on AM65x where transfers have to be
+<4K per DMA request and second patch handles possible EPROBE_DEFER when
+requesting DMA channels
 
---i0/AhcQY5QxfSsSZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Vignesh Raghavendra (2):
+  spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x
+  spi: spi-omap2-mcspi: Support probe deferral for DMA channels
 
-Hi!
+ drivers/spi/spi-omap2-mcspi.c                 | 103 +++++++++++-------
+ include/linux/platform_data/spi-omap2-mcspi.h |   1 +
+ 2 files changed, 65 insertions(+), 39 deletions(-)
 
-> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> > Behalf Of Greg Kroah-Hartman
-> > Sent: 03 February 2020 16:19
-> >=20
-> > This is the start of the stable review cycle for the 4.4.213 release.
-> > There are 53 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> > Anything received after that time might be too late.
->=20
-> We're seeing an issue with 4.4.213-rc1 (36670370c48b) and 4.4.213-rc2 (75=
-8a39807529) with our 4 am335x configurations [0]:
->=20
->    AS      arch/arm/kernel/hyp-stub.o
->  arch/arm/kernel/hyp-stub.S:   CC      arch/arm/mach-omap2/sram.o
->  Assembler messages:
->    AS      arch/arm/kernel/smccc-call.o
->  arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not suppo=
-rt `ubfx r7,r7,#16,#4' in ARM mode
->  scripts/Makefile.build:375: recipe for target 'arch/arm/kernel/hyp-stub.=
-o' failed
->  make[1]: *** [arch/arm/kernel/hyp-stub.o] Error 1
->=20
-> The culprit seems to be: 15163bcee7b5 ("ARM: 8955/1: virt: Relax arch tim=
-er version check during early boot")
-> Reverting the same resolves the build issue.
->=20
-> Latest pipeline: https://gitlab.com/cip-project/cip-testing/linux-stable-=
-rc-ci/pipelines/114683657
->=20
-> [0] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/-/blob/ma=
-ster/4.4.y-cip/arm/
-> siemens_am335x-axm2_defconfig, siemens_am335x-draco_defconfig, siemens_am=
-335x-dxr2_defconfig, siemens_am335x-etamin_defconfig
->=20
+-- 
+2.25.0
 
-For the record, build results are here:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/114=
-683657
-
-4.19.102 builds okay:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/114=
-683672
-
-but that's probably because siemens_am335x* configurations are not
-tested in 4.19.X case.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---i0/AhcQY5QxfSsSZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXjln2QAKCRAw5/Bqldv6
-8sIgAKCyj4zI/uOT7gLAynk1FPJR4qIjfQCeMFByf8ArntJ0TdW9b+2Yosh+sEc=
-=7XhL
------END PGP SIGNATURE-----
-
---i0/AhcQY5QxfSsSZ--
