@@ -2,96 +2,83 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7801C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE91C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED44217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086C42082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OH2U30gH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF3KNMZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBDV5R (ORCPT
+        id S1727613AbgBDV7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 16:57:17 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:33844 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbgBDV5R (ORCPT
+        Tue, 4 Feb 2020 16:59:15 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:36331 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbgBDV7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 16:57:17 -0500
-Received: by mail-qv1-f68.google.com with SMTP id o18so156401qvf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 13:57:16 -0800 (PST)
+        Tue, 4 Feb 2020 16:59:14 -0500
+Received: by mail-yw1-f65.google.com with SMTP id n184so369355ywc.3;
+        Tue, 04 Feb 2020 13:59:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o8PJJopMHRnW2Lc0cvuzqZJdPgsHNH4EmbqfPi2CudQ=;
-        b=OH2U30gH+ZDmHD5RKklKpDEpNSUh2d5eNyvmYsHQBPN7ljSC5DhtSh97amEFql9+83
-         HIKukiAIGsoEcookCeIj3IUimjLT45df6BDTvuoIo97U1KeQIHYtNEdNFu5RI5RlTo94
-         5wxZ2VMVw23n+ITPWSknknHiTgiwthNe9VreGu8Ak3ShMZuF77zCdXwW+bOD1pC3+TPj
-         cHpvtOPMDheERtzU01rUP+UH5fm5uyvTwTXecYfA3Vfie6gNJnHoWPx1I0HaXpEIa7d1
-         XDwcPqTpjbFockMXiPTgzD/tqt3FHDIemmXEJopYHIVMf6OPHIBcjBniqMhd7BFvVtsU
-         j3Iw==
+        bh=EF7q5sA089XDGika52Fy1O+7Ot7CBhBKLfoQVIAAsyg=;
+        b=QF3KNMZBmanFxfNF2rJXBwK8KmbYetam92nRxQP5I3z2qW4Ut1YxQbYPpb9X8biApK
+         uTTNnBpxwolHD9WCUTHEevyDUFYKWmgho+wyXcZhwRiYY9c5WluLdCt7227VR6GHqnBi
+         6xKx2CqHnbihTGsMNg/bnHTVaS5VFzg/5Nu/w8/ZC++ai8JWuPn3/1Zabc4Ox/ko37YV
+         k7UZHE/fCJKvEM9n5dRU2VynZljRYy248RsaYZfLlRZhmcjQ1qmjCIQm33Rnx9f00vMV
+         VQgxG69toSn5OWCUod9cMu8JIauYd/BwSDN+S7wgU/NFZnZ4vCHfiZfD2y/cm3YwQ00t
+         jFyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=o8PJJopMHRnW2Lc0cvuzqZJdPgsHNH4EmbqfPi2CudQ=;
-        b=B6axbDXLrO5bIfgkq5itHprTAEo+IUVgv+BLNlxHTmdYh/EZw3OVkNOJ+dmR55x7pr
-         kcyxmxFgEdDryRDOIthmkOTfeZ5d9z4g83sPShdJRSzbr+2k29ucOdvfnTeaXGBZUEF8
-         WenxSQAaHgHEXr+zW+MDKEJAXagugvoefA0ui2Kewegkw5Fb3PcG4eBzxMl1vUXGTPAg
-         jqdSdbDsOWJzKGOl/k3tbdAsMpCcfwh+F6b1c9T3+dCBBJ43bSMVCg9i1+fJyUgKr80y
-         PVzMdgP9CjQbAwhoMBuPG1SXBdy+Pz8ZBfBOdOwKAkbSHwimMnPmQTC6dywMTmi0hF+o
-         ofIQ==
-X-Gm-Message-State: APjAAAXlOH9nwYoJ8mPl7AphztDU+Cdp81z3NX4/nzidYBKx083LtAi6
-        wb50BPjhIXteEx+Y2mua8IK4KQ==
-X-Google-Smtp-Source: APXvYqw8wHQQ0TYYiyrNaAoyP1/6XXQmpVV3cfhOYaaGrRAqGG/43MHnS1ojgBUHUfnNQbnIl0rsDw==
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr28109982qvu.135.1580853435966;
-        Tue, 04 Feb 2020 13:57:15 -0800 (PST)
-Received: from ?IPv6:2620:0:1004:a:6e2b:60f7:b51b:3b04? ([2620:0:1004:a:6e2b:60f7:b51b:3b04])
-        by smtp.gmail.com with ESMTPSA id y26sm12042230qtv.28.2020.02.04.13.57.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 13:57:15 -0800 (PST)
-Subject: Re: [PATCH RFC 10/10] nvdimm/e820: add multiple namespaces support
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        KVM list <kvm@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Nikita Leshenko <nikita.leshchenko@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20200110190313.17144-1-joao.m.martins@oracle.com>
- <20200110190313.17144-11-joao.m.martins@oracle.com>
- <e605fed8-46f5-6a07-11e6-2cc079a1159b@google.com>
- <CAPcyv4iiSsEOsfEwLQcV3bNDjBSxw1OgWoBdEWPQEymq6=xm-A@mail.gmail.com>
- <ae788015-616f-96e6-3a0e-39c1911c4b01@google.com>
- <CAPcyv4ibWZgCSTqnYLicVR3vXeNKwuWSnV5K8fCwvyhz_h=0GQ@mail.gmail.com>
-From:   Barret Rhoden <brho@google.com>
-Message-ID: <fb4efb83-1a19-4fb7-a32a-477d5b5cd80a@google.com>
-Date:   Tue, 4 Feb 2020 16:57:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        bh=EF7q5sA089XDGika52Fy1O+7Ot7CBhBKLfoQVIAAsyg=;
+        b=RrKtTGnDAYzLBn8parxhSE1fuAYUp21vqYoC00vV/Ev5y8DhgIt+pvZNJc6T51FP6X
+         EZI9lH8YRwzfp73arqqIIlsNR/3d73aqCIQIgv6hyuiAZc5GP79DMueaANdwW8IA7vHo
+         EQK0W89Rc/WQKH6jgirQHPTF9oEK1pA9s/RWXg7wPFemj+H1mOXA+vv8zOGhcqWIuuk8
+         yVEKuQy57CRM86O2x8T3XvthkqeIvwZs/hJLXexyDLn1eOpgXYC+m96ztgW506pjsZ8F
+         R6Ux9Yc6eV/GpqT9iJJB8pTxZPOqYXjSb+pzCRNVBMvrKQsiA1V+1DH/8upU0I8C+qGd
+         W1UQ==
+X-Gm-Message-State: APjAAAWRJoociRbLoa6vmuhRhfVrR6fUeAVghJRkFUXIxklZp7/QFodr
+        2djn5ZVFebRDZy72pcpnliE=
+X-Google-Smtp-Source: APXvYqwJ2EAsNZ9FZ2jLWATXqX9SqwVTGIuftOVn5FvI8hEdSoKXkxO/sqoUOXNjC3ah9pvXsAGSLA==
+X-Received: by 2002:a81:7c07:: with SMTP id x7mr7164607ywc.291.1580853553316;
+        Tue, 04 Feb 2020 13:59:13 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id d66sm10310686ywc.16.2020.02.04.13.59.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 13:59:12 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] arch: um: add linker section for KUnit test suites
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, knut.omang@oracle.com,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200130230812.142642-1-brendanhiggins@google.com>
+ <20200130230812.142642-3-brendanhiggins@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <e060bdfc-5cdb-fb62-48b0-cc54c7bc72ce@gmail.com>
+Date:   Tue, 4 Feb 2020 15:59:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4ibWZgCSTqnYLicVR3vXeNKwuWSnV5K8fCwvyhz_h=0GQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200130230812.142642-3-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -99,15 +86,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 4:43 PM, Dan Williams wrote:
-> Ah, got it, you only ended up at wanting namespace labels because
-> there was no other way to carve up device-dax. That's changing as part
-> of the efi_fake_mem= enabling and I have a patch set in the works to
-> allow discontiguous sub-divisions of a device-dax range. Note that is
-> this branch rebases frequently:
+On 1/30/20 5:08 PM, Brendan Higgins wrote:
+> Add a linker section to UML where KUnit can put references to its test
+> suites. This patch is an early step in transitioning to dispatching all
+> KUnit tests from a centralized executor rather than having each as its
+> own separate late_initcall.
+
+All architectures please.
+
+The early versions of Kunit documented reliance on UML.  Discussion lead to
+the conclusion that real architectures and real hardware would be supported.
+
+This like this are what make me reluctant to move devicetree unittests to
+KUnit.
+
+Can you please add a section to the KUnit documentation that lists things
+like the expectations, requirements, limitations, etc for a test case that
+is run by KUnit?  Some examples that pop to mind from recent discussions
+and my own experiences:
+
+  - Each test case is invoked after late_init is complete.
+      + Exception: the possible value of being able to run a unit test
+        at a specific runlevel has been expressed.  If an actual unit
+        test can be shown to require running earlier, this restriction
+        will be re-visited.
+
+  - Each test case must be idempotent.  Each test case may be called
+    multiple times, and must generate the same result each time it
+    is called.
+      + Exception 1: a test case can be declared to not be idempotent
+        [[ mechanism TBD ]], in which case KUnit will not call the
+        test case a second time without the kernel rebooting.
+      + Exception 2: hardware may not be deterministic, so a test that
+        always passes or fails when run under UML may not always to
+        so on real hardware.  <--- sentence copied from
+        Documentation/dev-tools/kunit/usage.rst
+          [[ This item and 1st exception do not exist yet, but will exist
+          in some form if the proposed proc filesystem interface is
+          added. ]]
+
+  - KUnit provides a helpful wrapper to simplify building a UML kernel
+    containing the KUnit test cases, booting the UML kernel, and
+    formatting the output from the test cases.  This wrapper MUST NOT
+    be required to run the test cases or to determine a test result.
+    The formatting may provide additional analysis and improve
+    readability of a test result.
+
+  - .... There is more that belongs here, but I'm getting side tracked
+    here, when I'm trying to instead convert devicetree unittests to
+    KUnit and want to get back to that.
+
+
+-Frank
+
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  arch/um/include/asm/common.lds.S | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/um/include/asm/common.lds.S b/arch/um/include/asm/common.lds.S
+> index 7145ce6999822..eab9ceb450efd 100644
+> --- a/arch/um/include/asm/common.lds.S
+> +++ b/arch/um/include/asm/common.lds.S
+> @@ -52,6 +52,10 @@
+>  	CON_INITCALL
+>    }
+>  
+> +  .kunit_test_suites : {
+> +	KUNIT_TEST_SUITES
+> +  }
+> +
+>    .exitcall : {
+>  	__exitcall_begin = .;
+>  	*(.exitcall.exit)
+> 
 
-Cool, thanks.  I'll check it out!
-
-Barret
