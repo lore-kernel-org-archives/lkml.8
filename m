@@ -2,90 +2,174 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAF6C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFA0C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177AE20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55A42082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbgBDPgK (ORCPT
+        id S1727358AbgBDPi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:36:10 -0500
-Received: from muru.com ([72.249.23.125]:52652 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbgBDPgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:36:09 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 9E0BA8107;
-        Tue,  4 Feb 2020 15:36:51 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH] phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval
-Date:   Tue,  4 Feb 2020 07:36:02 -0800
-Message-Id: <20200204153602.60507-1-tony@atomide.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 4 Feb 2020 10:38:59 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40582 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgBDPi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:38:59 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 3E90428DBA5
+Subject: Re: [PATCH] dt-bindings: convert extcon-usbc-cros-ec.txt
+ extcon-usbc-cros-ec.yaml
+To:     Rob Herring <robh@kernel.org>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     devicetree@vger.kernel.org, myungjoo.ham@samsung.com,
+        cw00.choi@samsung.com, mark.rutland@arm.com, bleung@chromium.org,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+References: <20200122151313.11782-1-dafna.hirschfeld@collabora.com>
+ <20200203121849.GA8196@bogus>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <46068846-5d7d-8de6-3950-3b0a0d8b60a2@collabora.com>
+Date:   Tue, 4 Feb 2020 16:38:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200203121849.GA8196@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've noticed that when writing data to the modem the writes can time out
-at some point eventually. Looks like kicking the modem idle GPIO every
-600 ms instead of once a second fixes the issue. Note that this rate is
-different from our runtime PM autosuspend rate MDM6600_MODEM_IDLE_DELAY_MS
-that we still want to keep at 1 second, so let's add a separate define for
-PHY_MDM6600_IDLE_KICK_MS.
+Hi Dafna, Rob,
 
-Fixes: f7f50b2a7b05 ("phy: mapphone-mdm6600: Add runtime PM support for n_gsm on USB suspend")
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/phy/motorola/phy-mapphone-mdm6600.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+On 3/2/20 13:18, Rob Herring wrote:
+> On Wed, Jan 22, 2020 at 04:13:13PM +0100, Dafna Hirschfeld wrote:
+>> convert the binding file extcon-usbc-cros-ec.txt to yaml format
+>> This was tested and verified on ARM with:
+>> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>>
+>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>> ---
+>>  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 -----------
+>>  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 42 +++++++++++++++++++
+>>  2 files changed, 42 insertions(+), 24 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>> deleted file mode 100644
+>> index 8e8625c00dfa..000000000000
+>> --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>> +++ /dev/null
+>> @@ -1,24 +0,0 @@
+>> -ChromeOS EC USB Type-C cable and accessories detection
+>> -
+>> -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+>> -able to detect the state of external accessories such as display adapters
+>> -or USB devices when said accessories are attached or detached.
+>> -
+>> -The node for this device must be under a cros-ec node like google,cros-ec-spi
+>> -or google,cros-ec-i2c.
+>> -
+>> -Required properties:
+>> -- compatible:		Should be "google,extcon-usbc-cros-ec".
+>> -- google,usb-port-id:	Specifies the USB port ID to use.
+>> -
+>> -Example:
+>> -	cros-ec@0 {
+>> -		compatible = "google,cros-ec-i2c";
+>> -
+>> -		...
+>> -
+>> -		extcon {
+>> -			compatible = "google,extcon-usbc-cros-ec";
+>> -			google,usb-port-id = <0>;
+>> -		};
+>> -	}
+>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>> new file mode 100644
+>> index 000000000000..78779831282a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>> @@ -0,0 +1,42 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> 
+> Surely Google is the only copyright holder on the old file and would be 
+> okay with dual licensing here?
+> 
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: ChromeOS EC USB Type-C cable and accessories detection
+>> +
+>> +maintainers:
+>> +  - MyungJoo Ham <myungjoo.ham@samsung.com>
+>> +  - Chanwoo Choi <cw00.choi@samsung.com>
+> 
+> Usually this is someone that knows the h/w, not who applies the patch. 
+> I'd expect a Google person.
+> 
 
-diff --git a/drivers/phy/motorola/phy-mapphone-mdm6600.c b/drivers/phy/motorola/phy-mapphone-mdm6600.c
---- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
-+++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-@@ -20,6 +20,7 @@
- 
- #define PHY_MDM6600_PHY_DELAY_MS	4000	/* PHY enable 2.2s to 3.5s */
- #define PHY_MDM6600_ENABLED_DELAY_MS	8000	/* 8s more total for MDM6600 */
-+#define PHY_MDM6600_WAKE_KICK_MS	600	/* time on after GPIO toggle */
- #define MDM6600_MODEM_IDLE_DELAY_MS	1000	/* modem after USB suspend */
- #define MDM6600_MODEM_WAKE_DELAY_MS	200	/* modem response after idle */
- 
-@@ -525,8 +526,14 @@ static void phy_mdm6600_modem_wake(struct work_struct *work)
- 
- 	ddata = container_of(work, struct phy_mdm6600, modem_wake_work.work);
- 	phy_mdm6600_wake_modem(ddata);
-+
-+	/*
-+	 * The modem does not always stay awake 1.2 seconds after toggling
-+	 * the wake GPIO, and sometimes it idles after about some 600 ms
-+	 * making writes time out.
-+	 */
- 	schedule_delayed_work(&ddata->modem_wake_work,
--			      msecs_to_jiffies(MDM6600_MODEM_IDLE_DELAY_MS));
-+			      msecs_to_jiffies(PHY_MDM6600_WAKE_KICK_MS));
- }
- 
- static int __maybe_unused phy_mdm6600_runtime_suspend(struct device *dev)
--- 
-2.25.0
+I'd say that the driver author should be the maintainer, but if you don't know
+who is the maintainer because is not specified you can add Benson and me as
+maintainers (as chrome-platform maintainers we take care of this and all cros-ec
+related drivers)
+
+Benson Leung <bleung@chromium.org>
+Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+>> +
+>> +description: |
+>> +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+>> +  able to detect the state of external accessories such as display adapters
+>> +  or USB devices when said accessories are attached or detached.
+>> +  The node for this device must be under a cros-ec node like google,cros-ec-spi
+>> +  or google,cros-ec-i2c.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: google,extcon-usbc-cros-ec
+>> +
+>> +  google,usb-port-id:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      the port id
+> 
+> Any range of values allowed? ~0 is okay?
+> 
+
+From hardware point of view, the port id, is a number from 0 to 255. The typical
+usage is have two ports with port id 0 and port id 1.
+
+
+>> +required:
+>> +  - compatible
+>> +  - google,usb-port-id
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    cros-ec@0 {
+>> +        compatible = "google,cros-ec-i2c";
+>> +        extcon {
+>> +            compatible = "google,extcon-usbc-cros-ec";
+>> +            google,usb-port-id = <0>;
+>> +        };
+>> +    };
+>> -- 
+>> 2.17.1
+>>
