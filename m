@@ -2,133 +2,160 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F2C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC81C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC9220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D808820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hDIJPX0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgBDLSj (ORCPT
+        id S1727219AbgBDLSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:18:39 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726898AbgBDLSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:18:38 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1844E1A56B88039184FB;
-        Tue,  4 Feb 2020 19:18:33 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Feb 2020
- 19:18:27 +0800
-Subject: Re: [PATCH V5] brd: check and limit max_part par
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, Guiyao <guiyao@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>
-References: <3f053491-d8c1-7092-58d1-85afaa2e68df@huawei.com>
- <20200204085218.GA19922@ming.t460p>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <9ca2aa6a-6d61-16e3-678c-b91fd28b0b88@huawei.com>
-Date:   Tue, 4 Feb 2020 19:18:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 4 Feb 2020 06:18:55 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19169 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbgBDLSy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 06:18:54 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3953060000>; Tue, 04 Feb 2020 03:18:30 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 04 Feb 2020 03:18:53 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 03:18:53 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 11:18:53 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 4 Feb 2020 11:18:52 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e3953190001>; Tue, 04 Feb 2020 03:18:52 -0800
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V4 00/19] Tegra XUSB OTG support
+Date:   Tue, 4 Feb 2020 16:46:46 +0530
+Message-ID: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20200204085218.GA19922@ming.t460p>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580815110; bh=tmb9g4gv3VYfntztkatNk0Docrr1cqVXwSKnSSY/suM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=hDIJPX0Zw8Yag4pofBWD+qHwBwBbPulxSRzyjBykspE1zDZB4bWR+ZBiVAtGZbUDi
+         FBdSm4clELfmZ2unh2xE94m5Nsetfm8dA2R4cxgj/018ZpEXiUGDCYUNRQSOnOQp6F
+         5OgTLzHcFSvpjCwDxwTPLC2gqC/hsFSBcuMtLZ9B05srWA7uXUZufyLxPg9cvDFESJ
+         XlervIYoNdF1KKBbc62Ab6bCg3WRx8K0hXOHqLU41jRvn5L+FpsIxQ8stlqYdl6DYd
+         dsMcaFV1KT/v1of0vKj8HwBMRzk3r0UzkHq6RqcuzYtiBIJ877UYW4FM572L+P6l0/
+         FsS7bCtVmn1Sw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series adds OTG support on XUSB hardware used in Tegra210 and
+Tegra186 SoCs.
 
+This patchset is composed with :
+ - dt bindings of XUSB Pad Controller
+ - dt bindings for XUSB device Driver
+ - Tegra PHY driver for usb-role-switch and usb-phy
+ - Tegra XUSB host mode driver to support OTG mode
+ - Tegra XUSB device mode driver to use usb-phy and multi device mode
+ - dts for XUSB pad controller
+ - dts for xudc for Jetson TX1 and TX2
+ - dts for Jetson-TK1
 
-On 2020/2/4 16:52, Ming Lei wrote:
-> On Tue, Feb 04, 2020 at 10:44:18AM +0800, Zhiqiang Liu wrote:
->>
->> In brd_init func, rd_nr num of brd_device are firstly allocated
->> and add in brd_devices, then brd_devices are traversed to add each
->> brd_device by calling add_disk func. When allocating brd_device,
->> the disk->first_minor is set to i * max_part, if rd_nr * max_part
->> is larger than MINORMASK, two different brd_device may have the same
->> devt, then only one of them can be successfully added.
->> when rmmod brd.ko, it will cause oops when calling brd_exit.
->>
->> Follow those steps:
->>   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
->>   # rmmod brd
->> then, the oops will appear.
->>
->> Oops log:
->> [  726.613722] Call trace:
->> [  726.614175]  kernfs_find_ns+0x24/0x130
->> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
->> [  726.615749]  sysfs_remove_group+0x38/0xb0
->> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
->> [  726.617320]  blk_unregister_queue+0x98/0x100
->> [  726.618105]  del_gendisk+0x144/0x2b8
->> [  726.618759]  brd_exit+0x68/0x560 [brd]
->> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
->> [  726.620384]  el0_svc_common+0x78/0x130
->> [  726.621057]  el0_svc_handler+0x38/0x78
->> [  726.621738]  el0_svc+0x8/0xc
->> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
->>
->> Here, we add brd_check_and_reset_par func to check and limit max_part par.
->>
->> --
->> V4->V5:(suggested by Ming Lei)
->>  - make sure max_part is not larger than DISK_MAX_PARTS
->>
->> V3->V4:(suggested by Ming Lei)
->>  - remove useless change
->>  - add one limit of max_part
->>
->> V2->V3: (suggested by Ming Lei)
->>  - clear .minors when running out of consecutive minor space in brd_alloc
->>  - remove limit of rd_nr
->>
->> V1->V2:
->>  - add more checks in brd_check_par_valid as suggested by Ming Lei.
->>
->> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->> Reviewed-by: Bob Liu <bob.liu@oracle.com>
->> ---
->>  drivers/block/brd.c | 27 +++++++++++++++++++++++----
->>  1 file changed, 23 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
->> index df8103dd40ac..6b9db3f63cb7 100644
->> --- a/drivers/block/brd.c
->> +++ b/drivers/block/brd.c
->> @@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
->>  	 *  is harmless)
->>  	 */
->>  	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
->> -	disk = brd->brd_disk = alloc_disk(max_part);
->> +	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
->> +			0 : max_part);
->>  	if (!disk)
->>  		goto out_free_queue;
->>  	disk->major		= RAMDISK_MAJOR;
->> -	disk->first_minor	= i * max_part;
->> +	disk->first_minor	= i * disk->minors;
-> 
-> As I told you, the above change isn't needed, otherwise:
-> 
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Tegra Pad controller driver register for role switch updates for
+OTG/peripheral capable USB ports and adds usb-phy for that corresponding
+USB ports.
 
-Sorry for missing that. I will remove these in v6 patch.
-Thanks for your patience.
+Host and Device mode drivers gets usb-phy from USB2's phy and registers
+notifier for role changes to perform corresponding role tasks.
 
+Tests done:
+ - device mode support using micro-B USB cable connection between ubuntu
+   host and DUT on micro-AB port
+ - host mode support by connecting pen-drive to micro-AB USB port on DUT
+   using standard-A to micro-A converter.
+ - toggling between these 2 modes by hot plugging corresponding cables.
+
+DUT: Jetson-tx1, Jetson tx2.
+
+V4:
+ - Owner info is updated to port->dev for which USB role switch is used.
+ - Updated function name in logs, unsigned int usage as per comments.
+ - usb_phy_event is used instead of usb_role to detect role changes as
+   notifier arguments of usb-phy is used for charging current updates.
+ - Added ACKed-by info for corresponding patches.
+V3:
+ - Port and cable names updated in "Tests done" section of cover letter as
+   per JC inputs.
+ - Fixed arguments allignments in USB padctl driver.
+ - Padctl driver aborts if usb-role-switch is not present in dt for
+   peripheral/otg roles.
+ - Added Reviewed and ACKed details for corresponding patches.
+V2:
+ - Updated usb-role-switch documentation for Padctl driver.
+ - Update XUDC bindings doc as suggested by Rob.
+ - Used standard error codes for error return.
+ - Added of_platform_depopulate during error and driver removal.
+ - Updated error variable during phy initialization in XUDC driver.
+ - Updated Tegra210 soc dtb file as per changes to binding doc.
+
+Nagarjuna Kristam (19):
+  dt-bindings: phy: tegra-xusb: Add usb-role-switch
+  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+  phy: tegra: xusb: Add usb-role-switch support
+  phy: tegra: xusb: Add usb-phy support
+  phy: tegra: xusb: Add support to get companion USB 3 port
+  phy: tegra: xusb: Add set_mode support for USB 2 phy on Tegra210
+  phy: tegra: xusb: Add set_mode support for UTMI phy on Tegra186
+  usb: xhci-tegra: Add OTG support
+  usb: gadget: tegra-xudc: Remove usb-role-switch support
+  usb: gadget: tegra-xudc: Add usb-phy support
+  usb: gadget: tegra-xudc: use phy_set_mode to set/unset device mode
+  usb: gadget: tegra-xudc: support multiple device modes
+  arm64: tegra: update OTG port entries for jetson-tx1
+  arm64: tegra: update OTG port entries for jetson-tx2
+  arm64: tegra: Add xudc node for Tegra210
+  arm64: tegra: Enable xudc on Jetson TX1
+  arm64: tegra: Add xudc node for Tegra186
+  arm64: tegra: Enable xudc node on Jetson TX2
+  ARM: tegra: Remove USB 2-0 port from Jetson TK1 padctl
+
+ .../bindings/phy/nvidia,tegra124-xusb-padctl.txt   |   6 +
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 ++++++++++++++
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   6 -
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  23 +-
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  19 ++
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  34 ++-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  19 ++
+ drivers/phy/tegra/Kconfig                          |   1 +
+ drivers/phy/tegra/xusb-tegra186.c                  | 114 +++++++--
+ drivers/phy/tegra/xusb-tegra210.c                  | 131 ++++++++--
+ drivers/phy/tegra/xusb.c                           | 172 +++++++++++++
+ drivers/phy/tegra/xusb.h                           |   5 +
+ drivers/usb/gadget/udc/tegra-xudc.c                | 273 ++++++++++++++-------
+ drivers/usb/host/xhci-tegra.c                      | 228 ++++++++++++++++-
+ include/linux/phy/tegra/xusb.h                     |   2 +
+ 15 files changed, 1078 insertions(+), 145 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+
+-- 
+2.7.4
 
