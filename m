@@ -2,133 +2,134 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA0DC35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC1EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7052082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A260420730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="yv91YURh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgBDPVp (ORCPT
+        id S1727347AbgBDP00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:21:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:38078 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbgBDPVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:21:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDA41101E;
-        Tue,  4 Feb 2020 07:21:42 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC71A3F52E;
-        Tue,  4 Feb 2020 07:21:40 -0800 (PST)
-Date:   Tue, 4 Feb 2020 15:21:32 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        Lorenzo.Pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
-        rjw@rjwysocki.net, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-Message-ID: <20200204152132.GA44858@bogus>
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
- <20200203170832.GA38466@bogus>
- <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
+        Tue, 4 Feb 2020 10:26:26 -0500
+Received: from mail-co1nam11on2085.outbound.protection.outlook.com ([40.107.220.85]:27136
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727297AbgBDP0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:26:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RLqu9KIHH2TvcvnFfJOizX3ZAr38a4CCDQUQRHh5kPsABzjaUvFuRc2j6DmY5FmwOs6QIdZJo03BcFodMt0WU5pKNrcf2XrIsXOYPtkmvHyoHctMXgB/OcP7fSf4P8IGH6WKtXz51d1fd9C5lAoYMIxsj+O01w0CRdTQRa78w2bLyMWr2das6Idn37AvMElCnUqMYEDWdx1Hu1VnD3BkM23XpaUdqmQ9ds0HQyy3V6fAUzfmAOK8rcYIwJmj9k6ree3j45dVxq8Ib+RFuVad58GrV4jifc7Yfg/Jd16HiCCqgOm0W/Jrmr0JlhUwH3AIVPKqv5xBdUAiNFDHhUEQ4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j9zdQSYTmm99Hv3TNiq9TkSQbrEWSRLgySpYt46fu8w=;
+ b=GHLlJxzyXEOFyvBwE01WNyYY2pbG6w6NlVQavxxaA/cAIpr22oBc2Th1PTtU54MuhFlGD/rGN4VyJ0a+NsxW/Dm9C5ntMQuyWFCQq7h1aHvswllJhCP0rpku74UHC+WUrjVBq5ci/hiMwK6yA5mH491ut0gcct2d6A7OjrvK1dkDzY/zdpFjsGek/O/3w0Up2IHJQqhgiDQfWiPyp9Why9qy6Zvs2JEfEUMbxGtJkxSYFPXfd9d6fMlHvXOfQnhr7wVjClmCo8mvNY2ekSmf9CATlhriN7bOAwXgb5pTNZqLhGfbnaxNuNY7eSVBj18u2s7qvaEglx4EDXd32zq5KA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j9zdQSYTmm99Hv3TNiq9TkSQbrEWSRLgySpYt46fu8w=;
+ b=yv91YURh3amgwvuHDRI50fPeu7d/km3ky1VknV7865X0ZtvNSe23DFQX1AZZAX8/Rqmuu4er+sy3see5k1Rx79V0XQW/VgQPVrQEcp/yWNnu7SIaXuWksXbpdHa+mBGmB/4nle+WQem1mw0KU87e4yCE54T4RgUuVUj1FG6ypFU=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB4227.namprd08.prod.outlook.com (52.133.223.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.32; Tue, 4 Feb 2020 15:26:22 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2686.034; Tue, 4 Feb 2020
+ 15:26:21 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v5 6/8] scsi: ufs: Add dev ref clock gating wait
+ time support
+Thread-Topic: [EXT] [PATCH v5 6/8] scsi: ufs: Add dev ref clock gating wait
+ time support
+Thread-Index: AQHV2nLooe/S8vdKakmDvCDWUCrDuagLKLJw
+Date:   Tue, 4 Feb 2020 15:26:21 +0000
+Message-ID: <BN7PR08MB56841CCE325A2725CCA1A7D2DB030@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+ <1580721472-10784-7-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1580721472-10784-7-git-send-email-cang@codeaurora.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.80.131]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0abb0240-0701-4c4b-92d9-08d7a98696ce
+x-ms-traffictypediagnostic: BN7PR08MB4227:|BN7PR08MB4227:|BN7PR08MB4227:
+x-microsoft-antispam-prvs: <BN7PR08MB422710E989EECF7CD39306E3DB030@BN7PR08MB4227.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 03030B9493
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(366004)(396003)(346002)(189003)(199004)(55236004)(6506007)(4744005)(4326008)(2906002)(478600001)(186003)(33656002)(8936002)(8676002)(81156014)(316002)(81166006)(54906003)(110136005)(86362001)(26005)(5660300002)(66946007)(7416002)(52536014)(55016002)(71200400001)(7696005)(66556008)(9686003)(66446008)(66476007)(64756008)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4227;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QIh1DYrGFVdqbwB7qnUmSEOEb/vLoXpzGutVlALPmYWdUZAIrj5G7rhDpeUIKR6o79+bscQTHZfdKcs7f9yW+1Ix5VWYTxxV85ojxP+huM0zdniZky7nyde/AlqYKKK2Ft7TQCHuSc1Wp9AuhPwMg5DRkuq7fHdQuO6wcq0xv5QmUN/91aDBJqoDGTE0Cjra6BhAds2NLPm8PBPNM4NofrNyi1WF235mKYDnQ6Xt9TvkwWcwQKFfE9FVnXAFO6cEQ8zQjIpSgFtcRAnfwHaTJ2vqnMKG7EyEBb8KmZ68BmI5SPY1/Qb40ngy+yqBCQHVoDrD96zjDFvU3LdIFORMkucQyn7HHHtniGA8Goxn7LaGBWk7+lFndaBG7vv1reXffNVp+a2x9/rdbW7snsY/GNXd39CsY0W6f/ZMXdNCBJ4BcPf4XqKkAiTwi0jqPf1K
+x-ms-exchange-antispam-messagedata: LF0moTazbk7TmrjmRRfBxWRZhtwl3es6TiMa1fuvHLpEkVaY6fEz2jvvoFQAG6K2S0+7IXg2vw3X9qFwtQkWTr9Pi/duaRNG2X5wfLg9Ll5KyZBZxraLguUwlq03D9XucGghfgkmEBD37+2FoBtN+w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0abb0240-0701-4c4b-92d9-08d7a98696ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2020 15:26:21.4641
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5W++phJLh0NAgEy5Yx7QWLSJZumO7DrWr9XAtXvDfxCWmEwYO4HeW0UiPLfoCczW9aLLyFKT3NzG1wzKdRODDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4227
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
->
-> On 2/3/2020 10:38 PM, Sudeep Holla wrote:
-> > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
-> > > From: Ulf Hansson <ulf.hansson@linaro.org>
-> > >
-> > > If the hierarchical CPU topology is used, but the OS initiated mode isn't
-> > > supported, we need to rely solely on the regular cpuidle framework to
-> > > manage the idle state selection, rather than using genpd and its
-> > > governor.
-> > >
-> > > For this reason, introduce a new PSCI DT helper function,
-> > > psci_dt_pm_domains_parse_states(), which parses and converts the
-> > > hierarchically described domain idle states from DT, into regular flattened
-> > > cpuidle states. The converted states are added to the existing cpuidle
-> > > driver's array of idle states, which make them available for cpuidle.
-> > >
-> > And what's the main motivation for this if OSI is not supported in the
-> > firmware ?
->
-> Hi Sudeep,
->
-> Main motivation is to do last-man activities before the CPU cluster can
-> enter a deep idle state.
->
+Hi, Can
+>=20
+> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime defines=
+ the
+> minimum time for which the reference clock is required by device during
+> transition to LS-MODE or HIBERN8 state. Make this change to reflect the n=
+ew
+> requirement by adding delays before turning off the clock.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-Details on those last-man activities will help the discussion. Basically
-I am wondering what they are and why they need to done in OSPM ?
+This looks fine.
 
-> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > [applied to new path, resolved conflicts]
-> > > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > > ---
-> > >   drivers/cpuidle/cpuidle-psci-domain.c | 137 +++++++++++++++++++++++++++++-----
-> > >   drivers/cpuidle/cpuidle-psci.c        |  41 +++++-----
-> > >   drivers/cpuidle/cpuidle-psci.h        |  11 +++
-> > >   3 files changed, 153 insertions(+), 36 deletions(-)
-> > >
-> > > diff --git a/drivers/cpuidle/cpuidle-psci-domain.c b/drivers/cpuidle/cpuidle-psci-domain.c
-> > > index 423f03b..3c417f7 100644
-> > > --- a/drivers/cpuidle/cpuidle-psci-domain.c
-> > > +++ b/drivers/cpuidle/cpuidle-psci-domain.c
-> > > @@ -26,13 +26,17 @@ struct psci_pd_provider {
-> > >   };
-> > >
-> > >   static LIST_HEAD(psci_pd_providers);
-> > > -static bool osi_mode_enabled __initdata;
-> > > +static bool osi_mode_enabled;
-> > >
-> > >   static int psci_pd_power_off(struct generic_pm_domain *pd)
-> > >   {
-> > >   	struct genpd_power_state *state = &pd->states[pd->state_idx];
-> > >   	u32 *pd_state;
-> > >
-> > > +	/* If we have failed to enable OSI mode, then abort power off. */
-> > > +	if ((psci_has_osi_support()) && !osi_mode_enabled)
-> > > +		return -EBUSY;
-> > > +
-> > Why is this needed ? IIUC we don't create genpd domains if OSI is not
-> > enabled.
->
-> we do create genpd domains, for cpu domains, we just abort power off here
-> since idle states are converted into regular flattened mode.
->
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 
-OK, IIRC the OSI patches from Ulf didn't add the genpd or rather removed
-them in case of any failure to enable OSI. Has that been changed ? If so,
-why ?
+Thanks,=20
 
-> however genpd poweroff will be used by parent domain (rsc in this case)
-> which is kept in hireachy in DTSI with cluster domain to do last man
-> activities.
->
-
-I am bit confused here. Either we do OSI or PC and what you are describing
-sounds like a mix-n-match to me and I am totally against it.
-
---
-Regards,
-Sudeep
+//Bean
