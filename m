@@ -2,159 +2,152 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5A3C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58678C3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0E72086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hmIilxgh"
+	by mail.kernel.org (Postfix) with ESMTP id 34B052086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 05:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgBDFfc (ORCPT
+        id S1726981AbgBDFfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 00:35:32 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35436 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgBDFfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 00:35:31 -0500
-Received: by mail-pj1-f66.google.com with SMTP id q39so855634pjc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 21:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=mp+1c2B50o28Qqa1ZmH0uiauGkeLJPFOlJ1vQldCPSU=;
-        b=hmIilxghDj4/z3bkBL2jJGMmBKOd1M6J74hCRXsdkFjUO9BMoUZC7n8HjjjGvU3yIy
-         Kvr3Z0gG+Sfl+mikRakWmS7LlJDUTE5uDKMjgLFu+r0nWEWHx02CKNGU/lIv+wbTr3ah
-         IiMKdOLIuciuvLNqstSA8iP4obMmcAJvfnjvuAovqg3AWNNeYZEWjNzgwBJeCQhf3w9o
-         BXX4+UZwJ8ht4gTuYd90tMi+lIoJaDh3Gn7i8xANogKv7eD6+Uf/sYgcZkox5V+jS9dB
-         WEd3cCzwkyGf5fTSD1pnAhcFgqndN+KKNOMXEIDOf+zOxIlM10UDLM9YZwl/ren2FOYf
-         Yq7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=mp+1c2B50o28Qqa1ZmH0uiauGkeLJPFOlJ1vQldCPSU=;
-        b=BR2FogyEuZVVxwal53evLgYRgPr4NGKDZ6vCcbFkHEwftJFVm6YFEFsFqVx9h+AYlA
-         ICZR8neSSbgw5lxl6UKsIRPc8qsE+gbOsl3XBMxRZ1WbhUvdPe4Cy8rrqZbHJan1z8TW
-         kudK71/8mPka3WVVlpnPyQj8rr8LJK5gWmYlkJne4vJV55peBUNeyG2/3Yvfe8Ei0gdf
-         w094+h7jkQKD61SRG/LBKuIcakqWcme3EDnswJQsSo1FucT429IrjbT4F9oqiklQk0V4
-         WDoHf/S4cazOBfeZuai6JJxijmm1u9cSZm+5ERK0sInxNk+PzIVJcsG8Nt4JD04A/50U
-         HSNg==
-X-Gm-Message-State: APjAAAUwzCM4vSFZT6urcW2auhWWSQz08hBS2eqQG83Wh+FJ1EvrXDRo
-        Dd098Rynmv/N04DRd0HaTKFtNQ==
-X-Google-Smtp-Source: APXvYqycYSCBCmPC4Am2aK/6EFeIF9OyXPCBP5T0+mibKyaGrTqm3G/Fowfkw930WEP8iGBdZjdHVw==
-X-Received: by 2002:a17:902:bf41:: with SMTP id u1mr27165783pls.207.1580794530698;
-        Mon, 03 Feb 2020 21:35:30 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g21sm23210266pfb.126.2020.02.03.21.35.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 21:35:30 -0800 (PST)
-Date:   Mon, 3 Feb 2020 21:35:27 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
-        Erin Lo <erin.lo@mediatek.com>,
-        Brandon Maier <brandon.maier@rockwellcollins.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ma Feng <mafeng.ma@huawei.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [GIT PULL] remoteproc updates for v5.6
-Message-ID: <20200204053527.GB130281@yoga>
+        Tue, 4 Feb 2020 00:35:54 -0500
+Received: from mga07.intel.com ([134.134.136.100]:62720 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbgBDFfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 00:35:54 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 21:35:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="403678791"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 03 Feb 2020 21:35:52 -0800
+Date:   Mon, 3 Feb 2020 21:35:52 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v2 6/6] x86: vmx: virtualize split lock detection
+Message-ID: <20200204053552.GA31665@linux.intel.com>
+References: <20200203151608.28053-1-xiaoyao.li@intel.com>
+ <20200203151608.28053-7-xiaoyao.li@intel.com>
+ <20200203214212.GH19638@linux.intel.com>
+ <addf50c8-f683-9176-d6e4-51bc217dcc92@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <addf50c8-f683-9176-d6e4-51bc217dcc92@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+On Tue, Feb 04, 2020 at 10:52:01AM +0800, Xiaoyao Li wrote:
+> On 2/4/2020 5:42 AM, Sean Christopherson wrote:
+> >On Mon, Feb 03, 2020 at 11:16:08PM +0800, Xiaoyao Li wrote:
+> >>
+> >>Only when host is sld_off, can guest control the hardware value of
+> >>MSR_TEST_CTL, i.e., KVM loads guest's value into hardware when vcpu is
+> >>running.
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+...
 
-are available in the Git repository at:
+> Right, SLD is exposed to the guest only when host is sld_off makes thing
+> much simpler. But this seems only meaning for using guest for debugging or
+> testing?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rproc-v5.6
+Ah, I misunderstood.  I thought the above quote was saying SLD would be
+exposed to the guest if it's off in the host, i.e. intended only to reword
+the changelog.
 
-for you to fetch changes up to 600c39b34369e2a1bf78eb67afb99ce550f271cc:
+Per our offline discussion:
 
-  remoteproc: qcom: q6v5-mss: Improve readability of reset_assert (2020-01-24 09:34:07 -0800)
+  sld_fatal - MSR_TEST_CTL.SDL is forced on and is sticky from the guest's
+              perspective (so the guest can detect a forced fatal mode).
 
-----------------------------------------------------------------
-remoteproc updates for v5.6
+  sld_warn - SLD is exposed to the guest.  MSR_TEST_CTL.SDL is left on
+             until an #AC is intercepted with MSR_TEST_CTL.SDL=0 in the
+             guest, at which point normal sld_warn rules apply.  If a vCPU
+             associated with the task does VM-Enter with MSR_TEST_CTL.SDL=1,
+             TIF_SLD is reset and the cycle begins anew.
 
-This adds support for the Mediatek MT8183 SCP, modem remoteproc on
-Qualcomm SC7180 platform, audio and sensor remoteprocs on Qualcomm
-MSM8998 and audio, compute, modem and sensor remoteprocs on Qualcomm
-SM8150.
-It adds votes for necessary power-domains for all Qualcomm TrustZone
-based remoteproc instances are held, fixes a bug related to remoteproc
-drivers registering before the core has been initialized and does clean
-up the Qualcomm modem remoteproc driver.
+  sld_off - When set by the guest, MSR_TEST_CTL.SLD is set on VM-Entry
+            and cleared on VM-Exit.
 
-----------------------------------------------------------------
-Brandon Maier (1):
-      remoteproc: Initialize rproc_class before use
+Side topic, this means we need more than is_split_lock_detect_enabled(),
+but it's probably still a good idea to hide the enum, e.g. have
+is_sld_enabled() and is_sld_fatal() wrappers.
+ 
+> >Reiterating everything that was implemented in previous patches does more
+> >harm than good.
 
-Erin Lo (2):
-      dt-bindings: Add a binding for Mediatek SCP
-      remoteproc/mediatek: add SCP support for mt8183
+...
 
-Gustavo A. R. Silva (1):
-      remoteproc: use struct_size() helper
+> >>@@ -1934,6 +1960,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >>  	u32 index;
+> >>  	switch (msr_index) {
+> >>+	case MSR_TEST_CTRL:
+> >>+		if (!msr_info->host_initiated &&
+> >>+		    (!guest_has_feature_split_lock_detect(vcpu) ||
+> >>+		     data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
+> >>+			return 1;
+> >>+		if (data & MSR_TEST_CTRL_SPLIT_LOCK_DETECT)
+> >>+			vmx->disable_split_lock_detect = false;
+> >
+> >Pretty sure disable_split_lock_detect won't exist, but if it does, don't
+> >reuse it for emulating guest behavior.  Keep the two things separate, i.e.
+> >use vmx->msr_test_ctrl to track guest state and use the disable_sld to
+> >track when the feature has been disabled for an ignorant guest.
+> 
+> My thought was that when both host and guest are sld_warn.
+> If there is a split lock in guest user space,
+>  1. #AC trapped in kvm, and re-injected to guest due to guest's MSR bit set;
+>  2. Guest clears MSR bit but hardware bit not cleared, re-execute the
+> instruction
+>  3. #AC trapped again, vmx->disable_sld set to true, vm-enter to guest with
+> hardware MSR bit cleared, re-execute the instruction
+>  4. After guest user space application finishes/ or scheduled, guest set MSR
+> bit, here we'd better clear vmx->disable_sld, otherwise hardware MSR bit
+> keeps cleared for this vcpu thread.
 
-Ma Feng (1):
-      remoteproc: qcom: Remove unneeded semicolon
+Ya, all that works.  But I don't think KVM needs to context switch
+MSR_TEST_CTRL in any mode except sld_off.  For sld_fatal, it's simply on.
+For sld_warn, it's only disabled when TIF_SLD=1, i.e. after a warning #AC.
 
-Pi-Hsun Shih (1):
-      rpmsg: add rpmsg support for mt8183 SCP.
+I suppose there's a corner case where userspace is multiplexing vCPUs on
+tasks, in which case we could end up with TIF_SLD=1 and MSR_TEST_CTRL.SLD=1.
+KVM still doesn't need a separate flag, e.g.:
 
-Sibi Sankar (15):
-      remoteproc: qcom: pas: Disable interrupt on clock enable failure
-      dt-bindings: remoteproc: qcom: Add power-domain bindings for Q6V5 PAS
-      remoteproc: qcom: pas: Vote for active/proxy power domains
-      dt-bindings: remoteproc: qcom: SM8150 Add ADSP, CDSP, MPSS and SLPI support
-      remoteproc: qcom: pas: Add SM8150 ADSP, CDSP, Modem and SLPI support
-      remoteproc: qcom: pas: Add auto_boot flag
-      remoteproc: q6v5-mss: Remove mem clk from the active pool
-      dt-bindings: remoteproc: qcom: Add ADSP and SLPI support for MSM8998 SoC
-      remoteproc: qcom: pas: Add MSM8998 ADSP and SLPI support
-      dt-bindings: remoteproc: qcom: Add Q6V5 Modem PIL binding for SC7180
-      remoteproc: mss: q6v5-mss: Add modem support on SC7180
-      remoteproc: qcom: q6v5-mss: Improve readability across clk handling
-      remoteproc: qcom: q6v5-mss: Rename boot status timeout
-      remoteproc: qcom: q6v5-mss: Use regmap_read_poll_timeout
-      remoteproc: qcom: q6v5-mss: Improve readability of reset_assert
+        if (static_cpu_has(...) && vmx->msr_test_control) {
+                if (test_thread_flag(TIF_SLD))
+                        sld_turn_back_on();
+                else if (!is_split_lock_detect_enabled())
+                        wrmsrl(MSR_TEST_CTL,
+                               this_cpu_read(msr_test_ctl_val) |
+                               vmx->msr_test_ctl);
+	}
 
- .../devicetree/bindings/remoteproc/mtk,scp.txt     |  36 ++
- .../devicetree/bindings/remoteproc/qcom,adsp.txt   |  44 ++
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  23 +-
- drivers/remoteproc/Kconfig                         |  10 +
- drivers/remoteproc/Makefile                        |   1 +
- drivers/remoteproc/mtk_common.h                    |  94 +++
- drivers/remoteproc/mtk_scp.c                       | 663 +++++++++++++++++++++
- drivers/remoteproc/mtk_scp_ipi.c                   | 219 +++++++
- drivers/remoteproc/qcom_q6v5_mss.c                 | 236 +++++++-
- drivers/remoteproc/qcom_q6v5_pas.c                 | 260 +++++++-
- drivers/remoteproc/qcom_sysmon.c                   |   2 +-
- drivers/remoteproc/remoteproc_core.c               |   6 +-
- drivers/rpmsg/Kconfig                              |   9 +
- drivers/rpmsg/Makefile                             |   1 +
- drivers/rpmsg/mtk_rpmsg.c                          | 414 +++++++++++++
- include/linux/remoteproc/mtk_scp.h                 |  66 ++
- include/linux/rpmsg/mtk_rpmsg.h                    |  38 ++
- 17 files changed, 2092 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
- create mode 100644 drivers/remoteproc/mtk_common.h
- create mode 100644 drivers/remoteproc/mtk_scp.c
- create mode 100644 drivers/remoteproc/mtk_scp_ipi.c
- create mode 100644 drivers/rpmsg/mtk_rpmsg.c
- create mode 100644 include/linux/remoteproc/mtk_scp.h
- create mode 100644 include/linux/rpmsg/mtk_rpmsg.h
+        __vmx_vcpu_run();
+
+        if (static_cpu_has(...) && vmx->msr_test_control &&
+            !is_split_lock_detect_enabled())
+                wrmsrl(MSR_TEST_CTL, this_cpu_read(msr_test_ctl_val));
+
+
+
+
+> Also, this makes a difference for guest user space application that when it
+> scheduled out then scheduled in, the MSR bit is set again while in bare
+> metal it keeps cleared. That's why I use pr_warn_ratelimited() in #AC
+> interceptor.
