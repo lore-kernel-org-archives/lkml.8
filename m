@@ -2,195 +2,178 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C65C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED38C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1B12082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3332166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xy414p9S"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxqH2zud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbgBDSSB (ORCPT
+        id S1727518AbgBDSTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:18:01 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58688 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgBDSSA (ORCPT
+        Tue, 4 Feb 2020 13:19:14 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43360 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbgBDSTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 13:18:00 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 014IHk3A128570;
-        Tue, 4 Feb 2020 12:17:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580840266;
-        bh=lncBlGeTdqobitkZGOg+x6QMsqVd0LjGX8n1Fygx6xU=;
-        h=From:To:CC:Subject:Date;
-        b=Xy414p9SN4nH2VJrxYhIXDVfYoOBJ7HSfNPY6A22G8tbmRZccLlXNa090QCRN2yjn
-         4yc4YVd42u8AmkrsOVrOjrIah9TXcnqJIkmUUbaLeCMnwyJpt604GjdKAxjXY3JB/P
-         8ofQYRT+4mwnEqt0B6w60By3A5FkWqFads23tXzU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 014IHk0t057653
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Feb 2020 12:17:46 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
- 2020 12:17:45 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 4 Feb 2020 12:17:45 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 014IHjGV052884;
-        Tue, 4 Feb 2020 12:17:45 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2] net: phy: dp83867: Add speed optimization feature
-Date:   Tue, 4 Feb 2020 12:13:19 -0600
-Message-ID: <20200204181319.27381-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 4 Feb 2020 13:19:14 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 9so12862455lfq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 10:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=263l/kXk/O2VqBW1YQGhsnniYx47UR4rp/DuGLM6uRs=;
+        b=kxqH2zudhtDJEy7ymcHvBzEW3FJpBMLx3CFfUdHnAVFXasTaqStnKXJa88Qd5MfzHr
+         UbQLp0c/9m7cBeJM4BVWCs6h0rihDUFeauy/E0ly1EBdlc4HixVHSzUtqetSdUQpXlOl
+         sp+wsHotrzDUY7T5d+hui7bjrII+OkqAXQ18+cZI79daW41LyaNoevVvDscXkzAJM+Da
+         pFnLz+Bo0x/6YNwxIkn0ZR0T9A2shQ7hcUI//wLyi80iY6sn0D4f4MSqErvemK32An+P
+         k+oQvTAFqRfw+sUdQp8fYL82mXDNOkWlnyytsSf04J60eph8Db99ifBecXICZbjBUO17
+         pmOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=263l/kXk/O2VqBW1YQGhsnniYx47UR4rp/DuGLM6uRs=;
+        b=h4LshEZRozGtIz6EkEYzQrP1GBGkPwAQLwd1xC++nozI3exbdqdsE9jnNmn0oqEkXt
+         VJ/GNfQ6frZrS9SyB0B7QLx+1lVCmbILTUQ954D9W6WS0cljxINvo6bHrIgWEmrYn+SC
+         iQtWbfJYld/rZf7IG2blnHj9vCKGQmIXfZzq7jNNpPNcFQdSIgyrpxLMwLPjmHjJSa4X
+         eSr+MHpxCI9z3BQpon4L67ohTMWot60wzwImzW8qjQXEhn2tADC2310fMcoL1bKZiGfN
+         KGlqQjnuYlCJc9262vCMEmvWA0gDYGP6S3+otg9W124CEfxwWav1vgnhBWey7D2TzB4F
+         ltDA==
+X-Gm-Message-State: APjAAAUgOnxAEHr9jQC8U6P0jUJN+6KOhvQvtrqYb2CSHEpRUoiXmuzT
+        AeV2H1CdZ/R7Pb7GhSWEebGM0g18FnrCIugQXcBHKw==
+X-Google-Smtp-Source: APXvYqxYI97dIGwKe2kfoCU+bRfD51KxBYO1PfazopT6MD7LCXVkpTRstdxdtvoPSvV2TW99mgjSmdDAHXDrIn3Whl8=
+X-Received: by 2002:ac2:489b:: with SMTP id x27mr15395596lfc.130.1580840350453;
+ Tue, 04 Feb 2020 10:19:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-7-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1578630784-962-7-git-send-email-daidavid1@codeaurora.org>
+From:   Evan Green <evgreen@google.com>
+Date:   Tue, 4 Feb 2020 10:18:34 -0800
+Message-ID: <CAE=gft7qtfQjKK-MGgR_sK+Lsi2GmXgPkSsysD-DdUmFW4qMQw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] arm64: dts: sdm845: Redefine interconnect provider
+ DT nodes
+To:     David Dai <daidavid1@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>,
+        Alex Elder <elder@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the speed optimization bit on the DP83867 PHY.
-This feature can also be strapped on the 64 pin PHY devices
-but the 48 pin devices do not have the strap pin available to enable
-this feature in the hardware.  PHY team suggests to have this bit set.
+On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
+>
+> Add the DT nodes for each of the Network-On-Chip interconnect
+> buses found on SDM845 based platform and redefine the rsc_hlos
+> child node as a bcm-voter device to better represent the hardware.
+>
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
+>  1 file changed, 58 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index ddb1f23..7c617a9 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1364,6 +1364,55 @@
+>                         interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+>                 };
+>
+> +               mem_noc: interconnect@1380000 {
+> +                       compatible = "qcom,sdm845-mem-noc";
+> +                       reg = <0 0x01380000 0 0x27200>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+> +               dc_noc: interconnect@14e0000 {
+> +                       compatible = "qcom,sdm845-dc-noc";
+> +                       reg = <0 0x014e0000 0 0x400>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+> +               config_noc: interconnect@1500000 {
+> +                       compatible = "qcom,sdm845-config-noc";
+> +                       reg = <0 0x01500000 0 0x5080>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+> +               system_noc: interconnect@1620000 {
+> +                       compatible = "qcom,sdm845-system-noc";
+> +                       reg = <0 0x01620000 0 0x18080>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+> +               aggre1_noc: interconnect@16e0000 {
+> +                       compatible = "qcom,sdm845-aggre1-noc";
+> +                       reg = <0 0x016e0000 0 0xd080>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+> +               aggre2_noc: interconnect@1700000 {
+> +                       compatible = "qcom,sdm845-aggre2-noc";
+> +                       reg = <0 0x01700000 0 0x3b100>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+> +               mmss_noc: interconnect@1740000 {
+> +                       compatible = "qcom,sdm845-mmss-noc";
+> +                       reg = <0 0x01740000 0 0x1c1000>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+>                 ufs_mem_hc: ufshc@1d84000 {
+>                         compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+>                                      "jedec,ufs-2.0";
+> @@ -3100,6 +3149,13 @@
+>                         #mbox-cells = <1>;
+>                 };
+>
+> +               gladiator_noc: interconnect@17900000 {
+> +                       compatible = "qcom,sdm845-gladiator-noc";
+> +                       reg = <0 0x17900000 0 0xd080>;
+> +                       #interconnect-cells = <1>;
+> +                       qcom,bcm-voters = <&apps_bcm_voter>;
+> +               };
+> +
+>                 apps_rsc: rsc@179c0000 {
+>                         label = "apps_rsc";
+>                         compatible = "qcom,rpmh-rsc";
+> @@ -3174,9 +3230,8 @@
+>                                 };
+>                         };
+>
+> -                       rsc_hlos: interconnect {
+> -                               compatible = "qcom,sdm845-rsc-hlos";
+> -                               #interconnect-cells = <1>;
 
-With this bit set the PHY will auto negotiate and report the link
-parameters in the PHYSTS register.  This register provides a single
-location within the register set for quick access to commonly accessed
-information.
+With this reworking of the bindings the examples in these files are now broken:
+Documentation/devicetree/bindings/display/msm/gpu.txt
+Documentation/devicetree/bindings/display/msm/dpu.txt
 
-In this case when auto negotiation is on the PHY core reads the bits
-that have been configured or if auto negotiation is off the PHY core
-reads the BMCR register and sets the phydev parameters accordingly.
-
-This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
-4-wire cable.  If this should occur the PHYSTS register contains the
-current negotiated speed and duplex mode.
-
-In overriding the genphy_read_status the dp83867_read_status will do a
-genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
-register is read and the phydev speed and duplex mode settings are
-updated.
-
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
-v2 - Updated read status to call genphy_read_status first, added link_change
-callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/ 
-
- drivers/net/phy/dp83867.c | 55 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 967f57ed0b65..6f86ca1ebb51 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -21,6 +21,7 @@
- #define DP83867_DEVADDR		0x1f
- 
- #define MII_DP83867_PHYCTRL	0x10
-+#define MII_DP83867_PHYSTS	0x11
- #define MII_DP83867_MICR	0x12
- #define MII_DP83867_ISR		0x13
- #define DP83867_CFG2		0x14
-@@ -118,6 +119,15 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
- 
-+/* PHY STS bits */
-+#define DP83867_PHYSTS_1000			BIT(15)
-+#define DP83867_PHYSTS_100			BIT(14)
-+#define DP83867_PHYSTS_DUPLEX			BIT(13)
-+#define DP83867_PHYSTS_LINK			BIT(10)
-+
-+/* CFG2 bits */
-+#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
-+
- /* CFG3 bits */
- #define DP83867_CFG3_INT_OE			BIT(7)
- #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-@@ -287,6 +297,43 @@ static int dp83867_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83867_MICR, micr_status);
- }
- 
-+static void dp83867_link_change_notify(struct phy_device *phydev)
-+{
-+	if (phydev->state != PHY_RUNNING)
-+		return;
-+
-+	if (phydev->speed == SPEED_100 || phydev->speed == SPEED_10)
-+		phydev_warn(phydev, "Downshift detected connection is %iMbps\n",
-+			    phydev->speed);
-+}
-+
-+static int dp83867_read_status(struct phy_device *phydev)
-+{
-+	int status = phy_read(phydev, MII_DP83867_PHYSTS);
-+	int ret;
-+
-+	ret = genphy_read_status(phydev);
-+	if (ret)
-+		return ret;
-+
-+	if (status < 0)
-+		return status;
-+
-+	if (status & DP83867_PHYSTS_DUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	if (status & DP83867_PHYSTS_1000)
-+		phydev->speed = SPEED_1000;
-+	else if (status & DP83867_PHYSTS_100)
-+		phydev->speed = SPEED_100;
-+	else
-+		phydev->speed = SPEED_10;
-+
-+	return 0;
-+}
-+
- static int dp83867_config_port_mirroring(struct phy_device *phydev)
- {
- 	struct dp83867_private *dp83867 =
-@@ -467,6 +514,11 @@ static int dp83867_config_init(struct phy_device *phydev)
- 	int ret, val, bs;
- 	u16 delay;
- 
-+	/* Force speed optimization for the PHY even if it strapped */
-+	ret = phy_set_bits(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN);
-+	if (ret)
-+		return ret;
-+
- 	ret = dp83867_verify_rgmii_cfg(phydev);
- 	if (ret)
- 		return ret;
-@@ -655,6 +707,9 @@ static struct phy_driver dp83867_driver[] = {
- 		.config_init	= dp83867_config_init,
- 		.soft_reset	= dp83867_phy_reset,
- 
-+		.read_status	= dp83867_read_status,
-+		.link_change_notify = dp83867_link_change_notify,
-+
- 		.get_wol	= dp83867_get_wol,
- 		.set_wol	= dp83867_set_wol,
- 
--- 
-2.25.0
-
+It would be nice to fix them up in a subsequent change.
+-Evan
