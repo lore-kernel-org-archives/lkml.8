@@ -2,138 +2,88 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04614C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9457BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02E220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5827F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:59:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="jezB30oA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgBDO6I convert rfc822-to-8bit (ORCPT
+        id S1727355AbgBDO7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:58:08 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:54569 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbgBDO6H (ORCPT
+        Tue, 4 Feb 2020 09:59:12 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:46564 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbgBDO7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:58:07 -0500
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 9E5A5CED29;
-        Tue,  4 Feb 2020 16:07:27 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] net/bluetooth: remove __get_channel/dir
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <09359312-a1c8-c560-85ba-0f94be521b26@linux.alibaba.com>
-Date:   Tue, 4 Feb 2020 15:58:05 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2287CD53-58F4-40FD-B2F3-81A9F22F4731@holtmann.org>
-References: <1579596583-258090-1-git-send-email-alex.shi@linux.alibaba.com>
- <8CA3EF63-F688-48B2-A21D-16FDBC809EDE@holtmann.org>
- <09359312-a1c8-c560-85ba-0f94be521b26@linux.alibaba.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Tue, 4 Feb 2020 09:59:12 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 0EA6D27E10DF;
+        Tue,  4 Feb 2020 15:59:11 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XjChVko_WBR6; Tue,  4 Feb 2020 15:59:10 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id C4BA227E09CB;
+        Tue,  4 Feb 2020 15:59:10 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu C4BA227E09CB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1580828350;
+        bh=LYboxO+eGgeaPP+5xSVoFyM/DMglJmskvLywsMeS+6s=;
+        h=From:To:Date:Message-Id;
+        b=jezB30oAuRSITs+9Ea8xCL9S+F11Xzjk/kHO4rldIpD/92uL7maRAhk4Nb8mIfbFE
+         ssOtBtQWNULScoWvdbJZFZNc5kIjhY9ahcpBsTy5m+clPgNifgd96+E23p6RkST6tk
+         8aRdzYgzK1sAE5v4y4vtlW62+gqKWSKTDG06esIQ=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id kjv5ZIbr3A-7; Tue,  4 Feb 2020 15:59:10 +0100 (CET)
+Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id B144C27E02DE;
+        Tue,  4 Feb 2020 15:59:10 +0100 (CET)
+From:   Clement Leger <cleger@kalray.eu>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Clement Leger <cleger@kalray.eu>
+Subject: [PATCH] remoteproc: Replace trailing commas with semicolons
+Date:   Tue,  4 Feb 2020 15:58:53 +0100
+Message-Id: <20200204145853.29056-1-cleger@kalray.eu>
+X-Mailer: git-send-email 2.15.0.276.g89ea799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Replace two misplaced trailing commas by semicolons.
 
->>> These 2 macros are never used from first git commit Linux-2.6.12-rc2. So
->>> better to remove them.
->>> 
->>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
->>> Cc: Marcel Holtmann <marcel@holtmann.org> 
->>> Cc: Johan Hedberg <johan.hedberg@gmail.com> 
->>> Cc: "David S. Miller" <davem@davemloft.net> 
->>> Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com> 
->>> Cc: linux-bluetooth@vger.kernel.org 
->>> Cc: netdev@vger.kernel.org 
->>> Cc: linux-kernel@vger.kernel.org 
->>> ---
->>> net/bluetooth/rfcomm/core.c | 2 --
->>> 1 file changed, 2 deletions(-)
->>> 
->>> diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
->>> index 3a9e9d9670be..825adff79f13 100644
->>> --- a/net/bluetooth/rfcomm/core.c
->>> +++ b/net/bluetooth/rfcomm/core.c
->>> @@ -73,8 +73,6 @@ static struct rfcomm_session *rfcomm_session_create(bdaddr_t *src,
->>> 
->>> /* ---- RFCOMM frame parsing macros ---- */
->>> #define __get_dlci(b)     ((b & 0xfc) >> 2)
->>> -#define __get_channel(b)  ((b & 0xf8) >> 3)
->>> -#define __get_dir(b)      ((b & 0x04) >> 2)
->>> #define __get_type(b)     ((b & 0xef))
->>> 
->>> #define __test_ea(b)      ((b & 0x01))
->> 
->> it seems we are also not using __dir macro either.
->> 
-> 
-> Hi Marcel,
-> 
-> Thanks a lot for reminder. How about the following patch?
-> 
-> Thanks
-> Alex
-> 
-> From 41ef02c2f52cee1d69bb0ba0fbd90247d61dc155 Mon Sep 17 00:00:00 2001
-> From: Alex Shi <alex.shi@linux.alibaba.com>
-> Date: Wed, 15 Jan 2020 17:11:01 +0800
-> Subject: [PATCH v2] net/bluetooth: remove __get_channel/dir and __dir
-> 
-> These 3 macros are never used from first git commit Linux-2.6.12-rc2.
-> let's remove them.
-> 
-> Suggested-by: Marcel Holtmann <marcel@holtmann.org>
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Cc: linux-bluetooth@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> net/bluetooth/rfcomm/core.c | 3 ---
-> 1 file changed, 3 deletions(-)
-> 
-> diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-> index 3a9e9d9670be..dcecce087b24 100644
-> --- a/net/bluetooth/rfcomm/core.c
-> +++ b/net/bluetooth/rfcomm/core.c
-> @@ -73,8 +73,6 @@ static struct rfcomm_session *rfcomm_session_create(bdaddr_t *src,
-> 
-> /* ---- RFCOMM frame parsing macros ---- */
-> #define __get_dlci(b)     ((b & 0xfc) >> 2)
-> -#define __get_channel(b)  ((b & 0xf8) >> 3)
-> -#define __get_dir(b)      ((b & 0x04) >> 2)
-> #define __get_type(b)     ((b & 0xef))
-> 
-> #define __test_ea(b)      ((b & 0x01))
-> @@ -87,7 +85,6 @@ static struct rfcomm_session *rfcomm_session_create(bdaddr_t *src,
-> #define __ctrl(type, pf)       (((type & 0xef) | (pf << 4)))
-> #define __dlci(dir, chn)       (((chn & 0x1f) << 1) | dir)
-> #define __srv_channel(dlci)    (dlci >> 1)
-> -#define __dir(dlci)            (dlci & 0x01)
-> 
-> #define __len8(len)       (((len) << 1) | 1)
-> #define __len16(len)      ((len) << 1)
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+---
+ drivers/remoteproc/remoteproc_virtio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-just send a proper patch to the mailing list so that I can apply it.
-
-Regards
-
-Marcel
+diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+index 8c07cb2ca8ba..d58c6565f51d 100644
+--- a/drivers/remoteproc/remoteproc_virtio.c
++++ b/drivers/remoteproc/remoteproc_virtio.c
+@@ -376,8 +376,8 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+-	vdev->id.device	= id,
+-	vdev->config = &rproc_virtio_config_ops,
++	vdev->id.device	= id;
++	vdev->config = &rproc_virtio_config_ops;
+ 	vdev->dev.parent = dev;
+ 	vdev->dev.release = rproc_virtio_dev_release;
+ 
+-- 
+2.15.0.276.g89ea799
 
