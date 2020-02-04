@@ -2,140 +2,127 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11455C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D67AC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDFCB20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251A421582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580811532;
+	bh=XSjPltZDml0pHhQDIxXfkHVy7n79R52KyDFEjImPggU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p0q19qgc9Y3EDU3T/h/eTYh/yu3wpWUdF3QRivDS2BhUhqmVcSQn4Xd2rwqaQYBYe
+	 69BiInXY8B5QfTUyOSGQkV8oOKyHF8voNlenESgg/ow8cMcAU2DzMI2/AzuO8n6J6K
+	 Uj06BevKbKuFJqk/oSuKGTytVjBdirRur+4N6U6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgBDKSK (ORCPT
+        id S1727002AbgBDKSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:18:10 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:41231 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726554AbgBDKSJ (ORCPT
+        Tue, 4 Feb 2020 05:18:51 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44180 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbgBDKSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:18:09 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tp874Rw_1580811484;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tp874Rw_1580811484)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 04 Feb 2020 18:18:05 +0800
-Subject: Re: [PATCH] locking/rtmutex: remove unused cmpxchg_relaxed
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <1579595686-251535-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200131173922.hjvugxuybrn2wbsn@linux-p48b>
- <87r1zfxtne.fsf@nanos.tec.linutronix.de>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <87c1cdbc-6af0-3f56-e986-b9df894fe4da@linux.alibaba.com>
-Date:   Tue, 4 Feb 2020 18:18:04 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Tue, 4 Feb 2020 05:18:51 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so17936465ljj.11;
+        Tue, 04 Feb 2020 02:18:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QA9HPiPbuM4UHxdBV/KaiKxSA4ykX+SAvXggwSMLDg8=;
+        b=T49sjA7IVhZ3+uGbC4aY2XHFnljFEoda1YYVxJpyq3azzzI5AOpeQf4V4JsoS3IGld
+         +UFY377gBpSagUeBE52PqJ13f55YLe83z0Nmb407SITR/YTIh9Nlxc1nY57XhSHjOehW
+         fH5wsTi1rS2HRHi6IyaHSzFRfmstuNgZxUTLuoigOgZHtZl+QXqdLFxvGa76BBT9OreA
+         U4lVedr7t0cn5HjtziNMwW/AT3m8WFdS7D5lodHlMAnYmYrr4QTAqKiUDVPjrJq7qTXH
+         JxrKmcagzQsAhLaXpxswhXsb10bxUMiqpHi4JCG4ahQ29nHvcuXW22MM9nw/NdgE8YhV
+         Fakw==
+X-Gm-Message-State: APjAAAUcvBu770u80BbNEbz4sYyweepwqckO3Nfon81Sq0CssFaZW2gl
+        6WNLDbstQU2hFNXhaMU/HNI=
+X-Google-Smtp-Source: APXvYqyztY+5ijDrHtyvYSbwGDigg67WKXUahFCofHM0sleA0A6OTiQlMXGjH1SAiWMBH3WZwdoaqA==
+X-Received: by 2002:a2e:a491:: with SMTP id h17mr16898840lji.101.1580811527179;
+        Tue, 04 Feb 2020 02:18:47 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id d22sm10250256lfi.49.2020.02.04.02.18.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 02:18:46 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iyvIF-0003Yx-MZ; Tue, 04 Feb 2020 11:18:55 +0100
+Date:   Tue, 4 Feb 2020 11:18:55 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 65/90] Input: aiptek - use descriptors of current
+ altsetting
+Message-ID: <20200204101855.GI26725@localhost>
+References: <20200203161917.612554987@linuxfoundation.org>
+ <20200203161925.451117468@linuxfoundation.org>
+ <20200204081155.GC26725@localhost>
+ <20200204100332.GC1088789@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <87r1zfxtne.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204100332.GC1088789@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 04, 2020 at 10:03:32AM +0000, Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2020 at 09:11:55AM +0100, Johan Hovold wrote:
+> > On Mon, Feb 03, 2020 at 04:20:08PM +0000, Greg Kroah-Hartman wrote:
+> > > From: Johan Hovold <johan@kernel.org>
+> > > 
+> > > [ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
+> > > 
+> > > Make sure to always use the descriptors of the current alternate setting
+> > > to avoid future issues when accessing fields that may differ between
+> > > settings.
+> > > 
+> > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > Acked-by: Vladis Dronov <vdronov@redhat.com>
+> > > Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > >  drivers/input/tablet/aiptek.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
+> > > index 06d0ffef4a171..e08b0ef078e81 100644
+> > > --- a/drivers/input/tablet/aiptek.c
+> > > +++ b/drivers/input/tablet/aiptek.c
+> > > @@ -1713,7 +1713,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
+> > >  
+> > >  	aiptek->inputdev = inputdev;
+> > >  	aiptek->intf = intf;
+> > > -	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
+> > > +	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
+> > >  	aiptek->inDelay = 0;
+> > >  	aiptek->endDelay = 0;
+> > >  	aiptek->previousJitterable = 0;
+> > 
+> > I asked Sasha to drop this one directly when he added it, so it's
+> > probable gone from all the stable queues by now.
+> 
+> Oops, no, let me go drop it.
+> 
+> > But I'm still curious how this ended up being selected for stable in the
+> > first place? There's no fixes or stable tag in the commit, and I never
+> > received a mail from the AUTOSEL scripts.
+> 
+> I don't know, there was a bunch of last-minute patches picked up for
+> this round based on some "fixes needed due to other fixes".
 
+Ah, yeah, could be dependencies otherwise, but then you usually send a
+notice about that. And in this case this is the last commit to this
+particular driver in Linus's tree too.
 
-ÔÚ 2020/2/1 ÉÏÎç4:23, Thomas Gleixner Ð´µÀ:
-> Davidlohr Bueso <dave@stgolabs.net> writes:
->> On Tue, 21 Jan 2020, Alex Shi wrote:
-> 
->   Subject: locking/rtmutex: remove unused cmpxchg_relaxed
-> 
-> should be
-> 
->   Subject: locking/rtmutex: Remove unused rt_mutex_cmpxchg_relaxed()
-> 
-> You're not removing cmpxchg_relaxed, right?
-> 
->>> No one use this macro after it was introduced. Better to remove it?
-> 
-> Please make that factual.
-> 
->  The macro was never used at all. Remove it.
-> 
->> You also need to remove it for the CONFIG_DEBUG_RT_MUTEXES=y case.
-> 
-> Yes.
-> 
->> Hmm unrelated, but do we want CCAS for rtmutex fastpath? Ie:
->>
->>      (l->owner == c && cmpxchg_acquire(&l->owner, c, n) == c)
->>
->> That would optimize for the contended case and avoid the cmpxchg - it would
->> also help if we ever do the top-waiter spin thing.
-> 
-> Not sure if it buys much, but it kinda makes sense.
-> 
-> Thanks,
-> 
->         tglx
-> 
-Thanks Thomas and David!
-Is this following patch ok?
-
-Thanks
-Alex
----
-From 4cf9e38a73c67c6894f3addb2ddca26bb51b1a28 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Tue, 21 Jan 2020 15:03:33 +0800
-Subject: [PATCH v2] locking/rtmutex: optimize rt_mutex_cmpxchg_xxx series func
-
-rt_mutex_cmpxchg_relexed isn't interested by anyone, so remove it.
-And Davidlohr Bueso suggests check l->owner before cmpxchg to reduce
-lock contention.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/locking/rtmutex.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 851bbb10819d..eb26f4e57ce4 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -141,9 +141,10 @@ static void fixup_rt_mutex_waiters(struct rt_mutex *lock)
-  * set up.
-  */
- #ifndef CONFIG_DEBUG_RT_MUTEXES
--# define rt_mutex_cmpxchg_relaxed(l,c,n) (cmpxchg_relaxed(&l->owner, c, n) == c)
--# define rt_mutex_cmpxchg_acquire(l,c,n) (cmpxchg_acquire(&l->owner, c, n) == c)
--# define rt_mutex_cmpxchg_release(l,c,n) (cmpxchg_release(&l->owner, c, n) == c)
-+# define rt_mutex_cmpxchg_acquire(l,c,n)	\
-+		(l->owner == c && cmpxchg_acquire(&l->owner, c, n) == c)
-+# define rt_mutex_cmpxchg_release(l,c,n)	\
-+		(l->owner == c && cmpxchg_release(&l->owner, c, n) == c)
- 
- /*
-  * Callers must hold the ->wait_lock -- which is the whole purpose as we force
-@@ -202,7 +203,6 @@ static inline bool unlock_rt_mutex_safe(struct rt_mutex *lock,
- }
- 
- #else
--# define rt_mutex_cmpxchg_relaxed(l,c,n)	(0)
- # define rt_mutex_cmpxchg_acquire(l,c,n)	(0)
- # define rt_mutex_cmpxchg_release(l,c,n)	(0)
- 
--- 
-1.8.3.1
-
+Johan
