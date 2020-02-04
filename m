@@ -4,107 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678B2C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404ADC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3AA20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1339220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S6FGnNcH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cG81154L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgBDRAq (ORCPT
+        id S1727414AbgBDRCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:00:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28604 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727363AbgBDRAq (ORCPT
+        Tue, 4 Feb 2020 12:02:37 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42452 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgBDRCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:00:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580835645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BFdwVowO5Pc/LBG+Jvt+X7iJw2Gji+5wFzeYmAIGpEU=;
-        b=S6FGnNcHwNqhNC7PVm6atCEtANhjzH/5L6LVGd9X1VVXmMFX9XvwZq4jL1OH9Lo+sAzVni
-        2tltMTfT6YA3VXAEbUG0l6+QQwmqV3c7QLzF09RFqBQRLO0roJcShvS/JQC4weMLEGJOaH
-        RriqO13Nt2hC7+z9gz4YTyI0QbXoWhs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-zrgRukzwM56pnykmTZdjjg-1; Tue, 04 Feb 2020 12:00:43 -0500
-X-MC-Unique: zrgRukzwM56pnykmTZdjjg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4510C108838D;
-        Tue,  4 Feb 2020 17:00:42 +0000 (UTC)
-Received: from ovpn-116-174.phx2.redhat.com (ovpn-116-174.phx2.redhat.com [10.3.116.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A17871001B0B;
-        Tue,  4 Feb 2020 17:00:41 +0000 (UTC)
-Message-ID: <590e957e57f2fd83e583450c358e3282e5493709.camel@redhat.com>
-Subject: Re: [PATCH] sched/core: sched_tick_remote: Remove duplicate
- assignment
-From:   Scott Wood <swood@redhat.com>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Date:   Tue, 04 Feb 2020 11:00:41 -0600
-In-Reply-To: <20200204142718.GA23972@pauld.bos.csb>
-References: <1580776558-12882-1-git-send-email-swood@redhat.com>
-         <20200204142718.GA23972@pauld.bos.csb>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 4 Feb 2020 12:02:37 -0500
+Received: by mail-vs1-f67.google.com with SMTP id b79so11790187vsd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tbyhy2j9tl7lmdNZyQW97ifEWRaHT4auclOyiJhATrA=;
+        b=cG81154LPl6MHpTi4K0mfvhqs8a7wrBNf08IQEhTRcKMO8cBXjk/69NkI4v5yGZDU1
+         BN4jB3aRGY2vhXNVlTk5CJsvASg/55gcEfY1wmEX2HR5LLta90Ea9vB3mGkoWTakKO54
+         2XdBgvH8iy/T9ZJnPkLGhWxyUEnPpaf3TrA/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tbyhy2j9tl7lmdNZyQW97ifEWRaHT4auclOyiJhATrA=;
+        b=Gkzj3KzfbDWuTNlzRUdO3wIAeAnfcgLf1LQdX96InIZ7hRAuaoBnYrhScjs3AMEmSq
+         O3CED3BDcdWY1uw4IvV9ddw2EBfP3f2cgThctWqiWPt6WWDhrWRzpbPUUm8qfyhm17wZ
+         cXfbHqPqgA29UiUC4NqkU1cN7M8Qhbg5ty488fs9BEmkGX/sJOc3P2Pb5dJ8Sjx1fWeh
+         OJgBhc70zbtzzjiHOrwUkKjFAave3r0Eshy2GwTZE8kN2oeDKgRcJdDaNq9UW/idIfic
+         Mpc5/qWLVZ2brUgTUBhPyZvrngtKf7Cee3pMJ9buUnWJhykukFkxyIVHuTqG7Rtr9sbc
+         u7bQ==
+X-Gm-Message-State: APjAAAUDuJ3rjlZr1/h37i4X1YJ81XVjq4VmZJ8rWBca3QWn0LeoifQK
+        Hd9ZsD9mSsc3E2c0xHEr3vJhIQ7xR+M=
+X-Google-Smtp-Source: APXvYqzq7dtpm6P8/EeleQLLGpEx5iF5sCV7E7zxY66lQ3Ef04jopvfZY4rY7KMpVlkABU0PruKKfQ==
+X-Received: by 2002:a67:1983:: with SMTP id 125mr18918334vsz.63.1580835754235;
+        Tue, 04 Feb 2020 09:02:34 -0800 (PST)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id a126sm6600475vsc.15.2020.02.04.09.02.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 09:02:33 -0800 (PST)
+Received: by mail-ua1-f48.google.com with SMTP id 59so6984199uap.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 09:02:33 -0800 (PST)
+X-Received: by 2002:ab0:5c8:: with SMTP id e66mr17743329uae.120.1580835752473;
+ Tue, 04 Feb 2020 09:02:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <1580305919-30946-9-git-send-email-sanm@codeaurora.org> <5e38c092.1c69fb81.4fbb2.d9df@mx.google.com>
+In-Reply-To: <5e38c092.1c69fb81.4fbb2.d9df@mx.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 4 Feb 2020 09:02:18 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Xi=SFAjz9dAJsz-UXNPpGoC+FT5j77t+r5xCNfGMgViQ@mail.gmail.com>
+Message-ID: <CAD=FV=Xi=SFAjz9dAJsz-UXNPpGoC+FT5j77t+r5xCNfGMgViQ@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy
+ params for SC7180 IDP device
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-04 at 09:27 -0500, Phil Auld wrote:
-> Hi Scott,
-> 
-> On Mon, Feb 03, 2020 at 07:35:58PM -0500 Scott Wood wrote:
-> > A redundant "curr = rq->curr" was added; remove it.
-> > 
-> > Fixes: ebc0f83c78a2 ("timers/nohz: Update NOHZ load in remote tick")
-> > Signed-off-by: Scott Wood <swood@redhat.com>
+Hi,
+
+On Mon, Feb 3, 2020 at 4:53 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Sandeep Maheswaram (2020-01-29 05:51:59)
+> > Overriding the QUSB2 V2 Phy tuning parameters for SC7180 IDP device.
+> >
+> > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > > ---
-> >  kernel/sched/core.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 45f79bcc3146..377ec26e9159 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3683,7 +3683,6 @@ static void sched_tick_remote(struct work_struct
-> > *work)
-> >  	if (cpu_is_offline(cpu))
-> >  		goto out_unlock;
-> >  
-> > -	curr = rq->curr;
-> >  	update_rq_clock(rq);
-> >  
-> >  	if (!is_idle_task(curr)) {
-> > -- 
-> > 1.8.3.1
-> > 
-> 
-> Reviewed-by: Phil Auld <pauld@redhat.com>
-> 
-> Out of curiosity, why remove this one and not the one right before the 
-> cpu_is_offline check?
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 388f50a..826cf02 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -276,9 +276,11 @@
+> >         vdda-pll-supply = <&vreg_l11a_1p8>;
+> >         vdda-phy-dpdm-supply = <&vreg_l17a_3p0>;
+> >         qcom,imp-res-offset-value = <8>;
+> > -       qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+> > -       qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
+> > +       qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_15_PERCENT>;
+> >         qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
+> > +       qcom,bias-ctrl-value = <0x22>;
+> > +       qcom,charge-ctrl-value = <3>;
+> > +       qcom,hsdisc-trim-value = <0>;
+>
+> Actually, I'd prefer it uses /bits/ 8 here if it's just 8 bits.
 
-This was the one that was recently added by mistake.
+I have been giving the opposite advice and I thought in general Rob H
+suggests against adding "/bits/ 8" unless it's absolutely needed (like
+for an array).
 
--Scott
+One example from
+<http://lore.kernel.org/r/97cd8c1d98d7406347e4e48f4c7383a394a2ae93.1451997697.git.oreste.salerno@tomtom.com>
 
+> > + lp_intrvl = /bits/ 8 <0x0A>;
+>
+> If the size is not 32-bits, you need to state that in the description.
+> There is not really much point in making these 8-bit though.
 
+-Doug
