@@ -2,157 +2,86 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E890C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB5CC3524A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B3620732
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:07:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SS/40Myd"
+	by mail.kernel.org (Postfix) with ESMTP id 1F42E20732
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 04:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgBDEHe (ORCPT
+        id S1727170AbgBDEJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 23:07:34 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43778 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727015AbgBDEHe (ORCPT
+        Mon, 3 Feb 2020 23:09:08 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:51114 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbgBDEJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 23:07:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580789253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g7B85Tuhdr78AsiT4Ni5YNT6BLFTLG2y3kO7hKIaH4E=;
-        b=SS/40Myde0LXqmAP6XcapMGnvwxWHcVE3JTAKxBwd0SfmLaEZfYDeQISVR1xdMy3QM33X0
-        tae1wuHCHFViH4GfIFKQGHrFCAe7dtEK5LLoKgQHRa/iaMeJMdCLUrtPYHyBRjhZ49Z26m
-        NbdEVKWIkllPRkDZja3W6QQ+n1SXsbs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-IG-2EzjCNL6GTf6APFeeAw-1; Mon, 03 Feb 2020 23:07:23 -0500
-X-MC-Unique: IG-2EzjCNL6GTf6APFeeAw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AD66800D55;
-        Tue,  4 Feb 2020 04:07:20 +0000 (UTC)
-Received: from [10.72.12.170] (ovpn-12-170.pek2.redhat.com [10.72.12.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A7A691001920;
-        Tue,  4 Feb 2020 04:07:02 +0000 (UTC)
-Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
-To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org
-Cc:     kbuild-all@lists.01.org, mst@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jakub.kicinski@netronome.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com
-References: <20200128033215.GO1870@kadam>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d2babc39-8583-bf06-20d1-1a3be990f711@redhat.com>
-Date:   Tue, 4 Feb 2020 12:07:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 3 Feb 2020 23:09:07 -0500
+Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01448i66013873;
+        Tue, 4 Feb 2020 13:08:45 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
+ Tue, 04 Feb 2020 13:08:44 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01448ibp013869;
+        Tue, 4 Feb 2020 13:08:44 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: (from i-love@localhost)
+        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id 01448ioc013868;
+        Tue, 4 Feb 2020 13:08:44 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-Id: <202002040408.01448ioc013868@www262.sakura.ne.jp>
+X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
+Subject: [PATCH] kconfig: Invalidate all symbols after changing to y or m.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200128033215.GO1870@kadam>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 04 Feb 2020 13:08:44 +0900
+References: <ced8ab1c-9c35-c7b0-6b9e-bcee7ffdf469@i-love.sakura.ne.jp> <CAK7LNATNY1oP5XgFH3+fuUU=Z7pEz7Sqz0vKCzvhM4Kem7RkOg@mail.gmail.com>
+In-Reply-To: <CAK7LNATNY1oP5XgFH3+fuUU=Z7pEz7Sqz0vKCzvhM4Kem7RkOg@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit 89b9060987d98833 ("kconfig: Add yes2modconfig and
+mod2yesconfig targets.") forgot to clear SYMBOL_VALID bit after
+changing to y or m, these targets did not save the changes.
+Call sym_clear_all_valid() so that all symbols are revalidated.
 
-On 2020/1/28 =E4=B8=8A=E5=8D=8811:32, Dan Carpenter wrote:
-> Hi Jason,
->
-> url:    https://github.com/0day-ci/linux/commits/Jason-Wang/vDPA-suppor=
-t/20200117-170243
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git l=
-inux-next
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ scripts/kconfig/confdata.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-
-Will fix this.
-
-Thanks
-
-
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->
-> smatch warnings:
-> drivers/virtio/vdpa/vdpa_sim.c:288 vdpasim_alloc_coherent() warn: retur=
-ning freed memory 'addr'
->
-> # https://github.com/0day-ci/linux/commit/55047769b3e974d68b2aab5ce0022=
-459b172a23f
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout 55047769b3e974d68b2aab5ce0022459b172a23f
-> vim +/addr +288 drivers/virtio/vdpa/vdpa_sim.c
->
-> 55047769b3e974 Jason Wang 2020-01-16  263  static void *vdpasim_alloc_c=
-oherent(struct device *dev, size_t size,
-> 55047769b3e974 Jason Wang 2020-01-16  264  				    dma_addr_t *dma_addr=
-, gfp_t flag,
-> 55047769b3e974 Jason Wang 2020-01-16  265  				    unsigned long attrs)
-> 55047769b3e974 Jason Wang 2020-01-16  266  {
-> 55047769b3e974 Jason Wang 2020-01-16  267  	struct vdpa_device *vdpa =3D=
- dev_to_vdpa(dev);
-> 55047769b3e974 Jason Wang 2020-01-16  268  	struct vdpasim *vdpasim =3D=
- vdpa_to_sim(vdpa);
-> 55047769b3e974 Jason Wang 2020-01-16  269  	struct vhost_iotlb *iommu =3D=
- vdpasim->iommu;
-> 55047769b3e974 Jason Wang 2020-01-16  270  	void *addr =3D kmalloc(size=
-, flag);
-> 55047769b3e974 Jason Wang 2020-01-16  271  	int ret;
-> 55047769b3e974 Jason Wang 2020-01-16  272
-> 55047769b3e974 Jason Wang 2020-01-16  273  	if (!addr)
-> 55047769b3e974 Jason Wang 2020-01-16  274  		*dma_addr =3D DMA_MAPPING_=
-ERROR;
-> 55047769b3e974 Jason Wang 2020-01-16  275  	else {
-> 55047769b3e974 Jason Wang 2020-01-16  276  		u64 pa =3D virt_to_phys(ad=
-dr);
-> 55047769b3e974 Jason Wang 2020-01-16  277
-> 55047769b3e974 Jason Wang 2020-01-16  278  		ret =3D vhost_iotlb_add_ra=
-nge(iommu, (u64)pa,
-> 55047769b3e974 Jason Wang 2020-01-16  279  					    (u64)pa + size - 1,
-> 55047769b3e974 Jason Wang 2020-01-16  280  					    pa, VHOST_MAP_RW);
-> 55047769b3e974 Jason Wang 2020-01-16  281  		if (ret) {
-> 55047769b3e974 Jason Wang 2020-01-16  282  			kfree(addr);
->                                                                  ^^^^^^=
-^^^^^
-> 55047769b3e974 Jason Wang 2020-01-16  283  			*dma_addr =3D DMA_MAPPING=
-_ERROR;
-> 55047769b3e974 Jason Wang 2020-01-16  284  		} else
-> 55047769b3e974 Jason Wang 2020-01-16  285  			*dma_addr =3D (dma_addr_t=
-)pa;
-> 55047769b3e974 Jason Wang 2020-01-16  286  	}
-> 55047769b3e974 Jason Wang 2020-01-16  287
-> 55047769b3e974 Jason Wang 2020-01-16 @288  	return addr;
->                                                  ^^^^^^^^^^^^
-> 55047769b3e974 Jason Wang 2020-01-16  289  }
->
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology=
- Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corp=
-oration
->
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 11f6c72c2eee..aa70360f27c1 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1331,9 +1331,8 @@ void conf_rewrite_mod_or_yes(enum conf_def_mode mode)
+ 
+ 	for_all_symbols(i, sym) {
+ 		if (sym_get_type(sym) == S_TRISTATE &&
+-		    sym->def[S_DEF_USER].tri == old_val) {
++		    sym->def[S_DEF_USER].tri == old_val)
+ 			sym->def[S_DEF_USER].tri = new_val;
+-			sym_add_change_count(1);
+-		}
+ 	}
++	sym_clear_all_valid();
+ }
+-- 
+2.11.0
 
