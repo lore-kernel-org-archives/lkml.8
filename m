@@ -2,140 +2,178 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF69C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B92C3524B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7B32166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3661E21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 19:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MS7LtFiH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6UMHBAv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbgBDTcr (ORCPT
+        id S1727682AbgBDTcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 14:32:47 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:54924 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbgBDTcq (ORCPT
+        Tue, 4 Feb 2020 14:32:50 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34147 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbgBDTcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:32:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NEyB+td276ts8YTAgKy+Wd6aG//Mg77+7niimGcvraE=; b=MS7LtFiH+GHOwbhBv+vWvw2G6
-        GGWaM353Shw+BRBXs3RPScYYjeHQWFMROBIpEnJT7HGRbSG1i8cbmhXaKODdxvHybU3ar6gtLPDjK
-        v7CeOGLDXcMudmwpzsdOQT8Tg3F1uCEx98i+Uv6jo4DSh0TY7l0+Oq1AzLR124wiV8lWBE+CtiRzt
-        H1JY2UDAKt+Sv2+BWrf3iA9Jkf/+VFwVJraFRdDYOAiVKA70VZuRUOCEckZxy2i9fRi38TAP0VZni
-        Zxa04NpiTRK6Y50rqsQgLNI2xlxelTAhwhieQKXV7XbA7I79pi+7flkAWySufmzU+MTigSV/8khep
-        JPfNySMhQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:35968)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iz3w3-00040d-Fm; Tue, 04 Feb 2020 19:32:35 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iz3vy-0001AI-Sy; Tue, 04 Feb 2020 19:32:30 +0000
-Date:   Tue, 4 Feb 2020 19:32:30 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200204193230.GT25745@shell.armlinux.org.uk>
-References: <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
- <20200127161132.GX25745@shell.armlinux.org.uk>
- <20200127162206.GJ13647@lunn.ch>
- <c3e863b8-2143-fee3-bb0b-65699661d7ab@gmail.com>
- <BN8PR12MB3266B69DA09E1CC215843C3CD30A0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200204172603.GS25745@shell.armlinux.org.uk>
- <20200204174318.GB1364@lunn.ch>
+        Tue, 4 Feb 2020 14:32:47 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j7so7695191plt.1;
+        Tue, 04 Feb 2020 11:32:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QAbXnRGvDJG7H/08vR2np72AHjfOK0Akk01k65R/HVs=;
+        b=e6UMHBAvwqf5UTzC9adQbuiywGxE4xEJmfJ4Ird1yNrT6zEuFcv2raPV+bjz+23hkh
+         SCjg9iGT91AO+qYkxEyhP5MiDLiaXP+CaVWpPuw2uDGCJHya5cXdzKdy6IMTKdIkNpvA
+         k1xDFj2F2l2HlvLZJQEMlbew8ZlJqARGggyVyDvvZDLNN0XOhjKnluW6pJ9e83jdgz61
+         dl8tz5Y2UUu3eXD80XbnFvMfs8+SWaiYKhXyhLTi2OcbhT6UosRc53amdc/k85Dt+DSt
+         HD0QJqNVKYLZg55VJhqHkVLTIezeRxt3fjW6V475MsxFr5haghRmZsJ0YbAlOYsD65d7
+         7TvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QAbXnRGvDJG7H/08vR2np72AHjfOK0Akk01k65R/HVs=;
+        b=hQmuF0A5b7L97INz7ScGPvzAjBDn8st1buHjXQhHz6tJBrlKjGHfTg1zaQEKiz9CCp
+         TfLB5tg6Jry9KPR+0waPezC2x4N6qU0nrnTTEkTgOp66hY4nL0aT2ZNE6PyEGV6Vog15
+         i++UWA5T8WpjxfHNNHUT2CnDxmYcIL3595BOU62bQR8POh36jMHiqo5YbKaRKVPlAOrl
+         wWPFvrZOKitAgWlcN3ZjgAaYVmjHKdM/+6H7dfwRjdy/HTN7d8X+i9X6xJB0pKwDY7RH
+         XNO0+44yZHIwtDQDs7NwV/Dp96/oZE1dlKl1EzOSAMnB5zkXDQOTxU3NerbzGJOVO9Mc
+         Vc1g==
+X-Gm-Message-State: APjAAAX3ceho2HacQojLBwGgcyXuZe0W9TXcQ0BFN/TGidDHyTKAIYlB
+        twWpOcOGaPDqe3CvFM9tfko=
+X-Google-Smtp-Source: APXvYqz7GEmBBl58uGCrO61LTyVjbdyj3RRMPIirjdchQ8clFET4TYwJV623hGzveAFMpppWiixhBQ==
+X-Received: by 2002:a17:902:b116:: with SMTP id q22mr20400383plr.324.1580844766536;
+        Tue, 04 Feb 2020 11:32:46 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i3sm25050984pfg.94.2020.02.04.11.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Feb 2020 11:32:45 -0800 (PST)
+Date:   Tue, 4 Feb 2020 11:32:44 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: qcom-wdt: disable pretimeout on timer platform
+Message-ID: <20200204193244.GA21752@roeck-us.net>
+References: <20200204184322.22744-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204174318.GB1364@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200204184322.22744-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 06:43:18PM +0100, Andrew Lunn wrote:
-> > There, there is one MAC, but there are multiple different PCS - one
-> > for SGMII and 1000base-X, another for 10G, another for 25G, etc.
-> > These PCS are accessed via a MDIO adapter embedded in each of the
-> > MAC hardware blocks.
+On Tue, Feb 04, 2020 at 07:43:22PM +0100, Ansuel Smith wrote:
+> Some platform like ipq806x doesn't support pretimeout and define
+> some interrupts used by qcom,msm-timer. Change the driver to check
+> and use pretimeout only on qcom,kpss-wdt as it's the only platform
+> that actually supports it.
 > 
-> Hi Russell
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/watchdog/qcom-wdt.c | 31 +++++++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 8 deletions(-)
 > 
-> Marvell mv88e6390X switches are like this is a well. There is a PCS
-> for SGMII and 1000Base-X, and a second one for 10G. And it dynamically
-> swaps between them depending on the port mode, the so called cmode.
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index a494543d3ae1..195fe49ca32e 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -40,6 +40,11 @@ static const u32 reg_offset_data_kpss[] = {
+>  	[WDT_BITE_TIME] = 0x14,
+>  };
+>  
+> +struct qcom_wdt_match_data {
+> +	const u32 *offset;
+> +	bool pretimeout;
+> +};
+> +
+>  struct qcom_wdt {
+>  	struct watchdog_device	wdd;
+>  	unsigned long		rate;
+> @@ -179,19 +184,29 @@ static void qcom_clk_disable_unprepare(void *data)
+>  	clk_disable_unprepare(data);
+>  }
+>  
+> +static const struct qcom_wdt_match_data match_data_apcs_tmr = {
+> +	.offset = reg_offset_data_apcs_tmr,
+> +	.pretimeout = false,
+> +};
+> +
+> +static const struct qcom_wdt_match_data match_data_kpss = {
+> +	.offset = reg_offset_data_kpss,
+> +	.pretimeout = true,
+> +};
+> +
+>  static int qcom_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct qcom_wdt *wdt;
+>  	struct resource *res;
+>  	struct device_node *np = dev->of_node;
+> -	const u32 *regs;
+> +	const struct qcom_wdt_match_data *data;
+>  	u32 percpu_offset;
+>  	int irq, ret;
+>  	struct clk *clk;
+>  
+> -	regs = of_device_get_match_data(dev);
+> -	if (!regs) {
+> +	data = of_device_get_match_data(dev);
+> +	if (!data && !data->offset) {
+
+This should be ||. However, the second check is really unnecessary
+(it would be a coding error).
+
+Guenter
+
+>  		dev_err(dev, "Unsupported QCOM WDT module\n");
+>  		return -ENODEV;
+>  	}
+> @@ -247,7 +262,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  
+>  	/* check if there is pretimeout support */
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq > 0) {
+> +	if (data->pretimeout && irq > 0) {
+>  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+>  				       IRQF_TRIGGER_RISING,
+>  				       "wdt_bark", &wdt->wdd);
+> @@ -267,7 +282,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	wdt->wdd.min_timeout = 1;
+>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+>  	wdt->wdd.parent = dev;
+> -	wdt->layout = regs;
+> +	wdt->layout = data->offset;
+>  
+>  	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+>  		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+> @@ -311,9 +326,9 @@ static int __maybe_unused qcom_wdt_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(qcom_wdt_pm_ops, qcom_wdt_suspend, qcom_wdt_resume);
+>  
+>  static const struct of_device_id qcom_wdt_of_table[] = {
+> -	{ .compatible = "qcom,kpss-timer", .data = reg_offset_data_apcs_tmr },
+> -	{ .compatible = "qcom,scss-timer", .data = reg_offset_data_apcs_tmr },
+> -	{ .compatible = "qcom,kpss-wdt", .data = reg_offset_data_kpss },
+> +	{ .compatible = "qcom,kpss-timer", .data = &match_data_apcs_tmr },
+> +	{ .compatible = "qcom,scss-timer", .data = &match_data_apcs_tmr },
+> +	{ .compatible = "qcom,kpss-wdt", .data = &match_data_kpss },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
+> -- 
+> 2.24.0
 > 
-> So a generic solution is required, and please take your time to build
-> one.
-
-Well, DSA is quite a mixed bag...
-
-As far as I can work out, the situation with the CPU and DSA ports is
-quite hopeless - you've claimed that a change in phylink has broken it,
-I can't find what that may be.  The fact is, phylink has never had any
-link information for DSA links when no fixed-link property has been
-specified in DT.  As I've already said in a previous email about this,
-I can't see *any* sane way to fix that - but there was no response.
-
-
-On a more positive note...
-
-The mac_link_up() changes that I've talked about should work for DSA,
-if only there was a reasonable way to reconfigure the ports.  If you
-look at the "phy" branch, you will notice that there's a patch there -
-"net: mv88e6xxx: use resolved link config in mac_link_up()" which adds
-the support to configure the MAC manually.  It's rather messy, and I
-see no way to deal with the pause settings.  There is support in some
-Marvell DSA switches to force flow control but that's not supported
-through the current mid-layer at all (port_set_pause doesn't do it.)
-I'm not sure whether the "mv88e6xxx_phy_is_internal()" check there is
-the right test for every DSA switch correct either.
-
-What is missing is reading the results from the PCS (aka serdes) and
-forwarding them into phylink - I did have a quick look at how that might
-be possible, but the DSA code structure (consisting of multiple
-mid-layers) makes it hard without rewriting quite a lot of code.  That's
-fine if you know all the DSA chips inside out, but I don't - and that's
-where we need someone who has the knowledge of all DSA switches that we
-support.  Or, we get rid of the multiple mid-layers and switch to a
-library approach, so that we can modify support for one DSA switch
-without affecting everything.  It may be a simple matter of dropping the
-existing serdes workaround, but I'm not sure at the moment.
-
-I've tried this code out on the ZII rev B, I haven't tried it on the rev
-C which has the 6390 switches yet.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
