@@ -2,137 +2,67 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F201C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C49C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAA62084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2582087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgBDJNS (ORCPT
+        id S1727002AbgBDJOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:13:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47520 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgBDJNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:13:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A8FB2B020;
-        Tue,  4 Feb 2020 09:13:15 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 10:13:12 +0100
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200204091312.GC6494@linux>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
+        Tue, 4 Feb 2020 04:14:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33051 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgBDJOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:14:08 -0500
+Received: from [212.187.182.163] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iyuHT-0000TV-Eh; Tue, 04 Feb 2020 10:14:03 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 72864100720; Tue,  4 Feb 2020 09:13:55 +0000 (GMT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH V4] sched/isolation: isolate from handling managed interrupt
+In-Reply-To: <20200203235743.GH155875@xz-x1>
+References: <20200120091625.17912-1-ming.lei@redhat.com> <87eevrei7h.fsf@nanos.tec.linutronix.de> <20200203192154.GG155875@xz-x1> <87a75zz2hl.fsf@nanos.tec.linutronix.de> <20200203235743.GH155875@xz-x1>
+Date:   Tue, 04 Feb 2020 09:13:55 +0000
+Message-ID: <875zgmzpd8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006085646.5768-9-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 10:56:44AM +0200, David Hildenbrand wrote:
-> If we have holes, the holes will automatically get detected and removed
-> once we remove the next bigger/smaller section. The extra checks can
-> go.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Peter,
 
-Heh, I have been here before.
-I have to confess that when I wrote my version of this I was not really 100%
-about removing it, because hotplug was a sort of a "catchall" for all sort of weird
-and corner-cases configurations, but thinking more about it, I cannot think of
-any situation that would make this blow up.
+Peter Xu <peterx@redhat.com> writes:
+> On Mon, Feb 03, 2020 at 11:15:50PM +0000, Thomas Gleixner wrote:
+>> No, really. The basic guarantee is that your new kernel is going to work
+>> fine with the previous command line, but making a guarantee that new
+>> command line options still work on an old kernel are just creating a
+>> horrible mess. So if that command line interface was not designed to
+>> handle unknown arguments in the first place, you better fix that.
+>
+> Hi, Thomas,
+>
+> Just to make sure I understand it right: are you suggesting that we
+> fix up housekeeping_isolcpus_setup() to be able to skip unknown sub
+> parameters?
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
-> ---
->  mm/memory_hotplug.c | 34 +++++++---------------------------
->  1 file changed, 7 insertions(+), 27 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index f294918f7211..8dafa1ba8d9f 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->  		if (pfn) {
->  			zone->zone_start_pfn = pfn;
->  			zone->spanned_pages = zone_end_pfn - pfn;
-> +		} else {
-> +			zone->zone_start_pfn = 0;
-> +			zone->spanned_pages = 0;
->  		}
->  	} else if (zone_end_pfn == end_pfn) {
->  		/*
-> @@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->  					       start_pfn);
->  		if (pfn)
->  			zone->spanned_pages = pfn - zone_start_pfn + 1;
-> +		else {
-> +			zone->zone_start_pfn = 0;
-> +			zone->spanned_pages = 0;
-> +		}
->  	}
-> -
-> -	/*
-> -	 * The section is not biggest or smallest mem_section in the zone, it
-> -	 * only creates a hole in the zone. So in this case, we need not
-> -	 * change the zone. But perhaps, the zone has only hole data. Thus
-> -	 * it check the zone has only hole or not.
-> -	 */
-> -	pfn = zone_start_pfn;
-> -	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
-> -		if (unlikely(!pfn_to_online_page(pfn)))
-> -			continue;
-> -
-> -		if (page_zone(pfn_to_page(pfn)) != zone)
-> -			continue;
-> -
-> -		/* Skip range to be removed */
-> -		if (pfn >= start_pfn && pfn < end_pfn)
-> -			continue;
-> -
-> -		/* If we find valid section, we have nothing to do */
-> -		zone_span_writeunlock(zone);
-> -		return;
-> -	}
-> -
-> -	/* The zone has no valid section */
-> -	zone->zone_start_pfn = 0;
-> -	zone->spanned_pages = 0;
->  	zone_span_writeunlock(zone);
->  }
->  
-> -- 
-> 2.21.0
-> 
-
--- 
-Oscar Salvador
-SUSE L3
+Exactly.
