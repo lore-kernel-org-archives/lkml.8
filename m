@@ -2,233 +2,100 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B1AC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D847C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61712084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:20:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W0cRHz6M"
+	by mail.kernel.org (Postfix) with ESMTP id 590762084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 13:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgBDNUG (ORCPT
+        id S1727257AbgBDNVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:20:06 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46540 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727276AbgBDNUF (ORCPT
+        Tue, 4 Feb 2020 08:21:13 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36451 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgBDNVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 08:20:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580822403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DiCDr9VOMNIOGlerAt3rk5gsTcg7CmFEgtEnbuSq7k8=;
-        b=W0cRHz6MEySCD75UlhTV5sELbv7zUOqFCgnqWlFSfCIgz9CHKlidY/t/lqN4MajjGpntXT
-        GlV8mtP1I5AjXQE061CaXcgzIMpCD05VxzKePghdZOEHUVNM/8UL//rZs0J8K9SvqzYNee
-        YNExsKNcICcMzQ7T6jAwNJQAGe+yt6A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-117-CabuI7ORPYG9_kFSuyn87w-1; Tue, 04 Feb 2020 08:20:01 -0500
-X-MC-Unique: CabuI7ORPYG9_kFSuyn87w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 815E38C8800;
-        Tue,  4 Feb 2020 13:19:59 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F8A9811F8;
-        Tue,  4 Feb 2020 13:19:47 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 08:19:44 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-Message-ID: <20200204131944.esnzcqvnecfnqgbi@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
- <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
- <5238532.OiMyN8JqPO@x2>
+        Tue, 4 Feb 2020 08:21:13 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j20so8592198otq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 05:21:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KVrKWveR9k4x9vzNOToq7s3NXA+2AZmIcAe2EfBCbPo=;
+        b=HslvlFCPZGrigaqUOxFHGJ3m8L2hC7oZEYEIGmc+a2wv2zYEqWsPcgP7v18mD1mmWC
+         sqf5V8kRsJt6xgkI9iZvwK6uKbx/7LhJDRHcq1wM5IuUdhYo26Ktlm9OuM+IaT80RErU
+         ElMRKAwLmXwgXGDNbYsehQ72L/8oDg54W47J8AMT2UG9V/iQlFzK+unxACEMg7X6GoWX
+         bV5Oc8mdu9dNz03UJ0TOUIKaTl5dLxnuEBz8bl7qMu+D1BMHVNOoBV6jSNl7bIq8R2C7
+         h6PdfYYRsC6VOAt9zjc+/nePqzXagQ8x/f1N5tw06aiV/CCZrgRPPuNPnu2QU7vIrygi
+         D/nw==
+X-Gm-Message-State: APjAAAWF8SurRpg6cb0YDntRhwEqQwWFxlw7EgOcHwJ9dIfHwsQLJkRf
+        1/XC+hgJ8hY0/e51kh7BxXFDbK7beCak3nbIs8k=
+X-Google-Smtp-Source: APXvYqw1c/0MBx6lPDtFz9lgiWXHqMXu8272JmBs2BMg2EB4RC2X8iQqu+sRw2BpYMZVaSewmKj+LKnWEmjz+AHpD+I=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr22138743oth.145.1580822472473;
+ Tue, 04 Feb 2020 05:21:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5238532.OiMyN8JqPO@x2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200204111241.6927-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200204111241.6927-1-srinivas.kandagatla@linaro.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Feb 2020 14:21:01 +0100
+Message-ID: <CAMuHMdVw0crXH+=7e9GGLUR-c-SxZDz9kQdeWxkZyZ9Jx7CVig@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: wcd934x: Add missing COMMON_CLK dependency
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-31 09:50, Steve Grubb wrote:
-> On Wednesday, January 22, 2020 4:29:12 PM EST Paul Moore wrote:
-> > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > Track the parent container of a container to be able to filter and
-> > > report nesting.
-> > > 
-> > > Now that we have a way to track and check the parent container of a
-> > > container, modify the contid field format to be able to report that
-> > > nesting using a carrat ("^") separator to indicate nesting.  The
-> > > original field format was "contid=<contid>" for task-associated records
-> > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
-> > > records.  The new field format is
-> > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
-> > 
-> > Let's make sure we always use a comma as a separator, even when
-> > recording the parent information, for example:
-> > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
-> > 
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > > 
-> > >  include/linux/audit.h |  1 +
-> > >  kernel/audit.c        | 53
-> > >  +++++++++++++++++++++++++++++++++++++++++++-------- kernel/audit.h     
-> > >    |  1 +
-> > >  kernel/auditfilter.c  | 17 ++++++++++++++++-
-> > >  kernel/auditsc.c      |  2 +-
-> > >  5 files changed, 64 insertions(+), 10 deletions(-)
-> > 
-> > ...
-> > 
-> > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > index ef8e07524c46..68be59d1a89b 100644
-> > > --- a/kernel/audit.c
-> > > +++ b/kernel/audit.c
-> > > 
-> > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns,
-> > > struct task_struct *p)> 
-> > >                 audit_netns_contid_add(new->net_ns, contid);
-> > >  
-> > >  }
-> > > 
-> > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
-> > 
-> > If we need a forward declaration, might as well just move it up near
-> > the top of the file with the rest of the declarations.
-> > 
-> > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
-> > > +{
-> > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
-> > > +       int h;
-> > 
-> > It seems safer to pass the audit container ID object and not the u64.
-> > 
-> > > +       if (!audit_contid_valid(contid)) {
-> > > +               audit_log_format(ab, "%llu", contid);
-> > 
-> > Do we really want to print (u64)-1 here?  Since this is a known
-> > invalid number, would "?" be a better choice?
-> 
-> The established pattern is that we print -1 when its unset and "?" when its 
-> totalling missing. So, how could this be invalid? It should be set or not. 
-> That is unless its totally missing just like when we do not run with selinux 
-> enabled and a context just doesn't exist.
+Hi Srinivas,
 
-Ok, so in this case it is clearly unset, so should be -1, which will be a
-20-digit number when represented as an unsigned long long int.
+On Tue, Feb 4, 2020 at 12:14 PM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+> Looks like some platforms are not yet using COMMON CLK.
+>
+> PowerPC allyesconfig failed with below error in next
+>
+> ld: sound/soc/codecs/wcd934x.o:(.toc+0x0):
+>          undefined reference to `of_clk_src_simple_get'
+> ld: sound/soc/codecs/wcd934x.o: in function `.wcd934x_codec_probe':
+> wcd934x.c:(.text.wcd934x_codec_probe+0x3d4):
+>          undefined reference to `.__clk_get_name'
+> ld: wcd934x.c:(.text.wcd934x_codec_probe+0x438):
+>          undefined reference to `.clk_hw_register'
+> ld: wcd934x.c:(.text.wcd934x_codec_probe+0x474):
+>          undefined reference to `.of_clk_add_provider'
+>
+> Add the missing COMMON_CLK dependency to fix this errors.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Thank you for that clarification Steve.
+Thanks for your patch!
 
-> -Steve
-> 
-> > > +               return;
-> > > +       }
-> > > +       h = audit_hash_contid(contid);
-> > > +       rcu_read_lock();
-> > > +       list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
-> > > +               if (cont->id == contid) {
-> > > +                       prcont = cont;
-> > 
-> > Why not just pull the code below into the body of this if statement?
-> > It all needs to be done under the RCU read lock anyway and the code
-> > would read much better this way.
-> > 
-> > > +                       break;
-> > > +               }
-> > > +       if (!prcont) {
-> > > +               audit_log_format(ab, "%llu", contid);
-> > > +               goto out;
-> > > +       }
-> > > +       while (prcont) {
-> > > +               audit_log_format(ab, "%llu", prcont->id);
-> > > +               prcont = prcont->parent;
-> > > +               if (prcont)
-> > > +                       audit_log_format(ab, "^");
-> > 
-> > In the interest of limiting the number of calls to audit_log_format(),
-> > how about something like the following:
-> > 
-> >   audit_log_format("%llu", cont);
-> >   iter = cont->parent;
-> >   while (iter) {
-> >     if (iter->parent)
-> >       audit_log_format("^%llu,", iter);
-> >     else
-> >       audit_log_format("^%llu", iter);
-> >     iter = iter->parent;
-> >   }
-> > 
-> > > +       }
-> > > +out:
-> > > +       rcu_read_unlock();
-> > > +}
-> > > +
-> > > 
-> > >  /*
-> > >  
-> > >   * audit_log_container_id - report container info
-> > >   * @context: task or local context for record
-> > 
-> > ...
-> > 
-> > > @@ -2705,9 +2741,10 @@ int audit_set_contid(struct task_struct *task, u64
-> > > contid)> 
-> > >         if (!ab)
-> > >         
-> > >                 return rc;
-> > > 
-> > > -       audit_log_format(ab,
-> > > -                        "op=set opid=%d contid=%llu old-contid=%llu",
-> > > -                        task_tgid_nr(task), contid, oldcontid);
-> > > +       audit_log_format(ab, "op=set opid=%d contid=",
-> > > task_tgid_nr(task)); +       audit_log_contid(ab, contid);
-> > > +       audit_log_format(ab, " old-contid=");
-> > > +       audit_log_contid(ab, oldcontid);
-> > 
-> > This is an interesting case where contid and old-contid are going to
-> > be largely the same, only the first (current) ID is going to be
-> > different; do we want to duplicate all of those IDs?
-> > 
-> > >         audit_log_end(ab);
-> > >         return rc;
-> > >  
-> > >  }
-> > > 
-> > > @@ -2723,9 +2760,9 @@ void audit_log_container_drop(void)
-> > 
-> > paul moore
+But did this change really fix your PowerPC allyesconfig build?
+SND_SOC_ALL_CODECS will still select it...
 
-- RGB
+Fix sent.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Disclaimer: tested with m68k/allmodconfig only ;-)
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
