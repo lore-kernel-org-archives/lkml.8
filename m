@@ -2,129 +2,121 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64655C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509EBC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406FE2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B9C2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:22:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ACiGrEqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbgBDJUd (ORCPT
+        id S1726553AbgBDJWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:20:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33088 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgBDJUc (ORCPT
+        Tue, 4 Feb 2020 04:22:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52828 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgBDJWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:20:32 -0500
-Received: from [212.187.182.163] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iyuNM-0000dJ-BZ; Tue, 04 Feb 2020 10:20:08 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0F6E4100720; Tue,  4 Feb 2020 09:20:02 +0000 (GMT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        chenxiang <chenxiang66@hisilicon.com>
-Subject: Re: About irq_create_affinity_masks() for a platform device driver
-In-Reply-To: <2b381b20-512a-27a5-38d7-2f6a673bb621@huawei.com>
-References: <84a9411b-4ae3-1928-3d35-1666f2687ec8@huawei.com> <87o8uveoye.fsf@nanos.tec.linutronix.de> <4b447127-737e-a729-4dc7-82fc8b68af77@huawei.com> <19dc0422-5536-5565-e29f-ccfbcb8525d3@huawei.com> <87ftfvuww7.fsf@nanos.tec.linutronix.de> <2b381b20-512a-27a5-38d7-2f6a673bb621@huawei.com>
-Date:   Tue, 04 Feb 2020 09:20:02 +0000
-Message-ID: <871rrazp31.fsf@nanos.tec.linutronix.de>
+        Tue, 4 Feb 2020 04:22:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9M17iibfv122ur1ks8I+I3t1ou4sPRJVkTsCZX95FVI=; b=ACiGrEqV2DKuGLBrlG3vRt6K52
+        pmqg1KMBRD0Sksuzj4Aap9wld4vgPp9QXmAqYDrwECIL4P3oouRx7TjusqLQC0o76WInJU/TW4XqD
+        gZsVSlenLs738F4o9c29o9L9WBLIwqMfdk7eHn3EqDswQhcvMubNTwVES7TDHsFgk8unV3BxbztC8
+        RzxlXtrkRyQIeLkgXyo2/j0GqQiSIXayWNf3f1QrJe+Bxgg7c48W57GqTK/VrItlkLJ2QqkZW81AU
+        xBALJxq96Xubg1ZjDZOrsUy+A5u0OsoRa2FeoK3fONW09clHdIRkFNT0tDiXcZRn/KuDpRJQDpUHo
+        WXkAK5Sw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyuPe-0008Mr-RQ; Tue, 04 Feb 2020 09:22:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 624BA300E0C;
+        Tue,  4 Feb 2020 10:20:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CF68A203A89B2; Tue,  4 Feb 2020 10:22:28 +0100 (CET)
+Date:   Tue, 4 Feb 2020 10:22:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
+        bristot@redhat.com, longman@redhat.com, dave@stgolabs.net,
+        jack@suse.com
+Subject: [PATCH] locking/rwsem: Remove RWSEM_OWNER_UNKNOWN
+Message-ID: <20200204092228.GP14946@hirez.programming.kicks-ass.net>
+References: <20200131150703.194229898@infradead.org>
+ <20200131151540.155211856@infradead.org>
+ <20200203142050.GA28595@infradead.org>
+ <20200203150933.GJ14914@hirez.programming.kicks-ass.net>
+ <20200203174831.GA9834@infradead.org>
+ <20200204085049.GN14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204085049.GN14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John,
+On Tue, Feb 04, 2020 at 09:50:49AM +0100, Peter Zijlstra wrote:
 
-John Garry <john.garry@huawei.com> writes:
->> I wouldn't mind to expose a function which allows you to switch the
->> allocated interrupts to managed. The reason why we do it in one go in
->> the PCI code is that we get automatically the irq descriptors allocated
->> on the correct node. So if the node aware allocation is not a
->> showstopper 
->
-> I wouldn't say so for now.
+> Anyway, I'll go split, since you seem to care so deeply.
 
-Good.
+---
 
-> for this then your function would do:
->> 
->> 	...
->> 	for (i = 0; i < count; i++) {
->> 		pirqs[i] = platform_get_irq(dev, i);
->> 
->>                  irq_update_affinity_desc(pirqs[i], affdescs + i);
->> 
->>          }
->> 
->> int irq_update_affinity_desc(unsigned int irq, irq_affinity_desc *affinity)
->> {
->> 	unsigned long flags;
->> 	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
->> 
->>          if (!desc)
->>          	return -EINVAL;
->> 
->>          if (affinity->is_managed) {
->>          	irqd_set(&desc->irq_data, IRQD_IRQ_DISABLED);
->> 	        irqd_set(&desc->irq_data, IRQD_IRQ_MASKED);
->
-> Are these correct? I assume we want to follow alloc_descs() here.
+Subject: locking/rwsem: Remove RWSEM_OWNER_UNKNOWN
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue Feb  4 09:34:37 CET 2020
 
-Yeah, copied the wrong chunk :)
+Remove the now unused RWSEM_OWNER_UNKNOWN hack. This hack breaks
+PREEMPT_RT and getting rid of it was the entire motivation for
+re-writing the percpu rwsem.
 
->>          }
->>          cpumask_copy(desc->irq_common_data.affinity, affinity);
->>          return 0;
->> }
->
-> I see. So I made a couple of changes and it did work:
->
-> int irq_update_affinity_desc(unsigned int irq, struct irq_affinity_desc 
-> *affinity)
-> {
-> 	unsigned long flags;
-> 	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
->
-> 	if (!desc)
-> 		return -EINVAL;
->
-> 	if (affinity->is_managed) {
-> 		irqd_set(&desc->irq_data, IRQD_AFFINITY_MANAGED);
-> 		irqd_set(&desc->irq_data, IRQD_MANAGED_SHUTDOWN);
-> 	}
->
-> 	cpumask_copy(desc->irq_common_data.affinity, &affinity->mask);
-> 	irq_put_desc_unlock(desc, flags);
-> 	return 0;
-> }
+The biggest problem is that it is fundamentally incompatible with any
+form of Priority Inheritance, any exclusively held lock must have a
+distinct owner.
 
-Looks correct.
+Requested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ include/linux/rwsem.h  |    6 ------
+ kernel/locking/rwsem.c |    2 --
+ 2 files changed, 8 deletions(-)
 
-> And if we were to go this way, then we don't need to add the pointer in 
-> struct platform_device to hold affinity mask descriptors as we're using 
-> them immediately. Or even have a single function to do it all in the irq 
-> code (create the masks and update the affinity desc).
->
-> And since we're just updating the masks, I figure we shouldn't need to 
-> add acpi_irq_get_count(), which I invented to get the irq count (without 
-> creating the IRQ mapping).
-
-Yes, you can create and apply the masks after setting up the interrupts.
-
-Thanks,
-
-        tglx
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -53,12 +53,6 @@ struct rw_semaphore {
+ #endif
+ };
+ 
+-/*
+- * Setting all bits of the owner field except bit 0 will indicate
+- * that the rwsem is writer-owned with an unknown owner.
+- */
+-#define RWSEM_OWNER_UNKNOWN	(-2L)
+-
+ /* In all implementations count != 0 means locked */
+ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ {
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -659,8 +659,6 @@ static inline bool rwsem_can_spin_on_own
+ 	unsigned long flags;
+ 	bool ret = true;
+ 
+-	BUILD_BUG_ON(!(RWSEM_OWNER_UNKNOWN & RWSEM_NONSPINNABLE));
+-
+ 	if (need_resched()) {
+ 		lockevent_inc(rwsem_opt_fail);
+ 		return false;
