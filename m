@@ -4,181 +4,213 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D7C3524A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F425C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9BA2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F19321741
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 07:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgBDH0M (ORCPT
+        id S1726928AbgBDH0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 02:26:12 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:46840 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbgBDH0M (ORCPT
+        Tue, 4 Feb 2020 02:26:32 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33986 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgBDH0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 02:26:12 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tp78NT9_1580801078;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tp78NT9_1580801078)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 04 Feb 2020 15:24:39 +0800
-Subject: Re: [PATCH RESEND] mm: fix tick_sched timer blocked by
- pgdat_resize_lock
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200110082510.172517-2-shile.zhang@linux.alibaba.com>
- <20200110093053.34777-1-shile.zhang@linux.alibaba.com>
- <1ee6088c-9e72-8824-3a9a-fc099d196faf@virtuozzo.com>
- <c7ac0338-78a6-2ae3-465c-2d6371d96a72@linux.alibaba.com>
- <9420eab3-5e5e-150f-53c9-6cd40bacf859@virtuozzo.com>
- <ba242ee6-22be-3047-5a88-e6b39e1509ef@linux.alibaba.com>
- <e87a04fa-c96b-c15e-126e-46f1cc2885d1@virtuozzo.com>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <39eb8ac4-bdb2-bdf2-9189-2d088edb43c1@linux.alibaba.com>
-Date:   Tue, 4 Feb 2020 15:24:38 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Tue, 4 Feb 2020 02:26:32 -0500
+Received: from [IPv6:2a02:810a:113f:ad1c:9d02:317c:3fd7:2872] (unknown [IPv6:2a02:810a:113f:ad1c:9d02:317c:3fd7:2872])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E85A528F776;
+        Tue,  4 Feb 2020 07:26:28 +0000 (GMT)
+Subject: Re: [PATCH v2] dt-bindings: convert cros-ec-keyb.txt to yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
+        mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+References: <20200124104158.5008-1-dafna.hirschfeld@collabora.com>
+ <20200203123539.GA26961@bogus>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <de29c5a3-3ee7-0c2c-e288-c25c30fdfadf@collabora.com>
+Date:   Tue, 4 Feb 2020 08:26:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <e87a04fa-c96b-c15e-126e-46f1cc2885d1@virtuozzo.com>
+In-Reply-To: <20200203123539.GA26961@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andrew,
-
-Sorry for ping, could you please also help to check this issue?
-Any comments from you is welcome!
-
-Thanks!
 
 
-On 2020/1/15 17:45, Kirill Tkhai wrote:
-> On 14.01.2020 11:54, Shile Zhang wrote:
+On 03.02.20 13:35, Rob Herring wrote:
+> On Fri, Jan 24, 2020 at 11:41:58AM +0100, Dafna Hirschfeld wrote:
+>> Convert the binding file cros-ec-keyb.txt to yaml format.
 >>
->> On 2020/1/13 16:11, Kirill Tkhai wrote:
->>> On 13.01.2020 03:54, Shile Zhang wrote:
->>>> On 2020/1/10 19:42, Kirill Tkhai wrote:
->>>>> On 10.01.2020 12:30, Shile Zhang wrote:
->>>>>> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdat_resize_lock'
->>>>>> will be called inside 'pgdatinit' kthread to initialise the deferred
->>>>>> pages with local interrupts disabled. Which is introduced by
->>>>>> commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred
->>>>>> pages").
->>>>>>
->>>>>> But 'pgdatinit' kthread is possible be pined on the boot CPU (CPU#0 by
->>>>>> default), especially in small system with NRCPUS <= 2. In this case, the
->>>>>> interrupts are disabled on boot CPU during memory initialising, which
->>>>>> caused the tick_sched timer be blocked, leading to wall clock stuck.
->>>>>>
->>>>>> Fixes: commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing
->>>>>> deferred pages")
->>>>>>
->>>>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
->>>>>> ---
->>>>>>     include/linux/memory_hotplug.h | 16 ++++++++++++++--
->>>>>>     1 file changed, 14 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
->>>>>> index ba0dca6aac6e..be69a6dc4fee 100644
->>>>>> --- a/include/linux/memory_hotplug.h
->>>>>> +++ b/include/linux/memory_hotplug.h
->>>>>> @@ -6,6 +6,8 @@
->>>>>>     #include <linux/spinlock.h>
->>>>>>     #include <linux/notifier.h>
->>>>>>     #include <linux/bug.h>
->>>>>> +#include <linux/sched.h>
->>>>>> +#include <linux/smp.h>
->>>>>>       struct page;
->>>>>>     struct zone;
->>>>>> @@ -282,12 +284,22 @@ static inline bool movable_node_is_enabled(void)
->>>>>>     static inline
->>>>>>     void pgdat_resize_lock(struct pglist_data *pgdat, unsigned long *flags)
->>>>>>     {
->>>>>> -    spin_lock_irqsave(&pgdat->node_size_lock, *flags);
->>>>>> +    /*
->>>>>> +     * Disable local interrupts on boot CPU will stop the tick_sched
->>>>>> +     * timer, which will block jiffies(wall clock) update.
->>>>>> +     */
->>>>>> +    if (current->cpu != get_boot_cpu_id())
->>>>>> +        spin_lock_irqsave(&pgdat->node_size_lock, *flags);
->>>>>> +    else
->>>>>> +        spin_lock(&pgdat->node_size_lock);
->>>>>>     }
->>>>>>     static inline
->>>>>>     void pgdat_resize_unlock(struct pglist_data *pgdat, unsigned long *flags)
->>>>>>     {
->>>>>> -    spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
->>>>>> +    if (current->cpu != get_boot_cpu_id())
->>>>>> +        spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
->>>>>> +    else
->>>>>> +        spin_unlock(&pgdat->node_size_lock);
->>>>>>     }
->>>>>>     static inline
->>>>>>     void pgdat_resize_init(struct pglist_data *pgdat)
->>>>> 1)Linux kernel is *preemptible*. Kernel with CONFIG_PREEMPT_RT option even may preempt
->>>>> *kernel* code in the middle of function. When you are executing a code containing
->>>>> pgdat_resize_lock() and pgdat_resize_unlock(), the process may migrate to another cpu
->>>>> between them.
->>>>>
->>>>> bool cpu               another cpu
->>>>> ----------------------------------
->>>>> pgdat_resize_lock()
->>>>>      spin_lock()
->>>>>      --> migrate to another cpu
->>>>>                          pgdat_resize_unlock()
->>>>>                          spin_unlock_irqrestore(<uninitialized flags>)
->>>>>
->>>>> (Yes, in case of CONFIG_PREEMPT_RT, process is preemptible even after spin_lock() call).
->>>>>
->>>>> This looks like a bad helpers, and we should not introduce such the design.
->>>> Hi Kirill,
->>>>
->>>> Thanks for your comments!
->>>> Sorry for I'm not very clear about this lock/unlock, but I encountered this issue
->>>> with "CONFIG_PREEMPT is not set".
->>> The thing is we simply shouldn't introduce such the primitives since the thread
->>> may migrate to another cpu, while you own the lock. This looks like a buggy design.
->>>
->>>>> 2)I think there is no the problem this patch solves. Do we really this statistics?
->>>>> Can't we simple remove print message from deferred_init_memmap() and solve this?
->>>> Sorry for I've not put this issue very clearly. It's *not* just one statistics log
->>>> with wrong time calculate, but the wall clock is stuck.
->>>> So the 'systemd-analyze' command also give a wrong time as I mentioned in the cover
->>>> letter. I don't think is OK just remove the log, it cannot solve the wall clock latency.
->>> Have you tried temporary enabling interrupts in the middle of cycle after a huge enough
->>> memory block is initialized? Something like:
->>>
->>> deferred_init_memmap()
->>> {
->>>      while (spfn < epfn) {
->>>          nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
->>>          local_irq_enable();
->>>          local_irq_disable();
->>>      }
->>> }
->> Yes, I'd tried this for issue confirm, before I sent this patch. Likes I mentioned the debug log in cover letter, I also add mdelay between local_irq_enable/disable, this system jiffies is stuck without update.
->> So I think there must be problem to use spin_lock_irqsave in early boot path on boot CPU.
-> This time SMP is enabled. You have many threads are running. Interrupts are enabled
-> and they occur. So, it's OK to disable interrupts for some time.
->
-> My opinion is we should try to enable interrupts in the cycle after some fixed
-> amount of memory is initialized. Say, every 1GB. This should resolve two problems:
-> handling timer interrupt with update jiffies at time, and keeping the fix for the issue,
-> that Pavel fixed in 3a2d7fa8a3d5.
->
->>> Or, maybe, enable/disable interrupts somewhere inside deferred_init_maxorder().
->>>
->>>>> Also, you may try to check that sched_clock() gives better results with interrupts
->>>>> disabled (on x86 it uses rdtsc, when it's possible. But it also may fallback to
->>>>> jiffies-based clock in some hardware cases, and they also won't go with interrupts
->>>>> disabled).
+>> This was tested and verified on ARM and ARM64 with:
+>>
+>> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
+>> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
+>>
+>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>> ---
+>> Changes from v1:
+>> add: "additionalProperties: false"
+>>
+>>   .../bindings/input/cros-ec-keyb.txt           |  72 ------------
+>>   .../bindings/input/cros-ec-keyb.yaml          | 107 ++++++++++++++++++
+>>   2 files changed, 107 insertions(+), 72 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+>>   create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
+> 
+> [...]
+> 
+>> diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml b/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
+>> new file mode 100644
+>> index 000000000000..d414a2ad7c69
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
+>> @@ -0,0 +1,107 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/input/cros-ec-keyb.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: ChromeOS EC Keyboard
+>> +
+>> +maintainers:
+>> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> +  - Rob Herring <robh+dt@kernel.org>
+> 
+> Again, should be a Google/Cros person (I'm assuming Dmitry is here as
+> input maintainer).
+> 
+>> +
+>> +description: |
+>> +  Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
+>> +  a separate EC (Embedded Controller) device. It provides a message for reading
+>> +  key scans from the EC. These are then converted into keycodes for processing
+>> +  by the kernel. This binding is based on matrix-keymap.txt and extends it.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: google,cros-ec-keyb
+>> +
+>> +  google,needs-ghost-filter:
+>> +    type: boolean
+>> +    description: |
+>> +      True to enable a ghost filter for the matrix keyboard.
+>> +      This is recommended if the EC does not have its own logic or
+>> +      hardware for this.
+>> +
+>> +  # properties from matrix-keymap.txt
+>> +  linux,keymap:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    description: |
+>> +      an array of packed 1-cell entries containing the equivalent
+>> +      of row, column and linux key-code. The 32-bit big endian cell is packed
+>> +      as:
+>> +      row << 24 | column << 16 | key-code
+>> +
+>> +  keypad,num-rows:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: Number of row lines connected to the keypad controller.
+>> +
+>> +  keypad,num-columns:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32It seems that column and row are actually uint8 because of the definition for a cell: `row << 24 | column << 16 | key-code`
+so I can change the ref lines to `$ref: /schemas/types.yaml#/definitions/uint8`
 
+>> +    description: Number of column lines connected to the keypad controller.
+> 
+> matrix-keypad.txt should be converted to yaml and then referenced here.
+> 
+There is no "matrix-keypad.txt" did you mean "matrix-keymap.txt" ?
+I see that matrix-keymap.txt is mentioned in 14 files so this will require also
+changing all those files.
+  
+
+> Unless you have max sizes, then there's not any more to add here.
+In include/linux/input/matrix_keypad.h there are the defines
+MATRIX_MAX_COLS, MATRIX_MAX_ROWS as 32.
+which seems to be the max values
+
+thanks,
+Dafna
+
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - linux,keymap
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    cros-ec-keyb {
+>> +        compatible = "google,cros-ec-keyb";
+>> +        keypad,num-rows = <8>;
+>> +        keypad,num-columns = <13>;
+>> +        google,needs-ghost-filter;
+>> +        /*
+>> +         * Keymap entries take the form of 0xRRCCKKKK where
+>> +         * RR=Row CC=Column KKKK=Key Code
+>> +         * The values below are for a US keyboard layout and
+>> +         * are taken from the Linux driver. Note that the
+>> +         * 102ND key is not used for US keyboards.
+>> +         */
+>> +        linux,keymap = <
+>> +                /* CAPSLCK F1         B          F10     */
+>> +                0x0001003a 0x0002003b 0x00030030 0x00040044
+>> +                /* N       =          R_ALT      ESC     */
+>> +                0x00060031 0x0008000d 0x000a0064 0x01010001
+>> +                /* F4      G          F7         H       */
+>> +                0x0102003e 0x01030022 0x01040041 0x01060023
+>> +                /* '       F9         BKSPACE    L_CTRL  */
+>> +                0x01080028 0x01090043 0x010b000e 0x0200001d
+>> +                /* TAB     F3         T          F6      */
+>> +                0x0201000f 0x0202003d 0x02030014 0x02040040
+>> +                /* ]       Y          102ND      [       */
+>> +                0x0205001b 0x02060015 0x02070056 0x0208001a
+>> +                /* F8      GRAVE      F2         5       */
+>> +                0x02090042 0x03010029 0x0302003c 0x03030006
+>> +                /* F5      6          -          \       */
+>> +                0x0304003f 0x03060007 0x0308000c 0x030b002b
+>> +                /* R_CTRL  A          D          F       */
+>> +                0x04000061 0x0401001e 0x04020020 0x04030021
+>> +                /* S       K          J          ;       */
+>> +                0x0404001f 0x04050025 0x04060024 0x04080027
+>> +                /* L       ENTER      Z          C       */
+>> +                0x04090026 0x040b001c 0x0501002c 0x0502002e
+>> +                /* V       X          ,          M       */
+>> +                0x0503002f 0x0504002d 0x05050033 0x05060032
+>> +                /* L_SHIFT /          .          SPACE   */
+>> +                0x0507002a 0x05080035 0x05090034 0x050B0039
+>> +                /* 1       3          4          2       */
+>> +                0x06010002 0x06020004 0x06030005 0x06040003
+>> +                /* 8       7          0          9       */
+>> +                0x06050009 0x06060008 0x0608000b 0x0609000a
+>> +                /* L_ALT   DOWN       RIGHT      Q       */
+>> +                0x060a0038 0x060b006c 0x060c006a 0x07010010
+>> +                /* E       R          W          I       */
+>> +                0x07020012 0x07030013 0x07040011 0x07050017
+>> +                /* U       R_SHIFT    P          O       */
+>> +                0x07060016 0x07070036 0x07080019 0x07090018
+>> +                /* UP      LEFT    */
+>> +                0x070b0067 0x070c0069>;
+>> +    };
+>> +...
+>> -- 
+>> 2.17.1
+>>
