@@ -2,111 +2,151 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E6CC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E4FC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D4E20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRyxYkhu"
+	by mail.kernel.org (Postfix) with ESMTP id 43EFA20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgBDLH5 (ORCPT
+        id S1727148AbgBDLIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:07:57 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38305 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgBDLH5 (ORCPT
+        Tue, 4 Feb 2020 06:08:11 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:34956 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726741AbgBDLIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:07:57 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so9490085pgm.5;
-        Tue, 04 Feb 2020 03:07:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ESHQtDlIcqtlfd+NGPSAxf7TiL0GDSX0Vx2MqLzOZw8=;
-        b=CRyxYkhua7wqf0UmXQPzq2KQXbrAz9m4mVtTNrv2cRwBLNqziFULS+46m1H0OU+DOt
-         5YZK19o0bVR+jIfRuIK2NuRu5lObnKIwqtXBvtR5LxB0dUzWVBkCmDqdD5a6Xc2ZdyeD
-         v2zSLltYTJSJsfDfYJgJURvpv809LiznmqL5dwlmSLA51wqDruR/vYMNvo7Wp3vjSODC
-         5UutoOkZ1X1hveYWu3qzbSsII+qkXVidqTt1mxtYyW+fEyOBPhkq+CA+2lQlgFfwVm1P
-         BeNQIVmNeLSHwVS9Qc8moooCkvdI6MK3rJJ3Jp55ofZ/L996+QKK7WvlUrqm2x/wHiwM
-         nw4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ESHQtDlIcqtlfd+NGPSAxf7TiL0GDSX0Vx2MqLzOZw8=;
-        b=FDh28kNJtC3AkLraELOeYNqOzFWDVcZAt9bpGz+HrQoN6NASpexAKYzxYiqC/6gLpb
-         ZMuKuzHzWBpYh3khgh+LpcyksyyeJha4W//i8UboRiVSkcSI8149GGfm9Fl0Q4+UzJLW
-         r8cLUVtP+xhTgwDtkNRR3me0DcgKTKcN3vroJym8BxXwJPwJsrN6ul5AZTqedNlWdNCY
-         7IpvXaGRLupHJZ9uOeLnc0jninXtq5RRhxnMUyPwcprBAtx8X8L1jb3jbflG52yC4+mj
-         tILyoqeSbyYpqB7HYW4g8w3jj9cTGT+HcE8TMStgltWMECKwu/Jvvqfrozg+bNwFKa9+
-         HDyw==
-X-Gm-Message-State: APjAAAXKyArdZ710P0YljW/JsiI3fE9Ift+sMIWRRX4fUJN9tHvEHGcp
-        tF/N0XRjs9aBQ3xojwR5xHBaaju04keZ52tJtLzi8TjqBdk=
-X-Google-Smtp-Source: APXvYqyPQ+yETkyt1/TkchmZ3n6Rdzgwtsf/ny9fnoHapXSiK5r4dCz5U/ntSbFw4vm7r9QH01Z0RYz3v7l6Imiw3FU=
-X-Received: by 2002:a65:4685:: with SMTP id h5mr32173510pgr.203.1580814476576;
- Tue, 04 Feb 2020 03:07:56 -0800 (PST)
+        Tue, 4 Feb 2020 06:08:11 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tp7nyiq_1580814485;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tp7nyiq_1580814485)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Feb 2020 19:08:06 +0800
+Subject: Re: [PATCH] OCFS2: remove unused macros
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     ChenGang <cg.chen@huawei.com>, ocfs2-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org
+References: <1579577827-251796-1-git-send-email-alex.shi@linux.alibaba.com>
+ <a12fc48c-3165-3519-c2b2-399b06c8b5c6@linux.alibaba.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <580ee0d1-edce-3161-dbd9-91c763412681@linux.alibaba.com>
+Date:   Tue, 4 Feb 2020 19:08:05 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200131023433.12133-1-chris.packham@alliedtelesis.co.nz>
- <20200131023433.12133-3-chris.packham@alliedtelesis.co.nz>
- <CAHp75VfT=KNM6J1bP5cPsLw7Z776opcB9Kf6qhNCZukY-7g=pQ@mail.gmail.com> <86509a5e6656c4f560ee6f6514ab00a232994957.camel@alliedtelesis.co.nz>
-In-Reply-To: <86509a5e6656c4f560ee6f6514ab00a232994957.camel@alliedtelesis.co.nz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Feb 2020 13:07:48 +0200
-Message-ID: <CAHp75VdRYDrTeBy9+TbbE8y3jt_Fntr6fnXon3CuqCZFYQ7Maw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] spi: Add generic SPI multiplexer
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a12fc48c-3165-3519-c2b2-399b06c8b5c6@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 11:12 PM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
-> On Mon, 2020-02-03 at 11:50 +0200, Andy Shevchenko wrote:
 
-...
 
-> > > +       priv->mux = devm_mux_control_get(&spi->dev, NULL);
-> > > +       ret = PTR_ERR_OR_ZERO(priv->mux);
-> >
-> > This is a bit complicated.
-> >
-> > > +       if (ret) {
-> >
-> > Why not simple do
-> >
-> >   if (IS_ERR(priv->mux)) {
-> >     ret = PTR_ERR(...);
-> >     ...
-> >   }
-> >
-> > ?
->
-> I've had other maintainers/reviewers suggest the opposite for patches
-> I've submitted to other subsystems which is why I went with
-> PTR_ERR_OR_ZERO. It also works well with the goto err_put_ctlr; which
-> needs ret to be set. It's not exactly a common pattern in the spi code
-> so I'd be happy to go the other way if that's the desired convention
-> for spi.
+在 2020/1/26 上午9:43, Joseph Qi 写道:
+> 
+> 
+> On 20/1/21 11:37, Alex Shi wrote:
+>> O2HB_DEFAULT_BLOCK_BITS/DLM_THREAD_MAX_ASTS/DLM_MIGRATION_RETRY_MS and
+>> OCFS2_MAX_RESV_WINDOW_BITS/OCFS2_MIN_RESV_WINDOW_BITS are
+>> never used from they were introduced to kernel. so better to remove
+>> them.
+>>
+>>  
+>> -#define DLM_MIGRATION_RETRY_MS  100
+>> -
+> It is no longer used since commit 66effd3c6812 ("ocfs2/dlm: Do not
+> migrate resource to a node that is leaving the domain").
 
-Either way is the same amount of lines. The slight difference, that we
-don't check for 0. Can you check if generated code is different in
-these cases?
+Thanks for point out. how about the following revised patch?
 
+Since a trival patch don't need much reviewer, I removed some Ccs.
+
+Thanks
+Alex
+
+---
+
+From 3bf7bf5a82a6a2275db49ba029d48fdd5c09332c Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Tue, 21 Jan 2020 11:14:29 +0800
+Subject: [PATCH v2] OCFS2: remove unused macros
+
+DLM_MIGRATION_RETRY_MS is no longer used since commit 66effd3c6812
+("ocfs2/dlm: Do not migrate resource to a node that is leaving the domain").
+
+And the others are never used since they were introduced. Let's remove
+them.
+
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: ocfs2-devel@oss.oracle.com
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/ocfs2/cluster/heartbeat.c | 2 --
+ fs/ocfs2/dlm/dlmmaster.c     | 2 --
+ fs/ocfs2/dlm/dlmthread.c     | 1 -
+ fs/ocfs2/reservations.c      | 3 ---
+ 4 files changed, 8 deletions(-)
+
+diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
+index a368350d4c27..78cb48d6a596 100644
+--- a/fs/ocfs2/cluster/heartbeat.c
++++ b/fs/ocfs2/cluster/heartbeat.c
+@@ -101,8 +101,6 @@ struct o2hb_debug_buf {
+ 
+ static struct o2hb_callback *hbcall_from_type(enum o2hb_callback_type type);
+ 
+-#define O2HB_DEFAULT_BLOCK_BITS       9
+-
+ enum o2hb_heartbeat_modes {
+ 	O2HB_HEARTBEAT_LOCAL		= 0,
+ 	O2HB_HEARTBEAT_GLOBAL,
+diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
+index 74b768ca1cd8..123b6873d9fa 100644
+--- a/fs/ocfs2/dlm/dlmmaster.c
++++ b/fs/ocfs2/dlm/dlmmaster.c
+@@ -2751,8 +2751,6 @@ static int dlm_migrate_lockres(struct dlm_ctxt *dlm,
+ 	return ret;
+ }
+ 
+-#define DLM_MIGRATION_RETRY_MS  100
+-
+ /*
+  * Should be called only after beginning the domain leave process.
+  * There should not be any remaining locks on nonlocal lock resources,
+diff --git a/fs/ocfs2/dlm/dlmthread.c b/fs/ocfs2/dlm/dlmthread.c
+index 61c51c268460..2dd9727537fe 100644
+--- a/fs/ocfs2/dlm/dlmthread.c
++++ b/fs/ocfs2/dlm/dlmthread.c
+@@ -680,7 +680,6 @@ static void dlm_flush_asts(struct dlm_ctxt *dlm)
+ 
+ #define DLM_THREAD_TIMEOUT_MS (4 * 1000)
+ #define DLM_THREAD_MAX_DIRTY  100
+-#define DLM_THREAD_MAX_ASTS   10
+ 
+ static int dlm_thread(void *data)
+ {
+diff --git a/fs/ocfs2/reservations.c b/fs/ocfs2/reservations.c
+index 0249e8ca1028..bf3842e34fb9 100644
+--- a/fs/ocfs2/reservations.c
++++ b/fs/ocfs2/reservations.c
+@@ -33,9 +33,6 @@
+ 
+ static DEFINE_SPINLOCK(resv_lock);
+ 
+-#define	OCFS2_MIN_RESV_WINDOW_BITS	8
+-#define	OCFS2_MAX_RESV_WINDOW_BITS	1024
+-
+ int ocfs2_dir_resv_allowed(struct ocfs2_super *osb)
+ {
+ 	return (osb->osb_resv_level && osb->osb_dir_resv_level);
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
+
