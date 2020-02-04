@@ -2,337 +2,102 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279FDC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761E1C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA1A2051A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373CA20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPrtxgG0"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BAQbYNF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgBDLKX (ORCPT
+        id S1727207AbgBDLKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:10:23 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54932 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgBDLKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 06:10:21 -0500
-Received: by mail-pj1-f67.google.com with SMTP id dw13so1212712pjb.4;
-        Tue, 04 Feb 2020 03:10:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fB3mZrEGeC49afI3Ip3CR6vlAM4jq7k1Xx9Bu92kk3M=;
-        b=MPrtxgG0yzszFwspXDn57PyOpHFCowQRIl+gbyft0wvzPKUolfunKZtbtsaaA0UQ9G
-         rNgiDUSoxQyBTokPZT0ZLIMY8/kVjXFUysnbnINXHVwLHcSAfA/ttyl647IAeCQR+A5d
-         HgOOLJpzWPWjAHL5lP/xt9s3ThyS/sU+kJt+QVSnByRE8QYbEB3QuR2w0MjLc1SsKA0l
-         SwP6IeEnwWGP920xVbxqalp0870HA3sVxtJSJshueCkFMB3p+OSq/7qcGzaXdVuNY9Vv
-         celBhbCbh3JBq+8IjGapZtZQ2gVP732OZP47Fo1dIX7yfb0SHOWh5h+5mJxwfiSsUGw0
-         DJnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fB3mZrEGeC49afI3Ip3CR6vlAM4jq7k1Xx9Bu92kk3M=;
-        b=Up9QKx393/BRl7yO7aANnFozg86uHPMXvPlrEx5AzpBcLZDETMRXwKwdXieWhyXOB+
-         esQWzq31CyUHP4zVlX8uHlfbYX696XGsJIEjp9QFixN0BhMTtdUHuFtSgvRO6iYBoNf2
-         W4BsVtO2kbYQ86p8AsmeWhBuPNnI6wQ1jtI2YajLX3odswDU+JyNgoS8HTQxbzuhoUuG
-         1T6HPqkFwATFEzIrT+eGfdz1ncg3/mIeFYse0axNrQml4mM5ExZ3CO9sLoPnZt1Keoi4
-         nOtFBUZQjAcVffI/ad4wkds+cV8fzJJ9W7QA0pdjzMV0NkRiUHnuYfN45LMvxueAU3QS
-         ZtrA==
-X-Gm-Message-State: APjAAAXopO9VSa19Pv/QeMwijOk2Pj17OimmkqQ4RpxMUziuZTHzFGu1
-        Cfp2PfpNZ8JrIqaXR8Xx6lWZe+JDGRzhEbgW3ic=
-X-Google-Smtp-Source: APXvYqyWSPwrztPZ2Rxt99tpPpy8Ess18nvGiqptz5hdwPqEUv1sSi7lZeBdeDkaIrl0iwusTW+A6mhLkh0z1Ds6aVM=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr5865173pjq.132.1580814620837;
- Tue, 04 Feb 2020 03:10:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200204032838.20739-1-chris.packham@alliedtelesis.co.nz> <20200204032838.20739-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200204032838.20739-3-chris.packham@alliedtelesis.co.nz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Feb 2020 13:10:12 +0200
-Message-ID: <CAHp75VfouDS0MM=V2FesXrVssp4Mx230gh_cuFN7Ej+DpnVzJQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] spi: Add generic SPI multiplexer
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Feb 2020 06:10:39 -0500
+Received: from mout.gmx.net ([212.227.17.21]:36971 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727165AbgBDLKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 06:10:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1580814629;
+        bh=w+SKvp56UKIMNMDCt6NqCccXI38PRnIdXVD4TjA0chE=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=BAQbYNF/lO4xuQOi+ii/UXoh8CHY+aS+yuhsPgoqmxZT5BtUlSPYKxRKvNeixvRNU
+         p+u5wTIgRwDnQall5/NWBiDhECr4wkw1gTKEC56AA20NCz5vd01x0SNptwUaXWcWfY
+         MZurp4KnmotZ/AnAMrV15MQ+SWNpzP9vKu9Xfo5E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.simpson.net ([185.191.216.162]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3KPq-1jhaad0CVm-010LEc; Tue, 04
+ Feb 2020 12:10:29 +0100
+Message-ID: <1580814626.22602.26.camel@gmx.de>
+Subject: Re: [PATCH RT] mm/memcontrol: Move misplaced
+ local_unlock_irqrestore()
+From:   Mike Galbraith <efault@gmx.de>
+To:     Matt Fleming <matt@codeblueprint.co.uk>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Daniel Wagner <wagi@monom.org>
+Date:   Tue, 04 Feb 2020 12:10:26 +0100
+In-Reply-To: <20200204093519.GC4303@codeblueprint.co.uk>
+References: <20200126211945.28116-1-matt@codeblueprint.co.uk>
+         <20200203181746.htlca2aynoqidm3o@linutronix.de>
+         <20200204093519.GC4303@codeblueprint.co.uk>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ysEKcjmRuZGpGf3+qTb6S9467Hf2cCE8lzqPowAFHDHKg/QVcAH
+ FRrbdaPp0sLBPxQ11Cf9xrylGHLWRQPBL3RhEB9fUVTGHw0PfNKE5r38iyxJgVUq7QOSuRe
+ GCtGUVWUG9Pc1GfnLvDFh0EZQgnDgeJ9tXu1Xk/uZ1gGjavlnLkQLUnN171Kp8S6iZGODwv
+ SDCR2Hv1yfdbNeJrsvOaA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1pksGFDYPTw=:WE4KbA4xnHh4KjvkjTpNwL
+ DWWbWkYgACzuHUEoQSWukuASdfY02ob1H+Vcie2oVfXlJL4ACiqB7H08sMBrkXwyT/YEzi+k0
+ 11wriJYNtX87dpywUqrQiqlcMHbunlmMcg1mYTsjA+c2yh+S2DInHQOP08SmzJ67Nibc/wMrY
+ rXVOv3uGkxrzOyQF2qpGCFHzp5taapT2J1qBF2SA7qPA8umBiPUemKIaoKtggZcX71oYc9mmt
+ s82vWesIfjvLbWo2clL+pj3U1zghJ0n0CTKPDIRmgVpik2a7qf2Jtkcq+8ZnyQBf6GPIhp0XV
+ Z9rJMtDND9R+oos6Zy69Qbz2VTDZs+9dS1sIYHjX9R10nt1sum9DDKYpM9zJ6l1JEYqTAjnTX
+ CDWuzljp0DttSTxvvVsL59Vy7UGb0aZu1ztvE+Ug9wM5xV/jgzZvxO8pV+ADcRA+xh0ZPz6fK
+ hms5Lj+ytSGa/5IvOTCwMdpcvE0UQIUnQgdCY0rg6noYjfuyI1cN1FSxVy/fjEwstKd8/1nh5
+ BIODofxU0mL9GwCNiTyf2ByASq+sLvwgeFiFEV7H6weT/u8SzJgy4sHTSfnTAV8qTvBvFiPjA
+ ocF2CbtN04Ru9A3uuWN6kkVgFYyfIOOA1/YDXkvGQ+p9V7aKBHBQNIDqQtzZKSNcqrPceArAZ
+ D8RjvjE9orWuwXfvD2+hcn2Qc/Cq0mrpN8Us1+IBeZwbVYmCMkC0z/YYC0+WR9SCeEloklnTT
+ 7B+0XSVV6ddG23eTUuTarYywJal+Qm6BibVfzHH6TeYz/PkYKaY04NhloUEuBkG5FwTwuYtn2
+ UZjfFX7Chm0HdGj13DVQs6vkJUajoe/NHlyA8PGZng7qwwx4vcIzAxtM2wqTNfe3+2/Wd/rOe
+ GvrAEOn5dCLRjX24hVA5FAJ92QzYoA+XR6qwQ77CfjgYTR43J4XEcxuV1qjot7930lHwyGTBT
+ Tlvh9Zgt910lrj8Qur57lrhP4R/EAI8TJEjeSFIdQCJrdzv+G7krM5hjM3OKhl8mo+QnwxSPA
+ 0Cdv4or0LezIUkRE/q79EJ3HH3i8zQpfM+QXyzyQcufQX4yoUAjhm3Awc3Af1TMRSfXGi48nK
+ obIuLLkseTmdAjujqPhncov8A9klb4mAYoyJhkkRlIhpuFwTWS9VjJocaOl3erkmXkTNPi2l5
+ Bc+PDne8M+0iunyxY6IGsyzWz5sImKd9XgChZehdN1Eo7Ky52ReHfN1rCf7flf25Ho/j4mwZJ
+ 2tKY0FTpwWFH+Ovpc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 5:28 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+On Tue, 2020-02-04 at 09:35 +0000, Matt Fleming wrote:
+> On Mon, 03 Feb, at 07:17:46PM, Sebastian Andrzej Siewior wrote:
+> > On 2020-01-26 21:19:45 [+0000], Matt Fleming wrote:
+> > > There's no need to leave interrupts disabled when calling css_put_ma=
+ny().
+> >
+> > For RT the interrupts are never actually disabled and for !RT they are
+> > disabled with or without the change.
+> > The comment about the disable function mentions just the counters and
+> > css_put_many()'s callback just invokes a worker so it is probably save
+> > to move the function as suggested.
+> >
+> > May I ask how on earth you managed to open that file on a Sunday
+> > evening?
 >
-> Add a SPI device driver that sits in-band and provides a SPI controller
-> which supports chip selects via a mux-control. This enables extra SPI
-> devices to be connected with limited native chip selects.
->
+> We're carrying it in some of our older SUSE RT kernels and I'd really
+> like to get it upstream or sent to /dev/null ;)
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+My recollection of the reason for that patchlet existing was simply
+because while rummaging around one day, unlock placement offended my
+eye a bit, so I did a dinky on the spot correction.
 
-Mostly I did style review here.
-
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->     Changes in v5:
->     - Drop redudnant lines, use IS_ERR() instead of PTR_ERR_OR_ZERO
->
->     Changes in v4:
->     - incorporate review feedback from Andy
->
->  drivers/spi/Kconfig   |  11 +++
->  drivers/spi/Makefile  |   1 +
->  drivers/spi/spi-mux.c | 187 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 199 insertions(+)
->  create mode 100644 drivers/spi/spi-mux.c
->
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 870f7797b56b..a4509000a291 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -881,6 +881,17 @@ config SPI_ZYNQMP_GQSPI
->  # Add new SPI master controllers in alphabetical order above this line
->  #
->
-> +comment "SPI Multiplexer support"
-> +
-> +config SPI_MUX
-> +       tristate "SPI multiplexer support"
-> +       select MULTIPLEXER
-> +       help
-> +         This adds support for SPI multiplexers. Each SPI mux will be
-> +         accessible as a SPI controller, the devices behind the mux will appear
-> +         to be chip selects on this controller. It is still necessary to
-> +         select one or more specific mux-controller drivers.
-> +
->  #
->  # There are lots of SPI device types, with sensors and memory
->  # being probably the most widely used ones.
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index bb49c9e6d0a0..116409533727 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -9,6 +9,7 @@ ccflags-$(CONFIG_SPI_DEBUG) := -DDEBUG
->  # config declarations into driver model code
->  obj-$(CONFIG_SPI_MASTER)               += spi.o
->  obj-$(CONFIG_SPI_MEM)                  += spi-mem.o
-> +obj-$(CONFIG_SPI_MUX)                  += spi-mux.o
->  obj-$(CONFIG_SPI_SPIDEV)               += spidev.o
->  obj-$(CONFIG_SPI_LOOPBACK_TEST)                += spi-loopback-test.o
->
-> diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
-> new file mode 100644
-> index 000000000000..4f94c9127fc1
-> --- /dev/null
-> +++ b/drivers/spi/spi-mux.c
-> @@ -0,0 +1,187 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// General Purpose SPI multiplexer
-> +
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mux/consumer.h>
-> +#include <linux/slab.h>
-> +#include <linux/spi/spi.h>
-> +
-> +#define SPI_MUX_NO_CS  ((unsigned int)-1)
-> +
-> +/**
-> + * DOC: Driver description
-> + *
-> + * This driver supports a MUX on an SPI bus. This can be useful when you need
-> + * more chip selects than the hardware peripherals support, or than are
-> + * available in a particular board setup.
-> + *
-> + * The driver will create an additional SPI controller. Devices added under the
-> + * mux will be handled as 'chip selects' on this controller.
-> + */
-> +
-> +/**
-> + * struct spi_mux_priv - the basic spi_mux structure
-> + * @spi:               pointer to the device struct attached to the parent
-> + *                     spi controller
-> + * @current_cs:                The current chip select set in the mux
-> + * @child_msg_complete: The mux replaces the complete callback in the child's
-> + *                     message to its own callback; this field is used by the
-> + *                     driver to store the child's callback during a transfer
-> + * @child_msg_context: Used to store the child's context to the callback
-> + * @child_msg_dev:     Used to store the spi_device pointer to the child
-> + * @mux:               mux_control structure used to provide chip selects for
-> + *                     downstream spi devices
-> + */
-> +struct spi_mux_priv {
-> +       struct spi_device       *spi;
-> +       unsigned int            current_cs;
-> +
-> +       void                    (*child_msg_complete)(void *context);
-> +       void                    *child_msg_context;
-> +       struct spi_device       *child_msg_dev;
-> +       struct mux_control      *mux;
-> +};
-> +
-> +/* should not get called when the parent controller is doing a transfer */
-> +static int spi_mux_select(struct spi_device *spi)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
-> +       int ret;
-> +
-> +       if (priv->current_cs == spi->chip_select)
-> +               return 0;
-> +
-> +       dev_dbg(&priv->spi->dev, "setting up the mux for cs %d\n",
-> +               spi->chip_select);
-> +
-> +       /* copy the child device's settings except for the cs */
-> +       priv->spi->max_speed_hz = spi->max_speed_hz;
-> +       priv->spi->mode = spi->mode;
-> +       priv->spi->bits_per_word = spi->bits_per_word;
-> +
-> +       ret = mux_control_select(priv->mux, spi->chip_select);
-> +       if (ret)
-> +               return ret;
-> +
-> +       priv->current_cs = spi->chip_select;
-> +
-> +       return 0;
-> +}
-> +
-> +static int spi_mux_setup(struct spi_device *spi)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
-> +
-> +       /*
-> +        * can be called multiple times, won't do a valid setup now but we will
-> +        * change the settings when we do a transfer (necessary because we
-> +        * can't predict from which device it will be anyway)
-> +        */
-> +       return spi_setup(priv->spi);
-> +}
-> +
-> +static void spi_mux_complete_cb(void *context)
-> +{
-> +       struct spi_mux_priv *priv = (struct spi_mux_priv *)context;
-> +       struct spi_controller *ctlr = spi_get_drvdata(priv->spi);
-> +       struct spi_message *m = ctlr->cur_msg;
-> +
-> +       m->complete = priv->child_msg_complete;
-> +       m->context = priv->child_msg_context;
-> +       m->spi = priv->child_msg_dev;
-> +       spi_finalize_current_message(ctlr);
-> +       mux_control_deselect(priv->mux);
-> +}
-> +
-> +static int spi_mux_transfer_one_message(struct spi_controller *ctlr,
-> +                                               struct spi_message *m)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(ctlr);
-> +       struct spi_device *spi = m->spi;
-> +       int ret;
-> +
-> +       ret = spi_mux_select(spi);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /*
-> +        * Replace the complete callback, context and spi_device with our own
-> +        * pointers. Save originals
-> +        */
-> +       priv->child_msg_complete = m->complete;
-> +       priv->child_msg_context = m->context;
-> +       priv->child_msg_dev = m->spi;
-> +
-> +       m->complete = spi_mux_complete_cb;
-> +       m->context = priv;
-> +       m->spi = priv->spi;
-> +
-> +       /* do the transfer */
-> +       return spi_async(priv->spi, m);
-> +}
-> +
-> +static int spi_mux_probe(struct spi_device *spi)
-> +{
-> +       struct spi_controller *ctlr;
-> +       struct spi_mux_priv *priv;
-> +       int ret;
-> +
-> +       ctlr = spi_alloc_master(&spi->dev, sizeof(*priv));
-> +       if (!ctlr)
-> +               return -ENOMEM;
-> +
-> +       spi_set_drvdata(spi, ctlr);
-> +       priv = spi_controller_get_devdata(ctlr);
-> +       priv->spi = spi;
-> +
-> +       priv->mux = devm_mux_control_get(&spi->dev, NULL);
-> +       if (IS_ERR(priv->mux)) {
-> +               ret = PTR_ERR(priv->mux);
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(&spi->dev, "failed to get control-mux\n");
-> +               goto err_put_ctlr;
-> +       }
-> +
-> +       priv->current_cs = SPI_MUX_NO_CS;
-> +
-> +       /* supported modes are the same as our parent's */
-> +       ctlr->mode_bits = spi->controller->mode_bits;
-> +       ctlr->flags = spi->controller->flags;
-> +       ctlr->transfer_one_message = spi_mux_transfer_one_message;
-> +       ctlr->setup = spi_mux_setup;
-> +       ctlr->num_chipselect = mux_control_states(priv->mux);
-> +       ctlr->bus_num = -1;
-> +       ctlr->dev.of_node = spi->dev.of_node;
-> +
-> +       ret = devm_spi_register_controller(&spi->dev, ctlr);
-> +       if (ret)
-> +               goto err_put_ctlr;
-> +
-> +       return 0;
-> +
-> +err_put_ctlr:
-> +       spi_controller_put(ctlr);
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct of_device_id spi_mux_of_match[] = {
-> +       { .compatible = "spi-mux" },
-> +       { }
-> +};
-> +
-> +static struct spi_driver spi_mux_driver = {
-> +       .probe  = spi_mux_probe,
-> +       .driver = {
-> +               .name   = "spi-mux",
-> +               .of_match_table = spi_mux_of_match,
-> +       },
-> +};
-> +
-> +module_spi_driver(spi_mux_driver);
-> +
-> +MODULE_DESCRIPTION("SPI multiplexer");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.25.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+	-Mike
