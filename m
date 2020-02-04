@@ -2,204 +2,116 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206E4C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F206C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8B32082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153D12082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bEm/6aE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbgBDR1x (ORCPT
+        id S1727493AbgBDR2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:27:53 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727310AbgBDR1w (ORCPT
+        Tue, 4 Feb 2020 12:28:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBDR2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:27:52 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014HO9sn008388
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2020 12:27:52 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xxgjy7fs3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 12:27:51 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 4 Feb 2020 17:27:49 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Feb 2020 17:27:46 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 014HRjJL54263904
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Feb 2020 17:27:45 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D3F24C04A;
-        Tue,  4 Feb 2020 17:27:45 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AED4E4C040;
-        Tue,  4 Feb 2020 17:27:44 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.206.251])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Feb 2020 17:27:44 +0000 (GMT)
-Subject: Re: [PATCH v3 2/2] ima: support calculating the boot_aggregate
- based on different TPM banks
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Tue, 04 Feb 2020 12:27:44 -0500
-In-Reply-To: <01986ba728014571a3907fef9c69ff2c@huawei.com>
-References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
-         <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
-         <01986ba728014571a3907fef9c69ff2c@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 4 Feb 2020 12:28:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=wIR1JmS32XVeu+2C/XC7L3WcQePaYVm9hH5KSatXCuo=; b=bEm/6aE4sqW1LJuLN6dMteKKUi
+        b16MZzrJWPB9ORIQwqteL1I9gba3XXD59uuHIzVSocXXyLmLRLxRki2g3SxtRb1Ki5Bzu9RJM/l0R
+        8tG/j320Aplp/SdcH5NtO6JknLF1R7ajXPWDwao5FFikcHo3AJFCbacvDN7o9euGervBgKRfYNsiW
+        CUIMGhY8lkN77XlHp3jiEIiWOvGIi+ORBS3cD6fEu9OIt8ygPi5sedCUk5NLHQ19V5yi/KcODiEkN
+        HD+ZW9QttqLwt//+CD2XvnaYPQlv1n7Ud7izxmSJxASlEnPiimnpjfhdpydiVTatN0GoYqnwpg/6d
+        uvOip6aQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iz1zV-0004bg-IN; Tue, 04 Feb 2020 17:28:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 76EA0304C21;
+        Tue,  4 Feb 2020 18:26:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 162D52B4C428E; Tue,  4 Feb 2020 18:27:58 +0100 (CET)
+Date:   Tue, 4 Feb 2020 18:27:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+Message-ID: <20200204172758.GF14879@hirez.programming.kicks-ass.net>
+References: <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
+ <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
+ <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
+ <20200125111931.GW11457@worktop.programming.kicks-ass.net>
+ <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
+ <20200203134540.GA14879@hirez.programming.kicks-ass.net>
+ <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
+ <20200203152807.GK14914@hirez.programming.kicks-ass.net>
+ <15fa978d-bd41-3ecb-83d5-896187e11244@redhat.com>
+ <83762715-F68C-42DF-9B41-C4C48DF6762F@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020417-0016-0000-0000-000002E3A4E3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020417-0017-0000-0000-0000334681A5
-Message-Id: <1580837264.5585.78.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_06:2020-02-04,2020-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 adultscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002040114
+In-Reply-To: <83762715-F68C-42DF-9B41-C4C48DF6762F@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-04 at 13:37 +0000, Roberto Sassu wrote:
-> > -----Original Message-----
-> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
-> > Sent: Thursday, January 30, 2020 5:23 PM
-> > To: linux-integrity@vger.kernel.org
-> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
-> > <James.Bottomley@HansenPartnership.com>; linux-
-> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
-> > Subject: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
-> > on different TPM banks
+On Tue, Feb 04, 2020 at 11:54:02AM -0500, Alex Kogan wrote:
+> > On Feb 3, 2020, at 10:47 AM, Waiman Long <longman@redhat.com> wrote:
 > > 
-> > Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
-> > assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
-> > could support multiple TPM PCR banks, allowing firmware to configure and
-> > enable different banks.
-> > 
-> > Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
-> > the boot-aggregate, use the same hash algorithm for reading the TPM PCRs
-> > as
-> > for calculating the boot aggregate digest.  Preference is given to the
-> > configured IMA default hash algorithm.
-> > 
-> > For TPM 1.2 SHA1 is the only supported hash algorithm.
-> > 
-> > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> > ---
-> >  security/integrity/ima/ima_crypto.c | 45
-> > ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 44 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_crypto.c
-> > b/security/integrity/ima/ima_crypto.c
-> > index 7967a6904851..a020aaefdea8 100644
-> > --- a/security/integrity/ima/ima_crypto.c
-> > +++ b/security/integrity/ima/ima_crypto.c
-> > @@ -656,13 +656,34 @@ static void __init ima_pcrread(u32 idx, struct
-> > tpm_digest *d)
-> >  		pr_err("Error Communicating to TPM chip\n");
-> >  }
-> > 
-> > +static enum hash_algo get_hash_algo(const char *algname)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < HASH_ALGO__LAST; i++) {
-> > +		if (strcmp(algname, hash_algo_name[i]) == 0)
-> > +			break;
-> > +	}
-> > +
-> > +	return i;
-> > +}
-> > +
-> >  /*
-> > - * Calculate the boot aggregate hash
-> > + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
-> > + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but
-> > with
-> > + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
-> > + * allowing firmware to configure and enable different banks.
-> > + *
-> > + * Knowing which TPM bank is read to calculate the boot_aggregate digest
-> > + * needs to be conveyed to a verifier.  For this reason, use the same
-> > + * hash algorithm for reading the TPM PCRs as for calculating the boot
-> > + * aggregate digest as stored in the measurement list.
-> >   */
-> >  static int __init ima_calc_boot_aggregate_tfm(char *digest,
-> >  					      struct crypto_shash *tfm)
-> >  {
-> >  	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
-> > +	enum hash_algo crypto_id;
-> >  	int rc;
-> >  	u32 i;
-> >  	SHASH_DESC_ON_STACK(shash, tfm);
-> > @@ -673,6 +694,28 @@ static int __init ima_calc_boot_aggregate_tfm(char
-> > *digest,
-> >  	if (rc != 0)
-> >  		return rc;
-> > 
-> > +	crypto_id = get_hash_algo(crypto_shash_alg_name(tfm));
-> > +	if (crypto_id == HASH_ALGO__LAST) {
-> > +		pr_devel("unknown hash algorithm (%s), failing to read
-> > PCRs.\n",
-> > +			 crypto_shash_alg_name(tfm));
-> > +		return 0;
-> > +	}
-> > +
-> > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
-> > +		if (ima_tpm_chip->allocated_banks[i].crypto_id ==
-> > crypto_id) {
-> > +			d.alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
-> > +			break;
-> > +		}
-> > +	}
-> > +	if (i == ima_tpm_chip->nr_allocated_banks) {
-> > +		pr_devel("TPM %s bank not allocated, failing to read
-> > PCRs.\n",
-> > +			 crypto_shash_alg_name(tfm));
-> > +		return 0;
-> > +	}
-> > +
-> > +	pr_devel("calculating the boot-aggregregate based on TPM
-> > bank: %04x\n",
-> > +		  d.alg_id);
-> > +
-> >  	/* cumulative sha1 over tpm registers 0-7 */
-> >  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
-> >  		ima_pcrread(i, &d);
-> 
-> The third argument of crypto_shash_update() should be
-> crypto_shash_digestsize(tfm).
+> > On 2/3/20 10:28 AM, Peter Zijlstra wrote:
+> >> On Mon, Feb 03, 2020 at 09:59:12AM -0500, Waiman Long wrote:
+> >>> On 2/3/20 8:45 AM, Peter Zijlstra wrote:
+> >>>> Presumably you have a workload where CNA is actually a win? That is,
+> >>>> what inspired you to go down this road? Which actual kernel lock is so
+> >>>> contended on NUMA machines that we need to do this?
 
-Thanks!  At this point we know the hash algorithm, so we could use
-hash_digest_size[].
+> There are quite a few actually. files_struct.file_lock, file_lock_context.flc_lock
+> and lockref.lock are some concrete examples that get very hot in will-it-scale
+> benchmarks. 
 
-Mimi
+Right, that's all a variant of banging on the same resources across
+nodes. I'm not sure there's anything fundamental we can fix there.
 
+> And then there are spinlocks in __futex_data.queues, 
+> which get hot when applications have contended (pthread) locks — 
+> LevelDB is an example.
+
+A numa aware rework of futexes has been on the todo list for years :/
+
+> Our initial motivation was based on an observation that kernel qspinlock is not 
+> NUMA-aware. So what, you may ask. Much like people realized in the past that
+> global spinning is bad for performance, and they switched from ticket lock to
+> locks with local spinning (e.g., MCS), I think everyone would agree these days that
+> bouncing a lock (and cache lines in general) across numa nodes is similarly bad.
+> And as CNA demonstrates, we are easily leaving 2-3x speedups on the table by
+> doing just that with the current qspinlock.
+
+Actual benchmarks with performance numbers are required. It helps
+motivate the patches as well as gives reviewers clues on how to
+reproduce / inspect the claims made.
