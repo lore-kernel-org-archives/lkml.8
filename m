@@ -2,136 +2,223 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7818C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B680C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DCE2084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F1C2084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 21:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="miSX6bp0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fIOsfh0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgBDVn7 (ORCPT
+        id S1727562AbgBDVu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 16:43:59 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44338 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgBDVn7 (ORCPT
+        Tue, 4 Feb 2020 16:50:26 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44601 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbgBDVuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 16:43:59 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014Lc6DA177766;
-        Tue, 4 Feb 2020 21:42:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=cI83NiMZiUIDnvdb8KUxJgxBQNusH8bMD4a4D0szAf4=;
- b=miSX6bp09Hr1NgY4XkZ5xe1w7yagvQs0w65oO+jeTgqhOKuW4+tOjTlGwqsn+gc7SY09
- epW/hr4FzKwZvph7C2UsBTEdklp7LyZQHMBBe84Xb9zysLws5lhK5z02b8nn7FaQDwst
- 6wBSa5Y00mlNTlq3yFDve3eLuMEISpyQG+WqOEwgO5pOzKaH+LaCYFv/DqpVxVUJwXSI
- EwEe0SL+c2DMz2Gu7pXmOYcAsHAoufXYjBsr07euAPbNu61EBScZofxQqdAUCfaVUVNr
- 7YYDjxFb/+L/7CYph5bPkhstveSVib+p9xV2tTH9QCeemYmdB4od5EQL9MGpEtK/+e5D qg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xwyg9nwmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 21:42:47 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014LdUtE119922;
-        Tue, 4 Feb 2020 21:42:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xxvy3yh04-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Feb 2020 21:42:46 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014LgiQP028259;
-        Tue, 4 Feb 2020 21:42:45 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 13:42:44 -0800
-Subject: Re: [PATCH] mm: always consider THP when adjusting min_free_kbytes
-To:     David Rientjes <rientjes@google.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200204194156.61672-1-mike.kravetz@oracle.com>
- <alpine.DEB.2.21.2002041218580.58724@chino.kir.corp.google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <8cc18928-0b52-7c2e-fbc6-5952eb9b06ab@oracle.com>
-Date:   Tue, 4 Feb 2020 13:42:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 16:50:25 -0500
+Received: by mail-io1-f68.google.com with SMTP id z16so17994201iod.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 13:50:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i0i3/3+XXmz+J9LUoNMltdqXtFQCY6ttO7G0zGfPbFE=;
+        b=fIOsfh0x/I35igdo5knF4zup1aWEVAScD0wahqnjxg8zRW7zCBPQCt0zApOUQ5BzuE
+         Em1gwA4flRAKFMCK4yDfH+fvrXompZS3zpmEcFL0XOJe5+uv425N1qbWIGLFcM5D4Isw
+         8GfOK4fS05P0dDiCkzWSeMx9OHqJjvp31OJOc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i0i3/3+XXmz+J9LUoNMltdqXtFQCY6ttO7G0zGfPbFE=;
+        b=hbqvBzRgU4EodLF9Mvbaay7MXacosODIvXu9YSQRXED3eRNjzp2e+gmc34XihD/B7e
+         e+DQg6Exhr/yPYecxSVFEm02f9cGtT/oT0hnzXSumVifZr56Lc4fsyfzIladDzYxDuVR
+         Qi7tyy0fJMOXP2byggndMZWT6eLctopImzhgcp/oAXerLrH35IMR06tcFHGCDNN0UL4C
+         8OsGgFyPJ+lkHpqjncAa6DRg4Z0S/7JJFou2j5+zxeFBi6cXbPRWI84y+ewyJhUoGGC7
+         beyzd+h9TeCvF3Sm+2M58FTBe6uPIGJgYj00hv7RJS+vIm8Gx1i/mA3wap8lFlsFVTNl
+         tTLQ==
+X-Gm-Message-State: APjAAAVBex5nKGcvpUnK389hTwd92I6hnW+fpqPzmxWzosG89KIOqpA5
+        UQ2Z53/eEsjkRqhqiNR1Yz3oYrkxFYQ=
+X-Google-Smtp-Source: APXvYqwS02wj0hdef7McBQ3xlASNktjUy6dIZhwla7gWfQXqau25RuyTMMs3Kikk9SubEl+5tQhijg==
+X-Received: by 2002:a02:2a06:: with SMTP id w6mr27039731jaw.63.1580853024210;
+        Tue, 04 Feb 2020 13:50:24 -0800 (PST)
+Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id x87sm9323483ilk.39.2020.02.04.13.50.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 13:50:23 -0800 (PST)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mattias Nissler <mnissler@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Benjamin Gordon <bmgordon@google.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Raul Rangel <rrangel@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v5] Add a "nosymfollow" mount option.
+Date:   Tue,  4 Feb 2020 14:50:14 -0700
+Message-Id: <20200204215014.257377-1-zwisler@google.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2002041218580.58724@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002040148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002040148
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 12:33 PM, David Rientjes wrote:
-> On Tue, 4 Feb 2020, Mike Kravetz wrote:
-> 
-> Hmm, if khugepaged_adjust_min_free_kbytes() increases min_free_kbytes for 
-> thp, then the user has no ability to override this increase by using 
-> vm.min_free_kbytes?
-> 
-> IIUC, with this change, it looks like memory hotplug events properly 
-> increase min_free_kbytes for thp optimization but also doesn't respect a 
-> previous user-defined value?
+From: Mattias Nissler <mnissler@chromium.org>
 
-Good catch.
+For mounts that have the new "nosymfollow" option, don't follow symlinks
+when resolving paths. The new option is similar in spirit to the
+existing "nodev", "noexec", and "nosuid" options, as well as to the
+LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
+variants have been supporting the "nosymfollow" mount option for a long
+time with equivalent implementations.
 
-We should only call khugepaged_adjust_min_free_kbytes from the 'true'
-block of this if statement in init_per_zone_wmark_min.
+Note that symlinks may still be created on file systems mounted with
+the "nosymfollow" option present. readlink() remains functional, so
+user space code that is aware of symlinks can still choose to follow
+them explicitly.
 
-	if (new_min_free_kbytes > user_min_free_kbytes) {
-		min_free_kbytes = new_min_free_kbytes;
-		if (min_free_kbytes < 128)
-			min_free_kbytes = 128;
-		if (min_free_kbytes > 65536)
-			min_free_kbytes = 65536;
-	} else {
-		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
-				new_min_free_kbytes, user_min_free_kbytes);
-	}
+Setting the "nosymfollow" mount option helps prevent privileged
+writers from modifying files unintentionally in case there is an
+unexpected link along the accessed path. The "nosymfollow" option is
+thus useful as a defensive measure for systems that need to deal with
+untrusted file systems in privileged contexts.
 
-In the existing code, a hotplug event will cause min_free_kbytes to overwrite
-the user defined value if the new value is greater.  However, you will get
-the warning message if the user defined value is greater.  I am not sure if
-this is the 'desired/expected' behavior?  We print a warning if the user value
-takes precedence over our calculated value.  However, we do not print a message
-if we overwrite the user defined value.  That doesn't seem right!
+More information on the history and motivation for this patch can be
+found here:
 
-> So it looks like this is fixing an obvious correctness issue but also now 
-> requires users to rewrite the sysctl if they want to decrease the min 
-> watermark.
+https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
 
-Moving the call to khugepaged_adjust_min_free_kbytes as described above
-would avoid the THP adjustment unless we were going to overwrite the
-user defined value.  Now, I am not sure overwriting the user defined value
-as is done today is actually the correct thing to do.
+Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+Changes since v4 [1]:
+ * Rebased changes on top of the newly merged openat2(2) changes.  This
+   changed the error value when trying to traverse symlinks on a
+   restricted filesystem from -EACCESS to -ELOOP, which is what
+   LOOKUP_NO_SYMLINKS uses.
 
-Thoughts?
-Perhaps we should never overwrite a user defined value?
+[1]: https://lkml.org/lkml/2020/1/30/933
+---
+ fs/namei.c                 | 3 ++-
+ fs/namespace.c             | 2 ++
+ fs/proc_namespace.c        | 1 +
+ fs/statfs.c                | 2 ++
+ include/linux/mount.h      | 3 ++-
+ include/linux/statfs.h     | 1 +
+ include/uapi/linux/mount.h | 1 +
+ 7 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 4167109297e0f..93af3d4353543 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1122,7 +1122,8 @@ const char *get_link(struct nameidata *nd)
+ 	int error;
+ 	const char *res;
+ 
+-	if (unlikely(nd->flags & LOOKUP_NO_SYMLINKS))
++	if (unlikely(nd->flags & LOOKUP_NO_SYMLINKS) ||
++		unlikely(nd->path.mnt->mnt_flags & MNT_NOSYMFOLLOW))
+ 		return ERR_PTR(-ELOOP);
+ 
+ 	if (!(nd->flags & LOOKUP_RCU)) {
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 5e1bf611a9eb6..240421e02940d 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3109,6 +3109,8 @@ long do_mount(const char *dev_name, const char __user *dir_name,
+ 		mnt_flags &= ~(MNT_RELATIME | MNT_NOATIME);
+ 	if (flags & MS_RDONLY)
+ 		mnt_flags |= MNT_READONLY;
++	if (flags & MS_NOSYMFOLLOW)
++		mnt_flags |= MNT_NOSYMFOLLOW;
+ 
+ 	/* The default atime for remount is preservation */
+ 	if ((flags & MS_REMOUNT) &&
+diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
+index 273ee82d8aa97..91a552f617406 100644
+--- a/fs/proc_namespace.c
++++ b/fs/proc_namespace.c
+@@ -70,6 +70,7 @@ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ 		{ MNT_NOATIME, ",noatime" },
+ 		{ MNT_NODIRATIME, ",nodiratime" },
+ 		{ MNT_RELATIME, ",relatime" },
++		{ MNT_NOSYMFOLLOW, ",nosymfollow" },
+ 		{ 0, NULL }
+ 	};
+ 	const struct proc_fs_info *fs_infop;
+diff --git a/fs/statfs.c b/fs/statfs.c
+index 2616424012ea7..59f33752c1311 100644
+--- a/fs/statfs.c
++++ b/fs/statfs.c
+@@ -29,6 +29,8 @@ static int flags_by_mnt(int mnt_flags)
+ 		flags |= ST_NODIRATIME;
+ 	if (mnt_flags & MNT_RELATIME)
+ 		flags |= ST_RELATIME;
++	if (mnt_flags & MNT_NOSYMFOLLOW)
++		flags |= ST_NOSYMFOLLOW;
+ 	return flags;
+ }
+ 
+diff --git a/include/linux/mount.h b/include/linux/mount.h
+index bf8cc4108b8f9..ff2d132c21f5d 100644
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -30,6 +30,7 @@ struct fs_context;
+ #define MNT_NODIRATIME	0x10
+ #define MNT_RELATIME	0x20
+ #define MNT_READONLY	0x40	/* does the user want this to be r/o? */
++#define MNT_NOSYMFOLLOW	0x80
+ 
+ #define MNT_SHRINKABLE	0x100
+ #define MNT_WRITE_HOLD	0x200
+@@ -46,7 +47,7 @@ struct fs_context;
+ #define MNT_SHARED_MASK	(MNT_UNBINDABLE)
+ #define MNT_USER_SETTABLE_MASK  (MNT_NOSUID | MNT_NODEV | MNT_NOEXEC \
+ 				 | MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME \
+-				 | MNT_READONLY)
++				 | MNT_READONLY | MNT_NOSYMFOLLOW)
+ #define MNT_ATIME_MASK (MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME )
+ 
+ #define MNT_INTERNAL_FLAGS (MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL | \
+diff --git a/include/linux/statfs.h b/include/linux/statfs.h
+index 9bc69edb8f188..fac4356ea1bfc 100644
+--- a/include/linux/statfs.h
++++ b/include/linux/statfs.h
+@@ -40,6 +40,7 @@ struct kstatfs {
+ #define ST_NOATIME	0x0400	/* do not update access times */
+ #define ST_NODIRATIME	0x0800	/* do not update directory access times */
+ #define ST_RELATIME	0x1000	/* update atime relative to mtime/ctime */
++#define ST_NOSYMFOLLOW	0x2000	/* do not follow symlinks */
+ 
+ struct dentry;
+ extern int vfs_get_fsid(struct dentry *dentry, __kernel_fsid_t *fsid);
+diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+index 96a0240f23fed..c268ea586dbf4 100644
+--- a/include/uapi/linux/mount.h
++++ b/include/uapi/linux/mount.h
+@@ -34,6 +34,7 @@
+ #define MS_I_VERSION	(1<<23) /* Update inode I_version field */
+ #define MS_STRICTATIME	(1<<24) /* Always perform atime updates */
+ #define MS_LAZYTIME	(1<<25) /* Update the on-disk [acm]times lazily */
++#define MS_NOSYMFOLLOW	(1<<26) /* Do not follow symlinks */
+ 
+ /* These sb flags are internal to the kernel */
+ #define MS_SUBMOUNT     (1<<26)
 -- 
-Mike Kravetz
+2.25.0.341.g760bfbb309-goog
+
