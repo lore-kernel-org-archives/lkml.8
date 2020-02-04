@@ -2,75 +2,279 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE3DC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F1CC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D3321741
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC2D20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 10:31:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="T3LmiWCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgBDK1E (ORCPT
+        id S1726688AbgBDKbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 05:27:04 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33307 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgBDK1E (ORCPT
+        Tue, 4 Feb 2020 05:31:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39793 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgBDKbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 05:27:04 -0500
-Received: by mail-yw1-f66.google.com with SMTP id 192so17125007ywy.0;
-        Tue, 04 Feb 2020 02:27:02 -0800 (PST)
+        Tue, 4 Feb 2020 05:31:24 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so22280894wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 02:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=yrtra2ee+KLVOttd4bXZYdK9YXYtwBJf0l2O9Xpk63w=;
+        b=T3LmiWCzexeHLHNbYatPJHQ1Jzu/Dfe6b91IWZnWDttMbj7NlluOZ4VbcqwqVz7//x
+         LG9uDNGgWBZWg6kdJcgRrp/tWhBSC7AtLVjAG38MV1e2YuhzfYkHbTb8bESg5pYUn2g6
+         mTBy8LOv0U8zO988akhwj5miebzX2id3YKATYKcicNb+fmzgXCtiFtRUBsbnZ+4qqtyq
+         NphLTD94p3e2yfpafymvvbenC5CBwsTGmjNOQovWOOBASmREc66RhowyuOpGicGWWVAa
+         iXSNU7q8H8k/8FTuBEfHRg+VPRJWUTbCZa1jwb6Cepv2+g5QlBqWa2XjyOicuaFnEHHV
+         Lo7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iiOblPPXkUap1hSjW+vVczvgK9orjq02UMpan/2cwmk=;
-        b=bVbwTQXY0FYG0Ho+ddAImk73DbHsaJ42N2TZy+H7+3UGdkVSnZYKT7YavzkYYekRdq
-         Yo5P18x3UvZR3w76MTAzv5cG1W8/nUsjLGe6OdSk5h+H4PTN+3JkQDoSXiipeX3q2vsH
-         4hhHAJlxpdZ4GnjnC1DqYLECZRRg9NHQZpNhRjnf2qQzikv/T6+/+HSkqZvqFCt6QSmA
-         YAXPs6H3ZTOFtlLR309hCq+JhniXHgcZjspFG5TgecpvZ3vBjt53Waf8Xa6VYdR6nfLV
-         j3zlLFHt+kbZa+YLjhwW/smmBiN+EKI30UgLAajfW5G+M9QHE1hEDngmTLh+4HVog5qI
-         9TXg==
-X-Gm-Message-State: APjAAAU3i8V1TxLRIjpTuTjGu232lJjScVVCNWQ2XtCNjjwGaxTLRmWf
-        6YAGd0khS1iRqECdT/Hv3h1R7Xb9jsnhfAdaB44=
-X-Google-Smtp-Source: APXvYqwsBojweVPH1NIKFh79Z2yMuoe7rLawOuZXEiFEqjUOqC8YxjLGonbjUqh45rVQ9y4gNorrHBcyRwcipvYCRoU=
-X-Received: by 2002:a25:8587:: with SMTP id x7mr23609359ybk.325.1580812022096;
- Tue, 04 Feb 2020 02:27:02 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=yrtra2ee+KLVOttd4bXZYdK9YXYtwBJf0l2O9Xpk63w=;
+        b=SYIZuITZMKx/iOb9UBAn/d8ZCK19O3NUdqkVeWU1g34DSIYolmVHyQ6uNzGopxP4Ex
+         ikHpS3VIdzWytK6Tqn0L2pK1zT6jBTCqmsm4vpyvHoyfNkLKGk1zo3vVTRFIow/OUGNK
+         I4g/MrioeYtPPOhezvdb9gIi7wXrXQgf/Iz8ye5+LpFhcckhs2HPJp93MEIipblYG7O7
+         4FQvEsn9DHZGZPDW9wLuGTKXwdSfmMMxGLy7VaTzi8qGLY18nmjtF3roRocE9EeNBSlw
+         +vUtnJ2FMbDamFOnlEBFMnglbWIBAb8EEUNOnXt2DCPp6Hga1e2UE1HH9vUZu+/dL/7Y
+         UHCQ==
+X-Gm-Message-State: APjAAAWK9lUqzI6BhnxdchJ0MijV8uZMEUY/1C9Z/SDuYLFwC+2t28/E
+        drGX6sThg70M7OHvEOKzl48O9Q==
+X-Google-Smtp-Source: APXvYqzbzEy2S2mIksTlB/Be+HGMhTUe5EtNkl2cNi6/3J3nu2RvrRvZ8lWYtbHpC136cTDN5i5+Ig==
+X-Received: by 2002:adf:ea8a:: with SMTP id s10mr20395994wrm.278.1580812278888;
+        Tue, 04 Feb 2020 02:31:18 -0800 (PST)
+Received: from [173.194.76.109] ([149.199.62.130])
+        by smtp.gmail.com with ESMTPSA id r5sm29620132wrt.43.2020.02.04.02.31.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 02:31:17 -0800 (PST)
+Subject: Re: [PATCH v2 0/2] microblaze: Enable CMA
+To:     Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        x86@kernel.org, Guo Ren <guoren@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guo Ren <ren_guo@c-sky.com>
+References: <cover.1579248206.git.michal.simek@xilinx.com>
+From:   Michal Simek <monstr@monstr.eu>
+Autocrypt: addr=monstr@monstr.eu; keydata=
+ xsFNBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
+ howHe8Y9nSbG92obZMqsdt+d/hmRu3fgwRYiiU97YJjUkCN5paHXyBb+3IdrLNGt8I7C9RMy
+ svSoH4WcApYNqvB3rcMtJIna+HUhx8xOk+XCfyKJDnrSuKgx0Svj446qgM5fe7RyFOlGX/wF
+ Ae63Hs0RkFo3I/+hLLJP6kwPnOEo3lkvzm3FMMy0D9VxT9e6Y3afe1UTQuhkg8PbABxhowzj
+ SEnl0ICoqpBqqROV/w1fOlPrm4WSNlZJunYV4gTEustZf8j9FWncn3QzRhnQOSuzTPFbsbH5
+ WVxwDvgHLRTmBuMw1sqvCc7CofjsD1XM9bP3HOBwCxKaTyOxbPJh3D4AdD1u+cF/lj9Fj255
+ Es9aATHPvoDQmOzyyRNTQzupN8UtZ+/tB4mhgxWzorpbdItaSXWgdDPDtssJIC+d5+hskys8
+ B3jbv86lyM+4jh2URpnL1gqOPwnaf1zm/7sqoN3r64cml94q68jfY4lNTwjA/SnaS1DE9XXa
+ XQlkhHgjSLyRjjsMsz+2A4otRLrBbumEUtSMlPfhTi8xUsj9ZfPIUz3fji8vmxZG/Da6jx/c
+ a0UQdFFCL4Ay/EMSoGbQouzhC69OQLWNH3rMQbBvrRbiMJbEZwARAQABzR9NaWNoYWwgU2lt
+ ZWsgPG1vbnN0ckBtb25zdHIuZXU+wsGBBBMBAgArAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIe
+ AQIXgAIZAQUCWq+GEgUJDuRkWQAKCRA3fH8h/j0fkW9/D/9IBoykgOWah2BakL43PoHAyEKb
+ Wt3QxWZSgQjeV3pBys08uQDxByChT1ZW3wsb30GIQSTlzQ7juacoUosje1ygaLHR4xoFMAT9
+ L6F4YzZaPwW6aLI8pUJad63r50sWiGDN/UlhvPrHa3tinhReTEgSCoPCFg3TjjT4nI/NSxUS
+ 5DAbL9qpJyr+dZNDUNX/WnPSqMc4q5R1JqVUxw2xuKPtH0KI2YMoMZ4BC+qfIM+hz+FTQAzk
+ nAfA0/fbNi0gi4050wjouDJIN+EEtgqEewqXPxkJcFd3XHZAXcR7f5Q1oEm1fH3ecyiMJ3ye
+ Paim7npOoIB5+wL24BQ7IrMn3NLeFLdFMYZQDSBIUMe4NNyTfvrHPiwZzg2+9Z+OHvR9hv+r
+ +u/iQ5t5IJrnZQIHm4zEsW5TD7HaWLDx6Uq/DPUf2NjzKk8lPb1jgWbCUZ0ccecESwpgMg35
+ jRxodat/+RkFYBqj7dpxQ91T37RyYgSqKV9EhkIL6F7Whrt9o1cFxhlmTL86hlflPuSs+/Em
+ XwYVS+bO454yo7ksc54S+mKhyDQaBpLZBSh/soJTxB/nCOeJUji6HQBGXdWTPbnci1fnUhF0
+ iRNmR5lfyrLYKp3CWUrpKmjbfePnUfQS+njvNjQG+gds5qnIk2glCvDsuAM1YXlM5mm5Yh+v
+ z47oYKzXe87A4gRRb3+lEQQAsBOQdv8t1nkdEdIXWuD6NPpFewqhTpoFrxUtLnyTb6B+gQ1+
+ /nXPT570UwNw58cXr3/HrDml3e3Iov9+SI771jZj9+wYoZiO2qop9xp0QyDNHMucNXiy265e
+ OAPA0r2eEAfxZCi8i5D9v9EdKsoQ9jbII8HVnis1Qu4rpuZVjW8AoJ6xN76kn8yT225eRVly
+ PnX9vTqjBACUlfoU6cvse3YMCsJuBnBenGYdxczU4WmNkiZ6R0MVYIeh9X0LqqbSPi0gF5/x
+ D4azPL01d7tbxmJpwft3FO9gpvDqq6n5l+XHtSfzP7Wgooo2rkuRJBntMCwZdymPwMChiZgh
+ kN/sEvsNnZcWyhw2dCcUekV/eu1CGq8+71bSFgP/WPaXAwXfYi541g8rLwBrgohJTE0AYbQD
+ q5GNF6sDG/rNQeDMFmr05H+XEbV24zeHABrFpzWKSfVy3+J/hE5eWt9Nf4dyto/S55cS9qGB
+ caiED4NXQouDXaSwcZ8hrT34xrf5PqEAW+3bn00RYPFNKzXRwZGQKRDte8aCds+GHufCwa0E
+ GAECAA8CGwIFAlqvhnkFCQ7joU8AUgkQN3x/If49H5FHIAQZEQIABgUCUW9/pQAKCRDKSWXL
+ KUoMITzqAJ9dDs41goPopjZu2Au7zcWRevKP9gCgjNkNe7MxC9OeNnup6zNeTF0up/nEYw/9
+ Httigv2cYu0Q6jlftJ1zUAHadoqwChliMgsbJIQYvRpUYchv+11ZAjcWMlmW/QsS0arrkpA3
+ RnXpWg3/Y0kbm9dgqX3edGlBvPsw3gY4HohkwptSTE/h3UHS0hQivelmf4+qUTJZzGuE8TUN
+ obSIZOvB4meYv8z1CLy0EVsLIKrzC9N05gr+NP/6u2x0dw0WeLmVEZyTStExbYNiWSpp+SGh
+ MTyqDR/lExaRHDCVaveuKRFHBnVf9M5m2O0oFlZefzG5okU3lAvEioNCd2MJQaFNrNn0b0zl
+ SjbdfFQoc3m6e6bLtBPfgiA7jLuf5MdngdWaWGti9rfhVL/8FOjyG19agBKcnACYj3a3WCJS
+ oi6fQuNboKdTATDMfk9P4lgL94FD/Y769RtIvMHDi6FInfAYJVS7L+BgwTHu6wlkGtO9ZWJj
+ ktVy3CyxR0dycPwFPEwiRauKItv/AaYxf6hb5UKAPSE9kHGI4H1bK2R2k77gR2hR1jkooZxZ
+ UjICk2bNosqJ4Hidew1mjR0rwTq05m7Z8e8Q0FEQNwuw/GrvSKfKmJ+xpv0rQHLj32/OAvfH
+ L+sE5yV0kx0ZMMbEOl8LICs/PyNpx6SXnigRPNIUJH7Xd7LXQfRbSCb3BNRYpbey+zWqY2Wu
+ LHR1TS1UI9Qzj0+nOrVqrbV48K4Y78sajt7OwU0EUW68MQEQAJeqJfmHggDTd8k7CH7zZpBZ
+ 4dUAQOmMPMrmFJIlkMTnko/xuvUVmuCuO9D0xru2FK7WZuv7J14iqg7X+Ix9kD4MM+m+jqSx
+ yN6nXVs2FVrQmkeHCcx8c1NIcMyr05cv1lmmS7/45e1qkhLMgfffqnhlRQHlqxp3xTHvSDiC
+ Yj3Z4tYHMUV2XJHiDVWKznXU2fjzWWwM70tmErJZ6VuJ/sUoq/incVE9JsG8SCHvVXc0MI+U
+ kmiIeJhpLwg3e5qxX9LX5zFVvDPZZxQRkKl4dxjaqxAASqngYzs8XYbqC3Mg4FQyTt+OS7Wb
+ OXHjM/u6PzssYlM4DFBQnUceXHcuL7G7agX1W/XTX9+wKam0ABQyjsqImA8u7xOw/WaKCg6h
+ JsZQxHSNClRwoXYvaNo1VLq6l282NtGYWiMrbLoD8FzpYAqG12/z97T9lvKJUDv8Q3mmFnUa
+ 6AwnE4scnV6rDsNDkIdxJDls7HRiOaGDg9PqltbeYHXD4KUCfGEBvIyx8GdfG+9yNYg+cFWU
+ HZnRgf+CLMwN0zRJr8cjP6rslHteQYvgxh4AzXmbo7uGQIlygVXsszOQ0qQ6IJncTQlgOwxe
+ +aHdLgRVYAb5u4D71t4SUKZcNxc8jg+Kcw+qnCYs1wSE9UxB+8BhGpCnZ+DW9MTIrnwyz7Rr
+ 0vWTky+9sWD1ABEBAAHCwWUEGAECAA8CGwwFAlqvhmUFCQ7kZLEACgkQN3x/If49H5H4OhAA
+ o5VEKY7zv6zgEknm6cXcaARHGH33m0z1hwtjjLfVyLlazarD1VJ79RkKgqtALUd0n/T1Cwm+
+ NMp929IsBPpC5Ql3FlgQQsvPL6Ss2BnghoDr4wHVq+0lsaPIRKcQUOOBKqKaagfG2L5zSr3w
+ rl9lAZ5YZTQmI4hCyVaRp+x9/l3dma9G68zY5fw1aYuqpqSpV6+56QGpb+4WDMUb0A/o+Xnt
+ R//PfnDsh1KH48AGfbdKSMI83IJd3V+N7FVR2BWU1rZ8CFDFAuWj374to8KinC7BsJnQlx7c
+ 1CzxB6Ht93NvfLaMyRtqgc7Yvg2fKyO/+XzYPOHAwTPM4xrlOmCKZNI4zkPleVeXnrPuyaa8
+ LMGqjA52gNsQ5g3rUkhp61Gw7g83rjDDZs5vgZ7Q2x3CdH0mLrQPw2u9QJ8K8OVnXFtiKt8Q
+ L3FaukbCKIcP3ogCcTHJ3t75m4+pwH50MM1yQdFgqtLxPgrgn3U7fUVS9x4MPyO57JDFPOG4
+ oa0OZXydlVP7wrnJdi3m8DnljxyInPxbxdKGN5XnMq/r9Y70uRVyeqwp97sKLXd9GsxuaSg7
+ QJKUaltvN/i7ng1UOT/xsKeVdfXuqDIIElZ+dyEVTweDM011Zv0NN3OWFz6oD+GzyBetuBwD
+ 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
+Message-ID: <5706978d-4c9a-1123-c34b-e19e2b8aa37f@monstr.eu>
+Date:   Tue, 4 Feb 2020 11:30:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
- <1580735882-7429-3-git-send-email-harini.katakam@xilinx.com>
- <20200204.103749.1474392609351299440.davem@davemloft.net> <BN7PR02MB51215810D1240E98E81F6176C9030@BN7PR02MB5121.namprd02.prod.outlook.com>
-In-Reply-To: <BN7PR02MB51215810D1240E98E81F6176C9030@BN7PR02MB5121.namprd02.prod.outlook.com>
-From:   Harini Katakam <harinik@xilinx.com>
-Date:   Tue, 4 Feb 2020 15:56:51 +0530
-Message-ID: <CAFcVECKXoG5Cdi2Ef2D13zj7afx4ZVVyTRRm0H84dzEAYFvHnA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] net: macb: Limit maximum GEM TX length in TSO
-To:     David Miller <davem@davemloft.net>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Harini Katakam <harinikatakamlinux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T
+Content-Type: multipart/mixed; boundary="BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, git@xilinx.com, Christoph Hellwig <hch@lst.de>
+Cc: Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Mike Rapoport <rppt@linux.ibm.com>,
+ Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
+ Borislav Petkov <bp@alien8.de>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, linux-riscv@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+ Palmer Dabbelt <palmer@dabbelt.com>, x86@kernel.org,
+ Guo Ren <guoren@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>,
+ Wesley Terpstra <wesley@sifive.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ralf Baechle <ralf@linux-mips.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Will Deacon <will@kernel.org>, Christian Borntraeger
+ <borntraeger@de.ibm.com>, Deepa Dinamani <deepa.kernel@gmail.com>,
+ Chris Zankel <chris@zankel.net>, Manish Narani <manish.narani@xilinx.com>,
+ Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>,
+ Vasily Gorbik <gor@linux.ibm.com>, James Hogan <jhogan@kernel.org>,
+ Masahiro Yamada <yamada.masahiro@socionext.com>,
+ Heiko Carstens <heiko.carstens@de.ibm.com>, Guo Ren <ren_guo@c-sky.com>
+Message-ID: <5706978d-4c9a-1123-c34b-e19e2b8aa37f@monstr.eu>
+Subject: Re: [PATCH v2 0/2] microblaze: Enable CMA
+References: <cover.1579248206.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
 
-<snip>
-> > > v2:
-> > > Use 0x3FC0 by default
-> >
-> > You should add a comment above the definition which explains how this value
-> > was derived.  It looks magic currently.
+--BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-I'll add a comment. The value was specified in the errata document that Cadence
-provided to us.
+On 17. 01. 20 9:03, Michal Simek wrote:
+> Hi,
+>=20
+> the patchset enable CMA on Microblaze. Based on Christoph request I hav=
+e
+> created the first patch which makes dma-continugous.h mandatory for all=
 
-Regards,
-Harini
+> archs before Microblaze wiring.
+>=20
+> Thanks,
+> Michal
+>=20
+> Changes in v2:
+> - New patch suggested by Christoph
+> - Align commit message
+> - Remove adding dma-contigous.h via Kbuild because it is done by previo=
+us
+>   patch
+>=20
+> Michal Simek (2):
+>   asm-generic: Make dma-contiguous.h a mandatory include/asm header
+>   microblaze: Wire CMA allocator
+>=20
+>  arch/arm64/include/asm/Kbuild         | 1 -
+>  arch/csky/include/asm/Kbuild          | 1 -
+>  arch/microblaze/Kconfig               | 1 +
+>  arch/microblaze/configs/mmu_defconfig | 2 ++
+>  arch/microblaze/mm/init.c             | 4 ++++
+>  arch/mips/include/asm/Kbuild          | 1 -
+>  arch/riscv/include/asm/Kbuild         | 1 -
+>  arch/s390/include/asm/Kbuild          | 1 -
+>  arch/x86/include/asm/Kbuild           | 1 -
+>  arch/xtensa/include/asm/Kbuild        | 1 -
+>  include/asm-generic/Kbuild            | 1 +
+>  11 files changed, 8 insertions(+), 7 deletions(-)
+>=20
+
+Applied.
+
+Thanks,
+Michal
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
+
+
+--BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ--
+
+--pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXjlH4AAKCRDKSWXLKUoM
+IXg5AJ9J98El4wJeR5l37eVkp19mJ5smqwCdGPO/rvmeDwYSeGZMMaNPcnZNHRA=
+=bdA8
+-----END PGP SIGNATURE-----
+
+--pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T--
