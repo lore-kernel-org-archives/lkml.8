@@ -2,96 +2,107 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF53C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23EBC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC3020730
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="dUI5OE+c"
+	by mail.kernel.org (Postfix) with ESMTP id C0B1220730
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 15:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgBDPKC (ORCPT
+        id S1727363AbgBDPLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:10:02 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35552 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbgBDPKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 10:10:02 -0500
-Received: by mail-qt1-f195.google.com with SMTP id n17so13405463qtv.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 07:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1kTpygplqJdOI3iDEuAgKqhHQxR7LHiWxABHJf7/AXk=;
-        b=dUI5OE+c5BnUgX5djqCb1smQKnzp0w/LfaqJbpTTk1LiUuNRu4NE0PfLyBhYJx0WRk
-         oBXAOZCTK49KRMLpKuQqbnnmWyzA8IPy9oORpMj5DEArQR4mpWX9ACL+pkzuZHk0Qc6e
-         JoNmyoa9Cxyl71jaxpHq4CMWQQmmmWHpo8WVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1kTpygplqJdOI3iDEuAgKqhHQxR7LHiWxABHJf7/AXk=;
-        b=e0K8udg48DnYUu+xXejAK4pbrI50qGqKWIO3kegKWFdcwlx4lqyF6/umgvDROA50zZ
-         21CliUBXATo5MDgJXPTZ/kyH939LbIYy8FimagTYq17UXtR5UbOYOYDNMWpqpoCkJjGo
-         9g7WEyr2HGw9xZMsmiMuxL4mQdYbhFcEprtct1KLVAw3gvArePavspoHV4SVC5F1qaFo
-         Bqth71g5ku5akLPqnCzJ4pMgAwa7Y4Gv1zSHzzRET+MbV0UCyiQVHOFjbwtWZM07WHpq
-         XEo3aFs7p5TgtcqQQC10hmqF0ar43j5ESG7MQwuJJRVmC4Ca/KL/QST5lpT+CuSrKmIp
-         9feg==
-X-Gm-Message-State: APjAAAUCpHs8dd/M7nHR6m5QwGIH+a4GKGukvK8UuZZeKZgpbSxHjLuP
-        qTmw2xGUlTzvdZqxmsTrQvdQXJ140WMFNJCwZBdNrQ==
-X-Google-Smtp-Source: APXvYqyuX63SBC0NbgswvGMZ4JUNym8VPwQ5Q/VdLwrbtKrAW8hmK/dzTwc89g31Vo5d27dTxBuNLuKfX4Lexu6A5Sk=
-X-Received: by 2002:ac8:460a:: with SMTP id p10mr27557344qtn.98.1580828999868;
- Tue, 04 Feb 2020 07:09:59 -0800 (PST)
+        Tue, 4 Feb 2020 10:11:45 -0500
+Received: from mga01.intel.com ([192.55.52.88]:47959 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727221AbgBDPLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 10:11:44 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 07:11:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,402,1574150400"; 
+   d="scan'208";a="235192470"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 04 Feb 2020 07:11:43 -0800
+Date:   Tue, 4 Feb 2020 07:11:43 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v25 00/21] Intel SGX foundations
+Message-ID: <20200204151143.GA5663@linux.intel.com>
+References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-References: <CABWYdi1ZKR=jmKnjoJTik08Q9uJBvyZ4W0C29iPiUJ5ef1obvw@mail.gmail.com>
- <20191205123302.GA25750@kernel.org> <CABWYdi1+E7MQD8mC2xQfSP0m9_WFdx9mbLkw-36tJ8EtLaw2Jg@mail.gmail.com>
-In-Reply-To: <CABWYdi1+E7MQD8mC2xQfSP0m9_WFdx9mbLkw-36tJ8EtLaw2Jg@mail.gmail.com>
-From:   Marek Majkowski <marek@cloudflare.com>
-Date:   Tue, 4 Feb 2020 15:09:48 +0000
-Message-ID: <CAJPywTKC8=O0zmNm-W4OUENpoZfrbr1Ts38gQw2ZA608_u5wpw@mail.gmail.com>
-Subject: Re: perf not picking up symbols for namespaced processes
-To:     Ivan Babrou <ivan@cloudflare.com>,
-        kernel-team <kernel-team@cloudflare.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, sashal@kernel.org,
-        Kenton Varda <kenton@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 2:17 AM Ivan Babrou <ivan@cloudflare.com> wrote:
->
-> I'm not very good at this, but the following works for me. If you this
-> is in general vicinity of what you expected, I can email patch
-> properly.
->
+On Tue, Feb 04, 2020 at 08:05:24AM +0200, Jarkko Sakkinen wrote:
+>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+>  Documentation/x86/index.rst                   |   1 +
+>  Documentation/x86/sgx.rst                     | 177 ++++
+>  arch/x86/Kconfig                              |  14 +
+>  arch/x86/entry/vdso/Makefile                  |   8 +-
+>  arch/x86/entry/vdso/extable.c                 |  46 +
+>  arch/x86/entry/vdso/extable.h                 |  29 +
+>  arch/x86/entry/vdso/vdso-layout.lds.S         |   9 +-
+>  arch/x86/entry/vdso/vdso.lds.S                |   1 +
+>  arch/x86/entry/vdso/vdso2c.h                  |  58 +-
+>  arch/x86/entry/vdso/vsgx_enter_enclave.S      | 187 ++++
+>  arch/x86/include/asm/cpufeature.h             |   5 +-
+>  arch/x86/include/asm/cpufeatures.h            |   8 +-
+>  arch/x86/include/asm/disabled-features.h      |  18 +-
+>  arch/x86/include/asm/msr-index.h              |   8 +
+>  arch/x86/include/asm/required-features.h      |   2 +-
+>  arch/x86/include/asm/traps.h                  |   1 +
+>  arch/x86/include/asm/vdso.h                   |   5 +
+>  arch/x86/include/uapi/asm/sgx.h               | 114 +++
+>  arch/x86/kernel/cpu/Makefile                  |   1 +
+>  arch/x86/kernel/cpu/common.c                  |   4 +
+>  arch/x86/kernel/cpu/feat_ctl.c                |  29 +-
+>  arch/x86/kernel/cpu/sgx/Makefile              |   6 +
+>  arch/x86/kernel/cpu/sgx/arch.h                | 395 +++++++++
+>  arch/x86/kernel/cpu/sgx/driver.c              | 209 +++++
+>  arch/x86/kernel/cpu/sgx/driver.h              |  32 +
+>  arch/x86/kernel/cpu/sgx/encl.c                | 750 ++++++++++++++++
+>  arch/x86/kernel/cpu/sgx/encl.h                | 127 +++
+>  arch/x86/kernel/cpu/sgx/encls.h               | 239 ++++++
+>  arch/x86/kernel/cpu/sgx/ioctl.c               | 810 ++++++++++++++++++
+>  arch/x86/kernel/cpu/sgx/main.c                | 280 ++++++
+>  arch/x86/kernel/cpu/sgx/reclaim.c             | 463 ++++++++++
+>  arch/x86/kernel/cpu/sgx/sgx.h                 | 108 +++
+>  arch/x86/kernel/traps.c                       |  14 +
+>  arch/x86/mm/fault.c                           |  45 +-
+>  include/linux/mm.h                            |   2 +
+>  mm/mprotect.c                                 |  14 +-
+>  tools/arch/x86/include/asm/cpufeatures.h      |   7 +-
+>  tools/testing/selftests/x86/Makefile          |  44 +
+>  tools/testing/selftests/x86/sgx/.gitignore    |   3 +
+>  tools/testing/selftests/x86/sgx/Makefile      |  48 ++
+>  tools/testing/selftests/x86/sgx/defines.h     |  17 +
+>  tools/testing/selftests/x86/sgx/encl.c        |  20 +
+>  tools/testing/selftests/x86/sgx/encl.lds      |  34 +
+>  .../selftests/x86/sgx/encl_bootstrap.S        |  94 ++
+>  tools/testing/selftests/x86/sgx/main.c        | 379 ++++++++
+>  tools/testing/selftests/x86/sgx/sgx_call.S    |  66 ++
+>  tools/testing/selftests/x86/sgx/sgx_call.h    |  14 +
+>  tools/testing/selftests/x86/sgx/sgxsign.c     | 493 +++++++++++
+>  .../testing/selftests/x86/sgx/signing_key.pem |  39 +
+>  50 files changed, 5447 insertions(+), 31 deletions(-)
 
-Thanks for the patch, I can confirm it works. I had this problem today
-when playing
-with gvisor. Gvisor is starting up in a fresh mount namespace and perf fails
-to read the symbols. Stracing perf shows:
-
-11913 openat(AT_FDCWD, "/proc/9512/ns/mnt", O_RDONLY) = 197
-11913 setns(197, CLONE_NEWNS) = 0
-11913 stat("/home/marek/bin/runsc-debug", 0x7fffffff8480) = -1 ENOENT
-(No such file or directory)
-11913 setns(196, CLONE_NEWNS) = 0
-
-Which of course makes no sense - the runsc-debug binary does not exist in the
-empty mount namespace of the restricted runsc process.
-
-Marek
+Missing the MAINTAINERS update.
