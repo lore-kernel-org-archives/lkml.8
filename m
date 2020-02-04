@@ -2,75 +2,80 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1ADC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E2EC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FAA21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580807419;
-	bh=7UoyUd6eZyHhHXtwo/ibSZODYAQCVkBdlj/gf01XWZc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xUpdsRJUXz9q4mVrOz632pPnXxfDxqVcA1GBIWQjLjTWvcEG2xB1B4TwcIR4FcfhE
-	 QXsCCB6VfRZf7CneWY1IEq4trnY7aOjMS2zbLkT7IubuTumPz+LNRfK4UXaYOHIgXl
-	 AEaXKTIpfiWWfelpCv+anVewoPAvLUrXMO2P8Vx0=
+	by mail.kernel.org (Postfix) with ESMTP id A12622084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 09:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgBDJKR (ORCPT
+        id S1726855AbgBDJLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 04:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgBDJKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 04:10:15 -0500
-Subject: Re: [GIT PULL] remoteproc updates for v5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580807415;
-        bh=7UoyUd6eZyHhHXtwo/ibSZODYAQCVkBdlj/gf01XWZc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=POpMMIqSrkTr8lcI88LsOIHmjxxFwomlXc8+vj+XDiAzkDK+Upo6Zr6wpKlKQ2wtv
-         3Jl4qOUDIaWoOWyw7YiSX9dy/YPViaF4fcwxOgp8uOmLBE3dBp6MF7x1yxv5LjKaEA
-         +fGJ76413cXmMErcC9Ktrj4Ko05XFXlBzkibeFos=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200204053527.GB130281@yoga>
-References: <20200204053527.GB130281@yoga>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200204053527.GB130281@yoga>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git
- tags/rproc-v5.6
-X-PR-Tracked-Commit-Id: 600c39b34369e2a1bf78eb67afb99ce550f271cc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a45ad71e8995eed2b95c6ef0f4c442da0c4f6677
-Message-Id: <158080741512.26461.18233793131597857197.pr-tracker-bot@kernel.org>
-Date:   Tue, 04 Feb 2020 09:10:15 +0000
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Erin Lo <erin.lo@mediatek.com>,
-        Brandon Maier <brandon.maier@rockwellcollins.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ma Feng <mafeng.ma@huawei.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>
+        Tue, 4 Feb 2020 04:11:45 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9695 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726362AbgBDJLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 04:11:45 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E3B508283042FB7F481B;
+        Tue,  4 Feb 2020 17:11:43 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 4 Feb 2020 17:11:37 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <wanghaibin.wang@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH 4/5] irqchip/gic-v4.1: Drop 'tmp' in inherit_vpe_l1_table_from_rd()
+Date:   Tue, 4 Feb 2020 17:09:39 +0800
+Message-ID: <20200204090940.1225-5-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+In-Reply-To: <20200204090940.1225-1-yuzenghui@huawei.com>
+References: <20200204090940.1225-1-yuzenghui@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 3 Feb 2020 21:35:27 -0800:
+The variable 'tmp' in inherit_vpe_l1_table_from_rd() is actually
+not needed, drop it.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rproc-v5.6
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a45ad71e8995eed2b95c6ef0f4c442da0c4f6677
-
-Thank you!
-
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index c1d01454eec8..fc799ad7cd19 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2415,14 +2415,12 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
+-		u32 tmp;
+ 
+ 		if (!base || cpu == smp_processor_id())
+ 			continue;
+ 
+ 		val = gic_read_typer(base + GICR_TYPER);
+-		tmp = compute_common_aff(val);
+-		if (tmp != aff)
++		if (aff != compute_common_aff(val))
+ 			continue;
+ 
+ 		/*
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.19.1
+
+
