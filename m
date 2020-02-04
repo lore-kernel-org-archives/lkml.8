@@ -2,63 +2,64 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216D0C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A58FC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2CD21775
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0974B20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wd7mzS76"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WlOhJe8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBDAwJ (ORCPT
+        id S1727124AbgBDAwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 19:52:09 -0500
-Received: from mail-pl1-f171.google.com ([209.85.214.171]:46948 "EHLO
-        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgBDAwI (ORCPT
+        Mon, 3 Feb 2020 19:52:19 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37797 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgBDAwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:52:08 -0500
-Received: by mail-pl1-f171.google.com with SMTP id y8so6513965pll.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:52:07 -0800 (PST)
+        Mon, 3 Feb 2020 19:52:18 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so6535870plz.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:to:subject:cc:user-agent:date;
-        bh=hcIePRtjEpO0TZ9jpC5LlD4R/lpZZZ3BibuM5fjf+D8=;
-        b=Wd7mzS76ljQ/4qpb1siNkBg4U0iNC8Flv4k2iIn7K7CX6OYPrVh+iypR8nVmEpBhCV
-         2fa2RhLn4FsSP7mNmro9wArlkyph4AMAVVjj5S3RZgsK1ZsQFdONdfCDj+qsOUesrGxu
-         94HRhQlbXJBpAwNFkv65dUXbSIG69xmiBmVXs=
+        bh=juH1D/JjwiXFZsR7wDUzqXKriQUzIaRkvnk6WpEYkW8=;
+        b=WlOhJe8WG35ZWUHnMZxcRqm0DftkI4D2QIpdy6BXYpJT30L3p3i826iFF/TgGgajyw
+         u+7kNoKYYw9sTecDF+AeBMnyD2G4vR0faATZYfdiP+8U8N4TVPs+1WtFGhMSOL2vqpzD
+         6OZB8SkTXSSbPF2IuDRg3Vob8vF8HRj2X8qhs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
          :user-agent:date;
-        bh=hcIePRtjEpO0TZ9jpC5LlD4R/lpZZZ3BibuM5fjf+D8=;
-        b=aV7jU9niLfx4hYbfOTGfXOM1BAUIH5bvvSl9Opx7QdEnCwxGZTU3LkupzHamsChJLv
-         soET4Q2Mfu/dAl2BUsToofa3tI2xKoGo7G+aVnF5yllLSKX7enteAE/72xqNle2M7TRN
-         RaTiQLDfQZx1NEIoh1c4gP8oQokclgHPsC+9qBErxEC7jdj3bgJek8y9lfJqDiTtqLrK
-         mUMkFhs/Hw5Quwjw3xXT7uJ2Q/shlGgMkIinZsCUDtGS2caA2wNHXa5HnuBmGRgRl3j+
-         /GRjiUtmVc/zsELEvK/5CuDkgwhcBxV9KOhQiCA+eWsoyr70ci3dZrOpEIsunUkyX+vl
-         IbUw==
-X-Gm-Message-State: APjAAAV06N2MQURPz/tIISuvp0Mp4DGd6kYHNsAKT4v3oEbjZmchXGrX
-        48mhNmVekaRHgjma/hgU//xaHA==
-X-Google-Smtp-Source: APXvYqzXCR3u4HFYZyRHw5Y2qD6gJW15nagfIOV2RqNELlue/UXK8myO+hYQBmo83ngr9qpX9ygUnA==
-X-Received: by 2002:a17:90a:d986:: with SMTP id d6mr2438594pjv.78.1580777527487;
-        Mon, 03 Feb 2020 16:52:07 -0800 (PST)
+        bh=juH1D/JjwiXFZsR7wDUzqXKriQUzIaRkvnk6WpEYkW8=;
+        b=s5bomg0OQubeeZhJIIHFjCAS0eq5DkB1Ji2Z47z08Vu+Q9KpuAiQoJzMcK31Ea5V9X
+         iJNyyNoAqTWrI65qA+VRhAHDos58GVTbD99/x6lpVil8vNMgDF+wSpK9UaH8nfosMp8x
+         LcWhDi+gdM8BiLV7+Zhmldp0ymGIevMe4Ucw0CACcRWjqmtrihNP4EqGEUs+M/+IExzv
+         oGpkhjilYv+8P4AJT9zUpcUOWoT6nCQlXXgx4ilAz/w+mlxYEHZmhTphFWmaK5e1Kr7I
+         5Decg7XlS/1u2Vh2mgQ1OWl31+n4wyokgTrc/jw25O4gkgRgmXL054hFgELKtm12vrzc
+         3Fpw==
+X-Gm-Message-State: APjAAAWHU4ASAehYD8qZpf8NJbu8yXV93MspJ6mZoDcY7YjQJL1S8Idi
+        WdzgVWCMnzxj+H6pTohh7cZzjA==
+X-Google-Smtp-Source: APXvYqx0DysWV9esrDzkhiMpIHTmIfIqU1/9jj0L5WAp3alYyHpbkOnov8IzMg4CPqiAeouQyLsIKg==
+X-Received: by 2002:a17:90a:a115:: with SMTP id s21mr2340735pjp.23.1580777538254;
+        Mon, 03 Feb 2020 16:52:18 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y23sm21626086pfn.101.2020.02.03.16.52.06
+        by smtp.gmail.com with ESMTPSA id b1sm22322166pfg.182.2020.02.03.16.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 16:52:06 -0800 (PST)
-Message-ID: <5e38c036.1c69fb81.3da87.c53d@mx.google.com>
+        Mon, 03 Feb 2020 16:52:17 -0800 (PST)
+Message-ID: <5e38c041.1c69fb81.8c1f0.da56@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580305919-30946-6-git-send-email-sanm@codeaurora.org>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org> <1580305919-30946-6-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1580305919-30946-7-git-send-email-sanm@codeaurora.org>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org> <1580305919-30946-7-git-send-email-sanm@codeaurora.org>
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -68,114 +69,22 @@ To:     Andy Gross <agross@kernel.org>,
         Matthias Kaehlcke <mka@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v4 5/8] phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2 V2 PHY
+Subject: Re: [PATCH v4 6/8] arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
 User-Agent: alot/0.8.1
-Date:   Mon, 03 Feb 2020 16:52:05 -0800
+Date:   Mon, 03 Feb 2020 16:52:17 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-01-29 05:51:56)
-> @@ -277,6 +289,34 @@ static const char * const qusb2_phy_vreg_names[] =3D=
- {
-> =20
->  #define QUSB2_NUM_VREGS                ARRAY_SIZE(qusb2_phy_vreg_names)
-> =20
-> +/* struct override_param - structure holding qusb2 v2 phy overriding par=
-am
-> + * set override true if the  device tree property exists and read and as=
-sign
-> + * to value
-> + */
-> +struct override_param {
-> +       bool override;
-> +       u8 value;
-> +};
-> +
-> +/*struct override_params - structure holding qusb2 v2 phy overriding par=
-ams
-> + * @imp_res_offset: rescode offset to be updated in IMP_CTRL1 register
-> + * @hstx_trim: HSTX_TRIM to be updated in TUNE1 register
-> + * @preemphasis: Amplitude Pre-Emphasis to be updated in TUNE1 register
-> + * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-> + * @bias_ctrl: bias ctrl to be updated in BIAS_CONTROL_2 register
-> + * @charge_ctrl: charge ctrl to be updated in CHG_CTRL2 register
-> + * @hsdisc_trim: disconnect threshold to be updated in TUNE2 register
-> + */
-> +struct override_params {
-> +       struct override_param imp_res_offset;
-> +       struct override_param hstx_trim;
-> +       struct override_param preemphasis;
-> +       struct override_param preemphasis_width;
-> +       struct override_param bias_ctrl;
-> +       struct override_param charge_ctrl;
-> +       struct override_param hsdisc_trim;
-> +};
-> +
->  /**
->   * struct qusb2_phy - structure holding qusb2 phy attributes
->   *
-> @@ -395,23 +423,33 @@ static void qusb2_phy_override_phy_params(struct qu=
-sb2_phy *qphy)
-> @@ -421,6 +459,11 @@ static void qusb2_phy_override_phy_params(struct qus=
-b2_phy *qphy)
->                                       cfg->regs[QUSB2PHY_PORT_TUNE1],
->                                       PREEMPH_WIDTH_HALF_BIT);
->         }
-> +
-> +       if (qphy->overrides.hsdisc_trim.override)
-> +               qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE=
-2],
-> +               qphy->overrides.hsdisc_trim.value << HSDISC_TRIM_SHIFT,
-> +                                HSDISC_TRIM_MASK);
->  }
-> =20
->  /*
-> @@ -864,26 +907,44 @@ static int qusb2_phy_probe(struct platform_device *=
-pdev)
-> =20
-[...]
->         if (!of_property_read_u32(dev->of_node, "qcom,preemphasis-width",
->                                      &value)) {
-> -               qphy->preemphasis_width =3D (u8)value;
-> -               qphy->override_preemphasis_width =3D true;
-> +               qphy->overrides.preemphasis_width.value =3D (u8)value;
-> +               qphy->overrides.preemphasis_width.override =3D true;
-> +       }
-> +
-> +       if (!of_property_read_u32(dev->of_node, "qcom,hsdisc-trim-value",
-> +                                 &value)) {
-> +               qphy->overrides.hsdisc_trim.value =3D (u8)value;
-> +               qphy->overrides.hsdisc_trim.override =3D true;
->         }
-> =20
+Quoting Sandeep Maheswaram (2020-01-29 05:51:57)
+> Use generic QUSB2 V2 Phy configuration for SC7180.
+>=20
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
 
-Is it possible to make a local array that we can crank through the
-overrides with? If they're all u8 values maybe we can have an array like
-
-	const char * const char override_names[] =3D {
-		[HSDISC_TRIM_VALUE] =3D "qcom,hsdisc-trim-value",
-		[PREEMP_WIDTH] =3D ...
-	};
-
-that we then link to another array inside qphy named overrides:
-=09
-	struct override_param overrides[NUM_OVERRIDES];
-
-and then we can bounce from overrides to override_names to parse out the
-random u8 values from the DT node. The idea is to avoid "wasting"
-pointers to the name when we don't care after parsing it. It may not be
-any different vs. just having a const char *name in the override_paramt
-struct though, so please measure it.
-
-Also, why not  use of_property_read_u8() and make DT writers have
-
-	/bits/ 8 <0xf0>
-
-properties so that we can keep things smaller. I don't understand why
-they're u32 in DT besides to make it simpler to specify a u32.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
