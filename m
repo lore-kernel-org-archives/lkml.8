@@ -2,122 +2,183 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1711C3524B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F44FC35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786472087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3761D2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 18:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qKHIX6A6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="az91qY8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgBDSDt (ORCPT
+        id S1727466AbgBDSGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:03:49 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41332 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgBDSDs (ORCPT
+        Tue, 4 Feb 2020 13:06:23 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35026 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727355AbgBDSGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 13:03:48 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c26so20698906eds.8;
-        Tue, 04 Feb 2020 10:03:46 -0800 (PST)
+        Tue, 4 Feb 2020 13:06:23 -0500
+Received: by mail-il1-f193.google.com with SMTP id g12so16723842ild.2;
+        Tue, 04 Feb 2020 10:06:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dWvde0WuuXX7CPS5xkAIWw6infFPw3FSlM3GIfSoQP8=;
-        b=qKHIX6A6NSCUgZK7iuUx14Hz4eEJffzhloZxzvaPkj73uFGKOcMsR7Lbx9EdLwuS+w
-         mk+NMv4zxNZv9OD2EKTVjZUaI7L14261YFIlV66/UAPnOkkD6aNeKRhXzGDzB2KS9+zZ
-         LtgOHFRMmK5nPWgMSnuZtwgEbpasAuYtyWQZe7avTOjQ/wxVlAiwJyK8Ga3UcmpzmTnX
-         g50JKCjVVWSG0Qls4Ua9LdkgPQiF+JEkNidZM2mrC24y11ghR3tOeWtNU08xFeiLFNrs
-         nAoi1zb4eYt25HOMLPiDlipN4QPbhqPUNo1ntHfAlgHzjdPoycijorar+vCTvRgQY7Fd
-         49kw==
+        bh=mc62ZSJ2FyEbetH4nweBkjrAs6Ck5WUQW5hhZvQRO50=;
+        b=az91qY8K3YfCW0QGFi1FZ/pBdRYotv9Le+rXXqWUZQNr/OGWLGYifvJwzO97uDlxNF
+         EHB6INZm/VLtEkppIfPqkV+vJxyUYszv1d5Aevlx+zUCD2vY3eGVxArvUTN19rdJUaEc
+         CHL2j/uXpkPq183F50rozETD9JOHr27NNlbnmdb6+ZFnRb+RVDVr2ssZewHcaO8CKJGf
+         lOPCjfrKyUrmT2cb/+lOG5eREU2aILHuKjjM+4VQVeh15UXRJg8xX7r4QmKPYtCE1E/t
+         OhpQOzWbOXYq/fGb+BPpr6lViSL5aKf1Vwoy9NvsEiVXV3YuNlaHyU78vvOIvfnSYjgT
+         iAkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dWvde0WuuXX7CPS5xkAIWw6infFPw3FSlM3GIfSoQP8=;
-        b=oyl0Ik6i5kZT5pCXo1X5+h+d4dtnlxI7rFh+MOA4vXbIpjEg9WFADD7yZbLsO95o6w
-         BfDIobACiwlZrg3idfb2i9MoErSkGClH7pTGN0P7xIqtdbreq1DVDfnUKExqwtOCMX4i
-         WSM1+zja69K9NMxDUDYBG5VpZ0q+AhgZGfrQmJnbvzemvrS/3JGEgX4aNyTSjb5d8IeX
-         ATd/wuJdUW8m/rOlq+HR1QdPVQ1ZxiSuXOw7rzy0TCkYDvMC62wKllRtsl59twdV48yb
-         3RXVWPObD3VCxnrWDG1mNQV7wTqKbyvcMNeBwBrtBGF3cFx98JBL1t3R5ZHOHj61GI28
-         lhjg==
-X-Gm-Message-State: APjAAAXvv+jB8dZb9unUaP33EmS7MWYgvzfI37/cbvxC2MplYt7dx/ly
-        qHS+IYgVR7OR6TQx26Fmaj31zakAkRCQtlQ+Sbg=
-X-Google-Smtp-Source: APXvYqyWPgr+XP7Kc61q5ucd7+66soDxza7EDsiQJiHhZinA/4dQPsj7r9MgjJM5zWCOKF/CMt37Ed1nd54+McUf1Pk=
-X-Received: by 2002:aa7:c6c5:: with SMTP id b5mr1389168eds.281.1580839425205;
- Tue, 04 Feb 2020 10:03:45 -0800 (PST)
+        bh=mc62ZSJ2FyEbetH4nweBkjrAs6Ck5WUQW5hhZvQRO50=;
+        b=KjDVjws+P3bwn3w+dn9Y75Gk8n+D4RVeTTrheLwEXXh4d3VZzadnl+B0BK+I/IlLzO
+         wMWfPnz7PCiivh4oZXPMb2zAMeom4/mkOjXVEZ3goTeff+UcPfO6M8jLIEvd2GuqIdkl
+         YD1aMPUkFcm+m308GS6kF7qXKrOseGNkNnRbvrpNNAdNyfR4C079lO+OnaTV4Oawufd6
+         JhkDJHLjKi73yy6MPStjql9y2tVSpzMv5/unhrbv5809yXUxw+7AIHq30oj6v7HJb3p1
+         Kea/IG2VMfXxBTK81kSeG2a0DFzKSHHOlywsAhLOjjNvwzStwFtTFA8wVBEruAg73ARp
+         edSA==
+X-Gm-Message-State: APjAAAXDSvcj5Oa4Du6Z3zU15PH5VThd+mfCnnQhNMvEpN94bZR5T4Sd
+        5CyR27CE9q5SEmVzBmHR2hIF8laU4iC2sFO7JXA=
+X-Google-Smtp-Source: APXvYqxKyl971a5Xqlv2EwzvWwPfaoP5Bparz3CeO839snzSqpxb29ZVRbO7MW2JMyg+DfmWnqO+CoAF5YT0aGoBJvw=
+X-Received: by 2002:a92:b749:: with SMTP id c9mr21417293ilm.143.1580839582327;
+ Tue, 04 Feb 2020 10:06:22 -0800 (PST)
 MIME-Version: 1.0
-References: <1580838148-2981-1-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1580838148-2981-1-git-send-email-jcrouse@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 4 Feb 2020 10:03:34 -0800
-Message-ID: <CAF6AEGt+aKC-pZZNK34mcjiYrtVuNvzQ_Qc5GwWvJ3NRkHbnWg@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/a6xx: Remove unneeded GBIF unhalt
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        John Stultz <john.stultz@linaro.org>
+References: <20200203165117.5701-1-lhenriques@suse.com> <20200203165117.5701-2-lhenriques@suse.com>
+ <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com> <20200204151158.GA15992@suse.com>
+In-Reply-To: <20200204151158.GA15992@suse.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 4 Feb 2020 19:06:36 +0100
+Message-ID: <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in copy_file_range
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+jstultz
+On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
+> ...
+> > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > -               if (err) {
+> > > -                       if (err == -EOPNOTSUPP) {
+> > > -                               src_fsc->have_copy_from2 = false;
+> > > -                               pr_notice("OSDs don't support 'copy-from2'; "
+> > > -                                         "disabling copy_file_range\n");
+> > > -                       }
+> > > +               if (IS_ERR(req)) {
+> > > +                       err = PTR_ERR(req);
+> > >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> > > +
+> > > +                       /* wait for all queued requests */
+> > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
+> >
+> > Hi Luis,
+> >
+> > Looks like ret is still incremented unconditionally?  What happens
+> > if there are three OSD requests on the list and the first fails but
+> > the second and the third succeed?  As is, ceph_osdc_wait_requests()
+> > will return an error with reqs_complete set to 2...
+> >
+> > >                         if (!ret)
+> > >                                 ret = err;
+> >
+> > ... and we will return 8M instead of an error.
+>
+> Right, my assumption was that if a request fails, all subsequent requests
+> would also fail.  This would allow ret to be updated with the number of
+> successful requests (x object size), even if the OSDs replies were being
+> delivered in a different order.  But from your comment I see that my
+> assumption is incorrect.
+>
+> In that case, when shall ret be updated with the number of bytes already
+> written?  Only after a successful call to ceph_osdc_wait_requests()?
 
-On Tue, Feb 4, 2020 at 9:42 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+I mentioned this in the previous email: you probably want to change
+ceph_osdc_wait_requests() so that the counter isn't incremented after
+an error is encountered.
+
+> I.e. only after each throttling cycle, when we don't have any requests
+> pending completion?  In this case, I can simply drop the extra
+> reqs_complete parameter to the ceph_osdc_wait_requests.
 >
-> Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") added a
-> universal GBIF un-halt into a6xx_start(). This can cause problems for
-> a630 targets which do not use GBIF and might have access protection
-> enabled on the region now occupied by the GBIF registers.
+> In your example the right thing to do would be to simply return an error,
+> I guess.  But then we're assuming that we're loosing space in the storage,
+> as we may have created objects that won't be reachable anymore.
+
+Well, that is what I'm getting at -- this needs a lot more
+consideration.  How errors are dealt with, how file metadata is
+updated, when do we fall back to plain copy, etc.  Generating stray
+objects is bad but way better than reporting that e.g. 0..12M were
+copied when only 0..4M and 8M..12M were actually copied, leaving
+the user one step away from data loss.  One option is to revert to
+issuing copy-from requests serially when an error is encountered.
+Another option is to fall back to plain copy on any error.  Or perhaps
+we just don't bother with the complexity of parallel copy-from requests
+at all...
+
+Of course, no matter what we do for parallel copy-from requests, the
+existing short copy bug needs to be fixed separately.
+
 >
-> But it turns out that we didn't need to unhalt the GBIF in this path
-> since the stop function already takes care of that after executing a flush
-> but before turning off the headswitch. We should be confident that the
-> GBIF is open for business when we restart the hardware.
+> >
+> > >                         goto out_caps;
+> > >                 }
+> > > +               list_add(&req->r_private_item, &osd_reqs);
+> > >                 len -= object_size;
+> > >                 src_off += object_size;
+> > >                 dst_off += object_size;
+> > > -               ret += object_size;
+> > > +               /*
+> > > +                * Wait requests if we've reached the maximum requests allowed
+> > > +                * or if this was the last copy
+> > > +                */
+> > > +               if ((--copy_count == 0) || (len < object_size)) {
+> > > +                       err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
+> >
+> > Same here.
+> >
+> > > +                       if (err) {
+> > > +                               if (err == -EOPNOTSUPP) {
+> > > +                                       src_fsc->have_copy_from2 = false;
+> >
+> > Since EOPNOTSUPP is special in that it triggers the fallback, it
+> > should be returned even if something was copied.  Think about a
+> > mixed cluster, where some OSDs support copy-from2 and some don't.
+> > If the range is split between such OSDs, copy_file_range() will
+> > always return short if the range happens to start on a new OSD.
 >
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 12 ------------
->  1 file changed, 12 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index daf0780..e51c723 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -378,18 +378,6 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->         struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
->         int ret;
->
-> -       /*
-> -        * During a previous slumber, GBIF halt is asserted to ensure
-> -        * no further transaction can go through GPU before GPU
-> -        * headswitch is turned off.
-> -        *
-> -        * This halt is deasserted once headswitch goes off but
-> -        * incase headswitch doesn't goes off clear GBIF halt
-> -        * here to ensure GPU wake-up doesn't fail because of
-> -        * halted GPU transactions.
-> -        */
-> -       gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
-> -
->         /* Make sure the GMU keeps the GPU on while we set it up */
->         a6xx_gmu_set_oob(&a6xx_gpu->gmu, GMU_OOB_GPU_SET);
->
-> --
-> 2.7.4
+> IMO, if we managed to copy some objects, we still need to return the
+> number of bytes copied.  Because, since this return value will be less
+> then the expected amount of bytes, the application will retry the
+> operation.  And at that point, since we've set have_copy_from2 to 'false',
+> the default VFS implementation will be used.
+
+Ah, yeah, given have_copy_from2 guard, this particular corner case is
+fine.
+
+Thanks,
+
+                Ilya
