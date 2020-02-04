@@ -2,178 +2,91 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3B7C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A6C35247
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D781C21582
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WR7NDBJT"
+	by mail.kernel.org (Postfix) with ESMTP id 9579F21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 23:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgBDXC5 (ORCPT
+        id S1727612AbgBDXEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 18:02:57 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40743 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727412AbgBDXC4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 18:02:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580857375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NKr69gnaNBcjsWSr0bho3ksQ06JauqQQ0HsRD8GC1SM=;
-        b=WR7NDBJTcIJlQtvVsUkAYJI4bZUoP9SV8ujxf3RFiicJTBPwNw5tX8ODyYf5Oa3xjXeuAK
-        30gWx/idw2srPJY0Z9TwH4CluK6acKFvQxBuLtTy7CU91SsmGMviZh421scr4WCjl/iKP5
-        FE/iIg2EsySMZs0lO5pks8km4T2yYx4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-78-MhIqW77NP0-JlIJr67CfLA-1; Tue, 04 Feb 2020 18:02:53 -0500
-X-MC-Unique: MhIqW77NP0-JlIJr67CfLA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C227A18AB2C0;
-        Tue,  4 Feb 2020 23:02:51 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E6D4877927;
-        Tue,  4 Feb 2020 23:02:37 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 18:02:35 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 05/16] audit: log drop of contid on exit of
- last task
-Message-ID: <20200204230235.dwunh76dum4kkssp@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <b3725abab452beaba740ac58f76144e6c3bda2fa.1577736799.git.rgb@redhat.com>
- <CAHC9VhQ=+4P6Rr1S1-sNb2X-CbYYKMQMJDGP=bBr8GG3xLD8qQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQ=+4P6Rr1S1-sNb2X-CbYYKMQMJDGP=bBr8GG3xLD8qQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Tue, 4 Feb 2020 18:04:49 -0500
+Received: from mga01.intel.com ([192.55.52.88]:22705 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgBDXEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 18:04:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 15:04:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,403,1574150400"; 
+   d="scan'208";a="264017965"
+Received: from unknown (HELO gayuk-dev-mach.sc.intel.com) ([10.3.79.172])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Feb 2020 15:04:48 -0800
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
+        dvhart@infradead.org, mika.westerberg@intel.com,
+        peterz@infradead.org, charles.d.prestopine@intel.com,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Box <david.e.box@intel.com>
+Subject: [PATCH v2 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date:   Tue,  4 Feb 2020 15:01:53 -0800
+Message-Id: <cover.1580848931.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 16:28, Paul Moore wrote:
-> On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Since we are tracking the life of each audit container indentifier, we
-> > can match the creation event with the destruction event.  Log the
-> > destruction of the audit container identifier when the last process in
-> > that container exits.
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  kernel/audit.c   | 17 +++++++++++++++++
-> >  kernel/audit.h   |  2 ++
-> >  kernel/auditsc.c |  2 ++
-> >  3 files changed, 21 insertions(+)
-> >
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 4bab20f5f781..fa8f1aa3a605 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -2502,6 +2502,23 @@ int audit_set_contid(struct task_struct *task, u64 contid)
-> >         return rc;
-> >  }
-> >
-> > +void audit_log_container_drop(void)
-> > +{
-> > +       struct audit_buffer *ab;
-> > +
-> > +       if (!current->audit || !current->audit->cont ||
-> > +           refcount_read(&current->audit->cont->refcount) > 1)
-> > +               return;
-> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
-> > +       if (!ab)
-> > +               return;
-> > +
-> > +       audit_log_format(ab, "op=drop opid=%d contid=%llu old-contid=%llu",
-> > +                        task_tgid_nr(current), audit_get_contid(current),
-> > +                        audit_get_contid(current));
-> > +       audit_log_end(ab);
-> > +}
-> 
-> Assumine we are careful about where we call it in audit_free(...), you
-> are confident we can't do this as part of _audit_contobj_put(...),
-> yes?
+Hi,
 
-We need audit_log_container_drop in audit_free_syscall() due to needing
-context, which gets freed in audit_free_syscall() called from
-audit_free().
+Tiger Lake platform supports 8 sub-states/low power modes of S0ix. Add
+debugfs entries to pmc_core driver to access low power mode registers
+and residencies.
 
-We need audit_log_container_drop in audit_log_exit() due to having that
-record included before the EOE record at the end of audit_log_exit().
+Patch 1: Add debugfs entry to access sub-state residencies
+Patch 2: Add debugfs entry for low power mode status registers
+Patch 3: Refactor the driver by removing redundant code
+Patch 4: Remove slp_s0 attributes from tgl_reg_map
+Patch 5: Add an additional parameter to pmc_core_lpm_display_map()
+Patch 6: Dump low power status registers on an S0ix.y failure
+Patch 7: Add debugfs support to access live status registers
 
-We could put in _contobj_put() if we drop context and any attempt to
-connect it with a syscall record, which I strongly discourage.
+Changes since v1:
+1) Rebased it on for-next branch to make sure patch series apply
+   cleanly.
 
-The syscall record contains info about subject, container_id record only
-contains info about container object other than subj pid.
+Gayatri Kammela (7):
+  platform/x86: intel_pmc_core: Add debugfs entry to access sub-state
+    residencies
+  platform/x86: intel_pmc_core: Add debugfs entry for low power mode
+    status registers
+  platform/x86: intel_pmc_core: Refactor the driver by removing
+    redundant code
+  platform/x86: intel_pmc_core: Remove slp_s0 attributes from
+    tgl_reg_map
+  platform/x86: intel_pmc_core: Add an additional parameter to
+    pmc_core_lpm_display()
+  platform/x86: intel_pmc_core: Dump low power status registers on an
+    S0ix.y failure
+  platform/x86: intel_pmc_core: Add debugfs support to access live
+    status registers
 
-> >  /**
-> >   * audit_log_end - end one audit record
-> >   * @ab: the audit_buffer
-> > diff --git a/kernel/audit.h b/kernel/audit.h
-> > index e4a31aa92dfe..162de8366b32 100644
-> > --- a/kernel/audit.h
-> > +++ b/kernel/audit.h
-> > @@ -255,6 +255,8 @@ extern void audit_log_d_path_exe(struct audit_buffer *ab,
-> >  extern struct tty_struct *audit_get_tty(void);
-> >  extern void audit_put_tty(struct tty_struct *tty);
-> >
-> > +extern void audit_log_container_drop(void);
-> > +
-> >  /* audit watch/mark/tree functions */
-> >  #ifdef CONFIG_AUDITSYSCALL
-> >  extern unsigned int audit_serial(void);
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index 0e2d50533959..bd855794ad26 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -1568,6 +1568,8 @@ static void audit_log_exit(void)
-> >
-> >         audit_log_proctitle();
-> >
-> > +       audit_log_container_drop();
-> > +
-> >         /* Send end of event record to help user space know we are finished */
-> >         ab = audit_log_start(context, GFP_KERNEL, AUDIT_EOE);
-> >         if (ab)
-> > --
-> > 1.8.3.1
-> >
-> 
-> --
-> paul moore
-> www.paul-moore.com
-> 
+ drivers/platform/x86/intel_pmc_core.c | 301 +++++++++++++++++++++++---
+ drivers/platform/x86/intel_pmc_core.h |  28 +++
+ 2 files changed, 302 insertions(+), 27 deletions(-)
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+-- 
+2.17.1
 
