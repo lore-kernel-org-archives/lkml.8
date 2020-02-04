@@ -2,130 +2,136 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ADAC3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0232EC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2165217BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRwCOSuR"
+	by mail.kernel.org (Postfix) with ESMTP id D19A62087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 12:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgBDMnM (ORCPT
+        id S1727223AbgBDMnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 07:43:12 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38154 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgBDMnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 07:43:11 -0500
-Received: by mail-pl1-f193.google.com with SMTP id t6so7240917plj.5;
-        Tue, 04 Feb 2020 04:43:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oK7WxSDye40Q4exQOmSbaOEE2awt0AmOHfgQ/uSgZ+c=;
-        b=JRwCOSuR2tp+0d28muTxd7Vm+g5fQiqscXD0GrBsRFOfkbwQp+A9AiPdYYlpQkvW19
-         DeLV4Gbxc4vJ7+v5DVFOEg8iVWfXLwCkpTlOW8H6++hgzLxiL0KaqBvUuFXOx90kcg/y
-         nwQNwYmqpe3QJ1rsmbTfiy9Zm/sBVKoYgowdZ0B/7dUdDyyoVLi01e0ayIhph0m60zTR
-         PDPzeSghMahwuKCA1re4pyG7BFoKiAHpXFhuAtJ37ciMdADdUpo7AvKvpb7g6m8lQsuU
-         4pR8PwmzY82D509Hke/UAhFsW9FROXSDLPctvIOQiO5GvScgakpOGzjZCswOthVU6Bw8
-         9mRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oK7WxSDye40Q4exQOmSbaOEE2awt0AmOHfgQ/uSgZ+c=;
-        b=fva/RjobqzToZHVWrb+Z8Np9E4Rd9Ai9BHnFlEaACiCWXQXwj5nx4at8kSpI1GV2Ca
-         72y2INl0h742mxxqNjJknjgIZ6qFkxDb6prVhgSGt1jyjJYurr+QzJr0Y736eaE6a2+a
-         zLuzv2iXvKOf2YF8+MvR2s14mhFc3VLJZwlgaJE1s9hMISU42Jb8T5U0EwDG/R47pqan
-         wXAhNKhaIVrCv6wt0kdobeeskWEX86i03N2YNIFs57gOQmNiyGgAuza+xIRJeiR07X90
-         skaZX948Iy9HseFtqGB9kO56D6UKVEZe8Fx0l867ZZlVlE5NI2xr2m7dtZTHcQTrzlcl
-         0bSQ==
-X-Gm-Message-State: APjAAAXux2gnw2yiPoYYeBRF2edClwZwNsmlcZ8h62qNgNyyY01wIwUw
-        Ac981uQNQl+O7EgmKkQff+Y=
-X-Google-Smtp-Source: APXvYqzMyByEtQrwQXHneoNt7j6f1bwKwikmbbZDpMd2+UB0JSbapMDRb7NVdrxaDdHv8J5sXv6rDQ==
-X-Received: by 2002:a17:902:82cc:: with SMTP id u12mr27257199plz.342.1580820190632;
-        Tue, 04 Feb 2020 04:43:10 -0800 (PST)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id r66sm25316910pfc.74.2020.02.04.04.43.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 04:43:09 -0800 (PST)
-Date:   Tue, 4 Feb 2020 20:43:01 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: Fix build error for
- cpu-idle-cooling.rst and client.rst
-Message-ID: <20200204124301.g5acaod54bellxzm@mail.google.com>
-References: <20200203140223.10298-1-changbin.du@gmail.com>
- <20200203152255.GQ2841@vkoul-mobl>
+        Tue, 4 Feb 2020 07:43:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727128AbgBDMni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 07:43:38 -0500
+Received: from oasis.local.home (unknown [212.187.182.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E182A2082E;
+        Tue,  4 Feb 2020 12:43:34 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 07:43:30 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] bootconfig: Add "disable_bootconfig" cmdline option to
+ disable bootconfig
+Message-ID: <20200204074330.1e7cd4db@oasis.local.home>
+In-Reply-To: <20200204072856.0da60613@oasis.local.home>
+References: <20200204053155.127c3f1e@oasis.local.home>
+        <CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com>
+        <20200204072856.0da60613@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203152255.GQ2841@vkoul-mobl>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 08:52:55PM +0530, Vinod Koul wrote:
-> On 03-02-20, 22:02, Changbin Du wrote:
-> > This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
-> > 
-> > Sphinx parallel build error:
-> > docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
-> > 
-> > Sphinx parallel build error:
-> > docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > 
-> > ---
-> > v2: rebase.
-> > ---
-> >  Documentation/driver-api/dmaengine/client.rst | 14 +++++++---
-> >  .../driver-api/thermal/cpu-idle-cooling.rst   | 27 ++++++++++---------
-> >  Documentation/driver-api/thermal/index.rst    |  1 +
-> >  3 files changed, 26 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-> > index a9a7a3c84c63..2104830a99ae 100644
-> > --- a/Documentation/driver-api/dmaengine/client.rst
-> > +++ b/Documentation/driver-api/dmaengine/client.rst
-> > @@ -151,8 +151,8 @@ The details of these operations are:
-> >       Note that callbacks will always be invoked from the DMA
-> >       engines tasklet, never from interrupt context.
-> >  
-> > -  Optional: per descriptor metadata
-> > -  ---------------------------------
-> > +  **Optional: per descriptor metadata**
-> 
-> I have already fixed it up and it is linux-next (thru dmaengine tree)
-> 
-> Can you please send rest of client.rst changes to me as well
->
-No problem. But I think here it should not create a new section, so instead I
-made it bold.
 
-> Thanks
-> -- 
-> ~Vinod
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
+As the bootconfig is appended to the initrd it is not as easy to modify as
+the kernel command line. If there's some issue with the kernel, and the
+developer wants to boot a pristine kernel, it should not be needed to modify
+the initrd to remove the bootconfig for a single boot.
 
+A "disable_bootconfig" kernel command line option solves this. If
+"disable_bootconfig" is found on the kernel command line, then the
+bootconfig file that may be attached to the initrd will not be parsed.
 
+Link: https://lore.kernel.org/r/CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+ init/main.c                                     | 14 +++++++++++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index ade4e6ec23e0..c4f1417f1934 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -857,6 +857,10 @@
+                 on      Perform hardened usercopy checks (default).
+                 off     Disable hardened usercopy checks.
+ 
++	disable_bootconfig
++			Disable reading the bootconfig that may be attached
++			to the initrd.
++
+ 	disable_radix	[PPC]
+ 			Disable RADIX MMU mode on POWER9
+ 
+diff --git a/init/main.c b/init/main.c
+index dd7da62d99a5..b52636cd9c1d 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -336,15 +336,23 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
+ 	return ret;
+ }
+ 
+-static void __init setup_boot_config(void)
++static void __init setup_boot_config(const char *cmdline)
+ {
+ 	u32 size, csum;
+ 	char *data, *copy;
++	const char *p;
+ 	u32 *hdr;
+ 
+ 	if (!initrd_end)
+ 		return;
+ 
++	p = strstr(cmdline, "disable_bootconfig");
++	if (p && (p == cmdline || isspace(*(p-1))) &&
++	    (!p[18] || isspace(p[18]))) {
++		pr_info("Disabling bootconfig because 'disable_bootconfig' found on the command line\n");
++		return;
++	}
++
+ 	hdr = (u32 *)(initrd_end - 8);
+ 	size = hdr[0];
+ 	csum = hdr[1];
+@@ -379,7 +387,7 @@ static void __init setup_boot_config(void)
+ 	}
+ }
+ #else
+-#define setup_boot_config()	do { } while (0)
++#define setup_boot_config(cmdline)	do { } while (0)
+ #endif
+ 
+ /* Change NUL term back to "=", to make "param" the whole string. */
+@@ -760,7 +768,7 @@ asmlinkage __visible void __init start_kernel(void)
+ 	pr_notice("%s", linux_banner);
+ 	early_security_init();
+ 	setup_arch(&command_line);
+-	setup_boot_config();
++	setup_boot_config(command_line);
+ 	setup_command_line(command_line);
+ 	setup_nr_cpu_ids();
+ 	setup_per_cpu_areas();
 -- 
-Cheers,
-Changbin Du
+2.20.1
+
