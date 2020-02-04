@@ -2,126 +2,98 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67764C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85581C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09FF12082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503A52166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 14:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580827874;
+	bh=i5VLeV4e5x9ghuIKRaD6Lh7802bcgyXrqoMy5Rmb5WQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eVn+eQAU/mHp2r/Vg1zp5YJ+GqKQYPxRMEIKCwpzDIf+dNcD8ZopS5zfF//4PADSh
+	 rB92ftO/3Fg3Y9kQWfwvrTv1Py54fbsgR8kry0v1HZDr6YLZHplBKHwMlUIbbSPOFO
+	 ZrecJHUjykPhE0IN6KT95csLURin9Rl3sfMWt3LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBDOte (ORCPT
+        id S1727305AbgBDOvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:49:34 -0500
-Received: from lizzard.sbs.de ([194.138.37.39]:37254 "EHLO lizzard.sbs.de"
+        Tue, 4 Feb 2020 09:51:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgBDOtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 09:49:33 -0500
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 014EnUwV004584
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Feb 2020 15:49:30 +0100
-Received: from [139.25.68.37] ([139.25.68.37])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 014EnUoG029882;
-        Tue, 4 Feb 2020 15:49:30 +0100
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [ANNOUNCE] Jailhouse 0.12 released
-To:     Jailhouse <jailhouse-dev@googlegroups.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-X-Mozilla-News-Host: news://news://news://news://news://blaine.gmane.org
-Message-ID: <dd4344b9-ca04-0ef2-0810-6b98e30f68b4@siemens.com>
-Date:   Tue, 4 Feb 2020 15:49:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727252AbgBDOvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 09:51:13 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFA612082E;
+        Tue,  4 Feb 2020 14:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580827872;
+        bh=i5VLeV4e5x9ghuIKRaD6Lh7802bcgyXrqoMy5Rmb5WQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1t3n6KRGQYoZSzfSLwX0pi390M6357QS7ioVrwY8UcMX1jOSbSmh4edU7gZ15YxnA
+         0lOVf/yHFmn3GpskdeyL6Lzr/Vwe594mxrFfPWeYtBU1QBLb/jca0FtbLLW3wg5MlI
+         D1lTfR9tMquPmgYZgcYo9grR2uT1CoGOUjDbS84w=
+Date:   Tue, 4 Feb 2020 08:51:11 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hch@lst.de
+Subject: Re: [PATCH v2] x86/PCI: ensure to_pci_sysdata usage is available to
+ !CONFIG_PCI
+Message-ID: <20200204145111.GA6313@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203215306.172000-1-Jason@zx2c4.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This release is an important milestone for Jailhouse because it comes 
-with a reworked inter-cell communication device with better driver 
-support and even an experimental virtio transport model for this.
+On Mon, Feb 03, 2020 at 10:53:06PM +0100, Jason A. Donenfeld wrote:
+> Recently, the helper to_pci_sysdata was added inside of the CONFIG_PCI
+> guard, but it is used from inside of a CONFIG_NUMA guard, which does not
+> require CONFIG_PCI. This breaks builds on !CONFIG_PCI machines. This
+> commit makes that function available in all configurations.
+> 
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Fixes: aad6aa0cd674 ("x86/PCI: Add to_pci_sysdata() helper")
+> Cc: Christoph Hellwig <hch@lst.de>
 
-While this shared memory device model is still in discussion with virtio 
-and QEMU communities, thus may undergo some further smaller changes, it 
-was important to move forward with it because there is an increasing 
-demand for it on the Jailhouse side. We now support multi-peer 
-connection, have a secure (unprivileged) and efficient UIO driver and 
-can even start working on virtio integration - without having to touch 
-the hypervisor any further. More information also in [1].
+Thanks, applied with Randy's and Christoph's
+reported/acked/reviewed-by to for-linus.  I'll try to get this in
+v5.6-rc1 so the build issue is fixed.
 
-The release has another important new, and that is SMMUv3 for ARM64 
-target, as well as the TI-specific MPU-like Peripheral Virtualization 
-Unit (PVU). SMMUv2 support is unfortunately still waiting in some NXP 
-downstream branch for being pushed upstream.
-
-Note that there are several changes to the configuration format that 
-require adjustments of own configs. Please study related changes in our 
-reference configurations or, on x86, re-generate the system configuration.
-
-Due to all these significant changes, statistics for this release look 
-about more heavyweight than usual:
-195 files changed, 7185 insertions(+), 2612 deletions(-)
-
-- New targets:
-    - Texas Instruments J721E-EVM
-    - Raspberry Pi 4 Model B
-- Cross-arch changes:
-    - rework of ivshmem inter-cell communication device
-    - fix hugepage splitting in paging_destroy
-    - allow to disable hugepage creation
-      (to statically mitigate CVE-2018-12207)
-- ARM / ARM64:
-    - SMMUv3 support
-    - TI PVU support
-    - fix race several conditions in IRQ injection
-    - add support for PCI in bare-metal inmates
-- x86:
-    - model PIO access via whitelist regions, rather than bitmaps
-    - vtd: Protect against invalid IQT register values
-    - fix 1024x768 mode of EFI framebuffer
-    - permit root cell to enable CR4.UMIP
-
-You can download the new release from
-
-     https://github.com/siemens/jailhouse/archive/v0.12.tar.gz
-
-then follow the README.md for first steps on recommended evaluation
-platforms and check the tutorial session from ELC-E 2016 [2][3]. To try
-out Jailhouse in a virtual environment or on a few reference boards,
-there is an image generator available [4]. It will soon be updated to
-the new release as well. Drop us a note on the mailing list if you run
-into trouble.
-
-A quick forecast of what is being worked on: One of the next major 
-changes will be a rework of the CPU selection in configs (selection by 
-stable physical IDs), along with support for L2 CAT on Intel processors. 
-There is also ongoing discussion to extend sub-page memory regions with 
-access bitmaps, on byte or even register bit-level. That will make 
-access control more scalable, e.g. to pass pinmux registers to different 
-cells.
-
-Last but not least: We are starting a port of Jailhouse to RISC-V, first 
-against QEMU, then against an FPGA model that will be developed within 
-the EU-funded SELENE project. Stay tuned, there will be more behind it!
-
-Thanks to all the contributors and supporters!
-
-Jan
-
-[1] 
-https://static.sched.com/hosted_files/kvmforum2019/4b/KVM-Forum19_ivshmem2.pdf
-[2] 
-https://events.static.linuxfound.org/sites/events/files/slides/ELCE2016-Jailhouse-Tutorial.pdf
-[3] https://youtu.be/7fiJbwmhnRw?list=PLbzoR-pLrL6pRFP6SOywVJWdEHlmQE51q
-[4] https://github.com/siemens/jailhouse-images
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+> ---
+>  arch/x86/include/asm/pci.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+> index 40ac1330adb2..7ccb338507e3 100644
+> --- a/arch/x86/include/asm/pci.h
+> +++ b/arch/x86/include/asm/pci.h
+> @@ -33,13 +33,13 @@ extern int pci_routeirq;
+>  extern int noioapicquirk;
+>  extern int noioapicreroute;
+>  
+> -#ifdef CONFIG_PCI
+> -
+>  static inline struct pci_sysdata *to_pci_sysdata(const struct pci_bus *bus)
+>  {
+>  	return bus->sysdata;
+>  }
+>  
+> +#ifdef CONFIG_PCI
+> +
+>  #ifdef CONFIG_PCI_DOMAINS
+>  static inline int pci_domain_nr(struct pci_bus *bus)
+>  {
+> -- 
+> 2.25.0
+> 
