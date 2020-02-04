@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235D4C3524D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547FC3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74E32084E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87262166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jOS90TyK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NJUHs0Gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgBDAwl (ORCPT
+        id S1727192AbgBDAw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 19:52:41 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39410 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbgBDAwk (ORCPT
+        Mon, 3 Feb 2020 19:52:56 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51110 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbgBDAwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:52:40 -0500
-Received: by mail-pg1-f194.google.com with SMTP id j15so1717286pgm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:52:40 -0800 (PST)
+        Mon, 3 Feb 2020 19:52:55 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so569004pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 16:52:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:to:subject:cc:user-agent:date;
-        bh=e0hGtetyLqxwKOQo2k6I51N43ELPbdPLpjCR8mhCckk=;
-        b=jOS90TyKA0BwvhBC6yX/AhmQDWbhPvgHGHTtukpOI/NWlz0gEHSJan2mJ6KcDobylz
-         n91Sem8Lo6HMG2OrEox0ga7vU3UNDNs0GZxoyllC6FW/7+amVQqOnH5YBwFtxM8p8a2D
-         W996UvzdpqbyA4xpaxNgDlFsdlClfH0kxPcm8=
+        bh=WIox8twYzzuteqHQrnQrEwf1t//qJOVB4wlY7VwIEJM=;
+        b=NJUHs0Gv1JCvRtekbQ9nnuEypsM67s4TaDlGAXWUXhfPxnvk8gxYTzxamC7oFMcQJs
+         sE8Ak3TH502lBewTmSSylFbj1DXzBiY5H6S/7iWFHzacMg/cWuny+Zk3i/aYrhv+KHD2
+         4GfB2JL5L2guTHsUFk/B0BLknU/iDprv8WIdg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
          :user-agent:date;
-        bh=e0hGtetyLqxwKOQo2k6I51N43ELPbdPLpjCR8mhCckk=;
-        b=Z+nsz7Sin4DL29T+dPFWBy22iow5XqdC1tPlR0grHZmJWPwpLomjEXTic3Jp/+Xe4Q
-         QzAGLa352/UiehEUgWc1T1F7HoU8BqbsarOjh7XpZc9ODMTRjOV9TI6fFRkzKiZ66BuG
-         9O7jFrcqtvw5NJNEjz863SOX85oC/qJrMd9Hc0751ZjsdG7lXmhU2kQ5w4Pcw4/KtUfj
-         Hk0VNEGTxam+N+5vsGvIJSkWeOtCujovmT+eCBPmMq57X4ItA6/h5WIfWlySQnb6yE5L
-         Eh1bEsHKydpFR+LQMD7TAjqcB08wA9SGLHh2Rv0wKERc+BEg4CbvcvlhS560+oSV+fJA
-         CTRA==
-X-Gm-Message-State: APjAAAW7gN4lR+tNTA6o8n7pHiHVzar5TiLiEDbgqMAyRcbO7kt7OBLR
-        A7qjKapRFxZGMW8ma5l0VybHMA==
-X-Google-Smtp-Source: APXvYqzr/m9f0dWQxcnxMEacSzGmlleq5++9dn2cIjg2wCbvtdEhQuQRIX1GOcQEayWeCP/Hni8u6g==
-X-Received: by 2002:a62:1883:: with SMTP id 125mr26963112pfy.166.1580777560323;
-        Mon, 03 Feb 2020 16:52:40 -0800 (PST)
+        bh=WIox8twYzzuteqHQrnQrEwf1t//qJOVB4wlY7VwIEJM=;
+        b=djfs543yQ1WyXJqLYHt8HFYd8kddlYi7BALCoPpWpJmWHh+aQ+jwob3x1dajonw/TD
+         zTeB26UDbBM0lrxCef+B4Dhjy5LKLfCYcSdP0bRx6ZzS2o8Dxi8whhEa9gPyoO8H+LN3
+         EHDgFdVOIflej6Me2rWWFoBGCK+efUhUTEqrqy2UbYJuhdrFQOnHRstdbqkAlf77hygu
+         /E3fVgm6bePdO2EYGQs9Y9NQxkrnBMZwAptKx1HPW0N5mQaNbTQfkYUDIIpeoezoHl/w
+         V352mfzTkWWA/s1wLJiSxqnPK5yfvS7e8JqtrJV2SaJKcAAhvNOgMRJn+megpi83U3Ti
+         IeyA==
+X-Gm-Message-State: APjAAAVHjH3QXNihpEv567BIqXTfktfJtvYmoPOqf7pIRnOdo+5NThFQ
+        PrWueRRxxJZE7TxORQENWasRMw==
+X-Google-Smtp-Source: APXvYqyo7qfkI8dzpvQ5Y86FRR/oNXvn6/uBJC+Qlf2LtbTOB+2Bhl4GBiUZsKw3HZPW+3160JlSGA==
+X-Received: by 2002:a17:902:7687:: with SMTP id m7mr26042237pll.136.1580777575193;
+        Mon, 03 Feb 2020 16:52:55 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a13sm4114874pgk.65.2020.02.03.16.52.39
+        by smtp.gmail.com with ESMTPSA id h26sm22971966pfr.9.2020.02.03.16.52.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 16:52:39 -0800 (PST)
-Message-ID: <5e38c057.1c69fb81.4b4d5.c40d@mx.google.com>
+        Mon, 03 Feb 2020 16:52:54 -0800 (PST)
+Message-ID: <5e38c066.1c69fb81.e0fe7.f64d@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580305919-30946-8-git-send-email-sanm@codeaurora.org>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org> <1580305919-30946-8-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1580305919-30946-9-git-send-email-sanm@codeaurora.org>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org> <1580305919-30946-9-git-send-email-sanm@codeaurora.org>
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -69,19 +69,19 @@ To:     Andy Gross <agross@kernel.org>,
         Matthias Kaehlcke <mka@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v4 7/8] arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+Subject: Re: [PATCH v4 8/8] arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP device
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
 User-Agent: alot/0.8.1
-Date:   Mon, 03 Feb 2020 16:52:39 -0800
+Date:   Mon, 03 Feb 2020 16:52:53 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-01-29 05:51:58)
-> Use generic QUSB2 V2 Phy configuration for sdm845.
+Quoting Sandeep Maheswaram (2020-01-29 05:51:59)
+> Overriding the QUSB2 V2 Phy tuning parameters for SC7180 IDP device.
 >=20
 > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
