@@ -2,116 +2,188 @@ Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F206C35247
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F5C3524D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153D12082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C9C2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 17:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bEm/6aE4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bu4u7EiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbgBDR2X (ORCPT
+        id S1727455AbgBDRas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 12:28:23 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43220 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBDR2W (ORCPT
+        Tue, 4 Feb 2020 12:30:48 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35164 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBDRar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 12:28:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=wIR1JmS32XVeu+2C/XC7L3WcQePaYVm9hH5KSatXCuo=; b=bEm/6aE4sqW1LJuLN6dMteKKUi
-        b16MZzrJWPB9ORIQwqteL1I9gba3XXD59uuHIzVSocXXyLmLRLxRki2g3SxtRb1Ki5Bzu9RJM/l0R
-        8tG/j320Aplp/SdcH5NtO6JknLF1R7ajXPWDwao5FFikcHo3AJFCbacvDN7o9euGervBgKRfYNsiW
-        CUIMGhY8lkN77XlHp3jiEIiWOvGIi+ORBS3cD6fEu9OIt8ygPi5sedCUk5NLHQ19V5yi/KcODiEkN
-        HD+ZW9QttqLwt//+CD2XvnaYPQlv1n7Ud7izxmSJxASlEnPiimnpjfhdpydiVTatN0GoYqnwpg/6d
-        uvOip6aQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iz1zV-0004bg-IN; Tue, 04 Feb 2020 17:28:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 76EA0304C21;
-        Tue,  4 Feb 2020 18:26:12 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 162D52B4C428E; Tue,  4 Feb 2020 18:27:58 +0100 (CET)
-Date:   Tue, 4 Feb 2020 18:27:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20200204172758.GF14879@hirez.programming.kicks-ass.net>
-References: <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <20200125111931.GW11457@worktop.programming.kicks-ass.net>
- <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
- <20200203134540.GA14879@hirez.programming.kicks-ass.net>
- <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
- <20200203152807.GK14914@hirez.programming.kicks-ass.net>
- <15fa978d-bd41-3ecb-83d5-896187e11244@redhat.com>
- <83762715-F68C-42DF-9B41-C4C48DF6762F@oracle.com>
+        Tue, 4 Feb 2020 12:30:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w12so13223993wrt.2;
+        Tue, 04 Feb 2020 09:30:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=dKb+2vXfSa15czwnAW1BPHH/lZLrvUB+89CORs28USQ=;
+        b=bu4u7EiPcwy3dR9XXChdvY+2QuOwyrnBCocvyHJz+uzByTjtOH0OM0cLcsZG9VwPRH
+         0aGCpE2SKOBF44qBat/IrAALOE5TOctSpwV8zRXi+wDSj0uXCJ/Bsl8I1ZT3V+LdoO4R
+         Yvh+6NtQ0VAtaooGr/fWLn+jlzeNeQtXISv0JLdk/mxgZcF/pJOdTw2xQoJgRp8m7HJ0
+         fZX+Aqh2eKd6MpErTFrKh1kqAPY8dWeZrFjkwKuBYwrkdYH+9d9a1drc/vm++YJ8MOis
+         rJQ9KOPC3cHvl7hUCtaa6ChXKAXkYmjmu8yIMqJfNp0Fr5x96nAoh8Wm0WeGJJzRmr6J
+         oxkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=dKb+2vXfSa15czwnAW1BPHH/lZLrvUB+89CORs28USQ=;
+        b=j92eAoYi+r9Id1l1bPgldq9Hi9hJwSFla3BIMnzqs2w6n4esWw+sxYEZ1dvl38gkys
+         1bb5XJfx+LFpPJwz0WWSpqCNBzT80tq41sEuiJqIa4u9ERI9pSZCOIvRiHNoFWfj2hkG
+         FgwNuLU05fFxFOr46paAYa5UxKlIqGtJ7AxK9FDZEXMARXQe+JEqymZfU3E3cDHn10Ub
+         E18nC935mb4pnuTL10hOe5rNQmainTlOHeqsn5DQnyoaDVrepsWcSJkyBVF4dMa8dv64
+         gEnyTKyRERWC4pbdaJKYl49TVcp8Qpuni57hbVY5O1mqMoqr+lBs1syvN5tsECnpC3C1
+         QPEA==
+X-Gm-Message-State: APjAAAUF+9BZS6UMPR8sEDIKAPadu9CUMgtiXU2EouhkhLRk+9W0GvU/
+        cnE8Uc6LnfdAykPVwpoNx8fNJjYE9ng=
+X-Google-Smtp-Source: APXvYqxIOhls5KKicZxJ2jvCKlSBIJ4c3b6KDZN+py5MgxprlFzxofr9CvQHepvrqquwq3RBPgP3pQ==
+X-Received: by 2002:adf:e610:: with SMTP id p16mr4794240wrm.81.1580837444314;
+        Tue, 04 Feb 2020 09:30:44 -0800 (PST)
+Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.gmail.com with ESMTPSA id e22sm4697122wme.45.2020.02.04.09.30.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 09:30:43 -0800 (PST)
+From:   <ansuelsmth@gmail.com>
+To:     "'Guenter Roeck'" <linux@roeck-us.net>
+Cc:     "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Wim Van Sebroeck'" <wim@linux-watchdog.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200204152104.13278-1-ansuelsmth@gmail.com> <20200204160824.GA17320@roeck-us.net> <035201d5db76$78f56670$6ae03350$@gmail.com> <20200204162516.GA22814@roeck-us.net>
+In-Reply-To: <20200204162516.GA22814@roeck-us.net>
+Subject: R: R: [PATCH 1/3] watchdog: qcom-wdt: add option to skip pretimeout
+Date:   Tue, 4 Feb 2020 18:30:40 +0100
+Message-ID: <035f01d5db80$d2ed1fb0$78c75f10$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <83762715-F68C-42DF-9B41-C4C48DF6762F@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQHIAHuJN4fpJ8MkOCYMUgPEMn1OlAJOMHpaAfXvMGYCLKZZlqfzeb9g
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 11:54:02AM -0500, Alex Kogan wrote:
-> > On Feb 3, 2020, at 10:47 AM, Waiman Long <longman@redhat.com> wrote:
-> > 
-> > On 2/3/20 10:28 AM, Peter Zijlstra wrote:
-> >> On Mon, Feb 03, 2020 at 09:59:12AM -0500, Waiman Long wrote:
-> >>> On 2/3/20 8:45 AM, Peter Zijlstra wrote:
-> >>>> Presumably you have a workload where CNA is actually a win? That is,
-> >>>> what inspired you to go down this road? Which actual kernel lock is so
-> >>>> contended on NUMA machines that we need to do this?
+> On Tue, Feb 04, 2020 at 05:16:34PM +0100, ansuelsmth@gmail.com wrote:
+> > If something like this is used, msm-timer require interrupts. Without
+this
+> > configuration, the device is unbootable as the system froze on system
+> > bootup.
+> >
+> > timer@200a000 {
+> > 			compatible = "qcom,kpss-timer", "qcom,msm-timer";
+> > 			interrupts = <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(2) |
+> > 						 IRQ_TYPE_EDGE_RISING)>,
+> > 				     <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(2) |
+> > 						 IRQ_TYPE_EDGE_RISING)>,
+> > 				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(2) |
+> > 						 IRQ_TYPE_EDGE_RISING)>,
+> > 				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(2) |
+> > 						 IRQ_TYPE_EDGE_RISING)>,
+> > 				     <GIC_PPI 5 (GIC_CPU_MASK_SIMPLE(2) |
+> > 						 IRQ_TYPE_EDGE_RISING)>;
+> > 			no-pretimeout;
+> > 			reg = <0x0200a000 0x100>;
+> > 			clock-frequency = <25000000>,
+> > 					  <32768>;
+> > 			clocks = <&sleep_clk>;
+> > 			clock-names = "sleep";
+> > 			cpu-offset = <0x80000>;
+> > 		};
+> >
+> 
+> I think this is all wrong; the new property shows up in a node which
+> is completely unrelated to a watchdog. Maybe it wasn't such a good idea
+> to tie the watchdog to the timer node. At the very least, the situation
+> should be handled in the driver via of_table flags. If the situation can't
+> be handled that way, something is even more wrong. In that case it might
+> be better to revert commit 36375491a439 until that is sorted out properly.
+> 
+> Guenter
+> 
 
-> There are quite a few actually. files_struct.file_lock, file_lock_context.flc_lock
-> and lockref.lock are some concrete examples that get very hot in will-it-scale
-> benchmarks. 
+So pretimeout should be enabled only for kpss-wdt and disabled with a flag 
+in the of_table of the driver?
 
-Right, that's all a variant of banging on the same resources across
-nodes. I'm not sure there's anything fundamental we can fix there.
+> > > On Tue, Feb 04, 2020 at 04:21:01PM +0100, Ansuel Smith wrote:
+> > > > Some platform like ipq806x doesn't support pretimeout.
+> > > > As the driver check if there are available interrupts and ipq806x
+> > > > use msm-timer that require interrupts, the watchdog fail to probe
+> > > > as request_irq tries to use a ppi interrupt. Add an option to skip
+> > > > pretimeout setup and use the normal watchdog probe.
+> > > >
+> > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > > ---
+> > > >  drivers/watchdog/qcom-wdt.c | 5 ++++-
+> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/watchdog/qcom-wdt.c
+b/drivers/watchdog/qcom-wdt.c
+> > > > index a494543d3ae1..e689e97e883e 100644
+> > > > --- a/drivers/watchdog/qcom-wdt.c
+> > > > +++ b/drivers/watchdog/qcom-wdt.c
+> > > > @@ -189,6 +189,7 @@ static int qcom_wdt_probe(struct platform_device
+> > > *pdev)
+> > > >  	u32 percpu_offset;
+> > > >  	int irq, ret;
+> > > >  	struct clk *clk;
+> > > > +	bool nopretimeout;
+> > > >
+> > > >  	regs = of_device_get_match_data(dev);
+> > > >  	if (!regs) {
+> > > > @@ -204,6 +205,8 @@ static int qcom_wdt_probe(struct platform_device
+> > > *pdev)
+> > > >  	if (!res)
+> > > >  		return -ENOMEM;
+> > > >
+> > > > +	nopretimeout = of_property_read_bool(np, "no-pretimeout");
+> > > > +
+> > > >  	/* We use CPU0's DGT for the watchdog */
+> > > >  	if (of_property_read_u32(np, "cpu-offset", &percpu_offset))
+> > > >  		percpu_offset = 0;
+> > > > @@ -247,7 +250,7 @@ static int qcom_wdt_probe(struct platform_device
+> > > *pdev)
+> > > >
+> > > >  	/* check if there is pretimeout support */
+> > > >  	irq = platform_get_irq(pdev, 0);
+> > > > -	if (irq > 0) {
+> > > > +	if (!nopretimeout && irq > 0) {
+> > >
+> > > That is unnecessary; such platforms should simply not provide an
+> > interrupt.
+> > > Or, in other words, what is the point of assigning an interrupt to be
+used
+> > > for pretimeout if the platform doesn't support it ? And then to add
+yet
+> > > another attribute to tell the driver not to use it ?
+> > >
+> > > Guenter
+> > >
+> > > >  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+> > > >  				       IRQF_TRIGGER_RISING,
+> > > >  				       "wdt_bark", &wdt->wdd);
+> > > > --
+> > > > 2.24.0
+> > > >
+> >
 
-> And then there are spinlocks in __futex_data.queues, 
-> which get hot when applications have contended (pthread) locks — 
-> LevelDB is an example.
-
-A numa aware rework of futexes has been on the todo list for years :/
-
-> Our initial motivation was based on an observation that kernel qspinlock is not 
-> NUMA-aware. So what, you may ask. Much like people realized in the past that
-> global spinning is bad for performance, and they switched from ticket lock to
-> locks with local spinning (e.g., MCS), I think everyone would agree these days that
-> bouncing a lock (and cache lines in general) across numa nodes is similarly bad.
-> And as CNA demonstrates, we are easily leaving 2-3x speedups on the table by
-> doing just that with the current qspinlock.
-
-Actual benchmarks with performance numbers are required. It helps
-motivate the patches as well as gives reviewers clues on how to
-reproduce / inspect the claims made.
