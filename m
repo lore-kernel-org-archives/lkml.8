@@ -2,179 +2,128 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB62C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDB5C3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC56217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC5B2192A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgBEGTh convert rfc822-to-8bit (ORCPT
+        id S1726755AbgBEGVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:19:37 -0500
-Received: from mga07.intel.com ([134.134.136.100]:52004 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbgBEGTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 01:19:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 22:19:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,404,1574150400"; 
-   d="scan'208";a="343167986"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Feb 2020 22:19:34 -0800
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 4 Feb 2020 22:19:34 -0800
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 4 Feb 2020 22:19:34 -0800
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 4 Feb 2020 22:19:33 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.126]) with mapi id 14.03.0439.000;
- Wed, 5 Feb 2020 14:19:32 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v3 4/8] vfio/type1: Add VFIO_NESTING_GET_IOMMU_UAPI_VERSION
-Thread-Topic: [RFC v3 4/8] vfio/type1: Add
- VFIO_NESTING_GET_IOMMU_UAPI_VERSION
-Thread-Index: AQHV1pyVzTVYYyC090Ow388f+bA35qgBzDSAgALuTFCABInhgIAC5JFQ
-Date:   Wed, 5 Feb 2020 06:19:31 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A1AAE53@SHSMSX104.ccr.corp.intel.com>
-References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
-        <1580299912-86084-5-git-send-email-yi.l.liu@intel.com>
-        <20200129165649.43008300@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A1994A2@SHSMSX104.ccr.corp.intel.com>
- <20200203110045.1fb3ec8d@w520.home>
-In-Reply-To: <20200203110045.1fb3ec8d@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDljNmJkZDgtYjc0Yi00MGNhLTkyZWUtOTIwMmI0ZjY2OWIyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiakkxU2NRcEg3R3NIdEM1d1JhblhWZTc5UVZqSTZaU0ZCUFFHbHlrSnhaMlc4SlBGQWFhWmZHOVFIaUliQUc5ZCJ9
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 5 Feb 2020 01:21:15 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37257 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgBEGVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 01:21:14 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so652033pfn.4;
+        Tue, 04 Feb 2020 22:21:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ECOPUnHJYw3SVf2CKPyph34mtGffruwoj4HtB5jABLw=;
+        b=AXB6HcLp1xb5ZRKGdw8OQ27xBNaL5Aebdt/6u7e9EpKht3e//Y85UI0b3sddn7yaZK
+         wfEZxY7HfK8R2cDWUuFgAQX4fZ/aomSgO1Lpvb1PgdnvB8S/l2ESvsP/FNP9atHT5ZYm
+         P7vW5RTAIv6D14SirTv0/ih28qNW5/ygs9P0kIPHKVghY7yJ3eYYHX5ZH2hBeXecgx8r
+         HrZjzMVfuPqfXweu3Qlpw/UbjEp48p1SBX1oFk4L8PAzlR7v8js+Npc4ruWMUAUGbiiL
+         1VI88pgK+Ka11pUan22grt5y/XMwsZCi1Dp3J0gQXQxH5uNMy7shA/DTlUGr+nobxUXu
+         zIQg==
+X-Gm-Message-State: APjAAAWlFmQMVkaRBvKeyV5NG6yKYahfmF5nEBh98QI9SOa8HmQ81JaM
+        SIoJBKr6OmQ8nef2u7uHGePdJYspqlCwgA==
+X-Google-Smtp-Source: APXvYqymWvyAwOwGjKFzhv/YfJVjc0bej7RZ0q2+2yExcuo3o1tIBxQQX2X/zlurZ2VcNszyB2PUZQ==
+X-Received: by 2002:a63:1b0a:: with SMTP id b10mr34525865pgb.56.1580883673595;
+        Tue, 04 Feb 2020 22:21:13 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:55d5:fbd1:6791:7dd1? ([2601:647:4000:d7:55d5:fbd1:6791:7dd1])
+        by smtp.gmail.com with ESMTPSA id b11sm19588244pgg.13.2020.02.04.22.21.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 22:21:12 -0800 (PST)
+Subject: Re: [PATCH] scsi: ufs: Fix registers dump vops caused scheduling
+ while atomic
+To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, hongwus@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1580882795-29675-1-git-send-email-cang@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <3e529862-7790-c506-abaa-9a6972f5d53c@acm.org>
+Date:   Tue, 4 Feb 2020 22:21:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1580882795-29675-1-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Tuesday, February 4, 2020 2:01 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [RFC v3 4/8] vfio/type1: Add
-> VFIO_NESTING_GET_IOMMU_UAPI_VERSION
-> 
-> On Fri, 31 Jan 2020 13:04:11 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > Hi Alex,
-> >
-> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > Sent: Thursday, January 30, 2020 7:57 AM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [RFC v3 4/8] vfio/type1: Add
-> > > VFIO_NESTING_GET_IOMMU_UAPI_VERSION
-> > >
-> > > On Wed, 29 Jan 2020 04:11:48 -0800
-> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > >
-> > > > From: Liu Yi L <yi.l.liu@intel.com>
-> > > >
-> > > > In Linux Kernel, the IOMMU nesting translation (a.k.a. IOMMU dual stage
-> > > > translation capability) is abstracted in uapi/iommu.h, in which the uAPIs
-> > > > like bind_gpasid/iommu_cache_invalidate/fault_report/pgreq_resp are defined.
-> > > >
-> > > > VFIO_TYPE1_NESTING_IOMMU stands for the vfio iommu type which is backed
-> by
-> > > > IOMMU nesting translation capability. VFIO exposes the nesting capability
-> > > > to userspace and also exposes uAPIs (will be added in later patches) to user
-> > > > space for setting up nesting translation from userspace. Thus applications
-> > > > like QEMU could support vIOMMU for pass-through devices with IOMMU
-> nesting
-> > > > translation capability.
-> > > >
-> > > > As VFIO expose the nesting IOMMU programming to userspace, it also needs to
-> > > > provide an API for the uapi/iommu.h version check to ensure compatibility.
-> > > > This patch reports the iommu uapi version to userspace. Applications could
-> > > > use this API to do version check before further using the nesting uAPIs.
-> > > >
-> > > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > > Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > > ---
-> > > >  drivers/vfio/vfio.c       |  3 +++
-> > > >  include/uapi/linux/vfio.h | 10 ++++++++++
-> > > >  2 files changed, 13 insertions(+)
-> > > >
-> > > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > > > index 425d60a..9087ad4 100644
-> > > > --- a/drivers/vfio/vfio.c
-> > > > +++ b/drivers/vfio/vfio.c
-> > > > @@ -1170,6 +1170,9 @@ static long vfio_fops_unl_ioctl(struct file *filep,
-> > > >  	case VFIO_GET_API_VERSION:
-> > > >  		ret = VFIO_API_VERSION;
-> > > >  		break;
-> > > > +	case VFIO_NESTING_GET_IOMMU_UAPI_VERSION:
-> > > > +		ret = iommu_get_uapi_version();
-> > > > +		break;
-> > >
-> > > Shouldn't the type1 backend report this?  It doesn't make much sense
-> > > that the spapr backend reports a version for something it doesn't
-> > > support.  Better yet, provide this info gratuitously in the
-> > > VFIO_IOMMU_GET_INFO ioctl return like you do with nesting in the next
-> > > patch, then it can help the user figure out if this support is present.
-> >
-> > yeah, it would be better to report it by type1 backed. However,
-> > it is kind of issue when QEMU using it.
-> >
-> > My series "hooks" vSVA supports on VFIO_TYPE1_NESTING_IOMMU type.
-> > [RFC v3 09/25] vfio: check VFIO_TYPE1_NESTING_IOMMU support
-> > https://www.spinics.net/lists/kvm/msg205197.html
-> >
-> > In QEMU, it will determine the iommu type firstly and then invoke
-> > VFIO_SET_IOMMU. I think before selecting VFIO_TYPE1_NESTING_IOMMU,
-> > QEMU needs to check the IOMMU uAPI version. If IOMMU uAPI is incompatible,
-> > QEMU should not use VFIO_TYPE1_NESTING_IOMMU type. If
-> > VFIO_NESTING_GET_IOMMU_UAPI_VERSION is available after set iommu, then it
-> > may be an issue. That's why this series reports the version in vfio layer
-> > instead of type1 backend.
-> 
-> Why wouldn't you use CHECK_EXTENSION?  You could probe specifically for
-> a VFIO_TYP1_NESTING_IOMMU_UAPI_VERSION extension that returns the
-> version number.  Thanks,
+On 2020-02-04 22:06, Can Guo wrote:
+> @@ -5617,7 +5622,7 @@ static irqreturn_t ufshcd_check_errors(struct
+>
+>  					__func__, hba->saved_err,
+>  					hba->saved_uic_err);
+>
+> -				ufshcd_print_host_regs(hba);
+> +				__ufshcd_print_host_regs(hba, true);
+>  				ufshcd_print_pwr_info(hba);
+>  				ufshcd_print_tmrs(hba,
+>					hba->outstanding_tasks);
+>  				ufshcd_print_trs(hba,
+>					hba->outstanding_reqs,
 
-oh, yes. Thanks for this guiding. :-)
+Hi Can,
 
-Regards,
-Yi Liu
+Please fix this by splitting ufs_qcom_dump_dbg_regs() into two
+functions: one function that doesn't sleep and a second function that
+behaves identically to the current function. If the function names will
+make it clear which function sleeps and which function doesn't that will
+result in code that is much easier to read than the above code. For the
+above code it is namely impossible to figure out what will happen
+without looking up the caller.
+
+Thanks,
+
+Bart.
