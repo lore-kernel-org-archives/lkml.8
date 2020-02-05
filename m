@@ -2,142 +2,173 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3EBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB95C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD1F2072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:35:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Cw/B6gNv"
+	by mail.kernel.org (Postfix) with ESMTP id 6D20821741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgBELfb (ORCPT
+        id S1727003AbgBELmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 06:35:31 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43053 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgBELfa (ORCPT
+        Wed, 5 Feb 2020 06:42:11 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54762 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgBELmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:35:30 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so1223814lfq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 03:35:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9dzJMqCXyJ0/sQ9WqS79itnSpMjlI4okwKhRKzVm4NM=;
-        b=Cw/B6gNv6WrKuynnb0hGrn8XHxmwFGHBK6Kx3ISr6g8541JII8R/dNAUM8FBm3EG/z
-         7mldHZr7bI2tp5pBfvfOfywWE8+h25kWovFkuNAA2Cj1Nuq4GHdG+S1n6nGJL+Qkvl7u
-         DHVez+FLWMPQTo18ui7XxFbIAVT2/XZW7rBMXmKANw7Z3vjhI+/AgNja35tcKI2QrmWC
-         iB0aW7cfR8lhqyI5gnu4EX1AdRGts8kF7neLmR0wRRiDXDyyZo4cXG1dDMjDe7evtrBV
-         2VevE1g/382CgqcWrvzbCGiEIdnuWbHFIW8EwV4GVppGEzPCncLDF7f4SZMsf2BMC46d
-         Gxmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9dzJMqCXyJ0/sQ9WqS79itnSpMjlI4okwKhRKzVm4NM=;
-        b=STb+mS7O4wZF+uVtT+cYy26MILluyJ7S3HXvAYrtVkp+WMjiJ93vwXpY3DSTpaRwSd
-         AoNyIABhltQRplmW1ffMRkaISqnIRYnadNnEwY1JvGBFZ79bT7hU0uEYPbkG0qomj6cw
-         lAO+WPFhVA7folussiL33SePRSU68xAAGKNfa1FcLokD8bUkhTXHAyK4eLGJ7yvYeAlD
-         MPOvxgkUmFXPJ5NQ9EkIXeMmih1FVX1LhALgRE3114PjeBmWnW6aGWXGvG3IF4XmL86j
-         OOX4hBH3g5hv64czOBkBoF15fjkwuLVM6VEm0NjS0f2AGfRsdpO871H2s5j1IpPf0G+Y
-         qTCg==
-X-Gm-Message-State: APjAAAW2ch1aVWsst8gquBDYuiJ8CG4CyJ+zCzHxdktexvyirzz7vG/L
-        2F9TPVNdUhpxM94VmPdENzG4Vg==
-X-Google-Smtp-Source: APXvYqy9hnTW8jGEcTDyskMINKlFV9FjmuWaaZRQe2WXLP2287ba30lwKa4xY42Duoj0vvlh1UVC8g==
-X-Received: by 2002:a19:6b11:: with SMTP id d17mr17471991lfa.168.1580902528148;
-        Wed, 05 Feb 2020 03:35:28 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f11sm14259401lfa.9.2020.02.05.03.35.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 03:35:27 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 96D43100AF6; Wed,  5 Feb 2020 14:35:41 +0300 (+03)
-Date:   Wed, 5 Feb 2020 14:35:41 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v4 07/12] mm/gup: track FOLL_PIN pages
-Message-ID: <20200205113541.mi4kys5erldwxiog@box>
-References: <20200204234117.2974687-1-jhubbard@nvidia.com>
- <20200204234117.2974687-8-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200204234117.2974687-8-jhubbard@nvidia.com>
+        Wed, 5 Feb 2020 06:42:11 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1izIpN-0003Ww-0f; Wed, 05 Feb 2020 11:26:41 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu
+Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [RESEND] [PATCH v2 2/3] xhci: Wait until link state trainsits to U0 after setting USB_SS_PORT_LS_U0
+Date:   Wed,  5 Feb 2020 19:26:32 +0800
+Message-Id: <20200205112633.25995-2-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200205112633.25995-1-kai.heng.feng@canonical.com>
+References: <20200205112633.25995-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 03:41:12PM -0800, John Hubbard wrote:
-> Add tracking of pages that were pinned via FOLL_PIN. This tracking is
-> implemented via overloading of page->_refcount: pins are added by
-> adding GUP_PIN_COUNTING_BIAS (1024) to the refcount. This provides a
-> fuzzy indication of pinning, and it can have false positives (and that's
-> OK). Please see the pre-existing
-> Documentation/core-api/pin_user_pages.rst for details.
-> 
-> As mentioned in pin_user_pages.rst, callers who effectively set FOLL_PIN
-> (typically via pin_user_pages*()) are required to ultimately free such
-> pages via unpin_user_page().
-> 
-> Please also note the limitation, discussed in pin_user_pages.rst under
-> the "TODO: for 1GB and larger huge pages" section. (That limitation will
-> be removed in a following patch.)
-> 
-> The effect of a FOLL_PIN flag is similar to that of FOLL_GET, and may be
-> thought of as "FOLL_GET for DIO and/or RDMA use".
-> 
-> Pages that have been pinned via FOLL_PIN are identifiable via a
-> new function call:
-> 
->    bool page_maybe_dma_pinned(struct page *page);
-> 
-> What to do in response to encountering such a page, is left to later
-> patchsets. There is discussion about this in [1], [2], [3], and [4].
-> 
-> This also changes a BUG_ON(), to a WARN_ON(), in follow_page_mask().
-> 
-> [1] Some slow progress on get_user_pages() (Apr 2, 2019):
->     https://lwn.net/Articles/784574/
-> [2] DMA and get_user_pages() (LPC: Dec 12, 2018):
->     https://lwn.net/Articles/774411/
-> [3] The trouble with get_user_pages() (Apr 30, 2018):
->     https://lwn.net/Articles/753027/
-> [4] LWN kernel index: get_user_pages():
->     https://lwn.net/Kernel/Index/#Memory_management-get_user_pages
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Suggested-by: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
+time. The 20ms is not enough for some devices.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Intead of polling PLS or PLC, we can facilitate the port change event to
+know that the link transits to U0 is completed.
 
+While at it, also separate U0 and U3 case to make the code cleaner.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v2:
+ - Seperate U0 and U3 case.
+ - Prevent setting U0 from non-U state.
+ - Move the completion from per port to bus_state.
+
+ drivers/usb/host/xhci-hub.c  | 43 +++++++++++++++++++++++++-----------
+ drivers/usb/host/xhci-mem.c  |  2 ++
+ drivers/usb/host/xhci-ring.c |  1 +
+ drivers/usb/host/xhci.h      |  1 +
+ 4 files changed, 34 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index d3c5bcf76755..0a5d8b28b99f 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1297,7 +1297,32 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 					 wIndex, link_state);
+ 				goto error;
+ 			}
++
++			if (link_state == USB_SS_PORT_LS_U0) {
++				if ((temp & PORT_PLS_MASK) == XDEV_U0)
++					break;
++
++				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
++				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
++				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
++					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
++							wIndex);
++					goto error;
++				}
++				reinit_completion(&bus_state->link_change_done[wIndex]);
++				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U0);
++				spin_unlock_irqrestore(&xhci->lock, flags);
++				if (!wait_for_completion_timeout(&bus_state->link_change_done[wIndex],
++								 msecs_to_jiffies(100)))
++					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
++						 wIndex);
++				spin_lock_irqsave(&xhci->lock, flags);
++				temp = readl(ports[wIndex]->addr);
++				break;
++			}
++
+ 			if (link_state == USB_SS_PORT_LS_U3) {
++				int retries = 10;
+ 				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
+ 						wIndex + 1);
+ 				if (slot_id) {
+@@ -1308,26 +1333,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 					xhci_stop_device(xhci, slot_id, 1);
+ 					spin_lock_irqsave(&xhci->lock, flags);
+ 				}
+-			}
+-
+-			xhci_set_link_state(xhci, ports[wIndex], link_state);
+-
+-			spin_unlock_irqrestore(&xhci->lock, flags);
+-			if (link_state == USB_SS_PORT_LS_U3) {
+-				int retries = 10;
+-
++				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
++				spin_unlock_irqrestore(&xhci->lock, flags);
+ 				while (retries--) {
+ 					msleep(10); /* wait device to enter */
+ 					temp = readl(ports[wIndex]->addr);
+ 					if ((temp & PORT_PLS_MASK) == XDEV_U3)
+ 						break;
+ 				}
+-			}
+-			spin_lock_irqsave(&xhci->lock, flags);
+-
+-			temp = readl(ports[wIndex]->addr);
+-			if (link_state == USB_SS_PORT_LS_U3)
++				spin_lock_irqsave(&xhci->lock, flags);
++				temp = readl(ports[wIndex]->addr);
+ 				bus_state->suspended_ports |= 1 << wIndex;
++			}
+ 			break;
+ 		case USB_PORT_FEAT_POWER:
+ 			/*
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index 3b1388fa2f36..aceb8c1af775 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -2531,6 +2531,8 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
+ 		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
+ 		/* Only the USB 2.0 completions will ever be used. */
+ 		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
++		init_completion(&xhci->usb2_rhub.bus_state.link_change_done[i]);
++		init_completion(&xhci->usb3_rhub.bus_state.link_change_done[i]);
+ 	}
+ 
+ 	if (scratchpad_alloc(xhci, flags))
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index d23f7408c81f..4d0f8dab069a 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1677,6 +1677,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
+ 	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
+ 	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
++		complete(&bus_state->link_change_done[hcd_portnum]);
+ 		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 13d8838cd552..b5d443ce0750 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1694,6 +1694,7 @@ struct xhci_bus_state {
+ 	/* Which ports are waiting on RExit to U0 transition. */
+ 	unsigned long		rexit_ports;
+ 	struct completion	rexit_done[USB_MAXCHILDREN];
++	struct completion	link_change_done[USB_MAXCHILDREN];
+ };
+ 
+ 
 -- 
- Kirill A. Shutemov
+2.17.1
+
