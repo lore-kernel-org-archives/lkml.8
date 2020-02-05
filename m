@@ -2,172 +2,85 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978F4C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCABC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7DC217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:21:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWIK/VhI"
+	by mail.kernel.org (Postfix) with ESMTP id 3315D2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgBEAV3 (ORCPT
+        id S1727727AbgBEAYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:21:29 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45808 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgBEAV2 (ORCPT
+        Tue, 4 Feb 2020 19:24:11 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48353 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727537AbgBEAYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:21:28 -0500
-Received: by mail-qk1-f196.google.com with SMTP id x1so124002qkl.12;
-        Tue, 04 Feb 2020 16:21:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wj6LT20dLajifXtV99Zcoip6WQEuOXXdWvQjZR632DQ=;
-        b=cWIK/VhIEfvG6R7vLQUjiD2USWqk74e7Y8UP8G29xerXGSihB/jO4Jdic3n/iuC+Cc
-         i9qiETRp7a7wDh9zqTYFNQXIVI30ANvjbpAh4zGXfCXOxwrITuJ8nE88eBt27l3rfGCc
-         I4CW9lVK9212KAc2INscHM2lFTtbrwv4MslXEwQ4DP+c56mPYLMTwyvtzhm+htnm8z1c
-         fKO8c1IPtUKOUL15GzDv8NJKxMQJyXqXyiLeUo0oAN4TrX+y1ZvnzUbtBgtXvJvpIS7G
-         ldAswVGtddXIuwYpe2Tyg6c8ic8z+1NuyfDlfXfBJVAGNuY1jFOTlTey9aE0233Lm53k
-         zNjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wj6LT20dLajifXtV99Zcoip6WQEuOXXdWvQjZR632DQ=;
-        b=tpjXQhLml7y2s+2t91gWN3EFsn7RweAUnX5ST2HI3XkUgPEDPArNVCiK7dJbM4lSI3
-         LVBbfolXigp84MyECA4D4nN+uUFehbayfXOOYh/6bQfjOOox+QUD+i8mNiRTCu0a0TJB
-         7LwZcZkVGZ4q5zpQxMnNBo8qHxixVWZRJoaG+xZiwBVbp5fk8oaFrsP1kiZ11WHrW7ry
-         adynQF/qTfYPWO2iMJjRV/Af8hz2gyUzCnfEAv/FcvLw2nVoUlREaDfy4Lh8FAfsr18Z
-         h4YmL9e3A4fu8vNWx0LxHLc03lBg5ZKtYn81mq/k4lz1DM4rw6XUIfdOt63tXVELHMES
-         0IyQ==
-X-Gm-Message-State: APjAAAUoqKdWdmc8a8sZUASz2XrX/31Od+RLjdNXIJX5nckz2qTssDll
-        uBNrCVcxQYlkjK7sFOpVax4=
-X-Google-Smtp-Source: APXvYqzH9Sr3l/kGruhLbmvfKoKFWin30NBwVhgSosWEkPbFkoAMTLswz872Ls26QcHZQ5E9RL1HZw==
-X-Received: by 2002:ae9:f714:: with SMTP id s20mr30691996qkg.236.1580862086239;
-        Tue, 04 Feb 2020 16:21:26 -0800 (PST)
-Received: from brcpsddjunho-l.padtec.com.br (apolo.padtec.com.br. [200.228.158.130])
-        by smtp.gmail.com with ESMTPSA id z8sm12850825qth.16.2020.02.04.16.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 16:21:25 -0800 (PST)
-From:   Daniel Junho <djunho@gmail.com>
-X-Google-Original-From: Daniel Junho <djunho@padtec.com.br>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        hennerich@blackfin.uclinux.org, patrick.vasseur@c-s.fr
-Subject: [PATCH] dt-bindings: iio: adc: ad7923: Add dt-bindings for AD7928
-Date:   Tue,  4 Feb 2020 21:21:21 -0300
-Message-Id: <20200205002121.30941-1-djunho@padtec.com.br>
-X-Mailer: git-send-email 2.25.0
+        Tue, 4 Feb 2020 19:24:11 -0500
+X-Originating-IP: 92.243.9.8
+Received: from localhost (joshtriplett.org [92.243.9.8])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 565F140004;
+        Wed,  5 Feb 2020 00:24:07 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 16:24:07 -0800
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] acpi: button: Provide option for power button to
+ directly signal init
+Message-ID: <20200205002406.GC2968@localhost>
+References: <20200111022145.GA166025@localhost>
+ <CAJZ5v0hF2YDVHcvqx_4TaEzuqBKppVG7gZ4nXm_peF75Cfbzmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hF2YDVHcvqx_4TaEzuqBKppVG7gZ4nXm_peF75Cfbzmg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Junho <djunho@gmail.com>
+On Thu, Jan 30, 2020 at 10:07:09PM +0100, Rafael J. Wysocki wrote:
+> On Sat, Jan 11, 2020 at 3:21 AM Josh Triplett <josh@joshtriplett.org> wrote:
+> >
+> > Virtual machines and containers often use an ACPI power button event to
+> > tell the machine to shut down gracefully.
+> >
+> > Provide an optional, extremely lightweight way to handle this event by
+> > signaling init directly, rather than running a separate daemon (such as
+> > acpid or systemd-logind) that adds to startup time and VM image
+> > complexity.
+> 
+> Well, I'm not convinced.
 
-Add device tree bindings documentation for AD7923 adc in YAML format.
+I would be happy to talk through other possible options.
 
-Tested with:
-make ARCH=arm dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-make ARCH=arm dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> Even though the patch looks straightforward, the approach really is
+> quite not so conceptually and honestly it looks like a band-aid.
 
-Signed-off-by: Daniel Junho <djunho@gmail.com>
----
+I'm not sure what makes it conceptually non-straightforward. I'll freely
+admit that it isn't *elegant*. But it also seems inelegant to me to need
+to start and run an entire userspace daemon to watch for a key, or to
+add such logic into a domain-specific workload's setup and event loop.
 
-Hi,
+I'm entirely open to changing the approach. The goal I'm aiming for is
+to allow cloud systems and VMs that signal shutdown via an ACPI power
+button to run a more minimal userspace.
 
-I got maintainers from the driver authors list. Let me know if this is
-fine.
+> Also I'm not quite sure why the ACPI button driver is the target of
+> this and not the input layer, for instance.
 
-Thanks.
+I don't have any objections to putting this in another part of the
+stack, but input in particular seems like it would potentially affect
+the normal event-processing path.
 
- .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-new file mode 100644
-index 000000000000..8097441c97be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7923.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7923 and similars with 4 and 8 Channel ADCs.
-+
-+maintainers:
-+  - Michael Hennerich <hennerich@blackfin.uclinux.org>"
-+  - Patrick Vasseur <patrick.vasseur@c-s.fr>"
-+
-+description: |
-+  Analog Devices AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and AD7908,
-+   AD7918, AD7928 8 Channels ADCs.
-+
-+  Specifications about the part can be found at:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7923.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7904_7914_7924.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7908_7918_7928.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7904
-+      - adi,ad7914
-+      - adi,ad7923
-+      - adi,ad7924
-+      - adi,ad7908
-+      - adi,ad7918
-+      - adi,ad7928
-+
-+  reg:
-+    maxItems: 1
-+
-+  refin-supply:
-+    description: |
-+      The regulator supply for ADC reference voltage.
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      ad7928: adc@0 {
-+        compatible = "adi,ad7928";
-+        reg = <0>;
-+        spi-max-frequency = <25000000>;
-+        refin-supply = <&adc_vref>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+      };
-+    };
--- 
-2.25.0
-
+- Josh Triplett
