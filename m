@@ -2,125 +2,118 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C417C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D1DC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156DC2085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:32:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580895151;
-	bh=Gpy2hDxfILCFcNi6YZ66NKuF3zEEEMxnRbdzFslvPF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKnP3enbLBC/fZ6ChgDuntVoHGfETJaDIrEMmHzXMz07NSeLVn2FEYgoAIokWiI+3
-	 3acrycG1U8kOJKXfhzLo3/A1KuuMIe7Atn/JOiGmmetxi+eoFg/VJgQQf9ghZg782Q
-	 U17UVWCR8Oh0jdYySqZzqNerOLYJwUWpsgsEy4bk=
+	by mail.kernel.org (Postfix) with ESMTP id C041820661
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgBEJca (ORCPT
+        id S1728237AbgBEJdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:32:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 04:33:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:19048 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728034AbgBEJca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:32:30 -0500
-Received: from localhost (unknown [212.187.182.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B8E820661;
-        Wed,  5 Feb 2020 09:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580895149;
-        bh=Gpy2hDxfILCFcNi6YZ66NKuF3zEEEMxnRbdzFslvPF8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XB9E4giKihYUTpJkE7e56XLu6u0sCHsEYUC9MMMUVBdEGQif/VQu9hYBz9M9Li8vL
-         NrL1zBhh/d7Q/OeY+flSduv0gGKLdIwFOX6Nnq/JESZ0ECyF37wg9ZG4CgljWCJeTV
-         8WPvXLXw6oVuYbVFPqZALzn6/KOFRQAcSgPehN94=
-Date:   Wed, 5 Feb 2020 09:32:26 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>, stable@vger.kernel.org,
-        syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
-Subject: Re: [PATCH 5.4 17/78] HID: Fix slab-out-of-bounds read in
- hid_field_extract (Broken!)
-Message-ID: <20200205093226.GC1164405@kroah.com>
-References: <20200114094352.428808181@linuxfoundation.org>
- <20200114094356.028051662@linuxfoundation.org>
- <27ba705a-6734-9a92-a60c-23e27c9bce6d@sony.com>
+        id S1728035AbgBEJdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:33:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:33:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
+   d="scan'208";a="378683518"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 05 Feb 2020 01:33:43 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1izH43-0000Hp-JV; Wed, 05 Feb 2020 11:33:43 +0200
+Date:   Wed, 5 Feb 2020 11:33:43 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, davem@davemloft.ne,
+        jeffrey.t.kirsher@intel.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Li RongQing <lirongqing@baidu.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] net-sysfs: Ensure begin/complete are called in
+ speed_show() and duplex_show()
+Message-ID: <20200205093343.GT10400@smile.fi.intel.com>
+References: <20200205081616.18378-1-kai.heng.feng@canonical.com>
+ <20200205081616.18378-2-kai.heng.feng@canonical.com>
+ <20200205090638.GS10400@smile.fi.intel.com>
+ <20200205092345.GA14294@unicorn.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <27ba705a-6734-9a92-a60c-23e27c9bce6d@sony.com>
+In-Reply-To: <20200205092345.GA14294@unicorn.suse.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 08:12:27AM +0100, peter enderborg wrote:
-> On 1/14/20 11:00 AM, Greg Kroah-Hartman wrote:
-> > From: Alan Stern <stern@rowland.harvard.edu>
-> >
-> > commit 8ec321e96e056de84022c032ffea253431a83c3c upstream.
-> >
-> > The syzbot fuzzer found a slab-out-of-bounds bug in the HID report
-> > handler.  The bug was caused by a report descriptor which included a
-> > field with size 12 bits and count 4899, for a total size of 7349
-> > bytes.
-> >
-> > The usbhid driver uses at most a single-page 4-KB buffer for reports.
-> > In the test there wasn't any problem about overflowing the buffer,
-> > since only one byte was received from the device.  Rather, the bug
-> > occurred when the HID core tried to extract the data from the report
-> > fields, which caused it to try reading data beyond the end of the
-> > allocated buffer.
-> >
-> > This patch fixes the problem by rejecting any report whose total
-> > length exceeds the HID_MAX_BUFFER_SIZE limit (minus one byte to allow
-> > for a possible report index).  In theory a device could have a report
-> > longer than that, but if there was such a thing we wouldn't handle it
-> > correctly anyway.
-> >
-> > Reported-and-tested-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
-> > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> > CC: <stable@vger.kernel.org>
-> > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > ---
-> >  drivers/hid/hid-core.c |    6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > --- a/drivers/hid/hid-core.c
-> > +++ b/drivers/hid/hid-core.c
-> > @@ -288,6 +288,12 @@ static int hid_add_field(struct hid_pars
-> >  	offset = report->size;
-> >  	report->size += parser->global.report_size * parser->global.report_count;
-> >  
-> > +	/* Total size check: Allow for possible report index byte */
-> > +	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
-> > +		hid_err(parser->device, "report is too long\n");
-> > +		return -1;
-> > +	}
-> > +
-> >  	if (!parser->local.usage_index) /* Ignore padding fields */
-> >  		return 0;
-> >  
-> >
-> >
-> >
-> This patch breaks Elgato StreamDeck.
+On Wed, Feb 05, 2020 at 10:23:45AM +0100, Michal Kubecek wrote:
+> On Wed, Feb 05, 2020 at 11:06:38AM +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 05, 2020 at 04:16:16PM +0800, Kai-Heng Feng wrote:
+> > > Device like igb gets runtime suspended when there's no link partner. We
+> > > can't get correct speed under that state:
+> > > $ cat /sys/class/net/enp3s0/speed
+> > > 1000
+> > > 
+> > > In addition to that, an error can also be spotted in dmesg:
+> > > [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+> > > 
+> > > It's because the igb device doesn't get runtime resumed before calling
+> > > get_link_ksettings().
+> > > 
+> > > So let's use a new helper to call begin() and complete() like what
+> > > dev_ethtool() does, to runtime resume/suspend or power up/down the
+> > > device properly.
+> > > 
+> > > Once this fix is in place, igb can show the speed correctly without link
+> > > partner:
+> > > $ cat /sys/class/net/enp3s0/speed
+> > > -1
+> > 
+> > What is the meaning of -1? Does it tells us "Hey, something is bad in hardware
+> > I can't tell you the speed" or does it imply anything else?
+> 
+> It's SPEED_UNKNOWN constant printed with "%d" template.
+> 
+> > Wouldn't be better to report 0?
+> > 
+> > Where is the documentation part of this ABI change?
+> 
+> It's not an ABI change, /sys/class/net/*/speed already shows -1 when the
+> device reports SPEED_UNKNOWN. The only change is that after this patch,
+> igb driver reports SPEED_UNKNOWN rather than an outdated value if there
+> is no link.
 
-Does that mean the device is broken with a too-large of a report?
+Thanks for elaboration.
+Perhaps add a couple of words to the commit message that there is no ABI
+changes.
 
-Is it broken in Linus's tree?  If so, can you work with the HID
-developers to fix it there so we can backport the fix to all stable
-trees?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-thanks,
 
-greg k-h
