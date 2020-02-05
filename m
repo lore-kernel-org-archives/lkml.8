@@ -2,105 +2,192 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07CFC352A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6009CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BA421927
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360E8217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KJJ25gaI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YTTPEslj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgBEMHe (ORCPT
+        id S1727479AbgBEMIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:07:34 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34861 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726822AbgBEMHd (ORCPT
+        Wed, 5 Feb 2020 07:08:43 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:60741 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgBEMIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:07:33 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580904453; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Rw6fpPoaZ9TjeIMYqlvtFgTZBBMNHEMBUrNzr/IGp5k=; b=KJJ25gaIVRQZ9LjIfY8BlDbv1qfTYNC+P/Si0Ay/7kOjvasuzoCwskU3MaHFLqZYYuvyFq7e
- VSS/qmtrZFMt5t42kGX8iiEBN3mnN1j/7MLN4Das4s/Q/kZ2xOBES1t4wTGYOnurffHCyoLz
- dT+UbvV34sJJOZ+w+BWhDlyDAWo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3ab001.7fc5a6c5e500-smtp-out-n02;
- Wed, 05 Feb 2020 12:07:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2830CC447A2; Wed,  5 Feb 2020 12:07:29 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DF5BC43383;
-        Wed,  5 Feb 2020 12:07:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DF5BC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 6/7] arm64: dts: qcom: sc7180: Add cpuidle low power
- states
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
-        devicetree@vger.kernel.org
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-7-git-send-email-mkshah@codeaurora.org>
- <20200204231509.GB18972@google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <b07c9989-b44a-969c-4c4a-9f9465781e45@codeaurora.org>
-Date:   Wed, 5 Feb 2020 17:37:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 5 Feb 2020 07:08:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580904546; x=1612440546;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5nseEPYtjLdM+sI7lpq+YtHxkIrsbNc4+ej5OZqdF0k=;
+  b=YTTPEsljbscykbfzo5ZzYR3TSleCUOnLnKajRLabsEN5UIxG82iGYVqN
+   QoHF1vOErfz6fySuTdvWNySIZY0jD6N64FRCOAps3lum3lm9Pe6jgnyXH
+   ssuv66gckYQoX4Do3e4GZk5xEQkK4EThI/zwT6A+rDkwH5YelJ9WycqYs
+   63PJkeveOgO7QHJ21XHGyO7aUuJPSSTbeB8W56Z3a1vPFVAKmefuLY5rT
+   dQp52meRtHGbG2hFPrMlmQoOHibCW6SnqAgag8w0msR3LwyDWzGFxdF64
+   1mESCFxcgtHxFRc26Q9BeOl+i7cC2KBEX8tbTX8A+ZI9nUIXnRw+ZfC4x
+   g==;
+IronPort-SDR: m6yz31Nk9Du/2L+KJAZHHRJ1rvcsQOeCzi5/HF83B0Y0BpDm48pua+U64Ml0iUuFn7GCx8HNhp
+ m7cbFFW0yWGkeiWj13DWQyv8ivUdoZZd9ctwY1PcMyB1xxA3s2/fmtLOmXovAv8Ahd601IyWEm
+ NObvWJpZjfkyNatW9+HRPnDGnBxXXQIpXPpX/XAynRIex0yZ+YZijlufNpPKR90squjuM6z/Sh
+ n1+eaVaERBFbCKWHuOWNJZPnC2wrH3hpNc3RmYAfUYYzM/KMnOvXVnJK/eVWuTthP4n5rAAIyP
+ lbg=
+X-IronPort-AV: E=Sophos;i="5.70,405,1574092800"; 
+   d="scan'208";a="230892086"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Feb 2020 20:09:03 +0800
+IronPort-SDR: v2sJLRXzR0OrLOG3Mvx7pBcpyY7qVASqWI9wFsjt9F5AIC6CChYtFPutY7wbiWnFJT9sD/hdAE
+ UvxLMP//9PDDUN6eaNzn6MnpyG2kSqSrTcV45tEsTpPLTw13d3LVPSGS3AMBvH5dIW/1mBeSim
+ O1RIdaEpVp5KZ5FR2FVZC74JGvz/XCR4bkS/AXieXkNeB0gV440jXnUREIWv2XuhcZN95GwyFd
+ cVF3lYL1HWP320uMi0Acbm5z46rTJCusK4Mavg0YeFn3VnLTtlbHQ/qjCLSO4MJ6x+sCp8GVHp
+ ozFkRnCk9OD4tcXDR8bUDG6Q
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 04:01:40 -0800
+IronPort-SDR: iZx9L3wIvhBoCUDs3UXDHpLyOjsVnhi60mL6W2G4Mh5RCenJoeiWlqRDns7S0yfT+JudNePC3c
+ 1psd7p4KuS5JYSbVLgycki9Rp4NDmKcnJQkOvwjJY9aCSNDhv6S+Xj4lIrDi1HaZVPfsTOPYga
+ 9fVLITuodEMUF+EeMFFse0fT5mfQ77eBA84YvIKARmoLV3Amqxg9mW2YILoDpdlFB66+yb/mEK
+ 3uu4zQ3/jczt+saOWLyHoPSFXp2QE/x9xAOgIZCSYxiv2UtiUdSUUY9H0R6Y3CpnS0M8XT/oi2
+ 5Yw=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip01.wdc.com with ESMTP; 05 Feb 2020 04:08:38 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v11 0/2] New zonefs file system
+Date:   Wed,  5 Feb 2020 21:08:35 +0900
+Message-Id: <20200205120837.67798-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200204231509.GB18972@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-On 2/5/2020 4:45 AM, Matthias Kaehlcke wrote:
-> On Mon, Feb 03, 2020 at 07:05:39PM +0530, Maulik Shah wrote:
->> Add device bindings for cpuidle states for cpu devices.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 78 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 8011c5f..0aa0ced 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -86,6 +86,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x0>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
-> These entries are deleted again by the next patch in this series ('arm64:
-> dts: qcom: sc7180: Convert to the hierarchical CPU topology layout').
-> What is the point in adding them in the first place?
+Zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-Clubbed 6th and 7th patch in v4 series.
+Zonefs IO management implementation uses the new iomap generic code.
+
+Changes from v10:
+* Simplify zonefs_io_error() while extending I/O error and corruption
+  types coverage.
+* Reworked zonefs_create_zgroup() to avoid the use of on-stack file
+  name string and the need for the array of zone group names.
+* Fixed a bug in zonefs_file_buffered_write() (incorrect call to
+  zonefs_io_error).
+* Improved comments throughout the code.
+* Fixed documentation to describe I/O error handling as implemented.
+
+Changes from v9:
+* Changed mount options to a more useful set of possible actions for
+  zone corruption handling: repair, remount-ro, zone-ro or zone-offline
+* Check IMMUTABLE inodes to prevent write operations
+* Documented mount options
+
+Changes from v8:
+* Comments typos fixes and improvements as suggested by Darrick and
+  Dave.
+* Improved IO error handling:
+  - Better sequential file write pointer checks on write IO error
+  - Extended zone condition checks on IO error to all types of IOs
+  - Added mount options for controlling the FS behavior when a zone
+    write pointer corruption is detected.
+* Cleanup zonefs_iomap_begin() and its use in zonefs_map_blocks()
+* Ignore RWF_NOWAIT to avoid out of order writes on sequential zone
+  files.
+* Improved documentation file
+
+Changes from v7:
+* Fixed static checker warnings:
+  - Set-but-not-used variable in zonefs_file_buffered_write()
+  - Use S_ISDIR() in zonefs_inode_setattr()
+
+Changes from v6:
+* Fixed documentation as suggested by Randy.
+
+Changes from v5:
+* Added simple description of zoned block devices to the documentation,
+  as suggested by Johannes.
+* Added a 64-char max label field to the super block to allow label
+  based identification of volumes using libblkid (checked with a patch
+  to libblkid).
+
+Changes from v4:
+* Use octal values for file and directory permissions
+* Set initial directory permissions to 0555 (no write permission)
+* Prevent setting write permissions for directories
+
+Changes from v3:
+* Fixed many typos in the documentation
+* Use symbolic file permission macros instead of octal values
+  (checkpatch.pl complains about this)
+
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
+
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  310 ++++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1441 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  190 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1967 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.24.1
+
