@@ -2,179 +2,177 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38378C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56D6C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8182085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD50D2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="9qtwQyVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgBEIRG (ORCPT
+        id S1728057AbgBEIYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 03:17:06 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50633 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbgBEIRF (ORCPT
+        Wed, 5 Feb 2020 03:24:21 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:35784 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgBEIYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 03:17:05 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1izFrN-0008RX-T9; Wed, 05 Feb 2020 08:16:34 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     davem@davemloft.ne, mkubecek@suse.cz, jeffrey.t.kirsher@intel.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Wang Hai <wanghai26@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Li RongQing <lirongqing@baidu.com>,
-        linux-kernel@vger.kernel.org (open list),
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH v2 2/2] net-sysfs: Ensure begin/complete are called in speed_show() and duplex_show()
-Date:   Wed,  5 Feb 2020 16:16:16 +0800
-Message-Id: <20200205081616.18378-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200205081616.18378-1-kai.heng.feng@canonical.com>
-References: <20200205081616.18378-1-kai.heng.feng@canonical.com>
+        Wed, 5 Feb 2020 03:24:21 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0158M8TH016599;
+        Wed, 5 Feb 2020 03:23:54 -0500
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xyhnkh2ce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Feb 2020 03:23:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R7Fd8vb2YbHIsIl0bPxg4zQLxnvOJQRO8N9FDr5yJw/SzqYXG+o97J7qWSKSuhcjghTJWwVqV3vBJVgiV3Atep0cr1bgnxH46qmEvB8j1ZO+CY2AhXWfPlKOL6KqrHEXpuhbovbzQ8CqHmC2es7NBlM2ikv9iQwgNm7s6yqzH3vdCd7lrmeCDunlv53ToxBhaMUJMXCRv04VftqRJrp/FgSpqACyxv2nYLrz2h9NXoWmpsjLlLfBRWM31FHLjHyfewg5UnuI19/49m8loQDpRYekDuY4Y1WtAhbOhYqQTa2pWV54ATE7PBnAfZfrJpkYEiKwXnRqRZhvuw8s3EbZLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zl/49nzQFONtERwbqS3//pKrqu3jkpIMrb9X7i7bI/o=;
+ b=QMREJyJKt6L6pYD6MqS7ug/yKsBnGvPz1YrBXs7QgUJac+qa0en1HSky5V4jb8V/WmJzc9pznuajiBskOvyyEE5r9M46wDU6fp+bwO+x2zUCm/cVDqzGi8fU2ZCM/VciwLNQBiKcCoyC8kKQHQ6KlnQtlS7q29cM33rKAn6bZeq1cJHSm+Od2CCeB36kSVD8wEW1Xf9NmigL7U+LVmCZkeWHfjZ+WU7FN/SpX3a1Goc24i/WMZ0asYu5M1L4bwYATkVwPNF+g7yTuUKuAoy3ApeDG+h0aFVcaOoYUTfqfD3okn9Jevpve8/sOGUYcByvMx5Au3ogm6/1vCdWtlOsEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zl/49nzQFONtERwbqS3//pKrqu3jkpIMrb9X7i7bI/o=;
+ b=9qtwQyVqxzwdU/67Kh8DYf6dIHbLViDWLofwUm+zQJyFOCU5mUbBs9lPCnt9pVx2V0TuFCO9X6hSgbzde72KENG4cWPPZQlJtPFvLWJXfEupoR5UoMMLijwFPqwPSOCfX5ej0tYMyUoNJC9qYHZ7xNsNOGzyx/bOmte6yUNY5FM=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5303.namprd03.prod.outlook.com (20.180.14.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Wed, 5 Feb 2020 08:23:53 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::dce7:7fec:f33f:ad39]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::dce7:7fec:f33f:ad39%7]) with mapi id 15.20.2686.031; Wed, 5 Feb 2020
+ 08:23:53 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "patrick.vasseur@c-s.fr" <patrick.vasseur@c-s.fr>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "hennerich@waws-prod-bn1-047.cloudapp.net" 
+        <hennerich@waws-prod-bn1-047.cloudapp.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "djunho@gmail.com" <djunho@gmail.com>
+Subject: Re: [PATCH] dt-bindings: iio: adc: ad7923: Add dt-bindings for AD7928
+Thread-Topic: [PATCH] dt-bindings: iio: adc: ad7923: Add dt-bindings for
+ AD7928
+Thread-Index: AQHV27pETiAC0b8bxkCCrlA8zk5tC6gMRHUA
+Date:   Wed, 5 Feb 2020 08:23:52 +0000
+Message-ID: <b808cd095dd290ce3cf8ec6934f92edb2f94954e.camel@analog.com>
+References: <20200205002121.30941-1-djunho@padtec.com.br>
+In-Reply-To: <20200205002121.30941-1-djunho@padtec.com.br>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 25a269b8-7c42-4a5f-f193-08d7aa14bc4a
+x-ms-traffictypediagnostic: CH2PR03MB5303:
+x-microsoft-antispam-prvs: <CH2PR03MB5303C2C9C931F433E353B8F8F9020@CH2PR03MB5303.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0304E36CA3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(136003)(39860400002)(376002)(189003)(199004)(6486002)(26005)(186003)(5660300002)(316002)(2616005)(110136005)(36756003)(6512007)(8936002)(66476007)(81166006)(2906002)(966005)(66446008)(66556008)(64756008)(76116006)(478600001)(81156014)(71200400001)(66946007)(6506007)(8676002)(7416002)(86362001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5303;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qMobQdz9xWWvvW3SG6O04kRU9L02/04w8KtGv+vbDOUTiwhDrplJmg3TuGMfC5tTWYWrLSUV13JSewkRQe/tCk6RhCEEXh1Y+/iWRl+swbBhvhlnfaWSDLV6IKSGU68LyzZzwdC2/8H0qD2A2xn4ryy7m4T/WLLIfC+fEoOB85DNqLF/CFQ1/yR5aLX/rLTlAFENFQ9FjAezR6YZIfjZ/HYfx3OzEhSohYR2RKJI91tG/7/AZCWtaGTOF4/3tFFGmdo81SAbuJttU/QfxW0HNQkX2EaJ5jJm+QruCqn3V4ETFJP2AdyV/mpbmhEt4TDqMWSCy/JB6N93aWA8OnBgJohc+T0xUL2n//UjACBiMmLUklGzvqQRT7v5PKtcGvk9ZPZeX/TgUnyHhRyPPVbng7Wyx5t7TQXifHt9bZ7Npcf8i4aaEz98Cg4oOoOVekJFqwirCzSOdQoo0M8LpDDFIRuRPr4l5l8Qj2x1Ol4Z63ey60aexHVMQa9bWIYC5SpRW9Oo0xN+hPE2pJNc8QpyUrrO62m6ugFl50Dq1G0Yh4Yrz49xrEIRHrfNqeD1yBlwW8bcUFZZrlvryhAjgAM0UQ==
+x-ms-exchange-antispam-messagedata: /sXa9PsUFRRJrs2/2itm9uWUmSEuBJbTVEkNua6XykL7qNtgK2aLpuoWK3GHlJ+KCKWyC/YFb5t3znnaPJWOBRwUFvQI9B7LFsR6NNWPfOrFmN3D8Ms4SWLE8gKK4F7uwh1TxAhOqTz0BiJSEA0YeA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <54E124E65430FF45802BB883B34100C3@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25a269b8-7c42-4a5f-f193-08d7aa14bc4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2020 08:23:52.9110
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LYMe7gUGjY9gR7/rc4coj+t30Ex2CishYCjOiSOTaFeWMRQhvPJHb17ksaUagqF7QoBh/ge/i9DtLpsPGf2rYpkEo+dQxtdbqaMmZ7VGlyE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5303
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-05_02:2020-02-04,2020-02-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 clxscore=1011 suspectscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002050068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device like igb gets runtime suspended when there's no link partner. We
-can't get correct speed under that state:
-$ cat /sys/class/net/enp3s0/speed
-1000
-
-In addition to that, an error can also be spotted in dmesg:
-[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
-
-It's because the igb device doesn't get runtime resumed before calling
-get_link_ksettings().
-
-So let's use a new helper to call begin() and complete() like what
-dev_ethtool() does, to runtime resume/suspend or power up/down the
-device properly.
-
-Once this fix is in place, igb can show the speed correctly without link
-partner:
-$ cat /sys/class/net/enp3s0/speed
--1
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
- - Add a new helper with begin/complete and use it in net-sysfs.
-
- include/linux/ethtool.h |  4 ++++
- net/core/net-sysfs.c    |  4 ++--
- net/ethtool/ioctl.c     | 33 ++++++++++++++++++++++++++++++++-
- 3 files changed, 38 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-index 95991e4300bf..785ec1921417 100644
---- a/include/linux/ethtool.h
-+++ b/include/linux/ethtool.h
-@@ -160,6 +160,10 @@ extern int
- __ethtool_get_link_ksettings(struct net_device *dev,
- 			     struct ethtool_link_ksettings *link_ksettings);
- 
-+extern int
-+__ethtool_get_link_ksettings_full(struct net_device *dev,
-+				  struct ethtool_link_ksettings *link_ksettings);
-+
- /**
-  * ethtool_intersect_link_masks - Given two link masks, AND them together
-  * @dst: first mask and where result is stored
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 4c826b8bf9b1..a199e15a080f 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -201,7 +201,7 @@ static ssize_t speed_show(struct device *dev,
- 	if (netif_running(netdev)) {
- 		struct ethtool_link_ksettings cmd;
- 
--		if (!__ethtool_get_link_ksettings(netdev, &cmd))
-+		if (!__ethtool_get_link_ksettings_full(netdev, &cmd))
- 			ret = sprintf(buf, fmt_dec, cmd.base.speed);
- 	}
- 	rtnl_unlock();
-@@ -221,7 +221,7 @@ static ssize_t duplex_show(struct device *dev,
- 	if (netif_running(netdev)) {
- 		struct ethtool_link_ksettings cmd;
- 
--		if (!__ethtool_get_link_ksettings(netdev, &cmd)) {
-+		if (!__ethtool_get_link_ksettings_full(netdev, &cmd)) {
- 			const char *duplex;
- 
- 			switch (cmd.base.duplex) {
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index b987052d91ef..faeba247c1fb 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -420,7 +420,9 @@ struct ethtool_link_usettings {
- 	} link_modes;
- };
- 
--/* Internal kernel helper to query a device ethtool_link_settings. */
-+/* Internal kernel helper to query a device ethtool_link_settings. To be called
-+ * inside begin/complete block.
-+ */
- int __ethtool_get_link_ksettings(struct net_device *dev,
- 				 struct ethtool_link_ksettings *link_ksettings)
- {
-@@ -434,6 +436,35 @@ int __ethtool_get_link_ksettings(struct net_device *dev,
- }
- EXPORT_SYMBOL(__ethtool_get_link_ksettings);
- 
-+/* Internal kernel helper to query a device ethtool_link_settings. To be called
-+ * outside of begin/complete block.
-+ */
-+int __ethtool_get_link_ksettings_full(struct net_device *dev,
-+				      struct ethtool_link_ksettings *link_ksettings)
-+{
-+	int rc;
-+
-+	ASSERT_RTNL();
-+
-+	if (!dev->ethtool_ops->get_link_ksettings)
-+		return -EOPNOTSUPP;
-+
-+	if (dev->ethtool_ops->begin) {
-+		rc = dev->ethtool_ops->begin(dev);
-+		if (rc  < 0)
-+			return rc;
-+	}
-+
-+	memset(link_ksettings, 0, sizeof(*link_ksettings));
-+	rc = dev->ethtool_ops->get_link_ksettings(dev, link_ksettings);
-+
-+	if (dev->ethtool_ops->complete)
-+		dev->ethtool_ops->complete(dev);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL(__ethtool_get_link_ksettings_full);
-+
- /* convert ethtool_link_usettings in user space to a kernel internal
-  * ethtool_link_ksettings. return 0 on success, errno on error.
-  */
--- 
-2.17.1
-
+T24gVHVlLCAyMDIwLTAyLTA0IGF0IDIxOjIxIC0wMzAwLCBEYW5pZWwgSnVuaG8gd3JvdGU6DQo+
+IEZyb206IERhbmllbCBKdW5obyA8ZGp1bmhvQGdtYWlsLmNvbT4NCj4gDQo+IEFkZCBkZXZpY2Ug
+dHJlZSBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBBRDc5MjMgYWRjIGluIFlBTUwgZm9ybWF0
+Lg0KPiANCj4gVGVzdGVkIHdpdGg6DQo+IG1ha2UgQVJDSD1hcm0gZHRfYmluZGluZ19jaGVjaw0K
+PiBEVF9TQ0hFTUFfRklMRVM9RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9h
+ZGMvYWRpLGFkNzkyMy55YW1sDQo+IG1ha2UgQVJDSD1hcm0gZHRic19jaGVjaw0KPiBEVF9TQ0hF
+TUFfRklMRVM9RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvYWRpLGFk
+NzkyMy55YW1sDQo+IA0KDQpIZXksDQoNClNvbWUgY29tbWVudHMgaW5saW5lLg0KDQoNCj4gU2ln
+bmVkLW9mZi1ieTogRGFuaWVsIEp1bmhvIDxkanVuaG9AZ21haWwuY29tPg0KPiAtLS0NCj4gDQo+
+IEhpLA0KPiANCj4gSSBnb3QgbWFpbnRhaW5lcnMgZnJvbSB0aGUgZHJpdmVyIGF1dGhvcnMgbGlz
+dC4gTGV0IG1lIGtub3cgaWYgdGhpcyBpcw0KPiBmaW5lLg0KPiANCj4gVGhhbmtzLg0KPiANCj4g
+IC4uLi9iaW5kaW5ncy9paW8vYWRjL2FkaSxhZDc5MjMueWFtbCAgICAgICAgICB8IDY1ICsrKysr
+KysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA2NSBpbnNlcnRpb25zKCspDQo+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9h
+ZGMvYWRpLGFkNzkyMy55YW1sDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvYWRpLGFkNzkyMy55YW1sDQo+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvYWRpLGFkNzkyMy55YW1sDQo+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uODA5NzQ0MWM5N2JlDQo+IC0tLSAv
+ZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9h
+ZGMvYWRpLGFkNzkyMy55YW1sDQo+IEBAIC0wLDAgKzEsNjUgQEANCj4gKyMgU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KDQpMaWNlbnNlIGhlYWRlciBzaG91bGQgYmU6DQoj
+IFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZSkN
+Cg0KDQo+ICslWUFNTCAxLjINCj4gKy0tLQ0KPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcv
+c2NoZW1hcy9paW8vYWRjL2FkaSxhZDc5MjMueWFtbCMNCj4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZp
+Y2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPiArDQo+ICt0aXRsZTogQW5hbG9n
+IERldmljZXMgQUQ3OTIzIGFuZCBzaW1pbGFycyB3aXRoIDQgYW5kIDggQ2hhbm5lbCBBRENzLg0K
+PiArDQo+ICttYWludGFpbmVyczoNCj4gKyAgLSBNaWNoYWVsIEhlbm5lcmljaCA8aGVubmVyaWNo
+QGJsYWNrZmluLnVjbGludXgub3JnPiINCg0KRm9yIE1pY2hhZWwsIGVtYWlsIG5vdyBpczogIG1p
+Y2hhZWwuaGVubmVyaWNoQGFuYWxvZy5jb20gDQpUaGF0IGVtYWlsIG1heSBzdGlsbCB3b3JrLCBi
+dXQgZm9yIG5ldyBzdHVmZiwgaXQgc2hvdWxkIGJlIHVwZGF0ZWQuDQoNCj4gKyAgLSBQYXRyaWNr
+IFZhc3NldXIgPHBhdHJpY2sudmFzc2V1ckBjLXMuZnI+Ig0KPiArDQo+ICtkZXNjcmlwdGlvbjog
+fA0KPiArICBBbmFsb2cgRGV2aWNlcyBBRDc5MDQsIEFENzkxNCwgQUQ3OTIzLCBBRDc5MjQgNCBD
+aGFubmVsIEFEQ3MsIGFuZCBBRDc5MDgsDQo+ICsgICBBRDc5MTgsIEFENzkyOCA4IENoYW5uZWxz
+IEFEQ3MuDQo+ICsNCj4gKyAgU3BlY2lmaWNhdGlvbnMgYWJvdXQgdGhlIHBhcnQgY2FuIGJlIGZv
+dW5kIGF0Og0KPiArICAgIA0KPiBodHRwczovL3d3dy5hbmFsb2cuY29tL21lZGlhL2VuL3RlY2hu
+aWNhbC1kb2N1bWVudGF0aW9uL2RhdGEtc2hlZXRzL0FENzkyMy5wZGYNCj4gKyAgICANCj4gaHR0
+cHM6Ly93d3cuYW5hbG9nLmNvbS9tZWRpYS9lbi90ZWNobmljYWwtZG9jdW1lbnRhdGlvbi9kYXRh
+LXNoZWV0cy9BRDc5MDRfNzkxNF83OTI0LnBkZg0KPiArICAgIA0KPiBodHRwczovL3d3dy5hbmFs
+b2cuY29tL21lZGlhL2VuL3RlY2huaWNhbC1kb2N1bWVudGF0aW9uL2RhdGEtc2hlZXRzL0FENzkw
+OF83OTE4Xzc5MjgucGRmDQo+ICsNCj4gK3Byb3BlcnRpZXM6DQo+ICsgIGNvbXBhdGlibGU6DQo+
+ICsgICAgZW51bToNCj4gKyAgICAgIC0gYWRpLGFkNzkwNA0KPiArICAgICAgLSBhZGksYWQ3OTE0
+DQo+ICsgICAgICAtIGFkaSxhZDc5MjMNCj4gKyAgICAgIC0gYWRpLGFkNzkyNA0KPiArICAgICAg
+LSBhZGksYWQ3OTA4DQo+ICsgICAgICAtIGFkaSxhZDc5MTgNCj4gKyAgICAgIC0gYWRpLGFkNzky
+OA0KPiArDQo+ICsgIHJlZzoNCj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIHJlZmluLXN1
+cHBseToNCj4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiArICAgICAgVGhlIHJlZ3VsYXRvciBzdXBw
+bHkgZm9yIEFEQyByZWZlcmVuY2Ugdm9sdGFnZS4NCj4gKw0KPiArICAnI2FkZHJlc3MtY2VsbHMn
+Og0KPiArICAgIGNvbnN0OiAxDQo+ICsNCj4gKyAgJyNzaXplLWNlbGxzJzoNCj4gKyAgICBjb25z
+dDogMA0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAgLSBjb21wYXRpYmxlDQo+ICsgIC0gcmVnDQo+
+ICsNCj4gK2V4YW1wbGVzOg0KPiArICAtIHwNCj4gKyAgICBzcGkgew0KPiArICAgICAgI2FkZHJl
+c3MtY2VsbHMgPSA8MT47DQo+ICsgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKw0KPiArICAg
+ICAgYWQ3OTI4OiBhZGNAMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkNzkyOCI7
+DQo+ICsgICAgICAgIHJlZyA9IDwwPjsNCj4gKyAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8
+MjUwMDAwMDA+Ow0KPiArICAgICAgICByZWZpbi1zdXBwbHkgPSA8JmFkY192cmVmPjsNCj4gKw0K
+PiArICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKyAgICAgICAgI3NpemUtY2VsbHMg
+PSA8MD47DQo+ICsgICAgICB9Ow0KPiArICAgIH07DQo=
