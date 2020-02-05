@@ -2,104 +2,175 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745AFC3524B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB0C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD68214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:11:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="khBX16i5"
+	by mail.kernel.org (Postfix) with ESMTP id 74A41214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgBECLD (ORCPT
+        id S1727820AbgBECNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 21:11:03 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46974 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbgBECLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 21:11:03 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 015297hc172996;
-        Wed, 5 Feb 2020 02:10:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=WTxvDcELfnF6+kyZJkHVSDKOjDn1Mu05lE76QB+AYnA=;
- b=khBX16i5gBh8xA8zLYM1AJW9TKme7kfJ+2pMQBFgVLj335if9R4Yq3e3SFb27hXdgLAs
- 8Q4qUGOOpWSLLKM9KDzVd4XDS6msZaA+g/0v1gOgKcbogwq6V8Kj2fICQpYwNkarCEoz
- L7IyEOlFqe1M9621Db1YCU3ZeHC5KRBiB5SMlrstlf3PUnOKZWl9SU+0OVewGwKnG+FI
- hKQqqmET2qciTZLfM5inAtgwzxFxFMAiYhjNypONNvfayUGO74lZMorUpV501RaOtJP5
- 2iC8RpAB0lTfMR3uZ0ecOc1oW8KgTNNVtis1iqWyvjPcSPz1Po8x3KebzE1j2yXHh8tN Sg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xykbp87uf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 02:10:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01529BlJ130653;
-        Wed, 5 Feb 2020 02:10:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xykc04rj0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 02:10:39 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0152AbU3030895;
-        Wed, 5 Feb 2020 02:10:37 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 18:10:37 -0800
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
-        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Subject: Re: [PATCH RESEND v3 0/4] MediaTek UFS vendor implemenation part III and Auto-Hibern8 fix
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200129105251.12466-1-stanley.chu@mediatek.com>
-Date:   Tue, 04 Feb 2020 21:10:32 -0500
-In-Reply-To: <20200129105251.12466-1-stanley.chu@mediatek.com> (Stanley Chu's
-        message of "Wed, 29 Jan 2020 18:52:47 +0800")
-Message-ID: <yq1ftfp238n.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 4 Feb 2020 21:13:47 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:55170 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727140AbgBECNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 21:13:47 -0500
+Received: from [192.168.68.106] (unknown [111.18.44.203])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX9zKJDpei4cMAA--.47S3;
+        Wed, 05 Feb 2020 10:13:32 +0800 (CST)
+Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
+To:     Jonas Gorski <jonas.gorski@gmail.com>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jean Delvare <jdelvare@suse.de>
+References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAOiHx==FfiQoFA9cESSni_izS=m+mm7G+gk_tei5XFnKrgurew@mail.gmail.com>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <10732371-fbd1-e9f3-6fed-7821a3ce4847@loongson.cn>
+Date:   Wed, 5 Feb 2020 10:13:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002050015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002050015
+In-Reply-To: <CAOiHx==FfiQoFA9cESSni_izS=m+mm7G+gk_tei5XFnKrgurew@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID: AQAAf9DxX9zKJDpei4cMAA--.47S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFyxWw4fKw43Wr13GF4DJwb_yoWrJr4xpa
+        18JanYkrWkJF1fGw4fZ34xuryYkrZ3Kr98uFy3J3WUu3s8u34jvrs7Ar1I9FyDJr4kGw10
+        vr1a9F4UuayDuFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j
+        6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+        BIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/3/20 10:46 PM, Jonas Gorski wrote:
+> Hi,
+>
+> On Thu, 16 Jan 2020 at 14:28, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+>> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+>> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+>> driver can easily match various of mainboards.
+>>
+>> In the SMBIOS reference specification, the table anchor string "_SM_" is
+>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+>> but there exists a special case for Loongson platform, when call function
+>> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+>> it is reserved for SMBIOS and can be normally access in the BIOS.
+>>
+>> This patch works fine on the Loongson 3A3000 platform which belongs to
+>> MIPS architecture and has no influence on the other architectures such
+>> as x86 and ARM.
+>>
+>> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+>> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+>> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> Reviewed-by: Huacai Chen <chenhc@lemote.com>
+>> ---
+>>
+>> v2:
+>>    - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
+>>    - refine definitions and Kconfig by Jiaxun
+>>
+>>   arch/mips/Kconfig           | 10 ++++++++++
+>>   arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
+>>   arch/mips/kernel/setup.c    |  2 ++
+>>   drivers/firmware/dmi_scan.c |  6 +++++-
+>>   4 files changed, 37 insertions(+), 1 deletion(-)
+>>   create mode 100644 arch/mips/include/asm/dmi.h
+>>
+>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>> index 4b83507..c097f78 100644
+>> --- a/arch/mips/Kconfig
+>> +++ b/arch/mips/Kconfig
+>> @@ -2773,6 +2773,16 @@ config HW_PERF_EVENTS
+>>            Enable hardware performance counter support for perf events. If
+>>            disabled, perf events will use software events only.
+>>
+>> +config DMI
+>> +       default y if MACH_LOONGSON64
+>> +       select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+>> +       bool "Enable DMI scanning"
+> Is this option harmless to enable for other MIPS platforms? What
+> happens if it is enabled on devices where PHYS_OFFSET isn't 0, so
+> 0xF0000 is likely not backed by anything and accessing it might hang
+> the system?
+>
+> This probably should depend on MACH_LOONGSON64.
 
-Stanley,
 
-> v3 (Resend) - Fix "Fixes" tag in patch "scsi: ufs: fix Auto-Hibern8
-> error detection" (Greg KH)
+Hi Jonas,
 
-Next time, if you make changes, please bump the version number. Doesn't
-matter how small the change is.
+Thanks for your reply and suggestion.
 
-Applied to 5.7/scsi-queue. Thanks!
+With the current patch, on the MIPS architecture, the DMI option is
+default y only if MACH_LOONGSON64 is set, otherwise it is not set.
+When enable DMI manually on the MIPS platform which is not LOONGSON64,
+the SMBIOS_ENTRY_POINT_SCAN_START is 0xF0000, dmi_early_remap() will
+return NULL and goto err to print "DMI not present or invalid."
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+static void __init dmi_scan_machine(void)
+{
+...
+         p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
+         if (p == NULL)
+             goto error;
+...
+  error:
+     pr_info("DMI not present or invalid.\n");
+}
+
+It seems harmless and the system can boot successful. However, in order
+to avoid the unknown risks on the mips platform which is not LOONGSON64,
+I think it is better to depend on MACH_LOONGSON64.
+
+config DMI
+     bool "Enable DMI scanning"
+     depends on MACH_LOONGSON64
+     select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+     default y
+
+If other mips platform also needs this DMI feature in the future,
+the "depends on" conditon can be modified.
+
+I will do it in the v3 patch.
+
+
+Thanks,
+
+
+Tiezhu Yang
+
+
+>
+> Regards
+>
+> Jonas
+
