@@ -2,190 +2,97 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC35C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D432C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127332072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DB1218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tUzYU7xP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgBEUlf (ORCPT
+        id S1727456AbgBEUlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 15:41:35 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726534AbgBEUlf (ORCPT
+        Wed, 5 Feb 2020 15:41:44 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43420 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbgBEUlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 15:41:35 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015Ke0oY113251
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Feb 2020 15:41:33 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xyhmh4mr8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:41:33 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 5 Feb 2020 20:41:31 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 5 Feb 2020 20:41:28 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 015KfRZD46268756
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Feb 2020 20:41:27 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 270A6AE04D;
-        Wed,  5 Feb 2020 20:41:27 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42953AE053;
-        Wed,  5 Feb 2020 20:41:26 +0000 (GMT)
-Received: from dhcp-9-31-103-105.watson.ibm.com (unknown [9.31.103.105])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Feb 2020 20:41:26 +0000 (GMT)
-Subject: Re: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        James.Bottomley@HansenPartnership.com,
-        jarkko.sakkinen@linux.intel.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Wed, 05 Feb 2020 15:41:25 -0500
-In-Reply-To: <20200205103317.29356-3-roberto.sassu@huawei.com>
-References: <20200205103317.29356-1-roberto.sassu@huawei.com>
-         <20200205103317.29356-3-roberto.sassu@huawei.com>
+        Wed, 5 Feb 2020 15:41:44 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so3270217oth.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 12:41:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C80FvtF14u18Q5GuI4vN3cPxQNFCTPS0fGip7F+rzSA=;
+        b=tUzYU7xPl+51dvzEMgLEd/cCMubfaL8ywjSse0rY7RFkACLPYA4FOyxZvncSztxGfm
+         jFsPLMfKId7jpqzuZVxT2EFmuMLwh+x8Uzd2b6p6oOpYZTrPVrxfRUoUs9SiWeil9MEl
+         yg3G0cSD2guGQ453ii26L+O3hPobLCKda6c5k48Srl5Yl0CLV7URwPTuaaKYCo+W82Uw
+         zYcfpRpIMGhr7SSz87faIU23uuVkeMhwdM06oNRgj2Hb9/VE/+uxfuAdOGmHUe/euw8X
+         cH3J+NDend/xp57RcU74XjqeczV2W7ypldS6fRitxcboaDc5T8+C/X2ZQRo1+uH4ScSX
+         IPoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C80FvtF14u18Q5GuI4vN3cPxQNFCTPS0fGip7F+rzSA=;
+        b=qdBt2/hZa0HdZFkH8intnAOexMul0m/AVQLiWz1j2+NLZ+IHyTfkS5DNtNVI/hgxI7
+         qGzFXW7pfIzCy97hW4E55M9HNU9KJ+4DhmxjZki0c09KpRmVPW46BJIQ9MUarsfUK5g7
+         rJY5hQs7rIA0sZSwa9AkRiMb3N5xLghCw42nyT10xnnmJWKF4hHNkeNl3DTV4atSE6i2
+         r0adNo8SZmLNnksbJNefKZMkRp3JxYy0GgV8Atez27Y2sYXb9AdkfHIWAYvSMGZ5LbFK
+         Xk/+Q+ccohfIDeydDaHzs59FQNW3E1nAZb2EYdfQNppaxTDv3JfceDO2wDwtSGz/H1cv
+         tFIQ==
+X-Gm-Message-State: APjAAAWMzMpvcYCr0B71CiLAATcT54ViOUXrcX79l4owWO0YZoxAruaZ
+        vB4GbnvJUl249ApB35PvkhdInpSG3G2dAmOrbpRmoA==
+X-Google-Smtp-Source: APXvYqy9KjEBmSX5NkhLfBxg20I2V+XHYQ3xYGJSq4SDwQ1CyKJCQ+J9WrP3E0MhyV/DgPruw7w2Y2qCsPlY5jZD2/4=
+X-Received: by 2002:a9d:7493:: with SMTP id t19mr14867146otk.332.1580935303244;
+ Wed, 05 Feb 2020 12:41:43 -0800 (PST)
+MIME-Version: 1.0
+References: <1580838148-2981-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1580838148-2981-1-git-send-email-jcrouse@codeaurora.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 5 Feb 2020 12:41:32 -0800
+Message-ID: <CALAqxLX73PWJUFB1g2_nkdanGvCXJJDznwMUwjN2x5AiAJ=Ppg@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/a6xx: Remove unneeded GBIF unhalt
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020520-0012-0000-0000-0000038408C2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020520-0013-0000-0000-000021C07466
-Message-Id: <1580935285.5585.297.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_06:2020-02-04,2020-02-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- suspectscore=11 spamscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxscore=0
- clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002050158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-05 at 11:33 +0100, Roberto Sassu wrote:
-> boot_aggregate is the first entry of IMA measurement list. Its purpose is
-> to link pre-boot measurements to IMA measurements. As IMA was designed to
-> work with a TPM 1.2, the SHA1 PCR bank was always selected.
-> 
-> Currently, even if a TPM 2.0 is used, the SHA1 PCR bank is selected.
-> However, the assumption that the SHA1 PCR bank is always available is not
-> correct, as PCR banks can be selected with the PCR_Allocate() TPM command.
-> 
-> This patch tries to use ima_hash_algo as hash algorithm for boot_aggregate.
-> If no PCR bank uses that algorithm, the patch tries to find the SHA256 PCR
-> bank (which is mandatory in the TCG PC Client specification). If also this
-> bank is not found, the patch selects the first one. If the TPM algorithm
-> of that bank is not mapped to a crypto ID, boot_aggregate is set to zero.
-> 
-> Changelog
-> 
-> v1:
-> - add Mimi's comments
-> - if there is no PCR bank for the IMA default algorithm use SHA256 or the
->   first bank (suggested by James Bottomley)
+On Tue, Feb 4, 2020 at 9:42 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") added a
+> universal GBIF un-halt into a6xx_start(). This can cause problems for
+> a630 targets which do not use GBIF and might have access protection
+> enabled on the region now occupied by the GBIF registers.
+>
+> But it turns out that we didn't need to unhalt the GBIF in this path
+> since the stop function already takes care of that after executing a flush
+> but before turning off the headswitch. We should be confident that the
+> GBIF is open for business when we restart the hardware.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-If the IMA default hash algorithm is not enabled, James' comment was
-to use SHA256 for TPM 2.0 and SHA1 for TPM 1.2.  I don't remember him
-saying anything about using the first bank, that was in v1 of my
-patch.  Please refer to v2 of my patch, based on James' comments.
+Sorry, yesterday got busy with other things and I didn't get around to
+testing your patch, but I have tested earlier with my own patch which
+is identical:
+  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/db845c-mainline-WIP&id=4e6a2e84dd77fe74faa1a6b797eb0ee7bf11ffd7
 
-> 
-> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Cc: stable@vger.kernel.org
-> ---
->  security/integrity/ima/ima_crypto.c | 45 +++++++++++++++++++++++++----
->  security/integrity/ima/ima_init.c   | 22 ++++++++++----
->  2 files changed, 56 insertions(+), 11 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-> index 73044fc6a952..f2f41a2bc3d4 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -655,18 +655,29 @@ static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
->  }
->  
->  /*
-> - * Calculate the boot aggregate hash
-> + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
-> + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but with
-> + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
-> + * allowing firmware to configure and enable different banks.
-> + *
-> + * Knowing which TPM bank is read to calculate the boot_aggregate digest
-> + * needs to be conveyed to a verifier.  For this reason, use the same
-> + * hash algorithm for reading the TPM PCRs as for calculating the boot
-> + * aggregate digest as stored in the measurement list.
->   */
-> -static int __init ima_calc_boot_aggregate_tfm(char *digest,
-> +static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
->  					      struct crypto_shash *tfm)
->  {
-> -	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
-> +	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
->  	int rc;
->  	u32 i;
->  	SHASH_DESC_ON_STACK(shash, tfm);
->  
->  	shash->tfm = tfm;
->  
-> +	pr_devel("calculating the boot-aggregate based on TPM bank: %04x\n",
-> +		 d.alg_id);
-> +
+So, I think I can safely add:
+Tested-by: John Stultz <john.stultz@linaro.org>
 
-Good
-
->  	rc = crypto_shash_init(shash);
->  	if (rc != 0)
->  		return rc;
-> @@ -675,7 +686,8 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
->  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
->  		ima_pcrread(i, &d);
->  		/* now accumulate with current aggregate */
-> -		rc = crypto_shash_update(shash, d.digest, TPM_DIGEST_SIZE);
-> +		rc = crypto_shash_update(shash, d.digest,
-> +					 crypto_shash_digestsize(tfm));
->  	}
->  	if (!rc)
->  		crypto_shash_final(shash, digest);
-> @@ -685,14 +697,35 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
->  int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
->  {
-> 
-< snip >
->  
->  	hash->length = crypto_shash_digestsize(tfm);
-> -	rc = ima_calc_boot_aggregate_tfm(hash->digest, tfm);
-> +	alg_id = ima_tpm_chip->allocated_banks[bank_idx].alg_id;
-> +	rc = ima_calc_boot_aggregate_tfm(hash->digest, alg_id, tfm);
-
-Sure, backporting this change to ima_calc_boot_aggregate_tfm() should
-be fine.
-
-Mimi
-
->  	ima_free_tfm(tfm);
->  
-
+Thanks so much for the quick turnaround on this!
+-john
