@@ -2,111 +2,123 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27198C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F46BC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE05922464
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C0521744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VT9hTnG+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Hll0/GjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgBEAgf (ORCPT
+        id S1727778AbgBEAiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:36:35 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36437 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727644AbgBEAge (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:36:34 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r19so541455ljg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 16:36:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MjWXCXEdOOwOMkJJTNAHcUDq4zVsPSajy/GXrZmEiag=;
-        b=VT9hTnG+dCpN1oUkTy15tykgYxQNI3vmF23pTk/136wicIDfFXnU1lBcH6cchRsKpj
-         bSE7kppl3FvhhKU2qOSlNuQ01A213YcbbvQtFqQMtuUoH8Pc7or8v4KxolAK6vp21o8N
-         AQKDmeLLPLIAIT3qI/FHSsJCREix1XNwkRx2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MjWXCXEdOOwOMkJJTNAHcUDq4zVsPSajy/GXrZmEiag=;
-        b=Pj6fN02I6tqlZYoGb4K1Xfyi3HpicFALLnRr//W7XKko3fNzfhDQOQDJXjRj1qVIfR
-         p0SnySY3OPLylPovLO1wNJYgtWlT2wNrwa/14916e8CPudI4QrpITH1/lvi5hkyj86+l
-         7ERazLXc8m8Es1ccJT/bhYHwHwJ4Uw+AGUD46ycYGtG/y93zTS2AgCTV3Hood+g5tVnn
-         m+Pg9I4YfEfvb/XYWgR+T84rT9cHCF71OYByy73zEMtIoI5jBQqRaU5z/YmTleKRh4GS
-         r7oQ1BO676n9xCUvSH+IwJi9I3/PrcrhqPcnuvkjyRTW3tl4euCl28T5jktVH8JR+Mwx
-         h6eA==
-X-Gm-Message-State: APjAAAUFwjD7NzRZPtXJFd2QYU0/7VJC51muPZgzueM66szbAbxgWVP+
-        Snfu7YfFdGPDBzVtfVMORMFGJbDkBh0=
-X-Google-Smtp-Source: APXvYqwJw5hJDHqDnfRpbBRNb8GcEWu71ppz7NOv6d5md4IkRXyPcfNI9pE+whVaksEnyz73A0VqvA==
-X-Received: by 2002:a2e:80cc:: with SMTP id r12mr18013940ljg.154.1580862991840;
-        Tue, 04 Feb 2020 16:36:31 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id 135sm11336337lfb.28.2020.02.04.16.36.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 16:36:31 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id q8so552441ljb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 16:36:30 -0800 (PST)
-X-Received: by 2002:a2e:3e10:: with SMTP id l16mr18417534lja.286.1580862990119;
- Tue, 04 Feb 2020 16:36:30 -0800 (PST)
+        Tue, 4 Feb 2020 19:38:02 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47467 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727644AbgBEAiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 19:38:02 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48C2j223psz9sSN;
+        Wed,  5 Feb 2020 11:37:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580863079;
+        bh=D4ySHA1AZdixCqz+gphCjWo5PwSShyuxhG5htucJUPs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Hll0/GjARY18lDVuv/HjMGHWHf7qmMgcjP2k+i4xyHJOjpH9Coq/3bXzizD4td1kl
+         gnmuBBC9WXKxOTQ358RMfpH7OCuFFTlRNfQOCYZCQBTaNeiodRJxXZ0tn9xCinT8dD
+         jKXjvdxz+WR1jn5KHZrq0D6Yz2qFB2BFQjxeImE3G5aEItXCh+ytYyANfxCKp2N3NR
+         MZIOHxr2u4no0TP6BG8sMYITVaqSSuBoVtT1P0TlEKQ6mZLX9iqziBTHskZyGF7mIH
+         PzSKtSe3sQmnpqw35+XG5iKSE9a3OUXdc+RfSSjnUVDFfnrjjv73ZD+EN8Zlg0J86z
+         f0whArJZLCejw==
+Date:   Wed, 5 Feb 2020 11:37:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ASoC: wcd934x: Add missing COMMON_CLK dependency
+Message-ID: <20200205113755.7daca1f1@canb.auug.org.au>
+In-Reply-To: <CAMuHMdVw0crXH+=7e9GGLUR-c-SxZDz9kQdeWxkZyZ9Jx7CVig@mail.gmail.com>
+References: <20200204111241.6927-1-srinivas.kandagatla@linaro.org>
+        <CAMuHMdVw0crXH+=7e9GGLUR-c-SxZDz9kQdeWxkZyZ9Jx7CVig@mail.gmail.com>
 MIME-Version: 1.0
-References: <1580796831-18996-1-git-send-email-mkshah@codeaurora.org> <1580796831-18996-2-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1580796831-18996-2-git-send-email-mkshah@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 4 Feb 2020 16:35:53 -0800
-X-Gmail-Original-Message-ID: <CAE=gft6DCqmX8=cHWXNeOjSTuRHL23t7+b_GZOrvUJAPfhVD8A@mail.gmail.com>
-Message-ID: <CAE=gft6DCqmX8=cHWXNeOjSTuRHL23t7+b_GZOrvUJAPfhVD8A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] soc: qcom: rpmh: Update dirty flag only when data changes
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/_1_fW9as_IaoGbJacvoUTVq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 10:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Currently rpmh ctrlr dirty flag is set for all cases regardless
-> of data is really changed or not.
->
-> Add changes to update it when data is updated to new values.
->
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/soc/qcom/rpmh.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index 035091f..c3d6f00 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->  existing:
->         switch (state) {
->         case RPMH_ACTIVE_ONLY_STATE:
-> -               if (req->sleep_val != UINT_MAX)
-> +               if (req->sleep_val != UINT_MAX) {
->                         req->wake_val = cmd->data;
-> +                       ctrlr->dirty = true;
-> +               }
+--Sig_/_1_fW9as_IaoGbJacvoUTVq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Don't you need to set dirty = true for ACTIVE_ONLY state always? The
-conditional is just saying "if nobody set a sleep vote, then maintain
-this vote when we wake back up".
+Hi Geert,
+
+On Tue, 4 Feb 2020 14:21:01 +0100 Geert Uytterhoeven <geert@linux-m68k.org>=
+ wrote:
+>
+> On Tue, Feb 4, 2020 at 12:14 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+> > Looks like some platforms are not yet using COMMON CLK.
+> >
+> > PowerPC allyesconfig failed with below error in next
+> >
+> > ld: sound/soc/codecs/wcd934x.o:(.toc+0x0):
+> >          undefined reference to `of_clk_src_simple_get'
+> > ld: sound/soc/codecs/wcd934x.o: in function `.wcd934x_codec_probe':
+> > wcd934x.c:(.text.wcd934x_codec_probe+0x3d4):
+> >          undefined reference to `.__clk_get_name'
+> > ld: wcd934x.c:(.text.wcd934x_codec_probe+0x438):
+> >          undefined reference to `.clk_hw_register'
+> > ld: wcd934x.c:(.text.wcd934x_codec_probe+0x474):
+> >          undefined reference to `.of_clk_add_provider'
+> >
+> > Add the missing COMMON_CLK dependency to fix this errors.
+> >
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> =20
+>=20
+> Thanks for your patch!
+>=20
+> But did this change really fix your PowerPC allyesconfig build?
+
+It does not :-(
+
+> SND_SOC_ALL_CODECS will still select it...
+>=20
+> Fix sent.
+
+I have applied that patch to linux-next today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_1_fW9as_IaoGbJacvoUTVq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl46DmMACgkQAVBC80lX
+0Gx/DggAj9lmiFpTN+bBrorpgSuNVYj4avD/gKtS0FdPBJaSx+Xqeux+QRyKUfyr
+gJ/XgiVrgJAYPxUrXsMJUm2TWRYRQVlgkBqr94OD+hE1WnB0/pIwA5IIaEKXX/lW
+UJcfm+fj5tXfolbKJA0rZAYtSOR5lBEH+cyuSMs2oIZKBUkqOmTFxWkHoQhVT0si
+f+NDywZ1q7CarhMmnStOoZerBuDpdz+j7wzpreedebU+m/VSEJA1Kt33/RsAqLUF
+uGctV/gbqqgVtiY0d0dULjpyrD7FswfK6GurAVrycpFyJvKda0bqiE7QV96S3Qdz
+e1ZbwL6QKEXK+754qrD4/9IebKFnsQ==
+=z7P8
+-----END PGP SIGNATURE-----
+
+--Sig_/_1_fW9as_IaoGbJacvoUTVq--
