@@ -2,294 +2,165 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A55AC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6266C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DF6217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580927482;
-	bh=C0LmwRRDO6V9aBNMwOg6TmriDbDymklxGiZ5xV5e6GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Di++mgKkjlQotidETDMfx83CN8E/vnEbFaGCQ0oU0NJ6ZsUkjl8EgABTOd3A8r/fW
-	 ncwU0PdK8XlJ6W7ie8U7w7c11AOttBcTtNFAN54OIXfIE7kJj0XH1BEAFu7l3rvTvK
-	 gV1XyF+w1d7kYBcoDIxquLGtoYgp6/JIhwEFwUoo=
+	by mail.kernel.org (Postfix) with ESMTP id 87B6220674
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="a3ngBNZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgBESbV (ORCPT
+        id S1727309AbgBESnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:31:21 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34954 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBESbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:31:21 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b17so4062413wmb.0;
-        Wed, 05 Feb 2020 10:31:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6Wdi1Nw0TkbyvcKynPsbbC+SOzflRd/srDAI90XenZE=;
-        b=GWq+dEQUXJlz0Ac+2OGlrCSA6NW0bLszpGjJr6FLbFDw++7/B6JfgfKK7JXW6xDEpX
-         ClPgg42p8WWlk9HzWIhhrV32VNGmYuXrkdQf/XzhwsZfAofY5hOBb+v8qilBqdmKDpzG
-         MwOIUreO71vfHNXJpKFEjOyxR+cHOCziD9JZiX8TFoEaulY7ShbR6XbAgdrDyX7FEJH6
-         GmrNP3GMXU4XrP+hcA3a0MStjOv4mX+mr2EBYqxMYU++WncDWNgl/mTmxL/6k1iQzmWi
-         C2MOqzgwS9+uRQHiPwXRlIk5kLuiXkz4Haf0DHFXLIjC8DvYWGXlB+dMdmxEHxTk512V
-         R27g==
-X-Gm-Message-State: APjAAAXLW1cn8gPe47zCVGovYuTW8Im5cPf2QmoCtt3YtVDdGf4OtOQq
-        ujeghYlm2fD/rmQrGLvJWA==
-X-Google-Smtp-Source: APXvYqyn42Q1ovkJ2Lu+d8qWkUbTjADyn1vtAXRSpRxtBayMzNNVpcCMSU3WQqP8Tvcd/ZzJv+vAIw==
-X-Received: by 2002:a1c:e388:: with SMTP id a130mr6975762wmh.176.1580927476553;
-        Wed, 05 Feb 2020 10:31:16 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id k13sm732442wrx.59.2020.02.05.10.31.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 10:31:15 -0800 (PST)
-Received: (nullmailer pid 351 invoked by uid 1000);
-        Wed, 05 Feb 2020 18:31:14 -0000
-Date:   Wed, 5 Feb 2020 18:31:14 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Kociolek <konrad@cadence.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Add dt-bindings for Cadence XSPI controller
-Message-ID: <20200205183114.GA23752@bogus>
-References: <20200128124313.12837-1-konrad@cadence.com>
+        Wed, 5 Feb 2020 13:43:00 -0500
+Received: from mout.gmx.net ([212.227.15.15]:47867 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727033AbgBESnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:43:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1580928165;
+        bh=QB2JA70Yoel/lOGMwX7Gp3bN7HfJIhMZjb14SZXE2GA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=a3ngBNZzaFTkt4Ad4nczrW3cIIgpFf7iPrDTec0SyEeUQh0SLgfOMrA+jld6eiYAe
+         f7QLXcMFOyvErJfpqS4CZoWhnr+G1HpVPGmFr3nPgn9mvf04s2vjRXLWifHQMIptxm
+         QZdDWCr5o4YmO4RIELtPliQpN6QXSJExMiTWr/Ig=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.183] ([37.4.249.146]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUGe1-1j7Uec2F51-00RGAw; Wed, 05
+ Feb 2020 19:42:45 +0100
+Subject: Re: [PATCH 6/6] net: bcmgenet: reduce severity of missing clock
+ warnings
+To:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-7-jeremy.linton@arm.com>
+ <2dfd6cd2-1dd0-c8ff-8d83-aed3b4ea7a79@gmx.net>
+ <34aba1d9-5cad-0fee-038d-c5f3bfc9ed30@arm.com>
+ <45e138de5ddd70e8033bdef6484703eed60a9cb7.camel@suse.de>
+ <70a6ad63-dccc-e595-789d-800484197bbe@gmx.net>
+ <e5be3a95-0b7e-370a-2d65-fdeabbdfa187@broadcom.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <5523ee3b-b65a-8096-c9a5-dd990cb7080a@gmx.net>
+Date:   Wed, 5 Feb 2020 19:42:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128124313.12837-1-konrad@cadence.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5be3a95-0b7e-370a-2d65-fdeabbdfa187@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:byecORi8TWXhBfHT5p8Szo7iz30enBq9Jm2NmCJmJ8zcdNietdK
+ ydDMgge4TPXxs8hzagm3Yt4RQ4ETIXQt50mx47YgDpK2El7uwpPMI0lXC94d51fQDjw7a/I
+ e8kELrv+k6wSPP779xOXo/2iueREqQ9W+hOf0USHDDWKd5ckeqk623LbqVAC72yM2yTNKPF
+ RNJRtQ9m9PK7SPY4CNvkQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5sDQ1FJ6zCE=:lIqGyzQ9kktUgn/Wk0HTqF
+ 77WBl0zd+15O4OgV2gQL2H15y9yBQyJR6/he+M0SVHNjJWCea70FaWoSfoA61sksH/YmHjEUa
+ hOMK3YF22f93ri9/hhmwFrIc3XPeIvYWzL9foEqEuRWJmnlaHpodpKYZ8pRa4Zy1LxDjiYySG
+ VWFcOUI/nllFjYxVvmnSyigHHpZhcFHBeE2mVOzhYbkjpSYVMZOtHiVfWfQ7moUc8VY9+u1Xf
+ qSKtwqVUng8lKfSfkt2hE6CD1+l+K9YB9G/cvSdg4A9pvIgTAPTNElwvUx8zJuAZ/hX14R44i
+ IfV7O/N/1qbb4ci8DV0hCM8K+yKBy7Mi9etUK1Ih3Ogf/byytLmNXIfcW/QRKjh9uui4yuz1E
+ eiJuxZixqsbNFnI2LRhA0wSqgyTNIjtWA6nn3XrkPaXAqKiwNFufRSCmXRat18WHyKWcMWFGT
+ Ykzzab3BX80JhuCu0GhF1CWpAcE2uSSQjLhGACw+7INyC1o6W9BJU4idhVtqPp6W21Dn7/ez4
+ 15FebsWf9wxCjqVPLGExwxe0qNBsrDeE+hgfPP90349w0sPljLEshP2Ztf1ulaJk3+a0T/jdK
+ 6/xKYLoIk2tCGyuwV8ljTUuEdVChXA0/oIXzeAPCagm8eGUiiEv5tn80P8D54KD0v6E8Tw28H
+ f9gFN7OdXkdF/JDiqeM+iqO3MIhxL930s7ShJEnTqQ9QZ4cJsJuthqYWsycfaaScE1TJhYVfy
+ PWTnGb98cddES5TCNdskRcq2YMr5ULiok5gwmpQ2xAUFXid98WEzCWgmZUN3aLgFle7dAdeUZ
+ 61Y8Rr70uc77cx290bpM0mesXeSpxRB67V91hGRZpBECE3SOdT7AVeKtAWXzEyxC6B1lDAwWt
+ UkJCVz5U/kzbBUuPnjIMykQXugA0vJsG/R4ysNjCQh7Sb8YbIGpLs9ACaZKK/G+TVJDP1MKu5
+ PW/L6yvvYFe86KfKn/2a5nL2OgGa/RCJiGpNNAbMRhDtxbhkZ7ajZF1HOk7/LfPaZ/BZy5VrU
+ GSFq3onxYAMkJfRjDNE5zLzAvzjFKDgNtMCHrsgC9pgw9em7QfDdBlcEqRwV8ZAFrEqrDbDRo
+ lpE1n4jtVhq+x2hQ7ezVYStViOq3gr1R9yQdkSESSealzG2TcR3cGD+aCtPh6UjPL+OntNTdb
+ 95EQ7UWfaoEORMOOeKc1Q7j2TC0YRMo6thdZajQxJ0nIvFO7ATlh3+sPD95vrdVNho9hf+ji1
+ svwts4Gk+1/ISlkCm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:43:04PM +0100, Konrad Kociolek wrote:
-> Add dt-bindings documentation for Cadence XSPI controller to support
-> SPI based flash memories.
-> 
-> Signed-off-by: Konrad Kociolek <konrad@cadence.com>
-> ---
-> Changes between initial version and v2:
->   - renamed yaml file
->   - added missing include
-> 
->  .../devicetree/bindings/spi/cdns,xspi.yaml         | 166 +++++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> new file mode 100644
-> index 000000000000..e8c43957fd90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> @@ -0,0 +1,166 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
+Hi Florian,
 
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +# Copyright 2020 Cadence
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cdns,xspi.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence XSPI Controller
-> +
-> +maintainers:
-> +  - Konrad Kociolek <konrad@cadence.com>
-> +
-> +description: |
-> +  The XSPI controller allows SPI protocol communication in
-> +  single, dual, quad or octal wire transmission modes for
-> +  read/write access to slaves such as SPI-NOR flash.
-> +
-
-Needs a ref to spi-controller.yaml
-
-> +properties:
-> +  compatible:
-> +    const: cdns,xspi-nor-fpga
-> +
-> +  reg:
-> +    maxItems: 3
-> +    description: |
-> +      Contains three entries, each of which is a tuple consisting of a
-> +      physical address and length. The first entry is the address and
-> +      length of the controller register set. The second entry is the
-> +      address and length of the Slave DMA data port. The third entry is
-> +      the address and length of auxiliary registers.
-
-Split into 3 descriptions:
-
-items:
-  - description: ...
-  - description: ...
-  - description: ...
-
-With that, drop 'maxItems' as it is implied.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  cdns,dqs-last-data-drop:
-> +    type: boolean
-> +    description: |
-> +      This parameter should be set when the Flash Device being used
-> +      issues data on negative edge of Flash clock and returns them with
-> +      DQS and the PHY is configured to sample data in DQS mode.
-> +      If this param is set the controller internally requests this redundant
-> +      data at the end of the transfer cleaning up the PHY FIFO.
-> +
-> +  cdns,phy-data-select-oe-start:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the starting point of the DQ pad output enable window.
-> +      Lower numbers pull the rising edge earlier in time and larger
-> +      numbers cause the rising edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-data-select-oe-end:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the ending point of the DQ pad output enable window.
-> +      Lower numbers pull the falling edge earlier in time and larger
-> +      numbers cause the falling edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-dqs-select-oe-start:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the starting point of the DQS pad output enable window.
-> +      Lower numbers pull the rising edge earlier in time and larger
-> +      numbers cause the rising edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-dqs-select-oe-end:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the ending point of the DQS pad output enable window.
-> +      Lower numbers pull the falling edge earlier in time and larger
-> +      numbers cause the falling edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-gate-cfg-close:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Normally the gate is closing then all bits of dfi_cebar are high
-> +      or when dfi_rd_pre_post_amble and rebar_dfi are high. This parameter
-> +      allows to extend the closing of the DQS gate. Recommended zero.
-> +
-> +  cdns,phy-gate-cfg:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Coarse adjust of gate open time. This value is the number of cycles
-> +      to delay the dfi_rddata_en signal prior to opening the gate in
-> +      full cycle increments. Decreasing this value pulls the gate earlier
-> +      in time. This field should be programmed such that the gate signal
-> +      lands in the valid DQS gate window.
-> +
-> +  cdns,phy-rd-del-select:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Defines the read data delay. Holds the number of cycles to delay
-> +      the dfi_rddata_en signal prior to enabling the read FIFO.
-> +      After this delay, the read pointers begin incrementing the read FIFO.
-> +
-> +  cdns,phy-clk-wr-delay:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Controls the clk_wr delay line which adjusts the write DQ bit
-> +      timing in 1/256th steps of the clock period in normal DLL
-> +      locked mode. In bypass mode this field directly programs
-> +      the number of delay elements.
-
-For all of these, any constraints on the values? default?
-
-> +
-> +  cdns,phy-use-lpbk-dqs:
-> +    type: boolean
-> +    description: |
-> +      This parameter chooses lpbk_dqs to capture data for reads.
-> +      Instead memory DQS will be used.
-> +
-> +  cdns,phy-use-ext-lpbk-dqs:
-> +    type: boolean
-> +    description: |
-> +      This parameter chooses external lpbk_dqs for data capture
-> +      (lpbk_dqs connected to the lpbk_dqs_IO pad). When not used
-> +      mem_rebar_pad is used for data read capture.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - cdns,phy-data-select-oe-start
-> +  - cdns,phy-data-select-oe-end
-> +  - cdns,phy-dqs-select-oe-start
-> +  - cdns,phy-dqs-select-oe-end
-> +  - cdns,phy-gate-cfg-close
-> +  - cdns,phy-gate-cfg
-> +  - cdns,phy-rd-del-select
-> +  - cdns,phy-clk-wr-delay
-
-Is there no sensible default to make these optional?
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    xspi: spi@a0010000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "cdns,xspi-nor-fpga";
-> +        reg = <0x0 0xa0010000 0x0 0x10000>,
-> +              <0x0 0xb0000000 0x0 0x10000>,
-> +              <0x0 0xa0020000 0x0 0x10000>;
-> +        interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-parent = <&gic>;
-> +        cdns,dqs-last-data-drop;
-> +        cdns,phy-data-select-oe-start = <0>;
-> +        cdns,phy-data-select-oe-end = <4>;
-> +        cdns,phy-dqs-select-oe-start = <0>;
-> +        cdns,phy-dqs-select-oe-end = <1>;
-> +        cdns,phy-gate-cfg-close = <3>;
-> +        cdns,phy-gate-cfg = <0>;
-> +        cdns,phy-rd-del-select = <5>;
-> +        cdns,phy-clk-wr-delay = <64>;
-> +        cdns,phy-use-lpbk-dqs;
-> +        cdns,phy-use-ext-lpbk-dqs;
-> +        mt35xu512@0 {
-
-flash@0
-
-> +            compatible = "spi-nor", "micron,mt35xu512";
-
-Wrong order. Most specific first.
-
-> +            spi-max-frequency = <75000000>;
-> +            reg = <0>;
-> +        };
-> +        mt35xu512@1 {
-
-flash@1
-
-> +            compatible = "spi-nor", "micron,mt35xu512";
-> +            spi-max-frequency = <75000000>;
-> +            reg = <1>;
-> +        };
-> +    };
-> -- 
-> 2.15.0
-> 
+Am 03.02.20 um 22:21 schrieb Florian Fainelli:
+> On 2/3/20 11:08 AM, Stefan Wahren wrote:
+>> Hi,
+>>
+>> Am 03.02.20 um 19:36 schrieb Nicolas Saenz Julienne:
+>>> Hi,
+>>> BTW the patch looks good to me too:
+>>>
+>>> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>>
+>>> On Sat, 2020-02-01 at 13:27 -0600, Jeremy Linton wrote:
+>>>> Hi,
+>>>>
+>>>> First, thanks for looking at this!
+>>>>
+>>>> On 2/1/20 10:44 AM, Stefan Wahren wrote:
+>>>>> Hi Jeremy,
+>>>>>
+>>>>> [add Nicolas as BCM2835 maintainer]
+>>>>>
+>>>>> Am 01.02.20 um 08:46 schrieb Jeremy Linton:
+>>>>>> If one types "failed to get enet clock" or similar into google
+>>>>>> there are ~370k hits. The vast majority are people debugging
+>>>>>> problems unrelated to this adapter, or bragging about their
+>>>>>> rpi's. Given that its not a fatal situation with common DT based
+>>>>>> systems, lets reduce the severity so people aren't seeing failure
+>>>>>> messages in everyday operation.
+>>>>>>
+>>>>> i'm fine with your patch, since the clocks are optional according to the
+>>>>> binding. But instead of hiding of those warning, it would be better to
+>>>>> fix the root cause (missing clocks). Unfortunately i don't have the
+>>>>> necessary documentation, just some answers from the RPi guys.
+>>>> The DT case just added to my ammunition here :)
+>>>>
+>>>> But really, I'm fixing an ACPI problem because the ACPI power management
+>>>> methods are also responsible for managing the clocks. Which means if I
+>>>> don't lower the severity (or otherwise tweak the code path) these errors
+>>>> are going to happen on every ACPI boot.
+>>>>
+>>>>> This is what i got so far:
+>>> Stefan, Apart from the lack of documentation (and maybe also time), is there
+>>> any specific reason you didn't sent the genet clock patch yet? It should be OK
+>>> functionally isn't it?
+>> last time i tried to specify the both clocks as suggest by the binding
+>> document (took genet125 for wol, not sure this is correct), but this
+>> caused an abort on the BCM2711. In the lack of documentation i stopped
+>> further investigations. As i saw that Jeremy send this patch, i wanted
+>> to share my current results and retestet it with this version which
+>> doesn't crash. I don't know the reason why both clocks should be
+>> specified, but this patch should be acceptable since the RPi 4 doesn't
+>> support wake on LAN.
+> Your clock changes look correct, but there is also a CLKGEN register
+> block which has separate clocks for the GENET controller, which lives at
+> register offset 0x7d5e0048 and which has the following layout:
+>
+> bit 0: GENET_CLK_250_CLOCK_ENABLE
+> bit 1: GENET_EEE_CLOCK_ENABLE
+> bit 2: GENET_GISB_CLOCK_ENABLE
+> bit 3: GENET_GMII_CLOCK_ENABLE
+> bit 4: GENET_HFB_CLOCK_ENABLE
+> bit 5: GENET_L2_INTR_CLOCK_ENABLE
+> bit 6: GENET_SCB_CLOCK_ENABLE
+> bit 7: GENET_UNIMAC_SYS_RX_CLOCK_ENABLE
+> bit 8: GENET_UNIMAC_SYS_TX_CLOCK_ENABLE
+>
+> you will need all of those clocks turned on for normal operation minus
+> EEE, unless EEE is desirable which is why it is a separate clock. Those
+> clocks default to ON unless turned off, and the main gate that you
+> control is probably enough.
+so you suggest to add these clock gate(s) to the clk-bcm2835 or
+introduce a "clk-genet" from DT perspective?
+>
+> The Pi4 could support Wake-on-LAN with appropriate VPU firmware changes,
+> but I do not believe there is any interest in doing that. I would not
+> "bend" the clock representation just so as to please the driver with its
+> clocking needs.
