@@ -2,60 +2,70 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B29C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5BC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8100D20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B91C20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgBEMwC (ORCPT
+        id S1728188AbgBEMwI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:52:02 -0500
-Received: from in01-tec.fasttelco.net ([78.159.162.5]:37668 "EHLO
-        in01-tec.fasttelco.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgBEMwC (ORCPT
+        Wed, 5 Feb 2020 07:52:08 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:34956 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgBEMwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:52:02 -0500
-X-Greylist: delayed 551 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Feb 2020 07:52:00 EST
-Received: from z7qu2sj.com ([62.215.195.91])
-        by in01-tec.fasttelco.net (8.14.3/8.14.3/Debian-9.4) with ESMTP id 015CgdiZ018518
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Feb 2020 15:42:42 +0300
-Message-Id: <202002051242.015CgdiZ018518@in01-tec.fasttelco.net>
-From:   "Secretary-General for Development Coordination" 
-        <undc10@telefonica.net>
-Subject: General for Development Coordination
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset=us-ascii
-Reply-To: "Secretary-General for Development Coordination" 
-          <sarah.buchiri@gmail.com>, sarah.buchiri@gmail.com
-Date:   Wed, 5 Feb 2020 13:42:41 +0100
-X-Priority: 3
-X-Bayes-Prob: 0.0001 (Score 0, tokens from: corp_smtp, base:default, @@RPTN)
-X-CanIt-Geo: ip=62.215.195.91; country=KW; latitude=29.3375; longitude=47.6581; http://maps.google.com/maps?q=29.3375,47.6581&z=6
-X-CanItPRO-Stream: base:corp_smtp (inherits from base:makc.com.kw,base:default)
-X-Canit-Stats-ID: 041X0GETz - 304eba9c4cdd - 20200205
-X-Antispam-Training-Forget: https://spam.fasttelco.com/canit/b.php?c=f&i=041X0GETz&m=304eba9c4cdd&rlm=base&t=20200205
-X-Antispam-Training-Nonspam: https://spam.fasttelco.com/canit/b.php?c=n&i=041X0GETz&m=304eba9c4cdd&rlm=base&t=20200205
-X-Antispam-Training-Phish: https://spam.fasttelco.com/canit/b.php?c=p&i=041X0GETz&m=304eba9c4cdd&rlm=base&t=20200205
-X-Antispam-Training-Spam: https://spam.fasttelco.com/canit/b.php?c=s&i=041X0GETz&m=304eba9c4cdd&rlm=base&t=20200205
-X-Scanned-By: CanIt (www . roaringpenguin . com) on 78.159.162.5
+        Wed, 5 Feb 2020 07:52:08 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 0C821CECC7;
+        Wed,  5 Feb 2020 14:01:28 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Bug fixes while collecting
+ controller memory dump
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <d89347d22c12ffca5ccf4e18e0c716ab@codeaurora.org>
+Date:   Wed, 5 Feb 2020 13:52:05 +0100
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        robh@kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
+        Yoni Shavit <yshavit@google.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <20C0BA0B-1069-4DCF-A8FA-3B6359621D30@holtmann.org>
+References: <1580832929-2067-1-git-send-email-gubbaven@codeaurora.org>
+ <CANFp7mXgvfQGw0bc0dwNXg9KME1XD1zYGtPdEFWbM20NJpKtzQ@mail.gmail.com>
+ <d89347d22c12ffca5ccf4e18e0c716ab@codeaurora.org>
+To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Congratulations,
+Hi Venkata,
 
+>> Hi Venkata,
+>> Per our earlier review on chromium gerrit:
+>> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1992966
+>> I'm not too keen on the change from mutex to spinlock because it's
+>> made the code more complex.
+> [Venkata] :
+> 
+> We have moved from mutex to spinlock as timer callback function is getting executed under interrupt context and not under process context.
 
-Your email was randomly selected for the 2020 first quarter reimbursement via certified ATM CARD. Please reach Mrs. Sarah Buchiri with your code:U.N.D.C/2020/10/0109 for more information.
+can’t you use a delayed workqueue for this?
 
-Contact Name: Mrs. Sarah Buchiri
-Email: sarah.buchiri@gmail.com
+Regards
 
+Marcel
 
-Robert Andrew Piper
-Assistant Secretary-General for Development Coordination
