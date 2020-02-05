@@ -2,132 +2,88 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6A5C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0283C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0A2085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580877769;
-	bh=ypjJ03cXs420/s4crqQR9QNjl2BE2VR3LdUlBh+JvqM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jnRJccEFtcAgyjtsvLMLhhXFgGDmWicHdUB6LA18kDHM6Q2Nx7SYqNtX4CgrzNqid
-	 xDfbBb378e/U6uD2PKw75/uY2u0qaElgTApxGr7pAxvaIBvDX18RHwHZ6CtZxklteO
-	 xaF945q1E8uQ/ZyYV/rbtUX7Rd1zX9U/W2dTcc4k=
+	by mail.kernel.org (Postfix) with ESMTP id A7E322085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgBEEms (ORCPT
+        id S1728003AbgBEEnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:42:48 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:51574 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgBEEms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:42:48 -0500
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0154giSx014546;
-        Wed, 5 Feb 2020 13:42:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0154giSx014546
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580877764;
-        bh=6CPRqOD/Fe7zoq1RGimJL9B88AgPymJVLA5R5fTkxsc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zHHB/p6KmM0Kk6RP1vVPyCTW1hHBx0Vo9nCpLCtpaDHuCGacAbM8PLprep1c879Hz
-         W2iYS9jHiZMfjIBLgAAaPonzUCmX8jDNoV54W62IiF57f0CfwcpgEl+io4ecX2b4QI
-         pHoKd/ABAo9RqNH4WjRMZo1YB1y1qV6k074SKsJYWXO44Njrsj7dHAnD6r9KlmLwDz
-         W0YZETUkjPf/Z920ZtMaTrmCDagISAhVcDevy0QuyM2Ufl83+L0iFbDdGG4Ce2pMZf
-         FrTfmvZqrxjF4plzs07j3D3fGOBsLgkw7Zdn+yBtfgREyTx7Odnw7V3Q5u/0lKlFjH
-         hvgI2+Rj1jCvw==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id o42so368713uad.10;
-        Tue, 04 Feb 2020 20:42:44 -0800 (PST)
-X-Gm-Message-State: APjAAAX7ZbF9w1CYxaU2mExOwMrY4GxvCnZ3DGwA4caPw6pl7Erlppnf
-        2POka23Rra4i7VJhfMwWPqFeL18dn2Vm88WA48Y=
-X-Google-Smtp-Source: APXvYqxcekY6tR906J3p0JD4gnkPGtQ9DyvPxOsISnJIV+Cw5/8zojyJV8B6RF3T6mUxbEfJQ5YSNrfZEb4mu614T60=
-X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr19620371uay.25.1580877763433;
- Tue, 04 Feb 2020 20:42:43 -0800 (PST)
+        Tue, 4 Feb 2020 23:43:07 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51466 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727879AbgBEEnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 23:43:06 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1FE8CC8171B8065DF288;
+        Wed,  5 Feb 2020 12:42:59 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Feb 2020
+ 12:42:51 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <mripard@kernel.org>, <wens@csie.org>, <stefan@olimex.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] dmaengine: sun4i: remove set but unused variable 'linear_mode'
+Date:   Wed, 5 Feb 2020 12:42:47 +0800
+Message-ID: <20200205044247.32496-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <ced8ab1c-9c35-c7b0-6b9e-bcee7ffdf469@i-love.sakura.ne.jp>
- <CAK7LNATNY1oP5XgFH3+fuUU=Z7pEz7Sqz0vKCzvhM4Kem7RkOg@mail.gmail.com> <202002040408.01448ioc013868@www262.sakura.ne.jp>
-In-Reply-To: <202002040408.01448ioc013868@www262.sakura.ne.jp>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 5 Feb 2020 13:42:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATD1p6KDYNLYmb+UZpVNOaLdFEp-QRm1waDX_v-sSZ1=w@mail.gmail.com>
-Message-ID: <CAK7LNATD1p6KDYNLYmb+UZpVNOaLdFEp-QRm1waDX_v-sSZ1=w@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: Invalidate all symbols after changing to y or m.
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+drivers/dma/sun4i-dma.c: In function sun4i_dma_prep_dma_cyclic:
+drivers/dma/sun4i-dma.c:672:24: warning:
+ variable linear_mode set but not used [-Wunused-but-set-variable]
 
-On Tue, Feb 4, 2020 at 1:09 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> Since commit 89b9060987d98833 ("kconfig: Add yes2modconfig and
-> mod2yesconfig targets.") forgot to clear SYMBOL_VALID bit after
-> changing to y or m, these targets did not save the changes.
-> Call sym_clear_all_valid() so that all symbols are revalidated.
->
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+commit ffc079a4accc ("dmaengine: sun4i: Add support for cyclic requests with dedicated DMA")
+involved this unused variable.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/dma/sun4i-dma.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-My previous comment:
-"sym_add_change_count(1); seems the convention way
-to inform kconfig of some options being updated."
-was misleading. Sorry.
-
-
-conf_write() skips symbol invalidation
-when conf_get_change() returns non-zero value.
-
-        if (!conf_get_changed())
-                sym_clear_all_valid();
-
-I do not know why this if-conditional exists here...
-
-Anyway, this patch fixes the issue.
-
-Applied. Thanks.
-
-
-
-> ---
->  scripts/kconfig/confdata.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-> index 11f6c72c2eee..aa70360f27c1 100644
-> --- a/scripts/kconfig/confdata.c
-> +++ b/scripts/kconfig/confdata.c
-> @@ -1331,9 +1331,8 @@ void conf_rewrite_mod_or_yes(enum conf_def_mode mode)
->
->         for_all_symbols(i, sym) {
->                 if (sym_get_type(sym) == S_TRISTATE &&
-> -                   sym->def[S_DEF_USER].tri == old_val) {
-> +                   sym->def[S_DEF_USER].tri == old_val)
->                         sym->def[S_DEF_USER].tri = new_val;
-> -                       sym_add_change_count(1);
-> -               }
->         }
-> +       sym_clear_all_valid();
->  }
-> --
-> 2.11.0
->
-
-
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index bbc2bda..501cd44 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -669,7 +669,7 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 	dma_addr_t src, dest;
+ 	u32 endpoints;
+ 	int nr_periods, offset, plength, i;
+-	u8 ram_type, io_mode, linear_mode;
++	u8 ram_type, io_mode;
+ 
+ 	if (!is_slave_direction(dir)) {
+ 		dev_err(chan2dev(chan), "Invalid DMA direction\n");
+@@ -684,11 +684,9 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 
+ 	if (vchan->is_dedicated) {
+ 		io_mode = SUN4I_DDMA_ADDR_MODE_IO;
+-		linear_mode = SUN4I_DDMA_ADDR_MODE_LINEAR;
+ 		ram_type = SUN4I_DDMA_DRQ_TYPE_SDRAM;
+ 	} else {
+ 		io_mode = SUN4I_NDMA_ADDR_MODE_IO;
+-		linear_mode = SUN4I_NDMA_ADDR_MODE_LINEAR;
+ 		ram_type = SUN4I_NDMA_DRQ_TYPE_SDRAM;
+ 	}
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
+
