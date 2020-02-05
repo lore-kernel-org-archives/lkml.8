@@ -2,73 +2,143 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B449C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F003CC3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3A1222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA0C2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kw0Sqs4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgBEIIR (ORCPT
+        id S1727978AbgBEIKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 03:08:17 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:44606 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgBEIIQ (ORCPT
+        Wed, 5 Feb 2020 03:10:30 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:32858 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgBEIKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 03:08:16 -0500
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 1DC94CECC5;
-        Wed,  5 Feb 2020 09:17:37 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v2] net/bluetooth: remove __get_channel/dir and __dir
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1e76a7b8-c90a-56fe-96d7-4088dc7f6c38@linux.alibaba.com>
-Date:   Wed, 5 Feb 2020 09:08:15 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <140CEF7E-7BE9-4EC0-8625-292D95C45E7B@holtmann.org>
-References: <1579596583-258090-1-git-send-email-alex.shi@linux.alibaba.com>
- <8CA3EF63-F688-48B2-A21D-16FDBC809EDE@holtmann.org>
- <09359312-a1c8-c560-85ba-0f94be521b26@linux.alibaba.com>
- <2287CD53-58F4-40FD-B2F3-81A9F22F4731@holtmann.org>
- <1e76a7b8-c90a-56fe-96d7-4088dc7f6c38@linux.alibaba.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Wed, 5 Feb 2020 03:10:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0158APDC071899;
+        Wed, 5 Feb 2020 02:10:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580890225;
+        bh=b+qiEeC1rtft9IYzgd/F11sSSM+sJCMDAMLRewswKHc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kw0Sqs4i/i3pm3j/y6IWzWqkEvHOf0slYu7rew9t4n5/orO9pWC1ydloq3a60rQFg
+         PoKAvBpRYeq2U2DMTh7eI0jq1bAFJExZByMaR4ippNeSuOAA5+LZ6i/sy8z1xC2iwD
+         5/LVhQmL6ybBGt0GsKu6m6BVLa8PcYx1Cw8Dy68s=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0158AOhf098349
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Feb 2020 02:10:25 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
+ 2020 02:10:23 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 5 Feb 2020 02:10:24 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0158AM6j000628;
+        Wed, 5 Feb 2020 02:10:22 -0600
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
+ dma_request_slave_chan()
+To:     Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+ <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <20200204062118.GS2841@vkoul-mobl>
+ <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
+ <20200205044352.GC2618@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <13dcf3d9-06ca-d793-525d-12f6d7cd27c1@ti.com>
+Date:   Wed, 5 Feb 2020 10:10:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200205044352.GC2618@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Vinod,
 
-> These 3 macros are never used from first git commit Linux-2.6.12-rc2.
-> let's remove them.
+On 05/02/2020 6.43, Vinod Koul wrote:
+> On 04-02-20, 13:21, Andy Shevchenko wrote:
+>> On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
+>>>
+>>> On 03-02-20, 12:37, Andy Shevchenko wrote:
+>>>> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>>>
+>>>>> dma_request_slave_channel_reason() no longer have user in mainline, it
+>>>>> can be removed.
+>>>>>
+>>>>> Advise users of dma_request_slave_channel() and
+>>>>> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+>>>>
+>>>> How? There are legacy ARM boards you have to care / remove before.
+>>>> DMAengine subsystem makes a p*s off decisions without taking care of
+>>>> (I'm talking now about dma release callback, for example) end users.
+>>>
+>>> Can you elaborate issue you are seeing with dma_release callback?
+>>
+>>
+>> [    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
+>> defined so it is not safe to unbind this driver while in use
 > 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Cc: linux-bluetooth@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> net/bluetooth/rfcomm/core.c | 3 ---
-> 1 file changed, 3 deletions(-)
+> Yes that is expected but is not valid in your case.
 
-patch has been applied to bluetooth-next tree.
+In which case it is valid?
 
-Regards
+> Anyway this will be turned off before the release.
 
-Marcel
+Looking at the commit which added it and I still don't get the point.
+If any of the channel is in use then we should not allow the DMA driver
+to go away at all.
+Imho there should be a function to check if we can proceed with the
+.remove of the driver and fail it if any of the channels are in use.
 
+Hrm, base/dd.c __device_release_driver() does not check the .remove's
+return value, so it can not fail.
+
+What is expected if the .remove returns with OK but we still have
+channels in use?
+
+After the remove all sorts of things got yanked which might makes the
+still in use channels cause issues down the road.
+
+I'm curious why it is a good thing to remotely try to support unbind
+when the driver is in use.
+It is like one wants to support ext4 removal even when your rootfs is ext4.
+
+I think krefing the DMA driver for channel request/release is just fine,
+if user wants to break the system we should not assist...
+
+>> It's not limited to that driver, but actually all I'm maintaining.
+>>
+>> Users are not happy!
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
