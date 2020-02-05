@@ -2,155 +2,161 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813D5C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB6CC3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAEE2192A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2306D217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="SRP8TdlM";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="OFg0OWWN"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jwf+Qbf1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dJvD9bND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgBEHqK (ORCPT
+        id S1727231AbgBEHtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:46:10 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:1526 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgBEHqK (ORCPT
+        Wed, 5 Feb 2020 02:49:13 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60285 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgBEHtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:46:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1580888769; x=1612424769;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=p/ClQnwFPwIp+T8T7HU4ovsqIaqoYOktEulDnkWQsQE=;
-  b=SRP8TdlM5+bsLy/PSgrNrZGm4HJQYSGb2vW/GYTj7ChiZKSqil1hPu2K
-   GsK0RxVVtPf1vv+T2ZYDRK/AJvP+v2Lv3QrR2XcvBHg8G7yyo0GobHjvr
-   eD5PF2N072hLtXspRcjX+3uE8kUz49syMrTsSxCzcvzAzPa/RCPGrHHea
-   klZVQQ2zuWEaVNF3C/dWKMlHV3zxJJDL9roqFW+P03JgUGyr9T8+32ihW
-   2ugBD6Q57GCjYz/eHBP+X7D1WrdJHpRLs7ko6rJ8SQPRJ04nKC8i45jTm
-   95dPp1K0xfmkSF2oEJC84mpq5eesToI09MPG6dyRkaQAu7J3yfqlHWfS3
-   g==;
-IronPort-SDR: hMHDa0sdaXV946BFq9fxX7wDTBq4GrdJXaUGrLCRux+ImhwnuNMsDyDUJgNGJRSpHNA8tqw/ME
- zTdFgZPX+C3NUoMtpaJ5oS32/95Okrm4IanyehJrBbYwMJq466+FQeIGNtebLK/lWAsASo01E0
- kS0xGy/hNu2My/+dSTldsmW1BgW0MDbR1KxypFKJj+13B/QvVi+FdpJDq6cfo4H6X2nf5xNDqB
- soFc02NeYRJjQ6rYI8dBSO3coC/oJOPA6fdDvuZUMNVAAztIlNYGPpHeT15OywGGM6eIgDoj6n
- 0Xw=
-X-IronPort-AV: E=Sophos;i="5.70,404,1574092800"; 
-   d="scan'208";a="237097059"
-Received: from mail-sn1nam02lp2057.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.57])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Feb 2020 15:46:08 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=frI8m8przWOJEcO2hYtfqGKo1/iB7LGXSrl/ZYeh5+QwJhcN0FE09ZDJHG9ThDjr5QrEk5RLuml1+HgszqvwU1E1fWIBETbREBOptuKeRBEAVteuQ5j9V0io+8clawe4TVFs00rNMwiVo6ISihp9VmJ3QNMnQZag7jbBvNQjLyfBukU+3urAeW37qjr/QiqFXIzrZPjWHK82V/h1HCcIeuqnSyOnpiWpzXDOvhcu9e+2E+zm90Ssvn0TgxYGV5rHRduC7F99bK116dvHtR5iY2+eK9F3rcxH3DR+nhJfyKiEolvOpFOqQ2Sb/bNBntsg2jt8mByPlhw0qhLstcIJdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/ClQnwFPwIp+T8T7HU4ovsqIaqoYOktEulDnkWQsQE=;
- b=BVcR+PIUZDjETRE5dsJ70zzXZ47NaMkjmaiyQ6e5h53OUKBLXIjxfoDbeT6+gaZFFpgHjFXEet+Rh9VHWRKT6lyrqfRLltdTY/OfxyKHpyjHX39CA+vpLgL669hlobeG57XLamRe+LochW/ylOr5RlsVAmEukUW1PzYKwqiVcJjrhF3WvaGR3EaWDBY28OYRJUvb9LNZwEylKd9JGOw5CbR4sHa0DDYYk0DlW7nDqX2eVaqkxusmgv91WckCd+8bbZPY9GoZSOTz5AOsAkW1+RyCREjlJwlz+c0x0HaOtZ7qqgp18URpgy2BjlZn+z2vty0jIS4lOQblfWAhTD6VrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/ClQnwFPwIp+T8T7HU4ovsqIaqoYOktEulDnkWQsQE=;
- b=OFg0OWWNgARA7guV2fd0xqKVPHMJUBSNpWspMYtZ8g7i/XaSSWBirAD0pYphGFIuUodazLhCphbJYOed0Eq4MJC3VLYfWs8l6FbXnOGzLNCyKQH/dlUkHoTfIRM7EhJAmbkfeVJFQHVfj9fi2hS8k+vi10ypMzG5KTU80i9o57o=
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
- BYAPR04MB4374.namprd04.prod.outlook.com (20.176.251.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.27; Wed, 5 Feb 2020 07:46:07 +0000
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::cd8e:d1de:e661:a61]) by BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::cd8e:d1de:e661:a61%5]) with mapi id 15.20.2707.020; Wed, 5 Feb 2020
- 07:46:07 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Subject: Re: [v10 1/2] fs: New zonefs file system
-Thread-Topic: [v10 1/2] fs: New zonefs file system
-Thread-Index: AQHV2/RFr2J5n95mjEGmHUAr5fmH0A==
-Date:   Wed, 5 Feb 2020 07:46:07 +0000
-Message-ID: <BYAPR04MB5816A4CD15C760D0E5768285E7020@BYAPR04MB5816.namprd04.prod.outlook.com>
-References: <68ef8614-87f8-1b6e-7f55-f9d53a0f1e1c@web.de>
- <cfb36fa5dcf97113198848874c0ca9ba215e26fa.camel@wdc.com>
- <b1336be5-16f1-cb46-3469-46974406de14@web.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Damien.LeMoal@wdc.com; 
-x-originating-ip: [199.255.47.9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d5a7a924-5c2d-4db1-ebe2-08d7aa0f7610
-x-ms-traffictypediagnostic: BYAPR04MB4374:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB437480C39547485D006D9F8BE7020@BYAPR04MB4374.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0304E36CA3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(199004)(189003)(86362001)(81166006)(6506007)(4326008)(81156014)(8936002)(5660300002)(8676002)(53546011)(110136005)(316002)(4744005)(33656002)(54906003)(7696005)(26005)(2906002)(71200400001)(186003)(64756008)(66556008)(66476007)(478600001)(55016002)(76116006)(66946007)(91956017)(9686003)(66446008)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4374;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y4eG/J5Fj7zhZS++HsirRsesMs8SrW5E5Vc0hv/7g6hQAiZWshQNCVrcoRo9fCuwKilaVlwfNsewdygwHrtDyWpMMxktMTepi9H9iECLhtU+vu9+MKzVp+EI/0/6Wm34uqFSRpFC1mV1w26whgMxcyxFhnbp6GwmBD8BKO2IPA/tJzr7BYcQyfA65w+W/lUPYh73bun3WptT4vbau7ZIhXbVVrd3WVvUZeztwwUuINli61Lwc3snpWfznUoFNW9SfsYUjymw12CEhhZjn9+iO1xlm711LSCEr4ATqgihY1ASU9K5PE8qctmkJQUJGt7WoHv0YsDx8VnVrj+XuOGFimxAvBKcZS2gBri77ewwMnvYs/WZKd/DhvKQ8O+SkVe4VaiDjpBSuzd4IBsFiFEkYw/72gYcxcO1uGAgp9SnGG6pJhjeg+mkdFIPnF66jWob
-x-ms-exchange-antispam-messagedata: ueBDVAkJDevAlExAwfa6WkTt4qs/M+5MBSSGCIcDnNdb+sWKf0T4lyEUnYJrgdLzXAxYW2U/zIPe4bGxPLJhzcuAJA4GpLOk/OpvhE98TbBQccbqlc6AVlRJD2Gv3zKiDW0IzIQTvtMGbAL93k4Scg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Feb 2020 02:49:13 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 06AD66FE9;
+        Wed,  5 Feb 2020 02:49:12 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 05 Feb 2020 02:49:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=klnBhs3icmG873ARFeW0I55GIqv
+        Bct2WyDKkuastGyo=; b=jwf+Qbf1/dIOpQQPu6d5faHN3Z6Nv1tEzdcooIugMth
+        1avbUSzp56VsATlVcfZS4dAfADLi8S4qu/j6jsF7Zb43cVOD/zjIJ3rKAaFIlmjB
+        7yE7GKchPOAUw0QAFwXscVn+R8J2xLbSw7mplWO8w4ODugAY/eFEXTmjQSSJi4ir
+        R9t3n1+ga5wKgN9dhZgGpA6b1V6S7sRBSRDrbcekZNERahh5kTneYXC1+53SrlBR
+        CRlpAJyACUCokmEmQu0RB1gZMl0bdoaYrgIyGVYUP3rfWImjHA/PkRsPAy54uDag
+        OSYkxhZNlFbdzy0ABW3VgifxRNK0MfSIkN7mbZQWoBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=klnBhs
+        3icmG873ARFeW0I55GIqvBct2WyDKkuastGyo=; b=dJvD9bNDzk98V5EJjwjbLX
+        z/jqP7Y8Z4SGado2htR38gfwWtfB9jHHAJyZUvdd0l0Dlaqa5LLY0f6iBDWHqqv2
+        ZNZYOuzMod1M5vjBbNjUMnRFqDstAwnK2wROivOVgyeFNznPTGjfLQpOnHgMhnUS
+        +OF/Tuv3B1coSez3a2FM5b3Cd4RpOwct9mAwc0vI/2j8N1LnPPGKP6tiZdnKH8ES
+        Fn4sbCYM/59xrLrRM19pVhPfW0SNHTM98Qfsz1QrTlhXQUfi52jJEjMBmPtZ1liZ
+        XY4yB1hJI/5z0WqqB8wXyh0fLFto0jqby/jBpmSn3AeQf1kjohNqzDOdKjZIf4AQ
+        ==
+X-ME-Sender: <xms:dnM6XpEULNBgxpV7IuDuGHtWsEwpv4vI8j1lg3kb7G6-VzY-QfuY1g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrhedtgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:dnM6Xgt0evq26rLEpnUD07S8oq9BA9S2eDUWqQfmW-FOGo1hdY6UIQ>
+    <xmx:dnM6XsmFFPc77gnLfW67-HeRJd-hfQfxPxgdwgEK943FmGAu-CUh8A>
+    <xmx:dnM6XgyfuUHKvwyo9-Cc9FXCActuE6qPfkDXSLBnQUqpNXYS5VaHBA>
+    <xmx:d3M6XvKw6IGTWtKFAkvMrL3VaXUa2KseZuISM1x1FzF4V0ahHgfzzQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3FBB33280059;
+        Wed,  5 Feb 2020 02:49:10 -0500 (EST)
+Date:   Wed, 5 Feb 2020 08:49:08 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sugaya Taichi <sugaya.taichi@socionext.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        "james.tai" <james.tai@realtek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 11/12] dt-bindings: arm: Document Broadcom SoCs
+ 'secondary-boot-reg'
+Message-ID: <20200205074908.kwtqadfcwo2mtefk@gilmour.lan>
+References: <20200204235552.7466-1-f.fainelli@gmail.com>
+ <20200204235552.7466-12-f.fainelli@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5a7a924-5c2d-4db1-ebe2-08d7aa0f7610
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2020 07:46:07.7416
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iYCTp/ERaeFVzsabZFxyZv4FqTzSfHRlbDEI1wmCe0tjsgsqz+bS9yLHCQpsmxXLKKaPnw42taOdrN4l250LTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4374
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wa2xbnbegqf4phpr"
+Content-Disposition: inline
+In-Reply-To: <20200204235552.7466-12-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/02/05 16:17, Markus Elfring wrote:=0A=
->> Declaring it as=0A=
->>=0A=
->> static const char * const zgroups_name[] =3D { "cnv", "seq" };=0A=
->>=0A=
->> is probably what you are suggesting,=0A=
-> =0A=
-> Yes.=0A=
-> =0A=
-> =0A=
->> but since the string literals are already constants by default,=0A=
->> I do not think there is any difference.=0A=
-> =0A=
-> I propose to define this array also as a completely immutable data struct=
-ure.=0A=
-=0A=
-I understood that and pointed out that the added "const" does not change a=
-=0A=
-thing. I think that as is, it already is immutable. But sure, I can add=0A=
-that const, no problem.=0A=
-=0A=
-> =0A=
-> Regards,=0A=
-> Markus=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+
+--wa2xbnbegqf4phpr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Feb 04, 2020 at 03:55:51PM -0800, Florian Fainelli wrote:
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index c23c24ff7575..d7b181a44789 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -272,6 +272,39 @@ properties:
+>        While optional, it is the preferred way to get access to
+>        the cpu-core power-domains.
+>
+> +  secondary-boot-reg:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: |
+> +      Required for systems that have an "enable-method" property value of
+> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
+> +
+> +      This includes the following SoCs: |
+> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
+> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
+> +
+> +      The secondary-boot-reg property is a u32 value that specifies the
+> +      physical address of the register used to request the ROM holding pen
+> +      code release a secondary CPU. The value written to the register is
+> +      formed by encoding the target CPU id into the low bits of the
+> +      physical start address it should jump to.
+> +
+> +if:
+> +  # If the enable-method property contains one of those values
+> +  properties:
+> +    enable-method:
+> +      contains:
+> +        enum:
+> +          - brcm,bcm11351-cpu-method
+> +          - brcm,bcm23550
+> +          - brcm,bcm-nsp-smp
+> +  # and if enable-method is present
+
+Those comments were purely for the explanation, but you can keep them
+I guess :)
+
+Regardless on whether or not you keep them, for the whole series
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Maxime
+
+--wa2xbnbegqf4phpr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjpzdAAKCRDj7w1vZxhR
+xUq2AQDV+M4Nkim7RmuY3y8QYuA2P6xeHBu487XApQ5G8aH+fwEAlmF1WVwn93es
+CiiM9/4giVvGZGr3rNoZg/tgdu0GZQs=
+=+UYd
+-----END PGP SIGNATURE-----
+
+--wa2xbnbegqf4phpr--
