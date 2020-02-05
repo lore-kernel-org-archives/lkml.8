@@ -3,85 +3,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9461C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D4AC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D7C217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8917821741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgBEJCN (ORCPT
+        id S1728128AbgBEJDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:02:13 -0500
-Received: from mga11.intel.com ([192.55.52.93]:21948 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgBEJCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:02:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:02:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="231652104"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 05 Feb 2020 01:02:07 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1izGZU-0008Fz-F4; Wed, 05 Feb 2020 11:02:08 +0200
-Date:   Wed, 5 Feb 2020 11:02:08 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     linux-media@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 02/17] media: v4l2-fwnode: Pass notifier to
- v4l2_async_register_fwnode_subdev()
-Message-ID: <20200205090208.GR10400@smile.fi.intel.com>
-References: <20200204234918.20425-1-slongerbeam@gmail.com>
- <20200204234918.20425-3-slongerbeam@gmail.com>
+        Wed, 5 Feb 2020 04:03:31 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44763 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbgBEJDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:03:31 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so1217376otj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 01:03:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ly8+3gmEudftYUIeu3tPerclxKuHSskVOT90fOPXZhE=;
+        b=OKVItxpeqmP98QfrRFgIARI97k/FesAMPoFEs+csAYh2WoKBfsZmp0kyKjgZd+QNBT
+         nr0+feMKU7Xvrd3Hw8YrbTcGMstPKDI2yXsznDc3cODw5DTaAW2U7PhSSie0dtfibbr7
+         pe9b/wd4W0ObtLDGFT5ANPUR/4BJRJn8S//9jCWX6TSjqO9PXE+svk4trBKsreVlqpY8
+         zuY+2J38cQNjc+BHjv9LaENX5LEwurJ5WWveILB05vj/T/xeuCJaC5hAEDC4ku7YC++f
+         uTwFmMMkav5BUjZhjJ1wU7yilDcEXnCjbRh7IoPxZI6U+snKN7n/MLnM61I0s+N4t7Ch
+         Fpnw==
+X-Gm-Message-State: APjAAAWeEv+b7rDLoCzAfl/+iUUTfl3aEmztR6LUcz7dd1XxLpIcBw/U
+        e2dTKJRNdSzbAhx+bC4klnOrKgNsbENUpyxBf8s=
+X-Google-Smtp-Source: APXvYqyVwSn2VmNn5oApgPX5q+zTOnNZeAT401O+YxcAG7VYa5bBHlGp+7lxWYvZwut7WPxF1fu6UU5Z6kXVuJUJXdM=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr23691249otf.107.1580893410632;
+ Wed, 05 Feb 2020 01:03:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204234918.20425-3-slongerbeam@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net> <da150cdb160b5d1b58ad1ea2674cc93c1fc6aadc.camel@alliedtelesis.co.nz>
+ <20200204070927.GA966981@kroah.com> <1a90dc4c62c482ed6a44de70962996b533d6f627.camel@alliedtelesis.co.nz>
+ <20200204203116.GN8731@bombadil.infradead.org> <20200205033416.GT1778@kadam> <a3032823-03a9-f018-73e4-eb0d71e0bb53@roeck-us.net>
+In-Reply-To: <a3032823-03a9-f018-73e4-eb0d71e0bb53@roeck-us.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Feb 2020 10:03:18 +0100
+Message-ID: <CAMuHMdXKtJEvwRViRpy4nHbxv68P_rCFWbpikw=BMM5XnBvD2A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] staging: octeon: delete driver
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "brandonbonaby94@gmail.com" <brandonbonaby94@gmail.com>,
+        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ddaney@caviumnetworks.com" <ddaney@caviumnetworks.com>,
+        "bobdc9664@seznam.cz" <bobdc9664@seznam.cz>,
+        "sandro@volery.com" <sandro@volery.com>,
+        "ivalery111@gmail.com" <ivalery111@gmail.com>,
+        "ynezz@true.cz" <ynezz@true.cz>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 03:49:03PM -0800, Steve Longerbeam wrote:
-> Instead of allocating a notifier in v4l2_async_register_fwnode_subdev(),
-> have the caller provide one. This allows the caller to implement
-> notifier ops (bind, unbind).
-> 
-> The caller is now responsible for first initializing its notifier with a
-> call to v4l2_async_notifier_init().
+On Wed, Feb 5, 2020 at 4:57 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> On 2/4/20 7:34 PM, Dan Carpenter wrote:
+> > On Tue, Feb 04, 2020 at 12:31:16PM -0800, Matthew Wilcox wrote:
+> >> On Tue, Feb 04, 2020 at 08:06:14PM +0000, Chris Packham wrote:
+> >>> On Tue, 2020-02-04 at 07:09 +0000, gregkh@linuxfoundation.org wrote:
+> >>>> On Tue, Feb 04, 2020 at 04:02:15AM +0000, Chris Packham wrote:
+> >>> On Tue, 2020-02-04 at 10:21 +0300, Dan Carpenter wrote:
+> >>>> My advice is to delete all the COMPILE_TEST code.  That stuff was a
+> >>>> constant source of confusion and headaches.
+> >>>
+> >>> I was also going to suggest this. Since the COMPILE_TEST has been a
+> >>> source of trouble I was going to propose dropping the || COMPILE_TEST
+> >>> from the Kconfig for the octeon drivers.
+> >>
+> >> Not having it also causes problems.  I didn't originally add it for
+> >> shits and giggles.
+> >
+> > I wonder if the kbuild bot does enough cross compile build testing these
+> > days to detect compile problems.  It might have improved to the point
+> > where COMPILE_TEST isn't required.
 
-Hint: When creating a list of maintainers use this (or similar) command:
+It depends...
 
-	scripts/get_maintainer.pl --git --git-min-percent=67 ...
+> Not really. Looking at the build failures in the mainline kernel right now:
+>
+> Failed builds:
+>         alpha:allmodconfig
+>         arm:allmodconfig
+>         i386:allyesconfig
+>         i386:allmodconfig
+>         m68k:allmodconfig
+>         microblaze:mmu_defconfig
+>         mips:allmodconfig
+>         parisc:allmodconfig
+>         powerpc:allmodconfig
+>         s390:allmodconfig
+>         sparc64:allmodconfig
 
-P.S. Please, do not add me in Cc list for v4l2 matters.
+I did receive a report from noreply@ellerman.id.au for the m68k build
+failure. But that was sent to me only, not to the offender, and I do my
+own builds anyway.
+
+More interesting, that report happened after the offending commit landed
+upstream, while it had been in next for 4 weeks.
+
+> Many of those don't even _have_ specific configurations causing the build failures.
+
+Exactly. These are the "easy" ones, as the all*config builds enable as
+much infrastructure as possible.  It's much harder if some common
+dependency is not fulfilled in some specific config.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
