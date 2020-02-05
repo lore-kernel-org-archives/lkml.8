@@ -2,130 +2,147 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D866EC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD465C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA63E217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4ABA217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upPG+0IT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nbq5QFkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgBEPzg (ORCPT
+        id S1727716AbgBEPzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:55:36 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50317 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgBEPze (ORCPT
+        Wed, 5 Feb 2020 10:55:55 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:42972 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbgBEPzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:55:34 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so1155049pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:55:33 -0800 (PST)
+        Wed, 5 Feb 2020 10:55:54 -0500
+Received: by mail-vs1-f65.google.com with SMTP id b79so1626053vsd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:55:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=g1IIx60amrgjfE57qozlHgEQ8/enUuSyOSjIAvt32+w=;
-        b=upPG+0ITd2XZHOIr73HlK9LZRj2czAjtnUxJ1HrzBL9cZCq/P/H2b4EmSq6iR2/6YH
-         nA1nLitujYZ1IljDqRYJniwUyYAML9tF6fu9S+7vie3MuNCr0FtpactAAHl1vRy+anFi
-         f91D/tkK8NBe33ZClBDXNXX/1MyxvB+ZvqNFbrRfmknWiEi84r2H4R7PRpN8uaCL/4Ah
-         EpyBDoNLwePdwKq0LHNBE21qDn/GY7iF7PcPkyzGMIal2O8pDR1m8KD2p7oh/pKRowPO
-         86/Dl4UhotNZqw3jm/q+e3mAHO7zt3I5nDXVgqexQv8zdE1bDzFy/9o1QenrKNKkjygy
-         nxRg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ei9H45SV2oMs69C7hL0SyaAz256oxS6zCX5MjvjcWsU=;
+        b=Nbq5QFkLGVrepL0kiN0uMOeJSiQzYs0SIsaGXzuFw02d55rgJXVER2UguTreuVRGJO
+         Od4xBaxLrJDFSjE6bsj/+aUv9g+rYikRSWZyUQledbdk/qhAy29jK+vcs1DSM5HzxPuO
+         c5BOqGKN/1CIxVjv2yrQJRe4hCvPMRT57oeV36R1VPLE01xb9GAo9MxqQEOTMXvDJNZk
+         zkaFAQgOgMOYJxNPMgclviF2hmrn2Yfp6AO3+sQxJIajd3Ok/x+B0cgXXgWrzRXYHfKd
+         fpR95zPsC6lrCVdelVsr4LatgdvMAc1Y+1iJx5DWEh/KAgqOL/zuXYPqb5PRsywUb1/s
+         Ze9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:in-reply-to:references;
-        bh=g1IIx60amrgjfE57qozlHgEQ8/enUuSyOSjIAvt32+w=;
-        b=lftJJAHoL3pKAsMpl94/p1RL/RRp86jnJPjsDGA9LJ5uqFVBE7ANsF5Hgw8jba9x0I
-         7SIZX/x1bQ657rcbWlLl9NmfSBMJ/qB48WAmRi6YWC18brAvrJ8hgugqA6d/lyaa5XHr
-         XwZQaqEror4qS+yzF9rQ3A9krEomhAfjksIzYgHV9znbndUCaH4wL1YlqAIQ448zIjaQ
-         YIT5Wxz7JKAY6a7DERZMordO+1J1ZosXzd14XeVngl8RIwq+NaeSHlKHkXcFzGVA3HBe
-         cBuqvii23NKX0Ouc3JD2w8cyW+R0zK2Y2qow2eJ6z/fAwY44JK9Src+v6x8sa6zu82F4
-         khgw==
-X-Gm-Message-State: APjAAAXPPDSQezYkJfC9oEgYuqztK5fvFt1bNv1HqlXI6v8xf1baC42n
-        AxIn0jj86/C6MTYB5MLAL0w=
-X-Google-Smtp-Source: APXvYqzYNMNDJuaQ21iEMdiY++REnS7abORLIZMqrNaTbe+qDiaC8RcLrDnyCUo6QBzM28V2/UiETg==
-X-Received: by 2002:a17:90a:d804:: with SMTP id a4mr6272089pjv.11.1580918133166;
-        Wed, 05 Feb 2020 07:55:33 -0800 (PST)
-Received: from emb-wallaby.amd.com ([165.204.156.251])
-        by smtp.gmail.com with ESMTPSA id z10sm195678pgz.88.2020.02.05.07.55.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 07:55:32 -0800 (PST)
-From:   Arindam Nath <arindam.nath@amd.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Jiasen Lin <linjiasen@hygon.cn>,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
-        Arindam Nath <arindam.nath@amd.com>
-Subject: [PATCH 15/15] NTB: add pci shutdown handler for AMD NTB
-Date:   Wed,  5 Feb 2020 21:24:32 +0530
-Message-Id: <6c943711a14cd79bd6f3b392787f09da2cfb3711.1580914232.git.arindam.nath@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1580914232.git.arindam.nath@amd.com>
-References: <cover.1580914232.git.arindam.nath@amd.com>
-In-Reply-To: <cover.1580914232.git.arindam.nath@amd.com>
-References: <cover.1580914232.git.arindam.nath@amd.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ei9H45SV2oMs69C7hL0SyaAz256oxS6zCX5MjvjcWsU=;
+        b=StdgteiPVuXgGXXSRZR4YJibF+G/3Rd1E3otuFkcyqDA4MBe4JFewCEYfVEyekbmiq
+         5GJzP1bJRXtl0y68+Oe1/wy5CYi7fbWJ7m0Plr2vsGy+AR6P8IsS4SSTJ2VF8440fK8w
+         cwZ1QE6FJg97a9tWQezqzL5iYmw7XWbVFZN1nEIvr78gSzgW9B+QeGkfkW1RSyTbH1OF
+         VRe4YBij7QZVwenieDjSEj/Di2/URdbGxAIFQ4fIQudeyq1SYw73ytYg65AIKea1eMDl
+         Sxc/vrVpCE0gAXPB5OEJyURsHLYPccvqvJCDMJR12MAU5q+x/lvkv12zeksA0U1PkJUN
+         n3qg==
+X-Gm-Message-State: APjAAAUTHnykDcnX/FFqdkqkJXhOMCH0TkGh4pn7qvWITFyCuFZOubqI
+        seKbb6bwpbqtzEQYi1lD3L2Pd+rQ4prxYf5t9Lc6Xw==
+X-Google-Smtp-Source: APXvYqwSSPQAZY6rLGXHvigKNLyKPELRR7aaS7nR0axlfGQtU2mVxCkKTFTO+6ddkXy//tB9BMu4/9jHYzXyjFWuYuM=
+X-Received: by 2002:a05:6102:757:: with SMTP id v23mr22937800vsg.35.1580918153583;
+ Wed, 05 Feb 2020 07:55:53 -0800 (PST)
+MIME-Version: 1.0
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-6-git-send-email-mkshah@codeaurora.org> <20200203170832.GA38466@bogus>
+ <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org> <20200204152132.GA44858@bogus>
+ <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org> <20200205140603.GB38466@bogus>
+In-Reply-To: <20200205140603.GB38466@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 5 Feb 2020 16:55:17 +0100
+Message-ID: <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PCI shutdown handler is invoked in response
-to system reboot or shutdown. A data transfer
-might still be in flight when this happens. So
-the very first action we take here is to send
-a link down notification, so that any pending
-data transfer is terminated. Rest of the actions
-are same as that of PCI remove handler.
+On Wed, 5 Feb 2020 at 15:06, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
+> >
+> > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
+> > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
+> > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
+> > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
+> > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
+> > > > > >
+> > > > > > If the hierarchical CPU topology is used, but the OS initiated mode isn't
+> > > > > > supported, we need to rely solely on the regular cpuidle framework to
+> > > > > > manage the idle state selection, rather than using genpd and its
+> > > > > > governor.
+> > > > > >
+> > > > > > For this reason, introduce a new PSCI DT helper function,
+> > > > > > psci_dt_pm_domains_parse_states(), which parses and converts the
+> > > > > > hierarchically described domain idle states from DT, into regular flattened
+> > > > > > cpuidle states. The converted states are added to the existing cpuidle
+> > > > > > driver's array of idle states, which make them available for cpuidle.
+> > > > > >
+> > > > > And what's the main motivation for this if OSI is not supported in the
+> > > > > firmware ?
+> > > > Hi Sudeep,
+> > > >
+> > > > Main motivation is to do last-man activities before the CPU cluster can
+> > > > enter a deep idle state.
+> > > >
+> > > Details on those last-man activities will help the discussion. Basically
+> > > I am wondering what they are and why they need to done in OSPM ?
+> >
+> > Hi Sudeep,
+> >
+> > there are cases like,
+> >
+> > Last cpu going to deepest idle mode need to lower various resoruce
+> > requirements (for eg DDR freq).
+> >
+>
+> In PC mode, only PSCI implementation knows the last man and there shouldn't
+> be any notion of it in OS. If you need it, you may need OSI. You are still
+> mixing up the things. NACK for any such approach, sorry.
 
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
----
- drivers/ntb/hw/amd/ntb_hw_amd.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Sudeep, I don't quite agree with your NACK to this. At least not yet. :-)
 
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-index c6cea0005553..9e310e1ad4d0 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -1296,6 +1296,22 @@ static void amd_ntb_pci_remove(struct pci_dev *pdev)
- 	kfree(ndev);
- }
- 
-+static void amd_ntb_pci_shutdown(struct pci_dev *pdev)
-+{
-+	struct amd_ntb_dev *ndev = pci_get_drvdata(pdev);
-+
-+	/* Send link down notification */
-+	ntb_link_event(&ndev->ntb);
-+
-+	amd_deinit_side_info(ndev);
-+	ntb_peer_db_set(&ndev->ntb, BIT_ULL(ndev->db_last_bit));
-+	ntb_unregister_device(&ndev->ntb);
-+	ndev_deinit_debugfs(ndev);
-+	amd_deinit_dev(ndev);
-+	amd_ntb_deinit_pci(ndev);
-+	kfree(ndev);
-+}
-+
- static const struct file_operations amd_ntb_debugfs_info = {
- 	.owner = THIS_MODULE,
- 	.open = simple_open,
-@@ -1326,6 +1342,7 @@ static struct pci_driver amd_ntb_pci_driver = {
- 	.id_table	= amd_ntb_pci_tbl,
- 	.probe		= amd_ntb_pci_probe,
- 	.remove		= amd_ntb_pci_remove,
-+	.shutdown	= amd_ntb_pci_shutdown,
- };
- 
- static int __init amd_ntb_pci_driver_init(void)
--- 
-2.17.1
+I do agree that the best suited solution seems to be OSI, as to
+support this kind of SoC requirements.
 
+However, if for some reason the PC mode is being used, we could still
+allow Linux to control "last-man activities" as it knows what each CPU
+has voted for when going idle. Yes, the PSCI FW decides in the end,
+but that doesn't really matter. Or is there another technical reason
+to why you object?
+
+As a matter of fact, if we allow support for PC mode with
+"last-man-activities", it would allow us to make a fair
+performance/energy comparison between the two PSCI CPU suspend modes,
+for the same SoC. I would be thrilled about looking into doing such
+tests, I bet you are as well!?
+
+Kind regards
+Uffe
