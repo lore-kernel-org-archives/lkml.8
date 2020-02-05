@@ -2,198 +2,220 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C2C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227DCC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A9D217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nFjzSchn"
+	by mail.kernel.org (Postfix) with ESMTP id E8DEE21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580905629;
+	bh=QKBpJPiVyTVeBC8mnt3utXps19G5xC9I5KMgOWdab1E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GMEHe1OujhmHwDP99u4vfibycFXMCZiZGlF6K1539mgJjYvCsESgIr1T5/1pa+s8c
+	 3VpKMoeCWyoHMMRYcM5pjlUTquX8NqomyGmUmyoaFPJmPQWh6k36E5TE45db3ElajI
+	 OGDS9WslVPieUFd6ItXjHcf10dcptAwCaMuVa75E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgBEM1E (ORCPT
+        id S1728171AbgBEM1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:27:04 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14855 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727922AbgBEM1D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:27:03 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580905623; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Yj5wsZyZdrouBY0XL6JYIchV28OgZyZH1skDBxxWH4Y=; b=nFjzSchnik+WTujBu+fLKRo/BuCOpOoxY1WEPjQMShwcYZftBg0rzwJQHeUY0tdMiBgz1u4P
- vWifrwxe4tvsKtpSnb4IAGfK2XL5OUpaz1ZEh+g+76M/M/jazl2FSo87bc7VaJm0H3geTXoJ
- E9ntW0bTCWLKPNt6PBh+dK2hvVw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3ab496.7ff3e03b25a8-smtp-out-n03;
- Wed, 05 Feb 2020 12:27:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 75C52C447A6; Wed,  5 Feb 2020 12:27:02 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 5 Feb 2020 07:27:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728071AbgBEM1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:27:07 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E71F3C433CB;
-        Wed,  5 Feb 2020 12:26:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E71F3C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v4 5/6] drivers: firmware: psci: Allow hierarchical topology in PC mode
-Date:   Wed,  5 Feb 2020 17:56:11 +0530
-Message-Id: <1580905572-22712-6-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580905572-22712-1-git-send-email-mkshah@codeaurora.org>
-References: <1580905572-22712-1-git-send-email-mkshah@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id DAE6622527;
+        Wed,  5 Feb 2020 12:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580905627;
+        bh=QKBpJPiVyTVeBC8mnt3utXps19G5xC9I5KMgOWdab1E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zSt+huBiTdTNPzwwBWTKDLJoxb/3PNigLzG2XOn1LgYahLEG7KCaHXdAwSKGd8f2r
+         mR0TUHU+F4WwAJTnOrGaPFJ2Ma78/JMXt+Tmvyi98eJbPMnlpHbogwSvyd1FXvtNG4
+         4o8qrykZBMw71QyHSPAlxxJJ3ilOKqkLeIj7jlbg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1izJlp-0037ry-8I; Wed, 05 Feb 2020 12:27:05 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Feb 2020 12:27:05 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, tglx@linutronix.de,
+        jason@lakedaemon.net, wanghaibin.wang@huawei.com
+Subject: Re: [PATCH RFC 3/5] irqchip/gic-v4.1: Ensure L2 vPE table is
+ allocated at RD level
+In-Reply-To: <20200204090940.1225-4-yuzenghui@huawei.com>
+References: <20200204090940.1225-1-yuzenghui@huawei.com>
+ <20200204090940.1225-4-yuzenghui@huawei.com>
+Message-ID: <621f153637ccabb85ede10e2c495c38f@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+Hi Zenghui,
 
-If the hierarchical CPU topology is used, but the OS initiated mode isn't
-supported, we need to rely solely on the regular cpuidle framework to
-manage the idle state selection.
+Thanks for this. A few comments below.
 
-Remove current limitation of hierarchical topology to be used in OSI mode
-only.
+On 2020-02-04 09:09, Zenghui Yu wrote:
+> In GICv4, we will ensure that level2 vPE table memory is allocated
+> for the specified vpe_id on all v4 ITS, in its_alloc_vpe_table().
+> This still works well for the typical GICv4.1 implementation, where
+> the new vPE table is shared between the ITSs and the RDs.
+> 
+> To make things explicit, introduce allocate_vpe_l1_table_entry() to
+> make sure that the L2 tables are allocated on all v4.1 RDs. We're
+> likely not need to allocate memory in it because the vPE table is
+> shared and (L2 table is) already allocated at ITS level, except
+> for the case where the ITS doesn't share anything (say SVPET == 0,
+> practically unlikely but architecturally allowed).
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-[applied to new path, updated commit text]
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/cpuidle/cpuidle-psci-domain.c | 32 +++++++++++++++-----------------
- drivers/cpuidle/cpuidle-psci.c        | 34 ++++++++++++++++------------------
- 2 files changed, 31 insertions(+), 35 deletions(-)
+Huh... Interesting. I definitely don't anticipate the case to pop up,
+but you are right, this is architecturally allowed.
 
-diff --git a/drivers/cpuidle/cpuidle-psci-domain.c b/drivers/cpuidle/cpuidle-psci-domain.c
-index 423f03b..fcab330 100644
---- a/drivers/cpuidle/cpuidle-psci-domain.c
-+++ b/drivers/cpuidle/cpuidle-psci-domain.c
-@@ -125,11 +125,14 @@ static int __init psci_pd_init(struct device_node *np)
- 	 * Parse the domain idle states and let genpd manage the state selection
- 	 * for those being compatible with "domain-idle-state".
- 	 */
--	ret = psci_pd_parse_states(np, &states, &state_count);
--	if (ret)
--		goto free_name;
- 
--	pd->free_states = psci_pd_free_states;
-+	if (psci_has_osi_support()) {
-+		ret = psci_pd_parse_states(np, &states, &state_count);
-+		if (ret)
-+			goto free_name;
-+		pd->free_states = psci_pd_free_states;
-+	}
-+
- 	pd->name = kbasename(pd->name);
- 	pd->power_off = psci_pd_power_off;
- 	pd->states = states;
-@@ -236,10 +239,6 @@ static int __init psci_idle_init_domains(void)
- 	if (!np)
- 		return -ENODEV;
- 
--	/* Currently limit the hierarchical topology to be used in OSI mode. */
--	if (!psci_has_osi_support())
--		goto out;
--
- 	/*
- 	 * Parse child nodes for the "#power-domain-cells" property and
- 	 * initialize a genpd/genpd-of-provider pair when it's found.
-@@ -265,14 +264,16 @@ static int __init psci_idle_init_domains(void)
- 		goto remove_pd;
- 
- 	/* Try to enable OSI mode. */
--	ret = psci_set_osi_mode();
--	if (ret) {
--		pr_warn("failed to enable OSI mode: %d\n", ret);
--		psci_pd_remove_topology(np);
--		goto remove_pd;
-+	if (psci_has_osi_support()) {
-+		ret = psci_set_osi_mode();
-+		if (ret) {
-+			pr_warn("failed to enable OSI mode: %d\n", ret);
-+			psci_pd_remove_topology(np);
-+			goto remove_pd;
-+		} else
-+			osi_mode_enabled = true;
- 	}
- 
--	osi_mode_enabled = true;
- 	of_node_put(np);
- 	pr_info("Initialized CPU PM domain topology\n");
- 	return pd_count;
-@@ -293,9 +294,6 @@ struct device __init *psci_dt_attach_cpu(int cpu)
- {
- 	struct device *dev;
- 
--	if (!osi_mode_enabled)
--		return NULL;
--
- 	dev = dev_pm_domain_attach_by_name(get_cpu_device(cpu), "psci");
- 	if (IS_ERR_OR_NULL(dev))
- 		return dev;
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index edd7a54..16d8baa 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -193,24 +193,22 @@ static int __init psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
- 		goto free_mem;
- 	}
- 
--	/* Currently limit the hierarchical topology to be used in OSI mode. */
--	if (psci_has_osi_support()) {
--		data->dev = psci_dt_attach_cpu(cpu);
--		if (IS_ERR(data->dev)) {
--			ret = PTR_ERR(data->dev);
--			goto free_mem;
--		}
--
--		/*
--		 * Using the deepest state for the CPU to trigger a potential
--		 * selection of a shared state for the domain, assumes the
--		 * domain states are all deeper states.
--		 */
--		if (data->dev) {
--			drv->states[state_count - 1].enter =
--				psci_enter_domain_idle_state;
--			psci_cpuidle_use_cpuhp = true;
--		}
-+	data->dev = psci_dt_attach_cpu(cpu);
-+	if (IS_ERR(data->dev)) {
-+		ret = PTR_ERR(data->dev);
-+		goto free_mem;
-+	}
-+
-+	/*
-+	 * Using the deepest state for the CPU to trigger a potential
-+	 * selection of a shared state for the domain, assumes the
-+	 * domain states are all deeper states.
-+	 */
-+
-+	if (data->dev) {
-+		drv->states[state_count - 1].enter =
-+			psci_enter_domain_idle_state;
-+		psci_cpuidle_use_cpuhp = true;
- 	}
- 
- 	/* Idle states parsed correctly, store them in the per-cpu struct. */
+> The implementation of allocate_vpe_l1_table_entry() is mostly
+> copied from its_alloc_table_entry().
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 68 ++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 0f1fe56ce0af..c1d01454eec8 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -2443,6 +2443,64 @@ static u64 
+> inherit_vpe_l1_table_from_rd(cpumask_t **mask)
+>  	return 0;
+>  }
+> 
+> +static int allocate_vpe_l1_table_entry(int cpu, u32 id)
+
+Given that this actually allocates the L2 table, I'd rather have it 
+called
+something like allocate_vpe_l2_table() as the pendant of 
+allocate_vpe_l1_table().
+
+This should also properly return a bool rather then an int.
+
+> +{
+> +	void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
+> +	u64 val, gpsz, npg;
+> +	unsigned int psz, esz, idx;
+> +	struct page *page;
+> +	__le64 *table;
+> +
+> +	if (!gic_rdists->has_rvpeid)
+> +		return true;
+> +
+> +	val  = gits_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+> +
+> +	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
+> +	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
+> +	npg  = FIELD_GET(GICR_VPROPBASER_4_1_SIZE, val) + 1;
+> +
+> +	switch (gpsz) {
+> +	default:
+> +		WARN_ON(1);
+> +		/* fall through */
+> +	case GIC_PAGE_SIZE_4K:
+> +		psz = SZ_4K;
+> +		break;
+> +	case GIC_PAGE_SIZE_16K:
+> +		psz = SZ_16K;
+> +		break;
+> +	case GIC_PAGE_SIZE_64K:
+> +		psz = SZ_64K;
+> +		break;
+> +	}
+> +
+> +	/* Don't allow vpe_id that exceeds single, flat table limit */
+> +	if (!(val & GICR_VPROPBASER_4_1_INDIRECT))
+> +		return (id < (npg * psz / (esz * SZ_8)));
+> +
+> +	/* Compute 1st level table index & check if that exceeds table limit 
+> */
+> +	idx = id >> ilog2(psz / (esz * SZ_8));
+> +	if (idx >= (npg * psz / GITS_LVL1_ENTRY_SIZE))
+> +		return false;
+> +
+> +	table = gic_data_rdist_cpu(cpu)->vpe_l1_base;
+> +
+> +	/* Allocate memory for 2nd level table */
+> +	if (!table[idx]) {
+> +		page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(psz));
+> +		if (!page)
+> +			return false;
+> +
+> +		table[idx] = cpu_to_le64(page_to_phys(page) | GITS_BASER_VALID);
+
+I think we may need a cache flushing here in some circumstances. We 
+certainly
+have it in its_alloc_table_entry.
+
+> +
+> +		/* Ensure updated table contents are visible to RD hardware */
+> +		dsb(sy);
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static int allocate_vpe_l1_table(void)
+>  {
+>  	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
+> @@ -2957,6 +3015,7 @@ static bool its_alloc_device_table(struct
+> its_node *its, u32 dev_id)
+>  static bool its_alloc_vpe_table(u32 vpe_id)
+>  {
+>  	struct its_node *its;
+> +	int cpu;
+> 
+>  	/*
+>  	 * Make sure the L2 tables are allocated on *all* v4 ITSs. We
+> @@ -2979,6 +3038,15 @@ static bool its_alloc_vpe_table(u32 vpe_id)
+>  			return false;
+>  	}
+> 
+> +	/*
+> +	 * Make sure the L2 tables are allocated for all copies of
+> +	 * the L1 table on *all* v4.1 RDs.
+> +	 */
+> +	for_each_possible_cpu(cpu) {
+
+not: You could predicate this on gic_rdists->has_rvpeid so that you 
+don't
+iterate pointlessly on non v4.1 HW.
+
+> +		if (!allocate_vpe_l1_table_entry(cpu, vpe_id))
+> +			return false;
+> +	}
+> +
+>  	return true;
+>  }
+
+Otherwise, looks good to me.
+
+         M.
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Jazz is not dead. It just smells funny...
