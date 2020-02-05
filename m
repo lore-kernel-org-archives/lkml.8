@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09044C352A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D81C352A1
 	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB6F21927
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069A121D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgBEKvQ (ORCPT
+        id S1728348AbgBEKvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 5 Feb 2020 05:51:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbgBEKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728244AbgBEKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Feb 2020 05:51:14 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5171A2192A;
+        by mail.kernel.org (Postfix) with ESMTPSA id 79ADD222C2;
         Wed,  5 Feb 2020 10:51:14 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1izIH3-001Nsz-8R; Wed, 05 Feb 2020 05:51:13 -0500
-Message-Id: <20200205105113.146566802@goodmis.org>
+        id 1izIH3-001NtT-Co; Wed, 05 Feb 2020 05:51:13 -0500
+Message-Id: <20200205105113.283672584@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 05 Feb 2020 05:49:32 -0500
+Date:   Wed, 05 Feb 2020 05:49:33 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [for-next][PATCH 3/4] tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 4/4] ftrace: Add comment to why rcu_dereference_sched() is open coded
 References: <20200205104929.313040579@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,67 +43,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Fix following instances of sparse error
-kernel/trace/ftrace.c:5667:29: error: incompatible types in comparison
-kernel/trace/ftrace.c:5813:21: error: incompatible types in comparison
-kernel/trace/ftrace.c:5868:36: error: incompatible types in comparison
-kernel/trace/ftrace.c:5870:25: error: incompatible types in comparison
+Because the function graph tracer can execute in sections where RCU is not
+"watching", the rcu_dereference_sched() for the has needs to be open coded.
+This is fine because the RCU "flavor" of the ftrace hash is protected by
+its own RCU handling (it does its own little synchronization on every CPU
+and does not rely on RCU sched).
 
-Use rcu_dereference_protected to dereference the newly annotated pointer.
-
-Link: http://lkml.kernel.org/r/20200205055701.30195-1-frextrite@gmail.com
-
-Signed-off-by: Amol Grover <frextrite@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 2 +-
- kernel/trace/trace.h  | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ kernel/trace/trace.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 01d2ecd66161..481ede3eac13 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5592,7 +5592,7 @@ static const struct file_operations ftrace_notrace_fops = {
- static DEFINE_MUTEX(graph_lock);
- 
- struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
--struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
-+struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
- 
- enum graph_filter_type {
- 	GRAPH_FILTER_NOTRACE	= 0,
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 18ceab59a5ba..022def96d307 100644
+index 022def96d307..8c52f5de9384 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -965,7 +965,7 @@ extern void __trace_graph_return(struct trace_array *tr,
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern struct ftrace_hash __rcu *ftrace_graph_hash;
--extern struct ftrace_hash *ftrace_graph_notrace_hash;
-+extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
- 
- static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- {
-@@ -1018,10 +1018,14 @@ static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
- static inline int ftrace_graph_notrace_addr(unsigned long addr)
- {
- 	int ret = 0;
-+	struct ftrace_hash *notrace_hash;
+@@ -975,6 +975,11 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
  
  	preempt_disable_notrace();
  
--	if (ftrace_lookup_ip(ftrace_graph_notrace_hash, addr))
-+	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
-+						 !preemptible());
-+
-+	if (ftrace_lookup_ip(notrace_hash, addr))
- 		ret = 1;
++	/*
++	 * Have to open code "rcu_dereference_sched()" because the
++	 * function graph tracer can be called when RCU is not
++	 * "watching".
++	 */
+ 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
  
- 	preempt_enable_notrace();
+ 	if (ftrace_hash_empty(hash)) {
+@@ -1022,6 +1027,11 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ 
+ 	preempt_disable_notrace();
+ 
++	/*
++	 * Have to open code "rcu_dereference_sched()" because the
++	 * function graph tracer can be called when RCU is not
++	 * "watching".
++	 */
+ 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+ 						 !preemptible());
+ 
 -- 
 2.24.1
 
