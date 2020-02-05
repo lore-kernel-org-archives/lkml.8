@@ -2,121 +2,133 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C3C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7458C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91496214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="H6Qv++Gh"
+	by mail.kernel.org (Postfix) with ESMTP id BC6D0217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580942586;
+	bh=nn5r09JSEA69HqCVsbRn5ZRAKkatyDwlsdVsj6TXSvg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uE4lJc7g88R8/lJbeMz+Pf2IXcdSyRScKPFNqk3ei/msh6CjjDHD32PLwCRmlrCz6
+	 +6clcQLhBlm9VL4zR4rd+d4Vl9ZHOzYOxxbVTixqsQP80LIsfnnTT1Is3ephMcah9l
+	 L7loQkBX77+9MqzVF72obicJP+E1uucyRwF04QQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgBEWmV (ORCPT
+        id S1727607AbgBEWnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:42:21 -0500
-Received: from mail.kmu-office.ch ([178.209.48.109]:57700 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbgBEWmU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:42:20 -0500
-Received: from trochilidae.toradex.int (unknown [IPv6:2a02:169:3df5::edf])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 44ED15C406B;
-        Wed,  5 Feb 2020 23:42:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1580942538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=IMLaqe+3/cNGrP9F0fpJ/nD3jwSko8goV2jkxITs1to=;
-        b=H6Qv++Ghmk/dESi8x9UO2WFr4rza3Yso7vUCNFheHj5STpl/S0T2OYVoRfQZS+fc4fv98A
-        7aG59rxGn3PZflJrTH4raYUSMHTRsi51ozcDlnXqb5htaCD3NkJ2iGEGnVX8piA1+4N7qR
-        xEOIrnn56ZR/z/NfC86Nsx83QnTdtjs=
-From:   Stefan Agner <stefan@agner.ch>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc:     stefan@agner.ch, linux@armlinux.org.uk, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, arnd@arndb.de,
-        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: [PATCH v2] ARM: imx: limit errata selection to Cortex-A9 based designs
-Date:   Wed,  5 Feb 2020 23:42:14 +0100
-Message-Id: <20200205224214.253098-1-stefan@agner.ch>
-X-Mailer: git-send-email 2.25.0
+        Wed, 5 Feb 2020 17:43:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727493AbgBEWnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:43:05 -0500
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65D72214AF;
+        Wed,  5 Feb 2020 22:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580942584;
+        bh=nn5r09JSEA69HqCVsbRn5ZRAKkatyDwlsdVsj6TXSvg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=v+bTsd3SYSOG83+82drqx4QCsD7STR7LWPil9yz8osY3LqRWEK7Xn4uw3r87HI2ib
+         JC7qWCSMlB6+ZxzIkB79R3eGP4IZ+MSSpijveIabqAbwd3sbBy+ODSLE8R3q4sxdjo
+         BhB3Wreljh++Fzh07OMNhpp5qn9InM8a999FMkYs=
+Date:   Wed, 5 Feb 2020 14:43:04 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: moar new code for 5.6
+Message-ID: <20200205224303.GF6870@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan.agner@toradex.com>
+Hi Linus,
 
-The two erratas 754322 and 775420 are Cortex-A9 specific. The i.MX 6UL
-SoCs include a Cortex-A7 CPU and hence do not need this erratas enabeld.
-This patch moves the errata selection from the family Kconfig symbol to
-the SoC specifc Kconfig symbols where a Cortex-A9 is used.
+Please pull this second batch of new changes for 5.6-rc1.  This contains
+the buffer error code refactoring I mentioned last week, now that it has
+had extra time to complete the full xfs fuzz testing suite to make sure
+there aren't any obvious new bugs.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/mach-imx/Kconfig | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+This merges cleanly against upstream as of about 15 minutes ago.  Note
+that the -merge-7 and -merge-8 tags both point to the same ten day old
+commit; the message attached to -8 reflects only the changes since last
+week's pull.  Please let me know if anything odd happens during the
+merge, though it should be clean.
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index 95584ee02b55..e7d7b90e2cf8 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -471,8 +471,6 @@ config	SOC_IMX53
- config SOC_IMX6
- 	bool
- 	select ARM_CPU_SUSPEND if (PM || CPU_IDLE)
--	select ARM_ERRATA_754322
--	select ARM_ERRATA_775420
- 	select ARM_GIC
- 	select HAVE_IMX_ANATOP
- 	select HAVE_IMX_GPC
-@@ -484,6 +482,8 @@ config SOC_IMX6
- config SOC_IMX6Q
- 	bool "i.MX6 Quad/DualLite support"
- 	select ARM_ERRATA_764369 if SMP
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_775420
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_ARM_TWD
- 	select PINCTRL_IMX6Q
-@@ -494,6 +494,8 @@ config SOC_IMX6Q
- 
- config SOC_IMX6SL
- 	bool "i.MX6 SoloLite support"
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_775420
- 	select PINCTRL_IMX6SL
- 	select SOC_IMX6
- 
-@@ -502,6 +504,8 @@ config SOC_IMX6SL
- 
- config SOC_IMX6SLL
- 	bool "i.MX6 SoloLiteLite support"
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_775420
- 	select PINCTRL_IMX6SLL
- 	select SOC_IMX6
- 
-@@ -510,6 +514,8 @@ config SOC_IMX6SLL
- 
- config SOC_IMX6SX
- 	bool "i.MX6 SoloX support"
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_775420
- 	select PINCTRL_IMX6SX
- 	select SOC_IMX6
- 
--- 
-2.25.0
+--D
 
+The following changes since commit b3531f5fc16d4df2b12567bce48cd9f3ab5f9131:
+
+  xfs: remove unused variable 'done' (2020-01-23 21:24:50 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.6-merge-8
+
+for you to fetch changes up to cdbcf82b86ea24aa942991b4233cd8ddf13f590c:
+
+  xfs: fix xfs_buf_ioerror_alert location reporting (2020-01-26 14:32:27 -0800)
+
+----------------------------------------------------------------
+(More) new code for 5.6:
+- Refactor the metadata buffer functions to return the usual int error
+value instead of the open coded error checking mess we have now.
+
+----------------------------------------------------------------
+Darrick J. Wong (12):
+      xfs: make xfs_buf_alloc return an error code
+      xfs: make xfs_buf_get_map return an error code
+      xfs: make xfs_buf_read_map return an error code
+      xfs: make xfs_buf_get return an error code
+      xfs: make xfs_buf_get_uncached return an error code
+      xfs: make xfs_buf_read return an error code
+      xfs: make xfs_trans_get_buf_map return an error code
+      xfs: make xfs_trans_get_buf return an error code
+      xfs: remove the xfs_btree_get_buf[ls] functions
+      xfs: make xfs_*read_agf return EAGAIN to ALLOC_FLAG_TRYLOCK callers
+      xfs: remove unnecessary null pointer checks from _read_agf callers
+      xfs: fix xfs_buf_ioerror_alert location reporting
+
+ fs/xfs/libxfs/xfs_ag.c          |  21 +++---
+ fs/xfs/libxfs/xfs_alloc.c       |  51 ++++++-------
+ fs/xfs/libxfs/xfs_attr_remote.c |  22 ++----
+ fs/xfs/libxfs/xfs_bmap.c        |  25 ++++---
+ fs/xfs/libxfs/xfs_btree.c       |  45 +----------
+ fs/xfs/libxfs/xfs_btree.h       |  21 ------
+ fs/xfs/libxfs/xfs_da_btree.c    |   8 +-
+ fs/xfs/libxfs/xfs_ialloc.c      |  12 +--
+ fs/xfs/libxfs/xfs_refcount.c    |   6 --
+ fs/xfs/libxfs/xfs_sb.c          |  17 +++--
+ fs/xfs/scrub/agheader_repair.c  |   4 -
+ fs/xfs/scrub/fscounters.c       |   3 -
+ fs/xfs/scrub/repair.c           |  10 ++-
+ fs/xfs/xfs_attr_inactive.c      |  17 +++--
+ fs/xfs/xfs_buf.c                | 161 ++++++++++++++++++++++++----------------
+ fs/xfs/xfs_buf.h                |  33 ++++----
+ fs/xfs/xfs_buf_item.c           |   2 +-
+ fs/xfs/xfs_discard.c            |   2 +-
+ fs/xfs/xfs_dquot.c              |   8 +-
+ fs/xfs/xfs_filestream.c         |  11 ++-
+ fs/xfs/xfs_inode.c              |  12 +--
+ fs/xfs/xfs_log_recover.c        |  30 +++-----
+ fs/xfs/xfs_reflink.c            |   2 -
+ fs/xfs/xfs_rtalloc.c            |   8 +-
+ fs/xfs/xfs_symlink.c            |  37 +++------
+ fs/xfs/xfs_trans.h              |  14 ++--
+ fs/xfs/xfs_trans_buf.c          |  61 ++++++---------
+ 27 files changed, 278 insertions(+), 365 deletions(-)
