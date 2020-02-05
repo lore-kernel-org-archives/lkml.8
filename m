@@ -2,110 +2,108 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43930C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A96C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EE5217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB1B2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QH9Z7+Vg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNbpnarT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgBEJmD (ORCPT
+        id S1728188AbgBEJsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:42:03 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:54632 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgBEJmA (ORCPT
+        Wed, 5 Feb 2020 04:48:25 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51794 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728031AbgBEJsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:42:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=P9m/ElKBYHsznJFkHg/eA1I/ZIQ4f8/M8mbLexB2h7I=; b=QH9Z7+Vgrbwc3s22hS23UyZLm9
-        Fjie6Lbqjmf8sUX5tIUtotLgejsVubirCO5dB4u1oDsmKNDP9Ttvmfzh30as2EilOKkcf52yRZE9e
-        ajky2m0lqQwA+YrkM761mSa4bF2+QgbqqHPUWZnJpAS0lajder9mCaxdsS979w/+zY7JUjP7yBOfY
-        Owh06IHikJ1v0g0Urjsy2QyM0A65BEU66y/mn8AC+lmV5BVX5TyB2A5boF4RQnURG3GeEyyt5jlTO
-        T5tOVHmKKipFjNCNUtMEm78AcdmfJgxJAjJWGIH3BRlxTenwVRc4OF3m+tPfITft/c4RuesOmH+bC
-        70kLJWdQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izHBz-0007HK-U3; Wed, 05 Feb 2020 09:41:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 78A7C3011C6;
-        Wed,  5 Feb 2020 10:40:07 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 46C772B76AF47; Wed,  5 Feb 2020 10:41:53 +0100 (CET)
-Date:   Wed, 5 Feb 2020 10:41:53 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v5 6/7] locking/lockdep: Reuse freed chain_hlocks entries
-Message-ID: <20200205094153.GH14879@hirez.programming.kicks-ass.net>
-References: <20200203164147.17990-1-longman@redhat.com>
- <20200203164147.17990-7-longman@redhat.com>
- <20200204123629.GO14914@hirez.programming.kicks-ass.net>
- <8fd7ce61-d8eb-6bde-7d41-54b9920e3e39@redhat.com>
+        Wed, 5 Feb 2020 04:48:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580896103;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iYOL7XjTIAxW01ootqLvfDzjCPh14aTGE/Ook11e7A0=;
+        b=UNbpnarT5+A1istX5vI7opKJPcqfAMOY2sWXrJ01YiGeQFSD5vc+zwklKw6xMNMb8cqWPf
+        qiNAe2CdCqbqCbKn1jdRtdeWBzcKH0KLJQqgmR/C1PZTjJUIe1O/pM4hWaEmsCRBlYSMCY
+        cDi8k1laaY/Tpu4m9oKddS2qa86EBwM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-APXccsL3OvOt2wEVi3WyLQ-1; Wed, 05 Feb 2020 04:48:22 -0500
+X-MC-Unique: APXccsL3OvOt2wEVi3WyLQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B2318FE860;
+        Wed,  5 Feb 2020 09:48:20 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 313B51BC6D;
+        Wed,  5 Feb 2020 09:48:08 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 10:48:06 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinechin@redhat.com, sean.j.christopherson@intel.com,
+        pbonzini@redhat.com, jasowang@redhat.com, yan.y.zhao@intel.com,
+        mst@redhat.com, kevin.tian@intel.com, alex.williamson@redhat.com,
+        dgilbert@redhat.com, vkuznets@redhat.com
+Subject: Re: [PATCH 13/14] KVM: selftests: Let dirty_log_test async for dirty
+ ring test
+Message-ID: <20200205094806.dqkzpxhrndocjl6g@kamzik.brq.redhat.com>
+References: <20200205025105.367213-1-peterx@redhat.com>
+ <20200205025842.367575-1-peterx@redhat.com>
+ <20200205025842.367575-10-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8fd7ce61-d8eb-6bde-7d41-54b9920e3e39@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200205025842.367575-10-peterx@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 11:45:15AM -0500, Waiman Long wrote:
-> On 2/4/20 7:36 AM, Peter Zijlstra wrote:
-> > --- a/kernel/locking/lockdep_proc.c
-> > +++ b/kernel/locking/lockdep_proc.c
-> > @@ -278,9 +278,11 @@ static int lockdep_stats_show(struct seq
-> >  #ifdef CONFIG_PROVE_LOCKING
-> >  	seq_printf(m, " dependency chains:             %11lu [max: %lu]\n",
-> >  			lock_chain_count(), MAX_LOCKDEP_CHAINS);
-> > -	seq_printf(m, " dependency chain hlocks:       %11lu [max: %lu]\n",
-> > -			MAX_LOCKDEP_CHAIN_HLOCKS - nr_free_chain_hlocks,
-> > +	seq_printf(m, " dependency chain hlocks used:  %11lu [max: %lu]\n",
-> > +			MAX_LOCKDEP_CHAIN_HLOCKS - (nr_free_chain_hlocks - nr_lost_chain_hlocks),
-> >  			MAX_LOCKDEP_CHAIN_HLOCKS);
-> > +	seq_printf(m, " dependency chain hlocks free:  %11lu\n", nr_free_chain_hlocks);
-> > +	seq_printf(m, " dependency chain hlocks lost:  %11lu\n", nr_lost_chain_hlocks);
-> 
-> I do have some comments on this. There are three buckets now - free,
-> lost, used. They add up to MAX_LOCKDEP_CHAIN_HLOCKS. I don't think we
-> need to list all three. We can compute the third one by subtracting max
-> from the other two.
-> 
-> Something like:
-> 
-> diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-> index 14932ea50317..6fe6a21c58d3 100644
-> --- a/kernel/locking/lockdep_proc.c
-> +++ b/kernel/locking/lockdep_proc.c
-> @@ -278,9 +278,12 @@ static int lockdep_stats_show(struct seq_file *m,
-> void *v)
->  #ifdef CONFIG_PROVE_LOCKING
->         seq_printf(m, " dependency chains:             %11lu [max: %lu]\n",
->                         lock_chain_count(), MAX_LOCKDEP_CHAINS);
-> -       seq_printf(m, " dependency chain hlocks:       %11lu [max: %lu]\n",
-> -                       MAX_LOCKDEP_CHAIN_HLOCKS - nr_free_chain_hlocks,
-> +       seq_printf(m, " dependency chain hlocks used:  %11lu [max: %lu]\n",
-> +                       MAX_LOCKDEP_CHAIN_HLOCKS -
-> +                       (nr_free_chain_hlocks + nr_lost_chain_hlocks),
->                         MAX_LOCKDEP_CHAIN_HLOCKS);
-> +       seq_printf(m, " dependency chain hlocks lost:  %11lu\n",
-> +                       nr_lost_chain_hlocks);
->  #endif
->  
+On Tue, Feb 04, 2020 at 09:58:41PM -0500, Peter Xu wrote:
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index 4b78a8d3e773..e64fbfe6bbd5 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -115,6 +115,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva);
+>  struct kvm_run *vcpu_state(struct kvm_vm *vm, uint32_t vcpuid);
+>  void vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+>  int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+> +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+>  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid);
+>  void vcpu_set_mp_state(struct kvm_vm *vm, uint32_t vcpuid,
+>  		       struct kvm_mp_state *mp_state);
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 25edf20d1962..5137882503bd 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -1203,6 +1203,14 @@ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
+>  	return rc;
+>  }
+>  
+> +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
+> +{
+> +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> +
+> +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+> +	return ioctl(vcpu->fd, KVM_RUN, NULL);
+> +}
+> +
+>  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid)
+>  {
+>  	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
 
-Sure, also I tihnk the compiler is unhappy about %lu vs 'unsigned int'
-for some of them.
+I think we should add a vcpu_get_fd(vm, vcpuid) function instead, and
+then call ioctl directly from the test.
+
+Thanks,
+drew
+
