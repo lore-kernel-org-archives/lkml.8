@@ -2,163 +2,112 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694B5C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45110C35243
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E252072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:38:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WSArBGQM"
+	by mail.kernel.org (Postfix) with ESMTP id 269902072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgBEKiK (ORCPT
+        id S1728308AbgBEKjP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 05:38:10 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:40617 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727234AbgBEKiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 05:38:10 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580899089; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=5ilXVdiiGsHsIhZ8uHUoDTDngAhrh2sBE7trFb5Vk7s=;
- b=WSArBGQMTleQtKB+WB01kLgo1aXWgT8FB7dBuldaKLrX4f6QCpJbUrkML80KvQus/AlIk6KZ
- uW7u25dpEc0vtY8P7HW4KMDkedW8xVg2PyP+RDrJMbWs8ARLJR36Mu1Gfo2Yn7xdeXlUAT/Z
- QgCHBXEWk8TeqFR6fSXmmPzTs6Y=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a9b06.7fd1a5f669d0-smtp-out-n01;
- Wed, 05 Feb 2020 10:37:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B5EC5C447A1; Wed,  5 Feb 2020 10:37:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gubbaven)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A903C433CB;
-        Wed,  5 Feb 2020 10:37:58 +0000 (UTC)
+        Wed, 5 Feb 2020 05:39:15 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2374 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727170AbgBEKjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 05:39:15 -0500
+Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id ECE3A413CD6F6985D433;
+        Wed,  5 Feb 2020 10:39:13 +0000 (GMT)
+Received: from fraeml706-chm.china.huawei.com (10.206.15.55) by
+ lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 5 Feb 2020 10:39:13 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 5 Feb 2020 11:39:13 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Wed, 5 Feb 2020 11:39:13 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2 3/8] ima: Evaluate error in init_ima()
+Thread-Topic: [PATCH v2 3/8] ima: Evaluate error in init_ima()
+Thread-Index: AQHV3A/yDtFzVQlGOECsIOYH0olaDqgMaBfw
+Date:   Wed, 5 Feb 2020 10:39:13 +0000
+Message-ID: <2a45c4f2304549eb870279e83c5a3d86@huawei.com>
+References: <20200205103317.29356-1-roberto.sassu@huawei.com>
+ <20200205103317.29356-4-roberto.sassu@huawei.com>
+In-Reply-To: <20200205103317.29356-4-roberto.sassu@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 16:07:57 +0530
-From:   gubbaven@codeaurora.org
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        robh@kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
-        yshavit@google.com
-Subject: Re: [PATCH v2 1/2] Bluetooth: hci_qca: Enable clocks required for BT
- SOC
-In-Reply-To: <FA054FF0-C1EF-4749-96C3-A86ECD064FE9@holtmann.org>
-References: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
- <20200203195632.GM3948@builder>
- <FA054FF0-C1EF-4749-96C3-A86ECD064FE9@holtmann.org>
-Message-ID: <1ff3bfe6793972ab47675bf6b63cc596@codeaurora.org>
-X-Sender: gubbaven@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+> -----Original Message-----
+> From: Roberto Sassu
+> Sent: Wednesday, February 5, 2020 11:33 AM
+> To: zohar@linux.ibm.com; James.Bottomley@HansenPartnership.com;
+> jarkko.sakkinen@linux.intel.com
+> Cc: linux-integrity@vger.kernel.org; linux-security-module@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Silviu Vlasceanu
+> <Silviu.Vlasceanu@huawei.com>; Roberto Sassu
+> <roberto.sassu@huawei.com>
+> Subject: [PATCH v2 3/8] ima: Evaluate error in init_ima()
+> 
+> Evaluate error in init_ima() before register_blocking_lsm_notifier() and
+> return if not zero.
+> 
+> Fixes: b16942455193 ("ima: use the lsm policy update notifier")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-On 2020-02-04 14:34, Marcel Holtmann wrote:
-> Hi Bjorn,
-> 
->>> Instead of relying on other subsytem to turn ON clocks
->>> required for BT SoC to operate, voting them from the driver.
->>> 
->>> Signed-off-by: Venkata Lakshmi Narayana Gubba 
->>> <gubbaven@codeaurora.org>
->>> ---
->>> v2:
->>>   * addressed forward declarations
->>>   * updated with devm_clk_get_optional()
->>> 
->>> ---
->>> drivers/bluetooth/hci_qca.c | 25 +++++++++++++++++++++++++
->>> 1 file changed, 25 insertions(+)
->>> 
->>> diff --git a/drivers/bluetooth/hci_qca.c 
->>> b/drivers/bluetooth/hci_qca.c
->>> index d6e0c99..73706f3 100644
->>> --- a/drivers/bluetooth/hci_qca.c
->>> +++ b/drivers/bluetooth/hci_qca.c
->>> @@ -1738,6 +1738,15 @@ static int qca_power_off(struct hci_dev *hdev)
->>> 	return 0;
->>> }
->>> 
->>> +static int qca_setup_clock(struct clk *clk, bool enable)
->>> +{
->>> +	if (enable)
->>> +		return clk_prepare_enable(clk);
->>> +
->>> +	clk_disable_unprepare(clk);
->>> +	return 0;
->>> +}
->> 
->> As Marcel requested, inline these.
->> 
->>> +
->>> static int qca_regulator_enable(struct qca_serdev *qcadev)
->>> {
->>> 	struct qca_power *power = qcadev->bt_power;
->>> @@ -1755,6 +1764,13 @@ static int qca_regulator_enable(struct 
->>> qca_serdev *qcadev)
->>> 
->>> 	power->vregs_on = true;
->>> 
->>> +	ret = qca_setup_clock(qcadev->susclk, true);
->>> +	if (ret) {
->>> +		/* Turn off regulators to overcome power leakage */
->> 
->> You can omit this comment as well, as the name of the function you 
->> call
->> is aptly named.
-[Venkata] :
-We will update in next patch set.
->> 
->>> +		qca_regulator_disable(qcadev);
->>> +		return ret;
->> 
->> Just return ret below instead.
-[Venkata] :
-We will update in next patch set
->> 
->>> +	}
->>> +
->>> 	return 0;
->>> }
->>> 
->>> @@ -1773,6 +1789,9 @@ static void qca_regulator_disable(struct 
->>> qca_serdev *qcadev)
->>> 
->>> 	regulator_bulk_disable(power->num_vregs, power->vreg_bulk);
->>> 	power->vregs_on = false;
->>> +
->>> +	if (qcadev->susclk)
->> 
->> In the enable path you (correctly) rely on passing NULL to the clock
->> code, so do the same here.
-[Venkata] :
-We will update in next patch set.
-> 
-> I already pushed the patch, but I am happy to accept a cleanup patch.
-> 
-> Regards
-> 
-> Marcel
+Add in CC stable@vger.kernel.org.
 
-Regards,
-Venkata.
+Roberto
+
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
+
+> ---
+>  security/integrity/ima/ima_main.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_main.c
+> b/security/integrity/ima/ima_main.c
+> index d7e987baf127..a16c148ed90d 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -738,6 +738,9 @@ static int __init init_ima(void)
+>  		error = ima_init();
+>  	}
+> 
+> +	if (error)
+> +		return error;
+> +
+>  	error = register_blocking_lsm_notifier(&ima_lsm_policy_notifier);
+>  	if (error)
+>  		pr_warn("Couldn't register LSM notifier, error %d\n", error);
+> --
+> 2.17.1
+
