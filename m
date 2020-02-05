@@ -2,175 +2,118 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F46C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D19C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FE021741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WwA61MLa"
+	by mail.kernel.org (Postfix) with ESMTP id 82C9E21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgBEMXM (ORCPT
+        id S1727771AbgBEMY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:23:12 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46766 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726308AbgBEMXL (ORCPT
+        Wed, 5 Feb 2020 07:24:29 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53182 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgBEMY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:23:11 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580905390; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=uMCCQYZszq+bmmu00qnksmPsuxhQeLZVhG8wCPSsiv4=; b=WwA61MLaiDCsK2x/sdWfzAyFTZ/BuPgHAs1Ts0YKHdbHDWwvy++MkCAvKFCpjQ397Bj8dB9P
- +qmFtSjNt3dv3QWLiJqP4lqb5Y0ywEAt0uOPgbhjLwTnGm9Y1UKd5Ql9M7ctpLKkEMhdEVlp
- Sb94bpG7UuPz+2bPJoDj/imTwhw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3ab3ad.7f81a21f6dc0-smtp-out-n02;
- Wed, 05 Feb 2020 12:23:09 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 11713C447A3; Wed,  5 Feb 2020 12:23:09 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B304C433CB;
-        Wed,  5 Feb 2020 12:23:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B304C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        Lorenzo.Pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
-        rjw@rjwysocki.net
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
- <20200203170832.GA38466@bogus>
- <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
- <20200204152132.GA44858@bogus>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
-Date:   Wed, 5 Feb 2020 17:53:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 5 Feb 2020 07:24:29 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: alyssa)
+        with ESMTPSA id 4104628DAA6
+Date:   Wed, 5 Feb 2020 07:24:23 -0500
+From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/panfrost: Don't try to map on error faults
+Message-ID: <20200205122423.GA2903@kevin>
+References: <20200205100719.24999-1-tomeu.vizoso@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204152132.GA44858@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Content-Disposition: inline
+In-Reply-To: <20200205100719.24999-1-tomeu.vizoso@collabora.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2/4/2020 8:51 PM, Sudeep Holla wrote:
-> On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
->> On 2/3/2020 10:38 PM, Sudeep Holla wrote:
->>> On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
->>>> From: Ulf Hansson <ulf.hansson@linaro.org>
->>>>
->>>> If the hierarchical CPU topology is used, but the OS initiated mode isn't
->>>> supported, we need to rely solely on the regular cpuidle framework to
->>>> manage the idle state selection, rather than using genpd and its
->>>> governor.
->>>>
->>>> For this reason, introduce a new PSCI DT helper function,
->>>> psci_dt_pm_domains_parse_states(), which parses and converts the
->>>> hierarchically described domain idle states from DT, into regular flattened
->>>> cpuidle states. The converted states are added to the existing cpuidle
->>>> driver's array of idle states, which make them available for cpuidle.
->>>>
->>> And what's the main motivation for this if OSI is not supported in the
->>> firmware ?
->> Hi Sudeep,
->>
->> Main motivation is to do last-man activities before the CPU cluster can
->> enter a deep idle state.
->>
-> Details on those last-man activities will help the discussion. Basically
-> I am wondering what they are and why they need to done in OSPM ?
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sudeep,
+Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>=20
 
-there are cases like,
+Although it might be nice to
 
-Last cpu going to deepest idle mode need to lower various resoruce 
-requirements (for eg DDR freq).
+	#define TRANSLATION_FAULT_LEVEL1 0xC1
+	...
+	#define TRANSLATION_FAULT_LEVEL4 0xC4
 
-This is done by calling rpmh_flush which send SLEEP values for various 
-shared resources.
+and then use semantic names instead of magic values. Minimally maybe add
+a comment explaining that.
 
->>>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>>> [applied to new path, resolved conflicts]
->>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->>>> ---
->>>>    drivers/cpuidle/cpuidle-psci-domain.c | 137 +++++++++++++++++++++++++++++-----
->>>>    drivers/cpuidle/cpuidle-psci.c        |  41 +++++-----
->>>>    drivers/cpuidle/cpuidle-psci.h        |  11 +++
->>>>    3 files changed, 153 insertions(+), 36 deletions(-)
->>>>
->>>> diff --git a/drivers/cpuidle/cpuidle-psci-domain.c b/drivers/cpuidle/cpuidle-psci-domain.c
->>>> index 423f03b..3c417f7 100644
->>>> --- a/drivers/cpuidle/cpuidle-psci-domain.c
->>>> +++ b/drivers/cpuidle/cpuidle-psci-domain.c
->>>> @@ -26,13 +26,17 @@ struct psci_pd_provider {
->>>>    };
->>>>
->>>>    static LIST_HEAD(psci_pd_providers);
->>>> -static bool osi_mode_enabled __initdata;
->>>> +static bool osi_mode_enabled;
->>>>
->>>>    static int psci_pd_power_off(struct generic_pm_domain *pd)
->>>>    {
->>>>    	struct genpd_power_state *state = &pd->states[pd->state_idx];
->>>>    	u32 *pd_state;
->>>>
->>>> +	/* If we have failed to enable OSI mode, then abort power off. */
->>>> +	if ((psci_has_osi_support()) && !osi_mode_enabled)
->>>> +		return -EBUSY;
->>>> +
->>> Why is this needed ? IIUC we don't create genpd domains if OSI is not
->>> enabled.
->> we do create genpd domains, for cpu domains, we just abort power off here
->> since idle states are converted into regular flattened mode.
->>
-> OK, IIRC the OSI patches from Ulf didn't add the genpd or rather removed
-> them in case of any failure to enable OSI. Has that been changed ? If so,
-> why ?
->
->> however genpd poweroff will be used by parent domain (rsc in this case)
->> which is kept in hireachy in DTSI with cluster domain to do last man
->> activities.
->>
-> I am bit confused here. Either we do OSI or PC and what you are describing
-> sounds like a mix-n-match to me and I am totally against it.
+On Wed, Feb 05, 2020 at 11:07:16AM +0100, Tomeu Vizoso wrote:
+> If the exception type isn't one of the normal faults, don't try to map
+> and instead go straight to a terminal fault.
+>=20
+> Otherwise, we can get flooded by kernel warnings and further faults.
+>=20
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/pa=
+nfrost/panfrost_mmu.c
+> index 763cfca886a7..80abddb4544c 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> @@ -596,8 +596,9 @@ static irqreturn_t panfrost_mmu_irq_handler_thread(in=
+t irq, void *data)
+>  		source_id =3D (fault_status >> 16);
+> =20
+>  		/* Page fault only */
+> -		if ((status & mask) =3D=3D BIT(i)) {
+> -			WARN_ON(exception_type < 0xC1 || exception_type > 0xC4);
+> +		if ((status & mask) =3D=3D BIT(i) &&
+> +		     exception_type >=3D 0xC1 &&
+> +		     exception_type <=3D 0xC4) {
+> =20
+>  			ret =3D panfrost_mmu_map_fault_addr(pfdev, i, addr);
+>  			if (!ret) {
+> --=20
+> 2.21.0
+>=20
 
-we still do PC based on sc7180. there is no OSI.
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-can you please check v4 series, i have cleaned this change by remove 
-converter part.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl46s+0ACgkQ/v5QWgr1
+WA3Xtw//WjS7YeR6jL+CSEjw3qqi00m2hORBCxE2+yrEUv3RgF9pYj8ugBAZIV20
+TdvPTpZulaMFU8v3eV8T9e5RyrUrlUCjPBodW9Sc1VUXLSSUXAeE+gnMpUAB12pR
+f14Tmqc7q6e0eJsuFmA+cICJqkzmWQcnhBMhaXxaW0uF2ziew4/GaHo8F5tFyzue
+mu/t6u/RYB/GRIMtrAElsVGKGzgjw6TpCB4TiAjK20OTNkJfeZLHfpFop/nEwPcO
+VrY+J43BJikSleYbyUhxbpfhTDfmxaeg8TJPsRvXayeJ17oIh1Cz1gV/TrR6AGLF
+jrxfL+bkQ3QiOPJevtFy3w7G7uyC5LdpFdSYdYCiadctmhdJC8R/yFAMyxhV+HIv
+0MGEWvUnNobNBP88nnVT7JoBcbYIc4ncfJB9+L4X4wWpGCy6JOFc5Gz36re0pI4t
+7L5E7/CkI+zapX14ffqYlCNvuXM3kXcWavBcsiwGmW9gNUB5iu8dJPCwsShCICSl
+1zdePzXDjj8VVFy6aE8agY03hhTDG9qPT/Btxbt/Jj5W3UtMKGrl+u65V8HtZ9Jt
+PW/2Dsh7rwGHcqCya/zyNEZmlBQk1VZKQkcc3V22bH1pyb1VTdklQZ1PCwQPIafp
+aCzVPpgtKocCZTf30LVncWNnMxAFspoSppBE3jPBtk8VTLWdSqo=
+=AhWm
+-----END PGP SIGNATURE-----
 
-Maulik
-
->
-> --
-> Regards,
-> Sudeep
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--sdtB3X0nJg68CQEu--
