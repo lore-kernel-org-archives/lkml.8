@@ -2,223 +2,91 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4F8C3524B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 01:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11050C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 01:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0712085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 01:17:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aEb2zaRN"
+	by mail.kernel.org (Postfix) with ESMTP id DAA622085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 01:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgBEBR1 (ORCPT
+        id S1727777AbgBEBSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 20:17:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45821 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgBEBR1 (ORCPT
+        Tue, 4 Feb 2020 20:18:51 -0500
+Received: from smtprelay0098.hostedemail.com ([216.40.44.98]:33389 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727673AbgBEBSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 20:17:27 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so83364pgk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 17:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ehUZDKkbTDStuHx/pS6DuaspA135Mfd5By/OONirJ34=;
-        b=aEb2zaRNdrPfZXojfMR1qDxiSMQH7kF6i3jce+ifoVVxnFMNKmisV+hk1sz++QoJKa
-         L5UzKB7KJuV96SSbHGx+5SNdd2HWC9ad+MVsOfAINXYqjnM5ypQYBmwlXtH/H2XSzAlJ
-         U2uGA/3bAraovLBvIgxih9u02lM9cXP3Tqcqi2kluLyXyYZpt68kLMH5mZnoY1GdxD4D
-         7IeaLunIGZKPf6F4RzgL0DCN/BPTeHCSPtlsa75CkOf+PY6+oFXZp82GAl2nlushrGx7
-         P6wX1T5HSrusG/TUo0/eMswoN2VU2Q5XLghEbYdh+K6NVgYwiYRMe8jc0/W5oi3PfkKE
-         x1LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ehUZDKkbTDStuHx/pS6DuaspA135Mfd5By/OONirJ34=;
-        b=d6V2N0Rzd3vqFvuH8G5el6SMj6t1vzIJjRukoezXuMClWrOUDC9qLgAJOS9tO7AZO6
-         VtE0rejjhVbeK3zZJ+f+c/wscColPycreJ6aCUyaxQVeXdU32+wGHvyUA5wvPAuvtinx
-         NaV7T4qdp5ih8ilvviu2ryn8/B1O5I/Rh9zLJZC6UQSBAnAXHjjP5R1vAVHydzbX+v/S
-         dhQfiR0dyz7PbX1Fw16elp7viz2V8UbPo1MGcu5Tr53/FmU4sOKkgmXfwAzLAAb4dIpJ
-         vDHtrgBS84sV/aaRj6jcDE0FdkVg8V2Y6jQT1Np7dP72WetTS2SBvG7vDsU7YZ+fzYJz
-         THIg==
-X-Gm-Message-State: APjAAAVmd2z9rld7psngJUzznZDY0qiTP3qWa+l4FnCG5Qvkfcghz7OJ
-        o0Q5TzVkxKjKp0mIlKNlnTgkCHGhvlA47kNqPyJ1iA==
-X-Google-Smtp-Source: APXvYqzWPWbhmPlUq6xrTvgK8Vlg/kG9jG609SLnGNNW/4fPUY+RmVKzl+2/MeVgiCT4fpy3B7gKQ1Ve7/WdQecdozw=
-X-Received: by 2002:a63:480f:: with SMTP id v15mr33530785pga.201.1580865445849;
- Tue, 04 Feb 2020 17:17:25 -0800 (PST)
+        Tue, 4 Feb 2020 20:18:50 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 292C9100E7B42;
+        Wed,  5 Feb 2020 01:18:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cap53_4cbb811b77b29
+X-Filterd-Recvd-Size: 2755
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  5 Feb 2020 01:18:47 +0000 (UTC)
+Message-ID: <ee9b52c291fe7f090d6516397db978eaaae6c657.camel@perches.com>
+Subject: Re: [PATCH v2 1/2] kernel.h: Split out min()/max() et al helpers
+From:   Joe Perches <joe@perches.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Trond@black.fi.intel.com,
+        Myklebust@black.fi.intel.com, trond.myklebust@hammerspace.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 04 Feb 2020 17:17:36 -0800
+In-Reply-To: <c02c86a1-5df3-1b94-78a7-3948bd9e64cb@rasmusvillemoes.dk>
+References: <20200204170412.30106-1-andriy.shevchenko@linux.intel.com>
+         <c02c86a1-5df3-1b94-78a7-3948bd9e64cb@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-3-brendanhiggins@google.com> <e060bdfc-5cdb-fb62-48b0-cc54c7bc72ce@gmail.com>
- <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com> <1da1538d-2e4c-0ed0-5fae-6f9033230c46@gmail.com>
-In-Reply-To: <1da1538d-2e4c-0ed0-5fae-6f9033230c46@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 4 Feb 2020 17:17:14 -0800
-Message-ID: <CAFd5g45=m9Rvqf__5FW6HXjSytHJwX=mue-BO+TZMg0JP-BGmw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] arch: um: add linker section for KUnit test suites
-To:     Frank Rowand <frowand.list@gmail.com>,
-        David Gow <davidgow@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 3:17 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 2/4/20 4:30 PM, Brendan Higgins wrote:
-> > On Tue, Feb 4, 2020 at 1:59 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 1/30/20 5:08 PM, Brendan Higgins wrote:
-> >>> Add a linker section to UML where KUnit can put references to its test
-> >>> suites. This patch is an early step in transitioning to dispatching all
-> >>> KUnit tests from a centralized executor rather than having each as its
-> >>> own separate late_initcall.
-> >>
-> >> All architectures please.
-> >
-> > I *am* supporting all architectures with this patchset.
-> >
-> > The first patch in this series adds support to all architectures
-> > except UML (admittedly I only tried x86 and ARM, 32 bit and 64 bit for
->
-> Right you are.  My mind did not span from patch 1 to patch 2. Apologies for
-> the noise.
->
->
-> > both, but I am pretty sure someone tried it for POWER and something
-> > else, so maybe I should try it with others before submission). A patch
-> > specific for UML, this patch, was needed because UML is a special
-> > snowflake and has a bunch of special linker scripts that don't make
-> > the change in vmlinux.lds.h (the previous patch) sufficient.
-> >
-> >> The early versions of Kunit documented reliance on UML.  Discussion lead to
-> >> the conclusion that real architectures and real hardware would be supported.
-> >
-> > I am *very* aware.
-> >
-> > I would never intentionally break support for other architectures. I
-> > know it is very important to you, Alan, and others.
-> >
-> >> This like this are what make me reluctant to move devicetree unittests to
-> >> KUnit.
-> >
-> > Hopefully I can reassure you then:
-> >
-> > With Alan as a regular contributor who cares very much about non-UML
-> > architectures, it would be very unlikely for me to accidentally break
-> > support for other architectures without us finding out before a
-> > release.
-> >
-> > I also periodically test KUnit on linux-next on x86-64. I have gotten
-> > bugs for other architectures from Arnd Bergmann and one of the m86k
-> > maintainers who seems to play around with it as well.
-> >
-> > So yeah, other people care about this too, and I would really not want
-> > to make any of them unhappy.
->
-> Thanks for the extra reassurance.
+On Wed, 2020-02-05 at 00:23 +0100, Rasmus Villemoes wrote:
+> On 04/02/2020 18.04, Andy Shevchenko wrote:
+> > kernel.h is being used as a dump for all kinds of stuff for a long time.
+> > Here is the attempt to start cleaning it up by splitting out min()/max()
+> > et al helpers.
+> > 
+> > At the same time convert users in header and lib folder to use new header.
+> > Though for time being include new header back to kernel.h to avoid twisted
+> > indirected includes for existing users.
+> 
+> This is definitely long overdue, so thanks for taking this on. I think
+> minmax.h is fine as a header on its own, but for the other one, I think
+> you should go even further - and perhaps all these should go in a
+> include/math/ dir (include/linux/ has ~1200 files), so we'd have
+> math/minmax.h, math/round.h, math/ilog2.h, math/gcd.h etc., each
+> containing just enough #includes to be self-contained (so if there's a
+> declaration of something taking a u32, there's no way around having it
+> include types.h (or wherever that's defined).
 
-No worries. This actually makes me think that we should probably have
-some kind of automated test that at least makes sure that popular
-KUnit architectures are not broken. Someone is currently adding KUnit
-support to KernelCI; maybe we can have KernelCI run multiple
-architecture tests after the initial support is complete.
+I think that's not at all desirable.
 
-> >> Can you please add a section to the KUnit documentation that lists things
-> >> like the expectations, requirements, limitations, etc for a test case that
-> >> is run by KUnit?  Some examples that pop to mind from recent discussions
-> >> and my own experiences:
-> >>
-> >>   - Each test case is invoked after late_init is complete.
-> >>       + Exception: the possible value of being able to run a unit test
-> >>         at a specific runlevel has been expressed.  If an actual unit
-> >>         test can be shown to require running earlier, this restriction
-> >>         will be re-visited.
-> >>
-> >>   - Each test case must be idempotent.  Each test case may be called
-> >>     multiple times, and must generate the same result each time it
-> >>     is called.
-> >>       + Exception 1: a test case can be declared to not be idempotent
-> >>         [[ mechanism TBD ]], in which case KUnit will not call the
-> >>         test case a second time without the kernel rebooting.
-> >>       + Exception 2: hardware may not be deterministic, so a test that
-> >>         always passes or fails when run under UML may not always to
-> >>         so on real hardware.  <--- sentence copied from
-> >>         Documentation/dev-tools/kunit/usage.rst
-> >>           [[ This item and 1st exception do not exist yet, but will exist
-> >>           in some form if the proposed proc filesystem interface is
-> >>           added. ]]
-> >>
-> >>   - KUnit provides a helpful wrapper to simplify building a UML kernel
-> >>     containing the KUnit test cases, booting the UML kernel, and
-> >>     formatting the output from the test cases.  This wrapper MUST NOT
-> >>     be required to run the test cases or to determine a test result.
-> >>     The formatting may provide additional analysis and improve
-> >>     readability of a test result.
-> >>
-> >>   - .... There is more that belongs here, but I'm getting side tracked
-> >>     here, when I'm trying to instead convert devicetree unittests to
-> >>     KUnit and want to get back to that.
-> >
-> > Sure, I think that's a great start! Thanks for that. I hope you don't
-> > mind if I copy and paste some of it.
->
-> Please do.  And no need to credit me.
->
->
-> > It kind of sounds like you are talking about more of a requirements
-> > doc than the design doc I was imagining in my reply to you on the
-> > cover letter, which is fine. The documentation is primarily for people
-> > other than me, so whatever you and others think is useful, I will do.
-> >
->
-> I wasn't really sure what to label it as.  My inspiration was based
-> a little bit on reading through the Linux 5.5 KUnit source and
-> documentation, and trying to understand the expectations of the
-> KUnit framework and what the test cases have to either obey or
-> can expect.
->
-> I think there is a lot of history that you know, but is only visible
-> to test implementors if they read through the past couple of years
-> email threads.
+kernel.h as a monolithic include block is pretty useful.
 
-Yeah, that's no good. We need to provide a better experience than
-that. David has gotten deeply involved relatively recently: I suspect
-that he might have some good insight on this.
+Separating out the various bits into separate files is
+OK, but kernel.h should #include them all.
 
-David, you mentioned offline that there are some philosophical changes
-in how we think about KUnit that has happened that you feel have never
-quite been captured in the docs. Do you think this is part of what
-Frank has pointed out here? If not, do you have any thoughts about
-what we should call this documentation section?
+One day a precompiled header of just kernel.h would be
+useful to reduce overall compilation time.  Converting
+all the other source files that use a small part of the
+existing kernel.h into multiple includes would not allow
+precompiled headers to work efficiently.
 
-Shuah's first KUnit PR seemed to imply that KUnit was primarily for
-UML, or only fully supported under UML. So I think I might be the odd
-one out thinking that that has changed and the documentation properly
-conveys that.
+
+
