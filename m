@@ -2,320 +2,226 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967EBC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D66C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E1A2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AA12082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYYUZew3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz6IfCTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgBEVHA (ORCPT
+        id S1727305AbgBEVQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:07:00 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46802 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgBEVHA (ORCPT
+        Wed, 5 Feb 2020 16:16:16 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53813 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgBEVQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:07:00 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y8so1367546pll.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 13:06:59 -0800 (PST)
+        Wed, 5 Feb 2020 16:16:16 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s10so4015412wmh.3;
+        Wed, 05 Feb 2020 13:16:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=51aeHheY/rt4DM+DW672ePDwXYA8QyYv8DwatD1TXuQ=;
-        b=LYYUZew3BwAE1xoByIz6JPLp2v+5cIbt1vVEbEqSwZU+daxgKZMqXXZNwDO/EaTk89
-         mefzudnZvyMQwVKqJBHBxwO1RvNhAupM3vfp2JZ3DQ9IdQeNS5iXI/3PVzYsCui3DGPj
-         7P3Q/vJL71vxTJcoskqAqh1emNeO13XS5W1DGsoywcadkfDagL33w7P5O8vZJh7wky6q
-         WmtHRCfKjsTkS9Sykv4FGUNUyJGu8Z8qxovwgVpr21LdlZRplwPHK7f0FFKzx2hqDm+V
-         tcRkyuNlVmcsvTiGRvHRtK34hPDDBz/R9Y+v2L0jqeFQky+scE8b0KIuMnI+V4AGNj/u
-         ZS6Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ynqPK9O5c/fnULNbN+OoxL2G/QEDXaAaZBUdKRK1g+Q=;
+        b=Tz6IfCTorokKtvwisezDI2uIyip1iyl/nKLcADWkM+/1qxpyWMENBRqANwdThMudJI
+         dmUo+b4SN8HS5to4sMsguLHonGyUM1UI8jvqhk4LhS/6ehADQitn0XQV+IiVp1jKBMNb
+         lGPbpEF7tgfflM/Rf3oP/F/lJko6cgZMp5HJ+okvTJmPG42ladqnz4A9xBc+KE0ZjJRL
+         U2TuDB/bEadc/hBSDlFdiukMnH4bFKr/uMs9ksu3yYiE2eSSX72n3Ok8YLj/ABoMatVs
+         IAm6wJP96GPN59BoR7R7JicoJsRoMSfNSuOJVm2a8+gKFzA/uXeRJiI91yDSrD66/MUO
+         HVCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=51aeHheY/rt4DM+DW672ePDwXYA8QyYv8DwatD1TXuQ=;
-        b=XiPxYB9UPzaRQ1BxN6ERtnT1BR0Wn4hWAvQYPfyMM47kkAgj0mlpgSgfcdxWgYKsiF
-         PU3I2eqZWpCw6xAq0Q3SGkI+dYYy2V27FFtjDrRc4tpstLWYnVvIH020Ehh5Ah7YCcsk
-         h5UKybojlhh3kOj7BNfLRD7rrnySCkBHMqj/ELcwh0h+Re9qOWkMb9TaW3aMHieQyQ2y
-         v47pLkljKBzaybctUzWG1uk4THvdi3AAC3WoEswPqfmVUlKd9jCB+qK1XwaJCEkZ776g
-         vRU0DqiODpNAoluXWOIE4mHTTkSiEEXAPKr4n9n8Awd867Zj0APetKzlXGekPHJ1JEyK
-         kFrA==
-X-Gm-Message-State: APjAAAVFZmTsCNeecljzZUC4h1kXDtIB4PcXZPRiLyOW4ZKHc4DURy+w
-        Bs7EHqnzci5JDzGUyqqJkK8NEw==
-X-Google-Smtp-Source: APXvYqz/259/Z0l+PdxYDVyZ4ffYq1mmxbp7AAs1jQ1DpAGMP1eIJKwJWmu0jT4pXZZ76v93octxJw==
-X-Received: by 2002:a17:90a:8685:: with SMTP id p5mr103015pjn.92.1580936819090;
-        Wed, 05 Feb 2020 13:06:59 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 199sm420457pfv.81.2020.02.05.13.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 13:06:58 -0800 (PST)
-Date:   Wed, 5 Feb 2020 14:06:55 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
-Subject: Re: [PATCH v3 1/2] remoteproc: Use u64 len for da_to_va
-Message-ID: <20200205210655.GA25901@xps15>
-References: <20200129163013.GA16538@xps15>
- <20200204174412.16814-1-cleger@kalray.eu>
- <20200204174412.16814-2-cleger@kalray.eu>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ynqPK9O5c/fnULNbN+OoxL2G/QEDXaAaZBUdKRK1g+Q=;
+        b=aLdYpQnJ0jwkcVjkA733HqubQuPpJyX5Iif0QMO4C4X8p6Q/939jyn9t/nvfj4g4+Y
+         EEMMaeAl3wGyUawnATWq9Ed+0WoHnH9jrzDuOp8B+GUV+lzCT23fWeF58bwbdYPi7wQ0
+         Bpka5Muk+2i2znX7Vh6VCbvcAlZkd6EbFUgfUT5xwRVI0/6PpfQtISI/ms7pgtxephSa
+         2YYzwZ55USWM3rqfX+rI/TITX/2/Pdt0amJMs1CaPRD4eEwRF/cJievB3hyAaeS+Wv8R
+         2mzhFiTiiURuPxcJPppSiR9QeEy/haC1AAyI7LgZG0+ShTCAhxFrh0Xe7L9g1AkJ20AB
+         Aj6g==
+X-Gm-Message-State: APjAAAV/+VrqManCSkCzANpAyh1vTaYMID5TDnYb6ezRhn59gBA086aN
+        Kf+h7Iy5I9Y3FKJpi0idIM4mL28J
+X-Google-Smtp-Source: APXvYqzs5lgsgIKJDb59pkNODg5+gl7rDek95kUmovCzXfQiBzH+1UF+Z8paCfII85GsfqDogqu+dg==
+X-Received: by 2002:a7b:cf01:: with SMTP id l1mr7678705wmg.86.1580937373949;
+        Wed, 05 Feb 2020 13:16:13 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:7c61:997a:8e60:9300? (p200300EA8F2960007C61997A8E609300.dip0.t-ipconnect.de. [2003:ea:8f29:6000:7c61:997a:8e60:9300])
+        by smtp.googlemail.com with ESMTPSA id r14sm1284563wrj.26.2020.02.05.13.16.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 13:16:13 -0800 (PST)
+Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
+ feature
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com
+Cc:     linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200204181319.27381-1-dmurphy@ti.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
+Date:   Wed, 5 Feb 2020 22:16:03 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204174412.16814-2-cleger@kalray.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200204181319.27381-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clement,
-
-On Tue, Feb 04, 2020 at 06:44:11PM +0100, Clement Leger wrote:
-> With upcoming changes in elf loader for elf64 support, section size will
-> be a u64. When used with da_to_va, this will potentially lead to
-> overflow if using the current "int" type for len argument. Change
-> da_to_va prototype to use a u64 for len and fix all users of this
-> function.
+On 04.02.2020 19:13, Dan Murphy wrote:
+> Set the speed optimization bit on the DP83867 PHY.
+> This feature can also be strapped on the 64 pin PHY devices
+> but the 48 pin devices do not have the strap pin available to enable
+> this feature in the hardware.  PHY team suggests to have this bit set.
 > 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> With this bit set the PHY will auto negotiate and report the link
+> parameters in the PHYSTS register.  This register provides a single
+> location within the register set for quick access to commonly accessed
+> information.
+> 
+> In this case when auto negotiation is on the PHY core reads the bits
+> that have been configured or if auto negotiation is off the PHY core
+> reads the BMCR register and sets the phydev parameters accordingly.
+> 
+> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
+> 4-wire cable.  If this should occur the PHYSTS register contains the
+> current negotiated speed and duplex mode.
+> 
+> In overriding the genphy_read_status the dp83867_read_status will do a
+> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
+> register is read and the phydev speed and duplex mode settings are
+> updated.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  drivers/remoteproc/imx_rproc.c           | 9 +++++----
->  drivers/remoteproc/keystone_remoteproc.c | 2 +-
->  drivers/remoteproc/qcom_q6v5_adsp.c      | 2 +-
->  drivers/remoteproc/qcom_q6v5_mss.c       | 2 +-
->  drivers/remoteproc/qcom_q6v5_pas.c       | 2 +-
->  drivers/remoteproc/qcom_q6v5_wcss.c      | 2 +-
->  drivers/remoteproc/qcom_wcnss.c          | 2 +-
->  drivers/remoteproc/remoteproc_core.c     | 2 +-
->  drivers/remoteproc/remoteproc_internal.h | 2 +-
->  drivers/remoteproc/st_slim_rproc.c       | 4 ++--
->  drivers/remoteproc/wkup_m3_rproc.c       | 2 +-
->  include/linux/remoteproc.h               | 2 +-
->  12 files changed, 17 insertions(+), 16 deletions(-)
+> v2 - Updated read status to call genphy_read_status first, added link_change
+> callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/ 
 > 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 3e72b6f38d4b..1e895d5cf918 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -186,7 +186,7 @@ static int imx_rproc_stop(struct rproc *rproc)
->  }
->  
->  static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
-> -			       int len, u64 *sys)
-> +			       u64 len, u64 *sys)
->  {
->  	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
->  	int i;
-> @@ -203,12 +203,12 @@ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
->  		}
->  	}
->  
-> -	dev_warn(priv->dev, "Translation failed: da = 0x%llx len = 0x%x\n",
-> +	dev_warn(priv->dev, "Translation failed: da = 0x%llx len = 0x%llx\n",
->  		 da, len);
->  	return -ENOENT;
->  }
->  
-> -static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct imx_rproc *priv = rproc->priv;
->  	void *va = NULL;
 
-The condition "if (len <= 0)" at the beginning of the function needs to be
-fixed.  
+As stated in the first review, it would be appreciated if you implement
+also the downshift tunable. This could be a separate patch in this series.
+Most of the implementation would be boilerplate code.
 
+And I have to admit that I'm not too happy with the term "speed optimization".
+This sounds like the PHY has some magic to establish a 1.2Gbps link.
+Even though the vendor may call it this way in the datasheet, the standard
+term is "downshift". I'm fine with using "speed optimization" in constants
+to be in line with the datasheet. Just a comment in the code would be helpful
+that speed optimization is the vendor's term for downshift.
 
-> @@ -235,7 +235,8 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->  		}
->  	}
->  
-> -	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da, len, va);
-> +	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%llx va = 0x%p\n",
-> +		da, len, va);
->  
->  	return va;
->  }
-> diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
-> index 5c4658f00b3d..25c01df47eba 100644
-> --- a/drivers/remoteproc/keystone_remoteproc.c
-> +++ b/drivers/remoteproc/keystone_remoteproc.c
-> @@ -246,7 +246,7 @@ static void keystone_rproc_kick(struct rproc *rproc, int vqid)
->   * can be used either by the remoteproc core for loading (when using kernel
->   * remoteproc loader), or by any rpmsg bus drivers.
->   */
-> -static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
-
-Same comment as above.
-
->  	struct keystone_rproc *ksproc = rproc->priv;
->  	void __iomem *va = NULL;
-> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-> index e953886b2eb7..7518e67a49e5 100644
-> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> @@ -270,7 +270,7 @@ static int adsp_stop(struct rproc *rproc)
->  	return ret;
->  }
->  
-> -static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 471128a2e723..248febde6fc1 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -1148,7 +1148,7 @@ static int q6v5_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *q6v5_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct q6v5 *qproc = rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index db4b3c4bacd7..cf2cd609c90d 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -159,7 +159,7 @@ static int adsp_stop(struct rproc *rproc)
->  	return ret;
->  }
->  
-> -static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-> index f93e1e4a1cc0..3a6b82a16961 100644
-> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-> @@ -406,7 +406,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct q6v5_wcss *wcss = rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-> index dc135754bb9c..f893219e45a8 100644
-> --- a/drivers/remoteproc/qcom_wcnss.c
-> +++ b/drivers/remoteproc/qcom_wcnss.c
-> @@ -287,7 +287,7 @@ static int wcnss_stop(struct rproc *rproc)
->  	return ret;
->  }
->  
-> -static void *wcnss_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *wcnss_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
->  	int offset;
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 307df98347ba..9e6d3c6a60ee 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -185,7 +185,7 @@ EXPORT_SYMBOL(rproc_va_to_pa);
->   * here the output of the DMA API for the carveouts, which should be more
->   * correct.
->   */
-> -void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct rproc_mem_entry *carveout;
->  	void *ptr = NULL;
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 493ef9262411..004867061721 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -50,7 +50,7 @@ void rproc_exit_sysfs(void);
->  void rproc_free_vring(struct rproc_vring *rvring);
->  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->  
-> -void *rproc_da_to_va(struct rproc *rproc, u64 da, int len);
-> +void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len);
->  phys_addr_t rproc_va_to_pa(void *cpu_addr);
->  int rproc_trigger_recovery(struct rproc *rproc);
->  
-> diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-> index 04492fead3c8..fc01cd879b60 100644
-> --- a/drivers/remoteproc/st_slim_rproc.c
-> +++ b/drivers/remoteproc/st_slim_rproc.c
-> @@ -174,7 +174,7 @@ static int slim_rproc_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
->  	struct st_slim_rproc *slim_rproc = rproc->priv;
->  	void *va = NULL;
-> @@ -191,7 +191,7 @@ static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->  		}
->  	}
->  
-> -	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%pK\n",
-> +	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%llx va = 0x%pK\n",
->  		da, len, va);
->  
->  	return va;
-> diff --git a/drivers/remoteproc/wkup_m3_rproc.c b/drivers/remoteproc/wkup_m3_rproc.c
-> index 3984e585c847..0e8082948489 100644
-> --- a/drivers/remoteproc/wkup_m3_rproc.c
-> +++ b/drivers/remoteproc/wkup_m3_rproc.c
-> @@ -80,7 +80,7 @@ static int wkup_m3_rproc_stop(struct rproc *rproc)
->  	return 0;
->  }
->  
-> -static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->  {
-
-Same comment as above.
-
->  	struct wkup_m3_rproc *wkupm3 = rproc->priv;
->  	void *va = NULL;
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad66683ad0..f84bd5fe0211 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -374,7 +374,7 @@ struct rproc_ops {
->  	int (*start)(struct rproc *rproc);
->  	int (*stop)(struct rproc *rproc);
->  	void (*kick)(struct rproc *rproc, int vqid);
-> -	void * (*da_to_va)(struct rproc *rproc, u64 da, int len);
-> +	void * (*da_to_va)(struct rproc *rproc, u64 da, u64 len);
->  	int (*parse_fw)(struct rproc *rproc, const struct firmware *fw);
->  	int (*handle_rsc)(struct rproc *rproc, u32 rsc_type, void *rsc,
->  			  int offset, int avail);
-> -- 
-> 2.15.0.276.g89ea799
+>  drivers/net/phy/dp83867.c | 55 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index 967f57ed0b65..6f86ca1ebb51 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -21,6 +21,7 @@
+>  #define DP83867_DEVADDR		0x1f
+>  
+>  #define MII_DP83867_PHYCTRL	0x10
+> +#define MII_DP83867_PHYSTS	0x11
+>  #define MII_DP83867_MICR	0x12
+>  #define MII_DP83867_ISR		0x13
+>  #define DP83867_CFG2		0x14
+> @@ -118,6 +119,15 @@
+>  #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+>  #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+>  
+> +/* PHY STS bits */
+> +#define DP83867_PHYSTS_1000			BIT(15)
+> +#define DP83867_PHYSTS_100			BIT(14)
+> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
+> +#define DP83867_PHYSTS_LINK			BIT(10)
+> +
+> +/* CFG2 bits */
+> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
+> +
+>  /* CFG3 bits */
+>  #define DP83867_CFG3_INT_OE			BIT(7)
+>  #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
+> @@ -287,6 +297,43 @@ static int dp83867_config_intr(struct phy_device *phydev)
+>  	return phy_write(phydev, MII_DP83867_MICR, micr_status);
+>  }
+>  
+> +static void dp83867_link_change_notify(struct phy_device *phydev)
+> +{
+> +	if (phydev->state != PHY_RUNNING)
+> +		return;
+> +
+> +	if (phydev->speed == SPEED_100 || phydev->speed == SPEED_10)
+> +		phydev_warn(phydev, "Downshift detected connection is %iMbps\n",
+> +			    phydev->speed);
+
+The link partner may simply not advertise 1Gbps. How do you know that
+a link speed of e.g. 100Mbps is caused by a downshift?
+Some PHY's I've seen with this feature have a flag somewhere indicating
+that downshift occurred. How about the PHY here?
+
+> +}
+> +
+> +static int dp83867_read_status(struct phy_device *phydev)
+> +{
+> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
+> +	int ret;
+> +
+> +	ret = genphy_read_status(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (status < 0)
+> +		return status;
+> +
+> +	if (status & DP83867_PHYSTS_DUPLEX)
+> +		phydev->duplex = DUPLEX_FULL;
+> +	else
+> +		phydev->duplex = DUPLEX_HALF;
+> +
+> +	if (status & DP83867_PHYSTS_1000)
+> +		phydev->speed = SPEED_1000;
+> +	else if (status & DP83867_PHYSTS_100)
+> +		phydev->speed = SPEED_100;
+> +	else
+> +		phydev->speed = SPEED_10;
+> +
+> +	return 0;
+> +}
+> +
+>  static int dp83867_config_port_mirroring(struct phy_device *phydev)
+>  {
+>  	struct dp83867_private *dp83867 =
+> @@ -467,6 +514,11 @@ static int dp83867_config_init(struct phy_device *phydev)
+>  	int ret, val, bs;
+>  	u16 delay;
+>  
+> +	/* Force speed optimization for the PHY even if it strapped */
+> +	ret = phy_set_bits(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = dp83867_verify_rgmii_cfg(phydev);
+>  	if (ret)
+>  		return ret;
+> @@ -655,6 +707,9 @@ static struct phy_driver dp83867_driver[] = {
+>  		.config_init	= dp83867_config_init,
+>  		.soft_reset	= dp83867_phy_reset,
+>  
+> +		.read_status	= dp83867_read_status,
+> +		.link_change_notify = dp83867_link_change_notify,
+> +
+>  		.get_wol	= dp83867_get_wol,
+>  		.set_wol	= dp83867_set_wol,
+>  
+> 
+
