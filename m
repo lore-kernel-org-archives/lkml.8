@@ -2,197 +2,198 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8D1C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A110AC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A2920674
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E69E20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GwX7utvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgBELAD (ORCPT
+        id S1728351AbgBELAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 06:00:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53350 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbgBELAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:00:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 26937ACEF;
-        Wed,  5 Feb 2020 11:00:00 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 11:00:07 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
- copy_file_range
-Message-ID: <20200205110007.GA11836@suse.com>
-References: <20200203165117.5701-1-lhenriques@suse.com>
- <20200203165117.5701-2-lhenriques@suse.com>
- <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
- <20200204151158.GA15992@suse.com>
- <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
+        Wed, 5 Feb 2020 06:00:07 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57525 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728285AbgBELAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 06:00:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580900405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=bqgElwRefjJ3EiFm371iu05T9EzEgrtJ/QBv+TdYAbM=;
+        b=GwX7utvQnD1PiSu4n0v9dk/2O+MCHZhkKORgB+2rQLk1/8exCz1C+Wu0x7gilzsBuaVnIO
+        Hiq/Y8WTeHaCYXMNqvQW9dfH0stum9lAVV5aJKT9OM9YAqalfNWgS2zZOsvPPz6gM6/N79
+        P1uBPLx4aFXLt2dW6bd9jNtJoNhGDKs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-UX-nIhLWO6OpXEtZYbzKDA-1; Wed, 05 Feb 2020 06:00:00 -0500
+X-MC-Unique: UX-nIhLWO6OpXEtZYbzKDA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45CD2DB61;
+        Wed,  5 Feb 2020 10:59:59 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 431495D9E2;
+        Wed,  5 Feb 2020 10:59:56 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 8FDDE9C75; Wed,  5 Feb 2020 11:59:55 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/4] drm/virtio: resource teardown tweaks
+Date:   Wed,  5 Feb 2020 11:59:53 +0100
+Message-Id: <20200205105955.28143-3-kraxel@redhat.com>
+In-Reply-To: <20200205105955.28143-1-kraxel@redhat.com>
+References: <20200205105955.28143-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 07:06:36PM +0100, Ilya Dryomov wrote:
-> On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >
-> > On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
-> > ...
-> > > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> > > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > > -               if (err) {
-> > > > -                       if (err == -EOPNOTSUPP) {
-> > > > -                               src_fsc->have_copy_from2 = false;
-> > > > -                               pr_notice("OSDs don't support 'copy-from2'; "
-> > > > -                                         "disabling copy_file_range\n");
-> > > > -                       }
-> > > > +               if (IS_ERR(req)) {
-> > > > +                       err = PTR_ERR(req);
-> > > >                         dout("ceph_osdc_copy_from returned %d\n", err);
-> > > > +
-> > > > +                       /* wait for all queued requests */
-> > > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> > >
-> > > Hi Luis,
-> > >
-> > > Looks like ret is still incremented unconditionally?  What happens
-> > > if there are three OSD requests on the list and the first fails but
-> > > the second and the third succeed?  As is, ceph_osdc_wait_requests()
-> > > will return an error with reqs_complete set to 2...
-> > >
-> > > >                         if (!ret)
-> > > >                                 ret = err;
-> > >
-> > > ... and we will return 8M instead of an error.
-> >
-> > Right, my assumption was that if a request fails, all subsequent requests
-> > would also fail.  This would allow ret to be updated with the number of
-> > successful requests (x object size), even if the OSDs replies were being
-> > delivered in a different order.  But from your comment I see that my
-> > assumption is incorrect.
-> >
-> > In that case, when shall ret be updated with the number of bytes already
-> > written?  Only after a successful call to ceph_osdc_wait_requests()?
-> 
-> I mentioned this in the previous email: you probably want to change
-> ceph_osdc_wait_requests() so that the counter isn't incremented after
-> an error is encountered.
+Add new virtio_gpu_cleanup_object() helper function for object cleanup.
+Wire up callback function for resource unref, do cleanup from callback
+when we know the host stopped using the resource.
 
-Sure, I've seen that comment.  But it doesn't help either because it's not
-guaranteed that we'll receive the replies from the OSDs in the same order
-we've sent them.  Stopping the counter when we get an error doesn't
-provide us any reliable information (which means I can simply drop that
-counter).
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h    |  3 ++-
+ drivers/gpu/drm/virtio/virtgpu_object.c | 19 ++++++++++----
+ drivers/gpu/drm/virtio/virtgpu_vq.c     | 35 ++++++++++++++++++++++---
+ 3 files changed, 48 insertions(+), 9 deletions(-)
 
-> > I.e. only after each throttling cycle, when we don't have any requests
-> > pending completion?  In this case, I can simply drop the extra
-> > reqs_complete parameter to the ceph_osdc_wait_requests.
-> >
-> > In your example the right thing to do would be to simply return an error,
-> > I guess.  But then we're assuming that we're loosing space in the storage,
-> > as we may have created objects that won't be reachable anymore.
-> 
-> Well, that is what I'm getting at -- this needs a lot more
-> consideration.  How errors are dealt with, how file metadata is
-> updated, when do we fall back to plain copy, etc.  Generating stray
-> objects is bad but way better than reporting that e.g. 0..12M were
-> copied when only 0..4M and 8M..12M were actually copied, leaving
-> the user one step away from data loss.  One option is to revert to
-> issuing copy-from requests serially when an error is encountered.
-> Another option is to fall back to plain copy on any error.  Or perhaps
-> we just don't bother with the complexity of parallel copy-from requests
-> at all...
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 7e69c06e168e..372dd248cf02 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -262,7 +262,7 @@ void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
+ 				    struct virtio_gpu_object_array *objs,
+ 				    struct virtio_gpu_fence *fence);
+ void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
+-				   uint32_t resource_id);
++				   struct virtio_gpu_object *bo);
+ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
+ 					uint64_t offset,
+ 					uint32_t width, uint32_t height,
+@@ -355,6 +355,7 @@ void virtio_gpu_fence_event_process(struct virtio_gpu_device *vdev,
+ 				    u64 last_seq);
+ 
+ /* virtio_gpu_object */
++void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo);
+ struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
+ 						size_t size);
+ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index 017a9e0fc3bb..28a161af7503 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -61,6 +61,14 @@ static void virtio_gpu_resource_id_put(struct virtio_gpu_device *vgdev, uint32_t
+ 	}
+ }
+ 
++void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo)
++{
++	struct virtio_gpu_device *vgdev = bo->base.base.dev->dev_private;
++
++	virtio_gpu_resource_id_put(vgdev, bo->hw_res_handle);
++	drm_gem_shmem_free_object(&bo->base.base);
++}
++
+ static void virtio_gpu_free_object(struct drm_gem_object *obj)
+ {
+ 	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+@@ -68,11 +76,12 @@ static void virtio_gpu_free_object(struct drm_gem_object *obj)
+ 
+ 	if (bo->pages)
+ 		virtio_gpu_object_detach(vgdev, bo);
+-	if (bo->created)
+-		virtio_gpu_cmd_unref_resource(vgdev, bo->hw_res_handle);
+-	virtio_gpu_resource_id_put(vgdev, bo->hw_res_handle);
+-
+-	drm_gem_shmem_free_object(obj);
++	if (bo->created) {
++		virtio_gpu_cmd_unref_resource(vgdev, bo);
++		/* completion handler calls virtio_gpu_cleanup_object() */
++		return;
++	}
++	virtio_gpu_cleanup_object(bo);
+ }
+ 
+ static const struct drm_gem_object_funcs virtio_gpu_gem_funcs = {
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 6d6d55dc384e..6e8097e4c214 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -152,6 +152,15 @@ static void *virtio_gpu_alloc_cmd(struct virtio_gpu_device *vgdev,
+ 					 sizeof(struct virtio_gpu_ctrl_hdr), NULL);
+ }
+ 
++static void *virtio_gpu_alloc_cmd_cb(struct virtio_gpu_device *vgdev,
++				     struct virtio_gpu_vbuffer **vbuffer_p,
++				     int size,
++				     virtio_gpu_resp_cb cb)
++{
++	return virtio_gpu_alloc_cmd_resp(vgdev, cb, vbuffer_p, size,
++					 sizeof(struct virtio_gpu_ctrl_hdr), NULL);
++}
++
+ static void free_vbuf(struct virtio_gpu_device *vgdev,
+ 		      struct virtio_gpu_vbuffer *vbuf)
+ {
+@@ -494,17 +503,37 @@ void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
+ 	bo->created = true;
+ }
+ 
++static void virtio_gpu_cmd_unref_cb(struct virtio_gpu_device *vgdev,
++				    struct virtio_gpu_vbuffer *vbuf)
++{
++	struct virtio_gpu_object *bo;
++
++	bo = gem_to_virtio_gpu_obj(vbuf->objs->objs[0]);
++	kfree(vbuf->objs);
++	vbuf->objs = NULL;
++
++	virtio_gpu_cleanup_object(bo);
++}
++
+ void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
+-				   uint32_t resource_id)
++				   struct virtio_gpu_object *bo)
+ {
+ 	struct virtio_gpu_resource_unref *cmd_p;
+ 	struct virtio_gpu_vbuffer *vbuf;
+ 
+-	cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
++	cmd_p = virtio_gpu_alloc_cmd_cb(vgdev, &vbuf, sizeof(*cmd_p),
++					virtio_gpu_cmd_unref_cb);
+ 	memset(cmd_p, 0, sizeof(*cmd_p));
+ 
+ 	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_UNREF);
+-	cmd_p->resource_id = cpu_to_le32(resource_id);
++	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
++
++	/*
++	 * We are in the release callback and do NOT want refcount
++	 * bo, so do NOT use virtio_gpu_array_add_obj().
++	 */
++	vbuf->objs = virtio_gpu_array_alloc(1);
++	vbuf->objs->objs[0] = &bo->base.base;
+ 
+ 	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
+ }
+-- 
+2.18.1
 
-To be honest, I'm starting to lean towards this option.  Reverting to
-serializing requests or to plain copy on error will not necessarily
-prevent the stray objects:
-
-  - send a bunch of copy requests
-  - wait for them to complete
-     * 1 failed, the other 63 succeeded
-  - revert to serialized copies, repeating the previous 64 requests
-     * after a few copies, we get another failure (maybe on the same OSDs)
-       and abort, leaving behind some stray objects from the previous bulk
-       request
-
-I guess the only way around this would be some sort of atomic operation
-that would allow us to copy a bunch of objects in a single operation
-(copy-from3!)
-
-I thought a bit a about this while watching Jeff and Patrick's talk at
-FOSDEM (great talk, by the way!) but I don't think async directory
-operations have this problem because the requests there are
-metadata-related and a failure in a request is somewhat independent from
-other requests.
-
-> Of course, no matter what we do for parallel copy-from requests, the
-> existing short copy bug needs to be fixed separately.
-
-Yep, 20200205102852.12236-1-lhenriques@suse.com should fix that (Cc'ed
-stable@ as well).
-
-Cheers,
---
-Luís
-
-> 
-> >
-> > >
-> > > >                         goto out_caps;
-> > > >                 }
-> > > > +               list_add(&req->r_private_item, &osd_reqs);
-> > > >                 len -= object_size;
-> > > >                 src_off += object_size;
-> > > >                 dst_off += object_size;
-> > > > -               ret += object_size;
-> > > > +               /*
-> > > > +                * Wait requests if we've reached the maximum requests allowed
-> > > > +                * or if this was the last copy
-> > > > +                */
-> > > > +               if ((--copy_count == 0) || (len < object_size)) {
-> > > > +                       err = ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> > >
-> > > Same here.
-> > >
-> > > > +                       if (err) {
-> > > > +                               if (err == -EOPNOTSUPP) {
-> > > > +                                       src_fsc->have_copy_from2 = false;
-> > >
-> > > Since EOPNOTSUPP is special in that it triggers the fallback, it
-> > > should be returned even if something was copied.  Think about a
-> > > mixed cluster, where some OSDs support copy-from2 and some don't.
-> > > If the range is split between such OSDs, copy_file_range() will
-> > > always return short if the range happens to start on a new OSD.
-> >
-> > IMO, if we managed to copy some objects, we still need to return the
-> > number of bytes copied.  Because, since this return value will be less
-> > then the expected amount of bytes, the application will retry the
-> > operation.  And at that point, since we've set have_copy_from2 to 'false',
-> > the default VFS implementation will be used.
-> 
-> Ah, yeah, given have_copy_from2 guard, this particular corner case is
-> fine.
-> 
-> Thanks,
-> 
->                 Ilya
