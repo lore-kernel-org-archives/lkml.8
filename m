@@ -2,147 +2,140 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD465C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2CCC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4ABA217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446CD217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nbq5QFkL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WAuEc186"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgBEPzz (ORCPT
+        id S1727725AbgBEPz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:55:55 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:42972 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbgBEPzy (ORCPT
+        Wed, 5 Feb 2020 10:55:59 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58767 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbgBEPz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:55:54 -0500
-Received: by mail-vs1-f65.google.com with SMTP id b79so1626053vsd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:55:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ei9H45SV2oMs69C7hL0SyaAz256oxS6zCX5MjvjcWsU=;
-        b=Nbq5QFkLGVrepL0kiN0uMOeJSiQzYs0SIsaGXzuFw02d55rgJXVER2UguTreuVRGJO
-         Od4xBaxLrJDFSjE6bsj/+aUv9g+rYikRSWZyUQledbdk/qhAy29jK+vcs1DSM5HzxPuO
-         c5BOqGKN/1CIxVjv2yrQJRe4hCvPMRT57oeV36R1VPLE01xb9GAo9MxqQEOTMXvDJNZk
-         zkaFAQgOgMOYJxNPMgclviF2hmrn2Yfp6AO3+sQxJIajd3Ok/x+B0cgXXgWrzRXYHfKd
-         fpR95zPsC6lrCVdelVsr4LatgdvMAc1Y+1iJx5DWEh/KAgqOL/zuXYPqb5PRsywUb1/s
-         Ze9Q==
+        Wed, 5 Feb 2020 10:55:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580918158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=efV8S+DLqDmq+X1JgLrPt59ALotCaXcv3mMze6v9B9g=;
+        b=WAuEc186gVJUYim0Fb0zPuUuOZ0tJfOAc9qL6U5pGwCw38d0z7CJ9KvIa6ibS3ZfTHhZf2
+        DXNA9gWSQkYqL7Grd2Crls7yO6WEBkffqP0I6H6l2CJ1OP6nMaOk6OU8RD5IF0NqSJBK8P
+        gmW+lrKo1Yl/cW1by2LUQqs8C+EBipA=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-iicD0ZUePuGFZgIyFWqbSA-1; Wed, 05 Feb 2020 10:55:57 -0500
+X-MC-Unique: iicD0ZUePuGFZgIyFWqbSA-1
+Received: by mail-qt1-f199.google.com with SMTP id l25so1632652qtu.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:55:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ei9H45SV2oMs69C7hL0SyaAz256oxS6zCX5MjvjcWsU=;
-        b=StdgteiPVuXgGXXSRZR4YJibF+G/3Rd1E3otuFkcyqDA4MBe4JFewCEYfVEyekbmiq
-         5GJzP1bJRXtl0y68+Oe1/wy5CYi7fbWJ7m0Plr2vsGy+AR6P8IsS4SSTJ2VF8440fK8w
-         cwZ1QE6FJg97a9tWQezqzL5iYmw7XWbVFZN1nEIvr78gSzgW9B+QeGkfkW1RSyTbH1OF
-         VRe4YBij7QZVwenieDjSEj/Di2/URdbGxAIFQ4fIQudeyq1SYw73ytYg65AIKea1eMDl
-         Sxc/vrVpCE0gAXPB5OEJyURsHLYPccvqvJCDMJR12MAU5q+x/lvkv12zeksA0U1PkJUN
-         n3qg==
-X-Gm-Message-State: APjAAAUTHnykDcnX/FFqdkqkJXhOMCH0TkGh4pn7qvWITFyCuFZOubqI
-        seKbb6bwpbqtzEQYi1lD3L2Pd+rQ4prxYf5t9Lc6Xw==
-X-Google-Smtp-Source: APXvYqwSSPQAZY6rLGXHvigKNLyKPELRR7aaS7nR0axlfGQtU2mVxCkKTFTO+6ddkXy//tB9BMu4/9jHYzXyjFWuYuM=
-X-Received: by 2002:a05:6102:757:: with SMTP id v23mr22937800vsg.35.1580918153583;
- Wed, 05 Feb 2020 07:55:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=efV8S+DLqDmq+X1JgLrPt59ALotCaXcv3mMze6v9B9g=;
+        b=Av4VyMD2iJiCR8KlU1xFk9FNr2ptXptOhePxG+gQ7fvROtS8+N9ilsgojrOUJ+0bPf
+         91wHS2dWPd8yf16rQ2NLlfxcwF6F1+gLBnpJzCfun3zr+gz3C3lrwWpcXqvQo46OnpKF
+         8xElwpYyDljQfHnQIw9j+GRA1JGn2U7NHgid3uK0lwEkhc0l+EFhFx7mI5JkLtz5hX8n
+         Bwv23aBqYMmoxiyjcOFvWdLpshGvXWuOzDebzuG4kJhAptLD3EK0rnd0tO9e6X3jnOIn
+         uifx9CGu0bGWezV0x7x4BzCcZG6tb3GIQLRK38T3m8Ixi2sMC0K0KdJN9Pkj1igOqlxw
+         5iTg==
+X-Gm-Message-State: APjAAAWs610MD8an/e1DquBAG7jkNwjaorIva32xmN2v6IzlBvlqxRPE
+        xzI9CvynJg7ZUTQqlai/0YYhzS0lpzyIMifXVURmR79PQ9Rg/Vlp6FuaQl/hR+GjYRlGTBiTYuy
+        IvYR3wKUn/6DSm6ai7p6EQ8sE
+X-Received: by 2002:a05:620a:662:: with SMTP id a2mr35406422qkh.329.1580918155060;
+        Wed, 05 Feb 2020 07:55:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwFOamF0fw44YxctBelueuIit+7na62ANL6TulX8nNY0doj5ywuQ2bYPN4enBP7XgojeUNorQ==
+X-Received: by 2002:a05:620a:662:: with SMTP id a2mr35406398qkh.329.1580918154828;
+        Wed, 05 Feb 2020 07:55:54 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id w26sm14948qkj.46.2020.02.05.07.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 07:55:54 -0800 (PST)
+Date:   Wed, 5 Feb 2020 10:55:51 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinechin@redhat.com, sean.j.christopherson@intel.com,
+        pbonzini@redhat.com, jasowang@redhat.com, yan.y.zhao@intel.com,
+        mst@redhat.com, kevin.tian@intel.com, alex.williamson@redhat.com,
+        dgilbert@redhat.com, vkuznets@redhat.com
+Subject: Re: [PATCH 13/14] KVM: selftests: Let dirty_log_test async for dirty
+ ring test
+Message-ID: <20200205155551.GB378317@xz-x1>
+References: <20200205025105.367213-1-peterx@redhat.com>
+ <20200205025842.367575-1-peterx@redhat.com>
+ <20200205025842.367575-10-peterx@redhat.com>
+ <20200205094806.dqkzpxhrndocjl6g@kamzik.brq.redhat.com>
 MIME-Version: 1.0
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-6-git-send-email-mkshah@codeaurora.org> <20200203170832.GA38466@bogus>
- <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org> <20200204152132.GA44858@bogus>
- <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org> <20200205140603.GB38466@bogus>
-In-Reply-To: <20200205140603.GB38466@bogus>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 5 Feb 2020 16:55:17 +0100
-Message-ID: <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200205094806.dqkzpxhrndocjl6g@kamzik.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020 at 15:06, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
-> >
-> > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
-> > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
-> > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
-> > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
-> > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
-> > > > > >
-> > > > > > If the hierarchical CPU topology is used, but the OS initiated mode isn't
-> > > > > > supported, we need to rely solely on the regular cpuidle framework to
-> > > > > > manage the idle state selection, rather than using genpd and its
-> > > > > > governor.
-> > > > > >
-> > > > > > For this reason, introduce a new PSCI DT helper function,
-> > > > > > psci_dt_pm_domains_parse_states(), which parses and converts the
-> > > > > > hierarchically described domain idle states from DT, into regular flattened
-> > > > > > cpuidle states. The converted states are added to the existing cpuidle
-> > > > > > driver's array of idle states, which make them available for cpuidle.
-> > > > > >
-> > > > > And what's the main motivation for this if OSI is not supported in the
-> > > > > firmware ?
-> > > > Hi Sudeep,
-> > > >
-> > > > Main motivation is to do last-man activities before the CPU cluster can
-> > > > enter a deep idle state.
-> > > >
-> > > Details on those last-man activities will help the discussion. Basically
-> > > I am wondering what they are and why they need to done in OSPM ?
-> >
-> > Hi Sudeep,
-> >
-> > there are cases like,
-> >
-> > Last cpu going to deepest idle mode need to lower various resoruce
-> > requirements (for eg DDR freq).
-> >
->
-> In PC mode, only PSCI implementation knows the last man and there shouldn't
-> be any notion of it in OS. If you need it, you may need OSI. You are still
-> mixing up the things. NACK for any such approach, sorry.
+On Wed, Feb 05, 2020 at 10:48:06AM +0100, Andrew Jones wrote:
+> On Tue, Feb 04, 2020 at 09:58:41PM -0500, Peter Xu wrote:
+> > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> > index 4b78a8d3e773..e64fbfe6bbd5 100644
+> > --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> > @@ -115,6 +115,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva);
+> >  struct kvm_run *vcpu_state(struct kvm_vm *vm, uint32_t vcpuid);
+> >  void vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+> >  int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+> > +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+> >  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid);
+> >  void vcpu_set_mp_state(struct kvm_vm *vm, uint32_t vcpuid,
+> >  		       struct kvm_mp_state *mp_state);
+> > diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> > index 25edf20d1962..5137882503bd 100644
+> > --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> > +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> > @@ -1203,6 +1203,14 @@ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
+> >  	return rc;
+> >  }
+> >  
+> > +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
+> > +{
+> > +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> > +
+> > +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+> > +	return ioctl(vcpu->fd, KVM_RUN, NULL);
+> > +}
+> > +
+> >  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid)
+> >  {
+> >  	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> 
+> I think we should add a vcpu_get_fd(vm, vcpuid) function instead, and
+> then call ioctl directly from the test.
 
-Sudeep, I don't quite agree with your NACK to this. At least not yet. :-)
+Currently the vcpu struct is still internal to the lib/ directory (as
+defined in lib/kvm_util_internal.h).  Wit that, it seems the vcpu fd
+should also be limited to the lib/ as well?
 
-I do agree that the best suited solution seems to be OSI, as to
-support this kind of SoC requirements.
+But I feel like I got your point, because when I worked on the
+selftests I did notice that in many places it's easier to expose all
+these things for test cases (e.g., the struct vcpu).  For me, it's not
+only for the vcpu fd, but also for the rest of internal structures to
+be able to be accessed from tests directly.  Not sure whether that's
+what you thought too.  It's just a separate topic of what this series
+was trying to do.
 
-However, if for some reason the PC mode is being used, we could still
-allow Linux to control "last-man activities" as it knows what each CPU
-has voted for when going idle. Yes, the PSCI FW decides in the end,
-but that doesn't really matter. Or is there another technical reason
-to why you object?
+Thanks,
 
-As a matter of fact, if we allow support for PC mode with
-"last-man-activities", it would allow us to make a fair
-performance/energy comparison between the two PSCI CPU suspend modes,
-for the same SoC. I would be thrilled about looking into doing such
-tests, I bet you are as well!?
+-- 
+Peter Xu
 
-Kind regards
-Uffe
