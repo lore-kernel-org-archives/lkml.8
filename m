@@ -2,227 +2,123 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB8FC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C0B20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B83217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSPgiyua"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmPL0gav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgBEQvB (ORCPT
+        id S1727454AbgBEQvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:51:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39693 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgBEQvA (ORCPT
+        Wed, 5 Feb 2020 11:51:46 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35687 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgBEQvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:51:00 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c84so3649588wme.4;
-        Wed, 05 Feb 2020 08:50:58 -0800 (PST)
+        Wed, 5 Feb 2020 11:51:46 -0500
+Received: by mail-pj1-f67.google.com with SMTP id q39so1240761pjc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 08:51:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=GNfD+v5y6RyYcbwES/UgHaqU1BwN2IKYM5M3QSIMWho=;
-        b=FSPgiyuahPk9g6NhYYRDxwbb8+YtdaGI7RjUdoriZp1/OOMAkxcYjfL/1bFeXPvl5n
-         7g8NQDI4zozOMNdhNQxgdHmm/jGEyc416fQFUARJ/9ttmXo6iIO4H1KI9BSM/R0TEoDl
-         cD87PRPCCODtoEm0pXB8iU2ltxsp4JDjt/vMapF13WL/eKIWb1EEuQ5mlJMBeoXAFZpA
-         tLNIOYg2OiNO/1Ubt16PtKqYEiJ55O7o2W7vCnnFfOtM9RIHupEyj2FeMs5FGeRvR33i
-         HrFbBM33joO7xhd7QQlvwKSdLX0oWhy0RW4wwD6+9foSC5dPqDtqb0tcQFea8v7KEIKx
-         Mwxw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ywEsvWm4XVLIMTnvEIQGcAo+zgmS5NmEL02AYmIK1Y8=;
+        b=NmPL0gav3uJ5A/Mbh21U5I4QCRwUW32KYipdtdD6pSLUAI743KHd6WwwbypJkQ0Byd
+         sn3Z+1bL0V+RloZmr7vJsfphoIlFkLPQOw0ox9euG87te7ZgLyq1hbw8cUrDMydZEGRv
+         xuOsNvt1tU+0zpiqASKIGBox/QhiCx+3Zv9Y8p9EQULevVi2iOt3OqEmTh1Yaj6MTFO9
+         M+3b+KyoqND1pHU7q1Dw3H+ITTJibRQ051CGVT4BGpH5i7e3S5vRysvEjiTSTkMwADNq
+         qtARhG/UWh3aijEAitsUfjy8eYSFAP5OnHTulgheENbRoURrTQAUAQ75Duxy+z4O/Vvn
+         TVrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=GNfD+v5y6RyYcbwES/UgHaqU1BwN2IKYM5M3QSIMWho=;
-        b=Jqi9U5tcTl5ydA1ZDHZZfm6WE3LzcZPfe1DT/xtAfD6VMp7dCm3OWGqB4bUQA8hMIh
-         ssdAvAKmLk22ToozMZmlxVTtZtMSxeT4saiw3jj2VFKnaZJqGVPkiPWETM3KqSdl6uDN
-         XYv4dysmgWqzJWmD7uVyGuyA4k21omHoel9i63s4LSxvC2p+SkxHP9tEVEsknGY/M5iH
-         hUXNLBmJwDiDDfBJs9zFwlB5oeOa9KMjWi5Y/T+dU81QEs6v8vLG3p7YpFPtnIu50QoG
-         j3q5YBsWciakDXnE4divHziKfgqbsup7La/XjZLNaJLI+KQyMgFEoA9ZvFDZBHoW6TqS
-         2ibw==
-X-Gm-Message-State: APjAAAXong6Ihq/s927U6jfY0X+VMfMTNq54HeduIWpHJ1jtoGc+HbKJ
-        6Q5OxhwgknplBvgfK5VE4Yv4vrtb
-X-Google-Smtp-Source: APXvYqw2OXfV/cYfB1uoYhwXoSuPqN0wuPOvW4vS0kq+yGTU+Bu4nbmG6kpXZLcvNBXxFPm9kg5fWg==
-X-Received: by 2002:a05:600c:2290:: with SMTP id 16mr6249615wmf.184.1580921457878;
-        Wed, 05 Feb 2020 08:50:57 -0800 (PST)
-Received: from [192.168.43.126] ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id t10sm147634wmi.40.2020.02.05.08.50.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 08:50:57 -0800 (PST)
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
- <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
- <d9a15d32-a20b-a20f-9ea4-3ac355c15bb2@gmail.com>
- <c6cc1e97-f306-e3f0-3f7b-9463fdbbc5a5@kernel.dk>
- <d55fd4dc-e7f1-0f06-76bb-0e29c1db4995@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
-Message-ID: <62e33e81-7857-fb5c-92be-6757623a6478@gmail.com>
-Date:   Wed, 5 Feb 2020 19:50:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ywEsvWm4XVLIMTnvEIQGcAo+zgmS5NmEL02AYmIK1Y8=;
+        b=F3tKYfZsAplIetJ9kEAl4ZVHchLDTC6/64GwOqfhfjPtgD7XIZjEL4sV1s8R8ykUUt
+         S1fn+b80SqiwFsKpQVYzCd/aHUOACxSBYO/U67k88KYLuKHSeNuzMZYccLHx3pRWaRYA
+         a3cYeQ5lwFJEinyV/jKuNdeKNkEVeT5rtbGAyCU5/GxXsqjP3Voz92tCsOe3WZOlu89Y
+         AYRxTa6jwcJgTZ6biQKuyq8SQHtMM7x33VYkjJ9SQXBjUrsww2wdY3uzNUpkOj1XFaTW
+         iJfehX/Y0hQ6u15wWlP1P9pD2Ft/gm0YzFuXOTbb4cQI1VAN7+JCM2iCo3zj6g5TErft
+         S44A==
+X-Gm-Message-State: APjAAAW2d01fUIecOCHxuvZGzq5ZYJCwXAVWaE0z2n65PKu6uCyKNekC
+        ZeKHuWij7OqOuuFww0UYN9M=
+X-Google-Smtp-Source: APXvYqxXmsQtDlHhBs00qKZgpGV/nHF2y5uD2anu+uCp67JH4gEJlJrFqNlzACA4NDaxUinEjbNAUw==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr36261822plq.79.1580921505290;
+        Wed, 05 Feb 2020 08:51:45 -0800 (PST)
+Received: from workstation-portable ([103.211.17.109])
+        by smtp.gmail.com with ESMTPSA id p17sm43132pfn.31.2020.02.05.08.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 08:51:44 -0800 (PST)
+Date:   Wed, 5 Feb 2020 22:21:38 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     ebiederm@xmission.com, oleg@redhat.com,
+        christian.brauner@ubuntu.com, guro@fb.com, tj@kernel.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] signal.c: Fix sparse warnings
+Message-ID: <20200205165138.GB22537@workstation-portable>
+References: <20200205162319.28263-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d55fd4dc-e7f1-0f06-76bb-0e29c1db4995@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="8WeZfF0cieSpIUpc3RhwHnvtRbv55nPtK"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205162319.28263-1-madhuparnabhowmik10@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---8WeZfF0cieSpIUpc3RhwHnvtRbv55nPtK
-Content-Type: multipart/mixed; boundary="7N414J0GCl7O0RM7gWpbTzob2uj81ZNC1";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <62e33e81-7857-fb5c-92be-6757623a6478@gmail.com>
-Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
-References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
- <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
- <d9a15d32-a20b-a20f-9ea4-3ac355c15bb2@gmail.com>
- <c6cc1e97-f306-e3f0-3f7b-9463fdbbc5a5@kernel.dk>
- <d55fd4dc-e7f1-0f06-76bb-0e29c1db4995@kernel.dk>
-In-Reply-To: <d55fd4dc-e7f1-0f06-76bb-0e29c1db4995@kernel.dk>
+On Wed, Feb 05, 2020 at 09:53:19PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> This patch fixes the following two sparse warnings caused due to
+> accessing RCU protected pointer tsk->parent without rcu primitives.
+> 
+> kernel/signal.c:1948:65: warning: incorrect type in argument 1 (different address spaces)
+> kernel/signal.c:1948:65:    expected struct task_struct *tsk
+> kernel/signal.c:1948:65:    got struct task_struct [noderef] <asn:4> *parent
+> kernel/signal.c:1949:40: warning: incorrect type in argument 1 (different address spaces)
+> kernel/signal.c:1949:40:    expected void const volatile *p
+> kernel/signal.c:1949:40:    got struct cred const [noderef] <asn:4> *[noderef] <asn:4> *
+> kernel/signal.c:1949:40: warning: incorrect type in argument 1 (different address spaces)
+> kernel/signal.c:1949:40:    expected void const volatile *p
+> kernel/signal.c:1949:40:    got struct cred const [noderef] <asn:4> *[noderef] <asn:4> *
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  kernel/signal.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9ad8dea93dbb..3d59e5652d94 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1945,8 +1945,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>  	 * correct to rely on this
+>  	 */
+>  	rcu_read_lock();
+> -	info.si_pid = task_pid_nr_ns(tsk, task_active_pid_ns(tsk->parent));
+> -	info.si_uid = from_kuid_munged(task_cred_xxx(tsk->parent, user_ns),
+> +	info.si_pid = task_pid_nr_ns(tsk, task_active_pid_ns(rcu_access_pointer(tsk->parent)));
+> +	info.si_uid = from_kuid_munged(task_cred_xxx(rcu_access_pointer(tsk->parent), user_ns),
 
---7N414J0GCl7O0RM7gWpbTzob2uj81ZNC1
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Shouldn't rcu_dereference() OR rcu_dereference_check() be better suited
+here? Since, rcu_access_pointer() omits all lockdep checks.
 
-On 05/02/2020 19:16, Jens Axboe wrote:
-> On 2/5/20 9:05 AM, Jens Axboe wrote:
->> On 2/5/20 9:02 AM, Pavel Begunkov wrote:
->>> On 05/02/2020 18:54, Jens Axboe wrote:
->>>> On 2/5/20 8:46 AM, Pavel Begunkov wrote:
->>>>> IORING_OP_{READ,WRITE} need mm to access user buffers, hence
->>>>> req->has_user check should go for them as well. Move the correspond=
-ing
->>>>> imports past the check.
->>>>
->>>> I'd need to double check, but I think the has_user check should just=
- go.
->>>> The import checks for access anyway, so we'll -EFAULT there if we
->>>> somehow messed up and didn't acquire the right mm.
->>>>
->>> It'd be even better. I have plans to remove it, but I was thinking fr=
-om a
->>> different angle.
->>
->> Let me just confirm it in practice, but it should be fine. Then we can=
- just
->> kill it.
->=20
-> OK now I remember - in terms of mm it's fine, we'll do the right thing.=
+Thanks
+Amol
 
-> But the iov_iter_init() has this gem:
->=20
-> 	/* It will get better.  Eventually... */
-> 	if (uaccess_kernel()) {
-> 		i->type =3D ITER_KVEC | direction;
-> 		i->kvec =3D (struct kvec *)iov;
-> 	} else {
-> 		i->type =3D ITER_IOVEC | direction;
-> 		i->iov =3D iov;
-> 	}
->=20
-> which means that if we haven't set USER_DS, then iov_iter_init() will
-> magically set the type to ITER_KVEC which then crashes when the iterato=
-r
-> tries to copy.
->=20
-> Which is pretty lame. How about a patch that just checks for
-> uaccess_kernel() and -EFAULTs if true for the non-fixed variants where
-> we don't init the iter ourselves? Then we can still kill req->has_user
-> and not have to fill it in.
->=20
->=20
-On the other hand, we don't send requests async without @mm. So, if we fa=
-il them
-whenever can't grab mm, it solves all the problems even without extra che=
-cks.
-What do you think?
-
-
---=20
-Pavel Begunkov
-
-
---7N414J0GCl7O0RM7gWpbTzob2uj81ZNC1--
-
---8WeZfF0cieSpIUpc3RhwHnvtRbv55nPtK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl468kgACgkQWt5b1Glr
-+6XV7A//cIn1cVwo4wwBJu9BLQbEn2Xgya1OaDhPznWXIWuzijlkMXXWxICh949D
-JrfejhvIS6xqmswjPdnzTQJKvj/HH8EXt4mUsIMGl6mB1LNS+S6H1wyynMzL/mA9
-QkNi6cGWkEJyxnpZRZjWLyN0wYwDj45TRDVKRk1eqJeXn+IF+/JtZc6pmpQ+53OG
-vrRc4gCKBS+1vfhZoDvpksxZFhS2k8MqoXQNlGHFzX5QwGP0Mqon0XAEoMOEWbI0
-42W6XTiR0fILGuELkWum/n66sJ6YruaCtwOWVWJctQ4jmKZmYM6fW8c6hIxk5jpS
-2y16eTIkvakkbrAxcJWGQ5BbOxwVl6Wi63nZ7L9Vcsn72LjBv2liy2vEetd+OAnN
-E5xALbXQKnnz9nyOVS7wdjydHf0O2Rvhh/g03aVmrHp4QliDdL1HKJJ8DxFE3PW5
-LmVz2S8qmgTk7hONT4phNVhwWS12HEqxHwsYRj2mzSaVtXYj3A5t7ZcJLFPEfZdV
-jOmR8Xklc2H/YjOSh63oq0yZ5DNSWvRXUxgmzleQo3mWYLVb83THsUXmoVqqDbqF
-hlaOfrUFWZp/7LEtqG9lE/ozTBkCT1MolOURagJGcwGE2N/6mDOvo1UYBIbz+mai
-StRgEaI0nVrlfrxFGvAJegDOQwWHXVmsf7qfaojq71zi0oOoX9o=
-=AcP9
------END PGP SIGNATURE-----
-
---8WeZfF0cieSpIUpc3RhwHnvtRbv55nPtK--
+>  				       task_uid(tsk));
+>  	rcu_read_unlock();
+>  
+> -- 
+> 2.17.1
+> 
