@@ -2,147 +2,111 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8262C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA1CC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E343217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:13:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rET6ClPJ"
+	by mail.kernel.org (Postfix) with ESMTP id 581302072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgBEXNc (ORCPT
+        id S1727517AbgBEXTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:13:32 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1635 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727149AbgBEXNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:13:32 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3b4c000000>; Wed, 05 Feb 2020 15:13:04 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 05 Feb 2020 15:13:28 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 05 Feb 2020 15:13:28 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb
- 2020 23:13:28 +0000
-Subject: Re: [PATCH v4 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
- reporting
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200204234117.2974687-1-jhubbard@nvidia.com>
- <20200204234117.2974687-11-jhubbard@nvidia.com>
- <20200205093733.GB28058@quack2.suse.cz>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <09b49b0d-85cc-87b8-9176-0963f6c8c735@nvidia.com>
-Date:   Wed, 5 Feb 2020 15:13:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 5 Feb 2020 18:19:31 -0500
+Received: from mga18.intel.com ([134.134.136.126]:53775 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727149AbgBEXTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:19:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:19:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="224817012"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 05 Feb 2020 15:19:28 -0800
+Date:   Thu, 6 Feb 2020 07:19:45 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: [PATCH v1] mm/memory_hotplug: Easier calculation to get pages to
+ next section boundary
+Message-ID: <20200205231945.GB28446@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200205135251.37488-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200205093733.GB28058@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580944384; bh=QZo2rYgRggJLhdhuOglfdT26CygAzcQcsm1mvo4G27A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rET6ClPJ1i9ucTvvRWF/1/c462K2mCH6nZx8WiCBRBOHIYQjg+sBdCGrPEtzpJsKC
-         oKyCPZwjz3pxDIMTZQ64WUhXMxGUcmo2sbbCBiqNCUtVm8IDqmSKyYGkw81oZa918B
-         N0ScNcSKXjJywqnA2ZRAnUbR9x/eLSSwDq662e/d+ttmimG7GT1j+2mJRKDHI6zZbH
-         86HZzVIKep/0LUPMJQsvDeV54HT0Y46r7c6qo8I9SUAiapmADqg+pUsaOz9YoF0uW1
-         Jn2PUL4F9EQ2HxmAkHcoSFDySLMhNHZs2ZqJAAvZxFMlEtNxpUbGKwxFOdO35tSUdu
-         Cvzd7Xz67EEww==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205135251.37488-1-david@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/5/20 1:37 AM, Jan Kara wrote:
-> ...
-> 
->> @@ -104,6 +106,9 @@ static __maybe_unused struct page *try_grab_compound_head(struct page *page,
->>  		if (hpage_pincount_available(page))
->>  			hpage_pincount_add(page, refs);
->>  
->> +		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_ACQUIRED,
->> +				    orig_refs);
->> +
->>  		return page;
->>  	}
->>  
-> 
-> It seems to me you miss mod_node_page_state() in put_compound_head(), don't
-> you?
+On Wed, Feb 05, 2020 at 02:52:51PM +0100, David Hildenbrand wrote:
+>Let's use a calculation that's easier to understand and calculates the
+>same result. Reusing existing macros makes this look nicer.
+>
+>We always want to have the number of pages (> 0) to the next section
+>boundary, starting from the current pfn.
+>
+>Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Michal Hocko <mhocko@kernel.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richardw.yang@linux.intel.com>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
 
-Yes, that was definitely missing. I've added this for the next version:
+BTW, I got one question about hotplug size requirement.
 
+I thought the hotplug range should be section size aligned, while taking a
+look into current code function check_hotplug_memory_range() guard the range.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 7c543849181b..ae503c51bc7f 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2268,6 +2268,8 @@ static int record_subpages(struct page *page, unsigned long addr,
- 
- static void put_compound_head(struct page *page, int refs, unsigned int flags)
- {
-+       int orig_refs = refs;
-+
-        if (flags & FOLL_PIN) {
-                if (hpage_pincount_available(page))
-                        hpage_pincount_sub(page, refs);
-@@ -2283,6 +2285,8 @@ static void put_compound_head(struct page *page, int refs, unsigned int flags)
-        if (refs > 1)
-                page_ref_sub(page, refs - 1);
-        put_page(page);
-+
-+       mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, orig_refs);
- }
- 
- #ifdef CONFIG_ARCH_HAS_HUGEPD
+This function says the range should be block_size aligned. And if I am
+correct, block size on x86 should be in the range
 
+    [MIN_MEMORY_BLOCK_SIZE, MEM_SIZE_FOR_LARGE_BLOCK]
+    
+And MIN_MEMORY_BLOCK_SIZE is section size.
 
+Seems currently we support subsection hotplug? Then how a subsection range got
+hotplug? Or this patch is a pre-requisite?
 
-> 
-> Otherwise I like the new stat names better :).
-> 
-> 								Honza
-> 
+>---
+> mm/memory_hotplug.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 0a54ffac8c68..c30191183c04 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -528,7 +528,8 @@ void __remove_pages(unsigned long pfn, unsigned long nr_pages,
+> 	for (; pfn < end_pfn; pfn += cur_nr_pages) {
+> 		cond_resched();
+> 		/* Select all remaining pages up to the next section boundary */
+>-		cur_nr_pages = min(end_pfn - pfn, -(pfn | PAGE_SECTION_MASK));
+>+		cur_nr_pages = min(end_pfn - pfn,
+>+				   SECTION_ALIGN_UP(pfn + 1) - pfn);
+> 		__remove_section(pfn, cur_nr_pages, map_offset, altmap);
+> 		map_offset = 0;
+> 	}
+>-- 
+>2.24.1
 
-Glad to hear that! :)
-
-thanks,
 -- 
-John Hubbard
-NVIDIA
+Wei Yang
+Help you, Help me
