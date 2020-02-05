@@ -2,227 +2,112 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE584C352A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A9CC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2E921D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04CC20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nrehUZjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgBEPlq (ORCPT
+        id S1727453AbgBEPmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:41:46 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:34210 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBEPlp (ORCPT
+        Wed, 5 Feb 2020 10:42:16 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38660 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgBEPmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:41:45 -0500
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id DCD5467A6FE;
-        Wed,  5 Feb 2020 16:41:41 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Feb 2020
- 16:41:41 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Wed, 5 Feb 2020 16:41:41 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Adam Ford <aford173@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-Thread-Topic: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-Thread-Index: AQHVqxK76SDACaL8QUasrdsECo8DbaeqwvaAgAAKqICAYkD9AA==
-Date:   Wed, 5 Feb 2020 15:41:41 +0000
-Message-ID: <db801b5e-0482-0379-c19e-5c293532c493@kontron.de>
-References: <20191205021924.25188-1-aford173@gmail.com>
- <20191205021924.25188-6-aford173@gmail.com>
- <DB7PR04MB517877B39D4659568F69B813875C0@DB7PR04MB5178.eurprd04.prod.outlook.com>
- <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
-In-Reply-To: <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <32680A5ECEBE5747A3268A81C8330511@snt-world.com>
-Content-Transfer-Encoding: base64
+        Wed, 5 Feb 2020 10:42:16 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so1399333pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:42:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=03H9tOU4ZU6Aob62of9ZRzxsUiRGCwWaNgMF+MztT3g=;
+        b=nrehUZjzvoVHxS9MBml+qXueEBmbVQVRNi9QBTFlNb4ySXdy6sdRjrcpBdyFw4appf
+         EWDFAjrMEGyDLWcSlj+nW93jEfRP7BY22yZ7N4pkGQzq76QczVFRgkYk/iunW/YZ/MDv
+         sSH8U0+VX+dp0KjIQosvQElRZXeiN2OumArvk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=03H9tOU4ZU6Aob62of9ZRzxsUiRGCwWaNgMF+MztT3g=;
+        b=pTUvncCIQKd+d8/Av4hGqrRJ/ZTnWXpxyNRn3Y0rCT54P2KD86I56nz6bwGbfA0DpG
+         4SIabniF15UOalJrGVumHVgA6rPdzRidVNO1+7Por6881nKu2q5H41sfwL60fMjMHbCF
+         eTBO+Gx9+2A6OBAzMrvhS+VB3n63cY4FqJM3mPeq6S7g1G8FUEhKS/m3IoSFVacWYKGj
+         Gt1Y+8M1yx9TBo17lcAJH9Gw4jY4CSJv+h+bA39ltBW/k5VQwmKBKkg38+DDv4w3aWAr
+         ZbSSeARo1meIqz6THKQA8EIDlKrsqnQxlLLroU+j8pNG/GgxW420y27LpQvx2bvuYMBC
+         wblQ==
+X-Gm-Message-State: APjAAAUAJwMxU2YBQFaLMWw6MAA6d2qkoSuZiHyJ5P8RYeopXMi7uIJm
+        QIZ+KeG2yPK92WWi9vzVHR7xsw==
+X-Google-Smtp-Source: APXvYqyZJS8+VKbJ4mdfBpzG4WiIrsTqm/mT2imB8SMINJ7RnaYxCspLXuTcoiezwUtEjurmcUvWqw==
+X-Received: by 2002:a63:a1e:: with SMTP id 30mr28697873pgk.238.1580917334448;
+        Wed, 05 Feb 2020 07:42:14 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l69sm221887pgd.1.2020.02.05.07.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 07:42:13 -0800 (PST)
+Date:   Wed, 5 Feb 2020 10:42:12 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: Re: [for-next][PATCH 4/4] ftrace: Add comment to why
+ rcu_dereference_sched() is open coded
+Message-ID: <20200205154212.GC142103@google.com>
+References: <20200205104929.313040579@goodmis.org>
+ <20200205105113.283672584@goodmis.org>
+ <20200205063349.4c3df2c0@oasis.local.home>
+ <20200205141915.GA194021@google.com>
+ <20200205092847.0b650972@oasis.local.home>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: DCD5467A6FE.A43F0
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, devicetree@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, peng.fan@nxp.com,
-        ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de,
-        shawnguo@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205092847.0b650972@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIDA1LjEyLjE5IDA0OjE1LCBBZGFtIEZvcmQgd3JvdGU6DQo+IE9uIFdlZCwgRGVj
-IDQsIDIwMTkgYXQgODozNyBQTSBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0K
-Pj4NCj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4+IEZyb206IEFkYW0gRm9yZCA8
-YWZvcmQxNzNAZ21haWwuY29tPg0KPj4+IFNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciA1LCAyMDE5
-IDEwOjE5IEFNDQo+Pj4gVG86IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
-Pj4+IENjOiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNvbT47IFJvYiBIZXJyaW5nIDxyb2Jo
-K2R0QGtlcm5lbC5vcmc+Ow0KPj4+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-OyBTaGF3biBHdW8NCj4+PiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlciA8cy5o
-YXVlckBwZW5ndXRyb25peC5kZT47DQo+Pj4gUGVuZ3V0cm9uaXggS2VybmVsIFRlYW0gPGtlcm5l
-bEBwZW5ndXRyb25peC5kZT47IEZhYmlvIEVzdGV2YW0NCj4+PiA8ZmVzdGV2YW1AZ21haWwuY29t
-PjsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47DQo+Pj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4+PiBTdWJqZWN0OiBb
-UEFUQ0ggNS83XSBhcm02NDogZHRzOiBpbXg4bW06IGFkZCBHUEMgcG93ZXIgZG9tYWlucw0KPj4+
-DQo+Pj4gVGhlcmUgaXMgYSBwb3dlciBkb21haW4gY29udHJvbGxlciBvbiB0aGUgaS5YTThNIE1p
-bmkgdXNlZCBmb3IgaGFuZGxpbmcNCj4+PiBpbnRlcnJ1cHRzIGFuZCBjb250cm9sbGluZyBjZXJ0
-YWluIHBlcmlwaGVyYWxzIGxpa2UgVVNCIE9URyBhbmQgUENJZSwgd2hpY2gNCj4+PiBhcmUgY3Vy
-cmVudGx5IHVuYXZhaWxhYmxlLg0KPj4+DQo+Pj4gVGhpcyBwYXRjaCBlbmFibGVzIHN1cHBvcnQg
-dGhlIGNvbnRyb2xsZXIgaXRzZWxmIHRvIHRoZSBoZWxwIGZhY2lsaXRhdGUgZW5hYmxpbmcNCj4+
-PiBhZGRpdGlvbmFsIHBlcmlwaGVyYWxzLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogQWRhbSBG
-b3JkIDxhZm9yZDE3M0BnbWFpbC5jb20+DQo+Pj4gLS0tDQo+Pj4gICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaSB8IDgyDQo+Pj4gKysrKysrKysrKysrKysrKysrKysr
-Ky0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-DQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14
-OG1tLmR0c2kNCj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNp
-DQo+Pj4gaW5kZXggMjNjOGZhZDc5MzJiLi5kMDVjNWI2MTdhNGQgMTAwNjQ0DQo+Pj4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4+PiArKysgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPj4+IEBAIC00LDYgKzQsNyBA
-QA0KPj4+ICAgICovDQo+Pj4NCj4+PiAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9pbXg4
-bW0tY2xvY2suaD4NCj4+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Bvd2VyL2lteDhtLXBvd2Vy
-Lmg+DQo+Pj4gICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+Pj4gICAjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvaW5wdXQvaW5wdXQuaD4NCj4+PiAgICNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+Pj4gQEAgLTEzLDcgKzE0LDcg
-QEANCj4+Pg0KPj4+ICAgLyB7DQo+Pj4gICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhtbSI7
-DQo+Pj4gLSAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4+PiArICAgICBpbnRlcnJ1
-cHQtcGFyZW50ID0gPCZncGM+Ow0KPj4NCj4+IE5BQ0ssIGZvciBpbXg4bW0sIGlteDhtbiAmIGZ1
-dHVyZSBpLk1YOE0gU09DLCB3ZSBkb24ndCB0cmVhdCBHUEMgYXMgaW50ZXJydXB0IGNvbnRyb2xs
-ZXIgaW4gbGludXggYW55bW9yZS4NCj4+IEFib3ZlIGNoYW5nZSB3aWxsIGJyZWFrIHRoZSBsb3cg
-cG93ZXIgbW9kZSBzdXBwb3J0KHN1c3BlbmQvcmVzdW1lKQ0KPiANCj4gV2hhdCBtYWtlcyBpdCBk
-aWZmZXJlbnQgdGhhbiB0aGUgaS5NWDhNUT8gIFRoZSBJIGJhc2ljYWxseSBjb3BpZWQgdGhpcw0K
-PiBmcm9tIHRoZSBpLk1YOE1RIGFuZCB1cGRhdGVkIHRoZSBiaXQgbG9jYXRpb25zIGFuZCB0cmll
-ZCB0byBsZWF2ZQ0KPiBldmVyeXRoaW5nIGVsc2UgdGhlIHNhbWUuDQo+IA0KPiBJJ20gT0sgd2l0
-aCByZW1vdmluZyB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIgc3R1ZmYsIGJ1dCBpZiB0aGF0J3MN
-Cj4gcmVxdWlyZWQsIEknZCBsaWtlIHRvIHVuZGVyc3RhbmQgd2h5IGl0J3Mgc3RpbGwgaW4gdGhl
-IGkuTVg4US4NCg0KSSB3b3VsZCBhbHNvIGxpa2UgdG8ga25vdyBob3cgTlhQIHBsYW5zIHRvIGlt
-cGxlbWVudCB0aGluZ3MgbGlrZSBHUEMgaW4gDQptYWlubGluZS4gSSBjdXJyZW50bHkgdXNlIGEg
-dHJlZSBbMV0gdGhhdCBkb2Vzbid0IHVzZSBhbnkgcG93ZXIgZG9tYWluIA0KZHJpdmVyIGJ1dCBV
-U0IsIExDRElGIGFuZCBNSVBJLURTSSBhcmUgd29ya2luZyBmaW5lLg0KRm9yIHRoaXMgSSBwb3J0
-ZWQgc29tZSBwYXRjaGVzIGZyb20gdGhlIGlteF81LjQuMF84ZHhscGhhbnRvbV9lciB0cmVlIGlu
-IA0KdGhlIE5YUCByZXBvc2l0b3J5IFsyXSBhbmQgYWRkZWQgYSBmZXcgc21hbGwgaGFja3MgdG8g
-ZW5hYmxlIG1pc3NpbmcgDQpjbG9ja3MsIGV0Yy4NCg0KSXMgdGhlcmUgc29tZSByb2FkbWFwIGZv
-ciB0aGUgdXBzdHJlYW0gc3VwcG9ydCBvZiB0aGUgZGlmZmVyZW50IGRyaXZlcnMgDQphbmQgZmVh
-dHVyZXMgb2YgdGhlIGkuTVg4TU0/DQoNClRoYW5rcywNCkZyaWVkZXINCg0KWzFdIGh0dHBzOi8v
-Z2l0LmtvbnRyb24tZWxlY3Ryb25pY3MuZGUvbGludXgvbGludXgvY29tbWl0cy92NS40LWt0bg0K
-WzJdIA0KaHR0cHM6Ly9zb3VyY2UuY29kZWF1cm9yYS5vcmcvZXh0ZXJuYWwvaW14L2xpbnV4LWlt
-eC9sb2cvP2g9aW14XzUuNC4wXzhkeGxwaGFudG9tX2VyDQoNCj4gDQo+IGFkYW0NCj4+DQo+PiBC
-Ug0KPj4gSmFja3kgQmFpDQo+Pg0KPj4+ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwyPjsNCj4+
-PiAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+Pj4NCj4+PiBAQCAtNDk1LDYgKzQ5Niw4NSBA
-QA0KPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19T
-UEkgODkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICNyZXNldC1jZWxscyA9IDwxPjsNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgIH07
-DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICBncGM6IGdwY0AzMDNhMDAwMCB7DQo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1t
-LWdwYyI7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAzYTAw
-MDAgMHgxMDAwMD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0
-LXBhcmVudCA9IDwmZ2ljPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgODcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+Pj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+Pj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwzPjsNCj4+PiArDQo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdjIHsNCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+Pj4gKw0K
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdjX21pcGk6IHBvd2Vy
-LWRvbWFpbkAwIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsNCj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPElNWDhNTV9QT1dFUl9ET01BSU5fTUlQ
-ST47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPj4+ICsN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBnY19wY2llOiBwb3dl
-ci1kb21haW5AMSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJTVg4TU1fUE9XRVJfRE9NQUlOX1BD
-SUU+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4+PiAr
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwZ2Nfb3RnMTogcG93
-ZXItZG9tYWluQDIgew0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+Ow0KPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPQ0KPj4+IDxJTVg4TU1fUE9XRVJfRE9N
-QUlOX1VTQl9PVEcxPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdj
-X290ZzI6IHBvd2VyLWRvbWFpbkAzIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsNCj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0NCj4+PiA8SU1YOE1N
-X1BPV0VSX0RPTUFJTl9VU0JfT1RHMj47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHBnY19kZHIxOiBwb3dlci1kb21haW5ANCB7DQo+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJ
-TVg4TU1fUE9XRVJfRE9NQUlOX0REUjE+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBwZ2NfZ3B1MmQ6IHBvd2VyLWRvbWFpbkA1IHsNCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
-PElNWDhNTV9QT1dFUl9ET01BSU5fR1BVMkQ+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwZ2NfZ3B1OiBwb3dlci1kb21haW5ANiB7DQo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDxJTVg4TU1fUE9XRVJfRE9NQUlOX0dQVT47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHBnY192cHU6IHBvd2VyLWRvbWFpbkA3IHsNCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
-PElNWDhNTV9QT1dFUl9ET01BSU5fVlBVPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcGdjX2dwdTNkOiBwb3dlci1kb21haW5AOCB7DQo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDxJTVg4TU1fUE9XRVJfRE9NQUlOX0dQVTNEPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcGdjX2Rpc3A6IHBvd2VyLWRvbWFpbkA5IHsNCj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDww
-PjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
-ID0gPElNWDhNTV9QT1dFUl9ET01BSU5fRElTUD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHBnY192cHVfZzE6IHBvd2VyLWRvbWFpbkBhIHsNCj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9
-IDwwPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPElNWDhNTV9QT1dFUl9WUFVfRzE+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwZ2NfdnB1X2cyOiBwb3dlci1kb21haW5AYiB7DQo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8
-MD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-ZyA9IDxJTVg4TU1fUE9XRVJfVlBVX0cyPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcGdjX3ZwdV9oMTogcG93ZXItZG9tYWluQGMgew0KPj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+
-Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcg
-PSA8SU1YOE1NX1BPV0VSX1ZQVV9IMT47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgIH07DQo+Pj4gICAgICAgICAgICAgICAgfTsNCj4+Pg0KPj4+
-ICAgICAgICAgICAgICAgIGFpcHMyOiBidXNAMzA0MDAwMDAgew0KPj4+IC0tDQo+Pj4gMi4yMC4x
-DQo+Pg0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18NCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbA0KPiA=
+On Wed, Feb 05, 2020 at 09:28:47AM -0500, Steven Rostedt wrote:
+> On Wed, 5 Feb 2020 09:19:15 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > Could you paste the stack here when RCU is not watching? In trace event code
+> > IIRC we call rcu_enter_irqs_on() to have RCU temporarily watch, since that
+> > code can be called from idle loop. Should we doing the same here as well?
+> 
+> Unfortunately I lost the stack trace. And the last time we tried to use
+> rcu_enter_irqs_on() for ftrace, we couldn't find a way to do this
+> properly. Ftrace is much more invasive then going into idle. The
+> problem is that ftrace traces RCU itself, and calling
+> "rcu_enter_irqs_on()" in pretty much any place in the RCU code caused
+> lots of bugs ;-)
+> 
+> This is why we have the schedule_on_each_cpu(ftrace_sync) hack.
+
+The "schedule a task on each CPU" trick works on !PREEMPT though right?
+
+Because it is possible in PREEMPT=y to get preempted in the middle of a
+read-side critical section, switch to the worker thread executing the
+ftrace_sync() and then switch back. But RCU still has to watch that CPU since
+the read-side critical section was not completed.
+
+Or is there a subtlety here with ftrace that I missed?
+
+thanks,
+
+ - Joel
+
+
+> 
+> -- Steve
