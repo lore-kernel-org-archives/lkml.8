@@ -2,66 +2,88 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB6C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C116C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F53020702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E70D217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580910591;
+	bh=60KwhO2177ORVClH4AdnGJoVBBb6iFRzm5g/PSOixTw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tU1QF/IAvDtfZXVdr3l0E+9DcX/Y8E30x05VY7IDAHf1hrGwlrlgqwmqr8vbKBqj+
+	 oX8/cDJQPZ4d0DkJyG+jUmYDOd4QvRt3TnyM+ggFtKwH3uV17jvSdrBXe8kDxMYtVS
+	 aSXlIlaeK+R0oSRQVhU3o1rp9bi9fnmEVgHh+EP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgBENto (ORCPT
+        id S1728126AbgBENtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:49:44 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47314 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbgBENto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:49:44 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2B97D158EDDC9;
-        Wed,  5 Feb 2020 05:49:42 -0800 (PST)
-Date:   Wed, 05 Feb 2020 14:49:40 +0100 (CET)
-Message-Id: <20200205.144940.712557491994145617.davem@davemloft.net>
-To:     harini.katakam@xilinx.com
-Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
-        harinikatakamlinux@gmail.com
-Subject: Re: [PATCH v3 0/2] TSO bug fixes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1580906292-19445-1-git-send-email-harini.katakam@xilinx.com>
-References: <1580906292-19445-1-git-send-email-harini.katakam@xilinx.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Feb 2020 05:49:43 -0800 (PST)
+        Wed, 5 Feb 2020 08:49:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbgBENtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:49:49 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960D620702;
+        Wed,  5 Feb 2020 13:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580910589;
+        bh=60KwhO2177ORVClH4AdnGJoVBBb6iFRzm5g/PSOixTw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0JGyaMIiIvPgRzRyesX9+RGREvLiHXJMFtJaKawcYHTWAgD42NqS9q77xaELWMPqo
+         A+7R3L4ZEOsMeybupGB5MFfkFs9gu8d/+NGcEohG6+7nHTq9ou5+15WXdq3fq0rNsI
+         T1kjLRxwBkdGRxZTDIN0XFugEi3qCy9G3nuuK0Y8=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 0/4] bootconfig: Show more error information
+Date:   Wed,  5 Feb 2020 22:49:45 +0900
+Message-Id: <158091058484.27924.11216788166827115442.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
-Date: Wed,  5 Feb 2020 18:08:10 +0530
+Hello,
 
-> An IP errata was recently discovered when testing TSO enabled versions
-> with perf test tools where a false amba error is reported by the IP.
-> Some ways to reproduce would be to use iperf or applications with payload
-> descriptor sizes very close to 16K. Once the error is observed TXERR (or
-> bit 6 of ISR) will be constantly triggered leading to a series of tx path
-> error handling and clean up. Workaround the same by limiting this size to
-> 0x3FC0 as recommended by Cadence. There was no performance impact on 1G
-> system that I tested with.
-> 
-> Note on patch 1: The alignment code may be unused but leaving it there
-> in case anyone is using UFO.
-> 
-> Added Fixes tag to patch 1.
+Here are some patches to show more error information and
+the number of nodes on boot message and bootconfig tool.
 
-Series applied and queued up for -stable, thank you.
+Since the max number of the nodes are limited and it is hard
+to count the number of nodes while writing the config file,
+it is better that the bootconfig command informs user the
+current number of the node.
+
+Thank you,
+
+---
+
+Masami Hiramatsu (4):
+      bootconfig: Use bootconfig instead of boot config
+      bootconfig: Add more parse error messages
+      tools/bootconfig: Show the number of bootconfig nodes
+      bootconfig: Show the number of nodes on boot message
+
+
+ init/main.c             |   10 ++++++----
+ lib/bootconfig.c        |   21 ++++++++++++++++-----
+ tools/bootconfig/main.c |    1 +
+ 3 files changed, 23 insertions(+), 9 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
