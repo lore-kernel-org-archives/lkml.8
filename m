@@ -2,208 +2,100 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025D2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FA3C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7FA222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB99022464
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580924866;
-	bh=EsupDoQIFFE/AHmYsPM/3CALiSfw7Q+0rJAOszhmxKM=;
+	s=default; t=1580924913;
+	bh=gh2Zw4CvDEAIWdFs9go8qM08zPjmlCx8YzispcE1yfQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tf9uGPCi/EUX/OYOn+bmPU69zAGANLVjINBufj8+yIkXyiCn1onhe74Bc07rjW6QZ
-	 7ZHKfgUpzab5QckYQwhuacw1I0UrmqS+6V7icRHA4SUCB2CNuQ+BboNxLILrelRN5I
-	 QMUZIzaCN24oKIEnMd9Unit4/vk9f9t+nDuf/7qc=
+	b=cZ5qqKKVZcrafh2j1OGy8hrByxAoNH5cYwDuhN/CdUIntU2JXMGFUxaEOb/d+czQZ
+	 aTQnzhj7UMzMO/PDtRMU5lKw9fTX8HlnB3ig107z18gkLnsZuZlakO+O5h3wKqIS7o
+	 mZlaYtPHr/nv6spKvtT09a9bdlYqyfolzVEdOaj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgBERrq (ORCPT
+        id S1727361AbgBERsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:47:46 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44974 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgBERrp (ORCPT
+        Wed, 5 Feb 2020 12:48:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36589 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgBERsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:47:45 -0500
-Received: by mail-wr1-f68.google.com with SMTP id m16so3791843wrx.11;
-        Wed, 05 Feb 2020 09:47:43 -0800 (PST)
+        Wed, 5 Feb 2020 12:48:32 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so3847835wru.3;
+        Wed, 05 Feb 2020 09:48:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CYLfMRQOnfB9NcsP3jbmvn6lucoo/vUebKxirhMntc0=;
-        b=tnm44IXJ1eniMLeztRtHWnM9AwcJ+TGr2TsJ8OKwvmrQuTyUARXpabN8l0FDHnNrv5
-         0Q17YoiBIo3HyMUeHBlCfx6JC1xc6+hlgEHrsVrmm721vJemwZVJsq1iD0Fx7RKGBbue
-         sGJnjSUhkHSrldPFqLZjEF0Uz2yEmF+DII+d2v2Lki4TAjIizvgAIyDpsw+DNhVspx4J
-         wab/gMU2Ahe4c/jbdt5+kQuaEgWdQFS5E92Z4TIGpY5Iww7DbxIGUg8CG5nPqGvVgIVb
-         +7dVNtP74D7gIAvZt4t2GSO+6NqbPkpCKCgRwevR+TtunDvEmUyquZVJU2uSwj2Vhfp4
-         Yh1A==
-X-Gm-Message-State: APjAAAWm5atDHrolSkbJDaDi0qSwHBFe6JINvvHRUF/fW28gywxakkD9
-        Lne2u1PIen9+16wDNJIF+g==
-X-Google-Smtp-Source: APXvYqztCHUsi45+Mt62Wd/cXHFhEBCqL5ykVTJiCzLLf1seeZgXV2jDrI41CauiGVreIOnEmV30nA==
-X-Received: by 2002:adf:fe43:: with SMTP id m3mr31718793wrs.213.1580924862634;
-        Wed, 05 Feb 2020 09:47:42 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:content-language
+         :user-agent;
+        bh=Ux3DGzV35dAceVNHrHJKtHoyHks4VBOBKylo/BD3j8A=;
+        b=DkfkhCUQJrmGX5V3JIOOSr6LWxJ1zQ/4xCeP6hEV8W73GivRsJdvgwDmpIhVE2maFl
+         AoKnXz6XQaztWKLcuZ5APUZqmWExmm1CNBAImbAedj97ugtamOnmabzKEV9E9GcjVFTq
+         9LEVItT0WHX/dkaDnGxGYa3zwOod3zbOruhkW3I5auKjOfuHfbS4kKy/4y48OwgStCFN
+         Jwz8QRorMN7f7u6IiRqnHRVHKGqngzy5CAtWnjYWAprb/QIYDYR5fsQ9v+6zqKtvESzV
+         vJwiAeY4HJucafCb3AyRCyD7/oTZZZgg5r9jDyQX7IQJxGeYUxGFevZ+HEH6X4Ewd/99
+         +QyA==
+X-Gm-Message-State: APjAAAWgbNt5A3Z35CoG56eUI/zaHfxnZd7bJzBC39PGWwaPf/k68eq2
+        J1boJG/8eoZsaWZ5ytnpvg==
+X-Google-Smtp-Source: APXvYqyjCgMXX07vCklzfGwfuVFLf+VA2qWHi/2w8y238KZGaDM7SrZW2WawDJsygiDUkK+5I/A/1g==
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr28737729wrm.290.1580924911012;
+        Wed, 05 Feb 2020 09:48:31 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id u14sm659294wrm.51.2020.02.05.09.47.41
+        by smtp.gmail.com with ESMTPSA id b18sm695624wru.50.2020.02.05.09.48.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 09:47:42 -0800 (PST)
-Received: (nullmailer pid 26578 invoked by uid 1000);
-        Wed, 05 Feb 2020 17:47:40 -0000
-Date:   Wed, 5 Feb 2020 17:47:40 +0000
+        Wed, 05 Feb 2020 09:48:30 -0800 (PST)
+Received: (nullmailer pid 28035 invoked by uid 1000);
+        Wed, 05 Feb 2020 17:48:29 -0000
+Date:   Wed, 5 Feb 2020 17:48:29 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-i2c@vger.kernel.org, mark.rutland@arm.com,
-        bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
-        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH] dt-bindings: convert i2c-cros-ec-tunnel.txt to yaml
-Message-ID: <20200205174740.GA10738@bogus>
-References: <20200127161213.13339-1-dafna.hirschfeld@collabora.com>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        ruizhao@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: edac: dmc-520.yaml
+Message-ID: <20200205174829.GA27969@bogus>
+References: <5354a9c3-5b5a-486a-9d19-fa9be169faef@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127161213.13339-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <5354a9c3-5b5a-486a-9d19-fa9be169faef@gmail.com>
+Content-Language: en-US
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 05:12:13PM +0100, Dafna Hirschfeld wrote:
-> Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
+On Mon, 27 Jan 2020 08:23:08 -0800, Shiping Ji wrote:
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
 > 
-> This was tested and verified on ARM and ARM64 with:
+> From: Lei Wang <leiwang_git@outlook.com>
 > 
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
 > 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 > ---
->  .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 ------------
->  .../bindings/i2c/i2c-cros-ec-tunnel.yaml      | 61 +++++++++++++++++++
->  2 files changed, 61 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+>      Changes in v11:
+>          - Fix issues reported by make dt_binding_check
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-> deleted file mode 100644
-> index 898f030eba62..000000000000
-> --- a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -I2C bus that tunnels through the ChromeOS EC (cros-ec)
-> -======================================================
-> -On some ChromeOS board designs we've got a connection to the EC (embedded
-> -controller) but no direct connection to some devices on the other side of
-> -the EC (like a battery and PMIC).  To get access to those devices we need
-> -to tunnel our i2c commands through the EC.
-> -
-> -The node for this device should be under a cros-ec node like google,cros-ec-spi
-> -or google,cros-ec-i2c.
-> -
-> -
-> -Required properties:
-> -- compatible: google,cros-ec-i2c-tunnel
-> -- google,remote-bus: The EC bus we'd like to talk to.
-> -
-> -Optional child nodes:
-> -- One node per I2C device connected to the tunnelled I2C bus.
-> -
-> -
-> -Example:
-> -	cros-ec@0 {
-> -		compatible = "google,cros-ec-spi";
-> -
-> -		...
-> -
-> -		i2c-tunnel {
-> -			compatible = "google,cros-ec-i2c-tunnel";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			google,remote-bus = <0>;
-> -
-> -			battery: sbs-battery@b {
-> -				compatible = "sbs,sbs-battery";
-> -				reg = <0xb>;
-> -				sbs,poll-retry-count = <1>;
-> -			};
-> -		};
-> -	}
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-> new file mode 100644
-> index 000000000000..c1383e607f47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/i2c/i2c-cros-ec-tunnel.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: I2C bus that tunnels through the ChromeOS EC (cros-ec)
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> +  - Guenter Roeck <groeck@chromium.org>
-> +
-> +description: |
-> +  On some ChromeOS board designs we've got a connection to the EC (embedded
-> +  controller) but no direct connection to some devices on the other side of
-> +  the EC (like a battery and PMIC). To get access to those devices we need
-> +  to tunnel our i2c commands through the EC.
-> +  The node for this device should be under a cros-ec node like google,cros-ec-spi
-> +  or google,cros-ec-i2c.
-
-You should have a ref to /schemas/i2c-controller.yaml here.
-
-> +
-> +properties:
-> +  compatible:
-> +    const:
-> +      google,cros-ec-i2c-tunnel
-> +
-> +  google,remote-bus:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> +    description: The EC bus we'd like to talk to.
-> +
-> +  "#address-cells": true
-> +  "#size-cells": true
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: One node per I2C device connected to the tunnelled I2C bus.
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - google,remote-bus
-> +
-> +examples:
-> +  - |
-> +    cros-ec@0 {
-> +        compatible = "google,cros-ec-spi";
-> +        i2c-tunnel {
-> +            compatible = "google,cros-ec-i2c-tunnel";
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            google,remote-bus = <0>;
-> +
-> +            battery: sbs-battery@b {
-> +                compatible = "sbs,sbs-battery";
-> +                reg = <0xb>;
-> +                sbs,poll-retry-count = <1>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.17.1
+> ---
+>  .../devicetree/bindings/edac/dmc-520.yaml     | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
