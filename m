@@ -2,150 +2,220 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A2C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1166C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C732085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580902322;
-	bh=PFVOCoulyejpN6mvZgVTk5pxnaukban7QLyDFO77WfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JmK67NxUwuu1wkLfyb2qGgSLwbG27YJklYZ/6y0UmPlSvULlVGgrqyLMW90wzZHVz
-	 ee4LcwlWR0X6kpr0mie4G0pH3vgF8N+ofzDzXI/wVI5J8QPtLVa5XAccq4yHOvYWR2
-	 2ZPC+SOEbLKHIQDufOdV4t11ghBBuDoGxj9sIbm4=
+	by mail.kernel.org (Postfix) with ESMTP id 631142085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="MtYktUQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgBELcB (ORCPT
+        id S1728371AbgBELds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 06:32:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgBELcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:32:01 -0500
-Received: from localhost (unknown [122.178.239.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79CC22072B;
-        Wed,  5 Feb 2020 11:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580902320;
-        bh=PFVOCoulyejpN6mvZgVTk5pxnaukban7QLyDFO77WfU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ynQt/JGSz9QiJeFwzdoIo5Lu3mZYK4JHHr73L7Q3xz3HP++C72Tasj3hjstGaK0ZH
-         E6I6/kFHVqHJN7upIyo5b3zB1vDEHcq3sFsVdXKIKN0tkDf8kBhZOd1o3VpQ37mOP0
-         luK0OQha7EXiuCibsLDJz5qdwSQbswM/lcova95M=
-Date:   Wed, 5 Feb 2020 17:01:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
- dma_request_slave_chan()
-Message-ID: <20200205113155.GE2618@vkoul-mobl>
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
- <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <20200204062118.GS2841@vkoul-mobl>
- <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
- <20200205044352.GC2618@vkoul-mobl>
- <13dcf3d9-06ca-d793-525d-12f6d7cd27c1@ti.com>
+        Wed, 5 Feb 2020 06:33:48 -0500
+Received: from mail-eopbgr140051.outbound.protection.outlook.com ([40.107.14.51]:13189
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727562AbgBELds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 06:33:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MpfE6qfpIYTvrN7eG+72RnY2Ho/HVQ+D3bFxvo/P4bOu0+rkH1GoFXdEG7YmAZLvKroLipPinMjHlrNS8R2bi9pYG/REWZPp2E3lRxIewFpUegvkujRAqUekecGSHbg4LvmFvU5ARNijDiEx4ZqqbR74dLMYiP7dxDAawJ0WH4TFptL7tC3oS0YLHqjFtycJMnZXufdmIZS+almDIEkSIQocpQIgPbHT7kFNrgbXwN9UROTqwn/xlZL6hz7V0LqjGJQXsEeek0/qwNGbTgdxb0W/e2M0kJMeQ6OOdteheUWHBVbfEhAILZSCwAAsNbQDvYTx/uKYFI1ze30rItcJeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9z4NqEdh7x1/Eh9fEH3iTMZdHA2T3pBZnlucb64P4w=;
+ b=c/0yhXGDr1owC+rIfW5yT35hnlPEH8AfYbGmE2jKHzE1koqnl4wm/3XT8xbaUbqSu5Wrtgx9X2QBMqlMprxX5wlgY9VdJ5n3y+PLXzBYk82iwCcZHYH6kz4zrkDMNrG1HJ9gi/5ZbiGd4NU4HDvaCbSUyP4u4Y49XQM0BsWsFe3K9XTfQ57N5TjWMrEPqGPY9z/bbfT7yDNKG+CWA0tq4AOIobHlFTngNg3aUK4OSifE58SgjCEpfsK3l9LOJeM/9qSYjlq6SzA4LbsBtpV2eT97XMbhojaYPVCqikOVhv6DZGxfJ+X/2161vsLOfQzaTLrx20PcKieJqZjsGQCs+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9z4NqEdh7x1/Eh9fEH3iTMZdHA2T3pBZnlucb64P4w=;
+ b=MtYktUQyHRMLbjSoOLujBeKxnoJytwNRsY7cEJlnZ80aztVH7veCrnLpmZ4N5IVGwvnPeDJJVCx5c23Pcm+xozJHMgOzVYN2ajBMqpZBGA6Ok/tACXtIAgyelBv03V2TMkXoN7EwUnliiIOyle8APEXugx3tQPwtkt8DY9Oy/SU=
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (20.178.202.86) by
+ AM0PR04MB5202.eurprd04.prod.outlook.com (52.134.89.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Wed, 5 Feb 2020 11:33:40 +0000
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::1b4:31d2:1485:6e07]) by AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::1b4:31d2:1485:6e07%7]) with mapi id 15.20.2686.034; Wed, 5 Feb 2020
+ 11:33:40 +0000
+From:   "Calvin Johnson (OSS)" <calvin.johnson@oss.nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "linux.cj@gmail.com" <linux.cj@gmail.com>,
+        Jon Nettleton <jon@solid-run.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "Rajesh V. Bikkina" <rajesh.bikkina@nxp.com>,
+        "Calvin Johnson (OSS)" <calvin.johnson@oss.nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v1 6/7] net: phylink: Introduce
+ phylink_fwnode_phy_connect()
+Thread-Topic: [EXT] Re: [PATCH v1 6/7] net: phylink: Introduce
+ phylink_fwnode_phy_connect()
+Thread-Index: AQHV2Ewe+AYJWjXPMEG+NfVVXqSvHKgJ0naAgAKpuiA=
+Date:   Wed, 5 Feb 2020 11:33:40 +0000
+Message-ID: <AM0PR04MB5636989ED51E9BD72BC78C1093020@AM0PR04MB5636.eurprd04.prod.outlook.com>
+References: <20200131153440.20870-1-calvin.johnson@nxp.com>
+ <20200131153440.20870-7-calvin.johnson@nxp.com>
+ <20200203184121.GR25745@shell.armlinux.org.uk>
+In-Reply-To: <20200203184121.GR25745@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=calvin.johnson@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 71de16e8-190a-48b4-ff55-08d7aa2f3feb
+x-ms-traffictypediagnostic: AM0PR04MB5202:|AM0PR04MB5202:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB52024AD2A54270FB1244CBA3D2020@AM0PR04MB5202.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0304E36CA3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(189003)(199004)(76116006)(33656002)(66476007)(66556008)(2906002)(9686003)(64756008)(66946007)(4326008)(55016002)(66446008)(26005)(81156014)(81166006)(86362001)(8936002)(8676002)(71200400001)(54906003)(52536014)(5660300002)(6506007)(53546011)(316002)(7696005)(478600001)(186003)(7416002)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5202;H:AM0PR04MB5636.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JXBudp9AO4TXk8dcfQyyGNgyBOAv7kCKLWhKWBuO/wDwxCZp6phOQrnN14ouhrhloRSY9CmKPaCTxDvLM4vLpF2PxrWrgZ8aWthi9MvaRRue+0fyNyC4zule3ctlSvAMrQ1O1j2v/GOCPUvKiAxa7TV07cp1MPHGDTAVPyrd4UWhdbtTWbsnUvCVkOH6cZpFsUnIhfD58zJtox0VEo7JVT6OQUUA8QfLaaPDPFolC6eW4R6GQo5pltxbn05xj/0DjKsRw+OEy9b2GePfAF3SRjah1oVTjKLliFc/dFor5ZWxh/WlM5PwIicW793Ana1DBYRgRJfBAmr/+8lySf5gNUncvwNOiYoFj3hTagavRHcSXzduSXozVjx8MPPPCtrMGIz9NakkJVWJHkhysPexprfvi7PDRMIx5DgAPq+UhDgQs/ozRPIwgSHrfjlSsYYm
+x-ms-exchange-antispam-messagedata: t/Wli71+Ioefk4CXJXheA5nYXgvbudvSIqB9FnVFeHmCYLJ2K7OeMv1jvApg86lSevlWr6ZyGKjChlHH3FGln9yhNtp0wMv+oBRgD1aoG5gcs2QZeWzENc5KdeO73hkLULr2JfJiiIFthdm2/tSIYQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <13dcf3d9-06ca-d793-525d-12f6d7cd27c1@ti.com>
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71de16e8-190a-48b4-ff55-08d7aa2f3feb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2020 11:33:40.6931
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HaouxkScYNNytwHRuqU5tpgMF0opU3h5MJyv/mJp+7Tm/Yp+YSSp1EGt/ct9NZdPo5lVYFRgxLnpvMB6DiOYew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+> -----Original Message-----
+> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> Sent: Tuesday, February 4, 2020 12:11 AM
+> To: Calvin Johnson <calvin.johnson@nxp.com>
 
-On 05-02-20, 10:10, Peter Ujfalusi wrote:
-> Vinod,
-> 
-> On 05/02/2020 6.43, Vinod Koul wrote:
-> > On 04-02-20, 13:21, Andy Shevchenko wrote:
-> >> On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >>>
-> >>> On 03-02-20, 12:37, Andy Shevchenko wrote:
-> >>>> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >>>>
-> >>>>> dma_request_slave_channel_reason() no longer have user in mainline, it
-> >>>>> can be removed.
-> >>>>>
-> >>>>> Advise users of dma_request_slave_channel() and
-> >>>>> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
-> >>>>
-> >>>> How? There are legacy ARM boards you have to care / remove before.
-> >>>> DMAengine subsystem makes a p*s off decisions without taking care of
-> >>>> (I'm talking now about dma release callback, for example) end users.
-> >>>
-> >>> Can you elaborate issue you are seeing with dma_release callback?
-> >>
-> >>
-> >> [    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
-> >> defined so it is not safe to unbind this driver while in use
-> > 
-> > Yes that is expected but is not valid in your case.
-> 
-> In which case it is valid?
+<snip>
 
-It is valid for cases where device can be hotplugged. We didnt handle
-that very well earlier. TBH we never had a reason as most of the
-embedded cases that is not really doable.
+> > Introduce phylink_fwnode_phy_connect API to connect the PHY using
+> > fwnode.
+> >
+> > Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> > ---
+> >
+> >  drivers/net/phy/phylink.c | 64
+> +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/phylink.h   |  2 ++
+> >  2 files changed, 66 insertions(+)
+> >
+> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > index ee7a718662c6..f211f62283b5 100644
+> > --- a/drivers/net/phy/phylink.c
+> > +++ b/drivers/net/phy/phylink.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/spinlock.h>
+> >  #include <linux/timer.h>
+> >  #include <linux/workqueue.h>
+> > +#include <linux/acpi.h>
+> >
+> >  #include "sfp.h"
+> >  #include "swphy.h"
+> > @@ -817,6 +818,69 @@ int phylink_connect_phy(struct phylink *pl,
+> > struct phy_device *phy)  }  EXPORT_SYMBOL_GPL(phylink_connect_phy);
+> >
+> > +/**
+> > + * phylink_fwnode_phy_connect() - connect the PHY specified in the
+> fwnode.
+> > + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> > + * @dn: a pointer to a &struct device_node.
+> > + * @flags: PHY-specific flags to communicate to the PHY device driver
+> > + *
+> > + * Connect the phy specified in the device node @dn to the phylink
+> > +instance
+> > + * specified by @pl. Actions specified in phylink_connect_phy() will
+> > +be
+> > + * performed.
+> > + *
+> > + * Returns 0 on success or a negative errno.
+> > + */
+> > +int phylink_fwnode_phy_connect(struct phylink *pl,
+> > +                            struct fwnode_handle *fwnode,
+> > +                            u32 flags) {
+> > +     struct fwnode_handle *phy_node;
+> > +     struct phy_device *phy_dev;
+> > +     int ret;
+> > +     int status;
+> > +     struct fwnode_reference_args args;
+> > +
+> > +     /* Fixed links and 802.3z are handled without needing a PHY */
+> > +     if (pl->link_an_mode =3D=3D MLO_AN_FIXED ||
+> > +         (pl->link_an_mode =3D=3D MLO_AN_INBAND &&
+> > +          phy_interface_mode_is_8023z(pl->link_interface)))
+> > +             return 0;
+> > +
+> > +     status =3D acpi_node_get_property_reference(fwnode, "phy-handle",=
+ 0,
+> > +                                               &args);
+> > +     if (ACPI_FAILURE(status) || !is_acpi_device_node(args.fwnode))
+> > +             status =3D acpi_node_get_property_reference(fwnode, "phy"=
+, 0,
+> > +                                                       &args);
+> > +     if (ACPI_FAILURE(status) || !is_acpi_device_node(args.fwnode))
+> > +             status =3D acpi_node_get_property_reference(fwnode,
+> > +                                                       "phy-device", 0=
+,
+> > +                                                       &args);
+>=20
+> This is a copy-and-paste of phylink_of_phy_connect() without much thought=
+.
+>=20
+> There is no need to duplicate the legacy DT functionality of phy/phy-
+> device/phy-handle in ACPI - there is no legacy to support, so it's pointl=
+ess
+> trying to find one of three properties here.
 
-> > Anyway this will be turned off before the release.
-> 
-> Looking at the commit which added it and I still don't get the point.
-> If any of the channel is in use then we should not allow the DMA driver
-> to go away at all.
+Ok. I'll remove it.
 
-Not really, if the device is already gone, we cant do much about it. We
-have to handle that gracefully rather than oopsing
+> I'd prefer both the DT and ACPI variants to be more integrated, so we don=
+'t
+> have two almost identical functions except for the firmware specific deta=
+il.
 
-The important part is that the device is gone. Think about a device on
-PCI card which is yanked off or a USB device unplugged. Device is
-already gone, you can't communicate with it anymore. So all we can do is
-handle the condition and exit, hence the new method to let driver know.
+Did you mean phylink_of_phy_connect replaced with phylink_fwnode_phy_connec=
+t?
+I can add DT handling also inside phylink_fwnode_phy_connect. Please let me=
+ know.
 
-> Imho there should be a function to check if we can proceed with the
-> .remove of the driver and fail it if any of the channels are in use.
-> 
-> Hrm, base/dd.c __device_release_driver() does not check the .remove's
-> return value, so it can not fail.
-> 
-> What is expected if the .remove returns with OK but we still have
-> channels in use?
-> 
-> After the remove all sorts of things got yanked which might makes the
-> still in use channels cause issues down the road.
-> 
-> I'm curious why it is a good thing to remotely try to support unbind
-> when the driver is in use.
-> It is like one wants to support ext4 removal even when your rootfs is ext4.
-> 
-> I think krefing the DMA driver for channel request/release is just fine,
-> if user wants to break the system we should not assist...
-> 
-> >> It's not limited to that driver, but actually all I'm maintaining.
-> >>
-> >> Users are not happy!
-> >>
-> >> -- 
-> >> With Best Regards,
-> >> Andy Shevchenko
-> > 
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks for pointing out about adding linux-acpi ML. I started added them in=
+ my responses.
+I was assuming they would be added by get_maintainer.pl.=20
 
--- 
-~Vinod
+Thanks
+Calvin
