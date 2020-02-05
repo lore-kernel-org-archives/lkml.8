@@ -1,139 +1,139 @@
 Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE577C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12811C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB083217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0CC2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:57:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTug05rA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgBEDp1 (ORCPT
+        id S1727898AbgBED5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 22:45:27 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:26580 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgBEDp1 (ORCPT
+        Tue, 4 Feb 2020 22:57:04 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33287 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgBED5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 22:45:27 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48C6sJ5VnPzQl97;
-        Wed,  5 Feb 2020 04:45:24 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id jzTnhcMhNmm9; Wed,  5 Feb 2020 04:45:21 +0100 (CET)
-Date:   Wed, 5 Feb 2020 14:45:00 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Ross Zwisler <zwisler@chromium.org>,
-        Raul Rangel <rrangel@google.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
-Message-ID: <20200205034500.x3omkziqwu3g5gpx@yavin>
-References: <20200204215014.257377-1-zwisler@google.com>
- <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
- <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
- <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
- <20200205032110.GR8731@bombadil.infradead.org>
+        Tue, 4 Feb 2020 22:57:03 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 6so286234pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 19:57:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=apPrD7wZh90jY/Np9SrQOOe7m/4eyMCS6fQyaQaa/T8=;
+        b=VTug05rAZUGlDGXmWbShRAhCfmrlpIcWtRzJwxl9wGQ+VbWdqrEabcaXAQv2XcvUKL
+         1VBvkZFyCvSw+T9SqObdgTlVljbR1o5sqCZPGXMFh76s9tVpnXD6w1hSTn/CHt4KRyjZ
+         2h+HhdZcGSaWXz/2PL43WrkFGmAdbZJP3cJAElK7nAaK8WgEN6qk7G5xgxNBzaKvQIAN
+         dBrHSUzj3Np6RyjRPM5coxrj3LTYDx2kDOKRuAEhieK2J4qqeAxZufqnTwKSeROQZdRL
+         HfOInD/ce8c8HVvlrmYN6hsmH8T7QbKjEBv4WARkBG1zmTJ65fHbjD0uHuMMx/5ugjmP
+         AKXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=apPrD7wZh90jY/Np9SrQOOe7m/4eyMCS6fQyaQaa/T8=;
+        b=W0klF4e4ZL+S5QTqiGyMO9z01oAb2fXMeFw8PRB4dup9er7QF0cd7QNF4Kw1K1GB/+
+         UUc46QY3xob1UjMkNSaQYwThB6EWjlaDz0cE2bd7ndSOrA5jSfsftUKEX3gWnoQ7tlv4
+         3eH13K0gQ74K0h5TB7yMbUFF3zqrWAb02qvka3s2+xQXKQXBy77HXzLtfXIYy7V9WQkr
+         ZzXcC+LXmdVUz4GTZKfcmyusrt/Tgu+uJ/oU1js65NgIf1zhuVf2epQCNybdpTMYPk1o
+         WStQuyNrPqfSmU74yj0HD173M8QlE1/+dxa0BxYh1HlcqIYOaO51U4CZPIIOPh6+Gwzx
+         RwQQ==
+X-Gm-Message-State: APjAAAUUswYCiZWn1Qd0YsiPsG7rb/Xe4oKblGUjpwqaOTWJezaXJVF/
+        +VU+7tWhS6NOkz9VsAT7tCE=
+X-Google-Smtp-Source: APXvYqxsmUdbWOksoFfVNWJtGF2n5rhv+R5L27pihJEdGdWEyCmS4cxAwAeZJXQ9BYR2wi9jiprdwg==
+X-Received: by 2002:aa7:9145:: with SMTP id 5mr34531817pfi.74.1580875021751;
+        Tue, 04 Feb 2020 19:57:01 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k1sm27143644pfg.66.2020.02.04.19.56.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 19:57:00 -0800 (PST)
+Subject: Re: [PATCH 1/2] staging: octeon: delete driver
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "brandonbonaby94@gmail.com" <brandonbonaby94@gmail.com>,
+        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ddaney@caviumnetworks.com" <ddaney@caviumnetworks.com>,
+        "bobdc9664@seznam.cz" <bobdc9664@seznam.cz>,
+        "sandro@volery.com" <sandro@volery.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "ivalery111@gmail.com" <ivalery111@gmail.com>,
+        "ynezz@true.cz" <ynezz@true.cz>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net>
+ <da150cdb160b5d1b58ad1ea2674cc93c1fc6aadc.camel@alliedtelesis.co.nz>
+ <20200204070927.GA966981@kroah.com>
+ <1a90dc4c62c482ed6a44de70962996b533d6f627.camel@alliedtelesis.co.nz>
+ <20200204203116.GN8731@bombadil.infradead.org> <20200205033416.GT1778@kadam>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <a3032823-03a9-f018-73e4-eb0d71e0bb53@roeck-us.net>
+Date:   Tue, 4 Feb 2020 19:56:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cims4dzb2cjilfys"
-Content-Disposition: inline
-In-Reply-To: <20200205032110.GR8731@bombadil.infradead.org>
+In-Reply-To: <20200205033416.GT1778@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/4/20 7:34 PM, Dan Carpenter wrote:
+> On Tue, Feb 04, 2020 at 12:31:16PM -0800, Matthew Wilcox wrote:
+>> On Tue, Feb 04, 2020 at 08:06:14PM +0000, Chris Packham wrote:
+>>> On Tue, 2020-02-04 at 07:09 +0000, gregkh@linuxfoundation.org wrote:
+>>>> On Tue, Feb 04, 2020 at 04:02:15AM +0000, Chris Packham wrote:
+>>> On Tue, 2020-02-04 at 10:21 +0300, Dan Carpenter wrote:
+>>>> My advice is to delete all the COMPILE_TEST code.  That stuff was a
+>>>> constant source of confusion and headaches.
+>>>
+>>> I was also going to suggest this. Since the COMPILE_TEST has been a
+>>> source of trouble I was going to propose dropping the || COMPILE_TEST
+>>> from the Kconfig for the octeon drivers.
+>>
+>> Not having it also causes problems.  I didn't originally add it for
+>> shits and giggles.
+> 
+> I wonder if the kbuild bot does enough cross compile build testing these
+> days to detect compile problems.  It might have improved to the point
+> where COMPILE_TEST isn't required.
+> 
 
---cims4dzb2cjilfys
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not really. Looking at the build failures in the mainline kernel right now:
 
-On 2020-02-04, Matthew Wilcox <willy@infradead.org> wrote:
-> On Tue, Feb 04, 2020 at 04:49:48PM -0700, Ross Zwisler wrote:
-> > On Tue, Feb 4, 2020 at 3:11 PM Ross Zwisler <zwisler@chromium.org> wrot=
-e:
-> > > On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com> wrote:
-> > > > > --- a/include/uapi/linux/mount.h
-> > > > > +++ b/include/uapi/linux/mount.h
-> > > > > @@ -34,6 +34,7 @@
-> > > > >  #define MS_I_VERSION   (1<<23) /* Update inode I_version field */
-> > > > >  #define MS_STRICTATIME (1<<24) /* Always perform atime updates */
-> > > > >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]times =
-lazily */
-> > > > > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
-> > > > Doesn't this conflict with MS_SUBMOUNT below?
-> > > > >
-> > > > >  /* These sb flags are internal to the kernel */
-> > > > >  #define MS_SUBMOUNT     (1<<26)
-> > >
-> > > Yep.  Thanks for the catch, v6 on it's way.
-> >=20
-> > It actually looks like most of the flags which are internal to the
-> > kernel are actually unused (MS_SUBMOUNT, MS_NOREMOTELOCK, MS_NOSEC,
-> > MS_BORN and MS_ACTIVE).  Several are unused completely, and the rest
-> > are just part of the AA_MS_IGNORE_MASK which masks them off in the
-> > apparmor LSM, but I'm pretty sure they couldn't have been set anyway.
-> >=20
-> > I'll just take over (1<<26) for MS_NOSYMFOLLOW, and remove the rest in
-> > a second patch.
-> >=20
-> > If someone thinks these flags are actually used by something and I'm
-> > just missing it, please let me know.
->=20
-> Afraid you did miss it ...
->=20
-> /*
->  * sb->s_flags.  Note that these mirror the equivalent MS_* flags where
->  * represented in both.
->  */
-> ...
-> #define SB_SUBMOUNT     (1<<26)
->=20
-> It's not entirely clear to me why they need to be the same, but I haven't
-> been paying close attention to the separation of superblock and mount
-> flags, so someone else can probably explain the why of it.
+Failed builds:
+	alpha:allmodconfig
+	arm:allmodconfig
+	i386:allyesconfig
+	i386:allmodconfig
+	m68k:allmodconfig
+	microblaze:mmu_defconfig
+	mips:allmodconfig
+	parisc:allmodconfig
+	powerpc:allmodconfig
+	s390:allmodconfig
+	sparc64:allmodconfig
 
-I could be wrong, but I believe this is historic and originates from the
-kernel setting certain flags internally (similar to the whole O_* flag,
-"internal" O_* flag, and FMODE_NOTIFY mixup).
+Many of those don't even _have_ specific configurations causing the build failures.
 
-Also, one of the arguments for the new mount API was that we'd run out
-MS_* bits so it's possible that you have to enable this new mount option
-in the new mount API only. (Though Howells is the right person to talk
-to on this point.)
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---cims4dzb2cjilfys
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXjo6OQAKCRCdlLljIbnQ
-ElG7AQCJBIyk342KmYvS4G0NXRtiMxMWYkPsDE1cJSq8ZHMSAAEAsY1+Gaw3srD+
-cjfrtIlThKqAxyfkH2TZTgPG+4+k/QE=
-=abwl
------END PGP SIGNATURE-----
-
---cims4dzb2cjilfys--
+Guenter
