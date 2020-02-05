@@ -2,64 +2,89 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B6AC3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB93C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25C9222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86072085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gHFWUnHs"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PiZYNMCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgBEHBN (ORCPT
+        id S1727459AbgBEHBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:01:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46436 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBEHBM (ORCPT
+        Wed, 5 Feb 2020 02:01:54 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:34155 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbgBEHBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:01:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CIMLPTOIpIkqW6rCSCB/RZ2YWA0k6ASd16expdYFtQA=; b=gHFWUnHsOh5Qz70a1+BMJe/lh9
-        jRQ0lozk6QzxKXJhswoCOd5tJShhYPjcygqGKk7D7DkYLMfohtgHmGHopX+cD2q1tYtz7ebLJWJpK
-        nTUJgLVgTuVvcivsOk0E1LA6TlIWtN3ns17g2nu5GBBOkxn+28gPJpnQGrPB1QgX9Rnz4ZSzDd6YP
-        Spsn91t1/bPc5MnUEjZpdUXgdLlS3vO9TFNY069WNynKrss490n6VpqeFdwO3721JOOUuOI1yOiH7
-        OaPVOqMP6+Gu59g7RkCVSVAMtQVnrAa+HoWIQy8FSlIx9GyIWKwq7lMO5G5WYtYHOd1Kc1xMn/xmn
-        9NcaMjyA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izEgP-00061P-A1; Wed, 05 Feb 2020 07:01:09 +0000
-Date:   Tue, 4 Feb 2020 23:01:09 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com, cohuck@redhat.com
-Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200205070109.GA18027@infradead.org>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 5 Feb 2020 02:01:53 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580886113; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=FAAy3O1hxyU0/+fvL1xrHaa2WdkrwTdW+HGQMimJI18=; b=PiZYNMCUK/13eBrMSzk2fIkjJjUW9pIdeT6ptAP+qLe4gzsCL1jvWJsLk7soZMneEZP6k1o3
+ 1Quoq4CZ1HnwHR6DZs01rxHRyTNASu87EViijNlM2AeOuKuKbTI04Nr+S8egF97L94HQptLX
+ qNh/isot7JOFPbvgSNP6US88xsY=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a6860.7ff3e069f110-smtp-out-n03;
+ Wed, 05 Feb 2020 07:01:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 12AFFC447A3; Wed,  5 Feb 2020 07:01:52 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61BF6C43383;
+        Wed,  5 Feb 2020 07:01:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61BF6C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v4 1/3] dt-bindings: clk: qcom: Add support for GPU GX GDSCR
+Date:   Wed,  5 Feb 2020 12:31:35 +0530
+Message-Id: <1580886097-6312-2-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
+References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 04:05:34PM -0700, Alex Williamson wrote:
-> We address this in a few ways in this series.  First, we can use a bus
-> notifier and the driver_override facility to make sure VFs are bound
-> to the vfio-pci driver by default.  This should eliminate the chance
-> that a VF is accidentally bound and used by host drivers.  We don't
-> however remove the ability for a host admin to change this override.
+From: Taniya Das <tdas@codeaurora.org>
 
-That is just such a bad idea.  Using VFs in the host is a perfectly
-valid use case that you are breaking.
+In the cases where the GPU SW requires to use the GX GDSCR add
+support for the same.
+
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/dt-bindings/clock/qcom,gpucc-sc7180.h b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+index 0e4643b..65e706d 100644
+--- a/include/dt-bindings/clock/qcom,gpucc-sc7180.h
++++ b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+@@ -15,7 +15,8 @@
+ #define GPU_CC_CXO_CLK			6
+ #define GPU_CC_GMU_CLK_SRC		7
+ 
+-/* CAM_CC GDSCRs */
++/* GPU_CC GDSCRs */
+ #define CX_GDSC				0
++#define GX_GDSC				1
+ 
+ #endif
+-- 
+1.9.1
