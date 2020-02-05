@@ -2,137 +2,176 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D583DC35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20746C3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998202082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAEE9217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8qKu8Z/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="idqfQbQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgBEF5c (ORCPT
+        id S1726579AbgBEGGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 00:57:32 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37112 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgBEF5b (ORCPT
+        Wed, 5 Feb 2020 01:06:55 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43187 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbgBEGGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 00:57:31 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m13so502425pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 21:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Osd6lHNiwt4HuEIAx7RCd4aai13f+0kkBfeOhTavDQg=;
-        b=O8qKu8Z/sRwu52iIKxNhqY6g2mcLWqIgG91NDx4IdpOu08VotLQ426lk72n4tdkaQm
-         Cf+1AUtw7WoMfyhXzI2Ak4cfUXD+fJgGGDm50IS+9g7KqWnlKNz/lffL0+SXgtJ02k4I
-         yBtYeQE+aoC2a849fgvCGU0R4Tg+WhewEG8LfwJ3jN+KLM0QDyNVc6PDlR4BDiHFhYHq
-         +19Lypn7J0SMvWsyuJle58aNP0ZuGZ1y6QhD70pIk0vGfTRSk1QZ7MCN5QpOyl5gY74X
-         r7/3rpsf3Wz8pMgTtjnbtBudrs4Z1/MVS2C1qFYK0V5kIjrjgT2CoLNHhf8UBw3iM8Ag
-         o00g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Osd6lHNiwt4HuEIAx7RCd4aai13f+0kkBfeOhTavDQg=;
-        b=gNgh9108fc4RH5OGk/ANB/ND+tE0ru1HUEo58uIsdQl6U6OPauaPCQIwxHbFtYsROx
-         xMLcAryaEZXhcFNa+0TEqljHShdb+g93AbrxU22U+B7GSODnRPa5tMHaDiaLrk9kLtgy
-         Pko88yDMkrHtHikDrNeSMqHsxt9AsoW44HhwDWT98baMOHFxZ5SPPIVA/phRh5LZXSR6
-         mN6xIAVVtn8yFJK8py9QVsCiEpPLddJa/HGQeiA0RLuxwFqf0hoxuLJzpiWz7/xZSVtY
-         T4MsK07cB/woZq700NDhcDBuYKdfQqGz0ePklTlA9OjqZh7KNkWQbpHaGES4W2xqJ3ag
-         ErcA==
-X-Gm-Message-State: APjAAAUCjEWZA68RRmI8IFxJR9zice7/jFdI646s0b50bgwZPAN8Xn3r
-        8pKPXpJpfEup3ECcxBJ6rfM=
-X-Google-Smtp-Source: APXvYqwiEqw+zhsMO4I0HAA1xC9pca42gaAf9Cxcb2MrA0/GJOZ6z1gRLca+ldF3glgqLn29G//SZQ==
-X-Received: by 2002:a17:902:d688:: with SMTP id v8mr34300061ply.238.1580882250911;
-        Tue, 04 Feb 2020 21:57:30 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.109])
-        by smtp.googlemail.com with ESMTPSA id o29sm27152613pfp.124.2020.02.04.21.57.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 21:57:30 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
-Date:   Wed,  5 Feb 2020 11:27:02 +0530
-Message-Id: <20200205055701.30195-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 5 Feb 2020 01:06:54 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580882813; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=+G5FxAByirlTokI5Q9wrrRy13bzlUXcKOxokwDpbu2I=; b=idqfQbQFjcV8vUL3uUxeR+CFmZOrETyYSf4GijU19ebm2yJwzCUUDjp/2GqomVcEa9qlstHw
+ MV5TGf4ylm2qW5OkH0+mVEJIzS7pzUXeCvjDP30hYbWMJIwReZv6XU1cuzE/Qzpp4ffX+Bhw
+ IkuuD824RIJTdgPw4f3kTJyoux4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a5b76.7fc587a33650-smtp-out-n03;
+ Wed, 05 Feb 2020 06:06:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65606C447A5; Wed,  5 Feb 2020 06:06:44 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CC20C433CB;
+        Wed,  5 Feb 2020 06:06:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CC20C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] scsi: ufs: Fix registers dump vops caused scheduling while atomic
+Date:   Tue,  4 Feb 2020 22:06:28 -0800
+Message-Id: <1580882795-29675-1-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix following instances of sparse error
-kernel/trace/ftrace.c:5667:29: error: incompatible types in comparison
-kernel/trace/ftrace.c:5813:21: error: incompatible types in comparison
-kernel/trace/ftrace.c:5868:36: error: incompatible types in comparison
-kernel/trace/ftrace.c:5870:25: error: incompatible types in comparison
+Reigsters dump intiated from atomic context should not sleep. To fix it,
+add one boolean parameter to register dump vops to inform vendor driver if
+sleep is allowed or not.
 
-Use rcu_dereference_protected to dereference the newly annotated pointer.
+Signed-off-by: Can Guo <cang@codeaurora.org>
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- kernel/trace/ftrace.c | 2 +-
- kernel/trace/trace.h  | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 9bf1f2cd515e..3a310c0c3ae3 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5597,7 +5597,7 @@ static const struct file_operations ftrace_notrace_fops = {
- static DEFINE_MUTEX(graph_lock);
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 3b5b2d9..c30139c 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1619,13 +1619,17 @@ static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
+ 	kfree(testbus);
+ }
  
- struct ftrace_hash *ftrace_graph_hash = EMPTY_HASH;
--struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
-+struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
- 
- enum graph_filter_type {
- 	GRAPH_FILTER_NOTRACE	= 0,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 63bf60f79398..8c78bd6d53ca 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -951,7 +951,7 @@ extern void __trace_graph_return(struct trace_array *tr,
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern struct ftrace_hash *ftrace_graph_hash;
--extern struct ftrace_hash *ftrace_graph_notrace_hash;
-+extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
- 
- static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+-static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
++static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba, bool no_sleep)
  {
-@@ -1001,10 +1001,14 @@ static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
- static inline int ftrace_graph_notrace_addr(unsigned long addr)
- {
- 	int ret = 0;
-+	struct ftrace_hash *notrace_hash;
+ 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
+ 			 "HCI Vendor Specific Registers ");
  
- 	preempt_disable_notrace();
- 
--	if (ftrace_lookup_ip(ftrace_graph_notrace_hash, addr))
-+	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
-+						 !preemptible());
+ 	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
 +
-+	if (ftrace_lookup_ip(notrace_hash, addr))
- 		ret = 1;
++	if (no_sleep)
++		return;
++
+ 	usleep_range(1000, 1100);
+ 	ufs_qcom_testbus_read(hba);
+ 	usleep_range(1000, 1100);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 0ac5d47..37f1539 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -398,7 +398,7 @@ static void ufshcd_print_err_hist(struct ufs_hba *hba,
+ 		dev_err(hba->dev, "No record of %s\n", err_name);
+ }
  
- 	preempt_enable_notrace();
+-static void ufshcd_print_host_regs(struct ufs_hba *hba)
++static inline void __ufshcd_print_host_regs(struct ufs_hba *hba, bool no_sleep)
+ {
+ 	ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
+ 	dev_err(hba->dev, "hba->ufs_version = 0x%x, hba->capabilities = 0x%x\n",
+@@ -430,7 +430,12 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
+ 
+ 	ufshcd_print_clk_freqs(hba);
+ 
+-	ufshcd_vops_dbg_register_dump(hba);
++	ufshcd_vops_dbg_register_dump(hba, no_sleep);
++}
++
++static void ufshcd_print_host_regs(struct ufs_hba *hba)
++{
++	__ufshcd_print_host_regs(hba, false);
+ }
+ 
+ static
+@@ -4821,7 +4826,7 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+ 		dev_err(hba->dev,
+ 				"OCS error from controller = %x for tag %d\n",
+ 				ocs, lrbp->task_tag);
+-		ufshcd_print_host_regs(hba);
++		__ufshcd_print_host_regs(hba, true);
+ 		ufshcd_print_host_state(hba);
+ 		break;
+ 	} /* end of switch */
+@@ -5617,7 +5622,7 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
+ 					__func__, hba->saved_err,
+ 					hba->saved_uic_err);
+ 
+-				ufshcd_print_host_regs(hba);
++				__ufshcd_print_host_regs(hba, true);
+ 				ufshcd_print_pwr_info(hba);
+ 				ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+ 				ufshcd_print_trs(hba, hba->outstanding_reqs,
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 2ae6c7c..3de7cbb 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -323,7 +323,7 @@ struct ufs_hba_variant_ops {
+ 	int	(*apply_dev_quirks)(struct ufs_hba *hba);
+ 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
+ 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+-	void	(*dbg_register_dump)(struct ufs_hba *hba);
++	void	(*dbg_register_dump)(struct ufs_hba *hba, bool no_sleep);
+ 	int	(*phy_initialization)(struct ufs_hba *);
+ 	void	(*device_reset)(struct ufs_hba *hba);
+ };
+@@ -1078,10 +1078,11 @@ static inline int ufshcd_vops_resume(struct ufs_hba *hba, enum ufs_pm_op op)
+ 	return 0;
+ }
+ 
+-static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
++static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba,
++						 bool no_sleep)
+ {
+ 	if (hba->vops && hba->vops->dbg_register_dump)
+-		hba->vops->dbg_register_dump(hba);
++		hba->vops->dbg_register_dump(hba, no_sleep);
+ }
+ 
+ static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
 -- 
-2.24.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
