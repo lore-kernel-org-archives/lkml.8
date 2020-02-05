@@ -2,48 +2,49 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96BDC3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80856C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813D02085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D402192A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ICvsX8Cj"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="jjB0KZYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgBEALj (ORCPT
+        id S1727794AbgBEALl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:11:39 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56247 "EHLO
+        Tue, 4 Feb 2020 19:11:41 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56288 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBEALj (ORCPT
+        with ESMTP id S1727727AbgBEALk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:11:39 -0500
+        Tue, 4 Feb 2020 19:11:40 -0500
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D5346891AB;
-        Wed,  5 Feb 2020 13:11:35 +1300 (NZDT)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C939E891B0;
+        Wed,  5 Feb 2020 13:11:38 +1300 (NZDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580861495;
-        bh=rWw39W1xcUKR/heVavGcT0nqYJy6F8UnBKGaK5La1fI=;
-        h=From:To:Cc:Subject:Date;
-        b=ICvsX8CjRGALZEHG4kfCe+IHxZkNYkBA/lAjlNYOKZoYi8de7DuP/p9LugXIM5MOk
-         A5vVbn9p0hZb0sn7gYO8CG7LGNXcX99JhEn144aO9v0ORODFfBf4kXt83jXMDbp1P6
-         M1o+F2pUvSkXMvtkIg+7g4+ZTWVY44WalVlHGUlQGHiXInoQi6BArOVdMvduzGJJbj
-         JP1HAdWJbUM30CymXfYFx/QHDc36T8zJu+xG8juJXwGgAhVdl4PvlfQ8R66Ykgm21g
-         XIZnINhc29u9rQwbaHYJRSdf6DDrQM2C1UJPgqgFUil6bJYd9qBohkzxJdDHtzq/5K
-         g31qy2MPi9rEQ==
+        s=mail181024; t=1580861498;
+        bh=CNZrY07wx1fsMckb/UiVqAZ4mkkD9Vh2atjTCMywA4E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=jjB0KZYQnKCcQGimnKStgEBKGek+bfwua/MGbzemlcgG8UiJF+E9Yb5hWOngZarPR
+         XqmxT6CXLouk6kxK4YerEIrVg8uYuaENtzE3T0U1Yvv8ycah8wErv3IOsUmSGihC9u
+         wmz4GENDpWpD6jblfDFmntctNrCKoYPYsZmKhQ655oH/9ZxYX+aN+RXk6u5APiOxlu
+         JrSjDErrWW8LZP5ItZu8KsUs31SKmUqGytBizu75nXW54lFYD2LJni4C23WKJYpeZX
+         XYuUQTYx3IHmaWMM04vsr25d0pWZj4OdVQz46MMFf08d1y6JHrrztvqL38QNQIoS+0
+         tlawgtbMQlAvw==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e3a08380000>; Wed, 05 Feb 2020 13:11:36 +1300
+        id <B5e3a083a0003>; Wed, 05 Feb 2020 13:11:39 +1300
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 16E1513EEDE;
-        Wed,  5 Feb 2020 13:11:35 +1300 (NZDT)
+        by smtp (Postfix) with ESMTP id 1406113EEDE;
+        Wed,  5 Feb 2020 13:11:38 +1300 (NZDT)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 850D6280038; Wed,  5 Feb 2020 13:11:35 +1300 (NZDT)
+        id 841E5280038; Wed,  5 Feb 2020 13:11:38 +1300 (NZDT)
 From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
 To:     gregkh@linuxfoundation.org, ralf@linux-mips.org,
         paulburton@kernel.org, linux@roeck-us.net,
@@ -51,10 +52,12 @@ To:     gregkh@linuxfoundation.org, ralf@linux-mips.org,
 Cc:     linux-mips@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 0/6] Re-instate octeon staging drivers
-Date:   Wed,  5 Feb 2020 13:11:10 +1300
-Message-Id: <20200205001116.14096-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 5/6] MIPS: octeon: remove typedef declaration for cvmx_pko_command_word0
+Date:   Wed,  5 Feb 2020 13:11:15 +1300
+Message-Id: <20200205001116.14096-6-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200205001116.14096-1-chris.packham@alliedtelesis.co.nz>
+References: <20200205001116.14096-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 x-atlnz-ls: pat
@@ -63,91 +66,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series re-instates the octeon drivers that were recently removed and
-addresses the build issues that lead to that decision.
+Remove the typedef and update usage to use the union.
 
-I've approached Cavium/Marvell about taking a more active interest in get=
-ting
-the code out of staging and into their proper location. No reply on that =
-(yet).
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/mips/cavium-octeon/executive/cvmx-helper.c | 2 +-
+ arch/mips/include/asm/octeon/cvmx-pko.h         | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Chris Packham (6):
-  Revert "staging: octeon-usb: delete the octeon usb host controller
-    driver"
-  Revert "staging: octeon: delete driver"
-  MIPS: octeon: remove typedef declaration for cvmx_wqe
-  MIPS: octeon: remove typedef declaration for cvmx_helper_link_info
-  MIPS: octeon: remove typedef declaration for cvmx_pko_command_word0
-  Revert "staging/octeon: Mark Ethernet driver as BROKEN"
-
- .../executive/cvmx-helper-board.c             |    4 +-
- .../executive/cvmx-helper-rgmii.c             |    6 +-
- .../executive/cvmx-helper-sgmii.c             |    8 +-
- .../cavium-octeon/executive/cvmx-helper-spi.c |    6 +-
- .../executive/cvmx-helper-xaui.c              |    6 +-
- .../cavium-octeon/executive/cvmx-helper.c     |   10 +-
- .../include/asm/octeon/cvmx-helper-board.h    |    2 +-
- .../include/asm/octeon/cvmx-helper-rgmii.h    |    4 +-
- .../include/asm/octeon/cvmx-helper-sgmii.h    |    4 +-
- .../mips/include/asm/octeon/cvmx-helper-spi.h |    4 +-
- .../include/asm/octeon/cvmx-helper-util.h     |    2 +-
- .../include/asm/octeon/cvmx-helper-xaui.h     |    4 +-
- arch/mips/include/asm/octeon/cvmx-helper.h    |    8 +-
- arch/mips/include/asm/octeon/cvmx-pko.h       |   10 +-
- arch/mips/include/asm/octeon/cvmx-pow.h       |   22 +-
- arch/mips/include/asm/octeon/cvmx-wqe.h       |   16 +-
- drivers/staging/Kconfig                       |    4 +
- drivers/staging/Makefile                      |    2 +
- drivers/staging/octeon-usb/Kconfig            |   11 +
- drivers/staging/octeon-usb/Makefile           |    2 +
- drivers/staging/octeon-usb/TODO               |    8 +
- drivers/staging/octeon-usb/octeon-hcd.c       | 3737 +++++++++++++++++
- drivers/staging/octeon-usb/octeon-hcd.h       | 1847 ++++++++
- drivers/staging/octeon/Kconfig                |   15 +
- drivers/staging/octeon/Makefile               |   19 +
- drivers/staging/octeon/TODO                   |    9 +
- drivers/staging/octeon/ethernet-defines.h     |   40 +
- drivers/staging/octeon/ethernet-mdio.c        |  178 +
- drivers/staging/octeon/ethernet-mdio.h        |   28 +
- drivers/staging/octeon/ethernet-mem.c         |  154 +
- drivers/staging/octeon/ethernet-mem.h         |    9 +
- drivers/staging/octeon/ethernet-rgmii.c       |  158 +
- drivers/staging/octeon/ethernet-rx.c          |  538 +++
- drivers/staging/octeon/ethernet-rx.h          |   31 +
- drivers/staging/octeon/ethernet-sgmii.c       |   30 +
- drivers/staging/octeon/ethernet-spi.c         |  226 +
- drivers/staging/octeon/ethernet-tx.c          |  717 ++++
- drivers/staging/octeon/ethernet-tx.h          |   14 +
- drivers/staging/octeon/ethernet-util.h        |   47 +
- drivers/staging/octeon/ethernet.c             |  992 +++++
- drivers/staging/octeon/octeon-ethernet.h      |  107 +
- drivers/staging/octeon/octeon-stubs.h         | 1433 +++++++
- 42 files changed, 10414 insertions(+), 58 deletions(-)
- create mode 100644 drivers/staging/octeon-usb/Kconfig
- create mode 100644 drivers/staging/octeon-usb/Makefile
- create mode 100644 drivers/staging/octeon-usb/TODO
- create mode 100644 drivers/staging/octeon-usb/octeon-hcd.c
- create mode 100644 drivers/staging/octeon-usb/octeon-hcd.h
- create mode 100644 drivers/staging/octeon/Kconfig
- create mode 100644 drivers/staging/octeon/Makefile
- create mode 100644 drivers/staging/octeon/TODO
- create mode 100644 drivers/staging/octeon/ethernet-defines.h
- create mode 100644 drivers/staging/octeon/ethernet-mdio.c
- create mode 100644 drivers/staging/octeon/ethernet-mdio.h
- create mode 100644 drivers/staging/octeon/ethernet-mem.c
- create mode 100644 drivers/staging/octeon/ethernet-mem.h
- create mode 100644 drivers/staging/octeon/ethernet-rgmii.c
- create mode 100644 drivers/staging/octeon/ethernet-rx.c
- create mode 100644 drivers/staging/octeon/ethernet-rx.h
- create mode 100644 drivers/staging/octeon/ethernet-sgmii.c
- create mode 100644 drivers/staging/octeon/ethernet-spi.c
- create mode 100644 drivers/staging/octeon/ethernet-tx.c
- create mode 100644 drivers/staging/octeon/ethernet-tx.h
- create mode 100644 drivers/staging/octeon/ethernet-util.h
- create mode 100644 drivers/staging/octeon/ethernet.c
- create mode 100644 drivers/staging/octeon/octeon-ethernet.h
- create mode 100644 drivers/staging/octeon/octeon-stubs.h
-
+diff --git a/arch/mips/cavium-octeon/executive/cvmx-helper.c b/arch/mips/=
+cavium-octeon/executive/cvmx-helper.c
+index 8002f9d3039d..6044ff471002 100644
+--- a/arch/mips/cavium-octeon/executive/cvmx-helper.c
++++ b/arch/mips/cavium-octeon/executive/cvmx-helper.c
+@@ -782,7 +782,7 @@ static int __cvmx_helper_errata_fix_ipd_ptr_alignment=
+(void)
+ #define INTERFACE(port) (port >> 4)
+ #define INDEX(port) (port & 0xf)
+ 	uint64_t *p64;
+-	cvmx_pko_command_word0_t pko_command;
++	union cvmx_pko_command_word0 pko_command;
+ 	union cvmx_buf_ptr g_buffer, pkt_buffer;
+ 	struct cvmx_wqe *work;
+ 	int size, num_segs =3D 0, wqe_pcnt, pkt_pcnt;
+diff --git a/arch/mips/include/asm/octeon/cvmx-pko.h b/arch/mips/include/=
+asm/octeon/cvmx-pko.h
+index f033523c19f8..5b0b982a36f7 100644
+--- a/arch/mips/include/asm/octeon/cvmx-pko.h
++++ b/arch/mips/include/asm/octeon/cvmx-pko.h
+@@ -169,7 +169,7 @@ typedef union {
+ /**
+  * Structure of the first packet output command word.
+  */
+-typedef union {
++union cvmx_pko_command_word0 {
+ 	uint64_t u64;
+ 	struct {
+ #ifdef __BIG_ENDIAN_BITFIELD
+@@ -261,7 +261,7 @@ typedef union {
+ 	        uint64_t size1:2;
+ #endif
+ 	} s;
+-} cvmx_pko_command_word0_t;
++};
+=20
+ /* CSR typedefs have been moved to cvmx-csr-*.h */
+=20
+@@ -419,7 +419,7 @@ static inline void cvmx_pko_send_packet_prepare(uint6=
+4_t port, uint64_t queue,
+ static inline cvmx_pko_status_t cvmx_pko_send_packet_finish(
+ 	uint64_t port,
+ 	uint64_t queue,
+-	cvmx_pko_command_word0_t pko_command,
++	union cvmx_pko_command_word0 pko_command,
+ 	union cvmx_buf_ptr packet,
+ 	cvmx_pko_lock_t use_locking)
+ {
+@@ -462,7 +462,7 @@ static inline cvmx_pko_status_t cvmx_pko_send_packet_=
+finish(
+ static inline cvmx_pko_status_t cvmx_pko_send_packet_finish3(
+ 	uint64_t port,
+ 	uint64_t queue,
+-	cvmx_pko_command_word0_t pko_command,
++	union cvmx_pko_command_word0 pko_command,
+ 	union cvmx_buf_ptr packet,
+ 	uint64_t addr,
+ 	cvmx_pko_lock_t use_locking)
 --=20
 2.25.0
 
