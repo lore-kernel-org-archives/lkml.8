@@ -2,76 +2,88 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BDFC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E86C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975F820702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24162217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="2DAa94e6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgBEPxG (ORCPT
+        id S1727081AbgBEPyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:53:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:35897 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBEPxG (ORCPT
+        Wed, 5 Feb 2020 10:54:23 -0500
+Received: from mail-il1-f172.google.com ([209.85.166.172]:33307 "EHLO
+        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgBEPyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:53:06 -0500
-Received: from [212.187.182.165] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1izMz8-0004hJ-2L; Wed, 05 Feb 2020 16:53:02 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 8BAD0100C31; Wed,  5 Feb 2020 15:52:56 +0000 (GMT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH] genirq: Clarify that irq wake state is orthogonal to enable/disable
-In-Reply-To: <20200205153410.GA3898@codeaurora.org>
-References: <20200205060953.49167-1-swboyd@chromium.org> <87zhdxrzhh.fsf@nanos.tec.linutronix.de> <20200205153410.GA3898@codeaurora.org>
-Date:   Wed, 05 Feb 2020 15:52:56 +0000
-Message-ID: <87tv45rpyf.fsf@nanos.tec.linutronix.de>
+        Wed, 5 Feb 2020 10:54:23 -0500
+Received: by mail-il1-f172.google.com with SMTP id s18so2289453iln.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:54:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=K/TEbJFWEtJ7myelS/+rh6TG8Nyyi+LUMKE4sDPf1rk=;
+        b=2DAa94e6a/x2+aZvMCSs+SwO191hwhcxjL9ORz3MeaiM7QD6UI/y5uXhii6zCOtGxD
+         Ao68VSG9ANXirxvEHg31qu+hk4UtS8gkP+RgBF4kI7ysUTqTp9B35Yx7P1i3xQeF3kpF
+         HSv9V6w3pDzlhBFjbfV+9WJagOG8KuvTojdydEqoTFOmXGqsDbysJ+m33AGXI4lLghOR
+         r86lZDz+//el2LiYv2NEKsMCzBo6RM+2PXZs/7o6uZ4wUYz76Q77zof61X07yhEXCoU3
+         lUiV6nmvVxWGT92jf50syh3y47zCVzyQD6lsIB0daDXUfTqZxlg05+zsS7OhyC8DIKyY
+         QaLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K/TEbJFWEtJ7myelS/+rh6TG8Nyyi+LUMKE4sDPf1rk=;
+        b=eg5kQSuYkcB2o1H5Zkm8CwwgpaUlxs0FZ7pyLk1+FM76qyXQdVC2ZGDXYF9Fruaeye
+         +a5kZrgvki1Y9B9IXiRtnkPq2JXzKtXwcq81zIF1ZIimZapH1pbvkpXicss7Hp5Os4Ff
+         RbxDBVYTcTXp+ESH7j/v6aTUtV9zY4jDr/6b1I0Uuzh5wjTkbvmYeYEpSqFAWsLy9njW
+         3ngDV3M3OBJtOXQUmAI44vg8d2PgwEwgYo2II8vIZkXI7jJgqwzpeRX43/Ioz0BfJh+Y
+         9VIv1cvHrwhMY4NpvgtrrEvwiGl7INvB2V3OEo4JJeGPP8kec/ru8C7Hw3muqgWxF+QS
+         4M1A==
+X-Gm-Message-State: APjAAAWeU6eJEdkCZqVy71TiUCHmvvFLSI4KuHyEzUZhhAwVP+tq4lL5
+        Q7M8RxZEc7Qm8lG3Hhewp8Rkg+vv88w=
+X-Google-Smtp-Source: APXvYqzWXlbgLJfIBrB+xCBg3yB7cebqo/qOH8x84HpGW+NlmiRh3flk2lxkQXchXo176LKhA4ND7w==
+X-Received: by 2002:a92:48c2:: with SMTP id j63mr25700622ilg.153.1580918061800;
+        Wed, 05 Feb 2020 07:54:21 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r14sm10464783ilg.59.2020.02.05.07.54.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 07:54:21 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
+Date:   Wed, 5 Feb 2020 08:54:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lina Iyer <ilina@codeaurora.org> writes:
-> On Wed, Feb 05 2020 at 05:27 -0700, Thomas Gleixner wrote:
->>> @@ -731,6 +731,11 @@ static int set_irq_wake_real(unsigned int irq, unsigned int on)
->>>   *
->>>   *	Wakeup mode lets this IRQ wake the system from sleep
->>>   *	states like "suspend to RAM".
->>> + *
->>> + *	Note: irq enable/disable state is completely orthogonal
->>> + *	to the enable/disable state of irq wake. An irq can be
->>> + *	disabled with disable_irq() and still wake the system as
->>> + *	long as the irq has wake enabled.
->>
->>It clearly should say that this is really depending on the hardware
->>implementation of the particual interrupt chip whether disabled + wake
->>mode is supported.
->>
-> Could an irqchip flag be used to warn users that we may not wakeup from
-> suspend/resume if the interrupt if the hardware does not support wakeup
-> when disabled ?
+On 2/5/20 8:46 AM, Pavel Begunkov wrote:
+> IORING_OP_{READ,WRITE} need mm to access user buffers, hence
+> req->has_user check should go for them as well. Move the corresponding
+> imports past the check.
 
-There are also magic ways of wakeup for irqchips which do not have wake
-setup functions and still wake the system up when the interrupt line is
-disabled by the kernel on suspend. :)
+I'd need to double check, but I think the has_user check should just go.
+The import checks for access anyway, so we'll -EFAULT there if we
+somehow messed up and didn't acquire the right mm.
 
-Thanks,
+-- 
+Jens Axboe
 
-        tglx
