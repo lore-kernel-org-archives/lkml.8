@@ -2,154 +2,115 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5C7C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB2BC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE18217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86683218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580908272;
+	bh=wSPjyDZaJd4iYDsHDvfTkbCVhxFTYWZXqFiynFRgSqQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=MS4O3XTnjF5iIs6tCFCuDRyu8YixNXvvMLyiO9CuUafF9K3MHZhsXoNQL7RkRba/K
+	 FLMJOxluPqt3JaQwlumFjU+yMtxxKWyKI5ASU4ptgnoUkV9Dhi04F7VUgpqQpzdceQ
+	 ta7Ht6xkmvPcVE816Iq3fol1wNLN96ewOjmj1JhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgBENKo (ORCPT
+        id S1728026AbgBENLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:10:44 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:58093 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbgBENKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:10:43 -0500
-Received: from [172.18.205.202] (unknown [46.183.103.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 5 Feb 2020 08:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727051AbgBENLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:11:11 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id ADDE620643EEF;
-        Wed,  5 Feb 2020 14:10:39 +0100 (CET)
-Subject: Re: USB devices on Dell TB16 dock stop working after resuming
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     Mario Limonciello <mario.limonciello@dell.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, ck@xatom.net, linux-kernel@vger.kernel.org,
-        Anthony Wong <anthony.wong@canonical.com>
-References: <20191104154446.GH2552@lahna.fi.intel.com>
- <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
- <20191104162103.GI2552@lahna.fi.intel.com>
- <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
- <20191120105048.GY11621@lahna.fi.intel.com>
- <20191122105012.GD11621@lahna.fi.intel.com>
- <edfe1e3c-779b-61e4-8551-f2e13d46d733@molgen.mpg.de>
- <20191122112921.GF11621@lahna.fi.intel.com>
- <ae67c377-4763-4648-a91c-b9351e3b1cf1@molgen.mpg.de>
- <20191122114108.GG11621@lahna.fi.intel.com>
- <cf4140c8-5b92-f1e5-c9e4-e362ab06d6f8@linux.intel.com>
- <e5e3df06-4ddd-aadb-f1ad-6dd24fa2a5c2@molgen.mpg.de>
- <4b25e707-d2b5-11d1-4b16-48122828fde7@linux.intel.com>
- <a9e12353-6f88-edeb-0d78-15c1ac75666b@molgen.mpg.de>
- <87670037-8af5-c209-cbf8-70042e0a8fc5@linux.intel.com>
- <44d8eb12-9af5-7b9a-fa24-be8e8ec3cd48@molgen.mpg.de>
- <789c7db3bafa4bf9a9348123492196b0@AUSX13MPC105.AMER.DELL.COM>
- <ba9b732f-a969-1840-abfc-829d21395f83@molgen.mpg.de>
- <20ad18e8-08ca-f62a-dd7b-cdd671dcd997@molgen.mpg.de>
-Message-ID: <e9205ed2-68d2-e08d-2a50-00fe17a08a29@molgen.mpg.de>
-Date:   Wed, 5 Feb 2020 14:10:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D3B62082E;
+        Wed,  5 Feb 2020 13:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580908270;
+        bh=wSPjyDZaJd4iYDsHDvfTkbCVhxFTYWZXqFiynFRgSqQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=lFln09VkBtkKNCzjna0O6RjF4HXeY041b+M9cjd6Gg+nM1BDA5etdYv1mR98VGfJD
+         19dJOGyubTzNLTYO1TgPFs91g8c6SzX04APp359/ins/jR3jaif5VhBt3i8xwTGY3g
+         EUEm4yg8Z6LWtBrnQ8/8skmEGJgZSklG5+b1A6AU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3EDCC352270F; Wed,  5 Feb 2020 05:11:10 -0800 (PST)
+Date:   Wed, 5 Feb 2020 05:11:10 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Amol Grover <frextrite@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: Re: [PATCH] tracing: Annotate ftrace_graph_hash pointer with __rcu
+Message-ID: <20200205131110.GT2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200201072703.17330-1-frextrite@gmail.com>
+ <20200203163301.GB85781@google.com>
+ <20200204200116.479f0c60@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20ad18e8-08ca-f62a-dd7b-cdd671dcd997@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204200116.479f0c60@oasis.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Dear Mario, dear Mathias,
-
-
-Am 27.01.20 um 23:16 schrieb Paul Menzel:
-
-> Am 18.01.20 um 10:15 schrieb Paul Menzel:
+On Tue, Feb 04, 2020 at 08:01:16PM -0500, Steven Rostedt wrote:
+> On Mon, 3 Feb 2020 11:33:01 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
 > 
->> Am 17.01.20 um 19:33 schrieb Mario.Limonciello@dell.com:
->>>>> I was able to reproduce the issue with an external HS hub as well, 
->>>>> so  this issue appears to be more related to ASMedia host
->>>>> than the built in HS hub in TB16
->>>>
->>>> I contacted the (German) Dell support, and they asked me to
->>>> update the laptop firmware to 1.9.1 claiming that these issues
->>>> might be fixed there (despite the change-log not containing
->>>> that). Anyway, after the update, the user is still able to
->>>> reproduce the issue.
->>>>
->>>> Mario, what can I do, so the issue is escalated to your team, so you 
->>>> can work with ASMedia to solve this?
->>
->>> From this thread it does sound to me like an ASMedia firmware problem,
->>> not a Linux kernel problem.
->>>
->>> I do know there is an updated ASMedia firmware binary available. 
->>> Right now however there is unfortunately not a way to update
->>> ASMedia hub firmware using free software.
->>
->> The fwupd issue *Dell TB16: ASMedia USB controller can't be updated* 
->> [1] was closed by the “stale robot”.
->>
->>> If possible, I would recommend that you try to update the
->>> firmware using a Windows machine and see if it helps the problem.
->>
->> Thank you. I’ll try to do that on Monday.
->>
->>> I'm sorry and I don't intend to "pass the buck" but if that doesn't 
->>> help this needs to be prioritized and escalated with Dell support.
->>>
->>> They will then work with the appropriate engineering team who owns 
->>> the relationship to ASMedia to resolve it.
->>
->> That’s how it should work theoretically, but have you ever dealt with 
->> Dell’s first level support? They have little experience with Ubuntu, 
->> and if you are unlucky, they say that Ubuntu support is not done by 
->> Dell but “by the Linux community”. If you are lucky to not get this 
->> answer, they do (Google) searches, telling you, your problem is solved 
->> by referencing only similar sounding problems from the Ubuntu *user* 
->> forums. If the firmware has a bug (in the UI!), they ask you to 
->> install Microsoft Windows to see if that solves the issue. If you tell 
->> them, the Linux developers analyzed the problem, and they say the 
->> following solution have to be found, they do not know what that means. 
->> It’s very annoying and time consuming often for naught.
 > 
-> As reported in [1], updating the Dell TB16 firmware using a *Dell* 
-> laptop (with updated firmware and Thunderbolt drivers) and Dell’s 
-> Microsoft Windows update utility, the firmware parts below were updated, 
-> everything seems to work now.
+> > > --- a/kernel/trace/trace.h
+> > > +++ b/kernel/trace/trace.h
+> > > @@ -950,22 +950,25 @@ extern void __trace_graph_return(struct trace_array *tr,
+> > >  				 unsigned long flags, int pc);
+> > >  
+> > >  #ifdef CONFIG_DYNAMIC_FTRACE
+> > > -extern struct ftrace_hash *ftrace_graph_hash;
+> > > +extern struct ftrace_hash __rcu *ftrace_graph_hash;
+> > >  extern struct ftrace_hash *ftrace_graph_notrace_hash;
+> > >  
+> > >  static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+> > >  {
+> > >  	unsigned long addr = trace->func;
+> > >  	int ret = 0;
+> > > +	struct ftrace_hash *hash;
+> > >  
+> > >  	preempt_disable_notrace();
+> > >  
+> > > -	if (ftrace_hash_empty(ftrace_graph_hash)) {
+> > > +	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());  
+> > 
+> > I think you can use rcu_dereference_sched() here? That way no need to pass
+> > !preemptible.
+> > 
+> > A preempt-disabled section is an RCU "sched flavor" section. Flavors are
+> > consolidated in the backend, but in the front end the dereference API still
+> > do have flavors.
 > 
-> MST1                 3.10.002    3.12.002
-> MST2                 3.10.002    3.12.002
-> ASM USB 3.0 Cntlr    10.11.23    10.11.A9
-> Dock NVM             00.00.16    00.00.27
-> 
-> Mathias, can you please confirm, and maybe also approach ASMedia from 
-> Intel to ask them to improve the situation?
-> 
-> Can the Linux kernel (or some user space) carry a list of non-working 
-> firmware versions, and output a warning, that a firmware update is needed?
+> Unfortunately, doing it with rcu_dereference_sched() causes a lockdep
+> splat :-P. This is because ftrace can execute when rcu is not
+> "watching" and that will trigger a lockdep error. That means, this
+> origin patch *is* correct. I'm re-applying this one.
 
-After testing this some more, the user reports, that the situation 
-actually got worse.
+I strongly recommend a comment stating why disabling preemption prevents
+ftrace_graph_hash from going away.  I see the synchronize_rcu() after
+the rcu_assign_pointer() in ftrace_graph_release(), but I don't see
+anything that waits on CPUs that RCU is not watching.
 
-No the docking station additionally disconnects randomly when working 
-with the system. This did not happen before. Only the Ethernet port of 
-the docking station works more reliably now.
+Of course, event tracing -makes- RCU watch when needed, but if that
+was set up, then lockdep would not have complained.
 
-Mathias, can you confirm this behavior? Is it the same problem as before?
+So what am I missing?
 
-
-Kind regards,
-
-Paul
-
-
->> [1]: https://github.com/fwupd/fwupd/issues/1351
+							Thanx, Paul
