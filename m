@@ -2,105 +2,59 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C33C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E486CC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7DB217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:57:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Don0MEq7"
+	by mail.kernel.org (Postfix) with ESMTP id C349121741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgBEO5C (ORCPT
+        id S1727106AbgBEO70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:57:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51450 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727104AbgBEO5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:57:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580914619;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QK9rDhAQMTvm/4oE1owAxCKM6SK1FUKWk+UU1I8wspU=;
-        b=Don0MEq7VPayXQ1EBvjikjF+rsRCs2LLY/yrP6gleLjkH4wCTWjmyZHZiWxf9iXWjORz87
-        4HUR/IPGT63h8lBeczHKuq+TdJHBvQqSuBh04OSB55GyXGVkgIa1rXhXaeuIJgSGFrBdPP
-        K1zr0hn0sGi7CWPAEpbRFp+9kNYkin4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-DNBfUdS7N8CoqCrZ_es0eg-1; Wed, 05 Feb 2020 09:56:57 -0500
-X-MC-Unique: DNBfUdS7N8CoqCrZ_es0eg-1
-Received: by mail-wr1-f70.google.com with SMTP id u8so1302646wrp.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 06:56:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QK9rDhAQMTvm/4oE1owAxCKM6SK1FUKWk+UU1I8wspU=;
-        b=eXPYOSzmalt9S0mWdOSicHCg+tLuqkXQjfTGpBcFQHwi1thFtZIDXvp+7nzd+e22hu
-         qxdTEeJY8pK+4gru2OYRNEnohDUFGKqusyfC0wFz8JWg3Zut7VMArkk2Q3gQNSVyt6pv
-         QJWsd8P6XjGGZfQMj0Yfwz3DPtysdlYRBzvd5k7UNTs7iHKs1tWeO1L4swAk1qZKjxWy
-         BUJAR/pz7i2BArCxYB7zZZPH1o1tpoPTE3YUlBq52AvezE38aZvJQDRpgFDsyBRm2VUY
-         o4xHCc4eDtyvYdrRcejNC1M59TjHlIB9TM2MpnIR0uYbovO8KV8RNevHQoVrIGW9r5F5
-         nZGw==
-X-Gm-Message-State: APjAAAUBY/WvGWOYoVCCd8O3+AKBV31MhnDrz4IhhLGitqEHLchiQchB
-        FlNa7c74VLYRfoHhU698vGINdKVlk7jtCGJa/57/zdKTTvJr0/9aG3pypMML0htmU3KFaN9frPU
-        AgMeDchtuaH9vUwh/cl7Q5aDO
-X-Received: by 2002:adf:e984:: with SMTP id h4mr29308653wrm.275.1580914616566;
-        Wed, 05 Feb 2020 06:56:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz9qVZf32IzPnrUnSW4dGxh2PrlWaXwxprYQ5Jf4CLVaSlHpYNNxo2ZuvnMLVpXaD/j4TWLmA==
-X-Received: by 2002:adf:e984:: with SMTP id h4mr29308639wrm.275.1580914616383;
-        Wed, 05 Feb 2020 06:56:56 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:a9f0:cbc3:a8a6:fc56? ([2001:b07:6468:f312:a9f0:cbc3:a8a6:fc56])
-        by smtp.gmail.com with ESMTPSA id f127sm8396652wma.4.2020.02.05.06.56.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 06:56:55 -0800 (PST)
-Subject: Re: [kvm-unit-tests PATCH] x86: pmu: Test WRMSR on a running counter
-To:     Eric Hankland <ehankland@google.com>,
+        Wed, 5 Feb 2020 09:59:26 -0500
+Received: from mga06.intel.com ([134.134.136.31]:48838 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbgBEO7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:59:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 06:59:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
+   d="scan'208";a="431890501"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Feb 2020 06:59:24 -0800
+Date:   Wed, 5 Feb 2020 06:59:24 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200204012504.9590-1-ehankland@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ab91afac-baca-d901-67a7-04979bfcbbfa@redhat.com>
-Date:   Wed, 5 Feb 2020 15:56:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 04/26] KVM: x86: Add a kvm_x86_ops hook to query
+ virtualized MSR support
+Message-ID: <20200205145923.GC4877@linux.intel.com>
+References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
+ <20200129234640.8147-5-sean.j.christopherson@intel.com>
+ <87eev9ksqy.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204012504.9590-1-ehankland@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eev9ksqy.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/20 02:25, Eric Hankland wrote:
-> Ensure that the value of the counter was successfully set to 0 after
-> writing it while the counter was running.
+On Wed, Feb 05, 2020 at 03:34:29PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> Signed-off-by: Eric Hankland <ehankland@google.com>
-> ---
->  x86/pmu.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/x86/pmu.c b/x86/pmu.c
-> index cb8c9e3..8a77993 100644
-> --- a/x86/pmu.c
-> +++ b/x86/pmu.c
-> @@ -419,6 +419,21 @@ static void check_rdpmc(void)
->  	report_prefix_pop();
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Queued, thanks.
-
-Paolo
-
+Stooooooop!  Everything from this point on is obsoleted by kvm_cpu_caps!
