@@ -2,196 +2,149 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF74C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D94CC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6655A24650
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2FD2467B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:00:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hF6ZtELc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bk0/Cw3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgBER6j (ORCPT
+        id S1727361AbgBESAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:58:39 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33156 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727052AbgBER6j (ORCPT
+        Wed, 5 Feb 2020 13:00:01 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:41180 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgBESAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:58:39 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so3902023wrt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 09:58:37 -0800 (PST)
+        Wed, 5 Feb 2020 13:00:01 -0500
+Received: by mail-yw1-f66.google.com with SMTP id l22so3182373ywc.8;
+        Wed, 05 Feb 2020 10:00:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fJvZ+LESdZtd5WGeTnbWB5+DEtp+eP7zYdHNLW4NGgw=;
-        b=hF6ZtELcfVJ5Was2i3jUYVdbVhGlpsIdk7OQDTWzsSp+OxfC+NMNb4lFErpdSM589m
-         AambAQRybraD8+auTE49pcp7s9Kndskbd4cZO/8bhBAgeofqGbVPf3U5YmcIL46d3xf3
-         7rZF/Wp1aoZ3bmzK4+YqSuqVQj+myTGar5Old7WPMLZJGifN6D/mgyHGE0ZMaiEV4XMk
-         Ukc5TmMAD/wOD+3MKf5KLCkQvDXilM8YxFNqKEtEHJ+yQlevFWo2wcfwsbAACAxdjhJB
-         CbS451mst3RHRuyAPxvNGExC7mEX2QBDbZmqejgCgk73JbRdGWy31j0ptdR1hOCEUJm8
-         HU4A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rRgXvPr3SwIij87seHPiKa5mQQ0rdFnyGB2bv1mFSf8=;
+        b=Bk0/Cw3/MqA+hum9NqHHMRRRYzF3xdfomLI5myEg+7tMx0ZRORwJbupYsD5Fcx6/WZ
+         +iTgQCiKWKSaAPUceVbmwxBP3dluyHQ+6itcBpIHPH0q6OoUk1GIhnSIFXyXx8F4s84y
+         1QKv3u2CkJ4vqiaqrL+rDTyQ14PmxhCKsvjK/ky0/EuFW9l1Ze8Vnw29Zc/5/Pr4gVfw
+         +4aXPQpSJi3RqV+SAES3L5WtWJN9Lo1Kz9EuSdnxMjYaE5HgsLMCcoyeqKiMvDaPV+eg
+         t7eXrxmLxe12Pq8r+W4u487E9V0L5qQsikTa3ePAzgAfKaLzIBM8sWyHYe2UKPsCTdfA
+         nL9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fJvZ+LESdZtd5WGeTnbWB5+DEtp+eP7zYdHNLW4NGgw=;
-        b=OtnhbRKR3DsgVvzJ8xsaPMMZkfxLG2xRrJ7yMRNwGOmidWLnBD+4ZRb4fzSgP9GgE6
-         K7yNnEU6iuyhKFHWtR07k04Ezw5ZXEsnU9R7cbJY8P5oCNIlm9ZR8anXWa6LxreoTBgO
-         3c3TAA7HDxKS4P2H8RoQgHh+6zFQpus6hrJMIuF+H/UI3KJ0AsRiofCOjR6VsGvdfyku
-         CK19FLx+VBMK+abI/m98UUgqQmaR3TNUbw3t8OJsj/OmOySscrhvH0uduAgbRHVxnxpp
-         vRE4ORETYTdxr2TRAiydXew1AaowZxAFSlycXyAvGFvlMST6yiOYDeFCj9trDsqZhO+3
-         kIpw==
-X-Gm-Message-State: APjAAAW4LXnDtLVzb5UM1A4mk/mLtMYOApCD+1/pPU2b4JYjnAl8Scx9
-        3WJy4PhtRhvT73yDEsk3igYK1G7+8rL6XNTqhXUBsA==
-X-Google-Smtp-Source: APXvYqzTbfg/iLsk5cSfhBL9S5d5L+m+pFAAStIYggeDc/+2mzG1fiSGEKqoe3tVBitZlGnY8XgopbQRSol6RJzUXiQ=
-X-Received: by 2002:adf:ef4c:: with SMTP id c12mr30274271wrp.203.1580925516197;
- Wed, 05 Feb 2020 09:58:36 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rRgXvPr3SwIij87seHPiKa5mQQ0rdFnyGB2bv1mFSf8=;
+        b=YY8JS2hmTBhs3xJA1D5HZJyDKluF9XWTA5y0Wxy9O/SenLNvJbdu19EYXef4lr7MiC
+         aI1txX96nua+j8cv+3r9NzaKytPgahSblCiPd9gDO+qT8fQVZZUYMrlrOQZX4VUFc68f
+         +MdscRQu+lA8Mq5GnOevXO9Nv2vtE//r2kxtDLYl0Jk0+jCFttGmP4BPQnPnCsQOOh3M
+         1aWXYBIleO1agxqkpZsRBkdrpChvFbLTvlZw7fhXUKylXe4IncivEPWKq9SF/FaY15sm
+         PediVI27q7OsHUv85U2m4aNNeFcSlS8RViwe+MnpzRqcZ0KRHTlJibqqMBsyOszKUuwt
+         FknA==
+X-Gm-Message-State: APjAAAU98uY82lF0/RxENilhXb81OoqfCRfGx04Gn+J43+PdFcOYWjvz
+        GmxP0Tw4mnI76XgEwIY3maM9fEhjYv0=
+X-Google-Smtp-Source: APXvYqxL/2f5r/cM0VlljtruqTfsVW5vkWvw0UbpVFlDnScpMN99cE8YToUz2/tGE3IbM8NbrZIfaw==
+X-Received: by 2002:a81:11d7:: with SMTP id 206mr11978061ywr.150.1580925600074;
+        Wed, 05 Feb 2020 10:00:00 -0800 (PST)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id h203sm216399ywb.98.2020.02.05.09.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 09:59:59 -0800 (PST)
+Date:   Wed, 5 Feb 2020 12:59:45 -0500
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org
+Cc:     alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
+        benjamin.gaignard@st.com, linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] counter: stm32-timer-cnt: add power management support
+Message-ID: <20200205175945.GA57132@icarus>
+References: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-References: <CAFd5g448555=dKFQMbjJ6G=tvtfF5oJgTtTgGx+38Ls3VqHo5g@mail.gmail.com>
- <20200205021428.8007-1-sj38.park@gmail.com>
-In-Reply-To: <20200205021428.8007-1-sj38.park@gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 5 Feb 2020 09:58:23 -0800
-Message-ID: <CABVgOSmFAZN3KRYkHVg5bb-m-UorB7+9=f9vAqW2ECABzpa9zQ@mail.gmail.com>
-Subject: Re: Re: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if
- .kunitconfig is modified
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One thing we'd like to do with kunit_tool is to make its functionality
-a bit more independent: in particular, allowing the configuration,
-running the kernel, and parsing the results to be done independently.
+On Wed, Feb 05, 2020 at 11:47:58AM +0100, Fabrice Gasnier wrote:
+> Add suspend/resume PM sleep ops. When going to low power, enforce the
+> counter isn't active.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-If that's the case, it may make sense for "kunit.py run" or similar to
-not do anything with the .config, and to relegate that to a separate
-"configuration" step, which would allow someone to modify the
-configuration themselves (e.g., using make menuconfig) and re-run the
-tests, but also allow the config to be explicitly regenerated when
-helpful.
+These changes are purely for the PM ops and don't involve the Counter
+API, so I don't see any see any issues with this patch from my end.
 
-Exactly what that'd end up looking like (and to what extent we'd still
-want to support a single command that'd do both) are still up in the
-air: but I think a general "separation of concerns" like this is
-probably the right path forward for kunit_tool.
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Cheers,
--- David
-
-
-On Tue, Feb 4, 2020 at 6:14 PM SeongJae Park <sj38.park@gmail.com> wrote:
->
-> On Tue, 4 Feb 2020 16:46:06 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
->
-> > Sorry for the delay.
-> >
-> > On Mon, Jan 27, 2020 at 10:03 PM SeongJae Park <sj38.park@gmail.com> wrote:
-> > >
-> > > On Mon, 27 Jan 2020 16:02:48 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
-> > >
-> > > > On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
-> > > > >
-> > > > > From: SeongJae Park <sjpark@amazon.de>
-> > > > >
-> > > > > Deletions of configs in the '.kunitconfig' is not applied because kunit
-> > > > > rebuilds '.config' only if the '.config' is not a subset of the
-> > > > > '.kunitconfig'.  To allow the deletions to applied, this commit modifies
-> > > > > the '.config' rebuild condition to addtionally check the modified times
-> > > > > of those files.
-> > > >
-> > > > The reason it only checks that .kunitconfig is a subset of .config is
-> > > > because we don't want the .kunitconfig to remove options just because
-> > > > it doesn't recognize them.
-> > > >
-> > > > It runs `make ARCH=um olddefconfig` on the .config that it generates
-> > > > from the .kunitconfig, and most of the time that means you will get a
-> > > > .config with lots of things in it that aren't in the .kunitconfig.
-> > > > Consequently, nothing should ever be deleted from the .config just
-> > > > because it was deleted in the .kunitconfig (unless, of course, you
-> > > > change a =y to a =n or # ... is not set), so I don't see what this
-> > > > change would do.
-> > > >
-> > > > Can you maybe provide an example?
-> > >
-> > > Sorry for my insufficient explanation.  I added a kunit test
-> > > (SYSCTL_KUNIT_TEST) to '.kunitconfig', ran the added test, and then removed it
-> > > from the file.  However, '.config' is not generated again due to the condition
-> > > and therefore the test still runs.
-> > >
-> > > For more detail:
-> > >
-> > >     $ ./tools/testing/kunit/kunit.py run --defconfig --build_dir ../kunit.out/
-> > >     $ echo "CONFIG_SYSCTL_KUNIT_TEST=y" >> ../kunit.out/.kunitconfig
-> > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-> > >     $ sed -i '4d' ../kunit.out/.kunitconfig
-> > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-> > >
-> > > The 2nd line command adds sysctl kunit test and the 3rd line shows it runs the
-> > > added test as expected.  Because the default kunit config contains only 3
-> > > lines, The 4th line command removes the sysctl kunit test from the
-> > > .kunitconfig.  However, the 5th line still run the test.
-> > >
-> > > This patch is for such cases.  Of course, this might make more false positives
-> > > but I believe it would not be a big problem because .config generation takes no
-> > > long time.  If I missed something, please let me know.
-> >
-> > I think I understand.
-> >
-> > It is intentional - currently - that KUnit doesn't generate a new
-> > .config with every invocation. The reason is basically to support
-> > interaction with other methods of generating .configs. Consider that
-> > you might want to use make menuconfig to turn something on. It is a
-> > pretty handy interface if you work on vastly different parts of the
-> > kernel. Or maybe you have a defconfig that you always use for some
-> > platform, I think it is easier to run
-> >
-> > make foo_config; tools/testing/kunit/kunit.py run
-> >
-> > Then having to maintain both your defconfig and a .kunitconfig which
-> > is a superset of the defconfig.
-> >
-> > Your change would make it so that you have to have a .kunitconfig for
-> > every test environment that you care about, and you could not as
-> > easily take advantage of menuconfig.
->
-> Thank you for this kind answer.  Now I understood the intention and agree with
-> that. :)
->
-> >
-> > I think what we do now is a bit janky, and the use cases I mentioned
-> > are not super well supported. So I am sympathetic to what you are
-> > trying to do, maybe we could have a config option for it?
-> >
-> > I think Ted and Bjorn might have opinions on this; they had some
-> > related opinions in the past.
->
-> I'm ok with current state, but if related discussions continue and my opinion
-> is required, I will join in.
->
->
-> Thanks,
-> SeongJae Park
->
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/20200205021428.8007-1-sj38.park%40gmail.com.
+> ---
+>  drivers/counter/stm32-timer-cnt.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> index 3eafcce..3b84503 100644
+> --- a/drivers/counter/stm32-timer-cnt.c
+> +++ b/drivers/counter/stm32-timer-cnt.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/iio/types.h>
+>  #include <linux/mfd/stm32-timers.h>
+>  #include <linux/module.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  
+>  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
+> @@ -358,10 +359,33 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
+>  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
+>  	priv->counter.priv = priv;
+>  
+> +	platform_set_drvdata(pdev, priv);
+> +
+>  	/* Register Counter device */
+>  	return devm_counter_register(dev, &priv->counter);
+>  }
+>  
+> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
+> +{
+> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
+> +	u32 cr1;
+> +
+> +	/* Check for active counter */
+> +	regmap_read(priv->regmap, TIM_CR1, &cr1);
+> +	if (cr1 & TIM_CR1_CEN)
+> +		return -EBUSY;
+> +
+> +	return pinctrl_pm_select_sleep_state(dev);
+> +}
+> +
+> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
+> +{
+> +	return pinctrl_pm_select_default_state(dev);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
+> +			 stm32_timer_cnt_resume);
+> +
+>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
+>  	{ .compatible = "st,stm32-timer-counter", },
+>  	{},
+> @@ -373,6 +397,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
+>  	.driver = {
+>  		.name = "stm32-timer-counter",
+>  		.of_match_table = stm32_timer_cnt_of_match,
+> +		.pm = &stm32_timer_cnt_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(stm32_timer_cnt_driver);
+> -- 
+> 2.7.4
+> 
