@@ -2,191 +2,79 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E1FC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E8EC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5435E217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PTz0lOqH"
+	by mail.kernel.org (Postfix) with ESMTP id 78A58227BF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBERBj (ORCPT
+        id S1727561AbgBERCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:01:39 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:15803 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727081AbgBERBj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:01:39 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580922098; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=7DUhFiRSM+eRxfIS8UQQZG95uYXWL3eYV9xeTSLQqKg=; b=PTz0lOqHWNJsbrvzANXCuJidZ9X4rCIL2M290EhJjLqg4/QzCnGMVmK8vq/ERtwgqZ1nc5fh
- RoZBtIn6J/Ce7OSUfLfIYT00DcwH3Ncm/5lRx2KraJLUpJbzacVM0MFLJaFvoj0Ti+rUZPqs
- JcjE1bRc70PR3w1uiAWFDdbqGwU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3af4e9.7f4300106068-smtp-out-n03;
- Wed, 05 Feb 2020 17:01:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 919E8C447A1; Wed,  5 Feb 2020 17:01:28 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF247C43383;
-        Wed,  5 Feb 2020 17:01:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF247C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Sharat Masetty <smasetty@codeaurora.org>, dianders@chromium.org,
-        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/msm/a6xx: Update the GMU bus tables for sc7180
-Date:   Wed,  5 Feb 2020 10:01:21 -0700
-Message-Id: <1580922081-25177-1-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Feb 2020 12:02:10 -0500
+Received: from mga04.intel.com ([192.55.52.120]:15693 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbgBERCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 12:02:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 09:02:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
+   d="scan'208";a="220160548"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 05 Feb 2020 09:02:09 -0800
+Date:   Wed, 5 Feb 2020 09:02:09 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 04/26] KVM: x86: Add a kvm_x86_ops hook to query
+ virtualized MSR support
+Message-ID: <20200205170209.GH4877@linux.intel.com>
+References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
+ <20200129234640.8147-5-sean.j.christopherson@intel.com>
+ <87eev9ksqy.fsf@vitty.brq.redhat.com>
+ <20200205145923.GC4877@linux.intel.com>
+ <8736bpkqif.fsf@vitty.brq.redhat.com>
+ <20200205153508.GD4877@linux.intel.com>
+ <87tv45j7nf.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tv45j7nf.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixup the GMU bus table values for the sc7180 target.
+On Wed, Feb 05, 2020 at 05:55:32PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > I dug deeper into the CPUID crud after posting this series because I really
+> > didn't like the end result for vendor-specific leafs, and ended up coming
+> > up with (IMO) a much more elegant solution.
+> >
+> > https://lkml.kernel.org/r/20200201185218.24473-1-sean.j.christopherson@intel.com/
+> >
+> > or on patchwork
+> >
+> > https://patchwork.kernel.org/cover/11361361/
+> >
+> 
+> Thanks, I saw it. I tried applying it to kvm/next earlier today but
+> failed. Do you by any chance have a git branch somewhere? I'll try to
+> review it and test at least AMD stuff (if AMD people don't beat me to it
+> of course).
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Have you tried kvm/queue?  I'm pretty sure I based the code on kvm/queue.
+If that doesn't work, I'll push a tag to my github repo.
 
- drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 85 ++++++++++++++++++++++++-----------
- 1 file changed, 60 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-index eda11ab..e450e0b 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-@@ -7,6 +7,7 @@
- 
- #include "a6xx_gmu.h"
- #include "a6xx_gmu.xml.h"
-+#include "a6xx_gpu.h"
- 
- #define HFI_MSG_ID(val) [val] = #val
- 
-@@ -216,48 +217,82 @@ static int a6xx_hfi_send_perf_table(struct a6xx_gmu *gmu)
- 		NULL, 0);
- }
- 
--static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
-+static void a618_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
- {
--	struct a6xx_hfi_msg_bw_table msg = { 0 };
-+	/* Send a single "off" entry since the 618 GMU doesn't do bus scaling */
-+	msg->bw_level_num = 1;
-+
-+	msg->ddr_cmds_num = 3;
-+	msg->ddr_wait_bitmask = 0x01;
-+
-+	msg->ddr_cmds_addrs[0] = 0x50000;
-+	msg->ddr_cmds_addrs[1] = 0x5003c;
-+	msg->ddr_cmds_addrs[2] = 0x5000c;
-+
-+	msg->ddr_cmds_data[0][0] =  0x40000000;
-+	msg->ddr_cmds_data[0][1] =  0x40000000;
-+	msg->ddr_cmds_data[0][2] =  0x40000000;
- 
- 	/*
--	 * The sdm845 GMU doesn't do bus frequency scaling on its own but it
--	 * does need at least one entry in the list because it might be accessed
--	 * when the GMU is shutting down. Send a single "off" entry.
-+	 * These are the CX (CNOC) votes - these are used by the GMU but the
-+	 * votes are known and fixed for the target
- 	 */
-+	msg->cnoc_cmds_num = 1;
-+	msg->cnoc_wait_bitmask = 0x01;
-+
-+	msg->cnoc_cmds_addrs[0] = 0x5007c;
-+	msg->cnoc_cmds_data[0][0] =  0x40000000;
-+	msg->cnoc_cmds_data[1][0] =  0x60000001;
-+}
- 
--	msg.bw_level_num = 1;
-+static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
-+{
-+	/* Send a single "off" entry since the 630 GMU doesn't do bus scaling */
-+	msg->bw_level_num = 1;
- 
--	msg.ddr_cmds_num = 3;
--	msg.ddr_wait_bitmask = 0x07;
-+	msg->ddr_cmds_num = 3;
-+	msg->ddr_wait_bitmask = 0x07;
- 
--	msg.ddr_cmds_addrs[0] = 0x50000;
--	msg.ddr_cmds_addrs[1] = 0x5005c;
--	msg.ddr_cmds_addrs[2] = 0x5000c;
-+	msg->ddr_cmds_addrs[0] = 0x50000;
-+	msg->ddr_cmds_addrs[1] = 0x5005c;
-+	msg->ddr_cmds_addrs[2] = 0x5000c;
- 
--	msg.ddr_cmds_data[0][0] =  0x40000000;
--	msg.ddr_cmds_data[0][1] =  0x40000000;
--	msg.ddr_cmds_data[0][2] =  0x40000000;
-+	msg->ddr_cmds_data[0][0] =  0x40000000;
-+	msg->ddr_cmds_data[0][1] =  0x40000000;
-+	msg->ddr_cmds_data[0][2] =  0x40000000;
- 
- 	/*
- 	 * These are the CX (CNOC) votes.  This is used but the values for the
- 	 * sdm845 GMU are known and fixed so we can hard code them.
- 	 */
- 
--	msg.cnoc_cmds_num = 3;
--	msg.cnoc_wait_bitmask = 0x05;
-+	msg->cnoc_cmds_num = 3;
-+	msg->cnoc_wait_bitmask = 0x05;
- 
--	msg.cnoc_cmds_addrs[0] = 0x50034;
--	msg.cnoc_cmds_addrs[1] = 0x5007c;
--	msg.cnoc_cmds_addrs[2] = 0x5004c;
-+	msg->cnoc_cmds_addrs[0] = 0x50034;
-+	msg->cnoc_cmds_addrs[1] = 0x5007c;
-+	msg->cnoc_cmds_addrs[2] = 0x5004c;
- 
--	msg.cnoc_cmds_data[0][0] =  0x40000000;
--	msg.cnoc_cmds_data[0][1] =  0x00000000;
--	msg.cnoc_cmds_data[0][2] =  0x40000000;
-+	msg->cnoc_cmds_data[0][0] =  0x40000000;
-+	msg->cnoc_cmds_data[0][1] =  0x00000000;
-+	msg->cnoc_cmds_data[0][2] =  0x40000000;
-+
-+	msg->cnoc_cmds_data[1][0] =  0x60000001;
-+	msg->cnoc_cmds_data[1][1] =  0x20000001;
-+	msg->cnoc_cmds_data[1][2] =  0x60000001;
-+}
-+
-+
-+static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
-+{
-+	struct a6xx_hfi_msg_bw_table msg = { 0 };
-+	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
-+	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
- 
--	msg.cnoc_cmds_data[1][0] =  0x60000001;
--	msg.cnoc_cmds_data[1][1] =  0x20000001;
--	msg.cnoc_cmds_data[1][2] =  0x60000001;
-+	if (adreno_is_a618(adreno_gpu))
-+		a618_build_bw_table(&msg);
-+	else
-+		a6xx_build_bw_table(&msg);
- 
- 	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_BW_TABLE, &msg, sizeof(msg),
- 		NULL, 0);
--- 
-2.7.4
+This is exactly why I usually note the base for large series.  *sigh*
