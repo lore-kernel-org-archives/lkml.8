@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871D7C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABF9C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8CD20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E482224672
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GnR6foxt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dyOcs1re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgBELAH (ORCPT
+        id S1728365AbgBELAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 06:00:07 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53064 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728282AbgBELAG (ORCPT
+        Wed, 5 Feb 2020 06:00:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60362 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728285AbgBELAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:00:06 -0500
+        Wed, 5 Feb 2020 06:00:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580900405;
+        s=mimecast20190719; t=1580900408;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=BgAf28tr3sqHVEILT1FNGmbW4lhfnumj/1HGg/VPkDg=;
-        b=GnR6foxt8d/HB0OlR0ZyTuM2/PDRbmhWawxP0uiZLeTxqcikS/HL5BIGJILJgNEINajBDr
-        wpE7t6O7UnKq7O3y5wGmaU40H6gSWkQgz745MUoYqNEzRPvZG3oeyJiOJnmsXPpFg0LZXk
-        Sb6crxLT+4LUnt/2JmU96Urj6d4pk+A=
+        bh=ZE9yzcYAG7jYkbRuqwJpp4ye+y4wCXZsK9HIcU0xUu8=;
+        b=dyOcs1retUtjLo7N+lLe/WppzZ97g9oDfFD2GuHntieDozfywVCob68jXk0hdT5kvUz/LT
+        z+X2YFAy0IBFTFvfsGxvnVoQKQvY28wbeQg/FJpuD1tR6YfZk2e8XvESTonYn/dAm7Uqzv
+        KaEmwdSgt745Sqed4qt5HMA/5P0C0c0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-irqP3HoTMueL5ix49kOxrA-1; Wed, 05 Feb 2020 06:00:01 -0500
-X-MC-Unique: irqP3HoTMueL5ix49kOxrA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-276-TYOJ46MHP0-fl3NOX5-Kfg-1; Wed, 05 Feb 2020 06:00:04 -0500
+X-MC-Unique: TYOJ46MHP0-fl3NOX5-Kfg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE38D100FC40;
-        Wed,  5 Feb 2020 10:59:59 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B375C800D55;
+        Wed,  5 Feb 2020 10:59:58 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A895960BF7;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 110F7859A0;
         Wed,  5 Feb 2020 10:59:56 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 02C75939C; Wed,  5 Feb 2020 11:59:56 +0100 (CET)
+        id 61DA49CAF; Wed,  5 Feb 2020 11:59:55 +0100 (CET)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
@@ -53,173 +53,68 @@ Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
         Daniel Vetter <daniel@ffwll.ch>,
         virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 4/4] drm/virtio: move virtio_gpu_mem_entry initialization to new function
-Date:   Wed,  5 Feb 2020 11:59:55 +0100
-Message-Id: <20200205105955.28143-5-kraxel@redhat.com>
+Subject: [PATCH 1/4] drm/virtio: simplify virtio_gpu_alloc_cmd
+Date:   Wed,  5 Feb 2020 11:59:52 +0100
+Message-Id: <20200205105955.28143-2-kraxel@redhat.com>
 In-Reply-To: <20200205105955.28143-1-kraxel@redhat.com>
 References: <20200205105955.28143-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce new virtio_gpu_object_shmem_init() helper function which will
-create the virtio_gpu_mem_entry array, containing the backing storage
-information for the host.  For the most path this just moves code from
-virtio_gpu_object_attach().
+Just call virtio_gpu_alloc_cmd_resp with some fixed args
+instead of duplicating most of the function body.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h    |  4 ++
- drivers/gpu/drm/virtio/virtgpu_object.c | 49 +++++++++++++++++++++++++
- drivers/gpu/drm/virtio/virtgpu_vq.c     | 49 ++-----------------------
- 3 files changed, 56 insertions(+), 46 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_vq.c | 25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 15fb3c12f22f..be62a7469b04 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -71,6 +71,10 @@ struct virtio_gpu_object {
- 
- 	struct sg_table *pages;
- 	uint32_t mapped;
-+
-+	struct virtio_gpu_mem_entry *ents;
-+	unsigned int nents;
-+
- 	bool dumb;
- 	bool created;
- };
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index bce2b3d843fe..4e82e269a1f4 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -121,6 +121,49 @@ struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
- 	return &bo->base.base;
- }
- 
-+static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
-+					struct virtio_gpu_object *bo)
-+{
-+	bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
-+	struct scatterlist *sg;
-+	int si, ret;
-+
-+	ret = drm_gem_shmem_pin(&bo->base.base);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	bo->pages = drm_gem_shmem_get_sg_table(&bo->base.base);
-+	if (bo->pages == NULL) {
-+		drm_gem_shmem_unpin(&bo->base.base);
-+		return -EINVAL;
-+	}
-+
-+	if (use_dma_api) {
-+		bo->mapped = dma_map_sg(vgdev->vdev->dev.parent,
-+					 bo->pages->sgl, bo->pages->nents,
-+					 DMA_TO_DEVICE);
-+		bo->nents = bo->mapped;
-+	} else {
-+		bo->nents = bo->pages->nents;
-+	}
-+
-+	bo->ents = kmalloc_array(bo->nents, sizeof(struct virtio_gpu_mem_entry),
-+				 GFP_KERNEL);
-+	if (!bo->ents) {
-+		DRM_ERROR("failed to allocate ent list\n");
-+		return -ENOMEM;
-+	}
-+
-+	for_each_sg(bo->pages->sgl, sg, bo->nents, si) {
-+		bo->ents[si].addr = cpu_to_le64(use_dma_api
-+						? sg_dma_address(sg)
-+						: sg_phys(sg));
-+		bo->ents[si].length = cpu_to_le32(sg->length);
-+		bo->ents[si].padding = 0;
-+	}
-+	return 0;
-+}
-+
- int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
- 			     struct virtio_gpu_object_params *params,
- 			     struct virtio_gpu_object **bo_ptr,
-@@ -165,6 +208,12 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
- 					       objs, fence);
- 	}
- 
-+	ret = virtio_gpu_object_shmem_init(vgdev, bo);
-+	if (ret != 0) {
-+		virtio_gpu_free_object(&shmem_obj->base);
-+		return ret;
-+	}
-+
- 	ret = virtio_gpu_object_attach(vgdev, bo, NULL);
- 	if (ret != 0) {
- 		virtio_gpu_free_object(&shmem_obj->base);
 diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index e258186bedb2..7db91376f2f2 100644
+index 5914e79d3429..6d6d55dc384e 100644
 --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
 +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -1081,54 +1081,11 @@ int virtio_gpu_object_attach(struct virtio_gpu_device *vgdev,
- 			     struct virtio_gpu_object *obj,
- 			     struct virtio_gpu_fence *fence)
- {
--	bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
--	struct virtio_gpu_mem_entry *ents;
--	struct scatterlist *sg;
--	int si, nents, ret;
--
--	if (WARN_ON_ONCE(!obj->created))
--		return -EINVAL;
--	if (WARN_ON_ONCE(obj->pages))
--		return -EINVAL;
--
--	ret = drm_gem_shmem_pin(&obj->base.base);
--	if (ret < 0)
--		return -EINVAL;
--
--	obj->pages = drm_gem_shmem_get_sg_table(&obj->base.base);
--	if (obj->pages == NULL) {
--		drm_gem_shmem_unpin(&obj->base.base);
--		return -EINVAL;
--	}
--
--	if (use_dma_api) {
--		obj->mapped = dma_map_sg(vgdev->vdev->dev.parent,
--					 obj->pages->sgl, obj->pages->nents,
--					 DMA_TO_DEVICE);
--		nents = obj->mapped;
--	} else {
--		nents = obj->pages->nents;
--	}
--
--	/* gets freed when the ring has consumed it */
--	ents = kmalloc_array(nents, sizeof(struct virtio_gpu_mem_entry),
--			     GFP_KERNEL);
--	if (!ents) {
--		DRM_ERROR("failed to allocate ent list\n");
--		return -ENOMEM;
--	}
--
--	for_each_sg(obj->pages->sgl, sg, nents, si) {
--		ents[si].addr = cpu_to_le64(use_dma_api
--					    ? sg_dma_address(sg)
--					    : sg_phys(sg));
--		ents[si].length = cpu_to_le32(sg->length);
--		ents[si].padding = 0;
--	}
--
- 	virtio_gpu_cmd_resource_attach_backing(vgdev, obj->hw_res_handle,
--					       ents, nents,
-+					       obj->ents, obj->nents,
- 					       fence);
-+	obj->ents = NULL;
-+	obj->nents = 0;
- 	return 0;
+@@ -109,23 +109,6 @@ virtio_gpu_get_vbuf(struct virtio_gpu_device *vgdev,
+ 	return vbuf;
  }
  
+-static void *virtio_gpu_alloc_cmd(struct virtio_gpu_device *vgdev,
+-				  struct virtio_gpu_vbuffer **vbuffer_p,
+-				  int size)
+-{
+-	struct virtio_gpu_vbuffer *vbuf;
+-
+-	vbuf = virtio_gpu_get_vbuf(vgdev, size,
+-				   sizeof(struct virtio_gpu_ctrl_hdr),
+-				   NULL, NULL);
+-	if (IS_ERR(vbuf)) {
+-		*vbuffer_p = NULL;
+-		return ERR_CAST(vbuf);
+-	}
+-	*vbuffer_p = vbuf;
+-	return vbuf->buf;
+-}
+-
+ static struct virtio_gpu_update_cursor*
+ virtio_gpu_alloc_cursor(struct virtio_gpu_device *vgdev,
+ 			struct virtio_gpu_vbuffer **vbuffer_p)
+@@ -161,6 +144,14 @@ static void *virtio_gpu_alloc_cmd_resp(struct virtio_gpu_device *vgdev,
+ 	return (struct virtio_gpu_command *)vbuf->buf;
+ }
+ 
++static void *virtio_gpu_alloc_cmd(struct virtio_gpu_device *vgdev,
++				  struct virtio_gpu_vbuffer **vbuffer_p,
++				  int size)
++{
++	return virtio_gpu_alloc_cmd_resp(vgdev, NULL, vbuffer_p, size,
++					 sizeof(struct virtio_gpu_ctrl_hdr), NULL);
++}
++
+ static void free_vbuf(struct virtio_gpu_device *vgdev,
+ 		      struct virtio_gpu_vbuffer *vbuf)
+ {
 -- 
 2.18.1
 
