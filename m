@@ -2,118 +2,210 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303CEC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05B4C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C0C20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7841E20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9cdohrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgBEMt5 (ORCPT
+        id S1727561AbgBEMvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:49:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:46778 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgBEMt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:49:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 057631FB;
-        Wed,  5 Feb 2020 04:49:56 -0800 (PST)
-Received: from [10.37.12.130] (unknown [10.37.12.130])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DB2D3F52E;
-        Wed,  5 Feb 2020 04:49:34 -0800 (PST)
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
-References: <20200127215453.15144-1-lukasz.luba@arm.com>
- <20200127215453.15144-4-lukasz.luba@arm.com>
- <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
- <db3f2554-288d-81ab-2373-1447367ba673@arm.com>
- <20200131204118.GA27284@kozik-lap>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <c54e252d-dc55-5fa3-f97f-643d7efbfdc1@arm.com>
-Date:   Wed, 5 Feb 2020 12:49:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200131204118.GA27284@kozik-lap>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 5 Feb 2020 07:51:20 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37053 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgBEMvT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:51:19 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so854247plz.4;
+        Wed, 05 Feb 2020 04:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PXFvkiGRXuDhiJvcYc/Jk/zrUgQKIy7nBUfvFcGoJRk=;
+        b=U9cdohrchImToTte6UIkVqRPyXjcmnCaDPkha+8rOGhUm2FlVecoLDxszkQhdUDlun
+         BwtaKxndX+TbOMjEEmRNmKazySg4cl79JRjZybXu3FfeBM+Wyg/uqiGDEO2x9bCygMzM
+         VvEfvqKRYBS7iWT5JzdV5DC4h7ZWjvwYaOQX7ypsCtWWnd1x8K/DADdftT2MfDSOxIGX
+         gaYhkOTN3ECbLKyo3AagzoY90wqcQJZY9dYS3jzAAdGmNnP2vrA8M3zmhz1HgdYfg8hY
+         SDf0hXSkZMy+vF2x3YvQvdsvi+QkBkSq437f2K3C5yS92Fl8vTdycE0RkvIeLPjCC6hD
+         bJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PXFvkiGRXuDhiJvcYc/Jk/zrUgQKIy7nBUfvFcGoJRk=;
+        b=Uqfsti/Oj6ShfcZ7gptmTdG3XCpM2/aIEPoI3O4T/9KZVsnaQQu2CTn9hcdekwadGJ
+         yCRPtWccCnF4JAxdsH4Atluv888bvrFPOULaldEjcu8oeP0YQ2DzyAJREFbM/TWWk3Yf
+         PddW+2SD6kRm9CC1KokIJax/7/NH8oA+IC0nqk4K45mRMjfqn7QMUOeAEEqAeYIK7Ovn
+         QhGoWhp9LC9sbGkWAa/Siw6SBjbDWs3dA2iBPvKtWAHbJVp6Iea6py04o2TpCy74oXvj
+         FkBDHwa9QJuHvff6zyMFz9/b968g0wOhAwb07Xr2xqGDEZmx1mN+c1BSW0kpeF6bQtcs
+         jIdw==
+X-Gm-Message-State: APjAAAUEzphnZK3b10ZuOvBLSq3yzedV3+v9RlsFOYjQaveiysJFGWtD
+        1t+Jj1A8ASn2Q0wxopYkodo=
+X-Google-Smtp-Source: APXvYqz4sd6fi573XbT5NcaZW+Sb0tSHSKJq5m6qBTIez9iu5vjhwO183Uck3jZcDScGo6lYpsQa1Q==
+X-Received: by 2002:a17:902:bb83:: with SMTP id m3mr35458452pls.258.1580907078376;
+        Wed, 05 Feb 2020 04:51:18 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id y127sm22864784pfg.22.2020.02.05.04.51.15
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 05 Feb 2020 04:51:17 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
+        linus.walleij@linaro.org, baolin.wang@linaro.org,
+        baolin.wang7@gmail.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/5] Add MMC software queue support
+Date:   Wed,  5 Feb 2020 20:50:27 +0800
+Message-Id: <cover.1580894083.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi All,
 
-On 1/31/20 8:41 PM, Krzysztof Kozlowski wrote:
-> On Fri, Jan 31, 2020 at 05:30:46PM +0000, Lukasz Luba wrote:
->   
->>>
->>>>                   |-----------------------------------------------|---------------
->>>>                   | performance   | SchedUtil     | SchedUtil     | performance
->>>>                   | governor      | governor      | governor      | governor
->>>>                   |               | w/o EAS       | w/ EAS        |
->>>> ----------------|---------------|---------------|---------------|---------------
->>>> hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
->>>> hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
->>>
->>> Why does the performance different before and after this patch?
->>
->> Probably due to better locality and cache utilization. I can see that
->> there is ~700k context switches vs ~450k and ~160k migrations vs ~50k.
->> If you need to communicate two threads in different clusters, it will go
->> through CCI.
-> 
-> Mhmm... I was not specific - I mean, "performance governor". All this
-> you mentioned should not differ between performance governor before and
-> after. However once you have 12.7, then 13.0 - 12.2. Unless multi-core
-> scheduler affects it... but then these numbers here are not showing
-> only this change, but also the SCHED_MC effect.  In such case each of
-> commits should be coming with their own numbers.
+Now the MMC read/write stack will always wait for previous request is
+completed by mmc_blk_rw_wait(), before sending a new request to hardware,
+or queue a work to complete request, that will bring context switching
+overhead, especially for high I/O per second rates, to affect the IO
+performance.
 
-Agree, I should have not put 'this patch set' in the commit
-msg. It should go into the cover letter and avoid this confusion.
-You are right with ' Unless multi-core scheduler affects it...',
-that's why when the SCHED_MC is missing, the decisions about task
-placing might cause this variation and delay '13.0 - 12.2' seconds.
+Thus this patch set will introduce the MMC software command queue support
+based on command queue engine's interfaces, and set the queue depth as 64
+to allow more requests can be be prepared, merged and inserted into IO
+scheduler, but we only allow 2 requests in flight, that is enough to let
+the irq handler always trigger the next request without a context switch,
+as well as avoiding a long latency.
 
-> 
->> As mentioned in response to patch 1/3. The fist patch would create MC
->> domain, something different than Energy Model or EAS. The decisions in
->> the scheduler would be different.
->>
->> I can merge 1/3 and 3/3 if you like, though.
-> 
-> I understand now that their independent. Still, they are part of one
-> goal to tune the scheduler for Exynos platform. Splitting these looks
-> too much, like enabling multiple drivers one after another.
-> 
-> However if you provide numbers for each of cases (before patches, multi
-> core scheduler, energy model with DTS), then I see benefit of splitting
-> it.  Each commit would have its own rationale.  I am not sure if it is
-> worth such investigation - that's just defconfig... distros might ignore
-> it anyway.
+Moreover we can expand the MMC software queue interface to support
+MMC packed request or packed command instead of adding new interfaces,
+according to previosus discussion.
 
-Good point, and I agree that it would require more investigation, for
-which unfortunately I don't have currently spare cycles.
+Below are some comparison data with fio tool. The fio command I used
+is like below with changing the '--rw' parameter and enabling the direct
+IO flag to measure the actual hardware transfer speed in 4K block size.
 
-Should I merge patch 1/3 and 3/3 and send the v2 with a cover letter
-which would have the test results?
+./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=1G --group_reporting --numjobs=20 --name=test_read
 
-Regards,
-Lukasz
+My eMMC card working at HS400 Enhanced strobe mode:
+[    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+[    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB 
+[    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+[    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+[    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+
+1. Without MMC software queue
+I tested 5 times for each case and output a average speed.
+
+1) Sequential read:
+Speed: 59.4MiB/s, 63.4MiB/s, 57.5MiB/s, 57.2MiB/s, 60.8MiB/s
+Average speed: 59.66MiB/s
+
+2) Random read:
+Speed: 26.9MiB/s, 26.9MiB/s, 27.1MiB/s, 27.1MiB/s, 27.2MiB/s
+Average speed: 27.04MiB/s
+
+3) Sequential write:
+Speed: 71.6MiB/s, 72.5MiB/s, 72.2MiB/s, 64.6MiB/s, 67.5MiB/s
+Average speed: 69.68MiB/s
+
+4) Random write:
+Speed: 36.3MiB/s, 35.4MiB/s, 38.6MiB/s, 34MiB/s, 35.5MiB/s
+Average speed: 35.96MiB/s
+
+2. With MMC software queue
+I tested 5 times for each case and output a average speed.
+
+1) Sequential read:
+Speed: 59.2MiB/s, 60.4MiB/s, 63.6MiB/s, 60.3MiB/s, 59.9MiB/s
+Average speed: 60.68MiB/s
+
+2) Random read:
+Speed: 31.3MiB/s, 31.4MiB/s, 31.5MiB/s, 31.3MiB/s, 31.3MiB/s
+Average speed: 31.36MiB/s
+
+3) Sequential write:
+Speed: 71MiB/s, 71.8MiB/s, 72.3MiB/s, 72.2MiB/s, 71MiB/s
+Average speed: 71.66MiB/s
+
+4) Random write:
+Speed: 68.9MiB/s, 68.7MiB/s, 68.8MiB/s, 68.6MiB/s, 68.8MiB/s
+Average speed: 68.76MiB/s
+
+Form above data, we can see the MMC software queue can help to improve some
+performance obviously for random read and write, though no obvious improvement
+for sequential read and write.
+
+Any comments are welcome. Thanks a lot.
+
+Changes from v7:
+ - Add reviewed tag from Arnd.
+ - Use the 'hsq' acronym for varibles and functions in the core layer.
+ - Check the 'card->ext_csd.cmdq_en' in cqhci.c to make sure the CQE
+ can work normally.
+ - Add a new patch to enable the host software queue for the SD card.
+ - Use the default MMC queue depth for host software queue.
+
+Changes from v6:
+ - Change the patch order and set host->always_defer_done = true for the
+ Spreadtrum host driver.
+
+Changes from v5:
+ - Modify the condition of defering to complete request suggested by Adrian.
+
+Changes from v4:
+ - Add a seperate patch to introduce a variable to defer to complete
+ data requests for some host drivers, when using host software queue.
+
+Changes from v3:
+ - Use host software queue instead of sqhci.
+ - Fix random config building issue.
+ - Change queue depth to 32, but still only allow 2 requests in flight.
+ - Update the testing data.
+
+Changes from v2:
+ - Remove reference to 'struct cqhci_host' and 'struct cqhci_slot',
+ instead adding 'struct sqhci_host', which is only used by software queue.
+
+Changes from v1:
+ - Add request_done ops for sdhci_ops.
+ - Replace virtual command queue with software queue for functions and
+ variables.
+ - Rename the software queue file and add sqhci.h header file.
+
+Baolin Wang (5):
+  mmc: Add MMC host software queue support
+  mmc: core: Enable the MMC host software queue for the SD card
+  mmc: host: sdhci: Add request_done ops for struct sdhci_ops
+  mmc: host: sdhci: Add a variable to defer to complete requests if
+    needed
+  mmc: host: sdhci-sprd: Add software queue support
+
+ drivers/mmc/core/block.c      |   61 ++++++++
+ drivers/mmc/core/mmc.c        |   13 +-
+ drivers/mmc/core/queue.c      |   22 ++-
+ drivers/mmc/core/sd.c         |   10 ++
+ drivers/mmc/host/Kconfig      |    8 +
+ drivers/mmc/host/Makefile     |    1 +
+ drivers/mmc/host/cqhci.c      |    3 +
+ drivers/mmc/host/mmc_hsq.c    |  343 +++++++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/mmc_hsq.h    |   30 ++++
+ drivers/mmc/host/sdhci-sprd.c |   28 ++++
+ drivers/mmc/host/sdhci.c      |   14 +-
+ drivers/mmc/host/sdhci.h      |    3 +
+ include/linux/mmc/host.h      |    3 +
+ 13 files changed, 529 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/mmc/host/mmc_hsq.c
+ create mode 100644 drivers/mmc/host/mmc_hsq.h
+
+-- 
+1.7.9.5
 
