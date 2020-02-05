@@ -2,117 +2,170 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A99C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9C1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F8B20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2280620659
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K/jdJAcJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kKMB39Bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgBEGbu (ORCPT
+        id S1726838AbgBEGd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:31:50 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60161 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725906AbgBEGbt (ORCPT
+        Wed, 5 Feb 2020 01:33:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50144 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgBEGdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 01:31:49 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580884309; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ViCP3t2YRGW6lTwQZQeQAgzT2huQLFAv95wozwScy2g=;
- b=K/jdJAcJEkjjzI+HgJTCa9i9m+Vh7ItDEqX0XIBqqxnu5vs19nFJVzaR3zPM/7thOa2SAXdo
- qHv9Btl9f440CxySGAxyxGmDyNeLHyXvq7SLX/VlTqmebOoMF6t6A1q6iwNGzeVGON8USPjT
- sCd3lpcpMSyu5+qKVRQeQnPiZ5I=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a6153.7f282edce848-smtp-out-n03;
- Wed, 05 Feb 2020 06:31:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B30C3C447A3; Wed,  5 Feb 2020 06:31:46 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E25B5C43383;
-        Wed,  5 Feb 2020 06:31:45 +0000 (UTC)
+        Wed, 5 Feb 2020 01:33:55 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0156XjvP117119;
+        Wed, 5 Feb 2020 00:33:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580884425;
+        bh=oq7M5D4MHfw58kUSHUZ2et32/o3xpjb9uBa074gAXtA=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=kKMB39BkYrq0YXMigUT8w5YVkK7oeHBdyoK0/K+qW+gov5/5NA58d6e6FkH6LwwLp
+         WFBLSmOr/GA7Y+hWGTJIYUwehS/lUmEiVuqa1mCErXaeqVyFRlcVmDHB2vgn/W2uoX
+         MMwDoHyw8Qv3aviomTIwxFpdZcAp0ppeyQgq2nSc=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0156Xj4v080383
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Feb 2020 00:33:45 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
+ 2020 00:33:44 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 5 Feb 2020 00:33:44 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0156Xadk124007;
+        Wed, 5 Feb 2020 00:33:38 -0600
+Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Vidya Sagar <vidyas@nvidia.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, Tom Joseph <tjoseph@cadence.com>,
+        Milind Parab <mparab@cadence.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200103100736.27627-1-vidyas@nvidia.com>
+ <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
+ <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
+ <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+Message-ID: <b4af8353-3a56-fa31-3391-056050c0440a@ti.com>
+Date:   Wed, 5 Feb 2020 12:07:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 14:31:45 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: ufs: Fix registers dump vops caused scheduling
- while atomic
-In-Reply-To: <3e529862-7790-c506-abaa-9a6972f5d53c@acm.org>
-References: <1580882795-29675-1-git-send-email-cang@codeaurora.org>
- <3e529862-7790-c506-abaa-9a6972f5d53c@acm.org>
-Message-ID: <749a1db94df00278ec9f5c121cd937fe@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05 14:21, Bart Van Assche wrote:
-> On 2020-02-04 22:06, Can Guo wrote:
->> @@ -5617,7 +5622,7 @@ static irqreturn_t ufshcd_check_errors(struct
->> 
->>  					__func__, hba->saved_err,
->>  					hba->saved_uic_err);
->> 
->> -				ufshcd_print_host_regs(hba);
->> +				__ufshcd_print_host_regs(hba, true);
->>  				ufshcd_print_pwr_info(hba);
->>  				ufshcd_print_tmrs(hba,
->> 					hba->outstanding_tasks);
->>  				ufshcd_print_trs(hba,
->> 					hba->outstanding_reqs,
-> 
-> Hi Can,
-> 
-> Please fix this by splitting ufs_qcom_dump_dbg_regs() into two
-> functions: one function that doesn't sleep and a second function that
-> behaves identically to the current function. If the function names will
-> make it clear which function sleeps and which function doesn't that 
-> will
-> result in code that is much easier to read than the above code. For the
-> above code it is namely impossible to figure out what will happen
-> without looking up the caller.
-> 
-> Thanks,
-> 
-> Bart.
++Tom, Milind
 
-Hi Bart,
+Hi,
 
-Do you mean by splitting ufshcd_print_host_regs() into two functions?
-One behaves identically same to the current function, another one called
-ufshcd_print_host_regs_nosleep(). No?
+On 23/01/20 3:25 PM, Kishon Vijay Abraham I wrote:
+> Hi Vidya Sagar,
+> 
+> On 23/01/20 2:54 pm, Vidya Sagar wrote:
+>> Hi Kishon,
+>> Apologies for pinging again. Could you please review this series?
+>>
+>> Thanks,
+>> Vidya Sagar
+>>
+>> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
+>>> Hi Kishon,
+>>> Could you please review this series?
+>>>
+>>> Also, this series depends on the following change of yours
+>>> http://patchwork.ozlabs.org/patch/1109884/
+>>> Whats the plan to get this merged?
+> 
+> I've posted the endpoint improvements as a separate series
+> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
+> 
+> I'd prefer this series gets tested by others. I'm also planning to test
+> this series. Sorry for the delay. I'll test review and test this series
+> early next week.
 
-Thanks,
-Can Guo.
+I tested this series with DRA7 configured in EP mode. So for the series
+itself
+
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+Tom, Can you test this series in Cadence platform?
+
+Lorenzo, Andrew,
+
+How do you want to go about merging this series? This series depends on
+[1] which in turn is dependent on two other series. If required, I can
+rebase [1] on mainline kernel and remove it's dependencies with the
+other series. That way this series and [1] could be merged. And the
+other series could be worked later. Kindly let me know.
+
+Thanks
+Kishon
+
+[1] ->
+https://lore.kernel.org/linux-pci/20191231100331.6316-1-kishon@ti.com/
+> 
+> Thanks
+> Kishon
+> 
+>>>
+>>> Thanks,
+>>> Vidya Sagar
+>>>
+>>> On 1/3/20 3:37 PM, Vidya Sagar wrote:
+>>>> EPC/DesignWare core endpoint subsystems assume that the core
+>>>> registers are
+>>>> available always for SW to initialize. But, that may not be the case
+>>>> always.
+>>>> For example, Tegra194 hardware has the core running on a clock that
+>>>> is derived
+>>>> from reference clock that is coming into the endpoint system from host.
+>>>> Hence core is made available asynchronously based on when host system
+>>>> is going
+>>>> for enumeration of devices. To accommodate this kind of hardwares,
+>>>> support is
+>>>> required to defer the core initialization until the respective
+>>>> platform driver
+>>>> informs the EPC/DWC endpoint sub-systems that the core is indeed
+>>>> available for
+>>>> initiaization. This patch series is attempting to add precisely that.
+>>>> This series is based on Kishon's patch that adds notification mechanism
+>>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+>>>>
+>>>> Vidya Sagar (5):
+>>>>    PCI: endpoint: Add core init notifying feature
+>>>>    PCI: dwc: Refactor core initialization code for EP mode
+>>>>    PCI: endpoint: Add notification for core init completion
+>>>>    PCI: dwc: Add API to notify core initialization completion
+>>>>    PCI: pci-epf-test: Add support to defer core initialization
+>>>>
+>>>>   .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+>>>>   drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+>>>>   drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+>>>>   drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+>>>>   include/linux/pci-epc.h                       |   2 +
+>>>>   include/linux/pci-epf.h                       |   5 +
+>>>>   6 files changed, 164 insertions(+), 70 deletions(-)
+>>>>
