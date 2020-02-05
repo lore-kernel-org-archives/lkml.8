@@ -2,155 +2,86 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B8BC35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A00FC3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D92217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0785C21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgBEEUM (ORCPT
+        id S1727951AbgBEEVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:20:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26772 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727832AbgBEEUL (ORCPT
+        Tue, 4 Feb 2020 23:21:42 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47498 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbgBEEVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:20:11 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0154IgxB065034;
-        Tue, 4 Feb 2020 23:20:01 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn27wn4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Feb 2020 23:20:00 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0154F1Iw002400;
-        Wed, 5 Feb 2020 04:20:00 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04dal.us.ibm.com with ESMTP id 2xykc99w38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 04:20:00 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0154JxPk40894772
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Feb 2020 04:19:59 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A3F02805A;
-        Wed,  5 Feb 2020 04:19:59 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F06EA28058;
-        Wed,  5 Feb 2020 04:19:58 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.31.110])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Feb 2020 04:19:58 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 26C4F2E3006; Wed,  5 Feb 2020 09:49:56 +0530 (IST)
-Date:   Wed, 5 Feb 2020 09:49:56 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     ego@linux.vnet.ibm.com,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 2/3] powerpc/sysfs: Show idle_purr and idle_spurr for
- every CPU
-Message-ID: <20200205041956.GA5401@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
- <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
- <1575564547.si4rk0s96p.naveen@linux.ibm.com>
- <20200203045013.GC13468@in.ibm.com>
- <1580802180.jpxk9s8apz.naveen@linux.ibm.com>
+        Tue, 4 Feb 2020 23:21:42 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 694AB29298E
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v6 1/5] unicode: Add standard casefolded d_ops
+Organization: Collabora
+References: <20200128230328.183524-1-drosen@google.com>
+        <20200128230328.183524-2-drosen@google.com>
+        <85sgjsxx2g.fsf@collabora.com>
+        <CA+PiJmS3kbK8220QaccP5jJ7dSf4xv3UrStQvLskAtCN+=vG_A@mail.gmail.com>
+Date:   Tue, 04 Feb 2020 23:21:33 -0500
+In-Reply-To: <CA+PiJmS3kbK8220QaccP5jJ7dSf4xv3UrStQvLskAtCN+=vG_A@mail.gmail.com>
+        (Daniel Rosenberg's message of "Tue, 4 Feb 2020 19:05:02 -0800")
+Message-ID: <85h8051x6a.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580802180.jpxk9s8apz.naveen@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-04_09:2020-02-04,2020-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002050034
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Naveen,
+Daniel Rosenberg <drosen@google.com> writes:
 
-On Tue, Feb 04, 2020 at 01:22:19PM +0530, Naveen N. Rao wrote:
-> Gautham R Shenoy wrote:
-> >Hi Naveen,
-> >
-> >On Thu, Dec 05, 2019 at 10:23:58PM +0530, Naveen N. Rao wrote:
-> >>>diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-> >>>index 80a676d..42ade55 100644
-> >>>--- a/arch/powerpc/kernel/sysfs.c
-> >>>+++ b/arch/powerpc/kernel/sysfs.c
-> >>>@@ -1044,6 +1044,36 @@ static ssize_t show_physical_id(struct device *dev,
-> >>> }
-> >>> static DEVICE_ATTR(physical_id, 0444, show_physical_id, NULL);
-> >>>
-> >>>+static ssize_t idle_purr_show(struct device *dev,
-> >>>+			      struct device_attribute *attr, char *buf)
-> >>>+{
-> >>>+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> >>>+	unsigned int cpuid = cpu->dev.id;
-> >>>+	struct lppaca *cpu_lppaca_ptr = paca_ptrs[cpuid]->lppaca_ptr;
-> >>>+	u64 idle_purr_cycles = be64_to_cpu(cpu_lppaca_ptr->wait_state_cycles);
-> >>>+
-> >>>+	return sprintf(buf, "%llx\n", idle_purr_cycles);
-> >>>+}
-> >>>+static DEVICE_ATTR_RO(idle_purr);
-> >>>+
-> >>>+DECLARE_PER_CPU(u64, idle_spurr_cycles);
-> >>>+static ssize_t idle_spurr_show(struct device *dev,
-> >>>+			       struct device_attribute *attr, char *buf)
-> >>>+{
-> >>>+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> >>>+	unsigned int cpuid = cpu->dev.id;
-> >>>+	u64 *idle_spurr_cycles_ptr = per_cpu_ptr(&idle_spurr_cycles, cpuid);
-> >>
-> >>Is it possible for a user to read stale values if a particular cpu is in an
-> >>extended cede? Is it possible to use smp_call_function_single() to force the
-> >>cpu out of idle?
-> >
-> >Yes, if the CPU whose idle_spurr cycle is being read is still in idle,
-> >then we will miss reporting the delta spurr cycles for this last
-> >idle-duration. Yes, we can use an smp_call_function_single(), though
-> >that will introduce IPI noise. How often will idle_[s]purr be read ?
-> 
-> Since it is possible for a cpu to go into extended cede for multiple seconds
-> during which time it is possible to mis-report utilization, I think it is
-> better to ensure that the sysfs interface for idle_[s]purr report the proper
-> values through use of IPI.
+> On Sun, Feb 2, 2020 at 5:46 PM Gabriel Krisman Bertazi
+> <krisman@collabora.com> wrote:
+>>
+>>
+>> I don't think fs/unicode is the right place for these very specific
+>> filesystem functions, just because they happen to use unicode.  It is an
+>> encoding library, it doesn't care about dentries, nor should know how to
+>> handle them.  It exposes a simple api to manipulate and convert utf8 strings.
+>>
+>> I saw change was after the desire to not have these functions polluting
+>> the VFS hot path, but that has nothing to do with placing them here.
+>>
+>> Would libfs be better?  or a casefolding library in fs/casefold.c?
+>>
+>>
+>> --
+>> Gabriel Krisman Bertazi
 >
+> The hash function needs access to utf8ncursor, but apart from that,
+> libfs would make sense. utf8ncursor is the only reason I have them
+> here. How do you feel about exposing utf8cursor or something similar?
 
-Fair enough.
+Hi,
 
+It was designed to be an internal thing, but I'm ok with exposing it.
 
-> With repect to lparstat, the read interval is user-specified and just gets
-> passed onto sleep().
-
-Ok. So I guess currently you will be sending smp_call_function every
-time you read a PURR and SPURR. That number will now increase by 2
-times when we read idle_purr and idle_spurr.
-
-
-> 
-> - Naveen
-> 
-
---
-Thanks and Regards
-gautham.
+-- 
+Gabriel Krisman Bertazi
