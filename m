@@ -2,108 +2,197 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15F4C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FA3C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F8520702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E48E20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aefzUb08"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SKKmIKeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgBEO0b (ORCPT
+        id S1726509AbgBEO1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:26:31 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24470 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726597AbgBEO0b (ORCPT
+        Wed, 5 Feb 2020 09:27:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58011 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726046AbgBEO1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:26:31 -0500
+        Wed, 5 Feb 2020 09:27:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580912789;
+        s=mimecast20190719; t=1580912852;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KAdV3hA+UnlwePFUiQQxF7Qhd3fY3tGdtbme44OOFs8=;
-        b=aefzUb08POcOzVG5gdwD+F/OQGLSy5mOd0MRlJFbJHSSoS5jMPjzRKmDWCiedF/PKqnf5X
-        t0siZE5GZAMmCiILyg4JeMAMCpFEYWNdTV91rPuka6yGevtmd2wABcNfTSTzyJLP5kx+xP
-        +zbgPLqBVtRlHWLz8ni/rfVhvOSFeoM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-OBZq-5t8Nwu9IXhE-e1YOQ-1; Wed, 05 Feb 2020 09:26:26 -0500
-X-MC-Unique: OBZq-5t8Nwu9IXhE-e1YOQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 209311081FA3;
-        Wed,  5 Feb 2020 14:26:24 +0000 (UTC)
-Received: from localhost (ovpn-12-97.pek2.redhat.com [10.72.12.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 56DD25C1B5;
-        Wed,  5 Feb 2020 14:26:20 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 22:26:18 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200205142618.GE8965@MiWiFi-R3L-srv>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200204142516.GD26758@MiWiFi-R3L-srv>
- <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
- <20200205124329.GE26758@MiWiFi-R3L-srv>
- <cd353848-301a-025d-dd66-44d76e1bbc44@redhat.com>
- <20200205133442.GC8965@MiWiFi-R3L-srv>
- <2868343a-745b-e2b6-7e78-d5649c00ee31@redhat.com>
- <20200205141254.GD8965@MiWiFi-R3L-srv>
- <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
+        bh=udOvaIJpsx9wrAMmRufUgqUxBBbPPqah8VwHBWHf90Q=;
+        b=SKKmIKeUxra3qxQW/ION1N1RuABBgk9tTyhbc6Snv71U+BvJJXPmgv7D66dFwMteFTa26d
+        WqHOAfoEMMhn7bGlcD/TbvpjGOfKhCBx3HD7OKAdlndWKuqL3rbHlPbBdiUUJ0pCmAjEoT
+        wCKEi7TUBlIHJadJtt+i0dxeByfx//s=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-PU8A8ShzMyWqk8VSAoAx5Q-1; Wed, 05 Feb 2020 09:27:31 -0500
+X-MC-Unique: PU8A8ShzMyWqk8VSAoAx5Q-1
+Received: by mail-wr1-f70.google.com with SMTP id l1so1279932wrt.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 06:27:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=udOvaIJpsx9wrAMmRufUgqUxBBbPPqah8VwHBWHf90Q=;
+        b=C9rAmiMzaQ7NAZ8IF3lr4tiZXe/b0QuMMo6eAidTCVoHjjkY6aYEme+FvI2imMsACE
+         PjNnwlodQJgEere3bXFaBkJ07Iu7E1y3tLRjoY025DpLmbjwDJRWNeNlIy/HN6mMsdkx
+         tQO+re1B3SCVpaF+HEHuEdz/JCtcMYbq/Pff0tY/oNSVtRecPViZyMAIi3QWSIH/qJ9c
+         vTGZwrrSulUtJzIOEVIImkBoq0sayKEkOre5AvbjXU/q34gm5Y3fLwHzszmVmwjv15hO
+         g7ehkS3L0OZDTbiosswYz1w0yNw+h1G0NSUbdapOMsBLvwYI6AVEnBJeUxWsqh2xjDaa
+         2Fdg==
+X-Gm-Message-State: APjAAAVyhagN+GZpHiE6UziKYsmGoAT+n9mADEB183yOoI6oCIUT2e1V
+        711Bzz3SaksvtjV0mkxK4756z5e+clDEdVldT3BAtBhDGAn/QQ0zL4mxJ49WwBmyIBUVhfQkBIx
+        QG9u8/aYbB/9gzBGhDzqE5Fz+
+X-Received: by 2002:a05:600c:292:: with SMTP id 18mr6418552wmk.128.1580912849859;
+        Wed, 05 Feb 2020 06:27:29 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzkjcNG5Q8PJIrg66bMeEFA2HcUioDcta38qZgO+ETNzrN8b19Q38H5JexcmkrnZrQo/M3RCA==
+X-Received: by 2002:a05:600c:292:: with SMTP id 18mr6418525wmk.128.1580912849574;
+        Wed, 05 Feb 2020 06:27:29 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:a9f0:cbc3:a8a6:fc56? ([2001:b07:6468:f312:a9f0:cbc3:a8a6:fc56])
+        by smtp.gmail.com with ESMTPSA id d204sm8238460wmd.30.2020.02.05.06.27.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 06:27:29 -0800 (PST)
+Subject: Re: [PATCH v2] KVM: fix overflow of zero page refcount with ksm
+ running
+To:     Zhuang Yanying <ann.zhuangyanying@huawei.com>,
+        linfeng23@huawei.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     weiqi4@huawei.com, weidong.huang@huawei.com
+References: <1570851452-23364-1-git-send-email-ann.zhuangyanying@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e1b4d89d-f311-2bf1-7924-4b9db38fec09@redhat.com>
+Date:   Wed, 5 Feb 2020 15:27:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <1570851452-23364-1-git-send-email-ann.zhuangyanying@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/20 at 03:16pm, David Hildenbrand wrote:
-> >>>> Anyhow, that patch is already upstream and I don't consider this high
-> >>>> priority. Thanks :)
-> >>>
-> >>> Yeah, noticed you told Wei the status in another patch thread, I am fine
-> >>> with it, just leave it to you to decide. Thanks.
-> >>
-> >> I am fairly busy right now. Can you send a patch (double-checking and
-> >> making this eventually unconditional?). Thanks!
-> > 
-> > Understood, sorry about the noise, David. I will think about this.
-> > 
+On 12/10/19 05:37, Zhuang Yanying wrote:
+> We are testing Virtual Machine with KSM on v5.4-rc2 kernel,
+> and found the zero_page refcount overflow.
+> The cause of refcount overflow is increased in try_async_pf
+> (get_user_page) without being decreased in mmu_set_spte()
+> while handling ept violation.
+> In kvm_release_pfn_clean(), only unreserved page will call
+> put_page. However, zero page is reserved.
+> So, as well as creating and destroy vm, the refcount of
+> zero page will continue to increase until it overflows.
 > 
-> No need to excuse, really, I'm very happy about review feedback!
+> step1:
+> echo 10000 > /sys/kernel/pages_to_scan/pages_to_scan
+> echo 1 > /sys/kernel/pages_to_scan/run
+> echo 1 > /sys/kernel/pages_to_scan/use_zero_pages
+> 
+> step2:
+> just create several normal qemu kvm vms.
+> And destroy it after 10s.
+> Repeat this action all the time.
+> 
+> After a long period of time, all domains hang because
+> of the refcount of zero page overflow.
+> 
+> Qemu print error log as follow:
+>  …
+>  error: kvm run failed Bad address
+>  EAX=00006cdc EBX=00000008 ECX=80202001 EDX=078bfbfd
+>  ESI=ffffffff EDI=00000000 EBP=00000008 ESP=00006cc4
+>  EIP=000efd75 EFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
+>  ES =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+>  CS =0008 00000000 ffffffff 00c09b00 DPL=0 CS32 [-RA]
+>  SS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+>  DS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+>  FS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+>  GS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+>  LDT=0000 00000000 0000ffff 00008200 DPL=0 LDT
+>  TR =0000 00000000 0000ffff 00008b00 DPL=0 TSS32-busy
+>  GDT=     000f7070 00000037
+>  IDT=     000f70ae 00000000
+>  CR0=00000011 CR2=00000000 CR3=00000000 CR4=00000000
+>  DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
+>  DR6=00000000ffff0ff0 DR7=0000000000000400
+>  EFER=0000000000000000
+>  Code=00 01 00 00 00 e9 e8 00 00 00 c7 05 4c 55 0f 00 01 00 00 00 <8b> 35 00 00 01 00 8b 3d 04 00 01 00 b8 d8 d3 00 00 c1 e0 08 0c ea a3 00 00 01 00 c7 05 04
+>  …
+> 
+> Meanwhile, a kernel warning is departed.
+> 
+>  [40914.836375] WARNING: CPU: 3 PID: 82067 at ./include/linux/mm.h:987 try_get_page+0x1f/0x30
+>  [40914.836412] CPU: 3 PID: 82067 Comm: CPU 0/KVM Kdump: loaded Tainted: G           OE     5.2.0-rc2 #5
+>  [40914.836415] RIP: 0010:try_get_page+0x1f/0x30
+>  [40914.836417] Code: 40 00 c3 0f 1f 84 00 00 00 00 00 48 8b 47 08 a8 01 75 11 8b 47 34 85 c0 7e 10 f0 ff 47 34 b8 01 00 00 00 c3 48 8d 78 ff eb e9 <0f> 0b 31 c0 c3 66 90 66 2e 0f 1f 84 00 0
+>  0 00 00 00 48 8b 47 08 a8
+>  [40914.836418] RSP: 0018:ffffb4144e523988 EFLAGS: 00010286
+>  [40914.836419] RAX: 0000000080000000 RBX: 0000000000000326 RCX: 0000000000000000
+>  [40914.836420] RDX: 0000000000000000 RSI: 00004ffdeba10000 RDI: ffffdf07093f6440
+>  [40914.836421] RBP: ffffdf07093f6440 R08: 800000424fd91225 R09: 0000000000000000
+>  [40914.836421] R10: ffff9eb41bfeebb8 R11: 0000000000000000 R12: ffffdf06bbd1e8a8
+>  [40914.836422] R13: 0000000000000080 R14: 800000424fd91225 R15: ffffdf07093f6440
+>  [40914.836423] FS:  00007fb60ffff700(0000) GS:ffff9eb4802c0000(0000) knlGS:0000000000000000
+>  [40914.836425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  [40914.836426] CR2: 0000000000000000 CR3: 0000002f220e6002 CR4: 00000000003626e0
+>  [40914.836427] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>  [40914.836427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>  [40914.836428] Call Trace:
+>  [40914.836433]  follow_page_pte+0x302/0x47b
+>  [40914.836437]  __get_user_pages+0xf1/0x7d0
+>  [40914.836441]  ? irq_work_queue+0x9/0x70
+>  [40914.836443]  get_user_pages_unlocked+0x13f/0x1e0
+>  [40914.836469]  __gfn_to_pfn_memslot+0x10e/0x400 [kvm]
+>  [40914.836486]  try_async_pf+0x87/0x240 [kvm]
+>  [40914.836503]  tdp_page_fault+0x139/0x270 [kvm]
+>  [40914.836523]  kvm_mmu_page_fault+0x76/0x5e0 [kvm]
+>  [40914.836588]  vcpu_enter_guest+0xb45/0x1570 [kvm]
+>  [40914.836632]  kvm_arch_vcpu_ioctl_run+0x35d/0x580 [kvm]
+>  [40914.836645]  kvm_vcpu_ioctl+0x26e/0x5d0 [kvm]
+>  [40914.836650]  do_vfs_ioctl+0xa9/0x620
+>  [40914.836653]  ksys_ioctl+0x60/0x90
+>  [40914.836654]  __x64_sys_ioctl+0x16/0x20
+>  [40914.836658]  do_syscall_64+0x5b/0x180
+>  [40914.836664]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>  [40914.836666] RIP: 0033:0x7fb61cb6bfc7
+> 
+> Signed-off-by: LinFeng <linfeng23@huawei.com>
+> Signed-off-by: Zhuang Yanying <ann.zhuangyanying@huawei.com>
+> ---
+> v1 -> v2:  fix compile error
+> ---
+>  virt/kvm/kvm_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index fd68fbe..a073442 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -152,7 +152,7 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+>  {
+>  	if (pfn_valid(pfn))
+> -		return PageReserved(pfn_to_page(pfn));
+> +		return PageReserved(pfn_to_page(pfn)) && !is_zero_pfn(pfn);
+>  
+>  	return true;
+>  }
 > 
 
-Glad to hear it, thanks.
+Queued, thanks.
 
-> The review of this series happened fairly late. Bad, because it's not
-> perfect, but good, because no serious stuff was found (so far :) ). If
-> you also don't have time to look into this, I can put it onto my todo
-> list, just let me know.
-
-Both is OK to me, as long as thing is clear to us. I will discuss with
-Wei Yang for now. You can post patch anytime if you make one.
+Paolo
 
