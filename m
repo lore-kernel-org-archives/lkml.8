@@ -2,114 +2,138 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAD8C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C67CC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB499218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52205217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bKf1AqmH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="amq1bDa2";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jNa8oHno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBEWIa (ORCPT
+        id S1727455AbgBEWI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:08:30 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22333 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727106AbgBEWI3 (ORCPT
+        Wed, 5 Feb 2020 17:08:56 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43500 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgBEWI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:08:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580940508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6bIsTUAiuk9WkuPnamAI4/KWATTYkjxm0pqVjMTg08w=;
-        b=bKf1AqmHUFtCPg2m+npOgldfaxMNPunbYteHHWlRv6hayISOdCA3hWCx0af+epd8YFkPMI
-        eX64I3AbDsHOUWbnU6WK/Rm2Oaw050NIuyVGQOy2VXUdRDkAXNrQD+NMp7ylI+Kk1rnu8C
-        +SG0JLW4nn/cYcMYCGYWPbe5rBlGOmc=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-vuq_n6EJN9mvxYB3DCh6RA-1; Wed, 05 Feb 2020 17:08:27 -0500
-X-MC-Unique: vuq_n6EJN9mvxYB3DCh6RA-1
-Received: by mail-qt1-f198.google.com with SMTP id z11so2436979qts.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:08:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6bIsTUAiuk9WkuPnamAI4/KWATTYkjxm0pqVjMTg08w=;
-        b=kQI518RJ6ypXsTNVgd5aNv2eRwzCGv59obLquqws0qkFyM2A+UKMgmJPy9KYiGikUk
-         o7Y1acPoL5VIG6mipZAz5YHimNW1T3PnFgaFXYrnyzHSS1AshDJnxE3AtnCUjZlINJGp
-         yDgx/lZUm8rL/IggFfarzdmhEV51SsaVdD0ZHM0lkd5jH078lLfyY1Rs74vTu+F1ajSa
-         AvcC/KpVxgid3X2y7h/xHgPO002WRWz0GqS+kWuxdT/w5/Hm2wVTiAO2rbImjb4CPC+H
-         /tSr6mwJkNzluychkC4aGwVBzKtT2x1OF9m4mUmwg8tZ+TXLZGqWkyNwvD+oPc25G/b+
-         QnAA==
-X-Gm-Message-State: APjAAAW0/ibjH+cCVRqlg5QWGqIUsRgCpe262vX+boJibkvNDYyPCufy
-        2/giYtJumY5RcIG3m39DQTqS9FpjxOBRHtxRlidYmKqnKQNyOJA7Q6NMTCEz3bXO7Jr1GtP0Lpp
-        v3W4vNhbkbH36L/oLo7wI3QcI
-X-Received: by 2002:ac8:4e94:: with SMTP id 20mr35228153qtp.335.1580940506680;
-        Wed, 05 Feb 2020 14:08:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxhvNH1iy5q/tis+s7hwuGT0ebc3dkr1uSM1KA4FQeWbspaaAJT384pUzbSiV9AUE83qayDAQ==
-X-Received: by 2002:ac8:4e94:: with SMTP id 20mr35228131qtp.335.1580940506464;
-        Wed, 05 Feb 2020 14:08:26 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id t16sm458993qkg.96.2020.02.05.14.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 14:08:25 -0800 (PST)
-Date:   Wed, 5 Feb 2020 17:08:22 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 02/19] KVM: Reinstall old memslots if arch preparation
- fails
-Message-ID: <20200205220822.GE387680@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-3-sean.j.christopherson@intel.com>
+        Wed, 5 Feb 2020 17:08:56 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 015M8799150097;
+        Wed, 5 Feb 2020 22:08:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=UI5rcdJyqYY+DTVX9PvejzMOeqMSnFQuRyuUoAASGRc=;
+ b=amq1bDa2j2jr0FdogaTIiBaUkmJs12vblBWkfjEZ3yvBoAM6o1IfmTIWYYmYr4HCkqRn
+ BqoSMNEX0mw329ZDgIutoFzFPSuMafaPpkJrIA9DfDmiYgJFyMX7IqhHjRCxgHzEtr3v
+ bsLVgSGt7l2KMBOuUbuxM9RIH/m8jIr7LqygRGfT0NxwLR5jG8XT0l4hYyvKkIrM2ikv
+ Ofqsnv6dnJth+H6QmDgTkUle6N/q9SeHbcSS7dJCTHomvGqjAtB072owaFJIajDOX5xa
+ h8rGTOPCDJ808FdEnQF2Qu51oswqREnDd7scBYKeAHQhSCYUS4JiZPCQ4r7kaAqEx43X aw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=UI5rcdJyqYY+DTVX9PvejzMOeqMSnFQuRyuUoAASGRc=;
+ b=jNa8oHnompyhuHvnOSs87JodhwiPsd+wjoF6vNTBx4IbJXIAJi6aNHfFAAJO2n1rg2XS
+ RC0SHxmMmb33K+LTvxLYXT1H28ds7MVGClgTQ81ViKDTny8BKXY3DzqCREfOIystbodz
+ j4z2z1CRw6KKlh5CVQ4RgnrEEH8FJDqM3v3tEAg6gSRpUi4DzuCQNivGuJrXENkOyLCP
+ YDO8IOi8pV1ZMv3iaoHSWwbizMHr/o9tiNiu7Eq5iHALNxRV8w6kqWyv8R2ACr2Cq+fk
+ d8xaQ33EQWJbPXCVyuJJKuQPqLZutK9jyV2vWC8xkU7gLb6IsEIQI6RG8fWADbQ+uvbr ww== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xykbp61au-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Feb 2020 22:08:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 015M4YMk182470;
+        Wed, 5 Feb 2020 22:08:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xykbsxv16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Feb 2020 22:08:49 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 015M8naT017362;
+        Wed, 5 Feb 2020 22:08:49 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Feb 2020 14:08:48 -0800
+Subject: Re: [PATCH v11 2/9] hugetlb_cgroup: add interface for charge/uncharge
+ hugetlb reservations
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-2-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <a48fbdd1-fc0e-f17d-09c2-1492c8466254@oracle.com>
+Date:   Wed, 5 Feb 2020 14:08:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200203232248.104733-2-almasrymina@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121223157.15263-3-sean.j.christopherson@intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002050169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002050169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:31:40PM -0800, Sean Christopherson wrote:
-> Reinstall the old memslots if preparing the new memory region fails
-> after invalidating a to-be-{re}moved memslot.
+On 2/3/20 3:22 PM, Mina Almasry wrote:
+> Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
+> usage or hugetlb reservation counter.
 > 
-> Remove the superfluous 'old_memslots' variable so that it's somewhat
-> clear that the error handling path needs to free the unused memslots,
-> not simply the 'old' memslots.
+> Adds a new interface to uncharge a hugetlb_cgroup counter via
+> hugetlb_cgroup_uncharge_counter.
 > 
-> Fixes: bc6678a33d9b9 ("KVM: introduce kvm->srcu and convert kvm_set_memory_region to SRCU update")
-> Reviewed-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
+> hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Acked-by: David Rientjes <rientjes@google.com>
+> 
+> ---
+> 
+> Changes in v11:
+> - Changed all 'reserved' or 'reservation' to 'rsvd' to reflect the user
+> interface.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Thanks.
+
+Small nit,
+
+> @@ -450,8 +496,7 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
+>  	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
+> 
+>  	counter = &h_cg->hugepage[MEMFILE_IDX(of_cft(of)->private)];
+> -	rsvd_counter =
+> -		&h_cg->rsvd_hugepage[MEMFILE_IDX(of_cft(of)->private)];
+> +	rsvd_counter = &h_cg->rsvd_hugepage[MEMFILE_IDX(of_cft(of)->private)];
+> 
+
+That looks like a change just to reformat a line added in the first patch?
+
+>  	switch (MEMFILE_ATTR(of_cft(of)->private)) {
+>  	case RES_MAX_USAGE:
 
 -- 
-Peter Xu
-
+Mike Kravetz
