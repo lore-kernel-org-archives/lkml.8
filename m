@@ -2,389 +2,190 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73CAC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34954C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0BC217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E102465A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z0ShGgYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgBESWJ (ORCPT
+        id S1728105AbgBESWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:22:09 -0500
-Received: from mga14.intel.com ([192.55.52.115]:20940 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbgBESU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:20:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:20:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
-   d="scan'208";a="279447778"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Feb 2020 10:20:26 -0800
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [RFC PATCH v9 09/27] x86/mm: Introduce _PAGE_DIRTY_SW
-Date:   Wed,  5 Feb 2020 10:19:17 -0800
-Message-Id: <20200205181935.3712-10-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+        Wed, 5 Feb 2020 13:22:12 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42861 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbgBESWH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:22:07 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so2179930lfl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:22:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jYSq2gM0rxvbmer1jk84xhZ3+qMB/quMixgOKAh7Q9E=;
+        b=Z0ShGgYBzv9MqLGK+lDZ3hvGS5qTENbW1JXO05EKWQZuZetpcDYVGGVN7l+G4akJO8
+         5e7m6Du4pK1vyp8UKVSQRLOHxisKBQGV+mtKzKCAKh1UAPKL78ueLGukubKe7K1nSwav
+         9WR1ZoHQtd6YZlovje7nP9OxYEqpJ9EzHrwbo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jYSq2gM0rxvbmer1jk84xhZ3+qMB/quMixgOKAh7Q9E=;
+        b=aVXqvzafsKRex286XnX6EwCUsuMLynGNGblFn5HScT7GGOdnKUIBqCVn6DhCEvI7ho
+         OBLrXVrpDaX0GM5lxXxjq5q9PCopnfCXn6zZhLe1MD7pMItmQmwokFl+2Z49LLiIDO1P
+         3CAPalj/JDQrCTZKOS6OqplgORQ9F61H1Jw3ITahi6Gj0IxzJQzchpJR1PpGZ8sZOSVX
+         8YViQKJ3oKlw9I16wmnNrtlEcA9Zszpv53DBO/L/s/MIbhZcvHomR3WxHxriGN46QkQU
+         v+n7pweVINsuQbrThSMFiMio3S1K14BKHUtJupiTg/p4BLh8Pa9JEez3ZLqHf6NqLMvt
+         L4oQ==
+X-Gm-Message-State: APjAAAVEQ4fbLmuSEkE+HQ6mhYoTfUHqIF4LuYY1zlW/2oqNsB8EUcbU
+        4GfNuBO2Yx8BQJYQhQM7oQkEQUGzySg=
+X-Google-Smtp-Source: APXvYqxl+sY6OARGCeqzoO4Xmp/wXIlSASXur1Vv8S2Sgb21zEIpb49ty4XBY9Vhy/0IheLCW4S8Xw==
+X-Received: by 2002:ac2:4a89:: with SMTP id l9mr18290427lfp.121.1580926923307;
+        Wed, 05 Feb 2020 10:22:03 -0800 (PST)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id 126sm130819lfm.38.2020.02.05.10.22.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 10:22:02 -0800 (PST)
+Received: by mail-lf1-f45.google.com with SMTP id b15so2190919lfc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:22:02 -0800 (PST)
+X-Received: by 2002:a19:c205:: with SMTP id l5mr18227021lfc.159.1580926921198;
+ Wed, 05 Feb 2020 10:22:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1580796831-18996-1-git-send-email-mkshah@codeaurora.org>
+ <1580796831-18996-3-git-send-email-mkshah@codeaurora.org> <CAE=gft7gPS+hhnDP+uTn3is6s9=Nspbb4PL0bZ025Tq1Zpth8Q@mail.gmail.com>
+ <7db81eed-d46d-8131-f471-6f57c0335ace@codeaurora.org>
+In-Reply-To: <7db81eed-d46d-8131-f471-6f57c0335ace@codeaurora.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Wed, 5 Feb 2020 10:21:24 -0800
+X-Gmail-Original-Message-ID: <CAE=gft6zEKYoMabmRbO55BSAt-4oOuwRRZZD6BcSbe7Xp15Vnw@mail.gmail.com>
+Message-ID: <CAE=gft6zEKYoMabmRbO55BSAt-4oOuwRRZZD6BcSbe7Xp15Vnw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] soc: qcom: rpmh: Update rpm_msgs offset address and
+ add list_del
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When Shadow Stack (SHSTK) is introduced, a R/O and Dirty PTE exists in the
-following cases:
+On Tue, Feb 4, 2020 at 9:12 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+>
+> On 2/5/2020 6:01 AM, Evan Green wrote:
+> > On Mon, Feb 3, 2020 at 10:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+> >> rpm_msgs are copied in continuously allocated memory during write_batch.
+> >> Update request pointer to correctly point to designated area for rpm_msgs.
+> >>
+> >> While at this also add missing list_del before freeing rpm_msgs.
+> >>
+> >> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> >> ---
+> >>   drivers/soc/qcom/rpmh.c | 9 ++++++---
+> >>   1 file changed, 6 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> >> index c3d6f00..04c7805 100644
+> >> --- a/drivers/soc/qcom/rpmh.c
+> >> +++ b/drivers/soc/qcom/rpmh.c
+> >> @@ -65,7 +65,7 @@ struct cache_req {
+> >>   struct batch_cache_req {
+> >>          struct list_head list;
+> >>          int count;
+> >> -       struct rpmh_request rpm_msgs[];
+> >> +       struct rpmh_request *rpm_msgs;
+> >>   };
+> >>
+> >>   static struct rpmh_ctrlr *get_rpmh_ctrlr(const struct device *dev)
+> >> @@ -327,8 +327,10 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+> >>          unsigned long flags;
+> >>
+> >>          spin_lock_irqsave(&ctrlr->cache_lock, flags);
+> >> -       list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+> >> +       list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list) {
+> >> +               list_del(&req->list);
+> >>                  kfree(req);
+> >> +       }
+> >>          INIT_LIST_HEAD(&ctrlr->batch_cache);
+> > Hm, I don't get it. list_for_each_entry_safe ensures you can traverse
+> > the list while freeing it behind you. ctrlr->batch_cache is now a
+> > bogus list, but is re-inited with the lock held. From my reading,
+> > there doesn't seem to be anything wrong with the current code. Can you
+> > elaborate on the bug you found?
+>
+> Hi Evan,
+>
+> when we don't do list_del, there might be access to already freed memory.
+> Even after current item free via kfree(req), without list_del, the next
+> and prev item's pointer are still pointing to this freed region.
+> it seem best to call list_del to ensure that before freeing this area,
+> no other item in list refer to this.
 
-(a) A modified, copy-on-write (COW) page;
-(b) A R/O page that has been COW'ed;
-(c) A SHSTK page.
+I don't think that's true. the "_safe" part of
+list_for_each_entry_safe ensures that we don't touch the ->next member
+of any node after freeing it. So I don't think there's any case where
+we could touch freed memory. The list_del still seems like needless
+code to me.
 
-To separate non-SHSTK memory from SHSTK, introduce a spare bit of the
-64-bit PTE as _PAGE_BIT_DIRTY_SW and use that for case (a) and (b).
-This results in the following possible settings:
+>
+> >
+> >>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> >>   }
+> >> @@ -377,10 +379,11 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
+> >>                  return -ENOMEM;
+> >>
+> >>          req = ptr;
+> >> +       rpm_msgs = ptr + sizeof(*req);
+> >>          compls = ptr + sizeof(*req) + count * sizeof(*rpm_msgs);
+> >>
+> >>          req->count = count;
+> >> -       rpm_msgs = req->rpm_msgs;
+> >> +       req->rpm_msgs = rpm_msgs;
+> > I don't really understand what this is fixing either, can you explain?
+> the continous memory allocated via below is for 3 items,
+>
+> ptr = kzalloc(sizeof(*req) + count * (sizeof(req->rpm_msgs[0]) +
+> sizeof(*compls)), GFP_ATOMIC);
+>
+> 1. batch_cache_req,  followed by
+> 2. total count of rpmh_request,  followed by
+> 3. total count of compls
+>
+> current code starts using (3) compls from proper offset in memory
+>          compls = ptr + sizeof(*req) + count * sizeof(*rpm_msgs);
+>
+> however for (2) rpmh_request it does
+>
+>          rpm_msgs = req->rpm_msgs;
+>
+> because of this it starts 8 byte before its designated area and overlaps
+> with (1) batch_cache_req struct's last entry.
+> this patch corrects it via below to ensure rpmh_request uses correct
+> start address in memory.
+>
+>          rpm_msgs = ptr + sizeof(*req);
 
-Modified PTE:         (R/W + DIRTY_HW)
-Modified and COW PTE: (R/O + DIRTY_SW)
-R/O PTE COW'ed:       (R/O + DIRTY_SW)
-SHSTK PTE:            (R/O + DIRTY_HW)
-SHSTK shared PTE[1]:  (R/O + DIRTY_SW)
-SHSTK PTE COW'ed:     (R/O + DIRTY_HW)
+I don't follow that either. The empty array declaration (or the
+GCC-specific version of it would be  "struct rpmh_request
+rpm_msgs[0];") is a flexible array member, meaning the member itself
+doesn't take up any space in the struct. So, for instance, it holds
+true that &(req->rpm_msgs[0]) == (req + 1). By my reading the existing
+code is correct, and your patch just adds a needless pointer
+indirection. Check out this wikipedia entry:
 
-[1] When a SHSTK page is being shared among threads, its PTE is cleared of
-    _PAGE_DIRTY_HW, so the next SHSTK access causes a fault, and the page
-    is duplicated and _PAGE_DIRTY_HW is set again.
-
-With this, in pte_wrprotect(), if SHSTK is active, use _PAGE_DIRTY_SW for
-the Dirty bit, and in pte_mkwrite() use _PAGE_DIRTY_HW.  The same changes
-apply to pmd and pud.
-
-When this patch is applied, there are six free bits left in the 64-bit PTE.
-There are no more free bits in the 32-bit PTE (except for PAE) and SHSTK is
-not implemented for the 32-bit kernel.
-
-v9:
-- Remove pte_move_flags() etc. and put the logic directly in
-  pte_wrprotect()/pte_mkwrite() etc.
-- Change compile-time conditionals to run-time checks.
-- Split out pte_modify()/pmd_modify() to a new patch.
-- Update comments.
-
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
----
- arch/x86/include/asm/pgtable.h       | 111 ++++++++++++++++++++++++---
- arch/x86/include/asm/pgtable_types.h |  31 +++++++-
- 2 files changed, 131 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index ab50d25f9afc..62aeb118bc36 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -120,9 +120,9 @@ extern pmdval_t early_pmd_flags;
-  * The following only work if pte_present() is true.
-  * Undefined behaviour if not..
-  */
--static inline int pte_dirty(pte_t pte)
-+static inline bool pte_dirty(pte_t pte)
- {
--	return pte_flags(pte) & _PAGE_DIRTY_HW;
-+	return pte_flags(pte) & _PAGE_DIRTY_BITS;
- }
- 
- 
-@@ -159,9 +159,9 @@ static inline int pte_young(pte_t pte)
- 	return pte_flags(pte) & _PAGE_ACCESSED;
- }
- 
--static inline int pmd_dirty(pmd_t pmd)
-+static inline bool pmd_dirty(pmd_t pmd)
- {
--	return pmd_flags(pmd) & _PAGE_DIRTY_HW;
-+	return pmd_flags(pmd) & _PAGE_DIRTY_BITS;
- }
- 
- static inline int pmd_young(pmd_t pmd)
-@@ -169,9 +169,9 @@ static inline int pmd_young(pmd_t pmd)
- 	return pmd_flags(pmd) & _PAGE_ACCESSED;
- }
- 
--static inline int pud_dirty(pud_t pud)
-+static inline bool pud_dirty(pud_t pud)
- {
--	return pud_flags(pud) & _PAGE_DIRTY_HW;
-+	return pud_flags(pud) & _PAGE_DIRTY_BITS;
- }
- 
- static inline int pud_young(pud_t pud)
-@@ -312,7 +312,7 @@ static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
- 
- static inline pte_t pte_mkclean(pte_t pte)
- {
--	return pte_clear_flags(pte, _PAGE_DIRTY_HW);
-+	return pte_clear_flags(pte, _PAGE_DIRTY_BITS);
- }
- 
- static inline pte_t pte_mkold(pte_t pte)
-@@ -322,6 +322,17 @@ static inline pte_t pte_mkold(pte_t pte)
- 
- static inline pte_t pte_wrprotect(pte_t pte)
- {
-+	/*
-+	 * Use _PAGE_DIRTY_SW on a R/O PTE to set it apart from
-+	 * a Shadow Stack PTE, which is R/O + _PAGE_DIRTY_HW.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-+		if (pte_flags(pte) & _PAGE_DIRTY_HW) {
-+			pte = pte_clear_flags(pte, _PAGE_DIRTY_HW);
-+			pte = pte_set_flags(pte, _PAGE_DIRTY_SW);
-+		}
-+	}
-+
- 	return pte_clear_flags(pte, _PAGE_RW);
- }
- 
-@@ -332,9 +343,25 @@ static inline pte_t pte_mkexec(pte_t pte)
- 
- static inline pte_t pte_mkdirty(pte_t pte)
- {
-+	pteval_t dirty = _PAGE_DIRTY_HW;
-+
-+	if (static_cpu_has(X86_FEATURE_SHSTK) && !pte_write(pte))
-+		dirty = _PAGE_DIRTY_SW;
-+
-+	return pte_set_flags(pte, dirty | _PAGE_SOFT_DIRTY);
-+}
-+
-+static inline pte_t pte_mkdirty_shstk(pte_t pte)
-+{
-+	pte = pte_clear_flags(pte, _PAGE_DIRTY_SW);
- 	return pte_set_flags(pte, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
- }
- 
-+static inline bool pte_dirty_hw(pte_t pte)
-+{
-+	return pte_flags(pte) & _PAGE_DIRTY_HW;
-+}
-+
- static inline pte_t pte_mkyoung(pte_t pte)
- {
- 	return pte_set_flags(pte, _PAGE_ACCESSED);
-@@ -342,6 +369,13 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 
- static inline pte_t pte_mkwrite(pte_t pte)
- {
-+	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-+		if (pte_flags(pte) & _PAGE_DIRTY_SW) {
-+			pte = pte_clear_flags(pte, _PAGE_DIRTY_SW);
-+			pte = pte_set_flags(pte, _PAGE_DIRTY_HW);
-+		}
-+	}
-+
- 	return pte_set_flags(pte, _PAGE_RW);
- }
- 
-@@ -396,19 +430,46 @@ static inline pmd_t pmd_mkold(pmd_t pmd)
- 
- static inline pmd_t pmd_mkclean(pmd_t pmd)
- {
--	return pmd_clear_flags(pmd, _PAGE_DIRTY_HW);
-+	return pmd_clear_flags(pmd, _PAGE_DIRTY_BITS);
- }
- 
- static inline pmd_t pmd_wrprotect(pmd_t pmd)
- {
-+	/*
-+	 * Use _PAGE_DIRTY_SW on a R/O PMD to set it apart from
-+	 * a Shadow Stack PTE, which is R/O + _PAGE_DIRTY_HW.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-+		if (pmd_flags(pmd) & _PAGE_DIRTY_HW) {
-+			pmd = pmd_clear_flags(pmd, _PAGE_DIRTY_HW);
-+			pmd = pmd_set_flags(pmd, _PAGE_DIRTY_SW);
-+		}
-+	}
-+
- 	return pmd_clear_flags(pmd, _PAGE_RW);
- }
- 
- static inline pmd_t pmd_mkdirty(pmd_t pmd)
- {
-+	pmdval_t dirty = _PAGE_DIRTY_HW;
-+
-+	if (static_cpu_has(X86_FEATURE_SHSTK) && !(pmd_flags(pmd) & _PAGE_RW))
-+		dirty = _PAGE_DIRTY_SW;
-+
-+	return pmd_set_flags(pmd, dirty | _PAGE_SOFT_DIRTY);
-+}
-+
-+static inline pmd_t pmd_mkdirty_shstk(pmd_t pmd)
-+{
-+	pmd = pmd_clear_flags(pmd, _PAGE_DIRTY_SW);
- 	return pmd_set_flags(pmd, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
- }
- 
-+static inline bool pmd_dirty_hw(pmd_t pmd)
-+{
-+	return  pmd_flags(pmd) & _PAGE_DIRTY_HW;
-+}
-+
- static inline pmd_t pmd_mkdevmap(pmd_t pmd)
- {
- 	return pmd_set_flags(pmd, _PAGE_DEVMAP);
-@@ -426,6 +487,13 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
- 
- static inline pmd_t pmd_mkwrite(pmd_t pmd)
- {
-+	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-+		if (pmd_flags(pmd) & _PAGE_DIRTY_SW) {
-+			pmd = pmd_clear_flags(pmd, _PAGE_DIRTY_SW);
-+			pmd = pmd_set_flags(pmd, _PAGE_DIRTY_HW);
-+		}
-+	}
-+
- 	return pmd_set_flags(pmd, _PAGE_RW);
- }
- 
-@@ -450,17 +518,33 @@ static inline pud_t pud_mkold(pud_t pud)
- 
- static inline pud_t pud_mkclean(pud_t pud)
- {
--	return pud_clear_flags(pud, _PAGE_DIRTY_HW);
-+	return pud_clear_flags(pud, _PAGE_DIRTY_BITS);
- }
- 
- static inline pud_t pud_wrprotect(pud_t pud)
- {
-+	/*
-+	 * Use _PAGE_DIRTY_SW on a R/O PUD to set it apart from
-+	 * a Shadow Stack PTE, which is R/O + _PAGE_DIRTY_HW.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-+		if (pud_flags(pud) & _PAGE_DIRTY_HW) {
-+			pud = pud_clear_flags(pud, _PAGE_DIRTY_HW);
-+			pud = pud_set_flags(pud, _PAGE_DIRTY_SW);
-+		}
-+	}
-+
- 	return pud_clear_flags(pud, _PAGE_RW);
- }
- 
- static inline pud_t pud_mkdirty(pud_t pud)
- {
--	return pud_set_flags(pud, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
-+	pudval_t dirty = _PAGE_DIRTY_HW;
-+
-+	if (static_cpu_has(X86_FEATURE_SHSTK) && !(pud_flags(pud) & _PAGE_RW))
-+		dirty = _PAGE_DIRTY_SW;
-+
-+	return pud_set_flags(pud, dirty | _PAGE_SOFT_DIRTY);
- }
- 
- static inline pud_t pud_mkdevmap(pud_t pud)
-@@ -480,6 +564,13 @@ static inline pud_t pud_mkyoung(pud_t pud)
- 
- static inline pud_t pud_mkwrite(pud_t pud)
- {
-+	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-+		if (pud_flags(pud) & _PAGE_DIRTY_SW) {
-+			pud = pud_clear_flags(pud, _PAGE_DIRTY_SW);
-+			pud = pud_set_flags(pud, _PAGE_DIRTY_HW);
-+		}
-+	}
-+
- 	return pud_set_flags(pud, _PAGE_RW);
- }
- 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index e647e3c75578..826823df917f 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -23,7 +23,8 @@
- #define _PAGE_BIT_SOFTW2	10	/* " */
- #define _PAGE_BIT_SOFTW3	11	/* " */
- #define _PAGE_BIT_PAT_LARGE	12	/* On 2MB or 1GB pages */
--#define _PAGE_BIT_SOFTW4	58	/* available for programmer */
-+#define _PAGE_BIT_SOFTW4	57	/* available for programmer */
-+#define _PAGE_BIT_SOFTW5	58	/* available for programmer */
- #define _PAGE_BIT_PKEY_BIT0	59	/* Protection Keys, bit 1/4 */
- #define _PAGE_BIT_PKEY_BIT1	60	/* Protection Keys, bit 2/4 */
- #define _PAGE_BIT_PKEY_BIT2	61	/* Protection Keys, bit 3/4 */
-@@ -35,6 +36,12 @@
- #define _PAGE_BIT_SOFT_DIRTY	_PAGE_BIT_SOFTW3 /* software dirty tracking */
- #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
- 
-+/*
-+ * This bit indicates a copy-on-write page, and is different from
-+ * _PAGE_BIT_SOFT_DIRTY, which tracks which pages a task writes to.
-+ */
-+#define _PAGE_BIT_DIRTY_SW	_PAGE_BIT_SOFTW5 /* was written to */
-+
- /* If _PAGE_BIT_PRESENT is clear, we use these: */
- /* - if the user mapped it with PROT_NONE; pte_present gives true */
- #define _PAGE_BIT_PROTNONE	_PAGE_BIT_GLOBAL
-@@ -108,6 +115,28 @@
- #define _PAGE_DEVMAP	(_AT(pteval_t, 0))
- #endif
- 
-+/* A R/O and dirty PTE exists in the following cases:
-+ *	(a) A modified, copy-on-write (COW) page;
-+ *	(b) A R/O page that has been COW'ed;
-+ *	(c) A SHSTK page.
-+ * _PAGE_DIRTY_SW is used to separate case (c) from others.
-+ * This results in the following settings:
-+ *
-+ *	Modified PTE:         (R/W + DIRTY_HW)
-+ *	Modified and COW PTE: (R/O + DIRTY_SW)
-+ *	R/O PTE COW'ed:       (R/O + DIRTY_SW)
-+ *	SHSTK PTE:            (R/O + DIRTY_HW)
-+ *	SHSTK PTE COW'ed:     (R/O + DIRTY_HW)
-+ *	SHSTK PTE being shared among threads: (R/O + DIRTY_SW)
-+ */
-+#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-+#define _PAGE_DIRTY_SW	(_AT(pteval_t, 1) << _PAGE_BIT_DIRTY_SW)
-+#else
-+#define _PAGE_DIRTY_SW	(_AT(pteval_t, 0))
-+#endif
-+
-+#define _PAGE_DIRTY_BITS (_PAGE_DIRTY_HW | _PAGE_DIRTY_SW)
-+
- #define _PAGE_PROTNONE	(_AT(pteval_t, 1) << _PAGE_BIT_PROTNONE)
- 
- #define _PAGE_TABLE_NOENC	(_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |\
--- 
-2.21.0
-
+https://en.wikipedia.org/wiki/Flexible_array_member
