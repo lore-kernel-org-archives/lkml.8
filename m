@@ -2,136 +2,76 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E27C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6B8C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4763821741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LuOk1iZf"
+	by mail.kernel.org (Postfix) with ESMTP id 4D71A21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgBEONW (ORCPT
+        id S1728057AbgBEOPL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:13:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44107 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727441AbgBEONW (ORCPT
+        Wed, 5 Feb 2020 09:15:11 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43455 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726308AbgBEOPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:13:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580912000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RA1q163tSFNoE4JSzx/Wt2GVMECMjZ7C0brv5EqYlAE=;
-        b=LuOk1iZfmCvWRFqQN41E0nt5ayo6sxoc13xOe/7p26xVWoRHObP8ZxTuWhRWfE2cAUghfi
-        xW45rv1hTlAz2Zu7JT3+wzplJhvvy+3g/ouZI//bGsrAhCm64h1OUTbP8dGJG0D/4yiaZX
-        5bBBd5OYtxSmx30FOtc/I3b1UQXYumY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-CTlUFyNKOzCsy256PkLXAg-1; Wed, 05 Feb 2020 09:13:18 -0500
-X-MC-Unique: CTlUFyNKOzCsy256PkLXAg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D30B8018A1;
-        Wed,  5 Feb 2020 14:13:17 +0000 (UTC)
-Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CC92100164D;
-        Wed,  5 Feb 2020 14:13:16 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 07:13:15 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [RFC PATCH 3/7] vfio/pci: Introduce VF token
-Message-ID: <20200205071315.0569ed9e@x1.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A1ABFF0@SHSMSX104.ccr.corp.intel.com>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-        <158085756068.9445.6284766069491778316.stgit@gimli.home>
-        <A2975661238FB949B60364EF0F2C25743A1ABFF0@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        Wed, 5 Feb 2020 09:15:11 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-35-BvQRpUPMMNCExX1WpXxwPQ-1; Wed, 05 Feb 2020 14:15:06 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 5 Feb 2020 14:15:05 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 5 Feb 2020 14:15:05 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Mubin Usman Sayyed' <mubin.usman.sayyed@xilinx.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "siva.durga.paladugu@xilinx.com" <siva.durga.paladugu@xilinx.com>,
+        "anirudha.sarangi@xilinx.com" <anirudha.sarangi@xilinx.com>
+Subject: RE: [PATCH v2] irqchip: xilinx: Add support for multiple instances
+Thread-Topic: [PATCH v2] irqchip: xilinx: Add support for multiple instances
+Thread-Index: AQHV3C4mebwt/HjFmUCQKmd1NdxYk6gMpOHw
+Date:   Wed, 5 Feb 2020 14:15:05 +0000
+Message-ID: <e0d01341ac5c417982da48074972f470@AcuMS.aculab.com>
+References: <1580911535-19415-1-git-send-email-mubin.usman.sayyed@xilinx.com>
+In-Reply-To: <1580911535-19415-1-git-send-email-mubin.usman.sayyed@xilinx.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: BvQRpUPMMNCExX1WpXxwPQ-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020 07:57:29 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s)
+> confidential information that may be proprietary, privileged or copyrighted under applicable law. If
+> you are not the intended recipient, do not read, copy, or forward this email message or any
+> attachments. Delete this email message and any attachments immediately.
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, February 5, 2020 7:06 AM
-> > To: kvm@vger.kernel.org
-> > Subject: [RFC PATCH 3/7] vfio/pci: Introduce VF token
-> > 
-> > If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
-> > fully isolated from the PF.  The PF can always cause a denial of
-> > service to the VF, if not access data passed through the VF directly.
-> > This is why vfio-pci currently does not bind to PFs with SR-IOV enabled
-> > and does not provide access itself to enabling SR-IOV on a PF.  The
-> > IOMMU grouping mechanism might allow us a solution to this lack of
-> > isolation, however the deficiency isn't actually in the DMA path, so
-> > much as the potential cooperation between PF and VF devices.  Also,
-> > if we were to force VFs into the same IOMMU group as the PF, we severely
-> > limit the utility of having independent drivers managing PFs and VFs
-> > with vfio.
-> > 
-> > Therefore we introduce the concept of a VF token.  The token is
-> > implemented as a UUID and represents a shared secret which must be set
-> > by the PF driver and used by the VF drivers in order to access a vfio
-> > device file descriptor for the VF.  The ioctl to set the VF token will
-> > be provided in a later commit, this commit implements the underlying
-> > infrastructure.  The concept here is to augment the string the user
-> > passes to match a device within a group in order to retrieve access to
-> > the device descriptor.  For example, rather than passing only the PCI
-> > device name (ex. "0000:03:00.0") the user would also pass a vf_token
-> > UUID (ex. "2ab74924-c335-45f4-9b16-8569e5b08258").  The device match
-> > string therefore becomes:
-> > 
-> > "0000:03:00.0 vf_token=2ab74924-c335-45f4-9b16-8569e5b08258"
-> > 
-> > This syntax is expected to be extensible to future options as well, with
-> > the standard being:
-> > 
-> > "$DEVICE_NAME $OPTION1=$VALUE1 $OPTION2=$VALUE2"
-> > 
-> > The device name must be first and option=value pairs are separated by
-> > spaces.
-> > 
-> > The vf_token option is only required for VFs where the PF device is
-> > bound to vfio-pci.  There is no change for PFs using existing host
-> > drivers.
-> > 
-> > Note that in order to protect existing VF users, not only is it required
-> > to set a vf_token on the PF before VFs devices can be accessed, but also
-> > if there are existing VF users, (re)opening the PF device must also
-> > provide the current vf_token as authentication.  This is intended to
-> > prevent a VF driver starting with a trusted PF driver and later being
-> > replaced by an unknown driver.  A vf_token is not required to open the
-> > PF device when none of the VF devices are in use by vfio-pci drivers.  
-> 
-> So vfio_token is a kind of per-PF token?
+Deleted.....
 
-Yes, the token is per-PF.  Note that the token can be changed and it
-does not "de-authenticate" opened VFs.  Thanks,
-
-Alex
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
