@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6401FC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83A2C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C82214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE4C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XLUoY2KT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QALoKS78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbgBETEb (ORCPT
+        id S1727499AbgBETFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:04:31 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44568 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBETEb (ORCPT
+        Wed, 5 Feb 2020 14:05:19 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37642 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgBETFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:04:31 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d9so1247233plo.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:04:30 -0800 (PST)
+        Wed, 5 Feb 2020 14:05:18 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z12so1418810pgl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:05:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=am6fR46L40jLnJSE/2XocB+n60+MBKESAuM1CJxf9pA=;
-        b=XLUoY2KT5ZdfwTtuUfRq9CQssvHL5pDUTYQsMdMM21EHQ/GJCGkU+JPz2Xms0HSmCy
-         SmDCP2wFbE9g2QihcQLNI+nR3E+cxHylfQvkVHRmIrUoXOwEO12AVwM3cYcccfDmSMZ+
-         C+J1lbCnUbgOtMLL7L7x9ZKBS9VbzzkbuZ734=
+        bh=kUhe/K0/9x0fsd6OKD8kfBY5OuIzmdvoJ/dyGgBHb8o=;
+        b=QALoKS78qLC14BG79yLHIABZSre+wtSJ8SL0MJKSVhu0DwenWjSL9GY9gVd2hBUEiX
+         v0GIJOyQuHpd/TyPPAsXzv5NEGtPr1U951QGEs9n3p7+JbGk5/ak/ZIFovWhCAP0T2oQ
+         U76zezI2zJOHo4WIYPgDRXZ+nCUJK1fw8ljeM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=am6fR46L40jLnJSE/2XocB+n60+MBKESAuM1CJxf9pA=;
-        b=Soc66Lsm4rxBkSNDRc5Z7iTLF3f38NKUNZXv0obZeDsTMOP1IGXHBaXlVxuLSbj4bM
-         YBdOCO4dpiquyggnIQrkF/WjQoALhrf21Y9QgWQDjBgfwPtw3Z50m+Hpaf39zz8xrGxz
-         iW+1vzER7Q4zfYrjL6IU46aX1A5oGV2LuU8WSwwuXR/RLrsvWC3iJPVLWRE1vCFxdbC7
-         4XeGS9QgegqMM72UCV7Fcl+YYnudT4M4vKQu68TIlwkSa9iclSu6xD1btVTCW9vqOc9n
-         6gF2UndcsCPrGo8wMmO2j3rXU6Qez1gBvn4fciFeaQ9CTxIY4AlcTIzA5rmFjlLoVvxe
-         wM/g==
-X-Gm-Message-State: APjAAAUIH3qU/59eb4QdyXy9xNgBTbnPu2wh0yKqybfV2FYC9J/YdrzD
-        x5pXFOSVAw6mBbenh6jXZEI7eD3K3l8=
-X-Google-Smtp-Source: APXvYqwNoNSH2IAfwK6qqXpB77hQZdQMZQ4Usbc1WcGx2vILbMTceCVmsnGs7VMg833JoAFeMc/Zdg==
-X-Received: by 2002:a17:90a:bd89:: with SMTP id z9mr7064549pjr.13.1580929470211;
-        Wed, 05 Feb 2020 11:04:30 -0800 (PST)
+        bh=kUhe/K0/9x0fsd6OKD8kfBY5OuIzmdvoJ/dyGgBHb8o=;
+        b=WndBIKodTVnnlObSsIF+iljTkxkYj2v8ZYLAmNQhDMkT7XHb8Tm6c/j1UmbZkRkGrm
+         4SOcc4yI0VF/BW+1omoBzAhUuJUuAEU/6NAwTZWEqjH4I/dROCKQMYgXmsuSfBnPKH3r
+         hiwjrejyrR2AqFZDXLjFZPBBGSJ9GPV4u8mlZtoARLcd/DarNvUIbR1OoKZHiN58Io7O
+         A7kb30UD+ZJCq5mTEQxjUDoDggw9pBgBLzwulCNRmGI5Uq+/KUsYbZq+R1ArB4+AVT6T
+         a93PpiHJo3o5LHAL7oTA5lC5tXZ3itH5ViGGRQuRdx34v7/QiASWPfYER0rdEfsczDeV
+         kkOg==
+X-Gm-Message-State: APjAAAWQNz+qbr7zfYpo9cNgytPEWG8WQnZq6JSU3b6CCOuom5qxUQba
+        6dghj/8H0G7nFo6A59BVC4su0QdgeyU=
+X-Google-Smtp-Source: APXvYqzJkjH6E9bz4JwlNYArL8v/Cx5iOiZ96j3UsgzgOvjCms7MEvbZ0wh38CYXOFMSjYUv7qcqbQ==
+X-Received: by 2002:a63:7a0f:: with SMTP id v15mr11652478pgc.139.1580929517138;
+        Wed, 05 Feb 2020 11:05:17 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id u23sm257224pfm.29.2020.02.05.11.04.29
+        by smtp.gmail.com with ESMTPSA id u23sm257224pfm.29.2020.02.05.11.05.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 11:04:29 -0800 (PST)
+        Wed, 05 Feb 2020 11:05:16 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
         Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v2 02/17] platform/chrome: chardev: Use cros_ec_cmd()
-Date:   Wed,  5 Feb 2020 10:59:57 -0800
-Message-Id: <20200205190028.183069-3-pmalani@chromium.org>
+Subject: [PATCH v2 03/17] platform/chrome: proto: Use cros_ec_cmd()
+Date:   Wed,  5 Feb 2020 10:59:59 -0800
+Message-Id: <20200205190028.183069-4-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200205190028.183069-1-pmalani@chromium.org>
 References: <20200205190028.183069-1-pmalani@chromium.org>
@@ -72,64 +72,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the Chrome OS character device driver to use the newly introduced
-cros_ec_cmd() function instead of cros_ec_cmd_xfer_status(), thus
-avoiding message buffer set up work which is already done by the new
-function.
+Replace the use of cros_ec_cmd_xfer_status() with the new function
+cros_ec_cmd().
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
 
 Changes in v2:
-- Updated to use newer function name and parameter list.
+- Updated to use new function name and parameter list.
 
- drivers/platform/chrome/cros_ec_chardev.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ drivers/platform/chrome/cros_ec_proto.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-index c65e70bc168d8c..f92fe4139c4367 100644
---- a/drivers/platform/chrome/cros_ec_chardev.c
-+++ b/drivers/platform/chrome/cros_ec_chardev.c
-@@ -57,25 +57,20 @@ static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
- 		"unknown", "read-only", "read-write", "invalid",
- 	};
- 	struct ec_response_get_version *resp;
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index b3d5368f596813..aa7ae1f394cc91 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -811,31 +811,20 @@ EXPORT_SYMBOL(cros_ec_get_host_event);
+  */
+ int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+ {
 -	struct cros_ec_command *msg;
  	int ret;
  
--	msg = kzalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
--	if (!msg)
-+	resp = kzalloc(sizeof(*resp), GFP_KERNEL);
-+	if (!resp)
- 		return -ENOMEM;
- 
--	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
--	msg->insize = sizeof(*resp);
+ 	if (ec->features[0] == -1U && ec->features[1] == -1U) {
+ 		/* features bitmap not read yet */
+-		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
+-		if (!msg)
+-			return -ENOMEM;
 -
--	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	ret = cros_ec_cmd(ec->ec_dev, 0, ec->cmd_offset + EC_CMD_GET_VERSION,
-+			  NULL, 0, resp, sizeof(*resp), NULL);
- 	if (ret < 0) {
- 		snprintf(str, maxlen,
--			 "Unknown EC version, returned error: %d\n",
--			 msg->result);
-+			 "Unknown EC version, returned error: %d\n", ret);
- 		goto exit;
+-		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
+-		msg->insize = sizeof(ec->features);
+-
+-		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++		ret = cros_ec_cmd(ec->ec_dev, 0,
++				  ec->cmd_offset + EC_CMD_GET_FEATURES, NULL, 0,
++				  ec->features, sizeof(ec->features), NULL);
+ 		if (ret < 0) {
+-			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
+-				 ret, msg->result);
++			dev_warn(ec->dev, "cannot get EC features: %d\n", ret);
+ 			memset(ec->features, 0, sizeof(ec->features));
+-		} else {
+-			memcpy(ec->features, msg->data, sizeof(ec->features));
+ 		}
+ 
+ 		dev_dbg(ec->dev, "EC features %08x %08x\n",
+ 			ec->features[0], ec->features[1]);
+-
+-		kfree(msg);
  	}
  
--	resp = (struct ec_response_get_version *)msg->data;
- 	if (resp->current_image >= ARRAY_SIZE(current_image_name))
- 		resp->current_image = 3; /* invalid */
- 
-@@ -85,7 +80,7 @@ static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
- 
- 	ret = 0;
- exit:
--	kfree(msg);
-+	kfree(resp);
- 	return ret;
- }
- 
+ 	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
 -- 
 2.25.0.341.g760bfbb309-goog
 
