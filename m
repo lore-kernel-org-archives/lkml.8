@@ -2,278 +2,105 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD477C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84611C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767F92072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4E6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:25:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cza/Yb+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgBEWXW (ORCPT
+        id S1727514AbgBEWZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:23:22 -0500
-Received: from mga05.intel.com ([192.55.52.43]:12401 "EHLO mga05.intel.com"
+        Wed, 5 Feb 2020 17:25:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:48275 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgBEWXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:23:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 14:23:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
-   d="scan'208";a="235744152"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 05 Feb 2020 14:23:20 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1izT4p-0004rz-RH; Thu, 06 Feb 2020 06:23:19 +0800
-Date:   Thu, 06 Feb 2020 06:22:46 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:timers/urgent] BUILD SUCCESS
- febac332a819f0e764aa4da62757ba21d18c182b
-Message-ID: <5e3b4036.3/KbfugNoMrddYCf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727109AbgBEWZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:25:25 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48CbjZ0ttpz9sRG;
+        Thu,  6 Feb 2020 09:25:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580941522;
+        bh=FgeBSllH9nOX+H0EnoCoVt3VNC9kkq+gzK8azV5HlWs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cza/Yb+Wi4JBkdle8/ZXsgaZqWMVyrW/uQCjG6yxbUi2KZX1aClsnb2yqGlwI6i9F
+         NhOzaKMllIhgArj4R7pbPzPoZ7tsnIXWpm0UHIVl4m3/LNpBVry7slTdDAY1unQm/Y
+         QZ/e530Dh3zcmNP1zhOVQ3TseEPLkc96KJXiTWvh9V42oxkn1idnwwnyh/Ve6DGmw8
+         LzoZ+4i4Nlz4e8Pa/y+n3BT6/ahDkqNDA2qR7/XiRDL51++kvuwrDQTzkyhmQEqhEi
+         nrJ6nxlMyxZhnC9ehUMB/4ISNrbo1A1egok5qWIOZWnyKMKMID5Ovdlnfz3Hqj6Yf1
+         tNZqnwCR79Xkw==
+Date:   Thu, 6 Feb 2020 09:25:12 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dai Ngo <dai.ngo@oracle.com>
+Subject: linux-next: manual merge of the vfs tree with the nfs-anna tree
+Message-ID: <20200206092512.5eb304b7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/db1mAXHnx/_Rc63UC+p.9fG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/urgent
-branch HEAD: febac332a819f0e764aa4da62757ba21d18c182b  clocksource: Prevent double add_timer_on() for watchdog_timer
+--Sig_/db1mAXHnx/_Rc63UC+p.9fG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 6222m
+Hi all,
 
-configs tested: 215
-configs skipped: 1
+Today's linux-next merge of the vfs tree got a conflict in:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  fs/nfs/dir.c
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-um                                  defconfig
-xtensa                       common_defconfig
-sh                            titan_defconfig
-h8300                     edosk2674_defconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-nds32                               defconfig
-sh                          rsk7269_defconfig
-sparc64                          allmodconfig
-i386                              allnoconfig
-h8300                    h8300h-sim_defconfig
-sparc                               defconfig
-arc                                 defconfig
-parisc                            allnoconfig
-um                           x86_64_defconfig
-s390                                defconfig
-parisc                              defconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-openrisc                    or1ksim_defconfig
-nios2                         3c120_defconfig
-xtensa                          iss_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-openrisc                 simple_smp_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-x86_64               randconfig-a001-20200205
-x86_64               randconfig-a002-20200205
-x86_64               randconfig-a003-20200205
-i386                 randconfig-a001-20200205
-i386                 randconfig-a002-20200205
-i386                 randconfig-a003-20200205
-i386                 randconfig-a003-20200201
-i386                 randconfig-a002-20200201
-x86_64               randconfig-a003-20200201
-x86_64               randconfig-a002-20200201
-i386                 randconfig-a001-20200201
-x86_64               randconfig-a001-20200201
-x86_64               randconfig-a001-20200204
-x86_64               randconfig-a002-20200204
-x86_64               randconfig-a003-20200204
-i386                 randconfig-a001-20200204
-i386                 randconfig-a002-20200204
-i386                 randconfig-a003-20200204
-h8300                randconfig-a001-20200201
-nios2                randconfig-a001-20200201
-sparc64              randconfig-a001-20200201
-c6x                  randconfig-a001-20200201
-c6x                  randconfig-a001-20200205
-h8300                randconfig-a001-20200205
-microblaze           randconfig-a001-20200205
-nios2                randconfig-a001-20200205
-sparc64              randconfig-a001-20200205
-sh                   randconfig-a001-20200201
-s390                 randconfig-a001-20200201
-csky                 randconfig-a001-20200201
-xtensa               randconfig-a001-20200201
-openrisc             randconfig-a001-20200201
-x86_64               randconfig-c001-20200204
-x86_64               randconfig-c002-20200204
-x86_64               randconfig-c003-20200204
-i386                 randconfig-c001-20200204
-i386                 randconfig-c002-20200204
-i386                 randconfig-c003-20200204
-x86_64               randconfig-d003-20200201
-i386                 randconfig-d001-20200201
-x86_64               randconfig-d002-20200201
-i386                 randconfig-d003-20200201
-x86_64               randconfig-d001-20200201
-i386                 randconfig-d002-20200201
-x86_64               randconfig-d001-20200205
-x86_64               randconfig-d002-20200205
-x86_64               randconfig-d003-20200205
-i386                 randconfig-d001-20200205
-i386                 randconfig-d002-20200205
-i386                 randconfig-d003-20200205
-x86_64               randconfig-e001-20200205
-x86_64               randconfig-e002-20200205
-x86_64               randconfig-e003-20200205
-i386                 randconfig-e001-20200205
-i386                 randconfig-e002-20200205
-i386                 randconfig-e003-20200205
-i386                 randconfig-e003-20200201
-i386                 randconfig-e002-20200201
-x86_64               randconfig-e001-20200201
-x86_64               randconfig-e003-20200201
-i386                 randconfig-e001-20200201
-x86_64               randconfig-e002-20200201
-i386                 randconfig-f002-20200201
-i386                 randconfig-f003-20200201
-x86_64               randconfig-f002-20200201
-i386                 randconfig-f001-20200201
-x86_64               randconfig-f001-20200201
-x86_64               randconfig-f003-20200201
-x86_64               randconfig-f001-20200204
-x86_64               randconfig-f002-20200204
-x86_64               randconfig-f003-20200204
-i386                 randconfig-f001-20200204
-i386                 randconfig-f002-20200204
-i386                 randconfig-f003-20200204
-x86_64               randconfig-f001-20200205
-x86_64               randconfig-f002-20200205
-x86_64               randconfig-f003-20200205
-i386                 randconfig-f001-20200205
-i386                 randconfig-f002-20200205
-i386                 randconfig-f003-20200205
-x86_64               randconfig-g003-20200201
-x86_64               randconfig-g001-20200201
-i386                 randconfig-g001-20200201
-x86_64               randconfig-g002-20200201
-i386                 randconfig-g002-20200201
-i386                 randconfig-g003-20200201
-x86_64               randconfig-g001-20200205
-x86_64               randconfig-g002-20200205
-x86_64               randconfig-g003-20200205
-i386                 randconfig-g001-20200205
-i386                 randconfig-g002-20200205
-i386                 randconfig-g003-20200205
-x86_64               randconfig-h001-20200201
-i386                 randconfig-h002-20200201
-x86_64               randconfig-h002-20200201
-i386                 randconfig-h003-20200201
-x86_64               randconfig-h003-20200201
-i386                 randconfig-h001-20200201
-x86_64               randconfig-h001-20200204
-x86_64               randconfig-h002-20200204
-x86_64               randconfig-h003-20200204
-i386                 randconfig-h001-20200204
-i386                 randconfig-h002-20200204
-i386                 randconfig-h003-20200204
-arc                  randconfig-a001-20200204
-arm                  randconfig-a001-20200204
-arm64                randconfig-a001-20200204
-ia64                 randconfig-a001-20200204
-powerpc              randconfig-a001-20200204
-sparc                randconfig-a001-20200204
-arm                  randconfig-a001-20200205
-arm64                randconfig-a001-20200205
-ia64                 randconfig-a001-20200205
-powerpc              randconfig-a001-20200205
-powerpc              randconfig-a001-20200201
-arc                  randconfig-a001-20200201
-ia64                 randconfig-a001-20200201
-sparc                randconfig-a001-20200201
-arm64                randconfig-a001-20200201
-arm                  randconfig-a001-20200201
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                  sh7785lcr_32bit_defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+between commit:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  227823d2074d ("nfs: optimise readdir cache page invalidation")
+
+from the nfs-anna tree and commit:
+
+  ef3af2d44331 ("nfs: optimise readdir cache page invalidation")
+
+from the vfs tree.
+
+I fixed it up (I used the nfs-anna tree version) and can carry the fix
+as necessary. This is now fixed as far as linux-next is concerned, but
+any non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/db1mAXHnx/_Rc63UC+p.9fG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl47QMgACgkQAVBC80lX
+0GyVfwf/T+0uXHU7k55U4Yok50+o+m7JIq2U5y/5z+P7poFOcYoWB0liR3yaosC0
+/SPD6womk2pac9Km3xC7xjudcHx2qrgPu4jkgSboEDdrIYgq2EXoRjNZToHBduM0
+BsbThvoC4EpuA4vN922VpWe2zUuLoFUTSX/hUruBlMd+jeG90Nf4sczI1IMrlVbm
+VaR0oL/Jgf/X0wm2KvxmqAlDcmFmTmE/o6imAEQsaAAbWPpCLdHejCahGSuX0L7d
+ywuF5Gh7U641+itfVk2LJkFwr+iAmdyxmAbqXIBVoexEg24f+JzVwcBtOOwulerc
+DxplKLs0+sp+RGY9xqInD29ssNCSsg==
+=64+8
+-----END PGP SIGNATURE-----
+
+--Sig_/db1mAXHnx/_Rc63UC+p.9fG--
