@@ -2,150 +2,126 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AEFC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289A6C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4448A2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB6F2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ea+7hciI"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oLjjl/Qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgBEDAt (ORCPT
+        id S1727862AbgBEDFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 22:00:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49602 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727796AbgBEDAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 22:00:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580871648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MkSZ85QIBalZvWs6VFapLnhibOydb3IjnBZ+FKrtyNU=;
-        b=ea+7hciIlEEPE0RCfflLfaiP6VtTTQq+ch8qEEoZitEi+rRwCDsUR+pRSs65nArJqG7nih
-        1SyNnS6O0GtuAIt1oRokDbaGv0Sjj0Eulhb4HZ99MRcKwCK6oxbZ1+pz2O3t2Ba1An557G
-        RIuGmhwW0AkRpdBwPqJ105+NGKBCykc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-EKcXjFuyNrKsVagckzx_Cg-1; Tue, 04 Feb 2020 22:00:46 -0500
-X-MC-Unique: EKcXjFuyNrKsVagckzx_Cg-1
-Received: by mail-qv1-f69.google.com with SMTP id b8so646189qvw.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 19:00:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MkSZ85QIBalZvWs6VFapLnhibOydb3IjnBZ+FKrtyNU=;
-        b=PagRCORywYYrfhoj/D1rRDkuZI2hs0luFwtVMftPdFGpq94k317syrCzD+zB0ypQ4F
-         6kCJZr32WRuvT9UKmxpR3Qpz/0OioZ6CzHPrdtrbhCGWZeE8rmn16yThSOglVpWhANuG
-         taAA0T99Gouqk6Eau6NXX2aMcDg/5Vr67qsNsbu/ddaSkukaWPlqZXvrCPrj8ZTIKqFL
-         COhT498kQKHZulWZuwVaP6x08DA2J61RhUlv8IEdS3KZsA0WZtAvAk5Uyw+mQQfrjplu
-         AoKeA9vdHAhhgr74NAVQopTt08vsMRQ5VYDk/yc+F4BpyBWrNvr7k0z60brMpoKQTcTi
-         13VA==
-X-Gm-Message-State: APjAAAVyJPzerROYRbNrW1VepIRUQiU43695doLbAdKvGpEJ19gMdTA+
-        Na3o5tK99B9L55ZzWVDJ2O2TiCx90qpsLlumaPe+4FoCBSju0jcNGL6tq3C83ibQjpVghSns7mo
-        1wnpjhVOdngzboj/m7cQqD2ox
-X-Received: by 2002:ae9:f30e:: with SMTP id p14mr31895401qkg.186.1580871646038;
-        Tue, 04 Feb 2020 19:00:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz3lyYvbqkVDgZHul6XJFSDUjVusufeLIOwhSUi2JAXcDok/5lHyajvbFw+VyTI/6GvK5X8ow==
-X-Received: by 2002:ae9:f30e:: with SMTP id p14mr31895381qkg.186.1580871645788;
-        Tue, 04 Feb 2020 19:00:45 -0800 (PST)
-Received: from xz-x1.redhat.com ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id 2sm12111776qkv.98.2020.02.04.19.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 19:00:45 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     dinechin@redhat.com, sean.j.christopherson@intel.com,
-        pbonzini@redhat.com, jasowang@redhat.com, yan.y.zhao@intel.com,
-        mst@redhat.com, peterx@redhat.com, kevin.tian@intel.com,
-        alex.williamson@redhat.com, dgilbert@redhat.com,
-        vkuznets@redhat.com
-Subject: [PATCH 14/14] KVM: selftests: Add "-c" parameter to dirty log test
-Date:   Tue,  4 Feb 2020 22:00:42 -0500
-Message-Id: <20200205030042.367713-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200205025105.367213-1-peterx@redhat.com>
-References: <20200205025105.367213-1-peterx@redhat.com>
+        Tue, 4 Feb 2020 22:05:09 -0500
+Received: from ozlabs.org ([203.11.71.1]:43509 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727774AbgBEDFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 22:05:08 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48C5yp0hsYz9sSR;
+        Wed,  5 Feb 2020 14:05:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580871907;
+        bh=Dy2HNszoS5jMHuHyexeNZ1i6v2XpVUmuydKw/9Caj58=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=oLjjl/QmMaQUGkaI425lp8ZqbybG1H7xgmO+WmWq3t6CGe3Ydfi2omMvBob16Z5TS
+         LHkGOmvtvcpZoOVFbp1xrUN8gFyM+NV2mLZMiM0QNEI7mXLXmjvRfPJAaikuMqME9U
+         DdqyIDLQ8fMvvU9O3fXj+2ZNog4M9YaBI1kKj0vVSxuvesokyfqnXtxONTr0BTRBPw
+         GW6r4NuLz+BlK//+r3+ZzGcMec3ZhTxzZS+gLGPQpEtFPtWSi10F20kXho2mhO2xk1
+         C2dHxfOWKKQ1nfwjw5I8ncgxAzNir+zHOoAFGWZtbmPWBsUWAIawAKTavRpdoKHRah
+         /1o2zj3OuuW7Q==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, vishal.l.verma@intel.com,
+        hch@lst.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/5] mm/memremap_pages: Introduce memremap_compat_align()
+In-Reply-To: <158041476763.3889308.13149849631980018039.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158041475480.3889308.655103391935006598.stgit@dwillia2-desk3.amr.corp.intel.com> <158041476763.3889308.13149849631980018039.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 05 Feb 2020 14:05:02 +1100
+Message-ID: <875zgl3fa9.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's only used to override the existing dirty ring size/count.  If
-with a bigger ring count, we test async of dirty ring.  If with a
-smaller ring count, we test ring full code path.  Async is default.
+Dan Williams <dan.j.williams@intel.com> writes:
+> The "sub-section memory hotplug" facility allows memremap_pages() users
+> like libnvdimm to compensate for hardware platforms like x86 that have a
+> section size larger than their hardware memory mapping granularity.  The
+> compensation that sub-section support affords is being tolerant of
+> physical memory resources shifting by units smaller (64MiB on x86) than
+> the memory-hotplug section size (128 MiB). Where the platform
+> physical-memory mapping granularity is limited by the number and
+> capability of address-decode-registers in the memory controller.
+>
+> While the sub-section support allows memremap_pages() to operate on
+> sub-section (2MiB) granularity, the Power architecture may still
+> require 16MiB alignment on "!radix_enabled()" platforms.
+>
+> In order for libnvdimm to be able to detect and manage this per-arch
+> limitation, introduce memremap_compat_align() as a common minimum
+> alignment across all driver-facing memory-mapping interfaces, and let
+> Power override it to 16MiB in the "!radix_enabled()" case.
+>
+> The assumption / requirement for 16MiB to be a viable
+> memremap_compat_align() value is that Power does not have platforms
+> where its equivalent of address-decode-registers never hardware remaps a
+> persistent memory resource on smaller than 16MiB boundaries.
+>
+> Based on an initial patch by Aneesh.
+>
+> Link: http://lore.kernel.org/r/CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com
+> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Reported-by: Jeff Moyer <jmoyer@redhat.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  arch/powerpc/include/asm/io.h |   10 ++++++++++
+>  drivers/nvdimm/pfn_devs.c     |    2 +-
+>  include/linux/io.h            |   23 +++++++++++++++++++++++
+>  include/linux/mmzone.h        |    1 +
+>  4 files changed, 35 insertions(+), 1 deletion(-)
 
-It has no use for non-dirty-ring tests.
+The powerpc change here looks fine to me.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- tools/testing/selftests/kvm/dirty_log_test.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 6c754e91fc50..40312fdbe0d2 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -163,6 +163,7 @@ enum log_mode_t {
- /* Mode of logging.  Default is LOG_MODE_DIRTY_LOG */
- static enum log_mode_t host_log_mode;
- pthread_t vcpu_thread;
-+static uint32_t test_dirty_ring_count = TEST_DIRTY_RING_COUNT;
- 
- /* Only way to pass this to the signal handler */
- struct kvm_vm *current_vm;
-@@ -235,7 +236,7 @@ static void dirty_ring_create_vm_done(struct kvm_vm *vm)
- 	 * Switch to dirty ring mode after VM creation but before any
- 	 * of the vcpu creation.
- 	 */
--	vm_enable_dirty_ring(vm, TEST_DIRTY_RING_COUNT *
-+	vm_enable_dirty_ring(vm, test_dirty_ring_count *
- 			     sizeof(struct kvm_dirty_gfn));
- }
- 
-@@ -257,7 +258,7 @@ static uint32_t dirty_ring_collect_one(struct kvm_dirty_gfn *dirty_gfns,
- 	uint32_t count = 0;
- 
- 	while (true) {
--		cur = &dirty_gfns[*fetch_index % TEST_DIRTY_RING_COUNT];
-+		cur = &dirty_gfns[*fetch_index % test_dirty_ring_count];
- 		if (!dirty_gfn_is_dirtied(cur))
- 			break;
- 		TEST_ASSERT(cur->slot == slot, "Slot number didn't match: "
-@@ -744,6 +745,9 @@ static void help(char *name)
- 	printf("usage: %s [-h] [-i iterations] [-I interval] "
- 	       "[-p offset] [-m mode]\n", name);
- 	puts("");
-+	printf(" -c: specify dirty ring size, in number of entries\n");
-+	printf("     (only useful for dirty-ring test; default: %"PRIu32")\n",
-+	       TEST_DIRTY_RING_COUNT);
- 	printf(" -i: specify iteration counts (default: %"PRIu64")\n",
- 	       TEST_HOST_LOOP_N);
- 	printf(" -I: specify interval in ms (default: %"PRIu64" ms)\n",
-@@ -799,8 +803,11 @@ int main(int argc, char *argv[])
- 	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
- #endif
- 
--	while ((opt = getopt(argc, argv, "hi:I:p:m:M:")) != -1) {
-+	while ((opt = getopt(argc, argv, "c:hi:I:p:m:M:")) != -1) {
- 		switch (opt) {
-+		case 'c':
-+			test_dirty_ring_count = strtol(optarg, NULL, 10);
-+			break;
- 		case 'i':
- 			iterations = strtol(optarg, NULL, 10);
- 			break;
--- 
-2.24.1
+cheers
 
+> diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
+> index a63ec938636d..0fa2dc483008 100644
+> --- a/arch/powerpc/include/asm/io.h
+> +++ b/arch/powerpc/include/asm/io.h
+> @@ -734,6 +734,16 @@ extern void __iomem * __ioremap_at(phys_addr_t pa, void *ea,
+>  				   unsigned long size, pgprot_t prot);
+>  extern void __iounmap_at(void *ea, unsigned long size);
+>  
+> +#ifdef CONFIG_SPARSEMEM
+> +static inline unsigned long memremap_compat_align(void)
+> +{
+> +	if (radix_enabled())
+> +		return SUBSECTION_SIZE;
+> +	return (1UL << mmu_psize_defs[mmu_linear_psize].shift);
+> +}
+> +#define memremap_compat_align memremap_compat_align
+> +#endif
+> +
+>  /*
+>   * When CONFIG_PPC_INDIRECT_PIO is set, we use the generic iomap implementation
+>   * which needs some additional definitions here. They basically allow PIO
