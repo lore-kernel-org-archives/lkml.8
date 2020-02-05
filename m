@@ -2,103 +2,182 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B198C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6FDC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E202072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jovhgea1"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5E12072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBETyv (ORCPT
+        id S1727415AbgBET5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:54:51 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16142 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgBETyu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:54:50 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3b1d710000>; Wed, 05 Feb 2020 11:54:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 05 Feb 2020 11:54:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 05 Feb 2020 11:54:49 -0800
-Received: from [10.2.167.216] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb
- 2020 19:54:49 +0000
-Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver for
- Tegra210
-To:     Stephen Boyd <sboyd@kernel.org>, <frankc@nvidia.com>,
-        <hverkuil@xs4all.nl>, <jonathanh@nvidia.com>,
-        <thierry.reding@gmail.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <20200205192620.3A1F620720@mail.kernel.org>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <7e0ec06e-bb40-acf7-fd47-ced4b401afb2@nvidia.com>
-Date:   Wed, 5 Feb 2020 11:54:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 5 Feb 2020 14:57:02 -0500
+Received: from mga09.intel.com ([134.134.136.24]:53285 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbgBET5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:57:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 11:57:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
+   d="scan'208";a="225933582"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2020 11:57:00 -0800
+Date:   Wed, 5 Feb 2020 11:57:00 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        Serge Ayoun <serge.ayoun@intel.com>
+Subject: Re: [PATCH v25 07/21] x86/sgx: Enumerate and track EPC sections
+Message-ID: <20200205195700.GJ4877@linux.intel.com>
+References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
+ <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200205192620.3A1F620720@mail.kernel.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580932466; bh=9S5su+9VPxC93G/dxX1b6jj+ANaeVTDo08rIcJRucg0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jovhgea1EE0wEhkSoMo/gyga7GSU0eHEiacjqnE/55fSedszkXo0MVXq8E1bzf4eR
-         qIDzn50VKD0blDpbwt+8+XgkJ2Y/XbJmg9mibmLKSEBoh6U5AES3n5hSVX/ANOjB6n
-         EamZ/RG9lqCaP+5dTk9lrfdLlDGTHiO2yr/a4h32l0plv2/ryGZImE3qP6IA/auHRJ
-         Cl9PVD3HInnYwd4wcYMlhZBh3UZdCy/mD2EMpIo7VRjYIqgEXTiONvHv8N3m0UrrGh
-         vzWVB8GpV8WhEO36kW4rekI4JlK5Wli2ijmvcTCTUdKfn4IRiDrEBDqKyLivCIzElV
-         MgpE942UVXO2w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 04, 2020 at 08:05:31AM +0200, Jarkko Sakkinen wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> 
+> Enumerate Enclave Page Cache (EPC) sections via CPUID and add the data
+> structures necessary to track EPC pages so that they can be allocated,
+> freed and managed. As a system may have multiple EPC sections, invoke CPUID
+> on SGX sub-leafs until an invalid leaf is encountered.
+> 
+> For simplicity, support a maximum of eight EPC sections. Existing client
+> hardware supports only a single section, while upcoming server hardware
+> will support at most eight sections. Bounding the number of sections also
+> allows the section ID to be embedded along with a page's offset in a single
+> unsigned long, enabling easy retrieval of both the VA and PA for a given
+> page.
 
-On 2/5/20 11:26 AM, Stephen Boyd wrote:
-> External email: Use caution opening links or attachments
->
->
-> Quoting Sowjanya Komatineni (2020-01-28 10:23:20)
->> diff --git a/drivers/staging/media/tegra/Kconfig b/drivers/staging/media/tegra/Kconfig
->> new file mode 100644
->> index 000000000000..443b99f2e2c9
->> --- /dev/null
->> +++ b/drivers/staging/media/tegra/Kconfig
->> @@ -0,0 +1,12 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +config VIDEO_TEGRA
->> +       tristate "NVIDIA Tegra VI driver"
->> +       depends on ARCH_TEGRA || (ARM && COMPILE_TEST)
->> +       depends on COMMON_CLK
-> What depends on the common clk framework? I don't see any clk-provider.h
-> includes here.
-COMMON_CLK is not needed. Will remove in v2. Thanks.
->
->> +       depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
->> +       depends on MEDIA_CONTROLLER
->> +       select TEGRA_HOST1X
->> +       select VIDEOBUF2_DMA_CONTIG
->> +       select V4L2_FWNODE
->> +       help
->> +         Say yes here to enable support for Tegra video input hardware
+...
+
+> +++ b/arch/x86/kernel/cpu/sgx/reclaim.c
+> @@ -0,0 +1,87 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-19 Intel Corporation.
+> +
+> +#include <linux/freezer.h>
+> +#include <linux/highmem.h>
+> +#include <linux/kthread.h>
+> +#include <linux/pagemap.h>
+> +#include <linux/ratelimit.h>
+> +#include <linux/slab.h>
+> +#include <linux/sched/mm.h>
+> +#include <linux/sched/signal.h>
+> +#include "encls.h"
+> +
+> +struct task_struct *ksgxswapd_tsk;
+> +
+> +/*
+> + * Reset all pages to uninitialized state. Pages could be in initialized on
+> + * kmemexec.
+> + */
+> +static void sgx_sanitize_section(struct sgx_epc_section *section)
+> +{
+> +	struct sgx_epc_page *page, *tmp;
+> +	LIST_HEAD(secs_list);
+> +	int ret;
+> +
+> +	while (!list_empty(&section->unsanitized_page_list)) {
+> +		if (kthread_should_stop())
+> +			return;
+> +
+> +		spin_lock(&section->lock);
+> +
+> +		page = list_first_entry(&section->unsanitized_page_list,
+> +					struct sgx_epc_page, list);
+> +
+> +		ret = __eremove(sgx_epc_addr(page));
+> +		if (!ret)
+> +			list_move(&page->list, &section->page_list);
+> +		else
+> +			list_move_tail(&page->list, &secs_list);
+> +
+> +		spin_unlock(&section->lock);
+> +
+> +		cond_resched();
+> +	}
+> +
+> +	list_for_each_entry_safe(page, tmp, &secs_list, list) {
+> +		if (kthread_should_stop())
+> +			return;
+> +
+> +		ret = __eremove(sgx_epc_addr(page));
+> +		if (!WARN_ON_ONCE(ret)) {
+
+Sadly, this WARN can fire after kexec() on systems with multiple EPC
+sections if the SECS has child pages in another section.
+
+Virtual EPC (KVM) has a similar issue, which I'm handling by collecting all
+pages that fail a second EREMOVE in a global list, and then retrying every
+page in the global list every time a virtual EPC is destroyed, i.e. might
+have freed pages.
+
+The same approach should work here, e.g. retry all SECS pages a third time
+once all sections have been sanitized and WARN if EREMOVE fails a third
+time on a page.
+
+> +			spin_lock(&section->lock);
+> +			list_move(&page->list, &section->page_list);
+> +			spin_unlock(&section->lock);
+> +		} else {
+> +			list_del(&page->list);
+> +			kfree(page);
+> +		}
+> +
+> +		cond_resched();
+> +	}
+> +}
+> +
+> +static int ksgxswapd(void *p)
+> +{
+> +	int i;
+> +
+> +	set_freezable();
+> +
+> +	for (i = 0; i < sgx_nr_epc_sections; i++)
+> +		sgx_sanitize_section(&sgx_epc_sections[i]);
+
+I'm having second thoughts about proactively sanitizing the EPC sections.
+I think it'd be better to do EREMOVE the first time a page is allocated,
+e.g. add a SGX_EPC_PAGE_UNSANITIZED flag.
+
+  1. Sanitizing EPC that's never used is a waste of cycles, especially on
+     platforms with 64gb+ of EPC.
+
+  2. Deferring to allocation time automatically scales with the number of
+     tasks that are allocating EPC.  And, the CPU time will also be
+     accounted to those tasks.
+
+  3. Breaks on-demand paging when running in a VM, e.g. if the VMM chooses
+     to allocate a physical EPC page when it's actually accessed by the
+     VM.  I don't expect this to be a problem any time soon, as all VMMs
+     will likely preallocate EPC pages until KVM (or any other hypervisor)
+     gains EPC oversusbscription support, which may or may not ever happen.
+     But, I'd prefer to simply not have the problem in the first place.
+
+The logic will be a bit more complicated, but not terribly so.  
+
+> +
+> +	return 0;
+> +}
