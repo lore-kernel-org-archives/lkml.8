@@ -2,161 +2,161 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB6CC3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82729C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2306D217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FE5217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jwf+Qbf1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dJvD9bND"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q99F0HvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgBEHtN (ORCPT
+        id S1727982AbgBEHvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:49:13 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60285 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725875AbgBEHtN (ORCPT
+        Wed, 5 Feb 2020 02:51:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26106 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726277AbgBEHvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:49:13 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 06AD66FE9;
-        Wed,  5 Feb 2020 02:49:12 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 05 Feb 2020 02:49:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=klnBhs3icmG873ARFeW0I55GIqv
-        Bct2WyDKkuastGyo=; b=jwf+Qbf1/dIOpQQPu6d5faHN3Z6Nv1tEzdcooIugMth
-        1avbUSzp56VsATlVcfZS4dAfADLi8S4qu/j6jsF7Zb43cVOD/zjIJ3rKAaFIlmjB
-        7yE7GKchPOAUw0QAFwXscVn+R8J2xLbSw7mplWO8w4ODugAY/eFEXTmjQSSJi4ir
-        R9t3n1+ga5wKgN9dhZgGpA6b1V6S7sRBSRDrbcekZNERahh5kTneYXC1+53SrlBR
-        CRlpAJyACUCokmEmQu0RB1gZMl0bdoaYrgIyGVYUP3rfWImjHA/PkRsPAy54uDag
-        OSYkxhZNlFbdzy0ABW3VgifxRNK0MfSIkN7mbZQWoBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=klnBhs
-        3icmG873ARFeW0I55GIqvBct2WyDKkuastGyo=; b=dJvD9bNDzk98V5EJjwjbLX
-        z/jqP7Y8Z4SGado2htR38gfwWtfB9jHHAJyZUvdd0l0Dlaqa5LLY0f6iBDWHqqv2
-        ZNZYOuzMod1M5vjBbNjUMnRFqDstAwnK2wROivOVgyeFNznPTGjfLQpOnHgMhnUS
-        +OF/Tuv3B1coSez3a2FM5b3Cd4RpOwct9mAwc0vI/2j8N1LnPPGKP6tiZdnKH8ES
-        Fn4sbCYM/59xrLrRM19pVhPfW0SNHTM98Qfsz1QrTlhXQUfi52jJEjMBmPtZ1liZ
-        XY4yB1hJI/5z0WqqB8wXyh0fLFto0jqby/jBpmSn3AeQf1kjohNqzDOdKjZIf4AQ
-        ==
-X-ME-Sender: <xms:dnM6XpEULNBgxpV7IuDuGHtWsEwpv4vI8j1lg3kb7G6-VzY-QfuY1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrhedtgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:dnM6Xgt0evq26rLEpnUD07S8oq9BA9S2eDUWqQfmW-FOGo1hdY6UIQ>
-    <xmx:dnM6XsmFFPc77gnLfW67-HeRJd-hfQfxPxgdwgEK943FmGAu-CUh8A>
-    <xmx:dnM6XgyfuUHKvwyo9-Cc9FXCActuE6qPfkDXSLBnQUqpNXYS5VaHBA>
-    <xmx:d3M6XvKw6IGTWtKFAkvMrL3VaXUa2KseZuISM1x1FzF4V0ahHgfzzQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3FBB33280059;
-        Wed,  5 Feb 2020 02:49:10 -0500 (EST)
-Date:   Wed, 5 Feb 2020 08:49:08 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Vinod Koul <vkoul@kernel.org>,
-        "james.tai" <james.tai@realtek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 11/12] dt-bindings: arm: Document Broadcom SoCs
- 'secondary-boot-reg'
-Message-ID: <20200205074908.kwtqadfcwo2mtefk@gilmour.lan>
-References: <20200204235552.7466-1-f.fainelli@gmail.com>
- <20200204235552.7466-12-f.fainelli@gmail.com>
+        Wed, 5 Feb 2020 02:51:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580889061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YQLo/Dujelpm0XrehqZm62mCFlSLkIvoH/a0QZl9D2s=;
+        b=Q99F0HvUrenx935z7sUnwylWNIvHETMvhBqHcQfA5QSeLFP0CivbbCxdWAu86vlMc8HtFB
+        if9r9jUFq5/rKmxd6ngkh/5fUCitC6fr8vRDslnrMJqvA7I4uZH+3H+Eb7XcVFb73Dzzql
+        lArdzsLIhSUG19TjBT6RGs9f34c7wP4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-GBTihHV3M3uxJzsoVeentg-1; Wed, 05 Feb 2020 02:50:59 -0500
+X-MC-Unique: GBTihHV3M3uxJzsoVeentg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 826968010EF;
+        Wed,  5 Feb 2020 07:50:56 +0000 (UTC)
+Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8648C7792A;
+        Wed,  5 Feb 2020 07:50:23 +0000 (UTC)
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+To:     Shahaf Shuler <shahafs@mellanox.com>,
+        Tiwei Bie <tiwei.bie@intel.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "dan.daly@intel.com" <dan.daly@intel.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+ <20200205020247.GA368700@___>
+ <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <112858a4-1a01-f4d7-e41a-1afaaa1cad45@redhat.com>
+Date:   Wed, 5 Feb 2020 15:50:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wa2xbnbegqf4phpr"
-Content-Disposition: inline
-In-Reply-To: <20200204235552.7466-12-f.fainelli@gmail.com>
+In-Reply-To: <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---wa2xbnbegqf4phpr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Feb 04, 2020 at 03:55:51PM -0800, Florian Fainelli wrote:
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index c23c24ff7575..d7b181a44789 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -272,6 +272,39 @@ properties:
->        While optional, it is the preferred way to get access to
->        the cpu-core power-domains.
+On 2020/2/5 =E4=B8=8B=E5=8D=883:15, Shahaf Shuler wrote:
+> Wednesday, February 5, 2020 4:03 AM, Tiwei Bie:
+>> Subject: Re: [PATCH] vhost: introduce vDPA based backend
+>>
+>> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
+>>> On 2020/1/31 =E4=B8=8A=E5=8D=8811:36, Tiwei Bie wrote:
+>>>> This patch introduces a vDPA based vhost backend. This backend is
+>>>> built on top of the same interface defined in virtio-vDPA and
+>>>> provides a generic vhost interface for userspace to accelerate the
+>>>> virtio devices in guest.
+>>>>
+>>>> This backend is implemented as a vDPA device driver on top of the
+>>>> same ops used in virtio-vDPA. It will create char device entry named
+>>>> vhost-vdpa/$vdpa_device_index for userspace to use. Userspace can
+>>>> use vhost ioctls on top of this char device to setup the backend.
+>>>>
+>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+> [...]
 >
-> +  secondary-boot-reg:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: |
-> +      Required for systems that have an "enable-method" property value of
-> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
-> +
-> +      This includes the following SoCs: |
-> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
-> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
-> +
-> +      The secondary-boot-reg property is a u32 value that specifies the
-> +      physical address of the register used to request the ROM holding pen
-> +      code release a secondary CPU. The value written to the register is
-> +      formed by encoding the target CPU id into the low bits of the
-> +      physical start address it should jump to.
-> +
-> +if:
-> +  # If the enable-method property contains one of those values
-> +  properties:
-> +    enable-method:
-> +      contains:
-> +        enum:
-> +          - brcm,bcm11351-cpu-method
-> +          - brcm,bcm23550
-> +          - brcm,bcm-nsp-smp
-> +  # and if enable-method is present
+>>>> +static long vhost_vdpa_do_dma_mapping(struct vhost_vdpa *v) {
+>>>> +	/* TODO: fix this */
+>>>
+>>> Before trying to do this it looks to me we need the following during
+>>> the probe
+>>>
+>>> 1) if set_map() is not supported by the vDPA device probe the IOMMU
+>>> that is supported by the vDPA device
+>>> 2) allocate IOMMU domain
+>>>
+>>> And then:
+>>>
+>>> 3) pin pages through GUP and do proper accounting
+>>> 4) store GPA->HPA mapping in the umem
+>>> 5) generate diffs of memory table and using IOMMU API to setup the dm=
+a
+>>> mapping in this method
+>>>
+>>> For 1), I'm not sure parent is sufficient for to doing this or need t=
+o
+>>> introduce new API like iommu_device in mdev.
+>> Agree. We may also need to introduce something like the iommu_device.
+>>
+> Would it be better for the map/umnap logic to happen inside each device=
+ ?
+> Devices that needs the IOMMU will call iommu APIs from inside the drive=
+r callback.
 
-Those comments were purely for the explanation, but you can keep them
-I guess :)
 
-Regardless on whether or not you keep them, for the whole series
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Technically, this can work. But if it can be done by vhost-vpda it will=20
+make the vDPA driver more compact and easier to be implemented.
 
-Maxime
 
---wa2xbnbegqf4phpr
-Content-Type: application/pgp-signature; name="signature.asc"
+> Devices that has other ways to do the DMA mapping will call the proprie=
+tary APIs.
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjpzdAAKCRDj7w1vZxhR
-xUq2AQDV+M4Nkim7RmuY3y8QYuA2P6xeHBu487XApQ5G8aH+fwEAlmF1WVwn93es
-CiiM9/4giVvGZGr3rNoZg/tgdu0GZQs=
-=+UYd
------END PGP SIGNATURE-----
+To confirm, do you prefer:
 
---wa2xbnbegqf4phpr--
+1) map/unmap
+
+or
+
+2) pass all maps at one time?
+
+Thanks
+
+
+>
+
