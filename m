@@ -2,111 +2,108 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9AFC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDBAC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4037214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYYIerHF"
+	by mail.kernel.org (Postfix) with ESMTP id E074C217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgBEWpV (ORCPT
+        id S1727600AbgBEWp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:45:21 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37951 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727456AbgBEWpU (ORCPT
+        Wed, 5 Feb 2020 17:45:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51281 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727565AbgBEWpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:45:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580942719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qhu3K4UfMyr9rLuPVrEXyLiBiRw+0bLNH6EYh61xjr4=;
-        b=XYYIerHForgEJm1bmnDiaCU8X52LECPVfk5BEnHr8pgT2ETQiFlrNX2vmrVeE517TV/aNA
-        7Bc8b2ZMF7yFm5KeCy0JZK97GYECGWUu+836UnwYkEoYZx1ZHrwLsQVZcU3Jr0hZu3mZd/
-        BidUPuYtBCvqSpFmAEsmvZYBKKF0ndM=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-vydQWdGGOleAHeeW_64COQ-1; Wed, 05 Feb 2020 17:45:17 -0500
-X-MC-Unique: vydQWdGGOleAHeeW_64COQ-1
-Received: by mail-qv1-f72.google.com with SMTP id p3so2484496qvt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:45:17 -0800 (PST)
+        Wed, 5 Feb 2020 17:45:25 -0500
+Received: by mail-pj1-f65.google.com with SMTP id fa20so1597124pjb.1;
+        Wed, 05 Feb 2020 14:45:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qhu3K4UfMyr9rLuPVrEXyLiBiRw+0bLNH6EYh61xjr4=;
-        b=EZ68MP17LeQfteF1uYZSpgEF88xhtrqGuiare+E9/BZoUJvKXOgV3gSygQ/VSxFPqs
-         rujcEZpo8b5ZO0fyLX2dLTXUPXSV5ctFyyubHFSLFKZWJaiLQH3JHjW3O/LbtVoSnq+N
-         k3YUQHjOo5zykOKjv1QuKAVBBVEhH6BCZyy0lVoEnONrhj8NpXxF8TBD2jsoApJtyjIt
-         956CdDIg+UdNn93QrI+C6mB/GX0QG7gj4zTrb+fEVjfZFLCrOjkf5PqN8hbkg/lzVy/F
-         Jt3uiuGWceDWuMdEP3DR7VFdHk91tuPX15uXxUR17OZUMnNwVBstcj7aelZfVxl/PzCs
-         imWg==
-X-Gm-Message-State: APjAAAVWtCY0l3L0iOFucca0Bs3M4toOOOYN6Gc92SaprKnoxqT4aCdS
-        QEWyWbAfZrnAFnO/GmOy6wFe9Wabu+hc8rSh79mveM86B/2owZFaQ5gSt558IDsOdWB4xSGcEEW
-        yNCW2Mo1hvXMIMAiwwt0feWIn
-X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr61836qko.116.1580942717359;
-        Wed, 05 Feb 2020 14:45:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyAvhOweFr4KXXnP5Mb9+7dhUBLh1Z13T+81iDjtWqZt6EK3UE5xX8DXWaSS5tvfd+S4d7C7g==
-X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr61812qko.116.1580942717130;
-        Wed, 05 Feb 2020 14:45:17 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id x22sm615496qtq.30.2020.02.05.14.45.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 14:45:16 -0800 (PST)
-Date:   Wed, 5 Feb 2020 17:45:13 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 06/19] KVM: Drop kvm_arch_create_memslot()
-Message-ID: <20200205224513.GH387680@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-7-sean.j.christopherson@intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0bcRadV2UJTOgRUGh5EQgbkbXanJFAz0E1VJFEcU0fA=;
+        b=nL19jTnr+UtIZUrUyh1qfCHUlc3mGJQzrBFaOFL7s0FKvVw0AAcZMWETyJu9M44+Fc
+         Z0U/W1IoFAcyx7HwZD1hb+k35lW2DNEh+Yh1FsyuQlv+fd3gZAwNnA16Gg3PePBaex3d
+         Xa40SjUp5d0r3AxwaLgrptYEYycKIVSjwogwwMpZ4/y0R7ADRWsTdmMTxa7+PzmwpsKc
+         L05i9OTo9MKvCd9+mdV5PSMM8XKypyUnqRlsZ1l/TzGhKwcm9+fB+qx0NtnqRgopwGGV
+         xUZkAy/7lpb9gNhvI9rzeEoOoInGn2ZtxbzNKEyOxHyvDFwvFYCl/kx94e1TBt4d98r/
+         y4uQ==
+X-Gm-Message-State: APjAAAWUTQxx771OjIwcvpvQ+MWe3YcKva0MF5EsydA/Wfx0irm6mHMj
+        Ms2ChOaVyQKSwHZmop2HmoYbF/34NUs=
+X-Google-Smtp-Source: APXvYqy2Be4/PSxc5lyGQOYsxvsoLyc1S9eltGyYFdxnWDALqWHhsNkTXSBAtsvN6XPP9vluDg6QHw==
+X-Received: by 2002:a17:90a:7781:: with SMTP id v1mr538716pjk.108.1580942724481;
+        Wed, 05 Feb 2020 14:45:24 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id f18sm796557pgn.2.2020.02.05.14.45.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 14:45:23 -0800 (PST)
+Subject: Re: [PATCH] scsi: ufs: Fix registers dump vops caused scheduling
+ while atomic
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1580882795-29675-1-git-send-email-cang@codeaurora.org>
+ <3e529862-7790-c506-abaa-9a6972f5d53c@acm.org>
+ <749a1db94df00278ec9f5c121cd937fe@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <7931a786-8e2c-1529-8910-3d4f6c816580@acm.org>
+Date:   Wed, 5 Feb 2020 14:45:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121223157.15263-7-sean.j.christopherson@intel.com>
+In-Reply-To: <749a1db94df00278ec9f5c121cd937fe@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:31:44PM -0800, Sean Christopherson wrote:
-> Remove kvm_arch_create_memslot() now that all arch implementations are
-> effectively nops.  Removing kvm_arch_create_memslot() eliminates the
-> possibility for arch specific code to allocate memory prior to setting
-> a memslot, which sets the stage for simplifying kvm_free_memslot().
-> 
-> Cc: Janosch Frank <frankja@linux.ibm.com>
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On 2/4/20 10:31 PM, Can Guo wrote:
+> Do you mean by splitting ufshcd_print_host_regs() into two functions?
+> One behaves identically same to the current function, another one called
+> ufshcd_print_host_regs_nosleep(). No?
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Hi Can,
 
--- 
-Peter Xu
+Not really. I had something else in mind.
 
+Having taken a closer look at ufs_qcom_dump_dbg_regs() I started 
+wondering why there are sleep statements in that function. Is the goal 
+of these sleep statements perhaps to reduce how often printk() is 
+called? Has it been considered to remove all sleep calls from 
+ufs_qcom_dump_dbg_regs() and instead add something like the following at 
+the start of that function:
+
+	static DEFINE_RATELIMIT_STATE(_rs,
+				      DEFAULT_RATELIMIT_INTERVAL,
+				      DEFAULT_RATELIMIT_BURST);
+									
+	if (!__ratelimit(&_rs))
+		return;
+
+
+Thanks,
+
+Bart.
