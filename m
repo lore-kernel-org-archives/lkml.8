@@ -2,118 +2,139 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37F0C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D98C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B55E21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1E0217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MUrw6Dy+"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lkomPsKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgBEOSh (ORCPT
+        id S1728171AbgBEOTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:18:37 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43115 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728123AbgBEOSg (ORCPT
+        Wed, 5 Feb 2020 09:19:17 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38355 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgBEOTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:18:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580912314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1dGbRA7pmfjMTjjm0vzl9/+wz0Bn0fpu96k2WzDU2gg=;
-        b=MUrw6Dy+JLsmiUWYv/rUs+SluR2vIZlp+ikqPCGoNJs9sUIrdWDzJWZ8CLb/FXu1d0aAsS
-        GnegyrUVarQhP4s+yAHezADAb1jkUH87gMOubrlg9fDsClZngL7svZUCmpEF9avuEFm86L
-        E+F4KSacN7hf0giQQiRiLX0dTJgCcOI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-amSae5N0MbyMQZpTPJVfbQ-1; Wed, 05 Feb 2020 09:18:29 -0500
-X-MC-Unique: amSae5N0MbyMQZpTPJVfbQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4BEA801E76;
-        Wed,  5 Feb 2020 14:18:27 +0000 (UTC)
-Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 095EF790D4;
-        Wed,  5 Feb 2020 14:18:26 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 07:18:26 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200205071826.6d4d43d7@x1.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A1ABFF9@SHSMSX104.ccr.corp.intel.com>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-        <20200204161737.34696b91@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A1ABFF9@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        Wed, 5 Feb 2020 09:19:17 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j17so1058218pjz.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 06:19:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EF5azVm17B4N3OwsRCXVrI4EuCLTUDFgy1VYYMCZm7E=;
+        b=lkomPsKvF9AbvIEijT+xZBsoKXbi062ylvxZexLNRTuLVdyT+ISZ47Dz5pL71XjynX
+         KoIkv0DFyBFH2DvP37ygfwVqTO8M1D2VFgKX5+dN+rWtGQpUEBidlby1dPWDjyMTjKp5
+         mlXF20vI1fcDeoGRT1PQXRpQObHTW/oxjHzi4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EF5azVm17B4N3OwsRCXVrI4EuCLTUDFgy1VYYMCZm7E=;
+        b=b36XjXiyWmeXjGBYPokc4LtlDnaN8wuP0C6BoPypH1FpvJShuS/10ZoFnvRLyw0ybr
+         eNtpIFW0sQtWg9oktfFXJaqEuU0pkUqbbsgSdeI+2R8NWQK2otIzwmc2EG+NqJohlz4G
+         rXM7P1g+L66T/uHUthg5ncf6rCeQ9QSzo1L7oeUYopJX/jTFBHYiolkk8xO+dZBBIi9R
+         Eqeh0l5tU7P9OM5ivigCXu7RkP57hmjj4+zMQZXzISDoDep0woY+VQOpC9nMEKSlRiAB
+         5SU2KhkV+4iSYbT9hWibDC9WI2mFbszWKkCUXP4kDbBrgLrVFULE3frk+QEKRybQ6mK+
+         hjdQ==
+X-Gm-Message-State: APjAAAW11ghggd7fIVya3l2NCcIhBj5q0m5BJbkwWs1blTFl2u744T4J
+        fR1LLz3xZskB7UGOy20RmuwojQ==
+X-Google-Smtp-Source: APXvYqzZYFdoBQSOmdw0WKwR7L0jmNcdpUZ0MIfdx64/YCIfmfiNlXpLXxI8ab8UVrTaNnywBds+1Q==
+X-Received: by 2002:a17:902:8f94:: with SMTP id z20mr36122609plo.62.1580912356737;
+        Wed, 05 Feb 2020 06:19:16 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g21sm29824293pfb.126.2020.02.05.06.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 06:19:16 -0800 (PST)
+Date:   Wed, 5 Feb 2020 09:19:15 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: Re: [for-next][PATCH 4/4] ftrace: Add comment to why
+ rcu_dereference_sched() is open coded
+Message-ID: <20200205141915.GA194021@google.com>
+References: <20200205104929.313040579@goodmis.org>
+ <20200205105113.283672584@goodmis.org>
+ <20200205063349.4c3df2c0@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205063349.4c3df2c0@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020 07:57:36 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
-
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, February 5, 2020 7:18 AM
-> > To: kvm@vger.kernel.org
-> > Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-> > 
-> > 
-> > Promised example QEMU test case...
-> > 
-> > commit 3557c63bcb286c71f3f7242cad632edd9e297d26
-> > Author: Alex Williamson <alex.williamson@redhat.com>
-> > Date:   Tue Feb 4 13:47:41 2020 -0700
-> > 
-> >     vfio-pci: QEMU support for vfio-pci VF tokens
-> > 
-> >     Example support for using a vf_token to gain access to a device as
-> >     well as using the VFIO_DEVICE_FEATURE interface to set the VF token.
-> >     Note that the kernel will disregard the additional option where it's
-> >     not required, such as opening the PF with no VF users, so we can
-> >     always provide it.
-> > 
-> >     NB. It's unclear whether there's value to this QEMU support without
-> >     further exposure of SR-IOV within a VM.  This is meant mostly as a
-> >     test case where the real initial users will likely be DPDK drivers.
-> > 
-> >     Signed-off-by: Alex Williamson <alex.williamson@redhat.com>  
+On Wed, Feb 05, 2020 at 06:33:49AM -0500, Steven Rostedt wrote:
 > 
-> Just curious how UUID is used across the test. Should the QEMU
-> which opens VFs add the vfio_token=UUID or the QEMU which
-> opens PF add the vfio_token=UUID? or both should add vfio_token=UUID.
+> Paul and Joel,
+> 
+> Care to ack this patch (or complain about it ;-) ?
+> 
+> -- Steve
+> 
+> 
+> On Wed, 05 Feb 2020 05:49:33 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > Because the function graph tracer can execute in sections where RCU is not
+> > "watching", the rcu_dereference_sched() for the has needs to be open coded.
+> > This is fine because the RCU "flavor" of the ftrace hash is protected by
+> > its own RCU handling (it does its own little synchronization on every CPU
+> > and does not rely on RCU sched).
+> > 
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  kernel/trace/trace.h | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index 022def96d307..8c52f5de9384 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -975,6 +975,11 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+> >  
+> >  	preempt_disable_notrace();
+> >  
+> > +	/*
+> > +	 * Have to open code "rcu_dereference_sched()" because the
+> > +	 * function graph tracer can be called when RCU is not
+> > +	 * "watching".
+> > +	 */
+> >  	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
+> >  
+> >  	if (ftrace_hash_empty(hash)) {
+> > @@ -1022,6 +1027,11 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+> >  
+> >  	preempt_disable_notrace();
+> >  
+> > +	/*
+> > +	 * Have to open code "rcu_dereference_sched()" because the
+> > +	 * function graph tracer can be called when RCU is not
+> > +	 * "watching".
+> > +	 */
+> >  	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+> >  						 !preemptible());
+> >  
 
-In this example we do both as this covers the case where there are
-existing VF users, which requires the PF to also provide the vf_token.
-If there are no VF users, the PF is not required to provide a vf_token
-and vfio-pci will not fail the device match if a vf_token is provided
-but not needed.  In fact, when a PF is probed by vfio-pci a random
-vf_token is set, so it's required to use a PF driver to set a known
-vf_token before any VF users can access their VFs.  Thanks,
+Could you paste the stack here when RCU is not watching? In trace event code
+IIRC we call rcu_enter_irqs_on() to have RCU temporarily watch, since that
+code can be called from idle loop. Should we doing the same here as well?
 
-Alex
+thanks,
+
+ - Joel
 
