@@ -2,137 +2,57 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF03C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E843BC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BF92085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Qb8a2pvC"
+	by mail.kernel.org (Postfix) with ESMTP id C5CE1217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgBEKtO (ORCPT
+        id S1728312AbgBEKvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 05:49:14 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35216 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727234AbgBEKtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 05:49:14 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015AhQR8020225;
-        Wed, 5 Feb 2020 11:49:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=6nWcubbJcTb/v+QZhKnKIkzKmQoSurHo8oVRf6+XpXM=;
- b=Qb8a2pvCcgCQuiIgxFMQg/GM0mYu42OhVkYpk+kJ9oAK375nqc9s/bEWmWWc1FjkFAya
- 07HCqeHO1cy6Pc3xEpcA6AaAjSudozxw8SIy2bgOhDRE0cIQj9acVWNe308+8v8QFKqs
- fhOgJspOss2TXypsftkrlEMThuIAnkVZZ+PjpEWLwVpQ9olqO+zHemwgg8lv094p4Eym
- hwWQtQUthYd22CVkbl/3a6YE0Q3ZjY+2AupiCxF6J16arW2N2BtV6FVgyNTPJ0+aF4v6
- dTqtNfjZWAlM8oujpXKuUzFDv20zio0jC8G0I5J95rlNzlMKr3Iqh4fFWkB9Dorf8tOU 1Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhkycp4e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 11:49:00 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 57DD310002A;
-        Wed,  5 Feb 2020 11:48:53 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4A8522AD9FA;
-        Wed,  5 Feb 2020 11:48:53 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb 2020 11:48:52
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <vilhelm.gray@gmail.com>, <jic23@kernel.org>
-CC:     <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
-        <benjamin.gaignard@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] counter: stm32-timer-cnt: add power management support
-Date:   Wed, 5 Feb 2020 11:47:58 +0100
-Message-ID: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_03:2020-02-04,2020-02-05 signatures=0
+        Wed, 5 Feb 2020 05:51:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727562AbgBEKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 05:51:14 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D0B02085B;
+        Wed,  5 Feb 2020 10:51:14 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1izIH2-001NrU-R3; Wed, 05 Feb 2020 05:51:12 -0500
+Message-Id: <20200205104929.313040579@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Wed, 05 Feb 2020 05:49:29 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 0/4] tracing: Hopefully last update for 5.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add suspend/resume PM sleep ops. When going to low power, enforce the
-counter isn't active.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/counter/stm32-timer-cnt.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Amol Grover (2):
+      tracing: Annotate ftrace_graph_hash pointer with __rcu
+      tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
 
-diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-index 3eafcce..3b84503 100644
---- a/drivers/counter/stm32-timer-cnt.c
-+++ b/drivers/counter/stm32-timer-cnt.c
-@@ -12,6 +12,7 @@
- #include <linux/iio/types.h>
- #include <linux/mfd/stm32-timers.h>
- #include <linux/module.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- 
- #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
-@@ -358,10 +359,33 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
- 	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
- 	priv->counter.priv = priv;
- 
-+	platform_set_drvdata(pdev, priv);
-+
- 	/* Register Counter device */
- 	return devm_counter_register(dev, &priv->counter);
- }
- 
-+static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
-+{
-+	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
-+	u32 cr1;
-+
-+	/* Check for active counter */
-+	regmap_read(priv->regmap, TIM_CR1, &cr1);
-+	if (cr1 & TIM_CR1_CEN)
-+		return -EBUSY;
-+
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
-+
-+static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
-+{
-+	return pinctrl_pm_select_default_state(dev);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
-+			 stm32_timer_cnt_resume);
-+
- static const struct of_device_id stm32_timer_cnt_of_match[] = {
- 	{ .compatible = "st,stm32-timer-counter", },
- 	{},
-@@ -373,6 +397,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
- 	.driver = {
- 		.name = "stm32-timer-counter",
- 		.of_match_table = stm32_timer_cnt_of_match,
-+		.pm = &stm32_timer_cnt_pm_ops,
- 	},
- };
- module_platform_driver(stm32_timer_cnt_driver);
--- 
-2.7.4
+Steven Rostedt (VMware) (2):
+      bootconfig: Only load bootconfig if "bootconfig" is on the kernel cmdline
+      ftrace: Add comment to why rcu_dereference_sched() is open coded
 
+----
+ Documentation/admin-guide/bootconfig.rst        |  2 ++
+ Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
+ init/main.c                                     | 28 ++++++++++++++++++-------
+ kernel/trace/ftrace.c                           |  4 ++--
+ kernel/trace/trace.h                            | 27 +++++++++++++++++++-----
+ 5 files changed, 53 insertions(+), 14 deletions(-)
