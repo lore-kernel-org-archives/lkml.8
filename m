@@ -2,106 +2,112 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41167C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE12C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F9A217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B0D217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:57:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U093wRe3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgBEQ40 (ORCPT
+        id S1727530AbgBEQ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:56:26 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32144 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727054AbgBEQ40 (ORCPT
+        Wed, 5 Feb 2020 11:57:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27207 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726748AbgBEQ5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:56:26 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015GnpZJ131463;
-        Wed, 5 Feb 2020 11:55:50 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xyhmgwxt7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 11:55:50 -0500
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 015Gp2Ri135129;
-        Wed, 5 Feb 2020 11:55:50 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xyhmgwxsu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 11:55:49 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 015GtnRg024988;
-        Wed, 5 Feb 2020 16:55:49 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03wdc.us.ibm.com with ESMTP id 2xykc9e4k8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 16:55:49 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 015GtmHr11338068
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Feb 2020 16:55:48 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E96BC6063;
-        Wed,  5 Feb 2020 16:55:48 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34DA6C605A;
-        Wed,  5 Feb 2020 16:55:48 +0000 (GMT)
-Received: from localhost (unknown [9.41.100.106])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Feb 2020 16:55:48 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Michal Suchanek <msuchanek@suse.cz>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        linuxppc-dev@lists.ozlabs.org, Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH v2] powerpc: drmem: avoid NULL pointer dereference when drmem is unavailable
-In-Reply-To: <20200131132829.10281-1-msuchanek@suse.de>
-References: <20200131132829.10281-1-msuchanek@suse.de>
-Date:   Wed, 05 Feb 2020 10:55:47 -0600
-Message-ID: <87r1z92cto.fsf@linux.ibm.com>
+        Wed, 5 Feb 2020 11:57:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580921825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PxFkSdvrYLxIEAwQWaBaRc6nRKIPOYjssvLU1SdT+6A=;
+        b=U093wRe37lr9NqEC+BhSd4vcVng3O56aQ2w9MBM5ZIXcBCK7WbjxkCrBjZ9k+5KsElccw/
+        Qe6CIH4t7hxzvhU8hZlAnZ16ojZl5/c8mCLoSNmW3OlAcgbmB2tCZvvYPM//ZrCLFCcTMf
+        xAQ0SxNKJNYStoduFBgqp9DXUlMZJVE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-UXIawgWcNUGU1yXfJPM82A-1; Wed, 05 Feb 2020 11:57:02 -0500
+X-MC-Unique: UXIawgWcNUGU1yXfJPM82A-1
+Received: by mail-wr1-f69.google.com with SMTP id s13so1464384wru.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 08:57:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PxFkSdvrYLxIEAwQWaBaRc6nRKIPOYjssvLU1SdT+6A=;
+        b=VL8Xp62HOjKkqAvcM0QrVEEsIWw/ByRzAfkEEEZcZyXbhXsPXIeNgs2KcsLpguIMMp
+         AcS32Xyfd34x406FHE5jmn4/yR0w8lSxKkvCrEO6TqdHukJev04x9AK+CkGhvyqxSuem
+         QPOPAoUeYIYVBvNjvu7zrNOzYd7BaVf3K4WI2iANmq+43z4xZBzCo3JxfzKK1JdkNpxr
+         XhPm3H5RKs/j78U06zoH67NZ4+Mt0uLPq23398YvUuH3MPDsqzzTF3VBuXD1MJL5gmLV
+         egImVTRaM+NPafeF9lvOOcIFPrUScqwWvh/BF2D6dvPEQ+FkDNgXxL/rSPSrSxGN9F6c
+         wpqA==
+X-Gm-Message-State: APjAAAXKO877wk3tqOFWywzq02z+WGLJ4AJvX0JSlzAtnVDuJy5nfH3z
+        3fOC7V+fDd/9rJiNYQE0zPEzuA2l0YRDKkDXOoDq7Y/2ADDeONM446GnYbAJ8Pymbdv8sGyBuDj
+        po3MIDxE4RPUoStdaKDi7c/Q2
+X-Received: by 2002:a7b:ca49:: with SMTP id m9mr4617855wml.50.1580921821171;
+        Wed, 05 Feb 2020 08:57:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw6o+ESIGmO/3zFWtD1tm/ePiEllQhG+yeSmmbQ8rnxhegcVzud2hRMO5aLmfS0Rt3YXlUp7A==
+X-Received: by 2002:a7b:ca49:: with SMTP id m9mr4617845wml.50.1580921820988;
+        Wed, 05 Feb 2020 08:57:00 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id v14sm559308wrm.28.2020.02.05.08.57.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 08:57:00 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: vmx: delete meaningless vmx_decache_cr0_guest_bits() declaration
+In-Reply-To: <1580916833-28905-1-git-send-email-linmiaohe@huawei.com>
+References: <1580916833-28905-1-git-send-email-linmiaohe@huawei.com>
+Date:   Wed, 05 Feb 2020 17:56:59 +0100
+Message-ID: <87r1z9j7l0.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_05:2020-02-04,2020-02-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
- spamscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxscore=0
- clxscore=1011 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002050128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Suchanek <msuchanek@suse.de> writes:
-> From: Libor Pechacek <lpechacek@suse.cz>
->
-> In guests without hotplugagble memory drmem structure is only zero
-> initialized. Trying to manipulate DLPAR parameters results in a crash.
->
+linmiaohe <linmiaohe@huawei.com> writes:
 
-[...]
-
+> From: Miaohe Lin <linmiaohe@huawei.com>
 >
-> Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
-> Cc: Michal Suchanek <msuchanek@suse.cz>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> The function vmx_decache_cr0_guest_bits() is only called below its
+> implementation. So this is meaningless and should be removed.
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 > ---
-> v2: rename last_lmb -> limit, clarify error condition.
+>  arch/x86/kvm/vmx/vmx.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 678edbd6e278..061fefc30ecc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1428,8 +1428,6 @@ static bool emulation_required(struct kvm_vcpu *vcpu)
+>  	return emulate_invalid_guest_state && !guest_state_valid(vcpu);
+>  }
+>  
+> -static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu);
+> -
+>  unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
 
-Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Thanks!
+-- 
+Vitaly
+
