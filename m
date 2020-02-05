@@ -2,155 +2,107 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89D4C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C715FC35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F29F2085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PJ+u2sUN"
+	by mail.kernel.org (Postfix) with ESMTP id 9B33D2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580885548;
+	bh=Pz7yOFCk8uvaR5fC9HvpCZaDNCpKkJdjj6S/BYXw3FU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BtcRVmsq0EPr0nSCD/cAQAZUVR01Tc2vySmd922E3FVkelcdrLc9z5gsTcP8NOLWb
+	 ICKPGYIARzF3VzgA1gSkb7y7hiD4NSilmivsU8ZJ2CMxcNJ0db5+kY/sUxxucgdpXj
+	 b67rfflPLPAcboaT3WdQqJOMJU6l5gqcm9qeaxls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgBEGvp (ORCPT
+        id S1727050AbgBEGw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:51:45 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:29329 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725875AbgBEGvo (ORCPT
+        Wed, 5 Feb 2020 01:52:28 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:24774 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbgBEGw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 01:51:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580885503; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=FEUHkLBJ+nAGJuyoz3LEU26JARROyquI5FGuyUlZs9g=;
- b=PJ+u2sUNGTqIhHAX3Syi37z/mqW16j3oPsi0A1fg+iYwHY6sb8G8ofiqetpgBRP9s/jkLNIC
- lCTW9Lu7uXiljg1cexb3kaoa4222Cz1qNSIZqqrIQ182/bD8qGqgnr/SQKjgWrf3go6UtdVz
- Y0bYmCZdsSHIJy3VyPfMM+G4hoE=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a65fb.7ff54b745b58-smtp-out-n01;
- Wed, 05 Feb 2020 06:51:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39525C447A1; Wed,  5 Feb 2020 06:51:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AF06C43383;
-        Wed,  5 Feb 2020 06:51:38 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 12:21:38 +0530
-From:   smasetty@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-In-Reply-To: <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
-References: <1580472220-3453-1-git-send-email-smasetty@codeaurora.org>
- <1580472220-3453-2-git-send-email-smasetty@codeaurora.org>
- <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
-Message-ID: <1e29097cc1cdf18671379f6420f872b0@codeaurora.org>
-X-Sender: smasetty@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Wed, 5 Feb 2020 01:52:27 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 0156pvIw013204;
+        Wed, 5 Feb 2020 15:51:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0156pvIw013204
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580885518;
+        bh=SQLIo/CN+y8L0OepweOpNyV3Tsh+znSRoDYXyHAL2bc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jrzonPyH54xW+kntgU6q1kD4t7esoeqlX/P+JEVJ4PxUBV4oLckYFU8JOLrfN/jgW
+         1WK05cGazownMi2SeWzvvatFE1HWtDS220NOdQF3b59bTJdkEPN2PWBozgccNC/wIf
+         nTbmRMGeHvHV9+dLMIGcBu0Rvp22UtOFQmyK/+SI9z2rVwWmSjOOrxIyQ8EhSolEEj
+         TnMZfsgxBuNmodgVnpbdjA5qyMAstnEETYWj/vvo6W8CK73enNef0B5uJQunmzC9w5
+         xF2D0kyIeVLSSBPGip3M5XDLLS5cP8pLQGVC6U0xKImH1r5BaDnUMB6uDGcEIgnb+Z
+         X/WxsQPwuyfNA==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH] kbuild: make multiple directory targets work properly
+Date:   Wed,  5 Feb 2020 15:51:52 +0900
+Message-Id: <20200205065152.873-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-01 03:13, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Jan 31, 2020 at 4:04 AM Sharat Masetty 
-> <smasetty@codeaurora.org> wrote:
->> 
->> +               adreno_smmu: iommu@5040000 {
->> +                       compatible = "qcom,sc7180-smmu-v2", 
->> "qcom,smmu-v2";
->> +                       reg = <0 0x05040000 0 0x10000>;
->> +                       #iommu-cells = <1>;
->> +                       #global-interrupts = <2>;
->> +                       interrupts = <GIC_SPI 229 
->> IRQ_TYPE_LEVEL_HIGH>,
->> +                                       <GIC_SPI 231 
->> IRQ_TYPE_LEVEL_HIGH>,
->> +                                       <GIC_SPI 364 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 365 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 366 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 367 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 368 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 369 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 370 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 371 
->> IRQ_TYPE_EDGE_RISING>;
->> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
->> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
->> +
->> +                       clock-names = "bus", "iface", "mem_iface_clk";
-> 
-> Repeated comment from v2 feedback:
-> 
-> Please send a patch to:
-> 
-> Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> 
-> ...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
-> that you've added a new clock: "mem_iface_clk".  Is this truly a new
-> clock in sc7180 compared to previous IOMMUs?  ...or is it not really
-> needed?
-I can confirm that this clock is needed for SC7180. I will send out a 
-new patch
-to update the documentation this week.
-> 
-> 
->> +               gmu: gmu@506a000 {
->> +                       compatible="qcom,adreno-gmu-618.0", 
->> "qcom,adreno-gmu";
->> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 
->> 0 0x10000>,
->> +                               <0 0x0b490000 0 0x10000>;
->> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
->> +                       interrupts = <GIC_SPI 304 
->> IRQ_TYPE_LEVEL_HIGH>,
->> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
->> +                       interrupt-names = "hfi", "gmu";
->> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
->> +                              <&gpucc GPU_CC_CXO_CLK>,
->> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
->> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
->> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
->> +                       power-domains = <&gpucc CX_GDSC>;
->> +                       power-domain-names = "cx";
-> 
-> As per continued comments on v2, please see if this works for you:
-> 
->   power-domains = <&gpucc CX_GDSC>, <0>;
->   power-domain-names = "cx", "gx";
-> 
-> ...and work to get something more real for "gx" ASAP.  It did seem to
-> boot for me and (unless someone disagrees) it seems better than
-> totally leaving it out / violating the bindings?
-> 
-> 
-> -Doug
+Currently, the single-target build does not work when two
+or more sub-directories are given:
+
+  $ make fs/ kernel/ lib/
+    CALL    scripts/checksyscalls.sh
+    CALL    scripts/atomic/check-atomics.sh
+    DESCEND  objtool
+  make[2]: Nothing to be done for 'kernel/'.
+  make[2]: Nothing to be done for 'fs/'.
+  make[2]: Nothing to be done for 'lib/'.
+
+Make it work properly.
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+Linus,
+
+If you want to use this patch soon (seems useful since
+you are travelling), please feel free to apply it directly.
+
+If you wait for my next pull request, I will apply it to
+my tree.
+
+Either is fine with me.
+
+
+
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 65a5dc653deb..ef8913a8eb2a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1679,7 +1679,7 @@ PHONY += descend $(build-dirs)
+ descend: $(build-dirs)
+ $(build-dirs): prepare
+ 	$(Q)$(MAKE) $(build)=$@ \
+-	single-build=$(if $(filter-out $@/, $(single-no-ko)),1) \
++	single-build=$(if $(filter-out $@/, $(filter $@/%, $(single-no-ko))),1) \
+ 	need-builtin=1 need-modorder=1
+ 
+ clean-dirs := $(addprefix _clean_, $(clean-dirs))
+-- 
+2.17.1
+
