@@ -2,158 +2,127 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FAEC35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA35C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E57217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB03921741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q9KTEEJH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UWs189ma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgBEM1y (ORCPT
+        id S1728088AbgBEM2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:27:54 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37902 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgBEM1x (ORCPT
+        Wed, 5 Feb 2020 07:28:18 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36479 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727355AbgBEM2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:27:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BOW5KZykxI349ZwRVvxHRZ+Lw+4S+aeevegHK214C94=; b=q9KTEEJH599k/P0x11SS7ayg4
-        L0jenCNDR9Y+41TF9olCN0RGMhGGMfF1wNh1KyWIR/npJ7yX72i6h+c9Pf8RvVDbYd9CZLXFVglHC
-        eqjBzgFo/zhnRXaS6hrIfG3Wqjd3kXPn9gvb9gmzEEWrnue4KuyMiJtm/ZaSjJsd95YVX+mwb46De
-        4RrfB6rGoFMsCL3ra5SVHz0bbJPEqhMPCOV9Z4qXOqdzlakTjGR+G73D+/Mn9lru7np6ATjEBQUwA
-        q0FlTWlTEgMy6RHdDVUdajcHzH+IZgMtRgAo+f8PBglLJZ9aBnvHnuMxhwYXlt2BSyT3/vqFtzXkU
-        VG+Jm69dQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:36278)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1izJmN-0000RR-6U; Wed, 05 Feb 2020 12:27:39 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1izJmH-0001t4-Sd; Wed, 05 Feb 2020 12:27:33 +0000
-Date:   Wed, 5 Feb 2020 12:27:33 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200205122733.GU25745@shell.armlinux.org.uk>
-References: <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
- <20200127161132.GX25745@shell.armlinux.org.uk>
- <20200127162206.GJ13647@lunn.ch>
- <c3e863b8-2143-fee3-bb0b-65699661d7ab@gmail.com>
- <BN8PR12MB3266B69DA09E1CC215843C3CD30A0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200204172603.GS25745@shell.armlinux.org.uk>
- <20200204174318.GB1364@lunn.ch>
- <20200204193230.GT25745@shell.armlinux.org.uk>
+        Wed, 5 Feb 2020 07:28:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580905696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=N0JE7+6oGrDAm+xyYIpRKWHwm3P7rCoF8PvZvVL+Ao0=;
+        b=UWs189maj8n7Puq3vFR1FwQ85hzsTHsSbUWQnxA+DxLYhqI55t9ZeaAIFun6Gt/T6/h9zD
+        zZA7M5wr726u6+juoEX48vRv0nKsTG3gYZ/Y5HRG3j+4DPU6iZqNHb16AQhSuUuxNelN6t
+        3FDL/ZQ+p23gHgPn1jZh7kHaf9Jj3aE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-crE4rwpNMyezPs1TrhCfyw-1; Wed, 05 Feb 2020 07:28:14 -0500
+X-MC-Unique: crE4rwpNMyezPs1TrhCfyw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C49C9801A08;
+        Wed,  5 Feb 2020 12:28:13 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00F9F5C1B5;
+        Wed,  5 Feb 2020 12:27:58 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 20:27:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown
+ sub-parameters
+Message-ID: <20200205122754.GA28748@ming.t460p>
+References: <20200204161639.267026-1-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204193230.GT25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200204161639.267026-1-peterx@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 07:32:30PM +0000, Russell King - ARM Linux admin wrote:
-> On Tue, Feb 04, 2020 at 06:43:18PM +0100, Andrew Lunn wrote:
-> > > There, there is one MAC, but there are multiple different PCS - one
-> > > for SGMII and 1000base-X, another for 10G, another for 25G, etc.
-> > > These PCS are accessed via a MDIO adapter embedded in each of the
-> > > MAC hardware blocks.
-> > 
-> > Hi Russell
-> > 
-> > Marvell mv88e6390X switches are like this is a well. There is a PCS
-> > for SGMII and 1000Base-X, and a second one for 10G. And it dynamically
-> > swaps between them depending on the port mode, the so called cmode.
-> > 
-> > So a generic solution is required, and please take your time to build
-> > one.
+On Tue, Feb 04, 2020 at 11:16:39AM -0500, Peter Xu wrote:
+> The "isolcpus=" parameter allows sub-parameters to exist before the
+> cpulist is specified, and if it sees unknown sub-parameters the whole
+> parameter will be ignored.  This design is incompatible with itself
+> when we add more sub-parameters to "isolcpus=", because the old
+> kernels will not recognize the new "isolcpus=" sub-parameters, then it
+> will invalidate the whole parameter so the CPU isolation will not
+> really take effect if we start to use the new sub-parameters while
+> later we reboot into an old kernel. Instead we will see this when
+> booting the old kernel:
 > 
-> Well, DSA is quite a mixed bag...
+>     isolcpus: Error, unknown flag
 > 
-> As far as I can work out, the situation with the CPU and DSA ports is
-> quite hopeless - you've claimed that a change in phylink has broken it,
-> I can't find what that may be.  The fact is, phylink has never had any
-> link information for DSA links when no fixed-link property has been
-> specified in DT.  As I've already said in a previous email about this,
-> I can't see *any* sane way to fix that - but there was no response.
+> The better and compatible way is to allow "isolcpus=" to skip unknown
+> sub-parameters, so that even if we add new sub-parameters to it the
+> old kernel will still be able to behave as usual even if with the new
+> sub-parameter is specified.
 > 
+> Ideally this patch should be there when we introduce the first
+> sub-parameter for "isolcpus=", so it's already a bit late.  However
+> late is better than nothing.
 > 
-> On a more positive note...
+> CC: Ming Lei <ming.lei@redhat.com>
+> CC: Ingo Molnar <mingo@redhat.com>
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Juri Lelli <juri.lelli@redhat.com>
+> CC: Luiz Capitulino <lcapitulino@redhat.com>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  kernel/sched/isolation.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> The mac_link_up() changes that I've talked about should work for DSA,
-> if only there was a reasonable way to reconfigure the ports.  If you
-> look at the "phy" branch, you will notice that there's a patch there -
-> "net: mv88e6xxx: use resolved link config in mac_link_up()" which adds
-> the support to configure the MAC manually.  It's rather messy, and I
-> see no way to deal with the pause settings.  There is support in some
-> Marvell DSA switches to force flow control but that's not supported
-> through the current mid-layer at all (port_set_pause doesn't do it.)
-> I'm not sure whether the "mv88e6xxx_phy_is_internal()" check there is
-> the right test for every DSA switch correct either.
-> 
-> What is missing is reading the results from the PCS (aka serdes) and
-> forwarding them into phylink - I did have a quick look at how that might
-> be possible, but the DSA code structure (consisting of multiple
-> mid-layers) makes it hard without rewriting quite a lot of code.  That's
-> fine if you know all the DSA chips inside out, but I don't - and that's
-> where we need someone who has the knowledge of all DSA switches that we
-> support.  Or, we get rid of the multiple mid-layers and switch to a
-> library approach, so that we can modify support for one DSA switch
-> without affecting everything.  It may be a simple matter of dropping the
-> existing serdes workaround, but I'm not sure at the moment.
-> 
-> I've tried this code out on the ZII rev B, I haven't tried it on the rev
-> C which has the 6390 switches yet.
+> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> index 008d6ac2342b..d5defb667bbc 100644
+> --- a/kernel/sched/isolation.c
+> +++ b/kernel/sched/isolation.c
+> @@ -169,8 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+>  			continue;
+>  		}
+>  
+> -		pr_warn("isolcpus: Error, unknown flag\n");
+> -		return 0;
+> +		str = strchr(str, ',');
+> +		if (str)
+> +			/* Skip unknown sub-parameter */
+> +			str++;
+> +		else
+> +			return 0;
 
-Well, it seems GPIO hogging with the sx1503q (for the 3310 PHY, which
-is a local change) has broken sometime between v4.20 and v5.5, which
-prevents the sx1503q driver probing:
+Looks fine, even though the 'old' kernel has to apply this patch. 
 
-[   23.378706] gpio gpiochip7: (sx1503q): setup of own GPIO 10g-rstn failed
-[   23.394858] requesting hog GPIO 10g-rstn (chip sx1503q, offset 9) failed, -517
-[   23.402512] gpiochip_add_data_with_key: GPIOs 480..495 (sx1503q) failed to register, -517
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Without the hog, the 3310 PHY doesn't come out of reset, so I lose
-port 9 on the first switch.
 
-With that removed, I can boot, and if I bring up sff2, I see the port 9
-on the second switch status report 0xef4b and control 0x303f without
-fiber connected.  I'm out of time to do anything further on this today
-(not even decode those), because its taken all morning to get the board
-to this point, and I won't have any time tomorrow either.
+thanks,
+Ming
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
