@@ -2,191 +2,114 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C16FC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18416C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E2120730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:06:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="g3A0hNA6"
+	by mail.kernel.org (Postfix) with ESMTP id EBE762072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgBEXGF (ORCPT
+        id S1727561AbgBEXIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:06:05 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45556 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbgBEXGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:06:05 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so3847854edw.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:06:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vlJ/U1sEBP1oQwj7OCYoHbsQvGpwGivKoqIGPKoUwhQ=;
-        b=g3A0hNA6kxL9eVlbJg40LlUAgcaXfVIhyAWWXE+HXr4LqixdrqRVAo/myymEo1mxz0
-         7oLsCAN+970Ac58Bz39uxwHBk5xS8SmurEjexUpApiFBRmVaj+XThRHvQNFNlv5Nxdxo
-         4Y1zuutWQbpPW1mbRN/esV23cyvTHNslCjf2ltrYRk5IuHoDiWXU476zY1D53uqKUG7s
-         cJHhXWBb02p6B1RoTL5si0XL5svLP327G3/+Fl6KhJME78x4C51Ez4OcNAgFkA0DfIcX
-         6IA/anxSDbd0lNnuSHawKXd/latZwau57XBct1nsJ/nu94DAxJ6NZhH7tJ76mKMrc570
-         KC6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vlJ/U1sEBP1oQwj7OCYoHbsQvGpwGivKoqIGPKoUwhQ=;
-        b=mlby2YTSM02aORNVNV6aHQ3kVw3f+rqudaAH1An9hK5+YelYSa3nrmgHM3gRuzsSEu
-         +2nwEPyopOmMplWItiE88scWRqUpcxj6AxZEB8xKmu7m/T1F3+PYNe/0Hkjj8Jp/iE5F
-         LYdvdcOAAaLJ0RPLTwptN1hUxA8PpACEJodgTvklhsgS6BDdl/vUsS6vSZMRdLNKlZi4
-         4XyvnS48su5B8dtqAHVpvu3tCCvAAm7j1720FGj+2KkfhCHEE+uzi/9p/t5A/RftuQSM
-         jDvVMsZdT87pqGlzr5lvCYG3CBsodufwh9npOqO+5tpupHOGZ059QNb5Oxx1R2r5aBX4
-         5lJA==
-X-Gm-Message-State: APjAAAUaCCJVFEYsCECsEspKKLTid0EAIMRSwF/1kZ2JmkuAOseWEpBH
-        JljQ0J3/4qKfhXTXpoY/Zs6QDUuPV3Q6txw1Dfis
-X-Google-Smtp-Source: APXvYqz/4rBVGOVjSYn3epCJFE9lKFv+T/52X8+lWfni3jO5pJYkLxPkkrOJ1odyceqG814XJFKyAUMdwXjFbMkHuZg=
-X-Received: by 2002:a17:906:f251:: with SMTP id gy17mr338432ejb.308.1580943963052;
- Wed, 05 Feb 2020 15:06:03 -0800 (PST)
+        Wed, 5 Feb 2020 18:08:02 -0500
+Received: from mga02.intel.com ([134.134.136.20]:62071 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbgBEXIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:08:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:08:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="225098507"
+Received: from gtobin-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.85.85])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Feb 2020 15:07:56 -0800
+Date:   Thu, 6 Feb 2020 01:07:56 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v25 21/21] docs: x86/sgx: Document SGX micro architecture
+ and kernel internals
+Message-ID: <20200205230756.GB28111@linux.intel.com>
+References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
+ <20200204060545.31729-22-jarkko.sakkinen@linux.intel.com>
+ <5ea28632-cd64-bc26-fab6-2868142eb9e4@infradead.org>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
- <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com> <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca>
-In-Reply-To: <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 5 Feb 2020 18:05:52 -0500
-Message-ID: <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ea28632-cd64-bc26-fab6-2868142eb9e4@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 2:28 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-01-22 16:29, Paul Moore wrote:
-> > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >
-> > > Track the parent container of a container to be able to filter and
-> > > report nesting.
-> > >
-> > > Now that we have a way to track and check the parent container of a
-> > > container, modify the contid field format to be able to report that
-> > > nesting using a carrat ("^") separator to indicate nesting.  The
-> > > original field format was "contid=<contid>" for task-associated records
-> > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
-> > > records.  The new field format is
-> > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
-> >
-> > Let's make sure we always use a comma as a separator, even when
-> > recording the parent information, for example:
-> > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
+On Wed, Feb 05, 2020 at 09:54:31AM -0800, Randy Dunlap wrote:
+> Hi,
+> I have some Documentation edits. Please see inline below...
 >
-> The intent here is to clearly indicate and separate nesting from
-> parallel use of several containers by one netns.  If we do away with
-> that distinction, then we lose that inheritance accountability and
-> should really run the list through a "uniq" function to remove the
-> produced redundancies.  This clear inheritance is something Steve was
-> looking for since tracking down individual events/records to show that
-> inheritance was not aways feasible due to rolled logs or search effort.
+> or just: ``grep sgx /proc/cpuinfo
 
-Perhaps my example wasn't clear.  I'm not opposed to the little
-carat/hat character indicating a container's parent, I just think it
-would be good to also include a comma *in*addition* to the carat/hat.
+Makes sense.
 
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  include/linux/audit.h |  1 +
-> > >  kernel/audit.c        | 53 +++++++++++++++++++++++++++++++++++++++++++--------
-> > >  kernel/audit.h        |  1 +
-> > >  kernel/auditfilter.c  | 17 ++++++++++++++++-
-> > >  kernel/auditsc.c      |  2 +-
-> > >  5 files changed, 64 insertions(+), 10 deletions(-)
-> >
-> > ...
-> >
-> > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > index ef8e07524c46..68be59d1a89b 100644
-> > > --- a/kernel/audit.c
-> > > +++ b/kernel/audit.c
-> >
-> > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-> > >                 audit_netns_contid_add(new->net_ns, contid);
-> > >  }
-> > >
-> > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
-> >
-> > If we need a forward declaration, might as well just move it up near
-> > the top of the file with the rest of the declarations.
->
-> Ok.
->
-> > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
-> > > +{
-> > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
-> > > +       int h;
-> >
-> > It seems safer to pass the audit container ID object and not the u64.
->
-> It would also be faster, but in some places it isn't available such as
-> for ptrace and signal targets.  This also links back to the drop record
-> refcounts to hold onto the contobj until process exit, or signal
-> delivery.
->
-> What we could do is to supply two potential parameters, a contobj and/or
-> a contid, and have it use the contobj if it is valid, otherwise, use the
-> contid, as is done for names and paths supplied to audit_log_name().
+> > +key set into MSRs, which would then generate launch tokens for other enclaves.
+> > +This would only make sense with read-only MSRs, and thus the option has been
+> > +discluded.
+> 
+> I can't find "discluded" in a dictionary.
 
-Let's not do multiple parameters, that begs for misuse, let's take the
-wrapper function route:
+Should be "discarded".
 
- func a(int id) {
-   // important stuff
- }
+> "MAC" can mean a lots of different things.  Which one is this?
 
- func ao(struct obj) {
-   a(obj.id);
- }
+Message authentication code. I open
 
-... and we can add a comment that you *really* should be using the
-variant that passes an object.
+I rewrote the whole local attestation section:
 
-> > > @@ -2705,9 +2741,10 @@ int audit_set_contid(struct task_struct *task, u64 contid)
-> > >         if (!ab)
-> > >                 return rc;
-> > >
-> > > -       audit_log_format(ab,
-> > > -                        "op=set opid=%d contid=%llu old-contid=%llu",
-> > > -                        task_tgid_nr(task), contid, oldcontid);
-> > > +       audit_log_format(ab, "op=set opid=%d contid=", task_tgid_nr(task));
-> > > +       audit_log_contid(ab, contid);
-> > > +       audit_log_format(ab, " old-contid=");
-> > > +       audit_log_contid(ab, oldcontid);
-> >
-> > This is an interesting case where contid and old-contid are going to
-> > be largely the same, only the first (current) ID is going to be
-> > different; do we want to duplicate all of those IDs?
->
-> At first when I read your comment, I thought we could just take contid
-> and drop oldcontid, but if it fails, we still want all the information,
-> so given the way I've set up the search code in userspace, listing only
-> the newest contid in the contid field and all the rest in oldcontid
-> could be a good compromise.
+"In local attestation an enclave creates a **REPORT** data structure
+with **ENCLS[EREPORT]**, which describes the origin of an enclave. In
+particular, it contains a AES-CMAC of the enclave contents signed with a
+report key unique to each processor. All enclaves have access to this
+key.
 
-This is along the lines of what I was thinking.
+This mechanism can also be used in addition as a communication channel
+as the **REPORT** data structure includes a 64-byte field for variable
+information."
 
--- 
-paul moore
-www.paul-moore.com
+> > +* ECDSA based scheme, which 3rd party to act as an attestation service.
+> 
+>                          which uses a 3rd party
+> or
+>                          using a 3rd party
+
+It should be "allows a 3rd party".
+
+> > +Intel provides an open source *quoting enclave (QE)* and *provisioning
+> > +certification enclave (PCE)* for the ECDSA based scheme. The latter acts as
+> > +the CA for the local QE's. Intel also a precompiled binary version of the PCE
+> 
+>                                     also provides [??]
+
+I rewrote it as:
+
+"Intel provides a proprietary binary version of the PCE. This is a
+necessity when the software needs to prove to be running inside a legit
+enclave on real hardware."
+
+Thank you for the comments.
+
+/Jarkko
