@@ -2,372 +2,148 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27147C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FC3C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA18F20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EdrGDqRy"
+	by mail.kernel.org (Postfix) with ESMTP id 0D73B20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgBEQJP (ORCPT
+        id S1727085AbgBEQLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:09:15 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41435 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgBEQJO (ORCPT
+        Wed, 5 Feb 2020 11:11:45 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35096 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726534AbgBEQLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:09:14 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l19so1939033qtq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 08:09:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PvMgtmCypa6dN2YRTNmRQCzXIANAtMCLKhGHOwYDoYY=;
-        b=EdrGDqRyMunjHbYpc5wP887ggphFAl5426HJY9WayFNhFqCaCpknkK3F0SlcTYfGiI
-         cgLKTtp1+9KAeJx00gF+Ef08HCs2IzX156DZAWGB++CbeHDxPfZWUauUZufYbiGLGekV
-         83q5BfXwUOuuDj1rwng3JpCrZL/abv51l5TexSgSBcblOAD4C0Ru0U/FMHRXUz4ax3s2
-         kyGjuJUJtFJxWT+T4BqKX+yVfMo3Rj2LrSWFQY7rxZ6CqY/kkvnp5kK51etPgzI9W3gh
-         S5HYUmZjGUNZpPoGEyD6XvAkv7SpZOMK2pZI1JNHJeTRzSndGsjmu0lbdJZlxesgKGhg
-         lhPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PvMgtmCypa6dN2YRTNmRQCzXIANAtMCLKhGHOwYDoYY=;
-        b=ud3joqPJ0kWge0g+6fQC6fb1tK5k8MsYiuWHi0MhFA20vR+NkuqSEQ1O2WuZ431QUI
-         rWgdLEuZX5VpibywurXMosQo1Q3469UPdxnG4C6xVVuVbZjOlGp6Jsw6RBSFuVGNlswr
-         vJHe8tcmMO2/lOpq4Azhb0kI09hSA9J6doezCGWXFzOFzzI+75T/M/WQYHu71Ya+gtC3
-         PZUTgK73L2J2ANwe4y+nzRROMFJ3lg0trAwBN9nyPtUu4fRkLA4VlN5OyXSlTWZOSxes
-         0iwhb7bSpslKJk3h6Q+jysTPwYEvzRr4xsXG7H6KAFTYm/lZo+EGwPLoMQrJs1Y4SR+p
-         lcNg==
-X-Gm-Message-State: APjAAAU8lxtZbqjG0LH0R8TCB5Zy+e2O1ncJfh7V+n73FzVOGoFa9GbS
-        88rxZg0WfFuldtnAic6puuWPRWmUjuHajLzn7rpsEw==
-X-Google-Smtp-Source: APXvYqxVKtTV3F3WyzBJFJ8fLJYXNEpn4L0pyPcYZbS2t12iiyJHC1nVhn0ShSOXvJt3ABJnDADv3vEQuaHk0F8Vbmo=
-X-Received: by 2002:ac8:718e:: with SMTP id w14mr33945370qto.266.1580918952671;
- Wed, 05 Feb 2020 08:09:12 -0800 (PST)
+        Wed, 5 Feb 2020 11:11:44 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015G6xoV036194
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Feb 2020 11:11:43 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhpxxmb8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:11:43 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Wed, 5 Feb 2020 16:11:40 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Feb 2020 16:11:38 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 015GBbd456819952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Feb 2020 16:11:37 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CF7F11C04C;
+        Wed,  5 Feb 2020 16:11:37 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5D0911C052;
+        Wed,  5 Feb 2020 16:11:36 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.204])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  5 Feb 2020 16:11:36 +0000 (GMT)
+Date:   Wed, 5 Feb 2020 17:11:35 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [GIT PULL] s390 patches for the 5.6 merge window #2
 MIME-Version: 1.0
-References: <20200203015203.27882-1-leo.yan@linaro.org> <20200203015203.27882-4-leo.yan@linaro.org>
-In-Reply-To: <20200203015203.27882-4-leo.yan@linaro.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 5 Feb 2020 16:09:01 +0000
-Message-ID: <CAJ9a7Vgx+-8Etcak=NDJ1p1yQeexyqRDFFWPW=bW5ZHNLyeP6A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] perf cs-etm: Correct synthesizing instruction samples
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Robert Walker <robert.walker@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 20020516-0012-0000-0000-00000383F976
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020516-0013-0000-0000-000021C0645C
+Message-Id: <your-ad-here.call-01580919095-ext-5211@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-05_04:2020-02-04,2020-02-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 suspectscore=2 spamscore=0
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=999 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002050123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leo,
+Hello Linus,
 
-There are a couple of typos in the comments below, but I also believe
-that the sample loop could be considerably simplified
+please pull the second round of s390 fixes and features for 5.6.
 
-On Mon, 3 Feb 2020 at 01:52, Leo Yan <leo.yan@linaro.org> wrote:
->
-> When 'etm->instructions_sample_period' is less than
-> 'tidq->period_instructions', the function cs_etm__sample() cannot handle
-> this case properly with its logic.
->
-> Let's see below flow as an example:
->
-> - If we set itrace option '--itrace=i4', then function cs_etm__sample()
->   has variables with initialized values:
->
->   tidq->period_instructions = 0
->   etm->instructions_sample_period = 4
->
-> - When the first packet is coming:
->
->   packet->instr_count = 10; the number of instructions executed in this
->   packet is 10, thus update period_instructions as below:
->
->   tidq->period_instructions = 0 + 10 = 10
->   instrs_over = 10 - 4 = 6
->   offset = 10 - 6 - 1 = 3
->   tidq->period_instructions = instrs_over = 6
->
-> - When the second packet is coming:
->
->   packet->instr_count = 10; in the second pass, assume 10 instructions
->   in the trace sample again:
->
->   tidq->period_instructions = 6 + 10 = 16
->   instrs_over = 16 - 4 = 12
->   offset = 10 - 12 - 1 = -3  -> the negative value
->   tidq->period_instructions = instrs_over = 12
->
-> So after handle these two packets, there have below issues:
->
-> The first issue is that cs_etm__instr_addr() returns the address within
-> the current trace sample of the instruction related to offset, so the
-> offset is supposed to be always unsigned value.  But in fact, function
-> cs_etm__sample() might calculate a negative offset value (in handling
-> the second packet, the offset is -3) and pass to cs_etm__instr_addr()
-> with u64 type with a big positive integer.
->
-> The second issue is it only synthesizes 2 samples for sample period = 4.
-> In theory, every packet has 10 instructions so the two packets have
-> total 20 instructions, 20 instructions should generate 5 samples
-> (4 x 5 = 20).  This is because cs_etm__sample() only calls once
-> cs_etm__synth_instruction_sample() to generate instruction sample per
-> range packet.
->
-> This patch fixes the logic in function cs_etm__sample(); the basic
-> idea is to divide into three parts for handling coming packet:
->
-> - The first part is for synthesizing the first instruction sample, it
->   combines the instructions from the tail of previous packet and the
->   instructions from the head of the new packet;
-> - The second part is to simply generate samples with sample period
->   aligned;
-> - The third part is the tail of new packet, the rest instructions will
->   be left for the sequential sample handling.
->
-> Suggested-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 105 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 92 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 3e28462609e7..c5a05f728eac 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1360,23 +1360,102 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->                  * TODO: allow period to be defined in cycles and clock time
->                  */
->
-> -               /* Get number of instructions executed after the sample point */
-> -               u64 instrs_over = tidq->period_instructions -
-> -                       etm->instructions_sample_period;
-> +               /*
-> +                * Below diagram demonstrates the instruction samples
-> +                * generation flows:
-> +                *
-> +                *    Instrs     Instrs       Instrs       Instrs
-> +                *   Sample(n)  Sample(n+1)  Sample(n+2)  Sample(n+3)
-> +                *    |            |            |            |
-> +                *    V            V            V            V
-> +                *   --------------------------------------------------
-> +                *            ^                                  ^
-> +                *            |                                  |
-> +                *         Period                             Period
-> +                *    instructions(Pi)                   instructions(Pi')
-> +                *
-> +                *            |                                  |
-> +                *            \---------------- -----------------/
-> +                *                             V
-> +                *                      instrs_executed
-> +                *
-> +                * Period instructions (Pi) contains the the number of
-> +                * instructions executed after the sample point(n).  When a new
-> +                * instruction packet is coming and generate for the next sample
-> +                * (n+1), it combines with two parts instructions, one is the
-> +                * tail of the old packet and another is the head of the new
-> +                * coming packet.  So 'head' variable is used to cauclate the
-typo : s/cauclate/calculate
-> +                * instruction numbers in the new packet for sample(n+1).
-> +                *
-> +                * Sample(n+2) and sample(n+3) consume the instructions with
-> +                * sample period, so directly generate samples based on the
-> +                * sampe period.
-> +                *
-typo: s/sampe/sample
-> +                * After sample(n+3), the rest instructions will be used by
-> +                * later packet; so use 'instrs_over' to track the rest
-> +                * instruction number and it is assigned to
-> +                * 'tidq->period_instructions' for next round calculation.
-> +                */
-> +               u64 head, offset = 0;
-> +               u64 addr;
->
->                 /*
-> -                * Calculate the address of the sampled instruction (-1 as
-> -                * sample is reported as though instruction has just been
-> -                * executed, but PC has not advanced to next instruction)
-> +                * 'instrs_over' is the number of instructions executed after
-> +                * sample points, initialise it to 'instrs_executed' and will
-> +                * decrease it for consumed instructions in every synthesized
-> +                * instruction sample.
->                  */
-> -               u64 offset = (instrs_executed - instrs_over - 1);
-> -               u64 addr = cs_etm__instr_addr(etmq, trace_chan_id,
-> -                                             tidq->packet, offset);
-> +               u64 instrs_over = instrs_executed;
->
-> -               ret = cs_etm__synth_instruction_sample(
-> -                       etmq, tidq, addr, etm->instructions_sample_period);
-> -               if (ret)
-> -                       return ret;
-> +               /*
-> +                * 'head' is the instructions number of the head in the new
-> +                * packet, it combines with the tail of previous packet to
-> +                * generate a sample.  So 'head' uses the sample period to
-> +                * decrease the instruction number introduced by the previous
-> +                * packet.
-> +                */
-> +               head = etm->instructions_sample_period -
-> +                                 (tidq->period_instructions - instrs_executed);
-> +
-> +               if (head) {
-> +                       offset = head;
-> +
-> +                       /*
-> +                        * Calculate the address of the sampled instruction (-1
-> +                        * as sample is reported as though instruction has just
-> +                        * been executed, but PC has not advanced to next
-> +                        * instruction)
-> +                        */
-> +                       addr = cs_etm__instr_addr(etmq, trace_chan_id,
-> +                                                 tidq->packet, offset - 1);
-> +                       ret = cs_etm__synth_instruction_sample(
-> +                               etmq, tidq, addr,
-> +                               etm->instructions_sample_period);
-> +                       if (ret)
-> +                               return ret;
-> +
-> +                       instrs_over -= head;
-> +               }
-> +
-> +               while (instrs_over >= etm->instructions_sample_period) {
-> +                       offset += etm->instructions_sample_period;
-> +
-> +                       /*
-> +                        * Calculate the address of the sampled instruction (-1
-> +                        * as sample is reported as though instruction has just
-> +                        * been executed, but PC has not advanced to next
-> +                        * instruction)
-> +                        */
-> +                       addr = cs_etm__instr_addr(etmq, trace_chan_id,
-> +                                                 tidq->packet, offset - 1);
-> +                       ret = cs_etm__synth_instruction_sample(
-> +                               etmq, tidq, addr,
-> +                               etm->instructions_sample_period);
-> +                       if (ret)
-> +                               return ret;
-> +
-> +                       instrs_over -= etm->instructions_sample_period;
-> +               }
->
->                 /* Carry remaining instructions into next sample period */
->                 tidq->period_instructions = instrs_over;
-> --
-> 2.17.1
->
+Thank you,
+Vasily
 
-I believe the following change would work and make for easier reading...
+The following changes since commit 740eaf7d4dd255789987a543b0203ca239b37087:
 
-.... at the start of the function remove instrs_executed and replace ....
-/* get instructions remainder from previous packet */
-u64 instrs_prev = tidq->period_instructions;
+  Merge tag 's390-5.6-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2020-01-28 18:43:08 -0800)
 
-/* set available instructions to previous packet remainder + the
-current packet count  */
-tidq->period_instructions += tidq->packet->instr_count;
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux tags/s390-5.6-2
 
-.... within the if(etm->sample_instructions && ...) statement I would
-be more explicit what the elements of the diagram are ....
+for you to fetch changes up to 55d0a513a0e202c68af2c8f4b1e923a345227bbb:
 
-/*
- * Below diagram demonstrates the instruction samples
- * generation flows:
- *
- *    Instrs     Instrs       Instrs       Instrs
- *   Sample(n)  Sample(n+1)  Sample(n+2)  Sample(n+3)
- *    |            |            |            |
- *    V            V            V            V
- *   --------------------------------------------------
- *            ^                                  ^
- *            |                                  |
- *         Period                             Period
- *    instructions(Pi)                   instructions(Pi')
- *
- *            |                                  |
- *            \---------------- -----------------/
- *                             V
- *                      tidq->packet->instr_count;
- *
- * Instrs Sample(n...) are the synthesised samples occuring every
-etm->instructions_sample_period
- * instructions - as defined on the perf command line. Sample(n) being
-the last sample before the
- * current etm packet, n+1 to n+3 samples generated from the current etm packet.
- *
- * tidq->packet->instr_count represents the number of instructions in
-the current etm packet.
- *
- * Period instructions (Pi) contains the the number of instructions
-executed after the sample point(n)
- * from the previous etm packet. This will always be less than
-etm->instructions_sample_period.
- *
+  s390/pkey/zcrypt: Support EP11 AES secure keys (2020-01-30 13:07:56 +0100)
 
-.... continue with explanation here ....
+----------------------------------------------------------------
+s390 updates for the 5.6 merge window #2
 
+- Add KPROBES_ON_FTRACE support.
 
-.... then we can simplify the loop code removing some of the temporary
-variables ....
+- Add EP11 AES secure keys support.
 
-/* get the initial offset into the current packet instructions
-   (entry conditions ensure that instrs_prev < etm->instructions_sample_period)
- */
-u64 offset = etm->instructions_sample_period - instrs_prev;
-u64 addr;
+- PAES rework and prerequisites for paes-s390 ciphers selftests.
 
-/* Prepare last branches for instruction sample */
-if (etm->synth_opts.last_branch)
-    cs_etm__copy_last_branch_rb(etmq, tidq);
+- Fix page table upgrade for hugetlbfs.
 
-while (tidq->period_instructions >= etm->instructions_sample_period) {
+----------------------------------------------------------------
+Gerald Schaefer (1):
+      s390/mm: fix dynamic pagetable upgrade for hugetlbfs
 
-      /*
-       * Calculate the address of the sampled instruction (-1
-       * as sample is reported as though instruction has just
-       * been executed, but PC has not advanced to next
-       * instruction)
-       */
-    addr = cs_etm__instr_addr(etmq, trace_chan_id, tidq->packet, offset - 1);
-    ret = cs_etm__synth_instruction_sample( etmq, tidq, addr,
-                etm->instructions_sample_period);
-    if (ret)
-        return ret;
+Harald Freudenberger (8):
+      s390/crypto: Rework on paes implementation
+      s390/pkey: Add support for key blob with clear key value
+      s390/crypto: enable clear key values for paes ciphers
+      s390/zcrypt: enable card/domain autoselect on ep11 cprbs
+      s390/zcrypt: ep11 structs rework, export zcrypt_send_ep11_cprb
+      s390/zcrypt: add new low level ep11 functions support file
+      s390/zcrypt: extend EP11 card and queue sysfs attributes
+      s390/pkey/zcrypt: Support EP11 AES secure keys
 
-    offset += etm->instructions_sample_period;
-    tidq->period_instructions -= etm->instructions_sample_period;
-}
+Sven Schnelle (1):
+      s390: support KPROBES_ON_FTRACE
 
-.....
-I believe the above should work, but cannot claim to have tried it
-out. What do you think?
+ .../debug/kprobes-on-ftrace/arch-support.txt       |    2 +-
+ arch/s390/Kconfig                                  |    1 +
+ arch/s390/crypto/paes_s390.c                       |  230 +++-
+ arch/s390/include/asm/kprobes.h                    |    1 -
+ arch/s390/include/asm/page.h                       |    2 +
+ arch/s390/include/uapi/asm/pkey.h                  |   69 +-
+ arch/s390/include/uapi/asm/zcrypt.h                |   32 +-
+ arch/s390/kernel/ftrace.c                          |   80 +-
+ arch/s390/kernel/kprobes.c                         |   61 +-
+ arch/s390/kernel/mcount.S                          |    6 +
+ arch/s390/mm/hugetlbpage.c                         |  100 +-
+ drivers/s390/crypto/Makefile                       |    3 +-
+ drivers/s390/crypto/pkey_api.c                     |  470 ++++++-
+ drivers/s390/crypto/zcrypt_api.c                   |   27 +-
+ drivers/s390/crypto/zcrypt_api.h                   |    1 +
+ drivers/s390/crypto/zcrypt_ccamisc.h               |    1 +
+ drivers/s390/crypto/zcrypt_cex4.c                  |  273 ++++-
+ drivers/s390/crypto/zcrypt_ep11misc.c              | 1293 ++++++++++++++++++++
+ drivers/s390/crypto/zcrypt_ep11misc.h              |  124 ++
+ 19 files changed, 2494 insertions(+), 282 deletions(-)
+ create mode 100644 drivers/s390/crypto/zcrypt_ep11misc.c
+ create mode 100644 drivers/s390/crypto/zcrypt_ep11misc.h
 
-Regards
-
-Mike
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
