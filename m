@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC699C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3115C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68FE222D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A3D217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMa4T+ws"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KovrFgSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgBEPz0 (ORCPT
+        id S1727667AbgBEPz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:55:26 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38826 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727621AbgBEPzZ (ORCPT
+        Wed, 5 Feb 2020 10:55:29 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:54830 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727621AbgBEPz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:55:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so1417963pfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:55:24 -0800 (PST)
+        Wed, 5 Feb 2020 10:55:28 -0500
+Received: by mail-pj1-f68.google.com with SMTP id dw13so1142226pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:55:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=u1cAZL9ccoEDbLGWKB9jm2v64PDcsO++iTOy4WtzRP0=;
-        b=JMa4T+ws8shCNHx16TbsTbxZdnfu6YF6Hr1qBsRuiJcG4E2w8tb83QNFiMB5ko4bmN
-         vWZmMPWd6qzApH/icfsGl3/SL2ydxP3ojwATyV3A6L2ny+34xCSKPU+gcWrVyVnBJwDN
-         G3ktq46rIRps0ME9X2ZkwLr7G1uv1yLsXQobc4qoTxn2fQk7YD9PtY2Qgk9aYM94St+1
-         qeIjxlnuwzK56ocUWckheya9aNWYaS0pQsCtT1aWZJVon5CvWP3yTvecyzpAimF2J2v8
-         bbxBEDjmjLwTfZF1m1rgKbkOk9MkHCjpwBUSg52fQiZxrNak3SMIj4GREuT6BvSpoE+E
-         Ux7A==
+        bh=5hu692SP05XeWg1iEg/5pM4NUOKOgYoW5YB1MBMx/Sg=;
+        b=KovrFgSN1RLFU0dQ1e+ni3RbNTkHoele04g9B9yqWpkGxhwpa+MIvzsc70MhuYWfIb
+         5OZMzZu1QuQ0ImizQeHSC6jvN03hnUp6VrVzKP6ABRtAbJ7LBCdoLc8nGzhQRsBxFgr6
+         d5Lqg1JwEvxYO0CZYpwJ+ftb2y+R/d9WMtVMAPTIDX1aMBly5mRXwV3/OjgtvCyxjAqp
+         PebTJ0hHB9oL/ZBRf/r2KVndMZxPcI+6h9K+yy6jJBVfj8di3mUbEHRG2kZzVQDI05Px
+         F/CC0b5GROUQ8rvTgk9bi6+UzPGjduq7ppX3Ku1p3noUC6vEUwC+02CkNpCajql3ZM6w
+         gdyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:in-reply-to:references;
-        bh=u1cAZL9ccoEDbLGWKB9jm2v64PDcsO++iTOy4WtzRP0=;
-        b=htFJ4imELbrlyOT1DPfL+e9vqd6HHam5k6mAAD+mG0+m9+1qvE7+SNQF0qJgbq8I9N
-         +38psF2q8Gaqa6z4DZojIHgSMa0uv5tiHH5TZdJ3k13RcdyfHE8ZYDmX/pk6YAziUYfy
-         c6vJeyHYC5jKUyI8N4lV1QeOAj/HT1bnPVh4x2+J3GXcVYXxvWcqB7OD3SlmckMwrYk+
-         Sl4MsUuxMuxUu3b0gJKl/jucV5BJ9wuGIbaOI0UO5gzWMbB5zb6gZ4+H7ShizS9vC8tR
-         fyo4km2CYtfo4qqD4kxg10Cs7unxN/g5LEqX5944JTRbwzb49v2Zt9c8OGvWCTsRlSBm
-         zJcw==
-X-Gm-Message-State: APjAAAXpax0vbmhTtG0b/EAF0SE6HmiT2ttNHkU0YkkoBHqP0Ag07WCC
-        azEw6cO60GIND9HRPa+GcrI=
-X-Google-Smtp-Source: APXvYqynanJ+h0dRTwIrai7J6nOrCslS9StZirKZFUoAmsRGUvNaja7q5WSrrY6r3EXrteefNv57gA==
-X-Received: by 2002:aa7:8149:: with SMTP id d9mr35921404pfn.170.1580918124265;
-        Wed, 05 Feb 2020 07:55:24 -0800 (PST)
+        bh=5hu692SP05XeWg1iEg/5pM4NUOKOgYoW5YB1MBMx/Sg=;
+        b=DwWXQnW0Iz3MEvBkh/FUK/WmcUlVc2pjqz5dayNA6Laj8KCwyn0mKnNko5mzs0Vl4j
+         6gylI9Q/g7mc6WQUnG3udkcTg+96aCxaaRipDBlfu6Yq+1JOxa9wspTCe2+/SCQv9TjH
+         B+fqzKdVLlEMcwtq2iwKbg68gxi4ZDV9sJ5aritvWE9zywh/IQ+u/amXPd2iCWavaWc/
+         pFjMmQUHW//pkQJAc9lOLTZT2PA/kvEGTHHYglYVzsadgFr2Gz9Do91WcNTHIIQ41/lW
+         +wnjsfyyF/u27cIe+jr8O0P3aHmiaBx/32LEhCwbY5PkghnfEgGOCru/16qmHkS7H135
+         uPWw==
+X-Gm-Message-State: APjAAAVAnVtMbnnONdkw0EpSUMUtfE91WOyYa967mljWY9+nhdSH6TiP
+        y6Ig+DdYNVIfUC7+2Pc009I=
+X-Google-Smtp-Source: APXvYqzZwEViSPE5ZfA+cXcMvtDKHCvBVdWuL88Qs3lIt/N6pOQxrazKXlio0KSgrfmFFwDvr1c4ow==
+X-Received: by 2002:a17:902:b612:: with SMTP id b18mr33947745pls.318.1580918127370;
+        Wed, 05 Feb 2020 07:55:27 -0800 (PST)
 Received: from emb-wallaby.amd.com ([165.204.156.251])
-        by smtp.gmail.com with ESMTPSA id z10sm195678pgz.88.2020.02.05.07.55.21
+        by smtp.gmail.com with ESMTPSA id z10sm195678pgz.88.2020.02.05.07.55.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 07:55:23 -0800 (PST)
+        Wed, 05 Feb 2020 07:55:26 -0800 (PST)
 From:   Arindam Nath <arindam.nath@amd.com>
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
         Jon Mason <jdmason@kudzu.us>,
@@ -65,9 +65,9 @@ To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
         Sanjay R Mehta <sanju.mehta@amd.com>
 Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
         Arindam Nath <arindam.nath@amd.com>
-Subject: [PATCH 12/15] NTB: return link up status correctly for PRI and SEC
-Date:   Wed,  5 Feb 2020 21:24:29 +0530
-Message-Id: <542aee58e6c78f240da80b3de84f8fa0b88ae6ad.1580914232.git.arindam.nath@amd.com>
+Subject: [PATCH 13/15] NTB: remove redundant setting of DB valid mask
+Date:   Wed,  5 Feb 2020 21:24:30 +0530
+Message-Id: <77ab9d5b86cbf404cd254d50d26e276472014293.1580914232.git.arindam.nath@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1580914232.git.arindam.nath@amd.com>
 References: <cover.1580914232.git.arindam.nath@amd.com>
@@ -78,124 +78,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since NTB connects two physically separate systems,
-there can be scenarios where one system goes down
-while the other one remains active. In case of NTB
-primary, if the NTB secondary goes down, a Link-Down
-event is received. For the NTB secondary, if the
-NTB primary goes down, the PCIe hotplug mechanism
-ensures that the driver on the secondary side is also
-unloaded.
-
-But there are other scenarios to consider as well,
-when suppose the physical link remains active, but
-the driver on primary or secondary side is loaded
-or un-loaded.
-
-When the driver is loaded, on either side, it sets
-SIDE_READY bit(bit-1) of SIDE_INFO register. Similarly,
-when the driver is un-loaded, it resets the same bit.
-
-We consider the NTB link to be up and operational
-only when the driver on both sides of link are loaded
-and ready. But we also need to take account of
-Link Up and Down events which signify the physical
-link status. So amd_link_is_up() is modified to take
-care of the above scenarios.
+db_valid_mask is set at two places, once within
+amd_init_ntb(), and again within amd_init_dev().
+Since amd_init_ntb() is actually called from
+amd_init_dev(), setting db_valid_mask from
+former does not really make sense. So remove it.
 
 Signed-off-by: Arindam Nath <arindam.nath@amd.com>
 ---
- drivers/ntb/hw/amd/ntb_hw_amd.c | 64 ++++++++++++++++++++++++++++++---
- drivers/ntb/hw/amd/ntb_hw_amd.h |  1 +
- 2 files changed, 60 insertions(+), 5 deletions(-)
+ drivers/ntb/hw/amd/ntb_hw_amd.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-index d4029d531466..8a9852343de6 100644
+index 8a9852343de6..04be1482037b 100644
 --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
 +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -245,12 +245,66 @@ static int amd_ntb_get_link_status(struct amd_ntb_dev *ndev)
- 
- static int amd_link_is_up(struct amd_ntb_dev *ndev)
- {
--	if (!ndev->peer_sta)
--		return ndev->cntl_sta;
-+	int ret;
-+
-+	/*
-+	 * We consider the link to be up under two conditions:
-+	 *
-+	 *   - When a link-up event is received. This is indicated by
-+	 *     AMD_LINK_UP_EVENT set in peer_sta.
-+	 *   - When driver on both sides of the link have been loaded.
-+	 *     This is indicated by bit 1 being set in the peer
-+	 *     SIDEINFO register.
-+	 *
-+	 * This function should return 1 when the latter of the above
-+	 * two conditions is true.
-+	 *
-+	 * Now consider the sequence of events - Link-Up event occurs,
-+	 * then the peer side driver loads. In this case, we would have
-+	 * received LINK_UP event and bit 1 of peer SIDEINFO is also
-+	 * set. What happens now if the link goes down? Bit 1 of
-+	 * peer SIDEINFO remains set, but LINK_DOWN bit is set in
-+	 * peer_sta. So we should return 0 from this function. Not only
-+	 * that, we clear bit 1 of peer SIDEINFO to 0, since the peer
-+	 * side driver did not even get a chance to clear it before
-+	 * the link went down. This can be the case of surprise link
-+	 * removal.
-+	 *
-+	 * LINK_UP event will always occur before the peer side driver
-+	 * gets loaded the very first time. So there can be a case when
-+	 * the LINK_UP event has occurred, but the peer side driver hasn't
-+	 * yet loaded. We return 0 in that case.
-+	 *
-+	 * There is also a special case when the primary side driver is
-+	 * unloaded and then loaded again. Since there is no change in
-+	 * the status of NTB secondary in this case, there is no Link-Up
-+	 * or Link-Down notification received. We recognize this condition
-+	 * with peer_sta being set to 0.
-+	 *
-+	 * If bit 1 of peer SIDEINFO register is not set, then we
-+	 * simply return 0 irrespective of the link up or down status
-+	 * set in peer_sta.
-+	 */
-+	ret = amd_poll_link(ndev);
-+	if (ret) {
-+		/*
-+		 * We need to check the below only for NTB primary. For NTB
-+		 * secondary, simply checking the result of PSIDE_INFO
-+		 * register will suffice.
-+		 */
-+		if (ndev->ntb.topo == NTB_TOPO_PRI) {
-+			if ((ndev->peer_sta & AMD_LINK_UP_EVENT) ||
-+			    (ndev->peer_sta == 0))
-+				return ret;
-+			else if (ndev->peer_sta & AMD_LINK_DOWN_EVENT) {
-+				/* Clear peer sideinfo register */
-+				amd_clear_side_info_reg(ndev, true);
- 
--	if (ndev->peer_sta & AMD_LINK_UP_EVENT) {
--		ndev->peer_sta = 0;
--		return 1;
-+				return 0;
-+			}
-+		} else { /* NTB_TOPO_SEC */
-+			return ret;
-+		}
+@@ -1056,8 +1056,6 @@ static int amd_init_ntb(struct amd_ntb_dev *ndev)
+ 		return -EINVAL;
  	}
  
- 	return 0;
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_amd.h
-index 62ffdf35b683..73959c0b9972 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.h
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
-@@ -217,5 +217,6 @@ struct amd_ntb_dev {
+-	ndev->db_valid_mask = BIT_ULL(ndev->db_count) - 1;
+-
+ 	/* Mask event interrupts */
+ 	writel(ndev->int_mask, mmio + AMD_INTMASK_OFFSET);
  
- static void amd_set_side_info_reg(struct amd_ntb_dev *ndev, bool peer);
- static void amd_clear_side_info_reg(struct amd_ntb_dev *ndev, bool peer);
-+static int amd_poll_link(struct amd_ntb_dev *ndev);
- 
- #endif
 -- 
 2.17.1
 
