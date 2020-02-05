@@ -2,70 +2,69 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11FFC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D2CC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83176218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CB921741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8wu2z5+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bEaYo/0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgBETId (ORCPT
+        id S1727398AbgBETJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:08:33 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51141 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgBETIb (ORCPT
+        Wed, 5 Feb 2020 14:09:38 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41577 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgBETJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:08:31 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so3690448wmb.0;
-        Wed, 05 Feb 2020 11:08:29 -0800 (PST)
+        Wed, 5 Feb 2020 14:09:38 -0500
+Received: by mail-pl1-f196.google.com with SMTP id t14so1260990plr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:09:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=g6L+rbiNcdTBVsL6kM+kxRr5RcsPRbao2r368VHF3VU=;
-        b=P8wu2z5+bnBUNwlbxEku7azWnc176dPXBpkEd7UYdgv01rNRdvlokB/3y08YelaRPh
-         k6mLAfop46KJc4Xwsr/5Zz+ZYLn9SC1NTlT9FQiI/H38eQxi0oB+AZcDCG3QNdilx7Qu
-         eMaCe+TJLMrRNQUtL+OQztH2eovFh7wbK8aka1Cd0BgGX9Apq7Zs440iMK9moeFf0jI6
-         D3zAxRTbCxcX2jCnJ7VXlxaSyA4w+Ok8W9JDWO1Snn+W94tgVIW1qXRoHMs8gMjxUgy0
-         I1G2a5TZol0RNAG6aB2zf3dSww8lUHad/R0h4EbTdYKE4SDuPVMMbugGjC1OZ093O/Q7
-         xDUQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yQwjxtnCuhNLgby4wbmF8n20Zz+eQKPbKb6xRpOo1+Y=;
+        b=bEaYo/0OG7G4bg2lFM5kTYQQvYQPiVHZd9xuqDapJFMOgmPc8N5xliVdxLcbn2mH3z
+         9NKCaueAjDicw43YIh3MRNyiuMwLVk7728Yc5U9U0Fo+b35KIYghdR9aodPRIeYaZIwq
+         QQDVJzwXvMLeEFjin4Z2yNy+SKPP7KOLSJhXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=g6L+rbiNcdTBVsL6kM+kxRr5RcsPRbao2r368VHF3VU=;
-        b=cXq479zVgE4KtnkTU/bF/CjAB6d5SdMjAESBrlsxt4oQy0eR+vs8PitXolZ3wyIxlB
-         ZOiPqfqU0TgGSBHdgPFkSSsrQ3Qm3hUetdBPRloE+Rc87DyfX1JPzHuXQ09iaIUeUj/W
-         BR9Jx2IxLaYDumYuCQuFF54WdhQp8FGLB+Tby97AnsO2GX5QMEK5SD/1ASVgwckWYyxn
-         kc/AKlaPt8a6I28VhNqJUYZOzR0RxcQ4UVOT2DdzHhpvUME/5idYDK2DQgzxgzqHo0Jv
-         RREIc5AVY+4A1dQVLC0Ml75Yw9Fbxq0gaQJcxFOwkn4viYstFi2wQElAzRZ4JbKScwpI
-         a43w==
-X-Gm-Message-State: APjAAAVym8WK32arTTJ4KpRT0fH9Dt9KbQ26yMfqzlAjCVoX9T/mPrAx
-        gzWympLN3QXt0gGPtRcloMw=
-X-Google-Smtp-Source: APXvYqy3SpASx381GST6MjPbT70uWHMQXmjK3127CWOOJp2tMv2TPJKN+epcZsx4qG9h34ix0mYsRA==
-X-Received: by 2002:a1c:bb82:: with SMTP id l124mr7140850wmf.176.1580929708758;
-        Wed, 05 Feb 2020 11:08:28 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id b10sm915568wrw.61.2020.02.05.11.08.27
+        bh=yQwjxtnCuhNLgby4wbmF8n20Zz+eQKPbKb6xRpOo1+Y=;
+        b=fJGQAQVoftJVWqLpOQpE4DeGZhJ60/1awg+kzWKUGqIIQpzXY2I2Wf/voEumxGka2w
+         L2KHHmTP76G8xkvQQtJTc9NqnqrGrungq3Cl1K6A7JGNuS5leUQE+pZwB9PbVVfY4HiV
+         tRWZgCIgAep2tNdLFDMswdVwYIro4MKXEVr2D8QjeWVcspQPO0Bn1rOoEJG4zSqNH4/5
+         oiNkyqf7Vx/tSvkJZf49YP0YgbaqMIlcF0guD8bhkTJEZ5QFIzVcwJRxMt+IAZjFaEPA
+         zc7O8S75NUBfBQNuqRVFIWgqQuffcLsTaw6KC9rw61Ud6XpZUxEKiG+8FR9I5oaW3oXT
+         v6cA==
+X-Gm-Message-State: APjAAAXkJzZQpw/xpQ9S4b8XAQ72u6Tq4K5BhCuF8iGNHDmfKwNbzfDf
+        y3kK7Hkkzo/r+ToNGVMEP10G07Tm/t8=
+X-Google-Smtp-Source: APXvYqzE0wh0/PvbAsBgluXB7J12nEot424BnZLQBg4/3szM5HNdx6KpcwShp85X6JrHeKUB7lztFg==
+X-Received: by 2002:a17:902:8642:: with SMTP id y2mr35879837plt.306.1580929777005;
+        Wed, 05 Feb 2020 11:09:37 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id u23sm257224pfm.29.2020.02.05.11.09.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 11:08:28 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] io_uring: pass sqe for link head
-Date:   Wed,  5 Feb 2020 22:07:31 +0300
-Message-Id: <c9654d6a79898d5f8aa8b9dabcb76d9f23faa149.1580928112.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1580928112.git.asml.silence@gmail.com>
-References: <cover.1580928112.git.asml.silence@gmail.com>
+        Wed, 05 Feb 2020 11:09:36 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH v2 07/17] platform/chrome: sysfs: Use cros_ec_cmd()
+Date:   Wed,  5 Feb 2020 11:00:07 -0800
+Message-Id: <20200205190028.183069-8-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200205190028.183069-1-pmalani@chromium.org>
+References: <20200205190028.183069-1-pmalani@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,95 +72,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save an sqe for a head of a link, so it doesn't go through switch in
-io_req_defer_prep() nor allocating an async context in advance.
+Replace cros_ec_cmd_xfer_status() calls to the new function
+cros_ec_cmd() which is more readable and does the message setup code.
 
-Also, it's fixes potenial memleak for double-preparing head requests.
-E.g. prep in io_submit_sqe() and then prep in io_req_defer(),
-which leaks iovec for vectored read/writes.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
- fs/io_uring.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index f00c2c9c67c0..e18056af5672 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4721,20 +4721,22 @@ static void io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+Changes in v2:
+- Updated to use new function name and parameter list.
+
+ drivers/platform/chrome/cros_ec_sysfs.c | 103 +++++++++---------------
+ 1 file changed, 39 insertions(+), 64 deletions(-)
+
+diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+index 07dac97ad57c67..107eb81dff1305 100644
+--- a/drivers/platform/chrome/cros_ec_sysfs.c
++++ b/drivers/platform/chrome/cros_ec_sysfs.c
+@@ -51,20 +51,13 @@ static ssize_t reboot_store(struct device *dev,
+ 		{"hibernate",    EC_REBOOT_HIBERNATE, 0},
+ 		{"at-shutdown",  -1, EC_REBOOT_FLAG_ON_AP_SHUTDOWN},
+ 	};
+-	struct cros_ec_command *msg;
+-	struct ec_params_reboot_ec *param;
++	struct ec_params_reboot_ec param = {0};
+ 	int got_cmd = 0, offset = 0;
+ 	int i;
+ 	int ret;
+ 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+ 
+-	msg = kmalloc(sizeof(*msg) + sizeof(*param), GFP_KERNEL);
+-	if (!msg)
+-		return -ENOMEM;
+-
+-	param = (struct ec_params_reboot_ec *)msg->data;
+-
+-	param->flags = 0;
++	param.flags = 0;
+ 	while (1) {
+ 		/* Find word to start scanning */
+ 		while (buf[offset] && isspace(buf[offset]))
+@@ -76,9 +69,9 @@ static ssize_t reboot_store(struct device *dev,
+ 			if (!strncasecmp(words[i].str, buf+offset,
+ 					 strlen(words[i].str))) {
+ 				if (words[i].flags) {
+-					param->flags |= words[i].flags;
++					param.flags |= words[i].flags;
+ 				} else {
+-					param->cmd = words[i].cmd;
++					param.cmd = words[i].cmd;
+ 					got_cmd = 1;
+ 				}
+ 				break;
+@@ -95,15 +88,11 @@ static ssize_t reboot_store(struct device *dev,
+ 		goto exit;
  	}
+ 
+-	msg->version = 0;
+-	msg->command = EC_CMD_REBOOT_EC + ec->cmd_offset;
+-	msg->outsize = sizeof(*param);
+-	msg->insize = 0;
+-	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	ret = cros_ec_cmd(ec->ec_dev, 0, EC_CMD_REBOOT_EC + ec->cmd_offset,
++			  &param, sizeof(param), NULL, 0, NULL);
+ 	if (ret < 0)
+ 		count = ret;
+ exit:
+-	kfree(msg);
+ 	return count;
  }
  
--static inline void io_queue_link_head(struct io_kiocb *req)
-+static inline void io_queue_link_head(struct io_kiocb *req,
-+				      const struct io_uring_sqe *sqe)
- {
- 	if (unlikely(req->flags & REQ_F_FAIL_LINK)) {
- 		io_cqring_add_event(req, -ECANCELED);
- 		io_double_put_req(req);
- 	} else
--		io_queue_sqe(req, NULL);
-+		io_queue_sqe(req, sqe);
+@@ -115,25 +104,23 @@ static ssize_t version_show(struct device *dev,
+ 	struct ec_response_get_chip_info *r_chip;
+ 	struct ec_response_board_version *r_board;
+ 	struct cros_ec_command *msg;
++	void *ec_buf;
+ 	int ret;
+ 	int count = 0;
+ 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+ 
+-	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
+-	if (!msg)
++	ec_buf = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
++	if (!ec_buf)
+ 		return -ENOMEM;
+ 
+ 	/* Get versions. RW may change. */
+-	msg->version = 0;
+-	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
+-	msg->insize = sizeof(*r_ver);
+-	msg->outsize = 0;
+-	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	ret = cros_ec_cmd(ec->ec_dev, 0, EC_CMD_GET_VERSION  + ec->cmd_offset,
++			  NULL, 0, ec_buf, sizeof(*r_ver), NULL);
+ 	if (ret < 0) {
+ 		count = ret;
+ 		goto exit;
+ 	}
+-	r_ver = (struct ec_response_get_version *)msg->data;
++	r_ver = (struct ec_response_get_version *)ec_buf;
+ 	/* Strings should be null-terminated, but let's be sure. */
+ 	r_ver->version_string_ro[sizeof(r_ver->version_string_ro) - 1] = '\0';
+ 	r_ver->version_string_rw[sizeof(r_ver->version_string_rw) - 1] = '\0';
+@@ -145,8 +132,10 @@ static ssize_t version_show(struct device *dev,
+ 			   "Firmware copy: %s\n",
+ 			   (r_ver->current_image < ARRAY_SIZE(image_names) ?
+ 			    image_names[r_ver->current_image] : "?"));
++	memset(ec_buf, 0, sizeof(*msg) + EC_HOST_PARAM_SIZE);
+ 
+ 	/* Get build info. */
++	msg = (struct cros_ec_command *)ec_buf;
+ 	msg->command = EC_CMD_GET_BUILD_INFO + ec->cmd_offset;
+ 	msg->insize = EC_HOST_PARAM_SIZE;
+ 	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
+@@ -205,40 +194,28 @@ static ssize_t version_show(struct device *dev,
+ 	}
+ 
+ exit:
+-	kfree(msg);
++	kfree(ec_buf);
+ 	return count;
  }
  
- #define SQE_VALID_FLAGS	(IOSQE_FIXED_FILE|IOSQE_IO_DRAIN|IOSQE_IO_LINK|	\
- 				IOSQE_IO_HARDLINK | IOSQE_ASYNC)
- 
- static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
--			  struct io_submit_state *state, struct io_kiocb **link)
-+			  struct io_submit_state *state, struct io_kiocb **link,
-+			  const struct io_uring_sqe **link_sqe)
+ static ssize_t flashinfo_show(struct device *dev,
+ 			      struct device_attribute *attr, char *buf)
  {
- 	const struct cred *old_creds = NULL;
- 	struct io_ring_ctx *ctx = req->ctx;
-@@ -4812,7 +4814,7 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+-	struct ec_response_flash_info *resp;
+-	struct cros_ec_command *msg;
++	struct ec_response_flash_info resp = {0};
+ 	int ret;
+ 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
  
- 		/* last request of a link, enqueue the link */
- 		if (!(sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK))) {
--			io_queue_link_head(head);
-+			io_queue_link_head(head, *link_sqe);
- 			*link = NULL;
- 		}
- 	} else {
-@@ -4823,10 +4825,8 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 		if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
- 			req->flags |= REQ_F_LINK;
- 			INIT_LIST_HEAD(&req->link_list);
--			ret = io_req_defer_prep(req, sqe);
--			if (ret)
--				req->flags |= REQ_F_FAIL_LINK;
- 			*link = req;
-+			*link_sqe = sqe;
- 		} else {
- 			io_queue_sqe(req, sqe);
- 		}
-@@ -4924,6 +4924,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 	struct io_kiocb *link = NULL;
- 	int i, submitted = 0;
- 	bool mm_fault = false;
-+	const struct io_uring_sqe *link_sqe = NULL;
+-	msg = kmalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
+-	if (!msg)
+-		return -ENOMEM;
+-
+-	/* The flash info shouldn't ever change, but ask each time anyway. */
+-	msg->version = 0;
+-	msg->command = EC_CMD_FLASH_INFO + ec->cmd_offset;
+-	msg->insize = sizeof(*resp);
+-	msg->outsize = 0;
+-	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	ret = cros_ec_cmd(ec->ec_dev, 0, EC_CMD_FLASH_INFO + ec->cmd_offset,
++			  NULL, 0, &resp, sizeof(resp), NULL);
+ 	if (ret < 0)
+ 		goto exit;
  
- 	/* if we have a backlog and couldn't flush it all, return BUSY */
- 	if (test_bit(0, &ctx->sq_check_overflow)) {
-@@ -4983,7 +4984,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		req->needs_fixed_file = async;
- 		trace_io_uring_submit_sqe(ctx, req->opcode, req->user_data,
- 						true, async);
--		if (!io_submit_sqe(req, sqe, statep, &link))
-+		if (!io_submit_sqe(req, sqe, statep, &link, &link_sqe))
- 			break;
- 	}
+-	resp = (struct ec_response_flash_info *)msg->data;
+-
+ 	ret = scnprintf(buf, PAGE_SIZE,
+ 			"FlashSize %d\nWriteSize %d\n"
+ 			"EraseSize %d\nProtectSize %d\n",
+-			resp->flash_size, resp->write_block_size,
+-			resp->erase_block_size, resp->protect_block_size);
++			resp.flash_size, resp.write_block_size,
++			resp.erase_block_size, resp.protect_block_size);
+ exit:
+-	kfree(msg);
+ 	return ret;
+ }
  
-@@ -4993,7 +4994,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		percpu_ref_put_many(&ctx->refs, nr - ref_used);
- 	}
- 	if (link)
--		io_queue_link_head(link);
-+		io_queue_link_head(link, link_sqe);
- 	if (statep)
- 		io_submit_state_end(&state);
+@@ -249,29 +226,27 @@ static ssize_t kb_wake_angle_show(struct device *dev,
+ 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+ 	struct ec_response_motion_sense *resp;
+ 	struct ec_params_motion_sense *param;
+-	struct cros_ec_command *msg;
++	void *ec_buf;
+ 	int ret;
  
+-	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
+-	if (!msg)
++	ec_buf = kmalloc(EC_HOST_PARAM_SIZE, GFP_KERNEL);
++	if (!ec_buf)
+ 		return -ENOMEM;
+ 
+-	param = (struct ec_params_motion_sense *)msg->data;
+-	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+-	msg->version = 2;
++	param = (struct ec_params_motion_sense *)ec_buf;
++	resp = (struct ec_response_motion_sense *)ec_buf;
+ 	param->cmd = MOTIONSENSE_CMD_KB_WAKE_ANGLE;
+ 	param->kb_wake_angle.data = EC_MOTION_SENSE_NO_VALUE;
+-	msg->outsize = sizeof(*param);
+-	msg->insize = sizeof(*resp);
+ 
+-	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	ret = cros_ec_cmd(ec->ec_dev, 2,
++			  EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset, param,
++			  sizeof(*param), resp, sizeof(*resp), NULL);
+ 	if (ret < 0)
+ 		goto exit;
+ 
+-	resp = (struct ec_response_motion_sense *)msg->data;
+ 	ret = scnprintf(buf, PAGE_SIZE, "%d\n", resp->kb_wake_angle.ret);
+ exit:
+-	kfree(msg);
++	kfree(ec_buf);
+ 	return ret;
+ }
+ 
+@@ -281,7 +256,8 @@ static ssize_t kb_wake_angle_store(struct device *dev,
+ {
+ 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+ 	struct ec_params_motion_sense *param;
+-	struct cros_ec_command *msg;
++	struct ec_response_motion_sense *resp;
++	void *ec_buf;
+ 	u16 angle;
+ 	int ret;
+ 
+@@ -289,20 +265,19 @@ static ssize_t kb_wake_angle_store(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
+-	if (!msg)
++	ec_buf = kmalloc(EC_HOST_PARAM_SIZE, GFP_KERNEL);
++	if (!ec_buf)
+ 		return -ENOMEM;
+ 
+-	param = (struct ec_params_motion_sense *)msg->data;
+-	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+-	msg->version = 2;
++	param = (struct ec_params_motion_sense *)ec_buf;
++	resp = (struct ec_response_motion_sense *)ec_buf;
+ 	param->cmd = MOTIONSENSE_CMD_KB_WAKE_ANGLE;
+ 	param->kb_wake_angle.data = angle;
+-	msg->outsize = sizeof(*param);
+-	msg->insize = sizeof(struct ec_response_motion_sense);
+ 
+-	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+-	kfree(msg);
++	ret = cros_ec_cmd(ec->ec_dev, 2,
++			  EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset, param,
++			  sizeof(*param), resp, sizeof(*resp), NULL);
++	kfree(ec_buf);
+ 	if (ret < 0)
+ 		return ret;
+ 	return count;
 -- 
-2.24.0
+2.25.0.341.g760bfbb309-goog
 
