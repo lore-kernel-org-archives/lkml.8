@@ -2,112 +2,155 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E748C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B8BC35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C3721582
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NXwQDWNR"
+	by mail.kernel.org (Postfix) with ESMTP id 36D92217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgBEEOx (ORCPT
+        id S1727922AbgBEEUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:14:53 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51183 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727832AbgBEEOx (ORCPT
+        Tue, 4 Feb 2020 23:20:12 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26772 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727832AbgBEEUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:14:53 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580876092; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=mFggojvO9f3G3VuMRvXmpQHB4tK1ztWgPh7NXm+Cy0E=; b=NXwQDWNRDcFhomxHZCrDSV3y2gvqbOgNS0UoMqtWRP8htthqxhdltSUkvkWWkeL3Q2jjScHF
- T8s7noB0fJ/VPbHtsQRI+qqatFLl7SwothdW+SZ/GWybLIAqJ6Ur07H/8CuD+xJl7w9fEm13
- +pe/y0HvEcqNrotKA4EAf9s1O60=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a4138.7f291dc1b768-smtp-out-n03;
- Wed, 05 Feb 2020 04:14:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2855EC433CB; Wed,  5 Feb 2020 04:14:47 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87064C43383;
-        Wed,  5 Feb 2020 04:14:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87064C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH 1/3] soc: qcom: rpmh: Update dirty flag only when data
- changes
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1580796831-18996-1-git-send-email-mkshah@codeaurora.org>
- <1580796831-18996-2-git-send-email-mkshah@codeaurora.org>
- <CAE=gft6DCqmX8=cHWXNeOjSTuRHL23t7+b_GZOrvUJAPfhVD8A@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <d95de83d-fbda-5ebf-1b87-126c19f4d604@codeaurora.org>
-Date:   Wed, 5 Feb 2020 09:44:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 4 Feb 2020 23:20:11 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0154IgxB065034;
+        Tue, 4 Feb 2020 23:20:01 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn27wn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Feb 2020 23:20:00 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0154F1Iw002400;
+        Wed, 5 Feb 2020 04:20:00 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04dal.us.ibm.com with ESMTP id 2xykc99w38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Feb 2020 04:20:00 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0154JxPk40894772
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Feb 2020 04:19:59 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A3F02805A;
+        Wed,  5 Feb 2020 04:19:59 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F06EA28058;
+        Wed,  5 Feb 2020 04:19:58 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.31.110])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Feb 2020 04:19:58 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 26C4F2E3006; Wed,  5 Feb 2020 09:49:56 +0530 (IST)
+Date:   Wed, 5 Feb 2020 09:49:56 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     ego@linux.vnet.ibm.com,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH 2/3] powerpc/sysfs: Show idle_purr and idle_spurr for
+ every CPU
+Message-ID: <20200205041956.GA5401@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
+ <1575564547.si4rk0s96p.naveen@linux.ibm.com>
+ <20200203045013.GC13468@in.ibm.com>
+ <1580802180.jpxk9s8apz.naveen@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft6DCqmX8=cHWXNeOjSTuRHL23t7+b_GZOrvUJAPfhVD8A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580802180.jpxk9s8apz.naveen@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-04_09:2020-02-04,2020-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002050034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Naveen,
 
-On 2/5/2020 6:05 AM, Evan Green wrote:
-> On Mon, Feb 3, 2020 at 10:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Currently rpmh ctrlr dirty flag is set for all cases regardless
->> of data is really changed or not.
->>
->> Add changes to update it when data is updated to new values.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 15 +++++++++++----
->>   1 file changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index 035091f..c3d6f00 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>   existing:
->>          switch (state) {
->>          case RPMH_ACTIVE_ONLY_STATE:
->> -               if (req->sleep_val != UINT_MAX)
->> +               if (req->sleep_val != UINT_MAX) {
->>                          req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
-> Don't you need to set dirty = true for ACTIVE_ONLY state always? The
-> conditional is just saying "if nobody set a sleep vote, then maintain
-> this vote when we wake back up".
+On Tue, Feb 04, 2020 at 01:22:19PM +0530, Naveen N. Rao wrote:
+> Gautham R Shenoy wrote:
+> >Hi Naveen,
+> >
+> >On Thu, Dec 05, 2019 at 10:23:58PM +0530, Naveen N. Rao wrote:
+> >>>diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
+> >>>index 80a676d..42ade55 100644
+> >>>--- a/arch/powerpc/kernel/sysfs.c
+> >>>+++ b/arch/powerpc/kernel/sysfs.c
+> >>>@@ -1044,6 +1044,36 @@ static ssize_t show_physical_id(struct device *dev,
+> >>> }
+> >>> static DEVICE_ATTR(physical_id, 0444, show_physical_id, NULL);
+> >>>
+> >>>+static ssize_t idle_purr_show(struct device *dev,
+> >>>+			      struct device_attribute *attr, char *buf)
+> >>>+{
+> >>>+	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> >>>+	unsigned int cpuid = cpu->dev.id;
+> >>>+	struct lppaca *cpu_lppaca_ptr = paca_ptrs[cpuid]->lppaca_ptr;
+> >>>+	u64 idle_purr_cycles = be64_to_cpu(cpu_lppaca_ptr->wait_state_cycles);
+> >>>+
+> >>>+	return sprintf(buf, "%llx\n", idle_purr_cycles);
+> >>>+}
+> >>>+static DEVICE_ATTR_RO(idle_purr);
+> >>>+
+> >>>+DECLARE_PER_CPU(u64, idle_spurr_cycles);
+> >>>+static ssize_t idle_spurr_show(struct device *dev,
+> >>>+			       struct device_attribute *attr, char *buf)
+> >>>+{
+> >>>+	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> >>>+	unsigned int cpuid = cpu->dev.id;
+> >>>+	u64 *idle_spurr_cycles_ptr = per_cpu_ptr(&idle_spurr_cycles, cpuid);
+> >>
+> >>Is it possible for a user to read stale values if a particular cpu is in an
+> >>extended cede? Is it possible to use smp_call_function_single() to force the
+> >>cpu out of idle?
+> >
+> >Yes, if the CPU whose idle_spurr cycle is being read is still in idle,
+> >then we will miss reporting the delta spurr cycles for this last
+> >idle-duration. Yes, we can use an smp_call_function_single(), though
+> >that will introduce IPI noise. How often will idle_[s]purr be read ?
+> 
+> Since it is possible for a cpu to go into extended cede for multiple seconds
+> during which time it is possible to mis-report utilization, I think it is
+> better to ensure that the sysfs interface for idle_[s]purr report the proper
+> values through use of IPI.
+>
 
-The ACTIVE_ONLY vote is cached as wake_val to be apply when wakeup happens.
+Fair enough.
 
-In case value didn't change,wake_val is still same as older value and 
-there is no need to mark the entire cache as dirty.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> With repect to lparstat, the read interval is user-specified and just gets
+> passed onto sleep().
+
+Ok. So I guess currently you will be sending smp_call_function every
+time you read a PURR and SPURR. That number will now increase by 2
+times when we read idle_purr and idle_spurr.
+
+
+> 
+> - Naveen
+> 
+
+--
+Thanks and Regards
+gautham.
