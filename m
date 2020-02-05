@@ -2,68 +2,123 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E759C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A192C352A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D0F218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580926959;
-	bh=yuBrlgCSyNpGr7f0LkdGSKgVKnHVeUJjNZG0igVS9No=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=f41uA9voyJ4BbunO3LD1jPpGoSasT0c8uvOKGn6+2qzuom7n9lBslRcf42vomHevf
-	 mDadq60i6MSxZByLyLxKM8BNiwE8kRO7FuJzTbDa8/hFQdYs2nJLH5Yfso9Ch2GIps
-	 Xt+SpSxCRXy424nsIGoGsn/+7JcaITIE+NX1c8nA=
+	by mail.kernel.org (Postfix) with ESMTP id 5937B22464
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgBESUS (ORCPT
+        id S1727681AbgBESX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:20:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 13:23:27 -0500
+Received: from mga09.intel.com ([134.134.136.24]:43402 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbgBESUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:20:16 -0500
-Subject: Re: [GIT PULL] xen: branch for v5.6-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580926816;
-        bh=yuBrlgCSyNpGr7f0LkdGSKgVKnHVeUJjNZG0igVS9No=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=nzH9OKtg7Wr17/acZ5zPdO4nd6vpEVmHl1rP1B4nTRnmGk+3bHyRZHpfwPTDKvdiK
-         C0eETZgCkjnldURs8faFa2ds7o8EUogzUfLFo3eJD2nK8GvXgm9GMbhXM2fW8AU3q/
-         NzjDLSUr4RhhXOOFV4Qe/APvd10GeR8x0xZvRoq0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200205141135.31595-1-jgross@suse.com>
-References: <20200205141135.31595-1-jgross@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200205141135.31595-1-jgross@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
- for-linus-5.6-rc1-tag
-X-PR-Tracked-Commit-Id: 8557bbe5156e5fba022d5a5220004b1e016227ee
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d271ab29230b1d0ceb426f374c221c4eb2c91c64
-Message-Id: <158092681621.14135.14219430235179173763.pr-tracker-bot@kernel.org>
-Date:   Wed, 05 Feb 2020 18:20:16 +0000
-To:     Juergen Gross <jgross@suse.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
+        id S1727104AbgBESX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:23:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:23:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
+   d="scan'208";a="343835157"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Feb 2020 10:23:24 -0800
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [RFC PATCH v9 0/7] Control-flow Enforcement: Indirect Branch Tracking
+Date:   Wed,  5 Feb 2020 10:23:01 -0800
+Message-Id: <20200205182308.4028-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed,  5 Feb 2020 15:11:35 +0100:
+Control-flow Enforcement (CET) is a new Intel processor feature that blocks
+return/jump-oriented programming attacks.  Details can be found in "Intel
+64 and IA-32 Architectures Software Developer's Manual" [1].
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.6-rc1-tag
+This is the second half of CET and enables Indirect Branch Tracking (IBT).
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d271ab29230b1d0ceb426f374c221c4eb2c91c64
+Changes from v8:
 
-Thank you!
+- Remove a patch that adds the legacy bitmap size to memory accounting,
+  since the bitmap is now dynamically allocated.
+- Change the legacy bitmap from a pre-defined address to
+  get_unmapped_area().
+- Fix mis-handling of WAIT_ENDBR in signals
+- Split out PTRACE, VDSO, opcode map, and Makefile changes and submit
+  separately.
+
+[1] Intel 64 and IA-32 Architectures Software Developer's Manual:
+
+    https://software.intel.com/en-us/download/intel-64-and-ia-32-
+    architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+
+[2] CET patches v8:
+
+    https://lkml.kernel.org/r/20190813205225.12032-1-yu-cheng.yu@intel.com/
+    https://lkml.kernel.org/r/20190813205359.12196-1-yu-cheng.yu@intel.com/
+
+H.J. Lu (1):
+  x86/cet/ibt: Add arch_prctl functions for Indirect Branch Tracking
+
+Yu-cheng Yu (6):
+  x86/cet/ibt: Add Kconfig option for user-mode Indirect Branch Tracking
+  x86/cet/ibt: User-mode Indirect Branch Tracking support
+  x86/cet/ibt: Handle signals for Indirect Branch Tracking
+  x86/cet/ibt: ELF header parsing for Indirect Branch Tracking
+  mm: Update alloc_set_pte() for zero page
+  x86/cet/ibt: Introduce arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE)
+
+ arch/x86/Kconfig                              |  17 ++
+ arch/x86/Makefile                             |   7 +
+ arch/x86/include/asm/cet.h                    |   7 +
+ arch/x86/include/asm/disabled-features.h      |   8 +-
+ arch/x86/include/uapi/asm/prctl.h             |   3 +
+ arch/x86/kernel/Makefile                      |   2 +-
+ arch/x86/kernel/cet.c                         |  58 ++++-
+ arch/x86/kernel/cet_bitmap.c                  | 226 ++++++++++++++++++
+ arch/x86/kernel/cet_prctl.c                   |  19 ++
+ arch/x86/kernel/cpu/common.c                  |  17 ++
+ arch/x86/kernel/fpu/signal.c                  |   8 +-
+ arch/x86/kernel/process_64.c                  |   5 +
+ mm/memory.c                                   |   8 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ 14 files changed, 385 insertions(+), 8 deletions(-)
+ create mode 100644 arch/x86/kernel/cet_bitmap.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.21.0
+
