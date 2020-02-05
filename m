@@ -2,136 +2,211 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33B1C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4FEC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A508F20672
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:54:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IHSaNrlX"
+	by mail.kernel.org (Postfix) with ESMTP id 1DE4820672
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgBEXyr (ORCPT
+        id S1727641AbgBEXzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:54:47 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45756 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbgBEXyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:54:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5aXRAu4MuUd1u+UkGWrwGKaLApXhm4yXkzsV9CVJjT0=; b=IHSaNrlX76PEvKY68PALvoF2i
-        vdyQP4DzsFi59MzqPOMbeJKzjuWk6iMOAzGYIzNaCWxNlqkOFSzxj6lmw2bI8eWlYHqDGdcZHYJax
-        hBa9FbdRBI16SgV1JE9UOz9M/4nAfYder1jTv6XjvVzIBFp8fQljmMbMAC7v1xYQUd4hH4OSbnPHl
-        qv+aU2pmxRmIPELvvWP2BG/9mxvu7iVjoBhpDVV6bJF7TShe5ZmrdnyjemRqtCqWp9fhygFekoX4x
-        zvZh2owVVzNYp1HUoaKuWJWoCxTuJPHjVht4yOxucSNgFHho6c/QO31WQ/I/kLdcG88rLjGpwp+3X
-        Dc7WiGa9g==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:43988)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1izUVE-0003jc-VF; Wed, 05 Feb 2020 23:54:43 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1izUVE-0002If-5d; Wed, 05 Feb 2020 23:54:40 +0000
-Date:   Wed, 5 Feb 2020 23:54:40 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: kexec: drop invalid assembly argument
-Message-ID: <20200205235440.GW25745@shell.armlinux.org.uk>
-References: <ab67c7c5a1f96af6d22240e57fc27ba766d4193d.1580943526.git.stefan@agner.ch>
+        Wed, 5 Feb 2020 18:55:36 -0500
+Received: from mga02.intel.com ([134.134.136.20]:65093 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbgBEXzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:55:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:55:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="225108744"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Feb 2020 15:55:33 -0800
+Date:   Wed, 5 Feb 2020 15:55:33 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 01/19] KVM: x86: Allocate new rmap and large page
+ tracking when moving memslot
+Message-ID: <20200205235533.GA7631@linux.intel.com>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-2-sean.j.christopherson@intel.com>
+ <20200205214952.GD387680@xz-x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ab67c7c5a1f96af6d22240e57fc27ba766d4193d.1580943526.git.stefan@agner.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200205214952.GD387680@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 11:59:26PM +0100, Stefan Agner wrote:
-> The tst menomic has only a single #<const> argument in Thumb mode. There
-> is an ARM variant which allows to write #<const> as #<byte>, #<rot>
-> which probably is where the current syntax comes from.
+On Wed, Feb 05, 2020 at 04:49:52PM -0500, Peter Xu wrote:
+> On Tue, Jan 21, 2020 at 02:31:39PM -0800, Sean Christopherson wrote:
+> > Reallocate a rmap array and recalcuate large page compatibility when
+> > moving an existing memslot to correctly handle the alignment properties
+> > of the new memslot.  The number of rmap entries required at each level
+> > is dependent on the alignment of the memslot's base gfn with respect to
+> > that level, e.g. moving a large-page aligned memslot so that it becomes
+> > unaligned will increase the number of rmap entries needed at the now
+> > unaligned level.
+> > 
+> > Not updating the rmap array is the most obvious bug, as KVM accesses
+> > garbage data beyond the end of the rmap.  KVM interprets the bad data as
+> > pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
+> > 
+> >   general protection fault: 0000 [#1] SMP
+> >   CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
+> >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+> >   RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
+> >   Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
+> >   RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
+> >   RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
+> >   RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
+> >   RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
+> >   R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
+> >   R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
+> >   FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >   CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
+> >   Call Trace:
+> >    kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
+> >    __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
+> >    kvm_set_memory_region+0x45/0x60 [kvm]
+> >    kvm_vm_ioctl+0x30f/0x920 [kvm]
+> >    do_vfs_ioctl+0xa1/0x620
+> >    ksys_ioctl+0x66/0x70
+> >    __x64_sys_ioctl+0x16/0x20
+> >    do_syscall_64+0x4c/0x170
+> >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >   RIP: 0033:0x7f7ed9911f47
+> >   Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
+> >   RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> >   RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
+> >   RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
+> >   RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
+> >   R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
+> >   R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
+> >   Modules linked in: kvm_intel kvm irqbypass
+> >   ---[ end trace 0c5f570b3358ca89 ]---
+> > 
+> > The disallow_lpage tracking is more subtle.  Failure to update results
+> > in KVM creating large pages when it shouldn't, either due to stale data
+> > or again due to indexing beyond the end of the metadata arrays, which
+> > can lead to memory corruption and/or leaking data to guest/userspace.
+> > 
+> > Note, the arrays for the old memslot are freed by the unconditional call
+> > to kvm_free_memslot() in __kvm_set_memory_region().
 > 
-> It seems that binutils does not care about the additional parameter.
-> Clang however complains in Thumb2 mode:
-> arch/arm/kernel/relocate_kernel.S:28:12: error: too many operands for
-> instruction
->  tst r3,#1,0
->            ^
-> 
-> Drop the unnecessary parameter. This fixes building this file in Thumb2
-> mode with the Clang integrated assembler.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/770
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> If __kvm_set_memory_region() failed, I think the old memslot will be
+> kept and the new memslot will be freed instead?
 
-Please drop it in the patch system, thanks.
+This is referring to a successful MOVE operation to note that zeroing @arch
+in kvm_arch_create_memslot() won't leak memory.
 
-> ---
->  arch/arm/kernel/relocate_kernel.S | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > Fixes: 05da45583de9b ("KVM: MMU: large page support")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kvm/x86.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 4c30ebe74e5d..1953c71c52f2 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -9793,6 +9793,13 @@ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
+> >  {
+> >  	int i;
+> >  
+> > +	/*
+> > +	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
+> > +	 * old arrays will be freed by __kvm_set_memory_region() if installing
+> > +	 * the new memslot is successful.
+> > +	 */
+> > +	memset(&slot->arch, 0, sizeof(slot->arch));
 > 
-> diff --git a/arch/arm/kernel/relocate_kernel.S b/arch/arm/kernel/relocate_kernel.S
-> index 7eaa2ae7aff5..72a08786e16e 100644
-> --- a/arch/arm/kernel/relocate_kernel.S
-> +++ b/arch/arm/kernel/relocate_kernel.S
-> @@ -25,26 +25,26 @@ ENTRY(relocate_new_kernel)
->  	ldr	r3, [r0],#4
+> I actually gave r-b on this patch but it was lost... And then when I
+> read it again I start to confuse on why we need to set these to zeros.
+> Even if they're not zeros, iiuc kvm_free_memslot() will compare each
+> of the array pointer and it will only free the changed pointers, then
+> it looks fine even without zeroing?
+
+It's for the failure path, the out_free label, which blindy calls kvfree()
+and relies on un-allocated pointers being NULL.  If @arch isn't zeroed, the
+failure path will free metadata from the previous memslot.
+
+> > +
+> >  	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
+> >  		struct kvm_lpage_info *linfo;
+> >  		unsigned long ugfn;
+> > @@ -9867,6 +9874,10 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+> >  				const struct kvm_userspace_memory_region *mem,
+> >  				enum kvm_mr_change change)
+> >  {
+> > +	if (change == KVM_MR_MOVE)
+> > +		return kvm_arch_create_memslot(kvm, memslot,
+> > +					       mem->memory_size >> PAGE_SHIFT);
+> > +
+> 
+> Instead of calling kvm_arch_create_memslot() explicitly again here,
+> can it be replaced by below?
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 72b45f491692..85a7b02fd752 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1144,7 +1144,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>                 new.dirty_bitmap = NULL;
 >  
->  	/* Is it a destination page. Put destination address to r4 */
-> -	tst	r3,#1,0
-> +	tst	r3,#1
->  	beq	1f
->  	bic	r4,r3,#1
->  	b	0b
->  1:
->  	/* Is it an indirection page */
-> -	tst	r3,#2,0
-> +	tst	r3,#2
->  	beq	1f
->  	bic	r0,r3,#2
->  	b	0b
->  1:
+>         r = -ENOMEM;
+> -       if (change == KVM_MR_CREATE) {
+> +       if (change == KVM_MR_CREATE || change == KVM_MR_MOVE) {
+>                 new.userspace_addr = mem->userspace_addr;
 >  
->  	/* are we done ? */
-> -	tst	r3,#4,0
-> +	tst	r3,#4
->  	beq	1f
->  	b	2f
->  
->  1:
->  	/* is it source ? */
-> -	tst	r3,#8,0
-> +	tst	r3,#8
->  	beq	0b
->  	bic r3,r3,#8
->  	mov r6,#1024
+>                 if (kvm_arch_create_memslot(kvm, &new, npages))
+
+No, because other architectures don't need to re-allocate new metadata on
+MOVE and rely on __kvm_set_memory_region() to copy @arch from old to new,
+e.g. see kvmppc_core_create_memslot_hv().
+
+That being said, that's effectively what the x86 code looks like once
+kvm_arch_create_memslot() gets merged into kvm_arch_prepare_memory_region().
+
+> 
+> >  	return 0;
+> >  }
+> >  
+> > -- 
+> > 2.24.1
+> > 
+> 
 > -- 
-> 2.25.0
+> Peter Xu
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
