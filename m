@@ -2,143 +2,200 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F003CC3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F07BC3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA0C2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C44F217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kw0Sqs4i"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B/+U52J+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgBEIKa (ORCPT
+        id S1728029AbgBEIN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 03:10:30 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:32858 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgBEIKa (ORCPT
+        Wed, 5 Feb 2020 03:13:56 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43457 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgBEIN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 03:10:30 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0158APDC071899;
-        Wed, 5 Feb 2020 02:10:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580890225;
-        bh=b+qiEeC1rtft9IYzgd/F11sSSM+sJCMDAMLRewswKHc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kw0Sqs4i/i3pm3j/y6IWzWqkEvHOf0slYu7rew9t4n5/orO9pWC1ydloq3a60rQFg
-         PoKAvBpRYeq2U2DMTh7eI0jq1bAFJExZByMaR4ippNeSuOAA5+LZ6i/sy8z1xC2iwD
-         5/LVhQmL6ybBGt0GsKu6m6BVLa8PcYx1Cw8Dy68s=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0158AOhf098349
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Feb 2020 02:10:25 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
- 2020 02:10:23 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 5 Feb 2020 02:10:24 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0158AM6j000628;
-        Wed, 5 Feb 2020 02:10:22 -0600
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
- dma_request_slave_chan()
-To:     Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
- <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <20200204062118.GS2841@vkoul-mobl>
- <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
- <20200205044352.GC2618@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <13dcf3d9-06ca-d793-525d-12f6d7cd27c1@ti.com>
-Date:   Wed, 5 Feb 2020 10:10:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 5 Feb 2020 03:13:56 -0500
+Received: by mail-pg1-f195.google.com with SMTP id u131so571220pgc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 00:13:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9Kv2PfNZ/Q0TVvrr7RyiEmUt8JdC7LWiVIGz2BsjNHQ=;
+        b=B/+U52J+m+NF1gTrJMaYYLbomtsbHRdQwfD9R2WT9UzF9JAwj8hL7iTffUJBnZw583
+         nVEEhcTy/e7i+hr5oXqyl6TRCAnn1ks7LTIfnqPngvbvi/cv+dyJY2gf236C8iHzPF0P
+         ZomPzoRAZ86kr3ZsKjUpMM+sUJPM7TCvVqs04=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9Kv2PfNZ/Q0TVvrr7RyiEmUt8JdC7LWiVIGz2BsjNHQ=;
+        b=G5nXtNUHjvNl0Lw5SJjUexZp+oxVY+47FhV+7rRcJ0KlTY9uzjpx6S/NVwyk8ZY12e
+         J7/aWKiwa0K5p1U0Tf0c/EPIzD55hS/JVlHw0sJ7l29Vv/XLGtupp57w6mBVPhRuLHlW
+         hlP2mfWHMx8JCHZtlf0RffXHBMnw7kWpZGRfbIAweUGz3nl0PI/762a9uodPsq6jozxY
+         qC2RwXHABZrSnVY0pR/H+q7fRAKmOUvTFcBimM3yUJrjl35TztOSP3y0nd20J4vB72JV
+         E9RVut+Zb0KoCWYY2wRVE1FxIVV3iKqLxhneGrcTw6VWyAajw9/t2gn03X6/DgXdTulC
+         sJJw==
+X-Gm-Message-State: APjAAAV2RyMr+ysqblXc2dZVwRep+/yMTM5K0dhhkcL/XkGGTOUL6UwB
+        h2UOg910YrZBK0K6uWwEZbjERw==
+X-Google-Smtp-Source: APXvYqzNRlPWEekWO58tJEj8cBqvumvLPsg7qd6gYn8RHFbeCQwZHJLqQMEMKYBhZDm9nE1HE87fIA==
+X-Received: by 2002:a63:36c2:: with SMTP id d185mr15733815pga.59.1580890433605;
+        Wed, 05 Feb 2020 00:13:53 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id az9sm6415208pjb.3.2020.02.05.00.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 00:13:52 -0800 (PST)
+Date:   Wed, 5 Feb 2020 17:13:50 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCHv2 02/12] videobuf2: handle V4L2 buffer cache flags
+Message-ID: <20200205081350.GK41358@google.com>
+References: <20200204025641.218376-1-senozhatsky@chromium.org>
+ <20200204025641.218376-3-senozhatsky@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200205044352.GC2618@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204025641.218376-3-senozhatsky@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vinod,
+On (20/02/04 11:56), Sergey Senozhatsky wrote:
+> +static void set_buffer_cache_hints(struct vb2_queue *q,
+> +				   struct vb2_buffer *vb,
+> +				   struct v4l2_buffer *b)
+> +{
+> +	/*
+> +	 * DMA exporter should take care of cache syncs, so we can avoid
+> +	 * explicit ->prepare()/->finish() syncs. For other ->memory types
+> +	 * we always need ->prepare() or/and ->finish() cache sync.
+> +	 */
+> +	if (q->memory == VB2_MEMORY_DMABUF) {
+> +		vb->need_cache_sync_on_finish = 0;
+> +		vb->need_cache_sync_on_prepare = 0;
+> +		return;
+> +	}
+> +
+> +	if (!q->allow_cache_hints)
+> +		return;
+> +
+> +	vb->need_cache_sync_on_prepare = 1;
+> +	/*
+> +	 * ->finish() cache sync can be avoided when queue direction is
+> +	 * TO_DEVICE.
+> +	 */
+> +	if (q->dma_dir != DMA_TO_DEVICE)
+> +		vb->need_cache_sync_on_finish = 1;
+> +	else
+> +		vb->need_cache_sync_on_finish = 0;
+> +
+> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
+> +		vb->need_cache_sync_on_finish = 0;
+> +
+> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+> +		vb->need_cache_sync_on_prepare = 0;
+> +}
 
-On 05/02/2020 6.43, Vinod Koul wrote:
-> On 04-02-20, 13:21, Andy Shevchenko wrote:
->> On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
->>>
->>> On 03-02-20, 12:37, Andy Shevchenko wrote:
->>>> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>>
->>>>> dma_request_slave_channel_reason() no longer have user in mainline, it
->>>>> can be removed.
->>>>>
->>>>> Advise users of dma_request_slave_channel() and
->>>>> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
->>>>
->>>> How? There are legacy ARM boards you have to care / remove before.
->>>> DMAengine subsystem makes a p*s off decisions without taking care of
->>>> (I'm talking now about dma release callback, for example) end users.
->>>
->>> Can you elaborate issue you are seeing with dma_release callback?
->>
->>
->> [    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
->> defined so it is not safe to unbind this driver while in use
-> 
-> Yes that is expected but is not valid in your case.
+Last minute changes (tm), sorry. This is not right.
 
-In which case it is valid?
 
-> Anyway this will be turned off before the release.
+====8<====8<====
 
-Looking at the commit which added it and I still don't get the point.
-If any of the channel is in use then we should not allow the DMA driver
-to go away at all.
-Imho there should be a function to check if we can proceed with the
-.remove of the driver and fail it if any of the channels are in use.
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH] videobuf2: handle V4L2 buffer cache flags
 
-Hrm, base/dd.c __device_release_driver() does not check the .remove's
-return value, so it can not fail.
+Set video buffer cache management flags corresponding to V4L2 cache
+flags.
 
-What is expected if the .remove returns with OK but we still have
-channels in use?
+Both ->prepare() and ->finish() cache management hints should be
+passed during this stage (buffer preparation), because there is no
+other way for user-space to skip ->finish() cache flush.
 
-After the remove all sorts of things got yanked which might makes the
-still in use channels cause issues down the road.
+There are two possible alternative approaches:
+- The first one is to move cache sync from ->finish() to dqbuf().
+  But this breaks some drivers, that need to fix-up buffers before
+  dequeueing them.
 
-I'm curious why it is a good thing to remotely try to support unbind
-when the driver is in use.
-It is like one wants to support ext4 removal even when your rootfs is ext4.
+- The second one is to move ->finish() call from ->done() to dqbuf.
 
-I think krefing the DMA driver for channel request/release is just fine,
-if user wants to break the system we should not assist...
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ .../media/common/videobuf2/videobuf2-v4l2.c   | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
->> It's not limited to that driver, but actually all I'm maintaining.
->>
->> Users are not happy!
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
-> 
+diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+index eb5d5db96552..8ef57496b34a 100644
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -337,6 +337,41 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
+ 	return 0;
+ }
+ 
++static void set_buffer_cache_hints(struct vb2_queue *q,
++				   struct vb2_buffer *vb,
++				   struct v4l2_buffer *b)
++{
++	/*
++	 * DMA exporter should take care of cache syncs, so we can avoid
++	 * explicit ->prepare()/->finish() syncs. For other ->memory types
++	 * we always need ->prepare() or/and ->finish() cache sync.
++	 */
++	if (q->memory == VB2_MEMORY_DMABUF) {
++		vb->need_cache_sync_on_finish = 0;
++		vb->need_cache_sync_on_prepare = 0;
++		return;
++	}
++
++	vb->need_cache_sync_on_prepare = 1;
++	vb->need_cache_sync_on_finish = 1;
++
++	if (!q->allow_cache_hints)
++		return;
++
++	/*
++	 * ->finish() cache sync can be avoided when queue direction is
++	 * TO_DEVICE.
++	 */
++	if (q->dma_dir == DMA_TO_DEVICE)
++		vb->need_cache_sync_on_finish = 0;
++
++	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
++		vb->need_cache_sync_on_finish = 0;
++
++	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
++		vb->need_cache_sync_on_prepare = 0;
++}
++
+ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
+ 				    struct v4l2_buffer *b, bool is_prepare,
+ 				    struct media_request **p_req)
+@@ -381,6 +416,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
+ 	}
+ 
+ 	if (!vb->prepared) {
++		set_buffer_cache_hints(q, vb, b);
+ 		/* Copy relevant information provided by the userspace */
+ 		memset(vbuf->planes, 0,
+ 		       sizeof(vbuf->planes[0]) * vb->num_planes);
+-- 
+2.25.0.341.g760bfbb309-goog
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
