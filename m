@@ -2,181 +2,111 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F389C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E46BC35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE552082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qLP/9yEa"
+	by mail.kernel.org (Postfix) with ESMTP id 509792082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgBEIPW (ORCPT
+        id S1728069AbgBEIQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 03:15:22 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14618 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725875AbgBEIPV (ORCPT
+        Wed, 5 Feb 2020 03:16:33 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:50606 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgBEIQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 03:15:21 -0500
-X-UUID: 9ad21bda66b5410db1af0f5bc1f97c36-20200205
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+Eehl38VYEUnGQv2W5X+HsgZ4ZWAQEHn3zauirYc0JY=;
-        b=qLP/9yEaVNLyjmffhkleI1sCLuvIQo61R2habIuvMwzyVgvIE9nitOg0w6S0uKq5UMQZ1DRx0uDN/vHaJSAtIgNZeve0POCcRI/ud2WVzxe5IFCNF3rs105TjlTm5ed/RlOQcb9ecviKtHx09FNfKyHIk6/S+2PK+Nd6OgHS7xc=;
-X-UUID: 9ad21bda66b5410db1af0f5bc1f97c36-20200205
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <frankie.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1225700861; Wed, 05 Feb 2020 16:15:14 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 5 Feb 2020 16:14:28 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 5 Feb 2020 16:14:48 +0800
-From:   Frankie Chang <Frankie.Chang@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        <Jian-Min.Liu@mediatek.com>,
-        Frankie Chang <Frankie.Chang@mediatek.com>
-Subject: [PATCH v1 1/1] binder: transaction latency tracking for user build
-Date:   Wed, 5 Feb 2020 14:52:52 +0800
-Message-ID: <1580885572-14272-1-git-send-email-Frankie.Chang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 5 Feb 2020 03:16:33 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1izFrF-0008R1-Lf; Wed, 05 Feb 2020 08:16:26 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     davem@davemloft.ne, mkubecek@suse.cz, jeffrey.t.kirsher@intel.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] igb: Use device_lock() insead of rtnl_lock()
+Date:   Wed,  5 Feb 2020 16:16:15 +0800
+Message-Id: <20200205081616.18378-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVjb3JkIHN0YXJ0L2VuZCB0aW1lc3RhbXAgdG8gYmluZGVyIHRyYW5zYWN0aW9uLg0KV2hlbiB0
-cmFuc2FjdGlvbiBpcyBjb21wbGV0ZWQgb3IgdHJhbnNhY3Rpb24gaXMgZnJlZSwNCml0IHdvdWxk
-IGJlIGNoZWNrZWQgaWYgdHJhbnNhY3Rpb24gbGF0ZW5jeSBvdmVyIHRocmVzaG9sZCAoMiBzZWMp
-LA0KaWYgeWVzLCBwcmludGluZyByZWxhdGVkIGluZm9ybWF0aW9uIGZvciB0cmFjaW5nLg0KDQpT
-aWduZWQtb2ZmLWJ5OiBGcmFua2llIENoYW5nIDxGcmFua2llLkNoYW5nQG1lZGlhdGVrLmNvbT4N
-Ci0tLQ0KIGRyaXZlcnMvYW5kcm9pZC9LY29uZmlnICAgICAgICAgICB8ICAgIDggKysrDQogZHJp
-dmVycy9hbmRyb2lkL2JpbmRlci5jICAgICAgICAgIHwgIDEwNyArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrDQogZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oIHwg
-ICAgNCArKw0KIDMgZmlsZXMgY2hhbmdlZCwgMTE5IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvYW5kcm9pZC9LY29uZmlnIGIvZHJpdmVycy9hbmRyb2lkL0tjb25maWcNCmlu
-ZGV4IDZmZGYyYWIuLjdiYTgwZWIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2FuZHJvaWQvS2NvbmZp
-Zw0KKysrIGIvZHJpdmVycy9hbmRyb2lkL0tjb25maWcNCkBAIC01NCw2ICs1NCwxNCBAQCBjb25m
-aWcgQU5EUk9JRF9CSU5ERVJfSVBDX1NFTEZURVNUDQogCSAgZXhoYXVzdGl2ZWx5IHdpdGggY29t
-YmluYXRpb25zIG9mIHZhcmlvdXMgYnVmZmVyIHNpemVzIGFuZA0KIAkgIGFsaWdubWVudHMuDQog
-DQorY29uZmlnIEJJTkRFUl9VU0VSX1RSQUNLSU5HDQorCWJvb2wgIkFuZHJvaWQgQmluZGVyIHRy
-YW5zYWN0aW9uIHRyYWNraW5nIg0KKwloZWxwDQorCSAgVXNlZCBmb3IgdHJhY2sgYWJub3JtYWwg
-YmluZGVyIHRyYW5zYWN0aW9uIHdoaWNoIGlzIG92ZXIgMiBzZWNvbmRzLA0KKwkgIHdoZW4gdGhl
-IHRyYW5zYWN0aW9uIGlzIGRvbmUgb3IgYmUgZnJlZSwgdGhpcyB0cmFuc2FjdGlvbiB3b3VsZCBi
-ZQ0KKwkgIGNoZWNrZWQgd2hldGhlciBpdCBleGVjdXRlZCBvdmVydGltZS4NCisJICBJZiB5ZXMs
-IHByaW50aW5nIG91dCB0aGUgZGV0YWlsIGluZm8gYWJvdXQgaXQuDQorDQogZW5kaWYgIyBpZiBB
-TkRST0lEDQogDQogZW5kbWVudQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIu
-YyBiL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYw0KaW5kZXggZTliYzlmYy4uNWEzNTJlZSAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYw0KKysrIGIvZHJpdmVycy9hbmRyb2lk
-L2JpbmRlci5jDQpAQCAtNzYsNiArNzYsMTEgQEANCiAjaW5jbHVkZSAiYmluZGVyX2ludGVybmFs
-LmgiDQogI2luY2x1ZGUgImJpbmRlcl90cmFjZS5oIg0KIA0KKyNpZmRlZiBDT05GSUdfQklOREVS
-X1VTRVJfVFJBQ0tJTkcNCisjaW5jbHVkZSA8bGludXgvcnRjLmg+DQorI2luY2x1ZGUgPGxpbnV4
-L3RpbWUuaD4NCisjZW5kaWYNCisNCiBzdGF0aWMgSExJU1RfSEVBRChiaW5kZXJfZGVmZXJyZWRf
-bGlzdCk7DQogc3RhdGljIERFRklORV9NVVRFWChiaW5kZXJfZGVmZXJyZWRfbG9jayk7DQogDQpA
-QCAtNTkxLDggKzU5NiwxMDQgQEAgc3RydWN0IGJpbmRlcl90cmFuc2FjdGlvbiB7DQogCSAqIGR1
-cmluZyB0aHJlYWQgdGVhcmRvd24NCiAJICovDQogCXNwaW5sb2NrX3QgbG9jazsNCisjaWZkZWYg
-Q09ORklHX0JJTkRFUl9VU0VSX1RSQUNLSU5HDQorCXN0cnVjdCB0aW1lc3BlYyB0aW1lc3RhbXA7
-DQorCXN0cnVjdCB0aW1ldmFsIHR2Ow0KKyNlbmRpZg0KIH07DQogDQorI2lmZGVmIENPTkZJR19C
-SU5ERVJfVVNFUl9UUkFDS0lORw0KKw0KKy8qDQorICogYmluZGVyX3ByaW50X2RlbGF5IC0gT3V0
-cHV0IGluZm8gb2YgYSBkZWxheSB0cmFuc2FjdGlvbg0KKyAqIEB0OiAgICAgICAgICBwb2ludGVy
-IHRvIHRoZSBvdmVyLXRpbWUgdHJhbnNhY3Rpb24NCisgKi8NCitzdGF0aWMgdm9pZCBiaW5kZXJf
-cHJpbnRfZGVsYXkoc3RydWN0IGJpbmRlcl90cmFuc2FjdGlvbiAqdCkNCit7DQorCXN0cnVjdCBy
-dGNfdGltZSB0bTsNCisJc3RydWN0IHRpbWVzcGVjICpzdGFydGltZTsNCisJc3RydWN0IHRpbWVz
-cGVjIGN1ciwgc3ViX3Q7DQorDQorCWt0aW1lX2dldF90cygmY3VyKTsNCisJc3RhcnRpbWUgPSAm
-dC0+dGltZXN0YW1wOw0KKwlzdWJfdCA9IHRpbWVzcGVjX3N1YihjdXIsICpzdGFydGltZSk7DQor
-DQorCS8qIGlmIHRyYW5zYWN0aW9uIHRpbWUgaXMgb3ZlciB0aGFuIDIgc2VjLA0KKwkgKiBzaG93
-IHRpbWVvdXQgd2FybmluZyBsb2cuDQorCSAqLw0KKwlpZiAoc3ViX3QudHZfc2VjIDwgMikNCisJ
-CXJldHVybjsNCisNCisJcnRjX3RpbWVfdG9fdG0odC0+dHYudHZfc2VjLCAmdG0pOw0KKw0KKwlz
-cGluX2xvY2soJnQtPmxvY2spOw0KKwlwcl9pbmZvX3JhdGVsaW1pdGVkKCIlZDogZnJvbSAlZDol
-ZCB0byAlZDolZCIsDQorCQkJICAgIHQtPmRlYnVnX2lkLA0KKwkJCSAgICB0LT5mcm9tID8gdC0+
-ZnJvbS0+cHJvYy0+cGlkIDogMCwNCisJCQkgICAgdC0+ZnJvbSA/IHQtPmZyb20tPnBpZCA6IDAs
-DQorCQkJICAgIHQtPnRvX3Byb2MgPyB0LT50b19wcm9jLT5waWQgOiAwLA0KKwkJCSAgICB0LT50
-b190aHJlYWQgPyB0LT50b190aHJlYWQtPnBpZCA6IDApOw0KKwlzcGluX3VubG9jaygmdC0+bG9j
-ayk7DQorDQorCXByX2luZm9fcmF0ZWxpbWl0ZWQoIiB0b3RhbCAldS4lMDNsZCBzIGNvZGUgJXUg
-c3RhcnQgJWx1LiUwM2xkIGFuZHJvaWQgJWQtJTAyZC0lMDJkICUwMmQ6JTAyZDolMDJkLiUwM2x1
-XG4iLA0KKwkJCSAgICAodW5zaWduZWQgaW50KXN1Yl90LnR2X3NlYywNCisJCQkgICAgKHN1Yl90
-LnR2X25zZWMgLyBOU0VDX1BFUl9NU0VDKSwNCisJCQkgICAgdC0+Y29kZSwNCisJCQkgICAgKHVu
-c2lnbmVkIGxvbmcpc3RhcnRpbWUtPnR2X3NlYywNCisJCQkgICAgKHN0YXJ0aW1lLT50dl9uc2Vj
-IC8gTlNFQ19QRVJfTVNFQyksDQorCQkJICAgICh0bS50bV95ZWFyICsgMTkwMCksICh0bS50bV9t
-b24gKyAxKSwgdG0udG1fbWRheSwNCisJCQkgICAgdG0udG1faG91ciwgdG0udG1fbWluLCB0bS50
-bV9zZWMsDQorCQkJICAgICh1bnNpZ25lZCBsb25nKSh0LT50di50dl91c2VjIC8gVVNFQ19QRVJf
-TVNFQykpOw0KK30NCisNCitzdGF0aWMgdm9pZCBiaW5kZXJfbG9nX2VudHJ5X3NldHVwKHN0cnVj
-dCBiaW5kZXJfdHJhbnNhY3Rpb25fbG9nX2VudHJ5ICplKQ0KK3sNCisJa3RpbWVfZ2V0X3RzKCZl
-LT50aW1lc3RhbXApOw0KKwlkb19nZXR0aW1lb2ZkYXkoJmUtPnR2KTsNCisJZS0+dHYudHZfc2Vj
-IC09IChzeXNfdHoudHpfbWludXRlc3dlc3QgKiA2MCk7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIHRp
-bWVzdGFtcF9jb3B5KHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gKnQsDQorCQkJICAgc3RydWN0
-IGJpbmRlcl90cmFuc2FjdGlvbl9sb2dfZW50cnkgKmUpDQorew0KKwltZW1jcHkoJnQtPnRpbWVz
-dGFtcCwgJmUtPnRpbWVzdGFtcCwgc2l6ZW9mKHN0cnVjdCB0aW1lc3BlYykpOw0KKwltZW1jcHko
-JnQtPnR2LCAmZS0+dHYsIHNpemVvZihzdHJ1Y3QgdGltZXZhbCkpOw0KK30NCisNCitzdGF0aWMg
-dm9pZCBwcmludF9iaW5kZXJfdHJhbnNhY3Rpb25fZXh0KHN0cnVjdCBzZXFfZmlsZSAqbSwNCisJ
-CQkJCSBzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0aW9uICp0KQ0KK3sNCisJc3RydWN0IHJ0Y190aW1l
-IHRtOw0KKw0KKwlydGNfdGltZV90b190bSh0LT50di50dl9zZWMsICZ0bSk7DQorCXNlcV9wcmlu
-dGYobSwNCisJCSAgICIgc3RhcnQgJWx1LiUwNmx1IGFuZHJvaWQgJWQtJTAyZC0lMDJkICUwMmQ6
-JTAyZDolMDJkLiUwM2x1IiwNCisJCSAgICh1bnNpZ25lZCBsb25nKXQtPnRpbWVzdGFtcC50dl9z
-ZWMsDQorCQkgICAodC0+dGltZXN0YW1wLnR2X25zZWMgLyBOU0VDX1BFUl9VU0VDKSwNCisJCSAg
-ICh0bS50bV95ZWFyICsgMTkwMCksICh0bS50bV9tb24gKyAxKSwgdG0udG1fbWRheSwNCisJCSAg
-IHRtLnRtX2hvdXIsIHRtLnRtX21pbiwgdG0udG1fc2VjLA0KKwkJICAgKHVuc2lnbmVkIGxvbmcp
-KHQtPnR2LnR2X3VzZWMgLyBVU0VDX1BFUl9NU0VDKSk7DQorfQ0KKyNlbHNlDQorc3RhdGljIHZv
-aWQgYmluZGVyX3ByaW50X2RlbGF5KHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gKnQpDQorew0K
-K30NCisNCitzdGF0aWMgdm9pZCBiaW5kZXJfbG9nX2VudHJ5X3NldHVwKHN0cnVjdCBiaW5kZXJf
-dHJhbnNhY3Rpb25fbG9nX2VudHJ5ICplKQ0KK3sNCit9DQorDQorc3RhdGljIHZvaWQgdGltZXN0
-YW1wX2NvcHkoc3RydWN0IGJpbmRlcl90cmFuc2FjdGlvbiAqdCwNCisJCQkgICBzdHJ1Y3QgYmlu
-ZGVyX3RyYW5zYWN0aW9uX2xvZ19lbnRyeSAqZSkNCit7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIHBy
-aW50X2JpbmRlcl90cmFuc2FjdGlvbl9leHQoc3RydWN0IHNlcV9maWxlICptLA0KKwkJCQkJIHN0
-cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gKnQpDQorew0KK30NCisjZW5kaWYNCisNCiAvKioNCiAg
-KiBzdHJ1Y3QgYmluZGVyX29iamVjdCAtIHVuaW9uIG9mIGZsYXQgYmluZGVyIG9iamVjdCB0eXBl
-cw0KICAqIEBoZHI6ICAgZ2VuZXJpYyBvYmplY3QgaGVhZGVyDQpAQCAtMTkyNyw2ICsyMDI4LDcg
-QEAgc3RhdGljIHZvaWQgYmluZGVyX2ZyZWVfdHJhbnNhY3Rpb24oc3RydWN0IGJpbmRlcl90cmFu
-c2FjdGlvbiAqdCkNCiAJICogSWYgdGhlIHRyYW5zYWN0aW9uIGhhcyBubyB0YXJnZXRfcHJvYywg
-dGhlbg0KIAkgKiB0LT5idWZmZXItPnRyYW5zYWN0aW9uIGhhcyBhbHJlYWR5IGJlZW4gY2xlYXJl
-ZC4NCiAJICovDQorCWJpbmRlcl9wcmludF9kZWxheSh0KTsNCiAJYmluZGVyX2ZyZWVfdHhuX2Zp
-eHVwcyh0KTsNCiAJa2ZyZWUodCk7DQogCWJpbmRlcl9zdGF0c19kZWxldGVkKEJJTkRFUl9TVEFU
-X1RSQU5TQUNUSU9OKTsNCkBAIC0yODcyLDYgKzI5NzQsOCBAQCBzdGF0aWMgdm9pZCBiaW5kZXJf
-dHJhbnNhY3Rpb24oc3RydWN0IGJpbmRlcl9wcm9jICpwcm9jLA0KIAllLT5vZmZzZXRzX3NpemUg
-PSB0ci0+b2Zmc2V0c19zaXplOw0KIAlzdHJzY3B5KGUtPmNvbnRleHRfbmFtZSwgcHJvYy0+Y29u
-dGV4dC0+bmFtZSwgQklOREVSRlNfTUFYX05BTUUpOw0KIA0KKwliaW5kZXJfbG9nX2VudHJ5X3Nl
-dHVwKGUpOw0KKw0KIAlpZiAocmVwbHkpIHsNCiAJCWJpbmRlcl9pbm5lcl9wcm9jX2xvY2socHJv
-Yyk7DQogCQlpbl9yZXBseV90byA9IHRocmVhZC0+dHJhbnNhY3Rpb25fc3RhY2s7DQpAQCAtMzA1
-OCw2ICszMTYyLDcgQEAgc3RhdGljIHZvaWQgYmluZGVyX3RyYW5zYWN0aW9uKHN0cnVjdCBiaW5k
-ZXJfcHJvYyAqcHJvYywNCiAJCXJldHVybl9lcnJvcl9saW5lID0gX19MSU5FX187DQogCQlnb3Rv
-IGVycl9hbGxvY190X2ZhaWxlZDsNCiAJfQ0KKwl0aW1lc3RhbXBfY29weSh0LCBlKTsNCiAJSU5J
-VF9MSVNUX0hFQUQoJnQtPmZkX2ZpeHVwcyk7DQogCWJpbmRlcl9zdGF0c19jcmVhdGVkKEJJTkRF
-Ul9TVEFUX1RSQU5TQUNUSU9OKTsNCiAJc3Bpbl9sb2NrX2luaXQoJnQtPmxvY2spOw0KQEAgLTM0
-OTYsNiArMzYwMSw3IEBAIHN0YXRpYyB2b2lkIGJpbmRlcl90cmFuc2FjdGlvbihzdHJ1Y3QgYmlu
-ZGVyX3Byb2MgKnByb2MsDQogCWtmcmVlKHRjb21wbGV0ZSk7DQogCWJpbmRlcl9zdGF0c19kZWxl
-dGVkKEJJTkRFUl9TVEFUX1RSQU5TQUNUSU9OX0NPTVBMRVRFKTsNCiBlcnJfYWxsb2NfdGNvbXBs
-ZXRlX2ZhaWxlZDoNCisJYmluZGVyX3ByaW50X2RlbGF5KHQpOw0KIAlrZnJlZSh0KTsNCiAJYmlu
-ZGVyX3N0YXRzX2RlbGV0ZWQoQklOREVSX1NUQVRfVFJBTlNBQ1RJT04pOw0KIGVycl9hbGxvY190
-X2ZhaWxlZDoNCkBAIC01NTQ0LDYgKzU2NTAsNyBAQCBzdGF0aWMgdm9pZCBwcmludF9iaW5kZXJf
-dHJhbnNhY3Rpb25faWxvY2tlZChzdHJ1Y3Qgc2VxX2ZpbGUgKm0sDQogCQkgICB0LT50b190aHJl
-YWQgPyB0LT50b190aHJlYWQtPnBpZCA6IDAsDQogCQkgICB0LT5jb2RlLCB0LT5mbGFncywgdC0+
-cHJpb3JpdHksIHQtPm5lZWRfcmVwbHkpOw0KIAlzcGluX3VubG9jaygmdC0+bG9jayk7DQorCXBy
-aW50X2JpbmRlcl90cmFuc2FjdGlvbl9leHQobSwgdCk7DQogDQogCWlmIChwcm9jICE9IHRvX3By
-b2MpIHsNCiAJCS8qDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5h
-bC5oIGIvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oDQppbmRleCBhZTk5MTA5Li5l
-YTUyYzVkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oDQor
-KysgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVyX2ludGVybmFsLmgNCkBAIC0xMzEsNiArMTMxLDEw
-IEBAIHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb25fbG9nX2VudHJ5IHsNCiAJdWludDMyX3QgcmV0
-dXJuX2Vycm9yOw0KIAl1aW50MzJfdCByZXR1cm5fZXJyb3JfcGFyYW07DQogCWNoYXIgY29udGV4
-dF9uYW1lW0JJTkRFUkZTX01BWF9OQU1FICsgMV07DQorI2lmZGVmIENPTkZJR19CSU5ERVJfVVNF
-Ul9UUkFDS0lORw0KKwlzdHJ1Y3QgdGltZXNwZWMgdGltZXN0YW1wOw0KKwlzdHJ1Y3QgdGltZXZh
-bCB0djsNCisjZW5kaWYNCiB9Ow0KIA0KIHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb25fbG9nIHsN
-Ci0tIA0KMS43LjkuNQ0K
+Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
+fixed race condition between close and power management ops by using
+rtnl_lock().
+
+However we can achieve the same by using device_lock() since all power
+management ops are protected by device_lock().
+
+This fix is a preparation for next patch, to prevent a dead lock under
+rtnl_lock() when calling runtime resume routine.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v2:
+ - No change.
+
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index b46bff8fe056..3750e2b926b1 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -4026,8 +4026,13 @@ static int __igb_close(struct net_device *netdev, bool suspending)
+ 
+ int igb_close(struct net_device *netdev)
+ {
++	struct igb_adapter *adapter = netdev_priv(netdev);
++	struct device *dev = &adapter->pdev->dev;
++
++	device_lock(dev);
+ 	if (netif_device_present(netdev) || netdev->dismantle)
+ 		return __igb_close(netdev, false);
++	device_unlock(dev);
+ 	return 0;
+ }
+ 
+@@ -8760,7 +8765,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
+ 	bool wake;
+ 
+-	rtnl_lock();
+ 	netif_device_detach(netdev);
+ 
+ 	if (netif_running(netdev))
+@@ -8769,7 +8773,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	igb_ptp_suspend(adapter);
+ 
+ 	igb_clear_interrupt_scheme(adapter);
+-	rtnl_unlock();
+ 
+ 	status = rd32(E1000_STATUS);
+ 	if (status & E1000_STATUS_LU)
+@@ -8897,13 +8900,11 @@ static int __maybe_unused igb_resume(struct device *dev)
+ 
+ 	wr32(E1000_WUS, ~0);
+ 
+-	rtnl_lock();
+ 	if (!err && netif_running(netdev))
+ 		err = __igb_open(netdev, true);
+ 
+ 	if (!err)
+ 		netif_device_attach(netdev);
+-	rtnl_unlock();
+ 
+ 	return err;
+ }
+-- 
+2.17.1
 
