@@ -2,127 +2,126 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49528C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8CAC352A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293F5217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D5821741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="xqc4RuXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgBELmP convert rfc822-to-8bit (ORCPT
+        id S1727843AbgBELnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 06:42:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:54762 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbgBELmN (ORCPT
+        Wed, 5 Feb 2020 06:43:15 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44289 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgBELnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:42:13 -0500
-Received: from mail-pj1-f70.google.com ([209.85.216.70])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1izIno-0003RY-Qg
-        for linux-kernel@vger.kernel.org; Wed, 05 Feb 2020 11:25:05 +0000
-Received: by mail-pj1-f70.google.com with SMTP id hi12so1117418pjb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 03:25:04 -0800 (PST)
+        Wed, 5 Feb 2020 06:43:14 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so1232846lfa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 03:43:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Rg7FTb2EgzwOWtOl0Xh6SbFh/TDgIq/m4oej/j7EPsc=;
+        b=xqc4RuXXK6fPykrtEKs2WWshltrhXJ8pi3DtiLilCDNoCowiBWIO11F8QV2xYxhR8b
+         T3vNBwC3lWRaITvvrEEqmM0SMQWJPa3dJbYhI51XEx8oF0CkrITqDVx8yRD0aTffPJDn
+         sdmmfHSWVSqPoliUVDy85GbYfW6ruojAgBfVZxXigpn3TqbLBDdRhyS8A1HALKtjt7fQ
+         sLqgWUx13HP8PvkDbWENV1Q7qLdBeHXkHTTFMm1c3IJcKkbYcDPWZ7K6No8QskYqARcS
+         h42YxDkYmUL75rirEZLc3ay0c2OKP0hW8yKGroN5vGefezStmjyzjwY5hJRbwIuMdmnn
+         RvWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6zUnAJw/Y6vVvW2xmbH05AyrYz3QZAGIOapSC7+i3Mc=;
-        b=q/374D7ERbdRt0c5YEsGJaDXkn0yXyNfoXBVVni95Dy8UjJ9N5QIDKWp3z3dKuMa7F
-         QvyFbBbRJ6KyicbCxTYuKbHIRJtH8QGMFWrIEFuI8SG/8UHPkpuRowmON8DZhZNQR3tT
-         o8rkXn4EXqEgeGNvfk7K5bQPYa102HIzWpWlze1FIf5+tKXmn7WFZVu4AYIKgH8obkEh
-         ardzBFkFLMYscbZe5fxlD5154Jo0gHlUbrhSxVWRw0RY4cj5+E1gQ/GxaEvT5HnZpe1c
-         onU+8lgNilD8MenCZansFMVwE0t3Iqj3TMEAwEfqDDIWcq4pi+NXQhf1C1+xMXc95+Bi
-         wI4w==
-X-Gm-Message-State: APjAAAVf79Aen8N+wqgg4yC7A2fRidfVbP/wa+29c/SzfN4/eXRhM/m6
-        xkxAS0zVMaTM2InK75kukmgYjVPBOxwuAfqDS6FO6ljtaByIymmSWqwp2/YKLejcV8I+NGyVYcW
-        zQdarVpf746it2DL04PIj0v4GtzfxH9t2WynPySZOsw==
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr5081661pjx.54.1580901903209;
-        Wed, 05 Feb 2020 03:25:03 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzs8jEUWVsPGPIqrQGiyIxOU5NsCKAV2kLJxc/sS5hZH+c4Gr+g9ys+WG+0DEuEOGh1dzscQg==
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr5081630pjx.54.1580901902766;
-        Wed, 05 Feb 2020 03:25:02 -0800 (PST)
-Received: from 2001-b011-380f-35a3-4cfd-361b-ac7d-6a8c.dynamic-ip6.hinet.net (2001-b011-380f-35a3-4cfd-361b-ac7d-6a8c.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:4cfd:361b:ac7d:6a8c])
-        by smtp.gmail.com with ESMTPSA id u12sm27695654pfm.165.2020.02.05.03.25.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Feb 2020 03:25:02 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v2 1/3] xhci: Ensure link state is U3 after setting
- USB_SS_PORT_LS_U3
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200205112228.25155-1-kai.heng.feng@canonical.com>
-Date:   Wed, 5 Feb 2020 19:24:59 +0800
-Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <08A214EC-F78D-41E1-B080-2A03782E41C1@canonical.com>
-References: <20200205112228.25155-1-kai.heng.feng@canonical.com>
-To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rg7FTb2EgzwOWtOl0Xh6SbFh/TDgIq/m4oej/j7EPsc=;
+        b=THFygFjSVThQV62q64mdQNett3U6N0o/E748IVhW7lNahTQdSkG7W1o8gGSn1qbYIe
+         L40RX89AI+Ra9CZlFREsJTp9wTeVCHy4WHVhh3yz88A8CSpbcTqRAolL/oiq9AEjTa9T
+         ul1q1aYZ39EeAvKuG+nW8iUq99DUpyrjtUrFHZQzULAZ0O4JEg9RknnQ6IVV0NxI2XRA
+         kvyqBrnKVSL9Nw0HOnVjsrOdhb6i5e318HFvB8pub6rtGIFfqoK+h3yuA4lUTHaPkSyH
+         8mg194A7YADBdi1n2kFE8m3QgeveeeDG/j1NqokEKg+F5tzVnFWWURwoqM1nSg8rEqOx
+         Rypg==
+X-Gm-Message-State: APjAAAVHrT9GLNacvKLhljsG3S/WNo6WJ3b4fPVPGde3UBIZZlKklK8e
+        wukzKjS5kyLOG7de4EtbzD6dWA==
+X-Google-Smtp-Source: APXvYqyGuiOfyYh+qTRTsP2YJUspzVgxdBbwwERcM0hZgAzWTzfcx473yxjEYxYiSHWiqrCV91FjRA==
+X-Received: by 2002:a19:5201:: with SMTP id m1mr17618504lfb.114.1580902991825;
+        Wed, 05 Feb 2020 03:43:11 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id u23sm12011076lfg.89.2020.02.05.03.43.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 03:43:11 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 42BA0100AF6; Wed,  5 Feb 2020 14:43:25 +0300 (+03)
+Date:   Wed, 5 Feb 2020 14:43:25 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+Message-ID: <20200205114325.4e2f5aghsusihpap@box>
+References: <20200204234117.2974687-1-jhubbard@nvidia.com>
+ <20200204234117.2974687-11-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204234117.2974687-11-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 04, 2020 at 03:41:15PM -0800, John Hubbard wrote:
+> Now that pages are "DMA-pinned" via pin_user_page*(), and unpinned via
+> unpin_user_pages*(), we need some visibility into whether all of this is
+> working correctly.
+> 
+> Add two new fields to /proc/vmstat:
+> 
+>     nr_foll_pin_acquired
+>     nr_foll_pin_released
+> 
+> These are documented in Documentation/core-api/pin_user_pages.rst.
+> They represent the number of pages (since boot time) that have been
+> pinned ("nr_foll_pin_acquired") and unpinned ("nr_foll_pin_released"),
+> via pin_user_pages*() and unpin_user_pages*().
+> 
+> In the absence of long-running DMA or RDMA operations that hold pages
+> pinned, the above two fields will normally be equal to each other.
+> 
+> Also: update Documentation/core-api/pin_user_pages.rst, to remove an
+> earlier (now confirmed untrue) claim about a performance problem with
+> /proc/vmstat.
+> 
+> Also: updated Documentation/core-api/pin_user_pages.rst to rename the
+> new /proc/vmstat entries, to the names listed here.
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
+Please, clarify semantics for huge page. An user may want to know if we
+count huge page as one pin-acquired or by number of pages.
 
-> On Feb 5, 2020, at 19:22, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> The xHCI spec doesn't specify the upper bound of U3 transition time. For
-> some devices 20ms is not enough, so we need to make sure the link state
-> is in U3 before further actions.
-> 
-> I've tried to use U3 Entry Capability by setting U3 Entry Enable in
-> config register, however the port change event for U3 transition
-> interrupts the system suspend process.
-> 
-> For now let's use the less ideal method by polling PLS.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Otherwise looks good (given Jan concern is addressed).
 
-Please ignore this series. Some patches are missing changelog, will resend one.
-
-Kai-Heng
-
-> ---
-> v2:
-> - Remove some redundant debug messages.
-> - Use msleep loop outside if spinlock to stop pegging CPU.
-> 
-> drivers/usb/host/xhci-hub.c | 11 ++++++++++-
-> 1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index 7a3a29e5e9d2..d3c5bcf76755 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -1313,7 +1313,16 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
-> 			xhci_set_link_state(xhci, ports[wIndex], link_state);
-> 
-> 			spin_unlock_irqrestore(&xhci->lock, flags);
-> -			msleep(20); /* wait device to enter */
-> +			if (link_state == USB_SS_PORT_LS_U3) {
-> +				int retries = 10;
-> +
-> +				while (retries--) {
-> +					msleep(10); /* wait device to enter */
-> +					temp = readl(ports[wIndex]->addr);
-> +					if ((temp & PORT_PLS_MASK) == XDEV_U3)
-> +						break;
-> +				}
-> +			}
-> 			spin_lock_irqsave(&xhci->lock, flags);
-> 
-> 			temp = readl(ports[wIndex]->addr);
-> -- 
-> 2.17.1
-> 
-
+-- 
+ Kirill A. Shutemov
