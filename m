@@ -2,173 +2,108 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F570C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15F4C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DF420702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F8520702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdGw10uk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aefzUb08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgBEOZP (ORCPT
+        id S1728129AbgBEO0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:25:15 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38649 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgBEOZP (ORCPT
+        Wed, 5 Feb 2020 09:26:31 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24470 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726597AbgBEO0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:25:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so2971662wrh.5;
-        Wed, 05 Feb 2020 06:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qhXaXnj7gj/UHklOFLVC+u57GTsIaZTNIrcJnG9KwhE=;
-        b=fdGw10ukTIsbS2IUVXIBEXDsk9f1aqfr64xNDeQWjMSCOeqW7Dnd8t0aiFkXZM6/Er
-         Xe7xgLe4QfDWWneBciDvkyQWsNC+khv4RYeT7nGoTptdMg/55rxqqoVEfPrG0bNdWUlp
-         iN4SSMlEaESmaY8C7gxXiS7cIc/VcnqQuOAQrIdvMgGJKRMvmxPRQTGIDhRwy+sBo2gM
-         QwRioT3VjASh7CUqlUdkRD68+lkTslQWU6my8Siu0GAWicZ5CPasCBkS6JgYa9wHtkGj
-         S8FWa5Q/OI9mOE8NzeNbDogcHvqeKQ5thc80jYEF2QiYK/3JThwzaJtvko2Xts1HXRr0
-         sq2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qhXaXnj7gj/UHklOFLVC+u57GTsIaZTNIrcJnG9KwhE=;
-        b=cWN4P0UKOHIjJ4M5LFSJymkztjOL4nqm2NLVKiGiQuIe3qCd02A4tDJ6v+MxQcGIrK
-         xpeswsBV4fBilx6s7w9qrN4csZq3w8X7x6xBBUS28hiKWXbX3HQL2UHNtu2I+9HANJne
-         veHf+UY6l/WaoP9TQjEKJO7vgYEjqZHCDefBiPhHrMqm2qOSMPvaq73X08XSvn9pOWcR
-         8S0QH6kPvqs/9j2cty6ctfHUZFg+SLULNkMZT9cVcdAK6E+FlFF5t8F3xDk8c0Hl3OJX
-         xrX5qQomqsgTFsihID2ysCTCoEyScWS0ovMOqXWGqOMerVK84yNn/+gF53DSJjUm1DNK
-         gBzQ==
-X-Gm-Message-State: APjAAAUci8USNyhyqBTfIatxetuQMtFvled3k+SKq1jPzDHn4slf9ajs
-        Bn9fzAygqyMJv672GIxQjbc=
-X-Google-Smtp-Source: APXvYqx6w55XElDxgPBTYbaClZFgVcTjDyhPQxSHuYzRC0KycfMhsXQ7RV3nUG6/jMgm6hWBAntEAg==
-X-Received: by 2002:adf:f8c4:: with SMTP id f4mr27352188wrq.243.1580912713282;
-        Wed, 05 Feb 2020 06:25:13 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id e18sm33846336wrw.70.2020.02.05.06.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 06:25:12 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.6-rc1
-Date:   Wed,  5 Feb 2020 15:25:11 +0100
-Message-Id: <20200205142511.2172050-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 5 Feb 2020 09:26:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580912789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KAdV3hA+UnlwePFUiQQxF7Qhd3fY3tGdtbme44OOFs8=;
+        b=aefzUb08POcOzVG5gdwD+F/OQGLSy5mOd0MRlJFbJHSSoS5jMPjzRKmDWCiedF/PKqnf5X
+        t0siZE5GZAMmCiILyg4JeMAMCpFEYWNdTV91rPuka6yGevtmd2wABcNfTSTzyJLP5kx+xP
+        +zbgPLqBVtRlHWLz8ni/rfVhvOSFeoM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-OBZq-5t8Nwu9IXhE-e1YOQ-1; Wed, 05 Feb 2020 09:26:26 -0500
+X-MC-Unique: OBZq-5t8Nwu9IXhE-e1YOQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 209311081FA3;
+        Wed,  5 Feb 2020 14:26:24 +0000 (UTC)
+Received: from localhost (ovpn-12-97.pek2.redhat.com [10.72.12.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 56DD25C1B5;
+        Wed,  5 Feb 2020 14:26:20 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 22:26:18 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+ in shrink_zone_span()
+Message-ID: <20200205142618.GE8965@MiWiFi-R3L-srv>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-9-david@redhat.com>
+ <20200204142516.GD26758@MiWiFi-R3L-srv>
+ <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
+ <20200205124329.GE26758@MiWiFi-R3L-srv>
+ <cd353848-301a-025d-dd66-44d76e1bbc44@redhat.com>
+ <20200205133442.GC8965@MiWiFi-R3L-srv>
+ <2868343a-745b-e2b6-7e78-d5649c00ee31@redhat.com>
+ <20200205141254.GD8965@MiWiFi-R3L-srv>
+ <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 02/05/20 at 03:16pm, David Hildenbrand wrote:
+> >>>> Anyhow, that patch is already upstream and I don't consider this high
+> >>>> priority. Thanks :)
+> >>>
+> >>> Yeah, noticed you told Wei the status in another patch thread, I am fine
+> >>> with it, just leave it to you to decide. Thanks.
+> >>
+> >> I am fairly busy right now. Can you send a patch (double-checking and
+> >> making this eventually unconditional?). Thanks!
+> > 
+> > Understood, sorry about the noise, David. I will think about this.
+> > 
+> 
+> No need to excuse, really, I'm very happy about review feedback!
+> 
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+Glad to hear it, thanks.
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> The review of this series happened fairly late. Bad, because it's not
+> perfect, but good, because no serious stuff was found (so far :) ). If
+> you also don't have time to look into this, I can put it onto my todo
+> list, just let me know.
 
-are available in the Git repository at:
+Both is OK to me, as long as thing is clear to us. I will discuss with
+Wei Yang for now. You can post patch anytime if you make one.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.6-rc1
-
-for you to fetch changes up to 9871abffc81048e20f02e15d6aa4558a44ad53ea:
-
-  pwm: Remove set but not set variable 'pwm' (2020-01-20 15:40:49 +0100)
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v5.6-rc1
-
-This set of changes are mostly cleanups and minor improvements with some
-new chip support for some drivers.
-
-----------------------------------------------------------------
-Anson Huang (1):
-      pwm: imx27: Eliminate error message for defer probe
-
-Clément Péron (3):
-      pwm: sun4i: Prefer "mod" clock to unnamed
-      pwm: sun4i: Always calculate params when applying new parameters
-      pwm: sun4i: Move pwm_calculate() out of spin_lock()
-
-Fabrice Gasnier (1):
-      pwm: stm32: Remove automatic output enable
-
-Florian Fainelli (1):
-      pwm: bcm2835: Allow building for ARCH_BRCMSTB
-
-Gustavo A. R. Silva (1):
-      pwm: sun4i: Fix inconsistent IS_ERR and PTR_ERR
-
-Jernej Skrabec (4):
-      pwm: sun4i: Add an optional probe for reset line
-      pwm: sun4i: Add an optional probe for bus clock
-      pwm: sun4i: Add support to output source clock directly
-      pwm: sun4i: Add support for H6 PWM
-
-Krzysztof Kozlowski (1):
-      pwm: Fix minor Kconfig whitespace issues
-
-Rasmus Villemoes (5):
-      pwm: mxs: Implement ->apply()
-      pwm: mxs: Remove legacy methods
-      pwm: mxs: Add support for inverse polarity
-      dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
-      pwm: mxs: Avoid a division in mxs_pwm_apply()
-
-Thierry Reding (5):
-      pwm: Read initial hardware state at request time
-      pwm: cros-ec: Cache duty cycle value
-      pwm: imx27: Cache duty cycle register value
-      pwm: imx27: Unconditionally write state to hardware
-      pwm: sun4i: Initialize variables before use
-
-Uwe Kleine-König (14):
-      pwm: atmel: Add a hint where to find hardware documentation
-      pwm: atmel: Use a constant for maximum prescale value
-      pwm: atmel: Replace loop in prescale calculation by ad-hoc calculation
-      pwm: atmel: Document known weaknesses of both hardware and software
-      pwm: atmel: Use register accessors for channels
-      pwm: atmel: Implement .get_state()
-      pwm: rcar: Drop useless call to pwm_get_state()
-      pwm: rcar: Document inability to set duty_cycle = 0
-      pwm: Implement tracing for .get_state() and .apply_state()
-      pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
-      pwm: omap-dmtimer: Simplify error handling
-      pwm: omap-dmtimer: put_device() after of_find_device_by_node()
-      pwm: omap-dmtimer: Allow compiling with COMPILE_TEST
-      pwm: sun4i: Narrow scope of local variable
-
-yu kuai (1):
-      pwm: Remove set but not set variable 'pwm'
-
- Documentation/devicetree/bindings/pwm/mxs-pwm.txt |   4 +-
- drivers/pwm/Kconfig                               |   9 +-
- drivers/pwm/core.c                                |  13 +-
- drivers/pwm/pwm-atmel.c                           |  87 ++++++++--
- drivers/pwm/pwm-cros-ec.c                         |  58 ++++++-
- drivers/pwm/pwm-imx27.c                           | 147 +++++++++-------
- drivers/pwm/pwm-mxs.c                             | 101 ++++++-----
- drivers/pwm/pwm-omap-dmtimer.c                    |  54 ++++--
- drivers/pwm/pwm-pca9685.c                         |   4 -
- drivers/pwm/pwm-rcar.c                            |   5 +-
- drivers/pwm/pwm-stm32.c                           |   4 +-
- drivers/pwm/pwm-sun4i.c                           | 194 ++++++++++++++++++----
- include/trace/events/pwm.h                        |  58 +++++++
- 13 files changed, 539 insertions(+), 199 deletions(-)
- create mode 100644 include/trace/events/pwm.h
