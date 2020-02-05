@@ -2,215 +2,126 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69C4C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1DC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBC720730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69803214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h1pWFguP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FLa7puDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBEXvU (ORCPT
+        id S1727582AbgBEXxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:51:20 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43765 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727149AbgBEXvU (ORCPT
+        Wed, 5 Feb 2020 18:53:09 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:36250 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbgBEXxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:51:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580946678;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=21qSowVJcxcWYCp2yjWV+jXV3rSeSLvAJHZEZIMcZO8=;
-        b=h1pWFguPbN02Ienyvor0Re50q9TPTzst85NB1D5034p+s3M8kzrG67dAwbHN7/pv9TkXOQ
-        po/C5O3g2njKggOT6ltJHM1gPGFB3iC8woGc5IauqnyMIXXOg0bcjQ27HZ9byxmnXAlvJ4
-        cU3WJONYtgy6ccmtBd6wPKaRyQF5Jzk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-uJE-8bYYPnuJj-bwv06u2Q-1; Wed, 05 Feb 2020 18:51:14 -0500
-X-MC-Unique: uJE-8bYYPnuJj-bwv06u2Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50DE71800D42;
-        Wed,  5 Feb 2020 23:51:11 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 85FA160BF7;
-        Wed,  5 Feb 2020 23:50:59 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 18:50:56 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-Message-ID: <20200205235056.e5365xtgz7rbese2@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
- <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
- <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca>
- <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
+        Wed, 5 Feb 2020 18:53:09 -0500
+Received: by mail-qv1-f65.google.com with SMTP id db9so2030013qvb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:53:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/m+6/gHtitRcFwDRfgIzzOezx3KJKRXU/a2k3eD85GU=;
+        b=FLa7puDpv4wlbq05A10ZykfGH59L4UeD7CB9/Lf0OsX0XtUrdga2W2J0Q+VZk30wad
+         oiE997YzvsAZQ2T79shfFhO2SvlFt/d+QfpgrTkPRValXuFvVw2LepfnACEwPO5Gyiph
+         nos0QgbV/Y5frbDSa+0I1SXBgT4/2IWYpNCWdK8KdLShiuvNp75XJ6p3dm8xuH3/Fzrq
+         8iX7HE8qv1+8grJip7uVWB1mMVU6vTmswrGHASeYxQanYvqlSsO3qK5rUyF9L1iNO+FT
+         19RjBaO6LHwteGx1OxLouGE98zrOZhI9QrZ1lN4WtgcQUH94krDgJj7Udw/IN/Ji+d/W
+         LyDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/m+6/gHtitRcFwDRfgIzzOezx3KJKRXU/a2k3eD85GU=;
+        b=FJwbvMYETP4YhMsG2lHzE0sCXNJmYMZWut29avVBlPrPkK7ts++1saE05uSVdjJjQ2
+         UMaIlTfpSOXALvOrsOjZhQKklhVkouIzFPtKD7b1YynEVuFHlXWS9ZZaxhHfCTVlxomp
+         tbLOjf5s5cmPc0IOWs+jSwFnjqs+UlmK8bCGExaMxRfSR7Af5hQfyFIW9Q3cxP1uFO+Q
+         AOHG6NjdN/PcMrFylzjNVC79hlSVhEC+XkLSE++7F9XdGXIeIe/RgyBtDEoA8O+7SO/k
+         qgdooBUV/OKw9AZPYQ1JAiN8Tz/2dakST+eYdTPi80rwc8m8Y+DL8ww7MWZoXOoujCwp
+         UaKQ==
+X-Gm-Message-State: APjAAAX/6ARsdI39acDhdl17caEcRzVJk6+qXDr8H8GcF2xAJ8LaKwUv
+        U5LqErNuocqlaLc8M1PDsnjHy1iwjm57rnBltoGJkQ==
+X-Google-Smtp-Source: APXvYqyzKRTHTvT+l4TdaQr2pk5kOvN2mGmw40JYEsRH+53Jof9zm1ZEoS9/lbvB60SM2gWBa8IruOgj0c8Qd9efzVY=
+X-Received: by 2002:a0c:cdcb:: with SMTP id a11mr165374qvn.244.1580946787002;
+ Wed, 05 Feb 2020 15:53:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200202014624.75356-1-hridya@google.com> <CAHC9VhR-aUtrU4PTibDLLG2S5GB9bx9MtwKuyH-x9eqSCmyP9w@mail.gmail.com>
+In-Reply-To: <CAHC9VhR-aUtrU4PTibDLLG2S5GB9bx9MtwKuyH-x9eqSCmyP9w@mail.gmail.com>
+From:   Hridya Valsaraju <hridya@google.com>
+Date:   Wed, 5 Feb 2020 15:52:30 -0800
+Message-ID: <CA+wgaPPEpmD50rBffh3NDhAfxLRJh13QT0NX80xOaEfotfXyqg@mail.gmail.com>
+Subject: Re: [PATCH] selinux: Fix typo in filesystem name
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Mark Salyzyn <salyzyn@android.com>, selinux@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05 18:05, Paul Moore wrote:
-> On Thu, Jan 30, 2020 at 2:28 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-01-22 16:29, Paul Moore wrote:
-> > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > >
-> > > > Track the parent container of a container to be able to filter and
-> > > > report nesting.
-> > > >
-> > > > Now that we have a way to track and check the parent container of a
-> > > > container, modify the contid field format to be able to report that
-> > > > nesting using a carrat ("^") separator to indicate nesting.  The
-> > > > original field format was "contid=<contid>" for task-associated records
-> > > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
-> > > > records.  The new field format is
-> > > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
-> > >
-> > > Let's make sure we always use a comma as a separator, even when
-> > > recording the parent information, for example:
-> > > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
+On Wed, Feb 5, 2020 at 3:28 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Sat, Feb 1, 2020 at 8:46 PM Hridya Valsaraju <hridya@google.com> wrote:
 > >
-> > The intent here is to clearly indicate and separate nesting from
-> > parallel use of several containers by one netns.  If we do away with
-> > that distinction, then we lose that inheritance accountability and
-> > should really run the list through a "uniq" function to remove the
-> > produced redundancies.  This clear inheritance is something Steve was
-> > looking for since tracking down individual events/records to show that
-> > inheritance was not aways feasible due to rolled logs or search effort.
-> 
-> Perhaps my example wasn't clear.  I'm not opposed to the little
-> carat/hat character indicating a container's parent, I just think it
-> would be good to also include a comma *in*addition* to the carat/hat.
-
-Ah, ok.  Well, I'd offer that it would be slightly shorter, slightly
-less cluttered and having already written the parser in userspace, I
-think the parser would be slightly simpler.
-
-I must admit, I was a bit puzzled by your snippet of code that was used
-as a prefix to the next item rather than as a postfix to the given item.
-
-Can you say why you prefer the comma in addition?
-
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > ---
-> > > >  include/linux/audit.h |  1 +
-> > > >  kernel/audit.c        | 53 +++++++++++++++++++++++++++++++++++++++++++--------
-> > > >  kernel/audit.h        |  1 +
-> > > >  kernel/auditfilter.c  | 17 ++++++++++++++++-
-> > > >  kernel/auditsc.c      |  2 +-
-> > > >  5 files changed, 64 insertions(+), 10 deletions(-)
-> > >
-> > > ...
-> > >
-> > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > index ef8e07524c46..68be59d1a89b 100644
-> > > > --- a/kernel/audit.c
-> > > > +++ b/kernel/audit.c
-> > >
-> > > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-> > > >                 audit_netns_contid_add(new->net_ns, contid);
-> > > >  }
-> > > >
-> > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
-> > >
-> > > If we need a forward declaration, might as well just move it up near
-> > > the top of the file with the rest of the declarations.
+> > Correct the filesystem name to "binder" to enable
+> > genfscon per-file labelling for binderfs.
 > >
-> > Ok.
+> > Fixes: 7a4b5194747 ("selinux: allow per-file labelling for binderfs")
+> > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> > ---
 > >
-> > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
-> > > > +{
-> > > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
-> > > > +       int h;
-> > >
-> > > It seems safer to pass the audit container ID object and not the u64.
+> > Hello,
 > >
-> > It would also be faster, but in some places it isn't available such as
-> > for ptrace and signal targets.  This also links back to the drop record
-> > refcounts to hold onto the contobj until process exit, or signal
-> > delivery.
+> > I seem to have made the typo/mistake during a rebase. Sorry about that
+> > :(
 > >
-> > What we could do is to supply two potential parameters, a contobj and/or
-> > a contid, and have it use the contobj if it is valid, otherwise, use the
-> > contid, as is done for names and paths supplied to audit_log_name().
-> 
-> Let's not do multiple parameters, that begs for misuse, let's take the
-> wrapper function route:
-> 
->  func a(int id) {
->    // important stuff
->  }
-> 
->  func ao(struct obj) {
->    a(obj.id);
->  }
-> 
-> ... and we can add a comment that you *really* should be using the
-> variant that passes an object.
-
-I was already doing that where it available, and dereferencing the id
-for the call.  But I see an advantage to having both parameters supplied
-to the function, since it saves us the trouble of dereferencing it,
-searching for the id in the hash list and re-locating the object if the
-object is already available.
-
-> > > > @@ -2705,9 +2741,10 @@ int audit_set_contid(struct task_struct *task, u64 contid)
-> > > >         if (!ab)
-> > > >                 return rc;
-> > > >
-> > > > -       audit_log_format(ab,
-> > > > -                        "op=set opid=%d contid=%llu old-contid=%llu",
-> > > > -                        task_tgid_nr(task), contid, oldcontid);
-> > > > +       audit_log_format(ab, "op=set opid=%d contid=", task_tgid_nr(task));
-> > > > +       audit_log_contid(ab, contid);
-> > > > +       audit_log_format(ab, " old-contid=");
-> > > > +       audit_log_contid(ab, oldcontid);
-> > >
-> > > This is an interesting case where contid and old-contid are going to
-> > > be largely the same, only the first (current) ID is going to be
-> > > different; do we want to duplicate all of those IDs?
+> > Thanks,
+> > Hridya
 > >
-> > At first when I read your comment, I thought we could just take contid
-> > and drop oldcontid, but if it fails, we still want all the information,
-> > so given the way I've set up the search code in userspace, listing only
-> > the newest contid in the contid field and all the rest in oldcontid
-> > could be a good compromise.
-> 
-> This is along the lines of what I was thinking.
+> >  security/selinux/hooks.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Ooops :/
+>
+> Thanks for the fix.  I've merged this into selinux/stable-5.6, but due
+> to some personal scheduling issues on my end I'm going to refrain from
+> sending this to Linus until next week.
 
-Good.
+Thank you Paul and Stephen!
 
+Regards,
+Hridya
+
+>
+> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > index 89fe3a805129..d67a80b0d8a8 100644
+> > --- a/security/selinux/hooks.c
+> > +++ b/security/selinux/hooks.c
+> > @@ -699,7 +699,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
+> >
+> >         if (!strcmp(sb->s_type->name, "debugfs") ||
+> >             !strcmp(sb->s_type->name, "tracefs") ||
+> > -           !strcmp(sb->s_type->name, "binderfs") ||
+> > +           !strcmp(sb->s_type->name, "binder") ||
+> >             !strcmp(sb->s_type->name, "pstore"))
+> >                 sbsec->flags |= SE_SBGENFS;
+> >
+> > --
+> > 2.25.0.341.g760bfbb309-goog
+>
+> --
 > paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+> www.paul-moore.com
