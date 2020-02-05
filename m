@@ -2,321 +2,125 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7824BC35251
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E8C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D80217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A452082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="kDo9RkTv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNH/YUza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBEAMC (ORCPT
+        id S1727714AbgBEATK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:12:02 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56262 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgBEALk (ORCPT
+        Tue, 4 Feb 2020 19:19:10 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:37269 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727537AbgBEATJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:11:40 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 38B37891AE;
-        Wed,  5 Feb 2020 13:11:38 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580861498;
-        bh=TlEop1aMKKhr4TLLb8Kw8mnjVcZVWnitXHzhzdW7lr8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=kDo9RkTvcYw1r5kMFHPpurfnwLh5/ma3HIZlClqE56CefIGkJ1c+U4k6m3qQI9q0P
-         nY1M202zKC2RJHwQ2arma6uHy/Q+DgKsQWbjEranhmDlh4xEWSHokueD2PVzethk9G
-         7AX9JzvzHSLsVLLyo74w7SpMwzekLunPrVtrm1MLGZB2POywl1Xu907cTNC3nT1Js/
-         uIYtcvNZ3N6ZVwxWgeSSqClJ2bvm5QpwCQn9u8LGyfp3JmJbyf5j3dGXK1cbH34QUf
-         BnGOWmY4r1hSIs0tMsXXjjxi4ZM8Li7XwaJ7j0ABF3u8MMLM3Crpv32ytrTTdxSJY/
-         b2ROr+pWZOiZA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e3a083a0001>; Wed, 05 Feb 2020 13:11:38 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 5D4AC13EEDE;
-        Wed,  5 Feb 2020 13:11:37 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id CD52C280038; Wed,  5 Feb 2020 13:11:37 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     gregkh@linuxfoundation.org, ralf@linux-mips.org,
-        paulburton@kernel.org, linux@roeck-us.net,
-        dan.carpenter@oracle.com, willy@infradead.org
-Cc:     linux-mips@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 3/6] MIPS: octeon: remove typedef declaration for cvmx_wqe
-Date:   Wed,  5 Feb 2020 13:11:13 +1300
-Message-Id: <20200205001116.14096-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200205001116.14096-1-chris.packham@alliedtelesis.co.nz>
-References: <20200205001116.14096-1-chris.packham@alliedtelesis.co.nz>
+        Tue, 4 Feb 2020 19:19:09 -0500
+Received: by mail-yw1-f68.google.com with SMTP id l5so786624ywd.4;
+        Tue, 04 Feb 2020 16:19:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NIMxNLCcbWdI9pD04SjD3Y49RygU2eutIYBAiu1d0NQ=;
+        b=kNH/YUzawP+43dSMN7Q/MuLlyAhji6r3ufngpALGZyf5tggPBwRgsMIA6Hu/D9bA6A
+         D7x8zshF5PASFC3oztn4phdjSD+oSVQjBPfSI/nUZ7jOlcJFF1eEuuffiqDyY1n1Us26
+         vkojZ56eiO52mbJGxFN9ExLX6imGA1Ez6g6vgD2fTvDyxAGk4idW9EIBICRs2JA2ulWl
+         gRAHC0S770XSNTKEY8Z425DSL3K7L+4jVSMfpeYFPNz/BrpcenLW5gF1lLxb0jwJDSpr
+         +AOVSPDxb1FvEqvX4xW5h8DPPY4WxkqLZ5ryZ4KsFmmFuwggdX809RS0UzmthCSvxD59
+         6DAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NIMxNLCcbWdI9pD04SjD3Y49RygU2eutIYBAiu1d0NQ=;
+        b=UDlQHF8n6Kf3Q3UVUNb0lKKqLmbMAMVMSkB3fIBiWZVGOo+o2vBhMPKe5UCy1zoxL1
+         Gt5CFm65uDuSBYfxJf+pd+Htj9rG7GAMw+t4YQlx+e4wATFBaC8l7dbITjul5B3EdqND
+         psEsZsJBn7+3ccmeDkFkaBEWO33zahPi5v2upbofLV6MVtD7uKPE5EVEB9DItMQb9aT9
+         DAeQTkmvM0dYiicYapHjJa13r23GnbOSOIeS5aB2Yz70GLKTN55ULnx059Y5jvosghL/
+         15QlRC1AXKhxWxbfy3+jPE7C/BsyJgV8mWM+gsjOrDvLI7S4nBfCl9FA5d298w4ObY6H
+         Tn9w==
+X-Gm-Message-State: APjAAAXzCysOyIPMv5kjH4zuuTbrt+ynhda0UpMkAlMhUozir8dqC4dv
+        vH6ItCGw2TraJ+qct5h40aQ=
+X-Google-Smtp-Source: APXvYqwOMJ/fJzT9iHJ8EtyebqNOkpzqMGzGkLU+0qEGaS2WXqxmiJAiJRH2Fim/xt/KGKTmLPBAHA==
+X-Received: by 2002:a81:a903:: with SMTP id g3mr7778923ywh.427.1580861948493;
+        Tue, 04 Feb 2020 16:19:08 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id y129sm10877046ywd.40.2020.02.04.16.19.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 16:19:08 -0800 (PST)
+Subject: Re: [PATCH v2 7/7] Documentation: Add kunit_shutdown to
+ kernel-parameters.txt
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, knut.omang@oracle.com,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200130230812.142642-1-brendanhiggins@google.com>
+ <20200130230812.142642-8-brendanhiggins@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <d187686e-a175-e30b-2af9-6e00822fed5c@gmail.com>
+Date:   Tue, 4 Feb 2020 18:19:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <20200130230812.142642-8-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove typedef declaration from struct cvmx_wqe and replace its previous
-uses with new struct declaration.
+On 1/30/20 5:08 PM, Brendan Higgins wrote:
+> Add kunit_shutdown, an option to specify that the kernel shutsdown after
+> running KUnit tests, to the kernel-parameters.txt documentation.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ade4e6ec23e03..522fd8bdec949 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2054,6 +2054,13 @@
+>  			0: force disabled
+>  			1: force enabled
+>  
+> +	kunit_shutdown	[KERNEL UNIT TESTING FRAMEWORK] Shutdown kernel after
+> +			running tests.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- .../cavium-octeon/executive/cvmx-helper.c     |  2 +-
- .../include/asm/octeon/cvmx-helper-util.h     |  2 +-
- arch/mips/include/asm/octeon/cvmx-pko.h       |  2 +-
- arch/mips/include/asm/octeon/cvmx-pow.h       | 22 +++++++++----------
- arch/mips/include/asm/octeon/cvmx-wqe.h       | 16 +++++++-------
- 5 files changed, 22 insertions(+), 22 deletions(-)
+                        running built-in tests.  Tests configured as modules will not be run.
 
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-helper.c b/arch/mips/=
-cavium-octeon/executive/cvmx-helper.c
-index de391541d6f7..bb84ae33399a 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-helper.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-helper.c
-@@ -784,7 +784,7 @@ static int __cvmx_helper_errata_fix_ipd_ptr_alignment=
-(void)
- 	uint64_t *p64;
- 	cvmx_pko_command_word0_t pko_command;
- 	union cvmx_buf_ptr g_buffer, pkt_buffer;
--	cvmx_wqe_t *work;
-+	struct cvmx_wqe *work;
- 	int size, num_segs =3D 0, wqe_pcnt, pkt_pcnt;
- 	union cvmx_gmxx_prtx_cfg gmx_cfg;
- 	int retry_cnt;
-diff --git a/arch/mips/include/asm/octeon/cvmx-helper-util.h b/arch/mips/=
-include/asm/octeon/cvmx-helper-util.h
-index e9a97e7ee604..97b27a07cfb0 100644
---- a/arch/mips/include/asm/octeon/cvmx-helper-util.h
-+++ b/arch/mips/include/asm/octeon/cvmx-helper-util.h
-@@ -123,7 +123,7 @@ static inline int cvmx_helper_get_last_ipd_port(int i=
-nterface)
-  *
-  * @work:   Work queue entry with packet to free
-  */
--static inline void cvmx_helper_free_packet_data(cvmx_wqe_t *work)
-+static inline void cvmx_helper_free_packet_data(struct cvmx_wqe *work)
- {
- 	uint64_t number_buffers;
- 	union cvmx_buf_ptr buffer_ptr;
-diff --git a/arch/mips/include/asm/octeon/cvmx-pko.h b/arch/mips/include/=
-asm/octeon/cvmx-pko.h
-index 20eb9c46a75a..f033523c19f8 100644
---- a/arch/mips/include/asm/octeon/cvmx-pko.h
-+++ b/arch/mips/include/asm/octeon/cvmx-pko.h
-@@ -394,7 +394,7 @@ static inline void cvmx_pko_send_packet_prepare(uint6=
-4_t port, uint64_t queue,
- 		    CVMX_TAG_SW_BITS_INTERNAL << CVMX_TAG_SW_SHIFT |
- 		    CVMX_TAG_SUBGROUP_PKO << CVMX_TAG_SUBGROUP_SHIFT |
- 		    (CVMX_TAG_SUBGROUP_MASK & queue);
--		cvmx_pow_tag_sw_full((cvmx_wqe_t *) cvmx_phys_to_ptr(0x80), tag,
-+		cvmx_pow_tag_sw_full((struct cvmx_wqe *) cvmx_phys_to_ptr(0x80), tag,
- 				     CVMX_POW_TAG_TYPE_ATOMIC, 0);
- 	}
- }
-diff --git a/arch/mips/include/asm/octeon/cvmx-pow.h b/arch/mips/include/=
-asm/octeon/cvmx-pow.h
-index 410bb70e5aac..ba366f4f3c3d 100644
---- a/arch/mips/include/asm/octeon/cvmx-pow.h
-+++ b/arch/mips/include/asm/octeon/cvmx-pow.h
-@@ -1283,7 +1283,7 @@ static inline cvmx_pow_tag_req_t cvmx_pow_get_curre=
-nt_tag(void)
-  *
-  * Returns WQE pointer
-  */
--static inline cvmx_wqe_t *cvmx_pow_get_current_wqp(void)
-+static inline struct cvmx_wqe *cvmx_pow_get_current_wqp(void)
- {
- 	cvmx_pow_load_addr_t load_addr;
- 	cvmx_pow_tag_load_resp_t load_resp;
-@@ -1296,7 +1296,7 @@ static inline cvmx_wqe_t *cvmx_pow_get_current_wqp(=
-void)
- 	load_addr.sstatus.get_cur =3D 1;
- 	load_addr.sstatus.get_wqp =3D 1;
- 	load_resp.u64 =3D cvmx_read_csr(load_addr.u64);
--	return (cvmx_wqe_t *) cvmx_phys_to_ptr(load_resp.s_sstatus4.wqp);
-+	return (struct cvmx_wqe *) cvmx_phys_to_ptr(load_resp.s_sstatus4.wqp);
- }
-=20
- #ifndef CVMX_MF_CHORD
-@@ -1348,7 +1348,7 @@ static inline void cvmx_pow_tag_sw_wait(void)
-  * Returns Returns the WQE pointer from POW. Returns NULL if no work
-  * was available.
-  */
--static inline cvmx_wqe_t *cvmx_pow_work_request_sync_nocheck(cvmx_pow_wa=
-it_t
-+static inline struct cvmx_wqe *cvmx_pow_work_request_sync_nocheck(cvmx_p=
-ow_wait_t
- 							     wait)
- {
- 	cvmx_pow_load_addr_t ptr;
-@@ -1368,7 +1368,7 @@ static inline cvmx_wqe_t *cvmx_pow_work_request_syn=
-c_nocheck(cvmx_pow_wait_t
- 	if (result.s_work.no_work)
- 		return NULL;
- 	else
--		return (cvmx_wqe_t *) cvmx_phys_to_ptr(result.s_work.addr);
-+		return (struct cvmx_wqe *) cvmx_phys_to_ptr(result.s_work.addr);
- }
-=20
- /**
-@@ -1382,7 +1382,7 @@ static inline cvmx_wqe_t *cvmx_pow_work_request_syn=
-c_nocheck(cvmx_pow_wait_t
-  * Returns Returns the WQE pointer from POW. Returns NULL if no work
-  * was available.
-  */
--static inline cvmx_wqe_t *cvmx_pow_work_request_sync(cvmx_pow_wait_t wai=
-t)
-+static inline struct cvmx_wqe *cvmx_pow_work_request_sync(cvmx_pow_wait_=
-t wait)
- {
- 	if (CVMX_ENABLE_POW_CHECKS)
- 		__cvmx_pow_warn_if_pending_switch(__func__);
-@@ -1485,7 +1485,7 @@ static inline void cvmx_pow_work_request_async(int =
-scr_addr,
-  * Returns Returns the WQE from the scratch register, or NULL if no
-  * work was available.
-  */
--static inline cvmx_wqe_t *cvmx_pow_work_response_async(int scr_addr)
-+static inline struct cvmx_wqe *cvmx_pow_work_response_async(int scr_addr=
-)
- {
- 	cvmx_pow_tag_load_resp_t result;
-=20
-@@ -1495,7 +1495,7 @@ static inline cvmx_wqe_t *cvmx_pow_work_response_as=
-ync(int scr_addr)
- 	if (result.s_work.no_work)
- 		return NULL;
- 	else
--		return (cvmx_wqe_t *) cvmx_phys_to_ptr(result.s_work.addr);
-+		return (struct cvmx_wqe *) cvmx_phys_to_ptr(result.s_work.addr);
- }
-=20
- /**
-@@ -1508,7 +1508,7 @@ static inline cvmx_wqe_t *cvmx_pow_work_response_as=
-ync(int scr_addr)
-  * Returns 0 if pointer is valid
-  *	   1 if invalid (no work was returned)
-  */
--static inline uint64_t cvmx_pow_work_invalid(cvmx_wqe_t *wqe_ptr)
-+static inline uint64_t cvmx_pow_work_invalid(struct cvmx_wqe *wqe_ptr)
- {
- 	return wqe_ptr =3D=3D NULL;
- }
-@@ -1638,7 +1638,7 @@ static inline void cvmx_pow_tag_sw(uint32_t tag,
-  * @tag_type: type of tag
-  * @group:    group value for the work queue entry.
-  */
--static inline void cvmx_pow_tag_sw_full_nocheck(cvmx_wqe_t *wqp, uint32_=
-t tag,
-+static inline void cvmx_pow_tag_sw_full_nocheck(struct cvmx_wqe *wqp, ui=
-nt32_t tag,
- 						enum cvmx_pow_tag_type tag_type,
- 						uint64_t group)
- {
-@@ -1712,7 +1712,7 @@ static inline void cvmx_pow_tag_sw_full_nocheck(cvm=
-x_wqe_t *wqp, uint32_t tag,
-  * @tag_type: type of tag
-  * @group:	group value for the work queue entry.
-  */
--static inline void cvmx_pow_tag_sw_full(cvmx_wqe_t *wqp, uint32_t tag,
-+static inline void cvmx_pow_tag_sw_full(struct cvmx_wqe *wqp, uint32_t t=
-ag,
- 					enum cvmx_pow_tag_type tag_type,
- 					uint64_t group)
- {
-@@ -1803,7 +1803,7 @@ static inline void cvmx_pow_tag_sw_null(void)
-  * @qos:      Input queue to add to.
-  * @grp:      group value for the work queue entry.
-  */
--static inline void cvmx_pow_work_submit(cvmx_wqe_t *wqp, uint32_t tag,
-+static inline void cvmx_pow_work_submit(struct cvmx_wqe *wqp, uint32_t t=
-ag,
- 					enum cvmx_pow_tag_type tag_type,
- 					uint64_t qos, uint64_t grp)
- {
-diff --git a/arch/mips/include/asm/octeon/cvmx-wqe.h b/arch/mips/include/=
-asm/octeon/cvmx-wqe.h
-index 0d697aa786d4..9cec2299b81b 100644
---- a/arch/mips/include/asm/octeon/cvmx-wqe.h
-+++ b/arch/mips/include/asm/octeon/cvmx-wqe.h
-@@ -547,7 +547,7 @@ union cvmx_wqe_word1 {
-  *
-  * must be 8-byte aligned
-  */
--typedef struct {
-+struct cvmx_wqe {
-=20
-     /*****************************************************************
-      * WORD 0
-@@ -593,9 +593,9 @@ typedef struct {
-      *
-      */
-=20
--} CVMX_CACHE_LINE_ALIGNED cvmx_wqe_t;
-+} CVMX_CACHE_LINE_ALIGNED;
-=20
--static inline int cvmx_wqe_get_port(cvmx_wqe_t *work)
-+static inline int cvmx_wqe_get_port(struct cvmx_wqe *work)
- {
- 	int port;
-=20
-@@ -607,7 +607,7 @@ static inline int cvmx_wqe_get_port(cvmx_wqe_t *work)
- 	return port;
- }
-=20
--static inline void cvmx_wqe_set_port(cvmx_wqe_t *work, int port)
-+static inline void cvmx_wqe_set_port(struct cvmx_wqe *work, int port)
- {
- 	if (octeon_has_feature(OCTEON_FEATURE_CN68XX_WQE))
- 		work->word2.s_cn68xx.port =3D port;
-@@ -615,7 +615,7 @@ static inline void cvmx_wqe_set_port(cvmx_wqe_t *work=
-, int port)
- 		work->word1.cn38xx.ipprt =3D port;
- }
-=20
--static inline int cvmx_wqe_get_grp(cvmx_wqe_t *work)
-+static inline int cvmx_wqe_get_grp(struct cvmx_wqe *work)
- {
- 	int grp;
-=20
-@@ -627,7 +627,7 @@ static inline int cvmx_wqe_get_grp(cvmx_wqe_t *work)
- 	return grp;
- }
-=20
--static inline void cvmx_wqe_set_grp(cvmx_wqe_t *work, int grp)
-+static inline void cvmx_wqe_set_grp(struct cvmx_wqe *work, int grp)
- {
- 	if (octeon_has_feature(OCTEON_FEATURE_CN68XX_WQE))
- 		work->word1.cn68xx.grp =3D grp;
-@@ -635,7 +635,7 @@ static inline void cvmx_wqe_set_grp(cvmx_wqe_t *work,=
- int grp)
- 		work->word1.cn38xx.grp =3D grp;
- }
-=20
--static inline int cvmx_wqe_get_qos(cvmx_wqe_t *work)
-+static inline int cvmx_wqe_get_qos(struct cvmx_wqe *work)
- {
- 	int qos;
-=20
-@@ -647,7 +647,7 @@ static inline int cvmx_wqe_get_qos(cvmx_wqe_t *work)
- 	return qos;
- }
-=20
--static inline void cvmx_wqe_set_qos(cvmx_wqe_t *work, int qos)
-+static inline void cvmx_wqe_set_qos(struct cvmx_wqe *work, int qos)
- {
- 	if (octeon_has_feature(OCTEON_FEATURE_CN68XX_WQE))
- 		work->word1.cn68xx.qos =3D qos;
---=20
-2.25.0
+My wording might not be consistent with KUnit terminology regarding "built-in" and "modules".
+Feel free to properly word smith.
+
+
+> +			Default:	(flag not present) don't shutdown
+> +			poweroff:	poweroff the kernel after running tests
+> +			halt:		halt the kernel after running tests
+> +			reboot:		reboot the kernel after running tests
+> +
+>  	kvm.ignore_msrs=[KVM] Ignore guest accesses to unhandled MSRs.
+>  			Default is 0 (don't ignore, but inject #GP)
+>  
+> 
 
