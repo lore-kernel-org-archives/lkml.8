@@ -2,140 +2,100 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9556C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C71C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A0C217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CDC20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eucncfy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgBEXeP (ORCPT
+        id S1727561AbgBEXk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:34:15 -0500
-Received: from mga18.intel.com ([134.134.136.126]:54656 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbgBEXeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:34:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:34:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
-   d="scan'208";a="264405373"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 05 Feb 2020 15:34:12 -0800
-Date:   Thu, 6 Feb 2020 07:34:28 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200205233428.GD28446@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200205095924.GC24162@richard>
- <20200205144811.GF26758@MiWiFi-R3L-srv>
- <20200205225633.GA28446@richard>
- <20200205230826.GF8965@MiWiFi-R3L-srv>
- <20200205232620.GC28446@richard>
- <20200205233051.GG8965@MiWiFi-R3L-srv>
+        Wed, 5 Feb 2020 18:40:28 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37056 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbgBEXk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:40:27 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so2765122lfc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:40:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eImnorc+E72Ebn4XEF1SUg6cxpdpF8frzXw7k6RoRcE=;
+        b=Eucncfy0bfw2XSNvy3spLaCcbAJQXGXLfKwBFip2IDIQLXmUo0Oshd2FbgLS3FZnZK
+         9niWI9xMAjS7AulP2kZjWHny2XgDM4S//hdCeWXKGIFCEUzBUo9M1OOddK2Eg26bMsyB
+         DveOA8IJDdhnBk9uzpiAv8bDzUzDwCELfF16cn3TKe90OqY8nddNTeRzv5gtlrc0uFPh
+         ptbM+AfLEnnLiVD9BHUxlxFOKknvZ/WKsce5pwcjNl6ABhJJ2svy6h+x4B1RvPJIsTC1
+         B661E2LWjz74WjBpodNkt6YPeBFT46XbVetSnJ+7xHdI0sIyKm27coJnchHIyhuRidtM
+         TUgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eImnorc+E72Ebn4XEF1SUg6cxpdpF8frzXw7k6RoRcE=;
+        b=RRrvKena/KhM/A0doqamtrmqGNvfKfiscW9IwEYBrb9ww0KwtIopKQ7dC4IyPRbelN
+         DIR+l67xC0Asp98cbtDOV/Hn4Ge1QPTYBfu2V4baF3KUP7JL33o2LZWaPGKDyP4l/3YA
+         rECLWdYTpwXsJ6psIGqqlfBuCyASrQperNE0G2SntutwdwfVeeuK+T7cD4deUytgFkDc
+         YmBSf9nkMZfAfadhQMx8SfwaHunP+Ot3QtLjfbpYIfH8kQSG7baJoKDvD3bQ6/dp9DXB
+         wbjRbnJB8jLV56g8M98VPma1BdZCKvg3a6FLObQTSAHCZ+dJRBd3bgpvlH2c7eG8gzaX
+         qzbA==
+X-Gm-Message-State: APjAAAVnEZVYv5UJvgTxjXP+YhRFTvpFZviNwHsLIN6fm9AIXIzjo5rM
+        c+4NavaXTbWHT0pH3EFEu+nO42hWnR8to+We29w/LQ==
+X-Google-Smtp-Source: APXvYqzzEBWngyKstrRaijt7X7I5bXY9Val+Hxs5gu/BwpxZpiBbhMGiFic8G5pM6rS0i/mpmGgwfAohfvUcJsRyKVQ=
+X-Received: by 2002:ac2:5979:: with SMTP id h25mr122207lfp.203.1580946023798;
+ Wed, 05 Feb 2020 15:40:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205233051.GG8965@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200128230328.183524-1-drosen@google.com> <20200128230328.183524-2-drosen@google.com>
+ <85sgjsxx2g.fsf@collabora.com> <CA+PiJmS3kbK8220QaccP5jJ7dSf4xv3UrStQvLskAtCN+=vG_A@mail.gmail.com>
+ <85h8051x6a.fsf@collabora.com>
+In-Reply-To: <85h8051x6a.fsf@collabora.com>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Wed, 5 Feb 2020 15:40:11 -0800
+Message-ID: <CA+PiJmQgFNLYoRu7fSWgz_He8Z8ceq1G2yUDcy0OCn1iD2rkzA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] unicode: Add standard casefolded d_ops
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 07:30:51AM +0800, Baoquan He wrote:
->On 02/06/20 at 07:26am, Wei Yang wrote:
->> On Thu, Feb 06, 2020 at 07:08:26AM +0800, Baoquan He wrote:
->> >On 02/06/20 at 06:56am, Wei Yang wrote:
->> >> On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
->> >> >Hi Wei Yang,
->> >> >
->> >> >On 02/05/20 at 05:59pm, Wei Yang wrote:
->> >> >> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> >> >> >index f294918f7211..8dafa1ba8d9f 100644
->> >> >> >--- a/mm/memory_hotplug.c
->> >> >> >+++ b/mm/memory_hotplug.c
->> >> >> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->> >> >> > 		if (pfn) {
->> >> >> > 			zone->zone_start_pfn = pfn;
->> >> >> > 			zone->spanned_pages = zone_end_pfn - pfn;
->> >> >> >+		} else {
->> >> >> >+			zone->zone_start_pfn = 0;
->> >> >> >+			zone->spanned_pages = 0;
->> >> >> > 		}
->> >> >> > 	} else if (zone_end_pfn == end_pfn) {
->> >> >> > 		/*
->> >> >> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->> >> >> > 					       start_pfn);
->> >> >> > 		if (pfn)
->> >> >> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
->> >> >> >+		else {
->> >> >> >+			zone->zone_start_pfn = 0;
->> >> >> >+			zone->spanned_pages = 0;
->> >> >> >+		}
->> >> >> > 	}
->> >> >> 
->> >> >> If it is me, I would like to take out these two similar logic out.
->> >> >
->> >> >I also like this style. 
->> >> >> 
->> >> >> For example:
->> >> >> 
->> >> >> 	if () {
->> >> >> 	} else if () {
->> >> >> 	} else {
->> >> >> 		goto out;
->> >> >Here the last else is unnecessary, right?
->> >> >
->> >> 
->> >> I am afraid not.
->> >> 
->> >> If the range is not the first or last, we would leave pfn not initialized.
->> >
->> >Ah, you are right. I forgot that one. Then pfn can be assigned the
->> >zone_start_pfn as the old code. Then the following logic is the same
->> >as the original code, find_smallest_section_pfn()/find_biggest_section_pfn() 
->> >have done the iteration the old for loop was doing.
->> >
->> >	unsigned long pfn = zone_start_pfn;	
->> >	if () {
->> >	} else if () {
->> >	} 
->> >
->> >	/* The zone has no valid section */
->> >	if (!pfn) {
->> >        	zone->zone_start_pfn = 0;
->> >        	zone->spanned_pages = 0;
->> >	}
->> 
->> This one look better :-)
+On Tue, Feb 4, 2020 at 8:21 PM Gabriel Krisman Bertazi
+<krisman@collabora.com> wrote:
 >
->Thanks for your confirmation, I will make one patch like this and post.
+> Daniel Rosenberg <drosen@google.com> writes:
+>
+> Hi,
+>
+> It was designed to be an internal thing, but I'm ok with exposing it.
+>
+> --
+> Gabriel Krisman Bertazi
 
-Sure :-)
+We could also avoid exposing it by creating an iterator function that
+accepts a context struct with some actor function pointer, similar to
+iterate_dir. I'm currently reworking around that and moving the fs
+specific functions to libfs. I can move the generic op_set code there
+as well.
 
--- 
-Wei Yang
-Help you, Help me
+-Daniel Rosenberg
