@@ -2,118 +2,171 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E99C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0DC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F275E20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893C721741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580895377;
+	bh=RwByi0XDoyCwQdPe5YV1dEFXavEuBmppr0k662j0vE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1XnhxLRF7L4uhcwX0IlMUbkF0wcXjorSMO1iJ6WpNDHm4AIxV/oZfDv6dhhafhMtX
+	 2Llk7OlGB9KtzksEbHuhSe9ovOuJt0FTQWyxHGkQ42YpEPc+cuD77JgG2J55Y0mcpa
+	 E4Y5KGIIhcErem+b2ZoKC62grmZyxPl2qBVHIZe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgBEJfU (ORCPT
+        id S1728243AbgBEJgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:35:20 -0500
-Received: from mga17.intel.com ([192.55.52.151]:18567 "EHLO mga17.intel.com"
+        Wed, 5 Feb 2020 04:36:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728078AbgBEJfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:35:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:35:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="311314489"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga001.jf.intel.com with ESMTP; 05 Feb 2020 01:35:16 -0800
-Subject: Re: TI PCIe xHCI and kexec
-To:     Joel Stanley <joel@jms.id.au>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <26635edf-2df3-df0f-5644-e016e1e20248@linux.intel.com>
-Date:   Wed, 5 Feb 2020 11:37:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728035AbgBEJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:36:16 -0500
+Received: from localhost (unknown [212.187.182.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AD5E20661;
+        Wed,  5 Feb 2020 09:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580895375;
+        bh=RwByi0XDoyCwQdPe5YV1dEFXavEuBmppr0k662j0vE0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GVMZpACbv7YDWH+Ckvp13K/sQxq6HMXMZWFjtjxgZOzZCqv9+3Rz5m7YrNUSRGzRo
+         8xla3g7gqRFfMK8GwmrjBaSCImKNAg1i5cq0H1VmAJSHqnh8N8ShGFvp+81/Aocfwd
+         zPKKa2l7omXB4nxNHq8JHvMsPIqUAf6bH7AZ+bNg=
+Date:   Wed, 5 Feb 2020 09:36:12 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Frankie Chang <Frankie.Chang@mediatek.com>
+Cc:     Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com, Jian-Min.Liu@mediatek.com
+Subject: Re: [PATCH v1 1/1] binder: transaction latency tracking for user
+ build
+Message-ID: <20200205093612.GA1167956@kroah.com>
+References: <1580885572-14272-1-git-send-email-Frankie.Chang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580885572-14272-1-git-send-email-Frankie.Chang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5.2.2020 2.55, Joel Stanley wrote:
-> I'm supporting a system that uses Linux-as-a-bootloader to load a
-> distro kernel via kexec, The systems have a TI TUSB73x0 PCIe
-> controller which goes out to lunch after a kexec. This is the distro
-> (post-kexec) kernel:
+On Wed, Feb 05, 2020 at 02:52:52PM +0800, Frankie Chang wrote:
+> Record start/end timestamp to binder transaction.
+> When transaction is completed or transaction is free,
+> it would be checked if transaction latency over threshold (2 sec),
+> if yes, printing related information for tracing.
 > 
-> [    0.235411] pci 0003:01:00.0: xHCI HW did not halt within 16000
-> usec status = 0x0
-> [    1.037298] xhci_hcd 0003:01:00.0: xHCI Host Controller
-> [    1.037367] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
-> bus number 1
-> [    1.053481] xhci_hcd 0003:01:00.0: Host halt failed, -110
-> [    1.053523] xhci_hcd 0003:01:00.0: can't setup: -110
-> [    1.053565] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
-> [    1.053629] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
-> [    1.053703] xhci_hcd: probe of 0003:01:00.0 failed with error -110
+> Signed-off-by: Frankie Chang <Frankie.Chang@mediatek.com>
+> ---
+>  drivers/android/Kconfig           |    8 +++
+>  drivers/android/binder.c          |  107 +++++++++++++++++++++++++++++++++++++
+>  drivers/android/binder_internal.h |    4 ++
+>  3 files changed, 119 insertions(+)
 > 
-> There were some fixes made a few years back to improve the situation,
-> but we've still had to carry some form of the patch below in the
-> bootloader kernel. I would like to rework it so it can be merged.
-> 
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index dbac0fa9748d..eaa94456dd9d 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -789,6 +789,9 @@ void xhci_shutdown(struct usb_hcd *hcd)
->       xhci_dbg_trace(xhci, trace_xhci_dbg_init,
->               "xhci_shutdown completed - status = %x",
->               readl(&xhci->op_regs->status));
+> diff --git a/drivers/android/Kconfig b/drivers/android/Kconfig
+> index 6fdf2ab..7ba80eb 100644
+> --- a/drivers/android/Kconfig
+> +++ b/drivers/android/Kconfig
+> @@ -54,6 +54,14 @@ config ANDROID_BINDER_IPC_SELFTEST
+>  	  exhaustively with combinations of various buffer sizes and
+>  	  alignments.
+>  
+> +config BINDER_USER_TRACKING
+> +	bool "Android Binder transaction tracking"
+> +	help
+> +	  Used for track abnormal binder transaction which is over 2 seconds,
+> +	  when the transaction is done or be free, this transaction would be
+> +	  checked whether it executed overtime.
+> +	  If yes, printing out the detail info about it.
 > +
-> +    /* TI XHCI controllers do not come back after kexec without this hack */
-> +    pci_reset_function_locked(to_pci_dev(hcd->self.sysdev));
->   }
->   EXPORT_SYMBOL_GPL(xhci_shutdown);
-> 
-> I would like some advice on how to implement it in a way that is
-> acceptable. Would a quirk on the pci id in xhci_shutdown be ok?
+>  endif # if ANDROID
+>  
+>  endmenu
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index e9bc9fc..5a352ee 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -76,6 +76,11 @@
+>  #include "binder_internal.h"
+>  #include "binder_trace.h"
+>  
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +#include <linux/rtc.h>
+> +#include <linux/time.h>
+> +#endif
+> +
+>  static HLIST_HEAD(binder_deferred_list);
+>  static DEFINE_MUTEX(binder_deferred_lock);
+>  
+> @@ -591,8 +596,104 @@ struct binder_transaction {
+>  	 * during thread teardown
+>  	 */
+>  	spinlock_t lock;
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +	struct timespec timestamp;
+> +	struct timeval tv;
+> +#endif
+>  };
+>  
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +
+> +/*
+> + * binder_print_delay - Output info of a delay transaction
+> + * @t:          pointer to the over-time transaction
+> + */
+> +static void binder_print_delay(struct binder_transaction *t)
+> +{
+> +	struct rtc_time tm;
+> +	struct timespec *startime;
+> +	struct timespec cur, sub_t;
+> +
+> +	ktime_get_ts(&cur);
+> +	startime = &t->timestamp;
+> +	sub_t = timespec_sub(cur, *startime);
+> +
+> +	/* if transaction time is over than 2 sec,
+> +	 * show timeout warning log.
+> +	 */
+> +	if (sub_t.tv_sec < 2)
+> +		return;
+> +
+> +	rtc_time_to_tm(t->tv.tv_sec, &tm);
+> +
+> +	spin_lock(&t->lock);
+> +	pr_info_ratelimited("%d: from %d:%d to %d:%d",
+> +			    t->debug_id,
+> +			    t->from ? t->from->proc->pid : 0,
+> +			    t->from ? t->from->pid : 0,
+> +			    t->to_proc ? t->to_proc->pid : 0,
+> +			    t->to_thread ? t->to_thread->pid : 0);
+> +	spin_unlock(&t->lock);
+> +
+> +	pr_info_ratelimited(" total %u.%03ld s code %u start %lu.%03ld android %d-%02d-%02d %02d:%02d:%02d.%03lu\n",
+> +			    (unsigned int)sub_t.tv_sec,
+> +			    (sub_t.tv_nsec / NSEC_PER_MSEC),
+> +			    t->code,
+> +			    (unsigned long)startime->tv_sec,
+> +			    (startime->tv_nsec / NSEC_PER_MSEC),
+> +			    (tm.tm_year + 1900), (tm.tm_mon + 1), tm.tm_mday,
+> +			    tm.tm_hour, tm.tm_min, tm.tm_sec,
+> +			    (unsigned long)(t->tv.tv_usec / USEC_PER_MSEC));
+> +}
 
-Yes, but as this is a pci specific workaround the quirk should go to
-xhci-pci.c: xhci_pci_shutdown(), which was added in v5.5
+Ick, why not use a tracepoint for this instead?
 
-Is the rootcause known?
-Is the only possible solution to reset the pci function?.
-Have you tried, or seen this issue on any other controller than this TUSB73x0?
+And what is userspace supposed to do with this if they see it?
 
-> 
-> 0003:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB
-> 3.0 xHCI Host Controller (rev 02)
-> 
-> The full debug log of the distro kernel booting is below.
-> 
-> [    1.037833] xhci_hcd 0003:01:00.0: USBCMD 0x0:
-> [    1.037835] xhci_hcd 0003:01:00.0:   HC is being stopped
-> [    1.037837] xhci_hcd 0003:01:00.0:   HC has finished hard reset
-> [    1.037839] xhci_hcd 0003:01:00.0:   Event Interrupts disabled
-> [    1.037841] xhci_hcd 0003:01:00.0:   Host System Error Interrupts disabled
-> [    1.037843] xhci_hcd 0003:01:00.0:   HC has finished light reset
-> [    1.037846] xhci_hcd 0003:01:00.0: USBSTS 0x0:
-> [    1.037847] xhci_hcd 0003:01:00.0:   Event ring is empty
-> [    1.037849] xhci_hcd 0003:01:00.0:   No Host System Error
-> [    1.037851] xhci_hcd 0003:01:00.0:   HC is running
+thanks,
 
-Hmm, all bits in both USBCMD and USBSTS are 0. This is a bit suspicious.
-Normally at least USBCMD Run/Stop bit, and USBSTS HCHalted bit have
-opposite values.
-
--Mathias
+greg k-h
