@@ -2,80 +2,147 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF9FC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3762C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236E320659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8EF217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgBEQMS (ORCPT
+        id S1727054AbgBEQQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:12:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:35917 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgBEQMS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:12:18 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1izNHi-00052E-DZ; Wed, 05 Feb 2020 17:12:14 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     lijiang <lijiang@redhat.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] printk: replace ringbuffer
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
-        <dc4ca9b5-d2a2-03af-c186-204a3aad2399@redhat.com>
-        <20200205044848.GH41358@google.com>
-        <20200205050204.GI41358@google.com>
-        <88827ae2-7af5-347b-29fb-cffb94350f8f@redhat.com>
-        <20200205063640.GJ41358@google.com> <877e11h0ir.fsf@linutronix.de>
-        <cd7509a5-48fd-e652-90f4-1e0fe2311134@redhat.com>
-Date:   Wed, 05 Feb 2020 17:12:12 +0100
-In-Reply-To: <cd7509a5-48fd-e652-90f4-1e0fe2311134@redhat.com>
-        (lijiang@redhat.com's message of "Wed, 5 Feb 2020 18:19:02 +0800")
-Message-ID: <87sgjp9foj.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Wed, 5 Feb 2020 11:16:49 -0500
+Received: from mga01.intel.com ([192.55.52.88]:57205 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgBEQQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 11:16:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 08:16:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
+   d="scan'208";a="225879637"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2020 08:16:48 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1izNM7-00033i-IZ; Thu, 06 Feb 2020 00:16:47 +0800
+Date:   Thu, 06 Feb 2020 00:16:34 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:efi/urgent] BUILD SUCCESS
+ 59365cadfbcd299b8cdbe0c165faf15767c5f166
+Message-ID: <5e3aea62.CLGu9dvJXuZ++Xtv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05, lijiang <lijiang@redhat.com> wrote:
-> Do you have any suggestions about the size of CONFIG_LOG_* and
-> CONFIG_PRINTK_* options by default?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  efi/urgent
+branch HEAD: 59365cadfbcd299b8cdbe0c165faf15767c5f166  efi/x86: Fix boot regression on systems with invalid memmap entries
 
-The new printk implementation consumes more than double the memory that
-the current printk implementation requires. This is because dictionaries
-and meta-data are now stored separately.
+elapsed time: 4418m
 
-If the old defaults (LOG_BUF_SHIFT=17 LOG_CPU_MAX_BUF_SHIFT=12) were
-chosen because they are maximally acceptable defaults, then the defaults
-should be reduced by 1 so that the final size is "similar" to the
-current implementation.
+configs tested: 84
+configs skipped: 112
 
-If instead the defaults are left as-is, a machine with less than 64 CPUs
-will reserve 336KiB for printk information (128KiB text, 128KiB
-dictionary, 80KiB meta-data).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-It might also be desirable to reduce the dictionary size (maybe 1/4 the
-size of text?). However, since the new printk implementation allows for
-non-intrusive dictionaries, we might see their usage increase and start
-to be as large as the messages themselves.
+sparc                            allyesconfig
+h8300                     edosk2674_defconfig
+um                                  defconfig
+parisc                              defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64               randconfig-a001-20200205
+x86_64               randconfig-a002-20200205
+x86_64               randconfig-a003-20200205
+i386                 randconfig-a001-20200205
+i386                 randconfig-a002-20200205
+i386                 randconfig-a003-20200205
+x86_64               randconfig-a001-20200204
+x86_64               randconfig-a002-20200204
+x86_64               randconfig-a003-20200204
+i386                 randconfig-a001-20200204
+i386                 randconfig-a002-20200204
+i386                 randconfig-a003-20200204
+i386                 randconfig-b001-20200202
+x86_64               randconfig-b002-20200202
+i386                 randconfig-b002-20200202
+x86_64               randconfig-b001-20200202
+i386                 randconfig-b003-20200202
+x86_64               randconfig-b003-20200202
+x86_64               randconfig-d001-20200202
+x86_64               randconfig-d002-20200202
+x86_64               randconfig-d003-20200202
+i386                 randconfig-d001-20200202
+i386                 randconfig-d002-20200202
+i386                 randconfig-d003-20200202
+x86_64               randconfig-f001-20200205
+x86_64               randconfig-f002-20200205
+x86_64               randconfig-f003-20200205
+i386                 randconfig-f001-20200205
+i386                 randconfig-f002-20200205
+i386                 randconfig-f003-20200205
+x86_64               randconfig-g003-20200202
+x86_64               randconfig-g001-20200202
+i386                 randconfig-g001-20200202
+x86_64               randconfig-g002-20200202
+i386                 randconfig-g002-20200202
+i386                 randconfig-g003-20200202
+x86_64               randconfig-h001-20200204
+x86_64               randconfig-h002-20200204
+x86_64               randconfig-h003-20200204
+i386                 randconfig-h001-20200204
+i386                 randconfig-h002-20200204
+i386                 randconfig-h003-20200204
+arc                  randconfig-a001-20200203
+arm                  randconfig-a001-20200203
+arm64                randconfig-a001-20200203
+ia64                 randconfig-a001-20200203
+powerpc              randconfig-a001-20200203
+sparc                randconfig-a001-20200203
+arm                  randconfig-a001-20200205
+arm64                randconfig-a001-20200205
+ia64                 randconfig-a001-20200205
+powerpc              randconfig-a001-20200205
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-John Ogness
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
