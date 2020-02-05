@@ -2,199 +2,155 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149F8C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89D4C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD8721741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F29F2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FsAdKZTF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PJ+u2sUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgBEGuU (ORCPT
+        id S1726950AbgBEGvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:50:20 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34900 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725385AbgBEGuU (ORCPT
+        Wed, 5 Feb 2020 01:51:45 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:29329 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgBEGvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 01:50:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580885418;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wE2vWrZfATx1m0Y7LHRA4jaMP+1sekxlUzJjAOwdAHM=;
-        b=FsAdKZTFBUdh4E4OXGXXdmndvHslSEWlpXxB5+6/qv2pcnSTLU4FYG3XfKgR3JRmNqz39z
-        HuagAtsB6fBwC4exN/Ik5OLI0/bG6fFYvFYerOrLPW8ctMrVlFKbrxoUo+7AYWQs/KlhkA
-        +HzpX+xkuEvrLf1fM+k5yq7XdPL5BMU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-_Ob3lLb_MXmy3zWqO6IqAQ-1; Wed, 05 Feb 2020 01:50:16 -0500
-X-MC-Unique: _Ob3lLb_MXmy3zWqO6IqAQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Feb 2020 01:51:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580885503; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=FEUHkLBJ+nAGJuyoz3LEU26JARROyquI5FGuyUlZs9g=;
+ b=PJ+u2sUNGTqIhHAX3Syi37z/mqW16j3oPsi0A1fg+iYwHY6sb8G8ofiqetpgBRP9s/jkLNIC
+ lCTW9Lu7uXiljg1cexb3kaoa4222Cz1qNSIZqqrIQ182/bD8qGqgnr/SQKjgWrf3go6UtdVz
+ Y0bYmCZdsSHIJy3VyPfMM+G4hoE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a65fb.7ff54b745b58-smtp-out-n01;
+ Wed, 05 Feb 2020 06:51:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39525C447A1; Wed,  5 Feb 2020 06:51:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FB60DBA5;
-        Wed,  5 Feb 2020 06:50:14 +0000 (UTC)
-Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 394381001B09;
-        Wed,  5 Feb 2020 06:49:37 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
-        rob.miller@broadcom.com, haotian.wang@sifive.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com,
-        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
-        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
- <20200204005306-mutt-send-email-mst@kernel.org>
- <cf485e7f-46e3-20d3-8452-e3058b885d0a@redhat.com>
- <20200205020555.GA369236@___>
- <798e5644-ca28-ee46-c953-688af9bccd3b@redhat.com>
- <20200205003048-mutt-send-email-mst@kernel.org>
- <eb53d1c2-92ae-febf-f502-2d3e107ee608@redhat.com>
- <20200205011935-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <2dd43fb5-6f02-2dcc-5c27-9f7419ef72fc@redhat.com>
-Date:   Wed, 5 Feb 2020 14:49:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AF06C43383;
+        Wed,  5 Feb 2020 06:51:38 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200205011935-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Feb 2020 12:21:38 +0530
+From:   smasetty@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+In-Reply-To: <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
+References: <1580472220-3453-1-git-send-email-smasetty@codeaurora.org>
+ <1580472220-3453-2-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
+Message-ID: <1e29097cc1cdf18671379f6420f872b0@codeaurora.org>
+X-Sender: smasetty@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/2/5 =E4=B8=8B=E5=8D=882:30, Michael S. Tsirkin wrote:
-> On Wed, Feb 05, 2020 at 01:50:28PM +0800, Jason Wang wrote:
->> On 2020/2/5 =E4=B8=8B=E5=8D=881:31, Michael S. Tsirkin wrote:
->>> On Wed, Feb 05, 2020 at 11:12:21AM +0800, Jason Wang wrote:
->>>> On 2020/2/5 =E4=B8=8A=E5=8D=8810:05, Tiwei Bie wrote:
->>>>> On Tue, Feb 04, 2020 at 02:46:16PM +0800, Jason Wang wrote:
->>>>>> On 2020/2/4 =E4=B8=8B=E5=8D=882:01, Michael S. Tsirkin wrote:
->>>>>>> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
->>>>>>>> 5) generate diffs of memory table and using IOMMU API to setup t=
-he dma
->>>>>>>> mapping in this method
->>>>>>> Frankly I think that's a bunch of work. Why not a MAP/UNMAP inter=
-face?
->>>>>>>
->>>>>> Sure, so that basically VHOST_IOTLB_UPDATE/INVALIDATE I think?
->>>>> Do you mean we let userspace to only use VHOST_IOTLB_UPDATE/INVALID=
-ATE
->>>>> to do the DMA mapping in vhost-vdpa case? When vIOMMU isn't availab=
-le,
->>>>> userspace will set msg->iova to GPA, otherwise userspace will set
->>>>> msg->iova to GIOVA, and vhost-vdpa module will get HPA from msg->ua=
-ddr?
->>>>>
->>>>> Thanks,
->>>>> Tiwei
->>>> I think so. Michael, do you think this makes sense?
->>>>
->>>> Thanks
->>> to make sure, could you post the suggested argument format for
->>> these ioctls?
->>>
->> It's the existed uapi:
->>
->> /* no alignment requirement */
->> struct vhost_iotlb_msg {
->>  =C2=A0=C2=A0=C2=A0 __u64 iova;
->>  =C2=A0=C2=A0=C2=A0 __u64 size;
->>  =C2=A0=C2=A0=C2=A0 __u64 uaddr;
->> #define VHOST_ACCESS_RO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1
->> #define VHOST_ACCESS_WO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x2
->> #define VHOST_ACCESS_RW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3
->>  =C2=A0=C2=A0=C2=A0 __u8 perm;
->> #define VHOST_IOTLB_MISS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 1
->> #define VHOST_IOTLB_UPDATE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 2
->> #define VHOST_IOTLB_INVALIDATE=C2=A0=C2=A0=C2=A0=C2=A0 3
->> #define VHOST_IOTLB_ACCESS_FAIL=C2=A0=C2=A0=C2=A0 4
->>  =C2=A0=C2=A0=C2=A0 __u8 type;
->> };
->>
->> #define VHOST_IOTLB_MSG 0x1
->> #define VHOST_IOTLB_MSG_V2 0x2
->>
->> struct vhost_msg {
->>  =C2=A0=C2=A0=C2=A0 int type;
->>  =C2=A0=C2=A0=C2=A0 union {
->>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct vhost_iotlb_msg iotlb;
->>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 __u8 padding[64];
->>  =C2=A0=C2=A0=C2=A0 };
->> };
->>
->> struct vhost_msg_v2 {
->>  =C2=A0=C2=A0=C2=A0 __u32 type;
->>  =C2=A0=C2=A0=C2=A0 __u32 reserved;
->>  =C2=A0=C2=A0=C2=A0 union {
->>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct vhost_iotlb_msg iotlb;
->>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 __u8 padding[64];
->>  =C2=A0=C2=A0=C2=A0 };
->> };
-> Oh ok.  So with a real device, I suspect we do not want to wait for eac=
-h
-> change to be processed by device completely, so we might want an asynch=
-ronous variant
-> and then some kind of flush that tells device "you better apply these n=
-ow".
-
-
-Let me explain:
-
-There are two types of devices:
-
-1) device without on-chip IOMMU, DMA was done via IOMMU API which only=20
-support incremental map/unmap
-2) device with on-chip IOMMU, DMA could be done by device driver itself,=20
-and we could choose to pass the whole mappings to the driver at one time=20
-through vDPA bus operation (set_map)
-
-For vhost-vpda, there're two types of memory mapping:
-
-a) memory table, setup by userspace through VHOST_SET_MEM_TABLE, the=20
-whole mapping is updated in this way
-b) IOTLB API, incrementally done by userspace through vhost message=20
-(IOTLB_UPDATE/IOTLB_INVALIDATE)
-
-The current design is:
-
-- Reuse VHOST_SET_MEM_TABLE, and for type 1), we can choose to send=20
-diffs through IOMMU API or flush all the mappings then map new ones. For=20
-type 2), just send the whole mapping through set_map()
-- Reuse vhost IOTLB, so for type 1), simply forward update/invalidate=20
-request via IOMMU API, for type 2), send IOTLB to vDPA device driver via=20
-set_map(), device driver may choose to send diffs or rebuild all mapping=20
-at their will
-
-Technically we can use vhost IOTLB API (map/umap) for building=20
-VHOST_SET_MEM_TABLE, but to avoid device to process the each request, it=20
-looks to me we need new UAPI which seems sub optimal.
-
-What's you thought?
-
-Thanks
-
-
->
-
+On 2020-02-01 03:13, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Jan 31, 2020 at 4:04 AM Sharat Masetty 
+> <smasetty@codeaurora.org> wrote:
+>> 
+>> +               adreno_smmu: iommu@5040000 {
+>> +                       compatible = "qcom,sc7180-smmu-v2", 
+>> "qcom,smmu-v2";
+>> +                       reg = <0 0x05040000 0 0x10000>;
+>> +                       #iommu-cells = <1>;
+>> +                       #global-interrupts = <2>;
+>> +                       interrupts = <GIC_SPI 229 
+>> IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 231 
+>> IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 364 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 365 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 366 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 367 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 368 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 369 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 370 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 371 
+>> IRQ_TYPE_EDGE_RISING>;
+>> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+>> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
+>> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
+>> +
+>> +                       clock-names = "bus", "iface", "mem_iface_clk";
+> 
+> Repeated comment from v2 feedback:
+> 
+> Please send a patch to:
+> 
+> Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> 
+> ...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
+> that you've added a new clock: "mem_iface_clk".  Is this truly a new
+> clock in sc7180 compared to previous IOMMUs?  ...or is it not really
+> needed?
+I can confirm that this clock is needed for SC7180. I will send out a 
+new patch
+to update the documentation this week.
+> 
+> 
+>> +               gmu: gmu@506a000 {
+>> +                       compatible="qcom,adreno-gmu-618.0", 
+>> "qcom,adreno-gmu";
+>> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 
+>> 0 0x10000>,
+>> +                               <0 0x0b490000 0 0x10000>;
+>> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+>> +                       interrupts = <GIC_SPI 304 
+>> IRQ_TYPE_LEVEL_HIGH>,
+>> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       interrupt-names = "hfi", "gmu";
+>> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+>> +                              <&gpucc GPU_CC_CXO_CLK>,
+>> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+>> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+>> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
+>> +                       power-domains = <&gpucc CX_GDSC>;
+>> +                       power-domain-names = "cx";
+> 
+> As per continued comments on v2, please see if this works for you:
+> 
+>   power-domains = <&gpucc CX_GDSC>, <0>;
+>   power-domain-names = "cx", "gx";
+> 
+> ...and work to get something more real for "gx" ASAP.  It did seem to
+> boot for me and (unless someone disagrees) it seems better than
+> totally leaving it out / violating the bindings?
+> 
+> 
+> -Doug
