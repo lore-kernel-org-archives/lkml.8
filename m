@@ -2,159 +2,102 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ABEC35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAB7C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9A1217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mfz+4QrW"
+	by mail.kernel.org (Postfix) with ESMTP id 67A9B218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580907732;
+	bh=3UV6Ke695Hw2GuPRAnPrXfUEyBkzretTk1OokBbR4Fo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bEzuM5SuVk2PjnbMjxhpwgn3H4sMWZeUm3sAapG7+SF3/ogRzuTh1Tq7omQJYyfpN
+	 O6Hnz6slzLDt1bNFQbnRYQ1ELbcvoZ4ENXsacG2Ye83snPY+AC+9L8sOyLMVg61a9X
+	 e132C7+/hARDOOc8EvYfyo5wBUck9kTPzWqMZ4Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgBEM6l (ORCPT
+        id S1727861AbgBENCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:58:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26413 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726748AbgBEM6k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:58:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580907520;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=EsKI13uEInV1+e+5h+hQckTbAfRjcgKQBLxQjiFbWOU=;
-        b=Mfz+4QrWmKR4w7tUiqf6HBe/IdRK3NHnzGxS22huJJ43p4A9hjJLg3a3sfsQBlJIYxjycv
-        Hg0bcjaq3TWUvh7/L+Ci0Sow1iOldFuDaRz9jvFGVH1b932x3Nk9tr9+LHRGIv4oGo9qEi
-        rCJSzPbap9e0hwAqmPipNv4wxGmqL7c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-Jl4Bo-I3NZyj9UCfKmcPvQ-1; Wed, 05 Feb 2020 07:58:36 -0500
-X-MC-Unique: Jl4Bo-I3NZyj9UCfKmcPvQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Feb 2020 08:02:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgBENCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:02:11 -0500
+Received: from localhost (unknown [212.187.182.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 900698010EF;
-        Wed,  5 Feb 2020 12:58:34 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 02FCB5DA7D;
-        Wed,  5 Feb 2020 12:58:32 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prarit Bhargava <prarit@redhat.com>,
-        Alexander Krupp <centos@akr.yagii.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org
-Subject: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
-Date:   Wed,  5 Feb 2020 07:58:31 -0500
-Message-Id: <20200205125831.20430-1-prarit@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BF2A3217F4;
+        Wed,  5 Feb 2020 13:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580907730;
+        bh=3UV6Ke695Hw2GuPRAnPrXfUEyBkzretTk1OokBbR4Fo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ykDDmAwNPGoDmoYWDGHqSmWxyKrf6OS4Z2h9iZYRNZtCDD7PidKk0sfB/bPT79Z+b
+         5VY/EnHdLA6LM0nmZV7ongyAQ4JExeS1bf51hCATa7h0yCM+NUSS1ZZguStb070k/z
+         y1J+Af/8YaIHbLLcYV6FnqkExuFFzxyp7WbEMGDA=
+Date:   Wed, 5 Feb 2020 13:02:07 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>
+Subject: Re: [PATCH 4.4 00/53] 4.4.213-stable review
+Message-ID: <20200205130207.GA1199959@kroah.com>
+References: <20200203161902.714326084@linuxfoundation.org>
+ <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
-"spurious corrected errors may be logged in the IA32_MC0_STATUS register
-with the valid field (bit 63) set, the uncorrected error field (bit 61)
-not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
-an MCA Error Code (bits [15:0]) of 0x0005."
+On Tue, Feb 04, 2020 at 09:50:56AM +0000, Chris Paterson wrote:
+> Hi Greg,
+> 
+> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > Behalf Of Greg Kroah-Hartman
+> > Sent: 03 February 2020 16:19
+> > 
+> > This is the start of the stable review cycle for the 4.4.213 release.
+> > There are 53 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> > Anything received after that time might be too late.
+> 
+> We're seeing an issue with 4.4.213-rc1 (36670370c48b) and 4.4.213-rc2 (758a39807529) with our 4 am335x configurations [0]:
+> 
+>    AS      arch/arm/kernel/hyp-stub.o
+>  arch/arm/kernel/hyp-stub.S:   CC      arch/arm/mach-omap2/sram.o
+>  Assembler messages:
+>    AS      arch/arm/kernel/smccc-call.o
+>  arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not support `ubfx r7,r7,#16,#4' in ARM mode
+>  scripts/Makefile.build:375: recipe for target 'arch/arm/kernel/hyp-stub.o' failed
+>  make[1]: *** [arch/arm/kernel/hyp-stub.o] Error 1
+> 
+> The culprit seems to be: 15163bcee7b5 ("ARM: 8955/1: virt: Relax arch timer version check during early boot")
+> Reverting the same resolves the build issue.
+> 
+> Latest pipeline: https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/114683657
+> 
+> [0] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/-/blob/master/4.4.y-cip/arm/
+> siemens_am335x-axm2_defconfig, siemens_am335x-draco_defconfig, siemens_am335x-dxr2_defconfig, siemens_am335x-etamin_defconfig
 
-Block these spurious errors from the console and logs.
+Thanks, I'll go drop that patch from 4.4 and 4.9 trees.
 
-Links to Intel Specification updates:
-HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/=
-core/4th-gen-core-family-desktop-specification-update.html
-HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/=
-core/4th-gen-core-family-mobile-specification-update.html
-HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1=
-200v3-spec-update.html
-BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/c=
-ore/5th-gen-core-family-spec-update.html
-
-Signed-off-by: Alexander Krupp <centos@akr.yagii.de>
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: linux-edac@vger.kernel.org
----
- arch/x86/kernel/cpu/mce/core.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
-e.c
-index 2c4f949611e4..d893cc764a06 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -121,6 +121,8 @@ static struct irq_work mce_irq_work;
-=20
- static void (*quirk_no_way_out)(int bank, struct mce *m, struct pt_regs =
-*regs);
-=20
-+static int (*quirk_noprint)(struct mce *m);
-+
- /*
-  * CPU/chipset specific EDAC code can register a notifier call here to p=
-rint
-  * MCE errors in a human-readable form.
-@@ -232,6 +234,9 @@ struct mca_msr_regs msr_ops =3D {
-=20
- static void __print_mce(struct mce *m)
- {
-+	if (quirk_noprint && quirk_noprint(m))
-+		return;
-+
- 	pr_emerg(HW_ERR "CPU %d: Machine Check%s: %Lx Bank %d: %016Lx\n",
- 		 m->extcpu,
- 		 (m->mcgstatus & MCG_STATUS_MCIP ? " Exception" : ""),
-@@ -1622,6 +1627,15 @@ static void quirk_sandybridge_ifu(int bank, struct=
- mce *m, struct pt_regs *regs)
- 	m->cs =3D regs->cs;
- }
-=20
-+static int quirk_spurious_ce_noprint(struct mce *m)
-+{
-+	if (m->bank =3D=3D 0 &&
-+	    (m->status & 0xa0000000ffffffff) =3D=3D 0x80000000000f0005)
-+		return 1;
-+
-+	return 0;
-+}
-+
- /* Add per CPU specific workarounds here */
- static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
- {
-@@ -1696,6 +1710,13 @@ static int __mcheck_cpu_apply_quirks(struct cpuinf=
-o_x86 *c)
-=20
- 		if (c->x86 =3D=3D 6 && c->x86_model =3D=3D 45)
- 			quirk_no_way_out =3D quirk_sandybridge_ifu;
-+
-+		if ((c->x86 =3D=3D 6) &&
-+		    ((c->x86_model =3D=3D 0x3c) || (c->x86_model =3D=3D 0x3d) ||
-+		     (c->x86_model =3D=3D 0x45) || (c->x86_model =3D=3D 46))) {
-+			pr_info("MCE errata HSD131, HSM142, HSW131, BDM48, or HSM142 enabled.=
-\n");
-+			quirk_noprint =3D quirk_spurious_ce_noprint;
-+		}
- 	}
-=20
- 	if (c->x86_vendor =3D=3D X86_VENDOR_ZHAOXIN) {
---=20
-2.21.1
-
+greg k-h
