@@ -2,131 +2,140 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9A2C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C686EC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C447E217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jItTeeqZ"
+	by mail.kernel.org (Postfix) with ESMTP id A4A66217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgBERPo (ORCPT
+        id S1727558AbgBERPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:15:44 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23562 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727527AbgBERPn (ORCPT
+        Wed, 5 Feb 2020 12:15:49 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:14226 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727452AbgBERPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:15:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580922942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=i/fvcosY8fRo4ERPbKWIeYDN1mwqZhnrYMnwOUyDV6k=;
-        b=jItTeeqZ/MhF3GtkpjFBafoKEIF7vnfhWwf+c7Mju1VP9AUojQupnWWT4DvGBvz5JcBg36
-        6ewVOa3BPU0kpv2fiUQ+/QsM8LwBlAVMGoTD49RFDpVcG8wPPSdKHiDQglZvkJYb2RAu5w
-        XT0Bw4YsoCyoti+gCtCtjkH/K5eplTA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-LaOJTlB0PmeDY5VEkGCHRw-1; Wed, 05 Feb 2020 12:15:39 -0500
-X-MC-Unique: LaOJTlB0PmeDY5VEkGCHRw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC9D610CE789;
-        Wed,  5 Feb 2020 17:15:36 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DFA66213F;
-        Wed,  5 Feb 2020 17:15:24 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 18:15:21 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinechin@redhat.com, sean.j.christopherson@intel.com,
-        pbonzini@redhat.com, jasowang@redhat.com, yan.y.zhao@intel.com,
-        mst@redhat.com, kevin.tian@intel.com, alex.williamson@redhat.com,
-        dgilbert@redhat.com, vkuznets@redhat.com
-Subject: Re: [PATCH 13/14] KVM: selftests: Let dirty_log_test async for dirty
- ring test
-Message-ID: <20200205171521.nh2yz7lal7pmcpai@kamzik.brq.redhat.com>
-References: <20200205025105.367213-1-peterx@redhat.com>
- <20200205025842.367575-1-peterx@redhat.com>
- <20200205025842.367575-10-peterx@redhat.com>
- <20200205094806.dqkzpxhrndocjl6g@kamzik.brq.redhat.com>
- <20200205155551.GB378317@xz-x1>
+        Wed, 5 Feb 2020 12:15:34 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015HE7lh022098;
+        Wed, 5 Feb 2020 12:15:33 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xyhm9280m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Feb 2020 12:15:33 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 015HFWp3030485
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 5 Feb 2020 12:15:32 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 5 Feb 2020
+ 12:15:31 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 5 Feb 2020 09:15:30 -0800
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 015HFNal010661;
+        Wed, 5 Feb 2020 12:15:28 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH 4/5 V2] Documentation: ABI: testing: ad7192: update sysfs docs
+Date:   Wed, 5 Feb 2020 19:15:10 +0200
+Message-ID: <20200205171511.25912-5-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200205171511.25912-1-alexandru.tachici@analog.com>
+References: <20200202162215.50915c83@archlinux>
+ <20200205171511.25912-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205155551.GB378317@xz-x1>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-05_05:2020-02-04,2020-02-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002050131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:55:51AM -0500, Peter Xu wrote:
-> On Wed, Feb 05, 2020 at 10:48:06AM +0100, Andrew Jones wrote:
-> > On Tue, Feb 04, 2020 at 09:58:41PM -0500, Peter Xu wrote:
-> > > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> > > index 4b78a8d3e773..e64fbfe6bbd5 100644
-> > > --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> > > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> > > @@ -115,6 +115,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva);
-> > >  struct kvm_run *vcpu_state(struct kvm_vm *vm, uint32_t vcpuid);
-> > >  void vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
-> > >  int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
-> > > +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
-> > >  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid);
-> > >  void vcpu_set_mp_state(struct kvm_vm *vm, uint32_t vcpuid,
-> > >  		       struct kvm_mp_state *mp_state);
-> > > diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> > > index 25edf20d1962..5137882503bd 100644
-> > > --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> > > +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> > > @@ -1203,6 +1203,14 @@ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
-> > >  	return rc;
-> > >  }
-> > >  
-> > > +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
-> > > +{
-> > > +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
-> > > +
-> > > +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
-> > > +	return ioctl(vcpu->fd, KVM_RUN, NULL);
-> > > +}
-> > > +
-> > >  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid)
-> > >  {
-> > >  	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
-> > 
-> > I think we should add a vcpu_get_fd(vm, vcpuid) function instead, and
-> > then call ioctl directly from the test.
-> 
-> Currently the vcpu struct is still internal to the lib/ directory (as
-> defined in lib/kvm_util_internal.h).  Wit that, it seems the vcpu fd
-> should also be limited to the lib/ as well?
-> 
-> But I feel like I got your point, because when I worked on the
-> selftests I did notice that in many places it's easier to expose all
-> these things for test cases (e.g., the struct vcpu).  For me, it's not
-> only for the vcpu fd, but also for the rest of internal structures to
-> be able to be accessed from tests directly.  Not sure whether that's
-> what you thought too.  It's just a separate topic of what this series
-> was trying to do.
+Updated mainline documentation on ad7192 userspace sysfs.
 
-So far I've just wished I could get to the fd, which seems reasonable
-since it's an fd. I agree the whole internal thing is probably
-unnecessary, but nobody (including me) has complained enough yet to
-undo it. For this patch series I'd prefer we start heading in the
-expose more direction, than in the yet another variant of vcpu_run
-direction though.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ .../ABI/testing/sysfs-bus-iio-adc-ad7192      | 17 ++++++++++------
+ .../iio/Documentation/sysfs-bus-iio-ad7192    | 20 -------------------
+ 2 files changed, 11 insertions(+), 26 deletions(-)
+ delete mode 100644 drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
 
-Thanks,
-drew
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192 b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
+index 7627d3be08f5..9be6b8a69a19 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
++++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
+@@ -2,17 +2,22 @@ What:		/sys/bus/iio/devices/iio:deviceX/ac_excitation_en
+ KernelVersion:
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+-		Reading gives the state of AC excitation.
+-		Writing '1' enables AC excitation.
++		This attribute, if available, is used to enable the AC
++		excitation mode found on some converters. In ac excitation mode,
++		the polarity of the excitation voltage is reversed on
++		alternate cycles, to eliminate DC errors.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/bridge_switch_en
+ KernelVersion:
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+-		This bridge switch is used to disconnect it when there is a
+-		need to minimize the system current consumption.
+-		Reading gives the state of the bridge switch.
+-		Writing '1' enables the bridge switch.
++		This attribute, if available, is used to close or open the
++		bridge power down switch found on some converters.
++		In bridge applications, such as strain gauges and load cells,
++		the bridge itself consumes the majority of the current in the
++		system. To minimize the current consumption of the system,
++		the bridge can be disconnected (when it is not being used
++		using the bridge_switch_en attribute.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration
+ KernelVersion:
+diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192 b/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
+deleted file mode 100644
+index 1c35c507cc05..000000000000
+--- a/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
++++ /dev/null
+@@ -1,20 +0,0 @@
+-What:		/sys/.../iio:deviceX/ac_excitation_en
+-KernelVersion:	3.1.0
+-Contact:	linux-iio@vger.kernel.org
+-Description:
+-		This attribute, if available, is used to enable the AC
+-		excitation mode found on some converters. In ac excitation mode,
+-		the polarity of the excitation voltage is reversed on
+-		alternate cycles, to eliminate DC errors.
+-
+-What:		/sys/.../iio:deviceX/bridge_switch_en
+-KernelVersion:	3.1.0
+-Contact:	linux-iio@vger.kernel.org
+-Description:
+-		This attribute, if available, is used to close or open the
+-		bridge power down switch found on some converters.
+-		In bridge applications, such as strain gauges and load cells,
+-		the bridge itself consumes the majority of the current in the
+-		system. To minimize the current consumption of the system,
+-		the bridge can be disconnected (when it is not being used
+-		using the bridge_switch_en attribute.
+-- 
+2.20.1
 
