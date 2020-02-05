@@ -2,104 +2,92 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EFDC35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3FAC35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00E32085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zr4BtkV1"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA93214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgBEDVQ (ORCPT
+        id S1727899AbgBEDXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 22:21:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58166 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbgBEDVQ (ORCPT
+        Tue, 4 Feb 2020 22:23:33 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:52236 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727714AbgBEDXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 22:21:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5hq0VwiFlaOmvZItK695F4+jnVwqiW3Dfxm1dkVkswA=; b=Zr4BtkV1s02JJJN3KPF9BhlNEc
-        uAfsJMGbPNYPSTb/a677eux5ybug3BN5BqO20YL5bYnFfDd31oA2QXxAOSNQLsp3iblPe87QLoGaV
-        DejyTmjUyDmp8nRsL+wYbk3IoJC3g5V48MgpZ1aGgIMBvIgAI07xn8ysSCA1Vvwe1eKZmeHi3R4W5
-        UiEYmV5XgUNUdeVpsFfGEyyIWdS7fbuYmI3ALO5AuIwp29exe3kkFraNnkruSotbj0jc/7HCy9Gdn
-        /AvwG6eFjJEGEW4qW902m9/PKxUSM0K56Z4thTdu9Ss7vkOmwCAdk3xmc3cUfkUeam+Qzehzmgc3u
-        p5yJXc1Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izBFW-0005CA-D9; Wed, 05 Feb 2020 03:21:10 +0000
-Date:   Tue, 4 Feb 2020 19:21:10 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     Raul Rangel <rrangel@google.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
-Message-ID: <20200205032110.GR8731@bombadil.infradead.org>
-References: <20200204215014.257377-1-zwisler@google.com>
- <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
- <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
- <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
+        Tue, 4 Feb 2020 22:23:33 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TpA7DPY_1580873008;
+Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TpA7DPY_1580873008)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 05 Feb 2020 11:23:29 +0800
+Subject: [PATCH v2] net/bluetooth: remove __get_channel/dir and __dir
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1579596583-258090-1-git-send-email-alex.shi@linux.alibaba.com>
+ <8CA3EF63-F688-48B2-A21D-16FDBC809EDE@holtmann.org>
+ <09359312-a1c8-c560-85ba-0f94be521b26@linux.alibaba.com>
+ <2287CD53-58F4-40FD-B2F3-81A9F22F4731@holtmann.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <1e76a7b8-c90a-56fe-96d7-4088dc7f6c38@linux.alibaba.com>
+Date:   Wed, 5 Feb 2020 11:23:27 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
+In-Reply-To: <2287CD53-58F4-40FD-B2F3-81A9F22F4731@holtmann.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 04:49:48PM -0700, Ross Zwisler wrote:
-> On Tue, Feb 4, 2020 at 3:11 PM Ross Zwisler <zwisler@chromium.org> wrote:
-> > On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com> wrote:
-> > > > --- a/include/uapi/linux/mount.h
-> > > > +++ b/include/uapi/linux/mount.h
-> > > > @@ -34,6 +34,7 @@
-> > > >  #define MS_I_VERSION   (1<<23) /* Update inode I_version field */
-> > > >  #define MS_STRICTATIME (1<<24) /* Always perform atime updates */
-> > > >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]times lazily */
-> > > > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
-> > > Doesn't this conflict with MS_SUBMOUNT below?
-> > > >
-> > > >  /* These sb flags are internal to the kernel */
-> > > >  #define MS_SUBMOUNT     (1<<26)
-> >
-> > Yep.  Thanks for the catch, v6 on it's way.
-> 
-> It actually looks like most of the flags which are internal to the
-> kernel are actually unused (MS_SUBMOUNT, MS_NOREMOTELOCK, MS_NOSEC,
-> MS_BORN and MS_ACTIVE).  Several are unused completely, and the rest
-> are just part of the AA_MS_IGNORE_MASK which masks them off in the
-> apparmor LSM, but I'm pretty sure they couldn't have been set anyway.
-> 
-> I'll just take over (1<<26) for MS_NOSYMFOLLOW, and remove the rest in
-> a second patch.
-> 
-> If someone thinks these flags are actually used by something and I'm
-> just missing it, please let me know.
 
-Afraid you did miss it ...
+These 3 macros are never used from first git commit Linux-2.6.12-rc2.
+let's remove them.
 
-/*
- * sb->s_flags.  Note that these mirror the equivalent MS_* flags where
- * represented in both.
- */
-...
-#define SB_SUBMOUNT     (1<<26)
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: linux-bluetooth@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ net/bluetooth/rfcomm/core.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-It's not entirely clear to me why they need to be the same, but I haven't
-been paying close attention to the separation of superblock and mount
-flags, so someone else can probably explain the why of it.
+diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
+index 3a9e9d9670be..dcecce087b24 100644
+--- a/net/bluetooth/rfcomm/core.c
++++ b/net/bluetooth/rfcomm/core.c
+@@ -73,8 +73,6 @@ static struct rfcomm_session *rfcomm_session_create(bdaddr_t *src,
+ 
+ /* ---- RFCOMM frame parsing macros ---- */
+ #define __get_dlci(b)     ((b & 0xfc) >> 2)
+-#define __get_channel(b)  ((b & 0xf8) >> 3)
+-#define __get_dir(b)      ((b & 0x04) >> 2)
+ #define __get_type(b)     ((b & 0xef))
+ 
+ #define __test_ea(b)      ((b & 0x01))
+@@ -87,7 +85,6 @@ static struct rfcomm_session *rfcomm_session_create(bdaddr_t *src,
+ #define __ctrl(type, pf)       (((type & 0xef) | (pf << 4)))
+ #define __dlci(dir, chn)       (((chn & 0x1f) << 1) | dir)
+ #define __srv_channel(dlci)    (dlci >> 1)
+-#define __dir(dlci)            (dlci & 0x01)
+ 
+ #define __len8(len)       (((len) << 1) | 1)
+ #define __len16(len)      ((len) << 1)
+-- 
+1.8.3.1
+
+
