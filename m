@@ -2,179 +2,113 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C496C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8423DC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB4B2467B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5929D2467B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="isUzJGTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBESCY convert rfc822-to-8bit (ORCPT
+        id S1727307AbgBESDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:02:24 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:37980 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgBESCY (ORCPT
+        Wed, 5 Feb 2020 13:03:52 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35605 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgBESDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:02:24 -0500
-Received: by mail-yw1-f68.google.com with SMTP id 10so3220455ywv.5;
-        Wed, 05 Feb 2020 10:02:22 -0800 (PST)
+        Wed, 5 Feb 2020 13:03:52 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r16so2812346otd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:03:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I4JPeEjt7Um0jnncW2xGqU+AjtbYUDQIukn/RWGYtPE=;
+        b=isUzJGTJ7f76WNj3ErRloIg+GCY6ppfYFibDbF7cYNcvcP7bRHDvBg3vVrVP41nXLs
+         PD07PYxEOZQqCqG5IRE3GMbWwxGcKU2rsq68DZFR+ZvP1u/m722XWWDvErZR8seAUPJF
+         lJmXNrqQKx1WThrxpU0zdZL9f3fX+c3NgvQ4MzjTE+A0k3mY8hGMgUZlOpIlYwIx9S5m
+         axn1qNLQiFWRnKUgyVGwi1JRtg65lw+dXxeoT8i0E4wMdPHM/G6wLJZZno+wp2aYotgQ
+         VdIXRU1IW2haNgXyxDNJLYTdTXdiBOsc/mHm/TjJWbphWVF8x+egXGz5JFiSyCeALgTl
+         /q6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D8m3zpziTMf/1DK49oOTnKVovL2jn4pQ/YQP25fOkNM=;
-        b=Ypjh5SB/RW49YJWn7G7gMd7QmGSzXdi7rMgkcIyhZuNdSKX4F5NsmAttgjN09erHGw
-         rrHjbKnPupz5TDJIfhDMoKKJA4x3gnz4Ut/YeAx0V3wjCAOYZI/TGgpgsJJzem7SUINg
-         xbuUIG6PT22aCz447r2g8S+Myl2qmBHUoR3r3jeiwimPNi0ruuwDu8HhpsrLysKf6Qz3
-         SsGe3wu7VJk6HxUKGvYcAaAh6YVcPe4lBY+hVkEOJrNvVMcWfSof4AYH+MwIeRamWnnx
-         shfamKVQ78pF61lIQQq2rp6IbwV0533wdOnJbFqCD0jwx/qIgDU/9/oms043LAmX710n
-         BLxA==
-X-Gm-Message-State: APjAAAWrwml6sjqR0CQe6uRjbajZYg5MJcw2SjCuV+nNY71+htNl6KQr
-        Fz/zpONHMSjnJUPU50VBd/Vzh6H2I5i3+P4QndE=
-X-Google-Smtp-Source: APXvYqy1c38uBLDGGJ341PM5j5TAAE218gACbT2CX03aRP9JBZDvgjxAa+vHL8pEHWA2sJuLGbVLFN8YC44c7Jnxe0Q=
-X-Received: by 2002:a25:8804:: with SMTP id c4mr7889151ybl.387.1580925742108;
- Wed, 05 Feb 2020 10:02:22 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=I4JPeEjt7Um0jnncW2xGqU+AjtbYUDQIukn/RWGYtPE=;
+        b=cOms61WjRugZQ6ASOvAIMRFrLOsSmh6GkLn4EhrEdG0fcqFzUuEaie9FQs9l/9CQT/
+         sgGfcOTOscR0+bgunl5wdBJACpyCNCmRD4hflV7ZjmmLu/JLykX8hGbiHM5qa5ybH6Fd
+         ywxLawY8CO0hKf8M4dYwPxTEc6eacBxtbD/kr2BvmNi9GVGXWqTHz7NIcPl5aL6iu5E9
+         glPoM+K+uiKvTkPFJQuEfp7UXkvmo7uKU64LhCTnpgTyIKoFgn0PvTvcQXukRBHGsmaR
+         K6eiFR4cD9DbeV/l6mrWbua+Ml0HsAom4ldp3/sEE6npV1fa8Y/c0te7gEABapDdxdoa
+         BngQ==
+X-Gm-Message-State: APjAAAUaPlERXuSFWzgssKDiNTD7GFAAQJKq+jIRFCmUnXPdXtCc8zDc
+        a1AqhbDPqwJbcReJaANXjkqfqb6/KSRsxmoN3fu4rw==
+X-Google-Smtp-Source: APXvYqwI4QpMD2okSaeJYZlKQ7m3M3grdUPeMaD894f6WIxa4tidzyKzzE/ch4oi3Il/9yMS+FGDxJwZn2N+Plr21gI=
+X-Received: by 2002:a9d:2028:: with SMTP id n37mr28112037ota.127.1580925831217;
+ Wed, 05 Feb 2020 10:03:51 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1580610812.git.fthain@telegraphics.com.au> <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au>
-In-Reply-To: <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Wed, 5 Feb 2020 19:02:10 +0100
-Message-ID: <CAAdtpL7SpzfqSmEcuVszNyXfrRegC20txoS5j7Ss3WkCmyRH+g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] fbdev/g364fb: Fix build failure
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Laurent Vivier <laurent@vivier.eu>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-8-almasrymina@google.com> <0fa5d77c-d115-1e30-cb17-d6a48c916922@linux.ibm.com>
+ <CAHS8izPobKi_w8R4pTt_UyfxzBJJYuNUw+Z6hgFfvZ1Xma__YA@mail.gmail.com>
+ <CAHS8izNmSYumXpYXT1d8tAm36=-BRjXqdCDjLB6UNMwn5xhPZg@mail.gmail.com> <a980c9f7-2759-45a7-1add-89a390b79b39@linux.ibm.com>
+In-Reply-To: <a980c9f7-2759-45a7-1add-89a390b79b39@linux.ibm.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Wed, 5 Feb 2020 10:03:40 -0800
+Message-ID: <CAHS8izNZ+_UMEDjFXxMN9ig7QFEoJn_jLqxRTKOG7CFPvbDedg@mail.gmail.com>
+Subject: Re: [PATCH v11 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation tests
+To:     Sandipan Das <sandipan@linux.ibm.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 3:41 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+On Wed, Feb 5, 2020 at 4:42 AM Sandipan Das <sandipan@linux.ibm.com> wrote:
 >
-> This patch resolves these compiler errors and warnings --
+> Hi,
 >
->   CC      drivers/video/fbdev/g364fb.o
-> drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
-> drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
-> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
-> drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
-> drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
-> drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
+> On 05/02/20 4:03 am, Mina Almasry wrote:
+> > On Tue, Feb 4, 2020 at 12:36 PM Mina Almasry <almasrymina@google.com> wrote:
+> >>
+> >> So the problem in this log seems to be that this log line is missing:
+> >>     echo Waiting for hugetlb memory to reach size $size.
+> >>
+> >> The way the test works is that it starts a process that writes the
+> >> hugetlb memory, then it *should* wait until the memory is written,
+> >> then it should record the cgroup accounting and kill the process. It
+> >> seems from your log that the wait doesn't happen, so the test
+> >> continues before the background process has had time to write the
+> >> memory properly. Essentially wait_for_hugetlb_memory_to_get_written()
+> >> never gets called in your log.
+> >>
+> >> Can you try this additional attached diff on top of your changes? I
+> >> attached the diff and pasted the same here, hopefully one works for
+> >> you:
+> >> ...
+> >
+> > I got my hands on a machine with 16MB default hugepage size and
+> > charge_reserved_hugetlb.sh passes now after my changes. Please let me
+> > know if you still run into issues.
+> >
+>
+> With your updates, the tests are passing. Ran the tests on a ppc64 system
+> that uses radix MMU (2MB hugepages) and everything passed there as well.
+>
 
-18 years unnoticed...
+Thanks, please consider reviewing the next iteration of the patch then.
 
-> drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
-> drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
->
-> The MIPS Magnum framebuffer console now works when tested in QEMU.
->
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-
-This commit is the kernel 'git origin' import, not the proper reference.
-
-The actual change is between v2.5.17/2.5.19:
-https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/diff/drivers/video/g364fb.c?id=b30e6e183a728923267
-Date: 2002-05-22 07:52:33...
-
-The same commit introduced the changes in g364fb_cursor(), which was
-implemented previous to v2.4.0 so it is hard to follow from there.
-
-Nobody complains during 18 years so I doubt anyone care that
-g364fb_cursor() is removed.
-And by removing it, you improve the kernel quality, so:
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-(Maybe remove the unhelpful 'Fixes' tag).
-
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> ---
->  drivers/video/fbdev/g364fb.c | 29 +++--------------------------
->  1 file changed, 3 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
-> index 223896cc5f7d..fb26230a3c7b 100644
-> --- a/drivers/video/fbdev/g364fb.c
-> +++ b/drivers/video/fbdev/g364fb.c
-> @@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
->  static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
->                             u_int blue, u_int transp,
->                             struct fb_info *info);
-> -static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
->  static int g364fb_blank(int blank, struct fb_info *info);
->
->  static struct fb_ops g364fb_ops = {
-> @@ -119,28 +118,8 @@ static struct fb_ops g364fb_ops = {
->         .fb_fillrect    = cfb_fillrect,
->         .fb_copyarea    = cfb_copyarea,
->         .fb_imageblit   = cfb_imageblit,
-> -       .fb_cursor      = g364fb_cursor,
->  };
->
-> -int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
-> -{
-> -
-> -       switch (cursor->enable) {
-> -       case CM_ERASE:
-> -               *(unsigned int *) CTLA_REG |= CURS_TOGGLE;
-> -               break;
-> -
-> -       case CM_MOVE:
-> -       case CM_DRAW:
-> -               *(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
-> -               *(unsigned int *) CURS_POS_REG =
-> -                   ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
-> -                                                 info->var.yoffset);
-> -               break;
-> -       }
-> -       return 0;
-> -}
-> -
->  /*
->   *  Pan or Wrap the Display
->   *
-> @@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
->   */
->  int __init g364fb_init(void)
->  {
-> -       volatile unsigned int *pal_ptr =
-> -           (volatile unsigned int *) CLR_PAL_REG;
->         volatile unsigned int *curs_pal_ptr =
->             (volatile unsigned int *) CURS_PAL_REG;
-> -       int mem, i, j;
-> +       int mem, i;
->
->         if (fb_get_options("g364fb", NULL))
->                 return -ENODEV;
-> @@ -230,8 +207,8 @@ int __init g364fb_init(void)
->          */
->         *(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
->         *(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
-> -       fb_var.xres_virtual = fbvar.xres;
-> -       fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
-> +       fb_var.xres_virtual = fb_var.xres;
-> +       fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
->         fb_fix.smem_start = 0x40000000; /* physical address */
->         /* get size of video memory; this is special for the JAZZ hardware */
->         mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
-> --
-> 2.24.1
+> - Sandipan
 >
