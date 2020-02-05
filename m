@@ -2,88 +2,140 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6543C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B13C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949A12072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE3B2072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgBENZv (ORCPT
+        id S1728052AbgBEN0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:25:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:47252 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727162AbgBENZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:25:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F16C231B;
-        Wed,  5 Feb 2020 05:25:50 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AC093F52E;
-        Wed,  5 Feb 2020 05:25:50 -0800 (PST)
-Subject: Re: [PATCH] drm/panfrost: Don't try to map on error faults
-To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-References: <20200205100719.24999-1-tomeu.vizoso@collabora.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3500c501-b166-6a1e-267b-31a4e5c62619@arm.com>
-Date:   Wed, 5 Feb 2020 13:25:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 5 Feb 2020 08:26:46 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56947 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgBEN0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:26:46 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1izKhX-00035h-Ps; Wed, 05 Feb 2020 13:26:43 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v6 0/6] clone3 & cgroups: allow spawning processes into cgroups
+Date:   Wed,  5 Feb 2020 14:26:17 +0100
+Message-Id: <20200205132623.670015-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200205100719.24999-1-tomeu.vizoso@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/02/2020 10:07 am, Tomeu Vizoso wrote:
-> If the exception type isn't one of the normal faults, don't try to map
-> and instead go straight to a terminal fault.
+Hey Tejun,
 
-"One of the the normal faults" seems a rather vague way of saying "a 
-translation fault", which is what we're specifically handling here, and 
-logically the only fault reflecting something not yet mapped rather than 
-mapped inappropriately ;)
+This is v6 of the promised series to enable spawning processes into a
+target cgroup different from the parent's cgroup.
 
-(Who knows how the level ended up as 1-4 rather than 0-3 as it really 
-should be - another Mali Mystery(TM)...)
+This series can be pulled from the signed tag clone_into_cgroup_v5.7:
 
-> Otherwise, we can get flooded by kernel warnings and further faults.
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/clone_into_cgroup_v5.7
 
-Either way,
+and is available at
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+  kernel.org: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone_into_cgroup
+  github.com: https://github.com/brauner/linux/tree/clone_into_cgroup
+  gitlab.com: https://gitlab.com/brauner/linux/commits/clone_into_cgroup
 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->   drivers/gpu/drm/panfrost/panfrost_mmu.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index 763cfca886a7..80abddb4544c 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -596,8 +596,9 @@ static irqreturn_t panfrost_mmu_irq_handler_thread(int irq, void *data)
->   		source_id = (fault_status >> 16);
->   
->   		/* Page fault only */
-> -		if ((status & mask) == BIT(i)) {
-> -			WARN_ON(exception_type < 0xC1 || exception_type > 0xC4);
-> +		if ((status & mask) == BIT(i) &&
-> +		     exception_type >= 0xC1 &&
-> +		     exception_type <= 0xC4) {
->   
->   			ret = panfrost_mmu_map_fault_addr(pfdev, i, addr);
->   			if (!ret) {
-> 
+/* v1 */
+Link: https://lore.kernel.org/r/20191218173516.7875-1-christian.brauner@ubuntu.com
+
+/* v2 */
+Link: https://lore.kernel.org/r/20191223061504.28716-1-christian.brauner@ubuntu.com
+Rework locking and remove unneeded helper functions. Please see
+individual patch changelogs for details.
+With this I've been able to run the cgroup selftests and stress tests in
+loops for a long time without any regressions or deadlocks; lockdep and
+kasan did not complain either.
+
+/* v3 */
+Link: https://lore.kernel.org/r/20200117002143.15559-1-christian.brauner@ubuntu.com
+Split preliminary work into separate patches.
+See changelog of individual commits.
+
+/* v4 */
+Link: https://lore.kernel.org/r/20200117181219.14542-1-christian.brauner@ubuntu.com
+Verify that we have write access to the target cgroup. This is usually
+done by the vfs but since we aren't going through the vfs with
+CLONE_INTO_CGROUP we need to do it ourselves.
+
+/* v5 */
+Link: https://lore.kernel.org/r/20200121154844.411-1-christian.brauner@ubuntu.com
+Don't pass down the parent task_struct as argument, just use current
+directly. Put kargs->cset on error.
+
+/* v6 */
+Fix refcounting when setting new root_cset for CLONE_INTO_CGROUP.
+
+With this cgroup migration will be a lot easier, and accounting will be
+more exact. It also allows for nice features such as creating a frozen
+process by spawning it into a frozen cgroup.
+The code simplifies container creation and exec logic quite a bit as
+well.
+
+I've tried to contain all core changes for this features in
+kernel/cgroup/* to avoid exposing cgroup internals. This has mostly
+worked.
+When a new process is supposed to be spawned in a cgroup different from
+the parent's then we briefly acquire the cgroup mutex right before
+fork()'s point of no return and drop it once the child process has been
+attached to the tasklist and to its css_set. This is done to ensure that
+the cgroup isn't removed behind our back. The cgroup mutex is _only_
+held in this case; the usual case, where the child is created in the
+same cgroup as the parent does not acquire it since the cgroup can't be
+removed.
+
+The series already comes with proper testing. Once we've decided that
+this approach is good I'll expand the test-suite even more.
+
+Thanks!
+Christian
+
+Christian Brauner (6):
+  cgroup: unify attach permission checking
+  cgroup: add cgroup_get_from_file() helper
+  cgroup: refactor fork helpers
+  cgroup: add cgroup_may_write() helper
+  clone3: allow spawning processes into cgroups
+  selftests/cgroup: add tests for cloning into cgroups
+
+ include/linux/cgroup-defs.h                   |   5 +-
+ include/linux/cgroup.h                        |  20 +-
+ include/linux/sched/task.h                    |   4 +
+ include/uapi/linux/sched.h                    |   5 +
+ kernel/cgroup/cgroup.c                        | 291 ++++++++++++++----
+ kernel/cgroup/pids.c                          |  15 +-
+ kernel/fork.c                                 |  19 +-
+ tools/testing/selftests/cgroup/Makefile       |   6 +-
+ tools/testing/selftests/cgroup/cgroup_util.c  | 126 ++++++++
+ tools/testing/selftests/cgroup/cgroup_util.h  |   4 +
+ tools/testing/selftests/cgroup/test_core.c    |  64 ++++
+ .../selftests/clone3/clone3_selftests.h       |  19 +-
+ 12 files changed, 496 insertions(+), 82 deletions(-)
+
+
+base-commit: d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
+-- 
+2.25.0
+
