@@ -2,205 +2,125 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6892DC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605B3C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CCA214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DE5214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="B2gKGom1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SgorTlbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgBEWkv (ORCPT
+        id S1727566AbgBEWmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:40:51 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45114 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727530AbgBEWku (ORCPT
+        Wed, 5 Feb 2020 17:42:02 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48252 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727165AbgBEWmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:40:50 -0500
-Received: by mail-ed1-f66.google.com with SMTP id v28so3793476edw.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8xXG1QtEMIn8V9gNjRgmErq86awhNCCbmdyeTvn2xh4=;
-        b=B2gKGom18+c9MF6YGaz2F1Z1qW9+72OISrmowso176+fbEJ4JZdJKOh3vsryaEmTh2
-         qsQvM5njKuNSX/pDogHOs3oz3vOQ0pSe5bjZ3GghT09ZXUiPFwt+WUNdZWFtpiBvr/Vo
-         35XRtzO5XOYYDiWHXeJnqRi+81XvR1hD6IRxs+Agj7o11R3YTydxawjWSUzK+RHi0MZn
-         Qz4QNQ8DGRcLR8vX7dZCGPvsmhfEZ4NN3T2QQS15BGUtGdgRlr1kIGvLIHMoZd+OjNMA
-         UPaI06zrpOfJBd5wMiWOhk/QoVlDtFLtkPQ7CGVCqyrKxkW/Rki6/QlMAUO25kMLkiU5
-         KqHw==
+        Wed, 5 Feb 2020 17:42:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580942520;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rH9hapDVBD03GESwcZDF6GjM5sGJp1/0m6Dm+I8b0N0=;
+        b=SgorTlbzs1TFwRJO+GUzGpgEnZAm5AjKLjMJZSFhUHsKxXAWIhqSFmVd8NiJAmwnSntC9D
+        uOalY9fiT6eIAQDk3WEoyIrF+05ReO/ts2IvENmrMKtPu8BK/gfz3YJBjz1sQ14Vci0HlE
+        qwmSLBmUOio8lUOhpyhJ5vhFayqNQkY=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-412-auNEfzrpMl2ctreByi1rzg-1; Wed, 05 Feb 2020 17:41:59 -0500
+X-MC-Unique: auNEfzrpMl2ctreByi1rzg-1
+Received: by mail-qt1-f197.google.com with SMTP id e37so2463601qtk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:41:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8xXG1QtEMIn8V9gNjRgmErq86awhNCCbmdyeTvn2xh4=;
-        b=hgT76yZXlbhvKEE7ZJH+Djv+eS1vhqO7/UO6sr735ipjnx3tPj7ok1axj+Vgn9JN/T
-         ZH+WaaZl+SxJm4Cw3V9e4FTwhmtQf2cSKgQIQd7lOFEmOdgb31PDrA/pEgDRdDMAo82W
-         G7stcIyUF6bAtfSEWIWaTXDqnzYnlTpg9msQECDxB4ac8UydfuYmmIJoXwPE7UXUjLbL
-         xv7qgEvRk/BSxCApvwQOdUMek4DXOJ6GVRlDBs2cRalxa7n+lOVHaYYD2Mho9XhxZNTw
-         vJ3bxrURn8jYs50qamI+QFwpQN1UV+VvtnTGLUbYLcvMZCYEm0l8N69yCDxf9wlg5z2r
-         Ze2w==
-X-Gm-Message-State: APjAAAVZBMX9TljXMkTqcnDr0ZIHtbJMilJH5+KNnudRF921RFYl87/E
-        PLzuVJ/hyVEwMWS8qePi3EusxKPui95bOX1OiiwI
-X-Google-Smtp-Source: APXvYqyVmzGVk7l0HXNY4hEqVOGOlb69aaI9jrvMLTASMwXkrAFjGVXWNm6juE48f6syGPPLenhCV6x6YfwAuvnC2Wk=
-X-Received: by 2002:a50:a7a5:: with SMTP id i34mr396051edc.128.1580942447650;
- Wed, 05 Feb 2020 14:40:47 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rH9hapDVBD03GESwcZDF6GjM5sGJp1/0m6Dm+I8b0N0=;
+        b=dlEihwA/ceY4CbNMFSjRrGD3WLc40j6rlmbL4jFlRCpU257xPt/Cy35+94AVV8Y7Tj
+         O94CR+vypltdhEoT5d89Pijjx0gFeYjyA5K873hQcvpZVSnjBEpaKtteP6K7iIBWaxXM
+         BCUnhmJ53VmeSs0AeXKtfhT06vDZZF1+acZrxB/OOLh91DGLxx6bjjHu1SmKKuxwUgzQ
+         EzfV4Th4MLk/otMizzVMKPp7QWFR471Pmx3ZyagjcdogokYUWojWXus0BX6rPwQObWoK
+         al+qgvijyK6HGx8hytM2/ukuTxqLPV55WeK1vw2/gmR0TT2r4x4JxVBboBhcCcydcKsY
+         3pIA==
+X-Gm-Message-State: APjAAAXlJ5UV3BkBpN8eg4X53Uhvjia73/UM/wo+VNL+TfTg8n5W3R5J
+        eC+jc8rLSpvcU08286C6HCzrVz7/rtgcEcvHdifdASi/Q0a0Qlxnw2WNk0TJJXuTTFuQl3aDqIP
+        RJjxA3KJQt2q/+ZhQAwQ8qywp
+X-Received: by 2002:a37:4fc3:: with SMTP id d186mr59903qkb.100.1580942518823;
+        Wed, 05 Feb 2020 14:41:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz7uhA3CGENCAtqy4g5GvmYMoxE6Qbx+Ub2ume93+vIa38OEJ1jq8Hx/Hw9ZpC1eb3usykd7Q==
+X-Received: by 2002:a37:4fc3:: with SMTP id d186mr59892qkb.100.1580942518606;
+        Wed, 05 Feb 2020 14:41:58 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id a201sm512222qkc.134.2020.02.05.14.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 14:41:57 -0800 (PST)
+Date:   Wed, 5 Feb 2020 17:41:54 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 04/19] KVM: PPC: Move memslot memory allocation into
+ prepare_memory_region()
+Message-ID: <20200205224154.GG387680@xz-x1>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-5-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <a911acf0b209c05dc156fb6b57f9da45778747ce.1577736799.git.rgb@redhat.com>
- <CAHC9VhRRW2fFcgBs-R_BZ7ZWCP5wsXA9DB1RUM=QeKj2xZkS2Q@mail.gmail.com> <20200204225148.io3ayosk4efz2qii@madcap2.tricolour.ca>
-In-Reply-To: <20200204225148.io3ayosk4efz2qii@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 5 Feb 2020 17:40:36 -0500
-Message-ID: <CAHC9VhQSZDt4KyFmc9TtLvKgziMCkPzRWdwa71Juo=LZRygfVA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 04/16] audit: convert to contid list to check
- for orch/engine ownership
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200121223157.15263-5-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 5:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-01-22 16:28, Paul Moore wrote:
-> > On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >
-> > > Store the audit container identifier in a refcounted kernel object that
-> > > is added to the master list of audit container identifiers.  This will
-> > > allow multiple container orchestrators/engines to work on the same
-> > > machine without danger of inadvertantly re-using an existing identifier.
-> > > It will also allow an orchestrator to inject a process into an existing
-> > > container by checking if the original container owner is the one
-> > > injecting the task.  A hash table list is used to optimize searches.
-> > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  include/linux/audit.h | 14 ++++++--
-> > >  kernel/audit.c        | 98 ++++++++++++++++++++++++++++++++++++++++++++++++---
-> > >  kernel/audit.h        |  8 +++++
-> > >  3 files changed, 112 insertions(+), 8 deletions(-)
+On Tue, Jan 21, 2020 at 02:31:42PM -0800, Sean Christopherson wrote:
+>  static int kvmppc_core_prepare_memory_region_hv(struct kvm *kvm,
+> -					struct kvm_memory_slot *memslot,
+> -					const struct kvm_userspace_memory_region *mem)
+> +					struct kvm_memory_slot *slot,
+> +					const struct kvm_userspace_memory_region *mem,
+> +					enum kvm_mr_change change)
+>  {
+> +	unsigned long npages = mem->memory_size >> PAGE_SHIFT;
 
-...
+Only in case if this patch still needs a respin: IIUC we can directly
+use slot->npages below.  No matter what:
 
-> > > @@ -232,7 +263,11 @@ int audit_alloc(struct task_struct *tsk)
-> > >         }
-> > >         info->loginuid = audit_get_loginuid(current);
-> > >         info->sessionid = audit_get_sessionid(current);
-> > > -       info->contid = audit_get_contid(current);
-> > > +       spin_lock(&audit_contobj_list_lock);
-> > > +       info->cont = _audit_contobj(current);
-> > > +       if (info->cont)
-> > > +               _audit_contobj_hold(info->cont);
-> > > +       spin_unlock(&audit_contobj_list_lock);
-> >
-> > If we are taking a spinlock in order to bump the refcount, does it
-> > really need to be a refcount_t or can we just use a normal integer?
-> > In RCU protected lists a spinlock is usually used to protect
-> > adds/removes to the list, not the content of individual list items.
-> >
-> > My guess is you probably want to use the spinlock as described above
-> > (list add/remove protection) and manipulate the refcount_t inside a
-> > RCU read lock protected region.
->
-> Ok, I guess it could be an integer if it were protected by the spinlock,
-> but I think you've guessed my intent, so let us keep it as a refcount
-> and tighten the spinlock scope and use rcu read locking to protect _get
-> and _put in _alloc, _free, and later on when protecting the network
-> namespace contobj lists.  This should reduce potential contention for
-> the spinlock to one location over fewer lines of code in that place
-> while speeding up updates and slightly simplifying code in the others.
+Reviewed-by: Peter Xu <peterx@redhat.com>
 
-If it helps, you should be able to find plenty of rcu/spinlock
-protected list examples in the kernel code.  It might be a good idea
-if you spent some time looking at those implementations first to get
-an idea of how it is usually done.
-
-> > > @@ -2381,9 +2425,12 @@ int audit_set_contid(struct task_struct *task, u64 contid)
-> > >         }
-> > >         oldcontid = audit_get_contid(task);
-> > >         read_lock(&tasklist_lock);
-> > > -       /* Don't allow the audit containerid to be unset */
-> > > +       /* Don't allow the contid to be unset */
-> > >         if (!audit_contid_valid(contid))
-> > >                 rc = -EINVAL;
-> > > +       /* Don't allow the contid to be set to the same value again */
-> > > +       else if (contid == oldcontid) {
-> > > +               rc = -EADDRINUSE;
-> >
-> > First, is that brace a typo?  It looks like it.  Did this compile?
->
-> Yes, it was fixed in the later patch that restructured the if
-> statements.
-
-Generic reminder that each patch should compile and function on it's
-own without the need for any follow-up patches.  I know Richard is
-already aware of that, and this was a mistake that slipped through the
-cracks; this reminder is more for those who may be lurking on the
-list.
-
-> > Second, can you explain why (re)setting the audit container ID to the
-> > same value is something we need to prohibit?  I'm guessing it has
-> > something to do with explicitly set vs inherited, but I don't want to
-> > assume too much about your thinking behind this.
->
-> It made the refcounting more complicated later, and besides, the
-> prohibition on setting the contid again if it is already set would catch
-> this case, so I'll remove it in this patch and ensure this action
-> doesn't cause a problem in later patches.
->
-> > If it is "set vs inherited", would allowing an orchestrator to
-> > explicitly "set" an inherited audit container ID provide some level or
-> > protection against moving the task?
->
-> I can't see it helping prevent this since later descendancy checks will
-> stop this move anyways.
-
-That's what I thought, but I was just trying to think of any reason
-why you felt this might have been useful since it was in the patch.
-If it's in the patch I tend to fall back on the idea that it must have
-served a purpose ;)
-
-> > > @@ -2396,8 +2443,49 @@ int audit_set_contid(struct task_struct *task, u64 contid)
-> > >         else if (audit_contid_set(task))
-> > >                 rc = -ECHILD;
-> > >         read_unlock(&tasklist_lock);
-> > > -       if (!rc)
-> > > -               task->audit->contid = contid;
-> > > +       if (!rc) {
-> > > +               struct audit_contobj *oldcont = _audit_contobj(task);
-> > > +               struct audit_contobj *cont = NULL, *newcont = NULL;
-> > > +               int h = audit_hash_contid(contid);
-> > > +
-> > > +               rcu_read_lock();
-> > > +               list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
-> > > +                       if (cont->id == contid) {
-> > > +                               /* task injection to existing container */
-> > > +                               if (current == cont->owner) {
-> >
-> > Do we have any protection against the task pointed to by cont->owner
-> > going away and a new task with the same current pointer value (no
-> > longer the legitimate audit container ID owner) manipulating the
-> > target task's audit container ID?
->
-> Yes, the get_task_struct() call below.
-
-Gotcha.
+> +
+> +	if (change == KVM_MR_CREATE) {
+> +		slot->arch.rmap = vzalloc(array_size(npages,
+> +					  sizeof(*slot->arch.rmap)));
+> +		if (!slot->arch.rmap)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	return 0;
+>  }
 
 -- 
-paul moore
-www.paul-moore.com
+Peter Xu
+
