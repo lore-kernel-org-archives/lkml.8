@@ -2,73 +2,196 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A8C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF74C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A6621D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6655A24650
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hF6ZtELc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBER5S convert rfc822-to-8bit (ORCPT
+        id S1727317AbgBER6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:57:18 -0500
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:18412 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBER5S (ORCPT
+        Wed, 5 Feb 2020 12:58:39 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33156 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbgBER6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:57:18 -0500
-Received: from belgarion ([109.220.251.231])
-        by mwinf5d45 with ME
-        id z5xE2100A50Jj11035xEhh; Wed, 05 Feb 2020 18:57:15 +0100
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Wed, 05 Feb 2020 18:57:15 +0100
-X-ME-IP: 109.220.251.231
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Lubomir Rintel <lkundrak@v3.sk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: pxa: Avoid a warning when gpio0 and gpio1 IRQS are not there
-References: <20200128210845.332679-1-lkundrak@v3.sk>
-        <CAMpxmJUPcackGYLfX83TT1V9x2=iHgnw3cZ=KufuHn9FeKOn_A@mail.gmail.com>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Wed, 05 Feb 2020 18:57:00 +0100
-In-Reply-To: <CAMpxmJUPcackGYLfX83TT1V9x2=iHgnw3cZ=KufuHn9FeKOn_A@mail.gmail.com>
-        (Bartosz Golaszewski's message of "Tue, 4 Feb 2020 11:13:44 +0100")
-Message-ID: <87ftfo29zn.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+        Wed, 5 Feb 2020 12:58:39 -0500
+Received: by mail-wr1-f65.google.com with SMTP id u6so3902023wrt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 09:58:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fJvZ+LESdZtd5WGeTnbWB5+DEtp+eP7zYdHNLW4NGgw=;
+        b=hF6ZtELcfVJ5Was2i3jUYVdbVhGlpsIdk7OQDTWzsSp+OxfC+NMNb4lFErpdSM589m
+         AambAQRybraD8+auTE49pcp7s9Kndskbd4cZO/8bhBAgeofqGbVPf3U5YmcIL46d3xf3
+         7rZF/Wp1aoZ3bmzK4+YqSuqVQj+myTGar5Old7WPMLZJGifN6D/mgyHGE0ZMaiEV4XMk
+         Ukc5TmMAD/wOD+3MKf5KLCkQvDXilM8YxFNqKEtEHJ+yQlevFWo2wcfwsbAACAxdjhJB
+         CbS451mst3RHRuyAPxvNGExC7mEX2QBDbZmqejgCgk73JbRdGWy31j0ptdR1hOCEUJm8
+         HU4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fJvZ+LESdZtd5WGeTnbWB5+DEtp+eP7zYdHNLW4NGgw=;
+        b=OtnhbRKR3DsgVvzJ8xsaPMMZkfxLG2xRrJ7yMRNwGOmidWLnBD+4ZRb4fzSgP9GgE6
+         K7yNnEU6iuyhKFHWtR07k04Ezw5ZXEsnU9R7cbJY8P5oCNIlm9ZR8anXWa6LxreoTBgO
+         3c3TAA7HDxKS4P2H8RoQgHh+6zFQpus6hrJMIuF+H/UI3KJ0AsRiofCOjR6VsGvdfyku
+         CK19FLx+VBMK+abI/m98UUgqQmaR3TNUbw3t8OJsj/OmOySscrhvH0uduAgbRHVxnxpp
+         vRE4ORETYTdxr2TRAiydXew1AaowZxAFSlycXyAvGFvlMST6yiOYDeFCj9trDsqZhO+3
+         kIpw==
+X-Gm-Message-State: APjAAAW4LXnDtLVzb5UM1A4mk/mLtMYOApCD+1/pPU2b4JYjnAl8Scx9
+        3WJy4PhtRhvT73yDEsk3igYK1G7+8rL6XNTqhXUBsA==
+X-Google-Smtp-Source: APXvYqzTbfg/iLsk5cSfhBL9S5d5L+m+pFAAStIYggeDc/+2mzG1fiSGEKqoe3tVBitZlGnY8XgopbQRSol6RJzUXiQ=
+X-Received: by 2002:adf:ef4c:: with SMTP id c12mr30274271wrp.203.1580925516197;
+ Wed, 05 Feb 2020 09:58:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <CAFd5g448555=dKFQMbjJ6G=tvtfF5oJgTtTgGx+38Ls3VqHo5g@mail.gmail.com>
+ <20200205021428.8007-1-sj38.park@gmail.com>
+In-Reply-To: <20200205021428.8007-1-sj38.park@gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 5 Feb 2020 09:58:23 -0800
+Message-ID: <CABVgOSmFAZN3KRYkHVg5bb-m-UorB7+9=f9vAqW2ECABzpa9zQ@mail.gmail.com>
+Subject: Re: Re: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if
+ .kunitconfig is modified
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
+One thing we'd like to do with kunit_tool is to make its functionality
+a bit more independent: in particular, allowing the configuration,
+running the kernel, and parsing the results to be done independently.
 
-> wt., 28 sty 2020 o 22:08 Lubomir Rintel <lkundrak@v3.sk> napisał(a):
->>
->> Not all platforms use those. Let's use
->> platform_get_irq_byname_optional() instead platform_get_irq_byname() so
->> that we avoid a useless warning:
->>
->>   [    1.359455] pxa-gpio d4019000.gpio: IRQ gpio0 not found
->>   [    1.359583] pxa-gpio d4019000.gpio: IRQ gpio1 not found
->>
->> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Okay, what would have really be nice in the commit message was to state _which_
-platform doesn't use these, and still use pxa-gpio as their gpio driver.
+If that's the case, it may make sense for "kunit.py run" or similar to
+not do anything with the .config, and to relegate that to a separate
+"configuration" step, which would allow someone to modify the
+configuration themselves (e.g., using make menuconfig) and re-run the
+tests, but also allow the config to be explicitly regenerated when
+helpful.
 
-Cheers.
+Exactly what that'd end up looking like (and to what extent we'd still
+want to support a single command that'd do both) are still up in the
+air: but I think a general "separation of concerns" like this is
+probably the right path forward for kunit_tool.
 
---
-Robert
+Cheers,
+-- David
 
-PS: And yes, my response is late, but I'm moving house so my ping is huge
-lately.
+
+On Tue, Feb 4, 2020 at 6:14 PM SeongJae Park <sj38.park@gmail.com> wrote:
+>
+> On Tue, 4 Feb 2020 16:46:06 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+>
+> > Sorry for the delay.
+> >
+> > On Mon, Jan 27, 2020 at 10:03 PM SeongJae Park <sj38.park@gmail.com> wrote:
+> > >
+> > > On Mon, 27 Jan 2020 16:02:48 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+> > >
+> > > > On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
+> > > > >
+> > > > > From: SeongJae Park <sjpark@amazon.de>
+> > > > >
+> > > > > Deletions of configs in the '.kunitconfig' is not applied because kunit
+> > > > > rebuilds '.config' only if the '.config' is not a subset of the
+> > > > > '.kunitconfig'.  To allow the deletions to applied, this commit modifies
+> > > > > the '.config' rebuild condition to addtionally check the modified times
+> > > > > of those files.
+> > > >
+> > > > The reason it only checks that .kunitconfig is a subset of .config is
+> > > > because we don't want the .kunitconfig to remove options just because
+> > > > it doesn't recognize them.
+> > > >
+> > > > It runs `make ARCH=um olddefconfig` on the .config that it generates
+> > > > from the .kunitconfig, and most of the time that means you will get a
+> > > > .config with lots of things in it that aren't in the .kunitconfig.
+> > > > Consequently, nothing should ever be deleted from the .config just
+> > > > because it was deleted in the .kunitconfig (unless, of course, you
+> > > > change a =y to a =n or # ... is not set), so I don't see what this
+> > > > change would do.
+> > > >
+> > > > Can you maybe provide an example?
+> > >
+> > > Sorry for my insufficient explanation.  I added a kunit test
+> > > (SYSCTL_KUNIT_TEST) to '.kunitconfig', ran the added test, and then removed it
+> > > from the file.  However, '.config' is not generated again due to the condition
+> > > and therefore the test still runs.
+> > >
+> > > For more detail:
+> > >
+> > >     $ ./tools/testing/kunit/kunit.py run --defconfig --build_dir ../kunit.out/
+> > >     $ echo "CONFIG_SYSCTL_KUNIT_TEST=y" >> ../kunit.out/.kunitconfig
+> > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+> > >     $ sed -i '4d' ../kunit.out/.kunitconfig
+> > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+> > >
+> > > The 2nd line command adds sysctl kunit test and the 3rd line shows it runs the
+> > > added test as expected.  Because the default kunit config contains only 3
+> > > lines, The 4th line command removes the sysctl kunit test from the
+> > > .kunitconfig.  However, the 5th line still run the test.
+> > >
+> > > This patch is for such cases.  Of course, this might make more false positives
+> > > but I believe it would not be a big problem because .config generation takes no
+> > > long time.  If I missed something, please let me know.
+> >
+> > I think I understand.
+> >
+> > It is intentional - currently - that KUnit doesn't generate a new
+> > .config with every invocation. The reason is basically to support
+> > interaction with other methods of generating .configs. Consider that
+> > you might want to use make menuconfig to turn something on. It is a
+> > pretty handy interface if you work on vastly different parts of the
+> > kernel. Or maybe you have a defconfig that you always use for some
+> > platform, I think it is easier to run
+> >
+> > make foo_config; tools/testing/kunit/kunit.py run
+> >
+> > Then having to maintain both your defconfig and a .kunitconfig which
+> > is a superset of the defconfig.
+> >
+> > Your change would make it so that you have to have a .kunitconfig for
+> > every test environment that you care about, and you could not as
+> > easily take advantage of menuconfig.
+>
+> Thank you for this kind answer.  Now I understood the intention and agree with
+> that. :)
+>
+> >
+> > I think what we do now is a bit janky, and the use cases I mentioned
+> > are not super well supported. So I am sympathetic to what you are
+> > trying to do, maybe we could have a config option for it?
+> >
+> > I think Ted and Bjorn might have opinions on this; they had some
+> > related opinions in the past.
+>
+> I'm ok with current state, but if related discussions continue and my opinion
+> is required, I will join in.
+>
+>
+> Thanks,
+> SeongJae Park
+>
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/20200205021428.8007-1-sj38.park%40gmail.com.
