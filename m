@@ -2,208 +2,262 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D473DC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB77C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB0020702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gekr6qeJ"
+	by mail.kernel.org (Postfix) with ESMTP id 06C9320702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBERZi (ORCPT
+        id S1727526AbgBERZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:25:38 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37728 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbgBERZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:25:38 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z12so1288194pgl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 09:25:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HQNBfWoHDbfQqe6R2hgbu/PI6hvc3X2tSeWtPXIXvoM=;
-        b=gekr6qeJNiVT4y2Vx0W8jav06Cj5lTmlCMycNQSopUmBB6zpV3r9OfXuNAvxkDseKj
-         TIB5xqLdD/8ik3e7GrcpnyxfNb6nJJK+kOxaqCMfycR0LoFYD4PT/diU1Ao6zfVGeRwk
-         8Va69JSQM0+A8zTEF4kQIzpR+LBxMbcfWw235WeWCthR3hQ0L4jMw+7nGd0efva7K8w+
-         EBFRzKazsSeV3ia+Gt5rwM/dZVdy4IMWPCyyrHSd6WIRprjZLedsoL9FQRpCdoy2tFvC
-         5H3bLLZvJASpi+gFiU/O1HwrtCEATbiCtA8vGK1BPpxRS2hzPilHDqx+Ef4saAhOsU5q
-         Rssg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HQNBfWoHDbfQqe6R2hgbu/PI6hvc3X2tSeWtPXIXvoM=;
-        b=TaKEoMxhqYKW6oq1C7WFuT7ko1blHifzVb0XsJYGicFBewkoYDsMgb5UZlHTJAerZH
-         8SqeQtNwvd13vseWZocAuxQV3B/gv88O9sQvG6mSpSEs+vLK33YY5U0V3yZwzjyO04WE
-         +HqYCJAY/OwJQzRuN1s1JrjdhrpiX2cGi2eS/oGT1mTwyq4SVf1vKGUeJP+jbQpb0Msk
-         hnKpaK5ksMKLL5YOHtoYbBgY2+TOvnZpmpkT0M6jNwJca/I12p1NpTCY/ZotFJhrAKEW
-         HIOv7Di0AoXnjZQ61CiwUSaAIF5Pbi71taGm4XagdDFcHmT7cAHrm5FRtAwRGOYNSRN8
-         73FA==
-X-Gm-Message-State: APjAAAWWzfPxYluKVmjiljRg2B++74o2TSNI/OmbIGe6eIwvBlC3dCfk
-        85hzEaytx+a71QVzVZ0lKB4e5suNWcu3m+yhzN3D/tpBkE8=
-X-Google-Smtp-Source: APXvYqzJ5K1bH4NzXBspEaMGghiLHRqOF+eKBB3Oig9ZfyTDoMinjCqya9BC384JIHka1LRkuwfoIRmldt3qBZ3iGxE=
-X-Received: by 2002:a63:34e:: with SMTP id 75mr19231500pgd.286.1580923536731;
- Wed, 05 Feb 2020 09:25:36 -0800 (PST)
+        Wed, 5 Feb 2020 12:25:46 -0500
+Received: from mga18.intel.com ([134.134.136.126]:28710 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbgBERZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 12:25:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 09:25:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
+   d="scan'208";a="404215302"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 05 Feb 2020 09:25:43 -0800
+Received: from [10.252.5.149] (abudanko-mobl.ccr.corp.intel.com [10.252.5.149])
+        by linux.intel.com (Postfix) with ESMTP id 8BCCE5803E3;
+        Wed,  5 Feb 2020 09:25:36 -0800 (PST)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v6 00/10] Introduce CAP_PERFMON to secure system performance
+ monitoring and observability
+To:     James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+Organization: Intel Corp.
+Message-ID: <576a6141-36d4-14c0-b395-8d195892b916@linux.intel.com>
+Date:   Wed, 5 Feb 2020 20:25:34 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <cover.1579007786.git.andreyknvl@google.com> <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
- <87ftfv7nf0.fsf@kernel.org> <CAAeHK+wwmis4z9ifPAnkM36AnfG2oESSLAkKvDkuAa0QUM2wRg@mail.gmail.com>
- <87a7637ise.fsf@kernel.org> <CAAeHK+zNuqwmHG4NJwZNtQHizdaOpriHxoQffZHMffeke_hsGQ@mail.gmail.com>
- <87tv4556ke.fsf@kernel.org>
-In-Reply-To: <87tv4556ke.fsf@kernel.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 5 Feb 2020 18:25:25 +0100
-Message-ID: <CAAeHK+zE6N3W-UQ7yjrSkbfwGCBmd0cTv=z7LKNRa2Er1KMPew@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 5:42 PM Felipe Balbi <balbi@kernel.org> wrote:
->
->
-> Hi,
->
-> Andrey Konovalov <andreyknvl@google.com> writes:
-> >> >> > +static int raw_event_queue_add(struct raw_event_queue *queue,
-> >> >> > +     enum usb_raw_event_type type, size_t length, const void *data)
-> >> >> > +{
-> >> >> > +     unsigned long flags;
-> >> >> > +     struct usb_raw_event *event;
-> >> >> > +
-> >> >> > +     spin_lock_irqsave(&queue->lock, flags);
-> >> >> > +     if (WARN_ON(queue->size >= RAW_EVENT_QUEUE_SIZE)) {
-> >> >> > +             spin_unlock_irqrestore(&queue->lock, flags);
-> >> >> > +             return -ENOMEM;
-> >> >> > +     }
-> >> >> > +     event = kmalloc(sizeof(*event) + length, GFP_ATOMIC);
-> >> >>
-> >> >> I would very much prefer dropping GFP_ATOMIC here. Must you have this
-> >> >> allocation under a spinlock?
-> >> >
-> >> > The issue here is not the spinlock, but that this might be called in
-> >> > interrupt context. The number of atomic allocations here is restricted
-> >> > by 128, and we can reduce the limit even further (until some point in
-> >> > the future when and if we'll report more different events). Another
-> >> > option would be to preallocate the required number of objects
-> >> > (although we don't know the required size in advance, so we'll waste
-> >> > some memory) and use those. What would you prefer?
-> >>
-> >> I think you shouldn't do either :-) Here's what I think you should do:
-> >>
-> >> 1. support O_NONBLOCK. This just means conditionally removing your
-> >>    wait_for_completion_interruptible().
-> >
-> > I don't think non blocking read/writes will work for us. We do
-> > coverage-guided fuzzing and need to collect coverage for each syscall.
-> > In the USB case "syscall" means processing a USB request from start to
-> > end, and thus we need to wait until the kernel finishes processing it,
-> > otherwise we'll fail to associate coverage properly (It's actually a
-> > bit more complex, as we collect coverage for the whole initial
-> > enumeration process as for one "syscall", but the general idea stands,
-> > that we need to wait until the operation finishes.)
->
-> Fair enough, but if the only use case that this covers, is a testing
-> scenario, we don't gain much from accepting this upstream, right?
 
-We gain a lot, even though it's just for testing. For one thing, once
-the patch is upstream, all syzbot instances that target upstream-ish
-branches will start fuzzing USB, and there won't be any need for me to
-maintain a dedicated USB fuzzing branch manually. Another thing, is
-that syzbot will be able to do fix/cause bisection (at least for the
-bugs that are fixed/introduced after this patch is merged). And
-finally, once this is upstream, we'll be able to backport this to
-Android kernels and start testing them as well.
+Currently access to perf_events, i915_perf and other performance monitoring and
+observability subsystems of the kernel is open only for a privileged process [1]
+with CAP_SYS_ADMIN capability enabled in the process effective set [2].
 
-> We can
-> still support both block and nonblock, but let's at least give the
-> option.
->
-> >> 2. Every time user calls write(), you usb_ep_alloc(), allocate a buffer
-> >>    with the write size, copy buffer to kernel space,
-> >>    usb_ep_queue(). When complete() callback is called, then you free the
-> >>    request. This would allow us to amortize the cost of copy_from_user()
-> >>    with several requests being queued to USB controller.
-> >
-> > I'm not sure I really get this part. We'll still need to call
-> > copy_from_user() and usb_ep_queue() once per each operation/request.
-> > How does it get amortized? Or do you mean that having multiple
-> > requests queued will allow USB controller to process them in bulk?
->
-> yes :-)
->
-> > This makes sense, but again, we"ll then have an issue with coverage
-> > association.
->
-> You can still enqueue one by one, but this would turn your raw-gadget
-> interface more interesting for other use cases.
->
-> >> 3. Have a pre-allocated list of requests (128?) for read(). Enqueue them
-> >>    all during set_alt(). When user calls read() you will:
-> >>
-> >>    a) check if there are completed requests to be copied over to
-> >>       userspace. Recycle the request.
-> >>
-> >>    b) if there are no completed requests, then it depends on O_NONBLOCK
-> >>
-> >>       i) If O_NONBLOCK, return -EWOULDBLOCK
-> >>       ii) otherwise, wait_for_completion
-> >
-> > See response to #1, if we prequeue requests, then the kernel will
-> > start handling them before we do read(), and we'll fail to associate
-> > coverage properly. (This will also require adding another ioctl to
-> > imitate set_alt(), like the USB_RAW_IOCTL_CONFIGURE that we have.)
->
-> set_alt() needs to be supported if we're aiming at providing support for
-> various USB classes to be implemented on top of what you created :-)
+This patch set introduces CAP_PERFMON capability designed to secure system
+performance monitoring and observability operations so that CAP_PERFMON would
+assist CAP_SYS_ADMIN capability in its governing role for performance monitoring
+and observability subsystems of the kernel.
 
-What do you mean by supporting set_alt() here? AFAIU set_alt() is a
-part of the composite gadget framework, which I don't use for this.
-Are there some other actions (besides sending/receiving requests) that
-need to be exposed to userspace to implement various USB classes? The
-one that I know about is halting endpoints, it's mentioned in the TODO
-section in documentation.
+CAP_PERFMON intends to harden system security and integrity during performance 
+monitoring and observability operations by decreasing attack surface that is 
+available to a CAP_SYS_ADMIN privileged process [2]. Providing the access to
+performance monitoring and observability operations under CAP_PERFMON capability
+singly, without the rest of CAP_SYS_ADMIN credentials, excludes chances to misuse
+the credentials and makes the operation more secure. Thus, CAP_PERFMON implements
+the principal of least privilege for performance monitoring and observability 
+operations (POSIX IEEE 1003.1e: 2.2.2.39 principle of least privilege: A security
+design principle that states that a process or program be granted only those
+privileges (e.g., capabilities) necessary to accomplish its legitimate function,
+and only for the time that such privileges are actually required)
 
->
-> >> I think this can all be done without any GFP_ATOMIC allocations.
-> >
-> > Overall, supporting O_NONBLOCK might be a useful feature for people
-> > who are doing something else other than fuzzing, We can account for
-> > potential future extensions that'll support it, so detecting
-> > O_NONBLOCK and returning an error for now makes sense.
-> >
-> > WDYT?
->
-> If that's the way you want to go, that's okay. But let's, then, prepare
-> the code for extension later on. For example, let's add an IOCTL which
-> returns the "version" of the ABI. Based on that, userspace can detect
-> features and so on.
+CAP_PERFMON intends to meet the demand to secure system performance monitoring
+and observability operations for adoption in security sensitive, restricted,
+multiuser production environments (e.g. HPC clusters, cloud and virtual compute
+environments), where root or CAP_SYS_ADMIN credentials are not available to mass
+users of a system, and securely unblock accessibility of system performance 
+monitoring and observability operations beyond root and CAP_SYS_ADMIN use cases.
 
-This sounds good to me. Let's concentrate on implementing the part
-that is essential for testing/fuzzing, as it was the initial reason
-why I started working on this, instead of using e.g. GadgetFS. I'll
-add such IOCTL in v6.
+CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to system
+performance monitoring and observability operations and balance amount of
+CAP_SYS_ADMIN credentials following the recommendations in the capabilities man
+page [2] for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to
+kernel developers, below." For backward compatibility reasons access to system
+performance monitoring and observability subsystems of the kernel remains open
+for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability usage for
+secure system performance monitoring and observability operations is discouraged
+with respect to the designed CAP_PERFMON capability.
 
-Re GFP_ATOMIC allocations, if we're using the blocking approach,
-should I decrease the limit of the number of such allocations or do
-something else?
+Possible alternative solution to this system security hardening, capabilities
+balancing task of making performance monitoring and observability operations
+more secure and accessible could be to use the existing CAP_SYS_PTRACE capability
+to govern system performance monitoring and observability subsystems.
+However CAP_SYS_PTRACE capability still provides users with more credentials
+than are required for secure performance monitoring and observability operations
+and this excess is avoided by the designed CAP_PERFMON capability.
 
-Re licensing comments, do I need to change anything after all?
+Although software running under CAP_PERFMON can not ensure avoidance of related
+hardware issues, the software can still mitigate those issues following the
+official hardware issues mitigation procedure [3]. The bugs in the software
+itself can be fixed following the standard kernel development process [4] to
+maintain and harden security of system performance monitoring and observability
+operations. Finally, the patch set is shaped in the way that simplifies
+backtracking procedure of possible induced issues [5] as much as possible.
+
+The patch set is for tip perf/core repository:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
+sha1: 0cc4bd8f70d1ea2940295f1050508c663fe9eff9
+
+---
+Changes in v6:
+- avoided noaudit checks in perfmon_capable() to explicitly advertise CAP_PERFMON
+  usage thru audit logs to secure system performance monitoring and observability
+Changes in v5:
+- renamed CAP_SYS_PERFMON to CAP_PERFMON
+- extended perfmon_capable() with noaudit checks
+Changes in v4:
+- converted perfmon_capable() into an inline function
+- made perf_events kprobes, uprobes, hw breakpoints and namespaces data available
+  to CAP_SYS_PERFMON privileged processes
+- applied perfmon_capable() to drivers/perf and drivers/oprofile
+- extended __cmd_ftrace() with support of CAP_SYS_PERFMON
+Changes in v3:
+- implemented perfmon_capable() macros aggregating required capabilities checks
+Changes in v2:
+- made perf_events trace points available to CAP_SYS_PERFMON privileged processes
+- made perf_event_paranoid_check() treat CAP_SYS_PERFMON equally to CAP_SYS_ADMIN
+- applied CAP_SYS_PERFMON to i915_perf, bpf_trace, powerpc and parisc system
+  performance monitoring and observability related subsystems
+
+---
+Alexey Budankov (10):
+  capabilities: introduce CAP_PERFMON to kernel and user space
+  perf/core: open access to the core for CAP_PERFMON privileged process
+  perf/core: open access to probes for CAP_PERFMON privileged process
+  perf tool: extend Perf tool with CAP_PERFMON capability support
+  drm/i915/perf: open access for CAP_PERFMON privileged process
+  trace/bpf_trace: open access for CAP_PERFMON privileged process
+  powerpc/perf: open access for CAP_PERFMON privileged process
+  parisc/perf: open access for CAP_PERFMON privileged process
+  drivers/perf: open access for CAP_PERFMON privileged process
+  drivers/oprofile: open access for CAP_PERFMON privileged process
+
+ arch/parisc/kernel/perf.c           |  2 +-
+ arch/powerpc/perf/imc-pmu.c         |  4 ++--
+ drivers/gpu/drm/i915/i915_perf.c    | 13 ++++++-------
+ drivers/oprofile/event_buffer.c     |  2 +-
+ drivers/perf/arm_spe_pmu.c          |  4 ++--
+ include/linux/capability.h          |  4 ++++
+ include/linux/perf_event.h          |  6 +++---
+ include/uapi/linux/capability.h     |  8 +++++++-
+ kernel/events/core.c                |  6 +++---
+ kernel/trace/bpf_trace.c            |  2 +-
+ security/selinux/include/classmap.h |  4 ++--
+ tools/perf/builtin-ftrace.c         |  5 +++--
+ tools/perf/design.txt               |  3 ++-
+ tools/perf/util/cap.h               |  4 ++++
+ tools/perf/util/evsel.c             | 10 +++++-----
+ tools/perf/util/util.c              |  1 +
+ 16 files changed, 47 insertions(+), 31 deletions(-)
+
+---
+Testing and validation (Intel Skylake, 8 cores, Fedora 29, 5.5.0-rc3+, x86_64):
+
+libcap library [6], [7], [8] and Perf tool can be used to apply CAP_PERFMON 
+capability for secure system performance monitoring and observability beyond the
+scope permitted by the system wide perf_event_paranoid kernel setting [9] and
+below are the steps for evaluation:
+
+  - patch, build and boot the kernel
+  - patch, build Perf tool e.g. to /home/user/perf
+  ...
+  # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
+  # pushd libcap
+  # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1]
+  # make
+  # pushd progs
+  # ./setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+  # ./setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+  /home/user/perf: OK
+  # ./getcap /home/user/perf
+  /home/user/perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
+  # echo 2 > /proc/sys/kernel/perf_event_paranoid
+  # cat /proc/sys/kernel/perf_event_paranoid 
+  2
+  ...
+  $ /home/user/perf top
+    ... works as expected ...
+  $ cat /proc/`pidof perf`/status
+  Name:	perf
+  Umask:	0002
+  State:	S (sleeping)
+  Tgid:	2958
+  Ngid:	0
+  Pid:	2958
+  PPid:	9847
+  TracerPid:	0
+  Uid:	500	500	500	500
+  Gid:	500	500	500	500
+  FDSize:	256
+  ...
+  CapInh:	0000000000000000
+  CapPrm:	0000004400080000
+  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+                                     cap_perfmon,cap_sys_ptrace,cap_syslog
+  CapBnd:	0000007fffffffff
+  CapAmb:	0000000000000000
+  NoNewPrivs:	0
+  Seccomp:	0
+  Speculation_Store_Bypass:	thread vulnerable
+  Cpus_allowed:	ff
+  Cpus_allowed_list:	0-7
+  ...
+
+Usage of cap_perfmon effectively avoids unused credentials excess:
+
+- with cap_sys_admin:
+  CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
+
+- with cap_perfmon:
+  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+                                    38   34               19
+                               perfmon   syslog           sys_ptrace
+
+---
+[1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+[2] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[3] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[4] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+[5] https://www.kernel.org/doc/html/latest/process/management-style.html#decisions
+[6] http://man7.org/linux/man-pages/man8/setcap.8.html
+[7] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
+[8] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
+[9] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
+
+-- 
+2.20.1
+
