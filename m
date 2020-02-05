@@ -2,48 +2,47 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2639FC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AB7C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19A52082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032772082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cock.li header.i=@cock.li header.b="NW7pcRwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgBEUia (ORCPT
+        id S1727309AbgBEUlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 15:38:30 -0500
-Received: from mga11.intel.com ([192.55.52.93]:9266 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgBEUia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 15:38:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 12:38:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
-   d="scan'208";a="235715558"
-Received: from gtobin-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.85.85])
-  by orsmga006.jf.intel.com with ESMTP; 05 Feb 2020 12:38:25 -0800
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrey Pronin <apronin@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, stable@vger.kernel.org,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
-Date:   Wed,  5 Feb 2020 22:38:18 +0200
-Message-Id: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 5 Feb 2020 15:41:14 -0500
+Received: from mx1.cock.li ([185.10.68.5]:45703 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726534AbgBEUlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 15:41:13 -0500
+From:   Sergey Alirzaev <l29ah@cock.li>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cock.li; s=mail;
+        t=1580935270; bh=ntRFvU3hcsMEE34oypcg9/W6Ep/xOHm+MQXdA0Es7h4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NW7pcRwCupXSD4j8s711wENm+UqaKYaVIKzE4QcwCDYYhcWJmDlASquy90LYs00Wr
+         n515bEcisaEFfsw8CAxCbBakEl7EHaAgYB17BtTVG9hMcCzEydQTVKw/847pytpLiY
+         qLMLrvl5DePK1tWkqygcuVe3zig4jJAYWgtDCdhKwqumZOOMpa6U7kT+k3iRZiEcRX
+         ABKl30NZVG+ytvPOVg0h3OFYGja/ZnFFJKC1+iHEEY6DcoKtHYWz4xF22JMPXNChYT
+         tf2x3PyS1OcxHRipU7rQG7ZmBmHtmvF3JEZvsN3is1Ozk9cu1YNgZb7SlD5uuJ1YX0
+         XxoGy8oxzjguA==
+To:     v9fs-developer@lists.sourceforge.net
+Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sergey Alirzaev <l29ah@cock.li>
+Subject: [PATCH] 9pnet: allow making incomplete read requests
+Date:   Wed,  5 Feb 2020 23:40:53 +0300
+Message-Id: <20200205204053.12751-1-l29ah@cock.li>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,45 +50,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could break
-the build script. This can be achieved by renaming tpm_tis_spi.c as
-tpm_tis_spi_main.c. Then tpm_tis_spi-y can be used inside the makefile.
+A user doesn't necessarily want to wait for all the requested data to
+be available, since the waiting time for each request is unbounded.
 
-Cc: Andrey Pronin <apronin@chromium.org>
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: stable@vger.kernel.org
-Fixes: 797c0113c9a4 ("tpm: tpm_tis_spi: Support cr50 devices")
-Reported-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+The new method permits sending one read request at a time and getting
+the response ASAP, allowing to use 9pnet with synthetic file systems
+representing arbitrary data streams.
+
+Signed-off-by: Sergey Alirzaev <l29ah@cock.li>
 ---
- drivers/char/tpm/Makefile                              | 8 +++++---
- drivers/char/tpm/{tpm_tis_spi.c => tpm_tis_spi_main.c} | 0
- 2 files changed, 5 insertions(+), 3 deletions(-)
- rename drivers/char/tpm/{tpm_tis_spi.c => tpm_tis_spi_main.c} (100%)
+ include/net/9p/client.h |   2 +
+ net/9p/client.c         | 135 ++++++++++++++++++++++------------------
+ 2 files changed, 76 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 5a0d99d4fec0..9567e5197f74 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -21,9 +21,11 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
- tpm-$(CONFIG_OF) += eventlog/of.o
- obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
- obj-$(CONFIG_TCG_TIS) += tpm_tis.o
--obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi_mod.o
--tpm_tis_spi_mod-y := tpm_tis_spi.o
--tpm_tis_spi_mod-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
+diff --git a/include/net/9p/client.h b/include/net/9p/client.h
+index acc60d8a3b3b..f6c890e94f87 100644
+--- a/include/net/9p/client.h
++++ b/include/net/9p/client.h
+@@ -200,6 +200,8 @@ int p9_client_fsync(struct p9_fid *fid, int datasync);
+ int p9_client_remove(struct p9_fid *fid);
+ int p9_client_unlinkat(struct p9_fid *dfid, const char *name, int flags);
+ int p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err);
++int p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
++		int *err);
+ int p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err);
+ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset);
+ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 1d48afc7033c..240d7c05b282 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1549,82 +1549,95 @@ EXPORT_SYMBOL(p9_client_unlinkat);
+ int
+ p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err)
+ {
+-	struct p9_client *clnt = fid->clnt;
+-	struct p9_req_t *req;
+ 	int total = 0;
+ 	*err = 0;
+ 
++	while (iov_iter_count(to)) {
++		int count;
 +
-+obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
-+tpm_tis_spi-y := tpm_tis_spi_main.o
-+tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
++		count = p9_client_read_once(fid, offset, to, err);
++		if (!count || *err)
++			break;
++		offset += count;
++		total += count;
++	}
++	return total;
++}
++EXPORT_SYMBOL(p9_client_read);
 +
- obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
- obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
- obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi_main.c
-similarity index 100%
-rename from drivers/char/tpm/tpm_tis_spi.c
-rename to drivers/char/tpm/tpm_tis_spi_main.c
++int
++p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
++		    int *err)
++{
++	struct p9_client *clnt = fid->clnt;
++	struct p9_req_t *req;
++	int count = iov_iter_count(to);
++	int rsize, non_zc = 0;
++	char *dataptr;
++
++	*err = 0;
+ 	p9_debug(P9_DEBUG_9P, ">>> TREAD fid %d offset %llu %d\n",
+ 		   fid->fid, (unsigned long long) offset, (int)iov_iter_count(to));
+ 
+-	while (iov_iter_count(to)) {
+-		int count = iov_iter_count(to);
+-		int rsize, non_zc = 0;
+-		char *dataptr;
++	rsize = fid->iounit;
++	if (!rsize || rsize > clnt->msize - P9_IOHDRSZ)
++		rsize = clnt->msize - P9_IOHDRSZ;
+ 
+-		rsize = fid->iounit;
+-		if (!rsize || rsize > clnt->msize-P9_IOHDRSZ)
+-			rsize = clnt->msize - P9_IOHDRSZ;
++	if (count < rsize)
++		rsize = count;
+ 
+-		if (count < rsize)
+-			rsize = count;
++	/* Don't bother zerocopy for small IO (< 1024) */
++	if (clnt->trans_mod->zc_request && rsize > 1024) {
++		/* response header len is 11
++		 * PDU Header(7) + IO Size (4)
++		 */
++		req = p9_client_zc_rpc(clnt, P9_TREAD, to, NULL, rsize,
++				       0, 11, "dqd", fid->fid,
++				       offset, rsize);
++	} else {
++		non_zc = 1;
++		req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
++				    rsize);
++	}
++	if (IS_ERR(req)) {
++		*err = PTR_ERR(req);
++		return 0;
++	}
+ 
+-		/* Don't bother zerocopy for small IO (< 1024) */
+-		if (clnt->trans_mod->zc_request && rsize > 1024) {
+-			/*
+-			 * response header len is 11
+-			 * PDU Header(7) + IO Size (4)
+-			 */
+-			req = p9_client_zc_rpc(clnt, P9_TREAD, to, NULL, rsize,
+-					       0, 11, "dqd", fid->fid,
+-					       offset, rsize);
+-		} else {
+-			non_zc = 1;
+-			req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
+-					    rsize);
+-		}
+-		if (IS_ERR(req)) {
+-			*err = PTR_ERR(req);
+-			break;
+-		}
++	*err = p9pdu_readf(&req->rc, clnt->proto_version,
++			   "D", &count, &dataptr);
++	if (*err) {
++		trace_9p_protocol_dump(clnt, &req->rc);
++		p9_tag_remove(clnt, req);
++		return 0;
++	}
++	if (rsize < count) {
++		pr_err("bogus RREAD count (%d > %d)\n", count, rsize);
++		count = rsize;
++	}
+ 
+-		*err = p9pdu_readf(&req->rc, clnt->proto_version,
+-				   "D", &count, &dataptr);
+-		if (*err) {
+-			trace_9p_protocol_dump(clnt, &req->rc);
+-			p9_tag_remove(clnt, req);
+-			break;
+-		}
+-		if (rsize < count) {
+-			pr_err("bogus RREAD count (%d > %d)\n", count, rsize);
+-			count = rsize;
+-		}
++	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", count);
++	if (!count) {
++		p9_tag_remove(clnt, req);
++		return 0;
++	}
+ 
+-		p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", count);
+-		if (!count) {
+-			p9_tag_remove(clnt, req);
+-			break;
+-		}
++	if (non_zc) {
++		int n = copy_to_iter(dataptr, count, to);
+ 
+-		if (non_zc) {
+-			int n = copy_to_iter(dataptr, count, to);
+-			total += n;
+-			offset += n;
+-			if (n != count) {
+-				*err = -EFAULT;
+-				p9_tag_remove(clnt, req);
+-				break;
+-			}
+-		} else {
+-			iov_iter_advance(to, count);
+-			total += count;
+-			offset += count;
++		if (n != count) {
++			*err = -EFAULT;
++			p9_tag_remove(clnt, req);
++			return n;
+ 		}
+-		p9_tag_remove(clnt, req);
++	} else {
++		iov_iter_advance(to, count);
++		count;
+ 	}
+-	return total;
++	p9_tag_remove(clnt, req);
++	return count;
+ }
+-EXPORT_SYMBOL(p9_client_read);
++EXPORT_SYMBOL(p9_client_read_once);
+ 
+ int
+ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
 -- 
-2.20.1
+2.25.0
 
