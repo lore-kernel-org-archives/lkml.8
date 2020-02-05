@@ -2,95 +2,124 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B930C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34C3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62BD20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB41A20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw+//1eW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgBENj3 (ORCPT
+        id S1728062AbgBENkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:39:29 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47128 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbgBENj2 (ORCPT
+        Wed, 5 Feb 2020 08:40:19 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42425 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgBENkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:39:28 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE241158E83BF;
-        Wed,  5 Feb 2020 05:39:25 -0800 (PST)
-Date:   Wed, 05 Feb 2020 14:39:24 +0100 (CET)
-Message-Id: <20200205.143924.1875004608052019375.davem@davemloft.net>
-To:     boon.leong.ong@intel.com
-Cc:     netdev@vger.kernel.org, tee.min.tan@intel.com,
-        weifeng.voon@intel.com, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, Jose.Abreu@synopsys.com,
-        mcoquelin.stm32@gmail.com, Joao.Pinto@synopsys.com, arnd@arndb.de,
-        alexandru.ardelean@analog.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4 1/6] net: stmmac: Fix incorrect location to set
- real_num_rx|tx_queues
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200205085510.32353-2-boon.leong.ong@intel.com>
-References: <20200205085510.32353-1-boon.leong.ong@intel.com>
-        <20200205085510.32353-2-boon.leong.ong@intel.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Feb 2020 05:39:28 -0800 (PST)
+        Wed, 5 Feb 2020 08:40:18 -0500
+Received: by mail-pl1-f196.google.com with SMTP id e8so896672plt.9;
+        Wed, 05 Feb 2020 05:40:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T00hJf8Zau9OXAj1ZR0v+sEf9NavnQw2H4KNq+whO3w=;
+        b=Aw+//1eW8gmUsbzag2FFcGcdxzB0EAaQzlkg1oNypkQzxwHGCIAayYa7UERZwbzJ4s
+         9vp7r7TCm7ZD7Oqhmhz/O8HuUEaMke2MMWaF+U7gD5gmVf6/dD2ViDrFrTNam+ukarq3
+         mu/omXxh9ye9JLtc1ceGIoPJUC8zJvULNChjJxrhOCRlzBNY6Qsh9gIRO0hwXyf2bSg9
+         y/PlIAg35yYwuj+mE2wAWUew/AYdsdS7gEWeoHazsb1ckJtoSuenEsKOJbi++1rhpLcy
+         +MMxcT+u43KmJSxcS4tOpob92/hPcocevZQKhvizs1yODQwAjT+I4wBhgtdnZe26p2L9
+         472A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T00hJf8Zau9OXAj1ZR0v+sEf9NavnQw2H4KNq+whO3w=;
+        b=C5/V9jJ9U7xIu1FLL7cLGZc8xRbDTOVH2NEh4akRdc8x1lnmJmGxdHzC/5biqT05NM
+         tybcEEIWKq+3CwEo0h1lcrxUrzySOcz8Cuot7iRYNmAnVYMe8T/PCkAhiOwMRlJiAuWT
+         7CJwtASgkJ/1czvioEI6z/oMC36kMbdnOO2GWRoZx3qAz5WvWUrXYqNAaQqASJqdNw1h
+         avl5lsQSBe/11XPon5zy2ZPMdeafdbEdWQAHj3iU0+ENSPpWCvuYDt4s/Hn/B8bC86u6
+         8bf0uFPDzWyUpRDelhvUlBratsRsmc/dnJzNI6DyeU13Csmetde6tUjLshcE1plZvq7S
+         w1nQ==
+X-Gm-Message-State: APjAAAUqov+0Ic9cYHT6Z80KyD44lNNji1yeOC0C80upZY5foP7eRtCI
+        +cUDCU/ZbiHRqkDsY931nRbJq980q/HlWYHlK8c=
+X-Google-Smtp-Source: APXvYqx10235/jHI+YTs5wYLM4+RQSDrWQ83PUoirazbmKVoXWCEwqkUJaEF/9RyiBg18qwt72DkutwcO9wQ7Myus+o=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr5829550pjq.132.1580910018046;
+ Wed, 05 Feb 2020 05:40:18 -0800 (PST)
+MIME-Version: 1.0
+References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
+ <1580650021-8578-4-git-send-email-hadar.gat@arm.com> <CAHp75Vd4VYJD9kSgMU+iKOC5FOarPtMG4eG3Jbnf7OeebWuC7w@mail.gmail.com>
+ <AM5PR0801MB166546181D4D2EB9AE8DD26CE9020@AM5PR0801MB1665.eurprd08.prod.outlook.com>
+In-Reply-To: <AM5PR0801MB166546181D4D2EB9AE8DD26CE9020@AM5PR0801MB1665.eurprd08.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Feb 2020 15:40:09 +0200
+Message-ID: <CAHp75VeRFUJiCsKew457dPt4WkP+uFjpgKAMErmXzffDMgH6vQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: add HG as cctrng maintainer
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ong Boon Leong <boon.leong.ong@intel.com>
-Date: Wed,  5 Feb 2020 16:55:05 +0800
+On Wed, Feb 5, 2020 at 11:22 AM Hadar Gat <Hadar.Gat@arm.com> wrote:
+> > On Sun, Feb 2, 2020 at 3:29 PM Hadar Gat <hadar.gat@arm.com> wrote:
 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 5836b21edd7e..4d9afa13eeb9 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -2657,6 +2657,10 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
->  		stmmac_enable_tbs(priv, priv->ioaddr, enable, chan);
->  	}
->  
-> +	/* Configure real RX and TX queues */
-> +	netif_set_real_num_rx_queues(dev, priv->plat->rx_queues_to_use);
-> +	netif_set_real_num_tx_queues(dev, priv->plat->tx_queues_to_use);
-> +
->  	/* Start the ball rolling... */
->  	stmmac_start_all_dma(priv);
->  
+...
 
-It is only safe to ignore the return values from
-netif_set_real_num_{rx,tx}_queues() if you call them before the
-network device is registered.  Because only in that case are these
-functions guaranteed to succeed.
+> > > +CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER
+> > GENERATOR (TRNG) DRIVER
+> > > +M:     Hadar Gat <hadar.gat@arm.com>
+> > > +L:     linux-crypto@vger.kernel.org
+> > > +S:     Supported
+> > > +F:     drivers/char/hw_random/cctrng.c
+> > > +F:     drivers/char/hw_random/cctrng.h
+> > > +F:     Documentation/devicetree/bindings/rng/arm-cctrng.txt
+> > > +W:     https://developer.arm.com/products/system-ip/trustzone-
+> > cryptocell/cryptocell-700-family
 
-But now that you have moved these calls here, they can fail.
+> > Had you run parse-maintainers.pl afterwards to be sure everything is okay?
+>
+> I run parse-maintainers.pl now and it seems everything is okay.
 
-Therefore you must check the return value and unwind the state
-completely upon failures.
+Good, thank you!
 
-Honestly, I think this change will have several undesirable side effects:
+> But the generated MAINTAINERS file has many differences from the one I have all over it.
 
-1) Lots of added new code complexity
+Don't worry about it, just keep your stuff in order.
 
-2) A new failure mode when resuming the device, users will find this
-   very hard to diagnose and recover from
+> I couldn't find any documentation about this script (under Documentation/).
+> Can you point me to the documentation if exists?
 
-What real value do you get from doing these calls after probe?
+The documentation is in the top of MAINTAINERS. The script simple enforces it.
 
-If you can't come up with a suitable answer to that question, you
-should reconsider this change.
-
-Thanks.
+-- 
+With Best Regards,
+Andy Shevchenko
