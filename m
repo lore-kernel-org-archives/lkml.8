@@ -2,561 +2,475 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2244C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9956C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63DA217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580932073;
-	bh=erZuHPE5oBTfwxLwohCXCrhyZgZqkGPnYYKFrljQVlM=;
-	h=In-Reply-To:References:From:Subject:To:Date:List-ID:From;
-	b=h6KGCM8SLS3OUaBmvwtU/nzXQ2IaR0nspBValO6vMvmH1cAeB5EujihcLcr5gMVDw
-	 fBQKn2knRFI1wfADfJ+zKI8NF5VO+xe5lmLqLwng2EUSqg1c7agtx+4HxTBXmElhhs
-	 z6G8qZ3ypws6KRhbhid7c1p1lkw+DXgsQWBPXk5w=
+	by mail.kernel.org (Postfix) with ESMTP id 72DDB20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="zF2poooc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgBETrx (ORCPT
+        id S1727491AbgBETtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:47:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727085AbgBETrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:47:52 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 464C020730;
-        Wed,  5 Feb 2020 19:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580932070;
-        bh=erZuHPE5oBTfwxLwohCXCrhyZgZqkGPnYYKFrljQVlM=;
-        h=In-Reply-To:References:From:Subject:To:Date:From;
-        b=SR5ts6RDCOu7tBX8GQ0h6AY3HwfEN8QaCVus+ggaeyQV6x0OjodIQ0rMXKJ9Sspw5
-         NaAFiYPxBekuxHlpzQqDUzzXgyGLZSvREpKWqmdfmSFXOxyoAzleFpKxQ6WS7ppHco
-         6rPIbIPGVQK+u43v9kfDE2iJJE91tr6qTrP7+HB0=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1579905147-12142-8-git-send-email-vnkgutta@codeaurora.org>
-References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org> <1579905147-12142-8-git-send-email-vnkgutta@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: sm8250: Add sm8250 dts file
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vinod.koul@linaro.org, vnkgutta@codeaurora.org
-User-Agent: alot/0.8.1
-Date:   Wed, 05 Feb 2020 11:47:49 -0800
-Message-Id: <20200205194750.464C020730@mail.kernel.org>
+        Wed, 5 Feb 2020 14:49:36 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35631 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbgBETtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:49:36 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so3577843ljb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:49:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=gIyt1cpkVq71m26GmlnOQEs6es0tPvsgfnegp/G/QUc=;
+        b=zF2pooocQ/5UrU4UTArsjvHTqwgLgqgC3DSPGGlG43SwhOS3hJx/lVRvNG+uHLOOYu
+         91RnQ3SqfzaX1gxofu30MVwTxRZLITmFoFx9vWgjJasuR67hZnevtjlR2+pZeiP4xS+E
+         SWKF9RjgbIbNNzG5OgACxBxjW+ECNYI0M2Fl87JTeAQ5VsjTSwybt62mDwIB1H8fABXk
+         p6skIHy82+c4i4uDCuMZvDm5AAz6K/1amr302RCgP5UZ65uDIUZycrvo7yTFw6Grj7Vg
+         rJPqloDzpszvUM27D+HU2NmhooHugPJ7o1nojdMTqe+mkqgmoPlfoDM824sBzhBCtMC5
+         DHzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gIyt1cpkVq71m26GmlnOQEs6es0tPvsgfnegp/G/QUc=;
+        b=gqJJp829u2eNhlQgQ/o6X+X9JL0zjKwBJKF7uXY2tnu0KQjKTT/7pbVVf9uBqcdOYE
+         X1lI6/seLYwcgAxOz0LkDFQCCSBaYiS35GotupGaM3oMtMpXD+z9+5x3u0UubkfNi38/
+         /X8/uAOuuY92L/4IdMOdqcoJqXSF2ayHopf8MabR5RDzMpaKVMshdq0yUs605qLNjqgU
+         +/Gu2s5+swZtw7VM3G2b96xlYUHWZyxQLJyp2QIM1qPEM5yhcYv7nChNUhmMicOxD0my
+         jse/NhEIfUJhGRm0mn2bMt2YyHSIYk1GqLbfrkQmoegVAAyPbktmL1dGy1akgHP74KMB
+         jH8g==
+X-Gm-Message-State: APjAAAUrYhbB1EO7BLzM9uMdAu69lvH/AUpJmFLMtPn1QH+9gdqZnnfU
+        3PwBqRJSDXYpQvg/tf2vsoLgmA==
+X-Google-Smtp-Source: APXvYqxmXnmCi3ibcDyuAp14+u8ee0HUFOOPnUQRUyDR3K+S8A/pHDNAdHGexbHdtT+7R+aTNGP0KQ==
+X-Received: by 2002:a2e:90c6:: with SMTP id o6mr21379569ljg.129.1580932173412;
+        Wed, 05 Feb 2020 11:49:33 -0800 (PST)
+Received: from michalstanek-PC.semihalf.local (31-172-191-173.noc.fibertech.net.pl. [31.172.191.173])
+        by smtp.gmail.com with ESMTPSA id 3sm218370lja.65.2020.02.05.11.49.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 11:49:32 -0800 (PST)
+From:   Michal Stanek <mst@semihalf.com>
+To:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     stanekm@google.com, stable@vger.kernel.org, mw@semihalf.com,
+        levinale@chromium.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Michal Stanek <mst@semihalf.com>
+Subject: [PATCH] pinctrl: cherryview: Add quirk with custom translation of ACPI GPIO numbers
+Date:   Wed,  5 Feb 2020 20:48:04 +0100
+Message-Id: <20200205194804.1647-1-mst@semihalf.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:27)
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/q=
-com/sm8250.dtsi
-> new file mode 100644
-> index 0000000..f63df12
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> @@ -0,0 +1,450 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,rpmh.h>
-> +#include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> +
-> +/ {
-> +       interrupt-parent =3D <&intc>;
-> +
-> +       #address-cells =3D <2>;
-> +       #size-cells =3D <2>;
-> +
-> +       chosen { };
-> +
-> +       clocks {
-> +               xo_board: xo-board {
-> +                       compatible =3D "fixed-clock";
-> +                       #clock-cells =3D <0>;
-> +                       clock-frequency =3D <38400000>;
-> +                       clock-output-names =3D "xo_board";
-> +               };
-> +
-> +               sleep_clk: sleep-clk {
-> +                       compatible =3D "fixed-clock";
-> +                       #clock-cells =3D <0>;
-> +                       clock-frequency =3D <32000>;
-> +               };
-> +       };
-> +
-> +       cpus {
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <0>;
-> +
-> +               CPU0: cpu@0 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x0>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_0>;
-> +                       L2_0: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                               L3_0: l3-cache {
-> +                                     compatible =3D "cache";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               CPU1: cpu@100 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x100>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_100>;
-> +                       L2_100: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU2: cpu@200 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x200>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_200>;
-> +                       L2_200: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU3: cpu@300 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x300>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_300>;
-> +                       L2_300: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU4: cpu@400 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x400>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_400>;
-> +                       L2_400: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU5: cpu@500 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x500>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_500>;
-> +                       L2_500: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +
-> +               };
-> +
-> +               CPU6: cpu@600 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x600>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_600>;
-> +                       L2_600: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU7: cpu@700 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x700>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_700>;
-> +                       L2_700: l2-cache {
-> +                             compatible =3D "cache";
-> +                             next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       firmware: firmware {
+Dropping custom Linux GPIO translation caused some Intel_Strago based Chromebooks
+with old firmware to detect GPIOs incorrectly. Add quirk which restores some code removed by
+commit 03c4749dd6c7ff94 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO translation").
 
-Does this need a label?
+Fixes: 03c4749dd6c7ff94 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO translation")
+Cc: <stable@vger.kernel.org>
+Reported-by: Alex Levin <levinale@chromium.org>
+Signed-off-by: Michal Stanek <mst@semihalf.com>
+---
+ drivers/gpio/gpiolib-acpi.c                | 102 ++++++++++++++++++++-
+ drivers/pinctrl/intel/pinctrl-cherryview.c |  63 ++++++++++---
+ 2 files changed, 150 insertions(+), 15 deletions(-)
 
-> +               scm: scm {
-> +                       compatible =3D "qcom,scm";
-> +                       #reset-cells =3D <1>;
-> +               };
-> +       };
-> +
-> +       tcsr_mutex: hwlock {
-> +               compatible =3D "qcom,tcsr-mutex";
-> +               syscon =3D <&tcsr_mutex_regs 0 0x1000>;
-> +               #hwlock-cells =3D <1>;
-> +       };
-> +
-> +       memory@80000000 {
-> +               device_type =3D "memory";
-> +               /* We expect the bootloader to fill in the size */
-> +               reg =3D <0x0 0x80000000 0x0 0x0>;
-> +       };
-> +
-> +       pmu {
-> +               compatible =3D "arm,armv8-pmuv3";
-> +               interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +       };
-> +
-> +       psci {
-> +               compatible =3D "arm,psci-1.0";
-> +               method =3D "smc";
-> +       };
-> +
-> +       reserved_memory: reserved-memory {
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <2>;
-> +               ranges;
-> +
-> +               hyp_mem: memory@80000000 {
-> +                       reg =3D <0x0 0x80000000 0x0 0x600000>;
-> +                       no-map;
-> +               };
-> +
-> +               xbl_aop_mem: memory@80700000 {
-> +                       reg =3D <0x0 0x80700000 0x0 0x160000>;
-> +                       no-map;
-> +               };
-> +
-> +               cmd_db: memory@80860000 {
-> +                       compatible =3D "qcom,cmd-db";
-> +                       reg =3D <0x0 0x80860000 0x0 0x20000>;
-> +                       no-map;
-> +               };
-> +
-> +               smem_mem: memory@80900000 {
-> +                       reg =3D <0x0 0x80900000 0x0 0x200000>;
-> +                       no-map;
-> +               };
-> +
-> +               removed_mem: memory@80b00000 {
-> +                       reg =3D <0x0 0x80b00000 0x0 0x5300000>;
-> +                       no-map;
-> +               };
-> +
-> +               camera_mem: memory@86200000 {
-> +                       reg =3D <0x0 0x86200000 0x0 0x500000>;
-> +                       no-map;
-> +               };
-> +
-> +               wlan_mem: memory@86700000 {
-> +                       reg =3D <0x0 0x86700000 0x0 0x100000>;
-> +                       no-map;
-> +               };
-> +
-> +               ipa_fw_mem: memory@86800000 {
-> +                       reg =3D <0x0 0x86800000 0x0 0x10000>;
-> +                       no-map;
-> +               };
-> +
-> +               ipa_gsi_mem: memory@86810000 {
-> +                       reg =3D <0x0 0x86810000 0x0 0xa000>;
-> +                       no-map;
-> +               };
-> +
-> +               gpu_mem: memory@8681a000 {
-> +                       reg =3D <0x0 0x8681a000 0x0 0x2000>;
-> +                       no-map;
-> +               };
-> +
-> +               npu_mem: memory@86900000 {
-> +                       reg =3D <0x0 0x86900000 0x0 0x500000>;
-> +                       no-map;
-> +               };
-> +
-> +               video_mem: memory@86e00000 {
-> +                       reg =3D <0x0 0x86e00000 0x0 0x500000>;
-> +                       no-map;
-> +               };
-> +
-> +               cvp_mem: memory@87300000 {
-> +                       reg =3D <0x0 0x87300000 0x0 0x500000>;
-> +                       no-map;
-> +               };
-> +
-> +               cdsp_mem: memory@87800000 {
-> +                       reg =3D <0x0 0x87800000 0x0 0x1400000>;
-> +                       no-map;
-> +               };
-> +
-> +               slpi_mem: memory@88c00000 {
-> +                       reg =3D <0x0 0x88c00000 0x0 0x1500000>;
-> +                       no-map;
-> +               };
-> +
-> +               adsp_mem: memory@8a100000 {
-> +                       reg =3D <0x0 0x8a100000 0x0 0x1d00000>;
-> +                       no-map;
-> +               };
-> +
-> +               spss_mem: memory@8be00000 {
-> +                       reg =3D <0x0 0x8be00000 0x0 0x100000>;
-> +                       no-map;
-> +               };
-> +
-> +               cdsp_secure_heap: memory@8bf00000 {
-> +                       reg =3D <0x0 0x8bf00000 0x0 0x4600000>;
-> +                       no-map;
-> +               };
-> +       };
-> +
-> +       smem {
-> +               compatible =3D "qcom,smem";
-> +               memory-region =3D <&smem_mem>;
-> +               hwlocks =3D <&tcsr_mutex 3>;
-> +       };
-> +
-> +       soc: soc@0 {
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <2>;
-> +               ranges =3D <0 0 0 0 0x10 0>;
-> +               dma-ranges =3D <0 0 0 0 0x10 0>;
-> +               compatible =3D "simple-bus";
-> +
-> +               gcc: clock-controller@100000 {
-> +                       compatible =3D "qcom,gcc-sm8250";
-> +                       reg =3D <0x0 0x00100000 0x0 0x1f0000>;
-> +                       #clock-cells =3D <1>;
-> +                       #reset-cells =3D <1>;
-> +                       #power-domain-cells =3D <1>;
-> +                       clock-names =3D "bi_tcxo",
-> +                                       "sleep_clk";
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 31fee5e918b7..b5358facf3fb 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -23,6 +23,7 @@
+ 
+ #define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
+ #define QUIRK_NO_WAKEUP				0x02l
++#define QUIRK_NEED_ACPI_GPIO_TRANSLATION	0x04l
+ 
+ static int run_edge_events_on_boot = -1;
+ module_param(run_edge_events_on_boot, int, 0444);
+@@ -34,6 +35,11 @@ module_param(honor_wakeup, int, 0444);
+ MODULE_PARM_DESC(honor_wakeup,
+ 		 "Honor the ACPI wake-capable flag: 0=no, 1=yes, -1=auto");
+ 
++static int need_acpi_gpio_translation = -1;
++module_param(need_acpi_gpio_translation, int, 0444);
++MODULE_PARM_DESC(need_acpi_gpio_translation,
++		 "Do custom ACPI GPIO number translation: 0=no, 1=yes, -1=auto");
++
+ /**
+  * struct acpi_gpio_event - ACPI GPIO event handler data
+  *
+@@ -98,6 +104,62 @@ static int acpi_gpiochip_find(struct gpio_chip *gc, void *data)
+ 	return ACPI_HANDLE(gc->parent) == data;
+ }
+ 
++#ifdef CONFIG_PINCTRL
++/**
++ * acpi_gpiochip_pin_to_gpio_offset() - translates ACPI GPIO to Linux GPIO
++ * @gdev: GPIO device
++ * @pin: ACPI GPIO pin number from GpioIo/GpioInt resource
++ *
++ * Function takes ACPI GpioIo/GpioInt pin number as a parameter and
++ * translates it to a corresponding offset suitable to be passed to a
++ * GPIO controller driver.
++ *
++ * Typically the returned offset is same as @pin, but if the GPIO
++ * controller uses pin controller and the mapping is not contiguous the
++ * offset might be different.
++ */
++static int acpi_gpiochip_pin_to_gpio_offset(struct gpio_device *gdev, int pin)
++{
++	struct gpio_pin_range *pin_range;
++
++	/* Only do translation on selected platforms */
++	if (!need_acpi_gpio_translation)
++		return pin;
++
++	/* If there are no ranges in this chip, use 1:1 mapping */
++	if (list_empty(&gdev->pin_ranges))
++		return pin;
++
++	list_for_each_entry(pin_range, &gdev->pin_ranges, node) {
++		const struct pinctrl_gpio_range *range = &pin_range->range;
++		int i;
++
++		if (range->pins) {
++			for (i = 0; i < range->npins; i++) {
++				if (range->pins[i] == pin)
++					return range->base + i - gdev->base;
++			}
++		} else {
++			if (pin >= range->pin_base &&
++			    pin < range->pin_base + range->npins) {
++				unsigned int gpio_base;
++
++				gpio_base = range->base - gdev->base;
++				return gpio_base + pin - range->pin_base;
++			}
++		}
++	}
++
++	return -EINVAL;
++}
++#else
++static inline int acpi_gpiochip_pin_to_gpio_offset(struct gpio_device *gdev,
++						   int pin)
++{
++	return pin;
++}
++#endif
++
+ /**
+  * acpi_get_gpiod() - Translate ACPI GPIO pin to GPIO descriptor usable with GPIO API
+  * @path:	ACPI GPIO controller full path name, (e.g. "\\_SB.GPO1")
+@@ -113,6 +175,7 @@ static struct gpio_desc *acpi_get_gpiod(char *path, int pin)
+ 	struct gpio_chip *chip;
+ 	acpi_handle handle;
+ 	acpi_status status;
++	int offset;
+ 
+ 	status = acpi_get_handle(NULL, path, &handle);
+ 	if (ACPI_FAILURE(status))
+@@ -122,7 +185,11 @@ static struct gpio_desc *acpi_get_gpiod(char *path, int pin)
+ 	if (!chip)
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 
+-	return gpiochip_get_desc(chip, pin);
++	offset = acpi_gpiochip_pin_to_gpio_offset(chip->gpiodev, pin);
++	if (offset < 0)
++		return ERR_PTR(offset);
++
++	return gpiochip_get_desc(chip, offset);
+ }
+ 
+ static irqreturn_t acpi_gpio_irq_handler(int irq, void *data)
+@@ -236,6 +303,10 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 	if (!handler)
+ 		return AE_OK;
+ 
++	pin = acpi_gpiochip_pin_to_gpio_offset(chip->gpiodev, pin);
++	if (pin < 0)
++		return AE_BAD_PARAMETER;
++
+ 	desc = gpiochip_request_own_desc(chip, pin, "ACPI:Event",
+ 					 GPIO_ACTIVE_HIGH, GPIOD_IN);
+ 	if (IS_ERR(desc)) {
+@@ -958,6 +1029,12 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
+ 		struct gpio_desc *desc;
+ 		bool found;
+ 
++		pin = acpi_gpiochip_pin_to_gpio_offset(chip->gpiodev, pin);
++		if (pin < 0) {
++			status = AE_BAD_PARAMETER;
++			goto out;
++		}
++
+ 		mutex_lock(&achip->conn_lock);
+ 
+ 		found = false;
+@@ -1086,7 +1163,11 @@ acpi_gpiochip_parse_own_gpio(struct acpi_gpio_chip *achip,
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
+ 
+-	desc = gpiochip_get_desc(chip, gpios[0]);
++	ret = acpi_gpiochip_pin_to_gpio_offset(chip->gpiodev, gpios[0]);
++	if (ret < 0)
++		return ERR_PTR(ret);
++
++	desc = gpiochip_get_desc(chip, ret);
+ 	if (IS_ERR(desc))
+ 		return desc;
+ 
+@@ -1360,6 +1441,17 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] = {
+ 		},
+ 		.driver_data = (void *)QUIRK_NO_WAKEUP,
+ 	},
++	{
++		/*
++		 * Some Braswell based Google Chromebooks need custom ACPI GPIO
++		 * number translation due to hardcoded GPIO numbers in firmware.
++		 */
++		.matches = {
++		       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
++		       DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
++		},
++		.driver_data = (void *)QUIRK_NEED_ACPI_GPIO_TRANSLATION,
++	},
+ 	{} /* Terminating entry */
+ };
+ 
+@@ -1385,6 +1477,12 @@ static int acpi_gpio_setup_params(void)
+ 		else
+ 			honor_wakeup = 1;
+ 	}
++	if (need_acpi_gpio_translation < 0) {
++		if (quirks & QUIRK_NEED_ACPI_GPIO_TRANSLATION)
++			need_acpi_gpio_translation = 1;
++		else
++			need_acpi_gpio_translation = 0;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 4c74fdde576d..dd190ac6b11c 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -119,6 +119,7 @@ struct chv_gpio_pinrange {
+  * @nfunctions: Number of functions
+  * @gpio_ranges: An array of GPIO ranges in this community
+  * @ngpio_ranges: Number of GPIO ranges
++ * @ngpios: Total number of GPIOs in this community
+  * @nirqs: Total number of IRQs this community can generate
+  * @acpi_space_id: An address space ID for ACPI OpRegion handler
+  */
+@@ -132,6 +133,7 @@ struct chv_community {
+ 	size_t nfunctions;
+ 	const struct chv_gpio_pinrange *gpio_ranges;
+ 	size_t ngpio_ranges;
++	size_t ngpios;
+ 	size_t nirqs;
+ 	acpi_adr_space_type acpi_space_id;
+ };
+@@ -380,6 +382,7 @@ static const struct chv_community southwest_community = {
+ 	.nfunctions = ARRAY_SIZE(southwest_functions),
+ 	.gpio_ranges = southwest_gpio_ranges,
+ 	.ngpio_ranges = ARRAY_SIZE(southwest_gpio_ranges),
++	.ngpios = ARRAY_SIZE(southwest_pins),
+ 	/*
+ 	 * Southwest community can generate GPIO interrupts only for the
+ 	 * first 8 interrupts. The upper half (8-15) can only be used to
+@@ -469,6 +472,7 @@ static const struct chv_community north_community = {
+ 	.npins = ARRAY_SIZE(north_pins),
+ 	.gpio_ranges = north_gpio_ranges,
+ 	.ngpio_ranges = ARRAY_SIZE(north_gpio_ranges),
++	.ngpios = ARRAY_SIZE(north_pins),
+ 	/*
+ 	 * North community can generate GPIO interrupts only for the first
+ 	 * 8 interrupts. The upper half (8-15) can only be used to trigger
+@@ -517,6 +521,7 @@ static const struct chv_community east_community = {
+ 	.npins = ARRAY_SIZE(east_pins),
+ 	.gpio_ranges = east_gpio_ranges,
+ 	.ngpio_ranges = ARRAY_SIZE(east_gpio_ranges),
++	.ngpios = ARRAY_SIZE(east_pins),
+ 	.nirqs = 16,
+ 	.acpi_space_id = 0x93,
+ };
+@@ -643,6 +648,7 @@ static const struct chv_community southeast_community = {
+ 	.nfunctions = ARRAY_SIZE(southeast_functions),
+ 	.gpio_ranges = southeast_gpio_ranges,
+ 	.ngpio_ranges = ARRAY_SIZE(southeast_gpio_ranges),
++	.ngpios = ARRAY_SIZE(southeast_pins),
+ 	.nirqs = 16,
+ 	.acpi_space_id = 0x94,
+ };
+@@ -1236,14 +1242,39 @@ static struct pinctrl_desc chv_pinctrl_desc = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static const struct dmi_system_id need_acpi_gpio_translation[] = {
++	{
++		/*
++		 * Some Braswell based Google Chromebooks need custom ACPI GPIO
++		 * number translation due to hardcoded GPIO numbers in firmware.
++		 */
++		.ident = "Intel_Strago based Chromebooks (All models)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
++		},
++	},
++};
++
++static unsigned int chv_gpio_offset_to_pin(struct chv_pinctrl *pctrl,
++				      unsigned int offset)
++{
++	/* Mapping is not 1:1 on some platforms */
++	if (dmi_check_system(need_acpi_gpio_translation))
++		return pctrl->community->pins[offset].number;
++	else
++		return offset;
++}
++
+ static int chv_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(chip);
++	unsigned int pin = chv_gpio_offset_to_pin(pctrl, offset);
+ 	unsigned long flags;
+ 	u32 ctrl0, cfg;
+ 
+ 	raw_spin_lock_irqsave(&chv_lock, flags);
+-	ctrl0 = readl(chv_padreg(pctrl, offset, CHV_PADCTRL0));
++	ctrl0 = readl(chv_padreg(pctrl, pin, CHV_PADCTRL0));
+ 	raw_spin_unlock_irqrestore(&chv_lock, flags);
+ 
+ 	cfg = ctrl0 & CHV_PADCTRL0_GPIOCFG_MASK;
+@@ -1257,13 +1288,14 @@ static int chv_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ static void chv_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+ {
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(chip);
++	unsigned int pin = chv_gpio_offset_to_pin(pctrl, offset);
+ 	unsigned long flags;
+ 	void __iomem *reg;
+ 	u32 ctrl0;
+ 
+ 	raw_spin_lock_irqsave(&chv_lock, flags);
+ 
+-	reg = chv_padreg(pctrl, offset, CHV_PADCTRL0);
++	reg = chv_padreg(pctrl, pin, CHV_PADCTRL0);
+ 	ctrl0 = readl(reg);
+ 
+ 	if (value)
+@@ -1279,11 +1311,12 @@ static void chv_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+ static int chv_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(chip);
++	unsigned int pin = chv_gpio_offset_to_pin(pctrl, offset);
+ 	u32 ctrl0, direction;
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&chv_lock, flags);
+-	ctrl0 = readl(chv_padreg(pctrl, offset, CHV_PADCTRL0));
++	ctrl0 = readl(chv_padreg(pctrl, pin, CHV_PADCTRL0));
+ 	raw_spin_unlock_irqrestore(&chv_lock, flags);
+ 
+ 	direction = ctrl0 & CHV_PADCTRL0_GPIOCFG_MASK;
+@@ -1322,7 +1355,7 @@ static void chv_gpio_irq_ack(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+-	int pin = irqd_to_hwirq(d);
++	unsigned int pin = chv_gpio_offset_to_pin(pctrl, irqd_to_hwirq(d));
+ 	u32 intr_line;
+ 
+ 	raw_spin_lock(&chv_lock);
+@@ -1339,7 +1372,7 @@ static void chv_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+-	int pin = irqd_to_hwirq(d);
++	unsigned int pin = chv_gpio_offset_to_pin(pctrl, irqd_to_hwirq(d));
+ 	u32 value, intr_line;
+ 	unsigned long flags;
+ 
+@@ -1384,7 +1417,8 @@ static unsigned chv_gpio_irq_startup(struct irq_data *d)
+ 	if (irqd_get_trigger_type(d) == IRQ_TYPE_NONE) {
+ 		struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 		struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+-		unsigned int pin = irqd_to_hwirq(d);
++		unsigned int offset = irqd_to_hwirq(d);
++		unsigned int pin = chv_gpio_offset_to_pin(pctrl, offset);
+ 		irq_flow_handler_t handler;
+ 		unsigned long flags;
+ 		u32 intsel, value;
+@@ -1402,7 +1436,7 @@ static unsigned chv_gpio_irq_startup(struct irq_data *d)
+ 
+ 		if (!pctrl->intr_lines[intsel]) {
+ 			irq_set_handler_locked(d, handler);
+-			pctrl->intr_lines[intsel] = pin;
++			pctrl->intr_lines[intsel] = offset;
+ 		}
+ 		raw_spin_unlock_irqrestore(&chv_lock, flags);
+ 	}
+@@ -1415,7 +1449,8 @@ static int chv_gpio_irq_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+-	unsigned int pin = irqd_to_hwirq(d);
++	unsigned int offset = irqd_to_hwirq(d);
++	unsigned int pin = chv_gpio_offset_to_pin(pctrl, offset);
+ 	unsigned long flags;
+ 	u32 value;
+ 
+@@ -1461,7 +1496,7 @@ static int chv_gpio_irq_type(struct irq_data *d, unsigned int type)
+ 	value &= CHV_PADCTRL0_INTSEL_MASK;
+ 	value >>= CHV_PADCTRL0_INTSEL_SHIFT;
+ 
+-	pctrl->intr_lines[value] = pin;
++	pctrl->intr_lines[value] = offset;
+ 
+ 	if (type & IRQ_TYPE_EDGE_BOTH)
+ 		irq_set_handler_locked(d, handle_edge_irq);
+@@ -1591,17 +1626,19 @@ static int chv_gpio_add_pin_ranges(struct gpio_chip *chip)
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(chip);
+ 	const struct chv_community *community = pctrl->community;
+ 	const struct chv_gpio_pinrange *range;
+-	int ret, i;
++	int ret, i, offset;
+ 
+-	for (i = 0; i < community->ngpio_ranges; i++) {
++	for (i = 0, offset = 0; i < community->ngpio_ranges; i++) {
+ 		range = &community->gpio_ranges[i];
+ 		ret = gpiochip_add_pin_range(chip, dev_name(pctrl->dev),
+-					     range->base, range->base,
++					     offset, range->base,
+ 					     range->npins);
+ 		if (ret) {
+ 			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
+ 			return ret;
+ 		}
++
++		offset += range->npins;
+ 	}
+ 
+ 	return 0;
+@@ -1617,7 +1654,7 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ 
+ 	*chip = chv_gpio_chip;
+ 
+-	chip->ngpio = community->pins[community->npins - 1].number + 1;
++	chip->ngpio = community->ngpios;
+ 	chip->label = dev_name(pctrl->dev);
+ 	chip->add_pin_ranges = chv_gpio_add_pin_ranges;
+ 	chip->parent = pctrl->dev;
+-- 
+2.17.1
 
-Weird tabbign here.
-
-> +                       clocks =3D <&rpmhcc RPMH_CXO_CLK>,
-> +                               <&sleep_clk>;
-
-And here.
-
-> +               };
-> +
-> +               qupv3_id_1: geniqup@ac0000 {
-> +                       compatible =3D "qcom,geni-se-qup";
-> +                       reg =3D <0x0 0x00ac0000 0x0 0x6000>;
-> +                       clock-names =3D "m-ahb", "s-ahb";
-> +                       clocks =3D <&gcc 133>,
-> +                               <&gcc 134>;
-
-Make it one line instead of two?
-
-> +                       #address-cells =3D <2>;
-> +                       #size-cells =3D <2>;
-> +                       ranges;
-> +                       status =3D "disabled";
-> +
-> +                       uart2: serial@a90000 {
-> +                               compatible =3D "qcom,geni-debug-uart";
-> +                               reg =3D <0x0 0x00a90000 0x0 0x4000>;
-> +                               clock-names =3D "se";
-> +                               clocks =3D <&gcc 113>;
-> +                               interrupts =3D <GIC_SPI 357 IRQ_TYPE_LEVE=
-L_HIGH>;
-> +                               status =3D "disabled";
-> +                       };
-> +               };
-> +
-> +               intc: interrupt-controller@17a00000 {
-> +                       compatible =3D "arm,gic-v3";
-> +                       #interrupt-cells =3D <3>;
-> +                       interrupt-controller;
-> +                       reg =3D <0x0 0x17a00000 0x0 0x10000>,     /* GICD=
- */
-> +                             <0x0 0x17a60000 0x0 0x100000>;    /* GICR *=
- 8 */
-> +                       interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-
-Is there an ITS node? I think so. Please add it and mark it disabled.
-
-> +               };
-> +
-> +               pdc: interrupt-controller@b220000 {
-> +                       compatible =3D "qcom,sm8250-pdc";
-> +                       reg =3D <0x0b220000 0x30000>, <0x17c000f0 0x60>;
-> +                       qcom,pdc-ranges =3D <0 480 94>, <94 609 31>,
-> +                                       <125 63 1>, <126 716 12>;
-
-Weird tabbing here.
-
-> +                       #interrupt-cells =3D <2>;
-> +                       interrupt-parent =3D <&intc>;
-> +                       interrupt-controller;
-> +               };
-> +
-> +               spmi_bus: qcom,spmi@c440000 {
-
-Node name should be 'spmi'.
-
-> +                       compatible =3D "qcom,spmi-pmic-arb";
-> +                       reg =3D <0x0 0x0c440000 0x0 0x0001100>,
-> +                             <0x0 0x0c600000 0x0 0x2000000>,
-> +                             <0x0 0x0e600000 0x0 0x0100000>,
-> +                             <0x0 0x0e700000 0x0 0x00a0000>,
-> +                             <0x0 0x0c40a000 0x0 0x0026000>;
-> +                       reg-names =3D "core", "chnls", "obsrvr", "intr", =
-"cnfg";
-> +                       interrupt-names =3D "periph_irq";
-> +                       interrupts-extended =3D <&pdc 1 IRQ_TYPE_LEVEL_HI=
-GH>;
-
-Nice!
-
-> +                       qcom,ee =3D <0>;
-> +                       qcom,channel =3D <0>;
-> +                       #address-cells =3D <2>;
-> +                       #size-cells =3D <0>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <4>;
-> +                       cell-index =3D <0>;
-
-What is this property for?
-
-> +               };
-> +
-> +               apps_rsc: rsc@18200000 {
-> +                       label =3D "apps_rsc";
-> +                       compatible =3D "qcom,rpmh-rsc";
-> +                       reg =3D <0x0 0x18200000 0x0 0x10000>,
-> +                               <0x0 0x18210000 0x0 0x10000>,
-> +                               <0x0 0x18220000 0x0 0x10000>;
-
-More weird tabbing.
-
-> +                       reg-names =3D "drv-0", "drv-1", "drv-2";
-> +                       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +                       qcom,tcs-offset =3D <0xd00>;
-> +                       qcom,drv-id =3D <2>;
-> +                       qcom,tcs-config =3D <ACTIVE_TCS  2>,
-> +                                               <SLEEP_TCS   3>,
-> +                                               <WAKE_TCS    3>,
-> +                                               <CONTROL_TCS 1>;
-
-More weird tabbing.
-
-> +
-> +                       rpmhcc: clock-controller {
-> +                               compatible =3D "qcom,sm8250-rpmh-clk";
-> +                               #clock-cells =3D <1>;
-> +                               clock-names =3D "xo";
-> +                               clocks =3D <&xo_board>;
-> +                       };
-> +               };
-> +
-> +               tcsr_mutex_regs: syscon@1f40000 {
-> +                       compatible =3D "syscon";
-> +                       reg =3D <0x0 0x01f40000 0x0 0x40000>;
-> +               };
-> +
-> +               timer@17c20000 {
-
-Doug fixed these in another thread to use offset. Run dt_bindings_check
-and see how it fails.
-
-> +                       #address-cells =3D <2>;
-> +                       #size-cells =3D <2>;
-> +                       ranges;
-> +                       compatible =3D "arm,armv7-timer-mem";
-> +                       reg =3D <0x0 0x17c20000 0x0 0x1000>;
-> +                       clock-frequency =3D <19200000>;
-
-Remove this. Firmware should set it up properly.
-
-> +
-> +                       frame@17c21000 {
-> +                               frame-number =3D <0>;
-> +                               interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_=
-HIGH>,
-> +                                            <GIC_SPI 6 IRQ_TYPE_LEVEL_HI=
-GH>;
-> +                               reg =3D <0x0 0x17c21000 0x0 0x1000>,
-> +                                     <0x0 0x17c22000 0x0 0x1000>;
-> +                       };
-> +
-> +                       frame@17c23000 {
-> +                               frame-number =3D <1>;
-> +                               interrupts =3D <GIC_SPI 9 IRQ_TYPE_LEVEL_=
-HIGH>;
-> +                               reg =3D <0x0 0x17c23000 0x0 0x1000>;
-> +                               status =3D "disabled";
-> +                       };
-> +
-> +                       frame@17c25000 {
-> +                               frame-number =3D <2>;
-> +                               interrupts =3D <GIC_SPI 10 IRQ_TYPE_LEVEL=
-_HIGH>;
-> +                               reg =3D <0x0 0x17c25000 0x0 0x1000>;
-> +                               status =3D "disabled";
-> +                       };
-> +
-> +                       frame@17c27000 {
-> +                               frame-number =3D <3>;
-> +                               interrupts =3D <GIC_SPI 11 IRQ_TYPE_LEVEL=
-_HIGH>;
-> +                               reg =3D <0x0 0x17c27000 0x0 0x1000>;
-> +                               status =3D "disabled";
-> +                       };
-> +
-> +                       frame@17c29000 {
-> +                               frame-number =3D <4>;
-> +                               interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL=
-_HIGH>;
-> +                               reg =3D <0x0 0x17c29000 0x0 0x1000>;
-> +                               status =3D "disabled";
-> +                       };
-> +
-> +                       frame@17c2b000 {
-> +                               frame-number =3D <5>;
-> +                               interrupts =3D <GIC_SPI 13 IRQ_TYPE_LEVEL=
-_HIGH>;
-> +                               reg =3D <0x0 0x17c2b000 0x0 0x1000>;
-> +                               status =3D "disabled";
-> +                       };
-> +
-> +                       frame@17c2d000 {
-> +                               frame-number =3D <6>;
-> +                               interrupts =3D <GIC_SPI 14 IRQ_TYPE_LEVEL=
-_HIGH>;
-> +                               reg =3D <0x0 0x17c2d000 0x0 0x1000>;
-> +                               status =3D "disabled";
-> +                       };
-> +               };
-> +
-> +       };
-> +
