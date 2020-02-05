@@ -2,108 +2,86 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDBAC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBA2C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E074C217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CC6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580942771;
+	bh=hv6T71uUmvL/Bwp3JACY/D/S1uvhocjFb2xRovJ7rsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zua70zJfyfCMkLnBKf/gn6SUTMaVY0bNgvWdUr6oaw/y3VrCQw/V7IYne6Y1KRN14
+	 JGyG58jHa76f3cZPStIweJHOxZu/UVDvecTx8dQaFdIVytcaj3ryzVtI/Uzs/l8sYF
+	 pTColLOrWVAhoIe3wuAxNoXCLt37G0XoYU1463tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgBEWp1 (ORCPT
+        id S1727579AbgBEWqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:45:27 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51281 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727565AbgBEWpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:45:25 -0500
-Received: by mail-pj1-f65.google.com with SMTP id fa20so1597124pjb.1;
-        Wed, 05 Feb 2020 14:45:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0bcRadV2UJTOgRUGh5EQgbkbXanJFAz0E1VJFEcU0fA=;
-        b=nL19jTnr+UtIZUrUyh1qfCHUlc3mGJQzrBFaOFL7s0FKvVw0AAcZMWETyJu9M44+Fc
-         Z0U/W1IoFAcyx7HwZD1hb+k35lW2DNEh+Yh1FsyuQlv+fd3gZAwNnA16Gg3PePBaex3d
-         Xa40SjUp5d0r3AxwaLgrptYEYycKIVSjwogwwMpZ4/y0R7ADRWsTdmMTxa7+PzmwpsKc
-         L05i9OTo9MKvCd9+mdV5PSMM8XKypyUnqRlsZ1l/TzGhKwcm9+fB+qx0NtnqRgopwGGV
-         xUZkAy/7lpb9gNhvI9rzeEoOoInGn2ZtxbzNKEyOxHyvDFwvFYCl/kx94e1TBt4d98r/
-         y4uQ==
-X-Gm-Message-State: APjAAAWUTQxx771OjIwcvpvQ+MWe3YcKva0MF5EsydA/Wfx0irm6mHMj
-        Ms2ChOaVyQKSwHZmop2HmoYbF/34NUs=
-X-Google-Smtp-Source: APXvYqy2Be4/PSxc5lyGQOYsxvsoLyc1S9eltGyYFdxnWDALqWHhsNkTXSBAtsvN6XPP9vluDg6QHw==
-X-Received: by 2002:a17:90a:7781:: with SMTP id v1mr538716pjk.108.1580942724481;
-        Wed, 05 Feb 2020 14:45:24 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id f18sm796557pgn.2.2020.02.05.14.45.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 14:45:23 -0800 (PST)
-Subject: Re: [PATCH] scsi: ufs: Fix registers dump vops caused scheduling
- while atomic
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1580882795-29675-1-git-send-email-cang@codeaurora.org>
- <3e529862-7790-c506-abaa-9a6972f5d53c@acm.org>
- <749a1db94df00278ec9f5c121cd937fe@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <7931a786-8e2c-1529-8910-3d4f6c816580@acm.org>
-Date:   Wed, 5 Feb 2020 14:45:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 5 Feb 2020 17:46:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727149AbgBEWqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:46:10 -0500
+Received: from localhost (unknown [193.117.204.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B15F2082E;
+        Wed,  5 Feb 2020 22:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580942770;
+        bh=hv6T71uUmvL/Bwp3JACY/D/S1uvhocjFb2xRovJ7rsg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hyRT812zRw7D2xqxVZxF2DqYy25fMk3NwEKeHehj7dkfc4KW3fmNp37Ad+iT9FWZu
+         /p2sqVVBNgP7k2INn1O3GM0GDPJDC6CCL2uKZ7Feckd+nZcq6Ve4UWrgc1GcaVUz2W
+         oLjdyFEjY+cdaemnyYeJI4dQx/IXNwxD8gwGT9bQ=
+Date:   Wed, 5 Feb 2020 22:46:08 +0000
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     James Morris <jmorris@namei.org>
+Cc:     Sasha Levin <sashal@kernel.org>, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, kys@microsoft.com,
+        jamorris@microsoft.com
+Subject: Re: [PATCH] Documentation/process: Change Microsoft contact for
+ embargoed hardware issues
+Message-ID: <20200205224608.GA1547731@kroah.com>
+References: <20200205213621.31474-1-sashal@kernel.org>
+ <20200205214716.GA1468203@kroah.com>
+ <alpine.LRH.2.21.2002060854230.17039@namei.org>
+ <20200205221203.GA1471886@kroah.com>
+ <alpine.LRH.2.21.2002060919420.17039@namei.org>
 MIME-Version: 1.0
-In-Reply-To: <749a1db94df00278ec9f5c121cd937fe@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.21.2002060919420.17039@namei.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 10:31 PM, Can Guo wrote:
-> Do you mean by splitting ufshcd_print_host_regs() into two functions?
-> One behaves identically same to the current function, another one called
-> ufshcd_print_host_regs_nosleep(). No?
+On Thu, Feb 06, 2020 at 09:22:33AM +1100, James Morris wrote:
+> On Wed, 5 Feb 2020, Greg KH wrote:
+> 
+> > > Add me for this: jamorris@linux.microsoft.com
+> > 
+> > Can you send me a patch please?
+> > 
+> 
+> Sure.
+> 
+> >From 97a1a94c53ac2b840ad285f9e47929de764f0ffa Mon Sep 17 00:00:00 2001
+> From: James Morris <jmorris@namei.org>
+> Date: Wed, 5 Feb 2020 14:17:56 -0800
+> Subject: [PATCH] [PATCH] Documentation/process: Change Microsoft contact for embargoed hardware issues
+> 
+> Update Microsoft contact from Sasha to James.
+> 
+> Signed-off-by: James Morris <jmorris@namei.org>
+> ---
+>  Documentation/process/embargoed-hardware-issues.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Can,
-
-Not really. I had something else in mind.
-
-Having taken a closer look at ufs_qcom_dump_dbg_regs() I started 
-wondering why there are sleep statements in that function. Is the goal 
-of these sleep statements perhaps to reduce how often printk() is 
-called? Has it been considered to remove all sleep calls from 
-ufs_qcom_dump_dbg_regs() and instead add something like the following at 
-the start of that function:
-
-	static DEFINE_RATELIMIT_STATE(_rs,
-				      DEFAULT_RATELIMIT_INTERVAL,
-				      DEFAULT_RATELIMIT_BURST);
-									
-	if (!__ratelimit(&_rs))
-		return;
-
-
-Thanks,
-
-Bart.
+In a format that I don't have to hand-edit to fix up to apply?  :)
