@@ -2,86 +2,112 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5CEC35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71665C3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97012085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PucvsHxd"
+	by mail.kernel.org (Postfix) with ESMTP id 48ECF2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580885609;
+	bh=n0O7jn8pjUaRHsGu3lKLik44u45tuEE4LdGuOBTnZL4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EKaVKzjIhcDZiwyHDn4oQiKk5wy03d4IdTCBSTQMP11PS2KJpjx4aK+AzCDNjyy2O
+	 BfwM88lO4ZQJiLHjkAT1lsZ3v0zSuBTYqHmxHqRL6J73vuXmYeqqfB5eIFLyaEpwGV
+	 136j72MpZiBU3gmWIAAQV3DKv00n+17ZO13Cd0WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgBEGxW (ORCPT
+        id S1727143AbgBEGx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:53:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22733 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726614AbgBEGxW (ORCPT
+        Wed, 5 Feb 2020 01:53:28 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35893 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbgBEGx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 01:53:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580885602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=d/H8Uw2fGE2aBzDIfMTx++ovLGWmzUssb90jy8x2c6E=;
-        b=PucvsHxdRgeHf1zvoUePt+k+C4jaMQ/M8VoSkRzYE36et9C9RyNRDYlWJyuXv43LlrpsDb
-        Gg36uYaSY2l2Mnd/fC4ODKtx7wKwD4cbAurZrR2PpCyjnAFmpKglBo/xVvpNH/ZW8t1Ovn
-        U9eZ3b8gSp4spo5ZyHacq3yxc71w+vk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-Rxn7RGLHPnCfgZTy0C8iXw-1; Wed, 05 Feb 2020 01:53:17 -0500
-X-MC-Unique: Rxn7RGLHPnCfgZTy0C8iXw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B93CD8010FE;
-        Wed,  5 Feb 2020 06:53:15 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD4C460BF7;
-        Wed,  5 Feb 2020 06:53:12 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 105AD9D1E; Wed,  5 Feb 2020 07:53:12 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
-        tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/virtio: fix vblank handling
-Date:   Wed,  5 Feb 2020 07:53:11 +0100
-Message-Id: <20200205065312.15790-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Wed, 5 Feb 2020 01:53:28 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so1149476ljg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 22:53:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2rHfdxHhDLs+MM9uoNDxMNVLPLgX0yrzzDYb5bvzyPs=;
+        b=YqGr520gJK49j9BS5djcnSQIVbFnezOdeXThn4a1UvkDe+fWAXI8xjLPZY/2hHQZgw
+         W3dIK16G2ofRNyK8gtgqWihIhtD+XeKORIC66fA0OhNPtqIUalUUUfOHoVpoMxJwot5r
+         fCn2gNfkYPjnpRyHiPVn/3Q7Io9ydT/2hly3w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2rHfdxHhDLs+MM9uoNDxMNVLPLgX0yrzzDYb5bvzyPs=;
+        b=uCeivvEAhcFzu9/8DMLwLWvNRMA/FmLZH/VGBQI7e/oxD3+58xkRO3mpwAV0Y4MzEa
+         6HvjdOnXuJvS6+uEOaQEOqy66CTub5UN/H4N+6Hat7dkazgZnKxGdz9s+kJT3xkX8/sc
+         7KlkNJZmYvarmL0X7t65CIFtkv7ayoNkC1GQRhKGL+K0l5/sg3a3ygTxBo5o3fNXd4X6
+         TbRLN9P//cMFOprkmnu+Cu7zUcwURCzd4VAOiCe+eKxEFuJRdWMR95gD3Pz4GrjU4tUC
+         8sIYo6gUbZtvMxqTBQkIB8B57dxO5mRop5JGuZ+NzHQaSagRrk1441Fy8Iccstju02zv
+         4hww==
+X-Gm-Message-State: APjAAAWlL2BgO1NEezW5pq4EH/2WAVvhnuB8PfqLgiUB9a2ZOgawbTXB
+        Z5H5AYL64gZtUPE3mjddBVnreJzsh6ImJQ==
+X-Google-Smtp-Source: APXvYqxKO5ZtR9Q2dxwcFeLqbOvpNCwOKI9JYWzuPPolg6jYjf9eaQGDdX81rktJ09z++nD0krFMJA==
+X-Received: by 2002:a2e:89cd:: with SMTP id c13mr18080863ljk.139.1580885605145;
+        Tue, 04 Feb 2020 22:53:25 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id l64sm11638012lfd.30.2020.02.04.22.53.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 22:53:24 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id c23so664453lfi.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 22:53:24 -0800 (PST)
+X-Received: by 2002:a19:4849:: with SMTP id v70mr17364590lfa.30.1580885603756;
+ Tue, 04 Feb 2020 22:53:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20200204150015.GR23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200204150015.GR23230@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 5 Feb 2020 06:53:07 +0000
+X-Gmail-Original-Message-ID: <CAHk-=wivZdF6tNERQp+CXyz7zeN4uG9O4d7mZhCrp3anJ29Arg@mail.gmail.com>
+Message-ID: <CAHk-=wivZdF6tNERQp+CXyz7zeN4uG9O4d7mZhCrp3anJ29Arg@mail.gmail.com>
+Subject: Re: [put pull] timestamp stuff
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio has its own commit fail function.  Add the
-drm_atomic_helper_fake_vblank() call there.
+On Tue, Feb 4, 2020 at 3:00 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+>         More 64bit timestamp work
 
-Fixes: 2a735ad3d211 ("drm/virtio: Remove sending of vblank event")
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_display.c | 1 +
- 1 file changed, 1 insertion(+)
+Heh. pr-tracker-bot is not replying to your pull request, because you
+misspelled the subject line ("put pull").
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
-index ecf4ba7cc32b..7b0f0643bb2d 100644
---- a/drivers/gpu/drm/virtio/virtgpu_display.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_display.c
-@@ -324,6 +324,7 @@ static void vgdev_atomic_commit_tail(struct drm_atomic_state *state)
- 	drm_atomic_helper_commit_modeset_enables(dev, state);
- 	drm_atomic_helper_commit_planes(dev, state, 0);
- 
-+	drm_atomic_helper_fake_vblank(state);
- 	drm_atomic_helper_commit_hw_done(state);
- 
- 	drm_atomic_helper_wait_for_vblanks(dev, state);
--- 
-2.18.1
+But pr-tracker-bot _also_ isn't responding to the one where that
+wasn't the case:
 
+   [git pull] kernel-initiated rm -rf on ramfs-style filesystems
+
+and I'm not seeing why that one wasn't picked up. But it seems to be
+because it never made it to lore.
+
+I see
+
+  To: Linus Torvalds <torvalds@linux-foundation.org>
+  Cc: fsdevel.@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+  Subject: [git pull] kernel-initiated rm -rf on ramfs-style filesystems
+  Message-ID: <20200204150912.GS23230@ZenIV.linux.org.uk>
+
+on that other message in my mailbox, but I don't see it on lore. Odd.
+Is it because the "fsdevel" address is mis-spelled on the Cc line?
+Strange.
+
+Anyway, both pull requests pulled, even though neither got a
+pr-tracker-bot response for two apparently very different reasons.
+
+               Linus
