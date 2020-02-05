@@ -2,119 +2,446 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FABBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26C7C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048F0218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580926295;
-	bh=WB1JyKrS75c2AvvUswc+cIqLLh1dfJg7gVlsy6wC/kA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WHlhbM2RWh9ValUW6I0lf21BGFrF+z+LeGaF8/DyZw+KYO2o7aJUzSyAFwmWnZBJy
-	 9HAjByIwmxJulegXWpS4INhOi5SwE20TTYv+clSF7iEhuphdOd92Rc7tlf3yLm6Nub
-	 7Tyrvqic60Ax/8pXpY8QLeNKVzFKSjP/PRoAYlXQ=
+	by mail.kernel.org (Postfix) with ESMTP id B2230217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:18:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vh9/kegT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBESLe (ORCPT
+        id S1727678AbgBESSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgBESLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:11:34 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D952720674;
-        Wed,  5 Feb 2020 18:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580926293;
-        bh=WB1JyKrS75c2AvvUswc+cIqLLh1dfJg7gVlsy6wC/kA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CPtgGAUtn1Atx/7LmpFSw9Q/tc/VPVL/YIdNdZ3vgj4MBw7Xo5O9EQPsY4hWmQrBc
-         xAdPbXEhrqZpX2jPWprIhMfprD8mZpO6iFbUyand9qwCCQJoZa4KRXMZTH8DDbls0X
-         l7098IKAmz+V+hONMt5kgU/1dHAh7kXuakpXw5hY=
-Date:   Wed, 5 Feb 2020 12:11:31 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v1 1/1] PCI/ATS: For VF PCIe device use PF PASID
- Capability
-Message-ID: <20200205181131.GA226021@google.com>
+        Wed, 5 Feb 2020 13:18:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46161 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbgBESSP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:18:15 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so3903045wrl.13;
+        Wed, 05 Feb 2020 10:18:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0xXgn0Do0GhpwRUuTgBo4i1n9olCsjalmhiTFCPOUD0=;
+        b=vh9/kegTdIiS6WhtFKiXz68r6aFabtABqG9yBhHUwwsRt8wAYgcSdARvrlyrl9HiKr
+         +A3gf4S+C+gKWHam3u+X6CA176yizn7/WFjnjkemdKl7Hr16K/gOmbNGKFB/okUqRnHN
+         mYFIAlDkw3XyYnPPRP9EBSDigfuR8ce5SuPpIw8LBv44Aa1ih3jIEeZvWi3RN2qV3CkJ
+         wfYzQhgOqCEKJkXciXhoa1KLHHxl00cYEN0XhztoEgHI1hw9D6vafyMTaGuqMRcT6vfp
+         wy8LLk3pd9kAYqht1tfjR6GIF0idv/8yTYNz0bGj/1hyOC4HORFch1S8WMZAiDzCg3Gx
+         CwPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0xXgn0Do0GhpwRUuTgBo4i1n9olCsjalmhiTFCPOUD0=;
+        b=jI4lPsOljtVxTxEQgXs/JrL9QhBuWv/9hCTryDQuHdd4pEK/3z/Ajh3Csny4srI7i9
+         qB+ZOirvLDc7XUMgAuRCU4zg1LNRuZOHPerL0THUNHKMZbBfrPzZsBlAPU6o+sbMqaZR
+         /u/4a2XeyZ/zhVNfFzTqVLDOHa8HS4zHy1d/VK3xieud2ovFLKX1tIa2v+xlgAA7PaJJ
+         vPqQmDBn1+SMaJEWmAH0mlDLp3bHVzxtWz4tMeEzIuzOj+C0FT5OoIJp15jCH9/S5rV+
+         SLDOFHeuzTdN7eX+Pi87lcOWm6G5XDmPxiOfFYnq7DIq8RYThuuetNf9bnu5RueyQIS2
+         x5NQ==
+X-Gm-Message-State: APjAAAUKx7yFS6hr1ZDndyKCxLKphaRtGBv8O/OJLfDn2MAy0srK806T
+        233CsaB+p5ry5BFeCJw2YnfKiYbg
+X-Google-Smtp-Source: APXvYqzxpuHhJ2ER0WgondNapYoXr+YwBhHjwi3acPeUMI+DDwhF2FxPipDy6Q0WO+J6VMvsJPIEig==
+X-Received: by 2002:a5d:51c9:: with SMTP id n9mr30713569wrv.334.1580926692626;
+        Wed, 05 Feb 2020 10:18:12 -0800 (PST)
+Received: from [192.168.1.35] (162.red-83-52-55.dynamicip.rima-tde.net. [83.52.55.162])
+        by smtp.gmail.com with ESMTPSA id 18sm445678wmf.1.2020.02.05.10.18.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 10:18:11 -0800 (PST)
+Subject: Re: [PATCH 2/3] mips/jazz: Remove redundant settings and shrink
+ jazz_defconfig
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1580610812.git.fthain@telegraphics.com.au>
+ <9cb6a8a2eb5995bb3f16d0c2990c2ca3b170b544.1580610812.git.fthain@telegraphics.com.au>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Autocrypt: addr=f4bug@amsat.org; keydata=
+ mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
+ u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
+ HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
+ YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
+ ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
+ dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
+ ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
+ Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
+ HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
+ Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
+ YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
+ CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
+ klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
+ jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
+ 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
+ loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
+ sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
+ JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
+ 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
+ K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
+ n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
+ CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
+Message-ID: <842e81cf-1885-c061-ee72-c395c9872abb@amsat.org>
+Date:   Wed, 5 Feb 2020 19:18:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe891f9755cb18349389609e7fed9940fc5b081a.1580325170.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9cb6a8a2eb5995bb3f16d0c2990c2ca3b170b544.1580610812.git.fthain@telegraphics.com.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:14:00AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On 2/2/20 3:33 AM, Finn Thain wrote:
+> Remove some redundant assignments, that have no effect on
+> 'make jazz_defconfig':
 > 
-> Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability,
-> the PF PASID configuration is shared by its VFs. VFs must not implement
-> their own PASID Capability. But, commit 751035b8dc06 ("PCI/ATS: Cache
-> PASID Capability offset") when adding support for PASID Capability
-> offset caching, modified the pci_max_pasids() and pci_pasid_features()
-> APIs to use PASID Capability offset of VF device instead of using
-> PASID Capability offset of associated PF device. This change leads to
-> IOMMU bind failures when pci_max_pasids() and pci_pasid_features()
-> functions are invoked by PCIe VF devices.
+> CONFIG_INET_XFRM_MODE_TRANSPORT=m
+> CONFIG_INET_XFRM_MODE_TUNNEL=m
+> CONFIG_CRYPTO_HMAC=y
 > 
-> So modify pci_max_pasids() and pci_pasid_features() functions to use
-> correct PASID Capability offset.
+> Also drop the settings relating to crypto, wireless, advanced
+> networking etc. The Kconfig defaults for these options are fine.
 > 
-> Fixes: 751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-Applied to for-linus for v5.6, thanks!  I also added a stable tag
-since 751035b8dc06 appeared in v5.5.
-
+> This reduces the size of vmlinux so it can be launched by
+> "NetBSD/arc Bootstrap, Revision 1.1", which is conveniently available
+> on NetBSD/arc 5.1 ISO images.
+> 
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 > ---
->  drivers/pci/ats.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  arch/mips/configs/jazz_defconfig | 254 -------------------------------
+>  1 file changed, 254 deletions(-)
 > 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 982b46f0a54d..b6f064c885c3 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -424,11 +424,12 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
->  int pci_pasid_features(struct pci_dev *pdev)
->  {
->  	u16 supported;
-> -	int pasid = pdev->pasid_cap;
-> +	int pasid;
->  
->  	if (pdev->is_virtfn)
->  		pdev = pci_physfn(pdev);
->  
-> +	pasid = pdev->pasid_cap;
->  	if (!pasid)
->  		return -EINVAL;
->  
-> @@ -451,11 +452,12 @@ int pci_pasid_features(struct pci_dev *pdev)
->  int pci_max_pasids(struct pci_dev *pdev)
->  {
->  	u16 supported;
-> -	int pasid = pdev->pasid_cap;
-> +	int pasid;
->  
->  	if (pdev->is_virtfn)
->  		pdev = pci_physfn(pdev);
->  
-> +	pasid = pdev->pasid_cap;
->  	if (!pasid)
->  		return -EINVAL;
->  
-> -- 
-> 2.21.0
+> diff --git a/arch/mips/configs/jazz_defconfig b/arch/mips/configs/jazz_defconfig
+> index 328d4dfeb4cb..b13b2396a8a9 100644
+> --- a/arch/mips/configs/jazz_defconfig
+> +++ b/arch/mips/configs/jazz_defconfig
+> @@ -2,8 +2,6 @@ CONFIG_SYSVIPC=y
+>  CONFIG_POSIX_MQUEUE=y
+>  CONFIG_PREEMPT_VOLUNTARY=y
+>  CONFIG_BSD_PROCESS_ACCT=y
+> -CONFIG_IKCONFIG=y
+> -CONFIG_IKCONFIG_PROC=y
+>  CONFIG_LOG_BUF_SHIFT=14
+>  CONFIG_RELAY=y
+>  CONFIG_EXPERT=y
+> @@ -18,168 +16,16 @@ CONFIG_BINFMT_MISC=m
+>  CONFIG_NET=y
+>  CONFIG_PACKET=m
+>  CONFIG_UNIX=y
+> -CONFIG_NET_KEY=m
+> -CONFIG_NET_KEY_MIGRATE=y
+>  CONFIG_INET=y
+>  CONFIG_IP_MULTICAST=y
+>  CONFIG_NET_IPIP=m
+> -CONFIG_IP_MROUTE=y
+> -CONFIG_IP_PIMSM_V1=y
+> -CONFIG_IP_PIMSM_V2=y
+> -CONFIG_INET_XFRM_MODE_TRANSPORT=m
+> -CONFIG_INET_XFRM_MODE_TUNNEL=m
+> -CONFIG_TCP_MD5SIG=y
+> -CONFIG_IPV6_ROUTER_PREF=y
+> -CONFIG_IPV6_ROUTE_INFO=y
+>  CONFIG_INET6_AH=m
+>  CONFIG_INET6_ESP=m
+>  CONFIG_INET6_IPCOMP=m
+> -CONFIG_IPV6_TUNNEL=m
+> -CONFIG_NETWORK_SECMARK=y
+> -CONFIG_NETFILTER=y
+> -CONFIG_NF_CONNTRACK=m
+> -CONFIG_NF_CONNTRACK_SECMARK=y
+> -CONFIG_NF_CONNTRACK_EVENTS=y
+> -CONFIG_NF_CONNTRACK_AMANDA=m
+> -CONFIG_NF_CONNTRACK_FTP=m
+> -CONFIG_NF_CONNTRACK_H323=m
+> -CONFIG_NF_CONNTRACK_IRC=m
+> -CONFIG_NF_CONNTRACK_PPTP=m
+> -CONFIG_NF_CONNTRACK_SANE=m
+> -CONFIG_NF_CONNTRACK_SIP=m
+> -CONFIG_NF_CONNTRACK_TFTP=m
+> -CONFIG_NF_CT_NETLINK=m
+> -CONFIG_NETFILTER_XT_TARGET_CLASSIFY=m
+> -CONFIG_NETFILTER_XT_TARGET_CONNMARK=m
+> -CONFIG_NETFILTER_XT_TARGET_MARK=m
+> -CONFIG_NETFILTER_XT_TARGET_NFLOG=m
+> -CONFIG_NETFILTER_XT_TARGET_NFQUEUE=m
+> -CONFIG_NETFILTER_XT_TARGET_SECMARK=m
+> -CONFIG_NETFILTER_XT_TARGET_TCPMSS=m
+> -CONFIG_NETFILTER_XT_MATCH_COMMENT=m
+> -CONFIG_NETFILTER_XT_MATCH_CONNBYTES=m
+> -CONFIG_NETFILTER_XT_MATCH_CONNMARK=m
+> -CONFIG_NETFILTER_XT_MATCH_CONNTRACK=m
+> -CONFIG_NETFILTER_XT_MATCH_DCCP=m
+> -CONFIG_NETFILTER_XT_MATCH_ESP=m
+> -CONFIG_NETFILTER_XT_MATCH_HASHLIMIT=m
+> -CONFIG_NETFILTER_XT_MATCH_HELPER=m
+> -CONFIG_NETFILTER_XT_MATCH_LENGTH=m
+> -CONFIG_NETFILTER_XT_MATCH_LIMIT=m
+> -CONFIG_NETFILTER_XT_MATCH_MAC=m
+> -CONFIG_NETFILTER_XT_MATCH_MARK=m
+> -CONFIG_NETFILTER_XT_MATCH_MULTIPORT=m
+> -CONFIG_NETFILTER_XT_MATCH_POLICY=m
+> -CONFIG_NETFILTER_XT_MATCH_PHYSDEV=m
+> -CONFIG_NETFILTER_XT_MATCH_PKTTYPE=m
+> -CONFIG_NETFILTER_XT_MATCH_QUOTA=m
+> -CONFIG_NETFILTER_XT_MATCH_REALM=m
+> -CONFIG_NETFILTER_XT_MATCH_STATE=m
+> -CONFIG_NETFILTER_XT_MATCH_STATISTIC=m
+> -CONFIG_NETFILTER_XT_MATCH_STRING=m
+> -CONFIG_NETFILTER_XT_MATCH_TCPMSS=m
+> -CONFIG_IP_NF_IPTABLES=m
+> -CONFIG_IP_NF_MATCH_AH=m
+> -CONFIG_IP_NF_MATCH_ECN=m
+> -CONFIG_IP_NF_MATCH_TTL=m
+> -CONFIG_IP_NF_FILTER=m
+> -CONFIG_IP_NF_TARGET_REJECT=m
+> -CONFIG_IP_NF_MANGLE=m
+> -CONFIG_IP_NF_TARGET_CLUSTERIP=m
+> -CONFIG_IP_NF_TARGET_ECN=m
+> -CONFIG_IP_NF_TARGET_TTL=m
+> -CONFIG_IP_NF_RAW=m
+> -CONFIG_IP_NF_ARPTABLES=m
+> -CONFIG_IP_NF_ARPFILTER=m
+> -CONFIG_IP_NF_ARP_MANGLE=m
+> -CONFIG_IP6_NF_IPTABLES=m
+> -CONFIG_IP6_NF_MATCH_AH=m
+> -CONFIG_IP6_NF_MATCH_EUI64=m
+> -CONFIG_IP6_NF_MATCH_FRAG=m
+> -CONFIG_IP6_NF_MATCH_OPTS=m
+> -CONFIG_IP6_NF_MATCH_HL=m
+> -CONFIG_IP6_NF_MATCH_IPV6HEADER=m
+> -CONFIG_IP6_NF_MATCH_MH=m
+> -CONFIG_IP6_NF_MATCH_RT=m
+> -CONFIG_IP6_NF_TARGET_HL=m
+> -CONFIG_IP6_NF_FILTER=m
+> -CONFIG_IP6_NF_TARGET_REJECT=m
+> -CONFIG_IP6_NF_MANGLE=m
+> -CONFIG_IP6_NF_RAW=m
+> -CONFIG_DECNET_NF_GRABULATOR=m
+> -CONFIG_BRIDGE_NF_EBTABLES=m
+> -CONFIG_BRIDGE_EBT_BROUTE=m
+> -CONFIG_BRIDGE_EBT_T_FILTER=m
+> -CONFIG_BRIDGE_EBT_T_NAT=m
+> -CONFIG_BRIDGE_EBT_802_3=m
+> -CONFIG_BRIDGE_EBT_AMONG=m
+> -CONFIG_BRIDGE_EBT_ARP=m
+> -CONFIG_BRIDGE_EBT_IP=m
+> -CONFIG_BRIDGE_EBT_LIMIT=m
+> -CONFIG_BRIDGE_EBT_MARK=m
+> -CONFIG_BRIDGE_EBT_PKTTYPE=m
+> -CONFIG_BRIDGE_EBT_STP=m
+> -CONFIG_BRIDGE_EBT_VLAN=m
+> -CONFIG_BRIDGE_EBT_ARPREPLY=m
+> -CONFIG_BRIDGE_EBT_DNAT=m
+> -CONFIG_BRIDGE_EBT_MARK_T=m
+> -CONFIG_BRIDGE_EBT_REDIRECT=m
+> -CONFIG_BRIDGE_EBT_SNAT=m
+> -CONFIG_BRIDGE_EBT_LOG=m
+> -CONFIG_BRIDGE=m
+> -CONFIG_DECNET=m
+> -CONFIG_NET_SCHED=y
+> -CONFIG_NET_SCH_CBQ=m
+> -CONFIG_NET_SCH_HTB=m
+> -CONFIG_NET_SCH_HFSC=m
+> -CONFIG_NET_SCH_PRIO=m
+> -CONFIG_NET_SCH_RED=m
+> -CONFIG_NET_SCH_SFQ=m
+> -CONFIG_NET_SCH_TEQL=m
+> -CONFIG_NET_SCH_TBF=m
+> -CONFIG_NET_SCH_GRED=m
+> -CONFIG_NET_SCH_DSMARK=m
+> -CONFIG_NET_SCH_NETEM=m
+> -CONFIG_NET_CLS_BASIC=m
+> -CONFIG_NET_CLS_TCINDEX=m
+> -CONFIG_NET_CLS_ROUTE4=m
+> -CONFIG_NET_CLS_FW=m
+> -CONFIG_NET_CLS_U32=m
+> -CONFIG_NET_CLS_RSVP=m
+> -CONFIG_NET_CLS_RSVP6=m
+> -CONFIG_HAMRADIO=y
+> -CONFIG_AX25=m
+> -CONFIG_NETROM=m
+> -CONFIG_ROSE=m
+> -CONFIG_MKISS=m
+> -CONFIG_6PACK=m
+> -CONFIG_BPQETHER=m
+> -CONFIG_CONNECTOR=m
+>  CONFIG_PARPORT=m
+>  CONFIG_PARPORT_PC=m
+>  CONFIG_PARPORT_1284=y
+>  CONFIG_BLK_DEV_FD=m
+> -CONFIG_PARIDE=m
+> -CONFIG_PARIDE_PD=m
+> -CONFIG_PARIDE_PCD=m
+> -CONFIG_PARIDE_PF=m
+> -CONFIG_PARIDE_PT=m
+> -CONFIG_PARIDE_PG=m
+> -CONFIG_PARIDE_ATEN=m
+> -CONFIG_PARIDE_BPCK=m
+> -CONFIG_PARIDE_BPCK6=m
+> -CONFIG_PARIDE_COMM=m
+> -CONFIG_PARIDE_DSTR=m
+> -CONFIG_PARIDE_FIT2=m
+> -CONFIG_PARIDE_FIT3=m
+> -CONFIG_PARIDE_EPAT=m
+> -CONFIG_PARIDE_EPIA=m
+> -CONFIG_PARIDE_FRIQ=m
+> -CONFIG_PARIDE_FRPW=m
+> -CONFIG_PARIDE_KBIC=m
+> -CONFIG_PARIDE_KTTI=m
+> -CONFIG_PARIDE_ON20=m
+> -CONFIG_PARIDE_ON26=m
+>  CONFIG_BLK_DEV_LOOP=m
+>  CONFIG_BLK_DEV_CRYPTOLOOP=m
+>  CONFIG_BLK_DEV_NBD=m
+> @@ -194,26 +40,10 @@ CONFIG_BLK_DEV_SR=m
+>  CONFIG_BLK_DEV_SR_VENDOR=y
+>  CONFIG_SCSI_CONSTANTS=y
+>  CONFIG_SCSI_SCAN_ASYNC=y
+> -CONFIG_SCSI_FC_ATTRS=y
+> -CONFIG_SCSI_SAS_ATTRS=m
+>  CONFIG_ISCSI_TCP=m
+>  CONFIG_SCSI_PPA=m
+>  CONFIG_SCSI_IMM=m
+>  CONFIG_JAZZ_ESP=y
+> -CONFIG_MD=y
+> -CONFIG_BLK_DEV_MD=m
+> -CONFIG_MD_LINEAR=m
+> -CONFIG_MD_RAID0=m
+> -CONFIG_MD_RAID1=m
+> -CONFIG_MD_RAID10=m
+> -CONFIG_MD_RAID456=m
+> -CONFIG_MD_MULTIPATH=m
+> -CONFIG_MD_FAULTY=m
+> -CONFIG_BLK_DEV_DM=m
+> -CONFIG_DM_SNAPSHOT=m
+> -CONFIG_DM_MIRROR=m
+> -CONFIG_DM_ZERO=m
+> -CONFIG_DM_MULTIPATH=m
+>  CONFIG_NETDEVICES=y
+>  CONFIG_BONDING=m
+>  CONFIG_DUMMY=m
+> @@ -221,16 +51,6 @@ CONFIG_EQUALIZER=m
+>  CONFIG_TUN=m
+>  CONFIG_MIPS_JAZZ_SONIC=y
+>  CONFIG_NE2000=m
+> -CONFIG_PHYLIB=m
+> -CONFIG_CICADA_PHY=m
+> -CONFIG_DAVICOM_PHY=m
+> -CONFIG_LXT_PHY=m
+> -CONFIG_MARVELL_PHY=m
+> -CONFIG_QSEMI_PHY=m
+> -CONFIG_SMSC_PHY=m
+> -CONFIG_VITESSE_PHY=m
+> -CONFIG_PLIP=m
+> -CONFIG_INPUT_FF_MEMLESS=m
+>  CONFIG_SERIO_PARKBD=m
+>  CONFIG_SERIO_RAW=m
+>  CONFIG_VT_HW_CONSOLE_BINDING=y
+> @@ -239,10 +59,6 @@ CONFIG_SERIAL_8250_EXTENDED=y
+>  CONFIG_SERIAL_8250_SHARE_IRQ=y
+>  CONFIG_SERIAL_8250_DETECT_IRQ=y
+>  CONFIG_SERIAL_8250_RSA=y
+> -CONFIG_PRINTER=m
+> -CONFIG_PPDEV=m
+> -# CONFIG_HW_RANDOM is not set
+> -CONFIG_W1=m
+>  # CONFIG_HWMON is not set
+>  CONFIG_EXT2_FS=m
+>  CONFIG_EXT3_FS=y
+> @@ -263,78 +79,8 @@ CONFIG_VFAT_FS=m
+>  CONFIG_NTFS_FS=m
+>  CONFIG_PROC_KCORE=y
+>  CONFIG_TMPFS=y
+> -CONFIG_ADFS_FS=m
+> -CONFIG_AFFS_FS=m
+> -CONFIG_HFS_FS=m
+> -CONFIG_BEFS_FS=m
+> -CONFIG_BFS_FS=m
+> -CONFIG_EFS_FS=m
+> -CONFIG_CRAMFS=m
+> -CONFIG_VXFS_FS=m
+> -CONFIG_MINIX_FS=m
+> -CONFIG_HPFS_FS=m
+> -CONFIG_QNX4FS_FS=m
+> -CONFIG_ROMFS_FS=m
+> -CONFIG_SYSV_FS=m
+>  CONFIG_UFS_FS=m
+>  CONFIG_NFS_FS=m
+>  CONFIG_NFSD=m
+>  CONFIG_NFSD_V3=y
+>  CONFIG_CIFS=m
+> -CONFIG_CODA_FS=m
+> -CONFIG_AFS_FS=m
+> -CONFIG_NLS_CODEPAGE_437=m
+> -CONFIG_NLS_CODEPAGE_737=m
+> -CONFIG_NLS_CODEPAGE_775=m
+> -CONFIG_NLS_CODEPAGE_850=m
+> -CONFIG_NLS_CODEPAGE_852=m
+> -CONFIG_NLS_CODEPAGE_855=m
+> -CONFIG_NLS_CODEPAGE_857=m
+> -CONFIG_NLS_CODEPAGE_860=m
+> -CONFIG_NLS_CODEPAGE_861=m
+> -CONFIG_NLS_CODEPAGE_862=m
+> -CONFIG_NLS_CODEPAGE_863=m
+> -CONFIG_NLS_CODEPAGE_864=m
+> -CONFIG_NLS_CODEPAGE_865=m
+> -CONFIG_NLS_CODEPAGE_866=m
+> -CONFIG_NLS_CODEPAGE_869=m
+> -CONFIG_NLS_CODEPAGE_936=m
+> -CONFIG_NLS_CODEPAGE_950=m
+> -CONFIG_NLS_CODEPAGE_932=m
+> -CONFIG_NLS_CODEPAGE_949=m
+> -CONFIG_NLS_CODEPAGE_874=m
+> -CONFIG_NLS_ISO8859_8=m
+> -CONFIG_NLS_CODEPAGE_1250=m
+> -CONFIG_NLS_CODEPAGE_1251=m
+> -CONFIG_NLS_ASCII=m
+> -CONFIG_NLS_ISO8859_1=m
+> -CONFIG_NLS_ISO8859_2=m
+> -CONFIG_NLS_ISO8859_3=m
+> -CONFIG_NLS_ISO8859_4=m
+> -CONFIG_NLS_ISO8859_5=m
+> -CONFIG_NLS_ISO8859_6=m
+> -CONFIG_NLS_ISO8859_7=m
+> -CONFIG_NLS_ISO8859_9=m
+> -CONFIG_NLS_ISO8859_13=m
+> -CONFIG_NLS_ISO8859_14=m
+> -CONFIG_NLS_ISO8859_15=m
+> -CONFIG_NLS_KOI8_R=m
+> -CONFIG_NLS_KOI8_U=m
+> -CONFIG_NLS_UTF8=m
+> -CONFIG_CRYPTO_LRW=m
+> -CONFIG_CRYPTO_PCBC=m
+> -CONFIG_CRYPTO_HMAC=y
+> -CONFIG_CRYPTO_XCBC=m
+> -CONFIG_CRYPTO_MICHAEL_MIC=m
+> -CONFIG_CRYPTO_TGR192=m
+> -CONFIG_CRYPTO_WP512=m
+> -CONFIG_CRYPTO_ANUBIS=m
+> -CONFIG_CRYPTO_BLOWFISH=m
+> -CONFIG_CRYPTO_CAMELLIA=m
+> -CONFIG_CRYPTO_CAST6=m
+> -CONFIG_CRYPTO_FCRYPT=m
+> -CONFIG_CRYPTO_KHAZAD=m
+> -CONFIG_CRYPTO_SERPENT=m
+> -CONFIG_CRYPTO_TEA=m
+> -CONFIG_CRYPTO_TWOFISH=m
+> -CONFIG_CRC_CCITT=m
 > 
+
+Tested-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
