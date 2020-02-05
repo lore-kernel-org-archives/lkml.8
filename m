@@ -2,240 +2,191 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E25C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E1FC352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D46F20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5435E217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="it6mbhfW"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PTz0lOqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgBERAF (ORCPT
+        id S1727538AbgBERBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:00:05 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42575 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgBERAF (ORCPT
+        Wed, 5 Feb 2020 12:01:39 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:15803 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727081AbgBERBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:00:05 -0500
-Received: by mail-ed1-f66.google.com with SMTP id e10so2857240edv.9;
-        Wed, 05 Feb 2020 09:00:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=1Ncagz7r3fu/STUs+bmI4ylDZvHXy7k/weZ2KXTQCzM=;
-        b=it6mbhfWxu+6ybB+hucLJftorkST0mhIiAtjTRGAcuo1l4Yr9kVGJEjRgDw5O6wRGi
-         f5wA8qmCYtuLJPRpg1jofwmQDljzdqeWUXglaSAqMe/UnADvixKJMoKhUNZ8MCTbWiva
-         R4n2quAQQifsrS4zribIHS/Ts2Q8RZRlH+Wvo2wb7SuSeuTDGKeuimaPefjGBSdE2Jtt
-         Mh4R1U1Yar1nF2EJ3VxNeI8RcKvwcDRyPiMVSgoxZ0qKfK//3fm3D0bHORLPUSzWiKZl
-         aJIGaSikcOnWKCj9jX9zwM6gGEr/YY5ZAHcK0U4BKDYi/i4zNKfaqRwZCQ9Tr5/1uTo6
-         QjYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=1Ncagz7r3fu/STUs+bmI4ylDZvHXy7k/weZ2KXTQCzM=;
-        b=fHN+IB5B1KOjOlgkK2L/xsasmkuB9WAYKP40PqarKXrf7rSB/ii3T0jN8cryHwRqo3
-         PYE65dNfbBpnM9kwqw5jDKAo1x/87v6Ly8NBgc3I/N9v9sQCC9ZH1/IfhQC6wom08MiO
-         C1RL4OFP4NnK48ZDdpeRpvkDdXd6ABEe4nBruQOUrYY8TxRujoL15wb5HJCcXGYRyW8X
-         aAQd0hElY+4CgHWQBjg9MkKB9/VmCl8R69D1w1dWk2yyF43kUI123sL99aC8rHraMK2c
-         g/AWtQGHzn8w74B+gvcdh29pYRYtPo8ygUWUEFqK8I/0Y9v3IaP8AkrsiqxJA5qDB9yb
-         xzBQ==
-X-Gm-Message-State: APjAAAUfuYHI7GkW2dn6lagtgHxdMoXbqgcLZj5Eeq0p8B/Jgjxe/3Tj
-        84oJlFPx/wVCRRrisv0mRcxqCSvQ
-X-Google-Smtp-Source: APXvYqzRVFypZMbA++BOhXfuaePrNE1UhtiLr7lDSsTMqjXwHXPLlDJsTiGU07APw5rmyupmqVHCkA==
-X-Received: by 2002:a05:6402:19b9:: with SMTP id o25mr5616195edz.26.1580922001707;
-        Wed, 05 Feb 2020 09:00:01 -0800 (PST)
-Received: from [192.168.43.239] ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id a7sm39870ejr.30.2020.02.05.09.00.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 09:00:01 -0800 (PST)
-Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
- <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
- <d9a15d32-a20b-a20f-9ea4-3ac355c15bb2@gmail.com>
- <c6cc1e97-f306-e3f0-3f7b-9463fdbbc5a5@kernel.dk>
- <d55fd4dc-e7f1-0f06-76bb-0e29c1db4995@kernel.dk>
- <62e33e81-7857-fb5c-92be-6757623a6478@gmail.com>
- <fe6ea91c-ad4a-092f-e98c-6ba233304636@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <0c947713-64e2-1670-7ca4-18838fbaf096@gmail.com>
-Date:   Wed, 5 Feb 2020 19:59:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <fe6ea91c-ad4a-092f-e98c-6ba233304636@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="TOK6zagsvseVUmcfSevEPkkpIpuNQIJBU"
+        Wed, 5 Feb 2020 12:01:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580922098; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=7DUhFiRSM+eRxfIS8UQQZG95uYXWL3eYV9xeTSLQqKg=; b=PTz0lOqHWNJsbrvzANXCuJidZ9X4rCIL2M290EhJjLqg4/QzCnGMVmK8vq/ERtwgqZ1nc5fh
+ RoZBtIn6J/Ce7OSUfLfIYT00DcwH3Ncm/5lRx2KraJLUpJbzacVM0MFLJaFvoj0Ti+rUZPqs
+ JcjE1bRc70PR3w1uiAWFDdbqGwU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3af4e9.7f4300106068-smtp-out-n03;
+ Wed, 05 Feb 2020 17:01:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 919E8C447A1; Wed,  5 Feb 2020 17:01:28 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF247C43383;
+        Wed,  5 Feb 2020 17:01:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF247C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Sharat Masetty <smasetty@codeaurora.org>, dianders@chromium.org,
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/msm/a6xx: Update the GMU bus tables for sc7180
+Date:   Wed,  5 Feb 2020 10:01:21 -0700
+Message-Id: <1580922081-25177-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---TOK6zagsvseVUmcfSevEPkkpIpuNQIJBU
-Content-Type: multipart/mixed; boundary="USU9GwRdfKxAKn8OjhOUZABzgrPT8IHbc";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <0c947713-64e2-1670-7ca4-18838fbaf096@gmail.com>
-Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
-References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
- <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
- <d9a15d32-a20b-a20f-9ea4-3ac355c15bb2@gmail.com>
- <c6cc1e97-f306-e3f0-3f7b-9463fdbbc5a5@kernel.dk>
- <d55fd4dc-e7f1-0f06-76bb-0e29c1db4995@kernel.dk>
- <62e33e81-7857-fb5c-92be-6757623a6478@gmail.com>
- <fe6ea91c-ad4a-092f-e98c-6ba233304636@kernel.dk>
-In-Reply-To: <fe6ea91c-ad4a-092f-e98c-6ba233304636@kernel.dk>
+Fixup the GMU bus table values for the sc7180 target.
 
---USU9GwRdfKxAKn8OjhOUZABzgrPT8IHbc
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-On 05/02/2020 19:52, Jens Axboe wrote:
-> On 2/5/20 9:50 AM, Pavel Begunkov wrote:
->> On 05/02/2020 19:16, Jens Axboe wrote:
->>> On 2/5/20 9:05 AM, Jens Axboe wrote:
->>>> On 2/5/20 9:02 AM, Pavel Begunkov wrote:
->>>>> On 05/02/2020 18:54, Jens Axboe wrote:
->>>>>> On 2/5/20 8:46 AM, Pavel Begunkov wrote:
->>>>>>> IORING_OP_{READ,WRITE} need mm to access user buffers, hence
->>>>>>> req->has_user check should go for them as well. Move the correspo=
-nding
->>>>>>> imports past the check.
->>>>>>
->>>>>> I'd need to double check, but I think the has_user check should ju=
-st go.
->>>>>> The import checks for access anyway, so we'll -EFAULT there if we
->>>>>> somehow messed up and didn't acquire the right mm.
->>>>>>
->>>>> It'd be even better. I have plans to remove it, but I was thinking =
-from a
->>>>> different angle.
->>>>
->>>> Let me just confirm it in practice, but it should be fine. Then we c=
-an just
->>>> kill it.
->>>
->>> OK now I remember - in terms of mm it's fine, we'll do the right thin=
-g.
->>> But the iov_iter_init() has this gem:
->>>
->>> 	/* It will get better.  Eventually... */
->>> 	if (uaccess_kernel()) {
->>> 		i->type =3D ITER_KVEC | direction;
->>> 		i->kvec =3D (struct kvec *)iov;
->>> 	} else {
->>> 		i->type =3D ITER_IOVEC | direction;
->>> 		i->iov =3D iov;
->>> 	}
->>>
->>> which means that if we haven't set USER_DS, then iov_iter_init() will=
+ drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 85 ++++++++++++++++++++++++-----------
+ 1 file changed, 60 insertions(+), 25 deletions(-)
 
->>> magically set the type to ITER_KVEC which then crashes when the itera=
-tor
->>> tries to copy.
->>>
->>> Which is pretty lame. How about a patch that just checks for
->>> uaccess_kernel() and -EFAULTs if true for the non-fixed variants wher=
-e
->>> we don't init the iter ourselves? Then we can still kill req->has_use=
-r
->>> and not have to fill it in.
->>>
->>>
->> On the other hand, we don't send requests async without @mm. So, if we=
- fail them
->> whenever can't grab mm, it solves all the problems even without extra =
-checks.
->> What do you think?
->=20
-> I agree, the check is/was just there as a safe guard, it's not really
-> needed.
->=20
-Cool, I'll deal with it.
-
---=20
-Pavel Begunkov
-
-
---USU9GwRdfKxAKn8OjhOUZABzgrPT8IHbc--
-
---TOK6zagsvseVUmcfSevEPkkpIpuNQIJBU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl469GsACgkQWt5b1Glr
-+6W2yQ/9FIhV/9U8VB3Mc5pvNuexGv4wRrWFw8RNBdFMCljEfITID4PhgWWY4Qig
-lOl7C/vqvCuIAi1qL6cajWNY0kWjqj8O9wm6mqCRmgRPhu7EUyTjRBeLWMz+nQe6
-CtNvaKUkoMkRYJdhdtZKJLhAfPjGH/nNDkp5ncRNBGngzaFOfHjQhBvk6GhYDolS
-HdY1WRpxoxaa23EMBBoj5nsJIHbjLz83QmnXRQWBOKhk/VO5RcP+aaun3YGhH8nR
-3kkL7Io2QXKTrgUeooZmAehXVJmhE0DfKwsk+gxQ0SHYR/KyJmeuqb/Uf34dtsUe
-OnxUSmxOjQkvNkvzDL52Rm8ma0q+huJAGckDq/zkfJmqLTzRruCWuN0PhD169FWh
-zedUIs23Ybv6nNmMsIWnVIvz1ujqo7DfRUSJZj27Nv8T/7MR2gSWiusM3fDm4WuG
-P5+YhkruLd4eOZRrleHwrLZ0y5yXRzi9D9N0yTBMeNgVYSuy3HFfw3cULY1d9W0I
-geUeGHKjZ/hDNcGHMdDrdeKHBdP2vBbBFLpUkOQmPAAsKD1mMd3ZEv7m5VDDsAXC
-uNSbkkPue2AdWqEylcNalRI1GFGdiLPwNiab9TwGV+8L4iTARCREnK1xROvXFu3q
-SrxDHhmDysQFmAkPCudkZmAg57PZYr5oJ6XkRLdZndChjHGlrdk=
-=9HZb
------END PGP SIGNATURE-----
-
---TOK6zagsvseVUmcfSevEPkkpIpuNQIJBU--
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+index eda11ab..e450e0b 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+@@ -7,6 +7,7 @@
+ 
+ #include "a6xx_gmu.h"
+ #include "a6xx_gmu.xml.h"
++#include "a6xx_gpu.h"
+ 
+ #define HFI_MSG_ID(val) [val] = #val
+ 
+@@ -216,48 +217,82 @@ static int a6xx_hfi_send_perf_table(struct a6xx_gmu *gmu)
+ 		NULL, 0);
+ }
+ 
+-static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
++static void a618_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+ {
+-	struct a6xx_hfi_msg_bw_table msg = { 0 };
++	/* Send a single "off" entry since the 618 GMU doesn't do bus scaling */
++	msg->bw_level_num = 1;
++
++	msg->ddr_cmds_num = 3;
++	msg->ddr_wait_bitmask = 0x01;
++
++	msg->ddr_cmds_addrs[0] = 0x50000;
++	msg->ddr_cmds_addrs[1] = 0x5003c;
++	msg->ddr_cmds_addrs[2] = 0x5000c;
++
++	msg->ddr_cmds_data[0][0] =  0x40000000;
++	msg->ddr_cmds_data[0][1] =  0x40000000;
++	msg->ddr_cmds_data[0][2] =  0x40000000;
+ 
+ 	/*
+-	 * The sdm845 GMU doesn't do bus frequency scaling on its own but it
+-	 * does need at least one entry in the list because it might be accessed
+-	 * when the GMU is shutting down. Send a single "off" entry.
++	 * These are the CX (CNOC) votes - these are used by the GMU but the
++	 * votes are known and fixed for the target
+ 	 */
++	msg->cnoc_cmds_num = 1;
++	msg->cnoc_wait_bitmask = 0x01;
++
++	msg->cnoc_cmds_addrs[0] = 0x5007c;
++	msg->cnoc_cmds_data[0][0] =  0x40000000;
++	msg->cnoc_cmds_data[1][0] =  0x60000001;
++}
+ 
+-	msg.bw_level_num = 1;
++static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
++{
++	/* Send a single "off" entry since the 630 GMU doesn't do bus scaling */
++	msg->bw_level_num = 1;
+ 
+-	msg.ddr_cmds_num = 3;
+-	msg.ddr_wait_bitmask = 0x07;
++	msg->ddr_cmds_num = 3;
++	msg->ddr_wait_bitmask = 0x07;
+ 
+-	msg.ddr_cmds_addrs[0] = 0x50000;
+-	msg.ddr_cmds_addrs[1] = 0x5005c;
+-	msg.ddr_cmds_addrs[2] = 0x5000c;
++	msg->ddr_cmds_addrs[0] = 0x50000;
++	msg->ddr_cmds_addrs[1] = 0x5005c;
++	msg->ddr_cmds_addrs[2] = 0x5000c;
+ 
+-	msg.ddr_cmds_data[0][0] =  0x40000000;
+-	msg.ddr_cmds_data[0][1] =  0x40000000;
+-	msg.ddr_cmds_data[0][2] =  0x40000000;
++	msg->ddr_cmds_data[0][0] =  0x40000000;
++	msg->ddr_cmds_data[0][1] =  0x40000000;
++	msg->ddr_cmds_data[0][2] =  0x40000000;
+ 
+ 	/*
+ 	 * These are the CX (CNOC) votes.  This is used but the values for the
+ 	 * sdm845 GMU are known and fixed so we can hard code them.
+ 	 */
+ 
+-	msg.cnoc_cmds_num = 3;
+-	msg.cnoc_wait_bitmask = 0x05;
++	msg->cnoc_cmds_num = 3;
++	msg->cnoc_wait_bitmask = 0x05;
+ 
+-	msg.cnoc_cmds_addrs[0] = 0x50034;
+-	msg.cnoc_cmds_addrs[1] = 0x5007c;
+-	msg.cnoc_cmds_addrs[2] = 0x5004c;
++	msg->cnoc_cmds_addrs[0] = 0x50034;
++	msg->cnoc_cmds_addrs[1] = 0x5007c;
++	msg->cnoc_cmds_addrs[2] = 0x5004c;
+ 
+-	msg.cnoc_cmds_data[0][0] =  0x40000000;
+-	msg.cnoc_cmds_data[0][1] =  0x00000000;
+-	msg.cnoc_cmds_data[0][2] =  0x40000000;
++	msg->cnoc_cmds_data[0][0] =  0x40000000;
++	msg->cnoc_cmds_data[0][1] =  0x00000000;
++	msg->cnoc_cmds_data[0][2] =  0x40000000;
++
++	msg->cnoc_cmds_data[1][0] =  0x60000001;
++	msg->cnoc_cmds_data[1][1] =  0x20000001;
++	msg->cnoc_cmds_data[1][2] =  0x60000001;
++}
++
++
++static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
++{
++	struct a6xx_hfi_msg_bw_table msg = { 0 };
++	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
++	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+ 
+-	msg.cnoc_cmds_data[1][0] =  0x60000001;
+-	msg.cnoc_cmds_data[1][1] =  0x20000001;
+-	msg.cnoc_cmds_data[1][2] =  0x60000001;
++	if (adreno_is_a618(adreno_gpu))
++		a618_build_bw_table(&msg);
++	else
++		a6xx_build_bw_table(&msg);
+ 
+ 	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_BW_TABLE, &msg, sizeof(msg),
+ 		NULL, 0);
+-- 
+2.7.4
