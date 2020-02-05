@@ -2,172 +2,118 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF23C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1EEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9913B20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="byogR5Y9"
+	by mail.kernel.org (Postfix) with ESMTP id 4F9332085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580898163;
+	bh=hCb4rG8UeISbxhJYF0ebBE9lLPVV7Z/TLEmsRZeBj+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lbHFZLhDc/Ft2FgzwjhBo7gJ553wEHbB6wRyzWg3iTVbN27F544HxLUy7B/B797jN
+	 0cxfPT3oC6zU5rNMOgAr/X55DpY/3+wcJdk9wO48Un78/4dmr4Lc08g9sg0adyt5t4
+	 W46yKHyYkDcSIFQ3mmj5FfNDPmM0QyPfU/4B9rNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgBEKTg (ORCPT
+        id S1728272AbgBEKWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 05:19:36 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43684 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgBEKTg (ORCPT
+        Wed, 5 Feb 2020 05:22:42 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35112 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbgBEKWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 05:19:36 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 015AJAWT038813;
-        Wed, 5 Feb 2020 04:19:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580897950;
-        bh=a4B3Bqd5Pf17C8VTQl7PRrNSGniXRgvhSLeM1x0d+hk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=byogR5Y93N6sxhLZuK2obDyLC3hmzVNNSkPNhl2ry7ZEcrYkt8Hqq8IySduCmkPtB
-         ohzI1jKztmbskV4V7+4t9v6xsAEHReAeS1KcuOg+pfCOipcjcKomxqyKJ64H4kQq/o
-         E3K6QUFcAKw8gAI++17jnsbO91gCzSVdho02fGa4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 015AJA6F008867;
-        Wed, 5 Feb 2020 04:19:10 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
- 2020 04:19:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 5 Feb 2020 04:19:09 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 015AJ7R3091177;
-        Wed, 5 Feb 2020 04:19:07 -0600
-Subject: Re: [PoC] arm: dma-mapping: direct: Apply dma_pfn_offset only when it
- is valid
-To:     Christoph Hellwig <hch@lst.de>
-CC:     <robh@kernel.org>, <vigneshr@ti.com>, <konrad.wilk@oracle.com>,
-        <linux@armlinux.org.uk>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>, <rogerq@ti.com>
-References: <8eb68140-97b2-62ce-3e06-3761984aa5b1@ti.com>
- <20200114164332.3164-1-peter.ujfalusi@ti.com>
- <f8121747-8840-e279-8c7c-75a9d4becce8@arm.com>
- <28ee3395-baed-8d59-8546-ab7765829cc8@ti.com>
- <4f0e307f-29a9-44cd-eeaa-3b999e03871c@arm.com>
- <75843c71-1718-8d61-5e3d-edba6e1b10bd@ti.com> <20200130075332.GA30735@lst.de>
- <b2b1cb21-3aae-2181-fd79-f63701f283c0@ti.com> <20200130164010.GA6472@lst.de>
- <c37b12e4-0e0c-afa2-a8e4-782ccd57542d@ti.com> <20200203170809.GA19293@lst.de>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <af52fd8e-4991-cbf1-2b55-c2b4496f4703@ti.com>
-Date:   Wed, 5 Feb 2020 12:19:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 5 Feb 2020 05:22:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/rtlxdlFXFw6Im6mj5PCy/VNag7UxeRqSrkOJffVA38=; b=P27fPpAO6EuAqKJkVen6Iqg0M
+        4+zR4tbt/Lpfp3hs9Krjct35yrPGoCBcojIOwYeBSX0hzfyjh3Xh1elPHcm86yY7xV3NcIB/XgejM
+        XnHftV79L8ej6ObvVtWWqLUFUmBBuYuMSN2zsuTDQYiUWcmHxtdm8Wa8MRcxwGUyfi6Bs=;
+Received: from fw-tnat-cam3.arm.com ([217.140.106.51] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1izHpP-0003xE-BT; Wed, 05 Feb 2020 10:22:39 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 07415D01D7F; Wed,  5 Feb 2020 10:22:39 +0000 (GMT)
+Date:   Wed, 5 Feb 2020 10:22:38 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ASoC: wcd934x: Remove some unnecessary NULL checks
+Message-ID: <20200205102238.GG3897@sirena.org.uk>
+References: <20200204060143.23393-1-natechancellor@gmail.com>
+ <20200204100039.GX3897@sirena.org.uk>
+ <20200204193215.GA44094@ubuntu-x2-xlarge-x86>
 MIME-Version: 1.0
-In-Reply-To: <20200203170809.GA19293@lst.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mOr7kNv8EL30+EI+"
+Content-Disposition: inline
+In-Reply-To: <20200204193215.GA44094@ubuntu-x2-xlarge-x86>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--mOr7kNv8EL30+EI+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 03/02/2020 19.08, Christoph Hellwig wrote:
-> On Fri, Jan 31, 2020 at 04:00:20PM +0200, Peter Ujfalusi wrote:
->> I see. My PoC patch was not too off then ;)
->> So the plan is to have a generic implementation for all of the
->> architecture, right?
-> 
-> І don't know of a concrete plan, but that's defintively what I'd like
-> to see.
-> 
->>>> The dma_pfn_offset is _still_ applied to the mask we are trying to set
->>>> (and validate) via dma-direct.
->>>
->>> And for the general case that is exactly the right thing to do, we
->>> just need to deal with really odd ZONE_DMA placements like yours.
->>
->> I'm still not convinced, the point of the DMA mask, at least how I see
->> it, to check that the dma address can be handled by the device (DMA,
->> peripheral with built in DMA, etc), it is not against physical address.
->> Doing phys_to_dma() on the mask from the dma_set_mask() is just wrong.
-> 
-> We have a translation between the addresses that the device sees, and
-> those that the CPU sees.  The device can address N bits of address space
-> as seen from the device.  The addresses encoded in max_pfn,
-> zone_dma_bits or the harcoded 32 in the zone dma 32 case are CPU address.
-> So no, we can't blindly compare those.
+On Tue, Feb 04, 2020 at 12:32:15PM -0700, Nathan Chancellor wrote:
+> On Tue, Feb 04, 2020 at 10:00:39AM +0000, Mark Brown wrote:
 
-Right, thanks for the explanation.
+> > I'm not convincd this is a sensible warning, at the use site a
+> > pointer to an array in a struct looks identical to an array
+> > embedded in the struct so it's not such a bad idea to check and
+> > refactoring of the struct could easily introduce problems.
 
->>> But that will cause yet another regression in what we have just fixed
->>> with using the generic direct ops, at which points it turns into who
->>> screams louder.
->>
->> Hehe, I see.
->> I genuinely curious why k2 platform worked just fine with LPAE (it needs
->> it), but guys had issues with LPAE on dra7/am5.
->> The fix for dra7/am5 broke k2.
->> As far as I can see the main (only) difference is that k2 have
->> dma_pfn_offset = 0x780000, while dra7/am5 have it 0 (really direct mapping).
-> 
-> How much memory does the platform have?
+> Other static checkers like smatch will warn about this as well (since I
+> am sure that is how Dan Carpenter found the same issue in the wcd9335
+> driver). Isn't an antipattern in the kernel to do things "just in
+> case we do something later"? There are plenty of NULL checks removed
+> from the kernel because they do not do anything now.
 
-The boards which is bootable in mainline have maximum of 2G, there might
-be custom boards with more RAM, but I'm not aware of them.
+I'm not convinced it is an antipattern - adding the checks would
+be a bit silly but with the way C works the warnings feel like
+false positives.  If the compiler were able to warn about missing
+NULL checks in the case where the thing in the struct is a
+pointer I'd be a lot happier with this.
 
-> Once you are above 32-bits worth
-> of address space devices with a 32-bit DMA mask can't address all the
-> memory.  Now if k2 for example only had less than 4G of memory, but at
-> addresses over 4G, and the offset compensates for the offset of the DRAM
-> it works without bounce buffering and thus didn't need swiotlb.  But any
-> platform that has DRAM that is not addressable will need swiotlb.
+> I'd be fine with changing the check to something else that keeps the
+> same logic but doesn't create a warning; I am not exactly sure what that
+> would be because that is more of a specific driver logic thing, which I
+> am not familiar with.
 
-I see, since we have maximum of 2G, which is mirrored at 0x80000000 for
-devices we never needed the assistance from swiotlb for bounce buffering
-and that's why the arm ops worked fine.
+I've queued the change to be applied since it's shuts the
+compiler up but I'm really not convinced the compiler is helping
+here.
 
-> 
->>>  	u64 min_mask;
->>>  
->>> +	if (mask >= DMA_BIT_MASK(32))
->>> +		return 1;
->>> +
->>
->> Right, so skipping phys_to_dma() for the mask and believing that it will
->> work..
->>
->> It does: audio and dmatest memcpy tests are just fine with this, MMC
->> also probed with ADMA enabled.
->>
->> As far as I can tell it works as well as falling back to the old arm ops
->> in case of LPAE && dma_pfn_offset != 0
->>
->> Fwiw:
->> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>
->> Would you be comfortable to send this patch for mainline with
->> Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE
->> configs")
-> 
-> That is the big question.  I don't feel overly comfortable as I've been
-> trying to get this right, but so far it seems like the least bad option.
-> I'll send out a proper patch with updated comments and will see what
-> people think.
+--mOr7kNv8EL30+EI+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I understand and thank you for the patch, it makes k2 platform working
-again!
+-----BEGIN PGP SIGNATURE-----
 
-- Péter
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl46l24ACgkQJNaLcl1U
+h9AAXAf+MO8n4UxQtouGrNdxFiwPsOIGewJMPd4vN1NCZTVDUBP55eWyQ4naXCsN
++BfzAWdmmwJn142SlhZV1P6qThjGkZwZft+PMVDW58zVRibxqmypybMitrQXPvQM
+hzX56yshLBEYtaeps5/as2Iv0SU07tYFJ7g+ir1K0s8XOkYusOBWTGViOpO4JkH2
+Js8aho28jbWGq8UaK8aH2eDhtLVPTmjYpN5Xk7qfbGvy5+Pq+HOmpLW0sM56uw9Q
+nYPZOJbkFU+fIKXw8ZmxuuXs/vFeZHUqIdLAqcz+vIdxj6pxNnt9lk0uA6idJ+iH
++UdbUJ0BPsFyvzLEriFJEgwNnbTN0w==
+=B63k
+-----END PGP SIGNATURE-----
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--mOr7kNv8EL30+EI+--
