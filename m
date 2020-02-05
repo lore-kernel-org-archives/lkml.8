@@ -2,250 +2,106 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D0BC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01550C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B6A20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F4720730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Ua+yzHj1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBEWRs (ORCPT
+        id S1727481AbgBEWSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:17:48 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44336 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727165AbgBEWRs (ORCPT
+        Wed, 5 Feb 2020 17:18:22 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39814 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgBEWSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:17:48 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 187CC27E71;
-        Wed,  5 Feb 2020 17:17:43 -0500 (EST)
-Date:   Thu, 6 Feb 2020 09:17:41 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Laurent Vivier <laurent@vivier.eu>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Subject: Re: [PATCH 1/3] fbdev/g364fb: Fix build failure
-In-Reply-To: <CAAdtpL7SpzfqSmEcuVszNyXfrRegC20txoS5j7Ss3WkCmyRH+g@mail.gmail.com>
-Message-ID: <alpine.LNX.2.22.394.2002060829410.8@nippy.intranet>
-References: <cover.1580610812.git.fthain@telegraphics.com.au> <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au> <CAAdtpL7SpzfqSmEcuVszNyXfrRegC20txoS5j7Ss3WkCmyRH+g@mail.gmail.com>
+        Wed, 5 Feb 2020 17:18:22 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e9so1595076pjr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:18:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qEzN1Nr3XiQi/juytTwGJNmYcodSF75VNv82D15zU7s=;
+        b=Ua+yzHj1ekndzoKgVM+Cn/Saemfiq/5aCzU0AqiDegTYL+yBN6eNkczqTqN8WOZeMd
+         zL35aaPPF0e+FDHC/b6ZY6wpp8GJR156ImTOxzEoG0shGfwfHA61jAKyIDxqvTYkO/5r
+         cfGmORe5BHpRIt6vygXshgtdd/eAzyMwW4iqA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qEzN1Nr3XiQi/juytTwGJNmYcodSF75VNv82D15zU7s=;
+        b=IcpbzI7zJg3E8CAo16Kuyr21rthakVQVDaDNVdBfTvu3JOREDMAWh+dJ+YTPL9OJOp
+         unJAUkiFzA5Zh0+58C8Q65fPb1arEEZ7yWrJzgxVLutaj+n4woyG8+lBDd7jKoQ1p9TD
+         7Hto4C5NagxNOoZQ+fLjtgBi7JpvJbCL28lIHkK7balOvXRbV0/I/+Dcs8l+evzU/jwy
+         gEkcfGCvjtvWU6OyyQlIAVYVpGZCscYBuoNMbpm0VnwuwoLPjn3xiI7Hb5V6AP05Ybm2
+         3ljPBgwZHURf6pGCfCtjH07wnJ+0fwwllJV0/jh0kpa9iMZ1Lf+bdZ4jpLpFJNWlubeh
+         S3Fw==
+X-Gm-Message-State: APjAAAURixXsK1pgHsZMalc88vtBzpjxSth39s+v3SEJhAwmbYAjmQhv
+        aXGojQnMwSmhRLn/nH/hKGvGq7EBMBM=
+X-Google-Smtp-Source: APXvYqzhxZD8M5KCGlAijeTHvdgak0YMZQr3fsBJ7lGFQAV0yMy3bVL0XHXViN3jIKW741NXe1kuVg==
+X-Received: by 2002:a17:90a:e996:: with SMTP id v22mr403228pjy.53.1580941101745;
+        Wed, 05 Feb 2020 14:18:21 -0800 (PST)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r11sm787950pgi.9.2020.02.05.14.18.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 14:18:21 -0800 (PST)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org,
+        frextrite@gmail.com, rcu@vger.kernel.org,
+        madhuparnabhowmik04@gmail.com
+Subject: [PATCH] kernel/trace: Use rcu_assign_pointer() for setting fgraph hash pointers
+Date:   Wed,  5 Feb 2020 17:18:08 -0500
+Message-Id: <20200205221808.54576-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811774-1096103132-1580941061=:8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+set_ftrace_early_graph() sets pointers without any explicit
+release-barriers. Let us use rcu_assign_pointer() to ensure the same.
 
----1463811774-1096103132-1580941061=:8
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Note that ftrace_early_graph() calls ftrace_graph_set_hash() which does
+do mutex_unlock(&ftrace_lock); which should imply a release barrier.
+However it is better to not depend on it and just use
+rcu_assign_pointer() which should also avoid sparse errors in the
+future.
 
-On Wed, 5 Feb 2020, Philippe Mathieu-Daud=C3=A9 wrote:
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-> On Sun, Feb 2, 2020 at 3:41 AM Finn Thain <fthain@telegraphics.com.au> wr=
-ote:
-> >
-> > This patch resolves these compiler errors and warnings --
-> >
-> >   CC      drivers/video/fbdev/g364fb.o
-> > drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
-> > drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in=
- this function)
-> > drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is=
- reported only once for each function it appears in
-> > drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of func=
-tion 'fontwidth' [-Werror=3Dimplicit-function-declaration]
-> > drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use i=
-n this function)
-> > drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use i=
-n this function)
-> > drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of func=
-tion 'fontheight' [-Werror=3Dimplicit-function-declaration]
-> > drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
-> > drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first u=
-se in this function)
-> > drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first us=
-e in this function)
->=20
-> 18 years unnoticed...
->=20
+---
+ kernel/trace/ftrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-More likely, it was noticed by those without the skills or time to get it=
-=20
-fixed upstream.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 959ded08dc13f..340d30557a10e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5477,9 +5477,9 @@ static void __init set_ftrace_early_graph(char *buf, int enable)
+ 	}
+ 
+ 	if (enable)
+-		ftrace_graph_hash = hash;
++		rcu_assign_pointer(ftrace_graph_hash, hash);
+ 	else
+-		ftrace_graph_notrace_hash = hash;
++		rcu_assign_pointer(ftrace_graph_notrace_hash, hash);
+ }
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 
+-- 
+2.25.0.341.g760bfbb309-goog
 
-Those with the hardware skills and platform knowledge to be affected by an=
-=20
-obscure bug aren't necessarily also capable of fixing a kernel bug,=20
-sending a patch upstream and getting it past code review.
-
-Getting a patch into the Linux kernel is itself a lot of work, unless=20
-you've had years of experience with that constantly changing process=20
-(which varies significantly between subsystems).
-
-Kernel developers are only human and do accidentally introduce breakage in=
-=20
-their work (as contributors) while ironically (as reviewers) they raise=20
-the bar for random fixes from users not versed in the 10000+ lines of=20
-Documentation/process/*.rst
-
-Broken code does not mean zero potential users or zero frustrated users=20
-yet I often hear kernel developers disingenuously claim that it does.
-They have an incentive to make that claim and often there's no-one reading=
-=20
-the mailing lists to push back.
-
-> > drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wun=
-used-variable]
-> > drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr'=
- [-Wunused-variable]
-> >
-> > The MIPS Magnum framebuffer console now works when tested in QEMU.
-> >
-> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
->=20
-> This commit is the kernel 'git origin' import, not the proper reference.
->=20
-> The actual change is between v2.5.17/2.5.19:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/diff/dri=
-vers/video/g364fb.c?id=3Db30e6e183a728923267
-> Date: 2002-05-22 07:52:33...
->=20
-
-I think the driver was broken before that point. I didn't compile it, but=
-=20
-it seems that "xres" still has no declaration.
-
-BTW, is it wise to cite a sha-1 that doesn't exist in mainline?
-
-$ git show b30e6e183a728923267
-fatal: ambiguous argument 'b30e6e183a728923267': unknown revision or path=
-=20
-not in the working tree.
-
-I'd prefer to use a tag like this,
-References: https://git.kernel.org/tglx/history/c/b30e6e183a728923267
-
-FWIW, if you search for "tglx.history" in git log, you can find other=20
-stuff, like "Histroy Tree:" [sic] and "History-tree:". I don't know what=20
-the canonical form is.
-
-> The same commit introduced the changes in g364fb_cursor(), which was
-> implemented previous to v2.4.0 so it is hard to follow from there.
->=20
-> Nobody complains during 18 years so I doubt anyone care that
-> g364fb_cursor() is removed.
-
-Right. The .fb_cursor method is optional (not all framebuffers have a=20
-hardware cursor).
-
-> And by removing it, you improve the kernel quality, so:
-> Reviewed-by: Philippe Mathieu-Daud=C3=A9 <f4bug@amsat.org>
-> (Maybe remove the unhelpful 'Fixes' tag).
->=20
-
-In the past I've seen other reviewers of other patches say the same thing=
-=20
-("Please remove Fixes: Linux 2.6.12-rc2"). I don't know why.
-
-I used that tag because it indicates that the patch can be backported at=20
-least as far as the stated commit. Certainly the bug exists in Linux=20
-2.6.12-rc2, so the "Fixes" tag is meaningful in that sense.
-
-> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> > ---
-> >  drivers/video/fbdev/g364fb.c | 29 +++--------------------------
-> >  1 file changed, 3 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.=
-c
-> > index 223896cc5f7d..fb26230a3c7b 100644
-> > --- a/drivers/video/fbdev/g364fb.c
-> > +++ b/drivers/video/fbdev/g364fb.c
-> > @@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeni=
-nfo *var,
-> >  static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
-> >                             u_int blue, u_int transp,
-> >                             struct fb_info *info);
-> > -static int g364fb_cursor(struct fb_info *info, struct fb_cursor *curso=
-r);
-> >  static int g364fb_blank(int blank, struct fb_info *info);
-> >
-> >  static struct fb_ops g364fb_ops =3D {
-> > @@ -119,28 +118,8 @@ static struct fb_ops g364fb_ops =3D {
-> >         .fb_fillrect    =3D cfb_fillrect,
-> >         .fb_copyarea    =3D cfb_copyarea,
-> >         .fb_imageblit   =3D cfb_imageblit,
-> > -       .fb_cursor      =3D g364fb_cursor,
-> >  };
-> >
-> > -int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
-> > -{
-> > -
-> > -       switch (cursor->enable) {
-> > -       case CM_ERASE:
-> > -               *(unsigned int *) CTLA_REG |=3D CURS_TOGGLE;
-> > -               break;
-> > -
-> > -       case CM_MOVE:
-> > -       case CM_DRAW:
-> > -               *(unsigned int *) CTLA_REG &=3D ~CURS_TOGGLE;
-> > -               *(unsigned int *) CURS_POS_REG =3D
-> > -                   ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
-> > -                                                 info->var.yoffset);
-> > -               break;
-> > -       }
-> > -       return 0;
-> > -}
-> > -
-> >  /*
-> >   *  Pan or Wrap the Display
-> >   *
-> > @@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red=
-, u_int green,
-> >   */
-> >  int __init g364fb_init(void)
-> >  {
-> > -       volatile unsigned int *pal_ptr =3D
-> > -           (volatile unsigned int *) CLR_PAL_REG;
-> >         volatile unsigned int *curs_pal_ptr =3D
-> >             (volatile unsigned int *) CURS_PAL_REG;
-> > -       int mem, i, j;
-> > +       int mem, i;
-> >
-> >         if (fb_get_options("g364fb", NULL))
-> >                 return -ENODEV;
-> > @@ -230,8 +207,8 @@ int __init g364fb_init(void)
-> >          */
-> >         *(unsigned short *) (CURS_PAT_REG + 14 * 64) =3D 0xffff;
-> >         *(unsigned short *) (CURS_PAT_REG + 15 * 64) =3D 0xffff;
-> > -       fb_var.xres_virtual =3D fbvar.xres;
-> > -       fb_fix.line_length =3D (xres / 8) * fb_var.bits_per_pixel;
-> > +       fb_var.xres_virtual =3D fb_var.xres;
-> > +       fb_fix.line_length =3D fb_var.xres_virtual * fb_var.bits_per_pi=
-xel / 8;
-> >         fb_fix.smem_start =3D 0x40000000; /* physical address */
-> >         /* get size of video memory; this is special for the JAZZ hardw=
-are */
-> >         mem =3D (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
-> > --
-> > 2.24.1
-> >
->=20
----1463811774-1096103132-1580941061=:8--
