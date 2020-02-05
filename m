@@ -2,225 +2,89 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FC8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0710C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580DD20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAA420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLzqOyPg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lMUbxPAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgBEVAD (ORCPT
+        id S1727358AbgBEVAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:00:03 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34660 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgBEVAD (ORCPT
+        Wed, 5 Feb 2020 16:00:07 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44656 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgBEVAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:00:03 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r18so3611921edl.1;
-        Wed, 05 Feb 2020 13:00:01 -0800 (PST)
+        Wed, 5 Feb 2020 16:00:07 -0500
+Received: by mail-pg1-f194.google.com with SMTP id g3so1544462pgs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 13:00:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QafzbCfeHnYtXe2+wnlYbUjzoLaATFtLI4O/t7cFl+Q=;
-        b=LLzqOyPgxOYxX2fFIZXbsrOnO82CGToxLSKJphbGKsqy7jnlCooFy6MJczAqo/EXur
-         55P20+vFkQoPMccuFsAxmtoa2yhFIvMbrfqgkCRJR1owQXd2gVUildcoaos3GRwLUaGL
-         L57KXeAoHd1C4uKFyP0AxqtTwbzRgAGKUR9qi9Gm4O+Dj076hTIb6Q//1PBXzr01kWr3
-         WG1M53aL46oCcDHx/S22c+JjxJCq6E9afR+6PjaqC3KEzXpSV8lCSjvZeJU1euvWLHIK
-         CZ/9psDHd+gGs7F6fW/jLre0cKE8h3rl4yd3GW6XVPvhtNFDO4uRqi2WUgzHhhya0o7S
-         GlXA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkdK+w3U6i8S/R8ybgWONyXqyKhVQqPu9Z8fgYXJMtg=;
+        b=lMUbxPAEa6yxcDff7IbmI01EPoGO+TmSVV8ONWipypxT/qfJs95Zcchuv0LxjKAibz
+         ykSsPcsXz3MZ/bOS5le+TaH8Tb3k+1PrvfCrts5hm9xue1/rA54dVkyDQPr6zhey7aBd
+         6we4l3NBgnNYhVcsbUXgj2/E+ht+w6kp3e1Ok=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QafzbCfeHnYtXe2+wnlYbUjzoLaATFtLI4O/t7cFl+Q=;
-        b=gW+t19xP2D4TOE6mz2DXkVTt0NOzoEKdjUL+q26yd5titS54Cd3HVOYiCPmjsj/OPH
-         LA9OYD0WcwkhS02izu2m7LHZUhWOz5Sr0awJ4dYRjmVzFgtsO8xB3JbshL7nZLkEzprH
-         Pav2/0BgjMH1ybN3hRUEBKJdptS1IgQey1YTCYMXVsqFaUWSuEeaYi6WucjPhGsLJ6sj
-         ZWEdz98q6dq4jtovkW2X2ypo+SziRzbR+2lJnO1UYfv1esZOtsSnS10cldV9KhDIuQMc
-         I/kHKmYyKJkVdvZXEcx7Dl3tldPWeobA8uHPEmQq6iYnrGA5W67sJgnGffMCNUELxR3B
-         vlYQ==
-X-Gm-Message-State: APjAAAUNoFlLprml8/NhfDNZm5LCtWhwe7XCvlGUyj/Jp0vAiwD60sRh
-        jQYTnA8iM2Bso38y7hMJ+CZ5MIRS2qzPThO1W8s=
-X-Google-Smtp-Source: APXvYqzJzAjae+HUS9sVrAOjE8CO08MVfB1MqrAfFev2UPGSewtP0Vpp1kdw0wYbnvLZ9/+mFWRyadg3lVl4W+pI7kc=
-X-Received: by 2002:a17:906:af99:: with SMTP id mj25mr31219735ejb.293.1580936401142;
- Wed, 05 Feb 2020 13:00:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkdK+w3U6i8S/R8ybgWONyXqyKhVQqPu9Z8fgYXJMtg=;
+        b=VD5OrW+t07ZAqukr3sZx+MY0HdvOsSyNmuCJ1fWuKebvupR+YLIYRd45B9olMJbMmf
+         7oOm4waNb81BDCG9kGw4LJUxTYKJoUN6FaRj6OY6zznX6+jD8tMEgYMN76xFRNsxFIE7
+         Kcl8M9jVIrbDe1SSaLSxL3u+trvF6jUrtkthot75z8muFhRoGU8MJzPMgWSSC2YAgDBl
+         Y9WaTGrCjEA5UuWnm0y5PrlJXJdJ/ilgYDZy6TYEI3riOr61ELyupkEwVC9pkciSlBLZ
+         /WZnSxiIBrB8fqaVTOchBDgo2YkVCzx2uJsCoDkVoyGBMsAPVD4FSmfRioX8o1k8GY+v
+         4AGQ==
+X-Gm-Message-State: APjAAAXBj3ntUTyYRS4wdmxQk8BA/ZQc+EvOWIEg+iC+xYnYsxtbhKHj
+        qUW/qxFYrdGJ5bwGucMLd7PrsqGyoZg=
+X-Google-Smtp-Source: APXvYqxgljWDiYv68rVTNgd03FyySIH3BpVa+oX0FHJgstATcQO2R4k8tpdO+Ekspf5J97kGhzJ3eQ==
+X-Received: by 2002:a63:8a42:: with SMTP id y63mr24148745pgd.266.1580936406610;
+        Wed, 05 Feb 2020 13:00:06 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id f8sm648797pjg.28.2020.02.05.13.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 13:00:05 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
+        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 0/3] platform/chrome: Add Type C connector class driver
+Date:   Wed,  5 Feb 2020 12:59:48 -0800
+Message-Id: <20200205205954.84503-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-References: <1580935697-28195-1-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1580935697-28195-1-git-send-email-jcrouse@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 5 Feb 2020 12:59:49 -0800
-Message-ID: <CAF6AEGv9jVEO=QDY3DWts3w9aPxQ6fSBt2nydoqWdf5JenK=jA@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/msm: Fix a6xx GMU shutdown sequence
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 12:48 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") missed
-> updating the VBIF flush in a6xx_gmu_shutdown and instead
-> inserted the new sequence into a6xx_pm_suspend along with a redundant
-> GMU idle.
->
-> Move a6xx_bus_clear_pending_transactions to a6xx_gmu.c and use it in
-> the appropriate place in the shutdown routine and remove the redundant
-> idle call.
->
-> v2: Remove newly unused variable that was triggering a warning
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+The following series introduces a Type C port driver for Chrome OS devices
+that have an EC (Embedded Controller). It derives port information from
+ACPI or DT entries. This patch series adds basic support, including
+registering ports, and setting certain basic attributes.
 
-Reviewed-by: Rob Clark <robdclark@gmail.com>
+Prashant Malani (3):
+  platform/chrome: Add Type C connector class driver
+  platform/chrome: typec: Get PD_CONTROL cmd version
+  platform/chrome: typec: Update port info from EC
 
-> ---
->
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 37 +++++++++++++++++++++++++-----
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 43 -----------------------------------
->  2 files changed, 31 insertions(+), 49 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 983afea..748cd37 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -796,12 +796,41 @@ bool a6xx_gmu_isidle(struct a6xx_gmu *gmu)
->         return true;
->  }
->
-> +#define GBIF_CLIENT_HALT_MASK             BIT(0)
-> +#define GBIF_ARB_HALT_MASK                BIT(1)
-> +
-> +static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
-> +{
-> +       struct msm_gpu *gpu = &adreno_gpu->base;
-> +
-> +       if (!a6xx_has_gbif(adreno_gpu)) {
-> +               gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
-> +               spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) &
-> +                                                               0xf) == 0xf);
-> +               gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
-> +
-> +               return;
-> +       }
-> +
-> +       /* Halt new client requests on GBIF */
-> +       gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_CLIENT_HALT_MASK);
-> +       spin_until((gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK) &
-> +                       (GBIF_CLIENT_HALT_MASK)) == GBIF_CLIENT_HALT_MASK);
-> +
-> +       /* Halt all AXI requests on GBIF */
-> +       gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_ARB_HALT_MASK);
-> +       spin_until((gpu_read(gpu,  REG_A6XX_GBIF_HALT_ACK) &
-> +                       (GBIF_ARB_HALT_MASK)) == GBIF_ARB_HALT_MASK);
-> +
-> +       /* The GBIF halt needs to be explicitly cleared */
-> +       gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
-> +}
-> +
->  /* Gracefully try to shut down the GMU and by extension the GPU */
->  static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
->  {
->         struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
->         struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
-> -       struct msm_gpu *gpu = &adreno_gpu->base;
->         u32 val;
->
->         /*
-> @@ -819,11 +848,7 @@ static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
->                         return;
->                 }
->
-> -               /* Clear the VBIF pipe before shutting down */
-> -               gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
-> -               spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) & 0xf)
-> -                       == 0xf);
-> -               gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
-> +               a6xx_bus_clear_pending_transactions(adreno_gpu);
->
->                 /* tell the GMU we want to slumber */
->                 a6xx_gmu_notify_slumber(gmu);
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index daf0780..b580e47 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -748,39 +748,6 @@ static const u32 a6xx_register_offsets[REG_ADRENO_REGISTER_MAX] = {
->         REG_ADRENO_DEFINE(REG_ADRENO_CP_RB_CNTL, REG_A6XX_CP_RB_CNTL),
->  };
->
-> -#define GBIF_CLIENT_HALT_MASK             BIT(0)
-> -#define GBIF_ARB_HALT_MASK                BIT(1)
-> -
-> -static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
-> -{
-> -       struct msm_gpu *gpu = &adreno_gpu->base;
-> -
-> -       if(!a6xx_has_gbif(adreno_gpu)){
-> -               gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
-> -               spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) &
-> -                                                               0xf) == 0xf);
-> -               gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
-> -
-> -               return;
-> -       }
-> -
-> -       /* Halt new client requests on GBIF */
-> -       gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_CLIENT_HALT_MASK);
-> -       spin_until((gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK) &
-> -                       (GBIF_CLIENT_HALT_MASK)) == GBIF_CLIENT_HALT_MASK);
-> -
-> -       /* Halt all AXI requests on GBIF */
-> -       gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_ARB_HALT_MASK);
-> -       spin_until((gpu_read(gpu,  REG_A6XX_GBIF_HALT_ACK) &
-> -                       (GBIF_ARB_HALT_MASK)) == GBIF_ARB_HALT_MASK);
-> -
-> -       /*
-> -        * GMU needs DDR access in slumber path. Deassert GBIF halt now
-> -        * to allow for GMU to access system memory.
-> -        */
-> -       gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
-> -}
-> -
->  static int a6xx_pm_resume(struct msm_gpu *gpu)
->  {
->         struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> @@ -805,16 +772,6 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
->
->         devfreq_suspend_device(gpu->devfreq.devfreq);
->
-> -       /*
-> -        * Make sure the GMU is idle before continuing (because some transitions
-> -        * may use VBIF
-> -        */
-> -       a6xx_gmu_wait_for_idle(&a6xx_gpu->gmu);
-> -
-> -       /* Clear the VBIF pipe before shutting down */
-> -       /* FIXME: This accesses the GPU - do we need to make sure it is on? */
-> -       a6xx_bus_clear_pending_transactions(adreno_gpu);
-> -
->         return a6xx_gmu_stop(a6xx_gpu);
->  }
->
-> --
-> 2.7.4
+ drivers/platform/chrome/Kconfig         |  11 +
+ drivers/platform/chrome/Makefile        |   1 +
+ drivers/platform/chrome/cros_ec_typec.c | 346 ++++++++++++++++++++++++
+ 3 files changed, 358 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+
+-- 
+2.25.0.341.g760bfbb309-goog
+
