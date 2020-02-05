@@ -2,74 +2,110 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D13EC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E34C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1C220730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD96217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgBEWTh (ORCPT
+        id S1727481AbgBEWVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:19:37 -0500
-Received: from nautica.notk.org ([91.121.71.147]:48300 "EHLO nautica.notk.org"
+        Wed, 5 Feb 2020 17:21:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgBEWTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:19:36 -0500
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id 63E25C009; Wed,  5 Feb 2020 23:19:35 +0100 (CET)
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     v9fs-developer@lists.sourceforge.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH] net/9p: remove unused p9_req_t aux field
-Date:   Wed,  5 Feb 2020 23:19:12 +0100
-Message-Id: <1580941152-12973-1-git-send-email-asmadeus@codewreck.org>
-X-Mailer: git-send-email 1.7.10.4
+        id S1727116AbgBEWVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:21:44 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2BEC214AF;
+        Wed,  5 Feb 2020 22:21:43 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1izT3G-001P07-Tu; Wed, 05 Feb 2020 17:21:42 -0500
+Message-Id: <20200205222142.810675558@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Wed, 05 Feb 2020 17:21:11 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [for-next][PATCH 1/5] ftrace: Protect ftrace_graph_hash with ftrace_sync
+References: <20200205222110.912457436@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dominique Martinet <dominique.martinet@cea.fr>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The p9_req_t field 'aux' has not been used in a very long time,
-remove leftover field declaration
+As function_graph tracer can run when RCU is not "watching", it can not be
+protected by synchronize_rcu() it requires running a task on each CPU before
+it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
 
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
+
+Cc: stable@vger.kernel.org
+Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
-This has been sitting on my tree for a while, let's get some cleanup
-in for next cycle!
+ kernel/trace/ftrace.c | 11 +++++++++--
+ kernel/trace/trace.h  |  2 ++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
- include/net/9p/client.h | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/include/net/9p/client.h b/include/net/9p/client.h
-index acc60d8a3b3b..d32569755138 100644
---- a/include/net/9p/client.h
-+++ b/include/net/9p/client.h
-@@ -73,7 +73,6 @@ enum p9_req_status_t {
-  * @wq: wait_queue for the client to block on for this request
-  * @tc: the request fcall structure
-  * @rc: the response fcall structure
-- * @aux: transport specific data (provided for trans_fd migration)
-  * @req_list: link for higher level objects to chain requests
-  */
- struct p9_req_t {
-@@ -83,7 +82,6 @@ struct p9_req_t {
- 	wait_queue_head_t wq;
- 	struct p9_fcall tc;
- 	struct p9_fcall rc;
--	void *aux;
- 	struct list_head req_list;
- };
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 481ede3eac13..3f7ee102868a 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5867,8 +5867,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
  
+ 		mutex_unlock(&graph_lock);
+ 
+-		/* Wait till all users are no longer using the old hash */
+-		synchronize_rcu();
++		/*
++		 * We need to do a hard force of sched synchronization.
++		 * This is because we use preempt_disable() to do RCU, but
++		 * the function tracers can be called where RCU is not watching
++		 * (like before user_exit()). We can not rely on the RCU
++		 * infrastructure to do the synchronization, thus we must do it
++		 * ourselves.
++		 */
++		schedule_on_each_cpu(ftrace_sync);
+ 
+ 		free_ftrace_hash(old_hash);
+ 	}
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 8c52f5de9384..3c75d29bd861 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -979,6 +979,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+ 	 * Have to open code "rcu_dereference_sched()" because the
+ 	 * function graph tracer can be called when RCU is not
+ 	 * "watching".
++	 * Protected with schedule_on_each_cpu(ftrace_sync)
+ 	 */
+ 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
+ 
+@@ -1031,6 +1032,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ 	 * Have to open code "rcu_dereference_sched()" because the
+ 	 * function graph tracer can be called when RCU is not
+ 	 * "watching".
++	 * Protected with schedule_on_each_cpu(ftrace_sync)
+ 	 */
+ 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+ 						 !preemptible());
 -- 
 2.24.1
+
 
