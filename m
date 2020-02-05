@@ -2,132 +2,104 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07843C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603CEC35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD82B21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EF92085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgBEE0h (ORCPT
+        id S1727958AbgBEEmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:26:37 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:44570 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727834AbgBEE0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:26:36 -0500
-Received: from [192.168.68.106] (unknown [111.18.44.203])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH93rQzpeLI8MAA--.65S3;
-        Wed, 05 Feb 2020 12:26:21 +0800 (CST)
-Subject: Re: [PATCH v3 1/2] firmware: dmi: Add macro
- SMBIOS_ENTRY_POINT_SCAN_START
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jean Delvare <jdelvare@suse.de>
-Cc:     Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580875204-18052-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <aa85b2d8-d4fb-c681-e4d1-85e23750715d@loongson.cn>
-Date:   Wed, 5 Feb 2020 12:26:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 4 Feb 2020 23:42:16 -0500
+Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:50334 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgBEEmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 23:42:16 -0500
+Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
+        id 1izCVy-0004Fh-00; Wed, 05 Feb 2020 04:42:14 +0000
+Date:   Tue, 4 Feb 2020 23:42:14 -0500
+From:   Rich Felker <dalias@libc.org>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: Proposal to fix pwrite with O_APPEND via pwritev2 flag
+Message-ID: <20200205044214.GY1663@brightrain.aerifal.cx>
+References: <20200124000243.GA12112@brightrain.aerifal.cx>
 MIME-Version: 1.0
-In-Reply-To: <1580875204-18052-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID: AQAAf9DxH93rQzpeLI8MAA--.65S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1DCr1UZrWDKF4rAryxKrg_yoW8AF1kpF
-        4UGF45Cr4DJF4xGa97Aa13uFy5uan3tF9IgFWUZr1rua98XFyfJrs3A3ykKF1DArWDKayI
-        9r1fXF1aka4DK3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9a14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-        Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-        x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-        1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j
-        6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-        UvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124000243.GA12112@brightrain.aerifal.cx>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/5/20 12:00 PM, Tiezhu Yang wrote:
-> Use SMBIOS_ENTRY_POINT_SCAN_START instead of 0xF0000, because other
-> archtecture maybe use a special start address such as 0xFFFE000 for
-> Loongson platform.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> ---
->
-> v3:
->    - split the v2 patch into two patches
->    - make MIPS DMI config depend on MACH_LOONGSON64
->
-> v2:
->    - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
->    - refine definitions and Kconfig by Jiaxun
->
->   drivers/firmware/dmi_scan.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> index 2045566..f59163c 100644
-> --- a/drivers/firmware/dmi_scan.c
-> +++ b/drivers/firmware/dmi_scan.c
-> @@ -11,6 +11,10 @@
->   #include <asm/dmi.h>
->   #include <asm/unaligned.h>
->   
-> +#ifndef SMBIOS_ENTRY_POINT_SCAN_START
-> +#define SMBIOS_ENTRY_POINT_SCAN_START 0xF0000
-> +#endif
+On Thu, Jan 23, 2020 at 07:02:43PM -0500, Rich Felker wrote:
+> There's a longstanding unfixable (due to API stability) bug in the
+> pwrite syscall:
+> 
+> http://man7.org/linux/man-pages/man2/pwrite.2.html#BUGS
+> 
+> whereby it wrongly honors O_APPEND if set, ignoring the caller-passed
+> offset. Now that there's a pwritev2 syscall that takes a flags
+> argument, it's possible to fix this without breaking stability by
+> adding a new RWF_NOAPPEND flag, which callers that want the fixed
+> behavior can then pass.
+> 
+> I have a completely untested patch to add such a flag, but would like
+> to get a feel for whether the concept is acceptable before putting
+> time into testing it. If so, I'll submit this as a proper patch with
+> detailed commit message etc. Draft is below.
+
+I went ahead and tested this, and it works as intended, so I'll post a
+proper patch with commit message.
+
+Rich
+
+
+
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index e0d909d35763..3a769a972f79 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3397,6 +3397,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>  {
+>  	if (unlikely(flags & ~RWF_SUPPORTED))
+>  		return -EOPNOTSUPP;
+> +	if (unlikely((flags & RWF_APPEND) && (flags & RWF_NOAPPEND)))
+> +		return -EINVAL;
+>  
+>  	if (flags & RWF_NOWAIT) {
+>  		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+> @@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>  		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+>  	if (flags & RWF_APPEND)
+>  		ki->ki_flags |= IOCB_APPEND;
+> +	if (flags & RWF_NOAPPEND)
+> +		ki->ki_flags &= ~IOCB_APPEND;
+>  	return 0;
+>  }
+>  
+> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> index 379a612f8f1d..591357d9b3c9 100644
+> --- a/include/uapi/linux/fs.h
+> +++ b/include/uapi/linux/fs.h
+> @@ -299,8 +299,11 @@ typedef int __bitwise __kernel_rwf_t;
+>  /* per-IO O_APPEND */
+>  #define RWF_APPEND	((__force __kernel_rwf_t)0x00000010)
+>  
+> +/* per-IO negation of O_APPEND */
+> +#define RWF_NOAPPEND	((__force __kernel_rwf_t)0x00000020)
 > +
->   struct kobject *dmi_kobj;
->   EXPORT_SYMBOL_GPL(dmi_kobj);
->   
-> @@ -663,7 +667,7 @@ static void __init dmi_scan_machine(void)
->   			return;
->   		}
->   	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
-> -		p = dmi_early_remap(0xF0000, 0x10000);
-> +		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
->   		if (p == NULL)
->   			goto error;
->   
-
-Sorry, there appears to be some issues when git send-email,
-
-please ignore the repeated patch:
-
-[PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START.
-
-the correct send time of series patch is 2020-02-05 4:08 UTC, the link is
-
-https://lore.kernel.org/patchwork/patch/1189713/
-
-https://lore.kernel.org/patchwork/patch/1189714/
-
-
-Thanks,
-
-
-Tiezhu Yang
-
+>  /* mask of flags supported by the kernel */
+>  #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
+> -			 RWF_APPEND)
+> +			 RWF_APPEND | RWF_NOAPPEND)
+>  
+>  #endif /* _UAPI_LINUX_FS_H */
