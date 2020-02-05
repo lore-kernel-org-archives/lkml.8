@@ -2,67 +2,147 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BFCC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8262C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DB22072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E343217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rET6ClPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgBEXL4 (ORCPT
+        id S1727562AbgBEXNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:11:56 -0500
-Received: from mga07.intel.com ([134.134.136.100]:11678 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbgBEXL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:11:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:11:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
-   d="scan'208";a="249875306"
-Received: from gtobin-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.85.85])
-  by orsmga002.jf.intel.com with ESMTP; 05 Feb 2020 15:11:48 -0800
-Date:   Thu, 6 Feb 2020 01:11:47 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        Serge Ayoun <serge.ayoun@intel.com>
-Subject: Re: [PATCH v25 07/21] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20200205231147.GD28111@linux.intel.com>
-References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
- <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
- <20200205195700.GJ4877@linux.intel.com>
+        Wed, 5 Feb 2020 18:13:32 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1635 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbgBEXNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:13:32 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3b4c000000>; Wed, 05 Feb 2020 15:13:04 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Feb 2020 15:13:28 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 05 Feb 2020 15:13:28 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb
+ 2020 23:13:28 +0000
+Subject: Re: [PATCH v4 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200204234117.2974687-1-jhubbard@nvidia.com>
+ <20200204234117.2974687-11-jhubbard@nvidia.com>
+ <20200205093733.GB28058@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <09b49b0d-85cc-87b8-9176-0963f6c8c735@nvidia.com>
+Date:   Wed, 5 Feb 2020 15:13:27 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205195700.GJ4877@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200205093733.GB28058@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580944384; bh=QZo2rYgRggJLhdhuOglfdT26CygAzcQcsm1mvo4G27A=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rET6ClPJ1i9ucTvvRWF/1/c462K2mCH6nZx8WiCBRBOHIYQjg+sBdCGrPEtzpJsKC
+         oKyCPZwjz3pxDIMTZQ64WUhXMxGUcmo2sbbCBiqNCUtVm8IDqmSKyYGkw81oZa918B
+         N0ScNcSKXjJywqnA2ZRAnUbR9x/eLSSwDq662e/d+ttmimG7GT1j+2mJRKDHI6zZbH
+         86HZzVIKep/0LUPMJQsvDeV54HT0Y46r7c6qo8I9SUAiapmADqg+pUsaOz9YoF0uW1
+         Jn2PUL4F9EQ2HxmAkHcoSFDySLMhNHZs2ZqJAAvZxFMlEtNxpUbGKwxFOdO35tSUdu
+         Cvzd7Xz67EEww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 11:57:00AM -0800, Sean Christopherson wrote:
-> > +		ret = __eremove(sgx_epc_addr(page));
-> > +		if (!WARN_ON_ONCE(ret)) {
+On 2/5/20 1:37 AM, Jan Kara wrote:
+> ...
 > 
-> Sadly, this WARN can fire after kexec() on systems with multiple EPC
-> sections if the SECS has child pages in another section.
+>> @@ -104,6 +106,9 @@ static __maybe_unused struct page *try_grab_compound_head(struct page *page,
+>>  		if (hpage_pincount_available(page))
+>>  			hpage_pincount_add(page, refs);
+>>  
+>> +		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_ACQUIRED,
+>> +				    orig_refs);
+>> +
+>>  		return page;
+>>  	}
+>>  
+> 
+> It seems to me you miss mod_node_page_state() in put_compound_head(), don't
+> you?
 
-What causes this?
 
-/Jarkko
+Yes, that was definitely missing. I've added this for the next version:
+
+
+diff --git a/mm/gup.c b/mm/gup.c
+index 7c543849181b..ae503c51bc7f 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2268,6 +2268,8 @@ static int record_subpages(struct page *page, unsigned long addr,
+ 
+ static void put_compound_head(struct page *page, int refs, unsigned int flags)
+ {
++       int orig_refs = refs;
++
+        if (flags & FOLL_PIN) {
+                if (hpage_pincount_available(page))
+                        hpage_pincount_sub(page, refs);
+@@ -2283,6 +2285,8 @@ static void put_compound_head(struct page *page, int refs, unsigned int flags)
+        if (refs > 1)
+                page_ref_sub(page, refs - 1);
+        put_page(page);
++
++       mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, orig_refs);
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_HUGEPD
+
+
+
+> 
+> Otherwise I like the new stat names better :).
+> 
+> 								Honza
+> 
+
+Glad to hear that! :)
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
