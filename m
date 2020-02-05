@@ -2,182 +2,214 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6FDC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93343C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5E12072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C75214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTwYibTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgBET5C (ORCPT
+        id S1727484AbgBET5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:57:02 -0500
-Received: from mga09.intel.com ([134.134.136.24]:53285 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgBET5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:57:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 11:57:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
-   d="scan'208";a="225933582"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2020 11:57:00 -0800
-Date:   Wed, 5 Feb 2020 11:57:00 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        Serge Ayoun <serge.ayoun@intel.com>
-Subject: Re: [PATCH v25 07/21] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20200205195700.GJ4877@linux.intel.com>
-References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
- <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 5 Feb 2020 14:57:11 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:32965 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgBET5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:57:11 -0500
+Received: by mail-pl1-f201.google.com with SMTP id bd7so1739273plb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:57:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=PuVF7evpyL1IfNp/BZc5IBmfpPrjFc9Sd5OoulZaPYY=;
+        b=eTwYibTwJtvWYNlkl13M5V8guR9zMPOD9T267/OIZ1NRxDX/uVQvaSYKr6qCBjJOpn
+         cOCgteAVwIo8qqZDhkC3hO3TFluych2w2PZZBRRujjIkwfclnsSdZTM85wLMZXew2f3e
+         FDzJO75SbTf2LiEW7KVKNGqoqQfVNHyy40tXd1ZgvdiwYY7mA8jLkVGKKmvkNMK1SCFZ
+         AleB4yGkVlkwWtJxxTJiBOiecc8q9SCs9H0dFu6NUKXe0V39N+CGx0hO8neQQjb3u8/D
+         Btpm++u3CICW7/2KmTg6sFEhotsEzvdbEdv/14MCDtF9qupOKSsHpIzy0de6MbF/qG1r
+         ZXrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=PuVF7evpyL1IfNp/BZc5IBmfpPrjFc9Sd5OoulZaPYY=;
+        b=uGqtoj8mA9egQqSuO6eKG0UXRtoVSLIJUWpVXj3hT3Ol0WczwrbDwA5paPMcxqBpks
+         A8lZAZ2Rr6oozgFP0jw6pbrN/CnhCGVX56uZUyU0imj3voIvygqf2A/fbMP5Ip+X8+HR
+         UOzXejHUzx9XUNi0oNhJ1YW/8Ufgji1k4SCYbtmEOSmlaD1xKEMPnp6vjIKA0SMbR8Sm
+         rDJ4Iquoj+6rDMylRreNi17xGcouPiXH+Mq12QTtIOpaXctbfI61bgHSqCRkVAc6DgSI
+         8Hp2J2qg/BpAJTO1gI27yuVzoXboeN4PdfZ3J5I3IT6mzUE+rVuqonb66VvuktibknBB
+         tSqg==
+X-Gm-Message-State: APjAAAXa1Vq6acKY9LHbM73eJhu/8JoyJZc7KES9V6puO8hPpV6PwqO2
+        hAQgIjWypNjYtfMeJZu4tb0oAlWm9w==
+X-Google-Smtp-Source: APXvYqx/wnxdg8HvcO2bBozrEKRdWQqLV39Jj/9pBkAo8UqtLRdiRmlINailKqpXmI4LBA4uyEU/+ZAIqA==
+X-Received: by 2002:a63:b047:: with SMTP id z7mr16462018pgo.431.1580932630181;
+ Wed, 05 Feb 2020 11:57:10 -0800 (PST)
+Date:   Wed,  5 Feb 2020 11:57:06 -0800
+In-Reply-To: <20200205045526.GA15286@ming.t460p>
+Message-Id: <20200205195706.49438-1-sqazi@google.com>
+Mime-Version: 1.0
+References: <20200205045526.GA15286@ming.t460p>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] block: Limit number of items taken from the I/O scheduler in
+ one go
+From:   Salman Qazi <sqazi@google.com>
+To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Salman Qazi <sqazi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 08:05:31AM +0200, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Enumerate Enclave Page Cache (EPC) sections via CPUID and add the data
-> structures necessary to track EPC pages so that they can be allocated,
-> freed and managed. As a system may have multiple EPC sections, invoke CPUID
-> on SGX sub-leafs until an invalid leaf is encountered.
-> 
-> For simplicity, support a maximum of eight EPC sections. Existing client
-> hardware supports only a single section, while upcoming server hardware
-> will support at most eight sections. Bounding the number of sections also
-> allows the section ID to be embedded along with a page's offset in a single
-> unsigned long, enabling easy retrieval of both the VA and PA for a given
-> page.
+Flushes bypass the I/O scheduler and get added to hctx->dispatch
+in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+hctx->run_work work item and is past the point in
+blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
 
-...
+The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+because the I/O scheduler can feed an arbitrary number of commands.
 
-> +++ b/arch/x86/kernel/cpu/sgx/reclaim.c
-> @@ -0,0 +1,87 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2016-19 Intel Corporation.
-> +
-> +#include <linux/freezer.h>
-> +#include <linux/highmem.h>
-> +#include <linux/kthread.h>
-> +#include <linux/pagemap.h>
-> +#include <linux/ratelimit.h>
-> +#include <linux/slab.h>
-> +#include <linux/sched/mm.h>
-> +#include <linux/sched/signal.h>
-> +#include "encls.h"
-> +
-> +struct task_struct *ksgxswapd_tsk;
-> +
-> +/*
-> + * Reset all pages to uninitialized state. Pages could be in initialized on
-> + * kmemexec.
-> + */
-> +static void sgx_sanitize_section(struct sgx_epc_section *section)
-> +{
-> +	struct sgx_epc_page *page, *tmp;
-> +	LIST_HEAD(secs_list);
-> +	int ret;
-> +
-> +	while (!list_empty(&section->unsanitized_page_list)) {
-> +		if (kthread_should_stop())
-> +			return;
-> +
-> +		spin_lock(&section->lock);
-> +
-> +		page = list_first_entry(&section->unsanitized_page_list,
-> +					struct sgx_epc_page, list);
-> +
-> +		ret = __eremove(sgx_epc_addr(page));
-> +		if (!ret)
-> +			list_move(&page->list, &section->page_list);
-> +		else
-> +			list_move_tail(&page->list, &secs_list);
-> +
-> +		spin_unlock(&section->lock);
-> +
-> +		cond_resched();
-> +	}
-> +
-> +	list_for_each_entry_safe(page, tmp, &secs_list, list) {
-> +		if (kthread_should_stop())
-> +			return;
-> +
-> +		ret = __eremove(sgx_epc_addr(page));
-> +		if (!WARN_ON_ONCE(ret)) {
+Since we have only one hctx->run_work, the commands waiting in
+hctx->dispatch will wait an arbitrary length of time for run_work to be
+rerun.
 
-Sadly, this WARN can fire after kexec() on systems with multiple EPC
-sections if the SECS has child pages in another section.
+A similar phenomenon exists with dispatches from the software queue.
 
-Virtual EPC (KVM) has a similar issue, which I'm handling by collecting all
-pages that fail a second EREMOVE in a global list, and then retrying every
-page in the global list every time a virtual EPC is destroyed, i.e. might
-have freed pages.
+The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+rerun.
 
-The same approach should work here, e.g. retry all SECS pages a third time
-once all sections have been sanitized and WARN if EREMOVE fails a third
-time on a page.
+Signed-off-by: Salman Qazi <sqazi@google.com>
+---
+ block/blk-mq-sched.c | 37 +++++++++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 6 deletions(-)
 
-> +			spin_lock(&section->lock);
-> +			list_move(&page->list, &section->page_list);
-> +			spin_unlock(&section->lock);
-> +		} else {
-> +			list_del(&page->list);
-> +			kfree(page);
-> +		}
-> +
-> +		cond_resched();
-> +	}
-> +}
-> +
-> +static int ksgxswapd(void *p)
-> +{
-> +	int i;
-> +
-> +	set_freezable();
-> +
-> +	for (i = 0; i < sgx_nr_epc_sections; i++)
-> +		sgx_sanitize_section(&sgx_epc_sections[i]);
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index ca22afd47b3d..52249fddeb66 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -84,12 +84,16 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns true if hctx->dispatch was found non-empty and
++ * run_work has to be run again.
+  */
+-static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
++static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	LIST_HEAD(rq_list);
++	bool ret = false;
+ 
+ 	do {
+ 		struct request *rq;
+@@ -97,6 +101,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+ 			break;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = true;
++			break;
++		}
++
+ 		if (!blk_mq_get_dispatch_budget(hctx))
+ 			break;
+ 
+@@ -113,6 +122,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		 */
+ 		list_add(&rq->queuelist, &rq_list);
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
++
++	return ret;
+ }
+ 
+ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+@@ -130,16 +141,25 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns true if hctx->dispatch was found non-empty and
++ * run_work has to be run again.
+  */
+-static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
++static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	LIST_HEAD(rq_list);
+ 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
++	bool ret = false;
+ 
+ 	do {
+ 		struct request *rq;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = true;
++			break;
++		}
++
+ 		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+ 			break;
+ 
+@@ -165,6 +185,7 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+ 
+ 	WRITE_ONCE(hctx->dispatch_from, ctx);
++	return ret;
+ }
+ 
+ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+@@ -172,6 +193,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
++	bool run_again = false;
+ 	LIST_HEAD(rq_list);
+ 
+ 	/* RCU or SRCU read lock is needed before checking quiesced flag */
+@@ -208,19 +230,22 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 		blk_mq_sched_mark_restart_hctx(hctx);
+ 		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+ 			if (has_sched_dispatch)
+-				blk_mq_do_dispatch_sched(hctx);
++				run_again = blk_mq_do_dispatch_sched(hctx);
+ 			else
+-				blk_mq_do_dispatch_ctx(hctx);
++				run_again = blk_mq_do_dispatch_ctx(hctx);
+ 		}
+ 	} else if (has_sched_dispatch) {
+-		blk_mq_do_dispatch_sched(hctx);
++		run_again = blk_mq_do_dispatch_sched(hctx);
+ 	} else if (hctx->dispatch_busy) {
+ 		/* dequeue request one by one from sw queue if queue is busy */
+-		blk_mq_do_dispatch_ctx(hctx);
++		run_again = blk_mq_do_dispatch_ctx(hctx);
+ 	} else {
+ 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+ 		blk_mq_dispatch_rq_list(q, &rq_list, false);
+ 	}
++
++	if (run_again)
++		blk_mq_run_hw_queue(hctx, true);
+ }
+ 
+ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+-- 
+2.25.0.341.g760bfbb309-goog
 
-I'm having second thoughts about proactively sanitizing the EPC sections.
-I think it'd be better to do EREMOVE the first time a page is allocated,
-e.g. add a SGX_EPC_PAGE_UNSANITIZED flag.
-
-  1. Sanitizing EPC that's never used is a waste of cycles, especially on
-     platforms with 64gb+ of EPC.
-
-  2. Deferring to allocation time automatically scales with the number of
-     tasks that are allocating EPC.  And, the CPU time will also be
-     accounted to those tasks.
-
-  3. Breaks on-demand paging when running in a VM, e.g. if the VMM chooses
-     to allocate a physical EPC page when it's actually accessed by the
-     VM.  I don't expect this to be a problem any time soon, as all VMMs
-     will likely preallocate EPC pages until KVM (or any other hypervisor)
-     gains EPC oversusbscription support, which may or may not ever happen.
-     But, I'd prefer to simply not have the problem in the first place.
-
-The logic will be a bit more complicated, but not terribly so.  
-
-> +
-> +	return 0;
-> +}
