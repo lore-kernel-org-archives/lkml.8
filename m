@@ -2,175 +2,197 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F94C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DCFC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E5E217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DFE20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CO4CrP+P"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GuNlVw9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgBETT5 (ORCPT
+        id S1727519AbgBETUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:19:57 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43118 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgBETT5 (ORCPT
+        Wed, 5 Feb 2020 14:20:36 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:37692 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgBETUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:19:57 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s1so1698031pfh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:19:56 -0800 (PST)
+        Wed, 5 Feb 2020 14:20:36 -0500
+Received: by mail-vk1-f193.google.com with SMTP id o200so895208vke.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:20:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3kaWiVgCUzHQzm8XNSi+4KOVQd2YyqHUv1usmw/72LM=;
-        b=CO4CrP+PQwUxailENkBM1kFSgtk0eKkblQlMdzpIQpAFOVTyZbdF3Vqhlw5sqfA9uM
-         J/kEf5KKjzE/Q9McYWqw0RvFuSjEB1dRusTICnXxfSt83mlxxpZDjRr5WwKa1dPQAHPJ
-         g2RAa0Yj+zQdyRFFYfGHQ42PFCp7MHOcYFGec=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5YaLuYG6Iy8QwcRaBytxQgkWb5GSrDhgxvX793l25Mo=;
+        b=GuNlVw9BGjVfmhTOpV2VTeLQx5fb7PKdprf2XR10o8G5FgixUq0JmY+Z6cyD+kx95/
+         5YEYPMNOQ2HaOFmXohheuf6yU7ENKL+x9hT+6uAnCPS2kPLJN5v1nYtcuPh1UbkNEo++
+         J8++OrPT4HiHnTqOvvoifx1YVBfMdbqv1HAW8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3kaWiVgCUzHQzm8XNSi+4KOVQd2YyqHUv1usmw/72LM=;
-        b=JtZdMfezpUhRd2BY7lOshKqwKgDoasm72zs/cxMDvlB/0OG80rCOJbo1TUSvsUBraJ
-         bij6bzIYBIjbh60K6d9XJylHsQAiT3RYfAYWNGmQQORQfLsFDygSAy4Aj5Vm6ZgPnOyG
-         R/RjplCu+uf3bSW8oLfVsA4kWyekOkdmzZaiXJGG8dY0b0YhT2yaLU2JcSh+2WWi2Im4
-         NrJSBo2QrOVfqIybDlNwTR905ph2IBglbXsvnSVBQEEdGFWMC/vsOouIT9U0tQqnYQ1N
-         957a7uL2QuptoEES4y0ln0UJuFKORNH9yUZNgYmwl72AYZxUY1V+TMLPYLm6GoWSE57I
-         x2HA==
-X-Gm-Message-State: APjAAAV7+csRwIIYo5Nhipbc3GdsQAHBfRiVAyTvC9Ov1uIf/KbHzGRI
-        iObk6GO3JVQidOMwiDsAWrjYcp31+sw=
-X-Google-Smtp-Source: APXvYqw1egACkYs16SkZQ0SvN+AIzw2ZfFe0dA8G3jL2rE8nn48PZ/IdUGPcyCH9RHSxGF6Vb7C1aQ==
-X-Received: by 2002:a63:3487:: with SMTP id b129mr38154712pga.320.1580930395429;
-        Wed, 05 Feb 2020 11:19:55 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id u23sm257224pfm.29.2020.02.05.11.19.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 11:19:54 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        kbuild test robot <lkp@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB))
-Subject: [PATCH v2 15/17] media: cros-ec-cec: Use cros_ec_cmd()
-Date:   Wed,  5 Feb 2020 11:00:24 -0800
-Message-Id: <20200205190028.183069-16-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200205190028.183069-1-pmalani@chromium.org>
-References: <20200205190028.183069-1-pmalani@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5YaLuYG6Iy8QwcRaBytxQgkWb5GSrDhgxvX793l25Mo=;
+        b=DbWbKWrZsqWJpgcrbil2GVIryn6L3YGAGS0ZbAnTWi9WMHXLm+oklFDk1zNKVxwvRu
+         YVrHV1WZFPttKg8rTb97pFj+6ytuRc8X/+Wk8MLLXAp9YLxO967V0DNe2n5WJq9tBb/t
+         lEwxNlgadOqq+wrupyyJpG5KyvYv97S8uKwSu/RwZksHA8WHN0g2I4rfHTImFJWYI/R2
+         zg4natuS6jwnIYiIhKiTdbPR+xA0C5lW9T8O5yJBXtVCtLfmylz3aRbAlRZA50lv3V3U
+         scvN09j8PQmGVXc4ZWIlXjg+N3KlRPbvcbpglFZw1WrTrJry4ulh2ihzMFwEQ18WHMyd
+         PwYg==
+X-Gm-Message-State: APjAAAWVEkWLhe20w9S/OFk1C8XMJeBv/9gmPTX7m6/EzD+IZHPRTP2B
+        N/y2W4MOEUb0GthQMoAKXYk54jlOpWs=
+X-Google-Smtp-Source: APXvYqwnUkPhNCI/vHR6gaTpjw7fEMVuJB0XhcBiwU1LC86Wtcg9xOEcU0LxOfxXZ12POHHMgsFEng==
+X-Received: by 2002:a05:6122:1066:: with SMTP id k6mr2706939vko.68.1580930434361;
+        Wed, 05 Feb 2020 11:20:34 -0800 (PST)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id f9sm248225vkl.21.2020.02.05.11.20.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 11:20:33 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id a33so1282570uad.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:20:33 -0800 (PST)
+X-Received: by 2002:ab0:2006:: with SMTP id v6mr20493719uak.22.1580930433242;
+ Wed, 05 Feb 2020 11:20:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org> <1580886097-6312-3-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1580886097-6312-3-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 5 Feb 2020 11:20:22 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=V6yM7UJwu0ZLPCqmDgV9FS4=g+wcLg0TV51b72zvWT9Q@mail.gmail.com>
+Message-ID: <CAD=FV=V6yM7UJwu0ZLPCqmDgV9FS4=g+wcLg0TV51b72zvWT9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] clk: qcom: gpucc: Add support for GX GDSC for SC7180
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace cros_ec_cmd_xfer_status() with cros_ec_cmd() which does the
-message buffer setup and cleanup, but is located in platform/chrome
-and used by other drivers.
+Hi,
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Reported-by: kbuild test robot <lkp@intel.com>
----
+On Tue, Feb 4, 2020 at 11:02 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+> From: Taniya Das <tdas@codeaurora.org>
+>
+>  Most of the time the CPU should not be touching the GX domain on the
+>  GPU
+>  except for a very special use case when the CPU needs to force the GX
 
-Changes in v2:
-- Updated to use new function name and parameter list.
-- Used C99 element setting to initialize struct.
+Really weird word-wrapping?  You've also indented your whole commit message?
 
- .../media/platform/cros-ec-cec/cros-ec-cec.c  | 45 +++++++------------
- 1 file changed, 16 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-index 0e7e2772f08f96..a462af1c9ae04b 100644
---- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-+++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-@@ -93,18 +93,14 @@ static int cros_ec_cec_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
- {
- 	struct cros_ec_cec *cros_ec_cec = adap->priv;
- 	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
--	struct {
--		struct cros_ec_command msg;
--		struct ec_params_cec_set data;
--	} __packed msg = {};
-+	struct ec_params_cec_set data = {
-+		.cmd = CEC_CMD_LOGICAL_ADDRESS,
-+		.val = logical_addr,
-+	};
- 	int ret;
- 
--	msg.msg.command = EC_CMD_CEC_SET;
--	msg.msg.outsize = sizeof(msg.data);
--	msg.data.cmd = CEC_CMD_LOGICAL_ADDRESS;
--	msg.data.val = logical_addr;
--
--	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
-+	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_SET, &data, sizeof(data),
-+			  NULL, 0, NULL);
- 	if (ret < 0) {
- 		dev_err(cros_ec->dev,
- 			"error setting CEC logical address on EC: %d\n", ret);
-@@ -119,17 +115,12 @@ static int cros_ec_cec_transmit(struct cec_adapter *adap, u8 attempts,
- {
- 	struct cros_ec_cec *cros_ec_cec = adap->priv;
- 	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
--	struct {
--		struct cros_ec_command msg;
--		struct ec_params_cec_write data;
--	} __packed msg = {};
-+	struct ec_params_cec_write data = {};
- 	int ret;
- 
--	msg.msg.command = EC_CMD_CEC_WRITE_MSG;
--	msg.msg.outsize = cec_msg->len;
--	memcpy(msg.data.msg, cec_msg->msg, cec_msg->len);
--
--	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
-+	memcpy(data.msg, cec_msg->msg, cec_msg->len);
-+	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_WRITE_MSG, &data,
-+			  sizeof(cec_msg->len), NULL, 0, NULL);
- 	if (ret < 0) {
- 		dev_err(cros_ec->dev,
- 			"error writing CEC msg on EC: %d\n", ret);
-@@ -143,18 +134,14 @@ static int cros_ec_cec_adap_enable(struct cec_adapter *adap, bool enable)
- {
- 	struct cros_ec_cec *cros_ec_cec = adap->priv;
- 	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
--	struct {
--		struct cros_ec_command msg;
--		struct ec_params_cec_set data;
--	} __packed msg = {};
-+	struct ec_params_cec_set data = {
-+		.cmd = CEC_CMD_ENABLE,
-+		.val = enable,
-+	};
- 	int ret;
- 
--	msg.msg.command = EC_CMD_CEC_SET;
--	msg.msg.outsize = sizeof(msg.data);
--	msg.data.cmd = CEC_CMD_ENABLE;
--	msg.data.val = enable;
--
--	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
-+	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_SET, &data, sizeof(data),
-+			  NULL, 0, NULL);
- 	if (ret < 0) {
- 		dev_err(cros_ec->dev,
- 			"error %sabling CEC on EC: %d\n",
--- 
-2.25.0.341.g760bfbb309-goog
+>  headswitch off. Add a dummy enable function for the GX gdsc to simulate
+>  success so that the pm_runtime reference counting is correct.
 
+Overall the commit message sounds a lot like the message in commit
+85a3d920d30a ("clk: qcom: Add a dummy enable function for GX gdsc").
+That's fine for the most part, but it makes it sound like you're
+_only_ adding the dummy enable.  In this case you're adding support
+for the GX domain and _also_ adding a dummy enable.  Maybe try:
+
+Most of the time the CPU should not be touching the GX domain on the
+GPU except for a very special use case when the CPU needs to force the
+GX headswitch off. Add the GX domain for that use case.  As part of
+this add a dummy enable function for the GX gdsc to simulate success
+so that the pm_runtime reference counting is correct.  This matches
+what was done in sdm845 in commit 85a3d920d30a ("clk: qcom: Add a
+dummy enable function for GX gdsc").
+
+
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+
+Since you are re-posting Taniya's patch you need to add your own
+Signed-off-by as per kernel policy.
+
+
+> ---
+>  drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>
+> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
+> index ec61194..3b29f19 100644
+> --- a/drivers/clk/qcom/gpucc-sc7180.c
+> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+> @@ -172,8 +172,45 @@ enum {
+>         .flags = VOTABLE,
+>  };
+>
+> +/*
+> + * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
+> + * running in the CX domain so the CPU doesn't need to know anything about the
+> + * GX domain EXCEPT....
+> + *
+> + * Hardware constraints dictate that the GX be powered down before the CX. If
+> + * the GMU crashes it could leave the GX on. In order to successfully bring back
+> + * the device the CPU needs to disable the GX headswitch. There being no sane
+> + * way to reach in and touch that register from deep inside the GPU driver we
+> + * need to set up the infrastructure to be able to ensure that the GPU can
+> + * ensure that the GX is off during this super special case. We do this by
+> + * defining a GX gdsc with a dummy enable function and a "default" disable
+> + * function.
+> + *
+> + * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
+> + * driver. During power up, nothing will happen from the CPU (and the GMU will
+> + * power up normally but during power down this will ensure that the GX domain
+> + * is *really* off - this gives us a semi standard way of doing what we need.
+> + */
+> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
+> +{
+> +       /* Do nothing but give genpd the impression that we were successful */
+> +       return 0;
+> +}
+> +
+> +static struct gdsc gx_gdsc = {
+> +       .gdscr = 0x100c,
+> +       .clamp_io_ctrl = 0x1508,
+> +       .pd = {
+> +               .name = "gpu_gx_gdsc",
+
+nit: technically name could be "gx_gdsc" to match the name of the
+struct and #define.  Your name is copied from sdm845 and matches the
+name of the struct and #define from there.
+
+
+> +               .power_on = gx_gdsc_enable,
+> +       },
+> +       .pwrsts = PWRSTS_OFF_ON,
+> +       .flags = CLAMP_IO,
+
+Compared to sdm845, you have different flags.  There we have:
+
+.flags = CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
+
+I'm not sure I have enough background knowledge about the hardare to
+figure this out.  Can you confirm that you're different than sdm845 on
+purpose?  Bonus points if you can confirm whether sdm845 is also
+correct as it is today or should be changed to match what you have?
+
+
+> +};
+> +
+>  static struct gdsc *gpu_cc_sc7180_gdscs[] = {
+>         [CX_GDSC] = &cx_gdsc,
+> +       [GX_GDSC] = &gx_gdsc,
+>  };
+
+Assuming that the question on flags is resolved and the commit message
+updated, feel free to add my Reviewed-by tag.
+
+
+
+
+-Doug
