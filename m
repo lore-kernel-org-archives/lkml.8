@@ -4,155 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7B4C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA194C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9ADD2051A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDFF2051A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgBEJ7M (ORCPT
+        id S1727468AbgBEKBE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:59:12 -0500
-Received: from mga02.intel.com ([134.134.136.20]:6920 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbgBEJ7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:59:11 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:59:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="343395725"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Feb 2020 01:59:07 -0800
-Date:   Wed, 5 Feb 2020 17:59:24 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200205095924.GC24162@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
+        Wed, 5 Feb 2020 05:01:04 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:43185 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgBEKBE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 05:01:04 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2940D1C000D;
+        Wed,  5 Feb 2020 10:01:02 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 11:01:01 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH] mtd: nand: Add comment about Kioxia ID
+Message-ID: <20200205110101.3d4e2e6a@xps13>
+In-Reply-To: <73dae14b-5bf0-b909-3229-aab3ed232669@kioxia.com>
+References: <1580783163-5601-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+        <20200204095214.666c71fc@xps13>
+        <73dae14b-5bf0-b909-3229-aab3ed232669@kioxia.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006085646.5768-9-david@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 10:56:44AM +0200, David Hildenbrand wrote:
->If we have holes, the holes will automatically get detected and removed
->once we remove the next bigger/smaller section. The extra checks can
->go.
->
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: David Hildenbrand <david@redhat.com>
->Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->Cc: Dan Williams <dan.j.williams@intel.com>
->Cc: Wei Yang <richardw.yang@linux.intel.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> mm/memory_hotplug.c | 34 +++++++---------------------------
-> 1 file changed, 7 insertions(+), 27 deletions(-)
->
->diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->index f294918f7211..8dafa1ba8d9f 100644
->--- a/mm/memory_hotplug.c
->+++ b/mm/memory_hotplug.c
->@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> 		if (pfn) {
-> 			zone->zone_start_pfn = pfn;
-> 			zone->spanned_pages = zone_end_pfn - pfn;
->+		} else {
->+			zone->zone_start_pfn = 0;
->+			zone->spanned_pages = 0;
-> 		}
-> 	} else if (zone_end_pfn == end_pfn) {
-> 		/*
->@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> 					       start_pfn);
-> 		if (pfn)
-> 			zone->spanned_pages = pfn - zone_start_pfn + 1;
->+		else {
->+			zone->zone_start_pfn = 0;
->+			zone->spanned_pages = 0;
->+		}
-> 	}
+Hi Yoshio,
 
-If it is me, I would like to take out these two similar logic out.
+Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com> wrote on Tue, 4 Feb 2020
+19:30:04 +0900:
 
-For example:
-
-	if () {
-	} else if () {
-	} else {
-		goto out;
-	}
-
-
-	/* The zone has no valid section */
-	if (!pfn) {
-			zone->zone_start_pfn = 0;
-			zone->spanned_pages = 0;
-	}
-
-out:
-	zone_span_writeunlock(zone);
-
-Well, this is just my personal taste :-)
-
->-
->-	/*
->-	 * The section is not biggest or smallest mem_section in the zone, it
->-	 * only creates a hole in the zone. So in this case, we need not
->-	 * change the zone. But perhaps, the zone has only hole data. Thus
->-	 * it check the zone has only hole or not.
->-	 */
->-	pfn = zone_start_pfn;
->-	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
->-		if (unlikely(!pfn_to_online_page(pfn)))
->-			continue;
->-
->-		if (page_zone(pfn_to_page(pfn)) != zone)
->-			continue;
->-
->-		/* Skip range to be removed */
->-		if (pfn >= start_pfn && pfn < end_pfn)
->-			continue;
->-
->-		/* If we find valid section, we have nothing to do */
->-		zone_span_writeunlock(zone);
->-		return;
->-	}
->-
->-	/* The zone has no valid section */
->-	zone->zone_start_pfn = 0;
->-	zone->spanned_pages = 0;
-> 	zone_span_writeunlock(zone);
-> }
+> Dear Miquèl,
 > 
->-- 
->2.21.0
+> 
+> On 2020/02/04 17:52, Miquel Raynal wrote:
+> > Hi Yoshio,
+> >
+> > Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com> wrote on Tue,  4 Feb
+> > 2020 11:26:03 +0900:
+> >  
+> >> Add a comment above NAND_MFR_TOSHIBA and SPINAND_MFR_TOSHIBA definitions
+> >> that Toshiba and Kioxia ID are the same.
+> >>
+> >> Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+> >> ---
+> >>   drivers/mtd/nand/raw/internals.h | 1 +
+> >>   drivers/mtd/nand/spi/toshiba.c   | 1 +
+> >>   2 files changed, 2 insertions(+)
+> >>
+> >> diff --git a/drivers/mtd/nand/raw/internals.h b/drivers/mtd/nand/raw/internals.h
+> >> index cba6fe7..2918376b 100644
+> >> --- a/drivers/mtd/nand/raw/internals.h
+> >> +++ b/drivers/mtd/nand/raw/internals.h
+> >> @@ -30,6 +30,7 @@
+> >>   #define NAND_MFR_SAMSUNG	0xec
+> >>   #define NAND_MFR_SANDISK	0x45
+> >>   #define NAND_MFR_STMICRO	0x20
+> >> +/* Toshiba and Kioxia ID are the same. */
+> >>   #define NAND_MFR_TOSHIBA	0x98
+> >>   #define NAND_MFR_WINBOND	0xef  
+> >>   >> diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c  
+> >> index 0db5ee4..a92ecc8 100644
+> >> --- a/drivers/mtd/nand/spi/toshiba.c
+> >> +++ b/drivers/mtd/nand/spi/toshiba.c
+> >> @@ -10,6 +10,7 @@
+> >>   #include <linux/kernel.h>
+> >>   #include <linux/mtd/spinand.h>  
+> >>   >> +/* Toshiba and Kioxia ID are the same. */  
+> >>   #define SPINAND_MFR_TOSHIBA		0x98
+> >>   #define TOSH_STATUS_ECC_HAS_BITFLIPS_T	(3 << 4)  
+> >>   >  
+> > "Are the same" is not very descriptive, what about "Kioxia is the new
+> > name of Toshiba"?  
+> 
+> 
+> That's a good idea.
+> 
+> Actually ,
+> 
+> Is was changed a company name from Toshiba memory Co to Kioxia Co.     Since became independent from Toshiba group.
+> 
+> I will update the comment as "Kioxia is new name of Toshiba memory"
 
--- 
-Wei Yang
-Help you, Help me
+Well, in this case I would even recommend something more meaningful:
+
+"Since its independence from Toshiba Group, Toshiba memory Co has become Kioxia Co"
+
+Also, please update the version of your patch to "v3" in the title
+"[PATCH v3] ...", this can be done automatically when formatting your
+patch with git format-patch with the -v 3 option.
+
+Also the prefix should be "mtd: spinand: toshiba:"
+
+Thanks,
+Miquèl
