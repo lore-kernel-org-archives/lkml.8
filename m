@@ -2,138 +2,62 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569BCC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841E3C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5EB2072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pl0KRFDS"
+	by mail.kernel.org (Postfix) with ESMTP id 5CD78217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgBEXIl (ORCPT
+        id S1727613AbgBEXIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:08:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50628 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727307AbgBEXIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:08:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580944119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=29ZTjJBKR+L3bx4WS0f/voo5oahzOM1U9ASFLBeMp4o=;
-        b=Pl0KRFDSx1dq1MP/a+/jSZatwh26VOo2MB3Mxqb/OuWkthSMm1qe06pj/nYQF8FhcrWa5I
-        Jvil4MojRAcYbBa7zapCWp36wClx0FDseA3Z4hFXJULpetvpJi2rrUXfGpzgq9U/qvMZV3
-        X6UoRSMQNP8OgZQdnJjy08ScYEj5LvQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-127-aW0bz0YAODSSJOPBtHmibQ-1; Wed, 05 Feb 2020 18:08:35 -0500
-X-MC-Unique: aW0bz0YAODSSJOPBtHmibQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44D17800D54;
-        Wed,  5 Feb 2020 23:08:33 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ABEAA8DC12;
-        Wed,  5 Feb 2020 23:08:29 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 07:08:26 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200205230826.GF8965@MiWiFi-R3L-srv>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200205095924.GC24162@richard>
- <20200205144811.GF26758@MiWiFi-R3L-srv>
- <20200205225633.GA28446@richard>
+        Wed, 5 Feb 2020 18:08:44 -0500
+Received: from namei.org ([65.99.196.166]:43568 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbgBEXIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:08:43 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 015N8YLU023763;
+        Wed, 5 Feb 2020 23:08:35 GMT
+Date:   Thu, 6 Feb 2020 10:08:34 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Greg KH <greg@kroah.com>
+cc:     Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        linux-kernel@vger.kernel.org, KY Srinivasan <kys@microsoft.com>
+Subject: [PATCH] Documentation/process: Change Microsoft contact for embargoed
+ hardware issues
+Message-ID: <alpine.LRH.2.21.2002061006350.22130@namei.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205225633.GA28446@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/20 at 06:56am, Wei Yang wrote:
-> On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
-> >Hi Wei Yang,
-> >
-> >On 02/05/20 at 05:59pm, Wei Yang wrote:
-> >> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >> >index f294918f7211..8dafa1ba8d9f 100644
-> >> >--- a/mm/memory_hotplug.c
-> >> >+++ b/mm/memory_hotplug.c
-> >> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> >> > 		if (pfn) {
-> >> > 			zone->zone_start_pfn = pfn;
-> >> > 			zone->spanned_pages = zone_end_pfn - pfn;
-> >> >+		} else {
-> >> >+			zone->zone_start_pfn = 0;
-> >> >+			zone->spanned_pages = 0;
-> >> > 		}
-> >> > 	} else if (zone_end_pfn == end_pfn) {
-> >> > 		/*
-> >> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> >> > 					       start_pfn);
-> >> > 		if (pfn)
-> >> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
-> >> >+		else {
-> >> >+			zone->zone_start_pfn = 0;
-> >> >+			zone->spanned_pages = 0;
-> >> >+		}
-> >> > 	}
-> >> 
-> >> If it is me, I would like to take out these two similar logic out.
-> >
-> >I also like this style. 
-> >> 
-> >> For example:
-> >> 
-> >> 	if () {
-> >> 	} else if () {
-> >> 	} else {
-> >> 		goto out;
-> >Here the last else is unnecessary, right?
-> >
-> 
-> I am afraid not.
-> 
-> If the range is not the first or last, we would leave pfn not initialized.
+Update Microsoft contact from Sasha to James.
 
-Ah, you are right. I forgot that one. Then pfn can be assigned the
-zone_start_pfn as the old code. Then the following logic is the same
-as the original code, find_smallest_section_pfn()/find_biggest_section_pfn() 
-have done the iteration the old for loop was doing.
+Signed-off-by: James Morris <jmorris@namei.org>
+---
+ Documentation/process/embargoed-hardware-issues.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	unsigned long pfn = zone_start_pfn;	
-	if () {
-	} else if () {
-	} 
-
-	/* The zone has no valid section */
-	if (!pfn) {
-        	zone->zone_start_pfn = 0;
-        	zone->spanned_pages = 0;
-	}
+diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
+index 33edae654599..5916d76f0d6b 100644
+--- a/Documentation/process/embargoed-hardware-issues.rst
++++ b/Documentation/process/embargoed-hardware-issues.rst
+@@ -250,7 +250,7 @@ an involved disclosed party. The current ambassadors list:
+   Intel		Tony Luck <tony.luck@intel.com>
+   Qualcomm	Trilok Soni <tsoni@codeaurora.org>
+ 
+-  Microsoft	Sasha Levin <sashal@kernel.org>
++  Microsoft	James Morris <jamorris@linux.microsoft.com>
+   VMware
+   Xen		Andrew Cooper <andrew.cooper3@citrix.com>
+ 
+-- 
+2.21.1
 
