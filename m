@@ -2,80 +2,114 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EDBC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88495C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3A421741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580905556;
-	bh=BGUSK/7uLL7BOkAM9NLzAh6niDlDzSg/iI22QPLfcMc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=2uA/e3X+W1lQWQy1RYsmFZY5y5ntS+h/+TvO8vqutO++E7DZi3K6BsjMTfWZkn7ZN
-	 9jIr9znFG+Tfiuj0bV0TmhZVxk1nPfZiFHsJ9Ise/eOUZWONX5axHTi8tBGdLQXzss
-	 igeqf1jPEbRxbYz13ZbxG45gAsAmO3tZ4VfFQegQ=
+	by mail.kernel.org (Postfix) with ESMTP id 600C7217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wawFg2lS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgBEMZz (ORCPT
+        id S1728018AbgBEM0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgBEMZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:25:54 -0500
-Received: from localhost (unknown [212.187.182.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 5 Feb 2020 07:26:34 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:60280 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727500AbgBEM0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:26:34 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580905593; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=VQYmbPaY8MPrUfg022IBP+geTXmFMxGGDigIsbDvgZE=; b=wawFg2lS/mNWs8N3nSk3CZGNk7kyXgpbSqrX8wik9CfeInpJUT59ZI6E25JmGUdglchM758N
+ 9Z6bomKehEqf2CZobm0QytQOKfT2SfpRCRCWs3S/T5Z33WxD4jNXj18ovkn8Q3nhd4vgb5nr
+ VjVZvFOEIxG68K8vDJPtpgDpryw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3ab477.7f99b5a5bdf8-smtp-out-n03;
+ Wed, 05 Feb 2020 12:26:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7B66BC433A2; Wed,  5 Feb 2020 12:26:30 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89712218AC;
-        Wed,  5 Feb 2020 12:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580905554;
-        bh=BGUSK/7uLL7BOkAM9NLzAh6niDlDzSg/iI22QPLfcMc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=zaKbhDCmBBEiZx7ly4AWYRsGbVH9TUORNVzBQ8m5G4y2e297nIZ7etGKZd1GCqD+1
-         Vabp2NxYEi1wI5XX8Wl1kl6Ze2325+rJthUOgLkyAf4kwg4Wtje+RHkmJzeJy0W9ty
-         26scb73vffIkOQjR6F/aNU//O7uhLKLOSpPyVmmU=
-Date:   Wed, 5 Feb 2020 12:25:51 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pzb@amzn.com
-Subject: [PATCH] embargoed-hardware-issues: drop Amazon contact as the email
- address now bounces
-Message-ID: <20200205122551.GA1185549@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52B7BC43383;
+        Wed,  5 Feb 2020 12:26:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52B7BC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v4 0/6] Add RSC power domain support
+Date:   Wed,  5 Feb 2020 17:56:06 +0530
+Message-Id: <1580905572-22712-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter's email address bounces, so remove him as the contact for Amazon.
+Changes in v4:
+- Add change to allow hierarchical topology in PC mode
+- Drop hierarchical domain idle states converter from v3
+- Address Merge sc7180 dtsi change to add low power modes
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/process/embargoed-hardware-issues.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v3:
+- Address Rob's comment on dt property value
+- Address Stephen's comments on rpmh-rsc driver change
+- Include sc7180 cpuidle low power mode changes from [1]
+- Include hierarchical domain idle states converter change from [2]
 
-diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
-index 33edae654599..3bc44a7932ee 100644
---- a/Documentation/process/embargoed-hardware-issues.rst
-+++ b/Documentation/process/embargoed-hardware-issues.rst
-@@ -260,7 +260,7 @@ an involved disclosed party. The current ambassadors list:
-   Red Hat	Josh Poimboeuf <jpoimboe@redhat.com>
-   SUSE		Jiri Kosina <jkosina@suse.cz>
- 
--  Amazon	Peter Bowen <pzb@amzn.com>
-+  Amazon
-   Google	Kees Cook <keescook@chromium.org>
-   ============= ========================================================
- 
+Changes in v2:
+- Add Stephen's Reviewed-By to the first three patches
+- Addressed Stephen's comments on fourth patch
+- Include changes to connect rpmh domain to cpuidle and genpds
+
+Resource State Coordinator (RSC) is responsible for powering off/lowering
+the requirements from CPU subsystem for the associated hardware like buses,
+clocks, and regulators when all CPUs and cluster is powered down.
+
+RSC power domain uses last-man activities provided by genpd framework based on
+Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest idle
+states. As a part of domain poweroff, RSC can lower resource state requirements
+by flushing the cached sleep and wake state votes for resources.
+
+[1] https://patchwork.kernel.org/patch/11218965
+[2] https://patchwork.kernel.org/patch/10941671
+[3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+
+Maulik Shah (5):
+  drivers: qcom: rpmh: fix macro to accept NULL argument
+  drivers: qcom: rpmh: remove rpmh_flush export
+  dt-bindings: soc: qcom: Add RSC power domain specifier
+  drivers: qcom: rpmh-rsc: Add RSC power domain support
+  arm64: dts: qcom: sc7180: Add cpuidle low power states
+
+Ulf Hansson (1):
+  drivers: firmware: psci: Allow hierarchical topology in PC mode
+
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      |   9 ++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 135 +++++++++++++++++++++
+ drivers/cpuidle/cpuidle-psci-domain.c              |  32 +++--
+ drivers/cpuidle/cpuidle-psci.c                     |  34 +++---
+ drivers/soc/qcom/rpmh-internal.h                   |   3 +
+ drivers/soc/qcom/rpmh-rsc.c                        |  81 +++++++++++++
+ drivers/soc/qcom/rpmh.c                            |  22 ++--
+ include/soc/qcom/rpmh.h                            |   5 -
+ 8 files changed, 269 insertions(+), 52 deletions(-)
+
 -- 
-2.25.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
