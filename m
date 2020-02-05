@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33BFC35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83ACC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B2F20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8DF20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbNGETkV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJusQJKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgBEMv0 (ORCPT
+        id S1728088AbgBEMv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:51:26 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50859 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbgBEMvZ (ORCPT
+        Wed, 5 Feb 2020 07:51:29 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33402 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgBEMv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:51:25 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so954234pjb.0;
-        Wed, 05 Feb 2020 04:51:24 -0800 (PST)
+        Wed, 5 Feb 2020 07:51:28 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n7so1188210pfn.0;
+        Wed, 05 Feb 2020 04:51:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=p4o6nUOGxNPuRPSrNBregTBA8bwmvTg5CUl0u2z528Q=;
-        b=fbNGETkV3yePdfOPkkretpz/hHkJaTfR9FtEV44umuMjmWjiSP4KwUy85KHD5vWFMM
-         k08UG0ivgazlOCXXwx0uzSviXrifB+a1cvgQSXZpLuTQTDqR2SHs19Kx6HecK1J2Dksx
-         oCdml0BtSgbx+B5wK5EhnXCYYfFnYNhBBwnBpLFuQYMQjBnYGiw5eESm3HJBFoazO3oq
-         1mVsem66t2Izi8pvp9eP8o83i1aCKEx5GJn5VTy3w1yjIpdTgYz+34eOy/5fzNSKjbVC
-         qTm3dTiHbUyYtGn/LTfYkOItlGFeS3zq0LVexbdrwKyHzDVP9JCSzW+AmaSkvtXKKz1r
-         vH/w==
+        bh=6hpkny8N/XZM7wZK5JpvEfe2AHXPpO8aqNteI1qybns=;
+        b=hJusQJKJ3dMO68YWd/RkVmXquAcSQCouv+XJYUHwrjq+Ec5w/GLEVgFg/ymRr/W07j
+         1dDKHA4QuTspdrU82bamvjc8HNp76lvEvEH4OuaxAurErXqtCxF4NqBu7fSTKsz2HzR8
+         PnGbzgi+nw4onNaIVPb/H+RF9OHbaPihw6zMjrU8Umb1ujstnxbQsCxrnHWhG+XcG0mh
+         SodEOQOxj+fAxFGA16q1NFzWrEBEmf2Ha61Q4vSMqLq12xJ9VG1y0nxUql0MmGbILeoI
+         je0w7F8LWcO1Q0iOi8pC8zQgY8cdy/nWB9AeQywoQzCELmcIWFkyjHU+yeXYn3Zow+tc
+         p/Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=p4o6nUOGxNPuRPSrNBregTBA8bwmvTg5CUl0u2z528Q=;
-        b=GFZGkousOn9FrT0tUqIRWL5c/cq8kiWpaili6Evb72mv8/tmFndcC4h3gMuQGcADbK
-         ebi8AnkKkMLlAMiZHmyLryxw2Ky758WBY7eF1ClCvVyP1qGUc/dH6RV2BAVm2MI5Fz4I
-         WZ6vLKu8Nv0g3QLqNFZRiPcVuBWcBZP6fqcFB8u5jNODDIjg6fJG9IXgfmofTeiapFmB
-         gQgdKWUyAmL/gdcM9jgPn5ftRNlbvFILpkY5QyyJUOHI6rcOtJ1e5Mo9EnK3TJIiyUIr
-         NheXUpwrTXE+sNb1/1kIn2uA3kAHjPCTMKqi45Flw+qc2sTiasZtjQehupUim1lS0pkZ
-         z4hw==
-X-Gm-Message-State: APjAAAUH7UXTkDMBriet4paA0O1WqlwWfMlCcUoEsMvd1QNzbpFjFa0e
-        w/SnWLMfSJKSSpXYKe+od9o=
-X-Google-Smtp-Source: APXvYqzTrsVY+JCK2jDAhzccvTSDjze99dIgbA83iOUDSRGNMdW2P2/zXjPYHf1DwPAwSaRbU1O64w==
-X-Received: by 2002:a17:90a:9285:: with SMTP id n5mr5701197pjo.58.1580907084424;
-        Wed, 05 Feb 2020 04:51:24 -0800 (PST)
+        bh=6hpkny8N/XZM7wZK5JpvEfe2AHXPpO8aqNteI1qybns=;
+        b=h/LYMNSUQM4rVpohzjdFTGpmg+xGjp6ceB1OLL34VMjNQnVO14PtpvYq7IugH8JOsN
+         RgDldQSK0zOqb1CA+3Y6MmRI7hGWzyVkrkdr+dUep78D5dm2uXy7IENwhu/qlckFkMi7
+         0Kd1OCPy5prIhwx2XoURSEaJPJX5xJT1kiZbdWdQCZwZwkCV79e/1aOlpDDtF4TSvgi6
+         3uH2iacXKZ4p1tjg99MOupq7PUqQrc/fI1NcUX7zqUNfFehGII13yMRTM395Gw6sy+Vz
+         mFAbQI9pL5yiQADgHmJj/tCr+KXrAqlsKfC8mklyHiHQAITZAX7GvXu/MObr3p3Q/ZTW
+         ToGw==
+X-Gm-Message-State: APjAAAX4xT/ugvaAvX4kuvj0bj1zzwJFG+aYvNA9cv8K3rMzivGlU0OV
+        74Vogi+MDQRZx3BXWhdAUxw=
+X-Google-Smtp-Source: APXvYqw9idXFBSsT2xdvOiIRwSJPnB/B0HjeQJuBKo2i8fBwcpNqyp3vAtg3WzJp921F+ZoJTl6mhQ==
+X-Received: by 2002:a63:c14b:: with SMTP id p11mr13707443pgi.290.1580907087478;
+        Wed, 05 Feb 2020 04:51:27 -0800 (PST)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id y127sm22864784pfg.22.2020.02.05.04.51.21
+        by smtp.gmail.com with ESMTPSA id y127sm22864784pfg.22.2020.02.05.04.51.24
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 05 Feb 2020 04:51:24 -0800 (PST)
+        Wed, 05 Feb 2020 04:51:27 -0800 (PST)
 From:   Baolin Wang <baolin.wang7@gmail.com>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         asutoshd@codeaurora.org
@@ -64,9 +64,9 @@ Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
         linus.walleij@linaro.org, baolin.wang@linaro.org,
         baolin.wang7@gmail.com, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 2/5] mmc: core: Enable the MMC host software queue for the SD card
-Date:   Wed,  5 Feb 2020 20:50:29 +0800
-Message-Id: <0dc2be36722232c07ad9bd61ca285ed1553fe3c9.1580894083.git.baolin.wang7@gmail.com>
+Subject: [PATCH v8 3/5] mmc: host: sdhci: Add request_done ops for struct sdhci_ops
+Date:   Wed,  5 Feb 2020 20:50:30 +0800
+Message-Id: <825d6f7b69393b4bc11fc3175749d46a0a495496.1580894083.git.baolin.wang7@gmail.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1580894083.git.baolin.wang7@gmail.com>
 References: <cover.1580894083.git.baolin.wang7@gmail.com>
@@ -79,36 +79,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Baolin Wang <baolin.wang@linaro.org>
 
-Enable the MMC host software queue for the SD card if the host controller
-supports the MMC host software queue.
+Add request_done ops for struct sdhci_ops as a preparation in case some
+host controllers have different method to complete one request, such as
+supporting request completion of MMC software queue.
 
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/mmc/core/sd.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mmc/host/sdhci.c |   12 ++++++++++--
+ drivers/mmc/host/sdhci.h |    2 ++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index fe914ff..76c7add 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1082,6 +1082,16 @@ static int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
- 		}
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 63db844..9761981 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2944,7 +2944,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
+ 
+ 	spin_unlock_irqrestore(&host->lock, flags);
+ 
+-	mmc_request_done(host->mmc, mrq);
++	if (host->ops->request_done)
++		host->ops->request_done(host, mrq);
++	else
++		mmc_request_done(host->mmc, mrq);
+ 
+ 	return false;
+ }
+@@ -3372,7 +3375,12 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+ 
+ 	/* Process mrqs ready for immediate completion */
+ 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+-		if (mrqs_done[i])
++		if (!mrqs_done[i])
++			continue;
++
++		if (host->ops->request_done)
++			host->ops->request_done(host, mrqs_done[i]);
++		else
+ 			mmc_request_done(host->mmc, mrqs_done[i]);
  	}
  
-+	if (host->cqe_ops && !host->cqe_enabled) {
-+		err = host->cqe_ops->cqe_enable(host, card);
-+		if (!err) {
-+			host->cqe_enabled = true;
-+			host->hsq_enabled = true;
-+			pr_info("%s: Host Software Queue enabled\n",
-+				mmc_hostname(host));
-+		}
-+	}
-+
- 	if (host->caps2 & MMC_CAP2_AVOID_3_3V &&
- 	    host->ios.signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
- 		pr_err("%s: Host failed to negotiate down from 3.3V\n",
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index a6a3ddc..3e95f74 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -654,6 +654,8 @@ struct sdhci_ops {
+ 	void	(*voltage_switch)(struct sdhci_host *host);
+ 	void	(*adma_write_desc)(struct sdhci_host *host, void **desc,
+ 				   dma_addr_t addr, int len, unsigned int cmd);
++	void	(*request_done)(struct sdhci_host *host,
++				struct mmc_request *mrq);
+ };
+ 
+ #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
 -- 
 1.7.9.5
 
