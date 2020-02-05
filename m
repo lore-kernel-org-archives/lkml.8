@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83A2C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCD7C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE4C214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6152B22527
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QALoKS78"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oMayZTRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgBETFT (ORCPT
+        id S1727477AbgBETF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:05:19 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37642 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgBETFS (ORCPT
+        Wed, 5 Feb 2020 14:05:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39220 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgBETF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:05:18 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z12so1418810pgl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:05:17 -0800 (PST)
+        Wed, 5 Feb 2020 14:05:59 -0500
+Received: by mail-pj1-f65.google.com with SMTP id e9so1400327pjr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:05:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kUhe/K0/9x0fsd6OKD8kfBY5OuIzmdvoJ/dyGgBHb8o=;
-        b=QALoKS78qLC14BG79yLHIABZSre+wtSJ8SL0MJKSVhu0DwenWjSL9GY9gVd2hBUEiX
-         v0GIJOyQuHpd/TyPPAsXzv5NEGtPr1U951QGEs9n3p7+JbGk5/ak/ZIFovWhCAP0T2oQ
-         U76zezI2zJOHo4WIYPgDRXZ+nCUJK1fw8ljeM=
+        bh=T/+l2VZUrV5Qwvr/mwaqtpe39jAW0eY4hdEX/zwn5x4=;
+        b=oMayZTRwuvAF18x8VHGU+FkRVVQazEiVz6138R6ecuoN8gke/bAE5rYO/3eG3FNmMV
+         xCSvx17yStvz2wwTicSszIEiW6plnIlT2HdvzVRxtPRpg/PWxmvOX9TXDxosk3cC+dTu
+         8nURu6GYq4jhb/XwnHiq7Wq94uUWKb6xJrn6s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kUhe/K0/9x0fsd6OKD8kfBY5OuIzmdvoJ/dyGgBHb8o=;
-        b=WndBIKodTVnnlObSsIF+iljTkxkYj2v8ZYLAmNQhDMkT7XHb8Tm6c/j1UmbZkRkGrm
-         4SOcc4yI0VF/BW+1omoBzAhUuJUuAEU/6NAwTZWEqjH4I/dROCKQMYgXmsuSfBnPKH3r
-         hiwjrejyrR2AqFZDXLjFZPBBGSJ9GPV4u8mlZtoARLcd/DarNvUIbR1OoKZHiN58Io7O
-         A7kb30UD+ZJCq5mTEQxjUDoDggw9pBgBLzwulCNRmGI5Uq+/KUsYbZq+R1ArB4+AVT6T
-         a93PpiHJo3o5LHAL7oTA5lC5tXZ3itH5ViGGRQuRdx34v7/QiASWPfYER0rdEfsczDeV
-         kkOg==
-X-Gm-Message-State: APjAAAWQNz+qbr7zfYpo9cNgytPEWG8WQnZq6JSU3b6CCOuom5qxUQba
-        6dghj/8H0G7nFo6A59BVC4su0QdgeyU=
-X-Google-Smtp-Source: APXvYqzJkjH6E9bz4JwlNYArL8v/Cx5iOiZ96j3UsgzgOvjCms7MEvbZ0wh38CYXOFMSjYUv7qcqbQ==
-X-Received: by 2002:a63:7a0f:: with SMTP id v15mr11652478pgc.139.1580929517138;
-        Wed, 05 Feb 2020 11:05:17 -0800 (PST)
+        bh=T/+l2VZUrV5Qwvr/mwaqtpe39jAW0eY4hdEX/zwn5x4=;
+        b=IW8cpJknTXGGdXiGxVOgd/k7O3lJY1gtqJdttPy04cBeEsI5K1T3oWiAaKfrHXI+2F
+         TwbiQLVItMOnNzNvdmWoBrP5O0Gyc5jBOLCQu44wwrThr5ms1rBHbyjEIcNKKO56M1rN
+         DelRelsxhItFy6x2F4od60eB7TfpmgKSAmidmlqNIqmu+lPXPRQaQa5v/FwVYJ/YJVa3
+         eT4cDi/ADO0kWsy4PQq4M7574MH1QMDqT7rI6b3iUDC7hJYD3ObVLmT8RY3t4bE3fhDI
+         dqXSSaKUIaI3NV4Mq0AN+doQ7K73Nxzbmg2S/GckFuNyWmcM5U1Cr1oJA+GSJ2qjmwKO
+         hkDw==
+X-Gm-Message-State: APjAAAVZ5k1SQV7EczicSNKZoFMAby9vEILhtXQ3mRxgocGxnE+ippU8
+        w55T19Vr+ypROD4+W9lEGZPi0yP2Fxc=
+X-Google-Smtp-Source: APXvYqzIVWhhSDFGWOfKT8zIo1ZEPcDB7Tx4NHxSoFZAlaV4ccxqX9uwKM9bA3mNxUnSTiXoyoRfww==
+X-Received: by 2002:a17:902:8341:: with SMTP id z1mr35514102pln.178.1580929556983;
+        Wed, 05 Feb 2020 11:05:56 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id u23sm257224pfm.29.2020.02.05.11.05.16
+        by smtp.gmail.com with ESMTPSA id u23sm257224pfm.29.2020.02.05.11.05.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 11:05:16 -0800 (PST)
+        Wed, 05 Feb 2020 11:05:56 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
         Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v2 03/17] platform/chrome: proto: Use cros_ec_cmd()
-Date:   Wed,  5 Feb 2020 10:59:59 -0800
-Message-Id: <20200205190028.183069-4-pmalani@chromium.org>
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v2 04/17] platform/chrome: usbpd_logger: Use cros_ec_cmd()
+Date:   Wed,  5 Feb 2020 11:00:01 -0800
+Message-Id: <20200205190028.183069-5-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200205190028.183069-1-pmalani@chromium.org>
 References: <20200205190028.183069-1-pmalani@chromium.org>
@@ -72,8 +71,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the use of cros_ec_cmd_xfer_status() with the new function
-cros_ec_cmd().
+Convert the earlier call of cros_ec_cmd_xfer_status() to
+cros_ec_cmd() which does the buffer setup and message allocation.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
@@ -81,49 +80,37 @@ Signed-off-by: Prashant Malani <pmalani@chromium.org>
 Changes in v2:
 - Updated to use new function name and parameter list.
 
- drivers/platform/chrome/cros_ec_proto.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/platform/chrome/cros_usbpd_logger.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index b3d5368f596813..aa7ae1f394cc91 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -811,31 +811,20 @@ EXPORT_SYMBOL(cros_ec_get_host_event);
-  */
- int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
+index 7de3ea75ef46eb..084b6d4b692128 100644
+--- a/drivers/platform/chrome/cros_usbpd_logger.c
++++ b/drivers/platform/chrome/cros_usbpd_logger.c
+@@ -61,19 +61,15 @@ static int append_str(char *buf, int pos, const char *fmt, ...)
+ static struct ec_response_pd_log *ec_get_log_entry(struct logger_data *logger)
  {
+ 	struct cros_ec_dev *ec_dev = logger->ec_dev;
 -	struct cros_ec_command *msg;
  	int ret;
  
- 	if (ec->features[0] == -1U && ec->features[1] == -1U) {
- 		/* features bitmap not read yet */
--		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
--		if (!msg)
--			return -ENOMEM;
+-	msg = (struct cros_ec_command *)logger->ec_buffer;
 -
--		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
--		msg->insize = sizeof(ec->features);
+-	msg->command = ec_dev->cmd_offset + EC_CMD_PD_GET_LOG_ENTRY;
+-	msg->insize = CROS_USBPD_LOG_RESP_SIZE;
 -
--		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+		ret = cros_ec_cmd(ec->ec_dev, 0,
-+				  ec->cmd_offset + EC_CMD_GET_FEATURES, NULL, 0,
-+				  ec->features, sizeof(ec->features), NULL);
- 		if (ret < 0) {
--			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
--				 ret, msg->result);
-+			dev_warn(ec->dev, "cannot get EC features: %d\n", ret);
- 			memset(ec->features, 0, sizeof(ec->features));
--		} else {
--			memcpy(ec->features, msg->data, sizeof(ec->features));
- 		}
+-	ret = cros_ec_cmd_xfer_status(ec_dev->ec_dev, msg);
++	ret = cros_ec_cmd(ec_dev->ec_dev, 0,
++			  ec_dev->cmd_offset + EC_CMD_PD_GET_LOG_ENTRY, NULL, 0,
++			  logger->ec_buffer, CROS_USBPD_LOG_RESP_SIZE, NULL);
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
  
- 		dev_dbg(ec->dev, "EC features %08x %08x\n",
- 			ec->features[0], ec->features[1]);
--
--		kfree(msg);
- 	}
+-	return (struct ec_response_pd_log *)msg->data;
++	return (struct ec_response_pd_log *)logger->ec_buffer;
+ }
  
- 	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+ static void cros_usbpd_print_log_entry(struct ec_response_pd_log *r,
 -- 
 2.25.0.341.g760bfbb309-goog
 
