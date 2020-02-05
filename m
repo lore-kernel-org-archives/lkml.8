@@ -2,101 +2,202 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D356C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7E1C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FAA2192A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5360B217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Fn6D3ZXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgBEEuI (ORCPT
+        id S1727963AbgBEEwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:50:08 -0500
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:50338 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbgBEEuI (ORCPT
+        Tue, 4 Feb 2020 23:52:23 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:16304 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727884AbgBEEwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:50:08 -0500
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1izCda-0004Hp-00; Wed, 05 Feb 2020 04:50:06 +0000
-Date:   Tue, 4 Feb 2020 23:50:06 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-Message-ID: <20200205045006.GZ1663@brightrain.aerifal.cx>
+        Tue, 4 Feb 2020 23:52:23 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580878342; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=qIsXFy+HHp7SSvQVHd8PMPwqr2p1gsi3igCBMs8ZZZg=;
+ b=Fn6D3ZXpLZ2TWZJwBWgH/4at5SbRXr+OE3kDCFhccorB+1UAtJiki4e9bjc58uS8U7uP7z6s
+ eYUhw72nP1H18P7vBktZ4hI4A1EtnQ6mTMN0AogV7cGk/SFJlaxlsh9UpRQ6RP+oTW10te1t
+ 3Aou52xq7KQRNqJOJx+etgx+AEc=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a49fb.7f46fdfc9dc0-smtp-out-n03;
+ Wed, 05 Feb 2020 04:52:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B9D1BC447A6; Wed,  5 Feb 2020 04:52:11 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85B99C43383;
+        Wed,  5 Feb 2020 04:52:10 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Feb 2020 12:52:10 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 6/8] scsi: ufs: Add dev ref clock gating wait time
+ support
+In-Reply-To: <1580871040.21785.7.camel@mtksdccf07>
+References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+ <1580721472-10784-7-git-send-email-cang@codeaurora.org>
+ <1580871040.21785.7.camel@mtksdccf07>
+Message-ID: <d37515ab264b0c46848ee2b88ba0a676@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pwrite function, originally defined by POSIX (thus the "p"), is
-defined to ignore O_APPEND and write at the offset passed as its
-argument. However, historically Linux honored O_APPEND if set and
-ignored the offset. This cannot be changed due to stability policy,
-but is documented in the man page as a bug.
+On 2020-02-05 10:50, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Mon, 2020-02-03 at 01:17 -0800, Can Guo wrote:
+>> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime 
+>> defines
+>> the minimum time for which the reference clock is required by device 
+>> during
+>> transition to LS-MODE or HIBERN8 state. Make this change to reflect 
+>> the new
+>> requirement by adding delays before turning off the clock.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+>> ---
+>>  drivers/scsi/ufs/ufs.h    |  3 +++
+>>  drivers/scsi/ufs/ufshcd.c | 40 
+>> ++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 43 insertions(+)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+>> index cfe3803..304076e 100644
+>> --- a/drivers/scsi/ufs/ufs.h
+>> +++ b/drivers/scsi/ufs/ufs.h
+>> @@ -167,6 +167,7 @@ enum attr_idn {
+>>  	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
+>>  	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
+>>  	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
+>> +	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	= 0x17,
+>>  };
+>> 
+>>  /* Descriptor idn for Query requests */
+>> @@ -534,6 +535,8 @@ struct ufs_dev_info {
+>>  	u16 wmanufacturerid;
+>>  	/*UFS device Product Name */
+>>  	u8 *model;
+>> +	u16 spec_version;
+>> +	u32 clk_gating_wait_us;
+>>  };
+>> 
+>>  /**
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index e8f7f9d..d5c547b 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -91,6 +91,9 @@
+>>  /* default delay of autosuspend: 2000 ms */
+>>  #define RPM_AUTOSUSPEND_DELAY_MS 2000
+>> 
+>> +/* Default value of wait time before gating device ref clock */
+>> +#define UFSHCD_REF_CLK_GATING_WAIT_US 0xFF /* microsecs */
+>> +
+>>  #define ufshcd_toggle_vreg(_dev, _vreg, _on)				\
+>>  	({                                                              \
+>>  		int _ret;                                               \
+>> @@ -3281,6 +3284,37 @@ static inline int 
+>> ufshcd_read_unit_desc_param(struct ufs_hba *hba,
+>>  				      param_offset, param_read_buf, param_size);
+>>  }
+>> 
+>> +static int ufshcd_get_ref_clk_gating_wait(struct ufs_hba *hba)
+>> +{
+>> +	int err = 0;
+>> +	u32 gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
+>> +
+>> +	if (hba->dev_info.spec_version >= 0x300) {
+>> +		err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
+>> +				QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME, 0, 0,
+>> +				&gating_wait);
+>> +		if (err)
+>> +			dev_err(hba->dev, "Failed reading bRefClkGatingWait. err = %d, use 
+>> default %uus\n",
+>> +					 err, gating_wait);
+>> +
+>> +		if (gating_wait == 0) {
+>> +			gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
+>> +			dev_err(hba->dev, "Undefined ref clk gating wait time, use default 
+>> %uus\n",
+>> +					 gating_wait);
+>> +		}
+>> +
+>> +		/*
+>> +		 * bRefClkGatingWaitTime defines the minimum time for which the
+>> +		 * reference clock is required by device during transition from
+>> +		 * HS-MODE to LS-MODE or HIBERN8 state. Give it more time to be
+>> +		 * on the safe side.
+>> +		 */
+>> +		hba->dev_info.clk_gating_wait_us = gating_wait + 50;
+> 
+> 
+> Not sure if the additional 50us wait time here is too large.
+> 
+> Is there any special reason to fix it as "50"?
+> 
+> 
+> Thanks,
+> Stanley
+> 
 
-Now that there's a pwritev2 syscall providing a superset of the pwrite
-functionality that has a flags argument, the conforming behavior can
-be offered to userspace via a new flag. Since pwritev2 checks flag
-validity (in kiocb_set_rw_flags) and reports unknown ones with
-EOPNOTSUPP, callers will not get wrong behavior on old kernels that
-don't support the new flag; the error is reported and the caller can
-decide how to handle it.
+Hi Stanley,
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- include/linux/fs.h      | 4 ++++
- include/uapi/linux/fs.h | 5 ++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+We used to ask vendors about it, 50 is somehow agreed by them. Do you 
+have a
+better value in mind?
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e0d909d35763..3a769a972f79 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3397,6 +3397,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
- {
- 	if (unlikely(flags & ~RWF_SUPPORTED))
- 		return -EOPNOTSUPP;
-+	if (unlikely((flags & RWF_APPEND) && (flags & RWF_NOAPPEND)))
-+		return -EINVAL;
- 
- 	if (flags & RWF_NOWAIT) {
- 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
-@@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
- 		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
- 	if (flags & RWF_APPEND)
- 		ki->ki_flags |= IOCB_APPEND;
-+	if (flags & RWF_NOAPPEND)
-+		ki->ki_flags &= ~IOCB_APPEND;
- 	return 0;
- }
- 
-diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-index 379a612f8f1d..591357d9b3c9 100644
---- a/include/uapi/linux/fs.h
-+++ b/include/uapi/linux/fs.h
-@@ -299,8 +299,11 @@ typedef int __bitwise __kernel_rwf_t;
- /* per-IO O_APPEND */
- #define RWF_APPEND	((__force __kernel_rwf_t)0x00000010)
- 
-+/* per-IO negation of O_APPEND */
-+#define RWF_NOAPPEND	((__force __kernel_rwf_t)0x00000020)
-+
- /* mask of flags supported by the kernel */
- #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
--			 RWF_APPEND)
-+			 RWF_APPEND | RWF_NOAPPEND)
- 
- #endif /* _UAPI_LINUX_FS_H */
--- 
-2.21.0
+For me, I just wanted to give it 10, so that we can directly use 
+usleep_range
+with it, no need to decide whether to use udelay or usleep_range.
 
+Thanks,
+Can Guo.
+
+>>  				      &dev_info->model, SD_ASCII_STD);
+>> @@ -7003,6 +7041,8 @@ static int ufshcd_device_params_init(struct 
+>> ufs_hba *hba)
+>>  		goto out;
+>>  	}
+>> 
+>> +	ufshcd_get_ref_clk_gating_wait(hba);
+>> +
+>>  	ufs_fixup_device_setup(hba);
+>> 
+>>  	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
