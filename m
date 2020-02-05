@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBB2C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94090C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2B021741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AD921741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgBESX3 (ORCPT
+        id S1727959AbgBESXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:23:29 -0500
+        Wed, 5 Feb 2020 13:23:40 -0500
 Received: from mga09.intel.com ([134.134.136.24]:43407 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727563AbgBESX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:23:27 -0500
+        id S1727870AbgBESX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:23:29 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:23:26 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:23:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
-   d="scan'208";a="343835176"
+   d="scan'208";a="343835209"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Feb 2020 10:23:25 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 05 Feb 2020 10:23:26 -0800
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -55,9 +54,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [RFC PATCH v9 3/7] x86/cet/ibt: Handle signals for Indirect Branch Tracking
-Date:   Wed,  5 Feb 2020 10:23:04 -0800
-Message-Id: <20200205182308.4028-4-yu-cheng.yu@intel.com>
+Subject: [RFC PATCH v9 7/7] x86/cet/ibt: Introduce arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE)
+Date:   Wed,  5 Feb 2020 10:23:08 -0800
+Message-Id: <20200205182308.4028-8-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200205182308.4028-1-yu-cheng.yu@intel.com>
 References: <20200205182308.4028-1-yu-cheng.yu@intel.com>
@@ -68,112 +67,350 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indirect Branch Tracking setting does not change in signal delivering or
-sigreturn; except the WAIT_ENDBR status.  In general, a task is in
-WAIT_ENDBR after an indirect CALL/JMP and before the next instruction
-starts.
+When Indirect Branch Tracking (IBT) is active, non-IBT-compatible legacy
+code can be executed if its address range is specified in the legacy code
+bitmap.  Each bit in the bitmap indicates a 4-KB legacy code page.
 
-WAIT_ENDBR status can be read from MSR_IA32_U_CET.  It is reset for signal
-delivering, but preserved on a task's stack and restored for sigreturn.
+The bitmap is allocated when the first time an application calls
+arch_prctl(ARCH_X86_MARK_LEGACY_CODE).  It is setup as a special mapping.
+The application can read the bitmap but not write to; it manages the bitmap
+with the arch_prctl() being introduced:
+
+arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE, unsigned long *buf)
+    Mark an address range as IBT legacy code.
+
+    *buf: starting linear address
+    *(buf + 1): size of the legacy code
+    *(buf + 2): set (1); clear (0)
 
 v9:
-- Fix missing WAIT_ENDBR in signal handling.
+- Split out special mapping zero page handling to the previous patch.
+- Change the bitmap from a pre-defined address to get_unmapped_area().
+
+v8:
+- Change legacy bitmap to a special mapping.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/kernel/cet.c        | 24 ++++++++++++++++++++++--
- arch/x86/kernel/fpu/signal.c |  8 +++++---
- 2 files changed, 27 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/cet.h        |   2 +
+ arch/x86/include/uapi/asm/prctl.h |   3 +
+ arch/x86/kernel/Makefile          |   2 +-
+ arch/x86/kernel/cet_bitmap.c      | 226 ++++++++++++++++++++++++++++++
+ arch/x86/kernel/cet_prctl.c       |  15 ++
+ 5 files changed, 247 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/kernel/cet_bitmap.c
 
-diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
-index 26f5d7c4fbff..07864bef23f9 100644
---- a/arch/x86/kernel/cet.c
-+++ b/arch/x86/kernel/cet.c
-@@ -280,7 +280,7 @@ int cet_restore_signal(bool ia32, struct sc_ext *sc_ext)
- 	u64 msr_val = 0;
- 	int err;
+diff --git a/arch/x86/include/asm/cet.h b/arch/x86/include/asm/cet.h
+index d3f0d50d51ec..a9677bcdeb5c 100644
+--- a/arch/x86/include/asm/cet.h
++++ b/arch/x86/include/asm/cet.h
+@@ -4,6 +4,7 @@
  
--	if (!cet->shstk_enabled)
-+	if (!cet->shstk_enabled && !cet->ibt_enabled)
- 		return 0;
+ #ifndef __ASSEMBLY__
+ #include <linux/types.h>
++#include <asm/processor.h>
  
- 	cet_user_state = get_xsave_addr(&current->thread.fpu.state.xsave,
-@@ -297,6 +297,16 @@ int cet_restore_signal(bool ia32, struct sc_ext *sc_ext)
- 		msr_val |= MSR_IA32_CET_SHSTK_EN;
- 	}
+ struct task_struct;
+ struct sc_ext;
+@@ -30,6 +31,7 @@ void cet_disable_free_shstk(struct task_struct *p);
+ int cet_restore_signal(bool ia32, struct sc_ext *sc);
+ int cet_setup_signal(bool ia32, unsigned long rstor, struct sc_ext *sc);
+ int cet_setup_ibt(void);
++int cet_mark_legacy_code(unsigned long addr, unsigned long size, unsigned long set);
+ void cet_disable_ibt(void);
+ #else
+ static inline int prctl_cet(int option, unsigned long arg2) { return -EINVAL; }
+diff --git a/arch/x86/include/uapi/asm/prctl.h b/arch/x86/include/uapi/asm/prctl.h
+index d962f0ec9ccf..da39d4bde4e1 100644
+--- a/arch/x86/include/uapi/asm/prctl.h
++++ b/arch/x86/include/uapi/asm/prctl.h
+@@ -18,5 +18,8 @@
+ #define ARCH_X86_CET_DISABLE		0x3002
+ #define ARCH_X86_CET_LOCK		0x3003
+ #define ARCH_X86_CET_ALLOC_SHSTK	0x3004
++#define ARCH_X86_CET_GET_LEGACY_BITMAP	0x3005 /* deprecated */
++#define ARCH_X86_CET_SET_LEGACY_BITMAP	0x3006 /* deprecated */
++#define ARCH_X86_CET_MARK_LEGACY_CODE	0x3007
  
-+	if (cet->ibt_enabled) {
-+		msr_val |= (MSR_IA32_CET_ENDBR_EN | MSR_IA32_CET_NO_TRACK_EN);
+ #endif /* _ASM_X86_PRCTL_H */
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 69a19957e200..0261ea015e45 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -142,7 +142,7 @@ obj-$(CONFIG_UNWINDER_ORC)		+= unwind_orc.o
+ obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
+ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
+ 
+-obj-$(CONFIG_X86_INTEL_CET)		+= cet.o cet_prctl.o
++obj-$(CONFIG_X86_INTEL_CET)		+= cet.o cet_prctl.o cet_bitmap.o
+ 
+ ###
+ # 64 bit specific files
+diff --git a/arch/x86/kernel/cet_bitmap.c b/arch/x86/kernel/cet_bitmap.c
+new file mode 100644
+index 000000000000..2c9e76f9b3f6
+--- /dev/null
++++ b/arch/x86/kernel/cet_bitmap.c
+@@ -0,0 +1,226 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
-+		if (cet->ibt_bitmap_used)
-+			msr_val |= (cet->ibt_bitmap_base | MSR_IA32_CET_LEG_IW_EN);
++#include <linux/bits.h>
++#include <linux/err.h>
++#include <linux/memcontrol.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/oom.h>
++#include <linux/pagemap.h>
++#include <linux/rmap.h>
++#include <linux/swap.h>
++#include <asm/cet.h>
++#include <asm/fpu/internal.h>
 +
-+		if (sc_ext->wait_endbr)
-+			msr_val |= MSR_IA32_CET_WAIT_ENDBR;
++#define MMAP_MAX	(unsigned long)(test_thread_flag(TIF_ADDR32) ? \
++				TASK_SIZE : TASK_SIZE_MAX)
++#define IBT_BITMAP_SIZE	(round_up(MMAP_MAX, PAGE_SIZE * BITS_PER_BYTE) / \
++				(PAGE_SIZE * BITS_PER_BYTE))
++
++/*
++ * For read fault, provide the zero page.  For write fault coming from
++ * get_user_pages(), clear the page already allocated.
++ */
++static vm_fault_t bitmap_fault(const struct vm_special_mapping *sm,
++			       struct vm_area_struct *vma, struct vm_fault *vmf)
++{
++	if (!(vmf->flags & FAULT_FLAG_WRITE)) {
++		vmf->page = ZERO_PAGE(vmf->address);
++		return 0;
++	} else {
++		vm_fault_t r;
++
++		if (!vmf->cow_page)
++			return VM_FAULT_ERROR;
++
++		clear_user_highpage(vmf->cow_page, vmf->address);
++		__SetPageUptodate(vmf->cow_page);
++		r = finish_fault(vmf);
++		return r ? r : VM_FAULT_DONE_COW;
++	}
++}
++
++static int bitmap_mremap(const struct vm_special_mapping *sm,
++			 struct vm_area_struct *vma)
++{
++	return -EINVAL;
++}
++
++static const struct vm_special_mapping bitmap_mapping = {
++	.name	= "[ibt_bitmap]",
++	.fault	= bitmap_fault,
++	.mremap	= bitmap_mremap,
++};
++
++static int alloc_bitmap(void)
++{
++	struct mm_struct *mm = current->mm;
++	struct vm_area_struct *vma;
++	unsigned long addr;
++	u64 msr_val;
++	int r = 0;
++
++	if (down_write_killable(&mm->mmap_sem))
++		return -EINTR;
++
++	addr = get_unmapped_area(NULL, 0, IBT_BITMAP_SIZE, 0, 0);
++	if (IS_ERR_VALUE(addr)) {
++		up_write(&mm->mmap_sem);
++		return PTR_ERR((void *)addr);
 +	}
 +
- 	cet_user_state->user_cet = msr_val;
++	vma = _install_special_mapping(mm, addr, IBT_BITMAP_SIZE,
++				       VM_READ | VM_MAYREAD | VM_MAYWRITE,
++				       &bitmap_mapping);
++
++	if (IS_ERR(vma))
++		r = PTR_ERR(vma);
++
++	up_write(&mm->mmap_sem);
++
++	if (r)
++		return r;
++
++	fpregs_lock();
++	if (test_thread_flag(TIF_NEED_FPU_LOAD))
++		__fpregs_load_activate();
++
++	rdmsrl(MSR_IA32_U_CET, msr_val);
++	msr_val |= (addr | MSR_IA32_CET_LEG_IW_EN);
++	wrmsrl(MSR_IA32_U_CET, msr_val);
++	fpregs_unlock();
++	current->thread.cet.ibt_bitmap_used = 1;
++	current->thread.cet.ibt_bitmap_base = addr;
++	return 0;
++}
++
++/*
++ * Set bits in the IBT legacy code bitmap, which is read-only user memory.
++ */
++static int set_bits(unsigned long start_bit, unsigned long end_bit,
++		    unsigned long set)
++{
++	unsigned long start_ul, end_ul, nr_ul;
++	unsigned long start_ul_addr, tmp_addr, len;
++	int i, j;
++
++	start_ul = start_bit / BITS_PER_LONG;
++	end_ul = end_bit / BITS_PER_LONG;
++	i = start_bit % BITS_PER_LONG;
++	j = end_bit % BITS_PER_LONG;
++
++	tmp_addr = current->thread.cet.ibt_bitmap_base;
++	start_ul_addr = tmp_addr + start_ul * sizeof(0UL);
++	nr_ul = end_ul - start_ul + 1;
++
++	tmp_addr = start_ul_addr;
++	len = nr_ul * sizeof(0UL);
++
++	down_read(&current->mm->mmap_sem);
++	while (len) {
++		unsigned long *first, *last, mask, bytes;
++		int ret, offset;
++		void *kern_page_addr;
++		struct page *page = NULL;
++
++		ret = get_user_pages(tmp_addr, 1, FOLL_WRITE | FOLL_FORCE,
++				     &page, NULL);
++
++		if (ret <= 0) {
++			up_read(&current->mm->mmap_sem);
++			return ret;
++		}
++
++		kern_page_addr = kmap(page);
++
++		bytes = len;
++		offset = tmp_addr & (PAGE_SIZE - 1);
++
++		/* Is end_ul in this page? */
++		if (bytes > (PAGE_SIZE - offset)) {
++			bytes = PAGE_SIZE - offset;
++			last = NULL;
++		} else {
++			last = (unsigned long *)(kern_page_addr + offset + bytes) - 1;
++		}
++
++		/* Is start_ul in this page? */
++		if (tmp_addr == start_ul_addr)
++			first = (unsigned long *)(kern_page_addr + offset);
++		else
++			first = NULL;
++
++		if (nr_ul == 1) {
++			mask = GENMASK(j, i);
++
++			if (set)
++				*first |= mask;
++			else
++				*first &= ~mask;
++		} else {
++			if (first) {
++				mask = GENMASK(BITS_PER_LONG - 1, i);
++
++				if (set)
++					*first |= mask;
++				else
++					*first &= ~mask;
++			}
++
++			if (last) {
++				mask = GENMASK(j, 0);
++
++				if (set)
++					*last |= mask;
++				else
++					*last &= ~mask;
++			}
++
++			if (nr_ul > 2) {
++				void *p = kern_page_addr + offset;
++				int cnt = bytes;
++
++				if (first) {
++					p += sizeof(*first);
++					cnt -= sizeof(*first);
++				}
++
++				if (last)
++					cnt -= sizeof(*last);
++
++				if (set)
++					memset(p, 0xff, cnt);
++				else
++					memset(p, 0, cnt);
++			}
++		}
++
++		set_page_dirty_lock(page);
++		kunmap(page);
++		put_page(page);
++
++		len -= bytes;
++		tmp_addr += bytes;
++	}
++	up_read(&current->mm->mmap_sem);
++	return 0;
++}
++
++int cet_mark_legacy_code(unsigned long addr, unsigned long size, unsigned long set)
++{
++	int r;
++
++	if (!current->thread.cet.ibt_enabled)
++		return -EINVAL;
++
++	if ((addr >= MMAP_MAX) || (addr + size > MMAP_MAX))
++		return -EINVAL;
++
++	if (!current->thread.cet.ibt_bitmap_used) {
++		r = alloc_bitmap();
++		if (r)
++			return r;
++	}
++
++	return set_bits(addr / PAGE_SIZE, (addr + size - 1) / PAGE_SIZE, set);
++}
+diff --git a/arch/x86/kernel/cet_prctl.c b/arch/x86/kernel/cet_prctl.c
+index 2a3170786a3b..3fa5ce8d4938 100644
+--- a/arch/x86/kernel/cet_prctl.c
++++ b/arch/x86/kernel/cet_prctl.c
+@@ -54,6 +54,18 @@ static int handle_alloc_shstk(unsigned long arg2)
  	return 0;
  }
-@@ -312,7 +322,7 @@ int cet_setup_signal(bool ia32, unsigned long rstor_addr, struct sc_ext *sc_ext)
- 	unsigned long ssp = 0, new_ssp = 0;
- 	int err;
  
--	if (!cet->shstk_enabled)
-+	if (!cet->shstk_enabled && !cet->ibt_enabled)
- 		return 0;
- 
- 	if (cet->shstk_enabled) {
-@@ -339,6 +349,16 @@ int cet_setup_signal(bool ia32, unsigned long rstor_addr, struct sc_ext *sc_ext)
- 	}
- 
- 	start_update_msrs();
-+	if (cet->ibt_enabled) {
-+		u64 r;
++static int handle_mark_legacy_code(unsigned long arg2)
++{
++	unsigned long addr, size, set;
 +
-+		rdmsrl(MSR_IA32_U_CET, r);
-+		if (r & MSR_IA32_CET_WAIT_ENDBR) {
-+			sc_ext->wait_endbr = 1;
-+			wrmsrl(MSR_IA32_U_CET, r & ~MSR_IA32_CET_WAIT_ENDBR);
-+		}
-+	}
++	if (get_user(addr, (unsigned long __user *)arg2) ||
++	    get_user(size, (unsigned long __user *)arg2 + 1) ||
++	    get_user(set, (unsigned long __user *)arg2 + 2))
++		return -EFAULT;
 +
- 	if (cet->shstk_enabled)
- 		wrmsrl(MSR_IA32_PL3_SSP, ssp);
- 	end_update_msrs();
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 875cc0fadce3..1d8a75408b95 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -57,7 +57,8 @@ int save_cet_to_sigframe(void __user *fp, unsigned long restorer, int is_ia32)
- 	int err = 0;
++	return cet_mark_legacy_code(addr, size, set);
++}
++
+ int prctl_cet(int option, unsigned long arg2)
+ {
+ 	struct cet_status *cet = &current->thread.cet;
+@@ -82,6 +94,9 @@ int prctl_cet(int option, unsigned long arg2)
+ 	case ARCH_X86_CET_ALLOC_SHSTK:
+ 		return handle_alloc_shstk(arg2);
  
- #ifdef CONFIG_X86_INTEL_CET
--	if (!current->thread.cet.shstk_enabled)
-+	if (!current->thread.cet.shstk_enabled &&
-+	    !current->thread.cet.ibt_enabled)
- 		return 0;
- 
- 	if (fp) {
-@@ -89,7 +90,8 @@ static int restore_cet_from_sigframe(int is_ia32, void __user *fp)
- 	int err = 0;
- 
- #ifdef CONFIG_X86_INTEL_CET
--	if (!current->thread.cet.shstk_enabled)
-+	if (!current->thread.cet.shstk_enabled &&
-+	    !current->thread.cet.ibt_enabled)
- 		return 0;
- 
- 	if (fp) {
-@@ -548,7 +550,7 @@ static unsigned long fpu__alloc_sigcontext_ext(unsigned long sp)
- 	if (cpu_x86_cet_enabled()) {
- 		struct cet_status *cet = &current->thread.cet;
- 
--		if (cet->shstk_enabled)
-+		if (cet->shstk_enabled || cet->ibt_enabled)
- 			sp -= (sizeof(struct sc_ext) + 8);
++	case ARCH_X86_CET_MARK_LEGACY_CODE:
++		return handle_mark_legacy_code(arg2);
++
+ 	default:
+ 		return -EINVAL;
  	}
- 
 -- 
 2.21.0
 
