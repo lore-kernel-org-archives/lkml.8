@@ -2,181 +2,153 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A58C35251
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD16C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D464720730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6B7217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iWiKa5SU"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Paw5pf7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgBEHOt (ORCPT
+        id S1727924AbgBEHPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:14:49 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56380 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725875AbgBEHOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:14:48 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580886887; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=/Rn8gPx55VphCTkY85g7IMgryOUcsLPrZIyhj6H0O9Q=; b=iWiKa5SUAeH/yH0QKpi6CV7B2spOfw+f/QhX+tSlIFKBiCqAHbzwJcKZyxILc5yoe+umFjRi
- ad4jN//83PYrKmQhpLYiZqL53zKpYIl0yo7lK9tDBVx/bEfmbin6QznW/6kxFyWtKuTheK0H
- 4XepnbPz9S+BBLX1DmP7e8qqmpA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a6b66.7fa68d3f10d8-smtp-out-n03;
- Wed, 05 Feb 2020 07:14:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B9C4DC447A3; Wed,  5 Feb 2020 07:14:43 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B01CCC433CB;
-        Wed,  5 Feb 2020 07:14:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B01CCC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] scsi: ufs: Fix registers dump vops caused scheduling while atomic
-Date:   Tue,  4 Feb 2020 23:14:29 -0800
-Message-Id: <1580886875-31967-1-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 5 Feb 2020 02:15:10 -0500
+Received: from mail-eopbgr130083.outbound.protection.outlook.com ([40.107.13.83]:48105
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbgBEHPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 02:15:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PBDMKUZcGL0aqeoh996687/U8eLoRVrsoW0kMMBph6I1xnG5YsQol3uTsCzvrGM7IHo2icqu++2zlZ7EcikWPxBQc/1U/L9ssp0yFV10oQLoqbSKxtor7b6+6+bzmRdY9epLrWh92eU5P/7Fyrq3ewQc99C5wPb0grvppn/833u7sR4Z0azyxQWbtNcvqy478dOhwJ3yzqFJa4M3DJKwOMN4pwNgRi6D1aWb/CD107BV1A5J2Mj3jWGANvB+gfikjIrQDBZY6P1MQ7K0+eb6ACRdtNTeuy7KS6EnxxYVP/0uIqbEBdOoEgSHEClZXl5v4QKvrVQ5r8jTtce/ATZcYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XWf6a2Rd0ies5rSCVmJgZ66peRsDzAVCULR4cEzitfM=;
+ b=ebf3pTT6a7pS68qHIR2BxM9fkWUlZio9lhK1xWjg2UhfFAexS16c7e/ACf0/Zm4+V5Zdsp//YWI8oYM4rjv+GlrSoMa0tfRgsv7o1d3wfMyh4MaUhwZO4s3HANO70KqrkYbXwYOc3SBcO+u/siHlItY1HQx7mEYFgL5yStG29v/dRd0iMrQ/IqWtfVVLYgO2fxhkbpJJhVdhde1BMLp3XXBgHUcGFy1OVCcGGyiPX2Ff0QjfOyqbSGQ1bkQv/ixlE/lG77epK4AssK9OWxpmBvNBFtuZl/vU9R1U7Lb/kl39I4HEv0xXgFrmATWg1bBMnQOYWlP0mLhnqL2El3m1lQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XWf6a2Rd0ies5rSCVmJgZ66peRsDzAVCULR4cEzitfM=;
+ b=Paw5pf7nmpWMW4DoFhmsvhwXRXbNFU2hOId+q2artqmCX2yBa4JJS3x8bM2hTqFQRxXLCjfJClXKFHbGuLr0M1NNoZ2vSBuIeXIYP+5/PF09nzMQK0Kuf/i4x0ahR/gQwJ9ojDuhzmDe+FGDcmrRsLlCVXW7IflQN1KAIu42FWw=
+Received: from AM0PR0502MB3795.eurprd05.prod.outlook.com (52.133.45.150) by
+ AM0PR0502MB3876.eurprd05.prod.outlook.com (52.133.48.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Wed, 5 Feb 2020 07:15:04 +0000
+Received: from AM0PR0502MB3795.eurprd05.prod.outlook.com
+ ([fe80::d862:228a:d87f:99bb]) by AM0PR0502MB3795.eurprd05.prod.outlook.com
+ ([fe80::d862:228a:d87f:99bb%7]) with mapi id 15.20.2686.031; Wed, 5 Feb 2020
+ 07:15:04 +0000
+From:   Shahaf Shuler <shahafs@mellanox.com>
+To:     Tiwei Bie <tiwei.bie@intel.com>, Jason Wang <jasowang@redhat.com>
+CC:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "dan.daly@intel.com" <dan.daly@intel.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
+Subject: RE: [PATCH] vhost: introduce vDPA based backend
+Thread-Topic: [PATCH] vhost: introduce vDPA based backend
+Thread-Index: AQHV1+fI0VDKiPRsCkOOQhfIRhwRFqgKZwCAgAF56YCAAFYPAA==
+Date:   Wed, 5 Feb 2020 07:15:03 +0000
+Message-ID: <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+ <20200205020247.GA368700@___>
+In-Reply-To: <20200205020247.GA368700@___>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shahafs@mellanox.com; 
+x-originating-ip: [31.154.10.105]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 292764e5-cca2-454b-19d7-08d7aa0b1f2b
+x-ms-traffictypediagnostic: AM0PR0502MB3876:|AM0PR0502MB3876:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0502MB3876BCBD81EC75903EFE7472C3020@AM0PR0502MB3876.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0304E36CA3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(199004)(189003)(9686003)(66446008)(64756008)(66476007)(66556008)(8676002)(81166006)(81156014)(76116006)(66946007)(52536014)(5660300002)(4326008)(33656002)(6506007)(478600001)(8936002)(55016002)(186003)(26005)(86362001)(316002)(7416002)(2906002)(71200400001)(7696005)(54906003)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB3876;H:AM0PR0502MB3795.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dOVszRvCOAVzoncSG6qt26FwlLk9y1tpgm0ouWRt916xk6ttFFcQwzimymVR4fjQCL/LGF//X61z1pgQmPS9Iz0AzAKzZx43FyFOuNHa9gWss4QFdCKyIOePPSTxmlD4u/kat5ufHcux79cv+rud0jPZeIzlx4PQt5WkdIMcekdz0Am4B5PKCdB/S+ZXDmRr/1jQgI5OYSrZ2pYpSrQ6fYhZLjciJqwQJN6GsJNDAP9INRNnC294ciCyZq73qsMbG30Bm12Ngi9T+pHh7/sKfMkTaQaeYUkb456v9B7Yliv2vIjVFvyRqN+xDwGp0njFmj6qYqC2bR0Gqs1P0KgBGqJ6t7aYII8asMp/A9zmvlNeFM9ok2QdkCKCS2KyQPcEbKb9NwDjrweNhYLcfiLqBoaRzQJtcv4Wow1L/+gPvwRNHoCLeb5mTX6G/kw30Md4
+x-ms-exchange-antispam-messagedata: SXJn4Igv0AGygJVogE5g0hgFjY2EjAIiFQzpNgiUywDerafhGlqETJIazBfTc3+w5jFQNu2+J03838bw+yNyk2Y+T3FIC5gzpil902b7qeky2PgIRLxkeYTMxZrZe0KJ+fJdu9CaEGHezdUtQ0he5w==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 292764e5-cca2-454b-19d7-08d7aa0b1f2b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2020 07:15:03.9305
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A2Zw4lxXnah5i22LCSFf1152zBfgBHSm9YvVJXbsgW2GT0J31MxdTyUe9UFB/yTKDPdu7WV0/IQBGpjc3KKpFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3876
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reigsters dump intiated from atomic context should not sleep. To fix it,
-add one boolean parameter to register dump vops to inform vendor driver if
-sleep is allowed or not.
-
-Signed-off-by: Can Guo <cang@codeaurora.org>
-
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 3b5b2d9..c30139c 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1619,13 +1619,17 @@ static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
- 	kfree(testbus);
- }
- 
--static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
-+static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba, bool no_sleep)
- {
- 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
- 			 "HCI Vendor Specific Registers ");
- 
- 	/* sleep a bit intermittently as we are dumping too much data */
- 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
-+
-+	if (no_sleep)
-+		return;
-+
- 	usleep_range(1000, 1100);
- 	ufs_qcom_testbus_read(hba);
- 	usleep_range(1000, 1100);
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 0ac5d47..c585457 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -398,7 +398,7 @@ static void ufshcd_print_err_hist(struct ufs_hba *hba,
- 		dev_err(hba->dev, "No record of %s\n", err_name);
- }
- 
--static void ufshcd_print_host_regs(struct ufs_hba *hba)
-+static inline void __ufshcd_print_host_regs(struct ufs_hba *hba, bool no_sleep)
- {
- 	ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
- 	dev_err(hba->dev, "hba->ufs_version = 0x%x, hba->capabilities = 0x%x\n",
-@@ -430,7 +430,17 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
- 
- 	ufshcd_print_clk_freqs(hba);
- 
--	ufshcd_vops_dbg_register_dump(hba);
-+	ufshcd_vops_dbg_register_dump(hba, no_sleep);
-+}
-+
-+static void ufshcd_print_host_regs(struct ufs_hba *hba)
-+{
-+	__ufshcd_print_host_regs(hba, false);
-+}
-+
-+static void ufshcd_print_host_regs_atomic(struct ufs_hba *hba)
-+{
-+	__ufshcd_print_host_regs(hba, true);
- }
- 
- static
-@@ -4821,7 +4831,7 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
- 		dev_err(hba->dev,
- 				"OCS error from controller = %x for tag %d\n",
- 				ocs, lrbp->task_tag);
--		ufshcd_print_host_regs(hba);
-+		ufshcd_print_host_regs_atomic(hba);
- 		ufshcd_print_host_state(hba);
- 		break;
- 	} /* end of switch */
-@@ -5617,7 +5627,7 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
- 					__func__, hba->saved_err,
- 					hba->saved_uic_err);
- 
--				ufshcd_print_host_regs(hba);
-+				ufshcd_print_host_regs_atomic(hba);
- 				ufshcd_print_pwr_info(hba);
- 				ufshcd_print_tmrs(hba, hba->outstanding_tasks);
- 				ufshcd_print_trs(hba, hba->outstanding_reqs,
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2ae6c7c..3de7cbb 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -323,7 +323,7 @@ struct ufs_hba_variant_ops {
- 	int	(*apply_dev_quirks)(struct ufs_hba *hba);
- 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
- 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
--	void	(*dbg_register_dump)(struct ufs_hba *hba);
-+	void	(*dbg_register_dump)(struct ufs_hba *hba, bool no_sleep);
- 	int	(*phy_initialization)(struct ufs_hba *);
- 	void	(*device_reset)(struct ufs_hba *hba);
- };
-@@ -1078,10 +1078,11 @@ static inline int ufshcd_vops_resume(struct ufs_hba *hba, enum ufs_pm_op op)
- 	return 0;
- }
- 
--static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
-+static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba,
-+						 bool no_sleep)
- {
- 	if (hba->vops && hba->vops->dbg_register_dump)
--		hba->vops->dbg_register_dump(hba);
-+		hba->vops->dbg_register_dump(hba, no_sleep);
- }
- 
- static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+V2VkbmVzZGF5LCBGZWJydWFyeSA1LCAyMDIwIDQ6MDMgQU0sIFRpd2VpIEJpZToNCj4gU3ViamVj
+dDogUmU6IFtQQVRDSF0gdmhvc3Q6IGludHJvZHVjZSB2RFBBIGJhc2VkIGJhY2tlbmQNCj4gDQo+
+IE9uIFR1ZSwgRmViIDA0LCAyMDIwIGF0IDExOjMwOjExQU0gKzA4MDAsIEphc29uIFdhbmcgd3Jv
+dGU6DQo+ID4gT24gMjAyMC8xLzMxIOS4iuWNiDExOjM2LCBUaXdlaSBCaWUgd3JvdGU6DQo+ID4g
+PiBUaGlzIHBhdGNoIGludHJvZHVjZXMgYSB2RFBBIGJhc2VkIHZob3N0IGJhY2tlbmQuIFRoaXMg
+YmFja2VuZCBpcw0KPiA+ID4gYnVpbHQgb24gdG9wIG9mIHRoZSBzYW1lIGludGVyZmFjZSBkZWZp
+bmVkIGluIHZpcnRpby12RFBBIGFuZA0KPiA+ID4gcHJvdmlkZXMgYSBnZW5lcmljIHZob3N0IGlu
+dGVyZmFjZSBmb3IgdXNlcnNwYWNlIHRvIGFjY2VsZXJhdGUgdGhlDQo+ID4gPiB2aXJ0aW8gZGV2
+aWNlcyBpbiBndWVzdC4NCj4gPiA+DQo+ID4gPiBUaGlzIGJhY2tlbmQgaXMgaW1wbGVtZW50ZWQg
+YXMgYSB2RFBBIGRldmljZSBkcml2ZXIgb24gdG9wIG9mIHRoZQ0KPiA+ID4gc2FtZSBvcHMgdXNl
+ZCBpbiB2aXJ0aW8tdkRQQS4gSXQgd2lsbCBjcmVhdGUgY2hhciBkZXZpY2UgZW50cnkgbmFtZWQN
+Cj4gPiA+IHZob3N0LXZkcGEvJHZkcGFfZGV2aWNlX2luZGV4IGZvciB1c2Vyc3BhY2UgdG8gdXNl
+LiBVc2Vyc3BhY2UgY2FuDQo+ID4gPiB1c2Ugdmhvc3QgaW9jdGxzIG9uIHRvcCBvZiB0aGlzIGNo
+YXIgZGV2aWNlIHRvIHNldHVwIHRoZSBiYWNrZW5kLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IFRpd2VpIEJpZSA8dGl3ZWkuYmllQGludGVsLmNvbT4NCg0KWy4uLl0NCg0KPiA+ID4gK3N0
+YXRpYyBsb25nIHZob3N0X3ZkcGFfZG9fZG1hX21hcHBpbmcoc3RydWN0IHZob3N0X3ZkcGEgKnYp
+IHsNCj4gPiA+ICsJLyogVE9ETzogZml4IHRoaXMgKi8NCj4gPg0KPiA+DQo+ID4gQmVmb3JlIHRy
+eWluZyB0byBkbyB0aGlzIGl0IGxvb2tzIHRvIG1lIHdlIG5lZWQgdGhlIGZvbGxvd2luZyBkdXJp
+bmcNCj4gPiB0aGUgcHJvYmUNCj4gPg0KPiA+IDEpIGlmIHNldF9tYXAoKSBpcyBub3Qgc3VwcG9y
+dGVkIGJ5IHRoZSB2RFBBIGRldmljZSBwcm9iZSB0aGUgSU9NTVUNCj4gPiB0aGF0IGlzIHN1cHBv
+cnRlZCBieSB0aGUgdkRQQSBkZXZpY2UNCj4gPiAyKSBhbGxvY2F0ZSBJT01NVSBkb21haW4NCj4g
+Pg0KPiA+IEFuZCB0aGVuOg0KPiA+DQo+ID4gMykgcGluIHBhZ2VzIHRocm91Z2ggR1VQIGFuZCBk
+byBwcm9wZXIgYWNjb3VudGluZw0KPiA+IDQpIHN0b3JlIEdQQS0+SFBBIG1hcHBpbmcgaW4gdGhl
+IHVtZW0NCj4gPiA1KSBnZW5lcmF0ZSBkaWZmcyBvZiBtZW1vcnkgdGFibGUgYW5kIHVzaW5nIElP
+TU1VIEFQSSB0byBzZXR1cCB0aGUgZG1hDQo+ID4gbWFwcGluZyBpbiB0aGlzIG1ldGhvZA0KPiA+
+DQo+ID4gRm9yIDEpLCBJJ20gbm90IHN1cmUgcGFyZW50IGlzIHN1ZmZpY2llbnQgZm9yIHRvIGRv
+aW5nIHRoaXMgb3IgbmVlZCB0bw0KPiA+IGludHJvZHVjZSBuZXcgQVBJIGxpa2UgaW9tbXVfZGV2
+aWNlIGluIG1kZXYuDQo+IA0KPiBBZ3JlZS4gV2UgbWF5IGFsc28gbmVlZCB0byBpbnRyb2R1Y2Ug
+c29tZXRoaW5nIGxpa2UgdGhlIGlvbW11X2RldmljZS4NCj4gDQoNCldvdWxkIGl0IGJlIGJldHRl
+ciBmb3IgdGhlIG1hcC91bW5hcCBsb2dpYyB0byBoYXBwZW4gaW5zaWRlIGVhY2ggZGV2aWNlID8g
+DQpEZXZpY2VzIHRoYXQgbmVlZHMgdGhlIElPTU1VIHdpbGwgY2FsbCBpb21tdSBBUElzIGZyb20g
+aW5zaWRlIHRoZSBkcml2ZXIgY2FsbGJhY2suIA0KRGV2aWNlcyB0aGF0IGhhcyBvdGhlciB3YXlz
+IHRvIGRvIHRoZSBETUEgbWFwcGluZyB3aWxsIGNhbGwgdGhlIHByb3ByaWV0YXJ5IEFQSXMuIA0K
+DQo=
