@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05941C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754F6C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE41422522
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5341F218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgBESUt (ORCPT
+        id S1727945AbgBESUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:20:49 -0500
-Received: from mga14.intel.com ([192.55.52.115]:20940 "EHLO mga14.intel.com"
+        Wed, 5 Feb 2020 13:20:55 -0500
+Received: from mga14.intel.com ([192.55.52.115]:20934 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgBESUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:20:34 -0500
+        id S1727855AbgBESUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:20:33 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
   by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:20:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
-   d="scan'208";a="279447855"
+   d="scan'208";a="279447848"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
   by FMSMGA003.fm.intel.com with ESMTP; 05 Feb 2020 10:20:30 -0800
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
@@ -55,9 +55,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [RFC PATCH v9 26/27] mm/mmap: Add Shadow Stack pages to memory accounting
-Date:   Wed,  5 Feb 2020 10:19:34 -0800
-Message-Id: <20200205181935.3712-27-yu-cheng.yu@intel.com>
+Subject: [RFC PATCH v9 24/27] x86/cet/shstk: ELF header parsing for Shadow Stack
+Date:   Wed,  5 Feb 2020 10:19:32 -0800
+Message-Id: <20200205181935.3712-25-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200205181935.3712-1-yu-cheng.yu@intel.com>
 References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
@@ -68,39 +68,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Shadow Stack pages to memory accounting.
+Check an ELF file's .note.gnu.property, and setup Shadow Stack if the
+application supports it.
 
-v8:
-- Change Shadow Stake pages from data_vm to stack_vm.
+v9:
+- Change cpu_feature_enabled() to static_cpu_has().
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- mm/mmap.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/Kconfig             |  2 ++
+ arch/x86/include/asm/elf.h   | 13 +++++++++++++
+ arch/x86/kernel/process_64.c | 31 +++++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 71e4ffc83bcd..acfa04e2a5dd 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1687,6 +1687,9 @@ static inline int accountable_mapping(struct file *file, vm_flags_t vm_flags)
- 	if (file && is_file_hugepages(file))
- 		return 0;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 6c34b701c588..d1447380e02e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1987,6 +1987,8 @@ config X86_INTEL_SHADOW_STACK_USER
+ 	select ARCH_USES_HIGH_VMA_FLAGS
+ 	select X86_INTEL_CET
+ 	select ARCH_HAS_SHSTK
++	select ARCH_USE_GNU_PROPERTY
++	select ARCH_BINFMT_ELF_STATE
+ 	---help---
+ 	  Shadow Stack (SHSTK) provides protection against program
+ 	  stack corruption.  It is active when the kernel has this
+diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+index 69c0f892e310..fac79b621e0a 100644
+--- a/arch/x86/include/asm/elf.h
++++ b/arch/x86/include/asm/elf.h
+@@ -367,6 +367,19 @@ extern int compat_arch_setup_additional_pages(struct linux_binprm *bprm,
+ 					      int uses_interp);
+ #define compat_arch_setup_additional_pages compat_arch_setup_additional_pages
  
-+	if (arch_copy_pte_mapping(vm_flags))
-+		return 1;
++#ifdef CONFIG_ARCH_BINFMT_ELF_STATE
++struct arch_elf_state {
++	unsigned int gnu_property;
++};
 +
- 	return (vm_flags & (VM_NORESERVE | VM_SHARED | VM_WRITE)) == VM_WRITE;
++#define INIT_ARCH_ELF_STATE {	\
++	.gnu_property = 0,	\
++}
++
++#define arch_elf_pt_proc(ehdr, phdr, elf, interp, state) (0)
++#define arch_check_elf(ehdr, interp, interp_ehdr, state) (0)
++#endif
++
+ /* Do not change the values. See get_align_mask() */
+ enum align_flags {
+ 	ALIGN_VA_32	= BIT(0),
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 506d66830d4d..99548cde0cc6 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -732,3 +732,34 @@ unsigned long KSTK_ESP(struct task_struct *task)
+ {
+ 	return task_pt_regs(task)->sp;
  }
- 
-@@ -3302,6 +3305,8 @@ void vm_stat_account(struct mm_struct *mm, vm_flags_t flags, long npages)
- 		mm->stack_vm += npages;
- 	else if (is_data_mapping(flags))
- 		mm->data_vm += npages;
-+	else if (arch_copy_pte_mapping(flags))
-+		mm->stack_vm += npages;
- }
- 
- static vm_fault_t special_mapping_fault(struct vm_fault *vmf);
++
++#ifdef CONFIG_ARCH_USE_GNU_PROPERTY
++int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
++			     bool compat, struct arch_elf_state *state)
++{
++	if (type != GNU_PROPERTY_X86_FEATURE_1_AND)
++		return 0;
++
++	if (datasz != sizeof(unsigned int))
++		return -ENOEXEC;
++
++	state->gnu_property = *(unsigned int *)data;
++	return 0;
++}
++
++int arch_setup_elf_property(struct arch_elf_state *state)
++{
++	int r = 0;
++
++	memset(&current->thread.cet, 0, sizeof(struct cet_status));
++
++	if (static_cpu_has(X86_FEATURE_SHSTK)) {
++		if (state->gnu_property & GNU_PROPERTY_X86_FEATURE_1_SHSTK)
++			r = cet_setup_shstk();
++		if (r < 0)
++			return r;
++	}
++
++	return r;
++}
++#endif
 -- 
 2.21.0
 
