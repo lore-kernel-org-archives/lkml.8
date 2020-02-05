@@ -2,115 +2,95 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31203C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B677C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09226217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grh0SIQX"
+	by mail.kernel.org (Postfix) with ESMTP id 07AD6217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580922210;
+	bh=gEvy1hMNe3TSgP4o9uJ0oduLLzcHA2zBxfSPWN8InRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AiqTgVKxegWygMWoFt5ROQRGzn+5yJXi/dwVW1NZIplCsjE94cWnM17qQd7qFicQQ
+	 UpjafZXLSAlvht3cc15EY2YmQKs9JNlGkqXtCYSwqZVU7lTQeoalnwxG2HJeGD12R2
+	 qs+WAyJgVeUc4kvsyu/P23b0BMo2BL84p6RKOaR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgBERCd (ORCPT
+        id S1727505AbgBERD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:02:33 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34950 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgBERCd (ORCPT
+        Wed, 5 Feb 2020 12:03:29 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50956 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgBERD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:02:33 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so3665625wrt.2;
-        Wed, 05 Feb 2020 09:02:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pQL4z7TXHWq/sFcG+ZfVL1ooPqEtHyGn+vIefYNyNNg=;
-        b=grh0SIQXYGMQHg5hvBkzqFu3DuYjrp9vBhwvlMljGOgbkfCumw1DJ4TTUAW0lDoQMc
-         31RrLv1Z+srJRkH1JK2xMnRPyQ/k/SsvtZcHVvfGidxPVqDK9sutFb1WD5kNE37EebMS
-         nsYPQCqM80h4/pezolZowWVLRFp4ENtOGUKuPOnQY8QOavgnMuicRSRtepla4OoW1jpc
-         vxfYY6DP1aTEtau0Z33Hskp7Pk8Gw4gCV7lOwvDsF4/dPkNPx5ttEEnayeFlgVs7p9Jp
-         OnkPT3r3B2neLR4xU2iEDDhr0N4vUeEZFLPE21TfuaRWBSXpWelP0D3uqoo7KRq75mQJ
-         5ELw==
+        Wed, 5 Feb 2020 12:03:29 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so3300457wmb.0;
+        Wed, 05 Feb 2020 09:03:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pQL4z7TXHWq/sFcG+ZfVL1ooPqEtHyGn+vIefYNyNNg=;
-        b=dIe74j1gu8WzTyxf1Jxbz/2kWId20oYBTSdStJ7RPWShaJDREtHiijTLpsgzilIvSN
-         dlK5zb8WtYdOqQ1wPqQCthj7V4Vr2TMaD73VQvUsPYqt9SmkdlbWPNo97xPVs073VK7M
-         rzYyhRs2zqdXrOuU3Ip9q8+tL3E+dIqj3/9J8oH9mwq+G2u8u+RASXJ7ZdKopmJEZJ+I
-         FtyQE6Jn11XPHG3DU4zwXvBDrTkXBv82+IZBpckvpgUS/V2wR6rz2G8RIs33TKBP9ZLZ
-         ohlTQEo1V3k8C1lkzt/TyavHP1mSbsfFkP5XZqnZBa80mjLbOR6oHxdLi2/ZNRHmRa4U
-         1kxg==
-X-Gm-Message-State: APjAAAUdGITiGOMn6g8Wah2AqT8026IOFNH4QY9fyy7DiMYMxVYJO0lK
-        kLQLXO/hdutD6jzAgPvXkvc=
-X-Google-Smtp-Source: APXvYqynoyH2re39DhTeCk3EnXaqiL1bV3eoElmPeYE4VGss09frGcB2BvFdA4617Bo1yQU8QnyiDQ==
-X-Received: by 2002:adf:c3d0:: with SMTP id d16mr27959062wrg.376.1580922150291;
-        Wed, 05 Feb 2020 09:02:30 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 5sm531917wrc.75.2020.02.05.09.02.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 09:02:29 -0800 (PST)
-Subject: Re: [PATCH v2 2/9] ASoC: tegra: add support for CIF programming
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-3-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
-Date:   Wed, 5 Feb 2020 20:02:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fRIQiMPnzfOfDPSTsa46DUjk5WLP3W3ziTqGF6fOQ3o=;
+        b=S5J9k33glQ5y83L8pkaqZh/vyykT77Y26BHIvrbuwm0jPJYKvdtIKwzss/Jebcv57n
+         f1HwhAIqxK6rv/iaCTW8dNpcbK1yTOWWfjPC2nXrKHKRF7hgrWD3QiZXMn8l7JqOJcv5
+         1nkbmNo8Zr+A/YK8n8f4xc3Jg3b9MMxQViNd/TS0hIzlJ/szAuFb1bTqoOPl1afMbuHM
+         zTiKOLBNx3rE/4KXNrFs8fnAEwtVle3qvNBktflDkMtpFPmQVXkO9CQMcpoxonKPSaLm
+         F2GPyWSTTAIt/bgaPhhCBUwgR4/kDgjP9Ev3Rqfn0+EEfGiXdoU4QZEKhDS9HA6Ria8y
+         F1Cw==
+X-Gm-Message-State: APjAAAVsp7/vOHPZFutAgW5xlOLFvGUeoTZVsbSKpeVbJK6pHUUHEzFe
+        u9URDWO1dm6ZyE49Id9tvw==
+X-Google-Smtp-Source: APXvYqzv/UDVHl5gkQROxHuLAIfZru2WQcfHUc076e5lTJSilhpuQmDeQl259nyCa8fC1tWGkA83Uw==
+X-Received: by 2002:a1c:688a:: with SMTP id d132mr7176382wmc.189.1580922207661;
+        Wed, 05 Feb 2020 09:03:27 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id i204sm189506wma.44.2020.02.05.09.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 09:03:27 -0800 (PST)
+Received: (nullmailer pid 19258 invoked by uid 1000);
+        Wed, 05 Feb 2020 17:03:25 -0000
+Date:   Wed, 5 Feb 2020 17:03:25 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dafna.hirschfeld@collabora.com, helen.koike@collabora.com,
+        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
+Subject: Re: [PATCH] dt-bindings: convert google,cros-ec-pwm.txt to yaml
+ format
+Message-ID: <20200205170325.GA19200@bogus>
+References: <20200127103441.4618-1-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <1580380422-3431-3-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127103441.4618-1-dafna.hirschfeld@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.01.2020 13:33, Sameer Pujar пишет:
-...
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include "tegra_cif.h"
-> +
-> +void tegra_set_cif(struct regmap *regmap, unsigned int reg,
-> +		   struct tegra_cif_conf *conf)
-> +{
-> +	unsigned int value;
-> +
-> +	value = (conf->threshold << TEGRA_ACIF_CTRL_FIFO_TH_SHIFT) |
-> +		((conf->audio_ch - 1) << TEGRA_ACIF_CTRL_AUDIO_CH_SHIFT) |
-> +		((conf->client_ch - 1) << TEGRA_ACIF_CTRL_CLIENT_CH_SHIFT) |
-> +		(conf->audio_bits << TEGRA_ACIF_CTRL_AUDIO_BITS_SHIFT) |
-> +		(conf->client_bits << TEGRA_ACIF_CTRL_CLIENT_BITS_SHIFT) |
-> +		(conf->expand << TEGRA_ACIF_CTRL_EXPAND_SHIFT) |
-> +		(conf->stereo_conv << TEGRA_ACIF_CTRL_STEREO_CONV_SHIFT) |
-> +		(conf->replicate << TEGRA_ACIF_CTRL_REPLICATE_SHIFT) |
-> +		(conf->truncate << TEGRA_ACIF_CTRL_TRUNCATE_SHIFT) |
-> +		(conf->mono_conv << TEGRA_ACIF_CTRL_MONO_CONV_SHIFT);
-> +
-> +	regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
-> +}
-> +EXPORT_SYMBOL_GPL(tegra_set_cif);
+On Mon, 27 Jan 2020 11:34:41 +0100, Dafna Hirschfeld wrote:
+> Convert the binding file google,cros-ec-pwm.txt to yaml format.
+> 
+> This was tested and verified on ARM64 with:
+> 
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> 
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+>  .../bindings/pwm/google,cros-ec-pwm.txt       | 23 -----------
+>  .../bindings/pwm/google,cros-ec-pwm.yaml      | 40 +++++++++++++++++++
+>  2 files changed, 40 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> 
 
-Are you going to add more stuff into this source file later on?
-
-If not, then it's too much to have a separate driver module just for a
-single tiny function, you should move it into the header file (make it
-inline).
+Reviewed-by: Rob Herring <robh@kernel.org>
