@@ -2,241 +2,190 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AB7C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC35C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032772082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cock.li header.i=@cock.li header.b="NW7pcRwC"
+	by mail.kernel.org (Postfix) with ESMTP id 127332072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBEUlO (ORCPT
+        id S1727440AbgBEUlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 15:41:14 -0500
-Received: from mx1.cock.li ([185.10.68.5]:45703 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726534AbgBEUlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 15:41:13 -0500
-From:   Sergey Alirzaev <l29ah@cock.li>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cock.li; s=mail;
-        t=1580935270; bh=ntRFvU3hcsMEE34oypcg9/W6Ep/xOHm+MQXdA0Es7h4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NW7pcRwCupXSD4j8s711wENm+UqaKYaVIKzE4QcwCDYYhcWJmDlASquy90LYs00Wr
-         n515bEcisaEFfsw8CAxCbBakEl7EHaAgYB17BtTVG9hMcCzEydQTVKw/847pytpLiY
-         qLMLrvl5DePK1tWkqygcuVe3zig4jJAYWgtDCdhKwqumZOOMpa6U7kT+k3iRZiEcRX
-         ABKl30NZVG+ytvPOVg0h3OFYGja/ZnFFJKC1+iHEEY6DcoKtHYWz4xF22JMPXNChYT
-         tf2x3PyS1OcxHRipU7rQG7ZmBmHtmvF3JEZvsN3is1Ozk9cu1YNgZb7SlD5uuJ1YX0
-         XxoGy8oxzjguA==
-To:     v9fs-developer@lists.sourceforge.net
-Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sergey Alirzaev <l29ah@cock.li>
-Subject: [PATCH] 9pnet: allow making incomplete read requests
-Date:   Wed,  5 Feb 2020 23:40:53 +0300
-Message-Id: <20200205204053.12751-1-l29ah@cock.li>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
+        Wed, 5 Feb 2020 15:41:35 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726534AbgBEUlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 15:41:35 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015Ke0oY113251
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Feb 2020 15:41:33 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xyhmh4mr8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:41:33 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 5 Feb 2020 20:41:31 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Feb 2020 20:41:28 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 015KfRZD46268756
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Feb 2020 20:41:27 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 270A6AE04D;
+        Wed,  5 Feb 2020 20:41:27 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 42953AE053;
+        Wed,  5 Feb 2020 20:41:26 +0000 (GMT)
+Received: from dhcp-9-31-103-105.watson.ibm.com (unknown [9.31.103.105])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Feb 2020 20:41:26 +0000 (GMT)
+Subject: Re: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        James.Bottomley@HansenPartnership.com,
+        jarkko.sakkinen@linux.intel.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Wed, 05 Feb 2020 15:41:25 -0500
+In-Reply-To: <20200205103317.29356-3-roberto.sassu@huawei.com>
+References: <20200205103317.29356-1-roberto.sassu@huawei.com>
+         <20200205103317.29356-3-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020520-0012-0000-0000-0000038408C2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020520-0013-0000-0000-000021C07466
+Message-Id: <1580935285.5585.297.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-05_06:2020-02-04,2020-02-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ suspectscore=11 spamscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002050158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A user doesn't necessarily want to wait for all the requested data to
-be available, since the waiting time for each request is unbounded.
+On Wed, 2020-02-05 at 11:33 +0100, Roberto Sassu wrote:
+> boot_aggregate is the first entry of IMA measurement list. Its purpose is
+> to link pre-boot measurements to IMA measurements. As IMA was designed to
+> work with a TPM 1.2, the SHA1 PCR bank was always selected.
+> 
+> Currently, even if a TPM 2.0 is used, the SHA1 PCR bank is selected.
+> However, the assumption that the SHA1 PCR bank is always available is not
+> correct, as PCR banks can be selected with the PCR_Allocate() TPM command.
+> 
+> This patch tries to use ima_hash_algo as hash algorithm for boot_aggregate.
+> If no PCR bank uses that algorithm, the patch tries to find the SHA256 PCR
+> bank (which is mandatory in the TCG PC Client specification). If also this
+> bank is not found, the patch selects the first one. If the TPM algorithm
+> of that bank is not mapped to a crypto ID, boot_aggregate is set to zero.
+> 
+> Changelog
+> 
+> v1:
+> - add Mimi's comments
+> - if there is no PCR bank for the IMA default algorithm use SHA256 or the
+>   first bank (suggested by James Bottomley)
 
-The new method permits sending one read request at a time and getting
-the response ASAP, allowing to use 9pnet with synthetic file systems
-representing arbitrary data streams.
+If the IMA default hash algorithm is not enabled, James' comment was
+to use SHA256 for TPM 2.0 and SHA1 for TPM 1.2.  I don't remember him
+saying anything about using the first bank, that was in v1 of my
+patch.  Please refer to v2 of my patch, based on James' comments.
 
-Signed-off-by: Sergey Alirzaev <l29ah@cock.li>
----
- include/net/9p/client.h |   2 +
- net/9p/client.c         | 135 ++++++++++++++++++++++------------------
- 2 files changed, 76 insertions(+), 61 deletions(-)
+> 
+> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  security/integrity/ima/ima_crypto.c | 45 +++++++++++++++++++++++++----
+>  security/integrity/ima/ima_init.c   | 22 ++++++++++----
+>  2 files changed, 56 insertions(+), 11 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index 73044fc6a952..f2f41a2bc3d4 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -655,18 +655,29 @@ static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
+>  }
+>  
+>  /*
+> - * Calculate the boot aggregate hash
+> + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
+> + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but with
+> + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
+> + * allowing firmware to configure and enable different banks.
+> + *
+> + * Knowing which TPM bank is read to calculate the boot_aggregate digest
+> + * needs to be conveyed to a verifier.  For this reason, use the same
+> + * hash algorithm for reading the TPM PCRs as for calculating the boot
+> + * aggregate digest as stored in the measurement list.
+>   */
+> -static int __init ima_calc_boot_aggregate_tfm(char *digest,
+> +static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+>  					      struct crypto_shash *tfm)
+>  {
+> -	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
+> +	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
+>  	int rc;
+>  	u32 i;
+>  	SHASH_DESC_ON_STACK(shash, tfm);
+>  
+>  	shash->tfm = tfm;
+>  
+> +	pr_devel("calculating the boot-aggregate based on TPM bank: %04x\n",
+> +		 d.alg_id);
+> +
 
-diff --git a/include/net/9p/client.h b/include/net/9p/client.h
-index acc60d8a3b3b..f6c890e94f87 100644
---- a/include/net/9p/client.h
-+++ b/include/net/9p/client.h
-@@ -200,6 +200,8 @@ int p9_client_fsync(struct p9_fid *fid, int datasync);
- int p9_client_remove(struct p9_fid *fid);
- int p9_client_unlinkat(struct p9_fid *dfid, const char *name, int flags);
- int p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err);
-+int p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
-+		int *err);
- int p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err);
- int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset);
- int p9dirent_read(struct p9_client *clnt, char *buf, int len,
-diff --git a/net/9p/client.c b/net/9p/client.c
-index 1d48afc7033c..240d7c05b282 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1549,82 +1549,95 @@ EXPORT_SYMBOL(p9_client_unlinkat);
- int
- p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err)
- {
--	struct p9_client *clnt = fid->clnt;
--	struct p9_req_t *req;
- 	int total = 0;
- 	*err = 0;
- 
-+	while (iov_iter_count(to)) {
-+		int count;
-+
-+		count = p9_client_read_once(fid, offset, to, err);
-+		if (!count || *err)
-+			break;
-+		offset += count;
-+		total += count;
-+	}
-+	return total;
-+}
-+EXPORT_SYMBOL(p9_client_read);
-+
-+int
-+p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
-+		    int *err)
-+{
-+	struct p9_client *clnt = fid->clnt;
-+	struct p9_req_t *req;
-+	int count = iov_iter_count(to);
-+	int rsize, non_zc = 0;
-+	char *dataptr;
-+
-+	*err = 0;
- 	p9_debug(P9_DEBUG_9P, ">>> TREAD fid %d offset %llu %d\n",
- 		   fid->fid, (unsigned long long) offset, (int)iov_iter_count(to));
- 
--	while (iov_iter_count(to)) {
--		int count = iov_iter_count(to);
--		int rsize, non_zc = 0;
--		char *dataptr;
-+	rsize = fid->iounit;
-+	if (!rsize || rsize > clnt->msize - P9_IOHDRSZ)
-+		rsize = clnt->msize - P9_IOHDRSZ;
- 
--		rsize = fid->iounit;
--		if (!rsize || rsize > clnt->msize-P9_IOHDRSZ)
--			rsize = clnt->msize - P9_IOHDRSZ;
-+	if (count < rsize)
-+		rsize = count;
- 
--		if (count < rsize)
--			rsize = count;
-+	/* Don't bother zerocopy for small IO (< 1024) */
-+	if (clnt->trans_mod->zc_request && rsize > 1024) {
-+		/* response header len is 11
-+		 * PDU Header(7) + IO Size (4)
-+		 */
-+		req = p9_client_zc_rpc(clnt, P9_TREAD, to, NULL, rsize,
-+				       0, 11, "dqd", fid->fid,
-+				       offset, rsize);
-+	} else {
-+		non_zc = 1;
-+		req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
-+				    rsize);
-+	}
-+	if (IS_ERR(req)) {
-+		*err = PTR_ERR(req);
-+		return 0;
-+	}
- 
--		/* Don't bother zerocopy for small IO (< 1024) */
--		if (clnt->trans_mod->zc_request && rsize > 1024) {
--			/*
--			 * response header len is 11
--			 * PDU Header(7) + IO Size (4)
--			 */
--			req = p9_client_zc_rpc(clnt, P9_TREAD, to, NULL, rsize,
--					       0, 11, "dqd", fid->fid,
--					       offset, rsize);
--		} else {
--			non_zc = 1;
--			req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
--					    rsize);
--		}
--		if (IS_ERR(req)) {
--			*err = PTR_ERR(req);
--			break;
--		}
-+	*err = p9pdu_readf(&req->rc, clnt->proto_version,
-+			   "D", &count, &dataptr);
-+	if (*err) {
-+		trace_9p_protocol_dump(clnt, &req->rc);
-+		p9_tag_remove(clnt, req);
-+		return 0;
-+	}
-+	if (rsize < count) {
-+		pr_err("bogus RREAD count (%d > %d)\n", count, rsize);
-+		count = rsize;
-+	}
- 
--		*err = p9pdu_readf(&req->rc, clnt->proto_version,
--				   "D", &count, &dataptr);
--		if (*err) {
--			trace_9p_protocol_dump(clnt, &req->rc);
--			p9_tag_remove(clnt, req);
--			break;
--		}
--		if (rsize < count) {
--			pr_err("bogus RREAD count (%d > %d)\n", count, rsize);
--			count = rsize;
--		}
-+	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", count);
-+	if (!count) {
-+		p9_tag_remove(clnt, req);
-+		return 0;
-+	}
- 
--		p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", count);
--		if (!count) {
--			p9_tag_remove(clnt, req);
--			break;
--		}
-+	if (non_zc) {
-+		int n = copy_to_iter(dataptr, count, to);
- 
--		if (non_zc) {
--			int n = copy_to_iter(dataptr, count, to);
--			total += n;
--			offset += n;
--			if (n != count) {
--				*err = -EFAULT;
--				p9_tag_remove(clnt, req);
--				break;
--			}
--		} else {
--			iov_iter_advance(to, count);
--			total += count;
--			offset += count;
-+		if (n != count) {
-+			*err = -EFAULT;
-+			p9_tag_remove(clnt, req);
-+			return n;
- 		}
--		p9_tag_remove(clnt, req);
-+	} else {
-+		iov_iter_advance(to, count);
-+		count;
- 	}
--	return total;
-+	p9_tag_remove(clnt, req);
-+	return count;
- }
--EXPORT_SYMBOL(p9_client_read);
-+EXPORT_SYMBOL(p9_client_read_once);
- 
- int
- p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
--- 
-2.25.0
+Good
+
+>  	rc = crypto_shash_init(shash);
+>  	if (rc != 0)
+>  		return rc;
+> @@ -675,7 +686,8 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+>  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+>  		ima_pcrread(i, &d);
+>  		/* now accumulate with current aggregate */
+> -		rc = crypto_shash_update(shash, d.digest, TPM_DIGEST_SIZE);
+> +		rc = crypto_shash_update(shash, d.digest,
+> +					 crypto_shash_digestsize(tfm));
+>  	}
+>  	if (!rc)
+>  		crypto_shash_final(shash, digest);
+> @@ -685,14 +697,35 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+>  int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
+>  {
+> 
+< snip >
+>  
+>  	hash->length = crypto_shash_digestsize(tfm);
+> -	rc = ima_calc_boot_aggregate_tfm(hash->digest, tfm);
+> +	alg_id = ima_tpm_chip->allocated_banks[bank_idx].alg_id;
+> +	rc = ima_calc_boot_aggregate_tfm(hash->digest, alg_id, tfm);
+
+Sure, backporting this change to ima_calc_boot_aggregate_tfm() should
+be fine.
+
+Mimi
+
+>  	ima_free_tfm(tfm);
+>  
 
