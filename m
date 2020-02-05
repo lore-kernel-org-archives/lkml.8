@@ -2,177 +2,156 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D0C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD50BC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6182082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACF42082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q7h6Xidm"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="GU46OkPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgBEMBk (ORCPT
+        id S1727836AbgBEMDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:01:40 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46419 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBEMBk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:01:40 -0500
-Received: by mail-il1-f194.google.com with SMTP id t17so1603616ilm.13;
-        Wed, 05 Feb 2020 04:01:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UTlMr+bm39TdL62d31FlhsetqSonjyzAOVBT6mmPX9E=;
-        b=q7h6Xidm3szguswdwiC1d+lQJWd50OhBN+XmvVhlJQOHNtrcWrsjF1QZ3HR/6laKre
-         IwSUsSOuzxKqAOXEyRY0QiXbfVVgvVKACE1PrJduL49Ii0MUfzGzOBMd6rZdPdVUFLC7
-         kLvQ9M5uMn2fEMixjw7uW3LfKW0obWkAE4CGw1uTUVEhexjvVZ3VUeZmo0P8YSnKgQg6
-         BTvrbk/VkUk3GCwpCnnQYPPwsMl/zcOb9aNV007zZ+QAATOrLecO4nekDPtcd98c9VN1
-         BUpcVuaOHA1jnwNdTwG8IYAAkSAjOHc7S4C/CTkGmCh599ZIpcDmktlvAqXYwPxrzeTH
-         xH2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UTlMr+bm39TdL62d31FlhsetqSonjyzAOVBT6mmPX9E=;
-        b=Dd3y+mR9enfN2KsCHn+E1g35Q8jVzzccQ+9O+KQ0y959bh/vbH9fpq5V21OtOvzurk
-         ej48q+9JQaOOTgPmrVdhC1XG3UIbV2S+s6gbK7KMc12U5sGUqlVHNXTJq7Hf7DjTVUoZ
-         L0UAKRy91JsOV5oVHfhKCogWLBAlsU9Nl+8REQpUr/i1FRB9TAlWtPnqGlCoEU6RNl6e
-         mlqAceNoWGSydAsKmbcg0HajaXSNks4A2VVuWrSGzbnanNoIeHZM5r8fO4h+OqxBWpCc
-         z19rrgvdDanXF6dLKhTpS43NTLUHl+mJZm3iLivCxzEPPPPgNYg7Fq/f9n4liuW940Xq
-         f7Zw==
-X-Gm-Message-State: APjAAAUBEQb1VJ3SVG0KXD67ShCPuSIS1WYY6tsGK3sYTCf9qUySF/XM
-        5pNlb7eJH7/e3PrddhvkeZcB6sLwVPfSK8edYSiSjBezHFc=
-X-Google-Smtp-Source: APXvYqxOIHrGzwdzC5SFgayrk9B0L6R4dEMpS9n7Pc9xOcrGysbCxQxsjq0i/+ZfOULyZ8WsSJvBi9jN+4Q2fpI+vcI=
-X-Received: by 2002:a92:3a8d:: with SMTP id i13mr4269257ilf.112.1580904098942;
- Wed, 05 Feb 2020 04:01:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20200203165117.5701-1-lhenriques@suse.com> <20200203165117.5701-2-lhenriques@suse.com>
- <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
- <20200204151158.GA15992@suse.com> <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
- <20200205110007.GA11836@suse.com>
-In-Reply-To: <20200205110007.GA11836@suse.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 5 Feb 2020 13:01:52 +0100
-Message-ID: <CAOi1vP-kLCY+Q2UwpqvJdfeEV6me=FneLhasQrj2nkcu_7tRew@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in copy_file_range
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 5 Feb 2020 07:03:46 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:15969 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726953AbgBEMDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:03:45 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48CKwG2j3Wz9vBQB;
+        Wed,  5 Feb 2020 13:03:42 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=GU46OkPe; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id n2QPUTf7otnk; Wed,  5 Feb 2020 13:03:42 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48CKwG1bYZz9vBQ8;
+        Wed,  5 Feb 2020 13:03:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580904222; bh=C5M0Cj48NNBEOYHvqWjd1d/qw7guwrS5qscRXgVUNqo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=GU46OkPeZvmRZ+kSnunZ4z8NT27FmHv/6wZpZ5v7QvXy5JwdOpdiLTLkEGIcC67tm
+         U+vyox2GfDccu9iull750PB+VrBMkKA49BDq6rJ63VI8g891qH1zmome77g5/vjbcm
+         QvlRLB5YxK6XWdIAAVWX1PwMbVLrSoaL9C6asddI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F37A8B838;
+        Wed,  5 Feb 2020 13:03:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id DjYsAgrkX-J5; Wed,  5 Feb 2020 13:03:43 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.107])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2321D8B835;
+        Wed,  5 Feb 2020 13:03:43 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id CE24665266; Wed,  5 Feb 2020 12:03:42 +0000 (UTC)
+Message-Id: <3df15946ed0c29663dc7928b31ca07576e1444f6.1580904214.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/legacy_serial: Use early_ioremap()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed,  5 Feb 2020 12:03:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 12:00 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> On Tue, Feb 04, 2020 at 07:06:36PM +0100, Ilya Dryomov wrote:
-> > On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
-> > >
-> > > On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
-> > > ...
-> > > > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > > > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> > > > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > > > -               if (err) {
-> > > > > -                       if (err == -EOPNOTSUPP) {
-> > > > > -                               src_fsc->have_copy_from2 = false;
-> > > > > -                               pr_notice("OSDs don't support 'copy-from2'; "
-> > > > > -                                         "disabling copy_file_range\n");
-> > > > > -                       }
-> > > > > +               if (IS_ERR(req)) {
-> > > > > +                       err = PTR_ERR(req);
-> > > > >                         dout("ceph_osdc_copy_from returned %d\n", err);
-> > > > > +
-> > > > > +                       /* wait for all queued requests */
-> > > > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > > > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> > > >
-> > > > Hi Luis,
-> > > >
-> > > > Looks like ret is still incremented unconditionally?  What happens
-> > > > if there are three OSD requests on the list and the first fails but
-> > > > the second and the third succeed?  As is, ceph_osdc_wait_requests()
-> > > > will return an error with reqs_complete set to 2...
-> > > >
-> > > > >                         if (!ret)
-> > > > >                                 ret = err;
-> > > >
-> > > > ... and we will return 8M instead of an error.
-> > >
-> > > Right, my assumption was that if a request fails, all subsequent requests
-> > > would also fail.  This would allow ret to be updated with the number of
-> > > successful requests (x object size), even if the OSDs replies were being
-> > > delivered in a different order.  But from your comment I see that my
-> > > assumption is incorrect.
-> > >
-> > > In that case, when shall ret be updated with the number of bytes already
-> > > written?  Only after a successful call to ceph_osdc_wait_requests()?
-> >
-> > I mentioned this in the previous email: you probably want to change
-> > ceph_osdc_wait_requests() so that the counter isn't incremented after
-> > an error is encountered.
->
-> Sure, I've seen that comment.  But it doesn't help either because it's not
-> guaranteed that we'll receive the replies from the OSDs in the same order
-> we've sent them.  Stopping the counter when we get an error doesn't
-> provide us any reliable information (which means I can simply drop that
-> counter).
+[    0.000000] ioremap() called early from find_legacy_serial_ports+0x3cc/0x474. Use early_ioremap() instead
 
-The list is FIFO so even though replies may indeed arrive out of
-order, ceph_osdc_wait_requests() will process them in order.  If you
-stop counting as soon as an error is encountered, you know for sure
-that requests 1 through $COUNTER were successful and can safely
-multiply it by object size.
+find_legacy_serial_ports() is called early from setup_arch(), before
+paging_init(). vmalloc is not available yet, ioremap shouldn't be
+used that early.
 
->
-> > > I.e. only after each throttling cycle, when we don't have any requests
-> > > pending completion?  In this case, I can simply drop the extra
-> > > reqs_complete parameter to the ceph_osdc_wait_requests.
-> > >
-> > > In your example the right thing to do would be to simply return an error,
-> > > I guess.  But then we're assuming that we're loosing space in the storage,
-> > > as we may have created objects that won't be reachable anymore.
-> >
-> > Well, that is what I'm getting at -- this needs a lot more
-> > consideration.  How errors are dealt with, how file metadata is
-> > updated, when do we fall back to plain copy, etc.  Generating stray
-> > objects is bad but way better than reporting that e.g. 0..12M were
-> > copied when only 0..4M and 8M..12M were actually copied, leaving
-> > the user one step away from data loss.  One option is to revert to
-> > issuing copy-from requests serially when an error is encountered.
-> > Another option is to fall back to plain copy on any error.  Or perhaps
-> > we just don't bother with the complexity of parallel copy-from requests
-> > at all...
->
-> To be honest, I'm starting to lean towards this option.  Reverting to
-> serializing requests or to plain copy on error will not necessarily
-> prevent the stray objects:
->
->   - send a bunch of copy requests
->   - wait for them to complete
->      * 1 failed, the other 63 succeeded
->   - revert to serialized copies, repeating the previous 64 requests
->      * after a few copies, we get another failure (maybe on the same OSDs)
->        and abort, leaving behind some stray objects from the previous bulk
->        request
+Use early_ioremap() and switch to a regular ioremap() later.
 
-Yeah, doing it serially makes the accounting a lot easier.  If you
-issue any OSD requests before updating the size, stray objects are
-bound to happen -- that's why "how file metadata is updated" is one
-of the important considerations.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/legacy_serial.c | 33 +++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
-Thanks,
+diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kernel/legacy_serial.c
+index f061e06e9f51..8b2c1a8553a0 100644
+--- a/arch/powerpc/kernel/legacy_serial.c
++++ b/arch/powerpc/kernel/legacy_serial.c
+@@ -15,6 +15,7 @@
+ #include <asm/udbg.h>
+ #include <asm/pci-bridge.h>
+ #include <asm/ppc-pci.h>
++#include <asm/early_ioremap.h>
+ 
+ #undef DEBUG
+ 
+@@ -34,6 +35,7 @@ static struct legacy_serial_info {
+ 	unsigned int			clock;
+ 	int				irq_check_parent;
+ 	phys_addr_t			taddr;
++	void __iomem			*early_addr;
+ } legacy_serial_infos[MAX_LEGACY_SERIAL_PORTS];
+ 
+ static const struct of_device_id legacy_serial_parents[] __initconst = {
+@@ -325,17 +327,16 @@ static void __init setup_legacy_serial_console(int console)
+ {
+ 	struct legacy_serial_info *info = &legacy_serial_infos[console];
+ 	struct plat_serial8250_port *port = &legacy_serial_ports[console];
+-	void __iomem *addr;
+ 	unsigned int stride;
+ 
+ 	stride = 1 << port->regshift;
+ 
+ 	/* Check if a translated MMIO address has been found */
+ 	if (info->taddr) {
+-		addr = ioremap(info->taddr, 0x1000);
+-		if (addr == NULL)
++		info->early_addr = early_ioremap(info->taddr, 0x1000);
++		if (info->early_addr == NULL)
+ 			return;
+-		udbg_uart_init_mmio(addr, stride);
++		udbg_uart_init_mmio(info->early_addr, stride);
+ 	} else {
+ 		/* Check if it's PIO and we support untranslated PIO */
+ 		if (port->iotype == UPIO_PORT && isa_io_special)
+@@ -353,6 +354,30 @@ static void __init setup_legacy_serial_console(int console)
+ 	udbg_uart_setup(info->speed, info->clock);
+ }
+ 
++static int __init ioremap_legacy_serial_console(void)
++{
++	struct legacy_serial_info *info = &legacy_serial_infos[legacy_serial_console];
++	struct plat_serial8250_port *port = &legacy_serial_ports[legacy_serial_console];
++	void __iomem *vaddr;
++
++	if (legacy_serial_console < 0)
++		return 0;
++
++	if (!info->early_addr)
++		return 0;
++
++	vaddr = ioremap(info->taddr, 0x1000);
++	if (WARN_ON(!vaddr))
++		return -ENOMEM;
++
++	udbg_uart_init_mmio(vaddr, 1 << port->regshift);
++	early_iounmap(info->early_addr, 0x1000);
++	info->early_addr = NULL;
++
++	return 0;
++}
++early_initcall(ioremap_legacy_serial_console);
++
+ /*
+  * This is called very early, as part of setup_system() or eventually
+  * setup_arch(), basically before anything else in this file. This function
+-- 
+2.25.0
 
-                Ilya
