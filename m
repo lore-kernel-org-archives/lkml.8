@@ -2,123 +2,290 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E15C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE525C3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB209214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68D221582
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gjGg21E8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kjc6S/SF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgBEAjf (ORCPT
+        id S1727820AbgBEAjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:39:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50519 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727494AbgBEAje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:39:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 4 Feb 2020 19:39:51 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25326 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727522AbgBEAjv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 19:39:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580863188;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vVcjWGSIO/6HrV4SfXcKeCJavn13kL4kYAAWkT145to=;
+        b=Kjc6S/SFv58vYefXKSod+MGbrzo8fVoQQYklNvJbswxoDlnpX1LYS2KG+pn1nFaH9PMunp
+        dq3/TzQneonpk/yd9igPDz634TJxw6lbk+zzq1Wraa/n6AplggTafLT0q0D0hjRNQvHcw9
+        NxJBNNs+Dy6K7MGM7PFmYKxujv24mPs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-GYc-yhAzNTWtmmXelgC71A-1; Tue, 04 Feb 2020 19:39:46 -0500
+X-MC-Unique: GYc-yhAzNTWtmmXelgC71A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48C2kq2Q9Kz9sSN;
-        Wed,  5 Feb 2020 11:39:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580863172;
-        bh=RgyY/tOo9lziedT4Kg/hB7aY/945tp8KAZmY13gSICA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gjGg21E8GutoxDwoKArshcfZP7OMfo6KXVMdxP1JnveIwqYFf16suHb75Q2KTuoBu
-         LXT3ZzH5O/uok0ZrNOkjYZigsK469DDk/P645Ed8drQggyzyPNLml9Ex8aDazeBPVg
-         FOswW+53XfDN2d5SFADQ4a3Jxhz22usWTIZBuDNyQhcbyt9mskA7iRoMRCE8tDSgGV
-         A9vAQXJtOXjxSCOLf/8cM51siKyIAdxtFtoyYO8VEIgfFpvnacjBixIDIa0V717uTp
-         24qpMp/Op4Z7cz2UvdqGbPY7Vf6eExy6PbdB0PfMZzsKGqJB5yiwiMx0/LGQuhWS0d
-         +puw0yMXuyeuw==
-Date:   Wed, 5 Feb 2020 11:39:30 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: wcd934x: Add missing COMMON_CLK dependency to
- SND_SOC_ALL_CODECS
-Message-ID: <20200205113930.5eb08bb4@canb.auug.org.au>
-In-Reply-To: <20200204131857.7634-1-geert@linux-m68k.org>
-References: <20200204131857.7634-1-geert@linux-m68k.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 042521005513;
+        Wed,  5 Feb 2020 00:39:45 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD3A9811F8;
+        Wed,  5 Feb 2020 00:39:33 +0000 (UTC)
+Date:   Tue, 4 Feb 2020 19:39:30 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid
+ outside init_user_ns
+Message-ID: <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com>
+ <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
+ <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Hiz/NjwjpbUPYg/fH_/v/0X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Hiz/NjwjpbUPYg/fH_/v/0X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-01-22 16:29, Paul Moore wrote:
+> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
+> > process in a non-init user namespace the capability to set audit
+> > container identifiers.
+> >
+> > Provide /proc/$PID/audit_capcontid interface to capcontid.
+> > Valid values are: 1==enabled, 0==disabled
+> 
+> It would be good to be more explicit about "enabled" and "disabled" in
+> the commit description.  For example, which setting allows the target
+> task to set audit container IDs of it's children processes?
 
-Hi Geert,
+Ok...
 
-On Tue,  4 Feb 2020 14:18:57 +0100 Geert Uytterhoeven <geert@linux-m68k.org=
-> wrote:
->
-> Just adding a dependency on COMMON_CLK to SND_SOC_WCD934X is not
-> sufficient, as enabling SND_SOC_ALL_CODECS will still select it,
-> breaking the build later:
->=20
->     WARNING: unmet direct dependencies detected for SND_SOC_WCD934X
->       Depends on [n]: SOUND [=3Dm] && !UML && SND [=3Dm] && SND_SOC [=3Dm=
-] && COMMON_CLK [=3Dn] && MFD_WCD934X [=3Dm]
->       Selected by [m]:
->       - SND_SOC_ALL_CODECS [=3Dm] && SOUND [=3Dm] && !UML && SND [=3Dm] &=
-& SND_SOC [=3Dm] && COMPILE_TEST [=3Dy] && MFD_WCD934X [=3Dm]
->     ...
->     ERROR: "of_clk_add_provider" [sound/soc/codecs/snd-soc-wcd934x.ko] un=
-defined!
->     ERROR: "of_clk_src_simple_get" [sound/soc/codecs/snd-soc-wcd934x.ko] =
-undefined!
->     ERROR: "clk_hw_register" [sound/soc/codecs/snd-soc-wcd934x.ko] undefi=
-ned!
->     ERROR: "__clk_get_name" [sound/soc/codecs/snd-soc-wcd934x.ko] undefin=
-ed!
->=20
-> Fix this by adding the missing dependency to SND_SOC_ALL_CODECS
->=20
-> Fixes: 42b716359beca106 ("ASoC: wcd934x: Add missing COMMON_CLK dependenc=
-y")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-> Seen with e.g. m68k/allmodconfig.
+> > Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
+> > opid= capcontid= old-capcontid=
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/audit.h      | 14 ++++++++++++
+> >  include/uapi/linux/audit.h |  1 +
+> >  kernel/audit.c             | 35 +++++++++++++++++++++++++++++
+> >  4 files changed, 105 insertions(+)
+> 
+> ...
+> 
+> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > index 26091800180c..283ef8e006e7 100644
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -1360,6 +1360,59 @@ static ssize_t proc_contid_write(struct file *file, const char __user *buf,
+> >         .write          = proc_contid_write,
+> >         .llseek         = generic_file_llseek,
+> >  };
+> > +
+> > +static ssize_t proc_capcontid_read(struct file *file, char __user *buf,
+> > +                                 size_t count, loff_t *ppos)
+> > +{
+> > +       struct inode *inode = file_inode(file);
+> > +       struct task_struct *task = get_proc_task(inode);
+> > +       ssize_t length;
+> > +       char tmpbuf[TMPBUFLEN];
+> > +
+> > +       if (!task)
+> > +               return -ESRCH;
+> > +       /* if we don't have caps, reject */
+> > +       if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
+> > +               return -EPERM;
+> > +       length = scnprintf(tmpbuf, TMPBUFLEN, "%u", audit_get_capcontid(task));
+> > +       put_task_struct(task);
+> > +       return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
+> > +}
+> > +
+> > +static ssize_t proc_capcontid_write(struct file *file, const char __user *buf,
+> > +                                  size_t count, loff_t *ppos)
+> > +{
+> > +       struct inode *inode = file_inode(file);
+> > +       u32 capcontid;
+> > +       int rv;
+> > +       struct task_struct *task = get_proc_task(inode);
+> > +
+> > +       if (!task)
+> > +               return -ESRCH;
+> > +       if (*ppos != 0) {
+> > +               /* No partial writes. */
+> > +               put_task_struct(task);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       rv = kstrtou32_from_user(buf, count, 10, &capcontid);
+> > +       if (rv < 0) {
+> > +               put_task_struct(task);
+> > +               return rv;
+> > +       }
+> > +
+> > +       rv = audit_set_capcontid(task, capcontid);
+> > +       put_task_struct(task);
+> > +       if (rv < 0)
+> > +               return rv;
+> > +       return count;
+> > +}
+> > +
+> > +static const struct file_operations proc_capcontid_operations = {
+> > +       .read           = proc_capcontid_read,
+> > +       .write          = proc_capcontid_write,
+> > +       .llseek         = generic_file_llseek,
+> > +};
+> >  #endif
+> >
+> >  #ifdef CONFIG_FAULT_INJECTION
+> > @@ -3121,6 +3174,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+> >         REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
+> >         REG("sessionid",  S_IRUGO, proc_sessionid_operations),
+> >         REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
+> > +       REG("audit_capcontainerid", S_IWUSR|S_IRUSR|S_IRUSR, proc_capcontid_operations),
+> >  #endif
+> >  #ifdef CONFIG_FAULT_INJECTION
+> >         REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+> > @@ -3522,6 +3576,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
+> >         REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
+> >         REG("sessionid",  S_IRUGO, proc_sessionid_operations),
+> >         REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
+> > +       REG("audit_capcontainerid", S_IWUSR|S_IRUSR|S_IRUSR, proc_capcontid_operations),
+> >  #endif
+> >  #ifdef CONFIG_FAULT_INJECTION
+> >         REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index 28b9c7cd86a6..62c453306c2a 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -116,6 +116,7 @@ struct audit_task_info {
+> >         kuid_t                  loginuid;
+> >         unsigned int            sessionid;
+> >         struct audit_contobj    *cont;
+> > +       u32                     capcontid;
+> 
+> Where is the code change that actually uses this to enforce the
+> described policy on setting an audit container ID?
 
-Also seen with powerpc/allyesconfig
+Oops, lost in shuffle of refactorisation when dumping the netlink code in
+favour of /proc.
 
-Tested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> > index 2844d78cd7af..01251e6dcec0 100644
+> > --- a/include/uapi/linux/audit.h
+> > +++ b/include/uapi/linux/audit.h
+> > @@ -73,6 +73,7 @@
+> >  #define AUDIT_GET_FEATURE      1019    /* Get which features are enabled */
+> >  #define AUDIT_CONTAINER_OP     1020    /* Define the container id and info */
+> >  #define AUDIT_SIGNAL_INFO2     1021    /* Get info auditd signal sender */
+> > +#define AUDIT_SET_CAPCONTID    1022    /* Set cap_contid of a task */
+> >
+> >  #define AUDIT_FIRST_USER_MSG   1100    /* Userspace messages mostly uninteresting to kernel */
+> >  #define AUDIT_USER_AVC         1107    /* We filter this differently */
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 1287f0b63757..1c22dd084ae8 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
+> >         return false;
+> >  }
+> >
+> > +int audit_set_capcontid(struct task_struct *task, u32 enable)
+> > +{
+> > +       u32 oldcapcontid;
+> > +       int rc = 0;
+> > +       struct audit_buffer *ab;
+> > +
+> > +       if (!task->audit)
+> > +               return -ENOPROTOOPT;
+> > +       oldcapcontid = audit_get_capcontid(task);
+> > +       /* if task is not descendant, block */
+> > +       if (task == current)
+> > +               rc = -EBADSLT;
+> > +       else if (!task_is_descendant(current, task))
+> > +               rc = -EXDEV;
+> 
+> See my previous comments about error code sanity.
 
---=20
-Cheers,
-Stephen Rothwell
+I'll go with EXDEV.
 
---Sig_/Hiz/NjwjpbUPYg/fH_/v/0X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> > +       else if (current_user_ns() == &init_user_ns) {
+> > +               if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
+> > +                       rc = -EPERM;
+> 
+> I think we just want to use ns_capable() in the context of the current
+> userns to check CAP_AUDIT_CONTROL, yes?  Something like this ...
 
------BEGIN PGP SIGNATURE-----
+I thought we had firmly established in previous discussion that
+CAP_AUDIT_CONTROL in anything other than init_user_ns was completely irrelevant
+and untrustable.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl46DsIACgkQAVBC80lX
-0GwzRwgAgmwTJPOGlGhFjolOKlrmmYlrenpXgKt+jAHgVCjxg02BcOjHK2fq14FZ
-+EHbzsS6mcSM3yjNhuObh1tUMdIRxCCssy/mHdFuCO4QnDeDf2EuCMmCDz/8icqD
-vdBkRhMbB4EbX/1B5tEwACPmunrYRCoQ4CrOUvDMAbZ6tztglNDe1fqJxpr9QBFT
-lW69SSDX5JALt3MOBvxO9rWsoG51beKLwuMg9lEON64bzp9vA2xq5Z44+asHWfxB
-pnLa8MlKG99cxqzXDy+kPaGFRlfVy4XHwyn0bJJnHjLSkQXibYrIqKbxyUNfjfGS
-3rMWUB3s4Kg/vPD6FlvW7MPda+QjcQ==
-=16Dv
------END PGP SIGNATURE-----
+>   if (current_user_ns() != &init_user_ns) {
+>     if (!ns_capable(CAP_AUDIT_CONTROL) || !audit_get_capcontid())
+>       rc = -EPERM;
+>   } else if (!capable(CAP_AUDIT_CONTROL))
+>     rc = -EPERM;
+> 
+> > +       }
+> > +       if (!rc)
+> > +               task->audit->capcontid = enable;
+> > +
+> > +       if (!audit_enabled)
+> > +               return rc;
+> > +
+> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_SET_CAPCONTID);
+> > +       if (!ab)
+> > +               return rc;
+> > +
+> > +       audit_log_format(ab,
+> > +                        "opid=%d capcontid=%u old-capcontid=%u",
+> > +                        task_tgid_nr(task), enable, oldcapcontid);
+> > +       audit_log_end(ab);
+> 
+> My prior comments about recording the success/failure, or not emitting
+> the record on failure, seem relevant here too.
 
---Sig_/Hiz/NjwjpbUPYg/fH_/v/0X--
+It should be recorded in the syscall record.
+
+> > +       return rc;
+> > +}
+> 
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
