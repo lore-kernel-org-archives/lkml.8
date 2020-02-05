@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C9DC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E38C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968642082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EBF2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 08:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgBEIzk (ORCPT
+        id S1728158AbgBEIzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 03:55:40 -0500
+        Wed, 5 Feb 2020 03:55:44 -0500
 Received: from mga09.intel.com ([134.134.136.24]:48635 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgBEIzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 03:55:39 -0500
+        id S1728107AbgBEIzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 03:55:42 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 00:55:39 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 00:55:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="264149185"
+   d="scan'208";a="264149194"
 Received: from unknown (HELO bong5-HP-Z440.png.intel.com) ([10.221.118.166])
-  by fmsmga002.fm.intel.com with ESMTP; 05 Feb 2020 00:55:36 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 05 Feb 2020 00:55:39 -0800
 From:   Ong Boon Leong <boon.leong.ong@intel.com>
 To:     netdev@vger.kernel.org
 Cc:     Tan Tee Min <tee.min.tan@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Tan Tee Min <tee.min.tan@intel.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v4 2/6] net: stmmac: fix incorrect GMAC_VLAN_TAG register writting in GMAC4+
-Date:   Wed,  5 Feb 2020 16:55:06 +0800
-Message-Id: <20200205085510.32353-3-boon.leong.ong@intel.com>
+Subject: [PATCH net v4 3/6] net: stmmac: xgmac: fix incorrect XGMAC_VLAN_TAG register writting
+Date:   Wed,  5 Feb 2020 16:55:07 +0800
+Message-Id: <20200205085510.32353-4-boon.leong.ong@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200205085510.32353-1-boon.leong.ong@intel.com>
 References: <20200205085510.32353-1-boon.leong.ong@intel.com>
@@ -53,47 +53,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tan, Tee Min" <tee.min.tan@intel.com>
-
-It should always do a read of current value of GMAC_VLAN_TAG instead of
+We should always do a read of current value of XGMAC_VLAN_TAG instead of
 directly overwriting the register value.
 
-Fixes: c1be0022df0d ("net: stmmac: Add VLAN HASH filtering support in GMAC4+")
-Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
+Fixes: 3cd1cfcba26e2 ("net: stmmac: Implement VLAN Hash Filtering in XGMAC")
 Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index f0c0ea616032..4d8eef9ff137 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -736,11 +736,14 @@ static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
- 				    __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
-+	u32 value;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 2af3ac5409b7..a0e67d178280 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -569,7 +569,9 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
  
- 	writel(hash, ioaddr + GMAC_VLAN_HASH_TABLE);
+ 		writel(value, ioaddr + XGMAC_PACKET_FILTER);
  
-+	value = readl(ioaddr + GMAC_VLAN_TAG);
+-		value = XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
++		value = readl(ioaddr + XGMAC_VLAN_TAG);
 +
- 	if (hash) {
--		u32 value = GMAC_VLAN_VTHM | GMAC_VLAN_ETV;
-+		value |= GMAC_VLAN_VTHM | GMAC_VLAN_ETV;
++		value |= XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
  		if (is_double) {
- 			value |= GMAC_VLAN_EDVLP;
- 			value |= GMAC_VLAN_ESVL;
-@@ -759,8 +762,6 @@ static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+ 			value |= XGMAC_VLAN_EDVLP;
+ 			value |= XGMAC_VLAN_ESVL;
+@@ -584,7 +586,9 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
  
- 		writel(value | perfect_match, ioaddr + GMAC_VLAN_TAG);
- 	} else {
--		u32 value = readl(ioaddr + GMAC_VLAN_TAG);
--
- 		value &= ~(GMAC_VLAN_VTHM | GMAC_VLAN_ETV);
- 		value &= ~(GMAC_VLAN_EDVLP | GMAC_VLAN_ESVL);
- 		value &= ~GMAC_VLAN_DOVLTC;
+ 		writel(value, ioaddr + XGMAC_PACKET_FILTER);
+ 
+-		value = XGMAC_VLAN_ETV;
++		value = readl(ioaddr + XGMAC_VLAN_TAG);
++
++		value |= XGMAC_VLAN_ETV;
+ 		if (is_double) {
+ 			value |= XGMAC_VLAN_EDVLP;
+ 			value |= XGMAC_VLAN_ESVL;
 -- 
 2.17.1
 
