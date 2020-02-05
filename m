@@ -2,226 +2,88 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D66C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40CCC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AA12082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz6IfCTo"
+	by mail.kernel.org (Postfix) with ESMTP id 99399214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580937496;
+	bh=cw/Q+0LM9/vBqCHeBQby87XziAnC/q/ln5gJPgJs8uY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oiNw3x69f+zd5BcPHp2gs8JwuDVDgG1OFih5zXWllME/2fFLvzzNUkRqQL9DuAvSh
+	 3Khgcc33og1wMcJrFZ6serQD274RvXHhNLZgt+oziJOGdHpQYbmmyYoJ4mf26zQ7xq
+	 OWl4QJO7jmED8pwET3L6GxZsGQAXa3Kf0PWAYnQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBEVQQ (ORCPT
+        id S1727355AbgBEVSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:16:16 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53813 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgBEVQQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:16:16 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so4015412wmh.3;
-        Wed, 05 Feb 2020 13:16:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ynqPK9O5c/fnULNbN+OoxL2G/QEDXaAaZBUdKRK1g+Q=;
-        b=Tz6IfCTorokKtvwisezDI2uIyip1iyl/nKLcADWkM+/1qxpyWMENBRqANwdThMudJI
-         dmUo+b4SN8HS5to4sMsguLHonGyUM1UI8jvqhk4LhS/6ehADQitn0XQV+IiVp1jKBMNb
-         lGPbpEF7tgfflM/Rf3oP/F/lJko6cgZMp5HJ+okvTJmPG42ladqnz4A9xBc+KE0ZjJRL
-         U2TuDB/bEadc/hBSDlFdiukMnH4bFKr/uMs9ksu3yYiE2eSSX72n3Ok8YLj/ABoMatVs
-         IAm6wJP96GPN59BoR7R7JicoJsRoMSfNSuOJVm2a8+gKFzA/uXeRJiI91yDSrD66/MUO
-         HVCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ynqPK9O5c/fnULNbN+OoxL2G/QEDXaAaZBUdKRK1g+Q=;
-        b=aLdYpQnJ0jwkcVjkA733HqubQuPpJyX5Iif0QMO4C4X8p6Q/939jyn9t/nvfj4g4+Y
-         EEMMaeAl3wGyUawnATWq9Ed+0WoHnH9jrzDuOp8B+GUV+lzCT23fWeF58bwbdYPi7wQ0
-         Bpka5Muk+2i2znX7Vh6VCbvcAlZkd6EbFUgfUT5xwRVI0/6PpfQtISI/ms7pgtxephSa
-         2YYzwZ55USWM3rqfX+rI/TITX/2/Pdt0amJMs1CaPRD4eEwRF/cJievB3hyAaeS+Wv8R
-         2mzhFiTiiURuPxcJPppSiR9QeEy/haC1AAyI7LgZG0+ShTCAhxFrh0Xe7L9g1AkJ20AB
-         Aj6g==
-X-Gm-Message-State: APjAAAV/+VrqManCSkCzANpAyh1vTaYMID5TDnYb6ezRhn59gBA086aN
-        Kf+h7Iy5I9Y3FKJpi0idIM4mL28J
-X-Google-Smtp-Source: APXvYqzs5lgsgIKJDb59pkNODg5+gl7rDek95kUmovCzXfQiBzH+1UF+Z8paCfII85GsfqDogqu+dg==
-X-Received: by 2002:a7b:cf01:: with SMTP id l1mr7678705wmg.86.1580937373949;
-        Wed, 05 Feb 2020 13:16:13 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:7c61:997a:8e60:9300? (p200300EA8F2960007C61997A8E609300.dip0.t-ipconnect.de. [2003:ea:8f29:6000:7c61:997a:8e60:9300])
-        by smtp.googlemail.com with ESMTPSA id r14sm1284563wrj.26.2020.02.05.13.16.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 13:16:13 -0800 (PST)
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com
-Cc:     linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200204181319.27381-1-dmurphy@ti.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
-Date:   Wed, 5 Feb 2020 22:16:03 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 5 Feb 2020 16:18:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727033AbgBEVSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 16:18:15 -0500
+Received: from localhost (unknown [193.117.204.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3BA2082E;
+        Wed,  5 Feb 2020 21:18:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580937494;
+        bh=cw/Q+0LM9/vBqCHeBQby87XziAnC/q/ln5gJPgJs8uY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fxZmdrSJHuMsidDfa1uOS3dF6qWrcd1OHMT1o9OuFBK9hKVzLWq7ojVN9lkrLp9/k
+         cF9aetR05NynOQvt76sMmLt2xxkuh8qCkTsMdM+ed5sarRKiug2OPwj2qmL9e6pAQT
+         NouQx1+BIg6NaqlbvNVRh2Df1uZIZd/PLtErLRgw=
+Date:   Wed, 5 Feb 2020 21:18:12 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
+Message-ID: <20200205211812.GD1399643@kroah.com>
+References: <cover.1579007786.git.andreyknvl@google.com>
+ <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
+ <87ftfv7nf0.fsf@kernel.org>
+ <CAAeHK+wwmis4z9ifPAnkM36AnfG2oESSLAkKvDkuAa0QUM2wRg@mail.gmail.com>
+ <87a7637ise.fsf@kernel.org>
+ <CAAeHK+zNuqwmHG4NJwZNtQHizdaOpriHxoQffZHMffeke_hsGQ@mail.gmail.com>
+ <87tv4556ke.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200204181319.27381-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tv4556ke.fsf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.02.2020 19:13, Dan Murphy wrote:
-> Set the speed optimization bit on the DP83867 PHY.
-> This feature can also be strapped on the 64 pin PHY devices
-> but the 48 pin devices do not have the strap pin available to enable
-> this feature in the hardware.  PHY team suggests to have this bit set.
+On Wed, Feb 05, 2020 at 06:42:41PM +0200, Felipe Balbi wrote:
+> > Overall, supporting O_NONBLOCK might be a useful feature for people
+> > who are doing something else other than fuzzing, We can account for
+> > potential future extensions that'll support it, so detecting
+> > O_NONBLOCK and returning an error for now makes sense.
+> >
+> > WDYT?
 > 
-> With this bit set the PHY will auto negotiate and report the link
-> parameters in the PHYSTS register.  This register provides a single
-> location within the register set for quick access to commonly accessed
-> information.
-> 
-> In this case when auto negotiation is on the PHY core reads the bits
-> that have been configured or if auto negotiation is off the PHY core
-> reads the BMCR register and sets the phydev parameters accordingly.
-> 
-> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
-> 4-wire cable.  If this should occur the PHYSTS register contains the
-> current negotiated speed and duplex mode.
-> 
-> In overriding the genphy_read_status the dp83867_read_status will do a
-> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
-> register is read and the phydev speed and duplex mode settings are
-> updated.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> v2 - Updated read status to call genphy_read_status first, added link_change
-> callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/ 
-> 
+> If that's the way you want to go, that's okay. But let's, then, prepare
+> the code for extension later on. For example, let's add an IOCTL which
+> returns the "version" of the ABI. Based on that, userspace can detect
+> features and so on.
 
-As stated in the first review, it would be appreciated if you implement
-also the downshift tunable. This could be a separate patch in this series.
-Most of the implementation would be boilerplate code.
+Ick, no, no version mess.  If you have a new api, just add a new ioctl
+and away you go, userspace can easily test for that.  Don't go down the
+path of trying to version your api, that way never works.
 
-And I have to admit that I'm not too happy with the term "speed optimization".
-This sounds like the PHY has some magic to establish a 1.2Gbps link.
-Even though the vendor may call it this way in the datasheet, the standard
-term is "downshift". I'm fine with using "speed optimization" in constants
-to be in line with the datasheet. Just a comment in the code would be helpful
-that speed optimization is the vendor's term for downshift.
+Trust me, been there, got the t-shirt, lived to regret it.
 
->  drivers/net/phy/dp83867.c | 55 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-> index 967f57ed0b65..6f86ca1ebb51 100644
-> --- a/drivers/net/phy/dp83867.c
-> +++ b/drivers/net/phy/dp83867.c
-> @@ -21,6 +21,7 @@
->  #define DP83867_DEVADDR		0x1f
->  
->  #define MII_DP83867_PHYCTRL	0x10
-> +#define MII_DP83867_PHYSTS	0x11
->  #define MII_DP83867_MICR	0x12
->  #define MII_DP83867_ISR		0x13
->  #define DP83867_CFG2		0x14
-> @@ -118,6 +119,15 @@
->  #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
->  #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
->  
-> +/* PHY STS bits */
-> +#define DP83867_PHYSTS_1000			BIT(15)
-> +#define DP83867_PHYSTS_100			BIT(14)
-> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
-> +#define DP83867_PHYSTS_LINK			BIT(10)
-> +
-> +/* CFG2 bits */
-> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
-> +
->  /* CFG3 bits */
->  #define DP83867_CFG3_INT_OE			BIT(7)
->  #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-> @@ -287,6 +297,43 @@ static int dp83867_config_intr(struct phy_device *phydev)
->  	return phy_write(phydev, MII_DP83867_MICR, micr_status);
->  }
->  
-> +static void dp83867_link_change_notify(struct phy_device *phydev)
-> +{
-> +	if (phydev->state != PHY_RUNNING)
-> +		return;
-> +
-> +	if (phydev->speed == SPEED_100 || phydev->speed == SPEED_10)
-> +		phydev_warn(phydev, "Downshift detected connection is %iMbps\n",
-> +			    phydev->speed);
-
-The link partner may simply not advertise 1Gbps. How do you know that
-a link speed of e.g. 100Mbps is caused by a downshift?
-Some PHY's I've seen with this feature have a flag somewhere indicating
-that downshift occurred. How about the PHY here?
-
-> +}
-> +
-> +static int dp83867_read_status(struct phy_device *phydev)
-> +{
-> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
-> +	int ret;
-> +
-> +	ret = genphy_read_status(phydev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (status < 0)
-> +		return status;
-> +
-> +	if (status & DP83867_PHYSTS_DUPLEX)
-> +		phydev->duplex = DUPLEX_FULL;
-> +	else
-> +		phydev->duplex = DUPLEX_HALF;
-> +
-> +	if (status & DP83867_PHYSTS_1000)
-> +		phydev->speed = SPEED_1000;
-> +	else if (status & DP83867_PHYSTS_100)
-> +		phydev->speed = SPEED_100;
-> +	else
-> +		phydev->speed = SPEED_10;
-> +
-> +	return 0;
-> +}
-> +
->  static int dp83867_config_port_mirroring(struct phy_device *phydev)
->  {
->  	struct dp83867_private *dp83867 =
-> @@ -467,6 +514,11 @@ static int dp83867_config_init(struct phy_device *phydev)
->  	int ret, val, bs;
->  	u16 delay;
->  
-> +	/* Force speed optimization for the PHY even if it strapped */
-> +	ret = phy_set_bits(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = dp83867_verify_rgmii_cfg(phydev);
->  	if (ret)
->  		return ret;
-> @@ -655,6 +707,9 @@ static struct phy_driver dp83867_driver[] = {
->  		.config_init	= dp83867_config_init,
->  		.soft_reset	= dp83867_phy_reset,
->  
-> +		.read_status	= dp83867_read_status,
-> +		.link_change_notify = dp83867_link_change_notify,
-> +
->  		.get_wol	= dp83867_get_wol,
->  		.set_wol	= dp83867_set_wol,
->  
-> 
-
+greg k-h
