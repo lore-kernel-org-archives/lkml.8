@@ -2,136 +2,169 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6898CC35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6FFC352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459282082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA9421927
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:48:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="csholPkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgBEOsG (ORCPT
+        id S1727003AbgBEOsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:48:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:48246 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbgBEOsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:48:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50F9531B;
-        Wed,  5 Feb 2020 06:48:05 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F283D3F68E;
-        Wed,  5 Feb 2020 06:48:03 -0800 (PST)
-Date:   Wed, 5 Feb 2020 14:48:01 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20200205144801.gkmxu3h3lfczbmbk@e107158-lin.cambridge.arm.com>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
- <20200131100629.GC27398@codeaurora.org>
- <20200131153405.2ejp7fggqtg5dodx@e107158-lin.cambridge.arm.com>
- <CAEU1=PnYryM26F-tNAT0JVUoFcygRgE374JiBeJPQeTEoZpANg@mail.gmail.com>
- <20200203142712.a7yvlyo2y3le5cpn@e107158-lin>
- <20200203111451.0d1da58f@oasis.local.home>
- <20200203171745.alba7aswajhnsocj@e107158-lin>
- <20200203131203.20bf3fc3@oasis.local.home>
- <20200203190259.bnly7hfp3wfiteof@e107158-lin>
- <c30eddd3-143e-03f1-6975-97f5af1d3075@arm.com>
+        Wed, 5 Feb 2020 09:48:35 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46599 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726334AbgBEOse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:48:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580914113;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=95aJqeVITxcGTfX0TCyAquXczebVTrMMk8jxCMfrdaA=;
+        b=csholPklvLJoEHzFfu9LFT9gxzMrcpncGEy7oe69ILdvOfG3/gp7OjkeegT5nqAxbQTmtN
+        6BycIpZyO/+3LB+OH97P3R56TU7Hi4xdLVn9jzu7bM0emW4dMZuM0EwzJov31UXAnLWedV
+        JRHRNiFNRhAoU4/TI1vNC298FpIqJlY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-CRKct6xKO9GNNI26yrfXjA-1; Wed, 05 Feb 2020 09:48:20 -0500
+X-MC-Unique: CRKct6xKO9GNNI26yrfXjA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C1E51083E81;
+        Wed,  5 Feb 2020 14:48:18 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC77F87B00;
+        Wed,  5 Feb 2020 14:48:14 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 22:48:11 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+ in shrink_zone_span()
+Message-ID: <20200205144811.GF26758@MiWiFi-R3L-srv>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-9-david@redhat.com>
+ <20200205095924.GC24162@richard>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c30eddd3-143e-03f1-6975-97f5af1d3075@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200205095924.GC24162@richard>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/20 18:23, Dietmar Eggemann wrote:
-> On 03/02/2020 20:03, Qais Yousef wrote:
-> > On 02/03/20 13:12, Steven Rostedt wrote:
-> >> On Mon, 3 Feb 2020 17:17:46 +0000
-> >> Qais Yousef <qais.yousef@arm.com> wrote:
+Hi Wei Yang,
+
+On 02/05/20 at 05:59pm, Wei Yang wrote:
+> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> >index f294918f7211..8dafa1ba8d9f 100644
+> >--- a/mm/memory_hotplug.c
+> >+++ b/mm/memory_hotplug.c
+> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> > 		if (pfn) {
+> > 			zone->zone_start_pfn = pfn;
+> > 			zone->spanned_pages = zone_end_pfn - pfn;
+> >+		} else {
+> >+			zone->zone_start_pfn = 0;
+> >+			zone->spanned_pages = 0;
+> > 		}
+> > 	} else if (zone_end_pfn == end_pfn) {
+> > 		/*
+> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> > 					       start_pfn);
+> > 		if (pfn)
+> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
+> >+		else {
+> >+			zone->zone_start_pfn = 0;
+> >+			zone->spanned_pages = 0;
+> >+		}
+> > 	}
 > 
-> [...]
+> If it is me, I would like to take out these two similar logic out.
+
+I also like this style. 
 > 
-> > In the light of strictly adhering to priority based scheduling; yes this makes
-> > sense. Though I still think the migration will produce worse performance, but
-> > I can appreciate even if that was true it breaks the strict priority rule.
+> For example:
+> 
+> 	if () {
+> 	} else if () {
+> 	} else {
+> 		goto out;
+Here the last else is unnecessary, right?
+
+> 	}
+> 
+> 
+
+Like this, I believe both David and I will be satisfactory. Even though
+I still think his 2nd resetting is not needed :-)
+
+> 	/* The zone has no valid section */
+> 	if (!pfn) {
+> 			zone->zone_start_pfn = 0;
+> 			zone->spanned_pages = 0;
+> 	}
+> 
+> out:
+> 	zone_span_writeunlock(zone);
+> 
+> Well, this is just my personal taste :-)
+> 
+> >-
+> >-	/*
+> >-	 * The section is not biggest or smallest mem_section in the zone, it
+> >-	 * only creates a hole in the zone. So in this case, we need not
+> >-	 * change the zone. But perhaps, the zone has only hole data. Thus
+> >-	 * it check the zone has only hole or not.
+> >-	 */
+> >-	pfn = zone_start_pfn;
+> >-	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
+> >-		if (unlikely(!pfn_to_online_page(pfn)))
+> >-			continue;
+> >-
+> >-		if (page_zone(pfn_to_page(pfn)) != zone)
+> >-			continue;
+> >-
+> >-		/* Skip range to be removed */
+> >-		if (pfn >= start_pfn && pfn < end_pfn)
+> >-			continue;
+> >-
+> >-		/* If we find valid section, we have nothing to do */
+> >-		zone_span_writeunlock(zone);
+> >-		return;
+> >-	}
+> >-
+> >-	/* The zone has no valid section */
+> >-	zone->zone_start_pfn = 0;
+> >-	zone->spanned_pages = 0;
+> > 	zone_span_writeunlock(zone);
+> > }
 > > 
-> >>
-> >> You can add to the logic that you do not take over an RT task that is
-> >> pinned and can't move itself. Perhaps that may be the only change to
-> > 
-> > I get this.
-> > 
-> >> cpu_find(), is that it will only pick a big CPU if little CPUs are
-> >> available if the big CPU doesn't have a pinned RT task on it.
-> > 
-> > But not that. Do you mind rephrasing it?
-> > 
-> > Or let me try first:
-> > 
-> > 	1. Search all priority levels for a fitting CPU
+> >-- 
+> >2.21.0
 > 
-> Just so I get this right: All _lower_ prio levels than p->prio, right?
-
-Correct, that's what I meant :)
-
+> -- 
+> Wei Yang
+> Help you, Help me
 > 
-> > 	2. If failed, return the first lowest mask found
-> > 	3. If it succeeds, remove any CPU that has a pinned task in it
-> > 	4. If the lowest_mask is empty, return (2).
-> > 	5. Else return the lowest_mask with the fitting CPU(s)
-> 
-> Mapping this to the 5 FIFO tasks rt-tasks of Pavan's example (all
-> p->prio=89 (dflt rt-app prio), dflt min_cap=1024 max_cap=1024) on a 4
-> big (Cpu Capacity=1024) 4 little (Cpu capacity < 1024) system:
-> 
-> You search from idx 1 to 11 [p->prio=89 eq. idx (task_pri)=12] and since
-> there are no lower prior RT tasks the lowest mask of idx=1 (CFS or Idle)
-> for the 5th RT task is returned.
 
-We should basically fallback to whatever was supposed to be returned if this
-patch is not applied.
-
-	if (lower_mask) {
-		// record the value of the first valid lower_mask
-
-		if lower_mask doesn't contain a fitting CPU:
-			continue searching in the next priority level
-	}
-
-	if no fitting cpu was found at any lower level:
-		return the recorded first valid lower_mask
-
-> 
-> But that means that CPU capacity trumps priority?
-
-I'm not sure how to translate 'trumps' here.
-
-So priority has precedence over capacity. I think this is not the best option,
-but it keeps the rules consistent; which is if a higher priority task is
-runnable it'd be pushed to another CPU running a lower priority one if we can
-find one. We'll attempt to make sure this CPU fits the capacity requirement of
-the task, but if there isn't one we'll fallback to the next best thing.
-
-I think this makes sense and will keep this fitness logic generic.
-
-Maybe it's easier to discuss over a patch. I will post one soon hopefully.
-
-Thanks
-
---
-Qais Yousef
