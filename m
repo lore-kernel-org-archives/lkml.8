@@ -2,184 +2,185 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00135C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FF3C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D269321744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BDD2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Pk8YUnCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBEAwc (ORCPT
+        id S1727778AbgBEA4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:52:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbgBEAwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:52:31 -0500
-Received: from oasis.local.home (unknown [213.120.252.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB0C2085B;
-        Wed,  5 Feb 2020 00:52:28 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 19:52:24 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v4] bootconfig: Only load bootconfig if "bootconfig" is on
- the kernel cmdline
-Message-ID: <20200204195224.3c2882ea@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 4 Feb 2020 19:56:00 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37713 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbgBEA4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 19:56:00 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w47so278428qtk.4;
+        Tue, 04 Feb 2020 16:55:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=yC9xIL1dNyShbeFS2/Wyo+h8MlTkNrKRjdXdXeCa2a4=;
+        b=Pk8YUnCduMXLnvgA1FG4sxxGzi4T+lap2zlAsuptyOvqk+jHVAT0PFPiunxwbLAUMX
+         VIvF4xJpbwiyTNBX1SThGCDGK97BR3uHAX2Ae/jqTf9+7T1QYuTkl7hmF4pRZG/p5kqL
+         IIhn3SePpGLXpFQ4ZAzn6MrKuZn6E0dYI67AY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=yC9xIL1dNyShbeFS2/Wyo+h8MlTkNrKRjdXdXeCa2a4=;
+        b=cn3LXX93ePM3PIC3NgCNm7eJeAyda64VrwXhyVu6+Q4xkqIcrqzyinrnkhlEum1jwF
+         Lt/mcUs/4Hl1rDgs3GU04Tx89S1VV9t/aR39jWsc/7dzA2NtOhxDo223n40u6zfZckHL
+         xK9c2NSyRtlDZxs2QLYTKQmP3sJ7nK1UGOnnsLUkh0e0VP/7bcsVOup8EHaGi+Z/1ogg
+         jI1mW2JPce49mT7vEOeP4qcZbYXYZnls+g2+c2NewjCNaKBCRio3zszEMt6CIKizPZ9s
+         K2uEpSUVLRGa5UQ1jRTx1/n4vUaGiQFMbh44kmaiLJh/TEopBsaOCarI6janRQvlOW9D
+         H40Q==
+X-Gm-Message-State: APjAAAX+XvukWa7DeV8QCpQEoysnfow5BG9VbnVzejUiTJ7gDIgHtGR8
+        NO0r4A1Mu8Wen7ccZGiC/w7PONe24/ZhaRbSbUN/Amxc
+X-Google-Smtp-Source: APXvYqwraToRypAJColuSwSVdeBtc5ThkSYjFxUK+9tSBJHfeqQDTqCSDSwoG54gwHk3fP2ja0HbEGQ3J1EHVXULTz4=
+X-Received: by 2002:ac8:754e:: with SMTP id b14mr31535858qtr.220.1580864158382;
+ Tue, 04 Feb 2020 16:55:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 5 Feb 2020 00:55:46 +0000
+Message-ID: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
+Subject: TI PCIe xHCI and kexec
+To:     Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I'm supporting a system that uses Linux-as-a-bootloader to load a
+distro kernel via kexec, The systems have a TI TUSB73x0 PCIe
+controller which goes out to lunch after a kexec. This is the distro
+(post-kexec) kernel:
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+[    0.235411] pci 0003:01:00.0: xHCI HW did not halt within 16000
+usec status = 0x0
+[    1.037298] xhci_hcd 0003:01:00.0: xHCI Host Controller
+[    1.037367] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
+bus number 1
+[    1.053481] xhci_hcd 0003:01:00.0: Host halt failed, -110
+[    1.053523] xhci_hcd 0003:01:00.0: can't setup: -110
+[    1.053565] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
+[    1.053629] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
+[    1.053703] xhci_hcd: probe of 0003:01:00.0 failed with error -110
 
-As the bootconfig is appended to the initrd it is not as easy to modify as
-the kernel command line. If there's some issue with the kernel, and the
-developer wants to boot a pristine kernel, it should not be needed to modify
-the initrd to remove the bootconfig for a single boot.
+There were some fixes made a few years back to improve the situation,
+but we've still had to carry some form of the patch below in the
+bootloader kernel. I would like to rework it so it can be merged.
 
-As bootconfig is silently added (if the admin does not know where to look
-they may not know it's being loaded). It should be explicitly added to the
-kernel cmdline. The loading of the bootconfig is only done if "bootconfig"
-is on the kernel command line. This will let admins know that the kernel
-command line is extended.
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index dbac0fa9748d..eaa94456dd9d 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -789,6 +789,9 @@ void xhci_shutdown(struct usb_hcd *hcd)
+     xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+             "xhci_shutdown completed - status = %x",
+             readl(&xhci->op_regs->status));
++
++    /* TI XHCI controllers do not come back after kexec without this hack */
++    pci_reset_function_locked(to_pci_dev(hcd->self.sysdev));
+ }
+ EXPORT_SYMBOL_GPL(xhci_shutdown);
 
-Note, after adding printk()s for when the size is too great or the checksum
-is wrong, exposed that the current method always looked for the boot config,
-and if this size and checksum matched, it would parse it (as if either is
-wrong a printk has been added to show this). It's better to only check this
-if the boot config is asked to be looked for.
+I would like some advice on how to implement it in a way that is
+acceptable. Would a quirk on the pci id in xhci_shutdown be ok?
 
-Link: https://lore.kernel.org/r/CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com
+0003:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB
+3.0 xHCI Host Controller (rev 02)
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+The full debug log of the distro kernel booting is below.
+
+Cheers,
+
+Joel
+
 ---
-Changes since v3:
-  - Fix leftover reference to "config=bootconfig" to just "bootconfig" in warning message.
 
- Documentation/admin-guide/bootconfig.rst      |  2 ++
- .../admin-guide/kernel-parameters.txt         |  6 ++++
- init/main.c                                   | 28 ++++++++++++++-----
- 3 files changed, 29 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 4d617693c0c8..b342a6796392 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -123,6 +123,8 @@ To remove the config from the image, you can use -d option as below::
- 
-  # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
- 
-+Then add "bootconfig" on the normal kernel command line to tell the
-+kernel to look for the bootconfig at the end of the initrd file.
- 
- Config File Limitation
- ======================
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..b48c70ba9841 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -437,6 +437,12 @@
- 			no delay (0).
- 			Format: integer
- 
-+	bootconfig	[KNL]
-+			Extended command line options can be added to an initrd
-+			and this will cause the kernel to look for it.
-+
-+			See Documentation/admin-guide/bootconfig.rst
-+
- 	bert_disable	[ACPI]
- 			Disable BERT OS support on buggy BIOSes.
- 
-diff --git a/init/main.c b/init/main.c
-index dd7da62d99a5..f174a59d3903 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -336,28 +336,39 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
- 	return ret;
- }
- 
--static void __init setup_boot_config(void)
-+static void __init setup_boot_config(const char *cmdline)
- {
- 	u32 size, csum;
- 	char *data, *copy;
-+	const char *p;
- 	u32 *hdr;
- 
--	if (!initrd_end)
-+	p = strstr(cmdline, "bootconfig");
-+	if (!p || (p != cmdline && !isspace(*(p-1))) ||
-+	    (p[10] && !isspace(p[10])))
- 		return;
- 
-+	if (!initrd_end)
-+		goto not_found;
-+
- 	hdr = (u32 *)(initrd_end - 8);
- 	size = hdr[0];
- 	csum = hdr[1];
- 
--	if (size >= XBC_DATA_MAX)
-+	if (size >= XBC_DATA_MAX) {
-+		pr_err("bootconfig size %d greater than max size %d\n",
-+			size, XBC_DATA_MAX);
- 		return;
-+	}
- 
- 	data = ((void *)hdr) - size;
- 	if ((unsigned long)data < initrd_start)
--		return;
-+		goto not_found;
- 
--	if (boot_config_checksum((unsigned char *)data, size) != csum)
-+	if (boot_config_checksum((unsigned char *)data, size) != csum) {
-+		pr_err("bootconfig checksum failed\n");
- 		return;
-+	}
- 
- 	copy = memblock_alloc(size + 1, SMP_CACHE_BYTES);
- 	if (!copy) {
-@@ -377,9 +388,12 @@ static void __init setup_boot_config(void)
- 		/* Also, "init." keys are init arguments */
- 		extra_init_args = xbc_make_cmdline("init");
- 	}
-+	return;
-+not_found:
-+	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
- }
- #else
--#define setup_boot_config()	do { } while (0)
-+#define setup_boot_config(cmdline)	do { } while (0)
- #endif
- 
- /* Change NUL term back to "=", to make "param" the whole string. */
-@@ -760,7 +774,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	pr_notice("%s", linux_banner);
- 	early_security_init();
- 	setup_arch(&command_line);
--	setup_boot_config();
-+	setup_boot_config(command_line);
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
- 	setup_per_cpu_areas();
--- 
-2.20.1
-
+[    1.037638] xhci_hcd 0003:01:00.0: xHCI Host Controller
+[    1.037695] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
+bus number 1
+[    1.037789] xhci_hcd 0003:01:00.0: xHCI capability registers at
+    (ptrval):
+[    1.037792] xhci_hcd 0003:01:00.0: CAPLENGTH AND HCIVERSION 0x960020:
+[    1.037794] xhci_hcd 0003:01:00.0: CAPLENGTH: 0x20
+[    1.037796] xhci_hcd 0003:01:00.0: HCIVERSION: 0x96
+[    1.037798] xhci_hcd 0003:01:00.0: HCSPARAMS 1: 0x8000840
+[    1.037800] xhci_hcd 0003:01:00.0:   Max device slots: 64
+[    1.037802] xhci_hcd 0003:01:00.0:   Max interrupters: 8
+[    1.037804] xhci_hcd 0003:01:00.0:   Max ports: 8
+[    1.037806] xhci_hcd 0003:01:00.0: HCSPARAMS 2: 0xc0000f1
+[    1.037808] xhci_hcd 0003:01:00.0:   Isoc scheduling threshold: 1
+[    1.037810] xhci_hcd 0003:01:00.0:   Maximum allowed segments in
+event ring: 15
+[    1.037813] xhci_hcd 0003:01:00.0: HCSPARAMS 3 0x7ff000a:
+[    1.037815] xhci_hcd 0003:01:00.0:   Worst case U1 device exit latency: 10
+[    1.037816] xhci_hcd 0003:01:00.0:   Worst case U2 device exit latency: 2047
+[    1.037819] xhci_hcd 0003:01:00.0: HCC PARAMS 0x270f06d:
+[    1.037821] xhci_hcd 0003:01:00.0:   HC generates 64 bit addresses
+[    1.037823] xhci_hcd 0003:01:00.0:   HC hasn't Contiguous Frame ID Capability
+[    1.037825] xhci_hcd 0003:01:00.0:   HC can't generate Stopped -
+Short Package event
+[    1.037826] xhci_hcd 0003:01:00.0:   FIXME: more HCCPARAMS debugging
+[    1.037829] xhci_hcd 0003:01:00.0: RTSOFF 0x4a0:
+[    1.037831] xhci_hcd 0003:01:00.0: xHCI operational registers at
+     (ptrval):
+[    1.037833] xhci_hcd 0003:01:00.0: USBCMD 0x0:
+[    1.037835] xhci_hcd 0003:01:00.0:   HC is being stopped
+[    1.037837] xhci_hcd 0003:01:00.0:   HC has finished hard reset
+[    1.037839] xhci_hcd 0003:01:00.0:   Event Interrupts disabled
+[    1.037841] xhci_hcd 0003:01:00.0:   Host System Error Interrupts disabled
+[    1.037843] xhci_hcd 0003:01:00.0:   HC has finished light reset
+[    1.037846] xhci_hcd 0003:01:00.0: USBSTS 0x0:
+[    1.037847] xhci_hcd 0003:01:00.0:   Event ring is empty
+[    1.037849] xhci_hcd 0003:01:00.0:   No Host System Error
+[    1.037851] xhci_hcd 0003:01:00.0:   HC is running
+[    1.037854] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
+[    1.037857] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037860] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037862] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037865] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
+[    1.037868] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037870] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037873] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037876] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0xe03
+[    1.037878] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037881] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037884] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037886] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0xe03
+[    1.037889] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037892] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037894] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037897] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
+[    1.037900] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037902] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037905] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037908] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
+[    1.037910] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037913] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037916] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037918] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
+[    1.037921] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037924] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037926] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037929] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
+[    1.037931] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
+[    1.037934] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
+[    1.037937] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
+[    1.037939] xhci_hcd 0003:01:00.0: // Halt the HC
+[    1.053945] xhci_hcd 0003:01:00.0: Host halt failed, -110
+[    1.053987] xhci_hcd 0003:01:00.0: can't setup: -110
+[    1.054032] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
+[    1.054099] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
+[    1.054165] xhci_hcd: probe of 0003:01:00.0 failed with error -110
