@@ -2,137 +2,119 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1566C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D64C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9C5217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580941692;
-	bh=mhFskXW68cjm8ngJsjNtNIsLZErDvTn4apWGcjHiQ7A=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DYSeH5IM3zEDWGEzg8JVMjJbsv3sBiRgGrvOcHWVTA0Mro8V0dIwGjTc+jRCLkbO+
-	 JXxfi6KOvakGgCBsPxK9DlBCX/eSD5sEzpXi55ZR4GqdmqdhwlSBZ/4yzFusA6uuX9
-	 vtDoC9uEPbxZcmhV/rYdFm3Ll5FVpknKkr5pWIlo=
+	by mail.kernel.org (Postfix) with ESMTP id 7150C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iApYAl9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBEW2L (ORCPT
+        id S1727491AbgBEW2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:28:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbgBEW2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:28:11 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5F45214AF;
-        Wed,  5 Feb 2020 22:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580941689;
-        bh=mhFskXW68cjm8ngJsjNtNIsLZErDvTn4apWGcjHiQ7A=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gbiYizyBE01xlOjsK4iCwW06pKI+hMYA6qlXF679HJDAScyMlGZKmHMGlX1n0j6zp
-         yf1QiYOaNIASXqy4VTRMSlQvNkUu23rwBg9cqKi8wJB336WLwAwub0Lwd/KvA9P0rp
-         Kliz7v9+iKQTCWUJIwzX3XeI1BfiySM4qVsQX2d8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7108035227EB; Wed,  5 Feb 2020 14:28:09 -0800 (PST)
-Date:   Wed, 5 Feb 2020 14:28:09 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: [for-next][PATCH 1/5] ftrace: Protect ftrace_graph_hash with
- ftrace_sync
-Message-ID: <20200205222809.GD2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200205222110.912457436@goodmis.org>
- <20200205222142.810675558@goodmis.org>
+        Wed, 5 Feb 2020 17:28:37 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43987 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727441AbgBEW2h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:28:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580941716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xN2n9jkJvkSR0RH/zWMkRvEj2quGdHH6HsawLgUOQOY=;
+        b=iApYAl9yv6I1Bh97IB2lo6sf8+RYIKr6mH/HP0P4pzfLX6KSdCc8PFmzIGAGDzcArmo8Xd
+        /1FT0cx4FBvoNU89Fb9cYotDIApzO5vHrzfI/84L2xEbrtPPouyn9IE8FS5CenbD6PnzXu
+        0MeOvtZOe5Z63znWPoCl1MoIaDZ4xe4=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-281-R0wBmhagMhqQmveTy_dsVw-1; Wed, 05 Feb 2020 17:28:34 -0500
+X-MC-Unique: R0wBmhagMhqQmveTy_dsVw-1
+Received: by mail-qv1-f70.google.com with SMTP id g15so2434712qvq.20
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:28:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xN2n9jkJvkSR0RH/zWMkRvEj2quGdHH6HsawLgUOQOY=;
+        b=WOPHiHxxF6KhITwOSv4VdhqsBYoExoTFDnPFvBapJFFRDgFdi3M3A96sdKkyOfLnlG
+         DI/4BaIhOuNgzP+VbRn/JP5MAVxX8IkxaM5Lb2trvO0mAG8QPtrTitYYpppahHp/VTFJ
+         cWvWfZeQb2CMrShVMVZdbZp2c1QVdgEsYNfhQN2qUAJ9XLICfS5463pkOQEYp7qHNRiT
+         33tAjk5sRyHetmFfQHvnvGYbrqB0F/xc4alccs2bG/d2hQxxbKFMUF7j643fs8Pvimkr
+         BflpsxjIHl0GAbYZBUkQNYMu6o+2gJ92eqHKz8MwzmPMa6ZbcuhF0RFsiBLmIkX2OOeN
+         tr3Q==
+X-Gm-Message-State: APjAAAW4NdwgYzbidRsGxDM2J1vzodVZYNk9R57q0zMgcwwB2JZKPB+E
+        I3fS7mQXOpMNlOqsTPoWg3G24TaZtsnJvzkapP7P3VV0IsUWWwqTlTLRGmyaAe0L7BNrwSoouBD
+        ymTLP43I08YGRhAH/ldiUMPFp
+X-Received: by 2002:a05:620a:a46:: with SMTP id j6mr13683qka.164.1580941714103;
+        Wed, 05 Feb 2020 14:28:34 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzgDC/fBZ4GnRbk3BQEXE+eWIhbbieAb4nE+MGEKdPSLikBImrRnbk5qAuaCcwE1K66PslinA==
+X-Received: by 2002:a05:620a:a46:: with SMTP id j6mr13650qka.164.1580941713724;
+        Wed, 05 Feb 2020 14:28:33 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id c184sm503353qke.118.2020.02.05.14.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 14:28:33 -0800 (PST)
+Date:   Wed, 5 Feb 2020 17:28:29 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 03/19] KVM: Don't free new memslot if allocation of
+ said memslot fails
+Message-ID: <20200205222829.GF387680@xz-x1>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-4-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200205222142.810675558@goodmis.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200121223157.15263-4-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 05:21:11PM -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Tue, Jan 21, 2020 at 02:31:41PM -0800, Sean Christopherson wrote:
+> The two implementations of kvm_arch_create_memslot() in x86 and PPC are
+> both good citizens and free up all local resources if creation fails.
+> Return immediately (via a superfluous goto) instead of calling
+> kvm_free_memslot().
 > 
-> As function_graph tracer can run when RCU is not "watching", it can not be
-> protected by synchronize_rcu() it requires running a task on each CPU before
-> it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
-> 
-> Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
-> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Note, the call to kvm_free_memslot() is effectively an expensive nop in
+> this case as there are no resources to be freed.
 
-Nice!  If there is much more call for this, perhaps I should take a hint
-from the ftrace_sync() comment and add synchronize_rcu_rude().  ;-)
+(I failed to understand why that is expensive.. but the change looks OK)
 
-Reviewed-by: "Paul E. McKenney" <paulmck@kernel.org>
+> 
+> No functional change intended.
+> 
+> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-> ---
->  kernel/trace/ftrace.c | 11 +++++++++--
->  kernel/trace/trace.h  |  2 ++
->  2 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 481ede3eac13..3f7ee102868a 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5867,8 +5867,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
->  
->  		mutex_unlock(&graph_lock);
->  
-> -		/* Wait till all users are no longer using the old hash */
-> -		synchronize_rcu();
-> +		/*
-> +		 * We need to do a hard force of sched synchronization.
-> +		 * This is because we use preempt_disable() to do RCU, but
-> +		 * the function tracers can be called where RCU is not watching
-> +		 * (like before user_exit()). We can not rely on the RCU
-> +		 * infrastructure to do the synchronization, thus we must do it
-> +		 * ourselves.
-> +		 */
-> +		schedule_on_each_cpu(ftrace_sync);
->  
->  		free_ftrace_hash(old_hash);
->  	}
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 8c52f5de9384..3c75d29bd861 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -979,6 +979,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
->  	 * Have to open code "rcu_dereference_sched()" because the
->  	 * function graph tracer can be called when RCU is not
->  	 * "watching".
-> +	 * Protected with schedule_on_each_cpu(ftrace_sync)
->  	 */
->  	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
->  
-> @@ -1031,6 +1032,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
->  	 * Have to open code "rcu_dereference_sched()" because the
->  	 * function graph tracer can be called when RCU is not
->  	 * "watching".
-> +	 * Protected with schedule_on_each_cpu(ftrace_sync)
->  	 */
->  	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
->  						 !preemptible());
-> -- 
-> 2.24.1
-> 
-> 
+Reviewed-by: Peter Xu <peterx@redhat.com>
+
+-- 
+Peter Xu
+
