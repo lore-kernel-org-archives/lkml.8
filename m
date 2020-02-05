@@ -2,178 +2,179 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1141C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C496C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76B02467B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oVpH+7hb"
+	by mail.kernel.org (Postfix) with ESMTP id 4BB4B2467B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgBESBd (ORCPT
+        id S1727398AbgBESCY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:01:33 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:38432 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbgBESBc (ORCPT
+        Wed, 5 Feb 2020 13:02:24 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:37980 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgBESCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:01:32 -0500
-Received: by mail-vs1-f67.google.com with SMTP id r18so1939033vso.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:01:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tcERuPTreB1RdPPHaPDmwJiWCBqhIbQ/kkvuwoX6k74=;
-        b=oVpH+7hbPNdJnNsLjdBlqZ71TWR1mX/Dt0ANmSlQg+wjEIEYcnIMa/ZCjtuvTu8Y+f
-         lCVBpkS9eO35HQytqbp7j4bcqcVd9+uKbZwVawuzrzSvB4eVvCdhMu5aVmOy8WGjnK11
-         myPmLTbHd+oIm9FFyuy3G1w83Z8aW2eC71Gdw=
+        Wed, 5 Feb 2020 13:02:24 -0500
+Received: by mail-yw1-f68.google.com with SMTP id 10so3220455ywv.5;
+        Wed, 05 Feb 2020 10:02:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tcERuPTreB1RdPPHaPDmwJiWCBqhIbQ/kkvuwoX6k74=;
-        b=gWeOzPpfqLQFZ0gtuwTP72Jra8nUY9fmPxn+U35UsiNfP29WEr8gXqgOCRwdxGl1K8
-         f2Pbrb+joxABGAz2BcvPcqcg+Zq8epE2Vd55TcI84e8hQ0S4kkun+pJYzYXYFXIGLIJJ
-         73pFoFlPi6QBzHqCuj2Pk/XO4+Z+Kq+40HGG/N7FUSp3RWxu8ao+D7iZPTto5jCYvc6D
-         HJt+1t/5OjyVLaEiuC/UJ8VFw/mdh4VFlgsZKfbCxTXmoSYjQk8++hKfIxhRD8U2UeTU
-         s78g1ZPgGQbYJdz89EpYAojtmp0m4rWp+TxDc77JlfYiGtzK/1xBGbh5hfNIkAQ2qQvj
-         900Q==
-X-Gm-Message-State: APjAAAWc/xyZqaBWFhpPAJuPtPEI/7+W6yxWPvhmRmCZOaEM53TmsBo0
-        ufGayqLQzpZyyMGpk05WTExEYqd+urk=
-X-Google-Smtp-Source: APXvYqy+6XmPtGHVcv6U0HIHhdwJj16HzcAy9aKzGna+8GM4igycPoRxk/3A5UihMw9VjOengC4aPQ==
-X-Received: by 2002:a67:dc90:: with SMTP id g16mr22426058vsk.110.1580925690963;
-        Wed, 05 Feb 2020 10:01:30 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id s66sm176476vkg.11.2020.02.05.10.01.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 10:01:29 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id 59so1176926uap.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:01:29 -0800 (PST)
-X-Received: by 2002:ab0:724c:: with SMTP id d12mr21945531uap.0.1580925689110;
- Wed, 05 Feb 2020 10:01:29 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D8m3zpziTMf/1DK49oOTnKVovL2jn4pQ/YQP25fOkNM=;
+        b=Ypjh5SB/RW49YJWn7G7gMd7QmGSzXdi7rMgkcIyhZuNdSKX4F5NsmAttgjN09erHGw
+         rrHjbKnPupz5TDJIfhDMoKKJA4x3gnz4Ut/YeAx0V3wjCAOYZI/TGgpgsJJzem7SUINg
+         xbuUIG6PT22aCz447r2g8S+Myl2qmBHUoR3r3jeiwimPNi0ruuwDu8HhpsrLysKf6Qz3
+         SsGe3wu7VJk6HxUKGvYcAaAh6YVcPe4lBY+hVkEOJrNvVMcWfSof4AYH+MwIeRamWnnx
+         shfamKVQ78pF61lIQQq2rp6IbwV0533wdOnJbFqCD0jwx/qIgDU/9/oms043LAmX710n
+         BLxA==
+X-Gm-Message-State: APjAAAWrwml6sjqR0CQe6uRjbajZYg5MJcw2SjCuV+nNY71+htNl6KQr
+        Fz/zpONHMSjnJUPU50VBd/Vzh6H2I5i3+P4QndE=
+X-Google-Smtp-Source: APXvYqy1c38uBLDGGJ341PM5j5TAAE218gACbT2CX03aRP9JBZDvgjxAa+vHL8pEHWA2sJuLGbVLFN8YC44c7Jnxe0Q=
+X-Received: by 2002:a25:8804:: with SMTP id c4mr7889151ybl.387.1580925742108;
+ Wed, 05 Feb 2020 10:02:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20200204141219.1.Ief3f3a7edbbd76165901b14813e90381c290786d@changeid>
- <20200205173042.chqij5i53mncfzar@holly.lan>
-In-Reply-To: <20200205173042.chqij5i53mncfzar@holly.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 5 Feb 2020 10:01:17 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=V6ovmi-zCUYyFdiyf0pG4g=i5N4hUC8JjvrWDRUzPnqQ@mail.gmail.com>
-Message-ID: <CAD=FV=V6ovmi-zCUYyFdiyf0pG4g=i5N4hUC8JjvrWDRUzPnqQ@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Fix compiling on architectures w/out DBG_MAX_REG_NUM defined
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Anatoly Pugachev <matorola@gmail.com>,
-        Sparc kernel list <sparclinux@vger.kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
+References: <cover.1580610812.git.fthain@telegraphics.com.au> <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au>
+In-Reply-To: <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Wed, 5 Feb 2020 19:02:10 +0100
+Message-ID: <CAAdtpL7SpzfqSmEcuVszNyXfrRegC20txoS5j7Ss3WkCmyRH+g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] fbdev/g364fb: Fix build failure
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Laurent Vivier <laurent@vivier.eu>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Feb 2, 2020 at 3:41 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+>
+> This patch resolves these compiler errors and warnings --
+>
+>   CC      drivers/video/fbdev/g364fb.o
+> drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
+> drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
+> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
+> drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
+> drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
+> drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
 
-On Wed, Feb 5, 2020 at 9:30 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Tue, Feb 04, 2020 at 02:12:25PM -0800, Douglas Anderson wrote:
-> > In commit bbfceba15f8d ("kdb: Get rid of confusing diag msg from "rd"
-> > if current task has no regs") I tried to clean things up by using "if"
-> > instead of "#ifdef".  Turns out we really need "#ifdef" since not all
-> > architectures define some of the structures that the code is referring
-> > to.
-> >
-> > Let's switch to #ifdef again, but at least avoid using it inside of
-> > the function.
-> >
-> > Fixes: bbfceba15f8d ("kdb: Get rid of confusing diag msg from "rd" if current task has no regs")
-> > Reported-by: Anatoly Pugachev <matorola@gmail.com>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->
-> Thanks for being so quick with this (especially when if I had been less
-> delinquent with linux-next it might have been spotted sooner).
->
->
-> > ---
-> > I don't have a sparc64 compiler but I'm pretty sure this should work.
-> > Testing appreciated.
->
-> I've just add sparc64 into my pre-release testing (although I have had to
-> turn off a bunch of additional compiler warnings in order to do so).
->
->
-> >  kernel/debug/kdb/kdb_main.c | 17 +++++++++++------
-> >  1 file changed, 11 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> > index b22292b649c4..c84e61747267 100644
-> > --- a/kernel/debug/kdb/kdb_main.c
-> > +++ b/kernel/debug/kdb/kdb_main.c
-> > @@ -1833,6 +1833,16 @@ static int kdb_go(int argc, const char **argv)
-> >  /*
-> >   * kdb_rd - This function implements the 'rd' command.
-> >   */
-> > +
-> > +/* Fallback to Linux showregs() if we don't have DBG_MAX_REG_NUM */
-> > +#if DBG_MAX_REG_NUM <= 0
-> > +static int kdb_rd(int argc, const char **argv)
-> > +{
-> > +     if (!kdb_check_regs())
-> > +             kdb_dumpregs(kdb_current_regs);
-> > +     return 0;
-> > +}
-> > +#else
->
-> The original kdb_rd (and kdb_rm which still exists in this file) place
-> the #if inside the function and users > 0 so the common case was
-> covered at the top and the fallback at the bottom.
->
-> Why change style when re-introducing this code?
+18 years unnoticed...
 
-My opinion is that #if / #ifdef leads to hard-to-follow code, so I
-have always taken the policy that #if / #ifdef don't belong anywhere
-inside a function if it can be avoided.  This seems to be the policy
-in Linux in general, though not as much in the existing kgdb code.
-IMO kgdb should be working to reduce #if / #ifdef inside functions.
+> drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
+> drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
+>
+> The MIPS Magnum framebuffer console now works when tested in QEMU.
+>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 
-In this case, the duplicated code is 1 line: the call to
-kdb_check_regs().  It seemed better to duplicate.  Another option that
-would avoid the #if / #ifdef in the function would be as follows.
-Happy to change my patch like this if you prefer:
+This commit is the kernel 'git origin' import, not the proper reference.
 
-#if DBG_MAX_REG_NUM <= 0
-static int _kdb_rd(void)
-{
-  kdb_dumpregs(kdb_current_regs);
-  return 0;
-}
-#else
-static int _kdb_rd(void)
-{
- ...
-}
-#endif
+The actual change is between v2.5.17/2.5.19:
+https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/diff/drivers/video/g364fb.c?id=b30e6e183a728923267
+Date: 2002-05-22 07:52:33...
 
-static int kdb_rd(int argc, const char **argv)
-{
-  if (kdb_check_regs())
-    return 0;
-  return _kdb_rd();
-}
+The same commit introduced the changes in g364fb_cursor(), which was
+implemented previous to v2.4.0 so it is hard to follow from there.
 
-...or if you just want to get something quickly so we have time to
-debate the finer points, I wouldn't object to a simple Revert and I
-can put it on my plate to resubmit the patch later.
+Nobody complains during 18 years so I doubt anyone care that
+g364fb_cursor() is removed.
+And by removing it, you improve the kernel quality, so:
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+(Maybe remove the unhelpful 'Fixes' tag).
 
--Doug
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> ---
+>  drivers/video/fbdev/g364fb.c | 29 +++--------------------------
+>  1 file changed, 3 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
+> index 223896cc5f7d..fb26230a3c7b 100644
+> --- a/drivers/video/fbdev/g364fb.c
+> +++ b/drivers/video/fbdev/g364fb.c
+> @@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
+>  static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
+>                             u_int blue, u_int transp,
+>                             struct fb_info *info);
+> -static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
+>  static int g364fb_blank(int blank, struct fb_info *info);
+>
+>  static struct fb_ops g364fb_ops = {
+> @@ -119,28 +118,8 @@ static struct fb_ops g364fb_ops = {
+>         .fb_fillrect    = cfb_fillrect,
+>         .fb_copyarea    = cfb_copyarea,
+>         .fb_imageblit   = cfb_imageblit,
+> -       .fb_cursor      = g364fb_cursor,
+>  };
+>
+> -int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
+> -{
+> -
+> -       switch (cursor->enable) {
+> -       case CM_ERASE:
+> -               *(unsigned int *) CTLA_REG |= CURS_TOGGLE;
+> -               break;
+> -
+> -       case CM_MOVE:
+> -       case CM_DRAW:
+> -               *(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
+> -               *(unsigned int *) CURS_POS_REG =
+> -                   ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
+> -                                                 info->var.yoffset);
+> -               break;
+> -       }
+> -       return 0;
+> -}
+> -
+>  /*
+>   *  Pan or Wrap the Display
+>   *
+> @@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
+>   */
+>  int __init g364fb_init(void)
+>  {
+> -       volatile unsigned int *pal_ptr =
+> -           (volatile unsigned int *) CLR_PAL_REG;
+>         volatile unsigned int *curs_pal_ptr =
+>             (volatile unsigned int *) CURS_PAL_REG;
+> -       int mem, i, j;
+> +       int mem, i;
+>
+>         if (fb_get_options("g364fb", NULL))
+>                 return -ENODEV;
+> @@ -230,8 +207,8 @@ int __init g364fb_init(void)
+>          */
+>         *(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
+>         *(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
+> -       fb_var.xres_virtual = fbvar.xres;
+> -       fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
+> +       fb_var.xres_virtual = fb_var.xres;
+> +       fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
+>         fb_fix.smem_start = 0x40000000; /* physical address */
+>         /* get size of video memory; this is special for the JAZZ hardware */
+>         mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
+> --
+> 2.24.1
+>
