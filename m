@@ -2,129 +2,183 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D2EC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31310C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE14214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4DA214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zk8Pnsf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgBEC5T (ORCPT
+        id S1727899AbgBEC6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 21:57:19 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42074 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727855AbgBEC5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 21:57:19 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A41588CE0A3BFBCBC63E;
-        Wed,  5 Feb 2020 10:56:41 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Feb 2020
- 10:56:32 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v2 6/6] powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst and add 64bit part
-Date:   Wed, 5 Feb 2020 10:55:27 +0800
-Message-ID: <20200205025527.28640-7-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200205025527.28640-1-yanaijie@huawei.com>
-References: <20200205025527.28640-1-yanaijie@huawei.com>
+        Tue, 4 Feb 2020 21:58:50 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34806 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727746AbgBEC6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 21:58:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580871528;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iMoyuUQG6mGTZVCTKYztmS6Hs0K242TSdWPEeOxZW6A=;
+        b=Zk8Pnsf2ajJs2A8PU1TMYhlCMP3QCH+1zyGe7XH59GdobpRhqwsakGFtcWBX6ZKSjAdfAr
+        z/SBWwrcX7HbYbeCfvmgUYLgzluBlxc3hEwf3Jpex99tjYbcLq982afc4JuLs5z52Scaou
+        AK2HwdMUH1ycPgML81mtVr8bpsWuo24=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-8MDC-D-hOOuZOLfcA2gzBA-1; Tue, 04 Feb 2020 21:58:46 -0500
+X-MC-Unique: 8MDC-D-hOOuZOLfcA2gzBA-1
+Received: by mail-qv1-f69.google.com with SMTP id v3so642932qvm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 18:58:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iMoyuUQG6mGTZVCTKYztmS6Hs0K242TSdWPEeOxZW6A=;
+        b=t+wtbenNOwrNyT5UFiSG68P1LIpK0gfR7r7KBAbf2c+3kr2wEhIM2iEsrTkBjDwvdv
+         PbcjuWhDSGvnohOudBSi0+bQKovqjsHDv7yVUtOKFvx+x/hlnJYMhNn7Of2smfc/HJzL
+         065mwHGqTruh5rvDeN7/Cdlzo69R7uZlHft+d581LWBnEF7zcUvyNEKoy8tgQXltq5J/
+         QjXlP+18vJ0zETG3GVQ6mPemJDX8S8vJXplCFw7n3JZShj1ymWZEC6pYPVbPEjJXq37C
+         cmDPCndRnOlT2HBHcDrI0KCll8zyO5xDmwRx9Sp4AKC4wrxZbGnNMY52ju1IS07qEkPV
+         yCQQ==
+X-Gm-Message-State: APjAAAXm0fwQngKDjVDRN3Ww3IKrjv2OibtmCy9pTfCeXN3Pkv6/k3xR
+        jrX8/FF6gyvPR22yPxNrZAh7YQ9snzvMQ7BMf0ww/4tx2mawNyDDpRZPILTwOS8ubpjpbwHtHND
+        m07jWjx39/yhsRD1mIrCWMrDQ
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr31821683qtj.300.1580871525713;
+        Tue, 04 Feb 2020 18:58:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwcW1YtKLT8v5bd10IJa63sORuNDIe53LmsHkfWJo8kyUKgeShP1B4VamT5gnlv2wvLf68pxw==
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr31821664qtj.300.1580871525461;
+        Tue, 04 Feb 2020 18:58:45 -0800 (PST)
+Received: from xz-x1.redhat.com ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id e64sm12961649qtd.45.2020.02.04.18.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 18:58:44 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     dinechin@redhat.com, sean.j.christopherson@intel.com,
+        pbonzini@redhat.com, jasowang@redhat.com, yan.y.zhao@intel.com,
+        mst@redhat.com, peterx@redhat.com, kevin.tian@intel.com,
+        alex.williamson@redhat.com, dgilbert@redhat.com,
+        vkuznets@redhat.com
+Subject: [PATCH 04/14] KVM: Pass in kvm pointer into mark_page_dirty_in_slot()
+Date:   Tue,  4 Feb 2020 21:58:32 -0500
+Message-Id: <20200205025842.367575-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200205025105.367213-1-peterx@redhat.com>
+References: <20200205025105.367213-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we support both 32 and 64 bit KASLR for fsl booke. Add document for
-64 bit part and rename kaslr-booke32.rst to kaslr-booke.rst.
+The context will be needed to implement the kvm dirty ring.
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 ++++++++++++++++---
- 1 file changed, 31 insertions(+), 4 deletions(-)
- rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+ virt/kvm/kvm_main.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/powerpc/kaslr-booke32.rst b/Documentation/powerpc/kaslr-booke.rst
-similarity index 59%
-rename from Documentation/powerpc/kaslr-booke32.rst
-rename to Documentation/powerpc/kaslr-booke.rst
-index 8b259fdfdf03..42121fed8249 100644
---- a/Documentation/powerpc/kaslr-booke32.rst
-+++ b/Documentation/powerpc/kaslr-booke.rst
-@@ -1,15 +1,18 @@
- .. SPDX-License-Identifier: GPL-2.0
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 69190f9f7bd8..5307f6e33587 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -144,7 +144,9 @@ static void hardware_disable_all(void);
  
--===========================
--KASLR for Freescale BookE32
--===========================
-+=========================
-+KASLR for Freescale BookE
-+=========================
+ static void kvm_io_bus_destroy(struct kvm_io_bus *bus);
  
- The word KASLR stands for Kernel Address Space Layout Randomization.
+-static void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot, gfn_t gfn);
++static void mark_page_dirty_in_slot(struct kvm *kvm,
++				    struct kvm_memory_slot *memslot,
++				    gfn_t gfn);
  
- This document tries to explain the implementation of the KASLR for
--Freescale BookE32. KASLR is a security feature that deters exploit
-+Freescale BookE. KASLR is a security feature that deters exploit
- attempts relying on knowledge of the location of kernel internals.
+ __visible bool kvm_rebooting;
+ EXPORT_SYMBOL_GPL(kvm_rebooting);
+@@ -2057,7 +2059,8 @@ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_atomic);
  
-+KASLR for Freescale BookE32
-+-------------------------
-+
- Since CONFIG_RELOCATABLE has already supported, what we need to do is
- map or copy kernel to a proper place and relocate. Freescale Book-E
- parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-@@ -38,5 +41,29 @@ bit of the entropy to decide the index of the 64M zone. Then we chose a
+-static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
++static int __kvm_write_guest_page(struct kvm *kvm,
++				  struct kvm_memory_slot *memslot, gfn_t gfn,
+ 			          const void *data, int offset, int len)
+ {
+ 	int r;
+@@ -2069,7 +2072,7 @@ static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
+ 	r = __copy_to_user((void __user *)addr + offset, data, len);
+ 	if (r)
+ 		return -EFAULT;
+-	mark_page_dirty_in_slot(memslot, gfn);
++	mark_page_dirty_in_slot(kvm, memslot, gfn);
+ 	return 0;
+ }
  
-                               kernstart_virt_addr
+@@ -2078,7 +2081,7 @@ int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
+ {
+ 	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
  
-+
-+KASLR for Freescale BookE64
-+---------------------------
-+
-+The implementation for Freescale BookE64 is similar as BookE32. One
-+difference is that Freescale BookE64 set up a TLB mapping of 1G during
-+booting. Another difference is that ppc64 needs the kernel to be
-+64K-aligned. So we can randomize the kernel in this 1G mapping and make
-+it 64K-aligned. This can save some code to creat another TLB map at early
-+boot. The disadvantage is that we only have about 1G/64K = 16384 slots to
-+put the kernel in::
-+
-+    KERNELBASE
-+
-+          64K                     |--> kernel <--|
-+           |                      |              |
-+        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
-+        |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
-+        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
-+        |                         |                        1G
-+        |----->   offset    <-----|
-+
-+                              kernstart_virt_addr
-+
- To enable KASLR, set CONFIG_RANDOMIZE_BASE = y. If KASLR is enable and you
- want to disable it at runtime, add "nokaslr" to the kernel cmdline.
+-	return __kvm_write_guest_page(slot, gfn, data, offset, len);
++	return __kvm_write_guest_page(kvm, slot, gfn, data, offset, len);
+ }
+ EXPORT_SYMBOL_GPL(kvm_write_guest_page);
+ 
+@@ -2087,7 +2090,7 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+ {
+ 	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+ 
+-	return __kvm_write_guest_page(slot, gfn, data, offset, len);
++	return __kvm_write_guest_page(vcpu->kvm, slot, gfn, data, offset, len);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
+ 
+@@ -2206,7 +2209,7 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
+ 	if (r)
+ 		return -EFAULT;
+-	mark_page_dirty_in_slot(ghc->memslot, gpa >> PAGE_SHIFT);
++	mark_page_dirty_in_slot(kvm, ghc->memslot, gpa >> PAGE_SHIFT);
+ 
+ 	return 0;
+ }
+@@ -2273,7 +2276,8 @@ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len)
+ }
+ EXPORT_SYMBOL_GPL(kvm_clear_guest);
+ 
+-static void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot,
++static void mark_page_dirty_in_slot(struct kvm *kvm,
++				    struct kvm_memory_slot *memslot,
+ 				    gfn_t gfn)
+ {
+ 	if (memslot && memslot->dirty_bitmap) {
+@@ -2288,7 +2292,7 @@ void mark_page_dirty(struct kvm *kvm, gfn_t gfn)
+ 	struct kvm_memory_slot *memslot;
+ 
+ 	memslot = gfn_to_memslot(kvm, gfn);
+-	mark_page_dirty_in_slot(memslot, gfn);
++	mark_page_dirty_in_slot(kvm, memslot, gfn);
+ }
+ EXPORT_SYMBOL_GPL(mark_page_dirty);
+ 
+@@ -2297,7 +2301,7 @@ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn)
+ 	struct kvm_memory_slot *memslot;
+ 
+ 	memslot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+-	mark_page_dirty_in_slot(memslot, gfn);
++	mark_page_dirty_in_slot(vcpu->kvm, memslot, gfn);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_mark_page_dirty);
+ 
 -- 
-2.17.2
+2.24.1
 
