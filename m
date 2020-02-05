@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CB0C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D54CC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28E02253D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179A322464
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgBEWjh (ORCPT
+        id S1727572AbgBEWjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:39:37 -0500
-Received: from mga02.intel.com ([134.134.136.20]:60113 "EHLO mga02.intel.com"
+        Wed, 5 Feb 2020 17:39:41 -0500
+Received: from mga02.intel.com ([134.134.136.20]:60115 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727493AbgBEWjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:39:36 -0500
+        id S1727493AbgBEWji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:39:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 14:39:35 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 14:39:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
-   d="scan'208";a="225092438"
+   d="scan'208";a="225092456"
 Received: from unknown (HELO localhost.jf.intel.com) ([10.54.75.26])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Feb 2020 14:39:35 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 05 Feb 2020 14:39:36 -0800
 From:   Kristen Carlson Accardi <kristen@linux.intel.com>
 To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
         arjan@linux.intel.com, keescook@chromium.org
 Cc:     rick.p.edgecombe@intel.com, x86@kernel.org,
         linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
         Kristen Carlson Accardi <kristen@linux.intel.com>
-Subject: [RFC PATCH 02/11] x86: tools/relocs: Support >64K section headers
-Date:   Wed,  5 Feb 2020 14:39:41 -0800
-Message-Id: <20200205223950.1212394-3-kristen@linux.intel.com>
+Subject: [RFC PATCH 07/11] x86/tools: Adding relative relocs for randomized functions
+Date:   Wed,  5 Feb 2020 14:39:46 -0800
+Message-Id: <20200205223950.1212394-8-kristen@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200205223950.1212394-1-kristen@linux.intel.com>
 References: <20200205223950.1212394-1-kristen@linux.intel.com>
@@ -47,185 +47,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While it is already supported to find the total number of section
-headers if we exceed 64K sections, we need to support the
-extended symbol table to get section header indexes for symbols
-when there are > 64K sections. Parse the elf file to read
-the extended symbol table info, and then replace all direct references
-to st_shndx with calls to sym_index(), which will determine whether
-we can read the value directly or whether we need to pull it out of
-the extended table.
+If we are randomizing function sections, we are going to need
+to recalculate relative offsets for relocs that are either in
+the randomized sections, or refer to the randomized sections.
+Add code to detect whether a reloc satisifies these cases, and if
+so, add them to the appropriate reloc list.
 
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 ---
- arch/x86/tools/relocs.c | 104 ++++++++++++++++++++++++++++++----------
- 1 file changed, 78 insertions(+), 26 deletions(-)
+ arch/x86/boot/compressed/Makefile |  7 +++++-
+ arch/x86/tools/relocs.c           | 41 ++++++++++++++++++++++++++++---
+ arch/x86/tools/relocs.h           |  4 +--
+ arch/x86/tools/relocs_common.c    | 15 +++++++----
+ 4 files changed, 55 insertions(+), 12 deletions(-)
 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 1dac210f7d44..b7e5ea757ef4 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -119,6 +119,11 @@ $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+ 	$(call if_changed,check-and-link-vmlinux)
+ 
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
++
++ifdef CONFIG_FG_KASLR
++	RELOCS_ARGS += --fg-kaslr
++endif
++
+ $(obj)/vmlinux.bin: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+ 
+@@ -126,7 +131,7 @@ targets += $(patsubst $(obj)/%,%,$(vmlinux-objs-y)) vmlinux.bin.all vmlinux.relo
+ 
+ CMD_RELOCS = arch/x86/tools/relocs
+ quiet_cmd_relocs = RELOCS  $@
+-      cmd_relocs = $(CMD_RELOCS) $< > $@;$(CMD_RELOCS) --abs-relocs $<
++      cmd_relocs = $(CMD_RELOCS) $(RELOCS_ARGS) $< > $@;$(CMD_RELOCS) $(RELOCS_ARGS) --abs-relocs $<
+ $(obj)/vmlinux.relocs: vmlinux FORCE
+ 	$(call if_changed,relocs)
+ 
 diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index ce7188cbdae5..a00dc133f109 100644
+index a00dc133f109..2641eec5f2de 100644
 --- a/arch/x86/tools/relocs.c
 +++ b/arch/x86/tools/relocs.c
-@@ -14,6 +14,10 @@
- static Elf_Ehdr		ehdr;
- static unsigned long	shnum;
- static unsigned int	shstrndx;
-+static unsigned int	shsymtabndx;
-+static unsigned int	shxsymtabndx;
-+
-+static int sym_index(Elf_Sym *sym);
- 
- struct relocs {
- 	uint32_t	*offset;
-@@ -32,6 +36,7 @@ struct section {
- 	Elf_Shdr       shdr;
- 	struct section *link;
- 	Elf_Sym        *symtab;
-+	Elf32_Word     *xsymtab;
- 	Elf_Rel        *reltab;
- 	char           *strtab;
+@@ -42,6 +42,8 @@ struct section {
  };
-@@ -265,7 +270,7 @@ static const char *sym_name(const char *sym_strtab, Elf_Sym *sym)
- 		name = sym_strtab + sym->st_name;
- 	}
- 	else {
--		name = sec_name(sym->st_shndx);
-+		name = sec_name(sym_index(sym));
- 	}
- 	return name;
- }
-@@ -335,6 +340,23 @@ static uint64_t elf64_to_cpu(uint64_t val)
- #define elf_xword_to_cpu(x)	elf32_to_cpu(x)
- #endif
+ static struct section *secs;
  
-+static int sym_index(Elf_Sym *sym)
-+{
-+	Elf_Sym *symtab = secs[shsymtabndx].symtab;
-+	Elf32_Word *xsymtab = secs[shxsymtabndx].xsymtab;
-+	unsigned long offset;
-+	int index;
++static int fg_kaslr;
 +
-+	if (sym->st_shndx != SHN_XINDEX)
-+		return sym->st_shndx;
-+
-+	/* calculate offset of sym from head of table. */
-+	offset = (unsigned long) sym - (unsigned long) symtab;
-+	index = offset/sizeof(*sym);
-+
-+	return elf32_to_cpu(xsymtab[index]);
-+}
-+
- static void read_ehdr(FILE *fp)
- {
- 	if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1) {
-@@ -468,31 +490,60 @@ static void read_strtabs(FILE *fp)
- static void read_symtabs(FILE *fp)
- {
- 	int i,j;
-+
- 	for (i = 0; i < shnum; i++) {
- 		struct section *sec = &secs[i];
--		if (sec->shdr.sh_type != SHT_SYMTAB) {
-+		int num_syms;
-+
-+		switch (sec->shdr.sh_type) {
-+		case SHT_SYMTAB_SHNDX:
-+			sec->xsymtab = malloc(sec->shdr.sh_size);
-+			if (!sec->xsymtab) {
-+				die("malloc of %d bytes for xsymtab failed\n",
-+					sec->shdr.sh_size);
-+			}
-+			if (fseek(fp, sec->shdr.sh_offset, SEEK_SET) < 0) {
-+				die("Seek to %d failed: %s\n",
-+					sec->shdr.sh_offset, strerror(errno));
-+			}
-+			if (fread(sec->xsymtab, 1, sec->shdr.sh_size, fp)
-+					!= sec->shdr.sh_size) {
-+				die("Cannot read extended symbol table: %s\n",
-+					strerror(errno));
-+			}
-+			shxsymtabndx = i;
-+			continue;
-+
-+		case SHT_SYMTAB:
-+			num_syms = sec->shdr.sh_size/sizeof(Elf_Sym);
-+
-+			sec->symtab = malloc(sec->shdr.sh_size);
-+			if (!sec->symtab) {
-+				die("malloc of %d bytes for symtab failed\n",
-+					sec->shdr.sh_size);
-+			}
-+			if (fseek(fp, sec->shdr.sh_offset, SEEK_SET) < 0) {
-+				die("Seek to %d failed: %s\n",
-+					sec->shdr.sh_offset, strerror(errno));
-+			}
-+			if (fread(sec->symtab, 1, sec->shdr.sh_size, fp)
-+					!= sec->shdr.sh_size) {
-+				die("Cannot read symbol table: %s\n",
-+					strerror(errno));
-+			}
-+			for (j = 0; j < num_syms; j++) {
-+				Elf_Sym *sym = &sec->symtab[j];
-+
-+				sym->st_name  = elf_word_to_cpu(sym->st_name);
-+				sym->st_value = elf_addr_to_cpu(sym->st_value);
-+				sym->st_size  = elf_xword_to_cpu(sym->st_size);
-+				sym->st_shndx = elf_half_to_cpu(sym->st_shndx);
-+			}
-+			shsymtabndx = i;
-+			continue;
-+
-+		default:
- 			continue;
--		}
--		sec->symtab = malloc(sec->shdr.sh_size);
--		if (!sec->symtab) {
--			die("malloc of %d bytes for symtab failed\n",
--				sec->shdr.sh_size);
--		}
--		if (fseek(fp, sec->shdr.sh_offset, SEEK_SET) < 0) {
--			die("Seek to %d failed: %s\n",
--				sec->shdr.sh_offset, strerror(errno));
--		}
--		if (fread(sec->symtab, 1, sec->shdr.sh_size, fp)
--		    != sec->shdr.sh_size) {
--			die("Cannot read symbol table: %s\n",
--				strerror(errno));
--		}
--		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Sym); j++) {
--			Elf_Sym *sym = &sec->symtab[j];
--			sym->st_name  = elf_word_to_cpu(sym->st_name);
--			sym->st_value = elf_addr_to_cpu(sym->st_value);
--			sym->st_size  = elf_xword_to_cpu(sym->st_size);
--			sym->st_shndx = elf_half_to_cpu(sym->st_shndx);
- 		}
- 	}
- }
-@@ -759,13 +810,14 @@ static void percpu_init(void)
-  */
- static int is_percpu_sym(ElfW(Sym) *sym, const char *symname)
- {
--	return (sym->st_shndx == per_cpu_shndx) &&
-+	int shndx = sym_index(sym);
-+
-+	return (shndx == per_cpu_shndx) &&
- 		strcmp(symname, "__init_begin") &&
- 		strcmp(symname, "__per_cpu_load") &&
+ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
+ /*
+  * Following symbols have been audited. There values are constant and do
+@@ -818,6 +820,32 @@ static int is_percpu_sym(ElfW(Sym) *sym, const char *symname)
  		strncmp(symname, "init_per_cpu_", 13);
  }
  
--
++static int is_function_section(struct section *sec)
++{
++	const char *name;
++
++	if (!fg_kaslr)
++		return 0;
++
++	name = sec_name(sec->shdr.sh_info);
++
++	return(!strncmp(name, ".text.", 6));
++}
++
++static int is_randomized_sym(ElfW(Sym *sym))
++{
++	const char *name;
++
++	if (!fg_kaslr)
++		return 0;
++
++	if (sym->st_shndx > shnum)
++		return 0;
++
++	name = sec_name(sym_index(sym));
++	return(!strncmp(name, ".text.", 6));
++}
++
  static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
  		      const char *symname)
  {
-@@ -1088,7 +1140,7 @@ static int do_reloc_info(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
- 		sec_name(sec->shdr.sh_info),
- 		rel_type(ELF_R_TYPE(rel->r_info)),
- 		symname,
--		sec_name(sym->st_shndx));
-+		sec_name(sym_index(sym)));
- 	return 0;
+@@ -842,13 +870,17 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
+ 	case R_X86_64_PC32:
+ 	case R_X86_64_PLT32:
+ 		/*
+-		 * PC relative relocations don't need to be adjusted unless
+-		 * referencing a percpu symbol.
++		 * we need to keep pc relative relocations for sections which
++		 * might be randomized, and for the percpu section.
++		 * We also need to keep relocations for any offset which might
++		 * reference an address in a section which has been randomized.
+ 		 *
+ 		 * NB: R_X86_64_PLT32 can be treated as R_X86_64_PC32.
+ 		 */
+-		if (is_percpu_sym(sym, symname))
++		if (is_function_section(sec) || is_randomized_sym(sym) ||
++		    is_percpu_sym(sym, symname))
+ 			add_reloc(&relocs32neg, offset);
++
+ 		break;
+ 
+ 	case R_X86_64_PC64:
+@@ -1158,8 +1190,9 @@ static void print_reloc_info(void)
+ 
+ void process(FILE *fp, int use_real_mode, int as_text,
+ 	     int show_absolute_syms, int show_absolute_relocs,
+-	     int show_reloc_info)
++	     int show_reloc_info, int fgkaslr)
+ {
++	fg_kaslr = fgkaslr;
+ 	regex_init(use_real_mode);
+ 	read_ehdr(fp);
+ 	read_shdrs(fp);
+diff --git a/arch/x86/tools/relocs.h b/arch/x86/tools/relocs.h
+index 43c83c0fd22c..05504052c846 100644
+--- a/arch/x86/tools/relocs.h
++++ b/arch/x86/tools/relocs.h
+@@ -31,8 +31,8 @@ enum symtype {
+ 
+ void process_32(FILE *fp, int use_real_mode, int as_text,
+ 		int show_absolute_syms, int show_absolute_relocs,
+-		int show_reloc_info);
++		int show_reloc_info, int fg_kaslr);
+ void process_64(FILE *fp, int use_real_mode, int as_text,
+ 		int show_absolute_syms, int show_absolute_relocs,
+-		int show_reloc_info);
++		int show_reloc_info, int fg_kaslr);
+ #endif /* RELOCS_H */
+diff --git a/arch/x86/tools/relocs_common.c b/arch/x86/tools/relocs_common.c
+index 6634352a20bc..f76cd6f53961 100644
+--- a/arch/x86/tools/relocs_common.c
++++ b/arch/x86/tools/relocs_common.c
+@@ -12,14 +12,14 @@ void die(char *fmt, ...)
+ 
+ static void usage(void)
+ {
+-	die("relocs [--abs-syms|--abs-relocs|--reloc-info|--text|--realmode]" \
+-	    " vmlinux\n");
++	die("relocs [--abs-syms|--abs-relocs|--reloc-info|--text|--realmode"
++		"|--fg-kaslr] vmlinux\n");
  }
  
+ int main(int argc, char **argv)
+ {
+ 	int show_absolute_syms, show_absolute_relocs, show_reloc_info;
+-	int as_text, use_real_mode;
++	int as_text, use_real_mode, fg_kaslr;
+ 	const char *fname;
+ 	FILE *fp;
+ 	int i;
+@@ -30,6 +30,7 @@ int main(int argc, char **argv)
+ 	show_reloc_info = 0;
+ 	as_text = 0;
+ 	use_real_mode = 0;
++	fg_kaslr = 0;
+ 	fname = NULL;
+ 	for (i = 1; i < argc; i++) {
+ 		char *arg = argv[i];
+@@ -54,6 +55,10 @@ int main(int argc, char **argv)
+ 				use_real_mode = 1;
+ 				continue;
+ 			}
++			if (strcmp(arg, "--fg-kaslr") == 0) {
++				fg_kaslr = 1;
++				continue;
++			}
+ 		}
+ 		else if (!fname) {
+ 			fname = arg;
+@@ -75,11 +80,11 @@ int main(int argc, char **argv)
+ 	if (e_ident[EI_CLASS] == ELFCLASS64)
+ 		process_64(fp, use_real_mode, as_text,
+ 			   show_absolute_syms, show_absolute_relocs,
+-			   show_reloc_info);
++			   show_reloc_info, fg_kaslr);
+ 	else
+ 		process_32(fp, use_real_mode, as_text,
+ 			   show_absolute_syms, show_absolute_relocs,
+-			   show_reloc_info);
++			   show_reloc_info, fg_kaslr);
+ 	fclose(fp);
+ 	return 0;
+ }
 -- 
 2.24.1
 
