@@ -2,167 +2,223 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBBC3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5016BC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DB2214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A46B214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqD7Cask"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aea6jpx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgBECOn (ORCPT
+        id S1727834AbgBECRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 21:14:43 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37064 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbgBECOm (ORCPT
+        Tue, 4 Feb 2020 21:17:11 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54285 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727140AbgBECRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 21:14:42 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so275085pjb.2;
-        Tue, 04 Feb 2020 18:14:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=Fegxb96WbTiaWF4amnd9jGSEj+9x/8LIWAp8pFBqKBA=;
-        b=gqD7Casksvyd+oHamPEUb2BvyGbFbSjNXGaf+aQ0ecuOtLM8AiSohvvVH5dt1rYtO6
-         uRX1RFEMfZ0BENQFxjLqT+NA0CCJoRzSuQ8zrTJ9wxasKYOFdF3CZQ8kreKB8mPtChVU
-         P3Z6bFB9yY4Bmdbwa9ovgD6QKdqDu2Rj7uC1xLnqA592NiKerultYsRIvTNRTvODW+Mf
-         NT5oqomCwi4u7D0YgqSatiAbxWM7RNq0Utsl7e/j5t/YpcCSeNaedtlJlp/oHXq18nqo
-         ARURaI2TSXG/BljTHLRENIbbhKDzA9L2X/QHhIZPqs0GS6g2kliMTdNFmeAdxL6HJWv/
-         Za6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=Fegxb96WbTiaWF4amnd9jGSEj+9x/8LIWAp8pFBqKBA=;
-        b=O8CgClCNsrmOauvx4UdMDPdV7xucrj9+Uo9ILnApLB9zASpMQ+g8zZbplMm9apKT/Z
-         me6n7Ll9+wDn1jGdJO6h9Xblreb86CvFOJtSTnc8DBDASq89vxSfLz9JbPAWAHe0ZFjQ
-         RazjQUGHCJuElKTms3GlypPd5KwFdszTFMAHxo2pIozTH8GqY4Qyk+zanXo6bO0goN0i
-         fQDOxatsOunLrBe7H0DFhbvKRH2kffzbMY/pzT9RHHz7KudFT0eBPNbk6Koyp1CnF4nL
-         hwhdPKg1bUuaJMcExpe0AoYsWsYKgjMPV6BlRXi5JE+xwrVCF2n28TNYfy8BL3kKKpra
-         7uIw==
-X-Gm-Message-State: APjAAAWBl3/DdF3Gfe8DhqT00qe/aRDMZckHwZenTjw0GWaK/y0vbpta
-        rIMA/1lGfGWTdmiuDvIE3rk=
-X-Google-Smtp-Source: APXvYqzgyXkrf5MY2V6rkPJb/lySnGevQuWU9BWrrZ0FpmwWpyQGlet0W3tueHDGlZFDd56tzRYSxA==
-X-Received: by 2002:a17:902:8a8e:: with SMTP id p14mr32705929plo.28.1580868881563;
-        Tue, 04 Feb 2020 18:14:41 -0800 (PST)
-Received: from localhost.localdomain ([211.47.96.9])
-        by smtp.gmail.com with ESMTPSA id d69sm23968818pfd.72.2020.02.04.18.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 18:14:40 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     SeongJae Park <sj38.park@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: Re: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if .kunitconfig is modified
-Date:   Wed,  5 Feb 2020 03:14:28 +0100
-Message-Id: <20200205021428.8007-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAFd5g448555=dKFQMbjJ6G=tvtfF5oJgTtTgGx+38Ls3VqHo5g@mail.gmail.com> (raw)
+        Tue, 4 Feb 2020 21:17:11 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580869030; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=akJYwzCLbXwxHJd1f8VdXmC7moR+0lxrjFJgFgP3xb8=; b=aea6jpx6Lko9bbHSwR8IZv50By91nb72wmUy4/SbfkBQdsUFtg9tAtR2MRrCZ5NG/jL0t8b8
+ SpB8MKf4/VE5gC72FEaf+EAftP0pHVa3Ir19/mU1yiAMh4unc2yoYiXc1VKnLnBIn/KMLl4l
+ Yc+VIVEpYYRt9Hu6XU6j9VCiCMc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a25a2.7effbbc058b8-smtp-out-n02;
+ Wed, 05 Feb 2020 02:17:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DC71DC447A3; Wed,  5 Feb 2020 02:17:03 +0000 (UTC)
+Received: from [10.71.154.194] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 208A9C43383;
+        Wed,  5 Feb 2020 02:17:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 208A9C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v5 4/8] scsi: ufs-qcom: Adjust bus bandwidth voting and
+ unvoting
+To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+ <1580721472-10784-5-git-send-email-cang@codeaurora.org>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <ca9e97dc-0328-884e-0236-91c9f9ea9f41@codeaurora.org>
+Date:   Tue, 4 Feb 2020 18:17:01 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <1580721472-10784-5-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Feb 2020 16:46:06 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+On 2/3/2020 1:17 AM, Can Guo wrote:
+> The bus bandwidth voting is required to be done before the bus clocks
+> are enabled, and the unvoting is required to be done only after the bus
+> clocks are disabled.
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
 
-> Sorry for the delay.
-> 
-> On Mon, Jan 27, 2020 at 10:03 PM SeongJae Park <sj38.park@gmail.com> wrote:
-> >
-> > On Mon, 27 Jan 2020 16:02:48 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
-> >
-> > > On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
-> > > >
-> > > > From: SeongJae Park <sjpark@amazon.de>
-> > > >
-> > > > Deletions of configs in the '.kunitconfig' is not applied because kunit
-> > > > rebuilds '.config' only if the '.config' is not a subset of the
-> > > > '.kunitconfig'.  To allow the deletions to applied, this commit modifies
-> > > > the '.config' rebuild condition to addtionally check the modified times
-> > > > of those files.
-> > >
-> > > The reason it only checks that .kunitconfig is a subset of .config is
-> > > because we don't want the .kunitconfig to remove options just because
-> > > it doesn't recognize them.
-> > >
-> > > It runs `make ARCH=um olddefconfig` on the .config that it generates
-> > > from the .kunitconfig, and most of the time that means you will get a
-> > > .config with lots of things in it that aren't in the .kunitconfig.
-> > > Consequently, nothing should ever be deleted from the .config just
-> > > because it was deleted in the .kunitconfig (unless, of course, you
-> > > change a =y to a =n or # ... is not set), so I don't see what this
-> > > change would do.
-> > >
-> > > Can you maybe provide an example?
-> >
-> > Sorry for my insufficient explanation.  I added a kunit test
-> > (SYSCTL_KUNIT_TEST) to '.kunitconfig', ran the added test, and then removed it
-> > from the file.  However, '.config' is not generated again due to the condition
-> > and therefore the test still runs.
-> >
-> > For more detail:
-> >
-> >     $ ./tools/testing/kunit/kunit.py run --defconfig --build_dir ../kunit.out/
-> >     $ echo "CONFIG_SYSCTL_KUNIT_TEST=y" >> ../kunit.out/.kunitconfig
-> >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-> >     $ sed -i '4d' ../kunit.out/.kunitconfig
-> >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-> >
-> > The 2nd line command adds sysctl kunit test and the 3rd line shows it runs the
-> > added test as expected.  Because the default kunit config contains only 3
-> > lines, The 4th line command removes the sysctl kunit test from the
-> > .kunitconfig.  However, the 5th line still run the test.
-> >
-> > This patch is for such cases.  Of course, this might make more false positives
-> > but I believe it would not be a big problem because .config generation takes no
-> > long time.  If I missed something, please let me know.
-> 
-> I think I understand.
-> 
-> It is intentional - currently - that KUnit doesn't generate a new
-> .config with every invocation. The reason is basically to support
-> interaction with other methods of generating .configs. Consider that
-> you might want to use make menuconfig to turn something on. It is a
-> pretty handy interface if you work on vastly different parts of the
-> kernel. Or maybe you have a defconfig that you always use for some
-> platform, I think it is easier to run
-> 
-> make foo_config; tools/testing/kunit/kunit.py run
-> 
-> Then having to maintain both your defconfig and a .kunitconfig which
-> is a superset of the defconfig.
-> 
-> Your change would make it so that you have to have a .kunitconfig for
-> every test environment that you care about, and you could not as
-> easily take advantage of menuconfig.
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-Thank you for this kind answer.  Now I understood the intention and agree with
-that. :)
-
+>   drivers/scsi/ufs/ufs-qcom.c | 57 +++++++++++++++++++++++++++++++--------------
+>   1 file changed, 39 insertions(+), 18 deletions(-)
 > 
-> I think what we do now is a bit janky, and the use cases I mentioned
-> are not super well supported. So I am sympathetic to what you are
-> trying to do, maybe we could have a config option for it?
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index c69c29a1c..85d7c17 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -38,7 +38,6 @@ enum {
+>   
+>   static struct ufs_qcom_host *ufs_qcom_hosts[MAX_UFS_QCOM_HOSTS];
+>   
+> -static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote);
+>   static void ufs_qcom_get_default_testbus_cfg(struct ufs_qcom_host *host);
+>   static int ufs_qcom_set_dme_vs_core_clk_ctrl_clear_div(struct ufs_hba *hba,
+>   						       u32 clk_cycles);
+> @@ -674,7 +673,7 @@ static void ufs_qcom_get_speed_mode(struct ufs_pa_layer_attr *p, char *result)
+>   	}
+>   }
+>   
+> -static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
+> +static int __ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
+>   {
+>   	int err = 0;
+>   
+> @@ -705,7 +704,7 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+>   
+>   	vote = ufs_qcom_get_bus_vote(host, mode);
+>   	if (vote >= 0)
+> -		err = ufs_qcom_set_bus_vote(host, vote);
+> +		err = __ufs_qcom_set_bus_vote(host, vote);
+>   	else
+>   		err = vote;
+>   
+> @@ -716,6 +715,35 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+>   	return err;
+>   }
+>   
+> +static int ufs_qcom_set_bus_vote(struct ufs_hba *hba, bool on)
+> +{
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +	int vote, err;
+> +
+> +	/*
+> +	 * In case ufs_qcom_init() is not yet done, simply ignore.
+> +	 * This ufs_qcom_set_bus_vote() shall be called from
+> +	 * ufs_qcom_init() after init is done.
+> +	 */
+> +	if (!host)
+> +		return 0;
+> +
+> +	if (on) {
+> +		vote = host->bus_vote.saved_vote;
+> +		if (vote == host->bus_vote.min_bw_vote)
+> +			ufs_qcom_update_bus_bw_vote(host);
+> +	} else {
+> +		vote = host->bus_vote.min_bw_vote;
+> +	}
+> +
+> +	err = __ufs_qcom_set_bus_vote(host, vote);
+> +	if (err)
+> +		dev_err(hba->dev, "%s: set bus vote failed %d\n",
+> +				 __func__, err);
+> +
+> +	return err;
+> +}
+> +
+>   static ssize_t
+>   show_ufs_to_mem_max_bus_bw(struct device *dev, struct device_attribute *attr,
+>   			char *buf)
+> @@ -792,7 +820,7 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+>   	return 0;
+>   }
+>   
+> -static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
+> +static int ufs_qcom_set_bus_vote(struct ufs_hba *host, bool on)
+>   {
+>   	return 0;
+>   }
+> @@ -1030,8 +1058,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>   				 enum ufs_notify_change_status status)
+>   {
+>   	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	int err;
+> -	int vote = 0;
+> +	int err = 0;
+>   
+>   	/*
+>   	 * In case ufs_qcom_init() is not yet done, simply ignore.
+> @@ -1041,28 +1068,21 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>   	if (!host)
+>   		return 0;
+>   
+> -	if (on && (status == POST_CHANGE)) {
+> +	if (on && (status == PRE_CHANGE)) {
+> +		err = ufs_qcom_set_bus_vote(hba, true);
+> +	} else if (on && (status == POST_CHANGE)) {
+>   		/* enable the device ref clock for HS mode*/
+>   		if (ufshcd_is_hs_mode(&hba->pwr_info))
+>   			ufs_qcom_dev_ref_clk_ctrl(host, true);
+> -		vote = host->bus_vote.saved_vote;
+> -		if (vote == host->bus_vote.min_bw_vote)
+> -			ufs_qcom_update_bus_bw_vote(host);
+> -
+>   	} else if (!on && (status == PRE_CHANGE)) {
+>   		if (!ufs_qcom_is_link_active(hba)) {
+>   			/* disable device ref_clk */
+>   			ufs_qcom_dev_ref_clk_ctrl(host, false);
+>   		}
+> -
+> -		vote = host->bus_vote.min_bw_vote;
+> +	} else if (!on && (status == POST_CHANGE)) {
+> +		err = ufs_qcom_set_bus_vote(hba, false);
+>   	}
+>   
+> -	err = ufs_qcom_set_bus_vote(host, vote);
+> -	if (err)
+> -		dev_err(hba->dev, "%s: set bus vote failed %d\n",
+> -				__func__, err);
+> -
+>   	return err;
+>   }
+>   
+> @@ -1238,6 +1258,7 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+>   	ufs_qcom_set_caps(hba);
+>   	ufs_qcom_advertise_quirks(hba);
+>   
+> +	ufs_qcom_set_bus_vote(hba, true);
+>   	ufs_qcom_setup_clocks(hba, true, POST_CHANGE);
+>   
+>   	if (hba->dev->id < MAX_UFS_QCOM_HOSTS)
 > 
-> I think Ted and Bjorn might have opinions on this; they had some
-> related opinions in the past.
-
-I'm ok with current state, but if related discussions continue and my opinion
-is required, I will join in.
 
 
-Thanks,
-SeongJae Park
-
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
