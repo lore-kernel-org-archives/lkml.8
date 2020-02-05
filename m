@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96BDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3573C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20D62082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D85F2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hFrTHfEK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VCSKlQGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgBEC7E (ORCPT
+        id S1728069AbgBEC7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 21:59:04 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24584 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727998AbgBEC67 (ORCPT
+        Tue, 4 Feb 2020 21:59:09 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46595 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbgBEC7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 21:58:59 -0500
+        Tue, 4 Feb 2020 21:59:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580871539;
+        s=mimecast20190719; t=1580871542;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dlAqEpPTUndIZh7wPLDVCooz5AgvSxeI8vfIAUOxmtc=;
-        b=hFrTHfEKgkDl1MixL/e6qj8PD2kAMOte3cqwofpnxKiJTkjgdpx7iSqasaSmPLu0Yxu1bA
-        pWv3QTfoePTFz/9t1z+PDp50S7YWyQYtkh7DbfdK3fTnuwveH1i9Ow6JIKGlMwWjXHtEGo
-        QoankEDM+kWPH0BLUPwrWJ9XJ2NPTFg=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-nzQAxUx7NTq-xBodU0W7Cg-1; Tue, 04 Feb 2020 21:58:50 -0500
-X-MC-Unique: nzQAxUx7NTq-xBodU0W7Cg-1
-Received: by mail-qv1-f70.google.com with SMTP id p3so629790qvt.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 18:58:50 -0800 (PST)
+        bh=aF1BdxIc7NPI7Dsk+3ZH17n/EhvhXEPJcTNSoSkH9Wk=;
+        b=VCSKlQGU/4TyP64fsw8XjG/I5oU5tDss7/z/BCb4xH1GZO3x0vWVMH7fb+e50/4bg7QlxL
+        PujOXpwFBkT0AgdzCmWNDnG6mx/9TU4dBNPAtJNQjwbH/QP0UDpwphLMp55V2FSKsoWsnm
+        oPrVJ1FljygnJiupBL8/ohUXrIOlmH4=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-DuMgmE8-NMW0pXgedR4xgQ-1; Tue, 04 Feb 2020 21:59:01 -0500
+X-MC-Unique: DuMgmE8-NMW0pXgedR4xgQ-1
+Received: by mail-qk1-f199.google.com with SMTP id r145so407566qke.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 18:59:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dlAqEpPTUndIZh7wPLDVCooz5AgvSxeI8vfIAUOxmtc=;
-        b=i6lIhazfXtWJMk/F3AjwDqPfzoBsb8YlTMp3qqtLRFWCpsUsjtlCiDBAEXhv9CttZ0
-         jseqNwCVykmEuaAzJro03GPVPkXLaKsvMo3SLO6pcK+2YNTCUhbVxVEcU2PAYIT48IWh
-         pwbnum5KI0XlQKwFnJsf44BD1CQww6qUhYj24Ul94KnZLF3g9/809UrcNzeM5fxetVD/
-         8mi82gOJqNkJj1jyptWqlfPCyJKCbi/TYCarRhp2f7lfepqB7Cugd4RQJjPeDD9pLqBX
-         5C+3ULStqZg8fuc3CEhgGeRGqoiWCewseAr/p3Mir/PgkHfv9//TyHrG05j97yrKQSze
-         mWqQ==
-X-Gm-Message-State: APjAAAXC0YigVYP970zRRZE4zCyi5w881A0iUXglmZ6wu8XP6uDG93kq
-        Km+xfYdHhWTrWTT3Vchb9wjh+p4lYFyOeOyzbuVQ+zG/z/CuiQz4YJ9fF69wjKwNWG0FY9ODWYr
-        +5vTgTl0jIPBhsg4EQuIS1S0Q
-X-Received: by 2002:a37:a14f:: with SMTP id k76mr31068433qke.170.1580871530253;
-        Tue, 04 Feb 2020 18:58:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxlLWnSK6a/QgArTLNRRly1uyWTIwUItXLoG9GWm3CQ5h4eRRPsHCvnbEv3po8kqmv45eTqfg==
-X-Received: by 2002:a37:a14f:: with SMTP id k76mr31068418qke.170.1580871529992;
-        Tue, 04 Feb 2020 18:58:49 -0800 (PST)
+        bh=aF1BdxIc7NPI7Dsk+3ZH17n/EhvhXEPJcTNSoSkH9Wk=;
+        b=XFBijCL8j28TAFebNJURHrA/EM92pWm+E9Azl2hIbGfie7WdcBe37zkD2R4sI3WyB8
+         H7Ks7YMjjGBZyoqfuNnMnJ7f8N0KPD30if9feOHsJoT35UDtvvAuXKsUVP5V5Hwr9u3W
+         QhcsyA6gALLqsL0t/AolfmHX8a6K7pXe5EDx7ZWxGYVYk8i1Ha8jtiERq+GqrvHbfqqq
+         9i3KTKGtghKreKRl2M8mEdTrjknyeSTJX/i5+uIw11H1kICc6yJaBpRxbzTd8fhTcP4e
+         7HliUqDVLYEw7ZybXPwIJZWSWNvzGdqlZO0fd61A29BA9QmyogymwiDS6NIAan7z+rO/
+         mytg==
+X-Gm-Message-State: APjAAAU1H/+yUS+5kdjNpylY+JnFxbt5Zz1xlSCqZBJaMKgq06V3RVEo
+        L6RwSohg+XyXgY0NSV0XdKqo430XvZtIOlPX4L32oacUAAHnfT7/T7Umyx+k3AWMIqhYc4Zn4QV
+        QBuIp3o4BL7FfiZ3eKm5TS82D
+X-Received: by 2002:a37:a8f:: with SMTP id 137mr12400363qkk.435.1580871540613;
+        Tue, 04 Feb 2020 18:59:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw6iuymQEWo4p6WSsu4I/VZfKMlmOnkU8i8JNdOSs5IKO4yUnCfo2RtVlAYGtyecP4HujqyjQ==
+X-Received: by 2002:a37:a8f:: with SMTP id 137mr12400354qkk.435.1580871540357;
+        Tue, 04 Feb 2020 18:59:00 -0800 (PST)
 Received: from xz-x1.redhat.com ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id e64sm12961649qtd.45.2020.02.04.18.58.47
+        by smtp.gmail.com with ESMTPSA id e64sm12961649qtd.45.2020.02.04.18.58.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 18:58:48 -0800 (PST)
+        Tue, 04 Feb 2020 18:58:59 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     dinechin@redhat.com, sean.j.christopherson@intel.com,
@@ -69,9 +69,9 @@ Cc:     dinechin@redhat.com, sean.j.christopherson@intel.com,
         mst@redhat.com, peterx@redhat.com, kevin.tian@intel.com,
         alex.williamson@redhat.com, dgilbert@redhat.com,
         vkuznets@redhat.com
-Subject: [PATCH 06/14] KVM: Make dirty ring exclusive to dirty bitmap log
-Date:   Tue,  4 Feb 2020 21:58:34 -0500
-Message-Id: <20200205025842.367575-3-peterx@redhat.com>
+Subject: [PATCH 11/14] KVM: selftests: Introduce after_vcpu_run hook for dirty log test
+Date:   Tue,  4 Feb 2020 21:58:39 -0500
+Message-Id: <20200205025842.367575-8-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200205025842.367575-1-peterx@redhat.com>
 References: <20200205025105.367213-1-peterx@redhat.com>
@@ -83,77 +83,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no good reason to use both the dirty bitmap logging and the
-new dirty ring buffer to track dirty bits.  We should be able to even
-support both of them at the same time, but it could complicate things
-which could actually help little.  Let's simply make it the rule
-before we enable dirty ring on any arch, that we don't allow these two
-interfaces to be used together.
+Provide a hook for the checks after vcpu_run() completes.  Preparation
+for the dirty ring test because we'll need to take care of another
+exit reason.
 
-The big world switch would be KVM_CAP_DIRTY_LOG_RING capability
-enablement.  That's where we'll switch from the default dirty logging
-way to the dirty ring way.  As long as kvm->dirty_ring_size is setup
-correctly, we'll once and for all switch to the dirty ring buffer mode
-for the current virtual machine.
+Since at it, drop the pages_count because after all we have a better
+summary right now with statistics, and clean it up a bit.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- Documentation/virt/kvm/api.txt |  7 +++++++
- virt/kvm/kvm_main.c            | 12 ++++++++++++
- 2 files changed, 19 insertions(+)
+ tools/testing/selftests/kvm/dirty_log_test.c | 39 ++++++++++++--------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-index 558e719efdec..bbdd68583cde 100644
---- a/Documentation/virt/kvm/api.txt
-+++ b/Documentation/virt/kvm/api.txt
-@@ -5514,3 +5514,10 @@ make sure all the existing dirty gfns are flushed to the dirty rings.
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index a8ae8c0042a8..3542311f56ff 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -168,6 +168,15 @@ static void clear_log_collect_dirty_pages(struct kvm_vm *vm, int slot,
+ 	kvm_vm_clear_dirty_log(vm, slot, bitmap, 0, num_pages);
+ }
  
- The dirty ring can gets full.  When it happens, the KVM_RUN of the
- vcpu will return with exit reason KVM_EXIT_DIRTY_LOG_FULL.
++static void default_after_vcpu_run(struct kvm_vm *vm)
++{
++	struct kvm_run *run = vcpu_state(vm, VCPU_ID);
 +
-+NOTE: the KVM_CAP_DIRTY_LOG_RING capability and the new ioctl
-+KVM_RESET_DIRTY_RINGS are exclusive to the existing KVM_GET_DIRTY_LOG
-+interface.  After enabling KVM_CAP_DIRTY_LOG_RING with an acceptable
-+dirty ring size, the virtual machine will switch to the dirty ring
-+tracking mode, and KVM_GET_DIRTY_LOG, KVM_CLEAR_DIRTY_LOG ioctls will
-+stop working.
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index b710cee7e897..5a6f83b7270f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1243,6 +1243,10 @@ int kvm_get_dirty_log(struct kvm *kvm,
- 	unsigned long n;
- 	unsigned long any = 0;
++	TEST_ASSERT(get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC,
++		    "Invalid guest sync status: exit_reason=%s\n",
++		    exit_reason_str(run->exit_reason));
++}
++
+ struct log_mode {
+ 	const char *name;
+ 	/* Hook when the vm creation is done (before vcpu creation) */
+@@ -175,16 +184,20 @@ struct log_mode {
+ 	/* Hook to collect the dirty pages into the bitmap provided */
+ 	void (*collect_dirty_pages) (struct kvm_vm *vm, int slot,
+ 				     void *bitmap, uint32_t num_pages);
++	/* Hook to call when after each vcpu run */
++	void (*after_vcpu_run)(struct kvm_vm *vm);
+ } log_modes[LOG_MODE_NUM] = {
+ 	{
+ 		.name = "dirty-log",
+ 		.create_vm_done = NULL,
+ 		.collect_dirty_pages = dirty_log_collect_dirty_pages,
++		.after_vcpu_run = default_after_vcpu_run,
+ 	},
+ 	{
+ 		.name = "clear-log",
+ 		.create_vm_done = clear_log_create_vm_done,
+ 		.collect_dirty_pages = clear_log_collect_dirty_pages,
++		.after_vcpu_run = default_after_vcpu_run,
+ 	},
+ };
  
-+	/* Dirty ring tracking is exclusive to dirty log tracking */
-+	if (kvm->dirty_ring_size)
-+		return -EINVAL;
-+
- 	as_id = log->slot >> 16;
- 	id = (u16)log->slot;
- 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
-@@ -1300,6 +1304,10 @@ int kvm_get_dirty_log_protect(struct kvm *kvm,
- 	unsigned long *dirty_bitmap;
- 	unsigned long *dirty_bitmap_buffer;
+@@ -224,6 +237,14 @@ static void log_mode_collect_dirty_pages(struct kvm_vm *vm, int slot,
+ 	mode->collect_dirty_pages(vm, slot, bitmap, num_pages);
+ }
  
-+	/* Dirty ring tracking is exclusive to dirty log tracking */
-+	if (kvm->dirty_ring_size)
-+		return -EINVAL;
++static void log_mode_after_vcpu_run(struct kvm_vm *vm)
++{
++	struct log_mode *mode = &log_modes[host_log_mode];
 +
- 	as_id = log->slot >> 16;
- 	id = (u16)log->slot;
- 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
-@@ -1371,6 +1379,10 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
- 	unsigned long *dirty_bitmap;
- 	unsigned long *dirty_bitmap_buffer;
++	if (mode->after_vcpu_run)
++		mode->after_vcpu_run(vm);
++}
++
+ static void generate_random_array(uint64_t *guest_array, uint64_t size)
+ {
+ 	uint64_t i;
+@@ -237,31 +258,17 @@ static void *vcpu_worker(void *data)
+ 	int ret;
+ 	struct kvm_vm *vm = data;
+ 	uint64_t *guest_array;
+-	uint64_t pages_count = 0;
+-	struct kvm_run *run;
+-
+-	run = vcpu_state(vm, VCPU_ID);
  
-+	/* Dirty ring tracking is exclusive to dirty log tracking */
-+	if (kvm->dirty_ring_size)
-+		return -EINVAL;
-+
- 	as_id = log->slot >> 16;
- 	id = (u16)log->slot;
- 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+ 	guest_array = addr_gva2hva(vm, (vm_vaddr_t)random_array);
+-	generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+ 
+ 	while (!READ_ONCE(host_quit)) {
++		generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+ 		/* Let the guest dirty the random pages */
+ 		ret = _vcpu_run(vm, VCPU_ID);
+ 		TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
+-		if (get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC) {
+-			pages_count += TEST_PAGES_PER_LOOP;
+-			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+-		} else {
+-			TEST_ASSERT(false,
+-				    "Invalid guest sync status: "
+-				    "exit_reason=%s\n",
+-				    exit_reason_str(run->exit_reason));
+-		}
++		log_mode_after_vcpu_run(vm);
+ 	}
+ 
+-	DEBUG("Dirtied %"PRIu64" pages\n", pages_count);
+-
+ 	return NULL;
+ }
+ 
 -- 
 2.24.1
 
