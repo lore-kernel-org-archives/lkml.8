@@ -2,200 +2,147 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A4FC352A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB08C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF7E217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wd9J5CGG"
+	by mail.kernel.org (Postfix) with ESMTP id 4D9F821741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgBELAG (ORCPT
+        id S1728377AbgBELAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 06:00:06 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50391 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727522AbgBELAG (ORCPT
+        Wed, 5 Feb 2020 06:00:43 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52062 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbgBELAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:00:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580900404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=naGH2G6fbyV6fwYTkzFAjUTkqmyC/i76+hVzHonSuY0=;
-        b=Wd9J5CGG+ER61EUSTMPuuHSK8Gcc5vrYyqHXZqwbnQArVpKB1ItTaIy8nCRARnvodrOyMx
-        uyEE51iYahoUMIQ1h8UVWaxnK3QrWWDqc+amUL9Mx22RaZAhduzfIb1DZgtcjQw8y/q2IN
-        qY2vDOjusRtqyPK+yqfj6/Gx7P3/pDs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-61569fuSPLOqbzVrQwpUYg-1; Wed, 05 Feb 2020 06:00:00 -0500
-X-MC-Unique: 61569fuSPLOqbzVrQwpUYg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Feb 2020 06:00:43 -0500
+Received: from localhost.localdomain (p200300CB87166A00C93B781DBBC01C5E.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:c93b:781d:bbc0:1c5e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FDEE8010CB;
-        Wed,  5 Feb 2020 10:59:59 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73715790CE;
-        Wed,  5 Feb 2020 10:59:56 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id BE9B59C7F; Wed,  5 Feb 2020 11:59:55 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list),
-        linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK),
-        linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING
-        FRAMEWORK)
-Subject: [PATCH 3/4] drm/virtio: move mapping teardown to virtio_gpu_cleanup_object()
-Date:   Wed,  5 Feb 2020 11:59:54 +0100
-Message-Id: <20200205105955.28143-4-kraxel@redhat.com>
-In-Reply-To: <20200205105955.28143-1-kraxel@redhat.com>
-References: <20200205105955.28143-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 32C8B2913B4;
+        Wed,  5 Feb 2020 11:00:40 +0000 (GMT)
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH v2] dt-bindings: convert extcon-usbc-cros-ec.txt extcon-usbc-cros-ec.yaml
+Date:   Wed,  5 Feb 2020 12:00:28 +0100
+Message-Id: <20200205110029.3395-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stop sending DETACH_BACKING commands, that will happening anyway when
-releasing resources via UNREF.  Handle guest-side cleanup in
-virtio_gpu_cleanup_object(), called when the host finished processing
-the UNREF command.
+convert the binding file extcon-usbc-cros-ec.txt to yaml format
+This was tested and verified on ARM with:
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h    |  2 --
- drivers/gpu/drm/virtio/virtgpu_object.c | 14 ++++++--
- drivers/gpu/drm/virtio/virtgpu_vq.c     | 46 -------------------------
- 3 files changed, 12 insertions(+), 50 deletions(-)
+Changes since v1:
+1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
+2 - changing the maintainers
+3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 372dd248cf02..15fb3c12f22f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -280,8 +280,6 @@ void virtio_gpu_cmd_set_scanout(struct virtio_gpu_device *vgdev,
- int virtio_gpu_object_attach(struct virtio_gpu_device *vgdev,
- 			     struct virtio_gpu_object *obj,
- 			     struct virtio_gpu_fence *fence);
--void virtio_gpu_object_detach(struct virtio_gpu_device *vgdev,
--			      struct virtio_gpu_object *obj);
- int virtio_gpu_attach_status_page(struct virtio_gpu_device *vgdev);
- int virtio_gpu_detach_status_page(struct virtio_gpu_device *vgdev);
- void virtio_gpu_cursor_ping(struct virtio_gpu_device *vgdev,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index 28a161af7503..bce2b3d843fe 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -23,6 +23,7 @@
-  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
-+#include <linux/dma-mapping.h>
- #include <linux/moduleparam.h>
- 
- #include "virtgpu_drv.h"
-@@ -65,6 +66,17 @@ void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo)
- {
- 	struct virtio_gpu_device *vgdev = bo->base.base.dev->dev_private;
- 
-+	if (bo->pages) {
-+		if (bo->mapped) {
-+			dma_unmap_sg(vgdev->vdev->dev.parent,
-+				     bo->pages->sgl, bo->mapped,
-+				     DMA_TO_DEVICE);
-+			bo->mapped = 0;
-+		}
-+		sg_free_table(bo->pages);
-+		bo->pages = NULL;
-+		drm_gem_shmem_unpin(&bo->base.base);
-+	}
- 	virtio_gpu_resource_id_put(vgdev, bo->hw_res_handle);
- 	drm_gem_shmem_free_object(&bo->base.base);
- }
-@@ -74,8 +86,6 @@ static void virtio_gpu_free_object(struct drm_gem_object *obj)
- 	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
- 	struct virtio_gpu_device *vgdev = bo->base.base.dev->dev_private;
- 
--	if (bo->pages)
--		virtio_gpu_object_detach(vgdev, bo);
- 	if (bo->created) {
- 		virtio_gpu_cmd_unref_resource(vgdev, bo);
- 		/* completion handler calls virtio_gpu_cleanup_object() */
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 6e8097e4c214..e258186bedb2 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -538,22 +538,6 @@ void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
- 	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
- }
- 
--static void virtio_gpu_cmd_resource_inval_backing(struct virtio_gpu_device *vgdev,
--						  uint32_t resource_id,
--						  struct virtio_gpu_fence *fence)
--{
--	struct virtio_gpu_resource_detach_backing *cmd_p;
--	struct virtio_gpu_vbuffer *vbuf;
+ .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 ----------
+ .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 45 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+deleted file mode 100644
+index 8e8625c00dfa..000000000000
+--- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-ChromeOS EC USB Type-C cable and accessories detection
 -
--	cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
--	memset(cmd_p, 0, sizeof(*cmd_p));
+-On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+-able to detect the state of external accessories such as display adapters
+-or USB devices when said accessories are attached or detached.
 -
--	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_DETACH_BACKING);
--	cmd_p->resource_id = cpu_to_le32(resource_id);
+-The node for this device must be under a cros-ec node like google,cros-ec-spi
+-or google,cros-ec-i2c.
 -
--	virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, &cmd_p->hdr, fence);
--}
+-Required properties:
+-- compatible:		Should be "google,extcon-usbc-cros-ec".
+-- google,usb-port-id:	Specifies the USB port ID to use.
 -
- void virtio_gpu_cmd_set_scanout(struct virtio_gpu_device *vgdev,
- 				uint32_t scanout_id, uint32_t resource_id,
- 				uint32_t width, uint32_t height,
-@@ -1148,36 +1132,6 @@ int virtio_gpu_object_attach(struct virtio_gpu_device *vgdev,
- 	return 0;
- }
- 
--void virtio_gpu_object_detach(struct virtio_gpu_device *vgdev,
--			      struct virtio_gpu_object *obj)
--{
--	bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
+-Example:
+-	cros-ec@0 {
+-		compatible = "google,cros-ec-i2c";
 -
--	if (WARN_ON_ONCE(!obj->pages))
--		return;
+-		...
 -
--	if (use_dma_api && obj->mapped) {
--		struct virtio_gpu_fence *fence = virtio_gpu_fence_alloc(vgdev);
--		/* detach backing and wait for the host process it ... */
--		virtio_gpu_cmd_resource_inval_backing(vgdev, obj->hw_res_handle, fence);
--		dma_fence_wait(&fence->f, true);
--		dma_fence_put(&fence->f);
--
--		/* ... then tear down iommu mappings */
--		dma_unmap_sg(vgdev->vdev->dev.parent,
--			     obj->pages->sgl, obj->mapped,
--			     DMA_TO_DEVICE);
--		obj->mapped = 0;
--	} else {
--		virtio_gpu_cmd_resource_inval_backing(vgdev, obj->hw_res_handle, NULL);
+-		extcon {
+-			compatible = "google,extcon-usbc-cros-ec";
+-			google,usb-port-id = <0>;
+-		};
 -	}
--
--	sg_free_table(obj->pages);
--	obj->pages = NULL;
--
--	drm_gem_shmem_unpin(&obj->base.base);
--}
--
- void virtio_gpu_cursor_ping(struct virtio_gpu_device *vgdev,
- 			    struct virtio_gpu_output *output)
- {
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+new file mode 100644
+index 000000000000..fd95e413d46f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ChromeOS EC USB Type-C cable and accessories detection
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++description: |
++  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
++  able to detect the state of external accessories such as display adapters
++  or USB devices when said accessories are attached or detached.
++  The node for this device must be under a cros-ec node like google,cros-ec-spi
++  or google,cros-ec-i2c.
++
++properties:
++  compatible:
++    const: google,extcon-usbc-cros-ec
++
++  google,usb-port-id:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description: the port id
++    minimum: 0
++    maximum: 255
++
++required:
++  - compatible
++  - google,usb-port-id
++
++additionalProperties: false
++
++examples:
++  - |
++    cros-ec@0 {
++        compatible = "google,cros-ec-i2c";
++        extcon {
++            compatible = "google,extcon-usbc-cros-ec";
++            google,usb-port-id = <0>;
++        };
++    };
 -- 
-2.18.1
+2.17.1
 
