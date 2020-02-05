@@ -2,122 +2,113 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D66FC35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6467AC3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E80520659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:26:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Hmjs+NJp"
+	by mail.kernel.org (Postfix) with ESMTP id 44FB720659
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 06:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgBEG0C (ORCPT
+        id S1726614AbgBEG3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:26:02 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:64192 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgBEG0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 01:26:02 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48CBQb2lTQz9v9Cl;
-        Wed,  5 Feb 2020 07:25:59 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Hmjs+NJp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id djzf2NcZP0j6; Wed,  5 Feb 2020 07:25:59 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48CBQb1TnSz9v9Ck;
-        Wed,  5 Feb 2020 07:25:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580883959; bh=arjyGSAsMm0Nw/MEg/HGvPVCQztAhca2h8pfvGO7wGE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Hmjs+NJpMGkA+Ee2fGqfMl3SCjZu9+GCPa3wGWJc7wxoIgzYVeN2jhvL23n25B30d
-         NHCWMIWfW4VHsOQF3Bt0rJ7ofbK+qot1ySSNV99RkUGa4V9dHmKbRYXe2q3H9WFX0n
-         V0YLQ+h2/2Yekf2izKm81liQC22q9kqACXqDWOAM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0273C8B820;
-        Wed,  5 Feb 2020 07:26:00 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Ue-_DaLfAi1p; Wed,  5 Feb 2020 07:25:59 +0100 (CET)
-Received: from [172.25.230.107] (unknown [172.25.230.107])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B9A9A8B778;
-        Wed,  5 Feb 2020 07:25:59 +0100 (CET)
-Subject: Re: [PATCH] powerpc/vdso32: mark __kernel_datapage_offset as
- STV_PROTECTED
-To:     Fangrui Song <maskray@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200205005054.k72fuikf6rwrgfe4@google.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <10e3d362-ec29-3816-88ff-8415d5c78e3b@c-s.fr>
-Date:   Wed, 5 Feb 2020 07:25:59 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 5 Feb 2020 01:29:11 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36640 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbgBEG3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 01:29:11 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F292495C73F429EEABCA;
+        Wed,  5 Feb 2020 14:29:07 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Feb 2020
+ 14:29:05 +0800
+Subject: Re: [PATCH -next] dmaengine: sun4i: remove set but unused variable
+ 'linear_mode'
+To:     Chen-Yu Tsai <wens@csie.org>, Stefan Mavrodiev <stefan@olimex.com>
+References: <20200205044247.32496-1-yuehaibing@huawei.com>
+ <CAGb2v67gzb+8vR=6jQKX07pcARUqBHeburNWM9tqzqhfTnodGg@mail.gmail.com>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <e125193f-b7b2-c3a8-2e09-925ba2116db0@huawei.com>
+Date:   Wed, 5 Feb 2020 14:29:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200205005054.k72fuikf6rwrgfe4@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v67gzb+8vR=6jQKX07pcARUqBHeburNWM9tqzqhfTnodGg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/2/5 12:56, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> On Wed, Feb 5, 2020 at 12:43 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>>
+>> drivers/dma/sun4i-dma.c: In function sun4i_dma_prep_dma_cyclic:
+>> drivers/dma/sun4i-dma.c:672:24: warning:
+>>  variable linear_mode set but not used [-Wunused-but-set-variable]
+>>
+>> commit ffc079a4accc ("dmaengine: sun4i: Add support for cyclic requests with dedicated DMA")
+>> involved this unused variable.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/dma/sun4i-dma.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+>> index bbc2bda..501cd44 100644
+>> --- a/drivers/dma/sun4i-dma.c
+>> +++ b/drivers/dma/sun4i-dma.c
+>> @@ -669,7 +669,7 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+>>         dma_addr_t src, dest;
+>>         u32 endpoints;
+>>         int nr_periods, offset, plength, i;
+>> -       u8 ram_type, io_mode, linear_mode;
+>> +       u8 ram_type, io_mode;
+>>
+>>         if (!is_slave_direction(dir)) {
+>>                 dev_err(chan2dev(chan), "Invalid DMA direction\n");
+>> @@ -684,11 +684,9 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+>>
+>>         if (vchan->is_dedicated) {
+>>                 io_mode = SUN4I_DDMA_ADDR_MODE_IO;
+>> -               linear_mode = SUN4I_DDMA_ADDR_MODE_LINEAR;
+>>                 ram_type = SUN4I_DDMA_DRQ_TYPE_SDRAM;
+>>         } else {
+>>                 io_mode = SUN4I_NDMA_ADDR_MODE_IO;
+>> -               linear_mode = SUN4I_NDMA_ADDR_MODE_LINEAR;
+>>                 ram_type = SUN4I_NDMA_DRQ_TYPE_SDRAM;
+>>         }
+> 
+> I think it's better to actually use these values later when composing
+> the value for `endpoints`, as we do in sun4i_dma_prep_slave_sg().
+> 
+> The code currently works because SUN4I_DDMA_ADDR_MODE_LINEAR == 0.
+> However explicitly using the value makes the code more readable,
+> and doesn't require the reader to have implicit knowledge of default
+> values for parameters not specified in the composition of `endpoints`.
 
-
-Le 05/02/2020 à 01:50, Fangrui Song a écrit :
-> A PC-relative relocation (R_PPC_REL16_LO in this case) referencing a
-> preemptible symbol in a -shared link is not allowed.  GNU ld's powerpc
-> port is permissive and allows it [1], but lld will report an error after
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?id=ec0895f08f99515194e9fcfe1338becf6f759d38
-
-Note that there is a series whose first two patches aim at dropping 
-__kernel_datapage_offset . See 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=156045 
-and especially patches https://patchwork.ozlabs.org/patch/1231467/ and 
-https://patchwork.ozlabs.org/patch/1231461/
-
-Those patches can be applied independentely of the rest.
-
-Christophe
+Thanks, will send v2.
 
 > 
-> Make the symbol protected so that it is non-preemptible but still
-> exported.
+> ChenYu
 > 
-> [1]: https://sourceware.org/bugzilla/show_bug.cgi?id=25500
+> .
 > 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/851
-> Signed-off-by: Fangrui Song <maskray@google.com>
-> ---
->   arch/powerpc/kernel/vdso32/datapage.S | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-> index 217bb630f8f9..2831a8676365 100644
-> --- a/arch/powerpc/kernel/vdso32/datapage.S
-> +++ b/arch/powerpc/kernel/vdso32/datapage.S
-> @@ -13,7 +13,8 @@
->   #include <asm/vdso_datapage.h>
->   
->   	.text
-> -	.global	__kernel_datapage_offset;
-> +	.global	__kernel_datapage_offset
-> +	.protected	__kernel_datapage_offset
->   __kernel_datapage_offset:
->   	.long	0
->   
-> 
+
