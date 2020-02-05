@@ -2,135 +2,165 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD8DC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ACBC3524B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263ED2085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:26:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sHmoObS4"
+	by mail.kernel.org (Postfix) with ESMTP id 43C292085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgBEC0i (ORCPT
+        id S1727884AbgBEC20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 21:26:38 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37642 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727647AbgBEC0h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 21:26:37 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580869597; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Pgq9KvjPRshhckyUvQfLK0OTeO6Xr6mnSEYtpz2S3GE=;
- b=sHmoObS4E3jnWjSxplM24CoB0oDzOE35gn2kSG/Bl9DrByLWmoF1ivOPo12KebDZnSIgxpZV
- mMkgJSO1chR9hfig6DO3vE9Htu2+y8ubpAySxTvFRrFp5Affd6rmk/jE6SJZ9BjDLYQK1Pcj
- SVswctkX/V1wHt0nRsReJpZECQY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a27dc.7f7f05ee4298-smtp-out-n01;
- Wed, 05 Feb 2020 02:26:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7BABBC447A1; Wed,  5 Feb 2020 02:26:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38A01C433CB;
-        Wed,  5 Feb 2020 02:26:35 +0000 (UTC)
+        Tue, 4 Feb 2020 21:28:26 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:56844 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727674AbgBEC20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 21:28:26 -0500
+Received: from [192.168.68.106] (unknown [111.18.44.203])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2o7KDpeEYgMAA--.977S3;
+        Wed, 05 Feb 2020 10:28:12 +0800 (CST)
+Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jean Delvare <jdelvare@suse.com>
+References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+ <a267161f-c8b3-a11c-7416-3ab9ba19aa82@loongson.cn>
+ <20200203131422.384cd168@endymion>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <609c7042-0e44-2bd4-5e03-97465621b184@loongson.cn>
+Date:   Wed, 5 Feb 2020 10:28:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200203131422.384cd168@endymion>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 10:26:35 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 3/4] scsi: ufs: fix Auto-Hibern8 error detection
-In-Reply-To: <20200129105251.12466-4-stanley.chu@mediatek.com>
-References: <20200129105251.12466-1-stanley.chu@mediatek.com>
- <20200129105251.12466-4-stanley.chu@mediatek.com>
-Message-ID: <42d40d961663b0a83e4d6bb266fe5ca1@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Language: en-US
+X-CM-TRANSID: AQAAf9Dxf2o7KDpeEYgMAA--.977S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxArWkJF1kZr48KF1fXr1fZwb_yoW5urWkpa
+        1UGayYkF4DJr1xC3Zavw4xZr1S9393XrykWFy7uryUu3Z8X3Wftr1Ik3WUuFyDur4rKa4S
+        934agFyrCa4YkFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI4
+        8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+        wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+        v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
+        Y4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+        0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbpwZ7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-29 18:52, Stanley Chu wrote:
-> Auto-Hibern8 may be disabled by some vendors or sysfs
-> in runtime even if Auto-Hibern8 capability is supported
-> by host. If Auto-Hibern8 capability is supported by host
-> but not actually enabled, Auto-Hibern8 error shall not happen.
-> 
-> To fix this, provide a way to detect if Auto-Hibern8 is
-> actually enabled first, and bypass Auto-Hibern8 disabling
-> case in ufshcd_is_auto_hibern8_error().
-> 
-> Fixes: 821744403913 ("scsi: ufs: Add error-handling of Auto-Hibernate")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> Reviewed-by: Bean Huo <beanhuo@micron.com>
-> ---
+On 2/3/20 8:14 PM, Jean Delvare wrote:
+> Hi Tiezhun,
+>
+> On Mon, 3 Feb 2020 16:32:03 +0800, Tiezhu Yang wrote:
+>> On 1/16/20 9:26 PM, Tiezhu Yang wrote:
+>>> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+>>> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+>>> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+>>> driver can easily match various of mainboards.
+>>>
+>>> In the SMBIOS reference specification, the table anchor string "_SM_" is
+>>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+>>> but there exists a special case for Loongson platform, when call function
+>>> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+>>> it is reserved for SMBIOS and can be normally access in the BIOS.
+>>>
+>>> This patch works fine on the Loongson 3A3000 platform which belongs to
+>>> MIPS architecture and has no influence on the other architectures such
+>>> as x86 and ARM.
+>>>
+>>> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+>>> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+>>> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
+>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> Reviewed-by: Huacai Chen <chenhc@lemote.com>
+>>> ---
+>>>
+>>> v2:
+>>>     - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
+>>>     - refine definitions and Kconfig by Jiaxun
+>>>
+>>>    arch/mips/Kconfig           | 10 ++++++++++
+>>>    arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
+>>>    arch/mips/kernel/setup.c    |  2 ++
+>>>    drivers/firmware/dmi_scan.c |  6 +++++-
+>>>    4 files changed, 37 insertions(+), 1 deletion(-)
+>>>    create mode 100644 arch/mips/include/asm/dmi.h
+>>
+>> Hi Paul and Jean,
+>>
+>> How do you think this patch?
+> Looks good to me and you can add:
+>
+> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+>
+> for the dmi subsystem part.
+>
+>> Should I split it into the following two patches?
+>> [PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+>> [PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
+>>
+>> The first patch is only related with the common dmi code
+>> drivers/firmware/dmi_scan.c, the other patch is only related
+>> with the mips code under arch/mips.
+>>
+>> If you have any questions or suggestions, please let me know.
+>> I am looking forward to your early reply.
+> I'm fine either way. I you do not split it, as most changes are in the
+> mips arch files and I do not expect any conflict in the dmi subsystem
+> part, I believe that the patch should be merged by the mips arch
+> maintainer.
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
 
->  drivers/scsi/ufs/ufshcd.c | 3 ++-
->  drivers/scsi/ufs/ufshcd.h | 6 ++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index abd0e6b05f79..214a3f373dd8 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -5479,7 +5479,8 @@ static irqreturn_t
-> ufshcd_update_uic_error(struct ufs_hba *hba)
->  static bool ufshcd_is_auto_hibern8_error(struct ufs_hba *hba,
->  					 u32 intr_mask)
->  {
-> -	if (!ufshcd_is_auto_hibern8_supported(hba))
-> +	if (!ufshcd_is_auto_hibern8_supported(hba) ||
-> +	    !ufshcd_is_auto_hibern8_enabled(hba))
->  		return false;
-> 
->  	if (!(intr_mask & UFSHCD_UIC_HIBERN8_MASK))
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index 2ae6c7c8528c..81c71a3e3474 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -55,6 +55,7 @@
->  #include <linux/clk.h>
->  #include <linux/completion.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/bitfield.h>
->  #include "unipro.h"
-> 
->  #include <asm/irq.h>
-> @@ -773,6 +774,11 @@ static inline bool
-> ufshcd_is_auto_hibern8_supported(struct ufs_hba *hba)
->  	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
->  }
-> 
-> +static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
-> +{
-> +	return FIELD_GET(UFSHCI_AHIBERN8_TIMER_MASK, hba->ahit) ? true : 
-> false;
-> +}
-> +
->  #define ufshcd_writel(hba, val, reg)	\
->  	writel((val), (hba)->mmio_base + (reg))
->  #define ufshcd_readl(hba, reg)	\
+Hi Jean,
+
+
+Thanks very much for your review.
+
+
+As described in another mail [1] by MIPS maintainer Paul Burton:
+
+"So if unmerged arch/mips/ patches are holding you up, ping me, but
+preferrably make sure code being added actually belongs under arch/mips/
+first."
+
+I think it is better to split it into the following two patches?
+[PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+[PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
+
+
+I will send v3 patch as soon as possible.
+
+
+Thanks,
+
+
+Tiezhu Yang
+
+
+[1] 
+https://lore.kernel.org/linux-mips/20190208200852.wcywd7yfcq7zwzve@pburton-laptop/
+
+
+>
+> Thanks,
+
