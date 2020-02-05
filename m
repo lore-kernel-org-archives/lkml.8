@@ -2,108 +2,125 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A96C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E3FC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB1B2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNbpnarT"
+	by mail.kernel.org (Postfix) with ESMTP id 3291A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgBEJsZ (ORCPT
+        id S1728238AbgBEJsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:48:25 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51794 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728031AbgBEJsY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:48:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580896103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iYOL7XjTIAxW01ootqLvfDzjCPh14aTGE/Ook11e7A0=;
-        b=UNbpnarT5+A1istX5vI7opKJPcqfAMOY2sWXrJ01YiGeQFSD5vc+zwklKw6xMNMb8cqWPf
-        qiNAe2CdCqbqCbKn1jdRtdeWBzcKH0KLJQqgmR/C1PZTjJUIe1O/pM4hWaEmsCRBlYSMCY
-        cDi8k1laaY/Tpu4m9oKddS2qa86EBwM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-APXccsL3OvOt2wEVi3WyLQ-1; Wed, 05 Feb 2020 04:48:22 -0500
-X-MC-Unique: APXccsL3OvOt2wEVi3WyLQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B2318FE860;
-        Wed,  5 Feb 2020 09:48:20 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 313B51BC6D;
-        Wed,  5 Feb 2020 09:48:08 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 10:48:06 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinechin@redhat.com, sean.j.christopherson@intel.com,
-        pbonzini@redhat.com, jasowang@redhat.com, yan.y.zhao@intel.com,
-        mst@redhat.com, kevin.tian@intel.com, alex.williamson@redhat.com,
-        dgilbert@redhat.com, vkuznets@redhat.com
-Subject: Re: [PATCH 13/14] KVM: selftests: Let dirty_log_test async for dirty
- ring test
-Message-ID: <20200205094806.dqkzpxhrndocjl6g@kamzik.brq.redhat.com>
-References: <20200205025105.367213-1-peterx@redhat.com>
- <20200205025842.367575-1-peterx@redhat.com>
- <20200205025842.367575-10-peterx@redhat.com>
+        Wed, 5 Feb 2020 04:48:33 -0500
+Received: from mga09.intel.com ([134.134.136.24]:53956 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728012AbgBEJsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:48:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:48:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
+   d="scan'208";a="431808778"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Feb 2020 01:48:30 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5157B17C; Wed,  5 Feb 2020 11:48:29 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nick Crews <ncrews@chromium.org>, linux-kernel@vger.kernel.org,
+        Daniel Campello <campello@chromium.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2] platform/chrome: wilco_ec: Platform data shan't include kernel.h
+Date:   Wed,  5 Feb 2020 11:48:28 +0200
+Message-Id: <20200205094828.77940-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205025842.367575-10-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 09:58:41PM -0500, Peter Xu wrote:
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 4b78a8d3e773..e64fbfe6bbd5 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -115,6 +115,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva);
->  struct kvm_run *vcpu_state(struct kvm_vm *vm, uint32_t vcpuid);
->  void vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
->  int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
-> +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
->  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid);
->  void vcpu_set_mp_state(struct kvm_vm *vm, uint32_t vcpuid,
->  		       struct kvm_mp_state *mp_state);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 25edf20d1962..5137882503bd 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -1203,6 +1203,14 @@ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
->  	return rc;
->  }
->  
-> +int __vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
-> +{
-> +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
-> +
-> +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
-> +	return ioctl(vcpu->fd, KVM_RUN, NULL);
-> +}
-> +
->  void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid)
->  {
->  	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+Replace with appropriate types.h.
 
-I think we should add a vcpu_get_fd(vm, vcpuid) function instead, and
-then call ioctl directly from the test.
+Also there is no need to include device.h, but mutex.h.
+For the pointers to unknown structures use forward declarations.
 
-Thanks,
-drew
+In the *.c files we need to include all headers that provide APIs
+being used in the module.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: update *.c files (kbuild test robot)
+ drivers/platform/chrome/wilco_ec/properties.c | 3 +++
+ drivers/platform/chrome/wilco_ec/sysfs.c      | 4 ++++
+ include/linux/platform_data/wilco-ec.h        | 8 ++++++--
+ 3 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/chrome/wilco_ec/properties.c b/drivers/platform/chrome/wilco_ec/properties.c
+index e69682c95ea2..a0cbd8bd2851 100644
+--- a/drivers/platform/chrome/wilco_ec/properties.c
++++ b/drivers/platform/chrome/wilco_ec/properties.c
+@@ -3,8 +3,11 @@
+  * Copyright 2019 Google LLC
+  */
+ 
++#include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/platform_data/wilco-ec.h>
+ #include <linux/string.h>
++#include <linux/types.h>
+ #include <linux/unaligned/le_memmove.h>
+ 
+ /* Operation code; what the EC should do with the property */
+diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
+index f0d174b6bb21..3c587b4054a5 100644
+--- a/drivers/platform/chrome/wilco_ec/sysfs.c
++++ b/drivers/platform/chrome/wilco_ec/sysfs.c
+@@ -8,8 +8,12 @@
+  * See Documentation/ABI/testing/sysfs-platform-wilco-ec for more information.
+  */
+ 
++#include <linux/device.h>
++#include <linux/kernel.h>
+ #include <linux/platform_data/wilco-ec.h>
++#include <linux/string.h>
+ #include <linux/sysfs.h>
++#include <linux/types.h>
+ 
+ #define CMD_KB_CMOS			0x7C
+ #define SUB_CMD_KB_CMOS_AUTO_ON		0x03
+diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+index afede15a95bf..25f46a939637 100644
+--- a/include/linux/platform_data/wilco-ec.h
++++ b/include/linux/platform_data/wilco-ec.h
+@@ -8,8 +8,8 @@
+ #ifndef WILCO_EC_H
+ #define WILCO_EC_H
+ 
+-#include <linux/device.h>
+-#include <linux/kernel.h>
++#include <linux/mutex.h>
++#include <linux/types.h>
+ 
+ /* Message flags for using the mailbox() interface */
+ #define WILCO_EC_FLAG_NO_RESPONSE	BIT(0) /* EC does not respond */
+@@ -17,6 +17,10 @@
+ /* Normal commands have a maximum 32 bytes of data */
+ #define EC_MAILBOX_DATA_SIZE		32
+ 
++struct device;
++struct resource;
++struct platform_device;
++
+ /**
+  * struct wilco_ec_device - Wilco Embedded Controller handle.
+  * @dev: Device handle.
+-- 
+2.24.1
 
