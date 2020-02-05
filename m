@@ -2,175 +2,167 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB0C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBBC3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A41214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DB2214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 02:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqD7Cask"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgBECNr (ORCPT
+        id S1727885AbgBECOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 21:13:47 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:55170 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727140AbgBECNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 21:13:47 -0500
-Received: from [192.168.68.106] (unknown [111.18.44.203])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX9zKJDpei4cMAA--.47S3;
-        Wed, 05 Feb 2020 10:13:32 +0800 (CST)
-Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
-To:     Jonas Gorski <jonas.gorski@gmail.com>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jean Delvare <jdelvare@suse.de>
-References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
- <CAOiHx==FfiQoFA9cESSni_izS=m+mm7G+gk_tei5XFnKrgurew@mail.gmail.com>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <10732371-fbd1-e9f3-6fed-7821a3ce4847@loongson.cn>
-Date:   Wed, 5 Feb 2020 10:13:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAOiHx==FfiQoFA9cESSni_izS=m+mm7G+gk_tei5XFnKrgurew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID: AQAAf9DxX9zKJDpei4cMAA--.47S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFyxWw4fKw43Wr13GF4DJwb_yoWrJr4xpa
-        18JanYkrWkJF1fGw4fZ34xuryYkrZ3Kr98uFy3J3WUu3s8u34jvrs7Ar1I9FyDJr4kGw10
-        vr1a9F4UuayDuFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-        n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j
-        6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-        BIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 4 Feb 2020 21:14:43 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37064 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbgBECOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 21:14:42 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so275085pjb.2;
+        Tue, 04 Feb 2020 18:14:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=Fegxb96WbTiaWF4amnd9jGSEj+9x/8LIWAp8pFBqKBA=;
+        b=gqD7Casksvyd+oHamPEUb2BvyGbFbSjNXGaf+aQ0ecuOtLM8AiSohvvVH5dt1rYtO6
+         uRX1RFEMfZ0BENQFxjLqT+NA0CCJoRzSuQ8zrTJ9wxasKYOFdF3CZQ8kreKB8mPtChVU
+         P3Z6bFB9yY4Bmdbwa9ovgD6QKdqDu2Rj7uC1xLnqA592NiKerultYsRIvTNRTvODW+Mf
+         NT5oqomCwi4u7D0YgqSatiAbxWM7RNq0Utsl7e/j5t/YpcCSeNaedtlJlp/oHXq18nqo
+         ARURaI2TSXG/BljTHLRENIbbhKDzA9L2X/QHhIZPqs0GS6g2kliMTdNFmeAdxL6HJWv/
+         Za6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=Fegxb96WbTiaWF4amnd9jGSEj+9x/8LIWAp8pFBqKBA=;
+        b=O8CgClCNsrmOauvx4UdMDPdV7xucrj9+Uo9ILnApLB9zASpMQ+g8zZbplMm9apKT/Z
+         me6n7Ll9+wDn1jGdJO6h9Xblreb86CvFOJtSTnc8DBDASq89vxSfLz9JbPAWAHe0ZFjQ
+         RazjQUGHCJuElKTms3GlypPd5KwFdszTFMAHxo2pIozTH8GqY4Qyk+zanXo6bO0goN0i
+         fQDOxatsOunLrBe7H0DFhbvKRH2kffzbMY/pzT9RHHz7KudFT0eBPNbk6Koyp1CnF4nL
+         hwhdPKg1bUuaJMcExpe0AoYsWsYKgjMPV6BlRXi5JE+xwrVCF2n28TNYfy8BL3kKKpra
+         7uIw==
+X-Gm-Message-State: APjAAAWBl3/DdF3Gfe8DhqT00qe/aRDMZckHwZenTjw0GWaK/y0vbpta
+        rIMA/1lGfGWTdmiuDvIE3rk=
+X-Google-Smtp-Source: APXvYqzgyXkrf5MY2V6rkPJb/lySnGevQuWU9BWrrZ0FpmwWpyQGlet0W3tueHDGlZFDd56tzRYSxA==
+X-Received: by 2002:a17:902:8a8e:: with SMTP id p14mr32705929plo.28.1580868881563;
+        Tue, 04 Feb 2020 18:14:41 -0800 (PST)
+Received: from localhost.localdomain ([211.47.96.9])
+        by smtp.gmail.com with ESMTPSA id d69sm23968818pfd.72.2020.02.04.18.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 18:14:40 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     SeongJae Park <sj38.park@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Re: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if .kunitconfig is modified
+Date:   Wed,  5 Feb 2020 03:14:28 +0100
+Message-Id: <20200205021428.8007-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAFd5g448555=dKFQMbjJ6G=tvtfF5oJgTtTgGx+38Ls3VqHo5g@mail.gmail.com> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 10:46 PM, Jonas Gorski wrote:
-> Hi,
->
-> On Thu, 16 Jan 2020 at 14:28, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
->> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
->> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
->> driver can easily match various of mainboards.
->>
->> In the SMBIOS reference specification, the table anchor string "_SM_" is
->> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
->> but there exists a special case for Loongson platform, when call function
->> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
->> it is reserved for SMBIOS and can be normally access in the BIOS.
->>
->> This patch works fine on the Loongson 3A3000 platform which belongs to
->> MIPS architecture and has no influence on the other architectures such
->> as x86 and ARM.
->>
->> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
->> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
->> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> Reviewed-by: Huacai Chen <chenhc@lemote.com>
->> ---
->>
->> v2:
->>    - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
->>    - refine definitions and Kconfig by Jiaxun
->>
->>   arch/mips/Kconfig           | 10 ++++++++++
->>   arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
->>   arch/mips/kernel/setup.c    |  2 ++
->>   drivers/firmware/dmi_scan.c |  6 +++++-
->>   4 files changed, 37 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/mips/include/asm/dmi.h
->>
->> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->> index 4b83507..c097f78 100644
->> --- a/arch/mips/Kconfig
->> +++ b/arch/mips/Kconfig
->> @@ -2773,6 +2773,16 @@ config HW_PERF_EVENTS
->>            Enable hardware performance counter support for perf events. If
->>            disabled, perf events will use software events only.
->>
->> +config DMI
->> +       default y if MACH_LOONGSON64
->> +       select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
->> +       bool "Enable DMI scanning"
-> Is this option harmless to enable for other MIPS platforms? What
-> happens if it is enabled on devices where PHYS_OFFSET isn't 0, so
-> 0xF0000 is likely not backed by anything and accessing it might hang
-> the system?
->
-> This probably should depend on MACH_LOONGSON64.
+On Tue, 4 Feb 2020 16:46:06 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
 
+> Sorry for the delay.
+> 
+> On Mon, Jan 27, 2020 at 10:03 PM SeongJae Park <sj38.park@gmail.com> wrote:
+> >
+> > On Mon, 27 Jan 2020 16:02:48 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+> >
+> > > On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
+> > > >
+> > > > From: SeongJae Park <sjpark@amazon.de>
+> > > >
+> > > > Deletions of configs in the '.kunitconfig' is not applied because kunit
+> > > > rebuilds '.config' only if the '.config' is not a subset of the
+> > > > '.kunitconfig'.  To allow the deletions to applied, this commit modifies
+> > > > the '.config' rebuild condition to addtionally check the modified times
+> > > > of those files.
+> > >
+> > > The reason it only checks that .kunitconfig is a subset of .config is
+> > > because we don't want the .kunitconfig to remove options just because
+> > > it doesn't recognize them.
+> > >
+> > > It runs `make ARCH=um olddefconfig` on the .config that it generates
+> > > from the .kunitconfig, and most of the time that means you will get a
+> > > .config with lots of things in it that aren't in the .kunitconfig.
+> > > Consequently, nothing should ever be deleted from the .config just
+> > > because it was deleted in the .kunitconfig (unless, of course, you
+> > > change a =y to a =n or # ... is not set), so I don't see what this
+> > > change would do.
+> > >
+> > > Can you maybe provide an example?
+> >
+> > Sorry for my insufficient explanation.  I added a kunit test
+> > (SYSCTL_KUNIT_TEST) to '.kunitconfig', ran the added test, and then removed it
+> > from the file.  However, '.config' is not generated again due to the condition
+> > and therefore the test still runs.
+> >
+> > For more detail:
+> >
+> >     $ ./tools/testing/kunit/kunit.py run --defconfig --build_dir ../kunit.out/
+> >     $ echo "CONFIG_SYSCTL_KUNIT_TEST=y" >> ../kunit.out/.kunitconfig
+> >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+> >     $ sed -i '4d' ../kunit.out/.kunitconfig
+> >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+> >
+> > The 2nd line command adds sysctl kunit test and the 3rd line shows it runs the
+> > added test as expected.  Because the default kunit config contains only 3
+> > lines, The 4th line command removes the sysctl kunit test from the
+> > .kunitconfig.  However, the 5th line still run the test.
+> >
+> > This patch is for such cases.  Of course, this might make more false positives
+> > but I believe it would not be a big problem because .config generation takes no
+> > long time.  If I missed something, please let me know.
+> 
+> I think I understand.
+> 
+> It is intentional - currently - that KUnit doesn't generate a new
+> .config with every invocation. The reason is basically to support
+> interaction with other methods of generating .configs. Consider that
+> you might want to use make menuconfig to turn something on. It is a
+> pretty handy interface if you work on vastly different parts of the
+> kernel. Or maybe you have a defconfig that you always use for some
+> platform, I think it is easier to run
+> 
+> make foo_config; tools/testing/kunit/kunit.py run
+> 
+> Then having to maintain both your defconfig and a .kunitconfig which
+> is a superset of the defconfig.
+> 
+> Your change would make it so that you have to have a .kunitconfig for
+> every test environment that you care about, and you could not as
+> easily take advantage of menuconfig.
 
-Hi Jonas,
+Thank you for this kind answer.  Now I understood the intention and agree with
+that. :)
 
-Thanks for your reply and suggestion.
+> 
+> I think what we do now is a bit janky, and the use cases I mentioned
+> are not super well supported. So I am sympathetic to what you are
+> trying to do, maybe we could have a config option for it?
+> 
+> I think Ted and Bjorn might have opinions on this; they had some
+> related opinions in the past.
 
-With the current patch, on the MIPS architecture, the DMI option is
-default y only if MACH_LOONGSON64 is set, otherwise it is not set.
-When enable DMI manually on the MIPS platform which is not LOONGSON64,
-the SMBIOS_ENTRY_POINT_SCAN_START is 0xF0000, dmi_early_remap() will
-return NULL and goto err to print "DMI not present or invalid."
-
-static void __init dmi_scan_machine(void)
-{
-...
-         p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
-         if (p == NULL)
-             goto error;
-...
-  error:
-     pr_info("DMI not present or invalid.\n");
-}
-
-It seems harmless and the system can boot successful. However, in order
-to avoid the unknown risks on the mips platform which is not LOONGSON64,
-I think it is better to depend on MACH_LOONGSON64.
-
-config DMI
-     bool "Enable DMI scanning"
-     depends on MACH_LOONGSON64
-     select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-     default y
-
-If other mips platform also needs this DMI feature in the future,
-the "depends on" conditon can be modified.
-
-I will do it in the v3 patch.
+I'm ok with current state, but if related discussions continue and my opinion
+is required, I will join in.
 
 
 Thanks,
+SeongJae Park
 
-
-Tiezhu Yang
-
-
->
-> Regards
->
-> Jonas
-
+> 
