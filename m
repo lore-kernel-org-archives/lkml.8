@@ -7,54 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D70C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A348BC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD4A2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED292072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9O2+F8H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IqOTXcZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBEUoS (ORCPT
+        id S1727361AbgBEUoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 15:44:18 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:35259 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgBEUoS (ORCPT
+        Wed, 5 Feb 2020 15:44:22 -0500
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:43609 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbgBEUoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 15:44:18 -0500
-Received: by mail-wm1-f74.google.com with SMTP id z7so1565420wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 12:44:16 -0800 (PST)
+        Wed, 5 Feb 2020 15:44:22 -0500
+Received: by mail-wr1-f73.google.com with SMTP id u8so2080951wrp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 12:44:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=n91DHyeQsL6KJi+PzY/lmETuokxLoyCiTyEI3zpbN6o=;
-        b=N9O2+F8HGRS/N3l/0z0aPzfcPc/uidznZDRae5tYVw2Fz/NyGSezGN2HLMoeE7Zcv4
-         /LpXVmdndqNzNWQ5dT8sE5SA6uxR9aYpymvXp3UEEdnEuN6LsiYxovE6Kh1vw137cjtN
-         AKS4Ia9tPVjGteqOZnMQ8SG2CL3YCN1KXYx85uXj2fnJwPSfeO5q5wLeP6/C2lszb0+d
-         aqwEeviXf6FVJ9zSuitol/oDK3cnM+ho+GyxL/yXtZZsI52F8eqaeqwZgMZj1OguK1p7
-         bvhnG98RDI3DdzelfH/kfT0sxqcyOYMA29a8In45ykZ2L2NSUl78TQV2oz7gKsdFefnL
-         YK0A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=sqwbag/mHy/vE3+gzAzb/2Oiv0jGf8Mn6Bv8Q3gyQkw=;
+        b=IqOTXcZRoF8SEhZUjNCSG+GqZwsIC3sBUUxBHgycS65QviiCIVFm5nA+3zz+fH2rOi
+         ncmn3PHofpj4aV10ugF8h1UOD6tE5OM3hbnvaAS7h3MMJiymM14RYwhAnCCkZXoWeZNV
+         ZKf5yb9zwrajfIFwL0b76PHaKsxCqmnuWl3P6ubRoUtdby91xM/0LXAkeiuCCBQ7iH4w
+         8NpBI+laYP8gQ8sjoBvWpkEf0K8RyU/1h7kb4idrVVsoGlEOsracKLa+nOz+J0PsSzcd
+         SiBOGPrQpexvbbq6kjb+GaUx2MJEhYFv/MegGCxXfOoBGShEHwU+/HKV8OY9JM4ESfRt
+         H0+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=n91DHyeQsL6KJi+PzY/lmETuokxLoyCiTyEI3zpbN6o=;
-        b=mgSNLShFuHp+HRKNCdpQJHHf000tOaCYNvLIzZvxfivIFbAg+MxfFdG0JVATiwH4mw
-         MnkNdboNo9E2QM37yvhxsYadNhI5zW8apvnIlpX0iUJW8qqYUQuA+AbdLKt3+tJZO6Io
-         XQPE+Fd4wQUzTDbMYoTJzQmqfNI87g6mRBcDYyzplTGHHSd4ecrjIEFT3ZfQZ4saPtlM
-         p/GPPtOeMGdAjCUgcLvt2kPLWLZllja5nAxtAscrkpOa+Dv+FNi5DpFSHMlrDf5SuvuZ
-         8sGNuYPXvMziBaW2+9bM4VfEX+CRnkE0OrPKPZ+wZbxY/QizLd7zxRkmMPVCBCoovxWx
-         I3Dg==
-X-Gm-Message-State: APjAAAUsGYdmuU1rNEJTe0t1Z8DOkkcmdxdBgm2xo9fC/bzP6hciWLm4
-        LMMuk1esqKbN/FjzX73AAFrfFewHFg==
-X-Google-Smtp-Source: APXvYqxa2/gxRWK5q7X/QW4LfYH+GFp5g0UqIlXesfUbgZoo7HF6wQxpey96wrFvE8P4byF+WN8pmppzmQ==
-X-Received: by 2002:a05:6000:50:: with SMTP id k16mr331765wrx.145.1580935455011;
- Wed, 05 Feb 2020 12:44:15 -0800 (PST)
-Date:   Wed,  5 Feb 2020 21:43:31 +0100
-Message-Id: <20200205204333.30953-1-elver@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=sqwbag/mHy/vE3+gzAzb/2Oiv0jGf8Mn6Bv8Q3gyQkw=;
+        b=B2aey4ZDFSpD5qD1AmD/wWYSLYpqu6KOoiUp3uY9xCX9dxkmoZJrFQZYeGVYv8ZQho
+         j/m4lauVSKyW7oyLDmtg3Od5s533kF7sTGgw3ynlR1kH6ybgJzAQefqc0s9UfibY3TtK
+         Bhro/BeeGs9L93H611t2c85biMJHRVD9eP7FwsA//4oQS/0Vm1E0eSj0FQMfbuwmPmQX
+         0nIOy0gkat3UpqN5mY1tp3qJ0EEMoT0CYi+PuLRbrYPFIaGsDSPtcahrwKZrNIDcZ3S2
+         uPiwz1K+ylFd9t/6fzsVYUKQrDtwus+9uXXtJUlVGF8oH7VyF4CM0/FRYqTqCpsc1kLV
+         UmEg==
+X-Gm-Message-State: APjAAAWQJs5xC7zrkrs1bxUBdvBsdHQpHoPtI7PKEutnno+9Xt1QVcaO
+        jaI7xgynxFd1WEN4vZSV+ZFEbO61lw==
+X-Google-Smtp-Source: APXvYqwKzWuL5SA1nUkq74i0CXGJsZNQRrAsvDnm8+zpHgURL+fekhQGL9I4JbrH0xsolumcHK1Lu3YT3g==
+X-Received: by 2002:a5d:6646:: with SMTP id f6mr418289wrw.276.1580935458188;
+ Wed, 05 Feb 2020 12:44:18 -0800 (PST)
+Date:   Wed,  5 Feb 2020 21:43:32 +0100
+In-Reply-To: <20200205204333.30953-1-elver@google.com>
+Message-Id: <20200205204333.30953-2-elver@google.com>
 Mime-Version: 1.0
+References: <20200205204333.30953-1-elver@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH 1/3] kcsan: Introduce KCSAN_ACCESS_ASSERT access type
+Subject: [PATCH 2/3] kcsan: Introduce ASSERT_EXCLUSIVE_* macros
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
@@ -66,123 +70,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KCSAN_ACCESS_ASSERT access type may be used to introduce dummy reads
-and writes to assert certain properties of synchronization logic, where
-bugs could not be detected as normal data races.
+Introduces ASSERT_EXCLUSIVE_WRITER and ASSERT_EXCLUSIVE_ACCESS, which
+may be used to assert properties of synchronization logic, where
+violation cannot be detected as a normal data race.
 
-For example, a variable that is only meant to be written by a single
-CPU, but may be read (without locking) by other CPUs must still be
-marked properly to avoid data races. However, concurrent writes,
-regardless if WRITE_ONCE() or not, would be a bug. Using
-kcsan_check_access(&x, sizeof(x), KCSAN_ACCESS_ASSERT) would allow
-catching such bugs.
+Examples of the reports that may be generated:
 
-Notably, the KCSAN_ACCESS_ASSERT type disables various filters, so that
-all races that KCSAN observes are reported.
+    ==================================================================
+    BUG: KCSAN: data-race in test_thread / test_thread
+
+    write to 0xffffffffab3d1540 of 8 bytes by task 466 on cpu 2:
+     test_thread+0x8d/0x111
+     debugfs_write.cold+0x32/0x44
+     ...
+
+    assert no writes to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
+     test_thread+0xa3/0x111
+     debugfs_write.cold+0x32/0x44
+     ...
+    ==================================================================
+
+    ==================================================================
+    BUG: KCSAN: data-race in test_thread / test_thread
+
+    assert no accesses to 0xffffffffab3d1540 of 8 bytes by task 465 on cpu 1:
+     test_thread+0xb9/0x111
+     debugfs_write.cold+0x32/0x44
+     ...
+
+    read to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
+     test_thread+0x77/0x111
+     debugfs_write.cold+0x32/0x44
+     ...
+    ==================================================================
 
 Signed-off-by: Marco Elver <elver@google.com>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/kcsan-checks.h |  8 +++++++-
- kernel/kcsan/core.c          | 24 +++++++++++++++++++++---
- kernel/kcsan/report.c        | 11 +++++++++++
- 3 files changed, 39 insertions(+), 4 deletions(-)
+
+Please let me know if the names make sense, given they do not include a
+KCSAN_ prefix.
+
+The names are unique across the kernel. I wouldn't expect another macro
+with the same name but different semantics to pop up any time soon. If
+there is a dual use to these macros (e.g. another tool that could hook
+into it), we could also move it elsewhere (include/linux/compiler.h?).
+
+We can also revisit the original suggestion of WRITE_ONCE_EXCLUSIVE(),
+if it is something that'd be used very widely. It'd be straightforward
+to add with the help of these macros, but would need to be added to
+include/linux/compiler.h.
+---
+ include/linux/kcsan-checks.h | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-index ef3ee233a3fa9..21b1d1f214ad5 100644
+index 21b1d1f214ad5..1a7b51e516335 100644
 --- a/include/linux/kcsan-checks.h
 +++ b/include/linux/kcsan-checks.h
-@@ -6,10 +6,16 @@
- #include <linux/types.h>
+@@ -96,4 +96,38 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+ 	kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC | KCSAN_ACCESS_WRITE)
+ #endif
  
- /*
-- * Access type modifiers.
-+ * ACCESS TYPE MODIFIERS
++/**
++ * ASSERT_EXCLUSIVE_WRITER - assert no other threads are writing @var
 + *
-+ *   <none>: normal read access;
-+ *   WRITE : write access;
-+ *   ATOMIC: access is atomic;
-+ *   ASSERT: access is not a regular access, but an assertion;
-  */
- #define KCSAN_ACCESS_WRITE  0x1
- #define KCSAN_ACCESS_ATOMIC 0x2
-+#define KCSAN_ACCESS_ASSERT 0x4
- 
- /*
-  * __kcsan_*: Always calls into the runtime when KCSAN is enabled. This may be used
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 82c2bef827d42..190fb5c958fe3 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -178,6 +178,14 @@ is_atomic(const volatile void *ptr, size_t size, int type)
- 	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
- 		return true;
- 
-+	/*
-+	 * Unless explicitly declared atomic, never consider an assertion access
-+	 * as atomic. This allows using them also in atomic regions, such as
-+	 * seqlocks, without implicitly changing their semantics.
-+	 */
-+	if ((type & KCSAN_ACCESS_ASSERT) != 0)
-+		return false;
++ * Assert that there are no other threads writing @var; other readers are
++ * allowed. This assertion can be used to specify properties of synchronization
++ * logic, where violation cannot be detected as a normal data race.
++ *
++ * For example, if a per-CPU variable is only meant to be written by a single
++ * CPU, but may be read from other CPUs; in this case, reads and writes must be
++ * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
++ * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
++ * race condition. Using this macro allows specifying this property in the code
++ * and catch such bugs.
++ *
++ * @var variable to assert on
++ */
++#define ASSERT_EXCLUSIVE_WRITER(var)                                           \
++	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
 +
- 	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
- 	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
- 	    IS_ALIGNED((unsigned long)ptr, size))
-@@ -307,6 +315,7 @@ static noinline void
- kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- {
- 	const bool is_write = (type & KCSAN_ACCESS_WRITE) != 0;
-+	const bool is_assertion = (type & KCSAN_ACCESS_ASSERT) != 0;
- 	atomic_long_t *watchpoint;
- 	union {
- 		u8 _1;
-@@ -430,12 +439,21 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		 * No need to increment 'data_races' counter, as the racing
- 		 * thread already did.
- 		 */
--		kcsan_report(ptr, size, type, size > 8 || value_change,
--			     smp_processor_id(), KCSAN_REPORT_RACE_SIGNAL);
++/**
++ * ASSERT_EXCLUSIVE_ACCESS - assert no other threads are accessing @var
++ *
++ * Assert that no other thread is accessing @var (no readers nor writers). This
++ * assertion can be used to specify properties of synchronization logic, where
++ * violation cannot be detected as a normal data race.
++ *
++ * For example, if a variable is not read nor written by the current thread, nor
++ * should it be touched by any other threads during the current execution phase.
++ *
++ * @var variable to assert on
++ */
++#define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
++	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
 +
-+		/*
-+		 * - If we were not able to observe a value change due to size
-+		 *   constraints, always assume a value change.
-+		 * - If the access type is an assertion, we also always assume a
-+		 *   value change to always report the race.
-+		 */
-+		value_change = value_change || size > 8 || is_assertion;
-+
-+		kcsan_report(ptr, size, type, value_change, smp_processor_id(),
-+			     KCSAN_REPORT_RACE_SIGNAL);
- 	} else if (value_change) {
- 		/* Inferring a race, since the value should not have changed. */
- 		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
--		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN))
-+		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assertion)
- 			kcsan_report(ptr, size, type, true,
- 				     smp_processor_id(),
- 				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 7cd34285df740..938146104e046 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -178,6 +178,17 @@ static const char *get_access_type(int type)
- 		return "write";
- 	case KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
- 		return "write (marked)";
-+
-+	/*
-+	 * ASSERT variants:
-+	 */
-+	case KCSAN_ACCESS_ASSERT:
-+	case KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_ATOMIC:
-+		return "assert no writes";
-+	case KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE:
-+	case KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
-+		return "assert no accesses";
-+
- 	default:
- 		BUG();
- 	}
+ #endif /* _LINUX_KCSAN_CHECKS_H */
 -- 
 2.25.0.341.g760bfbb309-goog
 
