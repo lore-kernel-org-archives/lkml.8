@@ -2,101 +2,124 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E9AC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEDEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D233D2072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QaYncY22"
+	by mail.kernel.org (Postfix) with ESMTP id AAA6321D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgBEWeS (ORCPT
+        id S1727472AbgBEWhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:34:18 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45049 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgBEWeR (ORCPT
+        Wed, 5 Feb 2020 17:37:40 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35532 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgBEWhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:34:17 -0500
-Received: by mail-pg1-f193.google.com with SMTP id g3so1648424pgs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BJAZ+tjDZGEWKOLhDN5AGrWH1BdqO7gaMNKY2ZpYEZE=;
-        b=QaYncY22KA1veHmJfyF9ObQNUPiSi3a+CYQ/HWRhROmmrwOgTOH5jglHbNzKa3crqZ
-         0yWquqQt2uqdYLCLXrJPtB1A+OFdkF7HpKyn/NN7xtUqFHK7ipFabry5qlMjt0gX01gE
-         iB3UJDUvBVIWfSXh0lUgCf+hLlzcJkZDwHd/4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BJAZ+tjDZGEWKOLhDN5AGrWH1BdqO7gaMNKY2ZpYEZE=;
-        b=P97TlfEr+H/MBdx/rzAOYR6Tb4vwgMRUwdHM/dNq70m7y3vgfRgj/bIL/jN1HNa9xk
-         o21SRNNHC3wQ1SkKcehQd1QkCa/A52i7ek+4lW5pMQu2bwfNRtwm5JMZOZVWKXoSEB8G
-         me48lLAY17NYp5s8l9VKB/gAKQQ7gYsflpt60edAs3Em3deJ5HZoGGvtpdBlAx13CSaG
-         d+j90Lb/leWAxtVRh3Z9dlX+sNXyhP+L7UHVuDahnlPHmYe3TQdIyBVpcwOcXNDt1BwB
-         XBbaYOtVUPEkanMQGmHX3rsH0dTp3iL62ey0FUzkRqMqFAk5gE0Ax3mAt8iuMmlwdpNT
-         HCVQ==
-X-Gm-Message-State: APjAAAUDV0545VWntXhDnSWntVcPnxEv2Ht2AK4SpIhJVHD/SKNH0mFw
-        GNYFzkbpJB/BR2TvJeWIX2bwwg==
-X-Google-Smtp-Source: APXvYqwH/JozABknbiZDhGi/qjztmZyyCX4nXbvdvUmqzc6dhXb1KJ7OGhn2QUC6bDzXn1X7tfRLFg==
-X-Received: by 2002:a63:d0c:: with SMTP id c12mr130039pgl.173.1580942057139;
-        Wed, 05 Feb 2020 14:34:17 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t19sm784459pgg.23.2020.02.05.14.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 14:34:16 -0800 (PST)
-Date:   Wed, 5 Feb 2020 17:34:15 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        paulmck@kernel.org, frextrite@gmail.com, rcu@vger.kernel.org,
-        madhuparnabhowmik04@gmail.com
-Subject: Re: [PATCH] kernel/trace: Use rcu_assign_pointer() for setting
- fgraph hash pointers
-Message-ID: <20200205223415.GA55522@google.com>
-References: <20200205221808.54576-1-joel@joelfernandes.org>
- <20200205172529.4282a0d1@oasis.local.home>
+        Wed, 5 Feb 2020 17:37:40 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1330E1C036E; Wed,  5 Feb 2020 23:37:39 +0100 (CET)
+Date:   Wed, 5 Feb 2020 23:37:38 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>
+Subject: Re: [cip-dev] [PATCH 4.4 00/53] 4.4.213-stable review
+Message-ID: <20200205223738.GC1140@amd>
+References: <20200203161902.714326084@linuxfoundation.org>
+ <TYAPR01MB2285D96DC944217E7A22F8C6B7030@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20200205130207.GA1199959@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
 Content-Disposition: inline
-In-Reply-To: <20200205172529.4282a0d1@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200205130207.GA1199959@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 05:25:29PM -0500, Steven Rostedt wrote:
-> On Wed,  5 Feb 2020 17:18:08 -0500
-> "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> 
-> > set_ftrace_early_graph() sets pointers without any explicit
-> > release-barriers. Let us use rcu_assign_pointer() to ensure the same.
-> > 
-> > Note that ftrace_early_graph() calls ftrace_graph_set_hash() which does
-> > do mutex_unlock(&ftrace_lock); which should imply a release barrier.
-> > However it is better to not depend on it and just use
-> > rcu_assign_pointer() which should also avoid sparse errors in the
-> > future.
-> 
-> This is going to have to wait for the next merge window, as I'm already
-> *very* late, and I've pushed the limit to what I will add at this time
-> frame.
 
-I understand, no problem. I will resend it next merge window.
+--hYooF8G/hrfVAmum
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+On Wed 2020-02-05 13:02:07, Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2020 at 09:50:56AM +0000, Chris Paterson wrote:
+> > Hi Greg,
+> >=20
+> > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > Behalf Of Greg Kroah-Hartman
+> > > Sent: 03 February 2020 16:19
+> > >=20
+> > > This is the start of the stable review cycle for the 4.4.213 release.
+> > > There are 53 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >=20
+> > > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> > > Anything received after that time might be too late.
+> >=20
+> > We're seeing an issue with 4.4.213-rc1 (36670370c48b) and 4.4.213-rc2 (=
+758a39807529) with our 4 am335x configurations [0]:
+> >=20
+> >    AS      arch/arm/kernel/hyp-stub.o
+> >  arch/arm/kernel/hyp-stub.S:   CC      arch/arm/mach-omap2/sram.o
+> >  Assembler messages:
+> >    AS      arch/arm/kernel/smccc-call.o
+> >  arch/arm/kernel/hyp-stub.S:147: Error: selected processor does not sup=
+port `ubfx r7,r7,#16,#4' in ARM mode
+> >  scripts/Makefile.build:375: recipe for target 'arch/arm/kernel/hyp-stu=
+b.o' failed
+> >  make[1]: *** [arch/arm/kernel/hyp-stub.o] Error 1
+> >=20
+> > The culprit seems to be: 15163bcee7b5 ("ARM: 8955/1: virt: Relax arch t=
+imer version check during early boot")
+> > Reverting the same resolves the build issue.
+> >=20
+> > Latest pipeline: https://gitlab.com/cip-project/cip-testing/linux-stabl=
+e-rc-ci/pipelines/114683657
+> >=20
+> > [0] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/-/blob/=
+master/4.4.y-cip/arm/
+> > siemens_am335x-axm2_defconfig, siemens_am335x-draco_defconfig, siemens_=
+am335x-dxr2_defconfig, siemens_am335x-etamin_defconfig
+>=20
+> Thanks, I'll go drop that patch from 4.4 and 4.9 trees.
 
- - Joel
+I believe it is more likely than not to break 4.19 (and possibly
+mainline), too, but I have not yet done required testing.
 
-> 
-> -- Steve
-> 
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--hYooF8G/hrfVAmum
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl47Q7IACgkQMOfwapXb+vIb9wCggda45Gbi7vfZ9Rh2gBfoXKpH
+0gUAoLsP4cEKshmiZdBQBpCgLvlCGSXr
+=gdVu
+-----END PGP SIGNATURE-----
+
+--hYooF8G/hrfVAmum--
