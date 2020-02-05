@@ -2,74 +2,135 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0BAC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB1FC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A69E217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CFB217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z1WcrUak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgBEOHT (ORCPT
+        id S1728123AbgBEOLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:07:19 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55946 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726575AbgBEOHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:07:19 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C70FF382BE53C4C5180A;
-        Wed,  5 Feb 2020 22:07:16 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 5 Feb 2020 22:07:09 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <clabbe.montjoie@gmail.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <mripard@kernel.org>, <wens@csie.org>
-CC:     <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] crypto: allwinner - remove redundant platform_get_irq error message
-Date:   Wed, 5 Feb 2020 22:01:30 +0800
-Message-ID: <20200205140130.164805-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 5 Feb 2020 09:11:06 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52396 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727109AbgBEOLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:11:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580911864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w4/IAIkLz0D/Z/IjxmMi8dEqQry7xSlVGHBtHnUX7vg=;
+        b=Z1WcrUakHCqJ+6Xe7XtsyRXOwm/JSLTyS7nmmeExkpk3SoTpAdpyy340czNHSNtGMGHG1W
+        6IN6Y81+eEu230c0RB2Q2ubKgNB3M6VH1IJxjkgNIJmGjt7mO7a1YpfwjFLC3f6phjJCLY
+        6TsKMcwg7+xeYKF0grZYuyZhFlPiyVg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-ugnoM9xKOA6feBUjQwI-mQ-1; Wed, 05 Feb 2020 09:11:00 -0500
+X-MC-Unique: ugnoM9xKOA6feBUjQwI-mQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AFB41336563;
+        Wed,  5 Feb 2020 14:10:58 +0000 (UTC)
+Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E01660C05;
+        Wed,  5 Feb 2020 14:10:57 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 07:10:56 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
+Message-ID: <20200205071056.101ad3f2@x1.home>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A1ABFE0@SHSMSX104.ccr.corp.intel.com>
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+        <A2975661238FB949B60364EF0F2C25743A1ABFE0@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function dev_err() after platform_get_irq() is redundant because
-platform_get_irq() already prints an error.
+On Wed, 5 Feb 2020 07:57:21 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> Hi Alex,
+> 
+> Silly questions on the background:
+> 
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Wednesday, February 5, 2020 7:06 AM
+> > Subject: [RFC PATCH 0/7] vfio/pci: SR-IOV support
+> > 
+> > There seems to be an ongoing desire to use userspace, vfio-based
+> > drivers for both SR-IOV PF and VF devices.   
+> 
+> Is this series to make PF be bound-able to vfio-pci even SR-IOV is
+> enabled on such PFs? If yes, is it allowed to assign PF to a VM? or
+> it can only be used by userspace applications like DPDK?
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index f72346a..3e4e4bb 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -565,10 +565,8 @@ static int sun8i_ce_probe(struct platform_device *pdev)
- 
- 	/* Get Non Secure IRQ */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(ce->dev, "Cannot get CryptoEngine Non-secure IRQ\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	ce->reset = devm_reset_control_get(&pdev->dev, NULL);
- 	if (IS_ERR(ce->reset)) {
--- 
-2.7.4
+No, this series does not change the behavior of vfio-pci with respect
+to probing a PF where VFs are already enabled.  This is still
+disallowed.  I haven't seen a use case that requires this and allowing
+it tends to subvert the restrictions here.  For instance, if an
+existing VF is already in use by a vfio-pci driver, the PF can
+transition from a trusted host driver to an unknown userspace driver.
+
+> > The fundamental issue
+> > with this concept is that the VF is not fully independent of the PF
+> > driver.  Minimally the PF driver might be able to deny service to the
+> > VF, VF data paths might be dependent on the state of the PF device,
+> > or the PF my have some degree of ability to inspect or manipulate the
+> > VF data.  It therefore would seem irresponsible to unleash VFs onto
+> > the system, managed by a user owned PF.
+> > 
+> > We address this in a few ways in this series.  First, we can use a bus
+> > notifier and the driver_override facility to make sure VFs are bound
+> > to the vfio-pci driver by default.  This should eliminate the chance
+> > that a VF is accidentally bound and used by host drivers.  We don't
+> > however remove the ability for a host admin to change this override.
+> > 
+> > The next issue we need to address is how we let userspace drivers
+> > opt-in to this participation with the PF driver.  We do not want an
+> > admin to be able to unwittingly assign one of these VFs to a tenant
+> > that isn't working in collaboration with the PF driver.  We could use
+> > IOMMU grouping, but this seems to push too far towards tightly coupled
+> > PF and VF drivers.  This series introduces a "VF token", implemented
+> > as a UUID, as a shared secret between PF and VF drivers.  The token
+> > needs to be set by the PF driver and used as part of the device
+> > matching by the VF driver.  Provisions in the code also account for
+> > restarting the PF driver with active VF drivers, requiring the PF to
+> > use the current token to re-gain access to the PF.  
+> 
+> How about the scenario in which PF driver is vfio-based userspace
+> driver but VF drivers are mixed. This means not all VFs are bound
+> to vfio-based userspace driver. Is it also supported here? :-)
+
+It's allowed.  Userspace VF drivers will need to participate in the VF
+token scheme, host drivers may be bound to VFs normally after removing
+the default driver_override.  Thanks,
+
+Alex
 
