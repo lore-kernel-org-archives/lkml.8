@@ -6,82 +6,82 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31634C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9461C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034BE20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D7C217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgBEJAW (ORCPT
+        id S1728117AbgBEJCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:00:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34803 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgBEJAV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:00:21 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1izGXg-00061C-83; Wed, 05 Feb 2020 10:00:16 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     lijiang <lijiang@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Wed, 5 Feb 2020 04:02:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:21948 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbgBEJCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:02:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:02:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
+   d="scan'208";a="231652104"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 05 Feb 2020 01:02:07 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1izGZU-0008Fz-F4; Wed, 05 Feb 2020 11:02:08 +0200
+Date:   Wed, 5 Feb 2020 11:02:08 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] printk: replace ringbuffer
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
-        <dc4ca9b5-d2a2-03af-c186-204a3aad2399@redhat.com>
-        <20200205044848.GH41358@google.com>
-        <20200205050204.GI41358@google.com>
-        <88827ae2-7af5-347b-29fb-cffb94350f8f@redhat.com>
-        <20200205063640.GJ41358@google.com>
-Date:   Wed, 05 Feb 2020 10:00:12 +0100
-In-Reply-To: <20200205063640.GJ41358@google.com> (Sergey Senozhatsky's message
-        of "Wed, 5 Feb 2020 15:36:40 +0900")
-Message-ID: <877e11h0ir.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 02/17] media: v4l2-fwnode: Pass notifier to
+ v4l2_async_register_fwnode_subdev()
+Message-ID: <20200205090208.GR10400@smile.fi.intel.com>
+References: <20200204234918.20425-1-slongerbeam@gmail.com>
+ <20200204234918.20425-3-slongerbeam@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204234918.20425-3-slongerbeam@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->>>> So there is a General protection fault. That's the type of a
->>>> problem that kills the boot for me as well (different backtrace,
->>>> tho).
->>> 
->>> Do you have CONFIG_RELOCATABLE and CONFIG_RANDOMIZE_BASE (KASLR)
->>> enabled?
->> 
->> Yes. These two options are enabled.
->> 
->> CONFIG_RELOCATABLE=y
->> CONFIG_RANDOMIZE_BASE=y
->
-> So KASLR kills the boot for me. So does KASAN.
+On Tue, Feb 04, 2020 at 03:49:03PM -0800, Steve Longerbeam wrote:
+> Instead of allocating a notifier in v4l2_async_register_fwnode_subdev(),
+> have the caller provide one. This allows the caller to implement
+> notifier ops (bind, unbind).
+> 
+> The caller is now responsible for first initializing its notifier with a
+> call to v4l2_async_notifier_init().
 
-Sergey, thanks for looking into this already!
+Hint: When creating a list of maintainers use this (or similar) command:
 
-> John, do you see any of these problems on your test machine?
+	scripts/get_maintainer.pl --git --git-min-percent=67 ...
 
-For x86 I have only been using qemu. (For hardware tests I use arm64-smp
-in order to verify memory barriers.) With qemu-x86_64 I am unable to
-reproduce the problem.
+P.S. Please, do not add me in Cc list for v4l2 matters.
 
-Lianbo, thanks for the report. Can you share your boot args? Anything
-special in there (like log_buf_len=, earlyprintk, etc)?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Also, could you share your CONFIG_LOG_* and CONFIG_PRINTK_* options?
 
-I will move to bare metal x86_64 and hopefully see it as well.
-
-John
