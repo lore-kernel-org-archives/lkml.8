@@ -2,47 +2,49 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DE6C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49A6C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F2E20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB482082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TqoQIh/8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XK16LNdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgBEPeg (ORCPT
+        id S1727441AbgBEPek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:34:36 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21058 "EHLO
+        Wed, 5 Feb 2020 10:34:40 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60500 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726661AbgBEPeg (ORCPT
+        by vger.kernel.org with ESMTP id S1726661AbgBEPei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:34:36 -0500
+        Wed, 5 Feb 2020 10:34:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580916875;
+        s=mimecast20190719; t=1580916878;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=TyY0bw5BSjDw9i9Jna6kHj7htq0ZCBLkIM5aQY6kQxU=;
-        b=TqoQIh/8zG5kuzUnnVGx0Sgtfq9uDSFzZiHUBlFQ/6aJdPT4RSQzBX2FfSS/LCCJRbHeon
-        llAaMDWsqveGuu+21F4Z9a0qJK4Z3AKVb3AGmfH+Hgh5t7bA7McC0WsX81W/XsrqKbvuPZ
-        ZMFfWvn8ZclrtRMpmkNpSNskL3fXgR4=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+qTtaHPN/sKfwNnk+hJQ/UVpSyF6ed7CcXYktzWB+dM=;
+        b=XK16LNdMHUwFak9CErBlLyPxDSEkXi+stJY11N5lZAD7kWloLQkzannTjT+ZmGWfG3JKcI
+        jjfXdGbnrBXVZw7Wgr0ubOoEtL06rjHae6YW5qsoFp/ou+AXYR+dkV0iPcJrKPM1h05F/3
+        ygp5WrFwaQ5WB9rgNNyq+a1jtbWnQqo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-2J8eojHNN0m8FjrfGbJ0GQ-1; Wed, 05 Feb 2020 10:34:34 -0500
-X-MC-Unique: 2J8eojHNN0m8FjrfGbJ0GQ-1
+ us-mta-307-mUHa5rg7PdeSlLimikn19A-1; Wed, 05 Feb 2020 10:34:36 -0500
+X-MC-Unique: mUHa5rg7PdeSlLimikn19A-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 182998010CB;
-        Wed,  5 Feb 2020 15:34:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BAE9A1083E80;
+        Wed,  5 Feb 2020 15:34:34 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-116-179.ams2.redhat.com [10.36.116.179])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DECE8857B5;
-        Wed,  5 Feb 2020 15:34:29 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C410857AE;
+        Wed,  5 Feb 2020 15:34:32 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Andy Shevchenko <andy@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -54,10 +56,12 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
         Cedric Hombourger <Cedric_Hombourger@mentor.com>,
         Len Brown <len.brown@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] x86/tsc_msr: Make MSR derived TSC frequency more accurate
-Date:   Wed,  5 Feb 2020 16:34:25 +0100
-Message-Id: <20200205153428.437087-1-hdegoede@redhat.com>
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v2 1/3] x86/tsc_msr: Use named struct initializers
+Date:   Wed,  5 Feb 2020 16:34:26 +0100
+Message-Id: <20200205153428.437087-2-hdegoede@redhat.com>
+In-Reply-To: <20200205153428.437087-1-hdegoede@redhat.com>
+References: <20200205153428.437087-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Content-Transfer-Encoding: quoted-printable
@@ -66,24 +70,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Use named struct initializers for the freq_desc struct-s initialization
+and change the "u8 msr_plat" to a "bool use_msr_plat" to make its meaning
+more clear instead of relying on a comment to explain it.
 
-Andy has contacted me offlist that he has been unable to find any docks
-specifying where the existing Merrifield and Moorefield numbers come from
-as such I believe that it is best to keep the table with multiplier/divid=
-er
-pairs per model even though there is some overlap.
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ arch/x86/kernel/tsc_msr.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-This v2 of the patch set fixes a typo in the commit message / added comme=
-nts
-and fixes my mistake of referring to Merrifield/Moorefield as BYT/CHT in =
-a
-comment, which they are not.
-
-Unless someone else has a better/cleaner idea to fix this, I believe that
-this series is ready for merging now.
-
-Regards,
-
-Hans
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index e0cbe4f2af49..5fa41ac3feb1 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -22,10 +22,10 @@
+  * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
+  * Unfortunately some Intel Atom SoCs aren't quite compliant to this,
+  * so we need manually differentiate SoC families. This is what the
+- * field msr_plat does.
++ * field use_msr_plat does.
+  */
+ struct freq_desc {
+-	u8 msr_plat;	/* 1: use MSR_PLATFORM_INFO, 0: MSR_IA32_PERF_STATUS */
++	bool use_msr_plat;
+ 	u32 freqs[MAX_NUM_FREQS];
+ };
+=20
+@@ -35,31 +35,39 @@ struct freq_desc {
+  * by MSR based on SDM.
+  */
+ static const struct freq_desc freq_desc_pnw =3D {
+-	0, { 0, 0, 0, 0, 0, 99840, 0, 83200 }
++	.use_msr_plat =3D false,
++	.freqs =3D { 0, 0, 0, 0, 0, 99840, 0, 83200 },
+ };
+=20
+ static const struct freq_desc freq_desc_clv =3D {
+-	0, { 0, 133200, 0, 0, 0, 99840, 0, 83200 }
++	.use_msr_plat =3D false,
++	.freqs =3D { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
+ };
+=20
+ static const struct freq_desc freq_desc_byt =3D {
+-	1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
+ };
+=20
+ static const struct freq_desc freq_desc_cht =3D {
+-	1, { 83300, 100000, 133300, 116700, 80000, 93300, 90000, 88900, 87500 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
++		   88900, 87500 },
+ };
+=20
+ static const struct freq_desc freq_desc_tng =3D {
+-	1, { 0, 100000, 133300, 0, 0, 0, 0, 0 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 0, 100000, 133300, 0, 0, 0, 0, 0 },
+ };
+=20
+ static const struct freq_desc freq_desc_ann =3D {
+-	1, { 83300, 100000, 133300, 100000, 0, 0, 0, 0 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
+ };
+=20
+ static const struct freq_desc freq_desc_lgm =3D {
+-	1, { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
+ };
+=20
+ static const struct x86_cpu_id tsc_msr_cpu_ids[] =3D {
+@@ -91,7 +99,7 @@ unsigned long cpu_khz_from_msr(void)
+ 		return 0;
+=20
+ 	freq_desc =3D (struct freq_desc *)id->driver_data;
+-	if (freq_desc->msr_plat) {
++	if (freq_desc->use_msr_plat) {
+ 		rdmsr(MSR_PLATFORM_INFO, lo, hi);
+ 		ratio =3D (lo >> 8) & 0xff;
+ 	} else {
+--=20
+2.24.1
 
