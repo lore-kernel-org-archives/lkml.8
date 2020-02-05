@@ -2,162 +2,199 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA2EC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312D8C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7DC20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED31220720
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu5NVfan"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QR2/W4p4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgBEVB4 (ORCPT
+        id S1727512AbgBEVCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:01:56 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45742 "EHLO
+        Wed, 5 Feb 2020 16:02:18 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37802 "EHLO
         mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbgBEVB4 (ORCPT
+        with ESMTP id S1727085AbgBEVCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:01:56 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so1365649pls.12;
-        Wed, 05 Feb 2020 13:01:55 -0800 (PST)
+        Wed, 5 Feb 2020 16:02:17 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c23so1379672plz.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 13:02:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V5Ya82AT4pQW2Zb1hIubalMGAZsHsnbL9u1TTZT+ojU=;
-        b=pu5NVfan4hvUUC4H7MWX7H8oiJa6r11XNrkBqIk/q1dfaK6gcIKEhG1dB317SqGvD1
-         f3ocIW4SnPXybVn1vQGe91ftFysoOTkUrYg5IANDsxwreOun7gLBVyESMLigxyec81/h
-         aIAWOwIZQws1v8WsUS6oN6n0q6bHKV4xbHsrDLQvCQmP45v/o14OTudT4TcBUAoF2EYE
-         VusU2pIOdqZnUorcev+0/KmA52+NqmRFlWcNiszQ11KxND1ifLKi1xpQfNCm+LATX9e/
-         U/bwh++vGBox32I4nf2HMWopDDC2b2Nn4eG5IlSv+czNuR488XZd2ccpqmGgMN5c+dzy
-         rBvA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1GKmfOgEfc+T65S9fe0HlKXKx9NnWDi37nRmrX7afPE=;
+        b=QR2/W4p4NKNy2jSR9gzQSGSMcD0j7zWf+DtEIaUAgCfeJNq5e4ohdqhIHyMO1NEX03
+         YFmQFNvV0v3+qEg+Pwq7KdWGagIp+I1BcobZOgHQLkS5jRMs8WogHOstX9DRndm2Vwcw
+         0fTTTixnPrBj1GQ+MtwYxLFzfP/t9FCh3V1oQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V5Ya82AT4pQW2Zb1hIubalMGAZsHsnbL9u1TTZT+ojU=;
-        b=LNjC7734TH8uakVjh7dD6J9IRpPMfSf4d624ncxXNgj5LWfh0DZQdkviNrEkZPBQb9
-         BKl4fjbc18R4odR+ga+Y57tEd0Ny5a3cQLJG/QwyPpI5bUwtVvhVxGWVR5B0mNE1nUf/
-         mKRswG2nTQvHwq8VdrqaKv27dmrIvLI1uoGqRucz51WymM2uZLOqHp5IUnPiakA9R1U4
-         IOsy9olo24F/MFerbA64D3oy5Af47xn6u4zbBeR0iVb1CNpyXKM9ov3W8QSVtwDutnYt
-         VgDOimJxBqakrrKFgAuZdRo0ap+c991REY1nySecdz8Yz9xZ7NXVfo8F3pPwmRqZDGDj
-         sLHw==
-X-Gm-Message-State: APjAAAXoZKWV2sEEg5Dnoeztp+ve79AFHlOoIyKYnk4pAFiKuJUcib/z
-        fUXljcxQc5H3F2yyUPG++lI=
-X-Google-Smtp-Source: APXvYqyktnsAj93LGWXqW5QfEm/xoooCe6OO/kAgOLC0z7e0YXxBr4oz1kHsUw2pAjK26z5BPzZRSQ==
-X-Received: by 2002:a17:902:8d91:: with SMTP id v17mr35632917plo.53.1580936515173;
-        Wed, 05 Feb 2020 13:01:55 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c15sm392218pfo.137.2020.02.05.13.01.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Feb 2020 13:01:53 -0800 (PST)
-Date:   Wed, 5 Feb 2020 13:01:50 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/90] 5.4.18-stable review
-Message-ID: <20200205210150.GA18483@roeck-us.net>
-References: <20200203161917.612554987@linuxfoundation.org>
- <9a5a92f2-6e28-a9ab-a851-8d7e56482df6@roeck-us.net>
- <20200205151357.GB1236691@kroah.com>
- <20200205162429.GB25403@roeck-us.net>
- <20200205193008.GC1327971@kroah.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1GKmfOgEfc+T65S9fe0HlKXKx9NnWDi37nRmrX7afPE=;
+        b=jymm9LHzPbPXQv6Z8Hk28GmfyNNWgCeUZKpE1Z3xuNzrSyarGDsbsBm1NiRrEn51G3
+         pC5hy3nerEAp+niiQswswfZ3uQLVIzcPoJaj9uhwTOC7LxqkV+EE3o+0S2a0IKr01WCS
+         +A0oHyo2IRF0rNgVBGj0vkaY/3fr6PeLk5aUPYrM4tJ4gGRBolHqfF7MV7180NN2G9T6
+         pOO9NKR6zPNLYU+xtLmBsSvWJzEpF7ZBFCbsewTr6DT1kUTW9ecauOeFG+b70wHmv2u0
+         kbtW3EnXzNKs2i4cStAt2MKPRN9dAtncioQAIYodANqWZwLk7Yugyb/02trw+iO7Zspj
+         pluA==
+X-Gm-Message-State: APjAAAW0Fyel8LubGX7jWvNW5xoQ8D2P0qrG5tOzBeuHPj7KCRU94WmG
+        NTKvu6jmIAvKTPJmkMjcYn6WxtOJVS8=
+X-Google-Smtp-Source: APXvYqyItlB2yXfCMAOo4ljBCXUyqu5U37x8g0ORLqtoH+jF+mmeOfpjwra/9H+MV41tU0RO7SqhCg==
+X-Received: by 2002:a17:902:d711:: with SMTP id w17mr37810456ply.303.1580936535813;
+        Wed, 05 Feb 2020 13:02:15 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id f8sm648797pjg.28.2020.02.05.13.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 13:02:15 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
+        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        Jon Flatley <jflat@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 3/3] platform/chrome: typec: Update port info from EC
+Date:   Wed,  5 Feb 2020 12:59:54 -0800
+Message-Id: <20200205205954.84503-4-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200205205954.84503-1-pmalani@chromium.org>
+References: <20200205205954.84503-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205193008.GC1327971@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 07:30:08PM +0000, Greg Kroah-Hartman wrote:
-> On Wed, Feb 05, 2020 at 08:24:29AM -0800, Guenter Roeck wrote:
-> > On Wed, Feb 05, 2020 at 03:13:57PM +0000, Greg Kroah-Hartman wrote:
-> > > On Tue, Feb 04, 2020 at 06:37:38AM -0800, Guenter Roeck wrote:
-> > > > On 2/3/20 8:19 AM, Greg Kroah-Hartman wrote:
-> > > > > This is the start of the stable review cycle for the 5.4.18 release.
-> > > > > There are 90 patches in this series, all will be posted as a response
-> > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > let me know.
-> > > > > 
-> > > > > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> > > > > Anything received after that time might be too late.
-> > > > > 
-> > > > 
-> > > > Building i386:allyesconfig ... failed
-> > > > Building i386:allmodconfig ... failed
-> > > > --------------
-> > > > Error log:
-> > > > In file included from arch/x86/kernel/pci-dma.c:2:
-> > > > include/linux/dma-direct.h:29:20: error: conflicting types for 'dma_capable'
-> > > >    29 | static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
-> > > >       |                    ^~~~~~~~~~~
-> > > > In file included from include/linux/dma-direct.h:12,
-> > > >                  from arch/x86/kernel/pci-dma.c:2:
-> > > > arch/x86/include/asm/dma-direct.h:5:6: note: previous declaration of 'dma_capable' was here
-> > > >     5 | bool dma_capable(struct device *dev, dma_addr_t addr, size_t size);
-> > > 
-> > > Ok, I think this is now resolved with a patch that Sasha added.
-> > > 
-> > > I have pushed out a -rc4 that _should_ build and boot properly.
-> > > 
-> > The i386 build still fails with v5.4.17-99-gbd0c6624a110 (-rc4).
-> 
-> Crap.
-> 
-> Ok, let me get some food and then try to figure this out...
-> 
+After registering the ports at probe, get the current port information
+from EC and update the Type C connector class ports accordingly.
 
-# bad: [bd0c6624a110d0f667cd2f3636f88e8de9b75851] Linux 5.4.18-rc4
-# good: [313c8460cf0290fb1b9f71a20573fc32ac6c9cee] Linux 5.4.17
-git bisect start 'HEAD' 'v5.4.17'
-# good: [7c8bd91288c71011d793de1926a30182382141a0] parisc: Use proper printk format for resource_size_t
-git bisect good 7c8bd91288c71011d793de1926a30182382141a0
-# good: [67040c483ee8137adb12e20bb6448786455f4de6] r8152: Disable PLA MCU clock speed down
-git bisect good 67040c483ee8137adb12e20bb6448786455f4de6
-# good: [b3f55c9d709e6dcf96af5230295e631f0cbc3a8f] netfilter: nf_tables_offload: fix check the chain offload flag
-git bisect good b3f55c9d709e6dcf96af5230295e631f0cbc3a8f
-# good: [87bd4bf79429566adf306b8b133625604460b7c2] perf report: Fix no libunwind compiled warning break s390 issue
-git bisect good 87bd4bf79429566adf306b8b133625604460b7c2
-# good: [f831fda5fe86918fcb049721fba779ba2300c022] ASoC: topology: fix soc_tplg_fe_link_create() - link->dobj initialization order
-git bisect good f831fda5fe86918fcb049721fba779ba2300c022
-# good: [cc47538aebee48bb7626c84607116e43f57118d5] tracing/uprobe: Fix to make trace_uprobe_filter alignment safe
-git bisect good cc47538aebee48bb7626c84607116e43f57118d5
-# bad: [26f444bf728054ad23e5888bdd4ffa899e364b45] dma-direct: unify the dma_capable definitions
-git bisect bad 26f444bf728054ad23e5888bdd4ffa899e364b45
-# first bad commit: [26f444bf728054ad23e5888bdd4ffa899e364b45] dma-direct: unify the dma_capable definitions
+Co-developed-by: Jon Flatley <jflat@chromium.org>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
+ drivers/platform/chrome/cros_ec_typec.c | 88 ++++++++++++++++++++++++-
+ 1 file changed, 87 insertions(+), 1 deletion(-)
 
-Reverting 26f444bf728054ad23e5888bdd4ffa899e364b45 fixes that problem, but
-results in other build failures. After dropping this commit, another bisect yields:
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index b8edcfaa8a5297..f6aeba5bdc4972 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -153,6 +153,80 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
+ 	return ret;
+ }
+ 
++static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
++		int port_num, struct ec_response_usb_pd_control *resp)
++{
++	struct typec_port *port = typec->ports[port_num];
++	enum typec_orientation polarity;
++
++	if (!resp->enabled)
++		polarity = TYPEC_ORIENTATION_NONE;
++	else if (!resp->polarity)
++		polarity = TYPEC_ORIENTATION_NORMAL;
++	else
++		polarity = TYPEC_ORIENTATION_REVERSE;
++
++	typec_set_pwr_role(port, resp->role ? TYPEC_SOURCE : TYPEC_SINK);
++	typec_set_orientation(port, polarity);
++}
++
++static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
++		int port_num, struct ec_response_usb_pd_control_v1 *resp)
++{
++	struct typec_port *port = typec->ports[port_num];
++	enum typec_orientation polarity;
++
++	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
++		polarity = TYPEC_ORIENTATION_NONE;
++	else if (!resp->polarity)
++		polarity = TYPEC_ORIENTATION_NORMAL;
++	else
++		polarity = TYPEC_ORIENTATION_REVERSE;
++	typec_set_orientation(port, polarity);
++	typec_set_data_role(port, resp->role & PD_CTRL_RESP_ROLE_DATA ?
++			TYPEC_HOST : TYPEC_DEVICE);
++	typec_set_pwr_role(port, resp->role & PD_CTRL_RESP_ROLE_POWER ?
++			TYPEC_SOURCE : TYPEC_SINK);
++	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
++			TYPEC_SOURCE : TYPEC_SINK);
++}
++
++static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
++{
++	struct ec_params_usb_pd_control req;
++	struct ec_response_usb_pd_control_v1 resp;
++	int ret;
++
++	if (port_num < 0 || port_num >= typec->num_ports) {
++		dev_err(typec->dev, "cannot get status for invalid port %d\n",
++			port_num);
++		return -EINVAL;
++	}
++
++	req.port = port_num;
++	req.role = USB_PD_CTRL_ROLE_NO_CHANGE;
++	req.mux = USB_PD_CTRL_MUX_NO_CHANGE;
++	req.swap = USB_PD_CTRL_SWAP_NONE;
++
++	ret = cros_typec_ec_command(typec, typec->cmd_ver,
++				    EC_CMD_USB_PD_CONTROL, &req, sizeof(req),
++				    &resp, sizeof(resp));
++	if (ret < 0)
++		return ret;
++
++	dev_dbg(typec->dev, "Enabled %d: 0x%hhx\n", port_num, resp.enabled);
++	dev_dbg(typec->dev, "Role %d: 0x%hhx\n", port_num, resp.role);
++	dev_dbg(typec->dev, "Polarity %d: 0x%hhx\n", port_num, resp.polarity);
++	dev_dbg(typec->dev, "State %d: %s\n", port_num, resp.state);
++
++	if (typec->cmd_ver == 1)
++		cros_typec_set_port_params_v1(typec, port_num, &resp);
++	else
++		cros_typec_set_port_params_v0(typec, port_num,
++			(struct ec_response_usb_pd_control *) &resp);
++
++	return 0;
++}
+ 
+ static int cros_typec_get_num_ports(struct cros_typec_data *typec)
+ {
+@@ -219,7 +293,7 @@ static int cros_typec_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct cros_typec_data *typec;
+-	int ret;
++	int ret, i;
+ 
+ 	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
+ 	if (!typec)
+@@ -242,7 +316,19 @@ static int cros_typec_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	for (i = 0; i < typec->num_ports; i++) {
++		ret = cros_typec_port_update(typec, i);
++		if (ret < 0)
++			goto unregister_ports;
++	}
++
+ 	return 0;
++
++unregister_ports:
++	for (i = 0; i < typec->num_ports; i++)
++		if (typec->ports[i])
++			typec_unregister_port(typec->ports[i]);
++	return ret;
+ }
+ 
+ static struct platform_driver cros_typec_driver = {
+-- 
+2.25.0.341.g760bfbb309-goog
 
-# bad: [56ea21e523a5ebf53e4ce88bc743c60c480d42ff] Linux 5.4.18-rc4
-# good: [313c8460cf0290fb1b9f71a20573fc32ac6c9cee] Linux 5.4.17
-git bisect start 'HEAD' 'v5.4.17'
-# good: [7c8bd91288c71011d793de1926a30182382141a0] parisc: Use proper printk format for resource_size_t
-git bisect good 7c8bd91288c71011d793de1926a30182382141a0
-# good: [afbfe89dc11d19769477c5378a7164837baf75be] r8152: disable U2P3 for RTL8153B
-git bisect good afbfe89dc11d19769477c5378a7164837baf75be
-# good: [8403906c74753734338665be315175ddd1e03f5e] netfilter: conntrack: sctp: use distinct states for new SCTP connections
-git bisect good 8403906c74753734338665be315175ddd1e03f5e
-# good: [6b1562623df22cd81bf2138d880915029bbd414c] dm thin: fix use-after-free in metadata_pre_commit_callback
-git bisect good 6b1562623df22cd81bf2138d880915029bbd414c
-# bad: [705430d0039088973d204feea9eb0b7740509194] mm/migrate.c: also overwrite error when it is bigger than zero
-git bisect bad 705430d0039088973d204feea9eb0b7740509194
-# bad: [180dafcb1d1c0ee38f935810fe18d02eb7658c9f] dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
-git bisect bad 180dafcb1d1c0ee38f935810fe18d02eb7658c9f
-# good: [87bd4bf79429566adf306b8b133625604460b7c2] perf report: Fix no libunwind compiled warning break s390 issue
-git bisect good 87bd4bf79429566adf306b8b133625604460b7c2
-# first bad commit: [180dafcb1d1c0ee38f935810fe18d02eb7658c9f] dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
-
-Dropping that patch as well fixes the problem for me.
-
-Guenter
