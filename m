@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C530C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8936BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE0022314
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611B82465A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBESUi (ORCPT
+        id S1727913AbgBESUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:20:38 -0500
-Received: from mga14.intel.com ([192.55.52.115]:20934 "EHLO mga14.intel.com"
+        Wed, 5 Feb 2020 13:20:41 -0500
+Received: from mga14.intel.com ([192.55.52.115]:20940 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbgBESU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:20:27 -0500
+        id S1727505AbgBESU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:20:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:20:25 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:20:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
-   d="scan'208";a="279447755"
+   d="scan'208";a="279447786"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Feb 2020 10:20:25 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Feb 2020 10:20:26 -0800
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -54,9 +54,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for user-mode Shadow Stack protection
-Date:   Wed,  5 Feb 2020 10:19:13 -0800
-Message-Id: <20200205181935.3712-6-yu-cheng.yu@intel.com>
+Subject: [RFC PATCH v9 11/27] drm/i915/gvt: Change _PAGE_DIRTY to _PAGE_DIRTY_BITS
+Date:   Wed,  5 Feb 2020 10:19:19 -0800
+Message-Id: <20200205181935.3712-12-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200205181935.3712-1-yu-cheng.yu@intel.com>
 References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
@@ -67,74 +67,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce Kconfig option: X86_INTEL_SHADOW_STACK_USER.
-
-Shadow Stack (SHSTK) provides protection against function return address
-corruption.  It is active when the kernel has this feature enabled, and
-both the processor and the application support it.  When this feature is
-enabled, legacy non-SHSTK applications continue to work, but without SHSTK
-protection.
-
-The user-mode SHSTK protection is only implemented for the 64-bit kernel.
-IA32 applications are supported under the compatibility mode.
+After the introduction of _PAGE_DIRTY_SW, a dirty PTE can have either
+_PAGE_DIRTY_HW or _PAGE_DIRTY_SW.  Change _PAGE_DIRTY to _PAGE_DIRTY_BITS.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/Kconfig  | 22 ++++++++++++++++++++++
- arch/x86/Makefile |  7 +++++++
- 2 files changed, 29 insertions(+)
+ drivers/gpu/drm/i915/gvt/gtt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5e8949953660..6c34b701c588 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1974,6 +1974,28 @@ config X86_INTEL_TSX_MODE_AUTO
- 	  side channel attacks- equals the tsx=auto command line parameter.
- endchoice
+diff --git a/drivers/gpu/drm/i915/gvt/gtt.c b/drivers/gpu/drm/i915/gvt/gtt.c
+index 4b04af569c05..e467ca182633 100644
+--- a/drivers/gpu/drm/i915/gvt/gtt.c
++++ b/drivers/gpu/drm/i915/gvt/gtt.c
+@@ -1201,7 +1201,7 @@ static int split_2MB_gtt_entry(struct intel_vgpu *vgpu,
+ 	}
  
-+config X86_INTEL_CET
-+	def_bool n
-+
-+config ARCH_HAS_SHSTK
-+	def_bool n
-+
-+config X86_INTEL_SHADOW_STACK_USER
-+	prompt "Intel Shadow Stack for user-mode"
-+	def_bool n
-+	depends on CPU_SUP_INTEL && X86_64
-+	select ARCH_USES_HIGH_VMA_FLAGS
-+	select X86_INTEL_CET
-+	select ARCH_HAS_SHSTK
-+	---help---
-+	  Shadow Stack (SHSTK) provides protection against program
-+	  stack corruption.  It is active when the kernel has this
-+	  feature enabled, and the processor and the application
-+	  support it.  When this feature is enabled, legacy non-SHSTK
-+	  applications continue to work, but without SHSTK protection.
-+
-+	  If unsure, say y.
-+
- config EFI
- 	bool "EFI runtime service support"
- 	depends on ACPI
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 94df0868804b..c34f5befa4c8 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -149,6 +149,13 @@ ifdef CONFIG_X86_X32
- endif
- export CONFIG_X86_X32_ABI
+ 	/* Clear dirty field. */
+-	se->val64 &= ~_PAGE_DIRTY;
++	se->val64 &= ~_PAGE_DIRTY_BITS;
  
-+# Check assembler Shadow Stack suppot
-+ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-+  ifeq ($(call as-instr, saveprevssp, y),)
-+      $(error CONFIG_X86_INTEL_SHADOW_STACK_USER not supported by the assembler)
-+  endif
-+endif
-+
- #
- # If the function graph tracer is used with mcount instead of fentry,
- # '-maccumulate-outgoing-args' is needed to prevent a GCC bug
+ 	ops->clear_pse(se);
+ 	ops->clear_ips(se);
 -- 
 2.21.0
 
