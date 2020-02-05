@@ -2,125 +2,172 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E8C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978F4C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A452082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7DC217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNH/YUza"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWIK/VhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgBEATK (ORCPT
+        id S1727722AbgBEAV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:19:10 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:37269 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgBEATJ (ORCPT
+        Tue, 4 Feb 2020 19:21:29 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45808 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727537AbgBEAV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:19:09 -0500
-Received: by mail-yw1-f68.google.com with SMTP id l5so786624ywd.4;
-        Tue, 04 Feb 2020 16:19:08 -0800 (PST)
+        Tue, 4 Feb 2020 19:21:28 -0500
+Received: by mail-qk1-f196.google.com with SMTP id x1so124002qkl.12;
+        Tue, 04 Feb 2020 16:21:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NIMxNLCcbWdI9pD04SjD3Y49RygU2eutIYBAiu1d0NQ=;
-        b=kNH/YUzawP+43dSMN7Q/MuLlyAhji6r3ufngpALGZyf5tggPBwRgsMIA6Hu/D9bA6A
-         D7x8zshF5PASFC3oztn4phdjSD+oSVQjBPfSI/nUZ7jOlcJFF1eEuuffiqDyY1n1Us26
-         vkojZ56eiO52mbJGxFN9ExLX6imGA1Ez6g6vgD2fTvDyxAGk4idW9EIBICRs2JA2ulWl
-         gRAHC0S770XSNTKEY8Z425DSL3K7L+4jVSMfpeYFPNz/BrpcenLW5gF1lLxb0jwJDSpr
-         +AOVSPDxb1FvEqvX4xW5h8DPPY4WxkqLZ5ryZ4KsFmmFuwggdX809RS0UzmthCSvxD59
-         6DAg==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wj6LT20dLajifXtV99Zcoip6WQEuOXXdWvQjZR632DQ=;
+        b=cWIK/VhIEfvG6R7vLQUjiD2USWqk74e7Y8UP8G29xerXGSihB/jO4Jdic3n/iuC+Cc
+         i9qiETRp7a7wDh9zqTYFNQXIVI30ANvjbpAh4zGXfCXOxwrITuJ8nE88eBt27l3rfGCc
+         I4CW9lVK9212KAc2INscHM2lFTtbrwv4MslXEwQ4DP+c56mPYLMTwyvtzhm+htnm8z1c
+         fKO8c1IPtUKOUL15GzDv8NJKxMQJyXqXyiLeUo0oAN4TrX+y1ZvnzUbtBgtXvJvpIS7G
+         ldAswVGtddXIuwYpe2Tyg6c8ic8z+1NuyfDlfXfBJVAGNuY1jFOTlTey9aE0233Lm53k
+         zNjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=NIMxNLCcbWdI9pD04SjD3Y49RygU2eutIYBAiu1d0NQ=;
-        b=UDlQHF8n6Kf3Q3UVUNb0lKKqLmbMAMVMSkB3fIBiWZVGOo+o2vBhMPKe5UCy1zoxL1
-         Gt5CFm65uDuSBYfxJf+pd+Htj9rG7GAMw+t4YQlx+e4wATFBaC8l7dbITjul5B3EdqND
-         psEsZsJBn7+3ccmeDkFkaBEWO33zahPi5v2upbofLV6MVtD7uKPE5EVEB9DItMQb9aT9
-         DAeQTkmvM0dYiicYapHjJa13r23GnbOSOIeS5aB2Yz70GLKTN55ULnx059Y5jvosghL/
-         15QlRC1AXKhxWxbfy3+jPE7C/BsyJgV8mWM+gsjOrDvLI7S4nBfCl9FA5d298w4ObY6H
-         Tn9w==
-X-Gm-Message-State: APjAAAXzCysOyIPMv5kjH4zuuTbrt+ynhda0UpMkAlMhUozir8dqC4dv
-        vH6ItCGw2TraJ+qct5h40aQ=
-X-Google-Smtp-Source: APXvYqwOMJ/fJzT9iHJ8EtyebqNOkpzqMGzGkLU+0qEGaS2WXqxmiJAiJRH2Fim/xt/KGKTmLPBAHA==
-X-Received: by 2002:a81:a903:: with SMTP id g3mr7778923ywh.427.1580861948493;
-        Tue, 04 Feb 2020 16:19:08 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id y129sm10877046ywd.40.2020.02.04.16.19.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Feb 2020 16:19:08 -0800 (PST)
-Subject: Re: [PATCH v2 7/7] Documentation: Add kunit_shutdown to
- kernel-parameters.txt
-To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
-        keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com
-Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
-        mcgrof@kernel.org, knut.omang@oracle.com,
-        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-8-brendanhiggins@google.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <d187686e-a175-e30b-2af9-6e00822fed5c@gmail.com>
-Date:   Tue, 4 Feb 2020 18:19:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=Wj6LT20dLajifXtV99Zcoip6WQEuOXXdWvQjZR632DQ=;
+        b=tpjXQhLml7y2s+2t91gWN3EFsn7RweAUnX5ST2HI3XkUgPEDPArNVCiK7dJbM4lSI3
+         LVBbfolXigp84MyECA4D4nN+uUFehbayfXOOYh/6bQfjOOox+QUD+i8mNiRTCu0a0TJB
+         7LwZcZkVGZ4q5zpQxMnNBo8qHxixVWZRJoaG+xZiwBVbp5fk8oaFrsP1kiZ11WHrW7ry
+         adynQF/qTfYPWO2iMJjRV/Af8hz2gyUzCnfEAv/FcvLw2nVoUlREaDfy4Lh8FAfsr18Z
+         h4YmL9e3A4fu8vNWx0LxHLc03lBg5ZKtYn81mq/k4lz1DM4rw6XUIfdOt63tXVELHMES
+         0IyQ==
+X-Gm-Message-State: APjAAAUoqKdWdmc8a8sZUASz2XrX/31Od+RLjdNXIJX5nckz2qTssDll
+        uBNrCVcxQYlkjK7sFOpVax4=
+X-Google-Smtp-Source: APXvYqzH9Sr3l/kGruhLbmvfKoKFWin30NBwVhgSosWEkPbFkoAMTLswz872Ls26QcHZQ5E9RL1HZw==
+X-Received: by 2002:ae9:f714:: with SMTP id s20mr30691996qkg.236.1580862086239;
+        Tue, 04 Feb 2020 16:21:26 -0800 (PST)
+Received: from brcpsddjunho-l.padtec.com.br (apolo.padtec.com.br. [200.228.158.130])
+        by smtp.gmail.com with ESMTPSA id z8sm12850825qth.16.2020.02.04.16.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 16:21:25 -0800 (PST)
+From:   Daniel Junho <djunho@gmail.com>
+X-Google-Original-From: Daniel Junho <djunho@padtec.com.br>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        hennerich@blackfin.uclinux.org, patrick.vasseur@c-s.fr
+Subject: [PATCH] dt-bindings: iio: adc: ad7923: Add dt-bindings for AD7928
+Date:   Tue,  4 Feb 2020 21:21:21 -0300
+Message-Id: <20200205002121.30941-1-djunho@padtec.com.br>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200130230812.142642-8-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 5:08 PM, Brendan Higgins wrote:
-> Add kunit_shutdown, an option to specify that the kernel shutsdown after
-> running KUnit tests, to the kernel-parameters.txt documentation.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index ade4e6ec23e03..522fd8bdec949 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2054,6 +2054,13 @@
->  			0: force disabled
->  			1: force enabled
->  
-> +	kunit_shutdown	[KERNEL UNIT TESTING FRAMEWORK] Shutdown kernel after
-> +			running tests.
+From: Daniel Junho <djunho@gmail.com>
 
-                        running built-in tests.  Tests configured as modules will not be run.
+Add device tree bindings documentation for AD7923 adc in YAML format.
 
-My wording might not be consistent with KUnit terminology regarding "built-in" and "modules".
-Feel free to properly word smith.
+Tested with:
+make ARCH=arm dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+make ARCH=arm dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
 
+Signed-off-by: Daniel Junho <djunho@gmail.com>
+---
 
-> +			Default:	(flag not present) don't shutdown
-> +			poweroff:	poweroff the kernel after running tests
-> +			halt:		halt the kernel after running tests
-> +			reboot:		reboot the kernel after running tests
-> +
->  	kvm.ignore_msrs=[KVM] Ignore guest accesses to unhandled MSRs.
->  			Default is 0 (don't ignore, but inject #GP)
->  
-> 
+Hi,
+
+I got maintainers from the driver authors list. Let me know if this is
+fine.
+
+Thanks.
+
+ .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+new file mode 100644
+index 000000000000..8097441c97be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7923.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7923 and similars with 4 and 8 Channel ADCs.
++
++maintainers:
++  - Michael Hennerich <hennerich@blackfin.uclinux.org>"
++  - Patrick Vasseur <patrick.vasseur@c-s.fr>"
++
++description: |
++  Analog Devices AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and AD7908,
++   AD7918, AD7928 8 Channels ADCs.
++
++  Specifications about the part can be found at:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7923.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7904_7914_7924.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7908_7918_7928.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7904
++      - adi,ad7914
++      - adi,ad7923
++      - adi,ad7924
++      - adi,ad7908
++      - adi,ad7918
++      - adi,ad7928
++
++  reg:
++    maxItems: 1
++
++  refin-supply:
++    description: |
++      The regulator supply for ADC reference voltage.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ad7928: adc@0 {
++        compatible = "adi,ad7928";
++        reg = <0>;
++        spi-max-frequency = <25000000>;
++        refin-supply = <&adc_vref>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++      };
++    };
+-- 
+2.25.0
 
