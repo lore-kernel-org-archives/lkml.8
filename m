@@ -2,340 +2,227 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CF8C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE584C352A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C9021927
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="STDP4ci2"
+	by mail.kernel.org (Postfix) with ESMTP id AF2E921D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgBEPkS (ORCPT
+        id S1727116AbgBEPlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:40:18 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36702 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726592AbgBEPkS (ORCPT
+        Wed, 5 Feb 2020 10:41:46 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:34210 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgBEPlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:40:18 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015FWwvf008590;
-        Wed, 5 Feb 2020 16:40:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=WdNadQvxNBXO+0tm2iC0eiSJG8J7/mehWsNGj64gZlw=;
- b=STDP4ci2p3F4IwppsnFjj8Y6G5zVYxUOAGHB5d/lgrSWq0HWHgEeacREUenF0JBZBxH/
- dXysb9Oi0dLO87O832Vw5/0A7cGf7adsyWixRC5BkCI3b1sQQj0erUs36Gx3K78ln5y0
- xEoxuG+zqnHcvcFS583IweXAsgv3G6524QnFJoPJ0UOaPFN3QDxHWGPX55q/OCmK1oRW
- 0yX0d4X1UDo60DwNrzzCHPHXftvDX5mFSxTHj/J/euC8n+v+JJOLp+bv+0VuBM7UJwsl
- QuJERc6xmLC4TTCqEx2CFOwcwdl/26WgrAmGwh424pmVf8vZFlXao4vwoKIVTMVqTRBT xw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhktqwj6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 16:40:05 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30698100038;
-        Wed,  5 Feb 2020 16:40:01 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B8462C38AF;
-        Wed,  5 Feb 2020 16:40:01 +0100 (CET)
-Received: from [10.48.1.171] (10.75.127.44) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb
- 2020 16:40:00 +0100
-Subject: Re: [PATCHv2] i2c: i2c-stm32f7: allow controller to be wakeup-source
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1580752328-26009-1-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <883584b6-ceab-b199-3118-e801e5109e10@st.com>
-Date:   Wed, 5 Feb 2020 16:40:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1580752328-26009-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 5 Feb 2020 10:41:45 -0500
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id DCD5467A6FE;
+        Wed,  5 Feb 2020 16:41:41 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Feb 2020
+ 16:41:41 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.005; Wed, 5 Feb 2020 16:41:41 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Adam Ford <aford173@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
+        "NXP Linux Team" <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
+Thread-Topic: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
+Thread-Index: AQHVqxK76SDACaL8QUasrdsECo8DbaeqwvaAgAAKqICAYkD9AA==
+Date:   Wed, 5 Feb 2020 15:41:41 +0000
+Message-ID: <db801b5e-0482-0379-c19e-5c293532c493@kontron.de>
+References: <20191205021924.25188-1-aford173@gmail.com>
+ <20191205021924.25188-6-aford173@gmail.com>
+ <DB7PR04MB517877B39D4659568F69B813875C0@DB7PR04MB5178.eurprd04.prod.outlook.com>
+ <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
+In-Reply-To: <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_04:2020-02-04,2020-02-05 signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <32680A5ECEBE5747A3268A81C8330511@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: DCD5467A6FE.A43F0
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, devicetree@vger.kernel.org,
+        festevam@gmail.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com, peng.fan@nxp.com,
+        ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de,
+        shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all
-
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Thanks
-
-On 2/3/20 6:52 PM, Alain Volmat wrote:
-> Allow the i2c-stm32f7 controller to become a wakeup-source
-> of the system. In such case, when a slave is registered to the
-> I2C controller, receiving a I2C message targeting that registered
-> slave address wakes up the suspended system.
-> 
-> In order to be able to wake-up, the I2C controller DT node
-> must have the property wakeup-source defined and a slave
-> must be registered.
-> 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  v2: - enclose _suspend and _resume functions (and related) with
->        #ifdef CONFIG_PM_SLEEP
->      - remove the __maybe_unused for functions enclosed with CONFIG_PM_SLEEP
->      - move stm32f7_i2c_enable_wakeup function upper in the file to avoid
->        having a prototype.
->  
->  drivers/i2c/busses/i2c-stm32f7.c | 107 +++++++++++++++++++++++++------
->  1 file changed, 86 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 5c3e8ac6ad92..378956ac6d1d 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -29,6 +29,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pinctrl/consumer.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pm_wakeirq.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
->  #include <linux/slab.h>
-> @@ -49,6 +50,7 @@
->  
->  /* STM32F7 I2C control 1 */
->  #define STM32F7_I2C_CR1_PECEN			BIT(23)
-> +#define STM32F7_I2C_CR1_WUPEN			BIT(18)
->  #define STM32F7_I2C_CR1_SBC			BIT(16)
->  #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
->  #define STM32F7_I2C_CR1_TXDMAEN			BIT(14)
-> @@ -301,6 +303,7 @@ struct stm32f7_i2c_msg {
->   * @dma: dma data
->   * @use_dma: boolean to know if dma is used in the current transfer
->   * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
-> + * @wakeup_src: boolean to know if the device is a wakeup source
->   */
->  struct stm32f7_i2c_dev {
->  	struct i2c_adapter adap;
-> @@ -323,6 +326,7 @@ struct stm32f7_i2c_dev {
->  	struct stm32_i2c_dma *dma;
->  	bool use_dma;
->  	struct regmap *regmap;
-> +	bool wakeup_src;
->  };
->  
->  /*
-> @@ -1691,6 +1695,24 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
->  	return ret;
->  }
->  
-> +static void stm32f7_i2c_enable_wakeup(struct stm32f7_i2c_dev *i2c_dev,
-> +				      bool enable)
-> +{
-> +	void __iomem *base = i2c_dev->base;
-> +	u32 mask = STM32F7_I2C_CR1_WUPEN;
-> +
-> +	if (!i2c_dev->wakeup_src)
-> +		return;
-> +
-> +	if (enable) {
-> +		device_set_wakeup_enable(i2c_dev->dev, true);
-> +		stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, mask);
-> +	} else {
-> +		device_set_wakeup_enable(i2c_dev->dev, false);
-> +		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1, mask);
-> +	}
-> +}
-> +
->  static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(slave->adapter);
-> @@ -1717,6 +1739,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
-> +		stm32f7_i2c_enable_wakeup(i2c_dev, true);
-> +
->  	if (id == 0) {
->  		/* Configure Own Address 1 */
->  		oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
-> @@ -1758,6 +1783,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  
->  	ret = 0;
->  pm_free:
-> +	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
-> +		stm32f7_i2c_enable_wakeup(i2c_dev, false);
-> +
->  	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
-> @@ -1791,8 +1819,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
->  
->  	i2c_dev->slave[id] = NULL;
->  
-> -	if (!(stm32f7_i2c_is_slave_registered(i2c_dev)))
-> +	if (!stm32f7_i2c_is_slave_registered(i2c_dev)) {
->  		stm32f7_i2c_disable_irq(i2c_dev, STM32F7_I2C_ALL_IRQ_MASK);
-> +		stm32f7_i2c_enable_wakeup(i2c_dev, false);
-> +	}
->  
->  	pm_runtime_mark_last_busy(i2c_dev->dev);
->  	pm_runtime_put_autosuspend(i2c_dev->dev);
-> @@ -1879,6 +1909,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  		return irq_error ? : -ENOENT;
->  	}
->  
-> +	i2c_dev->wakeup_src = of_property_read_bool(pdev->dev.of_node,
-> +						    "wakeup-source");
-> +
->  	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(i2c_dev->clk)) {
->  		dev_err(&pdev->dev, "Error: Missing controller clock\n");
-> @@ -1985,6 +2018,16 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  		goto clk_free;
->  	}
->  
-> +	if (i2c_dev->wakeup_src) {
-> +		device_set_wakeup_capable(i2c_dev->dev, true);
-> +
-> +		ret = dev_pm_set_wake_irq(i2c_dev->dev, irq_event);
-> +		if (ret) {
-> +			dev_err(i2c_dev->dev, "Failed to set wake up irq\n");
-> +			goto clr_wakeup_capable;
-> +		}
-> +	}
-> +
->  	platform_set_drvdata(pdev, i2c_dev);
->  
->  	pm_runtime_set_autosuspend_delay(i2c_dev->dev,
-> @@ -2014,6 +2057,13 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  	pm_runtime_set_suspended(i2c_dev->dev);
->  	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
->  
-> +	if (i2c_dev->wakeup_src)
-> +		dev_pm_clear_wake_irq(i2c_dev->dev);
-> +
-> +clr_wakeup_capable:
-> +	if (i2c_dev->wakeup_src)
-> +		device_set_wakeup_capable(i2c_dev->dev, false);
-> +
->  	if (i2c_dev->dma) {
->  		stm32_i2c_dma_free(i2c_dev->dma);
->  		i2c_dev->dma = NULL;
-> @@ -2032,6 +2082,15 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
->  	i2c_del_adapter(&i2c_dev->adap);
->  	pm_runtime_get_sync(i2c_dev->dev);
->  
-> +	if (i2c_dev->wakeup_src) {
-> +		dev_pm_clear_wake_irq(i2c_dev->dev);
-> +		/*
-> +		 * enforce that wakeup is disabled and that the device
-> +		 * is marked as non wakeup capable
-> +		 */
-> +		device_init_wakeup(i2c_dev->dev, false);
-> +	}
-> +
->  	pm_runtime_put_noidle(i2c_dev->dev);
->  	pm_runtime_disable(i2c_dev->dev);
->  	pm_runtime_set_suspended(i2c_dev->dev);
-> @@ -2073,8 +2132,8 @@ static int __maybe_unused stm32f7_i2c_runtime_resume(struct device *dev)
->  	return 0;
->  }
->  
-> -static int __maybe_unused
-> -stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
-> +#ifdef CONFIG_PM_SLEEP
-> +static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
->  {
->  	int ret;
->  	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
-> @@ -2095,8 +2154,7 @@ stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
->  	return ret;
->  }
->  
-> -static int __maybe_unused
-> -stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
-> +static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
->  {
->  	u32 cr1;
->  	int ret;
-> @@ -2127,41 +2185,48 @@ stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
->  	return ret;
->  }
->  
-> -static int __maybe_unused stm32f7_i2c_suspend(struct device *dev)
-> +static int stm32f7_i2c_suspend(struct device *dev)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->  	int ret;
->  
->  	i2c_mark_adapter_suspended(&i2c_dev->adap);
-> -	ret = stm32f7_i2c_regs_backup(i2c_dev);
-> -	if (ret < 0) {
-> -		i2c_mark_adapter_resumed(&i2c_dev->adap);
-> -		return ret;
-> -	}
->  
-> -	pinctrl_pm_select_sleep_state(dev);
-> -	pm_runtime_force_suspend(dev);
-> +	if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
-> +		ret = stm32f7_i2c_regs_backup(i2c_dev);
-> +		if (ret < 0) {
-> +			i2c_mark_adapter_resumed(&i2c_dev->adap);
-> +			return ret;
-> +		}
-> +
-> +		pinctrl_pm_select_sleep_state(dev);
-> +		pm_runtime_force_suspend(dev);
-> +	}
->  
->  	return 0;
->  }
->  
-> -static int __maybe_unused stm32f7_i2c_resume(struct device *dev)
-> +static int stm32f7_i2c_resume(struct device *dev)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->  	int ret;
->  
-> -	ret = pm_runtime_force_resume(dev);
-> -	if (ret < 0)
-> -		return ret;
-> -	pinctrl_pm_select_default_state(dev);
-> +	if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
-> +		ret = pm_runtime_force_resume(dev);
-> +		if (ret < 0)
-> +			return ret;
-> +		pinctrl_pm_select_default_state(dev);
-> +
-> +		ret = stm32f7_i2c_regs_restore(i2c_dev);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
->  
-> -	ret = stm32f7_i2c_regs_restore(i2c_dev);
-> -	if (ret < 0)
-> -		return ret;
->  	i2c_mark_adapter_resumed(&i2c_dev->adap);
->  
->  	return 0;
->  }
-> +#endif
->  
->  static const struct dev_pm_ops stm32f7_i2c_pm_ops = {
->  	SET_RUNTIME_PM_OPS(stm32f7_i2c_runtime_suspend,
-> 
+SGksDQoNCk9uIDA1LjEyLjE5IDA0OjE1LCBBZGFtIEZvcmQgd3JvdGU6DQo+IE9uIFdlZCwgRGVj
+IDQsIDIwMTkgYXQgODozNyBQTSBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0K
+Pj4NCj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4+IEZyb206IEFkYW0gRm9yZCA8
+YWZvcmQxNzNAZ21haWwuY29tPg0KPj4+IFNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciA1LCAyMDE5
+IDEwOjE5IEFNDQo+Pj4gVG86IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
+Pj4+IENjOiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNvbT47IFJvYiBIZXJyaW5nIDxyb2Jo
+K2R0QGtlcm5lbC5vcmc+Ow0KPj4+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
+OyBTaGF3biBHdW8NCj4+PiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlciA8cy5o
+YXVlckBwZW5ndXRyb25peC5kZT47DQo+Pj4gUGVuZ3V0cm9uaXggS2VybmVsIFRlYW0gPGtlcm5l
+bEBwZW5ndXRyb25peC5kZT47IEZhYmlvIEVzdGV2YW0NCj4+PiA8ZmVzdGV2YW1AZ21haWwuY29t
+PjsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47DQo+Pj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4+PiBTdWJqZWN0OiBb
+UEFUQ0ggNS83XSBhcm02NDogZHRzOiBpbXg4bW06IGFkZCBHUEMgcG93ZXIgZG9tYWlucw0KPj4+
+DQo+Pj4gVGhlcmUgaXMgYSBwb3dlciBkb21haW4gY29udHJvbGxlciBvbiB0aGUgaS5YTThNIE1p
+bmkgdXNlZCBmb3IgaGFuZGxpbmcNCj4+PiBpbnRlcnJ1cHRzIGFuZCBjb250cm9sbGluZyBjZXJ0
+YWluIHBlcmlwaGVyYWxzIGxpa2UgVVNCIE9URyBhbmQgUENJZSwgd2hpY2gNCj4+PiBhcmUgY3Vy
+cmVudGx5IHVuYXZhaWxhYmxlLg0KPj4+DQo+Pj4gVGhpcyBwYXRjaCBlbmFibGVzIHN1cHBvcnQg
+dGhlIGNvbnRyb2xsZXIgaXRzZWxmIHRvIHRoZSBoZWxwIGZhY2lsaXRhdGUgZW5hYmxpbmcNCj4+
+PiBhZGRpdGlvbmFsIHBlcmlwaGVyYWxzLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogQWRhbSBG
+b3JkIDxhZm9yZDE3M0BnbWFpbC5jb20+DQo+Pj4gLS0tDQo+Pj4gICBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaSB8IDgyDQo+Pj4gKysrKysrKysrKysrKysrKysrKysr
+Ky0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
+DQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14
+OG1tLmR0c2kNCj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNp
+DQo+Pj4gaW5kZXggMjNjOGZhZDc5MzJiLi5kMDVjNWI2MTdhNGQgMTAwNjQ0DQo+Pj4gLS0tIGEv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4+PiArKysgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPj4+IEBAIC00LDYgKzQsNyBA
+QA0KPj4+ICAgICovDQo+Pj4NCj4+PiAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9pbXg4
+bW0tY2xvY2suaD4NCj4+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Bvd2VyL2lteDhtLXBvd2Vy
+Lmg+DQo+Pj4gICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+Pj4gICAjaW5j
+bHVkZSA8ZHQtYmluZGluZ3MvaW5wdXQvaW5wdXQuaD4NCj4+PiAgICNpbmNsdWRlIDxkdC1iaW5k
+aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+Pj4gQEAgLTEzLDcgKzE0LDcg
+QEANCj4+Pg0KPj4+ICAgLyB7DQo+Pj4gICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhtbSI7
+DQo+Pj4gLSAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4+PiArICAgICBpbnRlcnJ1
+cHQtcGFyZW50ID0gPCZncGM+Ow0KPj4NCj4+IE5BQ0ssIGZvciBpbXg4bW0sIGlteDhtbiAmIGZ1
+dHVyZSBpLk1YOE0gU09DLCB3ZSBkb24ndCB0cmVhdCBHUEMgYXMgaW50ZXJydXB0IGNvbnRyb2xs
+ZXIgaW4gbGludXggYW55bW9yZS4NCj4+IEFib3ZlIGNoYW5nZSB3aWxsIGJyZWFrIHRoZSBsb3cg
+cG93ZXIgbW9kZSBzdXBwb3J0KHN1c3BlbmQvcmVzdW1lKQ0KPiANCj4gV2hhdCBtYWtlcyBpdCBk
+aWZmZXJlbnQgdGhhbiB0aGUgaS5NWDhNUT8gIFRoZSBJIGJhc2ljYWxseSBjb3BpZWQgdGhpcw0K
+PiBmcm9tIHRoZSBpLk1YOE1RIGFuZCB1cGRhdGVkIHRoZSBiaXQgbG9jYXRpb25zIGFuZCB0cmll
+ZCB0byBsZWF2ZQ0KPiBldmVyeXRoaW5nIGVsc2UgdGhlIHNhbWUuDQo+IA0KPiBJJ20gT0sgd2l0
+aCByZW1vdmluZyB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIgc3R1ZmYsIGJ1dCBpZiB0aGF0J3MN
+Cj4gcmVxdWlyZWQsIEknZCBsaWtlIHRvIHVuZGVyc3RhbmQgd2h5IGl0J3Mgc3RpbGwgaW4gdGhl
+IGkuTVg4US4NCg0KSSB3b3VsZCBhbHNvIGxpa2UgdG8ga25vdyBob3cgTlhQIHBsYW5zIHRvIGlt
+cGxlbWVudCB0aGluZ3MgbGlrZSBHUEMgaW4gDQptYWlubGluZS4gSSBjdXJyZW50bHkgdXNlIGEg
+dHJlZSBbMV0gdGhhdCBkb2Vzbid0IHVzZSBhbnkgcG93ZXIgZG9tYWluIA0KZHJpdmVyIGJ1dCBV
+U0IsIExDRElGIGFuZCBNSVBJLURTSSBhcmUgd29ya2luZyBmaW5lLg0KRm9yIHRoaXMgSSBwb3J0
+ZWQgc29tZSBwYXRjaGVzIGZyb20gdGhlIGlteF81LjQuMF84ZHhscGhhbnRvbV9lciB0cmVlIGlu
+IA0KdGhlIE5YUCByZXBvc2l0b3J5IFsyXSBhbmQgYWRkZWQgYSBmZXcgc21hbGwgaGFja3MgdG8g
+ZW5hYmxlIG1pc3NpbmcgDQpjbG9ja3MsIGV0Yy4NCg0KSXMgdGhlcmUgc29tZSByb2FkbWFwIGZv
+ciB0aGUgdXBzdHJlYW0gc3VwcG9ydCBvZiB0aGUgZGlmZmVyZW50IGRyaXZlcnMgDQphbmQgZmVh
+dHVyZXMgb2YgdGhlIGkuTVg4TU0/DQoNClRoYW5rcywNCkZyaWVkZXINCg0KWzFdIGh0dHBzOi8v
+Z2l0LmtvbnRyb24tZWxlY3Ryb25pY3MuZGUvbGludXgvbGludXgvY29tbWl0cy92NS40LWt0bg0K
+WzJdIA0KaHR0cHM6Ly9zb3VyY2UuY29kZWF1cm9yYS5vcmcvZXh0ZXJuYWwvaW14L2xpbnV4LWlt
+eC9sb2cvP2g9aW14XzUuNC4wXzhkeGxwaGFudG9tX2VyDQoNCj4gDQo+IGFkYW0NCj4+DQo+PiBC
+Ug0KPj4gSmFja3kgQmFpDQo+Pg0KPj4+ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwyPjsNCj4+
+PiAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+Pj4NCj4+PiBAQCAtNDk1LDYgKzQ5Niw4NSBA
+QA0KPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19T
+UEkgODkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICNyZXNldC1jZWxscyA9IDwxPjsNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgIH07
+DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICBncGM6IGdwY0AzMDNhMDAwMCB7DQo+
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1t
+LWdwYyI7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAzYTAw
+MDAgMHgxMDAwMD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0
+LXBhcmVudCA9IDwmZ2ljPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRl
+cnJ1cHRzID0gPEdJQ19TUEkgODcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+Pj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+Pj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwzPjsNCj4+PiArDQo+Pj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdjIHsNCj4+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+Pj4gKw0K
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdjX21pcGk6IHBvd2Vy
+LWRvbWFpbkAwIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsNCj4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPElNWDhNTV9QT1dFUl9ET01BSU5fTUlQ
+ST47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPj4+ICsN
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBnY19wY2llOiBwb3dl
+ci1kb21haW5AMSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJTVg4TU1fUE9XRVJfRE9NQUlOX1BD
+SUU+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4+PiAr
+DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwZ2Nfb3RnMTogcG93
+ZXItZG9tYWluQDIgew0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+Ow0KPj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPQ0KPj4+IDxJTVg4TU1fUE9XRVJfRE9N
+QUlOX1VTQl9PVEcxPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdj
+X290ZzI6IHBvd2VyLWRvbWFpbkAzIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsNCj4+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0NCj4+PiA8SU1YOE1N
+X1BPV0VSX0RPTUFJTl9VU0JfT1RHMj47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHBnY19kZHIxOiBwb3dlci1kb21haW5ANCB7DQo+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJ
+TVg4TU1fUE9XRVJfRE9NQUlOX0REUjE+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBwZ2NfZ3B1MmQ6IHBvd2VyLWRvbWFpbkA1IHsNCj4+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsN
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PElNWDhNTV9QT1dFUl9ET01BSU5fR1BVMkQ+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBwZ2NfZ3B1OiBwb3dlci1kb21haW5ANiB7DQo+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47
+DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
+IDxJTVg4TU1fUE9XRVJfRE9NQUlOX0dQVT47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHBnY192cHU6IHBvd2VyLWRvbWFpbkA3IHsNCj4+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsN
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PElNWDhNTV9QT1dFUl9ET01BSU5fVlBVPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcGdjX2dwdTNkOiBwb3dlci1kb21haW5AOCB7DQo+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47
+DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
+IDxJTVg4TU1fUE9XRVJfRE9NQUlOX0dQVTNEPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcGdjX2Rpc3A6IHBvd2VyLWRvbWFpbkA5IHsNCj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDww
+PjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ID0gPElNWDhNTV9QT1dFUl9ET01BSU5fRElTUD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHBnY192cHVfZzE6IHBvd2VyLWRvbWFpbkBhIHsNCj4+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9
+IDwwPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVnID0gPElNWDhNTV9QT1dFUl9WUFVfRzE+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBwZ2NfdnB1X2cyOiBwb3dlci1kb21haW5AYiB7DQo+Pj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8
+MD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+ZyA9IDxJTVg4TU1fUE9XRVJfVlBVX0cyPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcGdjX3ZwdV9oMTogcG93ZXItZG9tYWluQGMgew0KPj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+
+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcg
+PSA8SU1YOE1NX1BPV0VSX1ZQVV9IMT47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB9Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+Pj4g
+KyAgICAgICAgICAgICAgICAgICAgIH07DQo+Pj4gICAgICAgICAgICAgICAgfTsNCj4+Pg0KPj4+
+ICAgICAgICAgICAgICAgIGFpcHMyOiBidXNAMzA0MDAwMDAgew0KPj4+IC0tDQo+Pj4gMi4yMC4x
+DQo+Pg0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18NCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbA0KPiA=
