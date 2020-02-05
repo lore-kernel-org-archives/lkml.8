@@ -2,99 +2,134 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55A0C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D07C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E85E214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580945091;
-	bh=awwg/drPT6NpUw5oW833nxqJgOrW4ij+PIWl0U/eMIw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=dA/8a0L754Ppt0WQdnPrvMyjjXclobHls6DXDDB7Nt6ejWxskyMmSBiH7ZGXzKVv9
-	 fE4J8kGTSqvyEP04vfmUc+0wVOgOhrLb0Cml9/rabLfJ66/Ox3e4bhtMSmvMHEn9qH
-	 kezcJHRXNMMlolok0whNApmAXkY5cN99sw8gnehU=
+	by mail.kernel.org (Postfix) with ESMTP id 42CCC2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBEXYu (ORCPT
+        id S1727519AbgBEX0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:24:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 18:26:07 -0500
+Received: from mga17.intel.com ([192.55.52.151]:17979 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbgBEXYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:24:50 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF4E52082E;
-        Wed,  5 Feb 2020 23:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580945090;
-        bh=awwg/drPT6NpUw5oW833nxqJgOrW4ij+PIWl0U/eMIw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PRt1hIQ39qgbYrX5eh0lEQG2dy0H2kmVTi1Br+JjKIfZqW06HSqtW6WjxuFVSFPNB
-         Nf1m5Bd3UKy4lOmBZhB8j0dMd1cVBV0UPKZu8ZjBP+fJnSatuRXu91n6d7GUKl/aDF
-         flBDiBYjyaI4FNRiItP5AblHuFrnTeCa92QPD6Ds=
-Message-ID: <1580945088.2032.2.camel@kernel.org>
-Subject: Re: [PATCH][next] tracing/kprobe: Fix uninitialized variable bug
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 05 Feb 2020 17:24:48 -0600
-In-Reply-To: <20200205223404.GA3379@embeddedor>
-References: <20200205223404.GA3379@embeddedor>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1727361AbgBEX0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:26:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:26:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="264402948"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Feb 2020 15:26:03 -0800
+Date:   Thu, 6 Feb 2020 07:26:20 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+ in shrink_zone_span()
+Message-ID: <20200205232620.GC28446@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-9-david@redhat.com>
+ <20200205095924.GC24162@richard>
+ <20200205144811.GF26758@MiWiFi-R3L-srv>
+ <20200205225633.GA28446@richard>
+ <20200205230826.GF8965@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205230826.GF8965@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+On Thu, Feb 06, 2020 at 07:08:26AM +0800, Baoquan He wrote:
+>On 02/06/20 at 06:56am, Wei Yang wrote:
+>> On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
+>> >Hi Wei Yang,
+>> >
+>> >On 02/05/20 at 05:59pm, Wei Yang wrote:
+>> >> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> >> >index f294918f7211..8dafa1ba8d9f 100644
+>> >> >--- a/mm/memory_hotplug.c
+>> >> >+++ b/mm/memory_hotplug.c
+>> >> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>> >> > 		if (pfn) {
+>> >> > 			zone->zone_start_pfn = pfn;
+>> >> > 			zone->spanned_pages = zone_end_pfn - pfn;
+>> >> >+		} else {
+>> >> >+			zone->zone_start_pfn = 0;
+>> >> >+			zone->spanned_pages = 0;
+>> >> > 		}
+>> >> > 	} else if (zone_end_pfn == end_pfn) {
+>> >> > 		/*
+>> >> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>> >> > 					       start_pfn);
+>> >> > 		if (pfn)
+>> >> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
+>> >> >+		else {
+>> >> >+			zone->zone_start_pfn = 0;
+>> >> >+			zone->spanned_pages = 0;
+>> >> >+		}
+>> >> > 	}
+>> >> 
+>> >> If it is me, I would like to take out these two similar logic out.
+>> >
+>> >I also like this style. 
+>> >> 
+>> >> For example:
+>> >> 
+>> >> 	if () {
+>> >> 	} else if () {
+>> >> 	} else {
+>> >> 		goto out;
+>> >Here the last else is unnecessary, right?
+>> >
+>> 
+>> I am afraid not.
+>> 
+>> If the range is not the first or last, we would leave pfn not initialized.
+>
+>Ah, you are right. I forgot that one. Then pfn can be assigned the
+>zone_start_pfn as the old code. Then the following logic is the same
+>as the original code, find_smallest_section_pfn()/find_biggest_section_pfn() 
+>have done the iteration the old for loop was doing.
+>
+>	unsigned long pfn = zone_start_pfn;	
+>	if () {
+>	} else if () {
+>	} 
+>
+>	/* The zone has no valid section */
+>	if (!pfn) {
+>        	zone->zone_start_pfn = 0;
+>        	zone->spanned_pages = 0;
+>	}
 
-On Wed, 2020-02-05 at 16:34 -0600, Gustavo A. R. Silva wrote:
-> There is a potential execution path in which variable *ret* is
-> returned
-> without being properly initialized, previously.
-> 
-> Fix this by initializing variable *ret* to 0.
-> 
+This one look better :-)
 
-Good catch.  Thanks for fixing this!
+Thanks
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-
-
-
-> Addresses-Coverity-ID: 1491142 ("Uninitialized scalar variable")
-> Fixes: 2a588dd1d5d6 ("tracing: Add kprobe event command generation
-> functions")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  kernel/trace/trace_kprobe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c
-> b/kernel/trace/trace_kprobe.c
-> index d8264ebb9581..362cca52f5de 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1012,7 +1012,7 @@ int __kprobe_event_add_fields(struct
-> dynevent_cmd *cmd, ...)
->  {
->  	struct dynevent_arg arg;
->  	va_list args;
-> -	int ret;
-> +	int ret = 0;
->  
->  	if (cmd->type != DYNEVENT_TYPE_KPROBE)
->  		return -EINVAL;
+-- 
+Wei Yang
+Help you, Help me
