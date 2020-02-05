@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09545C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82AEC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C958424681
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2712464B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgBESU3 (ORCPT
+        id S1727875AbgBESUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:20:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:20937 "EHLO mga14.intel.com"
+        Wed, 5 Feb 2020 13:20:33 -0500
+Received: from mga14.intel.com ([192.55.52.115]:20940 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727756AbgBESU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:20:26 -0500
+        id S1727764AbgBESU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:20:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:20:24 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 10:20:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
-   d="scan'208";a="279447737"
+   d="scan'208";a="279447746"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
   by FMSMGA003.fm.intel.com with ESMTP; 05 Feb 2020 10:20:24 -0800
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
@@ -54,9 +55,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-Date:   Wed,  5 Feb 2020 10:19:09 -0800
-Message-Id: <20200205181935.3712-2-yu-cheng.yu@intel.com>
+Subject: [RFC PATCH v9 03/27] x86/fpu/xstate: Introduce CET MSR XSAVES supervisor states
+Date:   Wed,  5 Feb 2020 10:19:11 -0800
+Message-Id: <20200205181935.3712-4-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200205181935.3712-1-yu-cheng.yu@intel.com>
 References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
@@ -67,346 +68,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explain no_cet_shstk/no_cet_ibt kernel parameters, and introduce a new
-document on Control-flow Enforcement Technology (CET).
+Control-flow Enforcement Technology (CET) adds five MSRs.  Introduce them
+and their XSAVES supervisor states:
+
+    MSR_IA32_U_CET (user-mode CET settings),
+    MSR_IA32_PL3_SSP (user-mode Shadow Stack pointer),
+    MSR_IA32_PL0_SSP (kernel-mode Shadow Stack pointer),
+    MSR_IA32_PL1_SSP (Privilege Level 1 Shadow Stack pointer),
+    MSR_IA32_PL2_SSP (Privilege Level 2 Shadow Stack pointer).
+
+v6:
+- Remove __packed from struct cet_user_state, struct cet_kernel_state.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- .../admin-guide/kernel-parameters.txt         |   6 +
- Documentation/x86/index.rst                   |   1 +
- Documentation/x86/intel_cet.rst               | 294 ++++++++++++++++++
- 3 files changed, 301 insertions(+)
- create mode 100644 Documentation/x86/intel_cet.rst
+ arch/x86/include/asm/fpu/types.h            | 22 ++++++++++++++++++
+ arch/x86/include/asm/fpu/xstate.h           |  5 +++--
+ arch/x86/include/asm/msr-index.h            | 18 +++++++++++++++
+ arch/x86/include/uapi/asm/processor-flags.h |  2 ++
+ arch/x86/kernel/fpu/xstate.c                | 25 +++++++++++++++++++--
+ 5 files changed, 68 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..8b69ebf0baed 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3001,6 +3001,12 @@
- 			noexec=on: enable non-executable mappings (default)
- 			noexec=off: disable non-executable mappings
+diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
+index f098f6cab94b..d7ef4d9c7ad5 100644
+--- a/arch/x86/include/asm/fpu/types.h
++++ b/arch/x86/include/asm/fpu/types.h
+@@ -114,6 +114,9 @@ enum xfeature {
+ 	XFEATURE_Hi16_ZMM,
+ 	XFEATURE_PT_UNIMPLEMENTED_SO_FAR,
+ 	XFEATURE_PKRU,
++	XFEATURE_RESERVED,
++	XFEATURE_CET_USER,
++	XFEATURE_CET_KERNEL,
  
-+	no_cet_shstk	[X86-64] Disable Shadow Stack for user-mode
-+			applications
-+
-+	no_cet_ibt	[X86-64] Disable Indirect Branch Tracking for user-mode
-+			applications
-+
- 	nosmap		[X86,PPC]
- 			Disable SMAP (Supervisor Mode Access Prevention)
- 			even if it is supported by processor.
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index a8de2fbc1caa..81f919801765 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -19,6 +19,7 @@ x86-specific Documentation
-    tlb
-    mtrr
-    pat
-+   intel_cet
-    intel_mpx
-    intel-iommu
-    intel_txt
-diff --git a/Documentation/x86/intel_cet.rst b/Documentation/x86/intel_cet.rst
-new file mode 100644
-index 000000000000..71e2462fea5c
---- /dev/null
-+++ b/Documentation/x86/intel_cet.rst
-@@ -0,0 +1,294 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================================
-+Control-flow Enforcement Technology (CET)
-+=========================================
-+
-+[1] Overview
-+============
-+
-+Control-flow Enforcement Technology (CET) provides protection against
-+return/jump-oriented programming (ROP) attacks.  It can be setup to
-+protect both applications and the kernel.  In the first phase, only
-+user-mode protection is implemented in the 64-bit kernel; 32-bit
-+applications are supported in compatibility mode.
-+
-+CET introduces Shadow Stack (SHSTK) and Indirect Branch Tracking
-+(IBT).  SHSTK is a secondary stack allocated from memory and cannot
-+be directly modified by applications.  When executing a CALL, the
-+processor pushes a copy of the return address to SHSTK.  Upon
-+function return, the processor pops the SHSTK copy and compares it
-+to the one from the program stack.  If the two copies differ, the
-+processor raises a control-protection fault.  IBT verifies indirect
-+CALL/JMP targets are intended as marked by the compiler with 'ENDBR'
-+opcodes (see CET instructions below).
-+
-+There are two kernel configuration options:
-+
-+    X86_INTEL_SHADOW_STACK_USER, and
-+    X86_INTEL_BRANCH_TRACKING_USER.
-+
-+To build a CET-enabled kernel, Binutils v2.31 and GCC v8.1 or later
-+are required.  To build a CET-enabled application, GLIBC v2.28 or
-+later is also required.
-+
-+There are two command-line options for disabling CET features::
-+
-+    no_cet_shstk - disables SHSTK, and
-+    no_cet_ibt   - disables IBT.
-+
-+At run time, /proc/cpuinfo shows the availability of SHSTK and IBT.
-+
-+[2] CET assembly instructions
-+=============================
-+
-+RDSSP %r
-+    Read the SHSTK pointer into %r.
-+
-+INCSSP %r
-+    Unwind (increment) the SHSTK pointer (0 ~ 255) steps as indicated
-+    in the operand register.  The GLIBC longjmp uses INCSSP to unwind
-+    the SHSTK until that matches the program stack.  When it is
-+    necessary to unwind beyond 255 steps, longjmp divides and repeats
-+    the process.
-+
-+RSTORSSP (%r)
-+    Switch to the SHSTK indicated in the 'restore token' pointed by
-+    the operand register and replace the 'restore token' with a new
-+    token to be saved (with SAVEPREVSSP) for the outgoing SHSTK.
-+
-+::
-+
-+                                Before RSTORSSP
-+
-+               Incoming SHSTK                 Current/Outgoing SHSTK
-+
-+          |----------------------|           |----------------------|
-+   addr=x |                      |     ssp-> |                      |
-+          |----------------------|           |----------------------|
-+   (%r)-> | rstor_token=(x|Lg)   |  addr=y-8 |                      |
-+          |----------------------|           |----------------------|
-+
-+                                After RSTORSSP
-+
-+          |----------------------|           |----------------------|
-+   addr=x |                      |           |                      |
-+          |----------------------|           |----------------------|
-+    ssp-> | rstor_token=(y|Pv|Lg)|  addr=y-8 |                      |
-+          |----------------------|           |----------------------|
-+
-+    note:
-+        1. Only valid addresses and restore tokens can be on the
-+           user-mode SHSTK.
-+        2. A token is always of type u64 and must align to u64.
-+        3. The incoming SHSTK pointer in a rstor_token must point to
-+           immediately above the token.
-+        4. 'Lg' is bit[0] of a rstor_token indicating a 64-bit SHSTK.
-+        5. 'Pv' is bit[1] of a rstor_token indicating the token is to
-+           be used only for the next SAVEPREVSSP and invalid for
-+           RSTORSSP.
-+
-+SAVEPREVSSP
-+    Pop the SHSTK 'restore token' pointed by current SHSTK pointer
-+    and store it at (previous SHSTK pointer - 8).
-+
-+::
-+
-+                               After SAVEPREVSSP
-+
-+          |----------------------|           |----------------------|
-+    ssp-> |                      |           |                      |
-+          |----------------------|           |----------------------|
-+ addr=x-8 | rstor_token=(y|Pv|Lg)|  addr=y-8 | rstor_token(y|Lg)    |
-+          |----------------------|           |----------------------|
-+
-+WRUSS %r0, (%r1)
-+    Write the value in %r0 to the SHSTK address pointed by (%r1).
-+    This is a kernel-mode only instruction.
-+
-+ENDBR and NOTRACK prefix
-+    When IBT is enabled, an indirect CALL/JMP must either::
-+
-+        have a NOTRACK prefix,
-+        reach an ENDBR, or
-+        reach an address within a legacy code page;
-+
-+    or it results in a control-protection fault.
-+
-+    When the target address is derived from information that cannot
-+    be modified, the compiler uses the NOTRACK prefix.  In other
-+    cases, the compiler inserts an ENDBR at the target address.
-+
-+    A legacy code page is designated in the legacy code bitmap, which
-+    is explained below in section [8].
-+
-+[3] Application Enabling
-+========================
-+
-+An application's CET capability is marked in its ELF header and can
-+be verified from the following command output, in the
-+NT_GNU_PROPERTY_TYPE_0 field:
-+
-+    readelf -n <application>
-+
-+If an application supports CET and is statically linked, it will run
-+with CET protection.  If the application needs any shared libraries,
-+the loader checks all dependencies and enables CET only when all
-+requirements are met.
-+
-+[4] Legacy Libraries
-+====================
-+
-+GLIBC provides a few tunables for backward compatibility.
-+
-+GLIBC_TUNABLES=glibc.tune.hwcaps=-SHSTK,-IBT
-+    Turn off SHSTK/IBT for the current shell.
-+
-+GLIBC_TUNABLES=glibc.tune.x86_shstk=<on, permissive>
-+    This controls how dlopen() handles SHSTK legacy libraries::
-+
-+        on         - continue with SHSTK enabled;
-+        permissive - continue with SHSTK off.
-+
-+[5] CET system calls
-+====================
-+
-+The following arch_prctl() system calls are added for CET:
-+
-+arch_prctl(ARCH_X86_CET_STATUS, unsigned long *addr)
-+    Return CET feature status.
-+
-+    The parameter 'addr' is a pointer to a user buffer.
-+    On returning to the caller, the kernel fills the following
-+    information::
-+
-+        *addr       = SHSTK/IBT status
-+        *(addr + 1) = SHSTK base address
-+        *(addr + 2) = SHSTK size
-+
-+arch_prctl(ARCH_X86_CET_DISABLE, unsigned long features)
-+    Disable SHSTK and/or IBT specified in 'features'.  Return -EPERM
-+    if CET is locked.
-+
-+arch_prctl(ARCH_X86_CET_LOCK)
-+    Lock in CET feature.
-+
-+arch_prctl(ARCH_X86_CET_ALLOC_SHSTK, unsigned long *addr)
-+    Allocate a new SHSTK and put a restore token at top.
-+
-+    The parameter 'addr' is a pointer to a user buffer and indicates
-+    the desired SHSTK size to allocate.  On returning to the caller,
-+    the kernel fills '*addr' with the base address of the new SHSTK.
-+
-+arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE, unsigned long *addr)
-+    Mark an address range as IBT legacy code.
-+
-+    The parameter 'addr' is a pointer to a user buffer that has the
-+    following information::
-+
-+        *addr       = starting linear address of the legacy code
-+        *(addr + 1) = size of the legacy code
-+        *(addr + 2) = set (1); clear (0)
-+
-+Note:
-+  There is no CET-enabling arch_prctl function.  By design, CET is
-+  enabled automatically if the binary and the system can support it.
-+
-+  The parameters passed are always unsigned 64-bit.  When an IA32
-+  application passing pointers, it should only use the lower 32 bits.
-+
-+[6] The implementation of the SHSTK
-+===================================
-+
-+SHSTK size
-+----------
-+
-+A task's SHSTK is allocated from memory to a fixed size of
-+RLIMIT_STACK.  A compat-mode thread's SHSTK size is 1/4 of
-+RLIMIT_STACK.  The smaller 32-bit thread SHSTK allows more threads to
-+share a 32-bit address space.
-+
-+Signal
-+------
-+
-+The main program and its signal handlers use the same SHSTK.  Because
-+the SHSTK stores only return addresses, a large SHSTK will cover the
-+condition that both the program stack and the sigaltstack run out.
-+
-+The kernel creates a restore token at the SHSTK restoring address and
-+verifies that token when restoring from the signal handler.
-+
-+IBT for signal delivering and sigreturn is the same as the main
-+program's setup; except for WAIT_ENDBR status, which can be read from
-+MSR_IA32_U_CET.  In general, a task is in WAIT_ENDBR after an
-+indirect CALL/JMP and before the next instruction starts.
-+
-+A task's WAIT_ENDBR is reset for its signal handler, but preserved on
-+the task's stack; and then restored from sigreturn.
-+
-+Fork
-+----
-+
-+The SHSTK's vma has VM_SHSTK flag set; its PTEs are required to be
-+read-only and dirty.  When a SHSTK PTE is not present, RO, and dirty,
-+a SHSTK access triggers a page fault with an additional SHSTK bit set
-+in the page fault error code.
-+
-+When a task forks a child, its SHSTK PTEs are copied and both the
-+parent's and the child's SHSTK PTEs are cleared of the dirty bit.
-+Upon the next SHSTK access, the resulting SHSTK page fault is handled
-+by page copy/re-use.
-+
-+When a pthread child is created, the kernel allocates a new SHSTK for
-+the new thread.
-+
-+Setjmp/Longjmp
-+--------------
-+
-+Longjmp unwinds SHSTK until it matches the program stack.
-+
-+Ucontext
-+--------
-+
-+In GLIBC, getcontext/setcontext is implemented in similar way as
-+setjmp/longjmp.
-+
-+When makecontext creates a new ucontext, a new SHSTK is allocated for
-+that context with ARCH_X86_CET_ALLOC_SHSTK syscall.  The kernel
-+creates a restore token at the top of the new SHSTK and the user-mode
-+code switches to the new SHSTK with the RSTORSSP instruction.
-+
-+[7] The management of read-only & dirty PTEs for SHSTK
-+======================================================
-+
-+A RO and dirty PTE exists in the following cases:
-+
-+(a) A page is modified and then shared with a fork()'ed child;
-+(b) A R/O page that has been COW'ed;
-+(c) A SHSTK page.
-+
-+The processor only checks the dirty bit for (c).  To prevent the use
-+of non-SHSTK memory as SHSTK, we use a spare bit of the 64-bit PTE as
-+DIRTY_SW for (a) and (b) above.  This results to the following PTE
-+settings::
-+
-+    Modified PTE:             (R/W + DIRTY_HW)
-+    Modified and shared PTE:  (R/O + DIRTY_SW)
-+    R/O PTE, COW'ed:          (R/O + DIRTY_SW)
-+    SHSTK PTE:                (R/O + DIRTY_HW)
-+    SHSTK PTE, COW'ed:        (R/O + DIRTY_HW)
-+    SHSTK PTE, shared:        (R/O + DIRTY_SW)
-+
-+Note that DIRTY_SW is only used in R/O PTEs but not R/W PTEs.
-+
-+[8] The implementation of IBT legacy bitmap
-+===========================================
-+
-+When IBT is active, a non-IBT-capable legacy library can be executed
-+if its address ranges are specified in the legacy code bitmap.  The
-+bitmap covers the whole user-space address, which is TASK_SIZE_MAX
-+for 64-bit and TASK_SIZE for IA32, and its each bit indicates a 4-KB
-+legacy code page.  It is read-only from an application, and setup by
-+the kernel as a special mapping when the first time the application
-+calls arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE).  The application
-+manages the bitmap through the arch_prctl.
+ 	XFEATURE_MAX,
+ };
+@@ -128,6 +131,8 @@ enum xfeature {
+ #define XFEATURE_MASK_Hi16_ZMM		(1 << XFEATURE_Hi16_ZMM)
+ #define XFEATURE_MASK_PT		(1 << XFEATURE_PT_UNIMPLEMENTED_SO_FAR)
+ #define XFEATURE_MASK_PKRU		(1 << XFEATURE_PKRU)
++#define XFEATURE_MASK_CET_USER		(1 << XFEATURE_CET_USER)
++#define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL)
+ 
+ #define XFEATURE_MASK_FPSSE		(XFEATURE_MASK_FP | XFEATURE_MASK_SSE)
+ #define XFEATURE_MASK_AVX512		(XFEATURE_MASK_OPMASK \
+@@ -229,6 +234,23 @@ struct pkru_state {
+ 	u32				pad;
+ } __packed;
+ 
++/*
++ * State component 11 is Control-flow Enforcement user states
++ */
++struct cet_user_state {
++	u64 user_cet;			/* user control-flow settings */
++	u64 user_ssp;			/* user shadow stack pointer */
++};
++
++/*
++ * State component 12 is Control-flow Enforcement kernel states
++ */
++struct cet_kernel_state {
++	u64 kernel_ssp;			/* kernel shadow stack */
++	u64 pl1_ssp;			/* privilege level 1 shadow stack */
++	u64 pl2_ssp;			/* privilege level 2 shadow stack */
++};
++
+ struct xstate_header {
+ 	u64				xfeatures;
+ 	u64				xcomp_bv;
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index 9ebfdd543576..952d2515dae4 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -33,13 +33,14 @@
+ 				       XFEATURE_MASK_BNDCSR)
+ 
+ /* All currently supported supervisor features */
+-#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (0)
++#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_CET_USER)
+ 
+ /*
+  * Unsupported supervisor features. When a supervisor feature in this mask is
+  * supported in the future, move it to the supported supervisor feature mask.
+  */
+-#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT)
++#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT | \
++					       XFEATURE_MASK_CET_KERNEL)
+ 
+ /* All supervisor states including supported and unsupported states. */
+ #define ALL_XFEATURES_MASK_SUPERVISOR (SUPPORTED_XFEATURES_MASK_SUPERVISOR | \
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 084e98da04a7..114e77f5bb6b 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -872,4 +872,22 @@
+ #define MSR_VM_IGNNE                    0xc0010115
+ #define MSR_VM_HSAVE_PA                 0xc0010117
+ 
++/* Control-flow Enforcement Technology MSRs */
++#define MSR_IA32_U_CET		0x6a0 /* user mode cet setting */
++#define MSR_IA32_S_CET		0x6a2 /* kernel mode cet setting */
++#define MSR_IA32_PL0_SSP	0x6a4 /* kernel shstk pointer */
++#define MSR_IA32_PL1_SSP	0x6a5 /* ring-1 shstk pointer */
++#define MSR_IA32_PL2_SSP	0x6a6 /* ring-2 shstk pointer */
++#define MSR_IA32_PL3_SSP	0x6a7 /* user shstk pointer */
++#define MSR_IA32_INT_SSP_TAB	0x6a8 /* exception shstk table */
++
++/* MSR_IA32_U_CET and MSR_IA32_S_CET bits */
++#define MSR_IA32_CET_SHSTK_EN		0x0000000000000001ULL
++#define MSR_IA32_CET_WRSS_EN		0x0000000000000002ULL
++#define MSR_IA32_CET_ENDBR_EN		0x0000000000000004ULL
++#define MSR_IA32_CET_LEG_IW_EN		0x0000000000000008ULL
++#define MSR_IA32_CET_NO_TRACK_EN	0x0000000000000010ULL
++#define MSR_IA32_CET_WAIT_ENDBR	0x00000000000000800UL
++#define MSR_IA32_CET_BITMAP_MASK	0xfffffffffffff000ULL
++
+ #endif /* _ASM_X86_MSR_INDEX_H */
+diff --git a/arch/x86/include/uapi/asm/processor-flags.h b/arch/x86/include/uapi/asm/processor-flags.h
+index bcba3c643e63..a8df907e8017 100644
+--- a/arch/x86/include/uapi/asm/processor-flags.h
++++ b/arch/x86/include/uapi/asm/processor-flags.h
+@@ -130,6 +130,8 @@
+ #define X86_CR4_SMAP		_BITUL(X86_CR4_SMAP_BIT)
+ #define X86_CR4_PKE_BIT		22 /* enable Protection Keys support */
+ #define X86_CR4_PKE		_BITUL(X86_CR4_PKE_BIT)
++#define X86_CR4_CET_BIT		23 /* enable Control-flow Enforcement */
++#define X86_CR4_CET		_BITUL(X86_CR4_CET_BIT)
+ 
+ /*
+  * x86-64 Task Priority Register, CR8
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 04f7c6b8dbbc..ec08a2b6feca 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -38,6 +38,9 @@ static const char *xfeature_names[] =
+ 	"Processor Trace (unused)"	,
+ 	"Protection Keys User registers",
+ 	"unknown xstate feature"	,
++	"Control-flow User registers"	,
++	"Control-flow Kernel registers"	,
++	"unknown xstate feature"	,
+ };
+ 
+ static short xsave_cpuid_features[] __initdata = {
+@@ -51,6 +54,9 @@ static short xsave_cpuid_features[] __initdata = {
+ 	X86_FEATURE_AVX512F,
+ 	X86_FEATURE_INTEL_PT,
+ 	X86_FEATURE_PKU,
++	-1,		   /* Unused */
++	X86_FEATURE_SHSTK, /* XFEATURE_CET_USER */
++	X86_FEATURE_SHSTK, /* XFEATURE_CET_KERNEL */
+ };
+ 
+ /*
+@@ -316,6 +322,8 @@ static void __init print_xstate_features(void)
+ 	print_xstate_feature(XFEATURE_MASK_ZMM_Hi256);
+ 	print_xstate_feature(XFEATURE_MASK_Hi16_ZMM);
+ 	print_xstate_feature(XFEATURE_MASK_PKRU);
++	print_xstate_feature(XFEATURE_MASK_CET_USER);
++	print_xstate_feature(XFEATURE_MASK_CET_KERNEL);
+ }
+ 
+ /*
+@@ -563,6 +571,8 @@ static void check_xstate_against_struct(int nr)
+ 	XCHECK_SZ(sz, nr, XFEATURE_ZMM_Hi256, struct avx_512_zmm_uppers_state);
+ 	XCHECK_SZ(sz, nr, XFEATURE_Hi16_ZMM,  struct avx_512_hi16_state);
+ 	XCHECK_SZ(sz, nr, XFEATURE_PKRU,      struct pkru_state);
++	XCHECK_SZ(sz, nr, XFEATURE_CET_USER,   struct cet_user_state);
++	XCHECK_SZ(sz, nr, XFEATURE_CET_KERNEL, struct cet_kernel_state);
+ 
+ 	/*
+ 	 * Make *SURE* to add any feature numbers in below if
+@@ -770,8 +780,19 @@ void __init fpu__init_system_xstate(void)
+ 	 * Clear XSAVE features that are disabled in the normal CPUID.
+ 	 */
+ 	for (i = 0; i < ARRAY_SIZE(xsave_cpuid_features); i++) {
+-		if (!boot_cpu_has(xsave_cpuid_features[i]))
+-			xfeatures_mask_all &= ~BIT_ULL(i);
++		if (xsave_cpuid_features[i] == X86_FEATURE_SHSTK) {
++			/*
++			 * X86_FEATURE_SHSTK and X86_FEATURE_IBT share
++			 * same states, but can be enabled separately.
++			 */
++			if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
++			    !boot_cpu_has(X86_FEATURE_IBT))
++				xfeatures_mask_all &= ~BIT_ULL(i);
++		} else {
++			if ((xsave_cpuid_features[i] == -1) ||
++			    !boot_cpu_has(xsave_cpuid_features[i]))
++				xfeatures_mask_all &= ~BIT_ULL(i);
++		}
+ 	}
+ 
+ 	xfeatures_mask_all &= fpu__get_supported_xfeatures_mask();
 -- 
 2.21.0
 
