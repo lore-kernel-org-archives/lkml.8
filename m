@@ -2,154 +2,369 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1415C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7BB217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgLDDxPG"
+	by mail.kernel.org (Postfix) with ESMTP id E3AAB217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbgBEOQQ (ORCPT
+        id S1728121AbgBEORn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:16:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23200 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727956AbgBEOQP (ORCPT
+        Wed, 5 Feb 2020 09:17:43 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54246 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgBEORm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:16:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580912174;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=eglA8w6AfvXy89Hn1WJSwsLS3C9X6WiLXLa/SrVcjjM=;
-        b=ZgLDDxPGobVMmCdRGYp35/ZH5xx+iBiD1sfNmib+clm1kJO3sj9Cc38cQ0EwGmrjSN68Xg
-        OsnpM4+zddXYv725D8O+zI9MN9N9H3YRarmKhRCF0Y3cOqXmnA3gCGiuIACNqFd7z1yHK9
-        v2O5wT9Pc3Zbn8RUJna+eNAh0GPE1eM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-ZcRHbiYBO4C80qQy9mJCdQ-1; Wed, 05 Feb 2020 09:16:10 -0500
-X-MC-Unique: ZcRHbiYBO4C80qQy9mJCdQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Feb 2020 09:17:42 -0500
+Received: from [IPv6:2804:214:85ec:bd22:b29b:72b8:8fc3:cfae] (unknown [IPv6:2804:214:85ec:bd22:b29b:72b8:8fc3:cfae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20F83801E6C;
-        Wed,  5 Feb 2020 14:16:08 +0000 (UTC)
-Received: from [10.36.116.217] (ovpn-116-217.ams2.redhat.com [10.36.116.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A9042133;
-        Wed,  5 Feb 2020 14:16:04 +0000 (UTC)
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200204142516.GD26758@MiWiFi-R3L-srv>
- <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
- <20200205124329.GE26758@MiWiFi-R3L-srv>
- <cd353848-301a-025d-dd66-44d76e1bbc44@redhat.com>
- <20200205133442.GC8965@MiWiFi-R3L-srv>
- <2868343a-745b-e2b6-7e78-d5649c00ee31@redhat.com>
- <20200205141254.GD8965@MiWiFi-R3L-srv>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
-Date:   Wed, 5 Feb 2020 15:16:04 +0100
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A2AD028E9C0;
+        Wed,  5 Feb 2020 14:17:36 +0000 (GMT)
+Subject: Re: [PATCH 1/3] media: vimc: Support multiple buscodes for each
+ pixelformat
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+References: <20200202155019.1029993-1-nfraprado@protonmail.com>
+ <20200202155019.1029993-2-nfraprado@protonmail.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <1d32848b-3009-1748-2823-5b91404c6426@collabora.com>
+Date:   Wed, 5 Feb 2020 11:17:31 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200205141254.GD8965@MiWiFi-R3L-srv>
+In-Reply-To: <20200202155019.1029993-2-nfraprado@protonmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>> Anyhow, that patch is already upstream and I don't consider this high
->>>> priority. Thanks :)
->>>
->>> Yeah, noticed you told Wei the status in another patch thread, I am fine
->>> with it, just leave it to you to decide. Thanks.
->>
->> I am fairly busy right now. Can you send a patch (double-checking and
->> making this eventually unconditional?). Thanks!
+Hi Nícolas,
+
+Thanks for the patch, just some minor nits:
+
+On 2/2/20 1:50 PM, Nícolas F. R. A. Prado wrote:
+> Change vimc_pix_map_list to allow multiple media bus codes to map to the
+> same pixelformat, making it possible to add media bus codes for which
+> there are no pixelformat.
 > 
-> Understood, sorry about the noise, David. I will think about this.
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
+> ---
+>  drivers/media/platform/vimc/vimc-common.c | 68 ++++++++++++++---------
+>  drivers/media/platform/vimc/vimc-common.h |  9 ++-
+>  drivers/media/platform/vimc/vimc-scaler.c | 10 +++-
+>  drivers/media/platform/vimc/vimc-sensor.c |  6 +-
+>  4 files changed, 61 insertions(+), 32 deletions(-)
 > 
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index 16ce9f3b7c75..55797e5ab2b1 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -19,19 +19,19 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* RGB formats */
+>  	{
+> -		.code = MEDIA_BUS_FMT_BGR888_1X24,
+> +		.code = {MEDIA_BUS_FMT_BGR888_1X24},
 
-No need to excuse, really, I'm very happy about review feedback!
+Could you add spaces around the curly brackets?
+Example: https://git.linuxtv.org/media_tree.git/tree/drivers/media/common/v4l2-tpg/v4l2-tpg-colors.c#n35
 
-The review of this series happened fairly late. Bad, because it's not
-perfect, but good, because no serious stuff was found (so far :) ). If
-you also don't have time to look into this, I can put it onto my todo
-list, just let me know.
+>  		.pixelformat = V4L2_PIX_FMT_BGR24,
+>  		.bpp = 3,
+>  		.bayer = false,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_RGB888_1X24,
+> +		.code = {MEDIA_BUS_FMT_RGB888_1X24},
+>  		.pixelformat = V4L2_PIX_FMT_RGB24,
+>  		.bpp = 3,
+>  		.bayer = false,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
+> +		.code = {MEDIA_BUS_FMT_ARGB8888_1X32},
+>  		.pixelformat = V4L2_PIX_FMT_ARGB32,
+>  		.bpp = 4,
+>  		.bayer = false,
+> @@ -39,49 +39,49 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* Bayer formats */
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SBGGR8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SGBRG8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SGRBG8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SRGGB8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+> +		.code = {MEDIA_BUS_FMT_SBGGR10_1X10},
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+> +		.code = {MEDIA_BUS_FMT_SGBRG10_1X10},
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+> +		.code = {MEDIA_BUS_FMT_SGRBG10_1X10},
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+> +		.code = {MEDIA_BUS_FMT_SRGGB10_1X10},
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
+>  		.bpp = 2,
+>  		.bayer = true,
+> @@ -89,25 +89,25 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* 10bit raw bayer a-law compressed to 8 bits */
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+> @@ -115,49 +115,49 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* 10bit raw bayer DPCM compressed to 8 bits */
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+> +		.code = {MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8},
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
+> +		.code = {MEDIA_BUS_FMT_SBGGR12_1X12},
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
+> +		.code = {MEDIA_BUS_FMT_SGBRG12_1X12},
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
+> +		.code = {MEDIA_BUS_FMT_SGRBG12_1X12},
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+> +		.code = {MEDIA_BUS_FMT_SRGGB12_1X12},
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
+>  		.bpp = 2,
+>  		.bayer = true,
+> @@ -182,13 +182,29 @@ const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i)
+>  	return &vimc_pix_map_list[i];
+>  }
+>  
+> +const u32 vimc_mbus_code_by_index(unsigned int i)> +{
+> +	unsigned int j, k;
 
-Thanks!
+I would rename
 
--- 
-Thanks,
+s/i/index
+s/j/i
+s/k/j
 
-David / dhildenb
+> +
+> +	for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list); j++) {
+> +		for (k = 0; vimc_pix_map_list[j].code[k]; k++) {
+> +			if (!i)
+> +				return vimc_pix_map_list[j].code[k];
+> +			i--;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+>  const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
+>  {
+> -	unsigned int i;
+> +	unsigned int i, j;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+> -		if (vimc_pix_map_list[i].code == code)
+> -			return &vimc_pix_map_list[i];
+> +		for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
+> +			if (vimc_pix_map_list[i].code[j] == code)
+> +				return &vimc_pix_map_list[i];
+> +		}
+>  	}
+>  	return NULL;
+>  }
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index 87eb8259c2a8..132a5889f1ea 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -69,7 +69,7 @@ do {									\
+>   * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
+>   */
+>  struct vimc_pix_map {
+> -	unsigned int code;
+> +	unsigned int code[3];
 
+why 3?
+
+>  	unsigned int bpp;
+>  	u32 pixelformat;
+>  	bool bayer;
+> @@ -171,6 +171,13 @@ void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+>   */
+>  const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i);
+>  
+> +/**
+> + * vimc_mbus_code_by_index - get mbus code by its index
+> + *
+> + * @i:			index of the mbus code in vimc_pix_map_list
+> + */
+
+Could you add a comment saying it returns 0 if no mbus code is found?
+
+Regards,
+Helen
+
+> +const u32 vimc_mbus_code_by_index(unsigned int i);
+> +
+>  /**
+>   * vimc_pix_map_by_code - get vimc_pix_map struct by media bus code
+>   *
+> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+> index e2e551bc3ded..d2ba0a2cfcc4 100644
+> --- a/drivers/media/platform/vimc/vimc-scaler.c
+> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+> @@ -110,13 +110,19 @@ static int vimc_sca_enum_mbus_code(struct v4l2_subdev *sd,
+>  				   struct v4l2_subdev_pad_config *cfg,
+>  				   struct v4l2_subdev_mbus_code_enum *code)
+>  {
+> -	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
+> +	const u32 mbus_code = vimc_mbus_code_by_index(code->index);
+> +	const struct vimc_pix_map *vpix;
+> +
+> +	if (!mbus_code)
+> +		return -EINVAL;
+> +
+> +	vpix = vimc_pix_map_by_code(mbus_code);
+>  
+>  	/* We don't support bayer format */
+>  	if (!vpix || vpix->bayer)
+>  		return -EINVAL;
+>  
+> -	code->code = vpix->code;
+> +	code->code = mbus_code;
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+> index 32380f504591..9f4dd7fee9ab 100644
+> --- a/drivers/media/platform/vimc/vimc-sensor.c
+> +++ b/drivers/media/platform/vimc/vimc-sensor.c
+> @@ -52,12 +52,12 @@ static int vimc_sen_enum_mbus_code(struct v4l2_subdev *sd,
+>  				   struct v4l2_subdev_pad_config *cfg,
+>  				   struct v4l2_subdev_mbus_code_enum *code)
+>  {
+> -	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
+> +	const u32 mbus_code = vimc_mbus_code_by_index(code->index);
+>  
+> -	if (!vpix)
+> +	if (!mbus_code)
+>  		return -EINVAL;
+>  
+> -	code->code = vpix->code;
+> +	code->code = mbus_code;
+>  
+>  	return 0;
+>  }
+> 
