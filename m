@@ -2,97 +2,187 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D432C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D70C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DB1218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD4A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 20:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tUzYU7xP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9O2+F8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgBEUlo (ORCPT
+        id S1727170AbgBEUoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 15:41:44 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43420 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbgBEUlo (ORCPT
+        Wed, 5 Feb 2020 15:44:18 -0500
+Received: from mail-wm1-f74.google.com ([209.85.128.74]:35259 "EHLO
+        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgBEUoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 15:41:44 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so3270217oth.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 12:41:43 -0800 (PST)
+        Wed, 5 Feb 2020 15:44:18 -0500
+Received: by mail-wm1-f74.google.com with SMTP id z7so1565420wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 12:44:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C80FvtF14u18Q5GuI4vN3cPxQNFCTPS0fGip7F+rzSA=;
-        b=tUzYU7xPl+51dvzEMgLEd/cCMubfaL8ywjSse0rY7RFkACLPYA4FOyxZvncSztxGfm
-         jFsPLMfKId7jpqzuZVxT2EFmuMLwh+x8Uzd2b6p6oOpYZTrPVrxfRUoUs9SiWeil9MEl
-         yg3G0cSD2guGQ453ii26L+O3hPobLCKda6c5k48Srl5Yl0CLV7URwPTuaaKYCo+W82Uw
-         zYcfpRpIMGhr7SSz87faIU23uuVkeMhwdM06oNRgj2Hb9/VE/+uxfuAdOGmHUe/euw8X
-         cH3J+NDend/xp57RcU74XjqeczV2W7ypldS6fRitxcboaDc5T8+C/X2ZQRo1+uH4ScSX
-         IPoA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=n91DHyeQsL6KJi+PzY/lmETuokxLoyCiTyEI3zpbN6o=;
+        b=N9O2+F8HGRS/N3l/0z0aPzfcPc/uidznZDRae5tYVw2Fz/NyGSezGN2HLMoeE7Zcv4
+         /LpXVmdndqNzNWQ5dT8sE5SA6uxR9aYpymvXp3UEEdnEuN6LsiYxovE6Kh1vw137cjtN
+         AKS4Ia9tPVjGteqOZnMQ8SG2CL3YCN1KXYx85uXj2fnJwPSfeO5q5wLeP6/C2lszb0+d
+         aqwEeviXf6FVJ9zSuitol/oDK3cnM+ho+GyxL/yXtZZsI52F8eqaeqwZgMZj1OguK1p7
+         bvhnG98RDI3DdzelfH/kfT0sxqcyOYMA29a8In45ykZ2L2NSUl78TQV2oz7gKsdFefnL
+         YK0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C80FvtF14u18Q5GuI4vN3cPxQNFCTPS0fGip7F+rzSA=;
-        b=qdBt2/hZa0HdZFkH8intnAOexMul0m/AVQLiWz1j2+NLZ+IHyTfkS5DNtNVI/hgxI7
-         qGzFXW7pfIzCy97hW4E55M9HNU9KJ+4DhmxjZki0c09KpRmVPW46BJIQ9MUarsfUK5g7
-         rJY5hQs7rIA0sZSwa9AkRiMb3N5xLghCw42nyT10xnnmJWKF4hHNkeNl3DTV4atSE6i2
-         r0adNo8SZmLNnksbJNefKZMkRp3JxYy0GgV8Atez27Y2sYXb9AdkfHIWAYvSMGZ5LbFK
-         Xk/+Q+ccohfIDeydDaHzs59FQNW3E1nAZb2EYdfQNppaxTDv3JfceDO2wDwtSGz/H1cv
-         tFIQ==
-X-Gm-Message-State: APjAAAWMzMpvcYCr0B71CiLAATcT54ViOUXrcX79l4owWO0YZoxAruaZ
-        vB4GbnvJUl249ApB35PvkhdInpSG3G2dAmOrbpRmoA==
-X-Google-Smtp-Source: APXvYqy9KjEBmSX5NkhLfBxg20I2V+XHYQ3xYGJSq4SDwQ1CyKJCQ+J9WrP3E0MhyV/DgPruw7w2Y2qCsPlY5jZD2/4=
-X-Received: by 2002:a9d:7493:: with SMTP id t19mr14867146otk.332.1580935303244;
- Wed, 05 Feb 2020 12:41:43 -0800 (PST)
-MIME-Version: 1.0
-References: <1580838148-2981-1-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1580838148-2981-1-git-send-email-jcrouse@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 5 Feb 2020 12:41:32 -0800
-Message-ID: <CALAqxLX73PWJUFB1g2_nkdanGvCXJJDznwMUwjN2x5AiAJ=Ppg@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/a6xx: Remove unneeded GBIF unhalt
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=n91DHyeQsL6KJi+PzY/lmETuokxLoyCiTyEI3zpbN6o=;
+        b=mgSNLShFuHp+HRKNCdpQJHHf000tOaCYNvLIzZvxfivIFbAg+MxfFdG0JVATiwH4mw
+         MnkNdboNo9E2QM37yvhxsYadNhI5zW8apvnIlpX0iUJW8qqYUQuA+AbdLKt3+tJZO6Io
+         XQPE+Fd4wQUzTDbMYoTJzQmqfNI87g6mRBcDYyzplTGHHSd4ecrjIEFT3ZfQZ4saPtlM
+         p/GPPtOeMGdAjCUgcLvt2kPLWLZllja5nAxtAscrkpOa+Dv+FNi5DpFSHMlrDf5SuvuZ
+         8sGNuYPXvMziBaW2+9bM4VfEX+CRnkE0OrPKPZ+wZbxY/QizLd7zxRkmMPVCBCoovxWx
+         I3Dg==
+X-Gm-Message-State: APjAAAUsGYdmuU1rNEJTe0t1Z8DOkkcmdxdBgm2xo9fC/bzP6hciWLm4
+        LMMuk1esqKbN/FjzX73AAFrfFewHFg==
+X-Google-Smtp-Source: APXvYqxa2/gxRWK5q7X/QW4LfYH+GFp5g0UqIlXesfUbgZoo7HF6wQxpey96wrFvE8P4byF+WN8pmppzmQ==
+X-Received: by 2002:a05:6000:50:: with SMTP id k16mr331765wrx.145.1580935455011;
+ Wed, 05 Feb 2020 12:44:15 -0800 (PST)
+Date:   Wed,  5 Feb 2020 21:43:31 +0100
+Message-Id: <20200205204333.30953-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH 1/3] kcsan: Introduce KCSAN_ACCESS_ASSERT access type
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 9:42 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") added a
-> universal GBIF un-halt into a6xx_start(). This can cause problems for
-> a630 targets which do not use GBIF and might have access protection
-> enabled on the region now occupied by the GBIF registers.
->
-> But it turns out that we didn't need to unhalt the GBIF in this path
-> since the stop function already takes care of that after executing a flush
-> but before turning off the headswitch. We should be confident that the
-> GBIF is open for business when we restart the hardware.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+The KCSAN_ACCESS_ASSERT access type may be used to introduce dummy reads
+and writes to assert certain properties of synchronization logic, where
+bugs could not be detected as normal data races.
 
-Sorry, yesterday got busy with other things and I didn't get around to
-testing your patch, but I have tested earlier with my own patch which
-is identical:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/db845c-mainline-WIP&id=4e6a2e84dd77fe74faa1a6b797eb0ee7bf11ffd7
+For example, a variable that is only meant to be written by a single
+CPU, but may be read (without locking) by other CPUs must still be
+marked properly to avoid data races. However, concurrent writes,
+regardless if WRITE_ONCE() or not, would be a bug. Using
+kcsan_check_access(&x, sizeof(x), KCSAN_ACCESS_ASSERT) would allow
+catching such bugs.
 
-So, I think I can safely add:
-Tested-by: John Stultz <john.stultz@linaro.org>
+Notably, the KCSAN_ACCESS_ASSERT type disables various filters, so that
+all races that KCSAN observes are reported.
 
-Thanks so much for the quick turnaround on this!
--john
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ include/linux/kcsan-checks.h |  8 +++++++-
+ kernel/kcsan/core.c          | 24 +++++++++++++++++++++---
+ kernel/kcsan/report.c        | 11 +++++++++++
+ 3 files changed, 39 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
+index ef3ee233a3fa9..21b1d1f214ad5 100644
+--- a/include/linux/kcsan-checks.h
++++ b/include/linux/kcsan-checks.h
+@@ -6,10 +6,16 @@
+ #include <linux/types.h>
+ 
+ /*
+- * Access type modifiers.
++ * ACCESS TYPE MODIFIERS
++ *
++ *   <none>: normal read access;
++ *   WRITE : write access;
++ *   ATOMIC: access is atomic;
++ *   ASSERT: access is not a regular access, but an assertion;
+  */
+ #define KCSAN_ACCESS_WRITE  0x1
+ #define KCSAN_ACCESS_ATOMIC 0x2
++#define KCSAN_ACCESS_ASSERT 0x4
+ 
+ /*
+  * __kcsan_*: Always calls into the runtime when KCSAN is enabled. This may be used
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 82c2bef827d42..190fb5c958fe3 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -178,6 +178,14 @@ is_atomic(const volatile void *ptr, size_t size, int type)
+ 	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
+ 		return true;
+ 
++	/*
++	 * Unless explicitly declared atomic, never consider an assertion access
++	 * as atomic. This allows using them also in atomic regions, such as
++	 * seqlocks, without implicitly changing their semantics.
++	 */
++	if ((type & KCSAN_ACCESS_ASSERT) != 0)
++		return false;
++
+ 	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
+ 	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
+ 	    IS_ALIGNED((unsigned long)ptr, size))
+@@ -307,6 +315,7 @@ static noinline void
+ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ {
+ 	const bool is_write = (type & KCSAN_ACCESS_WRITE) != 0;
++	const bool is_assertion = (type & KCSAN_ACCESS_ASSERT) != 0;
+ 	atomic_long_t *watchpoint;
+ 	union {
+ 		u8 _1;
+@@ -430,12 +439,21 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 		 * No need to increment 'data_races' counter, as the racing
+ 		 * thread already did.
+ 		 */
+-		kcsan_report(ptr, size, type, size > 8 || value_change,
+-			     smp_processor_id(), KCSAN_REPORT_RACE_SIGNAL);
++
++		/*
++		 * - If we were not able to observe a value change due to size
++		 *   constraints, always assume a value change.
++		 * - If the access type is an assertion, we also always assume a
++		 *   value change to always report the race.
++		 */
++		value_change = value_change || size > 8 || is_assertion;
++
++		kcsan_report(ptr, size, type, value_change, smp_processor_id(),
++			     KCSAN_REPORT_RACE_SIGNAL);
+ 	} else if (value_change) {
+ 		/* Inferring a race, since the value should not have changed. */
+ 		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
+-		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN))
++		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assertion)
+ 			kcsan_report(ptr, size, type, true,
+ 				     smp_processor_id(),
+ 				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index 7cd34285df740..938146104e046 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -178,6 +178,17 @@ static const char *get_access_type(int type)
+ 		return "write";
+ 	case KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
+ 		return "write (marked)";
++
++	/*
++	 * ASSERT variants:
++	 */
++	case KCSAN_ACCESS_ASSERT:
++	case KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_ATOMIC:
++		return "assert no writes";
++	case KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE:
++	case KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
++		return "assert no accesses";
++
+ 	default:
+ 		BUG();
+ 	}
+-- 
+2.25.0.341.g760bfbb309-goog
+
