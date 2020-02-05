@@ -2,185 +2,259 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0DCC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A08C35243
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6D920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DA120659
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 09:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="BvKgxnwE";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="BvKgxnwE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iJrBIsVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgBEJWh (ORCPT
+        id S1728061AbgBEJWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:22:37 -0500
-Received: from mail-eopbgr00058.outbound.protection.outlook.com ([40.107.0.58]:55619
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728035AbgBEJWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:22:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yxuuRx6VAPDpgiep9kboX9WSyIKdMk+IDcq2kLGn30A=;
- b=BvKgxnwE6TfcZckyKL43mVMlELjLC85JdNRWhtsPzsok7G0yrkfdn+OOnFtzJtWh70/7ebGEzkSDncNFSg6O2ZyaXqt7wxcp3ZyssinhODHzWnUrw2mDr49FdfMApaE70RwmboBgbTRpLP+rClibGtOE3ObO2TZnX1vdOJkvPAs=
-Received: from VI1PR08CA0224.eurprd08.prod.outlook.com (2603:10a6:802:15::33)
- by DB6PR0802MB2311.eurprd08.prod.outlook.com (2603:10a6:4:87::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Wed, 5 Feb
- 2020 09:22:32 +0000
-Received: from DB5EUR03FT055.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::204) by VI1PR08CA0224.outlook.office365.com
- (2603:10a6:802:15::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend
- Transport; Wed, 5 Feb 2020 09:22:32 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT055.mail.protection.outlook.com (10.152.21.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.18 via Frontend Transport; Wed, 5 Feb 2020 09:22:32 +0000
-Received: ("Tessian outbound 846b976b3941:v42"); Wed, 05 Feb 2020 09:22:31 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 528b6db8faf1.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 2D2DEAEF-7AFF-4E22-8FD9-C067BCE1AA81.1;
-        Wed, 05 Feb 2020 09:22:26 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 528b6db8faf1.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 05 Feb 2020 09:22:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XqbhsXwjs6YfG+HZlErzEgmvhbXY3oj+wXIh7PAohGeAZxjhT1oemdoWH/7k+YTaPIkTNw9r30/EwG8ieVpEm3zSsz356QabxiOxG1Jr61isBoU6EvWIE8ugtobQIglWaPEpDEWdNiTxQsCBpMWZbYhLgmpAivA5UT+OuqYZ0My64KROrA/HMMdg82KNCC9NtoUL/R4H3r4PJaWR9/gzBm44I6ziVjrApm1r3bpxQOUjRrE0cWMv9v50mxaM5CGUCJ/ohMIJqvvJHVBNO3A8qjSUN6Lq2QBbwe6q1Pbgxv7I8rW7BdDOs1M65ZiRHEMNon5f5stbHB7x7i6Zf6/Xog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yxuuRx6VAPDpgiep9kboX9WSyIKdMk+IDcq2kLGn30A=;
- b=gMomP7rPEjGz0C2IgBJml8RPffqXXXhLtK6DV8+gL8oSlOyD/P8aQMzWb6SwJsnB+mKoCor2XzBGCAIvj99qiJ8Ll9tgYWB6IYvfKt0O7YUfIsL+o86yQHwE9ez/39Q2dszQp2s2snUoGdE+o3hM+moSxIgEYq/Q9wgx9jG+nDvEeHIASL6agSOq4oeOqGNWMfbIM+goW13+PPtvSjK0CwsSkMGVgQJRoZ2hnpHCuwym4bup4rgp1smY7GrhVM9uRsHPVqva+DgtiKK4WVd0rpF3S4zj1tOrw0+dKMFYuTeZ+nIIrMmNBlXGIbLqwQsdrJSTlhYHqXk1nqPzpyvu2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yxuuRx6VAPDpgiep9kboX9WSyIKdMk+IDcq2kLGn30A=;
- b=BvKgxnwE6TfcZckyKL43mVMlELjLC85JdNRWhtsPzsok7G0yrkfdn+OOnFtzJtWh70/7ebGEzkSDncNFSg6O2ZyaXqt7wxcp3ZyssinhODHzWnUrw2mDr49FdfMApaE70RwmboBgbTRpLP+rClibGtOE3ObO2TZnX1vdOJkvPAs=
-Received: from AM5PR0801MB1665.eurprd08.prod.outlook.com (10.169.247.15) by
- AM5PR0801MB1651.eurprd08.prod.outlook.com (10.169.246.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.27; Wed, 5 Feb 2020 09:22:23 +0000
-Received: from AM5PR0801MB1665.eurprd08.prod.outlook.com
- ([fe80::a9de:d56:93b9:46ec]) by AM5PR0801MB1665.eurprd08.prod.outlook.com
- ([fe80::a9de:d56:93b9:46ec%6]) with mapi id 15.20.2707.020; Wed, 5 Feb 2020
- 09:22:23 +0000
-From:   Hadar Gat <Hadar.Gat@arm.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Subject: RE: [PATCH v2 3/3] MAINTAINERS: add HG as cctrng maintainer
-Thread-Topic: [PATCH v2 3/3] MAINTAINERS: add HG as cctrng maintainer
-Thread-Index: AQHV2cyflDUjAqX7t0qCXDEExzT+K6gJQO2AgAMVRxA=
-Date:   Wed, 5 Feb 2020 09:22:23 +0000
-Message-ID: <AM5PR0801MB166546181D4D2EB9AE8DD26CE9020@AM5PR0801MB1665.eurprd08.prod.outlook.com>
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
- <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
- <CAHp75Vd4VYJD9kSgMU+iKOC5FOarPtMG4eG3Jbnf7OeebWuC7w@mail.gmail.com>
-In-Reply-To: <CAHp75Vd4VYJD9kSgMU+iKOC5FOarPtMG4eG3Jbnf7OeebWuC7w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: f2c14ebd-960d-4b74-9cdb-b5671e81e866.0
-x-checkrecipientchecked: true
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-x-originating-ip: [217.140.106.29]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a14400f5-fa69-40da-0095-08d7aa1cedca
-X-MS-TrafficTypeDiagnostic: AM5PR0801MB1651:|AM5PR0801MB1651:|DB6PR0802MB2311:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0802MB23119624D5E0425A51AA2AA8E9020@DB6PR0802MB2311.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:9508;OLM:9508;
-x-forefront-prvs: 0304E36CA3
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(189003)(199004)(6916009)(7696005)(55016002)(4326008)(186003)(478600001)(9686003)(81166006)(8936002)(2906002)(8676002)(52536014)(81156014)(54906003)(5660300002)(4744005)(7416002)(76116006)(66476007)(66946007)(66556008)(66446008)(64756008)(26005)(6506007)(33656002)(966005)(53546011)(86362001)(71200400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0801MB1651;H:AM5PR0801MB1665.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: IRg7lA5oInwe5NmlAqkjPrloXGj6j2tCQomFWuRzP9LwYtR/5gsQfsmvvDfrBjDbBtXPlvTuc5b0fk79PeavLkkIa92pJP+4vceeqFuakPHPO1z3HAuuXjKDjlWwIzLygOGfvaWMg8y1AhDtpzvXwhXueqebnmEgQhRF+4GNn83CgU4GTcBspR5raf3uS/GQYK0Sr1yf0VLjrdiq3CLmDmdrRyMtD22GXpozU5NGnibg01nX7Z5Cc58uDMfBbbOb/JrIDw0+NsgzQoOvrrE5qsvb0VmHwOcAcriHz32Otp8k+u8jwxDiXUKB4gi2EKqoEhWD/s1kgdVGL6BZbmQm2M6vIc87uI/qGCfEKb2tHw0KdBO5JW3tgXQgNXqbGF1v34r5hS7ow+b+I9pUr6dRy/LQNsgBphtYx4vV8nHgZ5UUEnXns9sVAnGgxLDVT+YIc/0OBvxzBVcmM26vneYT8o1A21r3RXu9Ns41VvWq3ONUsFKFMNVybo+ooe9bSFWhFEvIsTAqtfJGK4xW897nLw==
-x-ms-exchange-antispam-messagedata: 0H91j9gpAYfAeZ9LJeZOGZVgJcMyvufEMmOe0t08FH/GzPOVBRa4KZ2thMTgradavK91HxJnX/gGy293grBpQmQcvDuWWjvQ5ixqqjG7wdbKXgQvzP2BHfEofFJlABU+vaE854y33wZ7qXJYuqVxtA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 5 Feb 2020 04:22:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36661 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728168AbgBEJWl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:22:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580894559;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+4ADA5RYq1REkZi1n0de2jyMCM/FMnBA16Dj7PrO/fQ=;
+        b=iJrBIsVUqx836wD4X7jVnlgrU36LhfHLGeaIO5pdp50r7PysS8ddgsx2++K41tytZE835O
+        ONc15X7gGqeQ4PNk/fuI7S9arX4F2orOc7kYt3CDBcl1toTEndug044ZC5tPE/yUyCC9sg
+        3Z+N4v0G8uDg6qOukUi5W7yoLV4gvuk=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-123-NL2J8oOCPXylfKNkBVUGMw-1; Wed, 05 Feb 2020 04:22:36 -0500
+X-MC-Unique: NL2J8oOCPXylfKNkBVUGMw-1
+Received: by mail-qk1-f198.google.com with SMTP id x127so880243qkb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 01:22:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+4ADA5RYq1REkZi1n0de2jyMCM/FMnBA16Dj7PrO/fQ=;
+        b=AgnoxCa1ZiKObby5LjJu0/iowmYsxqMYfkYnK4E4lpg9t/YAThiFmxISbgpVZL4T4+
+         TASXq5LuLC2zO7cTMZKJDEEkZtr5zqMNTwKPguB5xdmZiZ5UDjwbMAbHUVYiz1abbH3Z
+         zPzqhc7zNB2sKYJ9OwMKxGrEXbuz9/ZGm9zH+TSH9UCd6Pbi4Vy//RViaNd8bz2wL5+j
+         TZvuGgMxXdxVPdTxo007oK5MZgrpoiGO8H7RZyXljlBhiPrXz7pXQAUnAAxwaB24ln9O
+         Hxrc8gnAvn7LX/lt40cB75wREyLF67dtq94Oj9oTxb/cvD8QCxDo48TfI9I3T6LsrzFE
+         UqwQ==
+X-Gm-Message-State: APjAAAWKop12ml2wM5+oixajCPoMMcjPzVGawr53/1YNYZ5Yft/xAO+e
+        lhSxfgcHINPXFVK4gpp8PBP6iZ8oOua10OyOTC4fm5xJNFfC/SWx5syUqylcLMWRQAUl1fE6RZQ
+        XOS0ETgga+ZFPewojMFrMqXTe
+X-Received: by 2002:ae9:c106:: with SMTP id z6mr31970427qki.6.1580894556157;
+        Wed, 05 Feb 2020 01:22:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzNW6yz51xBNkYKmPewuHn/dhSffxfXzu9258rVB96SNzDJIZ1H3sTIKuDefukwjee0ClvffQ==
+X-Received: by 2002:ae9:c106:: with SMTP id z6mr31970396qki.6.1580894555812;
+        Wed, 05 Feb 2020 01:22:35 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id c45sm13902138qtd.43.2020.02.05.01.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 01:22:34 -0800 (PST)
+Date:   Wed, 5 Feb 2020 04:22:28 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Tiwei Bie <tiwei.bie@intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
+        rob.miller@broadcom.com, haotian.wang@sifive.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com,
+        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
+        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+Message-ID: <20200205041817-mutt-send-email-mst@kernel.org>
+References: <20200204005306-mutt-send-email-mst@kernel.org>
+ <cf485e7f-46e3-20d3-8452-e3058b885d0a@redhat.com>
+ <20200205020555.GA369236@___>
+ <798e5644-ca28-ee46-c953-688af9bccd3b@redhat.com>
+ <20200205003048-mutt-send-email-mst@kernel.org>
+ <eb53d1c2-92ae-febf-f502-2d3e107ee608@redhat.com>
+ <20200205011935-mutt-send-email-mst@kernel.org>
+ <2dd43fb5-6f02-2dcc-5c27-9f7419ef72fc@redhat.com>
+ <20200205020547-mutt-send-email-mst@kernel.org>
+ <4e947390-da7c-52bc-c427-b1d82cc425ad@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1651
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT055.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(26826003)(8936002)(356004)(336012)(86362001)(478600001)(2906002)(966005)(52536014)(70586007)(70206006)(5660300002)(4326008)(450100002)(54906003)(8676002)(316002)(186003)(26005)(6506007)(53546011)(33656002)(9686003)(81166006)(81156014)(55016002)(7696005)(4744005)(6862004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0802MB2311;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 90edbec9-8288-42cd-6f32-08d7aa1ce8d6
-X-Forefront-PRVS: 0304E36CA3
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u23q3ADLv4b1395uurTe9U0gM6ri0Jwb9+2kU+hyp/F+aFRRLv7yfZcnaif86fG2tZLFaMUv0h+FHkygS9t2vXK2l45zMTOv8YplLATdg3BgMBgFBVno+QwQelhkn7C6PN1nihk4eKe8K9az1selCuJYQxIu1UPgdD2123K++JoXDDyQHSZ+jFp036lMucZbgqFe7NMn/A1i7wfqtsINeAkRPetVQxnc4FhwYiU31qu8GsGs9mBVxAMjU0sGxarhtLRfQvTOdEPKoTrD9nGHK76SJoEs+Rg9QLPXKUEMMaV4nwdJn4/DeDzx+wpBStvYa6vx4DRxiSFxLKvdzOBEeGeTzM+ZA9ADFwvQLvq5pz/A2y0LR++eg1KwG+YPhbyucf0dGY/RZcAx7FRyT0e3iQeWTljeIiXDBiJMNgVuRiHdRlfLLDEgNq4nGcDjgj88Sh7HRuPbzWOyQ1GNLoH3fd3nfUwNmwfSrt1N1hmHyj5p7z4i5UrpVhN4LYHomQrmotGIwHilg6ZWT5da7Y5yNQ==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2020 09:22:32.0588
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a14400f5-fa69-40da-0095-08d7aa1cedca
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2311
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4e947390-da7c-52bc-c427-b1d82cc425ad@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIFN1biwgRmViIDIsIDIwMjAgYXQgMzoyOSBQTSBIYWRhciBHYXQgPGhhZGFyLmdhdEBh
-cm0uY29tPiB3cm90ZToNCj4gPg0KPiA+IEkgd29yayBmb3IgQXJtIG9uIG1haW50YWluaW5nIHRo
-ZSBUcnVzdFpvbmUgQ3J5cHRvQ2VsbCBUUk5HIGRyaXZlci4NCj4gDQo+ID4gK0NDVFJORyBBUk0g
-VFJVU1RaT05FIENSWVBUT0NFTEwgVFJVRSBSQU5ET00gTlVNQkVSDQo+IEdFTkVSQVRPUiAoVFJO
-RykgRFJJVkVSDQo+ID4gK006ICAgICBIYWRhciBHYXQgPGhhZGFyLmdhdEBhcm0uY29tPg0KPiA+
-ICtMOiAgICAgbGludXgtY3J5cHRvQHZnZXIua2VybmVsLm9yZw0KPiA+ICtTOiAgICAgU3VwcG9y
-dGVkDQo+ID4gK0Y6ICAgICBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL2NjdHJuZy5jDQo+ID4gK0Y6
-ICAgICBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL2NjdHJuZy5oDQo+ID4gK0Y6ICAgICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvcm5nL2FybS1jY3RybmcudHh0DQo+ID4gK1c6ICAg
-ICBodHRwczovL2RldmVsb3Blci5hcm0uY29tL3Byb2R1Y3RzL3N5c3RlbS1pcC90cnVzdHpvbmUt
-DQo+IGNyeXB0b2NlbGwvY3J5cHRvY2VsbC03MDAtZmFtaWx5DQo+ID4gKw0KPiANCj4gSGFkIHlv
-dSBydW4gcGFyc2UtbWFpbnRhaW5lcnMucGwgYWZ0ZXJ3YXJkcyB0byBiZSBzdXJlIGV2ZXJ5dGhp
-bmcgaXMgb2theT8NCg0KSSBydW4gcGFyc2UtbWFpbnRhaW5lcnMucGwgbm93IGFuZCBpdCBzZWVt
-cyBldmVyeXRoaW5nIGlzIG9rYXkuDQpCdXQgdGhlIGdlbmVyYXRlZCBNQUlOVEFJTkVSUyBmaWxl
-IGhhcyBtYW55IGRpZmZlcmVuY2VzIGZyb20gdGhlIG9uZSBJIGhhdmUgYWxsIG92ZXIgaXQuDQpJ
-IGNvdWxkbid0IGZpbmQgYW55IGRvY3VtZW50YXRpb24gYWJvdXQgdGhpcyBzY3JpcHQgKHVuZGVy
-IERvY3VtZW50YXRpb24vKS4NCkNhbiB5b3UgcG9pbnQgbWUgdG8gdGhlIGRvY3VtZW50YXRpb24g
-aWYgZXhpc3RzPw0KDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2
-Y2hlbmtvDQoNClRoYW5rcywNCkhhZGFyDQo=
+On Wed, Feb 05, 2020 at 03:42:18PM +0800, Jason Wang wrote:
+> 
+> On 2020/2/5 下午3:16, Michael S. Tsirkin wrote:
+> > On Wed, Feb 05, 2020 at 02:49:31PM +0800, Jason Wang wrote:
+> > > On 2020/2/5 下午2:30, Michael S. Tsirkin wrote:
+> > > > On Wed, Feb 05, 2020 at 01:50:28PM +0800, Jason Wang wrote:
+> > > > > On 2020/2/5 下午1:31, Michael S. Tsirkin wrote:
+> > > > > > On Wed, Feb 05, 2020 at 11:12:21AM +0800, Jason Wang wrote:
+> > > > > > > On 2020/2/5 上午10:05, Tiwei Bie wrote:
+> > > > > > > > On Tue, Feb 04, 2020 at 02:46:16PM +0800, Jason Wang wrote:
+> > > > > > > > > On 2020/2/4 下午2:01, Michael S. Tsirkin wrote:
+> > > > > > > > > > On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
+> > > > > > > > > > > 5) generate diffs of memory table and using IOMMU API to setup the dma
+> > > > > > > > > > > mapping in this method
+> > > > > > > > > > Frankly I think that's a bunch of work. Why not a MAP/UNMAP interface?
+> > > > > > > > > > 
+> > > > > > > > > Sure, so that basically VHOST_IOTLB_UPDATE/INVALIDATE I think?
+> > > > > > > > Do you mean we let userspace to only use VHOST_IOTLB_UPDATE/INVALIDATE
+> > > > > > > > to do the DMA mapping in vhost-vdpa case? When vIOMMU isn't available,
+> > > > > > > > userspace will set msg->iova to GPA, otherwise userspace will set
+> > > > > > > > msg->iova to GIOVA, and vhost-vdpa module will get HPA from msg->uaddr?
+> > > > > > > > 
+> > > > > > > > Thanks,
+> > > > > > > > Tiwei
+> > > > > > > I think so. Michael, do you think this makes sense?
+> > > > > > > 
+> > > > > > > Thanks
+> > > > > > to make sure, could you post the suggested argument format for
+> > > > > > these ioctls?
+> > > > > > 
+> > > > > It's the existed uapi:
+> > > > > 
+> > > > > /* no alignment requirement */
+> > > > > struct vhost_iotlb_msg {
+> > > > >       __u64 iova;
+> > > > >       __u64 size;
+> > > > >       __u64 uaddr;
+> > > > > #define VHOST_ACCESS_RO      0x1
+> > > > > #define VHOST_ACCESS_WO      0x2
+> > > > > #define VHOST_ACCESS_RW      0x3
+> > > > >       __u8 perm;
+> > > > > #define VHOST_IOTLB_MISS           1
+> > > > > #define VHOST_IOTLB_UPDATE         2
+> > > > > #define VHOST_IOTLB_INVALIDATE     3
+> > > > > #define VHOST_IOTLB_ACCESS_FAIL    4
+> > > > >       __u8 type;
+> > > > > };
+> > > > > 
+> > > > > #define VHOST_IOTLB_MSG 0x1
+> > > > > #define VHOST_IOTLB_MSG_V2 0x2
+> > > > > 
+> > > > > struct vhost_msg {
+> > > > >       int type;
+> > > > >       union {
+> > > > >           struct vhost_iotlb_msg iotlb;
+> > > > >           __u8 padding[64];
+> > > > >       };
+> > > > > };
+> > > > > 
+> > > > > struct vhost_msg_v2 {
+> > > > >       __u32 type;
+> > > > >       __u32 reserved;
+> > > > >       union {
+> > > > >           struct vhost_iotlb_msg iotlb;
+> > > > >           __u8 padding[64];
+> > > > >       };
+> > > > > };
+> > > > Oh ok.  So with a real device, I suspect we do not want to wait for each
+> > > > change to be processed by device completely, so we might want an asynchronous variant
+> > > > and then some kind of flush that tells device "you better apply these now".
+> > > 
+> > > Let me explain:
+> > > 
+> > > There are two types of devices:
+> > > 
+> > > 1) device without on-chip IOMMU, DMA was done via IOMMU API which only
+> > > support incremental map/unmap
+> > Most IOMMUs have queues nowdays though. Whether APIs within kernel
+> > expose that matters but we are better off on emulating
+> > hardware not specific guest behaviour.
+> 
+> 
+> Last time I checked Intel IOMMU driver, I see the async QI is not used
+> there. And I'm not sure how queue will help much here. Qemu still need to
+> wait for all the DMA is setup to let guest work.
+> 
+> > 
+> > > 2) device with on-chip IOMMU, DMA could be done by device driver itself, and
+> > > we could choose to pass the whole mappings to the driver at one time through
+> > > vDPA bus operation (set_map)
+> > > 
+> > > For vhost-vpda, there're two types of memory mapping:
+> > > 
+> > > a) memory table, setup by userspace through VHOST_SET_MEM_TABLE, the whole
+> > > mapping is updated in this way
+> > > b) IOTLB API, incrementally done by userspace through vhost message
+> > > (IOTLB_UPDATE/IOTLB_INVALIDATE)
+> > > 
+> > > The current design is:
+> > > 
+> > > - Reuse VHOST_SET_MEM_TABLE, and for type 1), we can choose to send diffs
+> > > through IOMMU API or flush all the mappings then map new ones. For type 2),
+> > > just send the whole mapping through set_map()
+> > I know that at least for RDMA based things, you can't change
+> > a mapping if it's active. So drivers will need to figure out the
+> > differences which just looks ugly: userspace knows what
+> > it was changing (really just adding/removing some guest memory).
+> 
+> 
+> Two methods:
+> 
+> 1) using IOTLB message VHOST_IOTLB_UPDATE/INVALIDATE
+> 2) let vhost differs from two memory tables which should not be too hard
+> (compare two rb trees)
+
+
+Right but 2 is just such an obvious waste of cyclces. userspace knows what changed
+why does vhost need to re-calculate it? No?
+
+> 
+> > 
+> > 
+> > 
+> > > - Reuse vhost IOTLB, so for type 1), simply forward update/invalidate
+> > > request via IOMMU API, for type 2), send IOTLB to vDPA device driver via
+> > > set_map(), device driver may choose to send diffs or rebuild all mapping at
+> > > their will
+> > > 
+> > > Technically we can use vhost IOTLB API (map/umap) for building
+> > > VHOST_SET_MEM_TABLE, but to avoid device to process the each request, it
+> > > looks to me we need new UAPI which seems sub optimal.
+> > > 
+> > > What's you thought?
+> > > 
+> > > Thanks
+> > I suspect we can't completely avoid a new UAPI.
+> 
+> 
+> AFAIK, memory table usually contain just few entries, the performance cost
+> should be fine. (At least should be the same as the case of VFIO).
+> 
+> So in qemu, simply hooking add_region/remove_region to
+> VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE should work?
+> 
+> If we introduce API like you proposed previously (memory listener style):
+> 
+> begin
+> add
+> remove
+> commit
+> 
+> I suspect it will be too heavweight for the case of vIOMMU and for the
+> driver that want to build new mapping, we need addnop etc...
+> 
+> Thanks
+> 
+
+I feel this can help some workloads but this can wait, for sure.
+
+
+> > 
+
