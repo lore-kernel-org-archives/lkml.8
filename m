@@ -2,202 +2,130 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7E1C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826CEC35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5360B217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450C9217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Fn6D3ZXp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hFfnXhfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgBEEwX (ORCPT
+        id S1727951AbgBEEzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:52:23 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:16304 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727884AbgBEEwX (ORCPT
+        Tue, 4 Feb 2020 23:55:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45228 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727921AbgBEEzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:52:23 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580878342; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qIsXFy+HHp7SSvQVHd8PMPwqr2p1gsi3igCBMs8ZZZg=;
- b=Fn6D3ZXpLZ2TWZJwBWgH/4at5SbRXr+OE3kDCFhccorB+1UAtJiki4e9bjc58uS8U7uP7z6s
- eYUhw72nP1H18P7vBktZ4hI4A1EtnQ6mTMN0AogV7cGk/SFJlaxlsh9UpRQ6RP+oTW10te1t
- 3Aou52xq7KQRNqJOJx+etgx+AEc=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a49fb.7f46fdfc9dc0-smtp-out-n03;
- Wed, 05 Feb 2020 04:52:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B9D1BC447A6; Wed,  5 Feb 2020 04:52:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 4 Feb 2020 23:55:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580878543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RvwGCxc+2x79KFTn2BUwnQKkDy86bKUgsN+JhQMZL30=;
+        b=hFfnXhfZmCiHf8/djTqsLGLVzru1fomzHwpyAyezFqKGjZp+iO6ObxNeiEuH0UJNVvRXAX
+        8E/9gwh1Ry0fSCFudj5K0K4WidQFo69uqOEvBy4pYi8998rSxZJJz06f023BZdWB0vThU1
+        mEsHTLYAxwFMyiGLNt4bTjkPPSzpOmE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-sM65a1e_NsyRmHF8gQQK9A-1; Tue, 04 Feb 2020 23:55:39 -0500
+X-MC-Unique: sM65a1e_NsyRmHF8gQQK9A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85B99C43383;
-        Wed,  5 Feb 2020 04:52:10 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A5C42F62;
+        Wed,  5 Feb 2020 04:55:38 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F8B95C1B5;
+        Wed,  5 Feb 2020 04:55:30 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 12:55:26 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Salman Qazi <sqazi@google.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O
+ scheduler in one go
+Message-ID: <20200205045526.GA15286@ming.t460p>
+References: <CAKUOC8Xvxa8nixstFOdjuf7_sCZNV6EqSDxTAQZjLhvf86LESA@mail.gmail.com>
+ <20200204193711.257285-1-sqazi@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 12:52:10 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 6/8] scsi: ufs: Add dev ref clock gating wait time
- support
-In-Reply-To: <1580871040.21785.7.camel@mtksdccf07>
-References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
- <1580721472-10784-7-git-send-email-cang@codeaurora.org>
- <1580871040.21785.7.camel@mtksdccf07>
-Message-ID: <d37515ab264b0c46848ee2b88ba0a676@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204193711.257285-1-sqazi@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05 10:50, Stanley Chu wrote:
-> Hi Can,
+On Tue, Feb 04, 2020 at 11:37:11AM -0800, Salman Qazi wrote:
+> Flushes bypass the I/O scheduler and get added to hctx->dispatch
+> in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+> hctx->run_work work item and is past the point in
+> blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
 > 
-> On Mon, 2020-02-03 at 01:17 -0800, Can Guo wrote:
->> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime 
->> defines
->> the minimum time for which the reference clock is required by device 
->> during
->> transition to LS-MODE or HIBERN8 state. Make this change to reflect 
->> the new
->> requirement by adding delays before turning off the clock.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
->> ---
->>  drivers/scsi/ufs/ufs.h    |  3 +++
->>  drivers/scsi/ufs/ufshcd.c | 40 
->> ++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 43 insertions(+)
->> 
->> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
->> index cfe3803..304076e 100644
->> --- a/drivers/scsi/ufs/ufs.h
->> +++ b/drivers/scsi/ufs/ufs.h
->> @@ -167,6 +167,7 @@ enum attr_idn {
->>  	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
->>  	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
->>  	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
->> +	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	= 0x17,
->>  };
->> 
->>  /* Descriptor idn for Query requests */
->> @@ -534,6 +535,8 @@ struct ufs_dev_info {
->>  	u16 wmanufacturerid;
->>  	/*UFS device Product Name */
->>  	u8 *model;
->> +	u16 spec_version;
->> +	u32 clk_gating_wait_us;
->>  };
->> 
->>  /**
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index e8f7f9d..d5c547b 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -91,6 +91,9 @@
->>  /* default delay of autosuspend: 2000 ms */
->>  #define RPM_AUTOSUSPEND_DELAY_MS 2000
->> 
->> +/* Default value of wait time before gating device ref clock */
->> +#define UFSHCD_REF_CLK_GATING_WAIT_US 0xFF /* microsecs */
->> +
->>  #define ufshcd_toggle_vreg(_dev, _vreg, _on)				\
->>  	({                                                              \
->>  		int _ret;                                               \
->> @@ -3281,6 +3284,37 @@ static inline int 
->> ufshcd_read_unit_desc_param(struct ufs_hba *hba,
->>  				      param_offset, param_read_buf, param_size);
->>  }
->> 
->> +static int ufshcd_get_ref_clk_gating_wait(struct ufs_hba *hba)
->> +{
->> +	int err = 0;
->> +	u32 gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
->> +
->> +	if (hba->dev_info.spec_version >= 0x300) {
->> +		err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
->> +				QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME, 0, 0,
->> +				&gating_wait);
->> +		if (err)
->> +			dev_err(hba->dev, "Failed reading bRefClkGatingWait. err = %d, use 
->> default %uus\n",
->> +					 err, gating_wait);
->> +
->> +		if (gating_wait == 0) {
->> +			gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
->> +			dev_err(hba->dev, "Undefined ref clk gating wait time, use default 
->> %uus\n",
->> +					 gating_wait);
->> +		}
->> +
->> +		/*
->> +		 * bRefClkGatingWaitTime defines the minimum time for which the
->> +		 * reference clock is required by device during transition from
->> +		 * HS-MODE to LS-MODE or HIBERN8 state. Give it more time to be
->> +		 * on the safe side.
->> +		 */
->> +		hba->dev_info.clk_gating_wait_us = gating_wait + 50;
+> The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+> because the I/O scheduler can feed an arbitrary number of commands.
 > 
+> Since we have only one hctx->run_work, the commands waiting in
+> hctx->dispatch will wait an arbitrary length of time for run_work to be
+> rerun.
 > 
-> Not sure if the additional 50us wait time here is too large.
+> A similar phenomenon exists with dispatches from the software queue.
 > 
-> Is there any special reason to fix it as "50"?
+> The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+> blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+> rerun.
 > 
+> Signed-off-by: Salman Qazi <sqazi@google.com>
+> ---
+>  block/blk-mq-sched.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> Thanks,
-> Stanley
-> 
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index ca22afd47b3d..d1b8b31bc3d4 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -97,6 +97,9 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+>  			break;
+>  
+> +		if (!list_empty_careful(&hctx->dispatch))
+> +			break;
+> +
+>  		if (!blk_mq_get_dispatch_budget(hctx))
+>  			break;
+>  
+> @@ -140,6 +143,9 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+>  	do {
+>  		struct request *rq;
+>  
+> +		if (!list_empty_careful(&hctx->dispatch))
+> +			break;
+> +
+>  		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+>  			break;
 
-Hi Stanley,
+This approach looks good, given actually we retrieved request this way in
+legacy IO request path, see __elv_next_request().
 
-We used to ask vendors about it, 50 is somehow agreed by them. Do you 
-have a
-better value in mind?
+However,  blk_mq_request_bypass_insert() may be run at the same time, so
+this patch may cause requests stalled in scheduler queue.
 
-For me, I just wanted to give it 10, so that we can directly use 
-usleep_range
-with it, no need to decide whether to use udelay or usleep_range.
+How about returning if there is request available in hctx->dispatch from
+the two helpers, then re-dispatch requests in blk_mq_sched_dispatch_requests()
+if yes.
 
 Thanks,
-Can Guo.
+Ming
 
->>  				      &dev_info->model, SD_ASCII_STD);
->> @@ -7003,6 +7041,8 @@ static int ufshcd_device_params_init(struct 
->> ufs_hba *hba)
->>  		goto out;
->>  	}
->> 
->> +	ufshcd_get_ref_clk_gating_wait(hba);
->> +
->>  	ufs_fixup_device_setup(hba);
->> 
->>  	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
