@@ -2,162 +2,181 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E834C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A58C35251
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3AF21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D464720730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="BnCjssAp"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iWiKa5SU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgBEHLn (ORCPT
+        id S1726961AbgBEHOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:11:43 -0500
-Received: from mail-eopbgr80081.outbound.protection.outlook.com ([40.107.8.81]:34118
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725980AbgBEHLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:11:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I2YmdeYOFeyioi0acX5YPeYbofbRG3ytpIPBxvMPjBLohWMffxdNzNv1bWwvj0IiaUmOw+sdC7sqBfAcom1iVQSBnaLbdo+FHb2S2nDr+QjyQDR/BoMvPUC8zVbrLzoij9IysiHmNOgpbEXXU5dbc47R8FcnsgIRF0aBscSd1BinY2NPsB+uOj0TP/72tULx28nPWvkS8S7o6qzLtpLLjXiJDwUJOQLqR5s35/Vj4VxDhdYxkh+glJMvMHtUwgBVLh8GuqIPlypuAQKBUuvlb8FVpmclrKTwbzbLwhQfLSbcvFHHNYGIQfGsEyKED95NEEQ/lM9gOSrzs59fPGACjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jLGrS9QStFVN7Qh5VIHW4t5KN9sy8ViNx0sI4tT9cjU=;
- b=nSy9uTesCMrh/gJdkV7gUTGt2tabiGKHhVPNeqqcVLCOZ4tambI62BrDmus0cKFEZDMOrnMLaF/5TjW2H3Jt4fwYBx9GCHy81mW5jC6XMA49orpUIQW6ATmSOoc6JTWgbLrQDXvKjk6XYE67ewohaWpiVDIx8K3UlFgxUOozjlvKpiaLTGZmYs88GIfKpfdGhy3XlyHBryk19fs7Kyasso6pQOMw3YlwPMXKKxcygWxpaIWTZbvyJSiFpzioEp0mTKiDF9bchatiob4JhRXqH8ViFdLvv6RX3e1x9UHef+NON0LLClDmknSQjMTUC9nev8j6HhZVhs3KeV/1D7iFhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jLGrS9QStFVN7Qh5VIHW4t5KN9sy8ViNx0sI4tT9cjU=;
- b=BnCjssApr4yVITZPRtaFTN3D3N4t5nAG1HQOevl07lRlA9unjT8QQ8yVDVZNRhuCgtLExigmHFZDaGIwvuU22ufc1q5f/7Y2/8J03LKMZnEaOuUriERHDQxAdnelfN4ftszQwzIkph1qmg8xOQ6qjYworQYhN6Of4cpHIkc5qLU=
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (20.178.202.86) by
- AM0PR04MB7060.eurprd04.prod.outlook.com (10.186.129.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.30; Wed, 5 Feb 2020 07:11:37 +0000
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::1b4:31d2:1485:6e07]) by AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::1b4:31d2:1485:6e07%7]) with mapi id 15.20.2686.034; Wed, 5 Feb 2020
- 07:11:37 +0000
-From:   "Calvin Johnson (OSS)" <calvin.johnson@oss.nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "linux.cj@gmail.com" <linux.cj@gmail.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "Rajesh V. Bikkina" <rajesh.bikkina@nxp.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "Calvin Johnson (OSS)" <calvin.johnson@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH v1 1/7] mdio_bus: Introduce fwnode MDIO helpers
-Thread-Topic: [EXT] Re: [PATCH v1 1/7] mdio_bus: Introduce fwnode MDIO helpers
-Thread-Index: AQHV2EwP/pAQL9rldkeFtJ0S9YjbKagE9kYAgAcVUTA=
-Date:   Wed, 5 Feb 2020 07:11:37 +0000
-Message-ID: <AM0PR04MB5636F2F01AC234F2F613E5B293020@AM0PR04MB5636.eurprd04.prod.outlook.com>
-References: <20200131153440.20870-1-calvin.johnson@nxp.com>
- <20200131153440.20870-2-calvin.johnson@nxp.com>
- <20200131162814.GB17185@lunn.ch>
-In-Reply-To: <20200131162814.GB17185@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=calvin.johnson@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 043b98ef-6738-4662-0be3-08d7aa0aa3ed
-x-ms-traffictypediagnostic: AM0PR04MB7060:|AM0PR04MB7060:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB7060F7F6D20BE19434AEDCC6D2020@AM0PR04MB7060.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0304E36CA3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(366004)(136003)(199004)(189003)(33656002)(66446008)(64756008)(66556008)(66946007)(76116006)(66476007)(186003)(7696005)(6916009)(55016002)(478600001)(5660300002)(71200400001)(966005)(2906002)(4326008)(8676002)(9686003)(26005)(54906003)(316002)(81166006)(81156014)(6506007)(7416002)(52536014)(86362001)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7060;H:AM0PR04MB5636.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ikn9X1q2GyGWA+yERih8zkvdu7/kU/g0nQsjEFXCe5/AdRWCBvNqGfbyjBd0PNq5h27BUq/ytAsqUOElsH2ybI14kDn9iPWzf1pGLl7Wsix6+Hqv12qdyC+Wf6XvRbbYlX0o+yuOqUZdA7PxL2PYyBQxrDmgQAsuKQM+EUdgx/6zYELZ8eMr7Ni7suDcpKKQlNeAfv0CLvTGhGCLx8N57gLCZl4fdlVLViy+zlGnsC7hDcHHFV1dVWbe+9GsScRdfiSLDp01YYXFHTPpv+EkPPl/J+uQlc2HJJTJ0zdK01qAJUqkWny+lwX0VH0CYbpTPd0QlS2Zo1EcfLPsJhMkcLE8yPJHWDrMiIBK7IJT6w5AT2qm33pnNb5XT2vToveUsCCdj79Q7b4FY4oSjh9HLsKff59zEQuA1EHL2cyIJj30vXRH+GDVNwPdEwubuIVH9++YqAEDWAScqcGOvNQebFX47MUildfT6VD9JhH1ogCvVKIT13coiQy3p56Mc4HSX2om5YyKUASAG7bV+kwP3w==
-x-ms-exchange-antispam-messagedata: HnPKpSxv4X4vz+L5FoBgiPK7TG4vF3OHAKJkqDMrHmvPH1RJBGC7mlPJ0gE3EaK//+qrQU4X8Wx2Ql7asmozBjWGZpr8gUdHNs2qZV+qLtj7loTqJ4LiXgjpgiV/PyK1B2FU2SJOMupEtUHniDEYTA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 043b98ef-6738-4662-0be3-08d7aa0aa3ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2020 07:11:37.2101
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bhx7KObTDmQ8+BWfR+LR0J7CaKZ42q65J79LTSvInrsxZwQgMIjm3hJpKtll2P5VIhDvCn891jSqJEqXbeL6Mw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7060
+        Wed, 5 Feb 2020 02:14:49 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:56380 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgBEHOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 02:14:48 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580886887; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/Rn8gPx55VphCTkY85g7IMgryOUcsLPrZIyhj6H0O9Q=; b=iWiKa5SUAeH/yH0QKpi6CV7B2spOfw+f/QhX+tSlIFKBiCqAHbzwJcKZyxILc5yoe+umFjRi
+ ad4jN//83PYrKmQhpLYiZqL53zKpYIl0yo7lK9tDBVx/bEfmbin6QznW/6kxFyWtKuTheK0H
+ 4XepnbPz9S+BBLX1DmP7e8qqmpA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a6b66.7fa68d3f10d8-smtp-out-n03;
+ Wed, 05 Feb 2020 07:14:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B9C4DC447A3; Wed,  5 Feb 2020 07:14:43 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B01CCC433CB;
+        Wed,  5 Feb 2020 07:14:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B01CCC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] scsi: ufs: Fix registers dump vops caused scheduling while atomic
+Date:   Tue,  4 Feb 2020 23:14:29 -0800
+Message-Id: <1580886875-31967-1-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Reigsters dump intiated from atomic context should not sleep. To fix it,
+add one boolean parameter to register dump vops to inform vendor driver if
+sleep is allowed or not.
 
-> -----Original Message-----
-> From: Andrew Lunn <andrew@lunn.ch>
-> Sent: Friday, January 31, 2020 9:58 PM
+Signed-off-by: Can Guo <cang@codeaurora.org>
 
-<snip>
-
-> On Fri, Jan 31, 2020 at 09:04:34PM +0530, Calvin Johnson wrote:
-> > From: Marcin Wojtas <mw@semihalf.com>
-> >
-> > This patch introduces fwnode helper for registering MDIO bus, as well
-> > as one for finding the PHY, basing on its firmware node pointer.
-> > Comparing to existing OF equivalent,
-> > fwnode_mdiobus_register() does not support:
-> >  * deprecated bindings (device whitelist, nor the PHY ID embedded
-> >    in the compatible string)
-> >  * MDIO bus auto scanning
-> >
-> > Signed-off-by: Marcin Wojtas <mw@semihalf.com>
-> > Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
->=20
-> Hi Calvin
-> no
-> This appears to but a cut and paste, follow by an intelligent s/of/fwnode=
-/g.
-
-In this patchset, I tried to reuse Marcin's patch which was posted on 2017/=
-12/18.
-https://lkml.org/lkml/2017/12/18/211
-With my patch([v1,2/7] mdio_bus: modify fwnode phy related functions), I've=
- made=20
-modifications to this(v1,1/7) patch to adapt to the changes in the kernel.
-
-> Did you make any attempt to consolidate the two implementations?  It
-> seems like there should be some level of abstraction that hides away the
-> difference between DT properties, and DT properties stuffed into ACPI
-> tables?
-
-Yes attempt is to consolidate DT and ACPI into fwnode. Sure, I'll revisit t=
-he patch
-and try to work on your recommendation.
-
-Thanks
-Calvin
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 3b5b2d9..c30139c 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1619,13 +1619,17 @@ static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
+ 	kfree(testbus);
+ }
+ 
+-static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
++static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba, bool no_sleep)
+ {
+ 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
+ 			 "HCI Vendor Specific Registers ");
+ 
+ 	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
++
++	if (no_sleep)
++		return;
++
+ 	usleep_range(1000, 1100);
+ 	ufs_qcom_testbus_read(hba);
+ 	usleep_range(1000, 1100);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 0ac5d47..c585457 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -398,7 +398,7 @@ static void ufshcd_print_err_hist(struct ufs_hba *hba,
+ 		dev_err(hba->dev, "No record of %s\n", err_name);
+ }
+ 
+-static void ufshcd_print_host_regs(struct ufs_hba *hba)
++static inline void __ufshcd_print_host_regs(struct ufs_hba *hba, bool no_sleep)
+ {
+ 	ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
+ 	dev_err(hba->dev, "hba->ufs_version = 0x%x, hba->capabilities = 0x%x\n",
+@@ -430,7 +430,17 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
+ 
+ 	ufshcd_print_clk_freqs(hba);
+ 
+-	ufshcd_vops_dbg_register_dump(hba);
++	ufshcd_vops_dbg_register_dump(hba, no_sleep);
++}
++
++static void ufshcd_print_host_regs(struct ufs_hba *hba)
++{
++	__ufshcd_print_host_regs(hba, false);
++}
++
++static void ufshcd_print_host_regs_atomic(struct ufs_hba *hba)
++{
++	__ufshcd_print_host_regs(hba, true);
+ }
+ 
+ static
+@@ -4821,7 +4831,7 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+ 		dev_err(hba->dev,
+ 				"OCS error from controller = %x for tag %d\n",
+ 				ocs, lrbp->task_tag);
+-		ufshcd_print_host_regs(hba);
++		ufshcd_print_host_regs_atomic(hba);
+ 		ufshcd_print_host_state(hba);
+ 		break;
+ 	} /* end of switch */
+@@ -5617,7 +5627,7 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
+ 					__func__, hba->saved_err,
+ 					hba->saved_uic_err);
+ 
+-				ufshcd_print_host_regs(hba);
++				ufshcd_print_host_regs_atomic(hba);
+ 				ufshcd_print_pwr_info(hba);
+ 				ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+ 				ufshcd_print_trs(hba, hba->outstanding_reqs,
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 2ae6c7c..3de7cbb 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -323,7 +323,7 @@ struct ufs_hba_variant_ops {
+ 	int	(*apply_dev_quirks)(struct ufs_hba *hba);
+ 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
+ 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+-	void	(*dbg_register_dump)(struct ufs_hba *hba);
++	void	(*dbg_register_dump)(struct ufs_hba *hba, bool no_sleep);
+ 	int	(*phy_initialization)(struct ufs_hba *);
+ 	void	(*device_reset)(struct ufs_hba *hba);
+ };
+@@ -1078,10 +1078,11 @@ static inline int ufshcd_vops_resume(struct ufs_hba *hba, enum ufs_pm_op op)
+ 	return 0;
+ }
+ 
+-static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
++static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba,
++						 bool no_sleep)
+ {
+ 	if (hba->vops && hba->vops->dbg_register_dump)
+-		hba->vops->dbg_register_dump(hba);
++		hba->vops->dbg_register_dump(hba, no_sleep);
+ }
+ 
+ static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
