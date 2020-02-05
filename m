@@ -2,126 +2,114 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1DC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC674C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69803214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDD820672
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FLa7puDp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="o+udOMUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgBEXxJ (ORCPT
+        id S1727615AbgBEXxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:53:09 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:36250 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727149AbgBEXxJ (ORCPT
+        Wed, 5 Feb 2020 18:53:48 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:45738 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgBEXxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:53:09 -0500
-Received: by mail-qv1-f65.google.com with SMTP id db9so2030013qvb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:53:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/m+6/gHtitRcFwDRfgIzzOezx3KJKRXU/a2k3eD85GU=;
-        b=FLa7puDpv4wlbq05A10ZykfGH59L4UeD7CB9/Lf0OsX0XtUrdga2W2J0Q+VZk30wad
-         oiE997YzvsAZQ2T79shfFhO2SvlFt/d+QfpgrTkPRValXuFvVw2LepfnACEwPO5Gyiph
-         nos0QgbV/Y5frbDSa+0I1SXBgT4/2IWYpNCWdK8KdLShiuvNp75XJ6p3dm8xuH3/Fzrq
-         8iX7HE8qv1+8grJip7uVWB1mMVU6vTmswrGHASeYxQanYvqlSsO3qK5rUyF9L1iNO+FT
-         19RjBaO6LHwteGx1OxLouGE98zrOZhI9QrZ1lN4WtgcQUH94krDgJj7Udw/IN/Ji+d/W
-         LyDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/m+6/gHtitRcFwDRfgIzzOezx3KJKRXU/a2k3eD85GU=;
-        b=FJwbvMYETP4YhMsG2lHzE0sCXNJmYMZWut29avVBlPrPkK7ts++1saE05uSVdjJjQ2
-         UMaIlTfpSOXALvOrsOjZhQKklhVkouIzFPtKD7b1YynEVuFHlXWS9ZZaxhHfCTVlxomp
-         tbLOjf5s5cmPc0IOWs+jSwFnjqs+UlmK8bCGExaMxRfSR7Af5hQfyFIW9Q3cxP1uFO+Q
-         AOHG6NjdN/PcMrFylzjNVC79hlSVhEC+XkLSE++7F9XdGXIeIe/RgyBtDEoA8O+7SO/k
-         qgdooBUV/OKw9AZPYQ1JAiN8Tz/2dakST+eYdTPi80rwc8m8Y+DL8ww7MWZoXOoujCwp
-         UaKQ==
-X-Gm-Message-State: APjAAAX/6ARsdI39acDhdl17caEcRzVJk6+qXDr8H8GcF2xAJ8LaKwUv
-        U5LqErNuocqlaLc8M1PDsnjHy1iwjm57rnBltoGJkQ==
-X-Google-Smtp-Source: APXvYqyzKRTHTvT+l4TdaQr2pk5kOvN2mGmw40JYEsRH+53Jof9zm1ZEoS9/lbvB60SM2gWBa8IruOgj0c8Qd9efzVY=
-X-Received: by 2002:a0c:cdcb:: with SMTP id a11mr165374qvn.244.1580946787002;
- Wed, 05 Feb 2020 15:53:07 -0800 (PST)
+        Wed, 5 Feb 2020 18:53:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QxM7vFDpeUoZ8IDa9CFBEsGoHA6Q5iGUKmBkcPl6X2M=; b=o+udOMURKZLfOAnHR78OlJ0Mw
+        ObYjpnWzc0G8G332wh9jnadCgnlTtlUsGc0rpAP2eaL8xHeTv6ntJ+cgoxMpfO99FNwOTy7hyDTWM
+        jr9kCvjZHyxT74Z1U4K8EsXGDFJgvAukocoMmpIfrFoRHfIPlL28FY52V/Vcp0FPB9BFl7YRpI8V4
+        WDg35zfmXQFIG1zZal1eD/Ga+rn2kAjV15w8wk7bMh/ZOKgYLOvn5FW+8khnEsbJOTCnlm+SdZVQ9
+        7hJy9+XAmJwpcfpcO5EEXgIJuvCbVMFTPxl10EYNARVAlaRWB0ZgKYso7tnupDjJeSWcKIpn07pcS
+        q2LMTSQ/A==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:43986)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1izUU7-0003jB-Oz; Wed, 05 Feb 2020 23:53:31 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1izUU3-0002IX-C8; Wed, 05 Feb 2020 23:53:27 +0000
+Date:   Wed, 5 Feb 2020 23:53:27 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     arnd@arndb.de, linus.walleij@linaro.org, akpm@linux-foundation.org,
+        nsekhar@ti.com, mchehab+samsung@kernel.org,
+        bgolaszewski@baylibre.com, armlinux@m.disordat.com,
+        benjamin.gaignard@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] arm: make kexec depend on MMU
+Message-ID: <20200205235327.GV25745@shell.armlinux.org.uk>
+References: <5b595d37283f043df78259221f2b7d18e0cb0ce5.1580942558.git.stefan@agner.ch>
 MIME-Version: 1.0
-References: <20200202014624.75356-1-hridya@google.com> <CAHC9VhR-aUtrU4PTibDLLG2S5GB9bx9MtwKuyH-x9eqSCmyP9w@mail.gmail.com>
-In-Reply-To: <CAHC9VhR-aUtrU4PTibDLLG2S5GB9bx9MtwKuyH-x9eqSCmyP9w@mail.gmail.com>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Wed, 5 Feb 2020 15:52:30 -0800
-Message-ID: <CA+wgaPPEpmD50rBffh3NDhAfxLRJh13QT0NX80xOaEfotfXyqg@mail.gmail.com>
-Subject: Re: [PATCH] selinux: Fix typo in filesystem name
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Mark Salyzyn <salyzyn@android.com>, selinux@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b595d37283f043df78259221f2b7d18e0cb0ce5.1580942558.git.stefan@agner.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 3:28 PM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Sat, Feb 1, 2020 at 8:46 PM Hridya Valsaraju <hridya@google.com> wrote:
-> >
-> > Correct the filesystem name to "binder" to enable
-> > genfscon per-file labelling for binderfs.
-> >
-> > Fixes: 7a4b5194747 ("selinux: allow per-file labelling for binderfs")
-> > Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> > ---
-> >
-> > Hello,
-> >
-> > I seem to have made the typo/mistake during a rebase. Sorry about that
-> > :(
-> >
-> > Thanks,
-> > Hridya
-> >
-> >  security/selinux/hooks.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> Ooops :/
->
-> Thanks for the fix.  I've merged this into selinux/stable-5.6, but due
-> to some personal scheduling issues on my end I'm going to refrain from
-> sending this to Linus until next week.
+Does patch 8951/1, which has been merged into mainline, not fix this?
 
-Thank you Paul and Stephen!
+On Wed, Feb 05, 2020 at 11:43:44PM +0100, Stefan Agner wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> arm nommu config with KEXEC enabled doesn't compile
+> arch/arm/kernel/setup.c: In function 'reserve_crashkernel':
+> arch/arm/kernel/setup.c:1005:25: error: 'SECTION_SIZE' undeclared (first
+> use in this function)
+>              crash_size, SECTION_SIZE);
+> 
+> since 61603016e212 ("ARM: kexec: fix crashkernel= handling") which is
+> over one year without anybody noticing. I have only noticed beause of
+> my testing nommu config which somehow gained CONFIG_KEXEC without
+> an intention. This suggests that nobody is actually using KEXEC
+> on nommu ARM configs. It is even a question whether kexec works with
+> nommu.
+> 
+> Make KEXEC depend on MMU to make this clear. If somebody wants to enable
+> there will be probably more things to take care.
+> 
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> Reviewed-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  arch/arm/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 96dab76da3b3..59ce8943151f 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1906,6 +1906,7 @@ config KEXEC
+>  	bool "Kexec system call (EXPERIMENTAL)"
+>  	depends on (!SMP || PM_SLEEP_SMP)
+>  	depends on !CPU_V7M
+> +	depends on MMU
+>  	select KEXEC_CORE
+>  	help
+>  	  kexec is a system call that implements the ability to shutdown your
+> -- 
+> 2.25.0
+> 
+> 
 
-Regards,
-Hridya
-
->
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index 89fe3a805129..d67a80b0d8a8 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -699,7 +699,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
-> >
-> >         if (!strcmp(sb->s_type->name, "debugfs") ||
-> >             !strcmp(sb->s_type->name, "tracefs") ||
-> > -           !strcmp(sb->s_type->name, "binderfs") ||
-> > +           !strcmp(sb->s_type->name, "binder") ||
-> >             !strcmp(sb->s_type->name, "pstore"))
-> >                 sbsec->flags |= SE_SBGENFS;
-> >
-> > --
-> > 2.25.0.341.g760bfbb309-goog
->
-> --
-> paul moore
-> www.paul-moore.com
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
