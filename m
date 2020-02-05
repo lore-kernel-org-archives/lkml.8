@@ -2,121 +2,203 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3425C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6F3C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BB12192A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2602082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgBEE5H (ORCPT
+        id S1726236AbgBEFBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:57:07 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41463 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbgBEE5G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:57:06 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so927462eds.8;
-        Tue, 04 Feb 2020 20:57:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UCEeJD0oPt/cyzPGhF5uF/YpWpW9XVqpjLag5G1/XFc=;
-        b=Hv1fXXF32hvj7LYLlq2qPkonws7uAXVX+JzLHRKk/YhcjNzL+e6tCsjNpLKjBmGJLW
-         DLLMfdNwwD/0OPOAZ4pUvhP8I1XVo7v6+iSEugDMzM2WBU9hj1Xc9Qjn9F+jR6GXOEOL
-         jymYUw+GNbAK5j0W4HHS7jSEjca/FDp4guwxKv6RFQy27Qa4m8gGEQNR8mGIpjTb3bTr
-         LYG6usIM4me2OYQl+Y/sUACANTLVZrscSJYLDt8LJcEs5kD6ZhS9S6e8GQIU7fzGdx2i
-         E0q8vUNAjFtEuCmUry+x3qi4qgvcqfIOl5Nk7ZJmrLMhACc74P/1k0AoECxpvWAA1HA0
-         22ZA==
-X-Gm-Message-State: APjAAAUsomYpFMKl5VW2F5T8/xsTn34QORqSwnZAeHzkaHK0klAywEhQ
-        C4XB0f8MC/KX6FTCpUcNOL5FhB2adpM=
-X-Google-Smtp-Source: APXvYqzZvg2g+5sZ0P6JCpNVatD29o3L5Vs2eUn4du8DylTbX/kBvFuqQQMzUJhkXTdsjwTsziKzdA==
-X-Received: by 2002:a05:6402:28d:: with SMTP id l13mr3350267edv.236.1580878624510;
-        Tue, 04 Feb 2020 20:57:04 -0800 (PST)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id ck19sm1609324ejb.48.2020.02.04.20.57.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 20:57:04 -0800 (PST)
-Received: by mail-wr1-f47.google.com with SMTP id z9so948561wrs.10;
-        Tue, 04 Feb 2020 20:57:04 -0800 (PST)
-X-Received: by 2002:a5d:484f:: with SMTP id n15mr26015369wrs.365.1580878623767;
- Tue, 04 Feb 2020 20:57:03 -0800 (PST)
+        Wed, 5 Feb 2020 00:01:34 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:48352 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbgBEFBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 00:01:34 -0500
+Received: from [192.168.68.106] (unknown [111.18.44.203])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH2sYTDpeNpEMAA--.66S3;
+        Wed, 05 Feb 2020 13:01:14 +0800 (CST)
+Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jean Delvare <jdelvare@suse.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>
+References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+ <a267161f-c8b3-a11c-7416-3ab9ba19aa82@loongson.cn>
+ <20200203131422.384cd168@endymion>
+ <609c7042-0e44-2bd4-5e03-97465621b184@loongson.cn>
+ <17537451580871338@vla4-87a00c2d2b1b.qloud-c.yandex.net>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <081c8d68-35c4-2dc1-f73f-f5cf23cfaf27@loongson.cn>
+Date:   Wed, 5 Feb 2020 13:01:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200205044247.32496-1-yuehaibing@huawei.com>
-In-Reply-To: <20200205044247.32496-1-yuehaibing@huawei.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 5 Feb 2020 12:56:51 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67gzb+8vR=6jQKX07pcARUqBHeburNWM9tqzqhfTnodGg@mail.gmail.com>
-Message-ID: <CAGb2v67gzb+8vR=6jQKX07pcARUqBHeburNWM9tqzqhfTnodGg@mail.gmail.com>
-Subject: Re: [PATCH -next] dmaengine: sun4i: remove set but unused variable 'linear_mode'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <17537451580871338@vla4-87a00c2d2b1b.qloud-c.yandex.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID: AQAAf9DxH2sYTDpeNpEMAA--.66S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw13uF4xGw4xXF4fJw4rGrg_yoWrZr43pa
+        1UGa1YkF4DJr17C3WSqw17Zr1a93yfXrykWry7Wr17u3Z0qF1ftr1Ikr1j9FyUZr1rGay2
+        yr1aqFyfu3WYya7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9a14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
+        Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
+        x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
+        1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j
+        6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+        UvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2/5/20 10:55 AM, Jiaxun Yang wrote:
+>
+>> On 2/3/20 8:14 PM, Jean Delvare wrote:
+>>
+>>> Hi Tiezhun,
+>>>
+>>> On Mon, 3 Feb 2020 16:32:03 +0800, Tiezhu Yang wrote:
+>>>
+>>>> On 1/16/20 9:26 PM, Tiezhu Yang wrote:
+>>>>
+>>>>> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+>>>>> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+>>>>> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+>>>>> driver can easily match various of mainboards.
+>>>>>
+>>>>> In the SMBIOS reference specification, the table anchor string "_SM_" is
+>>>>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+>>>>> but there exists a special case for Loongson platform, when call function
+>>>>> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+>>>>> it is reserved for SMBIOS and can be normally access in the BIOS.
+>>>>>
+>>>>> This patch works fine on the Loongson 3A3000 platform which belongs to
+>>>>> MIPS architecture and has no influence on the other architectures such
+>>>>> as x86 and ARM.
+>>>>>
+>>>>> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+>>>>> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+>>>>> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
+>>>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>>> Reviewed-by: Huacai Chen <chenhc@lemote.com>
+>>>>> ---
+>>>>>
+>>>>> v2:
+>>>>> - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
+>>>>> - refine definitions and Kconfig by Jiaxun
+>>>>>
+>>>>> arch/mips/Kconfig | 10 ++++++++++
+>>>>> arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
+>>>>> arch/mips/kernel/setup.c | 2 ++
+>>>>> drivers/firmware/dmi_scan.c | 6 +++++-
+>>>>> 4 files changed, 37 insertions(+), 1 deletion(-)
+>>>>> create mode 100644 arch/mips/include/asm/dmi.h
+>>>> Hi Paul and Jean,
+>>>>
+>>>> How do you think this patch?
+>>> Looks good to me and you can add:
+>>>
+>>> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+>>>
+>>> for the dmi subsystem part.
+>>>
+>>>> Should I split it into the following two patches?
+>>>> [PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+>>>> [PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
+>>>>
+>>>> The first patch is only related with the common dmi code
+>>>> drivers/firmware/dmi_scan.c, the other patch is only related
+>>>> with the mips code under arch/mips.
+>>>>
+>>>> If you have any questions or suggestions, please let me know.
+>>>> I am looking forward to your early reply.
+>>> I'm fine either way. I you do not split it, as most changes are in the
+>>> mips arch files and I do not expect any conflict in the dmi subsystem
+>>> part, I believe that the patch should be merged by the mips arch
+>>> maintainer.
+>> Hi Jean,
+>>
+>> Thanks very much for your review.
+>>
+>> As described in another mail [1] by MIPS maintainer Paul Burton:
+>>
+>> "So if unmerged arch/mips/ patches are holding you up, ping me, but
+>> preferrably make sure code being added actually belongs under arch/mips/
+>> first."
+>>
+>> I think it is better to split it into the following two patches?
+>> [PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+>> [PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
+> Hi Tiezhu,
+>
+> That way will break bisect. In this case, I think the patch should still go through MIPS
+> tree after grab review or ack from DMI maintainer.
+>
+> There is a grey margin for tree-wide patches, we should discuss how to deal with them case by
+> case, for the email you mentioned, the main focus is platform driver.
 
-On Wed, Feb 5, 2020 at 12:43 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> drivers/dma/sun4i-dma.c: In function sun4i_dma_prep_dma_cyclic:
-> drivers/dma/sun4i-dma.c:672:24: warning:
->  variable linear_mode set but not used [-Wunused-but-set-variable]
->
-> commit ffc079a4accc ("dmaengine: sun4i: Add support for cyclic requests with dedicated DMA")
-> involved this unused variable.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/dma/sun4i-dma.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-> index bbc2bda..501cd44 100644
-> --- a/drivers/dma/sun4i-dma.c
-> +++ b/drivers/dma/sun4i-dma.c
-> @@ -669,7 +669,7 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
->         dma_addr_t src, dest;
->         u32 endpoints;
->         int nr_periods, offset, plength, i;
-> -       u8 ram_type, io_mode, linear_mode;
-> +       u8 ram_type, io_mode;
->
->         if (!is_slave_direction(dir)) {
->                 dev_err(chan2dev(chan), "Invalid DMA direction\n");
-> @@ -684,11 +684,9 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
->
->         if (vchan->is_dedicated) {
->                 io_mode = SUN4I_DDMA_ADDR_MODE_IO;
-> -               linear_mode = SUN4I_DDMA_ADDR_MODE_LINEAR;
->                 ram_type = SUN4I_DDMA_DRQ_TYPE_SDRAM;
->         } else {
->                 io_mode = SUN4I_NDMA_ADDR_MODE_IO;
-> -               linear_mode = SUN4I_NDMA_ADDR_MODE_LINEAR;
->                 ram_type = SUN4I_NDMA_DRQ_TYPE_SDRAM;
->         }
 
-I think it's better to actually use these values later when composing
-the value for `endpoints`, as we do in sun4i_dma_prep_slave_sg().
+Hi Jiaxun,
 
-The code currently works because SUN4I_DDMA_ADDR_MODE_LINEAR == 0.
-However explicitly using the value makes the code more readable,
-and doesn't require the reader to have implicit knowledge of default
-values for parameters not specified in the composition of `endpoints`.
 
-ChenYu
+Sorry for the late reply.
+
+I just saw your email a moment ago, and already sent the split v3 patch.
+
+https://lore.kernel.org/patchwork/patch/1189713/
+
+https://lore.kernel.org/patchwork/patch/1189714/
+
+Let us wait and hear the opinion of Paul.
+
+
+Hi Paul,
+
+How do you think this case? One patch or two patches?
+
+If one patch is better, I will send a v4 patch to make MIPS DMI config
+
+depend on MACH_LOONGSON64.
+
+
+Hi Jean,
+
+Please do not merge the following patch until  we hear the opinion of Paul:
+
+[PATCH v3,1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+
+https://lore.kernel.org/patchwork/patch/1189713/
+
+
+Thanks,
+
+
+Tiezhu Yang
+
+
+>
+> Thanks.
+>
+> --
+>
+> Jiaxun Yang
+
