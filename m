@@ -2,155 +2,97 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B7BC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D52C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6965F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580937694;
-	bh=HZPos4rVk7aXuEQAlz+FmnYnm93VWpVbO/dAG4GSfM8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R0SD8pgLU43/SPpQn3Wny4C4254TfPqVDgbty3No1XA0VmTTW6wrgY5EKYdGDLuEa
-	 O2T2T+JVyeSeYPRFCowlo5xFJcAupzqVE8bDgCkpfQLRq3w+TVm3H1W4JZppybtbpH
-	 X+GXpltHBC86QB+0qcPANrrdYBEj+h9z0xJVjk/8=
+	by mail.kernel.org (Postfix) with ESMTP id 8AE572072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ImbCkX8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgBEVVd (ORCPT
+        id S1727389AbgBEVXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:21:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727085AbgBEVVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:21:33 -0500
-Received: from localhost (unknown [193.117.204.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDE562082E;
-        Wed,  5 Feb 2020 21:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580937692;
-        bh=HZPos4rVk7aXuEQAlz+FmnYnm93VWpVbO/dAG4GSfM8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HKH4g//cfQ6S5jaqc/c7WFe/kXaldCe314/4mmcb1fyA4rbMwK32fpG6fyeXI8q7j
-         VPup/+nTDbgRkufOqmcRVp1fGQPMkvpnyvi1m3X9ssY+CI5MwbjyDmiHGtDrPYflbc
-         Ucj/D+9B/mkr5H5DwmTkQ1ak5Tc2JYeOgrfXhE3Y=
-Date:   Wed, 5 Feb 2020 21:21:29 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/90] 5.4.18-stable review
-Message-ID: <20200205212129.GA1452440@kroah.com>
-References: <20200203161917.612554987@linuxfoundation.org>
- <9a5a92f2-6e28-a9ab-a851-8d7e56482df6@roeck-us.net>
- <20200205151357.GB1236691@kroah.com>
- <20200205162429.GB25403@roeck-us.net>
- <20200205193008.GC1327971@kroah.com>
- <20200205210150.GA18483@roeck-us.net>
+        Wed, 5 Feb 2020 16:23:52 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6298 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgBEVXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 16:23:52 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3b324f0000>; Wed, 05 Feb 2020 13:23:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Feb 2020 13:23:51 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 05 Feb 2020 13:23:51 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb
+ 2020 21:23:51 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 5 Feb 2020 21:23:51 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.216]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e3b32660001>; Wed, 05 Feb 2020 13:23:51 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v2 1/6] dt-bindings: clock: tegra: Add clk id for CSI TPG clock
+Date:   Wed, 5 Feb 2020 13:23:21 -0800
+Message-ID: <1580937806-17376-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580937806-17376-1-git-send-email-skomatineni@nvidia.com>
+References: <1580937806-17376-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205210150.GA18483@roeck-us.net>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580937807; bh=S6xZgZFIi3mqYtcaBlNqBcPaadNMOP/GEU2NRAJynoY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=ImbCkX8JcgW9LjNHBAbr4zRWTOTJkZsyJLSoRROFZ8jl6Qa2hjMpzUN4m1dQZPeT8
+         ZU2VGvnWtHuTFf2jG1+dOa1IeIMCvbKYVxquGNXnIJHjuHjMsKB6iNIahmAeFqY8qC
+         9G94XbHoVuBWBvqiGA4t81rLzcXG6Qps7r3+NBj9eGKWElsWiEYdUCD/1U2o3IpbFc
+         3Sk4eC+/9Of6d0xorTJXrRdcBNvEzaLMYPUz3460MQ8S6eOiiAUmq3LhA3bI8tOueU
+         U6zM2hPjq4jmF+McFjRGs5p+KQTcLMGhHjcDcnENyh8QMOis3BYzjmr+1XRJPfTEfI
+         qHbNfZ1KFYVsA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 01:01:50PM -0800, Guenter Roeck wrote:
-> On Wed, Feb 05, 2020 at 07:30:08PM +0000, Greg Kroah-Hartman wrote:
-> > On Wed, Feb 05, 2020 at 08:24:29AM -0800, Guenter Roeck wrote:
-> > > On Wed, Feb 05, 2020 at 03:13:57PM +0000, Greg Kroah-Hartman wrote:
-> > > > On Tue, Feb 04, 2020 at 06:37:38AM -0800, Guenter Roeck wrote:
-> > > > > On 2/3/20 8:19 AM, Greg Kroah-Hartman wrote:
-> > > > > > This is the start of the stable review cycle for the 5.4.18 release.
-> > > > > > There are 90 patches in this series, all will be posted as a response
-> > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > let me know.
-> > > > > > 
-> > > > > > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> > > > > > Anything received after that time might be too late.
-> > > > > > 
-> > > > > 
-> > > > > Building i386:allyesconfig ... failed
-> > > > > Building i386:allmodconfig ... failed
-> > > > > --------------
-> > > > > Error log:
-> > > > > In file included from arch/x86/kernel/pci-dma.c:2:
-> > > > > include/linux/dma-direct.h:29:20: error: conflicting types for 'dma_capable'
-> > > > >    29 | static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
-> > > > >       |                    ^~~~~~~~~~~
-> > > > > In file included from include/linux/dma-direct.h:12,
-> > > > >                  from arch/x86/kernel/pci-dma.c:2:
-> > > > > arch/x86/include/asm/dma-direct.h:5:6: note: previous declaration of 'dma_capable' was here
-> > > > >     5 | bool dma_capable(struct device *dev, dma_addr_t addr, size_t size);
-> > > > 
-> > > > Ok, I think this is now resolved with a patch that Sasha added.
-> > > > 
-> > > > I have pushed out a -rc4 that _should_ build and boot properly.
-> > > > 
-> > > The i386 build still fails with v5.4.17-99-gbd0c6624a110 (-rc4).
-> > 
-> > Crap.
-> > 
-> > Ok, let me get some food and then try to figure this out...
-> > 
-> 
-> # bad: [bd0c6624a110d0f667cd2f3636f88e8de9b75851] Linux 5.4.18-rc4
-> # good: [313c8460cf0290fb1b9f71a20573fc32ac6c9cee] Linux 5.4.17
-> git bisect start 'HEAD' 'v5.4.17'
-> # good: [7c8bd91288c71011d793de1926a30182382141a0] parisc: Use proper printk format for resource_size_t
-> git bisect good 7c8bd91288c71011d793de1926a30182382141a0
-> # good: [67040c483ee8137adb12e20bb6448786455f4de6] r8152: Disable PLA MCU clock speed down
-> git bisect good 67040c483ee8137adb12e20bb6448786455f4de6
-> # good: [b3f55c9d709e6dcf96af5230295e631f0cbc3a8f] netfilter: nf_tables_offload: fix check the chain offload flag
-> git bisect good b3f55c9d709e6dcf96af5230295e631f0cbc3a8f
-> # good: [87bd4bf79429566adf306b8b133625604460b7c2] perf report: Fix no libunwind compiled warning break s390 issue
-> git bisect good 87bd4bf79429566adf306b8b133625604460b7c2
-> # good: [f831fda5fe86918fcb049721fba779ba2300c022] ASoC: topology: fix soc_tplg_fe_link_create() - link->dobj initialization order
-> git bisect good f831fda5fe86918fcb049721fba779ba2300c022
-> # good: [cc47538aebee48bb7626c84607116e43f57118d5] tracing/uprobe: Fix to make trace_uprobe_filter alignment safe
-> git bisect good cc47538aebee48bb7626c84607116e43f57118d5
-> # bad: [26f444bf728054ad23e5888bdd4ffa899e364b45] dma-direct: unify the dma_capable definitions
-> git bisect bad 26f444bf728054ad23e5888bdd4ffa899e364b45
-> # first bad commit: [26f444bf728054ad23e5888bdd4ffa899e364b45] dma-direct: unify the dma_capable definitions
-> 
-> Reverting 26f444bf728054ad23e5888bdd4ffa899e364b45 fixes that problem, but
-> results in other build failures. After dropping this commit, another bisect yields:
-> 
-> # bad: [56ea21e523a5ebf53e4ce88bc743c60c480d42ff] Linux 5.4.18-rc4
-> # good: [313c8460cf0290fb1b9f71a20573fc32ac6c9cee] Linux 5.4.17
-> git bisect start 'HEAD' 'v5.4.17'
-> # good: [7c8bd91288c71011d793de1926a30182382141a0] parisc: Use proper printk format for resource_size_t
-> git bisect good 7c8bd91288c71011d793de1926a30182382141a0
-> # good: [afbfe89dc11d19769477c5378a7164837baf75be] r8152: disable U2P3 for RTL8153B
-> git bisect good afbfe89dc11d19769477c5378a7164837baf75be
-> # good: [8403906c74753734338665be315175ddd1e03f5e] netfilter: conntrack: sctp: use distinct states for new SCTP connections
-> git bisect good 8403906c74753734338665be315175ddd1e03f5e
-> # good: [6b1562623df22cd81bf2138d880915029bbd414c] dm thin: fix use-after-free in metadata_pre_commit_callback
-> git bisect good 6b1562623df22cd81bf2138d880915029bbd414c
-> # bad: [705430d0039088973d204feea9eb0b7740509194] mm/migrate.c: also overwrite error when it is bigger than zero
-> git bisect bad 705430d0039088973d204feea9eb0b7740509194
-> # bad: [180dafcb1d1c0ee38f935810fe18d02eb7658c9f] dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
-> git bisect bad 180dafcb1d1c0ee38f935810fe18d02eb7658c9f
-> # good: [87bd4bf79429566adf306b8b133625604460b7c2] perf report: Fix no libunwind compiled warning break s390 issue
-> git bisect good 87bd4bf79429566adf306b8b133625604460b7c2
-> # first bad commit: [180dafcb1d1c0ee38f935810fe18d02eb7658c9f] dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
-> 
-> Dropping that patch as well fixes the problem for me.
+Tegra210 uses PLLD out internally for CSI TPG.
 
-Ah, now I got my i386 build working, yeah, this works for me too.
+This patch adds clk id for this CSI TPG clock from PLLD.
 
-Sasha, I think I tried to backport these dma patches earlier in the
-5.4.y series, but it was just too hard to unwind, so I figured it wasn't
-worth it.  I've dropped these two patches now and will go do a
-release...
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ include/dt-bindings/clock/tegra210-car.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks for the testing and help here, much appreciated.
+diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
+index 44f60623f99b..dc22aaec8805 100644
+--- a/include/dt-bindings/clock/tegra210-car.h
++++ b/include/dt-bindings/clock/tegra210-car.h
+@@ -349,7 +349,7 @@
+ #define TEGRA210_CLK_PLL_P_OUT_XUSB 317
+ #define TEGRA210_CLK_XUSB_SSP_SRC 318
+ #define TEGRA210_CLK_PLL_RE_OUT1 319
+-/* 320 */
++#define TEGRA210_CLK_CSI_TPG 320
+ /* 321 */
+ #define TEGRA210_CLK_ISP 322
+ #define TEGRA210_CLK_PLL_A_OUT_ADSP 323
+-- 
+2.7.4
 
-greg k-h
