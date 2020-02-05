@@ -2,133 +2,111 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7458C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9AFC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6D0217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580942586;
-	bh=nn5r09JSEA69HqCVsbRn5ZRAKkatyDwlsdVsj6TXSvg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=uE4lJc7g88R8/lJbeMz+Pf2IXcdSyRScKPFNqk3ei/msh6CjjDHD32PLwCRmlrCz6
-	 +6clcQLhBlm9VL4zR4rd+d4Vl9ZHOzYOxxbVTixqsQP80LIsfnnTT1Is3ephMcah9l
-	 L7loQkBX77+9MqzVF72obicJP+E1uucyRwF04QQs=
+	by mail.kernel.org (Postfix) with ESMTP id D4037214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYYIerHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgBEWnG (ORCPT
+        id S1727562AbgBEWpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727493AbgBEWnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:43:05 -0500
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65D72214AF;
-        Wed,  5 Feb 2020 22:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580942584;
-        bh=nn5r09JSEA69HqCVsbRn5ZRAKkatyDwlsdVsj6TXSvg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=v+bTsd3SYSOG83+82drqx4QCsD7STR7LWPil9yz8osY3LqRWEK7Xn4uw3r87HI2ib
-         JC7qWCSMlB6+ZxzIkB79R3eGP4IZ+MSSpijveIabqAbwd3sbBy+ODSLE8R3q4sxdjo
-         BhB3Wreljh++Fzh07OMNhpp5qn9InM8a999FMkYs=
-Date:   Wed, 5 Feb 2020 14:43:04 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: moar new code for 5.6
-Message-ID: <20200205224303.GF6870@magnolia>
+        Wed, 5 Feb 2020 17:45:21 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37951 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727456AbgBEWpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:45:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580942719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qhu3K4UfMyr9rLuPVrEXyLiBiRw+0bLNH6EYh61xjr4=;
+        b=XYYIerHForgEJm1bmnDiaCU8X52LECPVfk5BEnHr8pgT2ETQiFlrNX2vmrVeE517TV/aNA
+        7Bc8b2ZMF7yFm5KeCy0JZK97GYECGWUu+836UnwYkEoYZx1ZHrwLsQVZcU3Jr0hZu3mZd/
+        BidUPuYtBCvqSpFmAEsmvZYBKKF0ndM=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-vydQWdGGOleAHeeW_64COQ-1; Wed, 05 Feb 2020 17:45:17 -0500
+X-MC-Unique: vydQWdGGOleAHeeW_64COQ-1
+Received: by mail-qv1-f72.google.com with SMTP id p3so2484496qvt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:45:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qhu3K4UfMyr9rLuPVrEXyLiBiRw+0bLNH6EYh61xjr4=;
+        b=EZ68MP17LeQfteF1uYZSpgEF88xhtrqGuiare+E9/BZoUJvKXOgV3gSygQ/VSxFPqs
+         rujcEZpo8b5ZO0fyLX2dLTXUPXSV5ctFyyubHFSLFKZWJaiLQH3JHjW3O/LbtVoSnq+N
+         k3YUQHjOo5zykOKjv1QuKAVBBVEhH6BCZyy0lVoEnONrhj8NpXxF8TBD2jsoApJtyjIt
+         956CdDIg+UdNn93QrI+C6mB/GX0QG7gj4zTrb+fEVjfZFLCrOjkf5PqN8hbkg/lzVy/F
+         Jt3uiuGWceDWuMdEP3DR7VFdHk91tuPX15uXxUR17OZUMnNwVBstcj7aelZfVxl/PzCs
+         imWg==
+X-Gm-Message-State: APjAAAVWtCY0l3L0iOFucca0Bs3M4toOOOYN6Gc92SaprKnoxqT4aCdS
+        QEWyWbAfZrnAFnO/GmOy6wFe9Wabu+hc8rSh79mveM86B/2owZFaQ5gSt558IDsOdWB4xSGcEEW
+        yNCW2Mo1hvXMIMAiwwt0feWIn
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr61836qko.116.1580942717359;
+        Wed, 05 Feb 2020 14:45:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyAvhOweFr4KXXnP5Mb9+7dhUBLh1Z13T+81iDjtWqZt6EK3UE5xX8DXWaSS5tvfd+S4d7C7g==
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr61812qko.116.1580942717130;
+        Wed, 05 Feb 2020 14:45:17 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id x22sm615496qtq.30.2020.02.05.14.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 14:45:16 -0800 (PST)
+Date:   Wed, 5 Feb 2020 17:45:13 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 06/19] KVM: Drop kvm_arch_create_memslot()
+Message-ID: <20200205224513.GH387680@xz-x1>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-7-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200121223157.15263-7-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Jan 21, 2020 at 02:31:44PM -0800, Sean Christopherson wrote:
+> Remove kvm_arch_create_memslot() now that all arch implementations are
+> effectively nops.  Removing kvm_arch_create_memslot() eliminates the
+> possibility for arch specific code to allocate memory prior to setting
+> a memslot, which sets the stage for simplifying kvm_free_memslot().
+> 
+> Cc: Janosch Frank <frankja@linux.ibm.com>
+> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Please pull this second batch of new changes for 5.6-rc1.  This contains
-the buffer error code refactoring I mentioned last week, now that it has
-had extra time to complete the full xfs fuzz testing suite to make sure
-there aren't any obvious new bugs.
+Reviewed-by: Peter Xu <peterx@redhat.com>
 
-This merges cleanly against upstream as of about 15 minutes ago.  Note
-that the -merge-7 and -merge-8 tags both point to the same ten day old
-commit; the message attached to -8 reflects only the changes since last
-week's pull.  Please let me know if anything odd happens during the
-merge, though it should be clean.
+-- 
+Peter Xu
 
---D
-
-The following changes since commit b3531f5fc16d4df2b12567bce48cd9f3ab5f9131:
-
-  xfs: remove unused variable 'done' (2020-01-23 21:24:50 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.6-merge-8
-
-for you to fetch changes up to cdbcf82b86ea24aa942991b4233cd8ddf13f590c:
-
-  xfs: fix xfs_buf_ioerror_alert location reporting (2020-01-26 14:32:27 -0800)
-
-----------------------------------------------------------------
-(More) new code for 5.6:
-- Refactor the metadata buffer functions to return the usual int error
-value instead of the open coded error checking mess we have now.
-
-----------------------------------------------------------------
-Darrick J. Wong (12):
-      xfs: make xfs_buf_alloc return an error code
-      xfs: make xfs_buf_get_map return an error code
-      xfs: make xfs_buf_read_map return an error code
-      xfs: make xfs_buf_get return an error code
-      xfs: make xfs_buf_get_uncached return an error code
-      xfs: make xfs_buf_read return an error code
-      xfs: make xfs_trans_get_buf_map return an error code
-      xfs: make xfs_trans_get_buf return an error code
-      xfs: remove the xfs_btree_get_buf[ls] functions
-      xfs: make xfs_*read_agf return EAGAIN to ALLOC_FLAG_TRYLOCK callers
-      xfs: remove unnecessary null pointer checks from _read_agf callers
-      xfs: fix xfs_buf_ioerror_alert location reporting
-
- fs/xfs/libxfs/xfs_ag.c          |  21 +++---
- fs/xfs/libxfs/xfs_alloc.c       |  51 ++++++-------
- fs/xfs/libxfs/xfs_attr_remote.c |  22 ++----
- fs/xfs/libxfs/xfs_bmap.c        |  25 ++++---
- fs/xfs/libxfs/xfs_btree.c       |  45 +----------
- fs/xfs/libxfs/xfs_btree.h       |  21 ------
- fs/xfs/libxfs/xfs_da_btree.c    |   8 +-
- fs/xfs/libxfs/xfs_ialloc.c      |  12 +--
- fs/xfs/libxfs/xfs_refcount.c    |   6 --
- fs/xfs/libxfs/xfs_sb.c          |  17 +++--
- fs/xfs/scrub/agheader_repair.c  |   4 -
- fs/xfs/scrub/fscounters.c       |   3 -
- fs/xfs/scrub/repair.c           |  10 ++-
- fs/xfs/xfs_attr_inactive.c      |  17 +++--
- fs/xfs/xfs_buf.c                | 161 ++++++++++++++++++++++++----------------
- fs/xfs/xfs_buf.h                |  33 ++++----
- fs/xfs/xfs_buf_item.c           |   2 +-
- fs/xfs/xfs_discard.c            |   2 +-
- fs/xfs/xfs_dquot.c              |   8 +-
- fs/xfs/xfs_filestream.c         |  11 ++-
- fs/xfs/xfs_inode.c              |  12 +--
- fs/xfs/xfs_log_recover.c        |  30 +++-----
- fs/xfs/xfs_reflink.c            |   2 -
- fs/xfs/xfs_rtalloc.c            |   8 +-
- fs/xfs/xfs_symlink.c            |  37 +++------
- fs/xfs/xfs_trans.h              |  14 ++--
- fs/xfs/xfs_trans_buf.c          |  61 ++++++---------
- 27 files changed, 278 insertions(+), 365 deletions(-)
