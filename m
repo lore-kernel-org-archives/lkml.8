@@ -2,88 +2,98 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0283C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EA8C3524F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E322085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D433D2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580877838;
+	bh=k4/1T+HhTSCuFjv1n9/8fjT04o7baYWhF50eAka6OQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uKCEYsTp3FWBPHw2wz3oEK4lfndSmMG+hfQbbchd7OFKUkgbt7BDl86YGYOSDuk+y
+	 vmHF22FHinNsmFY5YRVkmuM4F4Je0QoTaBusqDNzPwAg3mJNupj79EH3tuFBRMxviX
+	 Vizk54q4xAxu28kQXMG6UBiH4fpPysJrB4Hiy3nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgBEEnH (ORCPT
+        id S1728016AbgBEEn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:43:07 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51466 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727879AbgBEEnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:43:06 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1FE8CC8171B8065DF288;
-        Wed,  5 Feb 2020 12:42:59 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Feb 2020
- 12:42:51 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <mripard@kernel.org>, <wens@csie.org>, <stefan@olimex.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dmaengine: sun4i: remove set but unused variable 'linear_mode'
-Date:   Wed, 5 Feb 2020 12:42:47 +0800
-Message-ID: <20200205044247.32496-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 4 Feb 2020 23:43:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727879AbgBEEn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 23:43:57 -0500
+Received: from localhost (unknown [49.207.63.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14CAC2085B;
+        Wed,  5 Feb 2020 04:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580877837;
+        bh=k4/1T+HhTSCuFjv1n9/8fjT04o7baYWhF50eAka6OQY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yB/Eet4KOP/iwRCK+7Yenry7SZkZfkA27+2iwcxdJL4S0ffJkrjw0mqyYIdTLk/oL
+         htxDkACD6d66vStqduOxElwJQ4ohy89ieIORJIuEfKngjiogSuE05QFmdKP0nQ+o0C
+         jg0zpeExl/Htr/WAnFAskSNgpWHguQVypEa9M7eE=
+Date:   Wed, 5 Feb 2020 10:13:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
+ dma_request_slave_chan()
+Message-ID: <20200205044352.GC2618@vkoul-mobl>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+ <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <20200204062118.GS2841@vkoul-mobl>
+ <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/dma/sun4i-dma.c: In function sun4i_dma_prep_dma_cyclic:
-drivers/dma/sun4i-dma.c:672:24: warning:
- variable linear_mode set but not used [-Wunused-but-set-variable]
+On 04-02-20, 13:21, Andy Shevchenko wrote:
+> On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 03-02-20, 12:37, Andy Shevchenko wrote:
+> > > On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> > >
+> > > > dma_request_slave_channel_reason() no longer have user in mainline, it
+> > > > can be removed.
+> > > >
+> > > > Advise users of dma_request_slave_channel() and
+> > > > dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+> > >
+> > > How? There are legacy ARM boards you have to care / remove before.
+> > > DMAengine subsystem makes a p*s off decisions without taking care of
+> > > (I'm talking now about dma release callback, for example) end users.
+> >
+> > Can you elaborate issue you are seeing with dma_release callback?
+> 
+> 
+> [    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
+> defined so it is not safe to unbind this driver while in use
 
-commit ffc079a4accc ("dmaengine: sun4i: Add support for cyclic requests with dedicated DMA")
-involved this unused variable.
+Yes that is expected but is not valid in your case.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/dma/sun4i-dma.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Anyway this will be turned off before the release.
 
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index bbc2bda..501cd44 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -669,7 +669,7 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
- 	dma_addr_t src, dest;
- 	u32 endpoints;
- 	int nr_periods, offset, plength, i;
--	u8 ram_type, io_mode, linear_mode;
-+	u8 ram_type, io_mode;
- 
- 	if (!is_slave_direction(dir)) {
- 		dev_err(chan2dev(chan), "Invalid DMA direction\n");
-@@ -684,11 +684,9 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
- 
- 	if (vchan->is_dedicated) {
- 		io_mode = SUN4I_DDMA_ADDR_MODE_IO;
--		linear_mode = SUN4I_DDMA_ADDR_MODE_LINEAR;
- 		ram_type = SUN4I_DDMA_DRQ_TYPE_SDRAM;
- 	} else {
- 		io_mode = SUN4I_NDMA_ADDR_MODE_IO;
--		linear_mode = SUN4I_NDMA_ADDR_MODE_LINEAR;
- 		ram_type = SUN4I_NDMA_DRQ_TYPE_SDRAM;
- 	}
- 
+> It's not limited to that driver, but actually all I'm maintaining.
+> 
+> Users are not happy!
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+
 -- 
-2.7.4
-
-
+~Vinod
