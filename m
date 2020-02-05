@@ -2,195 +2,184 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088ACC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5DC352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B1820659
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJaz2HSL"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2B420659
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 17:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgBER2B (ORCPT
+        id S1727279AbgBERaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:28:01 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55564 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgBER2A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:28:00 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so3365351wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 09:27:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/J7K6eoBY50PYm0N/u4X3+dlKUZnt64LaOlAE9qk+tY=;
-        b=lJaz2HSL0GodXUnBdAWn5vXGicOnSOjlEzL6WRhsXUYvoCwf2EksV/H80DsSr0HvVU
-         jf5gZF9txDXrM3yAMqWtQrJa6rF6ZxYg2ABlbXin3ylMvhed2NeSefp4yc29oR7AO7Kq
-         SForPuVGtkLxc0SWSZpIfaM7l+JRe3quj6YnZtk6CLCdH6Ya1+FowX4QH8PE8atAmrxL
-         2mwslJZqu1/pZH8QJ9X3mo5JZXE2zX0ovIXlKc9ZS9JoWrcs0qZi3ZNp1BsgCSehUGC7
-         pVPo2EESWoXfB1s0YdZHI7GfTR2svAMgYjRNn51zpIpuaTZN19/bg1o9tYC2NLTZCylr
-         L8ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/J7K6eoBY50PYm0N/u4X3+dlKUZnt64LaOlAE9qk+tY=;
-        b=M1IyWLz9T0bEoPs7NquVLizPX7s6x8AKXsqAPM7eFZahtN0m/P0B1+mz39iEhtpOi+
-         kjxP9KervuBoihSMG3ioir4FuGmqYMwu85vfXSxu+M2FtwJ63n8Oe+ak24fN5gfc8VAE
-         cw05enYNHUgxCprlV19b06wWeevErWilrWNBqWTdXWoV6IMU8V6J3L6EJyrhIQq7QEQJ
-         sujYx9UaXfJKP9uVg8mwpydGE7c29j5fGs1sMP3tdbisWsKQOmCshb+4VhG5tjQL92qh
-         U8bmYKd1czoUcmKqo7a8PKFqZhxAd7LDbOaNf8Sgx+60WBc+AoBACIHgG0hIvPhZvqq6
-         Pmlw==
-X-Gm-Message-State: APjAAAWsi0cQMmrlA6duwfA50kG/WQMup3DA4VR27zw1OBLi8ylzf9G1
-        VFFQ2YJcBn7W9VyVlftRquZ21P+zX2H9JffID5iqkA==
-X-Google-Smtp-Source: APXvYqynJh5j49aSDjFF+KSFSB3CwQRk6jra7/lReDNXiogMGUoOKebQhesHur67DC3ixje/LTjLJnSEbVX+e6ufw68=
-X-Received: by 2002:a1c:6a15:: with SMTP id f21mr6625580wmc.126.1580923677710;
- Wed, 05 Feb 2020 09:27:57 -0800 (PST)
+        Wed, 5 Feb 2020 12:30:17 -0500
+Received: from mga03.intel.com ([134.134.136.65]:8273 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbgBERaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 12:30:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 09:30:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,406,1574150400"; 
+   d="scan'208";a="254828117"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Feb 2020 09:30:10 -0800
+Received: from [10.252.5.149] (abudanko-mobl.ccr.corp.intel.com [10.252.5.149])
+        by linux.intel.com (Postfix) with ESMTP id BE1DE5802BC;
+        Wed,  5 Feb 2020 09:30:03 -0800 (PST)
+Subject: [PATCH v6 01/10] capabilities: introduce CAP_PERFMON to kernel and
+ user space
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+References: <576a6141-36d4-14c0-b395-8d195892b916@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <a4c5da70-b6d1-b133-9b64-34e164834b03@linux.intel.com>
+Date:   Wed, 5 Feb 2020 20:30:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200120145635.GA30904@blackbody.suse.cz> <20200124114017.8363-1-mkoutny@suse.com>
- <20200124114017.8363-2-mkoutny@suse.com> <CAJuCfpGjC=YwY=oNnYFNDp2nCuR9YhSU95=xbbeoDEheemte+Q@mail.gmail.com>
-In-Reply-To: <CAJuCfpGjC=YwY=oNnYFNDp2nCuR9YhSU95=xbbeoDEheemte+Q@mail.gmail.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 5 Feb 2020 09:27:45 -0800
-Message-ID: <CAJuCfpEq9c6cdEdqZOq6KDmxSHLNzby=46psRYpGxYhDT31yew@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] cgroup: Iterate tasks that did not finish do_exit()
-To:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     cgroups mailinglist <cgroups@vger.kernel.org>,
-        alex.shi@linux.alibaba.com, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kernel-team <kernel-team@android.com>,
-        JeiFeng Lee <linger.lee@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, Li Zefan <lizefan@huawei.com>,
-        matthias.bgg@gmail.com, shuah@kernel.org,
-        Tejun Heo <tj@kernel.org>, Tom Cherry <tomcherry@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <576a6141-36d4-14c0-b395-8d195892b916@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 2:56 PM Suren Baghdasaryan <surenb@google.com> wrot=
-e:
->
-> On Fri, Jan 24, 2020 at 3:40 AM Michal Koutn=C3=BD <mkoutny@suse.com> wro=
-te:
-> >
-> > PF_EXITING is set earlier than actual removal from css_set when a task
-> > is exitting. This can confuse cgroup.procs readers who see no PF_EXITIN=
-G
-> > tasks, however, rmdir is checking against css_set membership so it can
-> > transitionally fail with EBUSY.
-> >
-> > Fix this by listing tasks that weren't unlinked from css_set active
-> > lists.
-> > It may happen that other users of the task iterator (without
-> > CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
-> > is equal to the state before commit c03cd7738a83 ("cgroup: Include dyin=
-g
-> > leaders with live threads in PROCS iterations") but it may be reviewed
-> > later.
-> >
-> > Reported-by: Suren Baghdasaryan <surenb@google.com>
-> > Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads i=
-n PROCS iterations")
-> > Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
-> > ---
-> >  include/linux/cgroup.h |  1 +
-> >  kernel/cgroup/cgroup.c | 23 ++++++++++++++++-------
-> >  2 files changed, 17 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-> > index d7ddebd0cdec..e75d2191226b 100644
-> > --- a/include/linux/cgroup.h
-> > +++ b/include/linux/cgroup.h
-> > @@ -62,6 +62,7 @@ struct css_task_iter {
-> >         struct list_head                *mg_tasks_head;
-> >         struct list_head                *dying_tasks_head;
-> >
-> > +       struct list_head                *cur_tasks_head;
-> >         struct css_set                  *cur_cset;
-> >         struct css_set                  *cur_dcset;
-> >         struct task_struct              *cur_task;
-> > diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> > index 735af8f15f95..a6e3619e013b 100644
-> > --- a/kernel/cgroup/cgroup.c
-> > +++ b/kernel/cgroup/cgroup.c
-> > @@ -4404,12 +4404,16 @@ static void css_task_iter_advance_css_set(struc=
-t css_task_iter *it)
-> >                 }
-> >         } while (!css_set_populated(cset) && list_empty(&cset->dying_ta=
-sks));
-> >
-> > -       if (!list_empty(&cset->tasks))
-> > +       if (!list_empty(&cset->tasks)) {
-> >                 it->task_pos =3D cset->tasks.next;
-> > -       else if (!list_empty(&cset->mg_tasks))
-> > +               it->cur_tasks_head =3D &cset->tasks;
-> > +       } else if (!list_empty(&cset->mg_tasks)) {
-> >                 it->task_pos =3D cset->mg_tasks.next;
-> > -       else
-> > +               it->cur_tasks_head =3D &cset->mg_tasks;
-> > +       } else {
-> >                 it->task_pos =3D cset->dying_tasks.next;
-> > +               it->cur_tasks_head =3D &cset->dying_tasks;
-> > +       }
-> >
-> >         it->tasks_head =3D &cset->tasks;
-> >         it->mg_tasks_head =3D &cset->mg_tasks;
-> > @@ -4467,10 +4471,14 @@ static void css_task_iter_advance(struct css_ta=
-sk_iter *it)
-> >                 else
-> >                         it->task_pos =3D it->task_pos->next;
-> >
-> > -               if (it->task_pos =3D=3D it->tasks_head)
-> > +               if (it->task_pos =3D=3D it->tasks_head) {
-> >                         it->task_pos =3D it->mg_tasks_head->next;
-> > -               if (it->task_pos =3D=3D it->mg_tasks_head)
-> > +                       it->cur_tasks_head =3D it->mg_tasks_head;
-> > +               }
-> > +               if (it->task_pos =3D=3D it->mg_tasks_head) {
-> >                         it->task_pos =3D it->dying_tasks_head->next;
-> > +                       it->cur_tasks_head =3D it->dying_tasks_head;
-> > +               }
-> >                 if (it->task_pos =3D=3D it->dying_tasks_head)
-> >                         css_task_iter_advance_css_set(it);
-> >         } else {
-> > @@ -4489,11 +4497,12 @@ static void css_task_iter_advance(struct css_ta=
-sk_iter *it)
-> >                         goto repeat;
-> >
-> >                 /* and dying leaders w/o live member threads */
-> > -               if (!atomic_read(&task->signal->live))
-> > +               if (it->cur_tasks_head =3D=3D it->dying_tasks_head &&
-> > +                   !atomic_read(&task->signal->live))
-> >                         goto repeat;
-> >         } else {
-> >                 /* skip all dying ones */
-> > -               if (task->flags & PF_EXITING)
-> > +               if (it->cur_tasks_head =3D=3D it->dying_tasks_head)
-> >                         goto repeat;
-> >         }
-> >  }
-> > --
-> > 2.24.1
-> >
->
-> Tested-by: Suren Baghdasaryan <surenb@google.com>
->
-> Thanks!
 
-Hi Folks,
-If this new version looks good could we get an Ack please? I need to
-start backporting this fix to Android and would like a confirmation
-before doing so.
-Thanks!
+Introduce CAP_PERFMON capability designed to secure system performance
+monitoring and observability operations so that CAP_PERFMON would assist
+CAP_SYS_ADMIN capability in its governing role for performance monitoring
+and observability subsystems.
+
+CAP_PERFMON hardens system security and integrity during performance
+monitoring and observability operations by decreasing attack surface that
+is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
+to system performance monitoring and observability operations under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
+chances to misuse the credentials and makes the operation more secure.
+Thus, CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e: 2.2.2.39 principle
+of least privilege: A security design principle that states that a process
+or program be granted only those privileges (e.g., capabilities) necessary
+to accomplish its legitimate function, and only for the time that such
+privileges are actually required)
+
+CAP_PERFMON meets the demand to secure system performance monitoring and
+observability operations for adoption in security sensitive, restricted,
+multiuser production environments (e.g. HPC clusters, cloud and virtual compute
+environments), where root or CAP_SYS_ADMIN credentials are not available to
+mass users of a system, and securely unblocks accessibility of system performance monitoring and observability operations beyond root and CAP_SYS_ADMIN use cases.
+
+CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
+monitoring and observability operations and balances amount of CAP_SYS_ADMIN
+credentials following the recommendations in the capabilities man page [1]
+for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
+developers, below." For backward compatibility reasons access to system
+performance monitoring and observability subsystems of the kernel remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
+usage for secure system performance monitoring and observability operations
+is discouraged with respect to the designed CAP_PERFMON capability.
+
+Although the software running under CAP_PERFMON can not ensure avoidance
+of related hardware issues, the software can still mitigate these issues
+following the official hardware issues mitigation procedure [2]. The bugs
+in the software itself can be fixed following the standard kernel development
+process [3] to maintain and harden security of system performance monitoring
+and observability operations.
+
+[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ include/linux/capability.h          | 4 ++++
+ include/uapi/linux/capability.h     | 8 +++++++-
+ security/selinux/include/classmap.h | 4 ++--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index ecce0f43c73a..027d7e4a853b 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+ extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+ extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+ extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
++static inline bool perfmon_capable(void)
++{
++	return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
++}
+ 
+ /* audit system wants to get cap info from files as well */
+ extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index 240fdb9a60f6..8b416e5f3afa 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+ 
+ #define CAP_AUDIT_READ		37
+ 
++/*
++ * Allow system performance and observability privileged operations
++ * using perf_events, i915_perf and other kernel subsystems
++ */
++
++#define CAP_PERFMON		38
+ 
+-#define CAP_LAST_CAP         CAP_AUDIT_READ
++#define CAP_LAST_CAP         CAP_PERFMON
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
+diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+index 7db24855e12d..c599b0c2b0e7 100644
+--- a/security/selinux/include/classmap.h
++++ b/security/selinux/include/classmap.h
+@@ -27,9 +27,9 @@
+ 	    "audit_control", "setfcap"
+ 
+ #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+-		"wake_alarm", "block_suspend", "audit_read"
++		"wake_alarm", "block_suspend", "audit_read", "perfmon"
+ 
+-#if CAP_LAST_CAP > CAP_AUDIT_READ
++#if CAP_LAST_CAP > CAP_PERFMON
+ #error New capability defined, please update COMMON_CAP2_PERMS.
+ #endif
+ 
+-- 
+2.20.1
+
+
