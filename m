@@ -2,419 +2,183 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DB9C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C616C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9B020702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE3720702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bzycflIp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2XdTal3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgBEQCz (ORCPT
+        id S1727479AbgBEQDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:02:55 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36245 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgBEQCy (ORCPT
+        Wed, 5 Feb 2020 11:03:39 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35692 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgBEQDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:02:54 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so1180569pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 08:02:52 -0800 (PST)
+        Wed, 5 Feb 2020 11:03:38 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w12so3415525wrt.2;
+        Wed, 05 Feb 2020 08:03:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+AeCGL2lj79oLdk7fxV05TUxOgARWDhVkDbxtkPjipM=;
-        b=bzycflIp4oqpZR7YINJUKZGaEkL+FZw7AS3Mk3GhykOqyAOVdNEIxPNJsF7ZXtMBYt
-         CAXjPDLJgLMsln3tE/SBpxndFAHqIzF7hTlYkDEUoEvuHoqxhqthUNIjLOom4ISWb1uf
-         Qvi4aCeveaS0VHEzqnaNMcwaP0RqAogtOX4EY=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=pnB9RCK8FmRp6yLoMoOe15khy7Rws9cOlB5/jAIV8gM=;
+        b=D2XdTal3it2TTNpDINBSeYT7p6p2oMx0HeYjsyDEjbZFaxKU/MHENzcL9yOLWq7O0e
+         DffMDHUkj7WCr6kdiub+RL+EZci3Iji2+Ehe9HGfS5OFFQXyD/DNzUesR+unrbkJ67CX
+         IhQZrxFT8iPqmG4mPFSO5iCZpHD7g1Vzw1ZSlyiA7e+kvq1XG52R9gqy36ZrGlBlQtea
+         iPwqeoL+ZbU1gbCm1hikPJGQaASM5Il28GR///9IpVcHGZvCGAb3HeK7+pGLlyELnCk3
+         v9UpngxvPi37nHT5RPm6YCAOTmr06hNv6FOh9gUTJX6VWkuEhOzsoWgVoXLApy5hbYV/
+         Vf+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+AeCGL2lj79oLdk7fxV05TUxOgARWDhVkDbxtkPjipM=;
-        b=mFJQ2mQX8eIItBElhi3QBS/qntijyBjXmHGBvT2PI2Gwcopum7Qpiz8yztte8hh3jf
-         3rwYvSf4mwRIRsHwx6mQ5iDTv+owve5pGlVcVzdftwB6jbeYGTjVRiaumSk83Go9TNIp
-         ly8HqmKsmcHZAqKsKLUxs8Dykro91mCvUb13d4WtrH/mfOqDiYDl1pIjDp1rsvnSeg5U
-         k/fuOeH2sqmtJ2FMTWJgwqU6gV98hRlqlOu2+pk+j217msNKVUFILo/s1HkzAFMbLRxq
-         z8dj5sIxJKJTTp4tjuR0VhO3ouuZ/q8QgHX3WbISMmtfbtOejw4Knw5hOBNXW1BSIZWN
-         JXQg==
-X-Gm-Message-State: APjAAAVr/TIUaxdP0z22TWCfOrk9IJ3au4MtV7mIuja20ljBNX4UE3PZ
-        kvax03JJ8eaPCBCn9zqGRpXuiA==
-X-Google-Smtp-Source: APXvYqzQgVz8fC7tDSyNR6BHZZc1yory3It2uzEp9w6Bps1s0URaJnbcVIPztOGRJF3976yqOhAq7g==
-X-Received: by 2002:a17:90a:9f93:: with SMTP id o19mr6416489pjp.76.1580918571981;
-        Wed, 05 Feb 2020 08:02:51 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e16sm206509pgk.77.2020.02.05.08.02.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 08:02:51 -0800 (PST)
-Date:   Wed, 5 Feb 2020 11:02:50 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ast@kernel.org
-Cc:     Olof Johansson <olof.johansson@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=pnB9RCK8FmRp6yLoMoOe15khy7Rws9cOlB5/jAIV8gM=;
+        b=RikiRGMPL1KL7p9rx8h3gmFVQDX36fdMDdaeouVatDz5bbwUZn3zdned3K5G3pvFag
+         FeHR1VHAZu7urY6y6TGK/ZBVd5yTuuck8j3uiZXw2pj7vHQvkOAIxWlSM5bAruXJgJTE
+         uhYdf7+BmI1wcdcLOxi76AnIdSURwsd9zMoFT2cKQIK4byqHw/xLq8vdQdtq6FnLUjiB
+         r+CeIOUUAaTd461rYmPq5jK+3hhlK8wjiqO9nclbVT2gGoJFd0gB0u3cCKP188BI4B5s
+         omjtwPajJ+MndhhVTtL8mC6p66csxV8ilLm/+5ZrdyCtaO/CDO83B6ZfPsFEYev0TdCE
+         CJkA==
+X-Gm-Message-State: APjAAAVxP9/q7AcZ1zmeaelEWsBAwhrGvO7GM9COnjcVk8Pzj4BWgdO0
+        vhj2P+X26VuhOZVZalfK/G7vmCXx
+X-Google-Smtp-Source: APXvYqyzdGOQ01ccfwSGHyY9OJa44nj5odr8JsddGNX2FBcW8FpSLrunLgbdcQ1Z5mED96i46NHTag==
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr27826512wru.181.1580918614029;
+        Wed, 05 Feb 2020 08:03:34 -0800 (PST)
+Received: from [192.168.43.71] ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id c4sm56841wml.7.2020.02.05.08.03.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 08:03:33 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert kheaders feature
-Message-ID: <20200205160250.GG142103@google.com>
-References: <20200205154629.GA1257054@kroah.com>
+References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
+ <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <d9a15d32-a20b-a20f-9ea4-3ac355c15bb2@gmail.com>
+Date:   Wed, 5 Feb 2020 19:02:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205154629.GA1257054@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="pfG2uHdMyEOlx73mzYfCtv0xqbZ3OaDK1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:46:29PM +0000, Greg Kroah-Hartman wrote:
-> Now that BPF does not need a copy of the kernel headers anymore in order
-> to build programs, there's no real need for putting the kernel headers
-> into a kernel module.  So drop the feature quick, before someone starts
-> using it :)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--pfG2uHdMyEOlx73mzYfCtv0xqbZ3OaDK1
+Content-Type: multipart/mixed; boundary="TRgd0f8QT4hS02KsLbX8dpCiLVl9KzSjQ";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <d9a15d32-a20b-a20f-9ea4-3ac355c15bb2@gmail.com>
+Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
+References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
+ <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
+In-Reply-To: <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
 
-Temporary Nack. Adding Alexei to the thread.
+--TRgd0f8QT4hS02KsLbX8dpCiLVl9KzSjQ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-I believe at the time of this going in, the BPF's BTF feature was not fully
-ready or able to support the usecases. Especially because BPF programs can
-call or use macros in kernel headers as well.
+On 05/02/2020 18:54, Jens Axboe wrote:
+> On 2/5/20 8:46 AM, Pavel Begunkov wrote:
+>> IORING_OP_{READ,WRITE} need mm to access user buffers, hence
+>> req->has_user check should go for them as well. Move the corresponding=
 
-Also, now BCC project does depend on this and so does bpftrace. Have both
-of these tools migrated to use BTF and don't need CONFIG_KHEADERS to be
-compiled? Sorry if I lost track.
+>> imports past the check.
+>=20
+> I'd need to double check, but I think the has_user check should just go=
+=2E
+> The import checks for access anyway, so we'll -EFAULT there if we
+> somehow messed up and didn't acquire the right mm.
+>=20
+It'd be even better. I have plans to remove it, but I was thinking from a=
 
-Just last week someone was using CONFIG_KHEADERS for BPF tracing purposes at
-Google and pinged me as well. There are several others. This would at least
-them some amount of pain.
+different angle.
 
-I'd suggest let us discuss more before ripping it out. thanks,
-
- - Joel
+--=20
+Pavel Begunkov
 
 
+--TRgd0f8QT4hS02KsLbX8dpCiLVl9KzSjQ--
 
-> 
-> This patch reverts the following commits:
-> f276031b4e2f ("kheaders: explain why include/config/autoconf.h is excluded from md5sum")
-> 1463f74f492e ("kheaders: remove the last bashism to allow sh to run it")
-> ea79e5168be6 ("kheaders: optimize header copy for in-tree builds")
-> 0e11773e7609 ("kheaders: optimize md5sum calculation for in-tree builds")
-> 9a0663571844 ("kheaders: remove unneeded 'cat' command piped to 'head' / 'tail'")
-> 700dea5a0bea ("kheaders: substituting --sort in archive creation")
-> 86cdd2fdc4e3 ("kheaders: make headers archive reproducible")
-> 7199ff7d7400 ("kheaders: include only headers into kheaders_data.tar.xz")
-> b60b7c2ea9b7 ("kheaders: remove meaningless -R option of 'ls'")
-> 1457dc9ed8da ("kheaders: Do not regenerate archive if config is not changed")
-> f7b101d33046 ("kheaders: Move from proc to sysfs")
-> 43d8ce9d65a5 ("Provide in-kernel headers to make extending kernel easier")
-> 
-> Reported-by: Olof Johansson <olof.johansson@gmail.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Patrick Bellasi <patrick.bellasi@arm.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> 
-> This came up in a bpf presentation today, along with talking with Olof.
-> Anyone object to ripping this out before people start to rely on it, now
-> that it's stated reason isn't needed anymore?
-> 
-> 
->  Documentation/kbuild/reproducible-builds.rst | 13 +--
->  init/Kconfig                                 |  9 --
->  kernel/.gitignore                            |  1 -
->  kernel/Makefile                              | 10 --
->  kernel/gen_kheaders.sh                       | 97 --------------------
->  kernel/kheaders.c                            | 66 -------------
->  6 files changed, 4 insertions(+), 192 deletions(-)
->  delete mode 100755 kernel/gen_kheaders.sh
->  delete mode 100644 kernel/kheaders.c
-> 
-> diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
-> index 503393854e2e..ab92e98c89c8 100644
-> --- a/Documentation/kbuild/reproducible-builds.rst
-> +++ b/Documentation/kbuild/reproducible-builds.rst
-> @@ -16,21 +16,16 @@ the kernel may be unreproducible, and how to avoid them.
->  Timestamps
->  ----------
->  
-> -The kernel embeds timestamps in three places:
-> +The kernel embeds a timestamp in two places:
->  
->  * The version string exposed by ``uname()`` and included in
->    ``/proc/version``
->  
->  * File timestamps in the embedded initramfs
->  
-> -* If enabled via ``CONFIG_IKHEADERS``, file timestamps of kernel
-> -  headers embedded in the kernel or respective module,
-> -  exposed via ``/sys/kernel/kheaders.tar.xz``
-> -
-> -By default the timestamp is the current time and in the case of
-> -``kheaders`` the various files' modification times. This must
-> -be overridden using the `KBUILD_BUILD_TIMESTAMP`_ variable.
-> -If you are building from a git commit, you could use its commit date.
-> +By default the timestamp is the current time.  This must be overridden
-> +using the `KBUILD_BUILD_TIMESTAMP`_ variable.  If you are building
-> +from a git commit, you could use its commit date.
->  
->  The kernel does *not* use the ``__DATE__`` and ``__TIME__`` macros,
->  and enables warnings if they are used.  If you incorporate external
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 24b23d843df1..da5dea21b9cb 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -599,15 +599,6 @@ config IKCONFIG_PROC
->  	  This option enables access to the kernel configuration file
->  	  through /proc/config.gz.
->  
-> -config IKHEADERS
-> -	tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
-> -	depends on SYSFS
-> -	help
-> -	  This option enables access to the in-kernel headers that are generated during
-> -	  the build process. These can be used to build eBPF tracing programs,
-> -	  or similar programs.  If you build the headers as a module, a module called
-> -	  kheaders.ko is built which can be loaded on-demand to get access to headers.
-> -
->  config LOG_BUF_SHIFT
->  	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
->  	range 12 25
-> diff --git a/kernel/.gitignore b/kernel/.gitignore
-> index 34d1e77ee9df..6e699100872f 100644
-> --- a/kernel/.gitignore
-> +++ b/kernel/.gitignore
-> @@ -1,6 +1,5 @@
->  #
->  # Generated files
->  #
-> -kheaders.md5
->  timeconst.h
->  hz.bc
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 4cb4130ced32..9ea0a49bd856 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -74,7 +74,6 @@ obj-$(CONFIG_UTS_NS) += utsname.o
->  obj-$(CONFIG_USER_NS) += user_namespace.o
->  obj-$(CONFIG_PID_NS) += pid_namespace.o
->  obj-$(CONFIG_IKCONFIG) += configs.o
-> -obj-$(CONFIG_IKHEADERS) += kheaders.o
->  obj-$(CONFIG_SMP) += stop_machine.o
->  obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
->  obj-$(CONFIG_AUDIT) += audit.o auditfilter.o
-> @@ -127,12 +126,3 @@ $(obj)/configs.o: $(obj)/config_data.gz
->  targets += config_data.gz
->  $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
->  	$(call if_changed,gzip)
-> -
-> -$(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
-> -
-> -quiet_cmd_genikh = CHK     $(obj)/kheaders_data.tar.xz
-> -      cmd_genikh = $(CONFIG_SHELL) $(srctree)/kernel/gen_kheaders.sh $@
-> -$(obj)/kheaders_data.tar.xz: FORCE
-> -	$(call cmd,genikh)
-> -
-> -clean-files := kheaders_data.tar.xz kheaders.md5
-> diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
-> deleted file mode 100755
-> index e13ca842eb7e..000000000000
-> --- a/kernel/gen_kheaders.sh
-> +++ /dev/null
-> @@ -1,97 +0,0 @@
-> -#!/bin/sh
-> -# SPDX-License-Identifier: GPL-2.0
-> -
-> -# This script generates an archive consisting of kernel headers
-> -# for CONFIG_IKHEADERS.
-> -set -e
-> -sfile="$(readlink -f "$0")"
-> -outdir="$(pwd)"
-> -tarfile=$1
-> -cpio_dir=$outdir/$tarfile.tmp
-> -
-> -dir_list="
-> -include/
-> -arch/$SRCARCH/include/
-> -"
-> -
-> -# Support incremental builds by skipping archive generation
-> -# if timestamps of files being archived are not changed.
-> -
-> -# This block is useful for debugging the incremental builds.
-> -# Uncomment it for debugging.
-> -# if [ ! -f /tmp/iter ]; then iter=1; echo 1 > /tmp/iter;
-> -# else iter=$(($(cat /tmp/iter) + 1)); echo $iter > /tmp/iter; fi
-> -# find $all_dirs -name "*.h" | xargs ls -l > /tmp/ls-$iter
-> -
-> -all_dirs=
-> -if [ "$building_out_of_srctree" ]; then
-> -	for d in $dir_list; do
-> -		all_dirs="$all_dirs $srctree/$d"
-> -	done
-> -fi
-> -all_dirs="$all_dirs $dir_list"
-> -
-> -# include/generated/compile.h is ignored because it is touched even when none
-> -# of the source files changed.
-> -#
-> -# When Kconfig regenerates include/generated/autoconf.h, its timestamp is
-> -# updated, but the contents might be still the same. When any CONFIG option is
-> -# changed, Kconfig touches the corresponding timestamp file include/config/*.h.
-> -# Hence, the md5sum detects the configuration change anyway. We do not need to
-> -# check include/generated/autoconf.h explicitly.
-> -#
-> -# Ignore them for md5 calculation to avoid pointless regeneration.
-> -headers_md5="$(find $all_dirs -name "*.h"			|
-> -		grep -v "include/generated/compile.h"	|
-> -		grep -v "include/generated/autoconf.h"	|
-> -		xargs ls -l | md5sum | cut -d ' ' -f1)"
-> -
-> -# Any changes to this script will also cause a rebuild of the archive.
-> -this_file_md5="$(ls -l $sfile | md5sum | cut -d ' ' -f1)"
-> -if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
-> -if [ -f kernel/kheaders.md5 ] &&
-> -	[ "$(head -n 1 kernel/kheaders.md5)" = "$headers_md5" ] &&
-> -	[ "$(head -n 2 kernel/kheaders.md5 | tail -n 1)" = "$this_file_md5" ] &&
-> -	[ "$(tail -n 1 kernel/kheaders.md5)" = "$tarfile_md5" ]; then
-> -		exit
-> -fi
-> -
-> -if [ "${quiet}" != "silent_" ]; then
-> -       echo "  GEN     $tarfile"
-> -fi
-> -
-> -rm -rf $cpio_dir
-> -mkdir $cpio_dir
-> -
-> -if [ "$building_out_of_srctree" ]; then
-> -	(
-> -		cd $srctree
-> -		for f in $dir_list
-> -			do find "$f" -name "*.h";
-> -		done | cpio --quiet -pd $cpio_dir
-> -	)
-> -fi
-> -
-> -# The second CPIO can complain if files already exist which can happen with out
-> -# of tree builds having stale headers in srctree. Just silence CPIO for now.
-> -for f in $dir_list;
-> -	do find "$f" -name "*.h";
-> -done | cpio --quiet -pd $cpio_dir >/dev/null 2>&1
-> -
-> -# Remove comments except SDPX lines
-> -find $cpio_dir -type f -print0 |
-> -	xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
-> -
-> -# Create archive and try to normalize metadata for reproducibility.
-> -# For compatibility with older versions of tar, files are fed to tar
-> -# pre-sorted, as --sort=name might not be available.
-> -find $cpio_dir -printf "./%P\n" | LC_ALL=C sort | \
-> -    tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
-> -    --owner=0 --group=0 --numeric-owner --no-recursion \
-> -    -Jcf $tarfile -C $cpio_dir/ -T - > /dev/null
-> -
-> -echo $headers_md5 > kernel/kheaders.md5
-> -echo "$this_file_md5" >> kernel/kheaders.md5
-> -echo "$(md5sum $tarfile | cut -d ' ' -f1)" >> kernel/kheaders.md5
-> -
-> -rm -rf $cpio_dir
-> diff --git a/kernel/kheaders.c b/kernel/kheaders.c
-> deleted file mode 100644
-> index 8f69772af77b..000000000000
-> --- a/kernel/kheaders.c
-> +++ /dev/null
-> @@ -1,66 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * Provide kernel headers useful to build tracing programs
-> - * such as for running eBPF tracing tools.
-> - *
-> - * (Borrowed code from kernel/configs.c)
-> - */
-> -
-> -#include <linux/kernel.h>
-> -#include <linux/module.h>
-> -#include <linux/kobject.h>
-> -#include <linux/init.h>
-> -
-> -/*
-> - * Define kernel_headers_data and kernel_headers_data_end, within which the
-> - * compressed kernel headers are stored. The file is first compressed with xz.
-> - */
-> -
-> -asm (
-> -"	.pushsection .rodata, \"a\"		\n"
-> -"	.global kernel_headers_data		\n"
-> -"kernel_headers_data:				\n"
-> -"	.incbin \"kernel/kheaders_data.tar.xz\"	\n"
-> -"	.global kernel_headers_data_end		\n"
-> -"kernel_headers_data_end:			\n"
-> -"	.popsection				\n"
-> -);
-> -
-> -extern char kernel_headers_data;
-> -extern char kernel_headers_data_end;
-> -
-> -static ssize_t
-> -ikheaders_read(struct file *file,  struct kobject *kobj,
-> -	       struct bin_attribute *bin_attr,
-> -	       char *buf, loff_t off, size_t len)
-> -{
-> -	memcpy(buf, &kernel_headers_data + off, len);
-> -	return len;
-> -}
-> -
-> -static struct bin_attribute kheaders_attr __ro_after_init = {
-> -	.attr = {
-> -		.name = "kheaders.tar.xz",
-> -		.mode = 0444,
-> -	},
-> -	.read = &ikheaders_read,
-> -};
-> -
-> -static int __init ikheaders_init(void)
-> -{
-> -	kheaders_attr.size = (&kernel_headers_data_end -
-> -			      &kernel_headers_data);
-> -	return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
-> -}
-> -
-> -static void __exit ikheaders_cleanup(void)
-> -{
-> -	sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
-> -}
-> -
-> -module_init(ikheaders_init);
-> -module_exit(ikheaders_cleanup);
-> -
-> -MODULE_LICENSE("GPL v2");
-> -MODULE_AUTHOR("Joel Fernandes");
-> -MODULE_DESCRIPTION("Echo the kernel header artifacts used to build the kernel");
-> -- 
-> 2.25.0
-> 
+--pfG2uHdMyEOlx73mzYfCtv0xqbZ3OaDK1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl465y8ACgkQWt5b1Glr
++6W/MA//ZWBm820DWIhID/ljMSZYFtMkVORKhCMRNOOgee8vcbXFg8BdD8cjMg0i
+hNzoRTAlh+fxJ1UaV1pikzntvjDL03Uys9HqrxHHqjbi4FSOPcSuylIML8AgZ+dZ
+t5M6JhBuuliSW7bI//iQQpdVCe2syfdsIuzML90sEu+9XIJ2SZi+rbg2qMjNEtH/
+kYsCsVfCRDSa/kNuu27xuzXin2LcCfLWTl5dQd0fA2AkzQVxAhcA0jYMFMrEBHbz
+RswLCyQ5byBhIDP1ct2deOZu03mdtXrT2LLw2exG+JZJPx3X+0KkzR8BRe8PfgYA
+0TSWkX+6s4ICAUPHkeWcTCdIO9bA39FOp/kbpJHZF7UTx09VEoEqGo6+sFTbD92K
+jIiOf/rBH6rgkHaY7w6c0pPRhEXiwqkR8Gj94GK5ubZBcBZSXEbndNWwkCJeI4La
+loW26WfP/BTRCqCrC3eszh4X+ejL4cgKUgWewxKKkM7OVJn9WBDz9Fu+9TgBuQUe
+lmRWCmFvJLZIKnBUyer1Xglia1WsmiicH8c8xsFspqahUxHm5KxAUVk1YDtODn3/
+Bm9UnMZ/IZaoJgUfLCvWPYsJZyVotu9QI1v8ne1ukee7FfurX3W9gtRGBDbepV6T
+0H+9TFyG+y73VDpngFbyJiUDj6elOt4etRawsVfC03277a6XhlE=
+=Hwr7
+-----END PGP SIGNATURE-----
+
+--pfG2uHdMyEOlx73mzYfCtv0xqbZ3OaDK1--
