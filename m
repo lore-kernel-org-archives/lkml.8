@@ -2,126 +2,101 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289A6C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3523FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB6F2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C74421582
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 03:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oLjjl/Qm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a/rT7owE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgBEDFJ (ORCPT
+        id S1727941AbgBEDFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 22:05:09 -0500
-Received: from ozlabs.org ([203.11.71.1]:43509 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgBEDFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 22:05:08 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48C5yp0hsYz9sSR;
-        Wed,  5 Feb 2020 14:05:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580871907;
-        bh=Dy2HNszoS5jMHuHyexeNZ1i6v2XpVUmuydKw/9Caj58=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=oLjjl/QmMaQUGkaI425lp8ZqbybG1H7xgmO+WmWq3t6CGe3Ydfi2omMvBob16Z5TS
-         LHkGOmvtvcpZoOVFbp1xrUN8gFyM+NV2mLZMiM0QNEI7mXLXmjvRfPJAaikuMqME9U
-         DdqyIDLQ8fMvvU9O3fXj+2ZNog4M9YaBI1kKj0vVSxuvesokyfqnXtxONTr0BTRBPw
-         GW6r4NuLz+BlK//+r3+ZzGcMec3ZhTxzZS+gLGPQpEtFPtWSi10F20kXho2mhO2xk1
-         C2dHxfOWKKQ1nfwjw5I8ncgxAzNir+zHOoAFGWZtbmPWBsUWAIawAKTavRpdoKHRah
-         /1o2zj3OuuW7Q==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, vishal.l.verma@intel.com,
-        hch@lst.de, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 2/5] mm/memremap_pages: Introduce memremap_compat_align()
-In-Reply-To: <158041476763.3889308.13149849631980018039.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158041475480.3889308.655103391935006598.stgit@dwillia2-desk3.amr.corp.intel.com> <158041476763.3889308.13149849631980018039.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Wed, 05 Feb 2020 14:05:02 +1100
-Message-ID: <875zgl3fa9.fsf@mpe.ellerman.id.au>
+        Tue, 4 Feb 2020 22:05:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43970 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727897AbgBEDFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 22:05:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so350063lfq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 19:05:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5WF1go+DuJvbwgdXeUhoD65NaX1JQ7zRHimo51GmC8M=;
+        b=a/rT7owEo3U/lPRFn35JOyHmNdZNKq3CUN5eC0vmSOAlGMUJJc7ELCvSX1Mh8APfaa
+         lAlLVERWXR5pYN81ddhMclRnb/OmN5Fx2KddB7KuZLDfFPyFM3c5qNNCCjwGgxr+r3s1
+         DNCcaZvM6VYKACKmTz/OjiTlKJVFN9VL8YzEYvQS2U83lFvZUm1XWKOklUIkQxQvXozG
+         vNU7Zo1syf0hTTILG3oFQfUcj+JQqVr59fj+c5MCVuSCuEvLrPxTFeYRhYsiMU1wniYS
+         k/ew5rFlhFL2LzMHulEuIV3u33upCBPfLhXENQXAIsbZYUZT2I99yQmfa/FkquxeDAIP
+         aNXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5WF1go+DuJvbwgdXeUhoD65NaX1JQ7zRHimo51GmC8M=;
+        b=tOAj5a7nkDHcUMGvREqtcXoNNjGPOQMsUCJ/2yy4UPCXJ+IW66YZMLckzJsUyJ+k+n
+         cnsVzrH77IgnHUYdW9I4uB50dh4jb0Iu10GGPrumdpdvfzjJMXMzutPqIQeTam8GXkGs
+         js8LirqXqVqnmF/Piw3PRh4yYyEyeX3/xB30VLCJyIngqgNRhd+Xn0MtRd+5g5TFcal/
+         IGvmS0JoRYiQm/1BwanzgM+WVmg3fpTC0MYFMdbmcMvvenY5UXUJnHYAwtO/gOd29+K3
+         MY4yhSnnBzAoCUnl5mwhVmcH8S27nAf+/gqiD34B4w+UgN9bv5TeD3k6sauRRh87YGFk
+         wxvA==
+X-Gm-Message-State: APjAAAURN9yXo567m7SM+mqJY5k5dV2c+ANrxNld+VxAHKukAt6FVNT7
+        r+gfQPZNsvZ46WjMUMeck3vk+FUrQk4wOWIe8q2C4Q==
+X-Google-Smtp-Source: APXvYqzeG4caRRvcRllow4EA73MGmU6WFhFNYJbaTAD8sJamhzsXSFSCQuZUYpZgWEJovRgzDpyi7R9sxFKJltzNJtg=
+X-Received: by 2002:a19:4a92:: with SMTP id x140mr17094713lfa.29.1580871913677;
+ Tue, 04 Feb 2020 19:05:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200128230328.183524-1-drosen@google.com> <20200128230328.183524-2-drosen@google.com>
+ <85sgjsxx2g.fsf@collabora.com>
+In-Reply-To: <85sgjsxx2g.fsf@collabora.com>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Tue, 4 Feb 2020 19:05:02 -0800
+Message-ID: <CA+PiJmS3kbK8220QaccP5jJ7dSf4xv3UrStQvLskAtCN+=vG_A@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] unicode: Add standard casefolded d_ops
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-> The "sub-section memory hotplug" facility allows memremap_pages() users
-> like libnvdimm to compensate for hardware platforms like x86 that have a
-> section size larger than their hardware memory mapping granularity.  The
-> compensation that sub-section support affords is being tolerant of
-> physical memory resources shifting by units smaller (64MiB on x86) than
-> the memory-hotplug section size (128 MiB). Where the platform
-> physical-memory mapping granularity is limited by the number and
-> capability of address-decode-registers in the memory controller.
+On Sun, Feb 2, 2020 at 5:46 PM Gabriel Krisman Bertazi
+<krisman@collabora.com> wrote:
 >
-> While the sub-section support allows memremap_pages() to operate on
-> sub-section (2MiB) granularity, the Power architecture may still
-> require 16MiB alignment on "!radix_enabled()" platforms.
 >
-> In order for libnvdimm to be able to detect and manage this per-arch
-> limitation, introduce memremap_compat_align() as a common minimum
-> alignment across all driver-facing memory-mapping interfaces, and let
-> Power override it to 16MiB in the "!radix_enabled()" case.
+> I don't think fs/unicode is the right place for these very specific
+> filesystem functions, just because they happen to use unicode.  It is an
+> encoding library, it doesn't care about dentries, nor should know how to
+> handle them.  It exposes a simple api to manipulate and convert utf8 strings.
 >
-> The assumption / requirement for 16MiB to be a viable
-> memremap_compat_align() value is that Power does not have platforms
-> where its equivalent of address-decode-registers never hardware remaps a
-> persistent memory resource on smaller than 16MiB boundaries.
+> I saw change was after the desire to not have these functions polluting
+> the VFS hot path, but that has nothing to do with placing them here.
 >
-> Based on an initial patch by Aneesh.
+> Would libfs be better?  or a casefolding library in fs/casefold.c?
 >
-> Link: http://lore.kernel.org/r/CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Reported-by: Jeff Moyer <jmoyer@redhat.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  arch/powerpc/include/asm/io.h |   10 ++++++++++
->  drivers/nvdimm/pfn_devs.c     |    2 +-
->  include/linux/io.h            |   23 +++++++++++++++++++++++
->  include/linux/mmzone.h        |    1 +
->  4 files changed, 35 insertions(+), 1 deletion(-)
+>
+> --
+> Gabriel Krisman Bertazi
 
-The powerpc change here looks fine to me.
-
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-cheers
-
-> diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
-> index a63ec938636d..0fa2dc483008 100644
-> --- a/arch/powerpc/include/asm/io.h
-> +++ b/arch/powerpc/include/asm/io.h
-> @@ -734,6 +734,16 @@ extern void __iomem * __ioremap_at(phys_addr_t pa, void *ea,
->  				   unsigned long size, pgprot_t prot);
->  extern void __iounmap_at(void *ea, unsigned long size);
->  
-> +#ifdef CONFIG_SPARSEMEM
-> +static inline unsigned long memremap_compat_align(void)
-> +{
-> +	if (radix_enabled())
-> +		return SUBSECTION_SIZE;
-> +	return (1UL << mmu_psize_defs[mmu_linear_psize].shift);
-> +}
-> +#define memremap_compat_align memremap_compat_align
-> +#endif
-> +
->  /*
->   * When CONFIG_PPC_INDIRECT_PIO is set, we use the generic iomap implementation
->   * which needs some additional definitions here. They basically allow PIO
+The hash function needs access to utf8ncursor, but apart from that,
+libfs would make sense. utf8ncursor is the only reason I have them
+here. How do you feel about exposing utf8cursor or something similar?
