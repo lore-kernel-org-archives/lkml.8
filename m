@@ -2,222 +2,123 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CEDC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5110C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56352085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B726B2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 10:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AwFPoBAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgBEKKT convert rfc822-to-8bit (ORCPT
+        id S1727522AbgBEKO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 05:10:19 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53040 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgBEKKS (ORCPT
+        Wed, 5 Feb 2020 05:14:27 -0500
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:57737 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgBEKO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 05:10:18 -0500
-Received: from mail-pg1-f200.google.com ([209.85.215.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1izHdP-0007bL-Ol
-        for linux-kernel@vger.kernel.org; Wed, 05 Feb 2020 10:10:15 +0000
-Received: by mail-pg1-f200.google.com with SMTP id o21so911136pgm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 02:10:15 -0800 (PST)
+        Wed, 5 Feb 2020 05:14:27 -0500
+Received: by mail-wm1-f73.google.com with SMTP id t17so773533wmi.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 02:14:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UD8MX0T3MUe53I3VyW0MK1QJ1j+hRM6tFiKLV9YX/IY=;
+        b=AwFPoBAg8AfduU6mluO6q+xjnj/6ZfjQZ+9nrwOWG61fIjhJciOZHfryjbpHdwebfu
+         FsHYigug2st//KQ1hLkVUz10cwkuIMtayfO9Ia8+FhC5c3gsu1084MtjZMRoq1wb8rad
+         I2lqokjXVTbAQ+l7C+0GboJ6RMoYzZcN/IEqb5pMK6+iNvZ9y4gl7Cf6hnN2fFwzRze0
+         9dYzLXNjrUgdpFILRZuUtSQibIEE/2yJ0XoZkgmQzDPwZsAQ8xdr4/QhYKowcR1DtOQL
+         J6E5kguzuYx8TV3gyXengbPpy8NKoEDET3BBRXvwxwwxtb+6yxW8Hqfjd8eizQZ9ndU8
+         qWBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=b8Oi2WdDQGlnw0JZx35Y2ZoU7u/G+yblEF6ps+T1Z7A=;
-        b=T4dpPbkO6vlO00Zi8gknlbMIZVmVgzmqxxiAu+kFTMX7caIzIDqXCsXP5SiS45CNBU
-         L8FWvm2uwWLDtIKHapUP50bYEajAfSlrevpFICrZ7cEXPOMHDFdPG6TrjXyoJ2NQ/slJ
-         kx0O7HEqn7BVpnGBP2/DTpkL+fLOnsZvarJHh7fUzs4dfAb4MWzbGRnPwZX2dedS9Onr
-         JTmEQGasn4l6/XLANTYN7snGL5aFf3ckOdUBC/uGarMXRVxLLXfKCOF5jBMKXbs2e+IG
-         0j3SgVx71/hvId10FwfQIZH5imDYU1j+Fajml2sO3PEeUDkYYYLbSjfgKfXB+jrByhe/
-         1hJg==
-X-Gm-Message-State: APjAAAU3oeIdzHsuUkWAfWaRdm/hnO/KQGwQaJCDTAW2Wqy5XAvjt4Ex
-        qz9gWA3NkuBVEDaucouLhsgKLk0SUJ+fcg27+nD6thgov4Bk+1VptLPsn2ZmHwBYres3Uc2KpLB
-        lKzpczIBTC8NsK7AQU0ImazRuQpCh3dZme4GcNKbDdQ==
-X-Received: by 2002:a62:828b:: with SMTP id w133mr34324165pfd.192.1580897414255;
-        Wed, 05 Feb 2020 02:10:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzhLiRotsNnQNsivhoayjMiCgeXE0WQrA1E8lYViSEDb6rb+V+WWKm6Cr1nYBXR+C80MOw0Qw==
-X-Received: by 2002:a62:828b:: with SMTP id w133mr34324136pfd.192.1580897413944;
-        Wed, 05 Feb 2020 02:10:13 -0800 (PST)
-Received: from 2001-b011-380f-35a3-4cfd-361b-ac7d-6a8c.dynamic-ip6.hinet.net (2001-b011-380f-35a3-4cfd-361b-ac7d-6a8c.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:4cfd:361b:ac7d:6a8c])
-        by smtp.gmail.com with ESMTPSA id 10sm28075377pfu.132.2020.02.05.02.10.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Feb 2020 02:10:13 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge systems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <C4ADFDF0-8252-412A-8CFE-8E5ACE853B0A@canonical.com>
-Date:   Wed, 5 Feb 2020 18:10:11 +0800
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <6B7AE45E-F1E0-4949-B3E6-B78658CD223F@canonical.com>
-References: <20191129142154.29658-1-kai.heng.feng@canonical.com>
- <20191202170011.GC30032@infradead.org>
- <974A8EB3-70B6-4A33-B36C-CFF69464493C@canonical.com>
- <20191217095341.GG8689@8bytes.org>
- <6DC0EAB3-89B5-4A16-9A38-D7AD954DDF1C@canonical.com>
- <CY4PR12MB13505BE6EFF95F7C48253120F7520@CY4PR12MB1350.namprd12.prod.outlook.com>
- <84CFD1EE-2DB7-451F-98E4-58C4B0046A81@canonical.com>
- <C4ADFDF0-8252-412A-8CFE-8E5ACE853B0A@canonical.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UD8MX0T3MUe53I3VyW0MK1QJ1j+hRM6tFiKLV9YX/IY=;
+        b=XXwIDJHlMEUFjKSIOWitS/d+2n/Vl9rbQSE6zFbfzZm4JOnnm7oKZl29qc5RwmiCGK
+         2Rgs2Kd0eXhr9OR926dpVN7F6xZlod+hjUSbuY4R2yFikIFZMjjdc6XVkIBpCcv3G++e
+         ACkyodbBDo9HTpPYIreOS1sdVweXMr9+LN1d6iqGgNEIVUYxY678AXfQgMtkYL73OryN
+         9pudEZ7ZMInh8S7PT5i8WQOa2UnJPRM298o9TTPSknyU5uJVWoOzzyGIdOfVwSelhZPz
+         +3PAAT0o5nFtNdEV0kMxToznUCYXkFMbLWMe1KqbuZIq5LMdvP0YqgTFBuOw2DECenH3
+         OVvA==
+X-Gm-Message-State: APjAAAVUBPTuWzI1IFuFNW1ZesS2rtTZuc0OJZ3xPltjppJTOGBbx0W7
+        ZDC1eaaSvho1FxfXFVmmELkbXjH+OA==
+X-Google-Smtp-Source: APXvYqy1evs9nqE3YFwxxphgSKWYDq28pTy5VyvSWYSqjQVWCQuCLxqO8WRG+1uVGPkXve9fDTNJ4H8ugw==
+X-Received: by 2002:a5d:6987:: with SMTP id g7mr26978829wru.422.1580897664980;
+ Wed, 05 Feb 2020 02:14:24 -0800 (PST)
+Date:   Wed,  5 Feb 2020 11:14:19 +0100
+Message-Id: <20200205101419.149903-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] kcsan: Fix 0-sized checks
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+Instrumentation of arbitrary memory-copy functions, such as user-copies,
+may be called with size of 0, which could lead to false positives.
 
-> On Jan 6, 2020, at 16:37, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> 
-> 
->> On Dec 20, 2019, at 10:13, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->> 
->> 
->> 
->>> On Dec 20, 2019, at 03:15, Deucher, Alexander <Alexander.Deucher@amd.com> wrote:
->>> 
->>>> -----Original Message-----
->>>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>> Sent: Wednesday, December 18, 2019 12:45 PM
->>>> To: Joerg Roedel <joro@8bytes.org>
->>>> Cc: Christoph Hellwig <hch@infradead.org>; Deucher, Alexander
->>>> <Alexander.Deucher@amd.com>; iommu@lists.linux-foundation.org; Kernel
->>>> development list <linux-kernel@vger.kernel.org>
->>>> Subject: Re: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge
->>>> systems
->>>> 
->>>> 
->>>> 
->>>>> On Dec 17, 2019, at 17:53, Joerg Roedel <joro@8bytes.org> wrote:
->>>>> 
->>>>> On Fri, Dec 06, 2019 at 01:57:41PM +0800, Kai-Heng Feng wrote:
->>>>>> Hi Joerg,
->>>>>> 
->>>>>>> On Dec 3, 2019, at 01:00, Christoph Hellwig <hch@infradead.org> wrote:
->>>>>>> 
->>>>>>> On Fri, Nov 29, 2019 at 10:21:54PM +0800, Kai-Heng Feng wrote:
->>>>>>>> Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
->>>>>>>> 
->>>>>>>> According to Alex Deucher, IOMMU isn't enabled on Windows, so let's
->>>>>>>> do the same here to avoid screen flickering on 4K monitor.
->>>>>>> 
->>>>>>> Disabling the IOMMU entirely seem pretty severe.  Isn't it enough to
->>>>>>> identity map the GPU device?
->>>>>> 
->>>>>> Ok, there's set_device_exclusion_range() to exclude the device from
->>>> IOMMU.
->>>>>> However I don't know how to generate range_start and range_length,
->>>> which are read from ACPI.
->>>>> 
->>>>> set_device_exclusion_range() is not the solution here. The best is if
->>>>> the GPU device is put into a passthrough domain at boot, in which it
->>>>> will be identity mapped. DMA still goes through the IOMMU in this
->>>>> case, but it only needs to lookup the device-table, page-table walks
->>>>> will not be done anymore.
->>>>> 
->>>>> The best way to implement this is to put it into the
->>>>> amd_iommu_add_device() in drivers/iommu/amd_iommu.c. There is this
->>>>> check:
->>>>> 
->>>>>     if (dev_data->iommu_v2)
->>>>> 		iommu_request_dm_for_dev(dev);
->>>>> 
->>>>> The iommu_request_dm_for_dev() function causes the device to be
->>>>> identity mapped. The check can be extended to also check for a device
->>>>> white-list for devices that need identity mapping.
->>>> 
->>>> My patch looks like this but the original behavior (4K screen flickering) is still
->>>> the same:
->>> 
->>> Does reverting the patch to disable ATS along with this patch help?
->> 
->> Unfortunately it doesn't help.
-> 
-> Any further suggestion to let me try?
+To avoid this, add a comparison in check_access() for size==0, which
+will be optimized out for constant sized instrumentation
+(__tsan_{read,write}N), and therefore not affect the common-case
+fast-path.
 
-Since using identity mapping with ATS doesn't help,
-Is it possible to merge this patch as is?
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ kernel/kcsan/core.c |  7 +++++++
+ kernel/kcsan/test.c | 10 ++++++++++
+ 2 files changed, 17 insertions(+)
 
-Kai-Heng
-
-> 
-> Kai-Heng
-> 
->> 
->> Kai-Heng
->> 
->>> 
->>> Alex
->>> 
->>>> 
->>>> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
->>>> index bd25674ee4db..f913a25c9e92 100644
->>>> --- a/drivers/iommu/amd_iommu.c
->>>> +++ b/drivers/iommu/amd_iommu.c
->>>> @@ -42,6 +42,7 @@
->>>> #include <asm/iommu.h>
->>>> #include <asm/gart.h>
->>>> #include <asm/dma.h>
->>>> +#include <asm/pci-direct.h>
->>>> 
->>>> #include "amd_iommu_proto.h"
->>>> #include "amd_iommu_types.h"
->>>> @@ -2159,6 +2160,8 @@ static int amd_iommu_add_device(struct device
->>>> *dev)
->>>>      struct iommu_domain *domain;
->>>>      struct amd_iommu *iommu;
->>>>      int ret, devid;
->>>> +       bool need_identity_mapping = false;
->>>> +       u32 header;
->>>> 
->>>>      if (!check_device(dev) || get_dev_data(dev))
->>>>              return 0;
->>>> @@ -2184,7 +2187,11 @@ static int amd_iommu_add_device(struct device
->>>> *dev)
->>>> 
->>>>      BUG_ON(!dev_data);
->>>> 
->>>> -       if (dev_data->iommu_v2)
->>>> +       header = read_pci_config(0, PCI_BUS_NUM(devid), PCI_SLOT(devid),
->>>> PCI_FUNC(devid));
->>>> +       if ((header & 0xffff) == 0x1002 && (header >> 16) == 0x98e4)
->>>> +               need_identity_mapping = true;
->>>> +
->>>> +       if (dev_data->iommu_v2 || need_identity_mapping)
->>>>              iommu_request_dm_for_dev(dev);
->>>> 
->>>>      /* Domains are initialized for this device - have a look what we ended up
->>>> with */
->>>> 
->>>> 
->>>> $ dmesg | grep -i direct
->>>> [    0.011446] Using GB pages for direct mapping
->>>> [    0.703369] pci 0000:00:01.0: Using iommu direct mapping
->>>> [    0.703830] pci 0000:00:08.0: Using iommu direct mapping
->>>> 
->>>> So the graphics device (pci 0000:00:01.0:) is using direct mapping after the
->>>> change.
->>>> 
->>>> Kai-Heng
->>>> 
->>>>> 
->>>>> HTH,
->>>>> 
->>>>> 	Joerg
-> 
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index e3c7d8f34f2ff..82c2bef827d42 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -455,6 +455,13 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
+ 	atomic_long_t *watchpoint;
+ 	long encoded_watchpoint;
+ 
++	/*
++	 * Do nothing for 0 sized check; this comparison will be optimized out
++	 * for constant sized instrumentation (__tsan_{read,write}N).
++	 */
++	if (unlikely(size == 0))
++		return;
++
+ 	/*
+ 	 * Avoid user_access_save in fast-path: find_watchpoint is safe without
+ 	 * user_access_save, as the address that ptr points to is only used to
+diff --git a/kernel/kcsan/test.c b/kernel/kcsan/test.c
+index cc6000239dc01..d26a052d33838 100644
+--- a/kernel/kcsan/test.c
++++ b/kernel/kcsan/test.c
+@@ -92,6 +92,16 @@ static bool test_matching_access(void)
+ 		return false;
+ 	if (WARN_ON(matching_access(9, 1, 10, 1)))
+ 		return false;
++
++	/*
++	 * An access of size 0 could match another access, as demonstrated here.
++	 * Rather than add more comparisons to 'matching_access()', which would
++	 * end up in the fast-path for *all* checks, check_access() simply
++	 * returns for all accesses of size 0.
++	 */
++	if (WARN_ON(!matching_access(8, 8, 12, 0)))
++		return false;
++
+ 	return true;
+ }
+ 
+-- 
+2.25.0.341.g760bfbb309-goog
 
