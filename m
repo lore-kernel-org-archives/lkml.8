@@ -2,75 +2,77 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4FBC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E351BC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959972082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C201F214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBEVzC (ORCPT
+        id S1727484AbgBEVzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:55:02 -0500
-Received: from namei.org ([65.99.196.166]:43528 "EHLO namei.org"
+        Wed, 5 Feb 2020 16:55:05 -0500
+Received: from nautica.notk.org ([91.121.71.147]:56696 "EHLO nautica.notk.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgBEVzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:55:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 015LspWn020124;
-        Wed, 5 Feb 2020 21:54:51 GMT
-Date:   Thu, 6 Feb 2020 08:54:51 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     Sasha Levin <sashal@kernel.org>, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, kys@microsoft.com,
-        jamorris@microsoft.com
-Subject: Re: [PATCH] Documentation/process: Change Microsoft contact for
- embargoed hardware issues
-In-Reply-To: <20200205214716.GA1468203@kroah.com>
-Message-ID: <alpine.LRH.2.21.2002060854230.17039@namei.org>
-References: <20200205213621.31474-1-sashal@kernel.org> <20200205214716.GA1468203@kroah.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1727116AbgBEVzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 16:55:03 -0500
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id E3728C009; Wed,  5 Feb 2020 22:55:01 +0100 (CET)
+Date:   Wed, 5 Feb 2020 22:54:46 +0100
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Sergey Alirzaev <l29ah@cock.li>
+Cc:     v9fs-developer@lists.sourceforge.net,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 9pnet: allow making incomplete read requests
+Message-ID: <20200205215446.GB3942@nautica>
+References: <20200205204053.12751-1-l29ah@cock.li>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200205204053.12751-1-l29ah@cock.li>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020, Greg KH wrote:
-
-> On Wed, Feb 05, 2020 at 04:36:21PM -0500, Sasha Levin wrote:
-> > Remove Sasha Levin as the Microsoft contact. A new contact will be
-> > assigned by Microsoft.
-> > 
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  Documentation/process/embargoed-hardware-issues.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
-> > index 33edae654599..a6f4f6e5c78b 100644
-> > --- a/Documentation/process/embargoed-hardware-issues.rst
-> > +++ b/Documentation/process/embargoed-hardware-issues.rst
-> > @@ -250,7 +250,7 @@ an involved disclosed party. The current ambassadors list:
-> >    Intel		Tony Luck <tony.luck@intel.com>
-> >    Qualcomm	Trilok Soni <tsoni@codeaurora.org>
-> >  
-> > -  Microsoft	Sasha Levin <sashal@kernel.org>
-> > +  Microsoft
+Sergey Alirzaev wrote on Wed, Feb 05, 2020:
+> A user doesn't necessarily want to wait for all the requested data to
+> be available, since the waiting time for each request is unbounded.
 > 
-> That's fine, but when will that contact "be assigned"?  I'd rather not
-> go without one at all for no good reason other than "people need to
-> figure their stuff out" :)
+> The new method permits sending one read request at a time and getting
+> the response ASAP, allowing to use 9pnet with synthetic file systems
+> representing arbitrary data streams.
 
-Add me for this: jamorris@linux.microsoft.com
+Much better, thanks!
 
+> Signed-off-by: Sergey Alirzaev <l29ah@cock.li>
+> [...]
+> +		if (n != count) {
+> +			*err = -EFAULT;
+> +			p9_tag_remove(clnt, req);
+> +			return n;
+>  		}
+> -		p9_tag_remove(clnt, req);
+> +	} else {
+> +		iov_iter_advance(to, count);
+> +		count;
 
+Any reason for this stray 'count;' statement?
+
+If you're ok with this I'll just take patch without that line, don't
+bother resubmitting.
+Will take a fair amount of time to make it to linux-next though, test
+setup needs some love and I want to run tests even if this should be
+straightforward...
+
+Thanks,
 -- 
-James Morris
-<jmorris@namei.org>
-
+Dominique
