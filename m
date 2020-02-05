@@ -2,81 +2,175 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC640C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F46C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F70E217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580905154;
-	bh=LOewdwSTaVK8VM0ryRaJS1Fmt63m9VezPAf3BvT7ukg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sKuIBsLwtjhB6bcxcjxyspQnStgAKHe9TGLE+VvCJL72W5ETzMQh0HDW+o0x+JiGm
-	 72OXkt3crEFV9o/VMmLImFLgczH0yCNlo7K53fHlxSruo0MvRzf+6870vvF+KhcFC5
-	 M122gUTazhN3+qQ9QBgH5Umqj/dJ3XaqsZTwOyUU=
+	by mail.kernel.org (Postfix) with ESMTP id A7FE021741
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 12:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WwA61MLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgBEMTO (ORCPT
+        id S1727500AbgBEMXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:19:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgBEMTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:19:13 -0500
-Received: from localhost (unknown [212.187.182.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 5 Feb 2020 07:23:12 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46766 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726308AbgBEMXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:23:11 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580905390; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=uMCCQYZszq+bmmu00qnksmPsuxhQeLZVhG8wCPSsiv4=; b=WwA61MLaiDCsK2x/sdWfzAyFTZ/BuPgHAs1Ts0YKHdbHDWwvy++MkCAvKFCpjQ397Bj8dB9P
+ +qmFtSjNt3dv3QWLiJqP4lqb5Y0ywEAt0uOPgbhjLwTnGm9Y1UKd5Ql9M7ctpLKkEMhdEVlp
+ Sb94bpG7UuPz+2bPJoDj/imTwhw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3ab3ad.7f81a21f6dc0-smtp-out-n02;
+ Wed, 05 Feb 2020 12:23:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 11713C447A3; Wed,  5 Feb 2020 12:23:09 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7012D2072B;
-        Wed,  5 Feb 2020 12:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580905153;
-        bh=LOewdwSTaVK8VM0ryRaJS1Fmt63m9VezPAf3BvT7ukg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w5gXdX7dC8sMqpjcPAj5EfndRO7hIwEguTYeiTh7vDbWwDOHAxo03Cfa6KK68BReE
-         AuSU5i/IpNaHKTlvlCJ/mvtqD14wM0gzODMU6uewLVGGp4QIcvG/6Wf7Iz2Biz9QZZ
-         D8B8Eme59qOw05MlLwXTepvyKJ8FPjy7xtPXNTac=
-Date:   Wed, 5 Feb 2020 12:19:10 +0000
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Grant Likely <grant.likely@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] Documentation/process: Add Arm contact for embargoed HW
- issues
-Message-ID: <20200205121910.GA1184961@kroah.com>
-References: <20200205001627.27356-1-grant.likely@arm.com>
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B304C433CB;
+        Wed,  5 Feb 2020 12:23:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B304C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        Lorenzo.Pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        rjw@rjwysocki.net
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
+ <20200203170832.GA38466@bogus>
+ <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
+ <20200204152132.GA44858@bogus>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
+Date:   Wed, 5 Feb 2020 17:53:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205001627.27356-1-grant.likely@arm.com>
+In-Reply-To: <20200204152132.GA44858@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 12:16:27AM +0000, Grant Likely wrote:
-> Adding myself to list after getting voluntold
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Grant Likely <grant.likely@arm.com>
-> ---
->  Documentation/process/embargoed-hardware-issues.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-$ ./scripts/get_maintainer.pl --file Documentation/process/embargoed-hardware-issues.rst
-Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION,commit_signer:3/11=27%)
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> (commit_signer:10/11=91%)
-....
+On 2/4/2020 8:51 PM, Sudeep Holla wrote:
+> On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
+>> On 2/3/2020 10:38 PM, Sudeep Holla wrote:
+>>> On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
+>>>> From: Ulf Hansson <ulf.hansson@linaro.org>
+>>>>
+>>>> If the hierarchical CPU topology is used, but the OS initiated mode isn't
+>>>> supported, we need to rely solely on the regular cpuidle framework to
+>>>> manage the idle state selection, rather than using genpd and its
+>>>> governor.
+>>>>
+>>>> For this reason, introduce a new PSCI DT helper function,
+>>>> psci_dt_pm_domains_parse_states(), which parses and converts the
+>>>> hierarchically described domain idle states from DT, into regular flattened
+>>>> cpuidle states. The converted states are added to the existing cpuidle
+>>>> driver's array of idle states, which make them available for cpuidle.
+>>>>
+>>> And what's the main motivation for this if OSI is not supported in the
+>>> firmware ?
+>> Hi Sudeep,
+>>
+>> Main motivation is to do last-man activities before the CPU cluster can
+>> enter a deep idle state.
+>>
+> Details on those last-man activities will help the discussion. Basically
+> I am wondering what they are and why they need to done in OSPM ?
 
-{sigh}
+Hi Sudeep,
 
-I'll pick this up :)
+there are cases like,
 
-thanks,
+Last cpu going to deepest idle mode need to lower various resoruce 
+requirements (for eg DDR freq).
 
-greg k-h
+This is done by calling rpmh_flush which send SLEEP values for various 
+shared resources.
 
+>>>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>>> [applied to new path, resolved conflicts]
+>>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>>>> ---
+>>>>    drivers/cpuidle/cpuidle-psci-domain.c | 137 +++++++++++++++++++++++++++++-----
+>>>>    drivers/cpuidle/cpuidle-psci.c        |  41 +++++-----
+>>>>    drivers/cpuidle/cpuidle-psci.h        |  11 +++
+>>>>    3 files changed, 153 insertions(+), 36 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cpuidle/cpuidle-psci-domain.c b/drivers/cpuidle/cpuidle-psci-domain.c
+>>>> index 423f03b..3c417f7 100644
+>>>> --- a/drivers/cpuidle/cpuidle-psci-domain.c
+>>>> +++ b/drivers/cpuidle/cpuidle-psci-domain.c
+>>>> @@ -26,13 +26,17 @@ struct psci_pd_provider {
+>>>>    };
+>>>>
+>>>>    static LIST_HEAD(psci_pd_providers);
+>>>> -static bool osi_mode_enabled __initdata;
+>>>> +static bool osi_mode_enabled;
+>>>>
+>>>>    static int psci_pd_power_off(struct generic_pm_domain *pd)
+>>>>    {
+>>>>    	struct genpd_power_state *state = &pd->states[pd->state_idx];
+>>>>    	u32 *pd_state;
+>>>>
+>>>> +	/* If we have failed to enable OSI mode, then abort power off. */
+>>>> +	if ((psci_has_osi_support()) && !osi_mode_enabled)
+>>>> +		return -EBUSY;
+>>>> +
+>>> Why is this needed ? IIUC we don't create genpd domains if OSI is not
+>>> enabled.
+>> we do create genpd domains, for cpu domains, we just abort power off here
+>> since idle states are converted into regular flattened mode.
+>>
+> OK, IIRC the OSI patches from Ulf didn't add the genpd or rather removed
+> them in case of any failure to enable OSI. Has that been changed ? If so,
+> why ?
+>
+>> however genpd poweroff will be used by parent domain (rsc in this case)
+>> which is kept in hireachy in DTSI with cluster domain to do last man
+>> activities.
+>>
+> I am bit confused here. Either we do OSI or PC and what you are describing
+> sounds like a mix-n-match to me and I am totally against it.
 
+we still do PC based on sc7180. there is no OSI.
+
+can you please check v4 series, i have cleaned this change by remove 
+converter part.
+
+Thanks,
+
+Maulik
+
+>
+> --
+> Regards,
+> Sudeep
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
