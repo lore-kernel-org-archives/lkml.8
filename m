@@ -2,105 +2,137 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84611C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1566C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4E6214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:25:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cza/Yb+W"
+	by mail.kernel.org (Postfix) with ESMTP id 8D9C5217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580941692;
+	bh=mhFskXW68cjm8ngJsjNtNIsLZErDvTn4apWGcjHiQ7A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=DYSeH5IM3zEDWGEzg8JVMjJbsv3sBiRgGrvOcHWVTA0Mro8V0dIwGjTc+jRCLkbO+
+	 JXxfi6KOvakGgCBsPxK9DlBCX/eSD5sEzpXi55ZR4GqdmqdhwlSBZ/4yzFusA6uuX9
+	 vtDoC9uEPbxZcmhV/rYdFm3Ll5FVpknKkr5pWIlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgBEWZZ (ORCPT
+        id S1727390AbgBEW2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:25:25 -0500
-Received: from ozlabs.org ([203.11.71.1]:48275 "EHLO ozlabs.org"
+        Wed, 5 Feb 2020 17:28:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgBEWZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:25:25 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727106AbgBEW2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:28:11 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48CbjZ0ttpz9sRG;
-        Thu,  6 Feb 2020 09:25:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580941522;
-        bh=FgeBSllH9nOX+H0EnoCoVt3VNC9kkq+gzK8azV5HlWs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cza/Yb+Wi4JBkdle8/ZXsgaZqWMVyrW/uQCjG6yxbUi2KZX1aClsnb2yqGlwI6i9F
-         NhOzaKMllIhgArj4R7pbPzPoZ7tsnIXWpm0UHIVl4m3/LNpBVry7slTdDAY1unQm/Y
-         QZ/e530Dh3zcmNP1zhOVQ3TseEPLkc96KJXiTWvh9V42oxkn1idnwwnyh/Ve6DGmw8
-         LzoZ+4i4Nlz4e8Pa/y+n3BT6/ahDkqNDA2qR7/XiRDL51++kvuwrDQTzkyhmQEqhEi
-         nrJ6nxlMyxZhnC9ehUMB/4ISNrbo1A1egok5qWIOZWnyKMKMID5Ovdlnfz3Hqj6Yf1
-         tNZqnwCR79Xkw==
-Date:   Thu, 6 Feb 2020 09:25:12 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trondmy@gmail.com>,
-        NFS Mailing List <linux-nfs@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dai Ngo <dai.ngo@oracle.com>
-Subject: linux-next: manual merge of the vfs tree with the nfs-anna tree
-Message-ID: <20200206092512.5eb304b7@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F45214AF;
+        Wed,  5 Feb 2020 22:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580941689;
+        bh=mhFskXW68cjm8ngJsjNtNIsLZErDvTn4apWGcjHiQ7A=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=gbiYizyBE01xlOjsK4iCwW06pKI+hMYA6qlXF679HJDAScyMlGZKmHMGlX1n0j6zp
+         yf1QiYOaNIASXqy4VTRMSlQvNkUu23rwBg9cqKi8wJB336WLwAwub0Lwd/KvA9P0rp
+         Kliz7v9+iKQTCWUJIwzX3XeI1BfiySM4qVsQX2d8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7108035227EB; Wed,  5 Feb 2020 14:28:09 -0800 (PST)
+Date:   Wed, 5 Feb 2020 14:28:09 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: [for-next][PATCH 1/5] ftrace: Protect ftrace_graph_hash with
+ ftrace_sync
+Message-ID: <20200205222809.GD2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200205222110.912457436@goodmis.org>
+ <20200205222142.810675558@goodmis.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/db1mAXHnx/_Rc63UC+p.9fG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205222142.810675558@goodmis.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/db1mAXHnx/_Rc63UC+p.9fG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 05, 2020 at 05:21:11PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> As function_graph tracer can run when RCU is not "watching", it can not be
+> protected by synchronize_rcu() it requires running a task on each CPU before
+> it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
+> 
+> Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
+> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Hi all,
+Nice!  If there is much more call for this, perhaps I should take a hint
+from the ftrace_sync() comment and add synchronize_rcu_rude().  ;-)
 
-Today's linux-next merge of the vfs tree got a conflict in:
+Reviewed-by: "Paul E. McKenney" <paulmck@kernel.org>
 
-  fs/nfs/dir.c
-
-between commit:
-
-  227823d2074d ("nfs: optimise readdir cache page invalidation")
-
-from the nfs-anna tree and commit:
-
-  ef3af2d44331 ("nfs: optimise readdir cache page invalidation")
-
-from the vfs tree.
-
-I fixed it up (I used the nfs-anna tree version) and can carry the fix
-as necessary. This is now fixed as far as linux-next is concerned, but
-any non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/db1mAXHnx/_Rc63UC+p.9fG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl47QMgACgkQAVBC80lX
-0GyVfwf/T+0uXHU7k55U4Yok50+o+m7JIq2U5y/5z+P7poFOcYoWB0liR3yaosC0
-/SPD6womk2pac9Km3xC7xjudcHx2qrgPu4jkgSboEDdrIYgq2EXoRjNZToHBduM0
-BsbThvoC4EpuA4vN922VpWe2zUuLoFUTSX/hUruBlMd+jeG90Nf4sczI1IMrlVbm
-VaR0oL/Jgf/X0wm2KvxmqAlDcmFmTmE/o6imAEQsaAAbWPpCLdHejCahGSuX0L7d
-ywuF5Gh7U641+itfVk2LJkFwr+iAmdyxmAbqXIBVoexEg24f+JzVwcBtOOwulerc
-DxplKLs0+sp+RGY9xqInD29ssNCSsg==
-=64+8
------END PGP SIGNATURE-----
-
---Sig_/db1mAXHnx/_Rc63UC+p.9fG--
+> ---
+>  kernel/trace/ftrace.c | 11 +++++++++--
+>  kernel/trace/trace.h  |  2 ++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 481ede3eac13..3f7ee102868a 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -5867,8 +5867,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
+>  
+>  		mutex_unlock(&graph_lock);
+>  
+> -		/* Wait till all users are no longer using the old hash */
+> -		synchronize_rcu();
+> +		/*
+> +		 * We need to do a hard force of sched synchronization.
+> +		 * This is because we use preempt_disable() to do RCU, but
+> +		 * the function tracers can be called where RCU is not watching
+> +		 * (like before user_exit()). We can not rely on the RCU
+> +		 * infrastructure to do the synchronization, thus we must do it
+> +		 * ourselves.
+> +		 */
+> +		schedule_on_each_cpu(ftrace_sync);
+>  
+>  		free_ftrace_hash(old_hash);
+>  	}
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 8c52f5de9384..3c75d29bd861 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -979,6 +979,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+>  	 * Have to open code "rcu_dereference_sched()" because the
+>  	 * function graph tracer can be called when RCU is not
+>  	 * "watching".
+> +	 * Protected with schedule_on_each_cpu(ftrace_sync)
+>  	 */
+>  	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
+>  
+> @@ -1031,6 +1032,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+>  	 * Have to open code "rcu_dereference_sched()" because the
+>  	 * function graph tracer can be called when RCU is not
+>  	 * "watching".
+> +	 * Protected with schedule_on_each_cpu(ftrace_sync)
+>  	 */
+>  	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+>  						 !preemptible());
+> -- 
+> 2.24.1
+> 
+> 
