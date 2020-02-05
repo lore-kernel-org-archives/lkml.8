@@ -2,148 +2,173 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DC0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F570C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A699821741
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DF420702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:25:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdGw10uk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgBEOUQ (ORCPT
+        id S1728114AbgBEOZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:20:16 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:23554 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728165AbgBEOUP (ORCPT
+        Wed, 5 Feb 2020 09:25:15 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38649 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgBEOZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:20:15 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015EK3o2008623;
-        Wed, 5 Feb 2020 09:20:03 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xyhm91u3c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 09:20:03 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 015EJtTw055113
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 5 Feb 2020 09:19:55 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 5 Feb 2020
- 06:19:53 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 5 Feb 2020 06:19:53 -0800
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 015EJmEM000357;
-        Wed, 5 Feb 2020 09:19:50 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmitry.torokhov@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 2/2] input: adp5589: Add basic devicetree support
-Date:   Wed, 5 Feb 2020 16:22:18 +0200
-Message-ID: <20200205142218.15973-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200205142218.15973-1-alexandru.ardelean@analog.com>
-References: <20200205142218.15973-1-alexandru.ardelean@analog.com>
+        Wed, 5 Feb 2020 09:25:15 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so2971662wrh.5;
+        Wed, 05 Feb 2020 06:25:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qhXaXnj7gj/UHklOFLVC+u57GTsIaZTNIrcJnG9KwhE=;
+        b=fdGw10ukTIsbS2IUVXIBEXDsk9f1aqfr64xNDeQWjMSCOeqW7Dnd8t0aiFkXZM6/Er
+         Xe7xgLe4QfDWWneBciDvkyQWsNC+khv4RYeT7nGoTptdMg/55rxqqoVEfPrG0bNdWUlp
+         iN4SSMlEaESmaY8C7gxXiS7cIc/VcnqQuOAQrIdvMgGJKRMvmxPRQTGIDhRwy+sBo2gM
+         QwRioT3VjASh7CUqlUdkRD68+lkTslQWU6my8Siu0GAWicZ5CPasCBkS6JgYa9wHtkGj
+         S8FWa5Q/OI9mOE8NzeNbDogcHvqeKQ5thc80jYEF2QiYK/3JThwzaJtvko2Xts1HXRr0
+         sq2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qhXaXnj7gj/UHklOFLVC+u57GTsIaZTNIrcJnG9KwhE=;
+        b=cWN4P0UKOHIjJ4M5LFSJymkztjOL4nqm2NLVKiGiQuIe3qCd02A4tDJ6v+MxQcGIrK
+         xpeswsBV4fBilx6s7w9qrN4csZq3w8X7x6xBBUS28hiKWXbX3HQL2UHNtu2I+9HANJne
+         veHf+UY6l/WaoP9TQjEKJO7vgYEjqZHCDefBiPhHrMqm2qOSMPvaq73X08XSvn9pOWcR
+         8S0QH6kPvqs/9j2cty6ctfHUZFg+SLULNkMZT9cVcdAK6E+FlFF5t8F3xDk8c0Hl3OJX
+         xrX5qQomqsgTFsihID2ysCTCoEyScWS0ovMOqXWGqOMerVK84yNn/+gF53DSJjUm1DNK
+         gBzQ==
+X-Gm-Message-State: APjAAAUci8USNyhyqBTfIatxetuQMtFvled3k+SKq1jPzDHn4slf9ajs
+        Bn9fzAygqyMJv672GIxQjbc=
+X-Google-Smtp-Source: APXvYqx6w55XElDxgPBTYbaClZFgVcTjDyhPQxSHuYzRC0KycfMhsXQ7RV3nUG6/jMgm6hWBAntEAg==
+X-Received: by 2002:adf:f8c4:: with SMTP id f4mr27352188wrq.243.1580912713282;
+        Wed, 05 Feb 2020 06:25:13 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id e18sm33846336wrw.70.2020.02.05.06.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 06:25:12 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Changes for v5.6-rc1
+Date:   Wed,  5 Feb 2020 15:25:11 +0100
+Message-Id: <20200205142511.2172050-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_04:2020-02-04,2020-02-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002050112
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+Hi Linus,
 
-Add very basic devicetree suppport to the adp5589 allowing the device to be
-registered from devicetree.
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/input/keyboard/adp5589-keys.c | 33 ++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
-index c6a801bcdf90..56f4ff7fa9c3 100644
---- a/drivers/input/keyboard/adp5589-keys.c
-+++ b/drivers/input/keyboard/adp5589-keys.c
-@@ -1008,6 +1008,25 @@ static void adp5589_keypad_remove(struct adp5589_kpad *kpad)
- 	}
- }
- 
-+static int adp5589_i2c_get_driver_data(struct i2c_client *i2c,
-+				       const struct i2c_device_id *id)
-+{
-+	const struct of_device_id *match;
-+
-+	if (id)
-+		return id->driver_data;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !i2c->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(i2c->dev.driver->of_match_table,
-+			      i2c->dev.of_node);
-+	if (match)
-+		return (uintptr_t)match->data;
-+
-+	return -ENODEV;
-+}
-+
- static int adp5589_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -1029,7 +1048,11 @@ static int adp5589_probe(struct i2c_client *client,
- 
- 	kpad->client = client;
- 
--	switch (id->driver_data) {
-+	ret = adp5589_i2c_get_driver_data(client, id);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
- 	case ADP5585_02:
- 		kpad->support_row5 = true;
- 		/* fall through */
-@@ -1129,6 +1152,13 @@ static int adp5589_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(adp5589_dev_pm_ops, adp5589_suspend, adp5589_resume);
- 
-+static const struct of_device_id adp5589_of_match[] = {
-+	{ .compatible = "adi,adp5585", .data = (void *)ADP5585_01 },
-+	{ .compatible = "adi,adp5585-02", .data = (void *)ADP5585_02 },
-+	{ .compatible = "adi,adp5589", .data = (void *)ADP5589 },
-+	{}
-+};
-+
- static const struct i2c_device_id adp5589_id[] = {
- 	{"adp5589-keys", ADP5589},
- 	{"adp5585-keys", ADP5585_01},
-@@ -1142,6 +1172,7 @@ static struct i2c_driver adp5589_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.pm = &adp5589_dev_pm_ops,
-+		.of_match_table = adp5589_of_match,
- 	},
- 	.probe = adp5589_probe,
- 	.remove = adp5589_remove,
--- 
-2.20.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.6-rc1
+
+for you to fetch changes up to 9871abffc81048e20f02e15d6aa4558a44ad53ea:
+
+  pwm: Remove set but not set variable 'pwm' (2020-01-20 15:40:49 +0100)
+
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Changes for v5.6-rc1
+
+This set of changes are mostly cleanups and minor improvements with some
+new chip support for some drivers.
+
+----------------------------------------------------------------
+Anson Huang (1):
+      pwm: imx27: Eliminate error message for defer probe
+
+Clément Péron (3):
+      pwm: sun4i: Prefer "mod" clock to unnamed
+      pwm: sun4i: Always calculate params when applying new parameters
+      pwm: sun4i: Move pwm_calculate() out of spin_lock()
+
+Fabrice Gasnier (1):
+      pwm: stm32: Remove automatic output enable
+
+Florian Fainelli (1):
+      pwm: bcm2835: Allow building for ARCH_BRCMSTB
+
+Gustavo A. R. Silva (1):
+      pwm: sun4i: Fix inconsistent IS_ERR and PTR_ERR
+
+Jernej Skrabec (4):
+      pwm: sun4i: Add an optional probe for reset line
+      pwm: sun4i: Add an optional probe for bus clock
+      pwm: sun4i: Add support to output source clock directly
+      pwm: sun4i: Add support for H6 PWM
+
+Krzysztof Kozlowski (1):
+      pwm: Fix minor Kconfig whitespace issues
+
+Rasmus Villemoes (5):
+      pwm: mxs: Implement ->apply()
+      pwm: mxs: Remove legacy methods
+      pwm: mxs: Add support for inverse polarity
+      dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
+      pwm: mxs: Avoid a division in mxs_pwm_apply()
+
+Thierry Reding (5):
+      pwm: Read initial hardware state at request time
+      pwm: cros-ec: Cache duty cycle value
+      pwm: imx27: Cache duty cycle register value
+      pwm: imx27: Unconditionally write state to hardware
+      pwm: sun4i: Initialize variables before use
+
+Uwe Kleine-König (14):
+      pwm: atmel: Add a hint where to find hardware documentation
+      pwm: atmel: Use a constant for maximum prescale value
+      pwm: atmel: Replace loop in prescale calculation by ad-hoc calculation
+      pwm: atmel: Document known weaknesses of both hardware and software
+      pwm: atmel: Use register accessors for channels
+      pwm: atmel: Implement .get_state()
+      pwm: rcar: Drop useless call to pwm_get_state()
+      pwm: rcar: Document inability to set duty_cycle = 0
+      pwm: Implement tracing for .get_state() and .apply_state()
+      pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
+      pwm: omap-dmtimer: Simplify error handling
+      pwm: omap-dmtimer: put_device() after of_find_device_by_node()
+      pwm: omap-dmtimer: Allow compiling with COMPILE_TEST
+      pwm: sun4i: Narrow scope of local variable
+
+yu kuai (1):
+      pwm: Remove set but not set variable 'pwm'
+
+ Documentation/devicetree/bindings/pwm/mxs-pwm.txt |   4 +-
+ drivers/pwm/Kconfig                               |   9 +-
+ drivers/pwm/core.c                                |  13 +-
+ drivers/pwm/pwm-atmel.c                           |  87 ++++++++--
+ drivers/pwm/pwm-cros-ec.c                         |  58 ++++++-
+ drivers/pwm/pwm-imx27.c                           | 147 +++++++++-------
+ drivers/pwm/pwm-mxs.c                             | 101 ++++++-----
+ drivers/pwm/pwm-omap-dmtimer.c                    |  54 ++++--
+ drivers/pwm/pwm-pca9685.c                         |   4 -
+ drivers/pwm/pwm-rcar.c                            |   5 +-
+ drivers/pwm/pwm-stm32.c                           |   4 +-
+ drivers/pwm/pwm-sun4i.c                           | 194 ++++++++++++++++++----
+ include/trace/events/pwm.h                        |  58 +++++++
+ 13 files changed, 539 insertions(+), 199 deletions(-)
+ create mode 100644 include/trace/events/pwm.h
