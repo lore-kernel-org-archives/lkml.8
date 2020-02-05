@@ -2,75 +2,220 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0284CC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31043C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5A32082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580937524;
-	bh=QMhz+7e00RCmyYOltDlwhumaKg1yWLzr33A3QyUuuf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a8/SaXS99yX9zwagf+dv06v854n45B9xEBH4weF60pN/InmIPK+7xFtfa2RpJFeAH
-	 LPVvARV5tv/exfEEhd+/xGOFN9vst3+TRV+b2mFTjR+glHWwKl2fXbvzFIvhBTikqc
-	 N8mzBgRo+4nzht3+ohr6hEWhp0X4q/KtJ1+ZpUP8=
+	by mail.kernel.org (Postfix) with ESMTP id EF3BF214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uaLEGuO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBEVSm (ORCPT
+        id S1727479AbgBEVSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:18:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgBEVSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:18:41 -0500
-Received: from localhost (unknown [193.117.204.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 191DC2082E;
-        Wed,  5 Feb 2020 21:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580937521;
-        bh=QMhz+7e00RCmyYOltDlwhumaKg1yWLzr33A3QyUuuf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nEZpJZ1IHojRHvcxZHovij4sNzGsPKYmm9DiTM2JYopwLkCzNUvZolklBQ4EInKLX
-         RG2YM+zHZy7xp9YnzEzWVVYgJIyKMfYFqn4X90ph6bEw5cRVym7KDwplndYk/cI5vd
-         yJrptSfDQ9V2IW3Vn2qsYv+zg5cM29TPA1/vYS5w=
-Date:   Wed, 5 Feb 2020 21:18:39 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
-Message-ID: <20200205211839.GE1399643@kroah.com>
-References: <cover.1579007786.git.andreyknvl@google.com>
- <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
- <87ftfv7nf0.fsf@kernel.org>
- <CAAeHK+wwmis4z9ifPAnkM36AnfG2oESSLAkKvDkuAa0QUM2wRg@mail.gmail.com>
- <87a7637ise.fsf@kernel.org>
- <CAAeHK+zNuqwmHG4NJwZNtQHizdaOpriHxoQffZHMffeke_hsGQ@mail.gmail.com>
- <87tv4556ke.fsf@kernel.org>
- <CAAeHK+zE6N3W-UQ7yjrSkbfwGCBmd0cTv=z7LKNRa2Er1KMPew@mail.gmail.com>
+        Wed, 5 Feb 2020 16:18:47 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40581 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgBEVSq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 16:18:46 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p3so3626602edx.7;
+        Wed, 05 Feb 2020 13:18:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HwPPuPnmVEwZ6aDLR6Qux/8T5vpoODzKg3MxR8eUbtI=;
+        b=uaLEGuO51KXNG6vo70c0VJas4nlwIgWh3AIlvLVPa+k6MIC61WrmeJiOV6irU8bBJn
+         FMojQR6awRUvBofxnnvbPG5tfA21oxc2TXBUJ6n97ia0GLOM200Yns8ZkWjGba70+vuv
+         40g2Fi6yHD3PGwqGCFSiSc7GhCMS0Bp0kFyKhiuzt0QVh19vfF1LH05eaUVyEEd+9TNj
+         w7XFGFlfMhgupGDb8bUcmBivE1qoji1UkhO01xM5OVTHZz/g2INx308WQLwgj+MqbUW0
+         jDvMaRlP6xbYqTj5hNszoUaUC7Lu5NbGwyvL1WFgkCkxLcfkmJDdUeaAzOrY04InCdIb
+         hkcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HwPPuPnmVEwZ6aDLR6Qux/8T5vpoODzKg3MxR8eUbtI=;
+        b=j5hoN9BQHnjyjvb0BoMQ962tfXZu/eHCNX72L9WlyMyrFZJBH4ZZBiZaynALR72iIO
+         6iFIfM8aVzXOn/WIbPhswipO56H0QBgNSosVniSrA+At95z+Ex1un0MRmppi77FqOBtv
+         xiKEyz7x/Ly6Ry5Mtey810Z58RkYoiBRMYw0VquYvKDQV/hqk88FMIPeE+YQvIYSnBkG
+         RJiktWHrR6LfRnWry5DT0JCUELn1160Az23hDiG/OGoHlstfexdgrf2ZlxzzsSKR+T0u
+         rm6awHI/dPoObVUufJqCqEufY5UgwljjfFMY3+lMhkdB4Emee0ZSeyAbh+dnLdmzr+wN
+         xhzg==
+X-Gm-Message-State: APjAAAVgF1YV9ElocZvFCVJSCLD5cYxfTDg8MC80waAhW+7M0Yi/AmDe
+        KZD6e7KHsF6EC0Jrc5M+5ci/RAcjwgnMHfDNpT2KsuTQ
+X-Google-Smtp-Source: APXvYqwwgRaj4ECfGfJoTZ8YyHexZeS1MvdlVz7PnDwj0THon8h0EODB3kHzoiQQoG1OEnlQsrBRRd2OhNZ8owrKaT8=
+X-Received: by 2002:a17:906:6d03:: with SMTP id m3mr18262ejr.39.1580937524119;
+ Wed, 05 Feb 2020 13:18:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+zE6N3W-UQ7yjrSkbfwGCBmd0cTv=z7LKNRa2Er1KMPew@mail.gmail.com>
+References: <1580922081-25177-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1580922081-25177-1-git-send-email-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 5 Feb 2020 13:18:33 -0800
+Message-ID: <CAF6AEGv4z=XBuiNdnga2LofubRLjZ40O6chpjGorqeZJz2YQXw@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/a6xx: Update the GMU bus tables for sc7180
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 06:25:25PM +0100, Andrey Konovalov wrote:
-> Re licensing comments, do I need to change anything after all?
+On Wed, Feb 5, 2020 at 9:01 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Fixup the GMU bus table values for the sc7180 target.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-Nope, that part is fine, thanks.
+I suspect that we'll need to figure out a better way to get these
+values from the interconnect driver in the long run, esp. since there
+are several different SoCs with a618.. but for now, this looks
+reasonable
 
-greg k-h
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Fixes: e812744c5f95 ("drm: msm: a6xx: Add support for A618")
+
+
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 85 ++++++++++++++++++++++++-----------
+>  1 file changed, 60 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+> index eda11ab..e450e0b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+> @@ -7,6 +7,7 @@
+>
+>  #include "a6xx_gmu.h"
+>  #include "a6xx_gmu.xml.h"
+> +#include "a6xx_gpu.h"
+>
+>  #define HFI_MSG_ID(val) [val] = #val
+>
+> @@ -216,48 +217,82 @@ static int a6xx_hfi_send_perf_table(struct a6xx_gmu *gmu)
+>                 NULL, 0);
+>  }
+>
+> -static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
+> +static void a618_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+>  {
+> -       struct a6xx_hfi_msg_bw_table msg = { 0 };
+> +       /* Send a single "off" entry since the 618 GMU doesn't do bus scaling */
+> +       msg->bw_level_num = 1;
+> +
+> +       msg->ddr_cmds_num = 3;
+> +       msg->ddr_wait_bitmask = 0x01;
+> +
+> +       msg->ddr_cmds_addrs[0] = 0x50000;
+> +       msg->ddr_cmds_addrs[1] = 0x5003c;
+> +       msg->ddr_cmds_addrs[2] = 0x5000c;
+> +
+> +       msg->ddr_cmds_data[0][0] =  0x40000000;
+> +       msg->ddr_cmds_data[0][1] =  0x40000000;
+> +       msg->ddr_cmds_data[0][2] =  0x40000000;
+>
+>         /*
+> -        * The sdm845 GMU doesn't do bus frequency scaling on its own but it
+> -        * does need at least one entry in the list because it might be accessed
+> -        * when the GMU is shutting down. Send a single "off" entry.
+> +        * These are the CX (CNOC) votes - these are used by the GMU but the
+> +        * votes are known and fixed for the target
+>          */
+> +       msg->cnoc_cmds_num = 1;
+> +       msg->cnoc_wait_bitmask = 0x01;
+> +
+> +       msg->cnoc_cmds_addrs[0] = 0x5007c;
+> +       msg->cnoc_cmds_data[0][0] =  0x40000000;
+> +       msg->cnoc_cmds_data[1][0] =  0x60000001;
+> +}
+>
+> -       msg.bw_level_num = 1;
+> +static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+> +{
+> +       /* Send a single "off" entry since the 630 GMU doesn't do bus scaling */
+> +       msg->bw_level_num = 1;
+>
+> -       msg.ddr_cmds_num = 3;
+> -       msg.ddr_wait_bitmask = 0x07;
+> +       msg->ddr_cmds_num = 3;
+> +       msg->ddr_wait_bitmask = 0x07;
+>
+> -       msg.ddr_cmds_addrs[0] = 0x50000;
+> -       msg.ddr_cmds_addrs[1] = 0x5005c;
+> -       msg.ddr_cmds_addrs[2] = 0x5000c;
+> +       msg->ddr_cmds_addrs[0] = 0x50000;
+> +       msg->ddr_cmds_addrs[1] = 0x5005c;
+> +       msg->ddr_cmds_addrs[2] = 0x5000c;
+>
+> -       msg.ddr_cmds_data[0][0] =  0x40000000;
+> -       msg.ddr_cmds_data[0][1] =  0x40000000;
+> -       msg.ddr_cmds_data[0][2] =  0x40000000;
+> +       msg->ddr_cmds_data[0][0] =  0x40000000;
+> +       msg->ddr_cmds_data[0][1] =  0x40000000;
+> +       msg->ddr_cmds_data[0][2] =  0x40000000;
+>
+>         /*
+>          * These are the CX (CNOC) votes.  This is used but the values for the
+>          * sdm845 GMU are known and fixed so we can hard code them.
+>          */
+>
+> -       msg.cnoc_cmds_num = 3;
+> -       msg.cnoc_wait_bitmask = 0x05;
+> +       msg->cnoc_cmds_num = 3;
+> +       msg->cnoc_wait_bitmask = 0x05;
+>
+> -       msg.cnoc_cmds_addrs[0] = 0x50034;
+> -       msg.cnoc_cmds_addrs[1] = 0x5007c;
+> -       msg.cnoc_cmds_addrs[2] = 0x5004c;
+> +       msg->cnoc_cmds_addrs[0] = 0x50034;
+> +       msg->cnoc_cmds_addrs[1] = 0x5007c;
+> +       msg->cnoc_cmds_addrs[2] = 0x5004c;
+>
+> -       msg.cnoc_cmds_data[0][0] =  0x40000000;
+> -       msg.cnoc_cmds_data[0][1] =  0x00000000;
+> -       msg.cnoc_cmds_data[0][2] =  0x40000000;
+> +       msg->cnoc_cmds_data[0][0] =  0x40000000;
+> +       msg->cnoc_cmds_data[0][1] =  0x00000000;
+> +       msg->cnoc_cmds_data[0][2] =  0x40000000;
+> +
+> +       msg->cnoc_cmds_data[1][0] =  0x60000001;
+> +       msg->cnoc_cmds_data[1][1] =  0x20000001;
+> +       msg->cnoc_cmds_data[1][2] =  0x60000001;
+> +}
+> +
+> +
+> +static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
+> +{
+> +       struct a6xx_hfi_msg_bw_table msg = { 0 };
+> +       struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
+> +       struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+>
+> -       msg.cnoc_cmds_data[1][0] =  0x60000001;
+> -       msg.cnoc_cmds_data[1][1] =  0x20000001;
+> -       msg.cnoc_cmds_data[1][2] =  0x60000001;
+> +       if (adreno_is_a618(adreno_gpu))
+> +               a618_build_bw_table(&msg);
+> +       else
+> +               a6xx_build_bw_table(&msg);
+>
+>         return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_BW_TABLE, &msg, sizeof(msg),
+>                 NULL, 0);
+> --
+> 2.7.4
