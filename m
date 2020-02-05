@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13FDC352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16158C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9129217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC429222C2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgBEObC (ORCPT
+        id S1727481AbgBEObE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:31:02 -0500
-Received: from comms.puri.sm ([159.203.221.185]:48826 "EHLO comms.puri.sm"
+        Wed, 5 Feb 2020 09:31:04 -0500
+Received: from comms.puri.sm ([159.203.221.185]:48854 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgBEObB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727003AbgBEObB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Feb 2020 09:31:01 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 999CBE049D;
-        Wed,  5 Feb 2020 06:31:00 -0800 (PST)
+        by comms.puri.sm (Postfix) with ESMTP id 6FA10E03CF;
+        Wed,  5 Feb 2020 06:31:01 -0800 (PST)
 Received: from comms.puri.sm ([127.0.0.1])
         by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8X0Ugy737Zw9; Wed,  5 Feb 2020 06:30:59 -0800 (PST)
+        with ESMTP id 4qrC0zwEtsvC; Wed,  5 Feb 2020 06:30:56 -0800 (PST)
 From:   Martin Kepplinger <martin.kepplinger@puri.sm>
 To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
@@ -32,9 +32,9 @@ Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
         kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v1 03/12] arm64: dts: librem5-devkit: allow modem to wake the system from suspend
-Date:   Wed,  5 Feb 2020 15:29:54 +0100
-Message-Id: <20200205143003.28408-4-martin.kepplinger@puri.sm>
+Subject: [PATCH v1 02/12] arm64: dts: librem5-devkit: add the simcom 7100 modem and audio
+Date:   Wed,  5 Feb 2020 15:29:53 +0100
+Message-Id: <20200205143003.28408-3-martin.kepplinger@puri.sm>
 In-Reply-To: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
@@ -45,66 +45,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-Connect the WoWWAN signal to a gpio key to wake up the system from suspend.
+Add the simcomm modem and the sai6 interface that connects it, as well
+as the sgtl5000 audio codec.
 
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 27 +++++++++++++++----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 8162576e8f3d..ac6ba227e1da 100644
+index 9702db69d3ed..8162576e8f3d 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -33,7 +33,7 @@
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_gpio_keys>;
-+		pinctrl-0 = <&pinctrl_gpio_keys>, <&pinctrl_wwan_in>;
- 
- 		btn1 {
- 			label = "VOL_UP";
-@@ -55,6 +55,15 @@
- 			wakeup-source;
- 			linux,code = <KEY_HP>;
- 		};
-+
-+		wwan_wake {
-+			label = "WWAN_WAKE";
-+			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
-+			interrupt-parent = <&gpio3>;
-+			interrupts = <8 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+			linux,code = <KEY_PHONE>;
-+		};
+@@ -148,6 +148,51 @@
+ 		regulator-always-on;
  	};
  
- 	leds {
-@@ -767,11 +776,19 @@
- 		>;
- 	};
- 
--	pinctrl_wwan: wwangrp {
-+	pinctrl_wwan_in: wwaningrp {
-+		fsl,pins = <
-+		/* nWoWWAN */
-+		MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80
-+		>;
++	sim7100_codec: sound-wwan-codec {
++		compatible = "option,gtm601";
++		#sound-dai-cells = <0>;
 +	};
 +
-+	pinctrl_wwan_out: wwanoutgrp {
- 		fsl,pins = <
--			MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x09 /* nWWAN_DISABLE */
--			MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80 /* nWoWWAN */
--			MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19 /* WWAN_RESET */
-+		/* nWWAN_DISABLE */
-+		MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x09
-+		/* WWAN_RESET */
-+		MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19
- 		>;
- 	};
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "sgtl5000";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "Speaker Ext",
++			"Line", "Line In Jack";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++		simple-audio-card,cpu {
++			sound-dai = <&sai2>;
++		};
++		simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
++			frame-master;
++			bitclock-master;
++		};
++	};
++
++	sound-wwan {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "SIMCom SIM7100";
++		simple-audio-card,format = "dsp_a";
++		simple-audio-card,cpu {
++			sound-dai = <&sai6>;
++		};
++		telephony_link_master: simple-audio-card,codec {
++			sound-dai = <&sim7100_codec>;
++			frame-master;
++			bitclock-master;
++		};
++	};
++
+ 	vibrator {
+ 		compatible = "gpio-vibrator";
+ 		pinctrl-names = "default";
+@@ -749,6 +794,16 @@
+ 	status = "okay";
  };
+ 
++&sai6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai6>;
++	assigned-clocks = <&clk IMX8MQ_CLK_SAI6>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <24576000>;
++	fsl,sai-synchronous-rx;
++	status = "okay";
++};
++
+ &uart1 { /* console */
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
 -- 
 2.20.1
 
