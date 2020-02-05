@@ -2,205 +2,151 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E3FC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF32C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8A720702
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817C8217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GJrHZ472"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fW9VMren"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBEWFr (ORCPT
+        id S1727477AbgBEWGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:05:47 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60000 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgBEWFq (ORCPT
+        Wed, 5 Feb 2020 17:06:03 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35017 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBEWGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:05:46 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 015M5dYm081600;
-        Wed, 5 Feb 2020 16:05:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580940339;
-        bh=ny9cXXNXsLV9FUQqsaKg6nwuhajCMFweJM0P6C7uw8Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GJrHZ472slGcnY7fqN/7XzVol6XhXLAAdAQ2TyuGR/xEtffifaqNb1C6OKmMdfWHW
-         NM9mcZuutekuByKmiseTn0G7HzR+JUaS+KabOshUGqGaFWmQFIeIbpRy0fuJFB7YuB
-         CkrGBmu00dq5b9FPWhzchaXg1BNeco1eVMnRfpww=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 015M5dWB014510
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Feb 2020 16:05:39 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
- 2020 16:05:39 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 5 Feb 2020 16:05:39 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 015M5cqd022273;
-        Wed, 5 Feb 2020 16:05:39 -0600
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200204181319.27381-1-dmurphy@ti.com>
- <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
- <170d6518-ea82-08d3-0348-228c72425e64@ti.com>
- <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c7a7bd71-3a1c-1cf3-5faa-204b10ea8b78@ti.com>
-Date:   Wed, 5 Feb 2020 16:01:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 5 Feb 2020 17:06:03 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so1446762plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:06:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0mz8ghzRtlNXRAOessj5ksQCBU4mJW2G9mtxFkaYRDQ=;
+        b=fW9VMrenQz9iTmdfdoDMzHKyP8mMhtw2mck9e3ViEKVPBnj6IerWyXo1moiBRnAAij
+         bYQkpq6s+48whH++3i/ihUrN6f8hlH54AuBmvHzVdZYO2Yb0LSt8n8yflOTaRVOXY627
+         nME6stNH4hW4UJZTcKRuCz/7m7b3BZQtkARrI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0mz8ghzRtlNXRAOessj5ksQCBU4mJW2G9mtxFkaYRDQ=;
+        b=XG55LFvUs6x0iyPPcyG9VDt63I2zDVgt8GO/NYswtzsLDbQFihZxIG/IBjP30/tJm0
+         rpp0JmOKhbNKVlfkliaKW/Gtsg5lZLrPvM2tdFw5xR2ebSaQFI0CuuQWUKTL/eNqPb+S
+         7O+PRNg80kLFXdJ7j8+tvZ4v1Evpjk1sbq6W/xljCesUqY6jXtxJn1s0XuuyuvXqVL+u
+         XC8oFnVsqikxTcjQii5xQlkwuf7KuvwEI5Z0N3APNWnIpimyz6RiH9FGNamRaYhAvYF+
+         wx1oUs0xH88ftM3lNLZ2qi3uHHqRlQ8JJZWr+G3q0sSOhHlJrBV6Tx7ccZmaGU4aigoj
+         kKzA==
+X-Gm-Message-State: APjAAAVtjWPlmd8jwQ5fOOAINb0UuvLH6x675qTd+yJvjW1embj6lSh2
+        qodp2YwfxDUXQ8HKiLAjd4g1SQ==
+X-Google-Smtp-Source: APXvYqwPxwRuDtRVckccB99BVAAZnpynaXqtYDYcBqdZyf9yCOvN/yE8DvmTukAFZ2dnb8mjozDU4A==
+X-Received: by 2002:a17:902:7c05:: with SMTP id x5mr143755pll.236.1580940361372;
+        Wed, 05 Feb 2020 14:06:01 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 23sm494645pfh.28.2020.02.05.14.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 14:06:01 -0800 (PST)
+Date:   Wed, 5 Feb 2020 17:06:00 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] tracing: Annotate ftrace_graph_hash pointer with __rcu
+Message-ID: <20200205220600.GM142103@google.com>
+References: <20200201072703.17330-1-frextrite@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201072703.17330-1-frextrite@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+On Sat, Feb 01, 2020 at 12:57:04PM +0530, Amol Grover wrote:
+> Fix following instances of sparse error
+> kernel/trace/ftrace.c:5664:29: error: incompatible types in comparison
+> kernel/trace/ftrace.c:5785:21: error: incompatible types in comparison
+> kernel/trace/ftrace.c:5864:36: error: incompatible types in comparison
+> kernel/trace/ftrace.c:5866:25: error: incompatible types in comparison
+> 
+> Use rcu_dereference_protected to access the __rcu annotated pointer.
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  kernel/trace/ftrace.c | 2 +-
+>  kernel/trace/trace.h  | 9 ++++++---
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 9bf1f2cd515e..959ded08dc13 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -5596,7 +5596,7 @@ static const struct file_operations ftrace_notrace_fops = {
+>  
+>  static DEFINE_MUTEX(graph_lock);
+>  
+> -struct ftrace_hash *ftrace_graph_hash = EMPTY_HASH;
+> +struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
+>  struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
+>  
+>  enum graph_filter_type {
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 63bf60f79398..97dad3326020 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -950,22 +950,25 @@ extern void __trace_graph_return(struct trace_array *tr,
+>  				 unsigned long flags, int pc);
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> -extern struct ftrace_hash *ftrace_graph_hash;
+> +extern struct ftrace_hash __rcu *ftrace_graph_hash;
+>  extern struct ftrace_hash *ftrace_graph_notrace_hash;
+>  
+>  static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+>  {
+>  	unsigned long addr = trace->func;
+>  	int ret = 0;
+> +	struct ftrace_hash *hash;
+>  
+>  	preempt_disable_notrace();
+>  
+> -	if (ftrace_hash_empty(ftrace_graph_hash)) {
+> +	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
 
-On 2/5/20 4:00 PM, Florian Fainelli wrote:
-> On 2/5/20 1:51 PM, Dan Murphy wrote:
->> Heiner
->>
->> On 2/5/20 3:16 PM, Heiner Kallweit wrote:
->>> On 04.02.2020 19:13, Dan Murphy wrote:
->>>> Set the speed optimization bit on the DP83867 PHY.
->>>> This feature can also be strapped on the 64 pin PHY devices
->>>> but the 48 pin devices do not have the strap pin available to enable
->>>> this feature in the hardware.  PHY team suggests to have this bit set.
->>>>
->>>> With this bit set the PHY will auto negotiate and report the link
->>>> parameters in the PHYSTS register.  This register provides a single
->>>> location within the register set for quick access to commonly accessed
->>>> information.
->>>>
->>>> In this case when auto negotiation is on the PHY core reads the bits
->>>> that have been configured or if auto negotiation is off the PHY core
->>>> reads the BMCR register and sets the phydev parameters accordingly.
->>>>
->>>> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to
->>>> accomodate a
->>>> 4-wire cable.  If this should occur the PHYSTS register contains the
->>>> current negotiated speed and duplex mode.
->>>>
->>>> In overriding the genphy_read_status the dp83867_read_status will do a
->>>> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
->>>> register is read and the phydev speed and duplex mode settings are
->>>> updated.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>> v2 - Updated read status to call genphy_read_status first, added
->>>> link_change
->>>> callback to notify of speed change and use phy_set_bits -
->>>> https://lore.kernel.org/patchwork/patch/1188348/
->>>>
->>> As stated in the first review, it would be appreciated if you implement
->>> also the downshift tunable. This could be a separate patch in this
->>> series.
->>> Most of the implementation would be boilerplate code.
->> I just don't have a requirement from our customer to make it adjustable
->> so I did not want to add something extra.
->>
->> I can add in for v3.
->>
->>> And I have to admit that I'm not too happy with the term "speed
->>> optimization".
->>> This sounds like the PHY has some magic to establish a 1.2Gbps link.
->>> Even though the vendor may call it this way in the datasheet, the
->>> standard
->>> term is "downshift". I'm fine with using "speed optimization" in
->>> constants
->>> to be in line with the datasheet. Just a comment in the code would be
->>> helpful
->>> that speed optimization is the vendor's term for downshift.
->> Ack.  The data sheet actually says "Speed optimization, also known as
->> link downshift"
->>
->> So I probably will just rename everything down shift.
->>
->>>>    drivers/net/phy/dp83867.c | 55 +++++++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 55 insertions(+)
->>>>
->>>> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
->>>> index 967f57ed0b65..6f86ca1ebb51 100644
->>>> --- a/drivers/net/phy/dp83867.c
->>>> +++ b/drivers/net/phy/dp83867.c
->>>> @@ -21,6 +21,7 @@
->>>>    #define DP83867_DEVADDR        0x1f
->>>>      #define MII_DP83867_PHYCTRL    0x10
->>>> +#define MII_DP83867_PHYSTS    0x11
->>>>    #define MII_DP83867_MICR    0x12
->>>>    #define MII_DP83867_ISR        0x13
->>>>    #define DP83867_CFG2        0x14
->>>> @@ -118,6 +119,15 @@
->>>>    #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK    (0x1f << 8)
->>>>    #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT    8
->>>>    +/* PHY STS bits */
->>>> +#define DP83867_PHYSTS_1000            BIT(15)
->>>> +#define DP83867_PHYSTS_100            BIT(14)
->>>> +#define DP83867_PHYSTS_DUPLEX            BIT(13)
->>>> +#define DP83867_PHYSTS_LINK            BIT(10)
->>>> +
->>>> +/* CFG2 bits */
->>>> +#define DP83867_SPEED_OPTIMIZED_EN        (BIT(8) | BIT(9))
->>>> +
->>>>    /* CFG3 bits */
->>>>    #define DP83867_CFG3_INT_OE            BIT(7)
->>>>    #define DP83867_CFG3_ROBUST_AUTO_MDIX        BIT(9)
->>>> @@ -287,6 +297,43 @@ static int dp83867_config_intr(struct phy_device
->>>> *phydev)
->>>>        return phy_write(phydev, MII_DP83867_MICR, micr_status);
->>>>    }
->>>>    +static void dp83867_link_change_notify(struct phy_device *phydev)
->>>> +{
->>>> +    if (phydev->state != PHY_RUNNING)
->>>> +        return;
->>>> +
->>>> +    if (phydev->speed == SPEED_100 || phydev->speed == SPEED_10)
->>>> +        phydev_warn(phydev, "Downshift detected connection is
->>>> %iMbps\n",
->>>> +                phydev->speed);
->>> The link partner may simply not advertise 1Gbps. How do you know that
->>> a link speed of e.g. 100Mbps is caused by a downshift?
->>> Some PHY's I've seen with this feature have a flag somewhere indicating
->>> that downshift occurred. How about the PHY here?
->> I don't see a register that gives us that status
->>
->> I will ask the hardware team if there is one.
->>
->> This is a 1Gbps PHY by default so if a slower connection is established
->> due to faulty cabling or LP advertisement then this would be a down
->> shift IMO.
-> With your current link_change_notify function it would not be possible
-> to know whether the PHY was connected to a link partner that advertised
-> only 10/100 and so 100 ended up being the link speed, or the link
-> partner was capable of 10/100/1000 and downshift reduced the link speed.
->
-> If you cannot tell the difference from a register, it might be better to
-> simply omit that function then.
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Yeah I thought it was a bit redundant and wonky to see in the log that 
-the link established to xG/Mbps and then see another message saying the 
-downshift occurred.
+BTW I think set_ftrace_early_graph() should use rcu_assign_pointer() so that
+the early writes to the hash are release-barrier'ed before the global pointer
+is updated. I will send a patch for that.
 
-Dan
+thanks,
 
+ - Joel
+
+
+> +
+> +	if (ftrace_hash_empty(hash)) {
+>  		ret = 1;
+>  		goto out;
+>  	}
+>  
+> -	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
+> +	if (ftrace_lookup_ip(hash, addr)) {
+>  
+>  		/*
+>  		 * This needs to be cleared on the return functions
+> -- 
+> 2.24.1
+> 
