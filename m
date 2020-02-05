@@ -2,184 +2,148 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B16AC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C703C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299AE20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE3E20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CQ3Lze5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgBETlf (ORCPT
+        id S1727491AbgBETm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:41:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38490 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgBETlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:41:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4E16CB174;
-        Wed,  5 Feb 2020 19:41:33 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 19:41:39 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
- copy_file_range
-Message-ID: <20200205194139.GB27345@suse.com>
-References: <20200203165117.5701-1-lhenriques@suse.com>
- <20200203165117.5701-2-lhenriques@suse.com>
- <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
- <20200204151158.GA15992@suse.com>
- <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
- <20200205110007.GA11836@suse.com>
- <CAOi1vP-kLCY+Q2UwpqvJdfeEV6me=FneLhasQrj2nkcu_7tRew@mail.gmail.com>
- <2ce07148b49e6c1a857b4dd90c3bcea6ed0e8ce3.camel@kernel.org>
+        Wed, 5 Feb 2020 14:42:26 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41888 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgBETm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:42:26 -0500
+Received: by mail-io1-f66.google.com with SMTP id m25so3507573ioo.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 11:42:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4tNmqVZiW++bCIMW549FZaWf//Au+3Hw7l0TwF264r8=;
+        b=CQ3Lze5zaZTjmvhE3x3CrSo88h0oGNp0S8pHmB73CSZCa/zbWjTOuqj1DSyv7+LQ1Z
+         TXumJ0aRVETgtfIfkuddmzWNsxznqiJLag5g2FuxwR1yIIdW5AgvkJZngkqL/tGsl1yE
+         G7DM9Gz15hCx85y4b9zRJKC38nLawLWoIaWHA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4tNmqVZiW++bCIMW549FZaWf//Au+3Hw7l0TwF264r8=;
+        b=nZZiKBlyyTYNJHEHSCWAH11piTtigpsV+DC1fGKOdW6wrI3d2qh4rHUA1J0o/fEnk+
+         A72jfuFV91d26KyvyhYmpWRL5OhKidGvX5GA0vzlJz6xXZrYOInln0Yyt4yQJMKtNp3f
+         EYMPPWtQEGR5/5atleH/z7/PAMHJwehIdXSCSk0hqgD2a2kAMho8K3CHH2tYGxWkVQts
+         efD/e22lKuXRlyPCdnb9YitCodS3r4TsvrFQiAdmjc9c+4mjOFF+6OPnnf7+ea6OnwVu
+         4PZ3Ggii5AhbMznkTpLS1ecv/KzGimJysU2GPwaw1EySpQ4ElmKLsvrKP6yCLgKXQpxr
+         crPQ==
+X-Gm-Message-State: APjAAAVQGQe2buADFuh9a562Z1ekF7dILMz4em6uufPJMNB1g+pUqYO/
+        YNL7KsvjaVP8wHI8SSTqFziJIoOysqTDWD8kHdQkhw==
+X-Google-Smtp-Source: APXvYqzSEMPMmAVvKUvBQCZUvo4BcU8NrVHQ9+f2s894VpBliUIc0Ui4e4CSx4FNMaBk7ap8CYtPg0r5dKQIx/oArdE=
+X-Received: by 2002:a6b:dc03:: with SMTP id s3mr29708124ioc.50.1580931745506;
+ Wed, 05 Feb 2020 11:42:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2ce07148b49e6c1a857b4dd90c3bcea6ed0e8ce3.camel@kernel.org>
+References: <20200205190028.183069-1-pmalani@chromium.org> <20200205190028.183069-11-pmalani@chromium.org>
+In-Reply-To: <20200205190028.183069-11-pmalani@chromium.org>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Wed, 5 Feb 2020 11:42:14 -0800
+Message-ID: <CAPUE2uvJuNYc=MnGZfwT=hUzEJoRAoST-aT=xKfrTOZQ=5wgwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 08:12:22AM -0500, Jeff Layton wrote:
-> On Wed, 2020-02-05 at 13:01 +0100, Ilya Dryomov wrote:
-> > On Wed, Feb 5, 2020 at 12:00 PM Luis Henriques <lhenriques@suse.com> wrote:
-> > > On Tue, Feb 04, 2020 at 07:06:36PM +0100, Ilya Dryomov wrote:
-> > > > On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
-> > > > > On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
-> > > > > ...
-> > > > > > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > > > > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > > > > > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> > > > > > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > > > > > -               if (err) {
-> > > > > > > -                       if (err == -EOPNOTSUPP) {
-> > > > > > > -                               src_fsc->have_copy_from2 = false;
-> > > > > > > -                               pr_notice("OSDs don't support 'copy-from2'; "
-> > > > > > > -                                         "disabling copy_file_range\n");
-> > > > > > > -                       }
-> > > > > > > +               if (IS_ERR(req)) {
-> > > > > > > +                       err = PTR_ERR(req);
-> > > > > > >                         dout("ceph_osdc_copy_from returned %d\n", err);
-> > > > > > > +
-> > > > > > > +                       /* wait for all queued requests */
-> > > > > > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
-> > > > > > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
-> > > > > > 
-> > > > > > Hi Luis,
-> > > > > > 
-> > > > > > Looks like ret is still incremented unconditionally?  What happens
-> > > > > > if there are three OSD requests on the list and the first fails but
-> > > > > > the second and the third succeed?  As is, ceph_osdc_wait_requests()
-> > > > > > will return an error with reqs_complete set to 2...
-> > > > > > 
-> > > > > > >                         if (!ret)
-> > > > > > >                                 ret = err;
-> > > > > > 
-> > > > > > ... and we will return 8M instead of an error.
-> > > > > 
-> > > > > Right, my assumption was that if a request fails, all subsequent requests
-> > > > > would also fail.  This would allow ret to be updated with the number of
-> > > > > successful requests (x object size), even if the OSDs replies were being
-> > > > > delivered in a different order.  But from your comment I see that my
-> > > > > assumption is incorrect.
-> > > > > 
-> > > > > In that case, when shall ret be updated with the number of bytes already
-> > > > > written?  Only after a successful call to ceph_osdc_wait_requests()?
-> > > > 
-> > > > I mentioned this in the previous email: you probably want to change
-> > > > ceph_osdc_wait_requests() so that the counter isn't incremented after
-> > > > an error is encountered.
-> > > 
-> > > Sure, I've seen that comment.  But it doesn't help either because it's not
-> > > guaranteed that we'll receive the replies from the OSDs in the same order
-> > > we've sent them.  Stopping the counter when we get an error doesn't
-> > > provide us any reliable information (which means I can simply drop that
-> > > counter).
-> > 
-> > The list is FIFO so even though replies may indeed arrive out of
-> > order, ceph_osdc_wait_requests() will process them in order.  If you
-> > stop counting as soon as an error is encountered, you know for sure
-> > that requests 1 through $COUNTER were successful and can safely
-> > multiply it by object size.
-> > 
-> > > > > I.e. only after each throttling cycle, when we don't have any requests
-> > > > > pending completion?  In this case, I can simply drop the extra
-> > > > > reqs_complete parameter to the ceph_osdc_wait_requests.
-> > > > > 
-> > > > > In your example the right thing to do would be to simply return an error,
-> > > > > I guess.  But then we're assuming that we're loosing space in the storage,
-> > > > > as we may have created objects that won't be reachable anymore.
-> > > > 
-> > > > Well, that is what I'm getting at -- this needs a lot more
-> > > > consideration.  How errors are dealt with, how file metadata is
-> > > > updated, when do we fall back to plain copy, etc.  Generating stray
-> > > > objects is bad but way better than reporting that e.g. 0..12M were
-> > > > copied when only 0..4M and 8M..12M were actually copied, leaving
-> > > > the user one step away from data loss.  One option is to revert to
-> > > > issuing copy-from requests serially when an error is encountered.
-> > > > Another option is to fall back to plain copy on any error.  Or perhaps
-> > > > we just don't bother with the complexity of parallel copy-from requests
-> > > > at all...
-> > > 
-> > > To be honest, I'm starting to lean towards this option.  Reverting to
-> > > serializing requests or to plain copy on error will not necessarily
-> > > prevent the stray objects:
-> > > 
-> > >   - send a bunch of copy requests
-> > >   - wait for them to complete
-> > >      * 1 failed, the other 63 succeeded
-> > >   - revert to serialized copies, repeating the previous 64 requests
-> > >      * after a few copies, we get another failure (maybe on the same OSDs)
-> > >        and abort, leaving behind some stray objects from the previous bulk
-> > >        request
-> > 
-> > Yeah, doing it serially makes the accounting a lot easier.  If you
-> > issue any OSD requests before updating the size, stray objects are
-> > bound to happen -- that's why "how file metadata is updated" is one
-> > of the important considerations.
-> 
-> I don't think this is fundamentally different from the direct write
-> codepath. It's just that the source of the write is another OSD rather
-> than being sent in the request.
-> 
-> If you look at ceph_direct_read_write(), then it does this:
-> 
->       /*
->        * To simplify error handling, allow AIO when IO within i_size
->        * or IO can be satisfied by single OSD request.
->        */
-> 
-> So, that's another possibility. Do the requests synchronously when they
-> will result in a change to i_size. Otherwise, you can do them in
-> parallel.
-
-This could also work, but would add even more complexity.  I already find
-the __copy_file_range implementation way to complex (and the fact that I
-keep adding bugs to it is a good indicator :-) ), although I know the
-performance improvements provided by the parallel requests can be huge.
-Anyway, let me (try to!) fix these other bugs that Ilya keeps finding and
-then I'll revisit the whole thing.
-
-Cheers,
---
-Luís
-
-> In practice, we'd have to recommend that people truncate the destination
-> file up to the final length before doing copy_file_range, but that
-> doesn't sound too onerous.
-> 
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
+On Wed, Feb 5, 2020 at 11:13 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
+> which does the message buffer setup and cleanup.
+>
+> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
+> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
+> function.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Updated to use new function name and parameter list.
+> - Used C99 element setting to initialize param struct.
+> - For second usage, replaced cros_ec_cmd_xfer_status() with
+>   cros_ec_cmd_xfer() which is functionally similar.
+>
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index d3a3626c7cd834..94e22e7d927631 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>                                              u16 cmd_offset, u16 cmd, u32 *mask)
+>  {
+>         int ret;
+> -       struct {
+> -               struct cros_ec_command msg;
+> -               union {
+> -                       struct ec_params_get_cmd_versions params;
+> -                       struct ec_response_get_cmd_versions resp;
+> -               };
+> -       } __packed buf = {
+> -               .msg = {
+> -                       .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> -                       .insize = sizeof(struct ec_response_get_cmd_versions),
+> -                       .outsize = sizeof(struct ec_params_get_cmd_versions)
+> -                       },
+> -               .params = {.cmd = cmd}
+> +       struct ec_params_get_cmd_versions params = {
+> +               .cmd = cmd,
+>         };
+> +       struct ec_response_get_cmd_versions resp = {0};
+>
+> -       ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> +       ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> +                         &params, sizeof(params), &resp, sizeof(resp), NULL);
+>         if (ret >= 0)
+> -               *mask = buf.resp.version_mask;
+> +               *mask = resp.version_mask;
+>         return ret;
+>  }
+>
+> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+>
+>         memcpy(state->msg->data, &state->param, sizeof(state->param));
+>
+> -       ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+> +       ret = cros_ec_cmd_xfer(state->ec, state->msg);
+>         if (ret < 0)
+>                 return ret;
+> +       else if (state->msg->result != EC_RES_SUCCESS)
+> +               return -EPROTO;
+>
+>         if (ret &&
+>             state->resp != (struct ec_response_motion_sense *)state->msg->data)
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
