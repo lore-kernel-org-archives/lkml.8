@@ -2,151 +2,215 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7B0C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF59C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0632082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDTocgNr"
+	by mail.kernel.org (Postfix) with ESMTP id BBCEA217BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580881908;
+	bh=K4oX8xgOnRCMZXg3GYs4npaodCsefMeS35S01g6sm64=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=V5hpJFALB3mvtLr3Zm6sYx/JaGPzOW3HYnip6x43VFRLZnq6aNcRqqKnoCqgU6NhQ
+	 +52uiJnQ0w+mO6GlXM9YQQzkbqiL0d6B2EGmzjItIIAJeDSs8fGB5zo7Dq/bY72DrS
+	 Ft6xv7LHKzA/Ir8Ol6KnKNfmrc8NhQ9rdtTVp5Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgBEFvT (ORCPT
+        id S1726720AbgBEFvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 00:51:19 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36822 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgBEFvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 00:51:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580881877;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mCCBz5Rdlbkg4ojmDomdGX6wRFkIiLU8SA3hhtwlDwg=;
-        b=CDTocgNrNp/v/MPRdY1Z1xxqJcI6aeDY7cangVdqK8AbeIPTKYirbe48ezIr9SD4E0ycGs
-        OE/J23fr9EYDJso0eoWIcOxpy1LXKxxWzQUYsd6BEGrPX1YQKmTOe58RydpsKGEnnlLijg
-        afxOx7Y3aLl6N68CZckMirWa3CWjS1I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-BTzEyaLKMeuvyVcErxsMpw-1; Wed, 05 Feb 2020 00:51:15 -0500
-X-MC-Unique: BTzEyaLKMeuvyVcErxsMpw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Feb 2020 00:51:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbgBEFvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 00:51:31 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C27D1034B21;
-        Wed,  5 Feb 2020 05:51:13 +0000 (UTC)
-Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C1C548;
-        Wed,  5 Feb 2020 05:50:36 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
-        rob.miller@broadcom.com, haotian.wang@sifive.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com,
-        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
-        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
- <20200204005306-mutt-send-email-mst@kernel.org>
- <cf485e7f-46e3-20d3-8452-e3058b885d0a@redhat.com>
- <20200205020555.GA369236@___>
- <798e5644-ca28-ee46-c953-688af9bccd3b@redhat.com>
- <20200205003048-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <eb53d1c2-92ae-febf-f502-2d3e107ee608@redhat.com>
-Date:   Wed, 5 Feb 2020 13:50:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200205003048-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id A25AD2082E;
+        Wed,  5 Feb 2020 05:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580881890;
+        bh=K4oX8xgOnRCMZXg3GYs4npaodCsefMeS35S01g6sm64=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YkufCvwOwoOSEYuFCy4aC5YJIy+EqGMPRaLB82TA0pTsyrsjA2sYWScpmBOZlzGj0
+         yX1t5pM+3tuxTNgDyCnzUNTyptBtwaZEQwkUJm823ySEUsrWVfO84Snpyt/0W7twdY
+         GvPCRPjOUKZx9Drc056edAz44V2HExXYWQkNvNTo=
+Date:   Wed, 5 Feb 2020 14:51:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v4] bootconfig: Only load bootconfig if "bootconfig" is
+ on the kernel cmdline
+Message-Id: <20200205145126.be9cf26ffd5e95278b4eef4c@kernel.org>
+In-Reply-To: <20200204195224.3c2882ea@oasis.local.home>
+References: <20200204195224.3c2882ea@oasis.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 4 Feb 2020 19:52:24 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 2020/2/5 =E4=B8=8B=E5=8D=881:31, Michael S. Tsirkin wrote:
-> On Wed, Feb 05, 2020 at 11:12:21AM +0800, Jason Wang wrote:
->> On 2020/2/5 =E4=B8=8A=E5=8D=8810:05, Tiwei Bie wrote:
->>> On Tue, Feb 04, 2020 at 02:46:16PM +0800, Jason Wang wrote:
->>>> On 2020/2/4 =E4=B8=8B=E5=8D=882:01, Michael S. Tsirkin wrote:
->>>>> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
->>>>>> 5) generate diffs of memory table and using IOMMU API to setup the=
- dma
->>>>>> mapping in this method
->>>>> Frankly I think that's a bunch of work. Why not a MAP/UNMAP interfa=
-ce?
->>>>>
->>>> Sure, so that basically VHOST_IOTLB_UPDATE/INVALIDATE I think?
->>> Do you mean we let userspace to only use VHOST_IOTLB_UPDATE/INVALIDAT=
-E
->>> to do the DMA mapping in vhost-vdpa case? When vIOMMU isn't available=
-,
->>> userspace will set msg->iova to GPA, otherwise userspace will set
->>> msg->iova to GIOVA, and vhost-vdpa module will get HPA from msg->uadd=
-r?
->>>
->>> Thanks,
->>> Tiwei
->> I think so. Michael, do you think this makes sense?
->>
->> Thanks
-> to make sure, could you post the suggested argument format for
-> these ioctls?
->
+> 
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> As the bootconfig is appended to the initrd it is not as easy to modify as
+> the kernel command line. If there's some issue with the kernel, and the
+> developer wants to boot a pristine kernel, it should not be needed to modify
+> the initrd to remove the bootconfig for a single boot.
+> 
+> As bootconfig is silently added (if the admin does not know where to look
+> they may not know it's being loaded). It should be explicitly added to the
+> kernel cmdline. The loading of the bootconfig is only done if "bootconfig"
+> is on the kernel command line. This will let admins know that the kernel
+> command line is extended.
+> 
+> Note, after adding printk()s for when the size is too great or the checksum
+> is wrong, exposed that the current method always looked for the boot config,
+> and if this size and checksum matched, it would parse it (as if either is
+> wrong a printk has been added to show this). It's better to only check this
+> if the boot config is asked to be looked for.
+> 
+> Link: https://lore.kernel.org/r/CAHk-=wjfjO+h6bQzrTf=YCZA53Y3EDyAs3Z4gEsT7icA3u_Psw@mail.gmail.com
+> 
 
-It's the existed uapi:
+Thanks for the update!
+This looks good to me.
 
-/* no alignment requirement */
-struct vhost_iotlb_msg {
- =C2=A0=C2=A0=C2=A0 __u64 iova;
- =C2=A0=C2=A0=C2=A0 __u64 size;
- =C2=A0=C2=A0=C2=A0 __u64 uaddr;
-#define VHOST_ACCESS_RO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1
-#define VHOST_ACCESS_WO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x2
-#define VHOST_ACCESS_RW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3
- =C2=A0=C2=A0=C2=A0 __u8 perm;
-#define VHOST_IOTLB_MISS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 1
-#define VHOST_IOTLB_UPDATE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 2
-#define VHOST_IOTLB_INVALIDATE=C2=A0=C2=A0=C2=A0=C2=A0 3
-#define VHOST_IOTLB_ACCESS_FAIL=C2=A0=C2=A0=C2=A0 4
- =C2=A0=C2=A0=C2=A0 __u8 type;
-};
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-#define VHOST_IOTLB_MSG 0x1
-#define VHOST_IOTLB_MSG_V2 0x2
 
-struct vhost_msg {
- =C2=A0=C2=A0=C2=A0 int type;
- =C2=A0=C2=A0=C2=A0 union {
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct vhost_iotlb_msg iotlb;
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 __u8 padding[64];
- =C2=A0=C2=A0=C2=A0 };
-};
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+> Changes since v3:
+>   - Fix leftover reference to "config=bootconfig" to just "bootconfig" in warning message.
+> 
+>  Documentation/admin-guide/bootconfig.rst      |  2 ++
+>  .../admin-guide/kernel-parameters.txt         |  6 ++++
+>  init/main.c                                   | 28 ++++++++++++++-----
+>  3 files changed, 29 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+> index 4d617693c0c8..b342a6796392 100644
+> --- a/Documentation/admin-guide/bootconfig.rst
+> +++ b/Documentation/admin-guide/bootconfig.rst
+> @@ -123,6 +123,8 @@ To remove the config from the image, you can use -d option as below::
+>  
+>   # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
+>  
+> +Then add "bootconfig" on the normal kernel command line to tell the
+> +kernel to look for the bootconfig at the end of the initrd file.
+>  
+>  Config File Limitation
+>  ======================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ade4e6ec23e0..b48c70ba9841 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -437,6 +437,12 @@
+>  			no delay (0).
+>  			Format: integer
+>  
+> +	bootconfig	[KNL]
+> +			Extended command line options can be added to an initrd
+> +			and this will cause the kernel to look for it.
+> +
+> +			See Documentation/admin-guide/bootconfig.rst
+> +
+>  	bert_disable	[ACPI]
+>  			Disable BERT OS support on buggy BIOSes.
+>  
+> diff --git a/init/main.c b/init/main.c
+> index dd7da62d99a5..f174a59d3903 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -336,28 +336,39 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
+>  	return ret;
+>  }
+>  
+> -static void __init setup_boot_config(void)
+> +static void __init setup_boot_config(const char *cmdline)
+>  {
+>  	u32 size, csum;
+>  	char *data, *copy;
+> +	const char *p;
+>  	u32 *hdr;
+>  
+> -	if (!initrd_end)
+> +	p = strstr(cmdline, "bootconfig");
+> +	if (!p || (p != cmdline && !isspace(*(p-1))) ||
+> +	    (p[10] && !isspace(p[10])))
+>  		return;
+>  
+> +	if (!initrd_end)
+> +		goto not_found;
+> +
+>  	hdr = (u32 *)(initrd_end - 8);
+>  	size = hdr[0];
+>  	csum = hdr[1];
+>  
+> -	if (size >= XBC_DATA_MAX)
+> +	if (size >= XBC_DATA_MAX) {
+> +		pr_err("bootconfig size %d greater than max size %d\n",
+> +			size, XBC_DATA_MAX);
+>  		return;
+> +	}
+>  
+>  	data = ((void *)hdr) - size;
+>  	if ((unsigned long)data < initrd_start)
+> -		return;
+> +		goto not_found;
+>  
+> -	if (boot_config_checksum((unsigned char *)data, size) != csum)
+> +	if (boot_config_checksum((unsigned char *)data, size) != csum) {
+> +		pr_err("bootconfig checksum failed\n");
+>  		return;
+> +	}
+>  
+>  	copy = memblock_alloc(size + 1, SMP_CACHE_BYTES);
+>  	if (!copy) {
+> @@ -377,9 +388,12 @@ static void __init setup_boot_config(void)
+>  		/* Also, "init." keys are init arguments */
+>  		extra_init_args = xbc_make_cmdline("init");
+>  	}
+> +	return;
+> +not_found:
+> +	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
+>  }
+>  #else
+> -#define setup_boot_config()	do { } while (0)
+> +#define setup_boot_config(cmdline)	do { } while (0)
+>  #endif
+>  
+>  /* Change NUL term back to "=", to make "param" the whole string. */
+> @@ -760,7 +774,7 @@ asmlinkage __visible void __init start_kernel(void)
+>  	pr_notice("%s", linux_banner);
+>  	early_security_init();
+>  	setup_arch(&command_line);
+> -	setup_boot_config();
+> +	setup_boot_config(command_line);
+>  	setup_command_line(command_line);
+>  	setup_nr_cpu_ids();
+>  	setup_per_cpu_areas();
+> -- 
+> 2.20.1
+> 
 
-struct vhost_msg_v2 {
- =C2=A0=C2=A0=C2=A0 __u32 type;
- =C2=A0=C2=A0=C2=A0 __u32 reserved;
- =C2=A0=C2=A0=C2=A0 union {
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct vhost_iotlb_msg iotlb;
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 __u8 padding[64];
- =C2=A0=C2=A0=C2=A0 };
-};
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
