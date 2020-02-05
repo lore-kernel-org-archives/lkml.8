@@ -2,112 +2,145 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A9CC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FFDC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04CC20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nrehUZjz"
+	by mail.kernel.org (Postfix) with ESMTP id B7D99222C2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgBEPmQ (ORCPT
+        id S1727178AbgBEPpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:42:16 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38660 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgBEPmQ (ORCPT
+        Wed, 5 Feb 2020 10:45:12 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35844 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgBEPpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:42:16 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so1399333pfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:42:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=03H9tOU4ZU6Aob62of9ZRzxsUiRGCwWaNgMF+MztT3g=;
-        b=nrehUZjzvoVHxS9MBml+qXueEBmbVQVRNi9QBTFlNb4ySXdy6sdRjrcpBdyFw4appf
-         EWDFAjrMEGyDLWcSlj+nW93jEfRP7BY22yZ7N4pkGQzq76QczVFRgkYk/iunW/YZ/MDv
-         sSH8U0+VX+dp0KjIQosvQElRZXeiN2OumArvk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=03H9tOU4ZU6Aob62of9ZRzxsUiRGCwWaNgMF+MztT3g=;
-        b=pTUvncCIQKd+d8/Av4hGqrRJ/ZTnWXpxyNRn3Y0rCT54P2KD86I56nz6bwGbfA0DpG
-         4SIabniF15UOalJrGVumHVgA6rPdzRidVNO1+7Por6881nKu2q5H41sfwL60fMjMHbCF
-         eTBO+Gx9+2A6OBAzMrvhS+VB3n63cY4FqJM3mPeq6S7g1G8FUEhKS/m3IoSFVacWYKGj
-         Gt1Y+8M1yx9TBo17lcAJH9Gw4jY4CSJv+h+bA39ltBW/k5VQwmKBKkg38+DDv4w3aWAr
-         ZbSSeARo1meIqz6THKQA8EIDlKrsqnQxlLLroU+j8pNG/GgxW420y27LpQvx2bvuYMBC
-         wblQ==
-X-Gm-Message-State: APjAAAUAJwMxU2YBQFaLMWw6MAA6d2qkoSuZiHyJ5P8RYeopXMi7uIJm
-        QIZ+KeG2yPK92WWi9vzVHR7xsw==
-X-Google-Smtp-Source: APXvYqyZJS8+VKbJ4mdfBpzG4WiIrsTqm/mT2imB8SMINJ7RnaYxCspLXuTcoiezwUtEjurmcUvWqw==
-X-Received: by 2002:a63:a1e:: with SMTP id 30mr28697873pgk.238.1580917334448;
-        Wed, 05 Feb 2020 07:42:14 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l69sm221887pgd.1.2020.02.05.07.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 07:42:13 -0800 (PST)
-Date:   Wed, 5 Feb 2020 10:42:12 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: Re: [for-next][PATCH 4/4] ftrace: Add comment to why
- rcu_dereference_sched() is open coded
-Message-ID: <20200205154212.GC142103@google.com>
-References: <20200205104929.313040579@goodmis.org>
- <20200205105113.283672584@goodmis.org>
- <20200205063349.4c3df2c0@oasis.local.home>
- <20200205141915.GA194021@google.com>
- <20200205092847.0b650972@oasis.local.home>
+        Wed, 5 Feb 2020 10:45:11 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1izMrR-0004Qe-No; Wed, 05 Feb 2020 16:45:05 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 68D431C1EC5;
+        Wed,  5 Feb 2020 16:45:05 +0100 (CET)
+Date:   Wed, 05 Feb 2020 15:45:05 -0000
+From:   "tip-bot2 for Thomas Richter" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf probe: Add ustring support for perf probe command
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, sumanthk@linux.ibm.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200120132011.64698-2-tmricht@linux.ibm.com>
+References: <20200120132011.64698-2-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205092847.0b650972@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158091750519.411.12825187466008183227.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 09:28:47AM -0500, Steven Rostedt wrote:
-> On Wed, 5 Feb 2020 09:19:15 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> > Could you paste the stack here when RCU is not watching? In trace event code
-> > IIRC we call rcu_enter_irqs_on() to have RCU temporarily watch, since that
-> > code can be called from idle loop. Should we doing the same here as well?
-> 
-> Unfortunately I lost the stack trace. And the last time we tried to use
-> rcu_enter_irqs_on() for ftrace, we couldn't find a way to do this
-> properly. Ftrace is much more invasive then going into idle. The
-> problem is that ftrace traces RCU itself, and calling
-> "rcu_enter_irqs_on()" in pretty much any place in the RCU code caused
-> lots of bugs ;-)
-> 
-> This is why we have the schedule_on_each_cpu(ftrace_sync) hack.
+The following commit has been merged into the perf/urgent branch of tip:
 
-The "schedule a task on each CPU" trick works on !PREEMPT though right?
+Commit-ID:     1873f1547dde65c687de143938581347a9312207
+Gitweb:        https://git.kernel.org/tip/1873f1547dde65c687de143938581347a9312207
+Author:        Thomas Richter <tmricht@linux.ibm.com>
+AuthorDate:    Mon, 20 Jan 2020 14:20:10 +01:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Fri, 31 Jan 2020 09:33:58 +01:00
 
-Because it is possible in PREEMPT=y to get preempted in the middle of a
-read-side critical section, switch to the worker thread executing the
-ftrace_sync() and then switch back. But RCU still has to watch that CPU since
-the read-side critical section was not completed.
+perf probe: Add ustring support for perf probe command
 
-Or is there a subtlety here with ftrace that I missed?
+Kernel commit 88903c464321 ("tracing/probe: Add ustring type for user-space string")
+adds support for user-space strings when type 'ustring' is specified.
 
-thanks,
+Here is an example using sysfs command line interface
+for kprobes:
 
- - Joel
+Function to probe:
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
 
+Setup:
+  # cd /sys/kernel/debug/tracing/
+  # echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
+  # cat events/kprobes/tmr1/format | fgrep print
+  print fmt: "(%lx) arg1=\"%s\"", REC->__probe_ip, REC->arg1
+  # echo 1 > events/kprobes/tmr1/enable
+  # touch /tmp/111
+  # echo 0 > events/kprobes/tmr1/enable
+  # cat trace|fgrep /tmp/111
+  touch-5846  [005] d..2 255520.717960: tmr1:\
+	  (getname_flags+0x0/0x400) arg1="/tmp/111"
 
-> 
-> -- Steve
+Doing the same with the perf tool fails.
+Using type 'string' succeeds:
+ # perf probe "vfs_getname=getname_flags:72 pathname=filename:string"
+ Added new event:
+   probe:vfs_getname (on getname_flags:72 with pathname=filename:string)
+   ....
+ # perf probe -d probe:vfs_getname
+ Removed event: probe:vfs_getname
+
+However using type 'ustring' fails (output before):
+ # perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+ Failed to write event: Invalid argument
+   Error: Failed to add events.
+ #
+
+Fix this by adding type 'ustring' in function
+convert_variable_type().
+
+Using ustring succeeds (output after):
+ # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+ Added new event:
+   probe:vfs_getname (on getname_flags:72 with pathname=filename:ustring)
+
+ You can now use it in all perf tools, such as:
+
+	perf record -e probe:vfs_getname -aR sleep 1
+
+ #
+
+Note: This issue also exists on x86, it is not s390 specific.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: sumanthk@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20200120132011.64698-2-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/probe-finder.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c470c49..1c817ad 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -303,7 +303,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
+ 	char prefix;
+ 
+ 	/* TODO: check all types */
+-	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "x") != 0 &&
++	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "ustring") &&
++	    strcmp(cast, "x") != 0 &&
+ 	    strcmp(cast, "s") != 0 && strcmp(cast, "u") != 0) {
+ 		/* Non string type is OK */
+ 		/* and respect signedness/hexadecimal cast */
