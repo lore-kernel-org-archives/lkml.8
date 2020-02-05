@@ -2,88 +2,104 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E86C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3678EC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24162217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D5F20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 15:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="2DAa94e6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAhbp4fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgBEPyX (ORCPT
+        id S1727457AbgBEPyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:54:23 -0500
-Received: from mail-il1-f172.google.com ([209.85.166.172]:33307 "EHLO
-        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgBEPyX (ORCPT
+        Wed, 5 Feb 2020 10:54:49 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36757 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgBEPys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 10:54:23 -0500
-Received: by mail-il1-f172.google.com with SMTP id s18so2289453iln.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:54:22 -0800 (PST)
+        Wed, 5 Feb 2020 10:54:48 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so1171524pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 07:54:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=K/TEbJFWEtJ7myelS/+rh6TG8Nyyi+LUMKE4sDPf1rk=;
-        b=2DAa94e6a/x2+aZvMCSs+SwO191hwhcxjL9ORz3MeaiM7QD6UI/y5uXhii6zCOtGxD
-         Ao68VSG9ANXirxvEHg31qu+hk4UtS8gkP+RgBF4kI7ysUTqTp9B35Yx7P1i3xQeF3kpF
-         HSv9V6w3pDzlhBFjbfV+9WJagOG8KuvTojdydEqoTFOmXGqsDbysJ+m33AGXI4lLghOR
-         r86lZDz+//el2LiYv2NEKsMCzBo6RM+2PXZs/7o6uZ4wUYz76Q77zof61X07yhEXCoU3
-         lUiV6nmvVxWGT92jf50syh3y47zCVzyQD6lsIB0daDXUfTqZxlg05+zsS7OhyC8DIKyY
-         QaLg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=i0tu/hN5nPRoBqhYtWsd7kOpTFJDnB/EYcTe2/ffTnk=;
+        b=PAhbp4frFtPO4EcejiywOGYJLOdJYRZ93Sn7mtqxPgpWWVM8GdVmrPMUBUeqW3qxPk
+         KOmH1lFXPIvWq3GETYAJGLBeRIpjcKNWAtXnu7AYjdq6NLTx7flJ/3QEx+9LgCjVPZ9Z
+         K35MI4uw22Z1GnFob5wDhDzGbOfSjVmmDEeTCaj5F4M1KCXXih/auGv3291uj4E2DwyJ
+         Q7aLPktqiCK0JRiVWdn/1LCfJg+y1JNnu3AkMIhISrT/81arqIagsBenLhIQ2pD35tWe
+         xJafAorSX+kUzQQQ41eWMERKgKBKw8tSSpHgJu1yf+R8qg6g4KNJeBXLZl6VbcUiXt1F
+         tAuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K/TEbJFWEtJ7myelS/+rh6TG8Nyyi+LUMKE4sDPf1rk=;
-        b=eg5kQSuYkcB2o1H5Zkm8CwwgpaUlxs0FZ7pyLk1+FM76qyXQdVC2ZGDXYF9Fruaeye
-         +a5kZrgvki1Y9B9IXiRtnkPq2JXzKtXwcq81zIF1ZIimZapH1pbvkpXicss7Hp5Os4Ff
-         RbxDBVYTcTXp+ESH7j/v6aTUtV9zY4jDr/6b1I0Uuzh5wjTkbvmYeYEpSqFAWsLy9njW
-         3ngDV3M3OBJtOXQUmAI44vg8d2PgwEwgYo2II8vIZkXI7jJgqwzpeRX43/Ioz0BfJh+Y
-         9VIv1cvHrwhMY4NpvgtrrEvwiGl7INvB2V3OEo4JJeGPP8kec/ru8C7Hw3muqgWxF+QS
-         4M1A==
-X-Gm-Message-State: APjAAAWeU6eJEdkCZqVy71TiUCHmvvFLSI4KuHyEzUZhhAwVP+tq4lL5
-        Q7M8RxZEc7Qm8lG3Hhewp8Rkg+vv88w=
-X-Google-Smtp-Source: APXvYqzWXlbgLJfIBrB+xCBg3yB7cebqo/qOH8x84HpGW+NlmiRh3flk2lxkQXchXo176LKhA4ND7w==
-X-Received: by 2002:a92:48c2:: with SMTP id j63mr25700622ilg.153.1580918061800;
-        Wed, 05 Feb 2020 07:54:21 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r14sm10464783ilg.59.2020.02.05.07.54.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 07:54:21 -0800 (PST)
-Subject: Re: [PATCH] io_uring: fix mm use with IORING_OP_{READ,WRITE}
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <df11c48e-f456-3b64-88d1-6012b1ac2bc8@kernel.dk>
-Date:   Wed, 5 Feb 2020 08:54:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <951bb84c8337aaac7654261a21b03506b2b8a001.1580914723.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=i0tu/hN5nPRoBqhYtWsd7kOpTFJDnB/EYcTe2/ffTnk=;
+        b=gpHgtXrOz9A9/mQ+v2lmY1d9qSBEuqh71kT7FoQI/YFQ2fk/mq9lHYnmocfginFJOd
+         Uf7UkePtSP7rCECGOd67ggRgNPJO0zYQwCNvDwJMpg+SnB8QUw73znhppg0eKpLaZv18
+         Ff2ZIAkFwcJv5HZ0RD8TUS77sViDBgEk0wGOJKWg29DQ2J352hNI4X5YWE7I4sNA4kr7
+         OtDFwwD3XoJXWtCc4FE6/Qep6qxZLIbsdUTKqi8Az6iRvdWCf5r9Xve0A6tEhiCa6stM
+         cdyxoqRrVdGf007UNhr4mxPUiMNWGRuRPZS9hAhn13Kzh4+WTm218LRDIHbaH0HZPqs5
+         h27A==
+X-Gm-Message-State: APjAAAVdCvY3cXQxpXW3nJAsX+4Edq7dhOp+eEjOTAsIKCUs2iduoyTO
+        ZfY7OYDJjo2PJj6+2Z3+2x8=
+X-Google-Smtp-Source: APXvYqzv/cyl/PP0YheZLkTY4tfQAPft5kWWaGlKtPs6G2umfBsO4QccLRhSV6cavPFvn5hoQY59lg==
+X-Received: by 2002:a17:902:968c:: with SMTP id n12mr36308895plp.144.1580918088401;
+        Wed, 05 Feb 2020 07:54:48 -0800 (PST)
+Received: from emb-wallaby.amd.com ([165.204.156.251])
+        by smtp.gmail.com with ESMTPSA id z10sm195678pgz.88.2020.02.05.07.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 07:54:47 -0800 (PST)
+From:   Arindam Nath <arindam.nath@amd.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Jiasen Lin <linjiasen@hygon.cn>,
+        Sanjay R Mehta <sanju.mehta@amd.com>
+Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
+        Arindam Nath <arindam.nath@amd.com>
+Subject: [PATCH 00/15] AMD ntb driver fixes and improvements
+Date:   Wed,  5 Feb 2020 21:24:17 +0530
+Message-Id: <cover.1580914232.git.arindam.nath@amd.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/5/20 8:46 AM, Pavel Begunkov wrote:
-> IORING_OP_{READ,WRITE} need mm to access user buffers, hence
-> req->has_user check should go for them as well. Move the corresponding
-> imports past the check.
+This patch series fixes some bugs in the existing
+AMD NTB driver, cleans-up code, and modifies the
+code to handle NTB link-up/down events. The series
+is based on Linus' tree,
 
-I'd need to double check, but I think the has_user check should just go.
-The import checks for access anyway, so we'll -EFAULT there if we
-somehow messed up and didn't acquire the right mm.
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+Arindam Nath (15):
+  NTB: Fix access to link status and control register
+  NTB: clear interrupt status register
+  NTB: Enable link up and down event notification
+  NTB: define a new function to get link status
+  NTB: return the side info status from amd_poll_link
+  NTB: set peer_sta within event handler itself
+  NTB: remove handling of peer_sta from amd_link_is_up
+  NTB: handle link down event correctly
+  NTB: handle link up, D0 and D3 events correctly
+  NTB: move ntb_ctrl handling to init and deinit
+  NTB: add helper functions to set and clear sideinfo
+  NTB: return link up status correctly for PRI and SEC
+  NTB: remove redundant setting of DB valid mask
+  NTB: send DB event when driver is loaded or un-loaded
+  NTB: add pci shutdown handler for AMD NTB
+
+ drivers/ntb/hw/amd/ntb_hw_amd.c | 290 ++++++++++++++++++++++++++------
+ drivers/ntb/hw/amd/ntb_hw_amd.h |   8 +-
+ 2 files changed, 247 insertions(+), 51 deletions(-)
 
 -- 
-Jens Axboe
+2.17.1
 
