@@ -2,149 +2,178 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D94CC352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1141C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2FD2467B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76B02467B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bk0/Cw3/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oVpH+7hb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBESAB (ORCPT
+        id S1727389AbgBESBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:00:01 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:41180 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbgBESAB (ORCPT
+        Wed, 5 Feb 2020 13:01:33 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38432 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgBESBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:00:01 -0500
-Received: by mail-yw1-f66.google.com with SMTP id l22so3182373ywc.8;
-        Wed, 05 Feb 2020 10:00:00 -0800 (PST)
+        Wed, 5 Feb 2020 13:01:32 -0500
+Received: by mail-vs1-f67.google.com with SMTP id r18so1939033vso.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:01:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rRgXvPr3SwIij87seHPiKa5mQQ0rdFnyGB2bv1mFSf8=;
-        b=Bk0/Cw3/MqA+hum9NqHHMRRRYzF3xdfomLI5myEg+7tMx0ZRORwJbupYsD5Fcx6/WZ
-         +iTgQCiKWKSaAPUceVbmwxBP3dluyHQ+6itcBpIHPH0q6OoUk1GIhnSIFXyXx8F4s84y
-         1QKv3u2CkJ4vqiaqrL+rDTyQ14PmxhCKsvjK/ky0/EuFW9l1Ze8Vnw29Zc/5/Pr4gVfw
-         +4aXPQpSJi3RqV+SAES3L5WtWJN9Lo1Kz9EuSdnxMjYaE5HgsLMCcoyeqKiMvDaPV+eg
-         t7eXrxmLxe12Pq8r+W4u487E9V0L5qQsikTa3ePAzgAfKaLzIBM8sWyHYe2UKPsCTdfA
-         nL9Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tcERuPTreB1RdPPHaPDmwJiWCBqhIbQ/kkvuwoX6k74=;
+        b=oVpH+7hbPNdJnNsLjdBlqZ71TWR1mX/Dt0ANmSlQg+wjEIEYcnIMa/ZCjtuvTu8Y+f
+         lCVBpkS9eO35HQytqbp7j4bcqcVd9+uKbZwVawuzrzSvB4eVvCdhMu5aVmOy8WGjnK11
+         myPmLTbHd+oIm9FFyuy3G1w83Z8aW2eC71Gdw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rRgXvPr3SwIij87seHPiKa5mQQ0rdFnyGB2bv1mFSf8=;
-        b=YY8JS2hmTBhs3xJA1D5HZJyDKluF9XWTA5y0Wxy9O/SenLNvJbdu19EYXef4lr7MiC
-         aI1txX96nua+j8cv+3r9NzaKytPgahSblCiPd9gDO+qT8fQVZZUYMrlrOQZX4VUFc68f
-         +MdscRQu+lA8Mq5GnOevXO9Nv2vtE//r2kxtDLYl0Jk0+jCFttGmP4BPQnPnCsQOOh3M
-         1aWXYBIleO1agxqkpZsRBkdrpChvFbLTvlZw7fhXUKylXe4IncivEPWKq9SF/FaY15sm
-         PediVI27q7OsHUv85U2m4aNNeFcSlS8RViwe+MnpzRqcZ0KRHTlJibqqMBsyOszKUuwt
-         FknA==
-X-Gm-Message-State: APjAAAU98uY82lF0/RxENilhXb81OoqfCRfGx04Gn+J43+PdFcOYWjvz
-        GmxP0Tw4mnI76XgEwIY3maM9fEhjYv0=
-X-Google-Smtp-Source: APXvYqxL/2f5r/cM0VlljtruqTfsVW5vkWvw0UbpVFlDnScpMN99cE8YToUz2/tGE3IbM8NbrZIfaw==
-X-Received: by 2002:a81:11d7:: with SMTP id 206mr11978061ywr.150.1580925600074;
-        Wed, 05 Feb 2020 10:00:00 -0800 (PST)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id h203sm216399ywb.98.2020.02.05.09.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 09:59:59 -0800 (PST)
-Date:   Wed, 5 Feb 2020 12:59:45 -0500
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org
-Cc:     alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
-        benjamin.gaignard@st.com, linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] counter: stm32-timer-cnt: add power management support
-Message-ID: <20200205175945.GA57132@icarus>
-References: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tcERuPTreB1RdPPHaPDmwJiWCBqhIbQ/kkvuwoX6k74=;
+        b=gWeOzPpfqLQFZ0gtuwTP72Jra8nUY9fmPxn+U35UsiNfP29WEr8gXqgOCRwdxGl1K8
+         f2Pbrb+joxABGAz2BcvPcqcg+Zq8epE2Vd55TcI84e8hQ0S4kkun+pJYzYXYFXIGLIJJ
+         73pFoFlPi6QBzHqCuj2Pk/XO4+Z+Kq+40HGG/N7FUSp3RWxu8ao+D7iZPTto5jCYvc6D
+         HJt+1t/5OjyVLaEiuC/UJ8VFw/mdh4VFlgsZKfbCxTXmoSYjQk8++hKfIxhRD8U2UeTU
+         s78g1ZPgGQbYJdz89EpYAojtmp0m4rWp+TxDc77JlfYiGtzK/1xBGbh5hfNIkAQ2qQvj
+         900Q==
+X-Gm-Message-State: APjAAAWc/xyZqaBWFhpPAJuPtPEI/7+W6yxWPvhmRmCZOaEM53TmsBo0
+        ufGayqLQzpZyyMGpk05WTExEYqd+urk=
+X-Google-Smtp-Source: APXvYqy+6XmPtGHVcv6U0HIHhdwJj16HzcAy9aKzGna+8GM4igycPoRxk/3A5UihMw9VjOengC4aPQ==
+X-Received: by 2002:a67:dc90:: with SMTP id g16mr22426058vsk.110.1580925690963;
+        Wed, 05 Feb 2020 10:01:30 -0800 (PST)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id s66sm176476vkg.11.2020.02.05.10.01.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 10:01:29 -0800 (PST)
+Received: by mail-ua1-f45.google.com with SMTP id 59so1176926uap.12
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:01:29 -0800 (PST)
+X-Received: by 2002:ab0:724c:: with SMTP id d12mr21945531uap.0.1580925689110;
+ Wed, 05 Feb 2020 10:01:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
+References: <20200204141219.1.Ief3f3a7edbbd76165901b14813e90381c290786d@changeid>
+ <20200205173042.chqij5i53mncfzar@holly.lan>
+In-Reply-To: <20200205173042.chqij5i53mncfzar@holly.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 5 Feb 2020 10:01:17 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=V6ovmi-zCUYyFdiyf0pG4g=i5N4hUC8JjvrWDRUzPnqQ@mail.gmail.com>
+Message-ID: <CAD=FV=V6ovmi-zCUYyFdiyf0pG4g=i5N4hUC8JjvrWDRUzPnqQ@mail.gmail.com>
+Subject: Re: [PATCH] kdb: Fix compiling on architectures w/out DBG_MAX_REG_NUM defined
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Anatoly Pugachev <matorola@gmail.com>,
+        Sparc kernel list <sparclinux@vger.kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 11:47:58AM +0100, Fabrice Gasnier wrote:
-> Add suspend/resume PM sleep ops. When going to low power, enforce the
-> counter isn't active.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Hi,
 
-These changes are purely for the PM ops and don't involve the Counter
-API, so I don't see any see any issues with this patch from my end.
+On Wed, Feb 5, 2020 at 9:30 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Tue, Feb 04, 2020 at 02:12:25PM -0800, Douglas Anderson wrote:
+> > In commit bbfceba15f8d ("kdb: Get rid of confusing diag msg from "rd"
+> > if current task has no regs") I tried to clean things up by using "if"
+> > instead of "#ifdef".  Turns out we really need "#ifdef" since not all
+> > architectures define some of the structures that the code is referring
+> > to.
+> >
+> > Let's switch to #ifdef again, but at least avoid using it inside of
+> > the function.
+> >
+> > Fixes: bbfceba15f8d ("kdb: Get rid of confusing diag msg from "rd" if current task has no regs")
+> > Reported-by: Anatoly Pugachev <matorola@gmail.com>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>
+> Thanks for being so quick with this (especially when if I had been less
+> delinquent with linux-next it might have been spotted sooner).
+>
+>
+> > ---
+> > I don't have a sparc64 compiler but I'm pretty sure this should work.
+> > Testing appreciated.
+>
+> I've just add sparc64 into my pre-release testing (although I have had to
+> turn off a bunch of additional compiler warnings in order to do so).
+>
+>
+> >  kernel/debug/kdb/kdb_main.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> > index b22292b649c4..c84e61747267 100644
+> > --- a/kernel/debug/kdb/kdb_main.c
+> > +++ b/kernel/debug/kdb/kdb_main.c
+> > @@ -1833,6 +1833,16 @@ static int kdb_go(int argc, const char **argv)
+> >  /*
+> >   * kdb_rd - This function implements the 'rd' command.
+> >   */
+> > +
+> > +/* Fallback to Linux showregs() if we don't have DBG_MAX_REG_NUM */
+> > +#if DBG_MAX_REG_NUM <= 0
+> > +static int kdb_rd(int argc, const char **argv)
+> > +{
+> > +     if (!kdb_check_regs())
+> > +             kdb_dumpregs(kdb_current_regs);
+> > +     return 0;
+> > +}
+> > +#else
+>
+> The original kdb_rd (and kdb_rm which still exists in this file) place
+> the #if inside the function and users > 0 so the common case was
+> covered at the top and the fallback at the bottom.
+>
+> Why change style when re-introducing this code?
 
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+My opinion is that #if / #ifdef leads to hard-to-follow code, so I
+have always taken the policy that #if / #ifdef don't belong anywhere
+inside a function if it can be avoided.  This seems to be the policy
+in Linux in general, though not as much in the existing kgdb code.
+IMO kgdb should be working to reduce #if / #ifdef inside functions.
 
-> ---
->  drivers/counter/stm32-timer-cnt.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-> index 3eafcce..3b84503 100644
-> --- a/drivers/counter/stm32-timer-cnt.c
-> +++ b/drivers/counter/stm32-timer-cnt.c
-> @@ -12,6 +12,7 @@
->  #include <linux/iio/types.h>
->  #include <linux/mfd/stm32-timers.h>
->  #include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  
->  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
-> @@ -358,10 +359,33 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
->  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
->  	priv->counter.priv = priv;
->  
-> +	platform_set_drvdata(pdev, priv);
-> +
->  	/* Register Counter device */
->  	return devm_counter_register(dev, &priv->counter);
->  }
->  
-> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
-> +{
-> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
-> +	u32 cr1;
-> +
-> +	/* Check for active counter */
-> +	regmap_read(priv->regmap, TIM_CR1, &cr1);
-> +	if (cr1 & TIM_CR1_CEN)
-> +		return -EBUSY;
-> +
-> +	return pinctrl_pm_select_sleep_state(dev);
-> +}
-> +
-> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
-> +{
-> +	return pinctrl_pm_select_default_state(dev);
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
-> +			 stm32_timer_cnt_resume);
-> +
->  static const struct of_device_id stm32_timer_cnt_of_match[] = {
->  	{ .compatible = "st,stm32-timer-counter", },
->  	{},
-> @@ -373,6 +397,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
->  	.driver = {
->  		.name = "stm32-timer-counter",
->  		.of_match_table = stm32_timer_cnt_of_match,
-> +		.pm = &stm32_timer_cnt_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_timer_cnt_driver);
-> -- 
-> 2.7.4
-> 
+In this case, the duplicated code is 1 line: the call to
+kdb_check_regs().  It seemed better to duplicate.  Another option that
+would avoid the #if / #ifdef in the function would be as follows.
+Happy to change my patch like this if you prefer:
+
+#if DBG_MAX_REG_NUM <= 0
+static int _kdb_rd(void)
+{
+  kdb_dumpregs(kdb_current_regs);
+  return 0;
+}
+#else
+static int _kdb_rd(void)
+{
+ ...
+}
+#endif
+
+static int kdb_rd(int argc, const char **argv)
+{
+  if (kdb_check_regs())
+    return 0;
+  return _kdb_rd();
+}
+
+...or if you just want to get something quickly so we have time to
+debate the finer points, I wouldn't object to a simple Revert and I
+can put it on my plate to resubmit the patch later.
+
+-Doug
