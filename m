@@ -2,72 +2,71 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162D5C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83AEC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE30920730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1D220730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Rr3Zuwxj"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="RNwHSh2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgBEW5D (ORCPT
+        id S1727836AbgBEW6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:57:03 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37913 "EHLO
+        Wed, 5 Feb 2020 17:58:08 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36821 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgBEW5C (ORCPT
+        with ESMTP id S1727541AbgBEW6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:57:02 -0500
-Received: by mail-ed1-f66.google.com with SMTP id p23so3870764edr.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:56:59 -0800 (PST)
+        Wed, 5 Feb 2020 17:58:08 -0500
+Received: by mail-ed1-f66.google.com with SMTP id j17so3885045edp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:58:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Amzhmy9xv9aiOonSPr+eThtNwsfLtl5zGLSppwlbgNs=;
-        b=Rr3ZuwxjBG88ry1cXtNHdnsHK7RNLh2i2hW7ZcjXrXXVz1dH4kyMtKdSaBC1CgHQur
-         rCvuy3O+y+wkmSkopUyOF1OMDhD5Hx2sYMQ0meeghuuW5a+Zn08zQjCRISQh9rPkNdLI
-         59Z8ME76zI91V5UP7hugC1xMeu73AOuDGvfa7wKGNTbTsSdGgEMMiHozgfut4YcVzURe
-         G2c9J84y+lzCAe08WlYOCgBuodxP7gxMj+eT09LfB5r+cyv9tJ1KYWxRm+MN59LjZBco
-         Q6x5NKczijf5H13m8eUXysrheth2N8SEecoHY/HTzEDU+eOsPj0dHABPnKvVDueKZ0ND
-         s2Eg==
+        bh=oUqqVzVv+zHVRjksql7Cab1+TMNFjyRWbvebZrdripg=;
+        b=RNwHSh2uWCO9tLjuX2QtbpIaLYOgempdFirtNjAkAtl2Lv53y46dHjKm71oMQgMoAC
+         SBO8ofU2YRe0ZOpozTHfBE9dWtCVlTzEnRjLzNUNh+QWq+5N6T0J9Uh9t7t+8hTWoF+9
+         jIayozCNbwf0lGc0TDFHk7p+O9scR0Q58bIZ3tHbX9+KdOvZHkGiFUztFcYXe8fPt0/2
+         kvLAqsTBAcNWdLk5YDyo+6f1q0KuTCLHc4eVbOY0St5zcriy86UeHDmtEnvx4+TV1sc7
+         HJLZosR9LDytBdZEDnKXSj9vpSPq3CMMdFHusYNtVgWh70JO/sAOFoOJpbLerAjTch0Y
+         zmRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Amzhmy9xv9aiOonSPr+eThtNwsfLtl5zGLSppwlbgNs=;
-        b=BDEi8bI76MgH7DoX6DEHAgOU+9NqcXm659x4s2epLMtC04v4uGujJDuvZq6dN7a87B
-         LkYxMKGfLo88gVNmq1FryeLjohMxDugRXSwlqdmt1RjnM87odjnLlCPjYUvy7plBsn+h
-         A/6+v68KeZCm3qXR8AzHRAhE/O5sbDkUBBQSp5kH7g/xHvjAm5HvUpCTxOqb5AxQYMq7
-         kWXLwuvTEfD+XYTaR9imHSrgnY7/zdUdfC/MtLxBLTCNvQbF2Vn60Unw8u1A+G1tCx/j
-         pwsPBTiW/2CwWoQXi0qhgkQla4Lc6dzYQy6pGn0yXEesTtgGHPirOaX6KujbMkz46yuH
-         Er8w==
-X-Gm-Message-State: APjAAAW2Aj62/5Y9jaJXzlF93c9ycSgJgQApmZxPnJ37fKdAXABz0AwV
-        z3RbQt4ejuxMSC0ZE0dVaoz8HUvEPwS/wWHRc8/R
-X-Google-Smtp-Source: APXvYqyinVfnH51DI0L2SrSFONQ5jPWbqu4SEEJkGSvze4nkV8Nj8TjI5cDCggcgijMU0lqRKjn1C1Mv8js0mEJYleE=
-X-Received: by 2002:a17:906:19d0:: with SMTP id h16mr350075ejd.70.1580943419104;
- Wed, 05 Feb 2020 14:56:59 -0800 (PST)
+        bh=oUqqVzVv+zHVRjksql7Cab1+TMNFjyRWbvebZrdripg=;
+        b=QNpxp2yNn6qbN49CCwNuAG72Lzj7cCr+J/uB4nGT3rG/n30lx6Yb4O/Bc+disb0gjt
+         9HF4BHR8oVHeTIQgaS1GpCod6mNmVzz00EjOe1M1Vc4XcGwLDcwpbnGBixFagZ5v/9ZQ
+         QqP8uwxE4L+441snhHWEbiBs0fJ/Qe9kHgCRNqlyRygJdq8A5CobVFZFrh4eK7J7HizQ
+         UKsloHM4ZGgpwZWaKSgxLzkz7QoAnAI9vzWTXzUg7dbrqp/inOVhQNL9s+vd2hFsQgu+
+         F9yWg3J3nt5eLhOMS033siQwwMRzgwPq+OhOHCSB4rlAzVd1GOu1Q7xOwSQpZj3Wc9gs
+         T8OQ==
+X-Gm-Message-State: APjAAAX4rynOORarT+76NJldXg15ABxIQijTySxgAo1RFz3BCJnl1q53
+        oqOd7GJ0NS71kVrOhi4YzWGopGHXLVdhGz85UDwZ
+X-Google-Smtp-Source: APXvYqyqotke6mOUBVhpWeNPdxHTvQmAmbBNNpCHK3jA+gycAlKDCEspfqtGiRIi6zOl8VqQ5CArsS+4qJCbOLGo7NA=
+X-Received: by 2002:a17:906:9352:: with SMTP id p18mr292520ejw.95.1580943486402;
+ Wed, 05 Feb 2020 14:58:06 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
- <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com> <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca>
-In-Reply-To: <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com> <3665686.i1MIc9PeWa@x2>
+ <CAHC9VhRHfjuv5yyn+nQ2LbHtcezBcjKtOQ69ssYrXOiExuCjBw@mail.gmail.com> <35934535.C1y6eIYgqz@x2>
+In-Reply-To: <35934535.C1y6eIYgqz@x2>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 5 Feb 2020 17:56:48 -0500
-Message-ID: <CAHC9VhSsfBbfYmqLoR=QBgF5_VwbA8Dqqz97MjqwwJ6Jq6fHwA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid
- outside init_user_ns
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+Date:   Wed, 5 Feb 2020 17:57:55 -0500
+Message-ID: <CAHC9VhQnNUM8XQpFykx_Rg0zNLCaCWDo=HSY3RPhN3ft-RpyHw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
         linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
         netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
         Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
         nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
         mpatel@redhat.com
@@ -77,89 +76,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 7:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-01-22 16:29, Paul Moore wrote:
-> > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+On Tue, Feb 4, 2020 at 1:12 PM Steve Grubb <sgrubb@redhat.com> wrote:
+> On Tuesday, February 4, 2020 10:52:36 AM EST Paul Moore wrote:
+> > On Tue, Feb 4, 2020 at 10:47 AM Steve Grubb <sgrubb@redhat.com> wrote:
+> > > On Tuesday, February 4, 2020 8:19:44 AM EST Richard Guy Briggs wrote:
+> > > > > The established pattern is that we print -1 when its unset and "?"
+> > > > > when
+> > > > > its totalling missing. So, how could this be invalid? It should be
+> > > > > set
+> > > > > or not. That is unless its totally missing just like when we do not
+> > > > > run
+> > > > > with selinux enabled and a context just doesn't exist.
+> > > >
+> > > > Ok, so in this case it is clearly unset, so should be -1, which will be
+> > > > a
+> > > > 20-digit number when represented as an unsigned long long int.
+> > > >
+> > > > Thank you for that clarification Steve.
 > > >
-> > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> > > process in a non-init user namespace the capability to set audit
-> > > container identifiers.
-> > >
-> > > Provide /proc/$PID/audit_capcontid interface to capcontid.
-> > > Valid values are: 1==enabled, 0==disabled
+> > > It is literally a  -1.  ( 2 characters)
 > >
-> > It would be good to be more explicit about "enabled" and "disabled" in
-> > the commit description.  For example, which setting allows the target
-> > task to set audit container IDs of it's children processes?
+> > Well, not as Richard has currently written the code, it is a "%llu".
+> > This was why I asked the question I did; if we want the "-1" here we
+> > probably want to special case that as I don't think we want to display
+> > audit container IDs as signed numbers in general.
 >
-> Ok...
->
-> > > Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
-> > > opid= capcontid= old-capcontid=
-> > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/audit.h      | 14 ++++++++++++
-> > >  include/uapi/linux/audit.h |  1 +
-> > >  kernel/audit.c             | 35 +++++++++++++++++++++++++++++
-> > >  4 files changed, 105 insertions(+)
+> OK, then go with the long number, we'll fix it in the interpretation. I guess
+> we do the same thing for auid.
 
-...
-
-> > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > index 1287f0b63757..1c22dd084ae8 100644
-> > > --- a/kernel/audit.c
-> > > +++ b/kernel/audit.c
-> > > @@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
-> > >         return false;
-> > >  }
-> > >
-> > > +int audit_set_capcontid(struct task_struct *task, u32 enable)
-> > > +{
-> > > +       u32 oldcapcontid;
-> > > +       int rc = 0;
-> > > +       struct audit_buffer *ab;
-> > > +
-> > > +       if (!task->audit)
-> > > +               return -ENOPROTOOPT;
-> > > +       oldcapcontid = audit_get_capcontid(task);
-> > > +       /* if task is not descendant, block */
-> > > +       if (task == current)
-> > > +               rc = -EBADSLT;
-> > > +       else if (!task_is_descendant(current, task))
-> > > +               rc = -EXDEV;
-> >
-> > See my previous comments about error code sanity.
->
-> I'll go with EXDEV.
->
-> > > +       else if (current_user_ns() == &init_user_ns) {
-> > > +               if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-> > > +                       rc = -EPERM;
-> >
-> > I think we just want to use ns_capable() in the context of the current
-> > userns to check CAP_AUDIT_CONTROL, yes?  Something like this ...
->
-> I thought we had firmly established in previous discussion that
-> CAP_AUDIT_CONTROL in anything other than init_user_ns was completely irrelevant
-> and untrustable.
-
-In the case of a container with multiple users, and multiple
-applications, one being a nested orchestrator, it seems relevant to
-allow that container to control which of it's processes are able to
-exercise CAP_AUDIT_CONTROL.  Granted, we still want to control it
-within the overall host, e.g. the container in question must be
-allowed to run a nested orchestrator, but allowing the container
-itself to provide it's own granularity seems like the right thing to
-do.
-
-> >   if (current_user_ns() != &init_user_ns) {
-> >     if (!ns_capable(CAP_AUDIT_CONTROL) || !audit_get_capcontid())
-> >       rc = -EPERM;
-> >   } else if (!capable(CAP_AUDIT_CONTROL))
-> >     rc = -EPERM;
-> >
+As I said above, I'm okay with a special case handling for unset/"-1"
+in this case.
 
 -- 
 paul moore
