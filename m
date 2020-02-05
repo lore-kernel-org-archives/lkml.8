@@ -2,180 +2,151 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2487C35249
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7B0C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B52C2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC0632082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 05:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="gEp8EKx/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDTocgNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgBEFpV (ORCPT
+        id S1726575AbgBEFvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 00:45:21 -0500
-Received: from ozlabs.org ([203.11.71.1]:40697 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbgBEFpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 00:45:20 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 48C9Wd28wGz9sSX; Wed,  5 Feb 2020 16:45:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1580881517;
-        bh=/noY0+RuU8DVdLLYBpqd52ZZqO1Trq7Gfq6vEaa+fYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gEp8EKx/wFQtxFRErKJAOn30RfGAUoWR3Vdhua/241KyEfi9OeJXXJRCZFUmhurtw
-         TPKXC0Ld9l9g41GeNMnWS9DOYxAEZz/eGGVa8frzkOnThqh65hLd2y5BG0m/A7z/CY
-         yLIdOd4XmlYaVkJz25vX/Mv9uPUcb5deNl9UhvSo=
-Date:   Wed, 5 Feb 2020 16:45:08 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] libfdt: place new nodes & properties after the parent's
- ones
-Message-ID: <20200205054508.GG60221@umbus.fritz.box>
-References: <CGME20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd@eucas1p1.samsung.com>
- <20200204125844.19955-1-m.szyprowski@samsung.com>
+        Wed, 5 Feb 2020 00:51:19 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36822 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgBEFvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 00:51:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580881877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mCCBz5Rdlbkg4ojmDomdGX6wRFkIiLU8SA3hhtwlDwg=;
+        b=CDTocgNrNp/v/MPRdY1Z1xxqJcI6aeDY7cangVdqK8AbeIPTKYirbe48ezIr9SD4E0ycGs
+        OE/J23fr9EYDJso0eoWIcOxpy1LXKxxWzQUYsd6BEGrPX1YQKmTOe58RydpsKGEnnlLijg
+        afxOx7Y3aLl6N68CZckMirWa3CWjS1I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-BTzEyaLKMeuvyVcErxsMpw-1; Wed, 05 Feb 2020 00:51:15 -0500
+X-MC-Unique: BTzEyaLKMeuvyVcErxsMpw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C27D1034B21;
+        Wed,  5 Feb 2020 05:51:13 +0000 (UTC)
+Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C1C548;
+        Wed,  5 Feb 2020 05:50:36 +0000 (UTC)
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Tiwei Bie <tiwei.bie@intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
+        rob.miller@broadcom.com, haotian.wang@sifive.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com,
+        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
+        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+ <20200204005306-mutt-send-email-mst@kernel.org>
+ <cf485e7f-46e3-20d3-8452-e3058b885d0a@redhat.com>
+ <20200205020555.GA369236@___>
+ <798e5644-ca28-ee46-c953-688af9bccd3b@redhat.com>
+ <20200205003048-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <eb53d1c2-92ae-febf-f502-2d3e107ee608@redhat.com>
+Date:   Wed, 5 Feb 2020 13:50:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MiFvc8Vo6wRSORdP"
-Content-Disposition: inline
-In-Reply-To: <20200204125844.19955-1-m.szyprowski@samsung.com>
+In-Reply-To: <20200205003048-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---MiFvc8Vo6wRSORdP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2020/2/5 =E4=B8=8B=E5=8D=881:31, Michael S. Tsirkin wrote:
+> On Wed, Feb 05, 2020 at 11:12:21AM +0800, Jason Wang wrote:
+>> On 2020/2/5 =E4=B8=8A=E5=8D=8810:05, Tiwei Bie wrote:
+>>> On Tue, Feb 04, 2020 at 02:46:16PM +0800, Jason Wang wrote:
+>>>> On 2020/2/4 =E4=B8=8B=E5=8D=882:01, Michael S. Tsirkin wrote:
+>>>>> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
+>>>>>> 5) generate diffs of memory table and using IOMMU API to setup the=
+ dma
+>>>>>> mapping in this method
+>>>>> Frankly I think that's a bunch of work. Why not a MAP/UNMAP interfa=
+ce?
+>>>>>
+>>>> Sure, so that basically VHOST_IOTLB_UPDATE/INVALIDATE I think?
+>>> Do you mean we let userspace to only use VHOST_IOTLB_UPDATE/INVALIDAT=
+E
+>>> to do the DMA mapping in vhost-vdpa case? When vIOMMU isn't available=
+,
+>>> userspace will set msg->iova to GPA, otherwise userspace will set
+>>> msg->iova to GIOVA, and vhost-vdpa module will get HPA from msg->uadd=
+r?
+>>>
+>>> Thanks,
+>>> Tiwei
+>> I think so. Michael, do you think this makes sense?
+>>
+>> Thanks
+> to make sure, could you post the suggested argument format for
+> these ioctls?
+>
 
-On Tue, Feb 04, 2020 at 01:58:44PM +0100, Marek Szyprowski wrote:
-> While applying dt-overlays using libfdt code, the order of the applied
-> properties and sub-nodes is reversed. This should not be a problem in
-> ideal world (mainline), but this matters for some vendor specific/custom
-> dtb files. This can be easily fixed by the little change to libfdt code:
-> any new properties and sub-nodes should be added after the parent's node
-> properties and subnodes.
->=20
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+It's the existed uapi:
 
-I'm not convinced this is a good idea.
+/* no alignment requirement */
+struct vhost_iotlb_msg {
+ =C2=A0=C2=A0=C2=A0 __u64 iova;
+ =C2=A0=C2=A0=C2=A0 __u64 size;
+ =C2=A0=C2=A0=C2=A0 __u64 uaddr;
+#define VHOST_ACCESS_RO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1
+#define VHOST_ACCESS_WO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x2
+#define VHOST_ACCESS_RW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3
+ =C2=A0=C2=A0=C2=A0 __u8 perm;
+#define VHOST_IOTLB_MISS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1
+#define VHOST_IOTLB_UPDATE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ 2
+#define VHOST_IOTLB_INVALIDATE=C2=A0=C2=A0=C2=A0=C2=A0 3
+#define VHOST_IOTLB_ACCESS_FAIL=C2=A0=C2=A0=C2=A0 4
+ =C2=A0=C2=A0=C2=A0 __u8 type;
+};
 
-First, anything that relies on the order of properties or subnodes in
-a dtb is deeply, fundamentally broken.  That can't even really be a
-problem with a dtb file itself, only with the code processing it.
+#define VHOST_IOTLB_MSG 0x1
+#define VHOST_IOTLB_MSG_V2 0x2
 
-I'm also concerned this could have a negative performance impact,
-since it has to skip over a bunch of existing things before adding the
-new one.  On the other hand, that may be offset by the fact that it
-will reduce the amount of stuff that needs to be memmove()ed later on.
+struct vhost_msg {
+ =C2=A0=C2=A0=C2=A0 int type;
+ =C2=A0=C2=A0=C2=A0 union {
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct vhost_iotlb_msg iotlb;
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 __u8 padding[64];
+ =C2=A0=C2=A0=C2=A0 };
+};
 
-> ---
->  libfdt/fdt_rw.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
->=20
-> diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
-> index 8795947..88c5930 100644
-> --- a/libfdt/fdt_rw.c
-> +++ b/libfdt/fdt_rw.c
-> @@ -189,19 +189,27 @@ static int fdt_add_property_(void *fdt, int nodeoff=
-set, const char *name,
->  			     int len, struct fdt_property **prop)
->  {
->  	int proplen;
-> -	int nextoffset;
-> +	int offset, nextoffset;
->  	int namestroff;
->  	int err;
->  	int allocated;
-> +	uint32_t tag;
-> =20
->  	if ((nextoffset =3D fdt_check_node_offset_(fdt, nodeoffset)) < 0)
->  		return nextoffset;
-> =20
-> +	/* Try to place the new property after the parent's properties */
-> +	fdt_next_tag(fdt, nodeoffset, &nextoffset); /* skip the BEGIN_NODE */
-> +	do {
-> +		offset =3D nextoffset;
-> +		tag =3D fdt_next_tag(fdt, offset, &nextoffset);
-> +	} while ((tag =3D=3D FDT_PROP) || (tag =3D=3D FDT_NOP));
-> +
->  	namestroff =3D fdt_find_add_string_(fdt, name, &allocated);
->  	if (namestroff < 0)
->  		return namestroff;
-> =20
-> -	*prop =3D fdt_offset_ptr_w_(fdt, nextoffset);
-> +	*prop =3D fdt_offset_ptr_w_(fdt, offset);
->  	proplen =3D sizeof(**prop) + FDT_TAGALIGN(len);
-> =20
->  	err =3D fdt_splice_struct_(fdt, *prop, 0, proplen);
-> @@ -321,6 +329,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffs=
-et,
->  	struct fdt_node_header *nh;
->  	int offset, nextoffset;
->  	int nodelen;
-> +	int depth =3D 0;
->  	int err;
->  	uint32_t tag;
->  	fdt32_t *endtag;
-> @@ -333,12 +342,21 @@ int fdt_add_subnode_namelen(void *fdt, int parentof=
-fset,
->  	else if (offset !=3D -FDT_ERR_NOTFOUND)
->  		return offset;
-> =20
-> -	/* Try to place the new node after the parent's properties */
-> +	/* Try to place the new node after the parent's subnodes */
->  	fdt_next_tag(fdt, parentoffset, &nextoffset); /* skip the BEGIN_NODE */
->  	do {
-> +again:
->  		offset =3D nextoffset;
->  		tag =3D fdt_next_tag(fdt, offset, &nextoffset);
-> -	} while ((tag =3D=3D FDT_PROP) || (tag =3D=3D FDT_NOP));
-> +		if (depth && tag =3D=3D FDT_END_NODE) {
-> +			depth--;
-> +			goto again;
-> +		}
-> +		if (tag =3D=3D FDT_BEGIN_NODE) {
-> +			depth++;
-> +			goto again;
-> +		}
-> +	} while (depth || (tag =3D=3D FDT_PROP) || (tag =3D=3D FDT_NOP));
-> =20
->  	nh =3D fdt_offset_ptr_w_(fdt, offset);
->  	nodelen =3D sizeof(*nh) + FDT_TAGALIGN(namelen+1) + FDT_TAGSIZE;
+struct vhost_msg_v2 {
+ =C2=A0=C2=A0=C2=A0 __u32 type;
+ =C2=A0=C2=A0=C2=A0 __u32 reserved;
+ =C2=A0=C2=A0=C2=A0 union {
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct vhost_iotlb_msg iotlb;
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 __u8 padding[64];
+ =C2=A0=C2=A0=C2=A0 };
+};
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---MiFvc8Vo6wRSORdP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl46VmMACgkQbDjKyiDZ
-s5KD3A//U4sv8jVoLxP+/L5hprNKU/EkWN2F3K31m0Tw7YXZeL3SyPV5rbzVqsHW
-lYZ/VxuBU0huHffaPnSsXe7JOwmr8VZB+aueXNbFtgxggAqa2b+o8XZ2ILYEBufU
-DjiZdN90fPalirsO9duLSTSVPCdZ9qEzgf9l5ts/xnrDNMngDfs2ZXjbJ+IcFEAs
-G72pB+PGFz1s5FRLxMQBwlS32om4zQ5sGmYxLkt0C1b7i4hkRhU+aWJyAfLnak7i
-8DZyJMXeC9wue4u4/4Z+rx/cRESXHvaRya8vtRQN/dVeOliI2PTw4rv9K3Hvtojg
-v/ibSIK/9fIIz/4s1i585QInjsSoOHuQXRdy7y+MOfXKdpbWZaQVzS8Ya7IDLOo1
-zxyv1InDzp72gWos2ZPd0KlPict2sFzZx6ua2DPWuguvO5b3kk44y+tmfKhqIX5j
-gtchr6iRQK5HTfGPmyCDDhmzY1rpeA23keKHyALlrk08BgCYdnCN3ZsJ0jLKGrU7
-Pk/nBi/UUc+seVy34TDLtCp+sL5E8UP14hFymSXeDFY10b+JzRXEvzjjE8U5hjeA
-rUnOKvpTTSGaY3b/ZQKWx28OL3G1riWHCbh7y4xGmft9KH5jM7RuGbOyb1j/ERKD
-YyOpNvvwTA9eCMgOsygwcoZzW/66ag5304TELK+ejdN90Pk9ttg=
-=3XED
------END PGP SIGNATURE-----
-
---MiFvc8Vo6wRSORdP--
