@@ -2,199 +2,132 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52EDC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC703C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91D32082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB272082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 21:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580938384;
-	bh=PwyjaQ5OGG6NxbQ6h8nHxsIFTdcGJUR9l5f64qsJC7w=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=G0I+mA2PqeZGoxPNiUkpukVU6wl5dbKGvW2DcB2FM4nn5zKSU/a03zPUQb6sJLKDZ
-	 IUxjsudU9S9hm3IoLNtwx2YNwVrXd4PY+EVPYNB0+ImlCrjtXyTCWPl1gtoFxc+rqP
-	 u+EO1caAoczBt2BaehSyBlJJQ0irJ6xnTjMurBYY=
+	s=default; t=1580938440;
+	bh=WgGVdmgCO6PpmlPK9iFW836z1BNGktrqNPAvcXenJAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OUABKKHI4QU23nEF3Fs9Yp3XjpDuRKPldsL6i0fdKdGXUlmAVJWX1X37IFq65Xd9V
+	 Fasf3X9lpoOHBHDrx++o9HVpZuF06tJ4w/9pq1L7KGWJwttDKqZYsLfcmB0JHlnhAD
+	 cpqlMWcM08+nOYYAMK12cpWkPkZSg92QOycSAF64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgBEVdE (ORCPT
+        id S1727392AbgBEVd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 16:33:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40750 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 16:33:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgBEVdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 16:33:03 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1727106AbgBEVd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 16:33:57 -0500
+Received: from localhost (unknown [193.117.204.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 901602072B;
-        Wed,  5 Feb 2020 21:33:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E829E2072B;
+        Wed,  5 Feb 2020 21:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580938382;
-        bh=PwyjaQ5OGG6NxbQ6h8nHxsIFTdcGJUR9l5f64qsJC7w=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ih/4cfO0oxjPPinBUjZRiEEB2jjTRSteIgGDAOFkgk4aoXDbOm8ghfUkKfmhNpswS
-         oudruSAxbhdHJ2qYSD2xz+4y6MdPWLCCDlBzS4SeBsoBL8qZN7en2KXGceFmeNkSL/
-         r+aYUQCAOboBzGlXkuEqHz7K4xbHGm8wK0iYTnMQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 64BDC35227EB; Wed,  5 Feb 2020 13:33:02 -0800 (PST)
-Date:   Wed, 5 Feb 2020 13:33:02 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     andreyknvl@google.com, glider@google.com, dvyukov@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] kcsan: Introduce ASSERT_EXCLUSIVE_* macros
-Message-ID: <20200205213302.GA2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200205204333.30953-1-elver@google.com>
- <20200205204333.30953-2-elver@google.com>
+        s=default; t=1580938436;
+        bh=WgGVdmgCO6PpmlPK9iFW836z1BNGktrqNPAvcXenJAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M+MLwCZPgcvkGnMO7LtSd1O5y9LkwtzGnSPuxpRcX/DdJ7H9GPvvovj/Z/NOO8euv
+         WB4trnnaDNagTPVP8H6amaTSg2z1FC/iNczN1IflXqxuEz9bTO0BYnRsokBOnHzMcM
+         N5ZKNYLPnq6dH3X+luUCLS1EI80Qe6qM8IGxnejc=
+Date:   Wed, 5 Feb 2020 21:33:54 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kbuild@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert kheaders feature
+Message-ID: <20200205213354.GB1465126@kroah.com>
+References: <20200205154629.GA1257054@kroah.com>
+ <20200205160250.GG142103@google.com>
+ <CAOesGMj7Z9JoEYrnQaiHrHsjG7cv9ebEbyZM-QFWN2HJDa=UGA@mail.gmail.com>
+ <20200205171353.GI142103@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205204333.30953-2-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200205171353.GI142103@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 09:43:32PM +0100, Marco Elver wrote:
-> Introduces ASSERT_EXCLUSIVE_WRITER and ASSERT_EXCLUSIVE_ACCESS, which
-> may be used to assert properties of synchronization logic, where
-> violation cannot be detected as a normal data race.
+On Wed, Feb 05, 2020 at 12:13:53PM -0500, Joel Fernandes wrote:
+> On Wed, Feb 05, 2020 at 04:55:39PM +0000, Olof Johansson wrote:
+> > On Wed, Feb 5, 2020 at 4:02 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > On Wed, Feb 05, 2020 at 03:46:29PM +0000, Greg Kroah-Hartman wrote:
+> > > > Now that BPF does not need a copy of the kernel headers anymore in order
+> > > > to build programs, there's no real need for putting the kernel headers
+> > > > into a kernel module.  So drop the feature quick, before someone starts
+> > > > using it :)
+> > >
+> > > Temporary Nack. Adding Alexei to the thread.
+> > >
+> > > I believe at the time of this going in, the BPF's BTF feature was not fully
+> > > ready or able to support the usecases. Especially because BPF programs can
+> > > call or use macros in kernel headers as well.
+> > >
+> > > Also, now BCC project does depend on this and so does bpftrace. Have both
+> > > of these tools migrated to use BTF and don't need CONFIG_KHEADERS to be
+> > > compiled? Sorry if I lost track.
+> > >
+> > > Just last week someone was using CONFIG_KHEADERS for BPF tracing purposes at
+> > > Google and pinged me as well. There are several others. This would at least
+> > > them some amount of pain.
+> > >
+> > > I'd suggest let us discuss more before ripping it out. thanks,
+> > 
+> > 
+> > Greg, please use olof@lixom.net on the patch, I try to keep LKML out
+> > of my non-upstream inbox. :-)
+> > 
+> > 
+> > Alexei was part of the discussion, and from others in the same room it
+> > sounded like there are no users of the upstream version of this
+> > feature. Posting this patch is the obvious way to find out if that is
+> > the case.
+> > 
+> > I.e. even if there was a version of bcc that required this, it sounds
 > 
-> Examples of the reports that may be generated:
+> The upstream BCC currently does require it since several tools include kernel
+> headers and bpftrace does require it as well. I guess my point was before
+> ripping it out, someone needs to complete the migration of all of those tools
+> to BTF (if BTF can even handle all usecase) following the motto of "Don't
+> break userspace".
 > 
->     ==================================================================
->     BUG: KCSAN: data-race in test_thread / test_thread
+> > like the BTF approach is significantly better and said users are
+> > hopefully moving forward to it quickly, and if they can't move
+> > forward, then they're likely also not going to move forward to newer
+> > kernels either?
 > 
->     write to 0xffffffffab3d1540 of 8 bytes by task 466 on cpu 2:
->      test_thread+0x8d/0x111
->      debugfs_write.cold+0x32/0x44
->      ...
-> 
->     assert no writes to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
->      test_thread+0xa3/0x111
->      debugfs_write.cold+0x32/0x44
->      ...
->     ==================================================================
-> 
->     ==================================================================
->     BUG: KCSAN: data-race in test_thread / test_thread
-> 
->     assert no accesses to 0xffffffffab3d1540 of 8 bytes by task 465 on cpu 1:
->      test_thread+0xb9/0x111
->      debugfs_write.cold+0x32/0x44
->      ...
-> 
->     read to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
->      test_thread+0x77/0x111
->      debugfs_write.cold+0x32/0x44
->      ...
->     ==================================================================
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
-> 
-> Please let me know if the names make sense, given they do not include a
-> KCSAN_ prefix.
+> I think BCC runs on a lot of upstream machines. I think the migration
+> strategy is a matter of opinion, one way is to take it out and cause some
+> pain in the hope that users/tools will migrate soon (while probably carrying
+> the reverted patches out of tree). Another is to migrate the tools first and
+> then take it out (which has its own disadvantages such as introducing even
+> more users of it while it is still upstream).
 
-I am OK with this, but there might well be some bikeshedding later on.
-Which should not be a real problem, irritating though it might be.
+Do we "know" what tools today require this, and what needs to be done to
+"fix" them?  If we don't know that, then there's no way to drop this,
+pretty much ever :(
 
-> The names are unique across the kernel. I wouldn't expect another macro
-> with the same name but different semantics to pop up any time soon. If
-> there is a dual use to these macros (e.g. another tool that could hook
-> into it), we could also move it elsewhere (include/linux/compiler.h?).
-> 
-> We can also revisit the original suggestion of WRITE_ONCE_EXCLUSIVE(),
-> if it is something that'd be used very widely. It'd be straightforward
-> to add with the help of these macros, but would need to be added to
-> include/linux/compiler.h.
-
-A more definite use case for ASSERT_EXCLUSIVE_ACCESS() is a
-reference-counting algorithm where exclusive access is expected after
-a successful atomic_dec_and_test().  Any objection to making the
-docbook header use that example?  I believe that a more familiar
-example would help people see the point of all this.  ;-)
-
-I am queueing these as-is for review and testing, but please feel free
-to send updated versions.  Easy to do the replacement!
-
-And you knew that this was coming...  It looks to me that I can
-do something like this:
-
-	struct foo {
-		int a;
-		char b;
-		long c;
-		atomic_t refctr;
-	};
-
-	void do_a_foo(struct foo *fp)
-	{
-		if (atomic_dec_and_test(&fp->refctr)) {
-			ASSERT_EXCLUSIVE_ACCESS(*fp);
-			safely_dispose_of(fp);
-		}
-	}
-
-Does that work, or is it necessary to assert for each field separately?
-
-							Thanx, Paul
-
-> ---
->  include/linux/kcsan-checks.h | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-> index 21b1d1f214ad5..1a7b51e516335 100644
-> --- a/include/linux/kcsan-checks.h
-> +++ b/include/linux/kcsan-checks.h
-> @@ -96,4 +96,38 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
->  	kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC | KCSAN_ACCESS_WRITE)
->  #endif
->  
-> +/**
-> + * ASSERT_EXCLUSIVE_WRITER - assert no other threads are writing @var
-> + *
-> + * Assert that there are no other threads writing @var; other readers are
-> + * allowed. This assertion can be used to specify properties of synchronization
-> + * logic, where violation cannot be detected as a normal data race.
-> + *
-> + * For example, if a per-CPU variable is only meant to be written by a single
-> + * CPU, but may be read from other CPUs; in this case, reads and writes must be
-> + * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
-> + * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
-> + * race condition. Using this macro allows specifying this property in the code
-> + * and catch such bugs.
-> + *
-> + * @var variable to assert on
-> + */
-> +#define ASSERT_EXCLUSIVE_WRITER(var)                                           \
-> +	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
-> +
-> +/**
-> + * ASSERT_EXCLUSIVE_ACCESS - assert no other threads are accessing @var
-> + *
-> + * Assert that no other thread is accessing @var (no readers nor writers). This
-> + * assertion can be used to specify properties of synchronization logic, where
-> + * violation cannot be detected as a normal data race.
-> + *
-> + * For example, if a variable is not read nor written by the current thread, nor
-> + * should it be touched by any other threads during the current execution phase.
-> + *
-> + * @var variable to assert on
-> + */
-> +#define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
-> +	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
-> +
->  #endif /* _LINUX_KCSAN_CHECKS_H */
-> -- 
-> 2.25.0.341.g760bfbb309-goog
-> 
+greg k-h
