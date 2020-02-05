@@ -2,294 +2,152 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2156FC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96BDC3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1212085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813D02085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="UzXC10dz"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ICvsX8Cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbgBEALS (ORCPT
+        id S1727758AbgBEALj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:11:18 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34012 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbgBEALR (ORCPT
+        Tue, 4 Feb 2020 19:11:39 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56247 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBEALj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:11:17 -0500
-Received: by mail-wm1-f68.google.com with SMTP id s144so3267818wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2020 16:11:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TWMKFLmlf0AFDRFWSiZ8w6uqCqE+fpwvOde/KKxdspU=;
-        b=UzXC10dzSBLQ6VuzAQoUhXzFUQGOwSYE9pgvmC4LdvMdbspO/S66nkO9wvjlrrWPxv
-         XmpPUMQeEkO4AlU7kNm8UuYh2Y/CGxeVUlRJM5H/wP52De5/xUDjVecYTOwndzFU5AwE
-         NZws3UwOhqUJregkBG8US/i/nsP76mr8mcg9+Uu2Wdu+lq69qChmxrW0+Ep+aUwKP2r9
-         b1U9sLmEZ6Jl0WmsZgKq2tp3C9hWjupzpAOBYTT4QVVYvGnIni+fUQztb8/N68uIDjoC
-         htpTV8DM86H9wU7dI8uSUo+3VQ5BVP/N9LGzOKbTzJrBjXQUABGjZq2SMuD6DvMkpiW6
-         yRyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TWMKFLmlf0AFDRFWSiZ8w6uqCqE+fpwvOde/KKxdspU=;
-        b=s1Cu8Ey72H4UlP2Mziv9WhAyzVgcGXLjFx1h1xqd65k7dsnaPx8m91hQ94HAx2DPzV
-         sa4gMiB9/uxgUGzmQo3c10dIAm+Fzv7X569MpJrbhMkaQNCqARAUdsUvRU+S2QOSNBbc
-         M5yEmPXz64+pjRR+hG9WBGhGZVyN/hV3IWI7GKnsrE2NhdQzIZDQbkN461MBDsk7T4Qv
-         9Bnm2krPIDIuy4g/QwCjVy0RDXGGB0HghocHqeoM3R1/WMo4gxUno1J7b5nu80y1xKZ7
-         Tur+SiWxlMNo20WaqQ1PSstS4rD8AoeN+O9rfZuVc0DNlm9PvvanGTYLKVV5O2kSyfxE
-         tWig==
-X-Gm-Message-State: APjAAAUU4e6EHTInXx8cqulFeiVy035h9BFB+Eq0f8oVAjK5J847K5V5
-        zfpyXnv+AH2Ee+9smfXZjkWf48OeS3EfAPXVUc81
-X-Google-Smtp-Source: APXvYqyKn7KiPsuTjAOLqvpLY/n/dJ8r3z/19YegWM4nHyPKdgW4wlCJdMsTKLmliBy70QFIoNJttpnb7pGPVhaml7w=
-X-Received: by 2002:a1c:a404:: with SMTP id n4mr1570224wme.186.1580861473308;
- Tue, 04 Feb 2020 16:11:13 -0800 (PST)
+        Tue, 4 Feb 2020 19:11:39 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D5346891AB;
+        Wed,  5 Feb 2020 13:11:35 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1580861495;
+        bh=rWw39W1xcUKR/heVavGcT0nqYJy6F8UnBKGaK5La1fI=;
+        h=From:To:Cc:Subject:Date;
+        b=ICvsX8CjRGALZEHG4kfCe+IHxZkNYkBA/lAjlNYOKZoYi8de7DuP/p9LugXIM5MOk
+         A5vVbn9p0hZb0sn7gYO8CG7LGNXcX99JhEn144aO9v0ORODFfBf4kXt83jXMDbp1P6
+         M1o+F2pUvSkXMvtkIg+7g4+ZTWVY44WalVlHGUlQGHiXInoQi6BArOVdMvduzGJJbj
+         JP1HAdWJbUM30CymXfYFx/QHDc36T8zJu+xG8juJXwGgAhVdl4PvlfQ8R66Ykgm21g
+         XIZnINhc29u9rQwbaHYJRSdf6DDrQM2C1UJPgqgFUil6bJYd9qBohkzxJdDHtzq/5K
+         g31qy2MPi9rEQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e3a08380000>; Wed, 05 Feb 2020 13:11:36 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 16E1513EEDE;
+        Wed,  5 Feb 2020 13:11:35 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 850D6280038; Wed,  5 Feb 2020 13:11:35 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     gregkh@linuxfoundation.org, ralf@linux-mips.org,
+        paulburton@kernel.org, linux@roeck-us.net,
+        dan.carpenter@oracle.com, willy@infradead.org
+Cc:     linux-mips@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 0/6] Re-instate octeon staging drivers
+Date:   Wed,  5 Feb 2020 13:11:10 +1300
+Message-Id: <20200205001116.14096-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200128022737.15371-1-atish.patra@wdc.com> <20200128022737.15371-9-atish.patra@wdc.com>
- <CAAhSdy1DtsPeKYrSDuqNUirDixypvrd42xQnr1bVExc8XE-Npw@mail.gmail.com>
-In-Reply-To: <CAAhSdy1DtsPeKYrSDuqNUirDixypvrd42xQnr1bVExc8XE-Npw@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Tue, 4 Feb 2020 16:11:02 -0800
-Message-ID: <CAOnJCUJtUHKE_+hXemkxwoa1M0GpQYQVxbw-5ScnGcHf_xZd-Q@mail.gmail.com>
-Subject: Re: [PATCH v7 08/10] RISC-V: Add SBI HSM extension
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Abner Chang <abner.chang@hpe.com>, nickhu@andestech.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chester Lin <clin@suse.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Mao Han <han_mao@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 8:54 PM Anup Patel <anup@brainfault.org> wrote:
->
-> On Tue, Jan 28, 2020 at 7:58 AM Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> > SBI specification defines HSM extension that allows to start/stop a hart
-> > by a supervisor anytime. The specification is available at
-> >
-> > https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-> >
-> > Implement SBI HSM extension.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > ---
-> >  arch/riscv/include/asm/sbi.h | 22 ++++++++++++++++
-> >  arch/riscv/kernel/sbi.c      | 51 ++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 73 insertions(+)
-> >
-> > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> > index d55d8090ab5c..bed6fa26ec84 100644
-> > --- a/arch/riscv/include/asm/sbi.h
-> > +++ b/arch/riscv/include/asm/sbi.h
-> > @@ -26,6 +26,7 @@ enum sbi_ext_id {
-> >         SBI_EXT_TIME = 0x54494D45,
-> >         SBI_EXT_IPI = 0x735049,
-> >         SBI_EXT_RFENCE = 0x52464E43,
-> > +       SBI_EXT_HSM = 0x48534D,
-> >  };
-> >
-> >  enum sbi_ext_base_fid {
-> > @@ -56,6 +57,12 @@ enum sbi_ext_rfence_fid {
-> >         SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
-> >  };
-> >
-> > +enum sbi_ext_hsm_fid {
-> > +       SBI_EXT_HSM_HART_START = 0,
-> > +       SBI_EXT_HSM_HART_STOP,
-> > +       SBI_EXT_HSM_HART_STATUS,
-> > +};
-> > +
->
-> I think we should also define the possible return values of
-> SBI_EXT_HSM_HART_STATUS function.
->
+This series re-instates the octeon drivers that were recently removed and
+addresses the build issues that lead to that decision.
 
-Done.
+I've approached Cavium/Marvell about taking a more active interest in get=
+ting
+the code out of staging and into their proper location. No reply on that =
+(yet).
 
-> >  #define SBI_SPEC_VERSION_DEFAULT       0x1
-> >  #define SBI_SPEC_VERSION_MAJOR_SHIFT   24
-> >  #define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
-> > @@ -70,6 +77,7 @@ enum sbi_ext_rfence_fid {
-> >  #define SBI_ERR_INVALID_ADDRESS -5
-> >
-> >  extern unsigned long sbi_spec_version;
-> > +extern bool sbi_hsm_avail;
-> >  struct sbiret {
-> >         long error;
-> >         long value;
-> > @@ -110,8 +118,18 @@ int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
-> >                                 unsigned long start,
-> >                                 unsigned long size,
-> >                                 unsigned long asid);
-> > +int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-> > +                      unsigned long priv);
-> > +int sbi_hsm_hart_stop(void);
-> > +int sbi_hsm_hart_get_status(unsigned long hartid);
-> > +
-> >  int sbi_probe_extension(int ext);
-> >
-> > +static inline bool sbi_hsm_is_available(void)
-> > +{
-> > +       return sbi_hsm_avail;
-> > +}
-> > +
-> >  /* Check if current SBI specification version is 0.1 or not */
-> >  static inline int sbi_spec_is_0_1(void)
-> >  {
-> > @@ -137,5 +155,9 @@ void sbi_clear_ipi(void);
-> >  void sbi_send_ipi(const unsigned long *hart_mask);
-> >  void sbi_remote_fence_i(const unsigned long *hart_mask);
-> >  void sbi_init(void);
-> > +static inline bool sbi_hsm_is_available(void)
-> > +{
-> > +       return false;
-> > +}
-> >  #endif /* CONFIG_RISCV_SBI */
-> >  #endif /* _ASM_RISCV_SBI_H */
-> > diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> > index 3c34aba30f6f..9bdc9801784d 100644
-> > --- a/arch/riscv/kernel/sbi.c
-> > +++ b/arch/riscv/kernel/sbi.c
-> > @@ -12,6 +12,8 @@
-> >
-> >  /* default SBI version is 0.1 */
-> >  unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
-> > +bool sbi_hsm_avail;
-> > +
-> >  EXPORT_SYMBOL(sbi_spec_version);
-> >
-> >  static void (*__sbi_set_timer)(uint64_t stime);
-> > @@ -496,6 +498,54 @@ static void sbi_power_off(void)
-> >         sbi_shutdown();
-> >  }
-> >
-> > +int sbi_hsm_hart_stop(void)
-> > +{
-> > +       struct sbiret ret;
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
-> > +
-> > +       if (!ret.error)
-> > +               return ret.value;
-> > +       else
-> > +               return sbi_err_map_linux_errno(ret.error);
-> > +}
-> > +EXPORT_SYMBOL(sbi_hsm_hart_stop);
-> > +
-> > +int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-> > +                      unsigned long priv)
-> > +{
-> > +       struct sbiret ret;
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
-> > +                             hartid, saddr, priv, 0, 0, 0);
-> > +       if (!ret.error)
-> > +               return ret.value;
-> > +       else
-> > +               return sbi_err_map_linux_errno(ret.error);
-> > +}
-> > +EXPORT_SYMBOL(sbi_hsm_hart_start);
-> > +
-> > +int sbi_hsm_hart_get_status(unsigned long hartid)
-> > +{
-> > +       struct sbiret ret;
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
-> > +                             hartid, 0, 0, 0, 0, 0);
-> > +       if (!ret.error)
-> > +               return ret.value;
-> > +       else
-> > +               return sbi_err_map_linux_errno(ret.error);
-> > +}
-> > +EXPORT_SYMBOL(sbi_hsm_hart_get_status);
-> > +
-> > +void __init sbi_hsm_ext_init(void)
-> > +{
-> > +       if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
-> > +               pr_info("SBI v0.2 HSM extension detected\n");
-> > +               sbi_hsm_avail = true;
-> > +       }
-> > +}
-> > +
->
-> If we start adding all present and future extensions in
-> arch/riscv/kernel/sbi.c then it will blow-up.
->
-> IMHO, we should only keep legacy and replacement
-> extension in arch/riscv/kernel/sbi.c. All other extensions
-> will be separate based on how they are integrated.
->
-> For SBI HSM, all sbi_hsm_xyz() functions should be in
-> arch/riscv/kernel/cpu_ops_sbi.c which will be only compiled
-> when CONFIG_RISCV_SBI is enabled.
->
-> Maybe merge PATCH8 and PATCH9 ?
->
+Chris Packham (6):
+  Revert "staging: octeon-usb: delete the octeon usb host controller
+    driver"
+  Revert "staging: octeon: delete driver"
+  MIPS: octeon: remove typedef declaration for cvmx_wqe
+  MIPS: octeon: remove typedef declaration for cvmx_helper_link_info
+  MIPS: octeon: remove typedef declaration for cvmx_pko_command_word0
+  Revert "staging/octeon: Mark Ethernet driver as BROKEN"
 
-Sure. I am fine with that. However, I think we don't need to move
-spinwait ops to its
-own file as it won't grow in the future. I have refactored the series
-in the following way.
+ .../executive/cvmx-helper-board.c             |    4 +-
+ .../executive/cvmx-helper-rgmii.c             |    6 +-
+ .../executive/cvmx-helper-sgmii.c             |    8 +-
+ .../cavium-octeon/executive/cvmx-helper-spi.c |    6 +-
+ .../executive/cvmx-helper-xaui.c              |    6 +-
+ .../cavium-octeon/executive/cvmx-helper.c     |   10 +-
+ .../include/asm/octeon/cvmx-helper-board.h    |    2 +-
+ .../include/asm/octeon/cvmx-helper-rgmii.h    |    4 +-
+ .../include/asm/octeon/cvmx-helper-sgmii.h    |    4 +-
+ .../mips/include/asm/octeon/cvmx-helper-spi.h |    4 +-
+ .../include/asm/octeon/cvmx-helper-util.h     |    2 +-
+ .../include/asm/octeon/cvmx-helper-xaui.h     |    4 +-
+ arch/mips/include/asm/octeon/cvmx-helper.h    |    8 +-
+ arch/mips/include/asm/octeon/cvmx-pko.h       |   10 +-
+ arch/mips/include/asm/octeon/cvmx-pow.h       |   22 +-
+ arch/mips/include/asm/octeon/cvmx-wqe.h       |   16 +-
+ drivers/staging/Kconfig                       |    4 +
+ drivers/staging/Makefile                      |    2 +
+ drivers/staging/octeon-usb/Kconfig            |   11 +
+ drivers/staging/octeon-usb/Makefile           |    2 +
+ drivers/staging/octeon-usb/TODO               |    8 +
+ drivers/staging/octeon-usb/octeon-hcd.c       | 3737 +++++++++++++++++
+ drivers/staging/octeon-usb/octeon-hcd.h       | 1847 ++++++++
+ drivers/staging/octeon/Kconfig                |   15 +
+ drivers/staging/octeon/Makefile               |   19 +
+ drivers/staging/octeon/TODO                   |    9 +
+ drivers/staging/octeon/ethernet-defines.h     |   40 +
+ drivers/staging/octeon/ethernet-mdio.c        |  178 +
+ drivers/staging/octeon/ethernet-mdio.h        |   28 +
+ drivers/staging/octeon/ethernet-mem.c         |  154 +
+ drivers/staging/octeon/ethernet-mem.h         |    9 +
+ drivers/staging/octeon/ethernet-rgmii.c       |  158 +
+ drivers/staging/octeon/ethernet-rx.c          |  538 +++
+ drivers/staging/octeon/ethernet-rx.h          |   31 +
+ drivers/staging/octeon/ethernet-sgmii.c       |   30 +
+ drivers/staging/octeon/ethernet-spi.c         |  226 +
+ drivers/staging/octeon/ethernet-tx.c          |  717 ++++
+ drivers/staging/octeon/ethernet-tx.h          |   14 +
+ drivers/staging/octeon/ethernet-util.h        |   47 +
+ drivers/staging/octeon/ethernet.c             |  992 +++++
+ drivers/staging/octeon/octeon-ethernet.h      |  107 +
+ drivers/staging/octeon/octeon-stubs.h         | 1433 +++++++
+ 42 files changed, 10414 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/staging/octeon-usb/Kconfig
+ create mode 100644 drivers/staging/octeon-usb/Makefile
+ create mode 100644 drivers/staging/octeon-usb/TODO
+ create mode 100644 drivers/staging/octeon-usb/octeon-hcd.c
+ create mode 100644 drivers/staging/octeon-usb/octeon-hcd.h
+ create mode 100644 drivers/staging/octeon/Kconfig
+ create mode 100644 drivers/staging/octeon/Makefile
+ create mode 100644 drivers/staging/octeon/TODO
+ create mode 100644 drivers/staging/octeon/ethernet-defines.h
+ create mode 100644 drivers/staging/octeon/ethernet-mdio.c
+ create mode 100644 drivers/staging/octeon/ethernet-mdio.h
+ create mode 100644 drivers/staging/octeon/ethernet-mem.c
+ create mode 100644 drivers/staging/octeon/ethernet-mem.h
+ create mode 100644 drivers/staging/octeon/ethernet-rgmii.c
+ create mode 100644 drivers/staging/octeon/ethernet-rx.c
+ create mode 100644 drivers/staging/octeon/ethernet-rx.h
+ create mode 100644 drivers/staging/octeon/ethernet-sgmii.c
+ create mode 100644 drivers/staging/octeon/ethernet-spi.c
+ create mode 100644 drivers/staging/octeon/ethernet-tx.c
+ create mode 100644 drivers/staging/octeon/ethernet-tx.h
+ create mode 100644 drivers/staging/octeon/ethernet-util.h
+ create mode 100644 drivers/staging/octeon/ethernet.c
+ create mode 100644 drivers/staging/octeon/octeon-ethernet.h
+ create mode 100644 drivers/staging/octeon/octeon-stubs.h
 
-1. Move cpu_sbi_ops and sbi_hsm_xyz to its own file which can be
-compiled out with CONFIG_RISCV_SBI.
-2. Keep spinwait and other cpu_ops related functions in cpu_ops.c
+--=20
+2.25.0
 
-Let me know if you think that's not a good idea.
-
-> Regards,
-> Anup
->
-> >  int __init sbi_init(void)
-> >  {
-> >         int ret;
-> > @@ -532,5 +582,6 @@ int __init sbi_init(void)
-> >                 __sbi_rfence    = __sbi_rfence_v01;
-> >         }
-> >
-> > +       sbi_hsm_ext_init();
->
-> We don't need sbi_hsm_ext_init() because we can check
-> and set CPU ops at boot-time in cpu_set_ops()
->
-> >         return 0;
-> >  }
-> > --
-> > 2.24.0
-> >
->
-> Regards,
-> Anup
->
-
-
--- 
-Regards,
-Atish
