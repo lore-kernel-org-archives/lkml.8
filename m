@@ -2,157 +2,94 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C58C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BC2C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78644217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="tlFhwg7f"
+	by mail.kernel.org (Postfix) with ESMTP id E708D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580943109;
+	bh=7jofB+B4X06+m/QmPPK8i8hbugSJUjDJNEOv4/+YztY=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=nZNr/xlaP50f6iIGZ/D7/ztiF1IBE1VQsVFXSMzvAfT2QeWSL5XO9Vl0cOvCCLtww
+	 gdwYTDDa+DXYsW8Cm3ZkzzeWKmsH6Brcn1OJBcD6Az/VNm55wuYn69kDX3x7Ye/V0c
+	 d3Fa0QTdYeE75gYd0+uLImlOywSoPwkfL9YnAwec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgBEWvo (ORCPT
+        id S1727762AbgBEWvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:51:44 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46688 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727615AbgBEWvn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:51:43 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m8so3818230edi.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:51:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KkJqADdzREDp4wpCa3aAuBXzYy2a7dWtxmQqACuBiLA=;
-        b=tlFhwg7fuSsr9lDMyg/hJyhV9/r+SA/pNtn3GhTpEFeVNqw8D7oPmYV55YrajcvhPi
-         6USVBo6kXicLmvv6Bg2Y0ha0tk2Nay7mXyPilZSuO9GsGXq5p9msM1TW1ThqpEKIk6TO
-         4/OQyO/ulzcMerTQGaeD0VryqdPshEHuhKpG+unQcWhv6sPRbnKksfprLCn66VInLREd
-         Je6wlsaG5QsXqkI7MrdKq8b444s9J9M4EeNMgElcAD+QNFZ/daBRaPIp/Nv+OU/SgL9L
-         aTwx//Ff6J7OlQ/9BFdzCkZlg1MXq+nUXXnJiTXBCnSxNct/pUB8o87OQuSAcShpAQtW
-         d60Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KkJqADdzREDp4wpCa3aAuBXzYy2a7dWtxmQqACuBiLA=;
-        b=kO0pXF2EcjJ3ot/XWls3GCbRyapJdSWAl02LzusvCtrCHbd4vpkS65ynZShR+Jy4kQ
-         ie25YEwBiL0Lk6ogj/DTvProHr1WaHxdc1lePCha2ByWc9PGRWpm5ixzNGSvBrZkcadn
-         5/fWJ1l8GK5KJ1xMPxy2OM+CxhAaaIzymFJkyNY/Nxr0khEXWFdHKNoBAUykboYH4Y+4
-         KV7aK6Gi1jiEqB9kfAJeyJ3/UTcinUuVxgvgx49otJufTmjmcM7Jj6kB2U08OgIyX7Nz
-         93rxR9HVpCzXfEmDWeQoIuz1F+rfDM8dZ7RjQY8KCqdCC8E85ZBYpI1ySvl3b2dlcUCr
-         2vMA==
-X-Gm-Message-State: APjAAAWY15BqwvG9ckLxYzmT9GDuNbEDGV1T9VTdNTHJvmdYEWykqTuW
-        PPFr2RZJquxylV2Irgmi+fpLkUHaXvzdFBJBvSpB
-X-Google-Smtp-Source: APXvYqz2aK9JflWz0zHltcgH6zygcn9lbVHxrjU8/1oDrOSsvKKPYicMl7ZrYmjGxJ5ErI7H2IQMPuhpOBJ/wakZNE8=
-X-Received: by 2002:a50:e108:: with SMTP id h8mr394067edl.196.1580943101124;
- Wed, 05 Feb 2020 14:51:41 -0800 (PST)
+        Wed, 5 Feb 2020 17:51:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727690AbgBEWvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:51:46 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5486220730;
+        Wed,  5 Feb 2020 22:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580943105;
+        bh=7jofB+B4X06+m/QmPPK8i8hbugSJUjDJNEOv4/+YztY=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=GXUjNVGDU3rvq+e8Cd55zKyh7jfZEp2d/wHxWUxnR4fXOOOLuxQO6gY2uYbUG874L
+         94yDoivV+jh7Jm0wdOqbfhs4xHWUexD9Tucl9VcXpNWpeDDC3Qu6ClTUIFKbmfBQS1
+         lSNmZZS0WPC4d3oQoEyeRcxAP8ST4gpVnWLp/2XQ=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <2954ed671a7622ddf3abdb8854dbba2ad13e9f33.1577736799.git.rgb@redhat.com>
- <CAHC9VhRw3Fj9-hi+Vj8JJb_GXM4B9N5hRXa9H6aQkuuFqJJ15w@mail.gmail.com> <20200204234258.uwaqk3s3c42fxews@madcap2.tricolour.ca>
-In-Reply-To: <20200204234258.uwaqk3s3c42fxews@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 5 Feb 2020 17:51:30 -0500
-Message-ID: <CAHC9VhT0NELsrEeTmX15GaZ1SE-qZiQmz9-WweRGWRPcGN5EmA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 11/16] audit: add support for containerid to
- network namespaces
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200205194649.31309-1-geert+renesas@glider.be>
+References: <20200205194649.31309-1-geert+renesas@glider.be>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] of: clk: Make <linux/of_clk.h> self-contained
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 05 Feb 2020 14:51:44 -0800
+Message-Id: <20200205225145.5486220730@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 6:43 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-01-22 16:28, Paul Moore wrote:
-> > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >
-> > > This also adds support to qualify NETFILTER_PKT records.
-> > >
-> > > Audit events could happen in a network namespace outside of a task
-> > > context due to packets received from the net that trigger an auditing
-> > > rule prior to being associated with a running task.  The network
-> > > namespace could be in use by multiple containers by association to the
-> > > tasks in that network namespace.  We still want a way to attribute
-> > > these events to any potential containers.  Keep a list per network
-> > > namespace to track these audit container identifiiers.
-> > >
-> > > Add/increment the audit container identifier on:
-> > > - initial setting of the audit container identifier via /proc
-> > > - clone/fork call that inherits an audit container identifier
-> > > - unshare call that inherits an audit container identifier
-> > > - setns call that inherits an audit container identifier
-> > > Delete/decrement the audit container identifier on:
-> > > - an inherited audit container identifier dropped when child set
-> > > - process exit
-> > > - unshare call that drops a net namespace
-> > > - setns call that drops a net namespace
-> > >
-> > > Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-> > > event standalone records.  Iterate through all potential audit container
-> > > identifiers associated with a network namespace.
-> > >
-> > > Please see the github audit kernel issue for contid net support:
-> > >   https://github.com/linux-audit/audit-kernel/issues/92
-> > > Please see the github audit testsuiite issue for the test case:
-> > >   https://github.com/linux-audit/audit-testsuite/issues/64
-> > > Please see the github audit wiki for the feature overview:
-> > >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >  include/linux/audit.h    |  24 +++++++++
-> > >  kernel/audit.c           | 132 ++++++++++++++++++++++++++++++++++++++++++++++-
-> > >  kernel/nsproxy.c         |   4 ++
-> > >  net/netfilter/nft_log.c  |  11 +++-
-> > >  net/netfilter/xt_AUDIT.c |  11 +++-
-> > >  5 files changed, 176 insertions(+), 6 deletions(-)
-> >
-> > ...
-> >
-> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > index 5531d37a4226..ed8d5b74758d 100644
-> > > --- a/include/linux/audit.h
-> > > +++ b/include/linux/audit.h
-> > > @@ -12,6 +12,7 @@
-> > >  #include <linux/sched.h>
-> > >  #include <linux/ptrace.h>
-> > >  #include <uapi/linux/audit.h>
-> > > +#include <linux/refcount.h>
-> > >
-> > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > > @@ -121,6 +122,13 @@ struct audit_task_info {
-> > >
-> > >  extern struct audit_task_info init_struct_audit;
-> > >
-> > > +struct audit_contobj_netns {
-> > > +       struct list_head        list;
-> > > +       u64                     id;
-> >
-> > Since we now track audit container IDs in their own structure, why not
-> > link directly to the audit container ID object (and bump the
-> > refcount)?
->
-> Ok, I've done this but at first I had doubts about the complexity.
+Quoting Geert Uytterhoeven (2020-02-05 11:46:49)
+> Depending on include order:
+>=20
+>     include/linux/of_clk.h:11:45: warning: \u2018struct device_node\u2019=
+ declared inside parameter list will not be visible outside of this definit=
+ion or declaration
+>      unsigned int of_clk_get_parent_count(struct device_node *np);
+>                                                  ^~~~~~~~~~~
+>     include/linux/of_clk.h:12:43: warning: \u2018struct device_node\u2019=
+ declared inside parameter list will not be visible outside of this definit=
+ion or declaration
+>      const char *of_clk_get_parent_name(struct device_node *np, int index=
+);
+>                                                ^~~~~~~~~~~
+>     include/linux/of_clk.h:13:31: warning: \u2018struct of_device_id\u201=
+9 declared inside parameter list will not be visible outside of this defini=
+tion or declaration
+>      void of_clk_init(const struct of_device_id *matches);
+>                                    ^~~~~~~~~~~~
+>=20
+> Fix this by adding forward declarations for struct device_node and
+> struct of_device_id.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Noticed when cleaning up some platform code.
+> I am not aware of this being triggered in upstream, but this will become a
+> dependency for these cleanups.
 
-Yes, it will be more complex, but it should be much safer.
+So apply for fixes? I'll just throw it in now.
 
--- 
-paul moore
-www.paul-moore.com
+Applied to clk-next.
+
