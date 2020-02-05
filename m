@@ -2,80 +2,133 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E92C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04DFC352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAD6214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868252072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:23:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bsCVEZXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgBEWWm (ORCPT
+        id S1727567AbgBEWXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:22:42 -0500
-Received: from namei.org ([65.99.196.166]:43550 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgBEWWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:22:41 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 015MMXfo021603;
-        Wed, 5 Feb 2020 22:22:33 GMT
-Date:   Thu, 6 Feb 2020 09:22:33 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     Sasha Levin <sashal@kernel.org>, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, kys@microsoft.com,
-        jamorris@microsoft.com
-Subject: Re: [PATCH] Documentation/process: Change Microsoft contact for
- embargoed hardware issues
-In-Reply-To: <20200205221203.GA1471886@kroah.com>
-Message-ID: <alpine.LRH.2.21.2002060919420.17039@namei.org>
-References: <20200205213621.31474-1-sashal@kernel.org> <20200205214716.GA1468203@kroah.com> <alpine.LRH.2.21.2002060854230.17039@namei.org> <20200205221203.GA1471886@kroah.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 5 Feb 2020 17:23:10 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38512 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgBEWXK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:23:10 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z9so3589110oth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 14:23:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7BPBFZwYMLdjTS7FC4wsJG0SBY3jzmuiQq5ab/pR8tE=;
+        b=bsCVEZXyO1m1nDWrhyLfqfamqKXOfvuJP41PTr4vHEntSvyBELd7iYKhNse6c2Tn9g
+         iIYLNxjo6KV5OEOU8j19451ahN0XbitPB0O/3aRADfb1w9uvKbYi0JIUSthzfFbgWSZV
+         dMOREBTUlTsa8xBI1nry+fdIWSqxaER3PK0/U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7BPBFZwYMLdjTS7FC4wsJG0SBY3jzmuiQq5ab/pR8tE=;
+        b=WawFKlh0izu9HoSIkw4nxRt1lYGV0wLOyK3NGtBBe64AU7ehZYUzSBfoODu6AUvfYB
+         HUKSVzEuW2eg9eDGR4RG31EX4yuZWdyZ6T5HGrpm+/hUscMpqC5PYCtw4K07nDy/mcCS
+         SVjUgAinKMtfYC2Yq7MjeAm/bFW205GPDhlIEXfwasSOlrO3pIVzt04woXa5+EG5VOCm
+         /GgJ61vTl5fARgGJaUb5QZxMdZtbl8589JVBUAb+M1DWPXfVauVAnSrIWXEayJfrJCQM
+         71zK/Iwl+nC6BQG3mVvj+AE7Vc2ALd+CNZ2dmIUv0jpcLgfk05O5hBsPdG/6vPA1WkjA
+         EIiA==
+X-Gm-Message-State: APjAAAUlB/OYtOct3Xf6qWH4YYgSa1DOS+TOLqzdNQ8dS0W0mxlqVAs1
+        KgRSr+f7xjcHV0ZuUjGEKaCb5w==
+X-Google-Smtp-Source: APXvYqwiWxsqH9jzwGGCPTTA/BuMOcFastWQH/FIEhWKfTbMO7E5g/kRONngb8jpggIUpd8KuKUR/A==
+X-Received: by 2002:a9d:1ca3:: with SMTP id l35mr27648946ota.271.1580941389697;
+        Wed, 05 Feb 2020 14:23:09 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n22sm369796otj.36.2020.02.05.14.23.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 14:23:08 -0800 (PST)
+Date:   Wed, 5 Feb 2020 14:23:07 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, ssaner@redhat.com, atomlin@redhat.com,
+        oleksandr@redhat.com, vbendel@redhat.com, kirill@shutemov.name,
+        khlebnikov@yandex-team.ru,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_inconsistent_mm sysctl
+Message-ID: <202002051421.9419721B@keescook>
+References: <20200129180851.551109-1-ghalat@redhat.com>
+ <84C253EB-B348-4B62-B863-F192FBA8C202@lca.pw>
+ <34467005-1742-47a0-cd2b-05567584b91e@de.ibm.com>
+ <1580742371.7365.1.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1580742371.7365.1.camel@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020, Greg KH wrote:
-
-> > Add me for this: jamorris@linux.microsoft.com
+On Mon, Feb 03, 2020 at 10:06:11AM -0500, Qian Cai wrote:
+> On Mon, 2020-02-03 at 15:08 +0100, Christian Borntraeger wrote:
+> > 
+> > On 29.01.20 19:39, Qian Cai wrote:
+> > > 
+> > > 
+> > > > On Jan 29, 2020, at 1:08 PM, Grzegorz Halat <ghalat@redhat.com> wrote:
+> > > > 
+> > > > Memory management subsystem performs various checks at runtime,
+> > > > if an inconsistency is detected then such event is being logged and kernel
+> > > > continues to run. While debugging such problems it is helpful to collect
+> > > > memory dump as early as possible. Currently, there is no easy way to panic
+> > > > kernel when such error is detected.
+> > > > 
+> > > > It was proposed[1] to panic the kernel if panic_on_oops is set but this
+> > > > approach was not accepted. One of alternative proposals was introduction of
+> > > > a new sysctl.
+> > > > 
+> > > > Add a new sysctl - panic_on_inconsistent_mm. If the sysctl is set then the
+> > > > kernel will be crashed when an inconsistency is detected by memory
+> > > > management. This currently means panic when bad page or bad PTE
+> > > > is detected(this may be extended to other places in MM).
+> > > > 
+> > > > Another use case of this sysctl may be in security-wise environments,
+> > > > it may be more desired to crash machine than continue to run with
+> > > > potentially damaged data structures.
+> > > 
+> > > It is annoying that I have to repeat my feedback, but I don’t know why
+> > > admins want to enable this by allowing normal users to crash the systems
+> > > more easily through recoverable MM bugs where I am sure we have plenty.
+> > > How does that improve the security?
+> > 
+> > There are cases where data corruption is a no-go, while "one node going down" 
+> > is acceptable.
+> > And then there is also the case for payed service providers that often need
+> > a dump at the time of the problem to understand rare issues.
+> > 
+> > So I DO see value in such a thing. We should just piggy-back on panic_on_warn
+> > I guess.
+> > 
 > 
-> Can you send me a patch please?
-> 
+> Indeed, so change pr_alert() to pr_warn() there then?
 
-Sure.
+pr_* are just printk levels. If you want a full trace and to hook to
+panic_on_warn, you want WARN_ON(condition) (or WARN_ON_ONCE(), etc).
 
-From 97a1a94c53ac2b840ad285f9e47929de764f0ffa Mon Sep 17 00:00:00 2001
-From: James Morris <jmorris@namei.org>
-Date: Wed, 5 Feb 2020 14:17:56 -0800
-Subject: [PATCH] [PATCH] Documentation/process: Change Microsoft contact for embargoed hardware issues
-
-Update Microsoft contact from Sasha to James.
-
-Signed-off-by: James Morris <jmorris@namei.org>
----
- Documentation/process/embargoed-hardware-issues.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
-index 33edae654599..5916d76f0d6b 100644
---- a/Documentation/process/embargoed-hardware-issues.rst
-+++ b/Documentation/process/embargoed-hardware-issues.rst
-@@ -250,7 +250,7 @@ an involved disclosed party. The current ambassadors list:
-   Intel		Tony Luck <tony.luck@intel.com>
-   Qualcomm	Trilok Soni <tsoni@codeaurora.org>
- 
--  Microsoft	Sasha Levin <sashal@kernel.org>
-+  Microsoft	James Morris <jamorris@linux.microsoft.com>
-   VMware
-   Xen		Andrew Cooper <andrew.cooper3@citrix.com>
- 
 -- 
-2.21.1
-
-
+Kees Cook
