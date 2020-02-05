@@ -2,125 +2,102 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61384C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6396BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E4020730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sF43794a"
+	by mail.kernel.org (Postfix) with ESMTP id 442B72085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgBEHUR (ORCPT
+        id S1727003AbgBEHWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:20:17 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:41047 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726236AbgBEHUQ (ORCPT
+        Wed, 5 Feb 2020 02:22:31 -0500
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:17277 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725468AbgBEHWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:20:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580887216; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=7DffYjVGVCcrqC/qHz0LpV46gTFSwzkl9c+dLx2G4uU=;
- b=sF43794a7Qf81ENo1IR5kiLTpGl6XxG4FCMlkIOyoB4aZpYeDA6W4P6ph6zCn8y/qpeTG9WQ
- yTMp9FWxx7nHsIdy2FlXveYTFkMS/WmOB2AmblcyLszfuLaharAX5xzTfr3tAgLfcUXyalu/
- P5tRQ8zugrnrMc9BA+Id+eFmx30=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a6cab.7f4ebfd908f0-smtp-out-n02;
- Wed, 05 Feb 2020 07:20:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94D74C447A1; Wed,  5 Feb 2020 07:20:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: hongwus)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C75AFC433CB;
-        Wed,  5 Feb 2020 07:20:10 +0000 (UTC)
+        Wed, 5 Feb 2020 02:22:31 -0500
+X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Feb 2020 02:22:30 EST
+Subject: Re: [PATCH 5.4 17/78] HID: Fix slab-out-of-bounds read in
+ hid_field_extract (Broken!)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>
+CC:     <stable@vger.kernel.org>,
+        <syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com>
+References: <20200114094352.428808181@linuxfoundation.org>
+ <20200114094356.028051662@linuxfoundation.org>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <27ba705a-6734-9a92-a60c-23e27c9bce6d@sony.com>
+Date:   Wed, 5 Feb 2020 08:12:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200114094356.028051662@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 15:20:10 +0800
-From:   hongwus@codeaurora.org
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 7/8] scsi: ufs-qcom: Delay specific time before gate
- ref clk
-In-Reply-To: <1580721472-10784-8-git-send-email-cang@codeaurora.org>
-References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
- <1580721472-10784-8-git-send-email-cang@codeaurora.org>
-Message-ID: <537a8695bcadd7d5686a6b6e3c04f2af@codeaurora.org>
-X-Sender: hongwus@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=V88DLtvi c=1 sm=1 tr=0 a=T5MYTZSj1jWyQccoVcawfw==:117 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10 a=hSkVLCK3AAAA:8 a=VwQbUJbxAAAA:8 a=ag1SF4gXAAAA:8 a=mkI5n4lM7TqXLe6ThCMA:9 a=QEXdDO2ut3YA:10 a=cQPPKAXgyycSBL8etih5:22 a=AjGcO6oz07-iQ99wixmX:22 a=Yupwre4RP9_Eg_Bd0iYG:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-03 17:17, Can Guo wrote:
-> After enter hibern8, as UFS JEDEC ver 3.0 requires, a specific gating 
-> wait
-> time is required before disable the device reference clock. If it is 
-> not
-> specified, use the old delay.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+On 1/14/20 11:00 AM, Greg Kroah-Hartman wrote:
+> From: Alan Stern <stern@rowland.harvard.edu>
+>
+> commit 8ec321e96e056de84022c032ffea253431a83c3c upstream.
+>
+> The syzbot fuzzer found a slab-out-of-bounds bug in the HID report
+> handler.  The bug was caused by a report descriptor which included a
+> field with size 12 bits and count 4899, for a total size of 7349
+> bytes.
+>
+> The usbhid driver uses at most a single-page 4-KB buffer for reports.
+> In the test there wasn't any problem about overflowing the buffer,
+> since only one byte was received from the device.  Rather, the bug
+> occurred when the HID core tried to extract the data from the report
+> fields, which caused it to try reading data beyond the end of the
+> allocated buffer.
+>
+> This patch fixes the problem by rejecting any report whose total
+> length exceeds the HID_MAX_BUFFER_SIZE limit (minus one byte to allow
+> for a possible report index).  In theory a device could have a report
+> longer than that, but if there was such a thing we wouldn't handle it
+> correctly anyway.
+>
+> Reported-and-tested-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
+> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+> CC: <stable@vger.kernel.org>
+> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
 > ---
->  drivers/scsi/ufs/ufs-qcom.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 85d7c17..3b5b2d9 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -833,6 +833,8 @@ static int ufs_qcom_bus_register(struct 
-> ufs_qcom_host *host)
-> 
->  static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool 
-> enable)
->  {
-> +	unsigned long gating_wait;
+>  drivers/hid/hid-core.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -288,6 +288,12 @@ static int hid_add_field(struct hid_pars
+>  	offset = report->size;
+>  	report->size += parser->global.report_size * parser->global.report_count;
+>  
+> +	/* Total size check: Allow for possible report index byte */
+> +	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
+> +		hid_err(parser->device, "report is too long\n");
+> +		return -1;
+> +	}
 > +
->  	if (host->dev_ref_clk_ctrl_mmio &&
->  	    (enable ^ host->is_dev_ref_clk_enabled)) {
->  		u32 temp = readl_relaxed(host->dev_ref_clk_ctrl_mmio);
-> @@ -845,11 +847,16 @@ static void ufs_qcom_dev_ref_clk_ctrl(struct
-> ufs_qcom_host *host, bool enable)
->  		/*
->  		 * If we are here to disable this clock it might be immediately
->  		 * after entering into hibern8 in which case we need to make
-> -		 * sure that device ref_clk is active at least 1us after the
-> +		 * sure that device ref_clk is active for specific time after
->  		 * hibern8 enter.
->  		 */
-> -		if (!enable)
-> -			udelay(1);
-> +		if (!enable) {
-> +			gating_wait = host->hba->dev_info.clk_gating_wait_us;
-> +			if (!gating_wait)
-> +				udelay(1);
-> +			else
-> +				usleep_range(gating_wait, gating_wait + 10);
-> +		}
-> 
->  		writel_relaxed(temp, host->dev_ref_clk_ctrl_mmio);
+>  	if (!parser->local.usage_index) /* Ignore padding fields */
+>  		return 0;
+>  
+>
+>
+>
+This patch breaks Elgato StreamDeck.
 
-
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
