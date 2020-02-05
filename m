@@ -2,42 +2,43 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B1BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95572C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F4821927
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7092082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580945284;
-	bh=awZGcHfkIWwCNetTyJ7pCMgAfv9Tbgmgd2mWkjeCIkU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FsEtUZXqa3wp8K9hObTiYR5nmczqsl50nxQ8qgQkUxiQuTKybkYGU0cypSrrbkzzE
-	 b92asOILD6jDJPo4GO8cnQP85/aPCw2XTqOOgJtqoOtkfF0Pp3e20OVXZUnlyQHTPP
-	 IUZfdBVvr1MyBY/g4MFknGgMdVO9Ic4HTDqR61nE=
+	s=default; t=1580945287;
+	bh=Vs2ad5m8Wzki1gkcDfV7JuENWCjWBcBgOwmxALy+SKE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uenVFXhr7rcy6uBVAmb2P/Km7gcJLaTpkCJa634IdglitNHT7UxH18HENwOdvUCNN
+	 wRE2kC161v00KBEMhXu5ArRzvtKfN2FeQAXsENLwBCgeRJohunTeuaKgNxa3oW9BH+
+	 q/tr+WOJz8TwCZq+C10ogg4sg9Ml9FR8nVklY6aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgBEX2E (ORCPT
+        id S1727598AbgBEX2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:28:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 18:28:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbgBEX2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:28:03 -0500
+        id S1727550AbgBEX2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:28:04 -0500
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C272082E;
-        Wed,  5 Feb 2020 23:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 798FD217F4;
+        Wed,  5 Feb 2020 23:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1580945283;
-        bh=awZGcHfkIWwCNetTyJ7pCMgAfv9Tbgmgd2mWkjeCIkU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TL/pHUWzLi76ObaKjZv+aXgGODVi4TZyhVo81ye1yStcxnw0fQ1DlgV9AFIWsESzY
-         WlARgIf8g6TcKYggpDQpQIs8lVdMaL2rogYtTOfXsla69mf0CfXNZkgEvNQYSfZL4d
-         rMh9K7aP/g3ACjo9DkjRablK42KjZkCT1112SgqE=
+        bh=Vs2ad5m8Wzki1gkcDfV7JuENWCjWBcBgOwmxALy+SKE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sMxEOtkgJ/W9H2pRNp1aRL7EAtc8pB+UiR9JYSBfYGwo+SnfXNJLe9Pg/+yNTveYz
+         PvkQzveY/Qn7LpjB5nRDrYjpzE5d8RG9yvGwYMS3cphkNAF39yoAgMfVl/VK7ZyuHD
+         5bpP0dQhB2oX9ifqURwYcJkaTCAPpSgGISKlQSn8=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
@@ -45,10 +46,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 0/4] clk_phase error caching problems
-Date:   Wed,  5 Feb 2020 15:27:58 -0800
-Message-Id: <20200205232802.29184-1-sboyd@kernel.org>
+Subject: [PATCH v2 2/4] clk: Use 'parent' to shorten lines in __clk_core_init()
+Date:   Wed,  5 Feb 2020 15:28:00 -0800
+Message-Id: <20200205232802.29184-3-sboyd@kernel.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200205232802.29184-1-sboyd@kernel.org>
+References: <20200205232802.29184-1-sboyd@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,36 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series is a follow up to[1] which I sent out a few months
-ago. We no longer cache the clk phase if it's an error value, so that
-things like debugfs don't return us nonsense values for the phase.
-
-Futhermore, the last patch fixes up the locking so that debugfs code
-can avoid doing a recursive prepare lock because we know what we're
-doing in that case. While we get some more functions, we avoid taking
-the lock again.
-
-Changes from v1:
- * A pile of new patches
- * Rebased to clk-next
- * New patch to bail out of registration if getting the phase fails
+Some lines are getting long in this function. Let's move 'parent' up to
+the top of the function and use it in many places whenever there is a
+parent for a clk. This shortens some lines by avoiding core->parent->
+indirections.
 
 Cc: Douglas Anderson <dianders@chromium.org>
 Cc: Heiko Stuebner <heiko@sntech.de>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/clk.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-Stephen Boyd (4):
-  clk: Don't cache errors from clk_ops::get_phase()
-  clk: Use 'parent' to shorten lines in __clk_core_init()
-  clk: Move rate and accuracy recalc to mostly consumer APIs
-  clk: Bail out when calculating phase fails during clk registration
-
- drivers/clk/clk.c | 119 +++++++++++++++++++++++++++-------------------
- 1 file changed, 70 insertions(+), 49 deletions(-)
-
-[1] https://lkml.kernel.org/r/20191001174439.182435-1-sboyd@kernel.org
-
-base-commit: 5df867145f8adad9e5cdf9d67db1fbc0f71351e9
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 26213e82f5f9..9ad950178d10 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3342,6 +3342,7 @@ static void clk_core_reparent_orphans_nolock(void)
+ static int __clk_core_init(struct clk_core *core)
+ {
+ 	int ret;
++	struct clk_core *parent;
+ 	unsigned long rate;
+ 
+ 	if (!core)
+@@ -3413,7 +3414,7 @@ static int __clk_core_init(struct clk_core *core)
+ 			goto out;
+ 	}
+ 
+-	core->parent = __clk_init_parent(core);
++	parent = core->parent = __clk_init_parent(core);
+ 
+ 	/*
+ 	 * Populate core->parent if parent has already been clk_core_init'd. If
+@@ -3425,10 +3426,9 @@ static int __clk_core_init(struct clk_core *core)
+ 	 * clocks and re-parent any that are children of the clock currently
+ 	 * being clk_init'd.
+ 	 */
+-	if (core->parent) {
+-		hlist_add_head(&core->child_node,
+-				&core->parent->children);
+-		core->orphan = core->parent->orphan;
++	if (parent) {
++		hlist_add_head(&core->child_node, &parent->children);
++		core->orphan = parent->orphan;
+ 	} else if (!core->num_parents) {
+ 		hlist_add_head(&core->child_node, &clk_root_list);
+ 		core->orphan = false;
+@@ -3446,9 +3446,9 @@ static int __clk_core_init(struct clk_core *core)
+ 	 */
+ 	if (core->ops->recalc_accuracy)
+ 		core->accuracy = core->ops->recalc_accuracy(core->hw,
+-					__clk_get_accuracy(core->parent));
+-	else if (core->parent)
+-		core->accuracy = core->parent->accuracy;
++					__clk_get_accuracy(parent));
++	else if (parent)
++		core->accuracy = parent->accuracy;
+ 	else
+ 		core->accuracy = 0;
+ 
+@@ -3472,9 +3472,9 @@ static int __clk_core_init(struct clk_core *core)
+ 	 */
+ 	if (core->ops->recalc_rate)
+ 		rate = core->ops->recalc_rate(core->hw,
+-				clk_core_get_rate_nolock(core->parent));
+-	else if (core->parent)
+-		rate = core->parent->rate;
++				clk_core_get_rate_nolock(parent));
++	else if (parent)
++		rate = parent->rate;
+ 	else
+ 		rate = 0;
+ 	core->rate = core->req_rate = rate;
 -- 
 Sent by a computer, using git, on the internet
 
