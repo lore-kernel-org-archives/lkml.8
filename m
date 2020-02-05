@@ -2,144 +2,118 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29821C35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C94EC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F176D2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:59:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h/i24iBB"
+	by mail.kernel.org (Postfix) with ESMTP id 442EE2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgBEN73 (ORCPT
+        id S1727991AbgBEOBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:59:29 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40086 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726822AbgBEN72 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:59:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580911166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sEKZAVbhR+WgDA9hgYDagd1h+xb9JnJDbusY+IWYcbs=;
-        b=h/i24iBBJ59XlVujfYxAAhF8ExgZ//y/GIerZR7Ib8zriwZcJy4J1DoCn1H1JOLhr+UBTF
-        29BuNmiEq9zfoP7ZpltU9MR8BAkTorY6jl+7slytKQzsyPRXkvyWZiIJqWCz9dZ4KwIl6I
-        nmuPJImMqANNV3gO+rQihHqOZ2um1UQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-46-12VBgNs8OyuTH5ISjPH0AA-1; Wed, 05 Feb 2020 08:59:25 -0500
-X-MC-Unique: 12VBgNs8OyuTH5ISjPH0AA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD6491088387;
-        Wed,  5 Feb 2020 13:59:23 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1799D790C5;
-        Wed,  5 Feb 2020 13:59:23 +0000 (UTC)
-Subject: Re: [PATCH v5 6/7] locking/lockdep: Reuse freed chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20200203164147.17990-1-longman@redhat.com>
- <20200203164147.17990-7-longman@redhat.com>
- <20200204123629.GO14914@hirez.programming.kicks-ass.net>
- <8fd7ce61-d8eb-6bde-7d41-54b9920e3e39@redhat.com>
- <20200205094153.GH14879@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f475cd25-2b63-39bc-c18c-14ac7274428b@redhat.com>
-Date:   Wed, 5 Feb 2020 08:59:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 5 Feb 2020 09:01:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:47588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726748AbgBEOBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:01:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB65731B;
+        Wed,  5 Feb 2020 06:01:48 -0800 (PST)
+Received: from [10.1.195.32] (e112269-lin.cambridge.arm.com [10.1.195.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27F733F68E;
+        Wed,  5 Feb 2020 06:01:48 -0800 (PST)
+Subject: Re: [PATCH] drm/panfrost: Don't try to map on error faults
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        dri-devel@lists.freedesktop.org
+References: <20200205100719.24999-1-tomeu.vizoso@collabora.com>
+ <3500c501-b166-6a1e-267b-31a4e5c62619@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <565bac84-9e3c-21de-9043-f508e98ae6bf@arm.com>
+Date:   Wed, 5 Feb 2020 14:01:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200205094153.GH14879@hirez.programming.kicks-ass.net>
+In-Reply-To: <3500c501-b166-6a1e-267b-31a4e5c62619@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/5/20 4:41 AM, Peter Zijlstra wrote:
-> On Tue, Feb 04, 2020 at 11:45:15AM -0500, Waiman Long wrote:
->> On 2/4/20 7:36 AM, Peter Zijlstra wrote:
->>> --- a/kernel/locking/lockdep_proc.c
->>> +++ b/kernel/locking/lockdep_proc.c
->>> @@ -278,9 +278,11 @@ static int lockdep_stats_show(struct seq
->>>  #ifdef CONFIG_PROVE_LOCKING
->>>  	seq_printf(m, " dependency chains:             %11lu [max: %lu]\n",
->>>  			lock_chain_count(), MAX_LOCKDEP_CHAINS);
->>> -	seq_printf(m, " dependency chain hlocks:       %11lu [max: %lu]\n",
->>> -			MAX_LOCKDEP_CHAIN_HLOCKS - nr_free_chain_hlocks,
->>> +	seq_printf(m, " dependency chain hlocks used:  %11lu [max: %lu]\n",
->>> +			MAX_LOCKDEP_CHAIN_HLOCKS - (nr_free_chain_hlocks - nr_lost_chain_=
-hlocks),
->>>  			MAX_LOCKDEP_CHAIN_HLOCKS);
->>> +	seq_printf(m, " dependency chain hlocks free:  %11lu\n", nr_free_ch=
-ain_hlocks);
->>> +	seq_printf(m, " dependency chain hlocks lost:  %11lu\n", nr_lost_ch=
-ain_hlocks);
->> I do have some comments on this. There are three buckets now - free,
->> lost, used. They add up to MAX_LOCKDEP_CHAIN_HLOCKS. I don't think we
->> need to list all three. We can compute the third one by subtracting ma=
-x
->> from the other two.
->>
->> Something like:
->>
->> diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_pr=
-oc.c
->> index 14932ea50317..6fe6a21c58d3 100644
->> --- a/kernel/locking/lockdep_proc.c
->> +++ b/kernel/locking/lockdep_proc.c
->> @@ -278,9 +278,12 @@ static int lockdep_stats_show(struct seq_file *m,
->> void *v)
->> =C2=A0#ifdef CONFIG_PROVE_LOCKING
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 seq_printf(m, " dependency =
-chains:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 %11lu [max: %lu]\n",
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lock_c=
-hain_count(), MAX_LOCKDEP_CHAINS);
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 seq_printf(m, " dependency chain=
- hlocks:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %11lu [max: %lu]\n",
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX_LOCKD=
-EP_CHAIN_HLOCKS - nr_free_chain_hlocks,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 seq_printf(m, " dependency chain=
- hlocks used:=C2=A0 %11lu [max: %lu]\n",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX_LOCKD=
-EP_CHAIN_HLOCKS -
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (nr_free_=
-chain_hlocks + nr_lost_chain_hlocks),
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX_LO=
-CKDEP_CHAIN_HLOCKS);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 seq_printf(m, " dependency chain=
- hlocks lost:=C2=A0 %11lu\n",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nr_lost_c=
-hain_hlocks);
->> =C2=A0#endif
->> =C2=A0
-> Sure, also I tihnk the compiler is unhappy about %lu vs 'unsigned int'
-> for some of them.
->
-Yes, I found that after I compiled the code :-)
+On 05/02/2020 13:25, Robin Murphy wrote:
+> On 05/02/2020 10:07 am, Tomeu Vizoso wrote:
+>> If the exception type isn't one of the normal faults, don't try to map
+>> and instead go straight to a terminal fault.
+> 
+> "One of the the normal faults" seems a rather vague way of saying "a
+> translation fault", which is what we're specifically handling here, and
+> logically the only fault reflecting something not yet mapped rather than
+> mapped inappropriately ;)
+> 
+> (Who knows how the level ended up as 1-4 rather than 0-3 as it really
+> should be - another Mali Mystery(TM)...)
 
-Cheers,
-Longman
+Ah, but you're thinking of LPAE not Mali Magic Page Tables ('inspired
+by' LPAE but not actually compatible....) ;) However I do wonder what
+will happen when we enable aarch64 page tables in Bifrost.
+
+>> Otherwise, we can get flooded by kernel warnings and further faults.
+> 
+> Either way,
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> 
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> ---
+>>   drivers/gpu/drm/panfrost/panfrost_mmu.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> index 763cfca886a7..80abddb4544c 100644
+>> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> @@ -596,8 +596,9 @@ static irqreturn_t
+>> panfrost_mmu_irq_handler_thread(int irq, void *data)
+>>           source_id = (fault_status >> 16);
+>>             /* Page fault only */
+>> -        if ((status & mask) == BIT(i)) {
+>> -            WARN_ON(exception_type < 0xC1 || exception_type > 0xC4);
+>> +        if ((status & mask) == BIT(i) &&
+>> +             exception_type >= 0xC1 &&
+>> +             exception_type <= 0xC4) {
+
+I would suggest the best option here is to copy mali_kbase and check
+against a mask, in kbase[1] we have:
+
+	switch (fault_status & AS_FAULTSTATUS_EXCEPTION_CODE_MASK) {
+
+	case AS_FAULTSTATUS_EXCEPTION_CODE_TRANSLATION_FAULT:
+
+[1]
+https://gitlab.freedesktop.org/panfrost/linux-panfrost/blob/a864e6b9fbd093a033a90d5bbdd6dcc79a0667b2/mali_kbase_mmu.c#L108
+
+Where:
+
+#define AS_FAULTSTATUS_EXCEPTION_CODE_MASK                      (0x7<<3)
+#define AS_FAULTSTATUS_EXCEPTION_CODE_TRANSLATION_FAULT         (0x0<<3)
+
+Steve
+
+>>                 ret = panfrost_mmu_map_fault_addr(pfdev, i, addr);
+>>               if (!ret) {
+>>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
