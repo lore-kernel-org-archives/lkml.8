@@ -2,111 +2,110 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB9EC35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92556C352A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D780217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F38220730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 16:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ng9RIwUo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8466oHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgBEQXd (ORCPT
+        id S1727341AbgBEQYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:23:33 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41778 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBEQXc (ORCPT
+        Wed, 5 Feb 2020 11:24:31 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39346 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgBEQYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:23:32 -0500
-Received: by mail-pf1-f196.google.com with SMTP id j9so1449306pfa.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 08:23:32 -0800 (PST)
+        Wed, 5 Feb 2020 11:24:31 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 84so1458928pfy.6;
+        Wed, 05 Feb 2020 08:24:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Tce+wxjIMbP1aBJd+9E6qNp6uBiu269F8hsx89rAEMQ=;
-        b=Ng9RIwUoZeB4aHfpO+Tb3lYtoc5hWrPfBnInlWr5WYNzfKZ/Zvdt3OMzxTgW18UQnP
-         I7VPGuSbciereltyvGY4UrNiOBbZ1OFTMxwTuqbKZMVIaMurcVaaOIV6dqkPv88U5hL+
-         zCEJk9dGaUZL57IMf6ZlKSnmASpz6TxNCT+wHFoHtBOLivj8NNwVv6E35byBhy8myeMx
-         An5Cg+z6QcCXldbyeElha85nYyherOButvsO0TPW0plpBeFbNtQLrnHFPbxdCSrdetRS
-         aZGgg9aIu+Y00QQQpo43dGRXhy8l7FgUKxXRlzthdjuACqVGJtiavszTfdfZSeVIU79L
-         oEAQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vW/tfpwzyWWkMpKU6Lyvn0d5pLCF5+H/aORn6raHEIc=;
+        b=C8466oHR7IjuPqVnRwgw4cB0nRxpvX/Lr71L/qL5WnzCERx91rUPfqGhD2G5LhaGyH
+         PAsUA0u07wYdYhobVkDSfIlhDcvvxJtoa2PlcH+pK5cHR8pIMYs+5e+cMXzgj6CP7hp5
+         3+0HyV48NZoIE1ixMxVOfKKVWDIr/Rp69B0hdbC3Idna68fvQhbrthjVBaKOtjz8Fj8S
+         1myAhRL4XTinM3CoC/3ErT9EYlQzazss6sluMr5CMUHzlIkjGDpOXku76nlfWNzrMKHT
+         GIbH2bmSDomPN+Gk9hGy0PBVjaGF2lwloeM++QPYxFD39HZNU5cRCGB/JdxxUr/o5JzT
+         2Nww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Tce+wxjIMbP1aBJd+9E6qNp6uBiu269F8hsx89rAEMQ=;
-        b=WP5yGxsE1pLSvmnTgnsd+9eLi1pOBhg2XA/ASARdBzXpbEaEPadkF9d2kCZoUzIsQZ
-         DZMkf7jcOm3/ra778sG5X71AdJvRz/WRJ9XmhfX9QFbeObK/Bc0acU2hkx7Af5BkFP+m
-         EtCPF9aZr+YokS3t4gW5M7ayxAn9c5Pv1FtA6SJ9Hey7iOQTzV/hcDLMQAJj8Z36z/+C
-         MWLY+YK5iivYCAxVjM9eFam0op4g3GsiBFC10qwaJdE7nV4WNEk+QMYCZb2lOE1SIytM
-         2/lZlc+GsZBNgC0h4qzuf4tG4OUjx78HeSlV2ygxcuaLBry9czu1wpXVcixwM3siJCes
-         Bc+A==
-X-Gm-Message-State: APjAAAVwxSmPjGDbkAWGeLP5viIzguEtvfBa+nT+mxykfSnPFx6HMqyK
-        bDsoNMjTOELQQRTCeMhSpA==
-X-Google-Smtp-Source: APXvYqwPz03t/tZOqTHtQoK9t5yZGyu2CKqVzPPZ0H3B+hjFBBVmOLAEZg+s41V/DdpNMd8CU4EPiw==
-X-Received: by 2002:a63:f04c:: with SMTP id s12mr37284336pgj.408.1580919812193;
-        Wed, 05 Feb 2020 08:23:32 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:542:9945:9d58:40ca:c55a:7c02])
-        by smtp.gmail.com with ESMTPSA id v9sm269016pja.26.2020.02.05.08.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 08:23:31 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     ebiederm@xmission.com, oleg@redhat.com,
-        christian.brauner@ubuntu.com, guro@fb.com, tj@kernel.org
-Cc:     linux-kernel@vger.kernel.org, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] signal.c: Fix sparse warnings
-Date:   Wed,  5 Feb 2020 21:53:19 +0530
-Message-Id: <20200205162319.28263-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vW/tfpwzyWWkMpKU6Lyvn0d5pLCF5+H/aORn6raHEIc=;
+        b=dnT6UW2aJy3p/MvsKJMsHn1808Od3gO+RFtaVe3Y5Xp9FqUJuJD2GVVQviy+dMqOT2
+         m6nSw32Bz5BKj2U1v/eHlmc+oAOHelAA1+VrESCU3jRBO2/4j+oBeHsgYSh7r+yH3lLh
+         09rsrh2e2uqifie4WfCwrUJsZJ0ZAUZGF5QUI/fdaW6uG8Tfky8PzmD0aXZMUcapOddA
+         y3945/FI8nGAZAN5/BHPOmn8wpwOtf+DDt2UNJ0AdSW5JlG9FcAZEeYz1rLrtPRHD8Gr
+         To7DsHz5Irm42CkIhkDtppIPRj1rXUcYc/iXcdjrTKyHuz+V1OqbrEe2fA7ermHGT5Pr
+         V6HQ==
+X-Gm-Message-State: APjAAAX1rMQ7tFO4fkBnKE5JIhqiWiBTTf4hluBjb2EFKK7Sv/vubfij
+        XrtMyutxlPPguRKCnj6HJd8=
+X-Google-Smtp-Source: APXvYqyrnw4Nw+QSCWRTAQA4RVmt+Q4OIrnUYg1ZN28Fv2wXKYg/qluDCGNBlqZLAZfXqdhPD34fKQ==
+X-Received: by 2002:a62:e10b:: with SMTP id q11mr18975440pfh.48.1580919870973;
+        Wed, 05 Feb 2020 08:24:30 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a22sm31351602pfk.108.2020.02.05.08.24.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Feb 2020 08:24:30 -0800 (PST)
+Date:   Wed, 5 Feb 2020 08:24:29 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/90] 5.4.18-stable review
+Message-ID: <20200205162429.GB25403@roeck-us.net>
+References: <20200203161917.612554987@linuxfoundation.org>
+ <9a5a92f2-6e28-a9ab-a851-8d7e56482df6@roeck-us.net>
+ <20200205151357.GB1236691@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205151357.GB1236691@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Wed, Feb 05, 2020 at 03:13:57PM +0000, Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2020 at 06:37:38AM -0800, Guenter Roeck wrote:
+> > On 2/3/20 8:19 AM, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.4.18 release.
+> > > There are 90 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > 
+> > Building i386:allyesconfig ... failed
+> > Building i386:allmodconfig ... failed
+> > --------------
+> > Error log:
+> > In file included from arch/x86/kernel/pci-dma.c:2:
+> > include/linux/dma-direct.h:29:20: error: conflicting types for 'dma_capable'
+> >    29 | static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
+> >       |                    ^~~~~~~~~~~
+> > In file included from include/linux/dma-direct.h:12,
+> >                  from arch/x86/kernel/pci-dma.c:2:
+> > arch/x86/include/asm/dma-direct.h:5:6: note: previous declaration of 'dma_capable' was here
+> >     5 | bool dma_capable(struct device *dev, dma_addr_t addr, size_t size);
+> 
+> Ok, I think this is now resolved with a patch that Sasha added.
+> 
+> I have pushed out a -rc4 that _should_ build and boot properly.
+> 
+The i386 build still fails with v5.4.17-99-gbd0c6624a110 (-rc4).
 
-This patch fixes the following two sparse warnings caused due to
-accessing RCU protected pointer tsk->parent without rcu primitives.
-
-kernel/signal.c:1948:65: warning: incorrect type in argument 1 (different address spaces)
-kernel/signal.c:1948:65:    expected struct task_struct *tsk
-kernel/signal.c:1948:65:    got struct task_struct [noderef] <asn:4> *parent
-kernel/signal.c:1949:40: warning: incorrect type in argument 1 (different address spaces)
-kernel/signal.c:1949:40:    expected void const volatile *p
-kernel/signal.c:1949:40:    got struct cred const [noderef] <asn:4> *[noderef] <asn:4> *
-kernel/signal.c:1949:40: warning: incorrect type in argument 1 (different address spaces)
-kernel/signal.c:1949:40:    expected void const volatile *p
-kernel/signal.c:1949:40:    got struct cred const [noderef] <asn:4> *[noderef] <asn:4> *
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 9ad8dea93dbb..3d59e5652d94 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1945,8 +1945,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
- 	 * correct to rely on this
- 	 */
- 	rcu_read_lock();
--	info.si_pid = task_pid_nr_ns(tsk, task_active_pid_ns(tsk->parent));
--	info.si_uid = from_kuid_munged(task_cred_xxx(tsk->parent, user_ns),
-+	info.si_pid = task_pid_nr_ns(tsk, task_active_pid_ns(rcu_access_pointer(tsk->parent)));
-+	info.si_uid = from_kuid_munged(task_cred_xxx(rcu_access_pointer(tsk->parent), user_ns),
- 				       task_uid(tsk));
- 	rcu_read_unlock();
- 
--- 
-2.17.1
-
+Guenter
