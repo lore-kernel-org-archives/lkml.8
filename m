@@ -2,228 +2,184 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707E9C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B16AC35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48924217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580931625;
-	bh=zl2SX9JfsFFdzL3bneKhbUUQTtvwFKOgYGRjoAZSOiI=;
-	h=In-Reply-To:References:From:Subject:To:Date:List-ID:From;
-	b=Gz8Zy6wvbdQ6P1aKK7pyhysZFwoadGH+H4guHEbsOeJPPEzr/XY4p9JUFDkIen8Lc
-	 yli4DfkM2ORrtciblP0LgCibmlNGEkNr0vzNumE1DB8osraZLRBMXxOKRI/iLBD9Pp
-	 Fgelp9YsQJyj5PKVdDI4am8WagafnMp8gwGmuNq8=
+	by mail.kernel.org (Postfix) with ESMTP id 299AE20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 19:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbgBETkY (ORCPT
+        id S1727481AbgBETlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:40:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42794 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 14:41:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38490 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgBETkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:40:24 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5E8C20730;
-        Wed,  5 Feb 2020 19:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580931622;
-        bh=zl2SX9JfsFFdzL3bneKhbUUQTtvwFKOgYGRjoAZSOiI=;
-        h=In-Reply-To:References:From:Subject:To:Date:From;
-        b=ZWfQjPxHdJNmOJnoCInZQCzgfU75XT7u8TgGiNZI7si5dphN64Zv6Lz5Kccr1uAm/
-         LhG1ld3db3jET6iHgBqms5oceR9/DOuiq0sukSSY+s6P+ezAgtVsEeLcmrpKOf3VHw
-         4WlXOS55Rsxzb3f3EftJLOh1MDZnj7rV8SXtb9us=
-Content-Type: text/plain; charset="utf-8"
+        id S1727079AbgBETlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:41:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4E16CB174;
+        Wed,  5 Feb 2020 19:41:33 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 19:41:39 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
+ copy_file_range
+Message-ID: <20200205194139.GB27345@suse.com>
+References: <20200203165117.5701-1-lhenriques@suse.com>
+ <20200203165117.5701-2-lhenriques@suse.com>
+ <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
+ <20200204151158.GA15992@suse.com>
+ <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
+ <20200205110007.GA11836@suse.com>
+ <CAOi1vP-kLCY+Q2UwpqvJdfeEV6me=FneLhasQrj2nkcu_7tRew@mail.gmail.com>
+ <2ce07148b49e6c1a857b4dd90c3bcea6ed0e8ce3.camel@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1579905147-12142-7-git-send-email-vnkgutta@codeaurora.org>
-References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org> <1579905147-12142-7-git-send-email-vnkgutta@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 6/7] clk: qcom: gcc: Add global clock controller driver for SM8250
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vinod.koul@linaro.org, vnkgutta@codeaurora.org
-User-Agent: alot/0.8.1
-Date:   Wed, 05 Feb 2020 11:40:21 -0800
-Message-Id: <20200205194022.C5E8C20730@mail.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2ce07148b49e6c1a857b4dd90c3bcea6ed0e8ce3.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:26)
-> diff --git a/drivers/clk/qcom/gcc-sm8250.c b/drivers/clk/qcom/gcc-sm8250.c
-> new file mode 100644
-> index 0000000..300187e
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-sm8250.c
-> @@ -0,0 +1,3720 @@
-[...]
-> +
-> +static const struct parent_map gcc_parent_map_0[] =3D {
-> +       { P_BI_TCXO, 0 },
-> +       { P_GPLL0_OUT_MAIN, 1 },
-> +       { P_GPLL0_OUT_EVEN, 6 },
-> +       { P_CORE_BI_PLL_TEST_SE, 7 },
-> +};
-> +
-> +static const struct clk_parent_data gcc_parent_data_0[] =3D {
-> +       { .fw_name =3D "bi_tcxo" },
-> +       { .hw =3D &gpll0.clkr.hw },
-> +       { .hw =3D &gpll0_out_even.clkr.hw },
-> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
-_se" },
-> +};
-> +
-> +static const struct clk_parent_data gcc_parent_data_0_ao[] =3D {
-> +       { .fw_name =3D "bi_tcxo_ao" },
-> +       { .hw =3D &gpll0.clkr.hw },
-> +       { .hw =3D &gpll0_out_even.clkr.hw },
-> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
-_se" },
-> +};
-> +
-> +static const struct parent_map gcc_parent_map_1[] =3D {
-> +       { P_BI_TCXO, 0 },
-> +       { P_GPLL0_OUT_MAIN, 1 },
-> +       { P_SLEEP_CLK, 5 },
-> +       { P_GPLL0_OUT_EVEN, 6 },
-> +       { P_CORE_BI_PLL_TEST_SE, 7 },
-> +};
-> +
-> +static const struct clk_parent_data gcc_parent_data_1[] =3D {
-> +       { .fw_name =3D "bi_tcxo" },
-> +       { .hw =3D &gpll0.clkr.hw },
-> +       { .fw_name =3D "sleep_clk", .name =3D "sleep_clk" },
+On Wed, Feb 05, 2020 at 08:12:22AM -0500, Jeff Layton wrote:
+> On Wed, 2020-02-05 at 13:01 +0100, Ilya Dryomov wrote:
+> > On Wed, Feb 5, 2020 at 12:00 PM Luis Henriques <lhenriques@suse.com> wrote:
+> > > On Tue, Feb 04, 2020 at 07:06:36PM +0100, Ilya Dryomov wrote:
+> > > > On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
+> > > > > On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
+> > > > > ...
+> > > > > > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > > > > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > > > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > > > > > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > > > > > -               if (err) {
+> > > > > > > -                       if (err == -EOPNOTSUPP) {
+> > > > > > > -                               src_fsc->have_copy_from2 = false;
+> > > > > > > -                               pr_notice("OSDs don't support 'copy-from2'; "
+> > > > > > > -                                         "disabling copy_file_range\n");
+> > > > > > > -                       }
+> > > > > > > +               if (IS_ERR(req)) {
+> > > > > > > +                       err = PTR_ERR(req);
+> > > > > > >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> > > > > > > +
+> > > > > > > +                       /* wait for all queued requests */
+> > > > > > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> > > > > > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
+> > > > > > 
+> > > > > > Hi Luis,
+> > > > > > 
+> > > > > > Looks like ret is still incremented unconditionally?  What happens
+> > > > > > if there are three OSD requests on the list and the first fails but
+> > > > > > the second and the third succeed?  As is, ceph_osdc_wait_requests()
+> > > > > > will return an error with reqs_complete set to 2...
+> > > > > > 
+> > > > > > >                         if (!ret)
+> > > > > > >                                 ret = err;
+> > > > > > 
+> > > > > > ... and we will return 8M instead of an error.
+> > > > > 
+> > > > > Right, my assumption was that if a request fails, all subsequent requests
+> > > > > would also fail.  This would allow ret to be updated with the number of
+> > > > > successful requests (x object size), even if the OSDs replies were being
+> > > > > delivered in a different order.  But from your comment I see that my
+> > > > > assumption is incorrect.
+> > > > > 
+> > > > > In that case, when shall ret be updated with the number of bytes already
+> > > > > written?  Only after a successful call to ceph_osdc_wait_requests()?
+> > > > 
+> > > > I mentioned this in the previous email: you probably want to change
+> > > > ceph_osdc_wait_requests() so that the counter isn't incremented after
+> > > > an error is encountered.
+> > > 
+> > > Sure, I've seen that comment.  But it doesn't help either because it's not
+> > > guaranteed that we'll receive the replies from the OSDs in the same order
+> > > we've sent them.  Stopping the counter when we get an error doesn't
+> > > provide us any reliable information (which means I can simply drop that
+> > > counter).
+> > 
+> > The list is FIFO so even though replies may indeed arrive out of
+> > order, ceph_osdc_wait_requests() will process them in order.  If you
+> > stop counting as soon as an error is encountered, you know for sure
+> > that requests 1 through $COUNTER were successful and can safely
+> > multiply it by object size.
+> > 
+> > > > > I.e. only after each throttling cycle, when we don't have any requests
+> > > > > pending completion?  In this case, I can simply drop the extra
+> > > > > reqs_complete parameter to the ceph_osdc_wait_requests.
+> > > > > 
+> > > > > In your example the right thing to do would be to simply return an error,
+> > > > > I guess.  But then we're assuming that we're loosing space in the storage,
+> > > > > as we may have created objects that won't be reachable anymore.
+> > > > 
+> > > > Well, that is what I'm getting at -- this needs a lot more
+> > > > consideration.  How errors are dealt with, how file metadata is
+> > > > updated, when do we fall back to plain copy, etc.  Generating stray
+> > > > objects is bad but way better than reporting that e.g. 0..12M were
+> > > > copied when only 0..4M and 8M..12M were actually copied, leaving
+> > > > the user one step away from data loss.  One option is to revert to
+> > > > issuing copy-from requests serially when an error is encountered.
+> > > > Another option is to fall back to plain copy on any error.  Or perhaps
+> > > > we just don't bother with the complexity of parallel copy-from requests
+> > > > at all...
+> > > 
+> > > To be honest, I'm starting to lean towards this option.  Reverting to
+> > > serializing requests or to plain copy on error will not necessarily
+> > > prevent the stray objects:
+> > > 
+> > >   - send a bunch of copy requests
+> > >   - wait for them to complete
+> > >      * 1 failed, the other 63 succeeded
+> > >   - revert to serialized copies, repeating the previous 64 requests
+> > >      * after a few copies, we get another failure (maybe on the same OSDs)
+> > >        and abort, leaving behind some stray objects from the previous bulk
+> > >        request
+> > 
+> > Yeah, doing it serially makes the accounting a lot easier.  If you
+> > issue any OSD requests before updating the size, stray objects are
+> > bound to happen -- that's why "how file metadata is updated" is one
+> > of the important considerations.
+> 
+> I don't think this is fundamentally different from the direct write
+> codepath. It's just that the source of the write is another OSD rather
+> than being sent in the request.
+> 
+> If you look at ceph_direct_read_write(), then it does this:
+> 
+>       /*
+>        * To simplify error handling, allow AIO when IO within i_size
+>        * or IO can be satisfied by single OSD request.
+>        */
+> 
+> So, that's another possibility. Do the requests synchronously when they
+> will result in a change to i_size. Otherwise, you can do them in
+> parallel.
 
-Please drop .name
+This could also work, but would add even more complexity.  I already find
+the __copy_file_range implementation way to complex (and the fact that I
+keep adding bugs to it is a good indicator :-) ), although I know the
+performance improvements provided by the parallel requests can be huge.
+Anyway, let me (try to!) fix these other bugs that Ilya keeps finding and
+then I'll revisit the whole thing.
 
-> +       { .hw =3D &gpll0_out_even.clkr.hw },
-> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
-_se" },
-> +};
-> +
-> +static const struct parent_map gcc_parent_map_2[] =3D {
-> +       { P_BI_TCXO, 0 },
-> +       { P_SLEEP_CLK, 5 },
-> +       { P_CORE_BI_PLL_TEST_SE, 7 },
-> +};
-> +
-> +static const struct clk_parent_data gcc_parent_data_2[] =3D {
-> +       { .fw_name =3D "bi_tcxo" },
-> +       { .fw_name =3D "sleep_clk", .name =3D "sleep_clk" },
+Cheers,
+--
+Luís
 
-Please drop .name
-
-> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
-_se" },
-> +};
-> +
-[...]
-> +static const struct clk_parent_data gcc_parent_data_5[] =3D {
-> +       { .fw_name =3D "bi_tcxo" },
-> +       { .hw =3D &gpll0.clkr.hw },
-> +       { .fw_name =3D "aud_ref_clk", .name =3D "aud_ref_clk" },
-
-Why have .name? Pleas remove it.
-
-> +       { .hw =3D &gpll0_out_even.clkr.hw },
-> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
-_se" },
-
-Please drop these test inputs. I don't see any reason why they're listed.
-
-> +};
-> +
-> +static const struct freq_tbl ftbl_gcc_cpuss_ahb_clk_src[] =3D {
-> +       F(19200000, P_BI_TCXO, 1, 0, 0),
-> +       { }
-> +};
-> +
-> +static struct clk_branch gcc_sys_noc_cpuss_ahb_clk =3D {
-> +       .halt_reg =3D 0x48198,
-> +       .halt_check =3D BRANCH_HALT_VOTED,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x52000,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_sys_noc_cpuss_ahb_clk",
-> +                       .parent_data =3D &(const struct clk_parent_data){
-> +                               .hw =3D &gcc_cpuss_ahb_postdiv_clk_src.cl=
-kr.hw,
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-
-Is there a need for this clk to be exposed? Why can't we just turn the
-bit on in probe and ignore it after that? I'd prefer to not have
-CLK_IS_CRITICAL in this driver unless necessary.
-
-> +
-> +static struct clk_branch gcc_tsif_ahb_clk =3D {
-> +       .halt_reg =3D 0x36004,
-> +       .halt_check =3D BRANCH_HALT_VOTED,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x36004,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_tsif_ahb_clk",
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-[...]
-> +
-> +
-> +static int gcc_sm8250_probe(struct platform_device *pdev)
-> +{
-> +       struct regmap *regmap;
-> +       int ret;
-> +
-> +       regmap =3D qcom_cc_map(pdev, &gcc_sm8250_desc);
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-> +
-> +       /*
-> +        * Disable the GPLL0 active input to NPU and GPU
-> +        * via MISC registers.
-> +        */
-> +       regmap_update_bits(regmap, 0x4d110, 0x3, 0x3);
-> +       regmap_update_bits(regmap, 0x71028, 0x3, 0x3);
-> +
-> +       /*
-> +        * Keep the clocks always-ON
-> +        * GCC_VIDEO_AHB_CLK, GCC_CAMERA_AHB_CLK, GCC_DISP_AHB_CLK,
-> +        * GCC_CPUSS_DVM_BUS_CLK, GCC_GPU_CFG_AHB_CLK
-> +        */
-> +       regmap_update_bits(regmap, 0x0b004, BIT(0), BIT(0));
-> +       regmap_update_bits(regmap, 0x0b008, BIT(0), BIT(0));
-> +       regmap_update_bits(regmap, 0x0b00c, BIT(0), BIT(0));
-> +       regmap_update_bits(regmap, 0x4818c, BIT(0), BIT(0));
-> +       regmap_update_bits(regmap, 0x71004, BIT(0), BIT(0));
-
-These look like the AHB clks above that we just enabled and then ignore.
-
-> +
-> +       ret =3D qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
-> +                                      ARRAY_SIZE(gcc_dfs_clocks));
-> +       if (ret)
-> +               return ret;
-> +
-> +       return qcom_cc_really_probe(pdev, &gcc_sm8250_desc, regmap);
-> +}
+> In practice, we'd have to recommend that people truncate the destination
+> file up to the final length before doing copy_file_range, but that
+> doesn't sound too onerous.
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
