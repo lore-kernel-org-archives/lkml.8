@@ -2,108 +2,109 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB76C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8417AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3CC9217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5972C222D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 14:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580913756;
+	bh=goRHpqEzVWgkqM25Lpk2akGfuhi2SOTuDM5xHmMAyuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SNJ8lU+n+n8LsklZamJ4jb2E+JeJzxa2nW4hG/cHxRUtBcL2t6H7sa4Iil2joUfLk
+	 V52O+ttV7/g0mLAAhnRlpWI+ebDkb1kqzikfoqlWMZpuTv+1+IQSJm7+tVq8ZFpEBC
+	 8PZC/Bb+QvinZn1HbZe7jI0xVhpSceQeYKFG7k4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgBEOmD (ORCPT
+        id S1726806AbgBEOmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:42:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36266 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 09:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgBEOmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:42:02 -0500
-Received: from oasis.local.home (unknown [212.187.182.165])
+        id S1726046AbgBEOmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:42:35 -0500
+Received: from localhost (unknown [212.187.182.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822792082E;
-        Wed,  5 Feb 2020 14:42:00 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 09:41:56 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] ftrace: Protect ftrace_graph_hash with ftrace_sync
-Message-ID: <20200205094156.717b36c9@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A7E2082E;
+        Wed,  5 Feb 2020 14:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580913754;
+        bh=goRHpqEzVWgkqM25Lpk2akGfuhi2SOTuDM5xHmMAyuQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WXZZAttR7PfFWVWbKmWdaMDPyw3zKo2M+M7y71YhqVGGkBqRNWArDs4aEIXkF2DPV
+         2V99cMxHSjYsmhos7BdZ9MGtR0E3lOe0nuHhvmDTjQ7RcGuNOO2RRe5sX8pIJuzDbO
+         LVsRHSbMA3xDgyodVFRcdCGk1depdBDKdVAaEW5Q=
+Date:   Wed, 5 Feb 2020 14:42:32 +0000
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/70] 4.19.102-stable review
+Message-ID: <20200205144232.GA1227283@kroah.com>
+References: <20200203161912.158976871@linuxfoundation.org>
+ <20200204123726.GA6903@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200204123726.GA6903@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 04, 2020 at 01:37:27PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > This is the start of the stable review cycle for the 4.19.102 release.
+> > There are 70 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.102-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > and the diffstat can be found below.
+> 
+> ;; This buffer is for text that is not saved, and for Lisp evaluation.
+> ;; To create a file, visit it with C-x C-f and enter text in its buffer.
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+:)
 
-As function_graph tracer can run when RCU is not "watching", it can not be
-protected by synchronize_rcu() it requires running a task on each CPU before
-it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
+> I see different lists in git and on the lists. Extra on list:
+> 
+> 20434 O   Greg Kroah ├─>[PATCH 4.19 01/70] vfs: fix do_last() regression
+> 20435 O   Greg Kroah ├─>[PATCH 4.19 02/70] x86/resctrl: Fix use-after-free when deleting resource
+> 20436 O   Greg Kroah ├─>[PATCH 4.19 03/70] x86/resctrl: Fix use-after-free due to inaccurate refco
+> 
+> Extra in git:
+> 
+>  | b220e4852d0a d55966c4279b o | btrfs: do not zero f_bavail if we have availab
+> le space
+>  | e3dce09f7f99 c3314a74f86d   | perf report: Fix no libunwind compiled warning
+>  break s390 issue
+>  | 39dc8d352a93 dfe9aa23cab7 o | mm/migrate.c: also overwrite error when it is bigger than zero
 
-Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
+Yeah, Sasha added stuff at the last minute, this was a "tough" round,
+sorry...
 
-Cc: stable@vger.kernel.org
-Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 11 +++++++++--
- kernel/trace/trace.h  |  2 ++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+> Automatic testing did not find any errors in 4.19.102-rc2:
+> 
+> https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/114683672
+> 
+> (Hmm. I see some problems in 4.4.213-rc2, let me investigate.)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 481ede3eac13..3f7ee102868a 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5867,8 +5867,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
- 
- 		mutex_unlock(&graph_lock);
- 
--		/* Wait till all users are no longer using the old hash */
--		synchronize_rcu();
-+		/*
-+		 * We need to do a hard force of sched synchronization.
-+		 * This is because we use preempt_disable() to do RCU, but
-+		 * the function tracers can be called where RCU is not watching
-+		 * (like before user_exit()). We can not rely on the RCU
-+		 * infrastructure to do the synchronization, thus we must do it
-+		 * ourselves.
-+		 */
-+		schedule_on_each_cpu(ftrace_sync);
- 
- 		free_ftrace_hash(old_hash);
- 	}
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 8c52f5de9384..3c75d29bd861 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -979,6 +979,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 	 * Have to open code "rcu_dereference_sched()" because the
- 	 * function graph tracer can be called when RCU is not
- 	 * "watching".
-+	 * Protected with schedule_on_each_cpu(ftrace_sync)
- 	 */
- 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
- 
-@@ -1031,6 +1032,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
- 	 * Have to open code "rcu_dereference_sched()" because the
- 	 * function graph tracer can be called when RCU is not
- 	 * "watching".
-+	 * Protected with schedule_on_each_cpu(ftrace_sync)
- 	 */
- 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
- 						 !preemptible());
--- 
-2.20.1
+Great, thanks!
 
+greg k-h
