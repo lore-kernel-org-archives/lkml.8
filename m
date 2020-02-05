@@ -2,131 +2,108 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3C4C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2656BC35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF102072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE57B2072B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwK7gQWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgBEN0w (ORCPT
+        id S1728284AbgBEN1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:26:52 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:56958 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728062AbgBEN0s (ORCPT
+        Wed, 5 Feb 2020 08:27:02 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36225 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgBEN1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:26:48 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1izKha-00035h-6O; Wed, 05 Feb 2020 13:26:46 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org
-Subject: [PATCH v6 4/6] cgroup: add cgroup_may_write() helper
-Date:   Wed,  5 Feb 2020 14:26:21 +0100
-Message-Id: <20200205132623.670015-5-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200205132623.670015-1-christian.brauner@ubuntu.com>
-References: <20200205132623.670015-1-christian.brauner@ubuntu.com>
+        Wed, 5 Feb 2020 08:27:00 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j20so1902087otq.3;
+        Wed, 05 Feb 2020 05:26:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2iTmjWroM0axQMfNXSTY4B+Vwm8DbZJfE7GwGUvjpyQ=;
+        b=NwK7gQWqLfS/JUcGRZD+ikHP6oDzawbpGi52vOScViy7NpUb95lXZ/qUrSo13MJZuk
+         5/yZgqQKnkk0cMi5K7k1nZ3Jkn32nXwG8KZDA4HzCX1QzJqELzGfLhg1RjDGNfa9+j16
+         2WgZ5TU6eDlgZr1yrAB0vtYMLNBqb/QSpHhDJA1FB9nSMkk+3OGgHseBOnZn6Ydg8Lvg
+         vJrmPR0nsLR7TIHrGo1+7I32n8wSUO3gmaXbvmBTsVMwTUQjtr/3fgwqRRomCz40+hgs
+         alg9cOYWy3/bXhMOq/p+kABPeatiwUrS7yeF9cVyPolffFTFyh/K1iyMZI+aP89YauAq
+         +bTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2iTmjWroM0axQMfNXSTY4B+Vwm8DbZJfE7GwGUvjpyQ=;
+        b=WzjJo3ZViRdjrUhgzA7oeCBf1SGXCNRCCJ9KureROJrZQPPHo18zB3pA77vKxRCZwT
+         z+A8Kg9eqGYSsv/2rSUIL3X4EzQGtdmNIj+EyyPJExj0q9rcKIRv3unG4BZE28Hd1wLd
+         GYDAlY786hvEl8b6q/HyOUzeKAOMVRzLN9RuYt/54OXpHDTCxAHCy+Dztc/8G3KeqxKG
+         g2ZpktZeNZbw+LkIWJMoztrUJ00bLX+5hCgaK+KHhTKpoUPdvZzWikzSNZZALEuBuZ4P
+         eyPlj6Zf3laI8MRkD5ux9fImxkfUZWPRq6qfL7HslJSDSkxDMJ1+WqwEFat7ihUO3mM+
+         0AKg==
+X-Gm-Message-State: APjAAAWHS8fTBYZ6AoMYZ7dW4PAac1C4nVqxgojfVWRas28V8tTn8eFz
+        gHd7VcvG+QmzCP5OBPNQRT7VHNOGuiBi7mZIToU=
+X-Google-Smtp-Source: APXvYqx1Uo1av+7UTImzpbx3g3+rhU7G9l4tWB7NjhIpKmc4Fdg2DC7DGxSh2/aVlTgjwCfxuKVENTDYA5D3HTry98k=
+X-Received: by 2002:a05:6830:231d:: with SMTP id u29mr26656265ote.185.1580909219503;
+ Wed, 05 Feb 2020 05:26:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CANRm+CwwYoSLeA3Squp-_fVZpmYmxEfqOB+DGoQN4Y_iMT347w@mail.gmail.com>
+ <878slio6hp.fsf@vitty.brq.redhat.com> <CANRm+CzkN9oYf4UqWYp2SHFii02=pvVLbW4oNkLmPan7ZroDZA@mail.gmail.com>
+ <874kw6o1ve.fsf@vitty.brq.redhat.com>
+In-Reply-To: <874kw6o1ve.fsf@vitty.brq.redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 5 Feb 2020 21:26:48 +0800
+Message-ID: <CANRm+CwgJ07i3O_-DpvDMaVSGThX7Ymwuty9rBm5Sc2wiuV-bw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: Pre-allocate 1 cpumask variable per cpu for both pv
+ tlb and pv ipis
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a cgroup_may_write() helper which we can use in the
-CLONE_INTO_CGROUP patch series to verify that we can write to the
-destination cgroup.
+On Tue, 4 Feb 2020 at 22:36, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Wanpeng Li <kernellwp@gmail.com> writes:
+>
+> >>
+> >> Honestly, I'd simplify the check in kvm_alloc_cpumask() as
+> >>
+> >> if (!kvm_para_available())
+> >>         return;
+> >>
+> >> and allocated masks for all other cases.
+> >
+> > This will waste the memory if pv tlb and pv ipis are not exposed which
+> > are the only users currently.
+> >
+>
+> My assumption is that the number of cases where we a) expose KVM b)
+> don't expose IPIs and PV-TLB and c) care about 1 cpumask per cpu is
+> relatively low. Ok, let's at least have a function for
+>
+>         if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
+>             !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+>             kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
+>
+> as we now check it twice: in kvm_alloc_cpumask() and kvm_guest_init(),
+> something like pv_tlb_flush_supported(). We can also do
+> pv_ipi_supported() and probably others for consistency.
 
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Li Zefan <lizefan@huawei.com>
-Cc: cgroups@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v1 */
-patch not present
+Will do.
 
-/* v2 */
-patch not present
-
-/* v3 */
-patch not present
-
-/* v4 */
-Link: https://lore.kernel.org/r/20200117181219.14542-5-christian.brauner@ubuntu.com
-patch introduced
-
-/* v5 */
-Link: https://lore.kernel.org/r/20200121154844.411-5-christian.brauner@ubuntu.com
-unchanged
-
-/* v6 */
-unchanged
----
- kernel/cgroup/cgroup.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 991f10662e95..43c841596226 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4649,13 +4649,28 @@ static int cgroup_procs_show(struct seq_file *s, void *v)
- 	return 0;
- }
- 
-+static int cgroup_may_write(const struct cgroup *cgrp, struct super_block *sb)
-+{
-+	int ret;
-+	struct inode *inode;
-+
-+	lockdep_assert_held(&cgroup_mutex);
-+
-+	inode = kernfs_get_inode(sb, cgrp->procs_file.kn);
-+	if (!inode)
-+		return -ENOMEM;
-+
-+	ret = inode_permission(inode, MAY_WRITE);
-+	iput(inode);
-+	return ret;
-+}
-+
- static int cgroup_procs_write_permission(struct cgroup *src_cgrp,
- 					 struct cgroup *dst_cgrp,
- 					 struct super_block *sb)
- {
- 	struct cgroup_namespace *ns = current->nsproxy->cgroup_ns;
- 	struct cgroup *com_cgrp = src_cgrp;
--	struct inode *inode;
- 	int ret;
- 
- 	lockdep_assert_held(&cgroup_mutex);
-@@ -4665,12 +4680,7 @@ static int cgroup_procs_write_permission(struct cgroup *src_cgrp,
- 		com_cgrp = cgroup_parent(com_cgrp);
- 
- 	/* %current should be authorized to migrate to the common ancestor */
--	inode = kernfs_get_inode(sb, com_cgrp->procs_file.kn);
--	if (!inode)
--		return -ENOMEM;
--
--	ret = inode_permission(inode, MAY_WRITE);
--	iput(inode);
-+	ret = cgroup_may_write(com_cgrp, sb);
- 	if (ret)
- 		return ret;
- 
--- 
-2.25.0
-
+    Wanpeng
