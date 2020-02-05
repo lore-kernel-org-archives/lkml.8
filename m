@@ -2,112 +2,111 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DD6C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09328C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75FD214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="BLFkwCXK"
+	by mail.kernel.org (Postfix) with ESMTP id D930820730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 22:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgBEWyB (ORCPT
+        id S1727722AbgBEW4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:54:01 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.163]:28674 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727355AbgBEWyA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:54:00 -0500
-X-Greylist: delayed 1339 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Feb 2020 17:54:00 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 81EC6300D
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2020 16:31:40 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id zTCuiyULsQfADzTCui1Nf3; Wed, 05 Feb 2020 16:31:40 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=L0Nz5IqdwqEH9ceOPKFVEIdv2X6+UyVS0shI1C/vLi8=; b=BLFkwCXKaaGmoFODgQFki5r82E
-        S021q2WGng0zG9zg+PCxkTUhOgv7yJxsvUO8cSV0xDNxytNqx3DPz+a7IWVPzBThzCn6/srLJco5f
-        lsTxcXYpDnEnlXgDemY8uZrASbdNJ2gzw0fAcJgrO9rA0Kf3FKail5tMF1gQzkliLa2/tf02t8ZnP
-        aqbt01yO51riNLXFk3x8HCRqOtFCEmNLLuMrXZYV3GRlBbN8QDpRJtnqmaHhflJ6m8y7i6US7PciX
-        j8fmWaqkGJ97dLh28jakK5oiJMI64mXw/pZA28kWs4k+2wqUPRthdPDFje2XgqDs4z1mkBI1oYoA2
-        IzY4QvJA==;
-Received: from [201.144.174.45] (port=29810 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1izTCt-000Jo3-6R; Wed, 05 Feb 2020 16:31:39 -0600
-Date:   Wed, 5 Feb 2020 16:34:04 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] tracing/kprobe: Fix uninitialized variable bug
-Message-ID: <20200205223404.GA3379@embeddedor>
+        Wed, 5 Feb 2020 17:56:21 -0500
+Received: from mga02.intel.com ([134.134.136.20]:61277 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727479AbgBEW4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 17:56:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 14:56:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="225095649"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Feb 2020 14:56:16 -0800
+Date:   Thu, 6 Feb 2020 06:56:33 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+ in shrink_zone_span()
+Message-ID: <20200205225633.GA28446@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-9-david@redhat.com>
+ <20200205095924.GC24162@richard>
+ <20200205144811.GF26758@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200205144811.GF26758@MiWiFi-R3L-srv>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.144.174.45
-X-Source-L: No
-X-Exim-ID: 1izTCt-000Jo3-6R
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.144.174.45]:29810
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a potential execution path in which variable *ret* is returned
-without being properly initialized, previously.
+On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
+>Hi Wei Yang,
+>
+>On 02/05/20 at 05:59pm, Wei Yang wrote:
+>> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> >index f294918f7211..8dafa1ba8d9f 100644
+>> >--- a/mm/memory_hotplug.c
+>> >+++ b/mm/memory_hotplug.c
+>> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>> > 		if (pfn) {
+>> > 			zone->zone_start_pfn = pfn;
+>> > 			zone->spanned_pages = zone_end_pfn - pfn;
+>> >+		} else {
+>> >+			zone->zone_start_pfn = 0;
+>> >+			zone->spanned_pages = 0;
+>> > 		}
+>> > 	} else if (zone_end_pfn == end_pfn) {
+>> > 		/*
+>> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>> > 					       start_pfn);
+>> > 		if (pfn)
+>> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
+>> >+		else {
+>> >+			zone->zone_start_pfn = 0;
+>> >+			zone->spanned_pages = 0;
+>> >+		}
+>> > 	}
+>> 
+>> If it is me, I would like to take out these two similar logic out.
+>
+>I also like this style. 
+>> 
+>> For example:
+>> 
+>> 	if () {
+>> 	} else if () {
+>> 	} else {
+>> 		goto out;
+>Here the last else is unnecessary, right?
+>
 
-Fix this by initializing variable *ret* to 0.
+I am afraid not.
 
-Addresses-Coverity-ID: 1491142 ("Uninitialized scalar variable")
-Fixes: 2a588dd1d5d6 ("tracing: Add kprobe event command generation functions")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- kernel/trace/trace_kprobe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If the range is not the first or last, we would leave pfn not initialized.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index d8264ebb9581..362cca52f5de 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1012,7 +1012,7 @@ int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...)
- {
- 	struct dynevent_arg arg;
- 	va_list args;
--	int ret;
-+	int ret = 0;
- 
- 	if (cmd->type != DYNEVENT_TYPE_KPROBE)
- 		return -EINVAL;
+
 -- 
-2.25.0
-
+Wei Yang
+Help you, Help me
