@@ -2,85 +2,64 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCABC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB77C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3315D2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F91A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 00:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgBEAYL (ORCPT
+        id S1727743AbgBEA2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:24:11 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48353 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgBEAYL (ORCPT
+        Tue, 4 Feb 2020 19:28:40 -0500
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55]:60638 "EHLO
+        cam-smtp0.cambridge.arm.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727537AbgBEA2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 19:24:11 -0500
-X-Originating-IP: 92.243.9.8
-Received: from localhost (joshtriplett.org [92.243.9.8])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 565F140004;
-        Wed,  5 Feb 2020 00:24:07 +0000 (UTC)
-Date:   Tue, 4 Feb 2020 16:24:07 -0800
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH] acpi: button: Provide option for power button to
- directly signal init
-Message-ID: <20200205002406.GC2968@localhost>
-References: <20200111022145.GA166025@localhost>
- <CAJZ5v0hF2YDVHcvqx_4TaEzuqBKppVG7gZ4nXm_peF75Cfbzmg@mail.gmail.com>
+        Tue, 4 Feb 2020 19:28:39 -0500
+X-Greylist: delayed 706 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Feb 2020 19:28:38 EST
+Received: from moist.wifiportal.lan (arm6-cctv-system.cambridge.arm.com [10.37.12.8])
+        by cam-smtp0.cambridge.arm.com (8.13.8/8.13.8) with ESMTP id 0150Ga3Q011086;
+        Wed, 5 Feb 2020 00:16:37 GMT
+From:   Grant Likely <grant.likely@arm.com>
+To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Grant Likely <grant.likely@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH] Documentation/process: Add Arm contact for embargoed HW issues
+Date:   Wed,  5 Feb 2020 00:16:27 +0000
+Message-Id: <20200205001627.27356-1-grant.likely@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hF2YDVHcvqx_4TaEzuqBKppVG7gZ4nXm_peF75Cfbzmg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 10:07:09PM +0100, Rafael J. Wysocki wrote:
-> On Sat, Jan 11, 2020 at 3:21 AM Josh Triplett <josh@joshtriplett.org> wrote:
-> >
-> > Virtual machines and containers often use an ACPI power button event to
-> > tell the machine to shut down gracefully.
-> >
-> > Provide an optional, extremely lightweight way to handle this event by
-> > signaling init directly, rather than running a separate daemon (such as
-> > acpid or systemd-logind) that adds to startup time and VM image
-> > complexity.
-> 
-> Well, I'm not convinced.
+Adding myself to list after getting voluntold
 
-I would be happy to talk through other possible options.
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Grant Likely <grant.likely@arm.com>
+---
+ Documentation/process/embargoed-hardware-issues.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Even though the patch looks straightforward, the approach really is
-> quite not so conceptually and honestly it looks like a band-aid.
+diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
+index 5d54946cfc75..25bc61c07e6a 100644
+--- a/Documentation/process/embargoed-hardware-issues.rst
++++ b/Documentation/process/embargoed-hardware-issues.rst
+@@ -239,7 +239,7 @@ disclosure of a particular issue, unless requested by a response team or by
+ an involved disclosed party. The current ambassadors list:
+ 
+   ============= ========================================================
+-  ARM
++  ARM           Grant Likely <grant.likely@arm.com>
+   AMD		Tom Lendacky <tom.lendacky@amd.com>
+   IBM
+   Intel		Tony Luck <tony.luck@intel.com>
+-- 
+2.20.1
 
-I'm not sure what makes it conceptually non-straightforward. I'll freely
-admit that it isn't *elegant*. But it also seems inelegant to me to need
-to start and run an entire userspace daemon to watch for a key, or to
-add such logic into a domain-specific workload's setup and event loop.
-
-I'm entirely open to changing the approach. The goal I'm aiming for is
-to allow cloud systems and VMs that signal shutdown via an ACPI power
-button to run a more minimal userspace.
-
-> Also I'm not quite sure why the ACPI button driver is the target of
-> this and not the input layer, for instance.
-
-I don't have any objections to putting this in another part of the
-stack, but input in particular seems like it would potentially affect
-the normal event-processing path.
-
-- Josh Triplett
