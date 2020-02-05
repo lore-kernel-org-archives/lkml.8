@@ -2,307 +2,141 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3143C352A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03150C35247
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCED2072B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580925949;
-	bh=e5UyBDK/QRHrDLokQJnqbsHpafFDZYNtX2xaqBiqZ8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xJG83YQZ3zZJ842EHUFKvbyHZk3m2MC/Qlg2PQvtJZENoom27TxWbY33c2JgcL2MI
-	 OEOtd9SnZYKrwMBR82j3s6aT7o8FCZ7/SPr35HkuWUvk1lj+1OHz83GorKbRX/LETr
-	 pMkGl3O5/6sbgKTNAYC+Nj9BrLAMr6Nk25pJ3U4I=
+	by mail.kernel.org (Postfix) with ESMTP id D0D0C20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 18:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WP7q3Sui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBESFs (ORCPT
+        id S1727389AbgBESIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:05:48 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33189 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727165AbgBESFr (ORCPT
+        Wed, 5 Feb 2020 13:08:11 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42866 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbgBESIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:05:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m10so5040185wmc.0;
-        Wed, 05 Feb 2020 10:05:43 -0800 (PST)
+        Wed, 5 Feb 2020 13:08:10 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so2148992lfl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xxM2KM7SFU0OuxVauJZTx1kXhl4JXfEt7TGRJvg/kq4=;
+        b=WP7q3SuitLJAbKGWLEGzBmTKDcmmUlPnu/WjZqrW3AduihyetE/g/gczvYpfzautL6
+         18mEc2wQE2TWpn0PWNlNcERY3LsWVlL/rX6rAqCMX+/x9U55YT9RwSnLBHIaK7t5IRl+
+         RRgU60ChxJtJzE81ltKegxet7Bbww509GWpFc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FZOU06M79finD+fU3WNGe7T/3QL5sfF3MsjTs4VkFJE=;
-        b=s3PGN6GerbypSsqh0wJBF5n6oO1ERyiTDtTpWYfBvCS31NzXnSi0JlRUl1Wg9EoLeD
-         Oe3yW4lloGPs9ngkuspLX9z9tcuxP+YxCNg/F17NYIyS0BaTboDAGIZz4ddylnVjFuYW
-         zOjGoz4OUOCFTZIL//DqlYfKxkmtyAdeNRYPJtqsaLxkWU49K8jtBoRPzvkG+uUx9eMI
-         lH2263MzCOojKeOkGBqMjO0l4z0S54JKKIp2B8/sYNOKpnf+SWLkyh6ROrtW1/MwmsbV
-         90/TVyT/q06GQZwDD0JFW2hX43mQKsrTxUaPRr9YkyvVocXVPGC8ykFFS7olPQKAGWyc
-         gN7g==
-X-Gm-Message-State: APjAAAXrj8gVCJG1AQ8aEgWpfsAnN28uEyjWjicmB7STHQQAd9kQAQje
-        sMuoMmfgMo7Y0RPelq/Jfw==
-X-Google-Smtp-Source: APXvYqz3iUZKUFoM97RiyABU2uwE3KCT0W91mkdoaabYm6ZBikzV+mx2rNYeTJ4+0voYyyYemLCa6A==
-X-Received: by 2002:a7b:c14d:: with SMTP id z13mr7203058wmi.71.1580925942959;
-        Wed, 05 Feb 2020 10:05:42 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id d13sm769648wrc.3.2020.02.05.10.05.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 10:05:42 -0800 (PST)
-Received: (nullmailer pid 23862 invoked by uid 1000);
-        Wed, 05 Feb 2020 18:05:40 -0000
-Date:   Wed, 5 Feb 2020 18:05:40 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     dmitry.torokhov@gmail.com, mark.rutland@arm.com, megous@megous.com,
-        mylene.josserand@bootlin.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: touchscreen: Convert edt-ft5x06 to
- json-schema
-Message-ID: <20200205180540.GA30370@bogus>
-References: <20200128101455.4635-1-benjamin.gaignard@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xxM2KM7SFU0OuxVauJZTx1kXhl4JXfEt7TGRJvg/kq4=;
+        b=ah+5mWeWJMjnKVnxudtSDgjJ+UVRJkDgCL2oE4PvFlzfEUVLEwJSUqn6oGEXDBNfjS
+         MpWUpkNNkJpYaY1l+X6Bg42JqINC5GobF81C6RJ/0ta4VxzSJ24iQy93zmCYWwojWxID
+         GsQLK//xkq/1b2wERpmowvv9JXVBwGrZUegb9nKMhJ4Zvz6VHCtYF8DnyLbhhIEWvAho
+         9KAKWSl6o8LERpO3p8nLIRHh8pAsaKwDUYkUQTXpdce+04BxjJgil2EnmIyc74155PEC
+         iskdPr3xZiISLQeIWU4xbBMLR8UTFvBRooM9hoCmNa746h0e7SLbaW0bxelm6Br/g5uP
+         tZEA==
+X-Gm-Message-State: APjAAAWv5h2ZvHdzVhLDmk51omq3+Jl3s2duYpjo3C77EkSihLfM2WX7
+        frz3PMIOE7Z+04SLk1G+0G9ztW6Wr2s=
+X-Google-Smtp-Source: APXvYqxtrXKfQPnsGYDli9C7dvEX2PSuMY4D6rYCXxiRaM0D5j5Th0jMxCQgXfQgiIkvcvut6JXVIw==
+X-Received: by 2002:ac2:5dc8:: with SMTP id x8mr18074156lfq.217.1580926087996;
+        Wed, 05 Feb 2020 10:08:07 -0800 (PST)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id t9sm108037lfl.51.2020.02.05.10.08.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 10:08:07 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id 9so2143569lfq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 10:08:06 -0800 (PST)
+X-Received: by 2002:a19:c205:: with SMTP id l5mr18197762lfc.159.1580926086038;
+ Wed, 05 Feb 2020 10:08:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200128101455.4635-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580796831-18996-1-git-send-email-mkshah@codeaurora.org>
+ <1580796831-18996-2-git-send-email-mkshah@codeaurora.org> <CAE=gft6DCqmX8=cHWXNeOjSTuRHL23t7+b_GZOrvUJAPfhVD8A@mail.gmail.com>
+ <d95de83d-fbda-5ebf-1b87-126c19f4d604@codeaurora.org>
+In-Reply-To: <d95de83d-fbda-5ebf-1b87-126c19f4d604@codeaurora.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Wed, 5 Feb 2020 10:07:29 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7ESnpS8bYg4hmoAUtsuLiyek1D-AYEL+LWUKe=KubAJw@mail.gmail.com>
+Message-ID: <CAE=gft7ESnpS8bYg4hmoAUtsuLiyek1D-AYEL+LWUKe=KubAJw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] soc: qcom: rpmh: Update dirty flag only when data changes
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 11:14:55AM +0100, Benjamin Gaignard wrote:
-> Convert the EDT-FT5x06 to DT schema using json-schema.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
->  .../bindings/input/touchscreen/edt-ft5x06.yaml     | 119 +++++++++++++++++++++
->  2 files changed, 119 insertions(+), 75 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> deleted file mode 100644
-> index 0f6950073d6f..000000000000
-> --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> +++ /dev/null
-> @@ -1,75 +0,0 @@
-> -FocalTech EDT-FT5x06 Polytouch driver
-> -=====================================
-> -
-> -There are 5 variants of the chip for various touch panel sizes
-> -FT5206GE1  2.8" .. 3.8"
-> -FT5306DE4  4.3" .. 7"
-> -FT5406EE8  7"   .. 8.9"
-> -FT5506EEG  7"   .. 8.9"
-> -FT5726NEI  5.7” .. 11.6"
-> -
-> -The software interface is identical for all those chips, so that
-> -currently there is no need for the driver to distinguish between the
-> -different chips. Nevertheless distinct compatible strings are used so
-> -that a distinction can be added if necessary without changing the DT
-> -bindings.
-> -
-> -
-> -Required properties:
-> - - compatible:  "edt,edt-ft5206"
-> -           or:  "edt,edt-ft5306"
-> -           or:  "edt,edt-ft5406"
-> -           or:  "edt,edt-ft5506"
-> -           or:  "evervision,ev-ft5726"
-> -           or:  "focaltech,ft6236"
-> -
-> - - reg:         I2C slave address of the chip (0x38)
-> - - interrupts:       interrupt specification for the touchdetect
-> -                     interrupt
-> -
-> -Optional properties:
-> - - reset-gpios: GPIO specification for the RESET input
-> - - wake-gpios:  GPIO specification for the WAKE input
-> - - vcc-supply:  Regulator that supplies the touchscreen
-> -
-> - - pinctrl-names: should be "default"
-> - - pinctrl-0:   a phandle pointing to the pin settings for the
-> -                control gpios
-> -
-> - - threshold:   allows setting the "click"-threshold in the range
-> -                from 0 to 80.
-> -
-> - - gain:        allows setting the sensitivity in the range from 0 to
-> -                31. Note that lower values indicate higher
-> -                sensitivity.
-> -
-> - - offset:      allows setting the edge compensation in the range from
-> -                0 to 31.
-> -
-> - - offset-x:    Same as offset, but applies only to the horizontal position.
-> -                Range from 0 to 80, only supported by evervision,ev-ft5726
-> -                devices.
-> -
-> - - offset-y:    Same as offset, but applies only to the vertical position.
-> -                Range from 0 to 80, only supported by evervision,ev-ft5726
-> -                devices.
-> -
-> - - touchscreen-size-x	   : See touchscreen.txt
-> - - touchscreen-size-y	   : See touchscreen.txt
-> - - touchscreen-fuzz-x      : See touchscreen.txt
-> - - touchscreen-fuzz-y      : See touchscreen.txt
-> - - touchscreen-inverted-x  : See touchscreen.txt
-> - - touchscreen-inverted-y  : See touchscreen.txt
-> - - touchscreen-swapped-x-y : See touchscreen.txt
-> -
-> -Example:
-> -	polytouch: edt-ft5x06@38 {
-> -		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
-> -		reg = <0x38>;
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&edt_ft5x06_pins>;
-> -		interrupt-parent = <&gpio2>;
-> -		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-> -		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-> -		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> new file mode 100644
-> index 000000000000..178b7aea0f83
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> @@ -0,0 +1,119 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: FocalTech EDT-FT5x06 Polytouch Bindings
-> +
-> +description: There are 5 variants of the chip for various touch panel sizes
-> +             FT5206GE1  2.8" .. 3.8"
-> +             FT5306DE4  4.3" .. 7"
-> +             FT5406EE8  7"   .. 8.9"
-> +             FT5506EEG  7"   .. 8.9"
-> +             FT5726NEI  5.7” .. 11.6"
+On Tue, Feb 4, 2020 at 8:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+>
+> On 2/5/2020 6:05 AM, Evan Green wrote:
+> > On Mon, Feb 3, 2020 at 10:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+> >> Currently rpmh ctrlr dirty flag is set for all cases regardless
+> >> of data is really changed or not.
+> >>
+> >> Add changes to update it when data is updated to new values.
+> >>
+> >> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> >> ---
+> >>   drivers/soc/qcom/rpmh.c | 15 +++++++++++----
+> >>   1 file changed, 11 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> >> index 035091f..c3d6f00 100644
+> >> --- a/drivers/soc/qcom/rpmh.c
+> >> +++ b/drivers/soc/qcom/rpmh.c
+> >> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+> >>   existing:
+> >>          switch (state) {
+> >>          case RPMH_ACTIVE_ONLY_STATE:
+> >> -               if (req->sleep_val != UINT_MAX)
+> >> +               if (req->sleep_val != UINT_MAX) {
+> >>                          req->wake_val = cmd->data;
+> >> +                       ctrlr->dirty = true;
+> >> +               }
+> > Don't you need to set dirty = true for ACTIVE_ONLY state always? The
+> > conditional is just saying "if nobody set a sleep vote, then maintain
+> > this vote when we wake back up".
+>
+> The ACTIVE_ONLY vote is cached as wake_val to be apply when wakeup happens.
+>
+> In case value didn't change,wake_val is still same as older value and
+> there is no need to mark the entire cache as dirty.
+>
 
-This needs a '|' to preserve formatting. (Running this into python and 
-back out to yaml would clobber it.) 
+Ah, I see it now. We don't actually cache active_only votes anywhere,
+since they're one time requests. The sleep/wake votes seem to be the
+only thing that gets cached.
 
-> +
-> +maintainers:
-> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> +
-> +allOf:
-> +  - $ref: touchscreen.yaml#
-> +  - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - evervision,ev-ft5726
-> +
-> +    then:
-> +      properties:
-> +        offset-x: true
-> +        offset-y: true
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - edt,edt-ft5206
-> +      - edt,edt-ft5306
-> +      - edt,edt-ft5406
-> +      - edt,edt-ft5506
-> +      - evervision,ev-ft5726
-> +      - focaltech,ft6236
-> +
-> +  reg:
-> +    enum: [ 0x38 ]
+I was thinking it might be safer to also set dirty = true just after
+list_add_tail, since in the non-existing case this is a new batch that
+RPMh has never seen before and should always be written. But I suppose
+your checks here should cover that case, since sleep_val and wake_val
+are initialized to UINT_MAX. If you think the code might evolve, it
+might still be nice to add it.
 
-const: 0x38
+While I'm looking at that, why do we have this needless INIT_LIST_HEAD?
+        INIT_LIST_HEAD(&req->list);
+        list_add_tail(&req->list, &ctrlr->cache);
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  wake-gpios:
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    maxItems: 1
-> +
-> +  gain:
-> +    description: Allows setting the sensitivity in the range from 0 to 31.
-> +                 Note that lower values indicate higher sensitivity.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+-Evan
 
-Needs to be under an 'allOf' or minimum/maximum will be ignored.
-
-And the others here...
-
-> +    minimum: 0
-> +    maximum: 31
-> +
-> +  offset:
-> +    description: Allows setting the edge compensation in the range from 0 to 31.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 31
-> +
-> +  offset-x:
-> +    description: Same as offset, but applies only to the horizontal position.
-> +                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 80
-> +
-> +  offset-y:
-> +    description: Same as offset, but applies only to the vertical position.
-> +                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 80
-> +
-> +  touchscreen-size-x: true
-> +  touchscreen-size-y: true
-> +  touchscreen-fuzz-x: true
-> +  touchscreen-fuzz-y: true
-> +  touchscreen-inverted-x: true
-> +  touchscreen-inverted-y: true
-> +  touchscreen-swapped-x-y: true
-> +  interrupt-controller: true
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    i2c@00000000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      edt-ft5x06@38 {
-> +        compatible = "edt,edt-ft5406";
-> +        reg = <0x38>;
-> +        interrupt-parent = <&gpio2>;
-> +        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-> +        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-> +        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-> +      };
-> +    };
-> +
-> +...
-> +
-> -- 
-> 2.15.0
-> 
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
