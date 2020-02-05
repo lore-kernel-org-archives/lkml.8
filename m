@@ -2,115 +2,186 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB2BC35254
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F836C35254
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86683218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58600217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 13:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580908272;
-	bh=wSPjyDZaJd4iYDsHDvfTkbCVhxFTYWZXqFiynFRgSqQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MS4O3XTnjF5iIs6tCFCuDRyu8YixNXvvMLyiO9CuUafF9K3MHZhsXoNQL7RkRba/K
-	 FLMJOxluPqt3JaQwlumFjU+yMtxxKWyKI5ASU4ptgnoUkV9Dhi04F7VUgpqQpzdceQ
-	 ta7Ht6xkmvPcVE816Iq3fol1wNLN96ewOjmj1JhM=
+	s=default; t=1580908346;
+	bh=oKgy9dQpK3nwx7Di04OkzCy+/fe0qZS/610lbODO8hI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=YDZib9rjU8xcpIpxwEuXf31Yp8QZpE1K517IXMfN2YnI007AWyMqxJZSQzouetcDq
+	 esd0Aiqn47w0/5p1e82mCqBQRPMddAKkvJDdlUJ3BkRbzt1MSnDZ+7e9Jc9OzGzG4c
+	 c0NY3saZSsv5M7LuLqt36SWpLvlQ9yNkikKKZwEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgBENLL (ORCPT
+        id S1728061AbgBENMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 08:12:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbgBENLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:11:11 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726961AbgBENMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:12:25 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D3B62082E;
-        Wed,  5 Feb 2020 13:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7CEA217BA;
+        Wed,  5 Feb 2020 13:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580908270;
-        bh=wSPjyDZaJd4iYDsHDvfTkbCVhxFTYWZXqFiynFRgSqQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=lFln09VkBtkKNCzjna0O6RjF4HXeY041b+M9cjd6Gg+nM1BDA5etdYv1mR98VGfJD
-         19dJOGyubTzNLTYO1TgPFs91g8c6SzX04APp359/ins/jR3jaif5VhBt3i8xwTGY3g
-         EUEm4yg8Z6LWtBrnQ8/8skmEGJgZSklG5+b1A6AU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3EDCC352270F; Wed,  5 Feb 2020 05:11:10 -0800 (PST)
-Date:   Wed, 5 Feb 2020 05:11:10 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: Re: [PATCH] tracing: Annotate ftrace_graph_hash pointer with __rcu
-Message-ID: <20200205131110.GT2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200201072703.17330-1-frextrite@gmail.com>
- <20200203163301.GB85781@google.com>
- <20200204200116.479f0c60@oasis.local.home>
+        s=default; t=1580908344;
+        bh=oKgy9dQpK3nwx7Di04OkzCy+/fe0qZS/610lbODO8hI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=sC8i8s7/YIFcU7OUABAhe6F2vKi8VFazY8PbSlXTGuerjJ/c0pgvdVpC51ZPWc5Lf
+         XB9Xqf97SiTkRymP1A//84Dds8OKAm++iQ+GwI6nUO1oSH2KCzBdhPDsSbjMl+d99D
+         wp4cxx09am02m5/WCrZzfB04/gnFPvGLds6W0R0s=
+Message-ID: <2ce07148b49e6c1a857b4dd90c3bcea6ed0e8ce3.camel@kernel.org>
+Subject: Re: [PATCH v3 1/1] ceph: parallelize all copy-from requests in
+ copy_file_range
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>
+Cc:     Sage Weil <sage@redhat.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 05 Feb 2020 08:12:22 -0500
+In-Reply-To: <CAOi1vP-kLCY+Q2UwpqvJdfeEV6me=FneLhasQrj2nkcu_7tRew@mail.gmail.com>
+References: <20200203165117.5701-1-lhenriques@suse.com>
+         <20200203165117.5701-2-lhenriques@suse.com>
+         <CAOi1vP8vXeY156baexdZY2FWK_F0jHfWkyNdZ90PA+7txG=Qsw@mail.gmail.com>
+         <20200204151158.GA15992@suse.com>
+         <CAOi1vP-LvJYwAALQ_69rDUaiXYWa-_NPboeZV5zZiw_cokNyfw@mail.gmail.com>
+         <20200205110007.GA11836@suse.com>
+         <CAOi1vP-kLCY+Q2UwpqvJdfeEV6me=FneLhasQrj2nkcu_7tRew@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204200116.479f0c60@oasis.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 08:01:16PM -0500, Steven Rostedt wrote:
-> On Mon, 3 Feb 2020 11:33:01 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> 
-> > > --- a/kernel/trace/trace.h
-> > > +++ b/kernel/trace/trace.h
-> > > @@ -950,22 +950,25 @@ extern void __trace_graph_return(struct trace_array *tr,
-> > >  				 unsigned long flags, int pc);
-> > >  
-> > >  #ifdef CONFIG_DYNAMIC_FTRACE
-> > > -extern struct ftrace_hash *ftrace_graph_hash;
-> > > +extern struct ftrace_hash __rcu *ftrace_graph_hash;
-> > >  extern struct ftrace_hash *ftrace_graph_notrace_hash;
-> > >  
-> > >  static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
-> > >  {
-> > >  	unsigned long addr = trace->func;
-> > >  	int ret = 0;
-> > > +	struct ftrace_hash *hash;
-> > >  
-> > >  	preempt_disable_notrace();
-> > >  
-> > > -	if (ftrace_hash_empty(ftrace_graph_hash)) {
-> > > +	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());  
+On Wed, 2020-02-05 at 13:01 +0100, Ilya Dryomov wrote:
+> On Wed, Feb 5, 2020 at 12:00 PM Luis Henriques <lhenriques@suse.com> wrote:
+> > On Tue, Feb 04, 2020 at 07:06:36PM +0100, Ilya Dryomov wrote:
+> > > On Tue, Feb 4, 2020 at 4:11 PM Luis Henriques <lhenriques@suse.com> wrote:
+> > > > On Tue, Feb 04, 2020 at 11:56:57AM +0100, Ilya Dryomov wrote:
+> > > > ...
+> > > > > > @@ -2108,21 +2118,40 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > > > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > > > > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > > > > -               if (err) {
+> > > > > > -                       if (err == -EOPNOTSUPP) {
+> > > > > > -                               src_fsc->have_copy_from2 = false;
+> > > > > > -                               pr_notice("OSDs don't support 'copy-from2'; "
+> > > > > > -                                         "disabling copy_file_range\n");
+> > > > > > -                       }
+> > > > > > +               if (IS_ERR(req)) {
+> > > > > > +                       err = PTR_ERR(req);
+> > > > > >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> > > > > > +
+> > > > > > +                       /* wait for all queued requests */
+> > > > > > +                       ceph_osdc_wait_requests(&osd_reqs, &reqs_complete);
+> > > > > > +                       ret += reqs_complete * object_size; /* Update copied bytes */
+> > > > > 
+> > > > > Hi Luis,
+> > > > > 
+> > > > > Looks like ret is still incremented unconditionally?  What happens
+> > > > > if there are three OSD requests on the list and the first fails but
+> > > > > the second and the third succeed?  As is, ceph_osdc_wait_requests()
+> > > > > will return an error with reqs_complete set to 2...
+> > > > > 
+> > > > > >                         if (!ret)
+> > > > > >                                 ret = err;
+> > > > > 
+> > > > > ... and we will return 8M instead of an error.
+> > > > 
+> > > > Right, my assumption was that if a request fails, all subsequent requests
+> > > > would also fail.  This would allow ret to be updated with the number of
+> > > > successful requests (x object size), even if the OSDs replies were being
+> > > > delivered in a different order.  But from your comment I see that my
+> > > > assumption is incorrect.
+> > > > 
+> > > > In that case, when shall ret be updated with the number of bytes already
+> > > > written?  Only after a successful call to ceph_osdc_wait_requests()?
+> > > 
+> > > I mentioned this in the previous email: you probably want to change
+> > > ceph_osdc_wait_requests() so that the counter isn't incremented after
+> > > an error is encountered.
 > > 
-> > I think you can use rcu_dereference_sched() here? That way no need to pass
-> > !preemptible.
-> > 
-> > A preempt-disabled section is an RCU "sched flavor" section. Flavors are
-> > consolidated in the backend, but in the front end the dereference API still
-> > do have flavors.
+> > Sure, I've seen that comment.  But it doesn't help either because it's not
+> > guaranteed that we'll receive the replies from the OSDs in the same order
+> > we've sent them.  Stopping the counter when we get an error doesn't
+> > provide us any reliable information (which means I can simply drop that
+> > counter).
 > 
-> Unfortunately, doing it with rcu_dereference_sched() causes a lockdep
-> splat :-P. This is because ftrace can execute when rcu is not
-> "watching" and that will trigger a lockdep error. That means, this
-> origin patch *is* correct. I'm re-applying this one.
+> The list is FIFO so even though replies may indeed arrive out of
+> order, ceph_osdc_wait_requests() will process them in order.  If you
+> stop counting as soon as an error is encountered, you know for sure
+> that requests 1 through $COUNTER were successful and can safely
+> multiply it by object size.
+> 
+> > > > I.e. only after each throttling cycle, when we don't have any requests
+> > > > pending completion?  In this case, I can simply drop the extra
+> > > > reqs_complete parameter to the ceph_osdc_wait_requests.
+> > > > 
+> > > > In your example the right thing to do would be to simply return an error,
+> > > > I guess.  But then we're assuming that we're loosing space in the storage,
+> > > > as we may have created objects that won't be reachable anymore.
+> > > 
+> > > Well, that is what I'm getting at -- this needs a lot more
+> > > consideration.  How errors are dealt with, how file metadata is
+> > > updated, when do we fall back to plain copy, etc.  Generating stray
+> > > objects is bad but way better than reporting that e.g. 0..12M were
+> > > copied when only 0..4M and 8M..12M were actually copied, leaving
+> > > the user one step away from data loss.  One option is to revert to
+> > > issuing copy-from requests serially when an error is encountered.
+> > > Another option is to fall back to plain copy on any error.  Or perhaps
+> > > we just don't bother with the complexity of parallel copy-from requests
+> > > at all...
+> > 
+> > To be honest, I'm starting to lean towards this option.  Reverting to
+> > serializing requests or to plain copy on error will not necessarily
+> > prevent the stray objects:
+> > 
+> >   - send a bunch of copy requests
+> >   - wait for them to complete
+> >      * 1 failed, the other 63 succeeded
+> >   - revert to serialized copies, repeating the previous 64 requests
+> >      * after a few copies, we get another failure (maybe on the same OSDs)
+> >        and abort, leaving behind some stray objects from the previous bulk
+> >        request
+> 
+> Yeah, doing it serially makes the accounting a lot easier.  If you
+> issue any OSD requests before updating the size, stray objects are
+> bound to happen -- that's why "how file metadata is updated" is one
+> of the important considerations.
 
-I strongly recommend a comment stating why disabling preemption prevents
-ftrace_graph_hash from going away.  I see the synchronize_rcu() after
-the rcu_assign_pointer() in ftrace_graph_release(), but I don't see
-anything that waits on CPUs that RCU is not watching.
+I don't think this is fundamentally different from the direct write
+codepath. It's just that the source of the write is another OSD rather
+than being sent in the request.
 
-Of course, event tracing -makes- RCU watch when needed, but if that
-was set up, then lockdep would not have complained.
+If you look at ceph_direct_read_write(), then it does this:
 
-So what am I missing?
+      /*
+       * To simplify error handling, allow AIO when IO within i_size
+       * or IO can be satisfied by single OSD request.
+       */
 
-							Thanx, Paul
+So, that's another possibility. Do the requests synchronously when they
+will result in a change to i_size. Otherwise, you can do them in
+parallel.
+
+In practice, we'd have to recommend that people truncate the destination
+file up to the final length before doing copy_file_range, but that
+doesn't sound too onerous.
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
