@@ -2,70 +2,93 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6B2C3524F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C60C35249
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42702085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580888105;
-	bh=DxGrXlF0Xw+rWXtckYXPk0C8anbhJB6STJjrDypSdvg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=OWK8ZVDl7v2v4rXT0hnsOOgFrwqXMWtFE+uVvFjC5yEYGnNfdmKhF7GazTFbYkR9M
-	 erRtv93TkWIE2s42fQ7YNAvKOADgXLln3eOkGw10IPdepV6H5o0nUG4lxo9HN2Ye9z
-	 VFRQcCpCwP/LFIENfzGFThqhvaiEqiJVgOJOW99c=
+	by mail.kernel.org (Postfix) with ESMTP id 8163D20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 07:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ksLV6O8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgBEHfF (ORCPT
+        id S1727003AbgBEHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:35:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgBEHfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:35:04 -0500
-Subject: Re: [GIT PULL] parisc architecture fixes for kernel v5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580888104;
-        bh=DxGrXlF0Xw+rWXtckYXPk0C8anbhJB6STJjrDypSdvg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Y1J3ipZzfPNxO388MJYjKWw8iGNwW52vvpUNwb9EJaJWCd3kVsr7RQBhLfnxGn1aB
-         CtjfLuchPAQGxe4HeqzgL/7lmtY2hSRH4G9Cl9D4LX2CejzvJ1lXPdHOVCt/6nhu09
-         iS9P6rPMNWec47cQIiMNZKdADXjsRhuK3FXMHEI4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200205070604.GA11613@ls3530.fritz.box>
-References: <20200205070604.GA11613@ls3530.fritz.box>
-X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200205070604.GA11613@ls3530.fritz.box>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
- parisc-5.6-1
-X-PR-Tracked-Commit-Id: 84669923e1edf30f55e71fce9f831242502372c9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6992ca0dd017ebaa2bf8e9dcc49f1c3b7033b082
-Message-Id: <158088810425.30437.1803267607407340432.pr-tracker-bot@kernel.org>
-Date:   Wed, 05 Feb 2020 07:35:04 +0000
-To:     Helge Deller <deller@gmx.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
+        Wed, 5 Feb 2020 02:38:16 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:31463 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbgBEHiP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 02:38:15 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580888295; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Xj0iTt8/DaPDdtkod2jYgapACAYlKveoYf6/iq9s5GM=;
+ b=ksLV6O8lGcmwjo44vZxHMuvriBdqBeOS089RCBkDtoEDU5GYYmVJqjD7/3dN2Exm0TQV/FCO
+ zhxxVytGfSXjbhkbRcSjaXaxjm+g8Uh4lU/6WyNrksOKpSCbk2Y2xC2lWsJDdm4qXjJVKKXi
+ /JnYNsS/J3SkUuZbr+9J1LczwGI=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a70e2.7f6a043aec00-smtp-out-n03;
+ Wed, 05 Feb 2020 07:38:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1E478C433A2; Wed,  5 Feb 2020 07:38:07 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hongwus)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C4FDC433CB;
+        Wed,  5 Feb 2020 07:38:07 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Feb 2020 15:38:07 +0800
+From:   hongwus@codeaurora.org
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pedro Sousa <sousa@synopsys.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] [PATCH v5 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
+In-Reply-To: <BN7PR08MB5684198FAD001E147CEFA904DB030@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+ <1580721472-10784-9-git-send-email-cang@codeaurora.org>
+ <BN7PR08MB5684198FAD001E147CEFA904DB030@BN7PR08MB5684.namprd08.prod.outlook.com>
+Message-ID: <f1a77a5e5af9f1d284dd194836dbe9cc@codeaurora.org>
+X-Sender: hongwus@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 5 Feb 2020 08:06:04 +0100:
+On 2020-02-04 23:26, Bean Huo (beanhuo) wrote:
+> Hi, Can
+> 
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+> 
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+> 
+> Thanks,
+> 
+> //Bean
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.6-1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6992ca0dd017ebaa2bf8e9dcc49f1c3b7033b082
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
