@@ -2,176 +2,309 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816E3C3524D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0A5C3524D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E2521582
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E810A217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 04:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2c9SGzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgBEEIj (ORCPT
+        id S1727930AbgBEELC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Feb 2020 23:08:39 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:42346 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727832AbgBEEIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Feb 2020 23:08:39 -0500
-Received: from linux.HaierAP (unknown [111.18.44.203])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax1um3Pzpeh44MAA--.150S3;
-        Wed, 05 Feb 2020 12:08:29 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jean Delvare <jdelvare@suse.de>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
-Date:   Wed,  5 Feb 2020 12:08:33 +0800
-Message-Id: <1580875713-18252-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Ax1um3Pzpeh44MAA--.150S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xAw4rtFy7Zw45AF17GFg_yoWrXryfpa
-        1DA3Z5tr4DGF17Ga4fAFyI9r13Cws3WrWYkFWj9r17Zas8X348Jrs3KrsxZFyUAr4kKa40
-        9a4a9F4UCFZFv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUPE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
-        JwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-        IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-        kIc2xKxwCY02Avz4vE14v_Gryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-        Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-        CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-        I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-        8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
-        UjIFyTuYvjfU08nYUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 4 Feb 2020 23:11:02 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21337 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727854AbgBEELC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Feb 2020 23:11:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580875859;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mZTJknh5sK2MHEpZvb12IRTeffrqu13C1stnHofSxGc=;
+        b=i2c9SGzPwJjBraJ0xuFwFHw0Hf5RbezHTExtE72hHC3dGdvowqdokuHTEX/adsHtP+tumn
+        QpE4CH4rHOFxJ+ZPkn8R+SqgRNRWq9KQp2XSC35+0g8XgU0YaaEfmVKAjD5e15XOIaSOGQ
+        u2jWAet/us/cgJXxR54Y4+7WlUSVjC8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-cUk5z23YN_Se3RSdtgiohw-1; Tue, 04 Feb 2020 23:10:55 -0500
+X-MC-Unique: cUk5z23YN_Se3RSdtgiohw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D114D1081FA1;
+        Wed,  5 Feb 2020 04:10:52 +0000 (UTC)
+Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F17277792B;
+        Wed,  5 Feb 2020 04:10:44 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v4] virtio_net: add XDP meta data support
+To:     Yuya Kusakabe <yuya.kusakabe@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
+        mst@redhat.com, songliubraving@fb.com, yhs@fb.com, kuba@kernel.org,
+        andriin@fb.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <8da1b560-3128-b885-b453-13de5c7431fb@redhat.com>
+ <20200204071655.94474-1-yuya.kusakabe@gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <9a0a1469-c8a7-8223-a4d5-dad656a142fc@redhat.com>
+Date:   Wed, 5 Feb 2020 12:10:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200204071655.94474-1-yuya.kusakabe@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-(dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-driver can easily match various of mainboards.
 
-In the SMBIOS reference specification, the table anchor string "_SM_" is
-present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-but there exists a special case for Loongson platform, when call function
-dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-it is reserved for SMBIOS and can be normally access in the BIOS.
+On 2020/2/4 =E4=B8=8B=E5=8D=883:16, Yuya Kusakabe wrote:
+> Implement support for transferring XDP meta data into skb for
+> virtio_net driver; before calling into the program, xdp.data_meta point=
+s
+> to xdp.data and copy vnet header to the front of xdp.data_hard_start
+> to avoid overwriting it, where on program return with pass verdict,
+> we call into skb_metadata_set().
+>
+> Fixes: de8f3a83b0a0 ("bpf: add meta pointer for direct access")
+> Signed-off-by: Yuya Kusakabe <yuya.kusakabe@gmail.com>
+> ---
+>   drivers/net/virtio_net.c | 47 ++++++++++++++++++++++++++++-----------=
+-
+>   1 file changed, 33 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 2fe7a3188282..5fdd6ea0e3f1 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -371,7 +371,7 @@ static struct sk_buff *page_to_skb(struct virtnet_i=
+nfo *vi,
+>   				   struct receive_queue *rq,
+>   				   struct page *page, unsigned int offset,
+>   				   unsigned int len, unsigned int truesize,
+> -				   bool hdr_valid)
+> +				   bool hdr_valid, unsigned int metasize)
+>   {
+>   	struct sk_buff *skb;
+>   	struct virtio_net_hdr_mrg_rxbuf *hdr;
+> @@ -393,7 +393,7 @@ static struct sk_buff *page_to_skb(struct virtnet_i=
+nfo *vi,
+>   	else
+>   		hdr_padded_len =3D sizeof(struct padded_vnet_hdr);
+>  =20
+> -	if (hdr_valid)
+> +	if (hdr_valid && !metasize)
 
-This patch works fine on the Loongson 3A3000 platform which belongs to
-MIPS architecture and has no influence on the other architectures such
-as x86 and ARM.
 
-Additionally, in order to avoid the unknown risks on the mips platform
-which is not MACH_LOONGSON64, the DMI config is better to depend on
-MACH_LOONGSON64. If other mips platform also needs this DMI feature in
-the future, the "depends on" condition can be modified.
+hdr_valid means no XDP, so I think we can remove the check for metasize=20
+here and add a comment instead?
 
-Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-[jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Huacai Chen <chenhc@lemote.com>
----
 
-v3:
-  - split the v2 patch into two patches
-  - make MIPS DMI config depend on MACH_LOONGSON64
+>   		memcpy(hdr, p, hdr_len);
+>  =20
+>   	len -=3D hdr_len;
+> @@ -405,6 +405,11 @@ static struct sk_buff *page_to_skb(struct virtnet_=
+info *vi,
+>   		copy =3D skb_tailroom(skb);
+>   	skb_put_data(skb, p, copy);
+>  =20
+> +	if (metasize) {
+> +		__skb_pull(skb, metasize);
+> +		skb_metadata_set(skb, metasize);
+> +	}
+> +
+>   	len -=3D copy;
+>   	offset +=3D copy;
+>  =20
+> @@ -644,6 +649,7 @@ static struct sk_buff *receive_small(struct net_dev=
+ice *dev,
+>   	unsigned int delta =3D 0;
+>   	struct page *xdp_page;
+>   	int err;
+> +	unsigned int metasize =3D 0;
+>  =20
+>   	len -=3D vi->hdr_len;
+>   	stats->bytes +=3D len;
+> @@ -683,10 +689,15 @@ static struct sk_buff *receive_small(struct net_d=
+evice *dev,
+>  =20
+>   		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD + vi->hdr_len;
+>   		xdp.data =3D xdp.data_hard_start + xdp_headroom;
+> -		xdp_set_data_meta_invalid(&xdp);
+>   		xdp.data_end =3D xdp.data + len;
+> +		xdp.data_meta =3D xdp.data;
+>   		xdp.rxq =3D &rq->xdp_rxq;
+>   		orig_data =3D xdp.data;
+> +		/* Copy the vnet header to the front of data_hard_start to avoid
+> +		 * overwriting it by XDP meta data.
+> +		 */
+> +		memcpy(xdp.data_hard_start - vi->hdr_len,
+> +		       xdp.data - vi->hdr_len, vi->hdr_len);
 
-v2:
-  - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
-  - refine definitions and Kconfig by Jiaxun
 
- arch/mips/Kconfig           | 11 +++++++++++
- arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
- arch/mips/kernel/setup.c    |  2 ++
- 3 files changed, 33 insertions(+)
- create mode 100644 arch/mips/include/asm/dmi.h
+I think we don't need this. And it looks to me there's a bug in the=20
+current code.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 08b6f34..d84cb32 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2758,6 +2758,17 @@ config HW_PERF_EVENTS
- 	  Enable hardware performance counter support for perf events. If
- 	  disabled, perf events will use software events only.
- 
-+config DMI
-+	bool "Enable DMI scanning"
-+	depends on MACH_LOONGSON64
-+	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-+	default y
-+	help
-+	  Enabled scanning of DMI to identify machine quirks. Say Y
-+	  here unless you have verified that your setup is not
-+	  affected by entries in the DMI blacklist. Required by PNP
-+	  BIOS code.
-+
- config SMP
- 	bool "Multi-Processing support"
- 	depends on SYS_SUPPORTS_SMP
-diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
-new file mode 100644
-index 0000000..27415a2
---- /dev/null
-+++ b/arch/mips/include/asm/dmi.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_DMI_H
-+#define _ASM_DMI_H
-+
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+
-+#define dmi_early_remap(x, l)		ioremap_cache(x, l)
-+#define dmi_early_unmap(x, l)		iounmap(x)
-+#define dmi_remap(x, l)			ioremap_cache(x, l)
-+#define dmi_unmap(x)			iounmap(x)
-+
-+/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
-+#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
-+
-+#if defined(CONFIG_MACH_LOONGSON64)
-+#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
-+#endif
-+
-+#endif /* _ASM_DMI_H */
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 701f4bc..d9bd841 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -28,6 +28,7 @@
- #include <linux/decompress/generic.h>
- #include <linux/of_fdt.h>
- #include <linux/of_reserved_mem.h>
-+#include <linux/dmi.h>
- 
- #include <asm/addrspace.h>
- #include <asm/bootinfo.h>
-@@ -800,6 +801,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	arch_mem_init(cmdline_p);
-+	dmi_setup();
- 
- 	resource_init();
- 	plat_smp_setup();
--- 
-1.8.3.1
+Commit 436c9453a1ac0 ("virtio-net: keep vnet header zeroed after=20
+processing XDP") leave the a corner case for receive_small() which still=20
+use:
+
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!delta) {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 buf +=3D header_offset;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 memcpy(skb_vnet_hdr(skb), buf, vi->hdr_len);
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } /* keep zeroed vnet hdr sin=
+ce packet was changed by bpf */
+
+Which seems wrong, we need check xdp_prog instead of delta.
+
+With this fixed, there's no need to care about the vnet header here=20
+since we don't know whether or not packet is modified by XDP.
+
+
+>   		act =3D bpf_prog_run_xdp(xdp_prog, &xdp);
+>   		stats->xdp_packets++;
+>  =20
+> @@ -695,9 +706,11 @@ static struct sk_buff *receive_small(struct net_de=
+vice *dev,
+>   			/* Recalculate length in case bpf program changed it */
+>   			delta =3D orig_data - xdp.data;
+>   			len =3D xdp.data_end - xdp.data;
+> +			metasize =3D xdp.data - xdp.data_meta;
+>   			break;
+>   		case XDP_TX:
+>   			stats->xdp_tx++;
+> +			xdp.data_meta =3D xdp.data;
+
+
+I think we should remove the xdp_set_data_meta_invalid() at least? And=20
+move this initialization just after xdp.data is initialized.
+
+Testing receive_small() requires to disable mrg_rxbuf, guest_tso4,=20
+guest_tso6 and guest_ufo from qemu command line.
+
+
+>   			xdpf =3D convert_to_xdp_frame(&xdp);
+>   			if (unlikely(!xdpf))
+>   				goto err_xdp;
+> @@ -736,10 +749,12 @@ static struct sk_buff *receive_small(struct net_d=
+evice *dev,
+>   	skb_reserve(skb, headroom - delta);
+>   	skb_put(skb, len);
+>   	if (!delta) {
+
+
+Need to check xdp_prog (need another patch).
+
+
+> -		buf +=3D header_offset;
+> -		memcpy(skb_vnet_hdr(skb), buf, vi->hdr_len);
+> +		memcpy(skb_vnet_hdr(skb), buf + VIRTNET_RX_PAD, vi->hdr_len);
+>   	} /* keep zeroed vnet hdr since packet was changed by bpf */
+>  =20
+> +	if (metasize)
+> +		skb_metadata_set(skb, metasize);
+> +
+>   err:
+>   	return skb;
+>  =20
+> @@ -760,8 +775,8 @@ static struct sk_buff *receive_big(struct net_devic=
+e *dev,
+>   				   struct virtnet_rq_stats *stats)
+>   {
+>   	struct page *page =3D buf;
+> -	struct sk_buff *skb =3D page_to_skb(vi, rq, page, 0, len,
+> -					  PAGE_SIZE, true);
+> +	struct sk_buff *skb =3D
+> +		page_to_skb(vi, rq, page, 0, len, PAGE_SIZE, true, 0);
+>  =20
+>   	stats->bytes +=3D len - vi->hdr_len;
+>   	if (unlikely(!skb))
+> @@ -793,6 +808,7 @@ static struct sk_buff *receive_mergeable(struct net=
+_device *dev,
+>   	unsigned int truesize;
+>   	unsigned int headroom =3D mergeable_ctx_to_headroom(ctx);
+>   	int err;
+> +	unsigned int metasize =3D 0;
+>  =20
+>   	head_skb =3D NULL;
+>   	stats->bytes +=3D len - vi->hdr_len;
+> @@ -839,8 +855,8 @@ static struct sk_buff *receive_mergeable(struct net=
+_device *dev,
+>   		data =3D page_address(xdp_page) + offset;
+>   		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
+>   		xdp.data =3D data + vi->hdr_len;
+> -		xdp_set_data_meta_invalid(&xdp);
+>   		xdp.data_end =3D xdp.data + (len - vi->hdr_len);
+> +		xdp.data_meta =3D xdp.data;
+>   		xdp.rxq =3D &rq->xdp_rxq;
+>  =20
+>   		act =3D bpf_prog_run_xdp(xdp_prog, &xdp);
+> @@ -852,8 +868,9 @@ static struct sk_buff *receive_mergeable(struct net=
+_device *dev,
+>   			 * adjustments. Note other cases do not build an
+>   			 * skb and avoid using offset
+>   			 */
+> -			offset =3D xdp.data -
+> -					page_address(xdp_page) - vi->hdr_len;
+> +			metasize =3D xdp.data - xdp.data_meta;
+> +			offset =3D xdp.data - page_address(xdp_page) -
+> +				 vi->hdr_len - metasize;
+>  =20
+>   			/* recalculate len if xdp.data or xdp.data_end were
+>   			 * adjusted
+> @@ -863,14 +880,15 @@ static struct sk_buff *receive_mergeable(struct n=
+et_device *dev,
+>   			if (unlikely(xdp_page !=3D page)) {
+>   				rcu_read_unlock();
+>   				put_page(page);
+> -				head_skb =3D page_to_skb(vi, rq, xdp_page,
+> -						       offset, len,
+> -						       PAGE_SIZE, false);
+> +				head_skb =3D page_to_skb(vi, rq, xdp_page, offset,
+> +						       len, PAGE_SIZE, false,
+> +						       metasize);
+>   				return head_skb;
+>   			}
+>   			break;
+>   		case XDP_TX:
+>   			stats->xdp_tx++;
+> +			xdp.data_meta =3D xdp.data;
+
+
+Any reason for doing this?
+
+Thanks
+
+
+>   			xdpf =3D convert_to_xdp_frame(&xdp);
+>   			if (unlikely(!xdpf))
+>   				goto err_xdp;
+> @@ -921,7 +939,8 @@ static struct sk_buff *receive_mergeable(struct net=
+_device *dev,
+>   		goto err_skb;
+>   	}
+>  =20
+> -	head_skb =3D page_to_skb(vi, rq, page, offset, len, truesize, !xdp_pr=
+og);
+> +	head_skb =3D page_to_skb(vi, rq, page, offset, len, truesize, !xdp_pr=
+og,
+> +			       metasize);
+>   	curr_skb =3D head_skb;
+>  =20
+>   	if (unlikely(!curr_skb))
 
