@@ -2,100 +2,93 @@ Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C71C35247
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAE1C352A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CDC20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eucncfy0"
+	by mail.kernel.org (Postfix) with ESMTP id 8D2F820730
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBEXk2 (ORCPT
+        id S1727581AbgBEXls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:40:28 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37056 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727478AbgBEXk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:40:27 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so2765122lfc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 15:40:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eImnorc+E72Ebn4XEF1SUg6cxpdpF8frzXw7k6RoRcE=;
-        b=Eucncfy0bfw2XSNvy3spLaCcbAJQXGXLfKwBFip2IDIQLXmUo0Oshd2FbgLS3FZnZK
-         9niWI9xMAjS7AulP2kZjWHny2XgDM4S//hdCeWXKGIFCEUzBUo9M1OOddK2Eg26bMsyB
-         DveOA8IJDdhnBk9uzpiAv8bDzUzDwCELfF16cn3TKe90OqY8nddNTeRzv5gtlrc0uFPh
-         ptbM+AfLEnnLiVD9BHUxlxFOKknvZ/WKsce5pwcjNl6ABhJJ2svy6h+x4B1RvPJIsTC1
-         B661E2LWjz74WjBpodNkt6YPeBFT46XbVetSnJ+7xHdI0sIyKm27coJnchHIyhuRidtM
-         TUgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eImnorc+E72Ebn4XEF1SUg6cxpdpF8frzXw7k6RoRcE=;
-        b=RRrvKena/KhM/A0doqamtrmqGNvfKfiscW9IwEYBrb9ww0KwtIopKQ7dC4IyPRbelN
-         DIR+l67xC0Asp98cbtDOV/Hn4Ge1QPTYBfu2V4baF3KUP7JL33o2LZWaPGKDyP4l/3YA
-         rECLWdYTpwXsJ6psIGqqlfBuCyASrQperNE0G2SntutwdwfVeeuK+T7cD4deUytgFkDc
-         YmBSf9nkMZfAfadhQMx8SfwaHunP+Ot3QtLjfbpYIfH8kQSG7baJoKDvD3bQ6/dp9DXB
-         wbjRbnJB8jLV56g8M98VPma1BdZCKvg3a6FLObQTSAHCZ+dJRBd3bgpvlH2c7eG8gzaX
-         qzbA==
-X-Gm-Message-State: APjAAAVnEZVYv5UJvgTxjXP+YhRFTvpFZviNwHsLIN6fm9AIXIzjo5rM
-        c+4NavaXTbWHT0pH3EFEu+nO42hWnR8to+We29w/LQ==
-X-Google-Smtp-Source: APXvYqzzEBWngyKstrRaijt7X7I5bXY9Val+Hxs5gu/BwpxZpiBbhMGiFic8G5pM6rS0i/mpmGgwfAohfvUcJsRyKVQ=
-X-Received: by 2002:ac2:5979:: with SMTP id h25mr122207lfp.203.1580946023798;
- Wed, 05 Feb 2020 15:40:23 -0800 (PST)
+        Wed, 5 Feb 2020 18:41:48 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21263 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbgBEXls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:41:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:41:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="432036325"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Feb 2020 15:41:45 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1izUIj-0004su-6l; Thu, 06 Feb 2020 07:41:45 +0800
+Date:   Thu, 6 Feb 2020 07:41:18 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     kbuild-all@lists.01.org, zohar@linux.ibm.com,
+        James.Bottomley@HansenPartnership.com,
+        jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH v2 6/8] ima: Allocate and initialize tfm for each PCR bank
+Message-ID: <202002060720.CVTYGnC7%lkp@intel.com>
+References: <20200205103317.29356-7-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-References: <20200128230328.183524-1-drosen@google.com> <20200128230328.183524-2-drosen@google.com>
- <85sgjsxx2g.fsf@collabora.com> <CA+PiJmS3kbK8220QaccP5jJ7dSf4xv3UrStQvLskAtCN+=vG_A@mail.gmail.com>
- <85h8051x6a.fsf@collabora.com>
-In-Reply-To: <85h8051x6a.fsf@collabora.com>
-From:   Daniel Rosenberg <drosen@google.com>
-Date:   Wed, 5 Feb 2020 15:40:11 -0800
-Message-ID: <CA+PiJmQgFNLYoRu7fSWgz_He8Z8ceq1G2yUDcy0OCn1iD2rkzA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] unicode: Add standard casefolded d_ops
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205103317.29356-7-roberto.sassu@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 8:21 PM Gabriel Krisman Bertazi
-<krisman@collabora.com> wrote:
->
-> Daniel Rosenberg <drosen@google.com> writes:
->
-> Hi,
->
-> It was designed to be an internal thing, but I'm ok with exposing it.
->
-> --
-> Gabriel Krisman Bertazi
+Hi Roberto,
 
-We could also avoid exposing it by creating an iterator function that
-accepts a context struct with some actor function pointer, similar to
-iterate_dir. I'm currently reworking around that and moving the fs
-specific functions to libfs. I can move the generic op_set code there
-as well.
+Thank you for the patch! Perhaps something to improve:
 
--Daniel Rosenberg
+[auto build test WARNING on integrity/next-integrity]
+[also build test WARNING on jss-tpmdd/next v5.5 next-20200205]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Roberto-Sassu/ima-support-stronger-algorithms-for-attestation/20200205-233901
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-154-g1dc00f87-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> security/integrity/ima/ima_crypto.c:72:12: sparse: sparse: symbol 'ima_init_ima_crypto' was not declared. Should it be static?
+   security/integrity/ima/ima_crypto.c:545:36: sparse: sparse: invalid assignment: |=
+   security/integrity/ima/ima_crypto.c:545:36: sparse:    left side has type unsigned int
+   security/integrity/ima/ima_crypto.c:545:36: sparse:    right side has type restricted fmode_t
+   security/integrity/ima/ima_crypto.c:565:28: sparse: sparse: invalid assignment: &=
+   security/integrity/ima/ima_crypto.c:565:28: sparse:    left side has type unsigned int
+   security/integrity/ima/ima_crypto.c:565:28: sparse:    right side has type restricted fmode_t
+   security/integrity/ima/ima_crypto.c:592:52: sparse: sparse: restricted __le32 degrades to integer
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
