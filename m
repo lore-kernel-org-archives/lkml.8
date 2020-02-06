@@ -2,140 +2,244 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CDDC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D5EC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C972020659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB6520659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VRaRJW1Y"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NnOVue9i";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GDEa7pjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgBFTIG (ORCPT
+        id S1727951AbgBFTIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:08:06 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40715 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgBFTIG (ORCPT
+        Thu, 6 Feb 2020 14:08:41 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:44334 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgBFTIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:08:06 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so377740pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:08:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:cc:to:from:user-agent:date;
-        bh=Yu2QDav0lMyEABQNSAjZtJUdEYaLbzOvrURQHYilMW0=;
-        b=VRaRJW1YHC6Yz1ba1KM+r2rAH78IAw4ECZ8uW10SXwNAHIWn7E+yTg0EHguOn/zRrt
-         eMFPYSqUTeNMXsykpLoM4IV2tVHk0/uMr4OaXPJV8mcVbWOk0QE8XuGjrvBHau/XzuTz
-         tHhIdvSd9A1QlCqSpwFwRf2PLIPuBTZQ+KwDc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:cc:to:from
-         :user-agent:date;
-        bh=Yu2QDav0lMyEABQNSAjZtJUdEYaLbzOvrURQHYilMW0=;
-        b=a9ZNWIq1Ylscg/tFAcyn417C2g9j+Go4no4XrAdZjeop4AolIs9zkor+evMM0weBNg
-         BvL4jTlYHfcz++awG/LuSBxrxpGI767ku60F6lDbQPrdFknTOnERzsyz5Iopm3D2AZQ4
-         ZYpEotowhqCLdQXkYaFlUoGQbon3g/2Tga5ISme9tmGEzUshPRes6D+ih2Fbn4L3XfuS
-         8Lvgl9AINX8NMMJgJc4xDVXtuIKcpbKUie69tNGObmxvgomrkDlBdIYZrW4yGslnPwsG
-         iAdGUSMb+g/E41RI5MC3rGWI071tGuKNzmgYQgNz3oVoHeepvkmrk8num8Ddh1hsWyrG
-         5rNg==
-X-Gm-Message-State: APjAAAUE4nZ/qvWOLAAo2SKHyKIHq3q62CgiU6Xl8eBeorvLjnZ+Obw/
-        2mRnyHoqZsDtD7pF8bCc3abUyw==
-X-Google-Smtp-Source: APXvYqw4FzuijgYSawjl5c7tObZjQNWODBQFdG4z93eiZtWw8Kfhehai1gG8W0VsIPSAuMTH3ojcqQ==
-X-Received: by 2002:a17:902:9691:: with SMTP id n17mr5606416plp.304.1581016085712;
-        Thu, 06 Feb 2020 11:08:05 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q28sm145590pfl.153.2020.02.06.11.08.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:08:05 -0800 (PST)
-Message-ID: <5e3c6415.1c69fb81.11c79.08a6@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 6 Feb 2020 14:08:41 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016J8WpA172908;
+        Thu, 6 Feb 2020 19:08:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=yansYJidJ2HRyuM/DKZHN3c8dM+VvdkGZN7ODN38+Bc=;
+ b=NnOVue9i1GmzVur0C8YB31uthCY0qMvGVdbGkRGMtlhvH8I2FZetuvMJhwnUts9PaQYf
+ 8uPKLMOjp7XQciZKJJCYBjDBl085aJlitqMCaPvme0NGhOTL31s9oQ8D4z19RPlgolbZ
+ ITirbPbus7AFFuER/QogvcOWKInGN+9lOglWqXDLd0ge6B1RylxLuK9QSfTd+PCS6sZ0
+ 98GK5zy4bcr6FDdcHQsEs93e5JXAfjYTMmCAlARfpK/BmHPI/vaFMHruEfH3aF9VTxfD
+ Giua3WjIA46v5JMQVaR0jRdOdbNVR4XWY+LUFkXbkeszm3o2LVNzvoO/lYpfkOf+K7V2 GA== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=yansYJidJ2HRyuM/DKZHN3c8dM+VvdkGZN7ODN38+Bc=;
+ b=GDEa7pjC00TmLwoBuPhDKYUIrpHyz5eNq1KBKuQT7KOZPnDdsATODw+mszGtyfZeRR86
+ 1zjJXlCMP+ks7wUSqI0Lk83zd/o3bmHcsx8gwb9liK/6velPYWslcZ68izHj/OdMDQnR
+ VJ/n+UTEY/EvWHoGzwb7BdxFHd4lvijEYlPp4Gca1Bm4vODNvW+jrRaAxs8YQaJVwNum
+ kzKlOcC7khpOKxjHcgEkuPFfGZL9tyNFaDriP/Iv3jTuwRIRVD7VtfB7UGT6fmS4chmv
+ sRVu9BGBOzzg6led5NUcrDLK0a6mh6gbWP4C/ZS1ohFgSyQVfJWunqn2xr9vmd8yaYgs /Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xykbpksa6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 19:08:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016J8Pmf088015;
+        Thu, 6 Feb 2020 19:08:31 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2y0mnk9qbk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 19:08:31 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 016J8UIY015928;
+        Thu, 6 Feb 2020 19:08:30 GMT
+Received: from localhost.localdomain (/10.159.247.143)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 11:08:30 -0800
+Subject: Re: [PATCH v4 3/3] selftests: KVM: SVM: Add vmcall test
+To:     Wei Huang <wei.huang2@amd.com>, Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com,
+        thuth@redhat.com, drjones@redhat.com
+References: <20200206104710.16077-1-eric.auger@redhat.com>
+ <20200206104710.16077-4-eric.auger@redhat.com>
+ <20200206173931.GC2465308@weiserver.amd.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <556d20b2-d6cf-e13c-635c-809836316b80@oracle.com>
+Date:   Thu, 6 Feb 2020 11:08:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580997328-16365-2-git-send-email-kgunda@codeaurora.org>
-References: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org> <1580997328-16365-2-git-send-email-kgunda@codeaurora.org>
-Subject: Re: [PATCH V3 2/2] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
-Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Feb 2020 11:08:04 -0800
+In-Reply-To: <20200206173931.GC2465308@weiserver.amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kiran Gunda (2020-02-06 05:55:27)
-> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-> found on SC7180 based platforms
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 2 ++
->  drivers/mfd/qcom-spmi-pmic.c                              | 4 ++++
->  2 files changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/=
-Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> index affc169..36f0795 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> @@ -46,6 +46,8 @@ properties:
->        - qcom,pm8998
->        - qcom,pmi8998
->        - qcom,pm8005
-> +      - qcom,pm6150
-> +      - qcom,pm6150l
->        - qcom,spmi-pmic
 
-Maybe the yaml binding needs to say this is sorted in subtype id in a
-comment.
+On 2/6/20 9:39 AM, Wei Huang wrote:
+> On 02/06 11:47, Eric Auger wrote:
+>> L2 guest calls vmcall and L1 checks the exit status does
+>> correspond.
+>>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+> I verified this patch with my AMD box, both with nested=1 and nested=0. I
+> also intentionally changed the assertion of exit_code to a different
+> value (0x082) and the test complained about it. So the test is good.
+>
+> # selftests: kvm: svm_vmcall_test
+> # ==== Test Assertion Failure ====
+> #   x86_64/svm_vmcall_test.c:64: false
+> #   pid=2485656 tid=2485656 - Interrupted system call
+> #      1        0x0000000000401387: main at svm_vmcall_test.c:72
+> #      2        0x00007fd0978d71a2: ?? ??:0
+> #      3        0x00000000004013ed: _start at ??:?
+> #   Failed guest assert: vmcb->control.exit_code == SVM_EXIT_VMMCALL
+> # Testing guest mode: PA-bits:ANY, VA-bits:48,  4K pages
+> # Guest physical address width detected: 48
+> not ok 15 selftests: kvm: svm_vmcall_test # exit=254
+>
+>> ---
+>>
+>> v3 -> v4:
+>> - remove useless includes
+>> - collected Lin's R-b
+>>
+>> v2 -> v3:
+>> - remove useless comment and add Vitaly's R-b
+>> ---
+>>   tools/testing/selftests/kvm/Makefile          |  1 +
+>>   .../selftests/kvm/x86_64/svm_vmcall_test.c    | 79 +++++++++++++++++++
+>>   2 files changed, 80 insertions(+)
+>>   create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+>>
+>> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+>> index 2e770f554cae..b529d3b42c02 100644
+>> --- a/tools/testing/selftests/kvm/Makefile
+>> +++ b/tools/testing/selftests/kvm/Makefile
+>> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
+>>   TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
+>>   TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
+>>   TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
+>> +TEST_GEN_PROGS_x86_64 += x86_64/svm_vmcall_test
+>>   TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+>>   TEST_GEN_PROGS_x86_64 += dirty_log_test
+>>   TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+>> diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+>> new file mode 100644
+>> index 000000000000..6d3565aab94e
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+> Probably rename the file to svm_nested_vmcall_test.c. This matches with
+> the naming convention of VMX's nested tests. Otherwise people might not know
+> it is a nested one.
 
-	# Sorted based on subtype ID the device reports
-
-Or we should sort this list in the binding and sort the compatible
-string table in the driver with a comment that it's sorted based on
-subtype id.
-
-> =20
->    reg:
-> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-> index 1df1a27..5bfeec8 100644
-> --- a/drivers/mfd/qcom-spmi-pmic.c
-> +++ b/drivers/mfd/qcom-spmi-pmic.c
-> @@ -36,6 +36,8 @@
->  #define PM8998_SUBTYPE         0x14
->  #define PMI8998_SUBTYPE                0x15
->  #define PM8005_SUBTYPE         0x18
-> +#define PM6150L_SUBTYPE                0x1F
-> +#define PM6150_SUBTYPE         0x28
-> =20
->  static const struct of_device_id pmic_spmi_id_table[] =3D {
->         { .compatible =3D "qcom,spmi-pmic", .data =3D (void *)COMMON_SUBT=
-YPE },
-> @@ -57,6 +59,8 @@ static const struct of_device_id pmic_spmi_id_table[] =
-=3D {
->         { .compatible =3D "qcom,pm8998",    .data =3D (void *)PM8998_SUBT=
-YPE },
->         { .compatible =3D "qcom,pmi8998",   .data =3D (void *)PMI8998_SUB=
-TYPE },
->         { .compatible =3D "qcom,pm8005",    .data =3D (void *)PM8005_SUBT=
-YPE },
-> +       { .compatible =3D "qcom,pm6150l",   .data =3D (void *)PM6150L_SUB=
-TYPE },
-> +       { .compatible =3D "qcom,pm6150",    .data =3D (void *)PM6150_SUBT=
-YPE },
->         { }
->  };
+Is it better to give this file a generic name, say, nsvm_tests or 
+something like that, and place all future nested SVM tests in it, rather 
+than creating a separate file for each nested test ?
+>
+> Everything else looks good.
+>
+>> @@ -0,0 +1,79 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * svm_vmcall_test
+>> + *
+>> + * Copyright (C) 2020, Red Hat, Inc.
+>> + *
+>> + * Nested SVM testing: VMCALL
+>> + */
+>> +
+>> +#include "test_util.h"
+>> +#include "kvm_util.h"
+>> +#include "processor.h"
+>> +#include "svm_util.h"
+>> +
+>> +#define VCPU_ID		5
+>> +
+>> +static struct kvm_vm *vm;
+>> +
+>> +static inline void l2_vmcall(struct svm_test_data *svm)
+>> +{
+>> +	__asm__ __volatile__("vmcall");
+>> +}
+>> +
+>> +static void l1_guest_code(struct svm_test_data *svm)
+>> +{
+>> +	#define L2_GUEST_STACK_SIZE 64
+>> +	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+>> +	struct vmcb *vmcb = svm->vmcb;
+>> +
+>> +	/* Prepare for L2 execution. */
+>> +	generic_svm_setup(svm, l2_vmcall,
+>> +			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
+>> +
+>> +	run_guest(vmcb, svm->vmcb_gpa);
+>> +
+>> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
+>> +	GUEST_DONE();
+>> +}
+>> +
+>> +int main(int argc, char *argv[])
+>> +{
+>> +	vm_vaddr_t svm_gva;
+>> +
+>> +	nested_svm_check_supported();
+>> +
+>> +	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
+>> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+>> +
+>> +	vcpu_alloc_svm(vm, &svm_gva);
+>> +	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
+>> +
+>> +	for (;;) {
+>> +		volatile struct kvm_run *run = vcpu_state(vm, VCPU_ID);
+>> +		struct ucall uc;
+>> +
+>> +		vcpu_run(vm, VCPU_ID);
+>> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+>> +			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+>> +			    run->exit_reason,
+>> +			    exit_reason_str(run->exit_reason));
+>> +
+>> +		switch (get_ucall(vm, VCPU_ID, &uc)) {
+>> +		case UCALL_ABORT:
+>> +			TEST_ASSERT(false, "%s",
+>> +				    (const char *)uc.args[0]);
+>> +			/* NOT REACHED */
+>> +		case UCALL_SYNC:
+>> +			break;
+>> +		case UCALL_DONE:
+>> +			goto done;
+>> +		default:
+>> +			TEST_ASSERT(false,
+>> +				    "Unknown ucall 0x%x.", uc.cmd);
+>> +		}
+>> +	}
+>> +done:
+>> +	kvm_vm_free(vm);
+>> +	return 0;
+>> +}
+>
