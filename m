@@ -2,651 +2,345 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567FCC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932CBC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E41218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A16F217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jj0OX0wT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgBFXo0 (ORCPT
+        id S1727012AbgBFXvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 18:44:26 -0500
-Received: from [65.157.77.67] ([65.157.77.67]:58179 "HELO ubuntu.localdomain"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1726502AbgBFXo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 18:44:26 -0500
-Received: by ubuntu.localdomain (Postfix, from userid 1000)
-        id 7F8AA464DC7; Thu,  6 Feb 2020 16:44:23 -0700 (MST)
-From:   Mike Jones <michael-a1.jones@analog.com>
-To:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org,
-        corbet@lwn.net, Mike Jones <michael-a1.jones@analog.com>
-Subject: [PATCH 1/2] hwmon: (pmbus/ltc2978): add support for more parts.
-Date:   Thu,  6 Feb 2020 16:44:13 -0700
-Message-Id: <1581032654-4330-1-git-send-email-michael-a1.jones@analog.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Feb 2020 18:51:16 -0500
+Received: from mail-dm6nam12on2125.outbound.protection.outlook.com ([40.107.243.125]:49249
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726502AbgBFXvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 18:51:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NhAAiLXQwPZmj0UT2cZW3vhl9ReSmt2mb6dCcBWR+TJdLpKVIrA66EYzUzBk1ykFRTIU/APY+xswMW5dgkERpDNQuvRsuL3v/9IgAhvzEQ47Ivy90ubkvbZMXjZAI/hCKryQ8YR7Yu7yNOk5yTNO8c69ZjsHqXeExsAP3a91bVGzsHMRD/Qmx1PX8SjwcxO6KaFdpk5yKNnRepz1+CEjYRGXXppLnJ3Mi3v55lTS0CBpISWJg2KwfGQBXRIiMaAvzI9y+v2bN63W37MATrzeyH/G05nCa/AmoIVZXN62/9nox/CWhI1oEWp9c2zQtO4r8AGzT0NcAemQZCtvvHnmTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSc2LAi5Ve36RfDoc3BI3AWO5aCzFhdjWtALi+ulp2c=;
+ b=hqGdbMQAo3LoPdPvnRec0T8FAn2lrXHz5LUzr9zvbAEuWx8HWc1fY/gA5XylKSWYd1SLbwN+8Tn7n6DDveiUH8qsfVwuzknJ+wR5qDtcHgBQ3PjAChzFkFHaLr0EbHSroexgoY8VzPq/Yg7gegZEjZB3iutSSYpN9tuiV+3rRMj6CekByrXE+QIWBBy7VI6Ev7075K4TQxCJOgJexKRwbdRtZfKl8BBChm+fsC3Use7Pfi3GwTxbpnYqyJs/OIa6erl+wdta3/0NG1sekNJUrA0eadb8Z4Qi7kGmKpTfue63jSFJZHtp7HBVye2Dvlrz7zFiBqVEYv0y+N0eteeaCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSc2LAi5Ve36RfDoc3BI3AWO5aCzFhdjWtALi+ulp2c=;
+ b=jj0OX0wTF7dfxDGCc0BP6AFMQlrL0mG/dARupRABUaVnucef+CeXDMgErU86qPYyV8JRGfSq+Gk7QWTOKYC+nrydGgWUGgPkhZmJ+yU2DTExrFWUKC4DV5b5NYOoMaLRAydoBqSuTOUXhcQuJdHHtjbUoU0ad1FZf8FGTIBZITw=
+Received: from BN8PR21MB1155.namprd21.prod.outlook.com (20.179.72.202) by
+ BN8PR21MB1236.namprd21.prod.outlook.com (20.179.73.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.5; Thu, 6 Feb 2020 23:48:38 +0000
+Received: from BN8PR21MB1155.namprd21.prod.outlook.com
+ ([fe80::9123:f430:1749:be38]) by BN8PR21MB1155.namprd21.prod.outlook.com
+ ([fe80::9123:f430:1749:be38%8]) with mapi id 15.20.2729.010; Thu, 6 Feb 2020
+ 23:48:37 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Long Li <longli@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v4 1/2] PCI: hv: Decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [Patch v4 1/2] PCI: hv: Decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVyk09ZpI6noor9kG6MV8g7Smkvqf3ROSQgBe2D2A=
+Date:   Thu, 6 Feb 2020 23:48:37 +0000
+Message-ID: <BN8PR21MB1155B34C378807E67576F961CE1D0@BN8PR21MB1155.namprd21.prod.outlook.com>
+References: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
+ <SN6PR2101MB10234B91D7748441CA18A361CE0C0@SN6PR2101MB1023.namprd21.prod.outlook.com>
+In-Reply-To: <SN6PR2101MB10234B91D7748441CA18A361CE0C0@SN6PR2101MB1023.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=de622098-dfc4-499e-bbb8-0000d6a42635;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-22T21:41:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:3:edeb:db5c:c6fe:798]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: db3db4c4-54ba-470b-a761-08d7ab5f1640
+x-ms-traffictypediagnostic: BN8PR21MB1236:|BN8PR21MB1236:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR21MB123615DEC9DF8E1546C52D04CE1D0@BN8PR21MB1236.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(189003)(199004)(15650500001)(478600001)(186003)(66476007)(33656002)(8990500004)(66946007)(66446008)(76116006)(5660300002)(64756008)(66556008)(6506007)(86362001)(2906002)(7696005)(52536014)(55016002)(110136005)(9686003)(81166006)(81156014)(8676002)(71200400001)(316002)(8936002)(10290500003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1236;H:BN8PR21MB1155.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: irl8qw/T19icpzPqlLhRcjD+CL03rwSH98Siyu3V/pNy7V1P+yCYI6OrIgPVKegOryw/eCOcF9G3Or86TTmm44y4HEJjvkQ0vcgMy/sjXs2B2+Ou/WhVEBb7GxEmC6Sm4QXP9O5E4WNRH/zi+ZmmT9PY2fY3p+yduav6swgNcBhNeRb/1PSGS/p1mEmR+wh+gR+keUZAJ9R5nsKWYe3/WFRe/Gv0VdTQrTqOkKX5wkQv3fo22eg0A1s3Ld2cd+/Px2Qi4rU1ue0wwVNFFI6uc2V7NhVPwBh1BsvwCyZv7iMPWFJCSd21Q1nOHb4lnE/V6qkhRM/GXMieZKkFm0tpp/vM8vxUaUZNAg5kdy4dILGYfWkOERcucS37LymoF+At6GDqapqYe7CO/reqcXZTj8W/yzjgM+bAQ26xkOz9kZWs0bOhejg0Z5pCRJDsHT5jF18ZeSMxvwDnCGTFC+fRETxRJ1cyC/fQXXlSZRNViZpJFjqhwMBgc2q5bEiPhrPV
+x-ms-exchange-antispam-messagedata: 6a7JHjvy5bErj75R24LfPLvN4NkYHoW1Nxlu5rXkJv0VM6nmlHzf+GAtignmtuSIy0e1Msc+4UvjVlUTAzy+WkEHJbw5Y5qkMEs6Y+xMZpofv38+81TESaUJmzmppjyG2OYnJIn9WxJ9gIRXayATJ/bBx0eh9gBW67jewixwNX4ewpsLoVV4Pin/e6BeV2iJKCUE/kOsrvCIhBg6Dn10lg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db3db4c4-54ba-470b-a761-08d7ab5f1640
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 23:48:37.8214
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pgAGcvNcghMw8NLEWpImlQpaz96UZYMt/n+byirRCV3GZBxRwLj2dos6HSW7XD7osvbbpk4D+cgEDqENoJ/vBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1236
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LTC2972, LTC2979, LTC3884, LTC3889, LTC7880, LTM4664, LTM4677,
-LTM4678, LTM4680, LTM4700.
+Hi guys,
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
----
- Documentation/hwmon/ltc2978.rst | 164 +++++++++++++++++++++++++++++++---------
- drivers/hwmon/pmbus/Kconfig     |  11 +--
- drivers/hwmon/pmbus/ltc2978.c   |  92 ++++++++++++++++++++--
- 3 files changed, 220 insertions(+), 47 deletions(-)
+Ping again...
 
-diff --git a/Documentation/hwmon/ltc2978.rst b/Documentation/hwmon/ltc2978.rst
-index 42fd841..58838d4 100644
---- a/Documentation/hwmon/ltc2978.rst
-+++ b/Documentation/hwmon/ltc2978.rst
-@@ -3,6 +3,14 @@ Kernel driver ltc2978
- 
- Supported chips:
- 
-+  * Linear Technology LTC2972
-+
-+    Prefix: 'ltc2972'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltc2972.html
-+
-   * Linear Technology LTC2974
- 
-     Prefix: 'ltc2974'
-@@ -37,6 +45,14 @@ Supported chips:
- 
- 	       https://www.analog.com/en/products/ltc2978a
- 
-+  * Linear Technology LTC2979
-+
-+    Prefix: 'ltc2979'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltc2979
-+
-   * Linear Technology LTC2980
- 
-     Prefix: 'ltc2980'
-@@ -69,6 +85,14 @@ Supported chips:
- 
-     Datasheet: https://www.analog.com/en/products/ltc3883
- 
-+  * Linear Technology LTC3884
-+
-+    Prefix: 'ltc3884'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltc3884
-+
-   * Linear Technology LTC3886
- 
-     Prefix: 'ltc3886'
-@@ -85,6 +109,22 @@ Supported chips:
- 
-     Datasheet: https://www.analog.com/en/products/ltc3887
- 
-+  * Linear Technology LTC3889
-+
-+    Prefix: 'ltc3889'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltc3889
-+
-+  * Linear Technology LTC7880
-+
-+    Prefix: 'ltc7880'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltc7880
-+
-   * Linear Technology LTM2987
- 
-     Prefix: 'ltm2987'
-@@ -93,7 +133,15 @@ Supported chips:
- 
-     Datasheet: https://www.analog.com/en/products/ltm2987
- 
--  * Linear Technology LTM4675
-+  * Linear Technology LTM4644
-+
-+    Prefix: 'ltm4644'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltm4644
-+
-+   * Linear Technology LTM4675
- 
-     Prefix: 'ltm4675'
- 
-@@ -109,6 +157,30 @@ Supported chips:
- 
-     Datasheet: https://www.analog.com/en/products/ltm4676
- 
-+  * Linear Technology LTM4677
-+
-+    Prefix: 'ltm4677'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltm4677
-+
-+  * Linear Technology LTM4678
-+
-+    Prefix: 'ltm4678'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/ltm4678
-+
-+  * Analog Devices LTM4680
-+
-+    Prefix: 'ltm4680'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: http://www.analog.com/ltm4680
-+
-   * Analog Devices LTM4686
- 
-     Prefix: 'ltm4686'
-@@ -117,6 +189,15 @@ Supported chips:
- 
-     Datasheet: http://www.analog.com/ltm4686
- 
-+  * Analog Devices LTM4700
-+
-+    Prefix: 'ltm4700'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: http://www.analog.com/ltm4700
-+
-+
- 
- Author: Guenter Roeck <linux@roeck-us.net>
- 
-@@ -166,13 +247,13 @@ in1_min			Minimum input voltage.
- 
- in1_max			Maximum input voltage.
- 
--			LTC2974, LTC2975, LTC2977, LTC2980, LTC2978, and
--			LTM2987 only.
-+			LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
-+      LTC2979 and LTM2987 only.
- 
- in1_lcrit		Critical minimum input voltage.
- 
--			LTC2974, LTC2975, LTC2977, LTC2980, LTC2978, and
--			LTM2987 only.
-+			LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
-+      LTC2979 and LTM2987 only.
- 
- in1_crit		Critical maximum input voltage.
- 
-@@ -180,17 +261,17 @@ in1_min_alarm		Input voltage low alarm.
- 
- in1_max_alarm		Input voltage high alarm.
- 
--			LTC2974, LTC2975, LTC2977, LTC2980, LTC2978, and
--			LTM2987 only.
-+			LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
-+      LTC2979 and LTM2987 only.
- in1_lcrit_alarm		Input voltage critical low alarm.
- 
--			LTC2974, LTC2975, LTC2977, LTC2980, LTC2978, and
--			LTM2987 only.
-+			LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
-+      LTC2979 and LTM2987 only.
- in1_crit_alarm		Input voltage critical high alarm.
- 
- in1_lowest		Lowest input voltage.
- 
--			LTC2974, LTC2975, LTC2977, LTC2980, LTC2978, and
-+			LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978, and
- 			LTM2987 only.
- in1_highest		Highest input voltage.
- 
-@@ -198,11 +279,13 @@ in1_reset_history	Reset input voltage history.
- 
- in[N]_label		"vout[1-8]".
- 
-+      - LTC2972: N=2-3
- 			- LTC2974, LTC2975: N=2-5
--			- LTC2977, LTC2980, LTM2987: N=2-9
-+			- LTC2977, LTC2979, LTC2980, LTM2987: N=2-9
- 			- LTC2978: N=2-9
--			- LTC3880, LTC3882, LTC23886 LTC3887, LTM4675, LTM4676:
--			  N=2-3
-+			- LTC3880, LTC3882, LTC3884, LTC23886 LTC3887, LTC3889,
-+        LTC7880, LTM4644, LTM4675, LTM4676, LTM4677, LTM4678,
-+        LTM4680, LTM4700: N=2-3
- 			- LTC3883: N=2
- 
- in[N]_input		Measured output voltage.
-@@ -226,7 +309,7 @@ in[N]_crit_alarm	Output voltage critical high alarm.
- in[N]_lowest		Lowest output voltage.
- 
- 
--			LTC2974, LTC2975,and LTC2978 only.
-+			LTC2972, LTC2974, LTC2975,and LTC2978 only.
- 
- in[N]_highest		Highest output voltage.
- 
-@@ -234,20 +317,24 @@ in[N]_reset_history	Reset output voltage history.
- 
- temp[N]_input		Measured temperature.
- 
-+      - On LTC2972, temp[1-2] report external temperatures,
-+        and temp 3 reports the chip temperature.
- 			- On LTC2974 and LTC2975, temp[1-4] report external
- 			  temperatures, and temp5 reports the chip temperature.
--			- On LTC2977, LTC2980, LTC2978, and LTM2987, only one
--			  temperature measurement is supported and reports
--			  the chip temperature.
--			- On LTC3880, LTC3882, LTC3887, LTM4675, and LTM4676,
--			  temp1 and temp2 report external temperatures, and
--			  temp3 reports the chip temperature.
-+			- On LTC2977, LTC2979, LTC2980, LTC2978, and LTM2987,
-+        only one temperature measurement is supported and
-+        reports the chip temperature.
-+			- On LTC3880, LTC3882, LTC3886, LTC3887, LTC3889,
-+        LTM4664, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
-+        and LTM4700, temp1 and temp2 report external
-+        temperatures, and temp3 reports the chip temperature.
- 			- On LTC3883, temp1 reports an external temperature,
- 			  and temp2 reports the chip temperature.
- 
- temp[N]_min		Mimimum temperature.
- 
--			LTC2974, LCT2977, LTM2980, LTC2978, and LTM2987 only.
-+			LTC2972, LTC2974, LCT2977, LTM2980, LTC2978,
-+      LTC2979, and LTM2987 only.
- 
- temp[N]_max		Maximum temperature.
- 
-@@ -257,8 +344,8 @@ temp[N]_crit		Critical high temperature.
- 
- temp[N]_min_alarm	Temperature low alarm.
- 
--			LTC2974, LTC2975, LTC2977, LTM2980, LTC2978, and
--			LTM2987 only.
-+			LTC2972, LTC2974, LTC2975, LTC2977, LTM2980, LTC2978,
-+      LTC2979, and LTM2987 only.
- 
- temp[N]_max_alarm	Temperature high alarm.
- 
-@@ -269,8 +356,8 @@ temp[N]_crit_alarm	Temperature critical high alarm.
- 
- temp[N]_lowest		Lowest measured temperature.
- 
--			- LTC2974, LTC2975, LTC2977, LTM2980, LTC2978, and
--			  LTM2987 only.
-+			- LTC2972, LTC2974, LTC2975, LTC2977, LTM2980, LTC2978,
-+        LTC2979, and LTM2987 only.
- 			- Not supported for chip temperature sensor on LTC2974
- 			  and LTC2975.
- 
-@@ -290,19 +377,22 @@ power1_input		Measured input power.
- 
- power[N]_label		"pout[1-4]".
- 
-+      - LTC2972: N=1-2
- 			- LTC2974, LTC2975: N=1-4
--			- LTC2977, LTC2980, LTM2987: Not supported
-+			- LTC2977, LTC2979, LTC2980, LTM2987: Not supported
- 			- LTC2978: Not supported
--			- LTC3880, LTC3882, LTC3886, LTC3887, LTM4675, LTM4676:
--			  N=1-2
-+			- LTC3880, LTC3882, LTC3884, LTC3886, LTC3887, LTC3889,
-+        LTM4664, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
-+        LTM4700: N=1-2
- 			- LTC3883: N=2
- 
- power[N]_input		Measured output power.
- 
- curr1_label		"iin".
- 
--			LTC3880, LTC3883, LTC3886, LTC3887, LTM4675,
--			and LTM4676 only.
-+			LTC3880, LTC3883, LTC3884, LTC3886, LTC3887, LTC3889,
-+      LTM4644, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
-+      and LTM4700 only.
- 
- curr1_input		Measured input current.
- 
-@@ -320,11 +410,13 @@ curr1_reset_history	Reset input current history.
- 
- curr[N]_label		"iout[1-4]".
- 
-+      - LTC2972: N-1-2
- 			- LTC2974, LTC2975: N=1-4
--			- LTC2977, LTC2980, LTM2987: not supported
-+			- LTC2977, LTC2979, LTC2980, LTM2987: not supported
- 			- LTC2978: not supported
--			- LTC3880, LTC3882, LTC3886, LTC3887, LTM4675, LTM4676:
--			  N=2-3
-+			- LTC3880, LTC3882, LTC3884, LTC3886, LTC3887, LTC3889,
-+        LTM4664, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
-+        LTM4700: N=2-3
- 			- LTC3883: N=2
- 
- curr[N]_input		Measured output current.
-@@ -335,7 +427,7 @@ curr[N]_crit		Critical high output current.
- 
- curr[N]_lcrit		Critical low output current.
- 
--			LTC2974 and LTC2975 only.
-+			LTC2972, LTC2974 and LTC2975 only.
- 
- curr[N]_max_alarm	Output current high alarm.
- 
-@@ -343,11 +435,11 @@ curr[N]_crit_alarm	Output current critical high alarm.
- 
- curr[N]_lcrit_alarm	Output current critical low alarm.
- 
--			LTC2974 and LTC2975 only.
-+			LTC2972, LTC2974 and LTC2975 only.
- 
- curr[N]_lowest		Lowest output current.
- 
--			LTC2974 and LTC2975 only.
-+			LTC2972, LTC2974 and LTC2975 only.
- 
- curr[N]_highest		Highest output current.
- 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 5985997..92f26f3 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -113,8 +113,8 @@ config SENSORS_LTC2978
- 	tristate "Linear Technologies LTC2978 and compatibles"
- 	help
- 	  If you say yes here you get hardware monitoring support for Linear
--	  Technology LTC2974, LTC2975, LTC2977, LTC2978, LTC2980, LTC3880,
--	  LTC3883, LTC3886, LTC3887, LTCM2987, LTM4675, and LTM4676.
-+	  Technology LTC2972, LTC2974, LTC2975, LTC2977, LTC2978, LTC2979,
-+	  LTC2980, and LTM2987.
- 
- 	  This driver can also be built as a module. If so, the module will
- 	  be called ltc2978.
-@@ -123,9 +123,10 @@ config SENSORS_LTC2978_REGULATOR
- 	bool "Regulator support for LTC2978 and compatibles"
- 	depends on SENSORS_LTC2978 && REGULATOR
- 	help
--	  If you say yes here you get regulator support for Linear
--	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, LTM4676
--	  and LTM4686.
-+	  If you say yes here you get regulator support for Linear Technology
-+	  LTC3880, LTC3883, LTC3884, LTC3886, LTC3887, LTC3889, LTC7880, 
-+	  LTM4644, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680, LTM4686, 
-+	  and LTM4700.
- 
- config SENSORS_LTC3815
- 	tristate "Linear Technologies LTC3815"
-diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
-index a91ed01..8f619d0 100644
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -19,8 +19,10 @@
- #include <linux/regulator/driver.h>
- #include "pmbus.h"
- 
--enum chips { ltc2974, ltc2975, ltc2977, ltc2978, ltc2980, ltc3880, ltc3882,
--	ltc3883, ltc3886, ltc3887, ltm2987, ltm4675, ltm4676, ltm4686 };
-+enum chips { ltc2972, ltc2974, ltc2975, ltc2977, ltc2978, ltc2979, ltc2980, /* Managers */
-+	ltc3880, ltc3882, ltc3883, ltc3884, ltc3886, ltc3887, ltc3889, ltc7880, /* Controllers */
-+	ltm2987, ltm4664, ltm4675, ltm4676, ltm4677, ltm4678, ltm4680, ltm4686, ltm4700 /* Modules */
-+};
- 
- /* Common for all chips */
- #define LTC2978_MFR_VOUT_PEAK		0xdd
-@@ -43,9 +45,10 @@ enum chips { ltc2974, ltc2975, ltc2977, ltc2978, ltc2980, ltc3880, ltc3882,
- #define LTC3880_MFR_CLEAR_PEAKS		0xe3
- #define LTC3880_MFR_TEMPERATURE2_PEAK	0xf4
- 
--/* LTC3883 and LTC3886 only */
-+/* LTC3883, LTC3884, LTC3886, LTC3889 and LTC7880 only */
- #define LTC3883_MFR_IIN_PEAK		0xe1
- 
-+
- /* LTC2975 only */
- #define LTC2975_MFR_IIN_PEAK		0xc4
- #define LTC2975_MFR_IIN_MIN		0xc5
-@@ -54,27 +57,41 @@ enum chips { ltc2974, ltc2975, ltc2977, ltc2978, ltc2980, ltc3880, ltc3882,
- 
- #define LTC2978_ID_MASK			0xfff0
- 
-+#define LTC2972_ID			0x0310
- #define LTC2974_ID			0x0210
- #define LTC2975_ID			0x0220
- #define LTC2977_ID			0x0130
- #define LTC2978_ID_REV1			0x0110	/* Early revision */
- #define LTC2978_ID_REV2			0x0120
-+#define LTC2979_ID_A			0x8060
-+#define LTC2979_ID_B			0x8070
- #define LTC2980_ID_A			0x8030	/* A/B for two die IDs */
- #define LTC2980_ID_B			0x8040
- #define LTC3880_ID			0x4020
- #define LTC3882_ID			0x4200
- #define LTC3882_ID_D1			0x4240	/* Dash 1 */
- #define LTC3883_ID			0x4300
-+#define LTC3884_ID			0x4C00
- #define LTC3886_ID			0x4600
- #define LTC3887_ID			0x4700
- #define LTM2987_ID_A			0x8010	/* A/B for two die IDs */
- #define LTM2987_ID_B			0x8020
-+#define LTC3889_ID			0x4900
-+#define LTC7880_ID			0x49E0
-+#define LTM4664_ID			0x4120
- #define LTM4675_ID			0x47a0
- #define LTM4676_ID_REV1			0x4400
- #define LTM4676_ID_REV2			0x4480
- #define LTM4676A_ID			0x47e0
-+#define LTM4677_ID_REV1			0x47B0
-+#define LTM4677_ID_REV2			0x47D0
-+#define LTM4678_ID_REV1			0x4100
-+#define LTM4678_ID_REV2			0x4110
-+#define LTM4680_ID			0x4140
- #define LTM4686_ID			0x4770
-+#define LTM4700_ID			0x4130
- 
-+#define LTC2972_NUM_PAGES		2
- #define LTC2974_NUM_PAGES		4
- #define LTC2978_NUM_PAGES		8
- #define LTC3880_NUM_PAGES		2
-@@ -492,20 +509,30 @@ static int ltc2978_write_word_data(struct i2c_client *client, int page,
- }
- 
- static const struct i2c_device_id ltc2978_id[] = {
-+	{"ltc2972", ltc2972},
- 	{"ltc2974", ltc2974},
- 	{"ltc2975", ltc2975},
- 	{"ltc2977", ltc2977},
- 	{"ltc2978", ltc2978},
-+	{"ltc2979", ltc2979},
- 	{"ltc2980", ltc2980},
- 	{"ltc3880", ltc3880},
- 	{"ltc3882", ltc3882},
- 	{"ltc3883", ltc3883},
-+	{"ltc3884", ltc3884},
- 	{"ltc3886", ltc3886},
- 	{"ltc3887", ltc3887},
-+	{"ltc3889", ltc3889},
-+	{"ltc7880", ltc7880},
- 	{"ltm2987", ltm2987},
-+	{"ltm4664", ltm4664},
- 	{"ltm4675", ltm4675},
- 	{"ltm4676", ltm4676},
-+	{"ltm4677", ltm4677},
-+	{"ltm4678", ltm4678},
-+	{"ltm4680", ltm4680},
- 	{"ltm4686", ltm4686},
-+	{"ltm4700", ltm4700},
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, ltc2978_id);
-@@ -555,7 +582,9 @@ static int ltc2978_get_id(struct i2c_client *client)
- 
- 	chip_id &= LTC2978_ID_MASK;
- 
--	if (chip_id == LTC2974_ID)
-+	if (chip_id == LTC2972_ID)
-+		return ltc2972;
-+	else if (chip_id == LTC2974_ID)
- 		return ltc2974;
- 	else if (chip_id == LTC2975_ID)
- 		return ltc2975;
-@@ -563,6 +592,8 @@ static int ltc2978_get_id(struct i2c_client *client)
- 		return ltc2977;
- 	else if (chip_id == LTC2978_ID_REV1 || chip_id == LTC2978_ID_REV2)
- 		return ltc2978;
-+	else if (chip_id == LTC2979_ID_A || chip_id == LTC2979_ID_B)
-+		return ltc2979;
- 	else if (chip_id == LTC2980_ID_A || chip_id == LTC2980_ID_B)
- 		return ltc2980;
- 	else if (chip_id == LTC3880_ID)
-@@ -571,19 +602,34 @@ static int ltc2978_get_id(struct i2c_client *client)
- 		return ltc3882;
- 	else if (chip_id == LTC3883_ID)
- 		return ltc3883;
-+	else if (chip_id == LTC3884_ID)
-+		return ltc3884;
- 	else if (chip_id == LTC3886_ID)
- 		return ltc3886;
- 	else if (chip_id == LTC3887_ID)
- 		return ltc3887;
-+	else if (chip_id == LTC3889_ID)
-+		return ltc3889;
-+	else if (chip_id == LTC7880_ID)
-+		return ltc7880;
- 	else if (chip_id == LTM2987_ID_A || chip_id == LTM2987_ID_B)
- 		return ltm2987;
-+	else if (chip_id == LTM4664_ID)
-+		return ltm4664;
- 	else if (chip_id == LTM4675_ID)
- 		return ltm4675;
--	else if (chip_id == LTM4676_ID_REV1 || chip_id == LTM4676_ID_REV2 ||
--		 chip_id == LTM4676A_ID)
-+	else if (chip_id == LTM4676_ID_REV1 || chip_id == LTM4676_ID_REV2 || chip_id == LTM4676A_ID)
- 		return ltm4676;
-+	else if (chip_id == LTM4677_ID_REV1 || chip_id == LTM4677_ID_REV2)
-+		return ltm4677;
-+	else if (chip_id == LTM4678_ID_REV1 || chip_id == LTM4678_ID_REV2)
-+		return ltm4678;
-+	else if (chip_id == LTM4680_ID)
-+		return ltm4680;
- 	else if (chip_id == LTM4686_ID)
- 		return ltm4686;
-+	else if (chip_id == LTM4700_ID)
-+		return ltm4700;
- 
- 	dev_err(&client->dev, "Unsupported chip ID 0x%x\n", chip_id);
- 	return -ENODEV;
-@@ -637,6 +683,19 @@ static int ltc2978_probe(struct i2c_client *client,
- 	data->temp2_max = 0x7c00;
- 
- 	switch (data->id) {
-+	case ltc2972:
-+		info->read_word_data = ltc2975_read_word_data;
-+		info->pages = LTC2972_NUM_PAGES;
-+		info->func[0] = PMBUS_HAVE_IIN | PMBUS_HAVE_PIN
-+		  | PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
-+		  | PMBUS_HAVE_TEMP2;
-+		for (i = 0; i < info->pages; i++) {
-+			info->func[i] |= PMBUS_HAVE_VOUT
-+			  | PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_POUT
-+			  | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
-+			  | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT;
-+		}
-+		break;	
- 	case ltc2974:
- 		info->read_word_data = ltc2974_read_word_data;
- 		info->pages = LTC2974_NUM_PAGES;
-@@ -662,8 +721,10 @@ static int ltc2978_probe(struct i2c_client *client,
- 			  | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT;
- 		}
- 		break;
-+
- 	case ltc2977:
- 	case ltc2978:
-+	case ltc2979:
- 	case ltc2980:
- 	case ltm2987:
- 		info->read_word_data = ltc2978_read_word_data;
-@@ -680,6 +741,7 @@ static int ltc2978_probe(struct i2c_client *client,
- 	case ltc3887:
- 	case ltm4675:
- 	case ltm4676:
-+	case ltm4677:
- 	case ltm4686:
- 		data->features |= FEAT_CLEAR_PEAKS | FEAT_NEEDS_POLLING;
- 		info->read_word_data = ltc3880_read_word_data;
-@@ -721,7 +783,14 @@ static int ltc2978_probe(struct i2c_client *client,
- 		  | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT | PMBUS_HAVE_TEMP
- 		  | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_STATUS_TEMP;
- 		break;
-+	case ltc3884:
- 	case ltc3886:
-+	case ltc3889:
-+	case ltc7880:
-+	case ltm4664:
-+	case ltm4678:
-+	case ltm4680:
-+	case ltm4700:
- 		data->features |= FEAT_CLEAR_PEAKS | FEAT_NEEDS_POLLING;
- 		info->read_word_data = ltc3883_read_word_data;
- 		info->pages = LTC3880_NUM_PAGES;
-@@ -752,22 +821,33 @@ static int ltc2978_probe(struct i2c_client *client,
- 	return pmbus_do_probe(client, id, info);
- }
- 
-+
- #ifdef CONFIG_OF
- static const struct of_device_id ltc2978_of_match[] = {
-+	{ .compatible = "lltc,ltc2972" },
- 	{ .compatible = "lltc,ltc2974" },
- 	{ .compatible = "lltc,ltc2975" },
- 	{ .compatible = "lltc,ltc2977" },
- 	{ .compatible = "lltc,ltc2978" },
-+	{ .compatible = "lltc,ltc2979" },
- 	{ .compatible = "lltc,ltc2980" },
- 	{ .compatible = "lltc,ltc3880" },
- 	{ .compatible = "lltc,ltc3882" },
- 	{ .compatible = "lltc,ltc3883" },
-+	{ .compatible = "lltc,ltc3884" },
- 	{ .compatible = "lltc,ltc3886" },
- 	{ .compatible = "lltc,ltc3887" },
-+	{ .compatible = "lltc,ltc3889" },
-+	{ .compatible = "lltc,ltc7880" },
- 	{ .compatible = "lltc,ltm2987" },
-+	{ .compatible = "lltc,ltm4664" },
- 	{ .compatible = "lltc,ltm4675" },
- 	{ .compatible = "lltc,ltm4676" },
-+	{ .compatible = "lltc,ltm4677" },
-+	{ .compatible = "lltc,ltm4678" },
-+	{ .compatible = "lltc,ltm4680" },
- 	{ .compatible = "lltc,ltm4686" },
-+	{ .compatible = "lltc,ltm4700" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ltc2978_of_match);
--- 
-2.7.4
+Please take a look at these two patches.
+
+Thanks
+
+Long
+
+>Subject: RE: [Patch v4 1/2] PCI: hv: Decouple the func definition in hv_dr=
+_state
+>from VSP message
+>
+>Hi Lorenzo,
+>
+>Can you take a look at this patch?
+>
+>Thanks
+>
+>Long
+>
+>>Subject: [Patch v4 1/2] PCI: hv: Decouple the func definition in
+>>hv_dr_state from VSP message
+>>
+>>From: Long Li <longli@microsoft.com>
+>>
+>>hv_dr_state is used to find present PCI devices on the bus. The
+>>structure reuses struct pci_function_description from VSP message to desc=
+ribe
+>a device.
+>>
+>>To prepare support for pci_function_description v2, decouple this
+>>dependence in hv_dr_state so it can work with both v1 and v2 VSP messages=
+.
+>>
+>>There is no functionality change.
+>>
+>>Signed-off-by: Long Li <longli@microsoft.com>
+>>Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>>---
+>>Changes
+>>v2: Changed some spaces to tabs, changed failure code to -ENOMEM
+>>v3: Revised comment for function hv_pci_devices_present(), reformatted
+>>patch title
+>>v4: Fixed spelling
+>>
+>> drivers/pci/controller/pci-hyperv.c | 101 +++++++++++++++++++---------
+>> 1 file changed, 70 insertions(+), 31 deletions(-)
+>>
+>>diff --git a/drivers/pci/controller/pci-hyperv.c
+>>b/drivers/pci/controller/pci- hyperv.c index f1f300218fab..3b3e1967cf08
+>>100644
+>>--- a/drivers/pci/controller/pci-hyperv.c
+>>+++ b/drivers/pci/controller/pci-hyperv.c
+>>@@ -507,10 +507,24 @@ struct hv_dr_work {
+>> 	struct hv_pcibus_device *bus;
+>> };
+>>
+>>+struct hv_pcidev_description {
+>>+	u16	v_id;	/* vendor ID */
+>>+	u16	d_id;	/* device ID */
+>>+	u8	rev;
+>>+	u8	prog_intf;
+>>+	u8	subclass;
+>>+	u8	base_class;
+>>+	u32	subsystem_id;
+>>+	union	win_slot_encoding win_slot;
+>>+	u32	ser;	/* serial number */
+>>+	u32	flags;
+>>+	u16	virtual_numa_node;
+>>+};
+>>+
+>> struct hv_dr_state {
+>> 	struct list_head list_entry;
+>> 	u32 device_count;
+>>-	struct pci_function_description func[0];
+>>+	struct hv_pcidev_description func[0];
+>> };
+>>
+>> enum hv_pcichild_state {
+>>@@ -527,7 +541,7 @@ struct hv_pci_dev {
+>> 	refcount_t refs;
+>> 	enum hv_pcichild_state state;
+>> 	struct pci_slot *pci_slot;
+>>-	struct pci_function_description desc;
+>>+	struct hv_pcidev_description desc;
+>> 	bool reported_missing;
+>> 	struct hv_pcibus_device *hbus;
+>> 	struct work_struct wrk;
+>>@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void
+>>*context, struct pci_response *resp,
+>>  * Return: Pointer to the new tracking struct
+>>  */
+>> static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *h=
+bus,
+>>-		struct pci_function_description *desc)
+>>+		struct hv_pcidev_description *desc)
+>> {
+>> 	struct hv_pci_dev *hpdev;
+>> 	struct pci_child_message *res_req;
+>>@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct
+>>work_struct *work)  {
+>> 	u32 child_no;
+>> 	bool found;
+>>-	struct pci_function_description *new_desc;
+>>+	struct hv_pcidev_description *new_desc;
+>> 	struct hv_pci_dev *hpdev;
+>> 	struct hv_pcibus_device *hbus;
+>> 	struct list_head removed;
+>>@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct
+>>work_struct *work)
+>> 	put_hvpcibus(hbus);
+>> 	kfree(dr);
+>> }
+>>-
+>> /**
+>>- * hv_pci_devices_present() - Handles list of new children
+>>+ * hv_pci_start_relations_work() - Queue work to start device
+>>+ discovery
+>>  * @hbus:	Root PCI bus, as understood by this driver
+>>- * @relations:	Packet from host listing children
+>>+ * @dr:		The list of children returned from host
+>>  *
+>>- * This function is invoked whenever a new list of devices for
+>>- * this bus appears.
+>>+ * Return:  0 on success, -errno on failure
+>>  */
+>>-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>>-				   struct pci_bus_relations *relations)
+>>+static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
+>>+				       struct hv_dr_state *dr)
+>> {
+>>-	struct hv_dr_state *dr;
+>> 	struct hv_dr_work *dr_wrk;
+>>-	unsigned long flags;
+>> 	bool pending_dr;
+>>+	unsigned long flags;
+>>
+>> 	dr_wrk =3D kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+>> 	if (!dr_wrk)
+>>-		return;
+>>-
+>>-	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
+>>-		     (sizeof(struct pci_function_description) *
+>>-		      (relations->device_count)), GFP_NOWAIT);
+>>-	if (!dr)  {
+>>-		kfree(dr_wrk);
+>>-		return;
+>>-	}
+>>+		return -ENOMEM;
+>>
+>> 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
+>> 	dr_wrk->bus =3D hbus;
+>>-	dr->device_count =3D relations->device_count;
+>>-	if (dr->device_count !=3D 0) {
+>>-		memcpy(dr->func, relations->func,
+>>-		       sizeof(struct pci_function_description) *
+>>-		       dr->device_count);
+>>-	}
+>>
+>> 	spin_lock_irqsave(&hbus->device_list_lock, flags);
+>> 	/*
+>>@@ -2144,6 +2141,47 @@ static void hv_pci_devices_present(struct
+>>hv_pcibus_device *hbus,
+>> 		get_hvpcibus(hbus);
+>> 		queue_work(hbus->wq, &dr_wrk->wrk);
+>> 	}
+>>+
+>>+	return 0;
+>>+}
+>>+
+>>+/**
+>>+ * hv_pci_devices_present() - Handle list of new children
+>>+ * @hbus:	Root PCI bus, as understood by this driver
+>>+ * @relations:	Packet from host listing children
+>>+ *
+>>+ * Process a new list of devices on the bus. The list of devices is
+>>+ * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
+>>+ * whenever a new list of devices for this bus appears.
+>>+ */
+>>+static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>>+				   struct pci_bus_relations *relations) {
+>>+	struct hv_dr_state *dr;
+>>+	int i;
+>>+
+>>+	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
+>>+		     (sizeof(struct hv_pcidev_description) *
+>>+		      (relations->device_count)), GFP_NOWAIT);
+>>+
+>>+	if (!dr)
+>>+		return;
+>>+
+>>+	dr->device_count =3D relations->device_count;
+>>+	for (i =3D 0; i < dr->device_count; i++) {
+>>+		dr->func[i].v_id =3D relations->func[i].v_id;
+>>+		dr->func[i].d_id =3D relations->func[i].d_id;
+>>+		dr->func[i].rev =3D relations->func[i].rev;
+>>+		dr->func[i].prog_intf =3D relations->func[i].prog_intf;
+>>+		dr->func[i].subclass =3D relations->func[i].subclass;
+>>+		dr->func[i].base_class =3D relations->func[i].base_class;
+>>+		dr->func[i].subsystem_id =3D relations->func[i].subsystem_id;
+>>+		dr->func[i].win_slot =3D relations->func[i].win_slot;
+>>+		dr->func[i].ser =3D relations->func[i].ser;
+>>+	}
+>>+
+>>+	if (hv_pci_start_relations_work(hbus, dr))
+>>+		kfree(dr);
+>> }
+>>
+>> /**
+>>@@ -3018,7 +3056,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+>> 		struct pci_packet teardown_packet;
+>> 		u8 buffer[sizeof(struct pci_message)];
+>> 	} pkt;
+>>-	struct pci_bus_relations relations;
+>>+	struct hv_dr_state *dr;
+>> 	struct hv_pci_compl comp_pkt;
+>> 	int ret;
+>>
+>>@@ -3030,8 +3068,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+>> 		return;
+>>
+>> 	/* Delete any children which might still exist. */
+>>-	memset(&relations, 0, sizeof(relations));
+>>-	hv_pci_devices_present(hbus, &relations);
+>>+	dr =3D kzalloc(sizeof(*dr), GFP_KERNEL);
+>>+	if (dr && hv_pci_start_relations_work(hbus, dr))
+>>+		kfree(dr);
+>>
+>> 	ret =3D hv_send_resources_released(hdev);
+>> 	if (ret)
+>>--
+>>2.17.1
 
