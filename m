@@ -2,209 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1C2C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C009DC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96EFC214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94DDA20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/LKeGLG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJLL31cI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBFSSw (ORCPT
+        id S1727906AbgBFSWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:18:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29216 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727747AbgBFSSv (ORCPT
+        Thu, 6 Feb 2020 13:22:06 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53417 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFSWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:18:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581013130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5x2/ZaJGXQjcRm4wi5UDQcjXklaZ8VP1OiPe0LulP2g=;
-        b=W/LKeGLGvRKdwQ0hiy+bcFF294OEoDjMnGLpLDQibvAyO2OH/a7CS0cMyg72iMR6OZ/wbh
-        ZMX1wcuwGeIVbQyxZr6wWIW4op669Gx34e1G9uRK6gLhkOdtiyXFMUFFTLa/XNtIVgsyJr
-        Bbj8U+3Sv5/AfoRiwgf7Z0ibA1v75fM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-XelC2ffmM0mk96UujMCkzg-1; Thu, 06 Feb 2020 13:18:46 -0500
-X-MC-Unique: XelC2ffmM0mk96UujMCkzg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00A2E107B272;
-        Thu,  6 Feb 2020 18:18:44 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 207AC84DB8;
-        Thu,  6 Feb 2020 18:18:43 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 11:18:42 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [RFC PATCH 1/7] vfio: Include optional device match in
- vfio_device_ops callbacks
-Message-ID: <20200206111842.705bf58a@w520.home>
-In-Reply-To: <20200206121419.69997326.cohuck@redhat.com>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-        <158085754299.9445.4389176548645142886.stgit@gimli.home>
-        <20200206121419.69997326.cohuck@redhat.com>
+        Thu, 6 Feb 2020 13:22:06 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so324379pjc.3;
+        Thu, 06 Feb 2020 10:22:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=54PTuSGsMZatUFJRggtY0ZPnRku13hgus2gUwpQbThU=;
+        b=DJLL31cIptj/JwJcmnMQuxDCWzG2NMEB6d9KrNH6uxNCq67elwx9LgMDTuxpVwRbbk
+         XwEOrvQvrCHraqAaw816Izx2l8FxTFAlH1kq1VvfyscsvOEZH7dqaZyoaZg5JzgQbHbk
+         xcQqN98XAUYsu2rtjhS4TpFtiSDKxD1eyofrc5299fFy3rXmINeMHuogOsz5FsolJmJ8
+         F6HgLdZEh5GkHzD4RrsqSRerTI7s1+YUUu73wDW409NSCyyLbMY78MJ5NxPmfUVRDCGL
+         sO+9U4iMiVhcmLBDvShR+6d/bDHtpI15r1jti12JrNM60KxMeiQ8jpyITR8LBZnZV5FJ
+         4zag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=54PTuSGsMZatUFJRggtY0ZPnRku13hgus2gUwpQbThU=;
+        b=sxnwUBvbWTsfsRu4pBOC6kHzGCFeMom9CYJb0rm4/hLpPYytUNyczuo+kbdTRcEhva
+         Ko2BdUohrx8p6ocbPFUvgxaezTQmWk0401cYKMPFRozrgjQXV39UQyU4Qn2ouO0agDg6
+         iyWbUAbrnscCbOvaZ8f7WL4g5t+v1wcBzrojfW9wm1KgYmVNBPxjQurpbVC85GaSo6qB
+         GnfwJ4biDhkEoIDw/XtvgytjrcOfZ2dTZWluzYY98aNysVPoB/Mspsx/LCiekfhi6HKL
+         77CxUaejjAVgPhYVqYnpUXjGkDye+LbymbiVlLMuEW3HxACkvD1xuSMjUq+UlLu48Fg3
+         5wBQ==
+X-Gm-Message-State: APjAAAWcdIfla3B7byywFHw4XVqJ4i+wy5d0F0sUXZ+KGWHpfU4Mbo5B
+        hfrlLaerEOEDPUVf1UqMPH4=
+X-Google-Smtp-Source: APXvYqx9NC0lS1YLI/cu7N2wMO7HYmfx9BmQLUKvvEnN5VeJHLaRrQvN2FMNEpsoEBLSR6NhFv5h+w==
+X-Received: by 2002:a17:902:a984:: with SMTP id bh4mr5291321plb.281.1581013325916;
+        Thu, 06 Feb 2020 10:22:05 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id i6sm95146pgm.93.2020.02.06.10.22.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 10:22:05 -0800 (PST)
+Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     cai@lca.pw, Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+References: <1580841629-7102-1-git-send-email-cai@lca.pw>
+ <20200206163844.GA432041@zx2c4.com>
+ <453212cf-8987-9f05-ceae-42a4fc3b0876@gmail.com>
+ <CAHmME9pGhQoY8MjR8uvEZpF66Y_DvReAjKBx8L4SRiqbL_9itw@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <495f79f5-ae27-478a-2a1d-6d3fba2d4334@gmail.com>
+Date:   Thu, 6 Feb 2020 10:22:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHmME9pGhQoY8MjR8uvEZpF66Y_DvReAjKBx8L4SRiqbL_9itw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020 12:14:19 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
 
-> On Tue, 04 Feb 2020 16:05:43 -0700
-> Alex Williamson <alex.williamson@redhat.com> wrote:
+
+On 2/6/20 10:12 AM, Jason A. Donenfeld wrote:
+> On Thu, Feb 6, 2020 at 6:10 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>> Unfortunately we do not have ADD_ONCE() or something like that.
 > 
-> > Allow bus drivers to provide their own callback to match a device to
-> > the user provided string.
-> > 
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/vfio/vfio.c  |   19 +++++++++++++++----
-> >  include/linux/vfio.h |    3 +++
-> >  2 files changed, 18 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > index 388597930b64..dda1726adda8 100644
-> > --- a/drivers/vfio/vfio.c
-> > +++ b/drivers/vfio/vfio.c
-> > @@ -875,11 +875,22 @@ EXPORT_SYMBOL_GPL(vfio_device_get_from_dev);
-> >  static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
-> >  						     char *buf)
-> >  {
-> > -	struct vfio_device *it, *device = NULL;
-> > +	struct vfio_device *it, *device = ERR_PTR(-ENODEV);
-> >  
-> >  	mutex_lock(&group->device_lock);
-> >  	list_for_each_entry(it, &group->device_list, group_next) {
-> > -		if (!strcmp(dev_name(it->dev), buf)) {
-> > +		int ret;
-> > +
-> > +		if (it->ops->match) {
-> > +			ret = it->ops->match(it->device_data, buf);
-> > +			if (ret < 0 && ret != -ENODEV) {
-> > +				device = ERR_PTR(ret);
-> > +				break;
-> > +			}
-> > +		} else
-> > +			ret = strcmp(dev_name(it->dev), buf);  
+> I guess normally this is called "atomic_add", unless you're thinking
+> instead about something like this, which generates the same
+> inefficient code as WRITE_ONCE:
 > 
-> The asymmetric braces look a bit odd.
-
-Ok
-
-> > +
-> > +		if (!ret) {
-> >  			device = it;
-> >  			vfio_device_get(device);
-> >  			break;
-> > @@ -1441,8 +1452,8 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
-> >  		return -EPERM;
-> >  
-> >  	device = vfio_device_get_from_name(group, buf);
-> > -	if (!device)
-> > -		return -ENODEV;
-> > +	if (IS_ERR(device))
-> > +		return PTR_ERR(device);
-> >  
-> >  	ret = device->ops->open(device->device_data);
-> >  	if (ret) {
-> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> > index e42a711a2800..755e0f0e2900 100644
-> > --- a/include/linux/vfio.h
-> > +++ b/include/linux/vfio.h
-> > @@ -26,6 +26,8 @@
-> >   *         operations documented below
-> >   * @mmap: Perform mmap(2) on a region of the device file descriptor
-> >   * @request: Request for the bus driver to release the device
-> > + * @match: Optional device name match callback (return: 0 for match, -ENODEV
-> > + *         (or >0) for no match and continue, other -errno: no match and stop)  
+> #define ADD_ONCE(d, s) *(volatile typeof(d) *)&(d) += (s)
 > 
-> I'm wondering about these conventions.
-> 
-> If you basically want a tri-state return (match, don't match/continue,
-> don't match/stop), putting -ENODEV and >0 together feels odd. I would
-> rather expect either
-> - < 0 == don't match/stop, 0 == don't match/continue, > 0 == match, or
 
-So sort of a bool + errno.  I shied away from this because returning
-zero for success, or match, is such a common semantic, especially when
-we're replacing a simple strcmp().  I suppose it's logically just
-!strcmp() though, which avoids the abort case for a simple
-implementation like patch 2/7.
+Dmitry Vyukov had a nice suggestion few months back how to implement this.
 
-> - 0 == match, -ENODEV (or some other defined error) == don't
->   match/continue, all other values == don't match/abort?
-
-This is closest to what I arrived at in this version, but I found it
-necessary to exclude positive values from the no-match/abort and
-consider them as no-match/continue because I didn't want to assume the
-errno for that case.
-
-I think with your first option we arrive at something like this:
-
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index dda1726adda8..b5609a411139 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -883,14 +883,15 @@ static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
- 
- 		if (it->ops->match) {
- 			ret = it->ops->match(it->device_data, buf);
--			if (ret < 0 && ret != -ENODEV) {
-+			if (ret < 0) {
- 				device = ERR_PTR(ret);
- 				break;
- 			}
--		} else
--			ret = strcmp(dev_name(it->dev), buf);
-+		} else {
-+			ret = !strcmp(dev_name(it->dev), buf);
-+		}
- 
--		if (!ret) {
-+		if (ret) {
- 			device = it;
- 			vfio_device_get(device);
- 			break;
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 755e0f0e2900..029694b977f2 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -26,8 +26,9 @@
-  *         operations documented below
-  * @mmap: Perform mmap(2) on a region of the device file descriptor
-  * @request: Request for the bus driver to release the device
-- * @match: Optional device name match callback (return: 0 for match, -ENODEV
-- *         (or >0) for no match and continue, other -errno: no match and stop)
-+ * @match: Optional device name match callback (return: 0 for no-match, >0 for
-+ *         match, -errno for abort (ex. match with insufficient or incorrect
-+ *         additional args)
-  */
- struct vfio_device_ops {
- 	char	*name;
-
-
-I like that.  Thanks,
-
-Alex
+https://lkml.org/lkml/2019/10/5/6
 
