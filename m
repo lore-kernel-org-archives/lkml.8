@@ -2,155 +2,531 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26027C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C60C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F218921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LVhHaimU"
+	by mail.kernel.org (Postfix) with ESMTP id 752A620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgBFQjc (ORCPT
+        id S1727815AbgBFQjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:39:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36978 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFQjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:39:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=kOnzmlqacbR2EY8sLWfURzRzYlOaOYf9ui2nKYbQJNc=; b=LVhHaimUTg8zvT9iIZDn5rL3sH
-        cAUrz3bfud7dDw2YGGNuEoFiB57jifuOpK5UVIrkzhh9836/p4gxDUiu5+9dNPAkL4KUYBKEB5uiZ
-        4ynWGM1Lkp6yXrduEVBRYXp9NSEL0EWNWhN98NBY/jycni7wmnMa910BRDMl/Ep2Faw66QyXSLIxW
-        KWjO7mKGj/a6G0plVy8ST8rDtOcDckdXgRIc1G3P7byzfT/YbhkC9LzXARNFjymmTUIgcAu+gGAIk
-        wQM2DAnUl9njbx8aNHPPyadpf5bq7+DqivqgIrVqE6y+xdzTCLgjWXEwr5u6J7eJtYG+hMWFu4NF6
-        r0VZ3BLw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izkBf-0002gh-8c; Thu, 06 Feb 2020 16:39:31 +0000
-Subject: Re: linux-next: Tree for Jan 30 + 20200206
- (drivers/infiniband/hw/mlx5/)
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leonro@mellanox.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <20200130152852.6056b5d8@canb.auug.org.au>
- <df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org>
- <ee5f17b6-3282-2137-7e9d-fa0008f9eeb0@infradead.org>
- <20200206073019.GC414821@unreal> <20200206114033.GF414821@unreal>
- <20200206143201.GF25297@ziepe.ca>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <488a5c93-904a-9ccd-4c19-7e67663f5cdd@infradead.org>
-Date:   Thu, 6 Feb 2020 08:39:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 11:39:45 -0500
+Received: from mga05.intel.com ([192.55.52.43]:22808 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgBFQjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:39:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 08:39:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="264662769"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Feb 2020 08:39:42 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 387DC159; Thu,  6 Feb 2020 18:39:40 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, trond.myklebust@hammerspace.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 1/4] kernel.h: Split out min()/max() et al helpers
+Date:   Thu,  6 Feb 2020 18:39:37 +0200
+Message-Id: <20200206163940.1940-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200206143201.GF25297@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 6:32 AM, Jason Gunthorpe wrote:
-> On Thu, Feb 06, 2020 at 01:40:33PM +0200, Leon Romanovsky wrote:
->> On Thu, Feb 06, 2020 at 09:30:19AM +0200, Leon Romanovsky wrote:
->>> On Wed, Feb 05, 2020 at 09:31:15PM -0800, Randy Dunlap wrote:
->>>> On 1/30/20 5:47 AM, Randy Dunlap wrote:
->>>>> On 1/29/20 8:28 PM, Stephen Rothwell wrote:
->>>>>> Hi all,
->>>>>>
->>>>>> Please do not add any v5.7 material to your linux-next included
->>>>>> branches until after v5.6-rc1 has been released.
->>>>>>
->>>>>> Changes since 20200129:
->>>>>>
->>>>>
->>>>> on i386:
->>>>>
->>>>> ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
->>>>> ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
->>>>>
->>>>>
->>>>> Full randconfig file is attached.
->>>>>
->>>>>
->>>>
->>>> I am still seeing this on linux-next of 20200206.
->>>
->>> Sorry, I was under wrong impression that this failure is connected to
->>> other issue reported by you.
->>>
->>> I'm looking on it right now.
->>
->> Randy,
->>
->> I'm having hard time to reproduce the failure.
->> ➜  kernel git:(a0c61bf1c773) ✗ git fixes
->> Fixes: a0c61bf1c773 ("Add linux-next specific files for 20200206")
->> ➜  kernel git:(a0c61bf1c773) ✗ wget https://lore.kernel.org/lkml/df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org/2-config-r9621
->> from https://lore.kernel.org/lkml/df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org/
->> ➜  kernel git:(a0c61bf1c773) ✗ mv 2-config-r9621 .config
->> ➜  kernel git:(a0c61bf1c773) ✗ make ARCH=i386 -j64 -s M=drivers/infiniband/hw/mlx5
->> ➜  kernel git:(a0c61bf1c773) ✗ file drivers/infiniband/hw/mlx5/mlx5_ib.ko
->> drivers/infiniband/hw/mlx5/mlx5_ib.ko: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), BuildID[sha1]=49f81f5d56f7caf95d4a6cc9097391622c34f4ba, not stripped
->>
->> on my 64bit system:
->> ➜  kernel git:(rdma-next) file drivers/infiniband/hw/mlx5/mlx5_ib.ko
->> drivers/infiniband/hw/mlx5/mlx5_ib.ko: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), BuildID[sha1]=2dcb1e30d0bba9885d5a824f6f57488a98f0c95d, with debug_info, not stripped
-> 
-> You need to link to see it..
-> 
-> From bee7b242c2c6a3bfb696cd5fa37d83a731f3ab15 Mon Sep 17 00:00:00 2001
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Date: Thu, 6 Feb 2020 10:27:54 -0400
-> Subject: [PATCH] IB/mlx5: Use div64_u64 for num_var_hw_entries calculation
-> 
-> On i386:
-> 
-> ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> 
-> Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR capabilities")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+kernel.h is being used as a dump for all kinds of stuff for a long time.
+Here is the attempt to start cleaning it up by splitting out min()/max()
+et al helpers.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+At the same time convert users in header and lib folder to use new header.
+Though for time being include new header back to kernel.h to avoid twisted
+indirected includes for existing users.
 
-Thanks.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v3: no change
+ include/linux/blkdev.h    |   1 +
+ include/linux/bvec.h      |   6 +-
+ include/linux/jiffies.h   |   3 +-
+ include/linux/kernel.h    | 142 +------------------------------------
+ include/linux/minmax.h    | 145 ++++++++++++++++++++++++++++++++++++++
+ include/linux/nodemask.h  |   2 +-
+ include/linux/uaccess.h   |   1 +
+ kernel/range.c            |   3 +-
+ lib/find_bit.c            |   1 +
+ lib/hexdump.c             |   1 +
+ lib/math/rational.c       |   2 +-
+ lib/math/reciprocal_div.c |   1 +
+ 12 files changed, 162 insertions(+), 146 deletions(-)
+ create mode 100644 include/linux/minmax.h
 
-> ---
->  drivers/infiniband/hw/mlx5/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-> index 0ca9581432808c..9b88935f805ba2 100644
-> --- a/drivers/infiniband/hw/mlx5/main.c
-> +++ b/drivers/infiniband/hw/mlx5/main.c
-> @@ -6543,7 +6543,7 @@ static int mlx5_ib_init_var_table(struct mlx5_ib_dev *dev)
->  					doorbell_bar_offset);
->  	bar_size = (1ULL << log_doorbell_bar_size) * 4096;
->  	var_table->stride_size = 1ULL << log_doorbell_stride;
-> -	var_table->num_var_hw_entries = bar_size / var_table->stride_size;
-> +	var_table->num_var_hw_entries = div64_u64(bar_size, var_table->stride_size);
->  	mutex_init(&var_table->bitmap_lock);
->  	var_table->bitmap = bitmap_zalloc(var_table->num_var_hw_entries,
->  					  GFP_KERNEL);
-> 
-
-
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 053ea4b51988..0cea2c66d6c4 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -11,6 +11,7 @@
+ #include <linux/genhd.h>
+ #include <linux/list.h>
+ #include <linux/llist.h>
++#include <linux/minmax.h>
+ #include <linux/timer.h>
+ #include <linux/workqueue.h>
+ #include <linux/pagemap.h>
+diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+index a81c13ac1972..56d4dec74926 100644
+--- a/include/linux/bvec.h
++++ b/include/linux/bvec.h
+@@ -7,10 +7,14 @@
+ #ifndef __LINUX_BVEC_ITER_H
+ #define __LINUX_BVEC_ITER_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/bug.h>
+ #include <linux/errno.h>
++#include <linux/limits.h>
++#include <linux/minmax.h>
+ #include <linux/mm.h>
++#include <linux/types.h>
++
++struct page;
+ 
+ /*
+  * was unsigned short, but we might as well be ready for > 64kB I/O pages
+diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+index e3279ef24d28..d5a41a509cc0 100644
+--- a/include/linux/jiffies.h
++++ b/include/linux/jiffies.h
+@@ -3,8 +3,9 @@
+ #define _LINUX_JIFFIES_H
+ 
+ #include <linux/cache.h>
++#include <linux/limits.h>
+ #include <linux/math64.h>
+-#include <linux/kernel.h>
++#include <linux/minmax.h>
+ #include <linux/types.h>
+ #include <linux/time.h>
+ #include <linux/timex.h>
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 0d9db2a14f44..062d86f946c5 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -11,6 +11,7 @@
+ #include <linux/compiler.h>
+ #include <linux/bitops.h>
+ #include <linux/log2.h>
++#include <linux/minmax.h>
+ #include <linux/typecheck.h>
+ #include <linux/printk.h>
+ #include <linux/build_bug.h>
+@@ -819,147 +820,6 @@ ftrace_vprintk(const char *fmt, va_list ap)
+ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
+ #endif /* CONFIG_TRACING */
+ 
+-/*
+- * min()/max()/clamp() macros must accomplish three things:
+- *
+- * - avoid multiple evaluations of the arguments (so side-effects like
+- *   "x++" happen only once) when non-constant.
+- * - perform strict type-checking (to generate warnings instead of
+- *   nasty runtime surprises). See the "unnecessary" pointer comparison
+- *   in __typecheck().
+- * - retain result as a constant expressions when called with only
+- *   constant expressions (to avoid tripping VLA warnings in stack
+- *   allocation usage).
+- */
+-#define __typecheck(x, y) \
+-		(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+-
+-/*
+- * This returns a constant expression while determining if an argument is
+- * a constant expression, most importantly without evaluating the argument.
+- * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
+- */
+-#define __is_constexpr(x) \
+-	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+-
+-#define __no_side_effects(x, y) \
+-		(__is_constexpr(x) && __is_constexpr(y))
+-
+-#define __safe_cmp(x, y) \
+-		(__typecheck(x, y) && __no_side_effects(x, y))
+-
+-#define __cmp(x, y, op)	((x) op (y) ? (x) : (y))
+-
+-#define __cmp_once(x, y, unique_x, unique_y, op) ({	\
+-		typeof(x) unique_x = (x);		\
+-		typeof(y) unique_y = (y);		\
+-		__cmp(unique_x, unique_y, op); })
+-
+-#define __careful_cmp(x, y, op) \
+-	__builtin_choose_expr(__safe_cmp(x, y), \
+-		__cmp(x, y, op), \
+-		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
+-
+-/**
+- * min - return minimum of two values of the same or compatible types
+- * @x: first value
+- * @y: second value
+- */
+-#define min(x, y)	__careful_cmp(x, y, <)
+-
+-/**
+- * max - return maximum of two values of the same or compatible types
+- * @x: first value
+- * @y: second value
+- */
+-#define max(x, y)	__careful_cmp(x, y, >)
+-
+-/**
+- * min3 - return minimum of three values
+- * @x: first value
+- * @y: second value
+- * @z: third value
+- */
+-#define min3(x, y, z) min((typeof(x))min(x, y), z)
+-
+-/**
+- * max3 - return maximum of three values
+- * @x: first value
+- * @y: second value
+- * @z: third value
+- */
+-#define max3(x, y, z) max((typeof(x))max(x, y), z)
+-
+-/**
+- * min_not_zero - return the minimum that is _not_ zero, unless both are zero
+- * @x: value1
+- * @y: value2
+- */
+-#define min_not_zero(x, y) ({			\
+-	typeof(x) __x = (x);			\
+-	typeof(y) __y = (y);			\
+-	__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
+-
+-/**
+- * clamp - return a value clamped to a given range with strict typechecking
+- * @val: current value
+- * @lo: lowest allowable value
+- * @hi: highest allowable value
+- *
+- * This macro does strict typechecking of @lo/@hi to make sure they are of the
+- * same type as @val.  See the unnecessary pointer comparisons.
+- */
+-#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+-
+-/*
+- * ..and if you can't take the strict
+- * types, you can specify one yourself.
+- *
+- * Or not use min/max/clamp at all, of course.
+- */
+-
+-/**
+- * min_t - return minimum of two values, using the specified type
+- * @type: data type to use
+- * @x: first value
+- * @y: second value
+- */
+-#define min_t(type, x, y)	__careful_cmp((type)(x), (type)(y), <)
+-
+-/**
+- * max_t - return maximum of two values, using the specified type
+- * @type: data type to use
+- * @x: first value
+- * @y: second value
+- */
+-#define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
+-
+-/**
+- * clamp_t - return a value clamped to a given range using a given type
+- * @type: the type of variable to use
+- * @val: current value
+- * @lo: minimum allowable value
+- * @hi: maximum allowable value
+- *
+- * This macro does no typechecking and uses temporary variables of type
+- * @type to make all the comparisons.
+- */
+-#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
+-
+-/**
+- * clamp_val - return a value clamped to a given range using val's type
+- * @val: current value
+- * @lo: minimum allowable value
+- * @hi: maximum allowable value
+- *
+- * This macro does no typechecking and uses temporary variables of whatever
+- * type the input argument @val is.  This is useful when @val is an unsigned
+- * type and @lo and @hi are literals that will otherwise be assigned a signed
+- * integer type.
+- */
+-#define clamp_val(val, lo, hi) clamp_t(typeof(val), val, lo, hi)
+-
+-
+ /**
+  * swap - swap values of @a and @b
+  * @a: first value
+diff --git a/include/linux/minmax.h b/include/linux/minmax.h
+new file mode 100644
+index 000000000000..bfd6ad822914
+--- /dev/null
++++ b/include/linux/minmax.h
+@@ -0,0 +1,145 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_MINMAX_H
++#define _LINUX_MINMAX_H
++
++/*
++ * min()/max()/clamp() macros must accomplish three things:
++ *
++ * - avoid multiple evaluations of the arguments (so side-effects like
++ *   "x++" happen only once) when non-constant.
++ * - perform strict type-checking (to generate warnings instead of
++ *   nasty runtime surprises). See the "unnecessary" pointer comparison
++ *   in __typecheck().
++ * - retain result as a constant expressions when called with only
++ *   constant expressions (to avoid tripping VLA warnings in stack
++ *   allocation usage).
++ */
++#define __typecheck(x, y) \
++	(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
++
++/*
++ * This returns a constant expression while determining if an argument is
++ * a constant expression, most importantly without evaluating the argument.
++ * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
++ */
++#define __is_constexpr(x) \
++	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
++
++#define __no_side_effects(x, y) \
++		(__is_constexpr(x) && __is_constexpr(y))
++
++#define __safe_cmp(x, y) \
++		(__typecheck(x, y) && __no_side_effects(x, y))
++
++#define __cmp(x, y, op)	((x) op (y) ? (x) : (y))
++
++#define __cmp_once(x, y, unique_x, unique_y, op) ({	\
++		typeof(x) unique_x = (x);		\
++		typeof(y) unique_y = (y);		\
++		__cmp(unique_x, unique_y, op); })
++
++#define __careful_cmp(x, y, op) \
++	__builtin_choose_expr(__safe_cmp(x, y), \
++		__cmp(x, y, op), \
++		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
++
++/**
++ * min - return minimum of two values of the same or compatible types
++ * @x: first value
++ * @y: second value
++ */
++#define min(x, y)	__careful_cmp(x, y, <)
++
++/**
++ * max - return maximum of two values of the same or compatible types
++ * @x: first value
++ * @y: second value
++ */
++#define max(x, y)	__careful_cmp(x, y, >)
++
++/**
++ * min3 - return minimum of three values
++ * @x: first value
++ * @y: second value
++ * @z: third value
++ */
++#define min3(x, y, z) min((typeof(x))min(x, y), z)
++
++/**
++ * max3 - return maximum of three values
++ * @x: first value
++ * @y: second value
++ * @z: third value
++ */
++#define max3(x, y, z) max((typeof(x))max(x, y), z)
++
++/**
++ * min_not_zero - return the minimum that is _not_ zero, unless both are zero
++ * @x: value1
++ * @y: value2
++ */
++#define min_not_zero(x, y) ({			\
++	typeof(x) __x = (x);			\
++	typeof(y) __y = (y);			\
++	__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
++
++/**
++ * clamp - return a value clamped to a given range with strict typechecking
++ * @val: current value
++ * @lo: lowest allowable value
++ * @hi: highest allowable value
++ *
++ * This macro does strict typechecking of @lo/@hi to make sure they are of the
++ * same type as @val.  See the unnecessary pointer comparisons.
++ */
++#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
++
++/*
++ * ..and if you can't take the strict
++ * types, you can specify one yourself.
++ *
++ * Or not use min/max/clamp at all, of course.
++ */
++
++/**
++ * min_t - return minimum of two values, using the specified type
++ * @type: data type to use
++ * @x: first value
++ * @y: second value
++ */
++#define min_t(type, x, y)	__careful_cmp((type)(x), (type)(y), <)
++
++/**
++ * max_t - return maximum of two values, using the specified type
++ * @type: data type to use
++ * @x: first value
++ * @y: second value
++ */
++#define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
++
++/**
++ * clamp_t - return a value clamped to a given range using a given type
++ * @type: the type of variable to use
++ * @val: current value
++ * @lo: minimum allowable value
++ * @hi: maximum allowable value
++ *
++ * This macro does no typechecking and uses temporary variables of type
++ * @type to make all the comparisons.
++ */
++#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
++
++/**
++ * clamp_val - return a value clamped to a given range using val's type
++ * @val: current value
++ * @lo: minimum allowable value
++ * @hi: maximum allowable value
++ *
++ * This macro does no typechecking and uses temporary variables of whatever
++ * type the input argument @val is.  This is useful when @val is an unsigned
++ * type and @lo and @hi are literals that will otherwise be assigned a signed
++ * integer type.
++ */
++#define clamp_val(val, lo, hi) clamp_t(typeof(val), val, lo, hi)
++
++#endif	/* _LINUX_MINMAX_H */
+diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
+index 27e7fa36f707..7f38399cc9fe 100644
+--- a/include/linux/nodemask.h
++++ b/include/linux/nodemask.h
+@@ -90,9 +90,9 @@
+  * for such situations. See below and CPUMASK_ALLOC also.
+  */
+ 
+-#include <linux/kernel.h>
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
++#include <linux/minmax.h>
+ #include <linux/numa.h>
+ 
+ typedef struct { DECLARE_BITMAP(bits, MAX_NUMNODES); } nodemask_t;
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 67f016010aad..cd842869f931 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -2,6 +2,7 @@
+ #ifndef __LINUX_UACCESS_H__
+ #define __LINUX_UACCESS_H__
+ 
++#include <linux/minmax.h>
+ #include <linux/sched.h>
+ #include <linux/thread_info.h>
+ #include <linux/kasan-checks.h>
+diff --git a/kernel/range.c b/kernel/range.c
+index d84de6766472..56435f96da73 100644
+--- a/kernel/range.c
++++ b/kernel/range.c
+@@ -2,8 +2,9 @@
+ /*
+  * Range add and subtract
+  */
+-#include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/minmax.h>
++#include <linux/printk.h>
+ #include <linux/sort.h>
+ #include <linux/string.h>
+ #include <linux/range.h>
+diff --git a/lib/find_bit.c b/lib/find_bit.c
+index 49f875f1baf7..4a8751010d59 100644
+--- a/lib/find_bit.c
++++ b/lib/find_bit.c
+@@ -16,6 +16,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/export.h>
+ #include <linux/kernel.h>
++#include <linux/minmax.h>
+ 
+ #if !defined(find_next_bit) || !defined(find_next_zero_bit) ||			\
+ 	!defined(find_next_bit_le) || !defined(find_next_zero_bit_le) ||	\
+diff --git a/lib/hexdump.c b/lib/hexdump.c
+index 147133f8eb2f..9301578f98e8 100644
+--- a/lib/hexdump.c
++++ b/lib/hexdump.c
+@@ -7,6 +7,7 @@
+ #include <linux/ctype.h>
+ #include <linux/errno.h>
+ #include <linux/kernel.h>
++#include <linux/minmax.h>
+ #include <linux/export.h>
+ #include <asm/unaligned.h>
+ 
+diff --git a/lib/math/rational.c b/lib/math/rational.c
+index 31fb27db2deb..d8e985850d10 100644
+--- a/lib/math/rational.c
++++ b/lib/math/rational.c
+@@ -11,7 +11,7 @@
+ #include <linux/rational.h>
+ #include <linux/compiler.h>
+ #include <linux/export.h>
+-#include <linux/kernel.h>
++#include <linux/minmax.h>
+ 
+ /*
+  * calculate best rational approximation for a given fraction
+diff --git a/lib/math/reciprocal_div.c b/lib/math/reciprocal_div.c
+index bf043258fa00..32436dd4171e 100644
+--- a/lib/math/reciprocal_div.c
++++ b/lib/math/reciprocal_div.c
+@@ -4,6 +4,7 @@
+ #include <asm/div64.h>
+ #include <linux/reciprocal_div.h>
+ #include <linux/export.h>
++#include <linux/minmax.h>
+ 
+ /*
+  * For a description of the algorithm please have a look at
 -- 
-~Randy
+2.24.1
 
