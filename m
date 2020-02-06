@@ -2,195 +2,110 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8EFC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A925BC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B9520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:05:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SmyZvJrv"
+	by mail.kernel.org (Postfix) with ESMTP id 84ACA21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgBFQFp (ORCPT
+        id S1727657AbgBFQIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:05:45 -0500
-Received: from vps.xff.cz ([195.181.215.36]:39630 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727305AbgBFQFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:05:45 -0500
-X-Greylist: delayed 518 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Feb 2020 11:05:44 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1581004623; bh=Haoacbj1oR8jAZ/+z1mMEH6C0wNO66P8twZW4816v38=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=SmyZvJrvntWZ9bg2ivEI9G8FdrqYkMwCdVplGX9cdlFGyBFEYe7Babbv6FSFyp4mA
-         OOMKGASHg+sg5L6nP6hU7A2jcRM8CZJuHneiLn3DBqzQoRM2LmTusOqG2mF9j2ZglU
-         1OwCIBmNyEYhTjoLwPqYohjmiLBWdWlj54jW1j88=
-Date:   Thu, 6 Feb 2020 16:57:03 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-Message-ID: <20200206155703.fyry7nh473mc7pqy@core.my.home>
-Mail-Followup-To: Amit Kucheria <amit.kucheria@verdurent.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        Thu, 6 Feb 2020 11:08:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60696 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727060AbgBFQIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:08:30 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016G836a131979
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2020 11:08:29 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn48kmh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:08:21 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 6 Feb 2020 16:08:09 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Feb 2020 16:08:07 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016G86iO53280998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 16:08:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2878E5204E;
+        Thu,  6 Feb 2020 16:08:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.140.59])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 47A5252051;
+        Thu,  6 Feb 2020 16:08:05 +0000 (GMT)
+Subject: Re: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
+ template digests
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        James.Bottomley@HansenPartnership.com,
+        jarkko.sakkinen@linux.intel.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
+Date:   Thu, 06 Feb 2020 11:08:04 -0500
+In-Reply-To: <20200205103317.29356-6-roberto.sassu@huawei.com>
+References: <20200205103317.29356-1-roberto.sassu@huawei.com>
+         <20200205103317.29356-6-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020616-0016-0000-0000-000002E45153
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020616-0017-0000-0000-0000334737E3
+Message-Id: <1581005284.5585.422.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
+ adultscore=0 mlxlogscore=857 bulkscore=0 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
+Hi Roberto,
 
-On Thu, Feb 06, 2020 at 07:43:59PM +0530, Amit Kucheria wrote:
-> Hi Vasily,
+On Wed, 2020-02-05 at 11:33 +0100, Roberto Sassu wrote:
+> This patch dynamically allocates the array of tpm_digest structures in
+> ima_alloc_init_template() and ima_restore_template_data(). The size of the
+> array, stored in ima_num_template_digests, is initially equal to 1 (SHA1)
+> and will be determined in the upcoming patches depending on the allocated
+> PCR banks and the chosen default IMA algorithm.
 > 
-> For this entire series, the DTS files don't contain any trip points.
-> Did I miss some other series?
+> Calculating the SHA1 digest is mandatory, as SHA1 still remains the default
+> hash algorithm for the measurement list. When IMA will support the Crypto
+> Agile format, remaining digests will be also provided.
 > 
-> At a minimum, you should add some "hot" or "critical" trip points
-> since then don't require a cooling-map with throttling actions. If you
-> have "passive" trip points, then you need to provide cooling-maps.
+> The position in the array of the SHA1 digest is stored in the ima_sha1_idx
+> global variable and it is determined at IMA initialization time.
 > 
-> Since this series has been merged, could you please follow up with a
-> fixup series to add the trip points?
-
-I don't think lack of trip points causes runtime issues. Or does it? I planned
-to send update with some trip points and cooling maps for 5.7 merge window.
-Is this acceptable?
-
-If not, I can send a patch that adds:
-
-+ trips {
-+         cpu-very-hot {
-+                 temperature = <100000>;
-+                 hysteresis = <0>;
-+                 type = "critical";
-+         };
-+ };
-
-and 
-
-+ trips {
-+         gpu-very-hot {
-+                 temperature = <100000>;
-+                 hysteresis = <0>;
-+                 type = "critical";
-+         };
-+ };
-
-everywhere where appropriate. Though that will make rebase of out of
-tree patches that already have a more complicated setup to be sent for the next
-merge window a bit tedious.
-
-thank you,
-	Ondrej
-
-> Regards,
-> Amit
-> p.s. We should catch all this automatically, I'll send out yaml
-> bindings for the thermal framework soon that should catch this stuff.
+> Changelog
 > 
-> On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >
-> > This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> > H6 and R40 SoCs.
-> >
-> > v8:
-> >         - [vasily] Address more Maxime's comments for dt-schema
-> >         - [vasily] Add myself to MAINTAINERS for the driver and schema
-> >         - [vasily] Round calibration data size to word boundary for H6 and A64
-> >         - [vasily] Change offset for A64 since it reports too low temp otherwise.
-> >                    Likely conversion formula in user manual is not correct.
-> >
-> > v7:
-> >         - [vasily] Address Maxime's comments for dt-schema
-> >         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
-> >         - [vasily] Add Maxime's a-b to the driver patch
-> >
-> > v6:
-> >         - [ondrej, vasily] Squash all driver related changes into a
-> >                            single patch
-> >         - [ondrej] Rename calib -> calibration
-> >         - [ondrej] Fix thermal zone registration check
-> >         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
-> >         - [ondrej] Rework scale/offset values, H6 calibration
-> >         - [ondrej] Explicitly set mod clock to 24 MHz
-> >         - [ondrej] Set undocumented bits in CTRL0 for H6
-> >         - [ondrej] Add support for A83T
-> >         - [ondrej] Add dts changes for A83T, H3, H5, H6
-> >         - [vasily] Add dts changes for A64
-> >         - [vasily] Address Maxime's comments for YAML scheme
-> >         - [vasily] Make .calc_temp callback mandatory
-> >         - [vasily] Set .max_register in regmap config, so regs can be
-> >                    inspected using debugfs
-> >
-> > Ondrej Jirman (4):
-> >   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
-> >   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
-> >   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
-> >   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
-> >
-> > Vasily Khoruzhick (1):
-> >   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
-> >
-> > Yangtao Li (2):
-> >   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
-> >   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
-> >     bindings
-> >
-> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
-> >  MAINTAINERS                                   |   8 +
-> >  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
-> >  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
-> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
-> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
-> >  drivers/thermal/Kconfig                       |  14 +
-> >  drivers/thermal/Makefile                      |   1 +
-> >  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
-> >  11 files changed, 985 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> >  create mode 100644 drivers/thermal/sun8i_thermal.c
-> >
-> > --
-> > 2.24.1
-> >
+> v1:
+> - move ima_sha1_idx to ima_crypto.c
+> - introduce ima_num_template_digests (suggested by Mimi)
+
+Instead of hardcoding "nr_allocated_banks + 1" or nr_allocated_banks +
+2", I suggested defining "nr_allocated_banks + extra", where "extra"
+could be 0, 1, or 2.
+
+The rest of the code would remain exactly the same as you had.
+
+Mimi
+
