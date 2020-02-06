@@ -2,132 +2,318 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A769AC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E116C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C45218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FFFkDGH5"
+	by mail.kernel.org (Postfix) with ESMTP id DDE6921D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581021935;
+	bh=Vn998s63OSKGvhsxx59iuHRR4jcUmxVe8PhNMtTYO10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UOC9X6GywQRxF1MKAjoRhuiFbPj8fw6cilfspN5kMxWcy34Lgxw5lOTevXv95kIPO
+	 sePt1cl1JXL5CI3r2eDjTXuEv80omR6wmH6lDYEDOhJrJzHKJO7GS8dMJtfpIgX+im
+	 7j8rKE9pQhzab9mAXr3bsoMF81uEgg3XTK7QGcss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgBFUpW (ORCPT
+        id S1727936AbgBFUpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:22 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:28469 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727711AbgBFUpW (ORCPT
+        Thu, 6 Feb 2020 15:45:34 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41709 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgBFUpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:45:22 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581021921; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=DcZBAjG2VO2WTzYOcZCs8ZVgMYwd7rbCdreK1KsqE9E=; b=FFFkDGH50TF5qBwstZW9DQ/cKjKhw3evZtiqJEIDLe/rpPzbHeppKVbGg2cNo4HoBY5KDlv2
- v5gMrpRlyOd6da04TtSgcrkdGQIdppEqyCUQX/1nqK1DRvZ5GQoC9pWD5FlJmy/eJFbMa5PN
- L5pm6CrYEFgRILJdkUGSJusaZn0=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3c7adc.7f666d8d2030-smtp-out-n03;
- Thu, 06 Feb 2020 20:45:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F21FC43383; Thu,  6 Feb 2020 20:45:16 +0000 (UTC)
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E80CC433CB;
-        Thu,  6 Feb 2020 20:45:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E80CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 6 Feb 2020 13:45:14 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, lsrao@codeaurora.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-Message-ID: <20200206204514.GB8107@codeaurora.org>
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
- <20200203170832.GA38466@bogus>
- <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
- <20200204152132.GA44858@bogus>
- <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
- <20200205140603.GB38466@bogus>
- <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
- <20200205161816.GD38466@bogus>
- <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
+        Thu, 6 Feb 2020 15:45:33 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l3so3337590pgi.8;
+        Thu, 06 Feb 2020 12:45:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qIQ8hjlDUhZcArK+Q5WsTl5GNAhaa++UBQ6Modhac+E=;
+        b=kGXdVo1CwnaIsuzelyXAq3wU52Wy+xu8e8AniD53tA++AtdgqX9lM8WkZ/NU2azDTW
+         Fc7QMKKtkYl0Ng5dSyE0kV45Ear9kYfRDvtBbV5U7qWNitUeY9rG9SNq565eq4tzmqfi
+         XJ0pDI55OXmA8T5pV0+X8uV5FX9lx2oIMI133wKCENPRFEvb/Anax4IOi/iCBRvq2yzI
+         5WWZwjFIQRadR04VR/pxPEiRaJRy5PRzxaChuBGeH96fSjc5hUUTSnxzy7wjPSAPXd6B
+         brRaggwlPb14D/UKBlBhxyZzkq2MdAT9wBcHTAOL376vEG0tuNLwMc52HBGBXnw/eRb3
+         SCsg==
+X-Gm-Message-State: APjAAAVltdXATsmB11FQJsxbcN5Yem9qKBOL7DGufTiL0QQc/fD+wwaJ
+        8VxG59Eukk+zZByPh279zA==
+X-Google-Smtp-Source: APXvYqxp0gb4DCovJEikyOC6US+MZnvndVVAY5P6ZUyW0coT14JeNLGYWiVC5j97cQxJXe5/sJ3gbQ==
+X-Received: by 2002:a62:78c1:: with SMTP id t184mr5777570pfc.222.1581021932559;
+        Thu, 06 Feb 2020 12:45:32 -0800 (PST)
+Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
+        by smtp.gmail.com with ESMTPSA id e84sm262700pfh.149.2020.02.06.12.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 12:45:31 -0800 (PST)
+Received: (nullmailer pid 22868 invoked by uid 1000);
+        Thu, 06 Feb 2020 18:28:20 -0000
+Date:   Thu, 6 Feb 2020 18:28:20 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     dmitry.torokhov@gmail.com, mark.rutland@arm.com,
+        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        wim@linux-watchdog.org, linux@roeck-us.net, p.paillet@st.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
+Message-ID: <20200206182820.GA12162@bogus>
+References: <20200130154315.6260-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
+In-Reply-To: <20200130154315.6260-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06 2020 at 01:46 -0700, Ulf Hansson wrote:
->On Wed, 5 Feb 2020 at 17:18, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>
->> On Wed, Feb 05, 2020 at 04:55:17PM +0100, Ulf Hansson wrote:
->> > On Wed, 5 Feb 2020 at 15:06, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> > >
->> > > On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
->> > > >
->> > > > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
->> > > > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
->> > > > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
->> > > > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
->> > > > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
->> > > > > > > >
->> I was, but not anymore, especially if we want such changes in the kernel
->> to do so.
->>
->> Just use OSI as that was the point of adding all these after years of
->> discussion claiming it's more optimal compared to PC. Now telling that
->> you need more changes to compare it with PC just doesn't make any sense
->> at all to me.
->
->Fair enough.
->
->I was just pondering over if there are other reasons to why we may want this.
->
->One other thing that could be problematic to support, is when are
->other resources, I/O controllers for example, sharing the same power
->rail as a cluster. When such controller is in use, idle states of the
->cluster must be prevented. Without using genpd to model the CPU
->topology, it may be difficult to deal with this.
->
->Of course, using PC mode when trying to deal with this
->platform/board-requirement would also be suboptimal. In other words,
->your argument about when using OSI vs PC mode, still stands.
->
-I understand the arguments for using PC vs OSI and agree with it. But
-what in PSCI is against Linux knowing when the last core is powering
-down when the PSCI is configured to do only Platform Cordinated.
-There should not be any objection to drivers knowing when all the cores
-are powered down, be it reference counting CPU PM notifications or using
-a cleaner approach like this where GendPD framwork does everything
-cleanly and gives a nice callback. ARM architecture allows for different
-aspects of CPU access be handled at different levels. I see this as an
-extension of that approach.
+On Thu, Jan 30, 2020 at 04:43:15PM +0100, Benjamin Gaignard wrote:
+> Convert stpmic1 bindings to json-schema.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 ---
+>  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ------
+>  .../devicetree/bindings/mfd/st,stpmic1.yaml        | 205 +++++++++++++++++++++
+>  .../bindings/regulator/st,stpmic1-regulator.txt    |  64 -------
+>  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 --
+>  5 files changed, 205 insertions(+), 164 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
 
--- Lina
+
+> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+> new file mode 100644
+> index 000000000000..5db86be683dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+> @@ -0,0 +1,205 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectonics STPMIC1 Power Management IC bindings
+> +
+> +description: STMicroelectronics STPMIC1 Power Management IC
+> +
+> +maintainers:
+> +  - pascal Paillet <p.paillet@st.com>
+> +
+> +allOf:
+> +  - $ref: ../input/input.yaml
+> +  - $ref: ../regulator/regulator.yaml
+
+The properties these define don't apply to the parent node here.
+
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stpmic1
+> +
+> +  reg:
+> +    const: 0x33
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  onkey:
+> +    type: object
+
+input.yaml goes here.
+
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stpmic1-onkey
+> +
+> +      interrupts:
+> +        items:
+> +          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
+> +          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
+> +
+> +      interrupt-names:
+> +        items:
+> +          - const: onkey-falling
+> +          - const: onkey-rising
+> +
+> +      st,onkey-clear-cc-flag:
+> +        description: onkey is able power on after an over-current shutdown event.
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +      st,onkey-pu-inactive:
+> +        description: onkey pull up is not active
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +      power-off-time-sec:
+> +        minimum: 1
+> +        maximum: 16
+> +
+> +    required:
+> +      - compatible
+> +      - interrupts
+> +      - interrupt-names
+> +
+> +  watchdog:
+> +    type: object
+
+watchdog.yaml here.
+
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stpmic1-wdt
+> +
+> +    required:
+> +      - compatible
+> +
+> +  regulators:
+> +    type: object
+> +
+> +    description: |
+> +      Available Regulators in STPMIC1 device are:
+> +        - buck1 for Buck BUCK1
+> +        - buck2 for Buck BUCK2
+> +        - buck3 for Buck BUCK3
+> +        - buck4 for Buck BUCK4
+> +        - ldo1 for LDO LDO1
+> +        - ldo2 for LDO LDO2
+> +        - ldo3 for LDO LDO3
+> +        - ldo4 for LDO LDO4
+> +        - ldo5 for LDO LDO5
+> +        - ldo6 for LDO LDO6
+> +        - vref_ddr for LDO Vref DDR
+> +        - boost for Buck BOOST
+> +        - pwr_sw1 for VBUS_OTG switch
+> +        - pwr_sw2 for SW_OUT switch
+> +      Switches are fixed voltage regulators with only enable/disable capability.
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stpmic1-regulators
+> +
+> +    required:
+> +      - compatible
+> +
+> +patternProperties:
+> +  "^(buck[1-4]|ldo[1-6]|vref_ddr|boost|)$":
+
+Should be a child of 'regulators'
+
+> +    type: object
+> +
+> +    properties:
+> +      st,mask-reset:
+> +        description: mask reset for this regulator,
+> +                     the regulator configuration is maintained during pmic reset.
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +      regulator-over-current-protection: true
+> +
+> +  "^(pwr_sw[1-2])$":
+> +    type: object
+> +
+> +    properties:
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +      regulator-over-current-protection: true
+> +      regulator-active-discharge: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#interrupt-cells"
+> +  - interrupt-controller
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/mfd/st,stpmic1.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    i2c@0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      pmic@33 {
+> +        compatible = "st,stpmic1";
+> +        reg = <0x33>;
+> +        interrupt-parent = <&gpioa>;
+> +        interrupts = <0 2>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        onkey {
+> +          compatible = "st,stpmic1-onkey";
+> +          interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> +          interrupt-names = "onkey-falling", "onkey-rising";
+> +          power-off-time-sec = <10>;
+> +        };
+> +
+> +        watchdog {
+> +          compatible = "st,stpmic1-wdt";
+> +        };
+> +
+> +        regulators {
+> +          compatible = "st,stpmic1-regulators";
+> +
+> +          ldo6-supply = <&v3v3>;
+
+Not documented.
+
+> +
+> +          buck1 {
+> +            regulator-name = "vdd_core";
+> +            interrupts = <IT_CURLIM_BUCK1 0>;
+> +            st,mask-reset;
+> +            regulator-boot-on;
+> +            regulator-min-microvolt = <700000>;
+> +            regulator-max-microvolt = <1200000>;
+> +          };
+> +
+> +          buck3 {
+> +            regulator-name = "vdd";
+> +            regulator-min-microvolt = <3300000>;
+> +            regulator-max-microvolt = <3300000>;
+> +            regulator-boot-on;
+> +            regulator-pull-down;
+> +          };
+> +
+> +          buck4 {
+> +            regulator-name = "v3v3";
+> +            interrupts = <IT_CURLIM_BUCK4 0>;
+> +            regulator-min-microvolt = <3300000>;
+> +            regulator-max-microvolt = <3300000>;
+> +          };
+> +
+> +          ldo6 {
+> +            regulator-name = "v1v8";
+> +            regulator-min-microvolt = <1800000>;
+> +            regulator-max-microvolt = <1800000>;
+> +            regulator-over-current-protection;
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
