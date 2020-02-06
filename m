@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4651BC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9006CC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB0D21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F3C214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580976017;
-	bh=1TUCc/n7jK8aczgZHm/HnKVaNLnZAgdXj88EhcUg3jA=;
+	s=default; t=1580976019;
+	bh=3Z4nVUCvy1AmCLhgXTrp7YHVxDv1FFUtpXKT3OzbeOw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ocnojzlN85mGzH2liz8i0TBketx6S0YDLZAOArA8IkGJ1couwElirL7fd/BervODO
-	 Z9jkfRT/9kgvtggPDJ18KPNqMJTjQymUxcqSQ6WNOd5lI1+PmWqWsd486TH5qWjDUL
-	 jOJXYXmXeww1SwSr+SN4BxdraYE8wwlogayJnx6A=
+	b=bOavruUQx8diJuNDIx/RdjkuQFYAj0Blpa+h6qR4YYWHDxaHcGnjEhwahlL1aa+UB
+	 a7gTI36pzNHS92R8GacEwdIiGEb/zVVNBgMiJqV4yB72Pct5EMeo45SsjRGttNB+ej
+	 TtybiBbbu64+XMBBOqM3E80GpeGScSuH7jy108EQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgBFIAQ (ORCPT
+        id S1728296AbgBFIAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        Thu, 6 Feb 2020 03:00:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgBFIAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:00:16 -0500
-Subject: Re: [GIT PULL] libata changes for 5.6-rc1
+        id S1727874AbgBFIAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 03:00:17 -0500
+Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580976015;
-        bh=1TUCc/n7jK8aczgZHm/HnKVaNLnZAgdXj88EhcUg3jA=;
+        s=default; t=1580976016;
+        bh=3Z4nVUCvy1AmCLhgXTrp7YHVxDv1FFUtpXKT3OzbeOw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=FgiVVjIokKhvwU9j5JgR/q8qhoabIGs21SQLCt5kd7Ts+RKTf3R80X64WUHfk3Cb+
-         iVTUaim/GCxK1RnZm2vDgBly13wEc5c4TiiUm7P2hCBVTsEnN6IPOz8iFofCa2VR8P
-         U5GA6E8+wXK/vIPR9vYaBCI1OPzqtjOv4FSfQRbQ=
+        b=MyB53JI0phGl3H+PyH6CaRTz1l4jtqO9ue14B6cozc/Dfm94MXSl4VFfGcs0bZe6s
+         f8L0mg6NyCUXv35w+c+OQ4QJ0T+BE0jD5/rv2g8hXvZsW0g8Cb3/oe1gu83qdrAW+w
+         paunmJ//VMfMRpxIm9DV8QU5b9i2x1pCmIXMIHO0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <dac0d422-4a49-b50c-7096-2a092ee845ad@kernel.dk>
-References: <dac0d422-4a49-b50c-7096-2a092ee845ad@kernel.dk>
+In-Reply-To: <457eea2f-d344-fa09-7ddb-77ce4cb85aff@kernel.dk>
+References: <457eea2f-d344-fa09-7ddb-77ce4cb85aff@kernel.dk>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <dac0d422-4a49-b50c-7096-2a092ee845ad@kernel.dk>
+X-PR-Tracked-Message-Id: <457eea2f-d344-fa09-7ddb-77ce4cb85aff@kernel.dk>
 X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/libata-5.6-2020-02-05
-X-PR-Tracked-Commit-Id: 7991901082f0626592885a77a2cf8162536d1a51
+ tags/io_uring-5.6-2020-02-05
+X-PR-Tracked-Commit-Id: 2faf852d1be8a4960d328492298da6448cca0279
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0384066381ed5572cf1f57f8d01eaccd3f6d4785
-Message-Id: <158097601541.20426.13606324661097244573.pr-tracker-bot@kernel.org>
-Date:   Thu, 06 Feb 2020 08:00:15 +0000
+X-PR-Merge-Commit-Id: c1ef57a3a3f5e69e98baf89055b423da62791c13
+Message-Id: <158097601679.20426.12262983573989939498.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Feb 2020 08:00:16 +0000
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        IDE/ATA development list <linux-ide@vger.kernel.org>,
+        io-uring <io-uring@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 5 Feb 2020 14:19:18 -0700:
+The pull request you sent on Wed, 5 Feb 2020 14:26:29 -0700:
 
-> git://git.kernel.dk/linux-block.git tags/libata-5.6-2020-02-05
+> git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-02-05
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0384066381ed5572cf1f57f8d01eaccd3f6d4785
+https://git.kernel.org/torvalds/c/c1ef57a3a3f5e69e98baf89055b423da62791c13
 
 Thank you!
 
