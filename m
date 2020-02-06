@@ -2,149 +2,143 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8B7C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CE2C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1CA2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BDmKe+3q"
+	by mail.kernel.org (Postfix) with ESMTP id 142A82166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgBFAht (ORCPT
+        id S1727565AbgBFAtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 19:37:49 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34297 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727306AbgBFAhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 19:37:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580949468;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8Z6nE63gkylXxznMu19+y8UaaSgJhxKrGIJf/yXmjUY=;
-        b=BDmKe+3qGBwa3hnRvSSeVlTDycXwKtIadDuZWOpimaQzKvndThSp6H5pHKqDuoR24CjlqU
-        JitoUmFJRd3+M4Vc6P0DTGAv95ipDOWLFjU3ZsAOcIk3H/90PUhFT2v531xOhdiBYovhUA
-        ZpQJRhbJ44zeBkSJNSRoVcrkWiK00eU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-fQOd-l-lNTSkXVrIatLn2g-1; Wed, 05 Feb 2020 19:37:44 -0500
-X-MC-Unique: fQOd-l-lNTSkXVrIatLn2g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 935B11005513;
-        Thu,  6 Feb 2020 00:37:42 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77E9D60BF7;
-        Thu,  6 Feb 2020 00:37:39 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 08:37:36 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Easier calculation to get pages to
- next section boundary
-Message-ID: <20200206003736.GI8965@MiWiFi-R3L-srv>
-References: <20200205135251.37488-1-david@redhat.com>
- <20200205231945.GB28446@richard>
- <20200205235007.GA28870@richard>
- <20200206001317.GH8965@MiWiFi-R3L-srv>
+        Wed, 5 Feb 2020 19:49:46 -0500
+Received: from mga11.intel.com ([192.55.52.93]:26572 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727149AbgBFAtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 19:49:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 16:49:45 -0800
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="430340180"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 16:49:45 -0800
+Date:   Wed, 5 Feb 2020 16:49:44 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: [PATCH] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
+Message-ID: <20200206004944.GA11455@agluck-desk2.amr.corp.intel.com>
+References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com>
+ <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com>
+ <8CC9FBA7-D464-4E58-8912-3E14A751D243@gmail.com>
+ <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+ <20200203204155.GE19638@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200206001317.GH8965@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200203204155.GE19638@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/20 at 08:13am, Baoquan He wrote:
-> On 02/06/20 at 07:50am, Wei Yang wrote:
-> > On Thu, Feb 06, 2020 at 07:19:45AM +0800, Wei Yang wrote:
-> > >On Wed, Feb 05, 2020 at 02:52:51PM +0100, David Hildenbrand wrote:
-> > >>Let's use a calculation that's easier to understand and calculates the
-> > >>same result. Reusing existing macros makes this look nicer.
-> > >>
-> > >>We always want to have the number of pages (> 0) to the next section
-> > >>boundary, starting from the current pfn.
-> > >>
-> > >>Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
-> > >>Cc: Andrew Morton <akpm@linux-foundation.org>
-> > >>Cc: Michal Hocko <mhocko@kernel.org>
-> > >>Cc: Oscar Salvador <osalvador@suse.de>
-> > >>Cc: Baoquan He <bhe@redhat.com>
-> > >>Cc: Wei Yang <richardw.yang@linux.intel.com>
-> > >>Signed-off-by: David Hildenbrand <david@redhat.com>
-> > >
-> > >Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
-> > >
-> > >BTW, I got one question about hotplug size requirement.
-> > >
-> > >I thought the hotplug range should be section size aligned, while taking a
-> > >look into current code function check_hotplug_memory_range() guard the range.
-> 
-> A good question. The current code should be block size aligned. I
-> remember in some places we assume each block comprise all the sections.
-> Can't imagine one or some of them are half section filled.
+In a context switch from a task that is detecting split locks
+to one that is not (or vice versa) we need to update the TEST_CTRL
+MSR. Currently this is done with the common sequence:
+	read the MSR
+	flip the bit
+	write the MSR
+in order to avoid changing the value of any reserved bits in the MSR.
 
-I could be wrong, half filled block may not cause problem. 
+Cache the value of the TEST_CTRL MSR when we read it during initialization
+so we can avoid an expensive RDMSR instruction during context switch.
 
-> 
-> It truly has a risk that system ram is very huge to make the block
-> size is 2G, someone try to insert a 1G memory board. However, it should
-> only exist in experiment environment, e.g build a guest with enough ram,
-> then hot add 1G DIMM. In reality, we don't need to worry about it, at
-> least what I saw is 512G order of magnitude.
-> 
-> > >
-> > >This function says the range should be block_size aligned. And if I am
-> > >correct, block size on x86 should be in the range
-> > >
-> > >    [MIN_MEMORY_BLOCK_SIZE, MEM_SIZE_FOR_LARGE_BLOCK]
-> > >    
-> > >And MIN_MEMORY_BLOCK_SIZE is section size.
-> 
-> No, if I got it right, the range on x86 is
-> [MIN_MEMORY_BLOCK_SIZE, MAX_BLOCK_SIZE].
-> 
-> MEM_SIZE_FOR_LARGE_BLOCK is the starting point from which block size can
-> be adjusted. Otherwise it's MIN_MEMORY_BLOCK_SIZE.
-> 
-> /* Amount of ram needed to start using large blocks */                                                                                            
-> #define MEM_SIZE_FOR_LARGE_BLOCK (64UL << 30)
-> 
-> > >
-> > >Seems currently we support subsection hotplug? Then how a subsection range got
-> > >hotplug? Or this patch is a pre-requisite?
-> 
-> The sub-section hotplug feature was added by your colleague Dan
-> Williams. It intends to fix a nvdimms issue that nvdimms device could be
-> mapped into a non section size aligned starting address. And nvdimms
-> makes use of the existing memory hotplug mechanism to manage pages.
-> Not sure if we are saying the same thing.
-> 
-> > >
-> > 
-> > One more question is we support hot-add subsection memory but not support
-> > hot-online subsection memory.
-> > 
-> > Is my understanding correct?
-> > 
-> > -- 
-> > Wei Yang
-> > Help you, Help me
-> > 
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/kernel/cpu/intel.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 5d92e381fd91..78de69c5887a 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1054,6 +1054,14 @@ static void __init split_lock_setup(void)
+ 	}
+ }
+ 
++/*
++ * Soft copy of MSR_TEST_CTRL initialized when we first read the
++ * MSR. Used at runtime to avoid using rdmsr again just to collect
++ * the reserved bits in the MSR. We assume reserved bits are the
++ * same on all CPUs.
++ */
++static u64 test_ctrl_val;
++
+ /*
+  * Locking is not required at the moment because only bit 29 of this
+  * MSR is implemented and locking would not prevent that the operation
+@@ -1063,19 +1071,29 @@ static void __init split_lock_setup(void)
+  * exist, there may be glitches in virtualization that leave a guest
+  * with an incorrect view of real h/w capabilities.
+  */
+-static bool __sld_msr_set(bool on)
++static bool __sld_msr_init(void)
+ {
+-	u64 test_ctrl_val;
++	u64 val;
+ 
+-	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
++	if (rdmsrl_safe(MSR_TEST_CTRL, &val))
+ 		return false;
++	test_ctrl_val = val;
++
++	val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++
++	return !wrmsrl_safe(MSR_TEST_CTRL, val);
++}
++
++static void __sld_msr_set(bool on)
++{
++	u64 val = test_ctrl_val;
+ 
+ 	if (on)
+-		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++		val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+ 	else
+-		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++		val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+ 
+-	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
++	wrmsrl_safe(MSR_TEST_CTRL, val);
+ }
+ 
+ static void split_lock_init(void)
+@@ -1083,7 +1101,7 @@ static void split_lock_init(void)
+ 	if (sld_state == sld_off)
+ 		return;
+ 
+-	if (__sld_msr_set(true))
++	if (__sld_msr_init())
+ 		return;
+ 
+ 	/*
+-- 
+2.21.1
 
