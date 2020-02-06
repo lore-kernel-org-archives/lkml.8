@@ -2,107 +2,118 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0387C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB028C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7169120661
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17AD218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="je7nbPRU"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UNGce86v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgBFL4l (ORCPT
+        id S1727836AbgBFL45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:56:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46763 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBFL4l (ORCPT
+        Thu, 6 Feb 2020 06:56:57 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15793 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBFL44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:56:41 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g64so5175680otb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:56:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uMsAapITXkLzJOLckwG4XojxmW0d1pjkgV4d2lZV/fE=;
-        b=je7nbPRUzIurBISR1NYTtbJqnOaJQ4blgePkVkAxhJOR6ulsvPl17K4jqdMdXsqHZD
-         J+zSsq5WaLrrOawSLfzQmIhC4S8hICmpxOxLejMF+c4DojYJja4JBhGMcRsBBuqqP/g+
-         Onr9hXuFP7e5B+xORxzxCo3KFoIlBRUegbaUI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uMsAapITXkLzJOLckwG4XojxmW0d1pjkgV4d2lZV/fE=;
-        b=ZcoL8jzjVytoYGVVpOOU+yjGfwhVD3EJNhLNWn3vegx5GG/AnCYyvBk0nLbedXf4vo
-         yY7yRWEm9nUP36K9II7FqfCwebIWmlex2qIgAaGgOq+5mHOgU429SPplMopnSTiaevSd
-         wHvGKN3AnNSiAXzoSUgGuljLHGnCYuRy6j4aRgN2iBL9njlfpgKjNyIuRxzGs9Xa6q5B
-         Ab88FuueyHDPn2s2vogYfLR4l+0IAmiK76snCt/OIhqKIXaXx0PVjl8jzCU4RydNIhAX
-         AMroOcW8ew94HbKQmSeAFe65xkFNCgXc4Lu9YHfWYG3WiZT1PJmUU9IjAo/FJyB1syH0
-         2I7w==
-X-Gm-Message-State: APjAAAXydFHJ7Syykfktnwc2tgM/CfKhx5nnIdsKUMGVLxUMPIZ5x0NM
-        pKyylL2gKdsrcK6jutQj9P8HsA==
-X-Google-Smtp-Source: APXvYqzwToTMXn+aTOh/gblkFv/dlH3X35itT+RX5M+r5t5nmrsjGr3xv3LwBksLl8Co9w1+D/M2Ww==
-X-Received: by 2002:a9d:6f07:: with SMTP id n7mr29037601otq.112.1580990198850;
-        Thu, 06 Feb 2020 03:56:38 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a5sm1031776otl.45.2020.02.06.03.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 03:56:38 -0800 (PST)
-Date:   Thu, 6 Feb 2020 03:56:36 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [RFC PATCH 08/11] x86: Add support for finer grained KASLR
-Message-ID: <202002060353.A6A064A@keescook>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-9-kristen@linux.intel.com>
- <CALCETrVnCAzj0atoE1hLjHgmWjWAKVdSLm-UMtukUwWgr7-N9Q@mail.gmail.com>
+        Thu, 6 Feb 2020 06:56:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3bfecd0002>; Thu, 06 Feb 2020 03:55:57 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 03:56:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 03:56:55 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
+ 2020 11:56:50 +0000
+CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: [PATCH v2 2/9] ASoC: tegra: add support for CIF programming
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-3-git-send-email-spujar@nvidia.com>
+ <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <1305a6db-a492-eec2-111e-ddc801d58d86@nvidia.com>
+Date:   Thu, 6 Feb 2020 17:26:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVnCAzj0atoE1hLjHgmWjWAKVdSLm-UMtukUwWgr7-N9Q@mail.gmail.com>
+In-Reply-To: <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580990157; bh=iUPSM/V3A6BDAos6dKxs2BKrINIHdwVPZkEK84cY18A=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=UNGce86vrwf7dXG5TzHsshBC2TH6e5MSnJTd0nTqelKJky6+SVbyxdoLrNIywYqJx
+         rhXe+cpscMFAV0uoL/m2pt3cOeQvGqlouFD/A01FtR1cKyHHS1HnsNCT0K2Bf5NcqK
+         d8x7+/4ERSIGioKxr9qLmuiQ8EFkW49PPQQA4GNTJgiI732PtsthfhGWQVUPlk0tFj
+         Y3GhITrPqld7KVF7lt7HYlb9MTIFrHAv2W0VLKb2KeRvTCaaBm7NjfbqdFCO3sAOkR
+         ID1mc05uhPU0BNbJBHX+9UFq5aakQ4CvYCKMaLff9YIosSJ1A7Es2QKZlvrXYPsT4f
+         KVHvK31ejK+Yg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 05:17:11PM -0800, Andy Lutomirski wrote:
-> On Wed, Feb 5, 2020 at 2:39 PM Kristen Carlson Accardi
-> <kristen@linux.intel.com> wrote:
-> >
-> > At boot time, find all the function sections that have separate .text
-> > sections, shuffle them, and then copy them to new locations. Adjust
-> > any relocations accordingly.
-> >
-> 
-> > +       sort(base, num_syms, sizeof(int), kallsyms_cmp, kallsyms_swp);
-> 
-> Hah, here's a huge bottleneck.  Unless you are severely
-> memory-constrained, never do a sort with an expensive swap function
-> like this.  Instead allocate an array of indices that starts out as
-> [0, 1, 2, ...].  Sort *that* where the swap function just swaps the
-> indices.  Then use the sorted list of indices to permute the actual
-> data.  The result is exactly one expensive swap per item instead of
-> one expensive swap per swap.
 
-I think there are few places where memory-vs-speed need to be examined.
-I remain surprised about how much memory the entire series already uses
-(58MB in my local tests), but I suspect this is likely dominated by the
-two factors: a full copy of the decompressed kernel, and that the
-"allocator" in the image doesn't really implement free():
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/decompress/mm.h#n55
 
--- 
-Kees Cook
+On 2/5/2020 10:32 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> +#include <linux/module.h>
+>> +#include <linux/regmap.h>
+>> +#include "tegra_cif.h"
+>> +
+>> +void tegra_set_cif(struct regmap *regmap, unsigned int reg,
+>> +                struct tegra_cif_conf *conf)
+>> +{
+>> +     unsigned int value;
+>> +
+>> +     value =3D (conf->threshold << TEGRA_ACIF_CTRL_FIFO_TH_SHIFT) |
+>> +             ((conf->audio_ch - 1) << TEGRA_ACIF_CTRL_AUDIO_CH_SHIFT) |
+>> +             ((conf->client_ch - 1) << TEGRA_ACIF_CTRL_CLIENT_CH_SHIFT)=
+ |
+>> +             (conf->audio_bits << TEGRA_ACIF_CTRL_AUDIO_BITS_SHIFT) |
+>> +             (conf->client_bits << TEGRA_ACIF_CTRL_CLIENT_BITS_SHIFT) |
+>> +             (conf->expand << TEGRA_ACIF_CTRL_EXPAND_SHIFT) |
+>> +             (conf->stereo_conv << TEGRA_ACIF_CTRL_STEREO_CONV_SHIFT) |
+>> +             (conf->replicate << TEGRA_ACIF_CTRL_REPLICATE_SHIFT) |
+>> +             (conf->truncate << TEGRA_ACIF_CTRL_TRUNCATE_SHIFT) |
+>> +             (conf->mono_conv << TEGRA_ACIF_CTRL_MONO_CONV_SHIFT);
+>> +
+>> +     regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
+>> +}
+>> +EXPORT_SYMBOL_GPL(tegra_set_cif);
+> Are you going to add more stuff into this source file later on?
+
+Yes I plan to add Tegra30 and Tegra124 CIF functions in this. Anything=20
+related to CIF can be moved here.
+>
+> If not, then it's too much to have a separate driver module just for a
+> single tiny function, you should move it into the header file (make it
+> inline).
+
