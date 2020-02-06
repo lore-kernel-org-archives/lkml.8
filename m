@@ -2,149 +2,91 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F91FC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2ECC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC8A21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2028921741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:41:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sd/l60BD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgBFSiZ (ORCPT
+        id S1727830AbgBFSli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:38:25 -0500
-Received: from mga06.intel.com ([134.134.136.31]:12657 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgBFSiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:38:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 10:38:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="279752683"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Feb 2020 10:38:22 -0800
-Received: from [10.251.88.4] (abudanko-mobl.ccr.corp.intel.com [10.251.88.4])
-        by linux.intel.com (Postfix) with ESMTP id D2C645803E3;
-        Thu,  6 Feb 2020 10:38:15 -0800 (PST)
-Subject: Re: [PATCH v6 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-To:     Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        oprofile-list@lists.sf.net
-References: <576a6141-36d4-14c0-b395-8d195892b916@linux.intel.com>
- <a4c5da70-b6d1-b133-9b64-34e164834b03@linux.intel.com>
- <5be0f67c-17e2-7861-37f3-a0f8a82be8f0@tycho.nsa.gov>
- <1bcb4cb1-98c4-cc1a-b8e3-fd8a0e1e606f@linux.intel.com>
- <06cdca0e-65f2-b58d-a84e-5a1907aa9eb5@tycho.nsa.gov>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <e5d8dc64-6573-21f5-80dd-64cfbf72e13f@linux.intel.com>
-Date:   Thu, 6 Feb 2020 21:38:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 6 Feb 2020 13:41:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38550 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFSli (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 13:41:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Q08ftOUoyei97FPuiT9NtyQjBazlRzN9kuWqUvxH82M=; b=Sd/l60BDPZrpNVJCH76HWt2KQY
+        78r8ovu9yE0ts3Mz5ukvQXOuWS3r0hgZxMaUc24m2fEPFebomk2RCZf3C+pSzcetpwtHSymx6UANj
+        lXil3ylWqN9fg6idv8CR7oaUduchmPwqz3y/8RyeQl0T5hUcbW0gC1kgW0scwiLWmO//7aKNR66OL
+        fHvC3P7rn2pAOdtT2k1NNxcOlST5pjzUiwWt271ez9wE0mhwhRbheZCD+CjjdZKhVW84cZ3OnA1n6
+        8OzcWKOweAPV8HJ05OUTwV8usk/MeJbt9RscmKrhorxWx9qHFPBjRyljZiFJL5iv+UgSoypMnqAcC
+        421RZmBA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izm5m-0004hy-Gd; Thu, 06 Feb 2020 18:41:34 +0000
+Date:   Thu, 6 Feb 2020 10:41:34 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "Yang, Fei" <fei.yang@intel.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using
+ adb over f_fs
+Message-ID: <20200206184134.GA11027@infradead.org>
+References: <20200122222645.38805-1-john.stultz@linaro.org>
+ <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com>
+ <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
+ <87o8uu3wqd.fsf@kernel.org>
+ <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
+ <87lfpy3w1g.fsf@kernel.org>
+ <CALAqxLUQ0ciJTLrmEAu9WKCJHAbpY9szuVm=+VapN2QWWGnNjA@mail.gmail.com>
+ <20200206074005.GA28365@infradead.org>
+ <87ftfn602u.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <06cdca0e-65f2-b58d-a84e-5a1907aa9eb5@tycho.nsa.gov>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ftfn602u.fsf@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 06.02.2020 21:30, Stephen Smalley wrote:
-> On 2/6/20 1:26 PM, Alexey Budankov wrote:
->>
->> On 06.02.2020 21:23, Stephen Smalley wrote:
->>> On 2/5/20 12:30 PM, Alexey Budankov wrote:
->>>>
->>>> Introduce CAP_PERFMON capability designed to secure system performance
->>>> monitoring and observability operations so that CAP_PERFMON would assist
->>>> CAP_SYS_ADMIN capability in its governing role for performance monitoring
->>>> and observability subsystems.
->>>>
->>>> CAP_PERFMON hardens system security and integrity during performance
->>>> monitoring and observability operations by decreasing attack surface that
->>>> is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
->>>> to system performance monitoring and observability operations under CAP_PERFMON
->>>> capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
->>>> chances to misuse the credentials and makes the operation more secure.
->>>> Thus, CAP_PERFMON implements the principal of least privilege for performance
->>>> monitoring and observability operations (POSIX IEEE 1003.1e: 2.2.2.39 principle
->>>> of least privilege: A security design principle that states that a process
->>>> or program be granted only those privileges (e.g., capabilities) necessary
->>>> to accomplish its legitimate function, and only for the time that such
->>>> privileges are actually required)
->>>>
->>>> CAP_PERFMON meets the demand to secure system performance monitoring and
->>>> observability operations for adoption in security sensitive, restricted,
->>>> multiuser production environments (e.g. HPC clusters, cloud and virtual compute
->>>> environments), where root or CAP_SYS_ADMIN credentials are not available to
->>>> mass users of a system, and securely unblocks accessibility of system performance monitoring and observability operations beyond root and CAP_SYS_ADMIN use cases.
->>>>
->>>> CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
->>>> monitoring and observability operations and balances amount of CAP_SYS_ADMIN
->>>> credentials following the recommendations in the capabilities man page [1]
->>>> for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
->>>> developers, below." For backward compatibility reasons access to system
->>>> performance monitoring and observability subsystems of the kernel remains
->>>> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
->>>> usage for secure system performance monitoring and observability operations
->>>> is discouraged with respect to the designed CAP_PERFMON capability.
->>>>
->>>> Although the software running under CAP_PERFMON can not ensure avoidance
->>>> of related hardware issues, the software can still mitigate these issues
->>>> following the official hardware issues mitigation procedure [2]. The bugs
->>>> in the software itself can be fixed following the standard kernel development
->>>> process [3] to maintain and harden security of system performance monitoring
->>>> and observability operations.
->>>>
->>>> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
->>>> [2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
->>>> [3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
->>>>
->>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>
->>> This will require a small update to the selinux-testsuite to correctly reflect the new capability requirements, but that's easy enough.
->>
->> Is the suite a part of the kernel sources or something else?
+On Thu, Feb 06, 2020 at 08:29:45PM +0200, Felipe Balbi wrote:
+> > No, it shoudn't.  dma_map_sg returns the number of mapped segments,
+> > and the callers need to remember that.
 > 
-> It is external,
-> https://github.com/SELinuxProject/selinux-testsuite
-> 
-> I wasn't suggesting that your patch be blocked on updating the testsuite, just noting that it will need to be done.
+> We _do_ remember that:
 
-Ok. Thanks!
+That helps :)
 
-~Alexey
+> that req->request.num_mapped_sgs is the returned value. So you're saying
+> we should test for i == num_mapped_sgs, instead of using
+> sg_is_last(). Is that it?
 
+Yes.
 
+> Fair enough. Just out of curiosity, then, when *should* we use
+> sg_is_last()?
+
+Outside of sg_next/sg_last it really shoud not be used at all as far
+as I'm concerned. 
