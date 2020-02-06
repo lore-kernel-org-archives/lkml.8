@@ -2,159 +2,149 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E52C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB20C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BAC214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017E321775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:37:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="khF2rN3D"
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="UkIqrxpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgBFUdk (ORCPT
+        id S1727875AbgBFUhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:33:40 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35278 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBFUdk (ORCPT
+        Thu, 6 Feb 2020 15:37:01 -0500
+Received: from www.linux-watchdog.org ([185.87.125.42]:50056 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgBFUhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:33:40 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y73so45256pfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:33:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VpINtvpl8gFHQ0mORs3d/SBnRHkntsKpRwCxcH8Pi/M=;
-        b=khF2rN3DjY9FOox2SkpmQf8w8i4PYKUqPU2z3H45oXaqk0kZyA3kh44tjTaW0V8P7O
-         vXtWoDgt0QXsfo6nbfZRtp15g3IWlkvhXJ7wfVxyepST3B/jB2fOuV3sNTPFOvym3DbQ
-         f9txmV6TZQrXDJiPodVdHqD81N0LjCax4wCs7JnrRYvJr3UhErMMWB/shIyrIt7kVdd1
-         7l4MEAZKLntXoa4HqkYeUsa2JEJAPwNwmqAhkeA2h0i+i4/iJ8tEgnYli31BsaihW3b1
-         I6Sm+/ig9cGKIU1rp8PYykizu41SdiCoJ9Ggr2VQ3W9hFu4lsvFHW97PhoLd8mCLQEAi
-         +cuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VpINtvpl8gFHQ0mORs3d/SBnRHkntsKpRwCxcH8Pi/M=;
-        b=BjDZwOif+ar0W7FlAHFEpa3AXgF1WOALkuT53a7ateQcAoeym8gkSVvuCPGUClYC2T
-         NYUEeC2Sd0ZzFx16ok/M/ZaBQq+8hvU7ViUaFY2yCeoytE7XRwUDX4ROPd62lbJDsO6M
-         Nsi+BO61h3rIiry2yutmivM7SOIyQrHSHgDaKWe+qxvt2cPOKpp8ZeMoNlgp6KLV2Mck
-         wZ7Hgl1lZe/el7sIw43aJRQpF9l6jq0UkpVg37bQuShxA4of59M0ytZOeeURR3V5wo4X
-         jlAkJqr8akZhmcUUM2inKrqr29NNPg5cpNgEnhLc4ULvua92lqL+Sz4gKJNr5K57HUUO
-         73Cg==
-X-Gm-Message-State: APjAAAXVnJcp85eK3imgW5Zpm/vwvBmucIwaG7yV7LQTeT0rD5wiVQN2
-        l19Q1Y70k+zLo8UKS8JM8WS20w==
-X-Google-Smtp-Source: APXvYqyOwhQxvxYJuq1dFXkORTFoc1v18fGUp5SD8YPW+YEwmuiOytZ0dvOUz8r6PQeRGUo1txE1nw==
-X-Received: by 2002:a63:aa09:: with SMTP id e9mr5701988pgf.354.1581021219662;
-        Thu, 06 Feb 2020 12:33:39 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r3sm253200pfg.145.2020.02.06.12.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:33:39 -0800 (PST)
-Date:   Thu, 6 Feb 2020 12:33:36 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 7/8] scsi: ufs-qcom: Delay specific time before gate
- ref clk
-Message-ID: <20200206203336.GQ2514@yoga>
-References: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
- <1580978008-9327-8-git-send-email-cang@codeaurora.org>
+        Thu, 6 Feb 2020 15:37:00 -0500
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id 47C7D4065D; Thu,  6 Feb 2020 20:47:37 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 47C7D4065D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1581018457;
+        bh=UDRkZMKHbV1Ws+6JHIMGt7Ei1nb/ogRNQru6w0+tZXI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UkIqrxpjYMqxSpmlNdNmfr3iWoBr+ou8d7kmtu7k8f0Fzm9rNyTXop3ZNJFtA0XIl
+         3gkGyOHYXadfmyfUZSeX/gQDXIu3Dw1Nme/XeJNSP1jug8wWeQje1QO2+EIiPqzFXO
+         OFTngwMkIlSg7JqUuli/qP6lScQ5XXd0mhRVeIos=
+Date:   Thu, 6 Feb 2020 20:47:37 +0100
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Christophe Roullier <christophe.roullier@st.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Jack Mitchell <ml@embed.me.uk>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Vincent Prince <Vincent.PRINCE.fr@gmail.com>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Wang@www.linux-watchdog.org,
+        "Peng 1." <peng.1.wang@nokia-sbell.com>,
+        "yong.liang" <yong.liang@mediatek.com>
+Subject: [GIT PULL REQUEST] watchdog - v5.6 Merge window
+Message-ID: <20200206194737.GA12072@www.linux-watchdog.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580978008-9327-8-git-send-email-cang@codeaurora.org>
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 06 Feb 00:33 PST 2020, Can Guo wrote:
+Hi Linus,
 
-> After enter hibern8, as UFS JEDEC ver 3.0 requires, a specific gating wait
-> time is required before disable the device reference clock. If it is not
-> specified, use the old delay.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-> Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufs-qcom.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 85d7c17..39eefa4 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -833,6 +833,8 @@ static int ufs_qcom_bus_register(struct ufs_qcom_host *host)
->  
->  static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool enable)
->  {
-> +	unsigned long gating_wait;
-> +
->  	if (host->dev_ref_clk_ctrl_mmio &&
->  	    (enable ^ host->is_dev_ref_clk_enabled)) {
->  		u32 temp = readl_relaxed(host->dev_ref_clk_ctrl_mmio);
-> @@ -845,11 +847,25 @@ static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool enable)
->  		/*
->  		 * If we are here to disable this clock it might be immediately
->  		 * after entering into hibern8 in which case we need to make
-> -		 * sure that device ref_clk is active at least 1us after the
-> +		 * sure that device ref_clk is active for specific time after
->  		 * hibern8 enter.
->  		 */
-> -		if (!enable)
-> -			udelay(1);
-> +		if (!enable) {
-> +			gating_wait = host->hba->dev_info.clk_gating_wait_us;
-> +			if (!gating_wait) {
+Please pull the watchdog changes for the v5.6 release cycle.
 
-Afaict this can't happen, because in patch 6 you check for gating_wait
-being 0 and if so set it to 0xff.
+This series contains:
+* add IT8786 chipset
+* addition of sam9x60 compatible watchdog
+* da9062 improvements
+* fix UAF in reboot notifier handling in watchdog core code
+* other fixes and small improvements
 
-> +				udelay(1);
-> +			} else {
-> +				/*
-> +				 * bRefClkGatingWaitTime defines the minimum
-> +				 * time for which the reference clock is
-> +				 * required by device during transition from
-> +				 * HS-MODE to LS-MODE or HIBERN8 state. Give it
-> +				 * more time to be on the safe side.
-> +				 */
-> +				gating_wait += 10;
-> +				usleep_range(gating_wait, gating_wait + 10);
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
 
-I presume there's no strong requirement on the max, so how about using a
-substantially larger max - say 1k, or 10k - to allow the usleep_range()
-to do it's job?
+  Linux 5.5 (2020-01-26 16:23:03 -0800)
 
+are available in the git repository at:
 
-PS. Please include linux-arm-msm@ on all the patches in the series, not
-just two of them.
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.6-rc1
 
-Regards,
-Bjorn
+for you to fetch changes up to 057b52b4b3d58f4ee5944171da50f77b00a1bb0d:
 
-> +			}
-> +		}
->  
->  		writel_relaxed(temp, host->dev_ref_clk_ctrl_mmio);
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+  watchdog: da9062: make restart handler atomic safe (2020-01-27 15:55:49 +0100)
+
+----------------------------------------------------------------
+linux-watchdog 5.6-rc1 tag
+
+----------------------------------------------------------------
+Christophe Roullier (1):
+      drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
+
+Eugen Hristev (1):
+      watchdog: sama5d4_wdt: addition of sam9x60 compatible watchdog
+
+Jack Mitchell (1):
+      watchdog: dw_wdt: ping watchdog to reset countdown before start
+
+Marco Felsch (3):
+      watchdog: da9062: add power management ops
+      dt-bindings: watchdog: da9062: add suspend disable option
+      watchdog: da9062: make restart handler atomic safe
+
+Sai Prakash Ranjan (1):
+      watchdog: qcom: Use platform_get_irq_optional() for bark irq
+
+Srinivas Neeli (1):
+      watchdog: cadence: Skip printing pointer value
+
+Vincent Prince (1):
+      watchdog: it87_wdt: add IT8786 ID
+
+Vladis Dronov (1):
+      watchdog: fix UAF in reboot notifier handling in watchdog core code
+
+Wang, Peng 1. (NSB - CN/Hangzhou) (1):
+      watchdog: make DesignWare watchdog allow users to set bigger timeout value
+
+yong.liang (4):
+      dt-bindings: mediatek: mt8183: Add #reset-cells
+      dt-bindings: mediatek: mt2712: Add #reset-cells
+      watchdog: mtk_wdt: mt8183: Add reset controller
+      watchdog: mtk_wdt: mt2712: Add reset controller
+
+ .../devicetree/bindings/watchdog/da9062-wdt.txt    |   5 +
+ .../devicetree/bindings/watchdog/mtk-wdt.txt       |  11 ++-
+ drivers/watchdog/at91sam9_wdt.h                    |  21 ++++
+ drivers/watchdog/cadence_wdt.c                     |   5 +-
+ drivers/watchdog/da9062_wdt.c                      |  35 ++++++-
+ drivers/watchdog/dw_wdt.c                          |  11 ++-
+ drivers/watchdog/it87_wdt.c                        |   2 +
+ drivers/watchdog/mtk_wdt.c                         | 105 +++++++++++++++++++-
+ drivers/watchdog/qcom-wdt.c                        |   2 +-
+ drivers/watchdog/sama5d4_wdt.c                     | 109 ++++++++++++++++-----
+ drivers/watchdog/stm32_iwdg.c                      |  18 ++++
+ drivers/watchdog/watchdog_core.c                   |  35 +++++++
+ drivers/watchdog/watchdog_dev.c                    |  36 +------
+ .../dt-bindings/reset-controller/mt2712-resets.h   |  22 +++++
+ .../dt-bindings/reset-controller/mt8183-resets.h   |  17 ++++
+ 15 files changed, 361 insertions(+), 73 deletions(-)
+ create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
+
