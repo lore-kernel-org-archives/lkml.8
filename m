@@ -2,97 +2,148 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69E4C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA26AC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A804221741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022557;
-	bh=5pyKS1PjOInkPWWC5YvLo01TyrF4G3VVyBIrB7TKB2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jG2sGUVCkV1cQcNP8kx38+D/iRZnRA1VB/CMJeWvUoEe1ictjpP1/15VWMAM4c2jq
-	 A3xt0DRpe0EKEzJP/56NGPYF8XctRcoiVguMUyO2GB3IlAptSltMW8Un3edaEygOfo
-	 NUq7iM0A0RH/7pIeq/hJluKtcYhtLxCIMPsX5GS0=
+	by mail.kernel.org (Postfix) with ESMTP id BE95E21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:58:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="B/G+VDjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgBFUz4 (ORCPT
+        id S1727923AbgBFU64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:55:56 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32768 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbgBFUz4 (ORCPT
+        Thu, 6 Feb 2020 15:58:56 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42074 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbgBFU6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:55:56 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so61533plb.0;
-        Thu, 06 Feb 2020 12:55:56 -0800 (PST)
+        Thu, 6 Feb 2020 15:58:55 -0500
+Received: by mail-io1-f65.google.com with SMTP id s6so7810535iol.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:58:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=AdYB/qVsQCfjtK6YLT21IXUFdwDIjEDegRvK53B7PwA=;
+        b=B/G+VDjDJpCN2ldsbpWbT42RDlAK1aKN/ANvJL9g9zPgjF8DL2GfhXzXLB8uc1UwiS
+         eA2UEaT/9e5qEZXmrGe66LyBxqxfD5LafMnuCVJTeuQHanGIibi8Oy68+8tkrYhlBVV/
+         ADl5wWfjdOEqS6VLF5go16dYq32duVQVNrjHoF9oyXxPBAoMTgaNDCfbYpPadozI0lpe
+         33gOOkXws19I84A02ZRwcJ8eI/XUE8yBQg0z4KjUGqWCIItQKeOysELLKTQc+lJwpwNs
+         NSqVv/uizyC/WXnUR+E+boLOwSM+GEE36sPTEXHN1FXyUZx97SJYTUTkIWopUKwFsKh3
+         CuWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hRqb0rGcJmy8G6SRcQd6g+ICeu/a0h7S63LOWMjzit8=;
-        b=LLpM/Ascy7JIWQ/KdWSlmQ4+4h4JSoRecD1o3zsqkQDZUGbXCvub6wrpISv8k5grP/
-         GjU7CnslwBbEhMQ2We1z+3WTp7a3WU+ABveXGDKNlsffPRmAQaWZWdYh0LP2KtJc2UN/
-         HJICdlNZe1WTlca1yZDVTkz/IIWf3CHEyAqaE8NOCWZtGt5olHVyW7uMy9PCVRxlcpIc
-         vkt5GA7Ga9b/mxDAphGyOSRHDsUWqi2KsyxKPqtyAt6dP1Qfye2dM7cRiQxwlAK4cQX7
-         DZSL1tPQp/ZMe0fxE8mo+CLg/3NAvSMuaNYIMrmxFlxCV95cBsbAx2WHzOpl7XezsJP/
-         BY8g==
-X-Gm-Message-State: APjAAAVXu5hmYzSwQUMz4q3LT+CbzP09JBHkcHItRpwqmcX82v+V0Q0p
-        qmfCbFW9vIBfPxPIDXOOww==
-X-Google-Smtp-Source: APXvYqwbwbIxptmurXEeUKWNE3CR+62iH6My7KW9TEahwWk+LI628RJ2t+DB8PDH6jbe1l1ZXWbDlQ==
-X-Received: by 2002:a17:90a:a88f:: with SMTP id h15mr7053408pjq.32.1581022555858;
-        Thu, 06 Feb 2020 12:55:55 -0800 (PST)
-Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id m71sm11545755pje.0.2020.02.06.12.55.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:55:55 -0800 (PST)
-Received: (nullmailer pid 15538 invoked by uid 1000);
-        Thu, 06 Feb 2020 20:55:51 -0000
-Date:   Thu, 6 Feb 2020 13:55:51 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
-Message-ID: <20200206205551.GA15172@bogus>
-References: <20200206150626.708649-1-gch981213@gmail.com>
- <20200206150626.708649-3-gch981213@gmail.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AdYB/qVsQCfjtK6YLT21IXUFdwDIjEDegRvK53B7PwA=;
+        b=bddUB/Tzrr9R/YXgbvKsFegsfrTeSTOBDC6aVetE49Hu3jRXjzNVPB9h8n/zov7qdC
+         F1Wj80deR8TctCee8qF/wd4Nat5bS1+2xULy4UcTZPR1TKLp6DB1vPMGX2QHx2m3ByrT
+         S/Uij+eSaLT5jKaOV3Lc1G5Yt1/ioU0vgdR2vYsPBOWabenfB5xShOIUIDTVvtsdS1fJ
+         v2uBSqOMyGqwm9KRwnPF+2EHTOU5oq5AeH0pkR80+JgzhZrjIH/VPNvT3a1yHMTjekcs
+         EOpv8uP/sQa93OsMoek2qJFsh5wtFgFz9dBxG1xokM054EWuUjJyw9Sz/iL4wsekR7Xu
+         Pv4A==
+X-Gm-Message-State: APjAAAVeo+gPtSkIhWPjqAKEn9pcxiG4lVJHWQh3sUejh7HKub1LTvpO
+        JPW48JqGFgUQMtxV/zcnPzgQVlTo9d0=
+X-Google-Smtp-Source: APXvYqx6GqYXoq9y83++pyl2zcO3nfQ0K9n4lzEkbOCZZnD5TUxbNMS+BXy0qLcL8dl5/3QGqS8RzQ==
+X-Received: by 2002:a6b:5109:: with SMTP id f9mr126416iob.86.1581022733488;
+        Thu, 06 Feb 2020 12:58:53 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e16sm210235iog.62.2020.02.06.12.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 12:58:52 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
+ <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
+ <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
+ <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+ <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
+ <28cacc0c-68e4-a9d1-bb5e-03dbeff8a586@kernel.dk>
+ <37dc06c1-e7ee-a185-43a7-98883709f5b0@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2095dbc7-88fb-9d4f-78a5-8577dda09a92@kernel.dk>
+Date:   Thu, 6 Feb 2020 13:58:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206150626.708649-3-gch981213@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <37dc06c1-e7ee-a185-43a7-98883709f5b0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Feb 2020 23:06:26 +0800, Chuanhong Guo wrote:
-> Add binding documentation for SPI controller in Qualcomm Atheros
-> AR934x/QCA95xx SoCs.
+On 2/6/20 1:39 PM, Pavel Begunkov wrote:
+> On 06/02/2020 23:16, Jens Axboe wrote:
+>> On 2/6/20 1:00 PM, Pavel Begunkov wrote:
+>>> On 06/02/2020 22:56, Jens Axboe wrote:
+>>>> On 2/6/20 10:16 AM, Pavel Begunkov wrote:
+>>>>> On 06/02/2020 20:04, Pavel Begunkov wrote:
+>>>>>> On 06/02/2020 19:51, Pavel Begunkov wrote:
+>>>>>>> After defer, a request will be prepared, that includes allocating iovec
+>>>>>>> if needed, and then submitted through io_wq_submit_work() but not custom
+>>>>>>> handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll leak
+>>>>>>> iovec, as it's in io-wq and the code goes as follows:
+>>>>>>>
+>>>>>>> io_read() {
+>>>>>>> 	if (!io_wq_current_is_worker())
+>>>>>>> 		kfree(iovec);
+>>>>>>> }
+>>>>>>>
+>>>>>>> Put all deallocation logic in io_{read,write,send,recv}(), which will
+>>>>>>> leave the memory, if going async with -EAGAIN.
+>>>>>>>
+>>>>>> Interestingly, this will fail badly if it returns -EAGAIN from io-wq context.
+>>>>>> Apparently, I need to do v2.
+>>>>>>
+>>>>> Or not...
+>>>>> Jens, can you please explain what's with the -EAGAIN handling in
+>>>>> io_wq_submit_work()? Checking the code, it seems neither of
+>>>>> read/write/recv/send can return -EAGAIN from async context (i.e.
+>>>>> force_nonblock=false). Are there other ops that can do it?
+>>>>
+>>>> Nobody should return -EAGAIN with force_nonblock=false, they should
+>>>> end the io_kiocb inline for that.
+>>>>
+>>>
+>>> If so for those 4, then the patch should work well.
+>>
+>> Maybe I'm dense, but I'm not seeing the leak? We have two cases here:
+>>
 > 
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> ---
-> Changes since v1: none
->  .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+> There is an example:
 > 
+> 1. submit a read, which need defer.
+> 
+> 2. io_req_defer() allocates ->io and goes io_req_defer_prep() -> io_read_prep().
+> Let #vecs > UIO_FASTIOV, so the prep() in the presence of ->io will allocate iovec.
+> Note: that work.func is left io_wq_submit_work
+> 
+> 3. At some point @io_wq calls io_wq_submit_work() -> io_issue_sqe() -> io_read(),
+> 
+> 4. actual reading succeeds, and it's coming to finalisation and the following
+> code in particular.
+> 
+> if (!io_wq_current_is_worker())
+> 	kfree(iovec);
+> 
+> 5. Because we're in io_wq, the cleanup will not be performed, even though we're
+> returning with success. And that's a leak.
+> 
+> Do you see anything wrong with it?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+That's my bad, I didn't read the subject fully, this is specific to
+a deferred request. Patch looks good to me, and it cleans it up too
+which is always a nice win!
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dts:20.28-29 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+-- 
+Jens Axboe
 
-See https://patchwork.ozlabs.org/patch/1234394
-Please check and re-submit.
