@@ -2,74 +2,102 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB78C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D816AC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C70A20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:38:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cElrmZOk"
+	by mail.kernel.org (Postfix) with ESMTP id B9D23214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgBFKik (ORCPT
+        id S1728513AbgBFKio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:38:40 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42582 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbgBFKik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:38:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DjXmqETrMux+Kvl54ARTF4j5vGbLSPVcRuU0fti6CUI=; b=cElrmZOkO5QQfNB2K32XFgXSa+
-        utFJ6s2akipb7LH6esgagCxAkyYZ+i5/T9dmvqBc+mgEDfb7gu9jQcxR0XIzhgNKru3P6RJocdX5K
-        SZNwEUnHqIVsfVfhI1nXdzSzSRWAKBpWFXxYIa0NokFgIyBX2sufPqFq9BSBPbeMQlzZuruhnS7Hp
-        3jIbpfGPfFxRIhQkhlAbK0Vodaydr59WGjJHs97FUQSk3VQCg/Pb1Hf6AhPvvjeXB6c8azGu1kU4+
-        ecak7avhEjeiExdtb0yoy2UqF/0nzVSbPWu7lEcL/qxN1GlKET5F0Oi+yO3voqz8OF2h4jDDrWvP0
-        ThB/X0EA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izeYL-0007Jr-5p; Thu, 06 Feb 2020 10:38:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 673EB3016E5;
-        Thu,  6 Feb 2020 11:36:44 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AAB262B789F43; Thu,  6 Feb 2020 11:38:30 +0100 (CET)
-Date:   Thu, 6 Feb 2020 11:38:30 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, keescook@chromium.org,
-        rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 08/11] x86: Add support for finer grained KASLR
-Message-ID: <20200206103830.GW14879@hirez.programming.kicks-ass.net>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-9-kristen@linux.intel.com>
+        Thu, 6 Feb 2020 05:38:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41282 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728368AbgBFKim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:38:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 53E6BB159;
+        Thu,  6 Feb 2020 10:38:40 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>, stable@vger.kernel.org
+Subject: [PATCH v2] ceph: fix copy_file_range error path in short copies
+Date:   Thu,  6 Feb 2020 10:38:42 +0000
+Message-Id: <20200206103842.14936-1-lhenriques@suse.com>
+In-Reply-To: <20200205192414.GA27345@suse.com>
+References: <20200205192414.GA27345@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205223950.1212394-9-kristen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 02:39:47PM -0800, Kristen Carlson Accardi wrote:
-> +static long __start___ex_table_addr;
-> +static long __stop___ex_table_addr;
-> +static long _stext;
-> +static long _etext;
-> +static long _sinittext;
-> +static long _einittext;
+When there's an error in the copying loop but some bytes have already been
+copied into the destination file, it is necessary to dirty the caps and
+eventually update the MDS with the file metadata (timestamps, size).  This
+patch fixes this error path.
 
-Should you not also adjust __jump_table, __mcount_loc,
-__kprobe_blacklist and possibly others that include text addresses?
+Another issue this patch fixes is the destination file size being reported
+to the MDS.  If we're on the error path but the amount of bytes written
+has already changed the destination file size, the offset to use is
+dst_off and not endoff.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/file.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 11929d2bb594..f7f8cb6c243f 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -2104,9 +2104,16 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
+ 		if (err) {
+ 			dout("ceph_osdc_copy_from returned %d\n", err);
+-			if (!ret)
++			/*
++			 * If we haven't done any copy yet, just exit with the
++			 * error code; otherwise, return the number of bytes
++			 * already copied, update metadata and dirty caps.
++			 */
++			if (!ret) {
+ 				ret = err;
+-			goto out_caps;
++				goto out_caps;
++			}
++			goto update_dst_inode;
+ 		}
+ 		len -= object_size;
+ 		src_off += object_size;
+@@ -2118,16 +2125,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 		/* We still need one final local copy */
+ 		do_final_copy = true;
+ 
++update_dst_inode:
+ 	file_update_time(dst_file);
+ 	inode_inc_iversion_raw(dst_inode);
+ 
+-	if (endoff > size) {
++	if (dst_off > size) {
+ 		int caps_flags = 0;
+ 
+ 		/* Let the MDS know about dst file size change */
+-		if (ceph_quota_is_max_bytes_approaching(dst_inode, endoff))
++		if (ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
+ 			caps_flags |= CHECK_CAPS_NODELAY;
+-		if (ceph_inode_set_size(dst_inode, endoff))
++		if (ceph_inode_set_size(dst_inode, dst_off))
+ 			caps_flags |= CHECK_CAPS_AUTHONLY;
+ 		if (caps_flags)
+ 			ceph_check_caps(dst_ci, caps_flags, NULL);
