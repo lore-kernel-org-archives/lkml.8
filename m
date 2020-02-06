@@ -2,126 +2,73 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AD3C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295FDC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95C0217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E216421775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="riCCmfUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBFQgd (ORCPT
+        id S1727747AbgBFQiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:36:33 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2390 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727390AbgBFQgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:36:33 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id A1480820A3DE03E99300;
-        Thu,  6 Feb 2020 16:36:29 +0000 (GMT)
-Received: from fraeml706-chm.china.huawei.com (10.206.15.55) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 6 Feb 2020 16:36:28 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 6 Feb 2020 17:36:28 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Thu, 6 Feb 2020 17:36:28 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
- template digests
-Thread-Topic: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
- template digests
-Thread-Index: AQHV3A/+rAKtbF80BkqxEfHd/18hO6gORlUAgAAVOaD///H/AIAAEVJA
-Date:   Thu, 6 Feb 2020 16:36:28 +0000
-Message-ID: <5bbf950910db4a5a853aaaeba5b18529@huawei.com>
-References: <20200205103317.29356-1-roberto.sassu@huawei.com>
-         <20200205103317.29356-6-roberto.sassu@huawei.com>
-         <1581005284.5585.422.camel@linux.ibm.com>
-         <0b91e6977bac4cd5a638041adb3e76eb@huawei.com>
- <1581006834.5585.430.camel@linux.ibm.com>
-In-Reply-To: <1581006834.5585.430.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 6 Feb 2020 11:38:51 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:38113 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgBFQiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:38:50 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 122bd2e9;
+        Thu, 6 Feb 2020 16:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
+        :cc:subject:message-id:references:mime-version:content-type
+        :in-reply-to; s=mail; bh=zYzK/NEhj71GVhP3Ol6c67NfALM=; b=riCCmfU
+        Wh7M6FwzcPNAwIkELDWRwzGmxOaomzdKYXpzYSu11gUGkpbNlfhfr0ZMimpRPvhU
+        WwXawBd9puKQLo1+lJPndZasMhdfjCuAb4t50LGAaFdCw8gsjNaIliIQN6WxvNgL
+        RTC6BKVCahber8XtQxTOn5a1PFB0NMCq5Ns9af7+v6iMmVQ4TbU/hvODfAuqN0O4
+        j/6NzoevKpSFF8RRQ0YwJ6yrNP73wDCq0f3ld436w10f72qaezs8NDtAlokjKd2U
+        tRs2rUEigiJK0kJutwGZmeAQP/iHVlOxJaB6KK6glQml44nTLhiqIjzulh7fkIJc
+        RRB+mbpkLrhR1Xw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 062996d6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 6 Feb 2020 16:37:41 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 17:38:44 +0100
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     eric.dumazet@gmail.com
+Cc:     cai@lca.pw, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
+Message-ID: <20200206163844.GA432041@zx2c4.com>
+References: <1580841629-7102-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1580841629-7102-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBvd25lci1saW51eC1zZWN1cml0
-eS1tb2R1bGVAdmdlci5rZXJuZWwub3JnIFttYWlsdG86b3duZXItbGludXgtDQo+IHNlY3VyaXR5
-LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6
-IFRodXJzZGF5LCBGZWJydWFyeSA2LCAyMDIwIDU6MzQgUE0NCj4gVG86IFJvYmVydG8gU2Fzc3Ug
-PHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT47DQo+IEphbWVzLkJvdHRvbWxleUBIYW5zZW5QYXJ0
-bmVyc2hpcC5jb207DQo+IGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20NCj4gQ2M6IGxp
-bnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3VyaXR5LW1vZHVsZUB2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbHZpdSBWbGFz
-Y2VhbnUNCj4gPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCB2MiA1LzhdIGltYTogU3dpdGNoIHRvIGR5bmFtaWNhbGx5IGFsbG9jYXRlZCBidWZmZXIg
-Zm9yDQo+IHRlbXBsYXRlIGRpZ2VzdHMNCj4gDQo+IE9uIFRodSwgMjAyMC0wMi0wNiBhdCAxNjoy
-NyArMDAwMCwgUm9iZXJ0byBTYXNzdSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+ID4gPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGludXguaWJtLmNv
-bV0NCj4gPiA+IFNlbnQ6IFRodXJzZGF5LCBGZWJydWFyeSA2LCAyMDIwIDU6MDggUE0NCj4gPiA+
-IFRvOiBSb2JlcnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+Ow0KPiA+ID4gSmFt
-ZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbTsNCj4gPiA+IGphcmtrby5zYWtraW5l
-bkBsaW51eC5pbnRlbC5jb20NCj4gPiA+IENjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1zZWN1cml0eS0NCj4gbW9kdWxlQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4gPiA+IDxTaWx2
-aXUuVmxhc2NlYW51QGh1YXdlaS5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDUv
-OF0gaW1hOiBTd2l0Y2ggdG8gZHluYW1pY2FsbHkgYWxsb2NhdGVkIGJ1ZmZlcg0KPiBmb3INCj4g
-PiA+IHRlbXBsYXRlIGRpZ2VzdHMNCj4gPiA+DQo+ID4gPiBIaSBSb2JlcnRvLA0KPiA+ID4NCj4g
-PiA+IE9uIFdlZCwgMjAyMC0wMi0wNSBhdCAxMTozMyArMDEwMCwgUm9iZXJ0byBTYXNzdSB3cm90
-ZToNCj4gPiA+ID4gVGhpcyBwYXRjaCBkeW5hbWljYWxseSBhbGxvY2F0ZXMgdGhlIGFycmF5IG9m
-IHRwbV9kaWdlc3Qgc3RydWN0dXJlcyBpbg0KPiA+ID4gPiBpbWFfYWxsb2NfaW5pdF90ZW1wbGF0
-ZSgpIGFuZCBpbWFfcmVzdG9yZV90ZW1wbGF0ZV9kYXRhKCkuIFRoZSBzaXplDQo+IG9mDQo+ID4g
-PiB0aGUNCj4gPiA+ID4gYXJyYXksIHN0b3JlZCBpbiBpbWFfbnVtX3RlbXBsYXRlX2RpZ2VzdHMs
-IGlzIGluaXRpYWxseSBlcXVhbCB0byAxDQo+IChTSEExKQ0KPiA+ID4gPiBhbmQgd2lsbCBiZSBk
-ZXRlcm1pbmVkIGluIHRoZSB1cGNvbWluZyBwYXRjaGVzIGRlcGVuZGluZyBvbiB0aGUNCj4gPiA+
-IGFsbG9jYXRlZA0KPiA+ID4gPiBQQ1IgYmFua3MgYW5kIHRoZSBjaG9zZW4gZGVmYXVsdCBJTUEg
-YWxnb3JpdGhtLg0KPiA+ID4gPg0KPiA+ID4gPiBDYWxjdWxhdGluZyB0aGUgU0hBMSBkaWdlc3Qg
-aXMgbWFuZGF0b3J5LCBhcyBTSEExIHN0aWxsIHJlbWFpbnMgdGhlDQo+IGRlZmF1bHQNCj4gPiA+
-ID4gaGFzaCBhbGdvcml0aG0gZm9yIHRoZSBtZWFzdXJlbWVudCBsaXN0LiBXaGVuIElNQSB3aWxs
-IHN1cHBvcnQgdGhlDQo+ID4gPiBDcnlwdG8NCj4gPiA+ID4gQWdpbGUgZm9ybWF0LCByZW1haW5p
-bmcgZGlnZXN0cyB3aWxsIGJlIGFsc28gcHJvdmlkZWQuDQo+ID4gPiA+DQo+ID4gPiA+IFRoZSBw
-b3NpdGlvbiBpbiB0aGUgYXJyYXkgb2YgdGhlIFNIQTEgZGlnZXN0IGlzIHN0b3JlZCBpbiB0aGUN
-Cj4gaW1hX3NoYTFfaWR4DQo+ID4gPiA+IGdsb2JhbCB2YXJpYWJsZSBhbmQgaXQgaXMgZGV0ZXJt
-aW5lZCBhdCBJTUEgaW5pdGlhbGl6YXRpb24gdGltZS4NCj4gPiA+ID4NCj4gPiA+ID4gQ2hhbmdl
-bG9nDQo+ID4gPiA+DQo+ID4gPiA+IHYxOg0KPiA+ID4gPiAtIG1vdmUgaW1hX3NoYTFfaWR4IHRv
-IGltYV9jcnlwdG8uYw0KPiA+ID4gPiAtIGludHJvZHVjZSBpbWFfbnVtX3RlbXBsYXRlX2RpZ2Vz
-dHMgKHN1Z2dlc3RlZCBieSBNaW1pKQ0KPiA+ID4NCj4gPiA+IEluc3RlYWQgb2YgaGFyZGNvZGlu
-ZyAibnJfYWxsb2NhdGVkX2JhbmtzICsgMSIgb3IgbnJfYWxsb2NhdGVkX2JhbmtzICsNCj4gPiA+
-IDIiLCBJIHN1Z2dlc3RlZCBkZWZpbmluZyAibnJfYWxsb2NhdGVkX2JhbmtzICsgZXh0cmEiLCB3
-aGVyZSAiZXh0cmEiDQo+ID4gPiBjb3VsZCBiZSAwLCAxLCBvciAyLg0KPiA+ID4NCj4gPiA+IFRo
-ZSByZXN0IG9mIHRoZSBjb2RlIHdvdWxkIHJlbWFpbiBleGFjdGx5IHRoZSBzYW1lIGFzIHlvdSBo
-YWQuDQo+ID4NCj4gPiBPay4gSSBkaWQgYSBzbWFsbCBpbXByb3ZlbWVudC4gU2luY2Ugd2UgZGV0
-ZXJtaW5lIHRoZSBudW1iZXIgb2YNCj4gPiByZXF1aXJlZCBlbGVtZW50cyBvZiBpbWFfYWxnb19h
-cnJheSBiZWZvcmUga21hbGxvYygpIEkgdGhvdWdodCBpdA0KPiA+IHdhcyBvayB0byBkaXJlY3Rs
-eSBzZXQgdGhhdCBudW1iZXIgb2YgZWxlbWVudHMgaW4gYSBzaW5nbGUgdmFyaWFibGUuDQo+ID4N
-Cj4gPiBJZiB5b3UgdGhpbmsgdGhhdCBoYXZpbmcgdHdvIHZhcmlhYmxlcyBpcyBiZXR0ZXIsIEkg
-d2lsbCBjaGFuZ2UgaXQuDQo+IA0KPiBUaGUgY29ubmVjdGlvbiB0byBucl9hbGxvY2F0ZWRfYmFu
-a3MgaXMgdGhlbiBub3QgYXMgdmlzaWJsZS4gwqBVc2luZw0KPiB0d28gdmFyaWFibGVzIGlzIGNs
-ZWFyZXIuDQoNCk9rLCBubyBwcm9ibGVtLiBJIHdpbGwgY2hhbmdlIGl0IGluIHRoZSBuZXh0IHZl
-cnNpb24uDQoNClJvYmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBHbWJI
-LCBIUkIgNTYwNjMNCk1hbmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFuLCBTaGkgWWFu
-bGkNCg==
+Hi Eric,
+
+On Tue, Feb 04, 2020 at 01:40:29PM -0500, Qian Cai wrote:
+> -	list->qlen--;
+> +	WRITE_ONCE(list->qlen, list->qlen - 1);
+
+Sorry I'm a bit late to the party here, but this immediately jumped out.
+This generates worse code with a bigger race in some sense:
+
+list->qlen-- is:
+
+   0:   83 6f 10 01             subl   $0x1,0x10(%rdi)
+
+whereas WRITE_ONCE(list->qlen, list->qlen - 1) is:
+
+   0:   8b 47 10                mov    0x10(%rdi),%eax
+   3:   83 e8 01                sub    $0x1,%eax
+   6:   89 47 10                mov    %eax,0x10(%rdi)
+
+Are you sure that's what we want?
+
+Jason
