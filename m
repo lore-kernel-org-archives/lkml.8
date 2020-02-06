@@ -2,101 +2,103 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81556C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D24C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBEF214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96404217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgBFQ1w (ORCPT
+        id S1727847AbgBFQ2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:27:52 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36737 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727358AbgBFQ1w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:27:52 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-185-_Inpmhi_MReCPYBTeRnDtw-1; Thu, 06 Feb 2020 16:27:47 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 6 Feb 2020 16:27:46 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 6 Feb 2020 16:27:46 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jann Horn' <jannh@google.com>, Kees Cook <keescook@chromium.org>
-CC:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: RE: [RFC PATCH 06/11] x86: make sure _etext includes function
- sections
-Thread-Topic: [RFC PATCH 06/11] x86: make sure _etext includes function
- sections
-Thread-Index: AQHV3O+Uub3eyEmx20OwpNUdqmwARKgOWIJQ
-Date:   Thu, 6 Feb 2020 16:27:46 +0000
-Message-ID: <9293be85241d49c182e614ffd7186bca@AcuMS.aculab.com>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-7-kristen@linux.intel.com>
- <202002060408.84005CEFFD@keescook>
- <CAG48ez19kRC_5+ykvQCnZxLq6Qg3xUy7fEMf3pYrG46vBZt6jQ@mail.gmail.com>
-In-Reply-To: <CAG48ez19kRC_5+ykvQCnZxLq6Qg3xUy7fEMf3pYrG46vBZt6jQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 6 Feb 2020 11:28:20 -0500
+Received: from mga04.intel.com ([192.55.52.120]:30727 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgBFQ2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:28:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 08:28:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="344968003"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Feb 2020 08:28:18 -0800
+Date:   Thu, 6 Feb 2020 08:28:18 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 12/19] KVM: Move memslot deletion to helper function
+Message-ID: <20200206162818.GD13067@linux.intel.com>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-13-sean.j.christopherson@intel.com>
+ <20200206161415.GA695333@xz-x1>
 MIME-Version: 1.0
-X-MC-Unique: _Inpmhi_MReCPYBTeRnDtw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206161415.GA695333@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSmFubiBIb3JuDQo+IFNlbnQ6IDA2IEZlYnJ1YXJ5IDIwMjAgMTM6MTYNCi4uLg0KPiA+
-IEkgY2Fubm90IGZpbmQgZXZpZGVuY2UgZm9yDQo+ID4gd2hhdCBmdW5jdGlvbiBzdGFydCBhbGln
-bm1lbnQgc2hvdWxkIGJlLg0KPiANCj4gVGhlcmUgaXMgbm8gYXJjaGl0ZWN0dXJhbGx5IHJlcXVp
-cmVkIGFsaWdubWVudCBmb3IgZnVuY3Rpb25zLCBidXQNCj4gSW50ZWwncyBPcHRpbWl6YXRpb24g
-TWFudWFsDQo+ICg8aHR0cHM6Ly93d3cuaW50ZWwuY29tL2NvbnRlbnQvZGFtL3d3dy9wdWJsaWMv
-dXMvZW4vZG9jdW1lbnRzL21hbnVhbHMvNjQtaWEtMzItYXJjaGl0ZWN0dXJlcy0NCj4gb3B0aW1p
-emF0aW9uLW1hbnVhbC5wZGY+KQ0KPiByZWNvbW1lbmRzIGluIHNlY3Rpb24gMy40LjEuNSwgIkNv
-ZGUgQWxpZ25tZW50IjoNCj4gDQo+IHwgQXNzZW1ibHkvQ29tcGlsZXIgQ29kaW5nIFJ1bGUgMTIu
-IChNIGltcGFjdCwgSCBnZW5lcmFsaXR5KQ0KPiB8IEFsbCBicmFuY2ggdGFyZ2V0cyBzaG91bGQg
-YmUgMTYtYnl0ZSBhbGlnbmVkLg0KPiANCj4gQUZBSUsgdGhpcyBpcyByZWNvbW1lbmRlZCBiZWNh
-dXNlLCBhcyBkb2N1bWVudGVkIGluIHNlY3Rpb24gMi4zLjIuMSwNCj4gIkxlZ2FjeSBEZWNvZGUg
-UGlwZWxpbmUiIChkZXNjcmliaW5nIHRoZSBmcm9udGVuZCBvZiBTYW5keSBCcmlkZ2UsIGFuZA0K
-PiB1c2VkIGFzIHRoZSBiYXNlIGZvciBuZXdlciBtaWNyb2FyY2hpdGVjdHVyZXMpOg0KPiANCj4g
-fCBBbiBpbnN0cnVjdGlvbiBmZXRjaCBpcyBhIDE2LWJ5dGUgYWxpZ25lZCBsb29rdXAgdGhyb3Vn
-aCB0aGUgSVRMQg0KPiBhbmQgaW50byB0aGUgaW5zdHJ1Y3Rpb24gY2FjaGUuDQo+IHwgVGhlIGlu
-c3RydWN0aW9uIGNhY2hlIGNhbiBkZWxpdmVyIGV2ZXJ5IGN5Y2xlIDE2IGJ5dGVzIHRvIHRoZQ0K
-PiBpbnN0cnVjdGlvbiBwcmUtZGVjb2Rlci4NCj4gDQo+IEFGQUlLIHRoaXMgbWVhbnMgdGhhdCBp
-ZiBhIGJyYW5jaCBlbmRzIGNsb3NlIHRvIHRoZSBlbmQgb2YgYSAxNi1ieXRlDQo+IGJsb2NrLCB0
-aGUgZnJvbnRlbmQgaXMgbGVzcyBlZmZpY2llbnQgYmVjYXVzZSBpdCBtYXkgaGF2ZSB0byBydW4g
-dHdvDQo+IGluc3RydWN0aW9uIGZldGNoZXMgYmVmb3JlIHRoZSBmaXJzdCBpbnN0cnVjdGlvbiBj
-YW4gZXZlbiBiZSBkZWNvZGVkLg0KDQpTZWUgYWxzbyBUaGUgbWljcm9hcmNoaXRlY3R1cmUgb2Yg
-SW50ZWwsIEFNRCBhbmQgVklBIENQVXMgZnJvbSB3d3cuYWduZXIub3JnL29wdGltaXplIA0KDQpN
-eSBzdXNwaWNpb24gaXMgdGhhdCByZWR1Y2luZyB0aGUgY2FjaGUgc2l6ZSAoc28gbW9yZSBjb2Rl
-IGZpdHMgaW4pDQp3aWxsIGFsbW9zdCBhbHdheXMgYmUgYSB3aW4gb3ZlciBhbGlnbmluZyBicmFu
-Y2ggdGFyZ2V0cyBhbmQgZW50cnkgcG9pbnRzLg0KSWYgdGhlIGFsaWdubWVudCBvZiBhIGZ1bmN0
-aW9uIG1hdHRlcnMgdGhlbiB0aGVyZSBhcmUgcHJvYmFibHkgb3RoZXINCmNoYW5nZXMgdG8gdGhh
-dCBiaXQgb2YgY29kZSB0aGF0IHdpbGwgZ2l2ZSBhIGxhcmdlciBiZW5lZml0Lg0KDQoJRGF2aWQN
-Cg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
-cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYg
-KFdhbGVzKQ0K
+On Thu, Feb 06, 2020 at 11:14:15AM -0500, Peter Xu wrote:
+> On Tue, Jan 21, 2020 at 02:31:50PM -0800, Sean Christopherson wrote:
+> > Move memslot deletion into its own routine so that the success path for
+> > other memslot updates does not need to use kvm_free_memslot(), i.e. can
+> > explicitly destroy the dirty bitmap when necessary.  This paves the way
+> > for dropping @dont from kvm_free_memslot(), i.e. all callers now pass
+> > NULL for @dont.
+> > 
+> > Add a comment above the code to make a copy of the existing memslot
+> > prior to deletion, it is not at all obvious that the pointer will become
+> > stale during sorting and/or installation of new memslots.
+> 
+> Could you help explain a bit on this explicit comment?  I can follow
+> up with the patch itself which looks all correct to me, but I failed
+> to catch what this extra comment wants to emphasize...
 
+It's tempting to write the code like this (I know, because I did it):
+
+	if (!mem->memory_size)
+		return kvm_delete_memslot(kvm, mem, slot, as_id);
+
+	new = *slot;
+
+Where @slot is a pointer to the memslot to be deleted.  At first, second,
+and third glances, this seems perfectly sane.
+
+The issue is that slot was pulled from struct kvm_memslots.memslots, e.g.
+
+	slot = &slots->memslots[index];
+
+Note that slots->memslots holds actual "struct kvm_memory_slot" objects,
+not pointers to slots.  When update_memslots() sorts the slots, it swaps
+the actual slot objects, not pointers.  I.e. after update_memslots(), even
+though @slot points at the same address, it's could be pointing at a
+different slot.  As a result kvm_free_memslot() in kvm_delete_memslot()
+will free the dirty page info and arch-specific points for some random
+slot, not the intended slot, and will set npages=0 for that random slot.
