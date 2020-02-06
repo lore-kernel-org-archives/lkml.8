@@ -2,136 +2,100 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4681C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD236C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEC021741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366421741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BINwRiA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgBFNpL (ORCPT
+        id S1727942AbgBFNpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:45:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40142 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgBFNpL (ORCPT
+        Thu, 6 Feb 2020 08:45:22 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33705 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727509AbgBFNpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:45:11 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 88AFF295177
-Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-References: <20200205190028.183069-1-pmalani@chromium.org>
- <20200205190028.183069-11-pmalani@chromium.org>
- <20200206121753.7b809631@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
-Date:   Thu, 6 Feb 2020 14:45:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 6 Feb 2020 08:45:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580996720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NDU1pecxlc+BOyhBmEht8Gi+UsDhBE70bSJ3aCURxjY=;
+        b=BINwRiA955dn+mQmP5Yzz/eHLrv1JZ17Wmy7/cGbr0CMDtE2lORWkr+c/GIofGkI4m7/W4
+        albqPN0qG5tgRQfOQfyFM/DKhQwz1P4jiXmiPKkJ41WIlthe4ZwVPmwoz/ankKLjuMp0Sj
+        4N9dokfZfQVdVzC6HGuyBmby4jYQ4FQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-_j4sQ72kNc6cDjhpHwN4kA-1; Thu, 06 Feb 2020 08:45:16 -0500
+X-MC-Unique: _j4sQ72kNc6cDjhpHwN4kA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 059468024DB;
+        Thu,  6 Feb 2020 13:45:15 +0000 (UTC)
+Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E1BE484DB4;
+        Thu,  6 Feb 2020 13:45:09 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 14:45:06 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com
+Subject: Re: [RFC PATCH 6/7] vfio/pci: Remove dev_fmt definition
+Message-ID: <20200206144506.178ba10a.cohuck@redhat.com>
+In-Reply-To: <158085758432.9445.12129266614127683867.stgit@gimli.home>
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+        <158085758432.9445.12129266614127683867.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200206121753.7b809631@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Tue, 04 Feb 2020 16:06:24 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-On 6/2/20 13:17, Jonathan Cameron wrote:
-> On Wed,  5 Feb 2020 11:00:13 -0800
-> Prashant Malani <pmalani@chromium.org> wrote:
+> It currently results in messages like:
 > 
->> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
->> which does the message buffer setup and cleanup.
->>
->> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
->> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
->> function.
->>
->> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>  "vfio-pci 0000:03:00.0: vfio_pci: ..."
 > 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Which is quite a bit redundant.
 > 
->> ---
->>
->> Changes in v2:
->> - Updated to use new function name and parameter list.
->> - Used C99 element setting to initialize param struct.
->> - For second usage, replaced cros_ec_cmd_xfer_status() with
->>   cros_ec_cmd_xfer() which is functionally similar.
->>
->>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
->>  1 file changed, 9 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> index d3a3626c7cd834..94e22e7d927631 100644
->> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
->>  					     u16 cmd_offset, u16 cmd, u32 *mask)
->>  {
->>  	int ret;
->> -	struct {
->> -		struct cros_ec_command msg;
->> -		union {
->> -			struct ec_params_get_cmd_versions params;
->> -			struct ec_response_get_cmd_versions resp;
->> -		};
->> -	} __packed buf = {
->> -		.msg = {
->> -			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
->> -			.insize = sizeof(struct ec_response_get_cmd_versions),
->> -			.outsize = sizeof(struct ec_params_get_cmd_versions)
->> -			},
->> -		.params = {.cmd = cmd}
->> +	struct ec_params_get_cmd_versions params = {
->> +		.cmd = cmd,
->>  	};
->> +	struct ec_response_get_cmd_versions resp = {0};
->>  
->> -	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
->> +	ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
->> +			  &params, sizeof(params), &resp, sizeof(resp), NULL);
->>  	if (ret >= 0)
->> -		*mask = buf.resp.version_mask;
->> +		*mask = resp.version_mask;
->>  	return ret;
->>  }
->>  
->> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
->>  
->>  	memcpy(state->msg->data, &state->param, sizeof(state->param));
->>  
->> -	ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
->> +	ret = cros_ec_cmd_xfer(state->ec, state->msg);
->>  	if (ret < 0)
->>  		return ret;
->> +	else if (state->msg->result != EC_RES_SUCCESS)
->> +		return -EPROTO;
->>  
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 026308aa18b5..343fe38ed06b 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -9,7 +9,6 @@
+>   */
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> -#define dev_fmt pr_fmt
+>  
+>  #include <linux/device.h>
+>  #include <linux/eventfd.h>
+> 
 
-There is no way to use the new cros_ec_cmd here?
+Yes, that looks a bit superfluous.
 
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
->>  	if (ret &&
->>  	    state->resp != (struct ec_response_motion_sense *)state->msg->data)
-> 
