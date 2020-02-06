@@ -2,156 +2,212 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C28DC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54097C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BB921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFB220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nq7ytd0e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFT94kIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgBFQv0 (ORCPT
+        id S1727727AbgBFQwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:51:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42134 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727684AbgBFQv0 (ORCPT
+        Thu, 6 Feb 2020 11:52:04 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45598 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBFQwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:51:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581007885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6wEZC2xS1ICrNAGJ+8QI1N9zsFW9IzwC/0IJCgjt8nk=;
-        b=Nq7ytd0eXJdKZ8CPoo1n96CnFlnJhjtZYxcK4REDrfdZ4NLZPjpnPRQjds91J+inHL1pvL
-        GSoYApQLM/3CMNgsq/qAA5ECTA9/RMppEXmSAdu+MJOutnfp8hUdKYocgT4pcIjbBbgnHk
-        y4GuTS7s+xg3gazFR/xi9tX3G0MpLGs=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-MzOsycC3Otq2FgZ2GX4QKg-1; Thu, 06 Feb 2020 11:51:21 -0500
-X-MC-Unique: MzOsycC3Otq2FgZ2GX4QKg-1
-Received: by mail-qt1-f199.google.com with SMTP id l25so4262706qtu.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 08:51:21 -0800 (PST)
+        Thu, 6 Feb 2020 11:52:04 -0500
+Received: by mail-ed1-f67.google.com with SMTP id v28so6652853edw.12;
+        Thu, 06 Feb 2020 08:52:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SJxFgsecqtei72spXgyrudIkZIJGgELlpouGAqZ4/us=;
+        b=tFT94kInRIvGnjurirgdAOKPn+CQH1ryOj12OD0drFnemVonOKNuX9RNNbDT9RrO5I
+         180vflqSELjgRysD/U+RFVKDuCexZXcHF5x2ge0bm8cJqKjIAFQBregPcgPVtG29tZkN
+         drFMkXqR9JYfBuz1nqLdxqgStVNL88M0bt8iwSjH9EiNCD6TNw8Plr3HPuxU9dfRDuKp
+         kLtdmiP/9bDm7iP8utNCx7QVGxDIM/L5P/JXDf//wl9JMZg0hNyI4zHLR8epruHzUkuD
+         Dh0soyOnpFT0SOmaptgECWpVuPvz3y0jAyw0G78oDBCvzVaSEX2uhBtt44sUwXnjU41P
+         DiHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6wEZC2xS1ICrNAGJ+8QI1N9zsFW9IzwC/0IJCgjt8nk=;
-        b=BajLm3Za8lTtnqaSj0eHAar8r4DKZgOK+BEmqHlOYCuuxTM/xL1KqmaOXuGsnJ+m4p
-         mt8HHBaQlItp2E76nsGjBXVfSC/fui7MS7+lHom6SWIMhtfDRQygcQGPncHFNHN2ykr7
-         LD+VytqFQlw53hjyomv2mhRQdv+QiLOPy+cPelZnaTff600OJsMmSI5vWuP5HsFFfDow
-         7JAjMKHxWgTiM1KRDUIRkDDqeZnhJ121tO8AOh3EOfPeUzHv7bsJPvae9h9DiJIcg5vl
-         J4EMudWtSpED/0LUO3Lk655uZtzh8Um7EYxhdw/ytMDxwS/XT4J661QNMzXsoKXwDYrb
-         YFeA==
-X-Gm-Message-State: APjAAAW7ojgxpaCtKnuTYLDO49E0M8OkyzipPZB/kfXxMY6AWDrWTkUU
-        OwJbKXQ8XaupwBVpvbHoQOpQprNbQ+BlQlMo4gEfTGCuYlgzBGS2LQ7BFNCUtD2C6t1vbfeBXJA
-        sN+2zKdbREkOuM/CRxNT3f8Ty
-X-Received: by 2002:a0c:ed22:: with SMTP id u2mr3142545qvq.13.1581007880669;
-        Thu, 06 Feb 2020 08:51:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx/jX2RKvHGf3JDTGGU+D3o2LP4p21Bk3Kl7+mbxJpFhXmYhA374b5M6RMOGMp7RFtjxv6e0g==
-X-Received: by 2002:a0c:ed22:: with SMTP id u2mr3142516qvq.13.1581007880314;
-        Thu, 06 Feb 2020 08:51:20 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id v10sm1058913qtj.26.2020.02.06.08.51.17
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SJxFgsecqtei72spXgyrudIkZIJGgELlpouGAqZ4/us=;
+        b=g49qy9REz5XeMpVehLQWzoW2C+3Jh4D7pVehlMaXSl+a+yc+2PObbsc26XEzU2/Ksa
+         iVIwXp+QYQWPHtmCvDvnvWgP6tlV22wyfLycVipYoI7pqSVSHxu49J2qmx/YVuWpxnUj
+         UoePPchEgOLFnVUB7pVyQx+7IiFLqZ9QnjJy8Dohf+guRjz+1peYj9kp+IHTAerI0/Cv
+         gHKUb3p9Cj+ni0tGsdDox5YMPYQbSEzHCTQxi4dm7lBU1szDqyfUf/elMoqTiOorRA3Y
+         zi4WQ3QHsLpBC8xwmlcuC9vREGGyQj4i44NFZMinZl1+4ccQnd6SyWiLNZGa1UPU+91s
+         lH2A==
+X-Gm-Message-State: APjAAAXxpahrIzHIwm7uDfd7aQanjHbb4AiHSIgY3aDsy8KOZyF8YOEF
+        JixT2k5X+Boax466Y9Nro4I=
+X-Google-Smtp-Source: APXvYqy+auJcYYJdToXmFqwPTZvEXE1DfEJIG7HuQmqsu4zH/qi96tHhVCFSqjY66+CHfw3ZUF3NRg==
+X-Received: by 2002:a05:6402:1e1:: with SMTP id i1mr3854649edy.338.1581007922255;
+        Thu, 06 Feb 2020 08:52:02 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id y4sm7015ejp.50.2020.02.06.08.52.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 08:51:19 -0800 (PST)
-Date:   Thu, 6 Feb 2020 11:51:16 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 12/19] KVM: Move memslot deletion to helper function
-Message-ID: <20200206165116.GE695333@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-13-sean.j.christopherson@intel.com>
- <20200206161415.GA695333@xz-x1>
- <20200206162818.GD13067@linux.intel.com>
+        Thu, 06 Feb 2020 08:52:01 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: fix deferred req iovec leak
+Date:   Thu,  6 Feb 2020 19:51:16 +0300
+Message-Id: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200206162818.GD13067@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 08:28:18AM -0800, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 11:14:15AM -0500, Peter Xu wrote:
-> > On Tue, Jan 21, 2020 at 02:31:50PM -0800, Sean Christopherson wrote:
-> > > Move memslot deletion into its own routine so that the success path for
-> > > other memslot updates does not need to use kvm_free_memslot(), i.e. can
-> > > explicitly destroy the dirty bitmap when necessary.  This paves the way
-> > > for dropping @dont from kvm_free_memslot(), i.e. all callers now pass
-> > > NULL for @dont.
-> > > 
-> > > Add a comment above the code to make a copy of the existing memslot
-> > > prior to deletion, it is not at all obvious that the pointer will become
-> > > stale during sorting and/or installation of new memslots.
-> > 
-> > Could you help explain a bit on this explicit comment?  I can follow
-> > up with the patch itself which looks all correct to me, but I failed
-> > to catch what this extra comment wants to emphasize...
-> 
-> It's tempting to write the code like this (I know, because I did it):
-> 
-> 	if (!mem->memory_size)
-> 		return kvm_delete_memslot(kvm, mem, slot, as_id);
-> 
-> 	new = *slot;
-> 
-> Where @slot is a pointer to the memslot to be deleted.  At first, second,
-> and third glances, this seems perfectly sane.
-> 
-> The issue is that slot was pulled from struct kvm_memslots.memslots, e.g.
-> 
-> 	slot = &slots->memslots[index];
-> 
-> Note that slots->memslots holds actual "struct kvm_memory_slot" objects,
-> not pointers to slots.  When update_memslots() sorts the slots, it swaps
-> the actual slot objects, not pointers.  I.e. after update_memslots(), even
-> though @slot points at the same address, it's could be pointing at a
-> different slot.  As a result kvm_free_memslot() in kvm_delete_memslot()
-> will free the dirty page info and arch-specific points for some random
-> slot, not the intended slot, and will set npages=0 for that random slot.
+After defer, a request will be prepared, that includes allocating iovec
+if needed, and then submitted through io_wq_submit_work() but not custom
+handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll leak
+iovec, as it's in io-wq and the code goes as follows:
 
-Ah I see, thanks.  Another alternative is we move the "old = *slot"
-copy into kvm_delete_memslot(), which could be even clearer imo.
-However I'm not sure whether it's a good idea to drop the test-by for
-this.  Considering that comment change should not affect it, would you
-mind enrich the comment into something like this (or anything better)?
+io_read() {
+	if (!io_wq_current_is_worker())
+		kfree(iovec);
+}
 
-/*
- * Make a full copy of the old memslot, the pointer will become stale
- * when the memslots are re-sorted by update_memslots() in
- * kvm_delete_memslot(), while to make the kvm_free_memslot() work as
- * expected later on, we still need the cached memory slot.
- */
+Put all deallocation logic in io_{read,write,send,recv}(), which will
+leave the memory, if going async with -EAGAIN.
 
-In all cases:
+It also fixes a leak after failed io_alloc_async_ctx() in
+io_{recv,send}_msg().
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 47 ++++++++++++-----------------------------------
+ 1 file changed, 12 insertions(+), 35 deletions(-)
 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index bff7a03e873f..ce3dbd2b1b5c 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2143,17 +2143,6 @@ static int io_alloc_async_ctx(struct io_kiocb *req)
+ 	return req->io == NULL;
+ }
+ 
+-static void io_rw_async(struct io_wq_work **workptr)
+-{
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+-	struct iovec *iov = NULL;
+-
+-	if (req->io->rw.iov != req->io->rw.fast_iov)
+-		iov = req->io->rw.iov;
+-	io_wq_submit_work(workptr);
+-	kfree(iov);
+-}
+-
+ static int io_setup_async_rw(struct io_kiocb *req, ssize_t io_size,
+ 			     struct iovec *iovec, struct iovec *fast_iov,
+ 			     struct iov_iter *iter)
+@@ -2166,7 +2155,6 @@ static int io_setup_async_rw(struct io_kiocb *req, ssize_t io_size,
+ 
+ 		io_req_map_rw(req, io_size, iovec, fast_iov, iter);
+ 	}
+-	req->work.func = io_rw_async;
+ 	return 0;
+ }
+ 
+@@ -2253,8 +2241,7 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		}
+ 	}
+ out_free:
+-	if (!io_wq_current_is_worker())
+-		kfree(iovec);
++	kfree(iovec);
+ 	return ret;
+ }
+ 
+@@ -2359,8 +2346,7 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		}
+ 	}
+ out_free:
+-	if (!io_wq_current_is_worker())
+-		kfree(iovec);
++	kfree(iovec);
+ 	return ret;
+ }
+ 
+@@ -2955,19 +2941,6 @@ static int io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	return 0;
+ }
+ 
+-#if defined(CONFIG_NET)
+-static void io_sendrecv_async(struct io_wq_work **workptr)
+-{
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+-	struct iovec *iov = NULL;
+-
+-	if (req->io->rw.iov != req->io->rw.fast_iov)
+-		iov = req->io->msg.iov;
+-	io_wq_submit_work(workptr);
+-	kfree(iov);
+-}
+-#endif
+-
+ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+ #if defined(CONFIG_NET)
+@@ -3036,17 +3009,19 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		if (force_nonblock && ret == -EAGAIN) {
+ 			if (req->io)
+ 				return -EAGAIN;
+-			if (io_alloc_async_ctx(req))
++			if (io_alloc_async_ctx(req)) {
++				if (kmsg && kmsg->iov != kmsg->fast_iov)
++					kfree(kmsg->iov);
+ 				return -ENOMEM;
++			}
+ 			memcpy(&req->io->msg, &io.msg, sizeof(io.msg));
+-			req->work.func = io_sendrecv_async;
+ 			return -EAGAIN;
+ 		}
+ 		if (ret == -ERESTARTSYS)
+ 			ret = -EINTR;
+ 	}
+ 
+-	if (!io_wq_current_is_worker() && kmsg && kmsg->iov != kmsg->fast_iov)
++	if (kmsg && kmsg->iov != kmsg->fast_iov)
+ 		kfree(kmsg->iov);
+ 	io_cqring_add_event(req, ret);
+ 	if (ret < 0)
+@@ -3180,17 +3155,19 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		if (force_nonblock && ret == -EAGAIN) {
+ 			if (req->io)
+ 				return -EAGAIN;
+-			if (io_alloc_async_ctx(req))
++			if (io_alloc_async_ctx(req)) {
++				if (kmsg && kmsg->iov != kmsg->fast_iov)
++					kfree(kmsg->iov);
+ 				return -ENOMEM;
++			}
+ 			memcpy(&req->io->msg, &io.msg, sizeof(io.msg));
+-			req->work.func = io_sendrecv_async;
+ 			return -EAGAIN;
+ 		}
+ 		if (ret == -ERESTARTSYS)
+ 			ret = -EINTR;
+ 	}
+ 
+-	if (!io_wq_current_is_worker() && kmsg && kmsg->iov != kmsg->fast_iov)
++	if (kmsg && kmsg->iov != kmsg->fast_iov)
+ 		kfree(kmsg->iov);
+ 	io_cqring_add_event(req, ret);
+ 	if (ret < 0)
 -- 
-Peter Xu
+2.24.0
 
