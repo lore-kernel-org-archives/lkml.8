@@ -2,291 +2,90 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4C0C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CE6C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7369F21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74003218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MU51J6wR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgBFQOb (ORCPT
+        id S1727657AbgBFQQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:14:31 -0500
-Received: from mga09.intel.com ([134.134.136.24]:40497 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727379AbgBFQOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:14:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 08:14:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="225291111"
-Received: from ssp-tglu-cdi358.jf.intel.com ([10.54.55.34])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Feb 2020 08:14:29 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, andriy.shevchenko@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2] perf/x86: Add Intel Tiger Lake uncore support
-Date:   Thu,  6 Feb 2020 08:15:27 -0800
-Message-Id: <20200206161527.3529-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 6 Feb 2020 11:16:10 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:37810 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727579AbgBFQQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:16:10 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581005769; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=f0rMcpx6SByS3z9A7XD51YTKbT0hseWOxZX2pLwY5zs=; b=MU51J6wRl7iH0kazUqVnHKwZLa4rzJHM0Rk6+suk5FT/z36MP5pVtKWQB912TIxfauiimIZf
+ 9yu0q0l3pp5Ov36NdvS7XE1cM2Zv5YRDlXP9oj3xZYPhjgzafmnd/H347jHLKN7r1aKmVbtj
+ HCGr65NAdyN+vArpvEnoHRFOXFU=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3c3bc3.7f093fee66c0-smtp-out-n03;
+ Thu, 06 Feb 2020 16:16:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5F120C433CB; Thu,  6 Feb 2020 16:16:03 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 560FCC43383;
+        Thu,  6 Feb 2020 16:16:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 560FCC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 04/16] bus: mhi: core: Add support for creating and
+ destroying MHI devices
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-5-manivannan.sadhasivam@linaro.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <f667cd9a-8de7-8f4a-6dbb-eeb2a0dfa18e@codeaurora.org>
+Date:   Thu, 6 Feb 2020 09:16:01 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200131135009.31477-5-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 1/31/2020 6:49 AM, Manivannan Sadhasivam wrote:
+> This commit adds support for creating and destroying MHI devices. The
+> MHI devices binds to the MHI channels and are used to transfer data
+> between MHI host and client device.
+> 
+> This is based on the patch submitted by Sujeev Dias:
+> https://lkml.org/lkml/2018/7/9/989
+> 
+> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> [mani: splitted from pm patch and cleaned up for upstream]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-For MSR type of uncore units, there is no difference between Ice Lake
-and Tiger Lake. Share the same code with Ice Lake.
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-Tiger Lake has two MCs. Both of them are located at 0:0:0. The BAR
-offset is still 0x48. The offset of the two MCs is 0x10000.
-Each MC has three counters to count every read/write/total issued by the
-Memory Controller to DRAM. The counters can be accessed by MMIO.
-They are free-running counters.
-
-The offset of counters are different for TIGERLAKE_L and TIGERLAKE.
-Add separated mmio_init() functions.
-
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V1:
-- Remove comma at the end of terminator line
-- Refine the code style of tgl_uncore_imc_freerunning_init_box()
-
- arch/x86/events/intel/uncore.c     |  12 +++
- arch/x86/events/intel/uncore.h     |   2 +
- arch/x86/events/intel/uncore_snb.c | 157 +++++++++++++++++++++++++++++
- 3 files changed, 171 insertions(+)
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 86467f85c383..63922e3a34f5 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1470,6 +1470,16 @@ static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
- 	.pci_init = skl_uncore_pci_init,
- };
- 
-+static const struct intel_uncore_init_fun tgl_uncore_init __initconst = {
-+	.cpu_init = icl_uncore_cpu_init,
-+	.mmio_init = tgl_uncore_mmio_init,
-+};
-+
-+static const struct intel_uncore_init_fun tgl_l_uncore_init __initconst = {
-+	.cpu_init = icl_uncore_cpu_init,
-+	.mmio_init = tgl_l_uncore_mmio_init,
-+};
-+
- static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
- 	.cpu_init = snr_uncore_cpu_init,
- 	.pci_init = snr_uncore_pci_init,
-@@ -1505,6 +1515,8 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_L,	  icl_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI,	  icl_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE,	  icl_uncore_init),
-+	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_TIGERLAKE_L,	  tgl_l_uncore_init),
-+	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_TIGERLAKE,	  tgl_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_D, snr_uncore_init),
- 	{},
- };
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index bbfdaa720b45..1204dcc9fe9b 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -527,6 +527,8 @@ void snb_uncore_cpu_init(void);
- void nhm_uncore_cpu_init(void);
- void skl_uncore_cpu_init(void);
- void icl_uncore_cpu_init(void);
-+void tgl_uncore_mmio_init(void);
-+void tgl_l_uncore_mmio_init(void);
- int snb_pci2phy_map_init(int devid);
- 
- /* uncore_snbep.c */
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index c37cb12d0ef6..ab67b23b2106 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -44,6 +44,11 @@
- #define PCI_DEVICE_ID_INTEL_WHL_UD_IMC		0x3e35
- #define PCI_DEVICE_ID_INTEL_ICL_U_IMC		0x8a02
- #define PCI_DEVICE_ID_INTEL_ICL_U2_IMC		0x8a12
-+#define PCI_DEVICE_ID_INTEL_TGL_U1_IMC		0x9a02
-+#define PCI_DEVICE_ID_INTEL_TGL_U2_IMC		0x9a04
-+#define PCI_DEVICE_ID_INTEL_TGL_U3_IMC		0x9a12
-+#define PCI_DEVICE_ID_INTEL_TGL_U4_IMC		0x9a14
-+#define PCI_DEVICE_ID_INTEL_TGL_H_IMC		0x9a36
- 
- 
- /* SNB event control */
-@@ -1002,3 +1007,155 @@ void nhm_uncore_cpu_init(void)
- }
- 
- /* end of Nehalem uncore support */
-+
-+/* Tiger Lake MMIO uncore support */
-+
-+static const struct pci_device_id tgl_uncore_pci_ids[] = {
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U1_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U2_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U3_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U4_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_H_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* end: all zeroes */ }
-+};
-+
-+enum perf_tgl_uncore_imc_freerunning_types {
-+	TGL_MMIO_UNCORE_IMC_DATA_TOTAL,
-+	TGL_MMIO_UNCORE_IMC_DATA_READ,
-+	TGL_MMIO_UNCORE_IMC_DATA_WRITE,
-+	TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
-+};
-+
-+static struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
-+	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x5040, 0x0, 0x0, 1, 64 },
-+	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x5058, 0x0, 0x0, 1, 64 },
-+	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0x50A0, 0x0, 0x0, 1, 64 },
-+};
-+
-+static struct freerunning_counters tgl_uncore_imc_freerunning[] = {
-+	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0xd840, 0x0, 0x0, 1, 64 },
-+	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0xd858, 0x0, 0x0, 1, 64 },
-+	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xd8A0, 0x0, 0x0, 1, 64 },
-+};
-+
-+static struct uncore_event_desc tgl_uncore_imc_events[] = {
-+	INTEL_UNCORE_EVENT_DESC(data_total,         "event=0xff,umask=0x10"),
-+	INTEL_UNCORE_EVENT_DESC(data_total.scale,   "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(data_total.unit,    "MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(data_read,         "event=0xff,umask=0x20"),
-+	INTEL_UNCORE_EVENT_DESC(data_read.scale,   "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(data_read.unit,    "MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(data_write,        "event=0xff,umask=0x30"),
-+	INTEL_UNCORE_EVENT_DESC(data_write.scale,  "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(data_write.unit,   "MiB"),
-+
-+	{ /* end: all zeroes */ }
-+};
-+
-+static struct pci_dev *tgl_uncore_get_mc_dev(void)
-+{
-+	const struct pci_device_id *ids = tgl_uncore_pci_ids;
-+	struct pci_dev *mc_dev = NULL;
-+
-+	while (ids && ids->vendor) {
-+		mc_dev = pci_get_device(PCI_VENDOR_ID_INTEL, ids->device, NULL);
-+		if (mc_dev)
-+			return mc_dev;
-+		ids++;
-+	}
-+
-+	return mc_dev;
-+}
-+
-+#define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
-+
-+static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-+{
-+	struct pci_dev *pdev = tgl_uncore_get_mc_dev();
-+	struct intel_uncore_pmu *pmu = box->pmu;
-+	resource_size_t addr;
-+	u32 mch_bar;
-+
-+	if (!pdev) {
-+		pr_warn("perf uncore: Cannot find matched IMC device.\n");
-+		return;
-+	}
-+
-+	pci_read_config_dword(pdev, SNB_UNCORE_PCI_IMC_BAR_OFFSET, &mch_bar);
-+	/* MCHBAR is disabled */
-+	if (!(mch_bar & BIT(0))) {
-+		pr_warn("perf uncore: MCHBAR is disabled. Failed to map IMC free-running counters.\n");
-+		return;
-+	}
-+	mch_bar &= ~BIT(0);
-+	addr = (resource_size_t)(mch_bar + TGL_UNCORE_MMIO_IMC_MEM_OFFSET * pmu->pmu_idx);
-+
-+	pci_read_config_dword(pdev, SNB_UNCORE_PCI_IMC_BAR_OFFSET + 4, &mch_bar);
-+	addr |= ((resource_size_t)mch_bar << 32);
-+
-+	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
-+}
-+
-+static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
-+	.init_box	= tgl_uncore_imc_freerunning_init_box,
-+	.exit_box	= uncore_mmio_exit_box,
-+	.read_counter	= uncore_mmio_read_counter,
-+	.hw_config	= uncore_freerunning_hw_config,
-+};
-+
-+static struct attribute *tgl_uncore_imc_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group tgl_uncore_imc_format_group = {
-+	.name = "format",
-+	.attrs = tgl_uncore_imc_formats_attr,
-+};
-+
-+static struct intel_uncore_type tgl_uncore_imc_free_running = {
-+	.name			= "imc_free_running",
-+	.num_counters		= 3,
-+	.num_boxes		= 2,
-+	.num_freerunning_types	= TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX,
-+	.freerunning		= tgl_uncore_imc_freerunning,
-+	.ops			= &tgl_uncore_imc_freerunning_ops,
-+	.event_descs		= tgl_uncore_imc_events,
-+	.format_group		= &tgl_uncore_imc_format_group,
-+};
-+
-+static struct intel_uncore_type *tgl_mmio_uncores[] = {
-+	&tgl_uncore_imc_free_running,
-+	NULL
-+};
-+
-+void tgl_l_uncore_mmio_init(void)
-+{
-+	tgl_uncore_imc_free_running.freerunning = tgl_l_uncore_imc_freerunning;
-+	uncore_mmio_uncores = tgl_mmio_uncores;
-+}
-+
-+void tgl_uncore_mmio_init(void)
-+{
-+	uncore_mmio_uncores = tgl_mmio_uncores;
-+}
-+
-+/* end of Tiger Lake MMIO uncore support */
 -- 
-2.21.0
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
