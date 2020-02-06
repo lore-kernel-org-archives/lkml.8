@@ -2,256 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE2FC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73FFC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCA420659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C45920659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCt8JJ62"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ooSEc0/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBFTHA (ORCPT
+        id S1727937AbgBFTH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:07:00 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40266 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727891AbgBFTG7 (ORCPT
+        Thu, 6 Feb 2020 14:07:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44502 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbgBFTH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:06:59 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z7so3198697pgk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:06:57 -0800 (PST)
+        Thu, 6 Feb 2020 14:07:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so8503600wrx.11;
+        Thu, 06 Feb 2020 11:07:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:cc:to:from:user-agent:date;
-        bh=JH73fAwhfkMNbW4kUyEFGAKqreY4Y4GoPK5G9xNxjhs=;
-        b=GCt8JJ62GzWZuf0t6fb8CNqtqnybSN/RQrt9/vyiGSVnlmRxprreQ6vYGYBLZdfolo
-         sHhU6AXhdZIFrqMi/FUvbt1k5jTH38l1icqf3JcbmWzVv1kjuyWfRfKQXCd+BcXjPh4P
-         jiIqx1nFMHebC14BN9dvDGQySMksuDH7bNu80=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PoWolEQlO36yCFoBh6RNDlkIfLs5bAGA5n8VNBI0TGw=;
+        b=ooSEc0/5Vy1Qws7kNcQ8ykf9IDS4AJyuHD98jJjfnnwBJy/hwAVNjIaUdLYEv0rMmR
+         dk2aXgj/pf7246xFAr50Ca6vm4yw3NLtCKxJMRkDgMpAm4SC6wBOE48/meAO/RccWHvH
+         WmlS55/YchK65M+OuN/gZ5xFPtzTQ1zLfWwShThEfrsayMAg8pI8x+IS6LLkD5frkJ/R
+         SOb6+sxj1L7FIa/dq9Q2FHnbTDn88KxatM5OU0vloM//rWUTtpTeXGTKcjW2pYfy+Md2
+         graRhxwW0gemUbsgU8wRPYEXNnEpDKODBWCmCR3WaMRLWA0IA858lZ/tokrLbmQZsrcf
+         Xw5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:cc:to:from
-         :user-agent:date;
-        bh=JH73fAwhfkMNbW4kUyEFGAKqreY4Y4GoPK5G9xNxjhs=;
-        b=cMezW4E0ghCUfK2itW7oCqXgT1SjKVEROfqJDsd6/AGq1w1LYJ0830qWcrjB+NlKrB
-         FsumJhqYWcTand0NS49GPS3Qye5jzZR+zfozo0wU81eKiy9xa22aVmV9WLcn6ZfdlTWd
-         MzEPz/OP2sdqchSso/PcIh7Zqv1DhFGUFXdwrWzt0RX/H9eX8NSzFHFIQernDzNy/YbW
-         fIrCUrQ3D2vPUYKAozYO/y8TRrhUzsWTwmNjxdqBUoFWzUpMaMVEGkG99J7G36GSAXUX
-         jmxatr/GLWTYhiemmKOvpSZgEJ4b2my0WPN/2N9NiGI6k+fKmvG7unJCJLnd7SipJYDR
-         VyvQ==
-X-Gm-Message-State: APjAAAXh+R4oSXbsWlp35EW7DdEDGBv6ovg70E1wHttTKZFBPEjrti77
-        AvzImvT3bC0sSJRD2t9Q4IFyCw==
-X-Google-Smtp-Source: APXvYqw13PzKBtXxqtku7lejhAKgAkYAo6T15zKICPanBOblwrSQ6Ohs1LKkVfctX9Ze/u1B5LaNRQ==
-X-Received: by 2002:a63:7c2:: with SMTP id 185mr5133841pgh.446.1581016017057;
-        Thu, 06 Feb 2020 11:06:57 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 199sm156429pfv.81.2020.02.06.11.06.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PoWolEQlO36yCFoBh6RNDlkIfLs5bAGA5n8VNBI0TGw=;
+        b=SvlQ5S7kB2r39WkYS1PkWoNzOXUGyNQGLEy256kSLAXU0Y9NHJSCfrB0KJ+rY962wN
+         MxmlYbQptFdT++ePi4ofArSD/PnDpvhJGFRhXCQ3TUAVe7vD6byS038ql3jvhCYy5HOS
+         9FLKkoEKzZJPBkAt9I31slk9Oo0kxD/A68eG0oN3TC9PZcmHawC3X/2hsfK9AcnDgMcS
+         JeVC/3b2cu05mVnqGuTaAd1d3IBxTuQDcGgjJdr9CTcgyayOvGqbRHdDv9X1tC8AZ+C8
+         yuVMSdhasQl5MOiAlTyE3e0qnboemGQhPbq6EcpO+//2EDCvUPywLP5r6PbHV03wLamd
+         KuvQ==
+X-Gm-Message-State: APjAAAXsvawvzKEimL87oIktN0f9Rsdj9m2dPfot3S/BO9tzkz9Icyib
+        eEgA+MZJvxsQq0rUt06UtPhgZeWW
+X-Google-Smtp-Source: APXvYqx7SOX3tJGX66fu37nOlzftG7MZ25kFYVNYAUB5SIR/ZUrIu83nMxvYl22TDDv3Ljrlde4umA==
+X-Received: by 2002:a5d:6388:: with SMTP id p8mr5157377wru.299.1581016073410;
+        Thu, 06 Feb 2020 11:07:53 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i16sm215093wrr.71.2020.02.06.11.07.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:06:56 -0800 (PST)
-Message-ID: <5e3c63d0.1c69fb81.c2bba.0957@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
-References: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
-Subject: Re: [PATCH V3 1/2] mfd: qcom-spmi-pmic: Convert bindings to .yaml format
-Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Feb 2020 11:06:55 -0800
+        Thu, 06 Feb 2020 11:07:50 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: dsa: b53: Always use dev->vlan_enabled in b53_configure_vlan()
+Date:   Thu,  6 Feb 2020 11:07:45 -0800
+Message-Id: <20200206190745.24032-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kiran Gunda (2020-02-06 05:55:26)
-> Convert the bindings from .txt to .yaml format.
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
+b53_configure_vlan() is called by the bcm_sf2 driver upon setup and
+indirectly through resume as well. During the initial setup, we are
+guaranteed that dev->vlan_enabled is false, so there is no change in
+behavior, however during suspend, we may have enabled VLANs before, so we
+do want to restore that setting.
 
-Did something change? Is there a cover letter?
+Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
+Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/dsa/b53/b53_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/=
-Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> new file mode 100644
-> index 0000000..affc169
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> @@ -0,0 +1,115 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/mfd/qcom,spmi-pmic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm SPMI PMICs multi-function device bindings
-> +
-> +maintainers:
-> +  - Lee Jones <lee.jones@linaro.org>
-> +  - Stephen Boyd <sboyd@codeaurora.org>
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 060497512159..449a22172e07 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -693,7 +693,7 @@ int b53_configure_vlan(struct dsa_switch *ds)
+ 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
+ 	}
+ 
+-	b53_enable_vlan(dev, false, ds->vlan_filtering);
++	b53_enable_vlan(dev, dev->vlan_enabled, ds->vlan_filtering);
+ 
+ 	b53_for_each_port(dev, i)
+ 		b53_write16(dev, B53_VLAN_PAGE,
+-- 
+2.17.1
 
-Please change this to sboyd@kernel.org
-
-> +
-> +description: |
-> +  The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
-> +  PMICs.  These PMICs use a QPNP scheme through SPMI interface.
-
-This first sentence will need continual updating. Please drop it.
-
-> +  QPNP is effectively a partitioning scheme for dividing the SPMI extend=
-ed
-> +  register space up into logical pieces, and set of fixed register
-> +  locations/definitions within these regions, with some of these regions
-> +  specifically used for interrupt handling.
-> +
-> +  The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and =
-are
-> +  interfaced to the chip via the SPMI (System Power Management Interface=
-) bus.
-> +  Support for multiple independent functions are implemented by splittin=
-g the
-> +  16-bit SPMI slave address space into 256 smaller fixed-size regions, 2=
-56 bytes
-> +  each. A function can consume one or more of these fixed-size register =
-regions.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,pm8941
-> +      - qcom,pm8841
-> +      - qcom,pma8084
-> +      - qcom,pm8019
-> +      - qcom,pm8226
-> +      - qcom,pm8110
-> +      - qcom,pma8084
-> +      - qcom,pmi8962
-> +      - qcom,pmd9635
-> +      - qcom,pm8994
-> +      - qcom,pmi8994
-> +      - qcom,pm8916
-> +      - qcom,pm8004
-> +      - qcom,pm8909
-> +      - qcom,pm8950
-> +      - qcom,pmi8950
-> +      - qcom,pm8998
-> +      - qcom,pmi8998
-> +      - qcom,pm8005
-> +      - qcom,spmi-pmic
-
-I think we want qcom,spmi-pmic to be there always. To do that we need it
-to look like:
-
-  compatible:
-    items:
-      enum:
-        - qcom,pm8941
-        ...
-      enum:
-        - qcom,spmi-pmic
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      Specifies the SPMI USID slave address for this device.
-> +      For more information see Documentation/devicetree/bindings/spmi/sp=
-mi.txt
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description:
-> +      Each child node of SPMI slave id represents a function of the PMIC=
-. In the
-> +      example below the rtc device node represents a peripheral of pm8941
-> +      SID =3D 0. The regulator device node represents a peripheral of pm=
-8941 SID =3D 1.
-> +
-> +    properties:
-> +      compatible:
-> +        description:
-> +          Compatible of the PMIC device.
-> +
-> +      interrupts:
-> +        maxItems: 2
-> +        description:
-> +          Interrupts are specified as a 4-tuple. For more information
-> +          see Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.=
-txt
-
-Just make this bindings/spmi/qcom,spmi-pmic-arb.txt so that  we don't
-have to worry about it. Why is max items 2? Isn't it 4? Is this property
-supposed to be specified at all?
-
-> +
-> +      interrupt-names:
-> +        description:
-> +          Corresponding interrupt name to the interrupts property
-
-Does this need to be specified either?
-
-> +
-> +    required:
-> +      - compatible
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    spmi {
-> +        compatible =3D "qcom,spmi-pmic-arb";
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <0>;
-> +
-> +       pm8941@0 {
-
-pmic@0
-
-> +         compatible =3D "qcom,pm8941";
-> +         reg =3D <0x0 0x0>;
-
-Why not include the header file to get the SPMI_USID macro?
-
-> +
-> +         rtc {
-> +           compatible =3D "qcom,rtc";
-> +           interrupts =3D <0x0 0x61 0x1 0x1>;
-> +           interrupt-names =3D "alarm";
-> +         };
-> +       };
-> +
-> +       pm8941@1 {
-
-pmic@1
-
-> +         compatible =3D "qcom,pm8941";
-> +         reg =3D <0x1 0x0>;
-> +
-> +         regulator {
-> +           compatible =3D "qcom,regulator";
-> +           regulator-name =3D "8941_boost";
-> +         };
-> +       };
-> +    };
-> +...
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
