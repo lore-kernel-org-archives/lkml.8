@@ -2,292 +2,458 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF0FC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE54C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C04020730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160C320659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgBFKt4 (ORCPT
+        id S1728250AbgBFK4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:49:56 -0500
-Received: from mga17.intel.com ([192.55.52.151]:62599 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbgBFKt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:49:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 02:49:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,409,1574150400"; 
-   d="scan'208";a="344740321"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.213.33]) ([10.254.213.33])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Feb 2020 02:49:53 -0800
-Subject: Re: [PATCH] iommu/intel-iommu: set as DUMMY_DEVICE_DOMAIN_INFO if no
- IOMMU
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-References: <20200203091009.196658-1-jian-hong@endlessm.com>
- <aab0948d-c6a3-baa1-7343-f18c936d662d@linux.intel.com>
- <CAPpJ_edkkWm0DYHB3U8nQPv=z_o-aV4V7RDMuLTXL5N1H6ZYrA@mail.gmail.com>
- <948da337-128f-22ae-7b2e-730b4b8da446@linux.intel.com>
- <CAPpJ_ecM0oCUjYLbG+uTprRk0=OTUBTxZc-d2BGBRDSYWk4uSQ@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <c8d89c4f-1347-8b9d-0486-a29dd081f26c@linux.intel.com>
-Date:   Thu, 6 Feb 2020 18:49:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 6 Feb 2020 05:56:25 -0500
+Received: from smtprelay0129.hostedemail.com ([216.40.44.129]:55114 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727698AbgBFK4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:56:24 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id F3517837F27D;
+        Thu,  6 Feb 2020 10:56:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ink51_5482e4a147944
+X-Filterd-Recvd-Size: 15578
+Received: from XPS-9350 (unknown [172.58.43.208])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  6 Feb 2020 10:56:20 +0000 (UTC)
+Message-ID: <4ba111ba18f14f0630cc550b58dbe5dbc82a48ac.camel@perches.com>
+Subject: [PATCH] rtw88: 8822[bc]: Make tables const, reduce data object size
+From:   Joe Perches <joe@perches.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Thu, 06 Feb 2020 02:54:38 -0800
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <CAPpJ_ecM0oCUjYLbG+uTprRk0=OTUBTxZc-d2BGBRDSYWk4uSQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Reduce the data size 2kb or 3kb by making tables const.
+Add const to pointer declarations to make compilation work too.
 
-On 2020/2/5 18:06, Jian-Hong Pan wrote:
-> Lu Baolu <baolu.lu@linux.intel.com> 於 2020年2月5日 週三 上午9:28寫道：
->>
->> Hi,
->>
->> On 2020/2/4 17:25, Jian-Hong Pan wrote:
->>> Lu Baolu <baolu.lu@linux.intel.com> 於 2020年2月4日 週二 下午2:11寫道：
->>>>
->>>> Hi,
->>>>
->>>> On 2020/2/3 17:10, Jian-Hong Pan wrote:
->>>>> If the device has no IOMMU, it still invokes iommu_need_mapping during
->>>>> intel_alloc_coherent. However, iommu_need_mapping can only check the
->>>>> device is DUMMY_DEVICE_DOMAIN_INFO or not. This patch marks the device
->>>>> is a DUMMY_DEVICE_DOMAIN_INFO if the device has no IOMMU.
->>>>>
->>>>> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
->>>>> ---
->>>>>     drivers/iommu/intel-iommu.c | 4 +++-
->>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->>>>> index 35a4a3abedc6..878bc986a015 100644
->>>>> --- a/drivers/iommu/intel-iommu.c
->>>>> +++ b/drivers/iommu/intel-iommu.c
->>>>> @@ -5612,8 +5612,10 @@ static int intel_iommu_add_device(struct device *dev)
->>>>>         int ret;
->>>>>
->>>>>         iommu = device_to_iommu(dev, &bus, &devfn);
->>>>> -     if (!iommu)
->>>>> +     if (!iommu) {
->>>>> +             dev->archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
->>>>
->>>> Is this a DMA capable device?
->>>
->>> Do you mean is the device in DMA Remapping table?
->>> Dump DMAR from ACPI table.  The device is not in the table.
->>> So, it does not support DMAR, Intel IOMMU.
->>>
->>> Or, should device_to_iommu be invoked in iommu_need_mapping to check
->>> IOMMU feature again?
->>>
->>
->> Normally intel_iommu_add_device() should only be called for PCI devices
->> and APCI name space devices (reported in ACPI/DMAR table). In both
->> cases, device_to_iommu() should always return a corresponding iommu. I
->> just tried to understand why it failed for your case.
-> 
-> We found all of the DMAR featured devices's PCI Segment Number is *0000*.
-> But the devices locating under segment/domain *0001* hit the issue,
-> until the patch is applied.
-> 
-> Because of different segment numbers, none of iommu will be matched by
-> for_each_active_iommu(iommu, drhd) loop in function device_to_iommu()
-> and it will return NULL.  So, intel_iommu_add_device() returns no
-> device.
-> 
-> I can share the DMAR:
-> /*
->   * Intel ACPI Component Architecture
->   * AML/ASL+ Disassembler version 20200110 (64-bit version)
->   * Copyright (c) 2000 - 2020 Intel Corporation
->   *
->   * Disassembly of dmar.dat, Wed Jan 22 11:41:50 2020
->   *
->   * ACPI Data Table [DMAR]
->   *
->   * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue
->   */
-> 
-> [000h 0000   4]                    Signature : "DMAR"    [DMA Remapping table]
-> [004h 0004   4]                 Table Length : 000000A8
-> [008h 0008   1]                     Revision : 01
-> [009h 0009   1]                     Checksum : 5E
-> [00Ah 0010   6]                       Oem ID : "INTEL "
-> [010h 0016   8]                 Oem Table ID : "EDK2    "
-> [018h 0024   4]                 Oem Revision : 00000002
-> [01Ch 0028   4]              Asl Compiler ID : "    "
-> [020h 0032   4]        Asl Compiler Revision : 01000013
-> 
-> [024h 0036   1]           Host Address Width : 26
-> [025h 0037   1]                        Flags : 05
-> [026h 0038  10]                     Reserved : 00 00 00 00 00 00 00 00 00 00
-> 
-> [030h 0048   2]                Subtable Type : 0000 [Hardware Unit Definition]
-> [032h 0050   2]                       Length : 0018
-> 
-> [034h 0052   1]                        Flags : 00
-> [035h 0053   1]                     Reserved : 00
-> [036h 0054   2]           PCI Segment Number : 0000
-> [038h 0056   8]        Register Base Address : 00000000FED90000
-> 
-> [040h 0064   1]            Device Scope Type : 01 [PCI Endpoint Device]
-> [041h 0065   1]                 Entry Length : 08
-> [042h 0066   2]                     Reserved : 0000
-> [044h 0068   1]               Enumeration ID : 00
-> [045h 0069   1]               PCI Bus Number : 00
-> 
-> [046h 0070   2]                     PCI Path : 02,00
-> 
-> 
-> [048h 0072   2]                Subtable Type : 0000 [Hardware Unit Definition]
-> [04Ah 0074   2]                       Length : 0020
-> 
-> [04Ch 0076   1]                        Flags : 01
-> [04Dh 0077   1]                     Reserved : 00
-> [04Eh 0078   2]           PCI Segment Number : 0000
-> [050h 0080   8]        Register Base Address : 00000000FED91000
-> 
-> [058h 0088   1]            Device Scope Type : 03 [IOAPIC Device]
-> [059h 0089   1]                 Entry Length : 08
-> [05Ah 0090   2]                     Reserved : 0000
-> [05Ch 0092   1]               Enumeration ID : 02
-> [05Dh 0093   1]               PCI Bus Number : 00
-> 
-> [05Eh 0094   2]                     PCI Path : 1E,07
-> 
-> 
-> [060h 0096   1]            Device Scope Type : 04 [Message-capable HPET Device]
-> [061h 0097   1]                 Entry Length : 08
-> [062h 0098   2]                     Reserved : 0000
-> [064h 0100   1]               Enumeration ID : 00
-> [065h 0101   1]               PCI Bus Number : 00
-> 
-> [066h 0102   2]                     PCI Path : 1E,06
-> 
-> 
-> [068h 0104   2]                Subtable Type : 0001 [Reserved Memory Region]
-> [06Ah 0106   2]                       Length : 0020
-> 
-> [06Ch 0108   2]                     Reserved : 0000
-> [06Eh 0110   2]           PCI Segment Number : 0000
-> [070h 0112   8]                 Base Address : 000000006F58B000
-> [078h 0120   8]          End Address (limit) : 000000006F7D4FFF
-> 
-> [080h 0128   1]            Device Scope Type : 01 [PCI Endpoint Device]
-> [081h 0129   1]                 Entry Length : 08
-> [082h 0130   2]                     Reserved : 0000
-> [084h 0132   1]               Enumeration ID : 00
-> [085h 0133   1]               PCI Bus Number : 00
-> 
-> [086h 0134   2]                     PCI Path : 14,00
-> 
-> 
-> [088h 0136   2]                Subtable Type : 0001 [Reserved Memory Region]
-> [08Ah 0138   2]                       Length : 0020
-> 
-> [08Ch 0140   2]                     Reserved : 0000
-> [08Eh 0142   2]           PCI Segment Number : 0000
-> [090h 0144   8]                 Base Address : 0000000079800000
-> [098h 0152   8]          End Address (limit) : 000000007DFFFFFF
-> 
-> [0A0h 0160   1]            Device Scope Type : 01 [PCI Endpoint Device]
-> [0A1h 0161   1]                 Entry Length : 08
-> [0A2h 0162   2]                     Reserved : 0000
-> [0A4h 0164   1]               Enumeration ID : 00
-> [0A5h 0165   1]               PCI Bus Number : 00
-> 
-> [0A6h 0166   2]                     PCI Path : 02,00
-> 
-> 
-> Raw Table Data: Length 168 (0xA8)
-> 
->      0000: 44 4D 41 52 A8 00 00 00 01 5E 49 4E 54 45 4C 20  // DMAR.....^INTEL
->      0010: 45 44 4B 32 20 20 20 20 02 00 00 00 20 20 20 20  // EDK2    ....
->      0020: 13 00 00 01 26 05 00 00 00 00 00 00 00 00 00 00  // ....&...........
->      0030: 00 00 18 00 00 00 00 00 00 00 D9 FE 00 00 00 00  // ................
->      0040: 01 08 00 00 00 00 02 00 00 00 20 00 01 00 00 00  // .......... .....
->      0050: 00 10 D9 FE 00 00 00 00 03 08 00 00 02 00 1E 07  // ................
->      0060: 04 08 00 00 00 00 1E 06 01 00 20 00 00 00 00 00  // .......... .....
->      0070: 00 B0 58 6F 00 00 00 00 FF 4F 7D 6F 00 00 00 00  // ..Xo.....O}o....
->      0080: 01 08 00 00 00 00 14 00 01 00 20 00 00 00 00 00  // .......... .....
->      0090: 00 00 80 79 00 00 00 00 FF FF FF 7D 00 00 00 00  // ...y.......}....
->      00A0: 01 08 00 00 00 00 02 00                          // ........
-> 
-> Here is the lspci:
-> 0000:00:00.0 Host bridge: Intel Corporation Device 9b61 (rev 0c)
-> 0000:00:02.0 VGA compatible controller: Intel Corporation Device 9b41 (rev 02)
-> 0000:00:04.0 Signal processing controller: Intel Corporation Skylake
-> Processor Thermal Subsystem (rev 0c)
-> 0000:00:08.0 System peripheral: Intel Corporation Skylake Gaussian Mixture Model
-> 0000:00:12.0 Signal processing controller: Intel Corporation Device 02f9
-> 0000:00:13.0 Serial controller: Intel Corporation Device 02fc
-> 0000:00:14.0 USB controller: Intel Corporation Device 02ed
-> 0000:00:14.2 RAM memory: Intel Corporation Device 02ef
-> 0000:00:14.3 Network controller: Intel Corporation Device 02f0
-> 0000:00:15.0 Serial bus controller [0c80]: Intel Corporation Device 02e8
-> 0000:00:15.1 Serial bus controller [0c80]: Intel Corporation Device 02e9
-> 0000:00:15.2 Serial bus controller [0c80]: Intel Corporation Device 02ea
-> 0000:00:16.0 Communication controller: Intel Corporation Device 02e0
-> 0000:00:17.0 RAID bus controller: Intel Corporation Device 02d7
-> 0000:00:1c.0 PCI bridge: Intel Corporation Device 02b8 (rev f0)
-> 0000:00:1e.0 Communication controller: Intel Corporation Device 02a8
-> 0000:00:1e.2 Serial bus controller [0c80]: Intel Corporation Device 02aa
-> 0000:00:1f.0 ISA bridge: Intel Corporation Device 0284
-> 0000:00:1f.3 Audio device: Intel Corporation Device 02c8
-> 0000:00:1f.4 SMBus: Intel Corporation Device 02a3
-> 0000:00:1f.5 Serial bus controller [0c80]: Intel Corporation Device 02a4
-> 0000:00:1f.6 Ethernet controller: Intel Corporation Device 0d4f
-> 0000:01:00.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3
-> Bridge [Titan Ridge 4C 2018] (rev 06)
-> 0000:02:00.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3
-> Bridge [Titan Ridge 4C 2018] (rev 06)
-> 0000:02:01.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3
-> Bridge [Titan Ridge 4C 2018] (rev 06)
-> 0000:02:02.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3
-> Bridge [Titan Ridge 4C 2018] (rev 06)
-> 0000:02:04.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3
-> Bridge [Titan Ridge 4C 2018] (rev 06)
-> 0000:03:00.0 System peripheral: Intel Corporation JHL7540 Thunderbolt
-> 3 NHI [Titan Ridge 4C 2018] (rev 06)
-> 0000:37:00.0 USB controller: Intel Corporation JHL7540 Thunderbolt 3
-> USB Controller [Titan Ridge 4C 2018] (rev 06)
-> 0001:00:00.0 SATA controller: Intel Corporation Device 02d7
-> 0001:00:01.0 Non-Volatile memory controller: Intel Corporation Device 0000
-> 0001:00:02.0 Non-Volatile memory controller: Intel Corporation Device 0000
->
+(x86-64 defconfig)
+$ size drivers/net/wireless/realtek/rtw88/rtw8822?.o*
+   text	   data	    bss	    dec	    hex	filename
+  25054	    672	      8	  25734	   6486	drivers/net/wireless/realtek/rtw88/rtw8822b.o.new
+  23870	   1872	      8	  25750	   6496	drivers/net/wireless/realtek/rtw88/rtw8822b.o.old
+  53646	    828	      0	  54474	   d4ca	drivers/net/wireless/realtek/rtw88/rtw8822c.o.new
+  52846	   1652	      0	  54498	   d4e2	drivers/net/wireless/realtek/rtw88/rtw8822c.o.old
 
-So devices are sitting in PCI segment 1, while ACPI/DMAR only reports
-IOMMU units for PCI segment 0. Do I understand it right?
+(x86-64 allyesconfig)
+$ size drivers/net/wireless/realtek/rtw88/rtw8822?.o*
+   text	   data	    bss	    dec	    hex	filename
+  45811	   6280	    128	  52219	   cbfb	drivers/net/wireless/realtek/rtw88/rtw8822b.o.new
+  44211	   7880	    128	  52219	   cbfb	drivers/net/wireless/realtek/rtw88/rtw8822b.o.old
+ 100195	   8128	      0	 108323	  1a723	drivers/net/wireless/realtek/rtw88/rtw8822c.o.new
+  98947	   9376	      0	 108323	  1a723	drivers/net/wireless/realtek/rtw88/rtw8822c.o.old
 
-Is it possible that hardware supports DMAR for both PCI segment 0 and 1,
-but the firmware doesn't reports those for PCI segement 1?
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/net/wireless/realtek/rtw88/mac.c      | 19 +++++++++---------
+ drivers/net/wireless/realtek/rtw88/main.h     | 22 ++++++++++-----------
+ drivers/net/wireless/realtek/rtw88/pci.c      |  2 +-
+ drivers/net/wireless/realtek/rtw88/rtw8822b.c | 28 +++++++++++++--------------
+ drivers/net/wireless/realtek/rtw88/rtw8822c.c | 28 +++++++++++++--------------
+ 5 files changed, 50 insertions(+), 49 deletions(-)
 
-> Best regards,
-> Jian-Hong Pan
-> 
+diff --git a/drivers/net/wireless/realtek/rtw88/mac.c b/drivers/net/wireless/realtek/rtw88/mac.c
+index cadf0a..0b98d3 100644
+--- a/drivers/net/wireless/realtek/rtw88/mac.c
++++ b/drivers/net/wireless/realtek/rtw88/mac.c
+@@ -101,7 +101,7 @@ static int rtw_mac_pre_system_cfg(struct rtw_dev *rtwdev)
+ }
+ 
+ static int rtw_pwr_cmd_polling(struct rtw_dev *rtwdev,
+-			       struct rtw_pwr_seq_cmd *cmd)
++			       const struct rtw_pwr_seq_cmd *cmd)
+ {
+ 	u8 value;
+ 	u8 flag = 0;
+@@ -139,9 +139,10 @@ static int rtw_pwr_cmd_polling(struct rtw_dev *rtwdev,
+ }
+ 
+ static int rtw_sub_pwr_seq_parser(struct rtw_dev *rtwdev, u8 intf_mask,
+-				  u8 cut_mask, struct rtw_pwr_seq_cmd *cmd)
++				  u8 cut_mask,
++				  const struct rtw_pwr_seq_cmd *cmd)
+ {
+-	struct rtw_pwr_seq_cmd *cur_cmd;
++	const struct rtw_pwr_seq_cmd *cur_cmd;
+ 	u32 offset;
+ 	u8 value;
+ 
+@@ -183,13 +184,13 @@ static int rtw_sub_pwr_seq_parser(struct rtw_dev *rtwdev, u8 intf_mask,
+ }
+ 
+ static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
+-			      struct rtw_pwr_seq_cmd **cmd_seq)
++			      const struct rtw_pwr_seq_cmd **cmd_seq)
+ {
+ 	u8 cut_mask;
+ 	u8 intf_mask;
+ 	u8 cut;
+ 	u32 idx = 0;
+-	struct rtw_pwr_seq_cmd *cmd;
++	const struct rtw_pwr_seq_cmd *cmd;
+ 	int ret;
+ 
+ 	cut = rtwdev->hal.cut_version;
+@@ -223,7 +224,7 @@ static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
+ static int rtw_mac_power_switch(struct rtw_dev *rtwdev, bool pwr_on)
+ {
+ 	struct rtw_chip_info *chip = rtwdev->chip;
+-	struct rtw_pwr_seq_cmd **pwr_seq;
++	const struct rtw_pwr_seq_cmd **pwr_seq;
+ 	u8 rpwm;
+ 	bool cur_pwr;
+ 
+@@ -705,7 +706,7 @@ int rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
+ 
+ static u32 get_priority_queues(struct rtw_dev *rtwdev, u32 queues)
+ {
+-	struct rtw_rqpn *rqpn = rtwdev->fifo.rqpn;
++	const struct rtw_rqpn *rqpn = rtwdev->fifo.rqpn;
+ 	u32 prio_queues = 0;
+ 
+ 	if (queues & BIT(IEEE80211_AC_VO))
+@@ -793,7 +794,7 @@ void rtw_mac_flush_queues(struct rtw_dev *rtwdev, u32 queues, bool drop)
+ static int txdma_queue_mapping(struct rtw_dev *rtwdev)
+ {
+ 	struct rtw_chip_info *chip = rtwdev->chip;
+-	struct rtw_rqpn *rqpn = NULL;
++	const struct rtw_rqpn *rqpn = NULL;
+ 	u16 txdma_pq_map = 0;
+ 
+ 	switch (rtw_hci_type(rtwdev)) {
+@@ -882,7 +883,7 @@ static int priority_queue_cfg(struct rtw_dev *rtwdev)
+ {
+ 	struct rtw_fifo_conf *fifo = &rtwdev->fifo;
+ 	struct rtw_chip_info *chip = rtwdev->chip;
+-	struct rtw_page_table *pg_tbl = NULL;
++	const struct rtw_page_table *pg_tbl = NULL;
+ 	u16 pubq_num;
+ 	int ret;
+ 
+diff --git a/drivers/net/wireless/realtek/rtw88/main.h b/drivers/net/wireless/realtek/rtw88/main.h
+index f334d2..a55635 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.h
++++ b/drivers/net/wireless/realtek/rtw88/main.h
+@@ -948,10 +948,10 @@ struct rtw_wow_param {
+ };
+ 
+ struct rtw_intf_phy_para_table {
+-	struct rtw_intf_phy_para *usb2_para;
+-	struct rtw_intf_phy_para *usb3_para;
+-	struct rtw_intf_phy_para *gen1_para;
+-	struct rtw_intf_phy_para *gen2_para;
++	const struct rtw_intf_phy_para *usb2_para;
++	const struct rtw_intf_phy_para *usb3_para;
++	const struct rtw_intf_phy_para *gen1_para;
++	const struct rtw_intf_phy_para *gen2_para;
+ 	u8 n_usb2_para;
+ 	u8 n_usb3_para;
+ 	u8 n_gen1_para;
+@@ -1048,13 +1048,13 @@ struct rtw_chip_info {
+ 
+ 	/* init values */
+ 	u8 sys_func_en;
+-	struct rtw_pwr_seq_cmd **pwr_on_seq;
+-	struct rtw_pwr_seq_cmd **pwr_off_seq;
+-	struct rtw_rqpn *rqpn_table;
+-	struct rtw_page_table *page_table;
+-	struct rtw_intf_phy_para_table *intf_table;
++	const struct rtw_pwr_seq_cmd **pwr_on_seq;
++	const struct rtw_pwr_seq_cmd **pwr_off_seq;
++	const struct rtw_rqpn *rqpn_table;
++	const struct rtw_page_table *page_table;
++	const struct rtw_intf_phy_para_table *intf_table;
+ 
+-	struct rtw_hw_reg *dig;
++	const struct rtw_hw_reg *dig;
+ 	u32 rf_base_addr[2];
+ 	u32 rf_sipi_addr[2];
+ 
+@@ -1500,7 +1500,7 @@ struct rtw_fifo_conf {
+ 	u16 rsvd_cpu_instr_addr;
+ 	u16 rsvd_fw_txbuf_addr;
+ 	u16 rsvd_csibuf_addr;
+-	struct rtw_rqpn *rqpn;
++	const struct rtw_rqpn *rqpn;
+ };
+ 
+ struct rtw_fw_state {
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index 1fbc14..82b1f86 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -1248,7 +1248,7 @@ static void rtw_pci_interface_cfg(struct rtw_dev *rtwdev)
+ static void rtw_pci_phy_cfg(struct rtw_dev *rtwdev)
+ {
+ 	struct rtw_chip_info *chip = rtwdev->chip;
+-	struct rtw_intf_phy_para *para;
++	const struct rtw_intf_phy_para *para;
+ 	u16 cut;
+ 	u16 value;
+ 	u16 offset;
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822b.c b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
+index 4bc14b..ded1e9f 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8822b.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
+@@ -1543,7 +1543,7 @@ static void rtw8822b_bf_config_bfee(struct rtw_dev *rtwdev, struct rtw_vif *vif,
+ 		rtw_warn(rtwdev, "wrong bfee role\n");
+ }
+ 
+-static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822b[] = {
++static const struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822b[] = {
+ 	{0x0086,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_SDIO_MSK,
+@@ -1581,7 +1581,7 @@ static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822b[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822b[] = {
++static const struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822b[] = {
+ 	{0x0012,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_ALL_MSK,
+@@ -1714,7 +1714,7 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822b[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822b[] = {
++static const struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822b[] = {
+ 	{0x0003,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_SDIO_MSK,
+@@ -1787,7 +1787,7 @@ static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822b[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822b[] = {
++static const struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822b[] = {
+ 	{0x0005,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_SDIO_MSK,
+@@ -1905,26 +1905,26 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822b[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd *card_enable_flow_8822b[] = {
++static const struct rtw_pwr_seq_cmd *card_enable_flow_8822b[] = {
+ 	trans_carddis_to_cardemu_8822b,
+ 	trans_cardemu_to_act_8822b,
+ 	NULL
+ };
+ 
+-static struct rtw_pwr_seq_cmd *card_disable_flow_8822b[] = {
++static const struct rtw_pwr_seq_cmd *card_disable_flow_8822b[] = {
+ 	trans_act_to_cardemu_8822b,
+ 	trans_cardemu_to_carddis_8822b,
+ 	NULL
+ };
+ 
+-static struct rtw_intf_phy_para usb2_param_8822b[] = {
++static const struct rtw_intf_phy_para usb2_param_8822b[] = {
+ 	{0xFFFF, 0x00,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_ALL,
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para usb3_param_8822b[] = {
++static const struct rtw_intf_phy_para usb3_param_8822b[] = {
+ 	{0x0001, 0xA841,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_D,
+@@ -1935,7 +1935,7 @@ static struct rtw_intf_phy_para usb3_param_8822b[] = {
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para pcie_gen1_param_8822b[] = {
++static const struct rtw_intf_phy_para pcie_gen1_param_8822b[] = {
+ 	{0x0001, 0xA841,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_C,
+@@ -1982,7 +1982,7 @@ static struct rtw_intf_phy_para pcie_gen1_param_8822b[] = {
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para pcie_gen2_param_8822b[] = {
++static const struct rtw_intf_phy_para pcie_gen2_param_8822b[] = {
+ 	{0x0001, 0xA841,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_C,
+@@ -2029,7 +2029,7 @@ static struct rtw_intf_phy_para pcie_gen2_param_8822b[] = {
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para_table phy_para_table_8822b = {
++static const struct rtw_intf_phy_para_table phy_para_table_8822b = {
+ 	.usb2_para	= usb2_param_8822b,
+ 	.usb3_para	= usb3_param_8822b,
+ 	.gen1_para	= pcie_gen1_param_8822b,
+@@ -2046,12 +2046,12 @@ static const struct rtw_rfe_def rtw8822b_rfe_defs[] = {
+ 	[5] = RTW_DEF_RFE(8822b, 5, 5),
+ };
+ 
+-static struct rtw_hw_reg rtw8822b_dig[] = {
++static const struct rtw_hw_reg rtw8822b_dig[] = {
+ 	[0] = { .addr = 0xc50, .mask = 0x7f },
+ 	[1] = { .addr = 0xe50, .mask = 0x7f },
+ };
+ 
+-static struct rtw_page_table page_table_8822b[] = {
++static const struct rtw_page_table page_table_8822b[] = {
+ 	{64, 64, 64, 64, 1},
+ 	{64, 64, 64, 64, 1},
+ 	{64, 64, 0, 0, 1},
+@@ -2059,7 +2059,7 @@ static struct rtw_page_table page_table_8822b[] = {
+ 	{64, 64, 64, 64, 1},
+ };
+ 
+-static struct rtw_rqpn rqpn_table_8822b[] = {
++static const struct rtw_rqpn rqpn_table_8822b[] = {
+ 	{RTW_DMA_MAPPING_NORMAL, RTW_DMA_MAPPING_NORMAL,
+ 	 RTW_DMA_MAPPING_LOW, RTW_DMA_MAPPING_LOW,
+ 	 RTW_DMA_MAPPING_EXTRA, RTW_DMA_MAPPING_HIGH},
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822c.c b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
+index 386509..5b2f594 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8822c.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
+@@ -3399,7 +3399,7 @@ static void rtw8822c_pwr_track(struct rtw_dev *rtwdev)
+ 	dm_info->pwr_trk_triggered = false;
+ }
+ 
+-static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
++static const struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
+ 	{0x0086,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_SDIO_MSK,
+@@ -3442,7 +3442,7 @@ static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
++static const struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
+ 	{0x0000,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_USB_MSK | RTW_PWR_INTF_SDIO_MSK,
+@@ -3551,7 +3551,7 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822c[] = {
++static const struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822c[] = {
+ 	{0x0093,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_ALL_MSK,
+@@ -3614,7 +3614,7 @@ static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822c[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822c[] = {
++static const struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822c[] = {
+ 	{0x0005,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_SDIO_MSK,
+@@ -3677,47 +3677,47 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822c[] = {
+ 	 RTW_PWR_CMD_END, 0, 0},
+ };
+ 
+-static struct rtw_pwr_seq_cmd *card_enable_flow_8822c[] = {
++static const struct rtw_pwr_seq_cmd *card_enable_flow_8822c[] = {
+ 	trans_carddis_to_cardemu_8822c,
+ 	trans_cardemu_to_act_8822c,
+ 	NULL
+ };
+ 
+-static struct rtw_pwr_seq_cmd *card_disable_flow_8822c[] = {
++static const struct rtw_pwr_seq_cmd *card_disable_flow_8822c[] = {
+ 	trans_act_to_cardemu_8822c,
+ 	trans_cardemu_to_carddis_8822c,
+ 	NULL
+ };
+ 
+-static struct rtw_intf_phy_para usb2_param_8822c[] = {
++static const struct rtw_intf_phy_para usb2_param_8822c[] = {
+ 	{0xFFFF, 0x00,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_ALL,
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para usb3_param_8822c[] = {
++static const struct rtw_intf_phy_para usb3_param_8822c[] = {
+ 	{0xFFFF, 0x0000,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_ALL,
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para pcie_gen1_param_8822c[] = {
++static const struct rtw_intf_phy_para pcie_gen1_param_8822c[] = {
+ 	{0xFFFF, 0x0000,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_ALL,
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para pcie_gen2_param_8822c[] = {
++static const struct rtw_intf_phy_para pcie_gen2_param_8822c[] = {
+ 	{0xFFFF, 0x0000,
+ 	 RTW_IP_SEL_PHY,
+ 	 RTW_INTF_PHY_CUT_ALL,
+ 	 RTW_INTF_PHY_PLATFORM_ALL},
+ };
+ 
+-static struct rtw_intf_phy_para_table phy_para_table_8822c = {
++static const struct rtw_intf_phy_para_table phy_para_table_8822c = {
+ 	.usb2_para	= usb2_param_8822c,
+ 	.usb3_para	= usb3_param_8822c,
+ 	.gen1_para	= pcie_gen1_param_8822c,
+@@ -3734,12 +3734,12 @@ static const struct rtw_rfe_def rtw8822c_rfe_defs[] = {
+ 	[2] = RTW_DEF_RFE(8822c, 0, 0),
+ };
+ 
+-static struct rtw_hw_reg rtw8822c_dig[] = {
++static const struct rtw_hw_reg rtw8822c_dig[] = {
+ 	[0] = { .addr = 0x1d70, .mask = 0x7f },
+ 	[1] = { .addr = 0x1d70, .mask = 0x7f00 },
+ };
+ 
+-static struct rtw_page_table page_table_8822c[] = {
++static const struct rtw_page_table page_table_8822c[] = {
+ 	{64, 64, 64, 64, 1},
+ 	{64, 64, 64, 64, 1},
+ 	{64, 64, 0, 0, 1},
+@@ -3747,7 +3747,7 @@ static struct rtw_page_table page_table_8822c[] = {
+ 	{64, 64, 64, 64, 1},
+ };
+ 
+-static struct rtw_rqpn rqpn_table_8822c[] = {
++static const struct rtw_rqpn rqpn_table_8822c[] = {
+ 	{RTW_DMA_MAPPING_NORMAL, RTW_DMA_MAPPING_NORMAL,
+ 	 RTW_DMA_MAPPING_LOW, RTW_DMA_MAPPING_LOW,
+ 	 RTW_DMA_MAPPING_EXTRA, RTW_DMA_MAPPING_HIGH},
 
-Best regards,
-baolu
