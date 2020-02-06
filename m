@@ -2,180 +2,199 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCB7C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC35C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65E921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC4E21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgBFTKv (ORCPT
+        id S1727946AbgBFTLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:10:51 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37478 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbgBFTKu (ORCPT
+        Thu, 6 Feb 2020 14:11:31 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43472 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbgBFTLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:10:50 -0500
-Received: by mail-io1-f65.google.com with SMTP id k24so7474473ioc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:10:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y0pT29ClCf7RkfthHwCY2/Eag9Xi+xiynNVAeKgXOlY=;
-        b=i/87nf+b+lkWyT4cI9kzrEkHXVT/qU+/FnRnwRjl0r+gcAr3OC/vGEpEXRCpnMG3Qp
-         ZhYBYWp9nNnVUSEQ2D/r3JjvvEpqK/NKvtVmaYmq7XFhPAWvN2HcTF6MpkR5HWw0Ix4I
-         lXg/C8mlmxE4Wbkp34oD9GdI4PNDzWgdrkIPNwr9kMk1Q/OMpNke2CAIZmGob3Uz6c1+
-         hIJ3L2EP4pd3twCQx2u6lu+D0lfxLN1LcL70DzRNdNWaPPRRyYFOZDVIlyycO7DozvM5
-         sKj1oyel8R6CAGbA50vuobY9ndm9ISoE/ALlIqlsnVkzQ840IGRKNCTryd3bPuKFBYx2
-         EBWw==
-X-Gm-Message-State: APjAAAX0hnocX4HxEVgbGtsQ1N6JthgzXRWn9cJy2hisEcLvglfKsBe9
-        mGGcCBxcmvNk5WQ8WhrDZroscw==
-X-Google-Smtp-Source: APXvYqyGXBfghUSAnRhU+Yv6sx9UWbwCJXoKK3btsfmruC8+t5jUcRXKs89cA13OHPFVQoDAR3LGuA==
-X-Received: by 2002:a6b:e601:: with SMTP id g1mr34051816ioh.55.1581016248293;
-        Thu, 06 Feb 2020 11:10:48 -0800 (PST)
-Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id d18sm121599iom.39.2020.02.06.11.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:10:47 -0800 (PST)
-Date:   Thu, 6 Feb 2020 12:10:45 -0700
-From:   Ross Zwisler <zwisler@chromium.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Raul Rangel <rrangel@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
-Message-ID: <CAGRrVHxRdLMx5axcB1Fyea8RZhfd-EO3TTpQtOvpOP0yxnAsbQ@mail.gmail.com>
-References: <20200204215014.257377-1-zwisler@google.com>
- <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
- <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
- <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
- <20200205032110.GR8731@bombadil.infradead.org>
- <20200205034500.x3omkziqwu3g5gpx@yavin>
+        Thu, 6 Feb 2020 14:11:31 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id BC0AA295836
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     open-iscsi@googlegroups.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     krisman@collabora.com, lduncan@suse.com, cleech@redhat.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        kernel@collabora.com, Frank Mayhar <fmayhar@google.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH v2] iscsi: Add support for asynchronous iSCSI session destruction
+Date:   Thu,  6 Feb 2020 16:09:03 -0300
+Message-Id: <20200206190903.104089-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205034500.x3omkziqwu3g5gpx@yavin>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 8:45 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2020-02-04, Matthew Wilcox <willy@infradead.org> wrote:
-> > On Tue, Feb 04, 2020 at 04:49:48PM -0700, Ross Zwisler wrote:
-> > > On Tue, Feb 4, 2020 at 3:11 PM Ross Zwisler <zwisler@chromium.org> wrote:
-> > > > On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com> wrote:
-> > > > > > --- a/include/uapi/linux/mount.h
-> > > > > > +++ b/include/uapi/linux/mount.h
-> > > > > > @@ -34,6 +34,7 @@
-> > > > > >  #define MS_I_VERSION   (1<<23) /* Update inode I_version field */
-> > > > > >  #define MS_STRICTATIME (1<<24) /* Always perform atime updates */
-> > > > > >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]times lazily */
-> > > > > > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
-> > > > > Doesn't this conflict with MS_SUBMOUNT below?
-> > > > > >
-> > > > > >  /* These sb flags are internal to the kernel */
-> > > > > >  #define MS_SUBMOUNT     (1<<26)
-> > > >
-> > > > Yep.  Thanks for the catch, v6 on it's way.
-> > >
-> > > It actually looks like most of the flags which are internal to the
-> > > kernel are actually unused (MS_SUBMOUNT, MS_NOREMOTELOCK, MS_NOSEC,
-> > > MS_BORN and MS_ACTIVE).  Several are unused completely, and the rest
-> > > are just part of the AA_MS_IGNORE_MASK which masks them off in the
-> > > apparmor LSM, but I'm pretty sure they couldn't have been set anyway.
-> > >
-> > > I'll just take over (1<<26) for MS_NOSYMFOLLOW, and remove the rest in
-> > > a second patch.
-> > >
-> > > If someone thinks these flags are actually used by something and I'm
-> > > just missing it, please let me know.
-> >
-> > Afraid you did miss it ...
-> >
-> > /*
-> >  * sb->s_flags.  Note that these mirror the equivalent MS_* flags where
-> >  * represented in both.
-> >  */
-> > ...
-> > #define SB_SUBMOUNT     (1<<26)
-> >
-> > It's not entirely clear to me why they need to be the same, but I haven't
-> > been paying close attention to the separation of superblock and mount
-> > flags, so someone else can probably explain the why of it.
->
-> I could be wrong, but I believe this is historic and originates from the
-> kernel setting certain flags internally (similar to the whole O_* flag,
-> "internal" O_* flag, and FMODE_NOTIFY mixup).
->
-> Also, one of the arguments for the new mount API was that we'd run out
-> MS_* bits so it's possible that you have to enable this new mount option
-> in the new mount API only. (Though Howells is the right person to talk
-> to on this point.)
+From: Frank Mayhar <fmayhar@google.com>
 
-As far as I can tell, SB_SUBMOUNT doesn't actually have any dependence on
-MS_SUBMOUNT. Nothing ever sets or checks MS_SUBMOUNT from within the kernel,
-and whether or not it's set from userspace has no bearing on how SB_SUBMOUNT
-is used.  SB_SUBMOUNT is set independently inside of the kernel in
-vfs_submount().
+iSCSI session destruction can be arbitrarily slow, since it might
+require network operations and serialization inside the scsi layer.
+This patch adds a new user event to trigger the destruction work
+asynchronously, releasing the rx_queue_mutex as soon as the operation is
+queued and before it is performed.  This change allow other operations
+to run in other sessions in the meantime, removing one of the major
+iSCSI bottlenecks for us.
 
-I agree that their association seems to be historical, introduced in this
-commit from David Howells:
+To prevent the session from being used after the destruction request, we
+remove it immediately from the sesslist. This simplifies the locking
+required during the asynchronous removal.
 
-e462ec50cb5fa VFS: Differentiate mount flags (MS_*) from internal superblock flags
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Co-developed-by: Khazhismel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Frank Mayhar <fmayhar@google.com>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
+This patch depends on ("iscsi: Don't destroy session if there are
+outstanding connections"), which can be found at Martin tree at
+5.7/scsi-queue
 
-In that commit message David notes:
+Changes from v1:
+ - Return a ENONMEM if creation of workqueue failed.
+---
+ drivers/scsi/scsi_transport_iscsi.c | 38 +++++++++++++++++++++++++++++
+ include/scsi/iscsi_if.h             |  1 +
+ include/scsi/scsi_transport_iscsi.h |  1 +
+ 3 files changed, 40 insertions(+)
 
-     (1) Some MS_* flags get translated to MNT_* flags (such as MS_NODEV ->
-         MNT_NODEV) without passing this on to the filesystem, but some
-         filesystems set such flags anyway.
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index f3f0ecdb09a2..17a45716a0fe 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -95,6 +95,8 @@ static DECLARE_WORK(stop_conn_work, stop_conn_work_fn);
+ static atomic_t iscsi_session_nr; /* sysfs session id for next new session */
+ static struct workqueue_struct *iscsi_eh_timer_workq;
+ 
++static struct workqueue_struct *iscsi_destroy_workq;
++
+ static DEFINE_IDA(iscsi_sess_ida);
+ /*
+  * list of registered transports and lock that must
+@@ -1615,6 +1617,7 @@ static struct sock *nls;
+ static DEFINE_MUTEX(rx_queue_mutex);
+ 
+ static LIST_HEAD(sesslist);
++static LIST_HEAD(sessdestroylist);
+ static DEFINE_SPINLOCK(sesslock);
+ static LIST_HEAD(connlist);
+ static LIST_HEAD(connlist_err);
+@@ -2035,6 +2038,14 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+ }
+ 
++static void __iscsi_destroy_session(struct work_struct *work)
++{
++	struct iscsi_cls_session *session =
++		container_of(work, struct iscsi_cls_session, destroy_work);
++
++	session->transport->destroy_session(session);
++}
++
+ struct iscsi_cls_session *
+ iscsi_alloc_session(struct Scsi_Host *shost, struct iscsi_transport *transport,
+ 		    int dd_size)
+@@ -2057,6 +2068,7 @@ iscsi_alloc_session(struct Scsi_Host *shost, struct iscsi_transport *transport,
+ 	INIT_WORK(&session->block_work, __iscsi_block_session);
+ 	INIT_WORK(&session->unbind_work, __iscsi_unbind_session);
+ 	INIT_WORK(&session->scan_work, iscsi_scan_session);
++	INIT_WORK(&session->destroy_work, __iscsi_destroy_session);
+ 	spin_lock_init(&session->lock);
+ 
+ 	/* this is released in the dev's release function */
+@@ -3631,6 +3643,23 @@ iscsi_if_recv_msg(struct sk_buff *skb, struct nlmsghdr *nlh, uint32_t *group)
+ 		else
+ 			transport->destroy_session(session);
+ 		break;
++	case ISCSI_UEVENT_DESTROY_SESSION_ASYNC:
++		session = iscsi_session_lookup(ev->u.d_session.sid);
++		if (!session)
++			err = -EINVAL;
++		else if (iscsi_session_has_conns(ev->u.d_session.sid))
++			err = -EBUSY;
++		else {
++			unsigned long flags;
++
++			/* Prevent this session from being found again */
++			spin_lock_irqsave(&sesslock, flags);
++			list_move(&session->sess_list, &sessdestroylist);
++			spin_unlock_irqrestore(&sesslock, flags);
++
++			queue_work(iscsi_destroy_workq, &session->destroy_work);
++		}
++		break;
+ 	case ISCSI_UEVENT_UNBIND_SESSION:
+ 		session = iscsi_session_lookup(ev->u.d_session.sid);
+ 		if (session)
+@@ -4676,8 +4705,16 @@ static __init int iscsi_transport_init(void)
+ 		goto release_nls;
+ 	}
+ 
++	iscsi_destroy_workq = create_singlethread_workqueue("iscsi_destroy");
++	if (!iscsi_destroy_workq) {
++		err = -ENOMEM;
++		goto destroy_wq;
++	}
++
+ 	return 0;
+ 
++destroy_wq:
++	destroy_workqueue(iscsi_eh_timer_workq);
+ release_nls:
+ 	netlink_kernel_release(nls);
+ unregister_flashnode_bus:
+@@ -4699,6 +4736,7 @@ static __init int iscsi_transport_init(void)
+ 
+ static void __exit iscsi_transport_exit(void)
+ {
++	destroy_workqueue(iscsi_destroy_workq);
+ 	destroy_workqueue(iscsi_eh_timer_workq);
+ 	netlink_kernel_release(nls);
+ 	bus_unregister(&iscsi_flashnode_bus);
+diff --git a/include/scsi/iscsi_if.h b/include/scsi/iscsi_if.h
+index 92b11c7e0b4f..deacaee53e61 100644
+--- a/include/scsi/iscsi_if.h
++++ b/include/scsi/iscsi_if.h
+@@ -60,6 +60,7 @@ enum iscsi_uevent_e {
+ 	ISCSI_UEVENT_LOGOUT_FLASHNODE_SID	= UEVENT_BASE + 30,
+ 	ISCSI_UEVENT_SET_CHAP		= UEVENT_BASE + 31,
+ 	ISCSI_UEVENT_GET_HOST_STATS	= UEVENT_BASE + 32,
++	ISCSI_UEVENT_DESTROY_SESSION_ASYNC	= UEVENT_BASE + 33,
+ 
+ 	/* up events */
+ 	ISCSI_KEVENT_RECV_PDU		= KEVENT_BASE + 1,
+diff --git a/include/scsi/scsi_transport_iscsi.h b/include/scsi/scsi_transport_iscsi.h
+index 2129dc9e2dec..fa8814245796 100644
+--- a/include/scsi/scsi_transport_iscsi.h
++++ b/include/scsi/scsi_transport_iscsi.h
+@@ -226,6 +226,7 @@ struct iscsi_cls_session {
+ 	struct work_struct unblock_work;
+ 	struct work_struct scan_work;
+ 	struct work_struct unbind_work;
++	struct work_struct destroy_work;
+ 
+ 	/* recovery fields */
+ 	int recovery_tmo;
+-- 
+2.25.0
 
-I think this is sort of what we are trying to do with MS_NOSYMFOLLOW: have a
-userspace flag that translates to MNT_NOSYMFOLLOW, but which doesn't need an
-associated SB_* flag.  Is it okay to reclaim the bit currently owned by
-MS_SUBMOUNT and use it for MS_NOSYMFOLLOW.
-
-A second option would be to choose one of the unused MS_* values from the
-middle of the range, such as 256 or 512.  Looking back as far as git will let
-me, I don't think that these flags have been used for MS_* values at least
-since v2.6.12:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/fs.h?id=1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
-
-I think maybe these used to be S_WRITE and S_APPEND, which weren't filesystem
-mount flags?
-
-https://sites.uclouvain.be/SystInfo/usr/include/sys/mount.h.html
-
-A third option would be to create this flag using the new mount system:
-
-https://lwn.net/Articles/753473/
-https://lwn.net/Articles/759499/
-
-My main concern with this option is that for Chrome OS we'd like to be able to
-backport whatever solution we come up with to a variety of older kernels, and
-if we go with the new mount system this would require us to backport the
-entire new mount system to those kernels, which I think is infeasible.  
-
-David, what are your thoughts on this?  Of these three options for supporting
-a new MS_NOSYMFOLLOW flag:
-
-1) reclaim the bit currently used by MS_SUBMOUNT
-2) use a smaller unused value for the flag, 256 or 512
-3) implement the new flag only in the new mount system
-
-do you think either #1 or #2 are workable?  If so, which would you prefer?
