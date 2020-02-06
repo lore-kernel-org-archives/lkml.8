@@ -2,100 +2,98 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BEEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3EC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2544520720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13C420720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgBFI4U (ORCPT
+        id S1728213AbgBFI5J convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:56:20 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:32768 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727895AbgBFI4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:56:20 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Feb 2020 14:26:18 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Feb 2020 14:26:17 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id A3A8428E6; Thu,  6 Feb 2020 14:26:16 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] drm/msm/dsi: save pll state before dsi host is powered off
-Date:   Thu,  6 Feb 2020 14:26:15 +0530
-Message-Id: <1580979375-17161-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Feb 2020 03:57:09 -0500
+Received: from mga11.intel.com ([192.55.52.93]:43116 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbgBFI5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 03:57:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 00:57:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,409,1574150400"; 
+   d="scan'208";a="404425769"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga005.jf.intel.com with ESMTP; 06 Feb 2020 00:57:07 -0800
+Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Feb 2020 00:57:07 -0800
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Feb 2020 00:57:06 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.126]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.98]) with mapi id 14.03.0439.000;
+ Thu, 6 Feb 2020 16:57:05 +0800
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Tyler Sanderson <tysand@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Nadav Amit <namit@vmware.com>, Michal Hocko <mhocko@kernel.org>
+Subject: RE: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Thread-Topic: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Thread-Index: AQHV3EIpfQc0Q8o+LUGdBo475Vlup6gN3WAA
+Date:   Thu, 6 Feb 2020 08:57:05 +0000
+Message-ID: <286AC319A985734F985F78AFA26841F73E4237B0@shsmsx102.ccr.corp.intel.com>
+References: <20200205163402.42627-1-david@redhat.com>
+ <20200205163402.42627-4-david@redhat.com>
+In-Reply-To: <20200205163402.42627-4-david@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save pll state before dsi host is powered off. Without this change
-some register values gets resetted.
+On Thursday, February 6, 2020 12:34 AM, David Hildenbrand wrote:
+> Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+> changed the behavior when deflation happens automatically. Instead of
+> deflating when called by the OOM handler, the shrinker is used.
+> 
+> However, the balloon is not simply some slab cache that should be shrunk
+> when under memory pressure. The shrinker does not have a concept of
+> priorities, so this behavior cannot be configured.
+> 
+> There was a report that this results in undesired side effects when inflating
+> the balloon to shrink the page cache. [1]
+> 	"When inflating the balloon against page cache (i.e. no free memory
+> 	 remains) vmscan.c will both shrink page cache, but also invoke the
+> 	 shrinkers -- including the balloon's shrinker. So the balloon
+> 	 driver allocates memory which requires reclaim, vmscan gets this
+> 	 memory by shrinking the balloon, and then the driver adds the
+> 	 memory back to the balloon. Basically a busy no-op."
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
+Not sure if we need to go back to OOM, which has many drawbacks as we discussed.
+Just posted out another approach, which is simple.
 
-Changes in v1:
-	- Saving pll state before dsi host is powered off.
-	- Removed calling of save state in msm_dsi_phy_disable since everything
-	would be resetted and it would save only resetted values.
-
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 104115d..a987efe 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -506,6 +506,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct drm_panel *panel = msm_dsi->panel;
-+	struct msm_dsi_pll *src_pll;
- 	bool is_dual_dsi = IS_DUAL_DSI();
- 	int ret;
- 
-@@ -539,6 +540,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 								id, ret);
- 	}
- 
-+	/* Save PLL status if it is a clock source */
-+	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
-+	msm_dsi_pll_save_state(src_pll);
-+
- 	ret = msm_dsi_host_power_off(host);
- 	if (ret)
- 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index b0cfa67..f509ebd 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -724,10 +724,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
- 	if (!phy || !phy->cfg->ops.disable)
- 		return;
- 
--	/* Save PLL status if it is a clock source */
--	if (phy->usecase != MSM_DSI_PHY_SLAVE)
--		msm_dsi_pll_save_state(phy->pll);
--
- 	phy->cfg->ops.disable(phy);
- 
- 	dsi_phy_regulator_disable(phy);
--- 
-2.7.4
-
+Best,
+Wei
