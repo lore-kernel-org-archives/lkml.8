@@ -2,95 +2,112 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB646C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DF5C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C110420838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE1F21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew8kBRM3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MY+/PXRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgBFOv6 (ORCPT
+        id S1727940AbgBFOwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:51:58 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37537 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgBFOv5 (ORCPT
+        Thu, 6 Feb 2020 09:52:05 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50220 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727678AbgBFOwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:51:57 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so6609888ioc.4;
-        Thu, 06 Feb 2020 06:51:55 -0800 (PST)
+        Thu, 6 Feb 2020 09:52:04 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so313409wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 06:52:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TqCXQKOBDXFQJVKGddlbc8pIiQ4q9FZiH/HTbC2xQy4=;
-        b=Ew8kBRM3/hL/4Kf0D2cwaTyLQ6Ds0xowkyP1rL4Mhrj2e8N3BvOyoJpmVJRJuDzbxE
-         s+hwyF6pkxXoHwciWNdtQEFg1Zt6H4WfNMD4RB/uxNxeFhiufi7/2w1e7V0qqw3p0xex
-         mU0w7qRdmzggpIIt9oPTIhmRIoobsnW6ubrnRSZQm4kKc3dNcSUdKfT5634rn5Nj4iMr
-         aD/4ESSeySiZl6MAyZEGer5u6rpziqyIDXkamz3sYoJB0FYdmeMv196F+IKFFWGFkWm1
-         ALPxipRfzvs+MoPHrnnLO2hry7+sVUdWldEZ1kjYadAWKbvVNhV/XGtjkB0mMCWp8ENA
-         jVkg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=mJxTh9S4n0F4s5VxjTTNjdqiTqHIU1Yz89fV5yVtbcM=;
+        b=MY+/PXRtdFE0kGyhmQO6CI5BTAO1Se7mdcKRfgHaw0gbVPmmkDIc/fE7OP1H1Ntct1
+         593K3T539bQM4slWTzc+u84QJpc3edzBNdTlIwJIqXY6uxy4ijP1Jk1zm88I9wkRaZTc
+         CGrvilSdVk1cqZ3Y2PzE2rRVzto9nrOw2idIzGGWG52WRyRFCQJFRvrlkSjGRNbVQOWs
+         u78GrUv/57KjOJHi0YIXwacLbW3TVAPs1Sdp3OYX/GHgOS3ji87LcBfYp5FYRKPdGwLR
+         +OBHRxH8BnpPH8jusy4su4jWNhhXlDhyAfyu48yM9icOiv27/Y3zf6s8zLAKJeIzBu+5
+         WpSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TqCXQKOBDXFQJVKGddlbc8pIiQ4q9FZiH/HTbC2xQy4=;
-        b=cOY1kcreBqKC6Y1qZBomC+SOcEdmLcBev0koN/D06+/o/WnGMeZqJG4ZQPB9Hhl0Yp
-         6utYSuZzladNh7RjJi3liHBoiv0Hs7Dk9N+YL+tzgwjLt55RFbZhnzkHQlom7PkfuiwB
-         riPZWI0tQ87NmAMITFoC5NCd5OqTQSG/i5JNFfjbHd5oej1czF2/TNGapsWVs3lJGaPI
-         fshB3UoCCTNTbFyjV+boV3tANTIRdEnmxXc7djR7C9t+DS0hYPNQqWkx9y4GITjNYQfJ
-         2a0DyI3E3i+QNU2zmdrxBYcJw2/W89nVj9qbmun7r4TsIO+wNRF5Ne2cSe1LLKjcb5gy
-         uyag==
-X-Gm-Message-State: APjAAAXB2ISGRFyIty7dykmggPxQtrQ+sqxUyjOlUbE1AG9TJHyknLNi
-        WH55iAsERa3M2Ytmwow2gGNRxxaK8FDWTVY8ACc=
-X-Google-Smtp-Source: APXvYqwZYxfalpMvjr4USAwpdtFeqzts07iNxgJWdvTv/0SPzfTizDCBhbfM18KUA+AWxFcUyEZ7fepmukSqkbODuyE=
-X-Received: by 2002:a02:a50f:: with SMTP id e15mr35226468jam.48.1581000715561;
- Thu, 06 Feb 2020 06:51:55 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=mJxTh9S4n0F4s5VxjTTNjdqiTqHIU1Yz89fV5yVtbcM=;
+        b=pQ3tsYjmLEXCp5CbGZJy/Mvp/+VcoJzhRoc7gnWy6PO6RE5Ro0sl4qS5tsShBhVneg
+         PKQCiHM/LFTQ9x2bFfP+246f+7cGiDHHEuoRpT4l5U5SpEW28gGWWPoaicO8eYPC0kzY
+         KoEvT1hjQMaRGPnDydU9KwTdd9ekIZX4n4UbQWgWliyXEmS6frzeW8VRbYt2CrnnAaC/
+         uBBEhvWTkl+1pI8JJwDwtqxf5LvMehRNuZJZP3N6K1WvLqc5pNUXeMXrwx/IfAc2PgSE
+         FkDAxYBGVtnyUrZR9N/iN5rFs9LEZpMjBT8dsm3Ep1N+FZcRCY1tPr72IHRL0W8JQCQ+
+         GF7Q==
+X-Gm-Message-State: APjAAAXOZeopn/IJMyEoi8zzjiVKSGFDd1QADm5T/ic8q3fkdynxk8/K
+        BNWpe9C5YoH2kibo5crYq6As7KE2BTjT4Q==
+X-Google-Smtp-Source: APXvYqyebkbTN9MGqapvZFGquDE74sOJyPmK+PjYKnjruE3amVtOOWzsBDEtNlQho9HPNpBEXNIsSw==
+X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr5229896wmg.13.1581000722859;
+        Thu, 06 Feb 2020 06:52:02 -0800 (PST)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id r5sm4415391wrt.43.2020.02.06.06.52.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 06:52:02 -0800 (PST)
+Date:   Thu, 6 Feb 2020 14:52:00 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [GIT PULL] kgdb fixes for v5.6-rc1
+Message-ID: <20200206145200.pafzy25atqrh5wro@holly.lan>
 MIME-Version: 1.0
-References: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 6 Feb 2020 07:51:44 -0700
-Message-ID: <CAOCk7NqEaJsbTwWgieXbGNN-eGFH3X0i=umMpLaLrPcB4GQzEw@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi: save pll state before dsi host is
- powered off
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 1:52 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Save pll state before dsi host is powered off. Without this change
-> some register values gets resetted.
+Hi Linus
 
-The phy driver already does this.  Why is the current implementation
-insufficient?
+I think you are likely to conclude from the following that the issue
+fixed in this PR should have been detected before it ever reached you.
+If that is your conclusion then I agree (and is one of the reasons
+I chose to address it with a direct revert).
 
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->
-> Changes in v1:
->         - Saving pll state before dsi host is powered off.
->         - Removed calling of save state in post_disable since everything
->         would be resetted and it would save only resetted values.
+Sorry!
 
-Removed from post_disable?  Thats not what I see in the change since
-you are adding code to dsi_mgr_bridge_post_disable()
+I have already added additional architectures to my pre-release tests
+so this mistake is now (much) more likely to be caught in future.
+
+
+The following changes since commit dc2c733e65848b1df8d55c83eea79fc4a868c800:
+
+  kdb: Use for_each_console() helper (2020-01-31 17:34:54 +0000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-fixes-5.6-rc1
+
+for you to fetch changes up to fcf2736c82ca1908e3a0e74730c404baebd8ccdf:
+
+  Revert "kdb: Get rid of confusing diag msg from "rd" if current task has no regs" (2020-02-06 11:40:09 +0000)
+
+----------------------------------------------------------------
+kgdb fixes for 5.6-rc1
+
+One of the simplifications added for 5.6-rc1 has caused build
+regressions on some platforms (it was reported for sparc64).
+This pull request fixes it with a direct revert.
+
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+----------------------------------------------------------------
+Daniel Thompson (1):
+      Revert "kdb: Get rid of confusing diag msg from "rd" if current task has no regs"
+
+ kernel/debug/kdb/kdb_main.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
