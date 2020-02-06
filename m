@@ -2,79 +2,67 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11354C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59045C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F6921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cESW/Gp9"
+	by mail.kernel.org (Postfix) with ESMTP id 3C27721775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgBFRgA (ORCPT
+        id S1727872AbgBFRgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:36:00 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:49014 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgBFRf7 (ORCPT
+        Thu, 6 Feb 2020 12:36:05 -0500
+Received: from smtprelay0057.hostedemail.com ([216.40.44.57]:36647 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726990AbgBFRgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:35:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SMyOfhZzZPZuujUA9E6GKG9U2eDhQH0R/BujkYeevWk=; b=cESW/Gp9HDS3+G9FpVQTt6hOML
-        sjgfAiMlMAPrC4TEVSciFPIhysWIP8ufQdJNbRKMnaikCo8+eDJVaTBvgSUfdGUwuKazj8S5/zve7
-        SBkf/3rkk/p/TKFS6tlJnf7uMgL8rChYdeX2tHYoD6liZjqYo5imoBuFHVXbY/CMckJiLTHagj090
-        iktPwKHYbuBQWOb3us0vZkN0q8aFayNFrHfWZ8BrhbMcept9LCEkDWVRrRnXagS/b9CneWfFZWFcK
-        nWq0TCHsJEFcLdftOsZdiO+WEmMdgzv0QAIsnyf/HZgwx1UUx9SzYff5sySRduCbm+dGIYnxu1jJB
-        pDWRlu2w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izl3z-0006cL-Vd; Thu, 06 Feb 2020 17:35:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B93FA30066E;
-        Thu,  6 Feb 2020 18:33:51 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 40AB22B813367; Thu,  6 Feb 2020 18:35:38 +0100 (CET)
-Date:   Thu, 6 Feb 2020 18:35:38 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 08/11] x86: Add support for finer grained KASLR
-Message-ID: <20200206173538.GY14914@hirez.programming.kicks-ass.net>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-9-kristen@linux.intel.com>
- <20200206103830.GW14879@hirez.programming.kicks-ass.net>
- <202002060356.BDFEEEFB6C@keescook>
- <20200206145253.GT14914@hirez.programming.kicks-ass.net>
- <9f337efdf226e51e3f5699243623e5de7505ac94.camel@linux.intel.com>
+        Thu, 6 Feb 2020 12:36:04 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 0CBED182CED2A;
+        Thu,  6 Feb 2020 17:36:04 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ocean08_51d5a3962c91c
+X-Filterd-Recvd-Size: 1469
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  6 Feb 2020 17:36:02 +0000 (UTC)
+Message-ID: <94a6f123779f4d229ad52c1524b083673aba51fc.camel@perches.com>
+Subject: Re: [PATCH v3 4/4] kernel.h: Move lower_32_bits()/upper_32_bits()
+ to bitops.h
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, trond.myklebust@hammerspace.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Date:   Thu, 06 Feb 2020 09:34:50 -0800
+In-Reply-To: <20200206163940.1940-4-andriy.shevchenko@linux.intel.com>
+References: <20200206163940.1940-1-andriy.shevchenko@linux.intel.com>
+         <20200206163940.1940-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f337efdf226e51e3f5699243623e5de7505ac94.camel@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 09:25:01AM -0800, Kristen Carlson Accardi wrote:
+On Thu, 2020-02-06 at 18:39 +0200, Andy Shevchenko wrote:
+> Move lower_32_bits()/upper_32_bits() to bitops.h.
 
-> That's right - all of these tables that you mention had relocs and thus
-> I did not have to do anything special for them. The orc_unwind_ip
-> tables get sorted during unwind_init(). 
+while these macros includes bits, i think they
+are not appropriate to be moved to bitops.h as
+they generally work on values that are either
+32 or 64 bit addresses.
 
-No they're not:
 
-  f14bf6a350df ("x86/unwind/orc: Remove boot-time ORC unwind tables sorting")
 
-Or rather, it might be you're working on an old tree.
