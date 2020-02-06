@@ -2,97 +2,203 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68FCC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D317C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE88021775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D14420659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UDJWWrKm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EPfii1aY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgBFTWq (ORCPT
+        id S1728066AbgBFTXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:22:46 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46472 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgBFTWp (ORCPT
+        Thu, 6 Feb 2020 14:23:07 -0500
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:55856 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbgBFTXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:22:45 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so3212725pgb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:22:45 -0800 (PST)
+        Thu, 6 Feb 2020 14:23:07 -0500
+Received: by mail-wm1-f45.google.com with SMTP id q9so1208456wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:cc:to:from:user-agent:date;
-        bh=77zEgP4+kvjzTDiKwzePB4Pg1qZYvQ9rh1jBzop1Cfo=;
-        b=UDJWWrKmyAku8utbdUF/Ir+N8v/ND76ypMceKgDu7fS4zXsNrq+sw4xiy6otRjvqNn
-         +ttDwYybEZg2A7GqfJwbjc3aV4UiF67/sYc9c/93Oy3JDYmIE5yKua4ATLykNnIjQh4k
-         81KgxcGBkJ3hKV6ws5TtT7IUmIpU437MTbHJE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OFxWhBE8bCLkAqt3LltRZI+Cx2EWphixiKp7DcpUO/0=;
+        b=EPfii1aYTJIzjpQ7Ag+p8JdkObOGGXjn000PKaanUZFEK/9ZTopIuUpSYjMABv6D2t
+         DYoVeBOVMd6JNFsPnKwXEGAm41Ux1DNvqRD5yWArwSwaiHcT150ahPWydxSH46gFP4wG
+         W/gW1e0FBvf73ONT40/pARQLAAmS0vil8HaJTQ41ZyuW+5ezSWvNz1xwRRtrwrGYM/nQ
+         bhy684fiJSYAXVJFOHd6+vp3zRNeJSXavFxPfhRVJdGKPVaUDEZE3GijvNFikGu6MG3f
+         wkbqINqNfPCOqB/aQSajogPme/1aZ6WNuUaH13Vjeva8tdunxbscU3y84RYKlOO+GT5D
+         7GOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:cc:to:from
-         :user-agent:date;
-        bh=77zEgP4+kvjzTDiKwzePB4Pg1qZYvQ9rh1jBzop1Cfo=;
-        b=D8XBLAe1298Uca9attNvfIuWMQM6k/dNT3Zusy5+hPwy8/d1r+/w/anosNwm0KGiEA
-         I7lIq8cMWsfHqQzUd0kb46hyOouYfEkFeprilihQVKOhKXNKko+YG584MYnvzQEi9jRC
-         Wg1jiwetpd9bD+XyyNEYu+OM2ManLuD2kye2TDnfORqYIburGZZLKWz+5jmXIadBu/Gr
-         d1qSLlPWI/2gjjwc92nGnYmfOJE1k0mdseiJkr8/baenmfMrt0IlWcurAcfGrsQ0Xgt2
-         YHDLAgZDs0w4TXnbUwWUi0px9sCUl/dJgU/5w1jF7Nnxn9vuo7p90nqqsHboNODs2gEo
-         dy3w==
-X-Gm-Message-State: APjAAAX89Ppwo40U5xVMLIFTy812xu6ve8+0YWvQOCVGiamIjNM2YR0P
-        a2wVudR+1VKTGgW/etAjMfSV8Q==
-X-Google-Smtp-Source: APXvYqx15GV6iXPlg6VEgBbt5XLtoCLhj9G1kgJ4mJJ+PUEVWX9tF8+ZXmb7/HjMq5ZD3BXw5H8Yng==
-X-Received: by 2002:a63:1f54:: with SMTP id q20mr5053928pgm.400.1581016965253;
-        Thu, 06 Feb 2020 11:22:45 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e1sm171231pfl.98.2020.02.06.11.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:22:44 -0800 (PST)
-Message-ID: <5e3c6784.1c69fb81.34ded.0a42@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OFxWhBE8bCLkAqt3LltRZI+Cx2EWphixiKp7DcpUO/0=;
+        b=kC/CA60A73QXl8Lu0klp23LHKfKMfNn3fM+rA2SRsIiNiGGoVpz4X5Aj+wy9odvGGM
+         ZypoT5hPbgg3D5ebOEkDxQZMzVnJhlabkF57mJmtONMjdp1dQIwQkgI+O6OQzWfk+z7f
+         /5dUXnUUVoDK/vlHEFMPwTSh5rQAHvMuQJ/nVMNq7wsiE6WtVTfGeqK9DZY/GgaxCfQh
+         FHCegQ37xtpbZTEzkqYJEVSdGi2sxgS8l+YtTn0PHCVuXE01RX3LeEBK3CCNUV8pymwx
+         UJ+bfRMcgJbqcst/giBbwOWoJlmo9Q5+JCTlYljbWX9u7UjsR8tDvP1N1XSTipHpdOFs
+         Cc1w==
+X-Gm-Message-State: APjAAAUFIVbJlEyqHWLz7Xbdx80pRYEC2Yu2FVoxgQcRgGmvxgYMrqB9
+        K4S0EO33+6F97FjKEkOnpPQAMQf2/lqehe2ods0kSg==
+X-Google-Smtp-Source: APXvYqwiaUUJbmWMm5tH32QPYYnFh9/ZzKme5n+D6QrxLS3rAho5DSsyxWHFSjxijisjTB59RnopY5Mkmq0zskdlFCc=
+X-Received: by 2002:a05:600c:2942:: with SMTP id n2mr5993040wmd.87.1581016983392;
+ Thu, 06 Feb 2020 11:23:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
-References: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrey Pronin <apronin@chromium.org>, stable@vger.kernel.org,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Feb 2020 11:22:44 -0800
+References: <20200130230812.142642-1-brendanhiggins@google.com>
+ <20200130230812.142642-3-brendanhiggins@google.com> <e060bdfc-5cdb-fb62-48b0-cc54c7bc72ce@gmail.com>
+ <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com>
+ <1da1538d-2e4c-0ed0-5fae-6f9033230c46@gmail.com> <CAFd5g45=m9Rvqf__5FW6HXjSytHJwX=mue-BO+TZMg0JP-BGmw@mail.gmail.com>
+In-Reply-To: <CAFd5g45=m9Rvqf__5FW6HXjSytHJwX=mue-BO+TZMg0JP-BGmw@mail.gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 6 Feb 2020 11:22:51 -0800
+Message-ID: <CABVgOSkiLi0UNijH1xTSvmsJEE5+ocCZ7nkzmKzxDLzzfqBSzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] arch: um: add linker section for KUnit test suites
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jarkko Sakkinen (2020-02-05 12:38:18)
-> Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could break
-> the build script. This can be achieved by renaming tpm_tis_spi.c as
+On Tue, Feb 4, 2020 at 5:17 PM 'Brendan Higgins' via KUnit Development
+<kunit-dev@googlegroups.com> wrote:
+>
+> On Tue, Feb 4, 2020 at 3:17 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >
+> > On 2/4/20 4:30 PM, Brendan Higgins wrote:
+> > > On Tue, Feb 4, 2020 at 1:59 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> > >>
+> > >> Can you please add a section to the KUnit documentation that lists things
+> > >> like the expectations, requirements, limitations, etc for a test case that
+> > >> is run by KUnit?  Some examples that pop to mind from recent discussions
+> > >> and my own experiences:
+> > >>
+> > >>   - Each test case is invoked after late_init is complete.
+> > >>       + Exception: the possible value of being able to run a unit test
+> > >>         at a specific runlevel has been expressed.  If an actual unit
+> > >>         test can be shown to require running earlier, this restriction
+> > >>         will be re-visited.
+> > >>
+> > >>   - Each test case must be idempotent.  Each test case may be called
+> > >>     multiple times, and must generate the same result each time it
+> > >>     is called.
+> > >>       + Exception 1: a test case can be declared to not be idempotent
+> > >>         [[ mechanism TBD ]], in which case KUnit will not call the
+> > >>         test case a second time without the kernel rebooting.
+> > >>       + Exception 2: hardware may not be deterministic, so a test that
+> > >>         always passes or fails when run under UML may not always to
+> > >>         so on real hardware.  <--- sentence copied from
+> > >>         Documentation/dev-tools/kunit/usage.rst
+> > >>           [[ This item and 1st exception do not exist yet, but will exist
+> > >>           in some form if the proposed proc filesystem interface is
+> > >>           added. ]]
+> > >>
+> > >>   - KUnit provides a helpful wrapper to simplify building a UML kernel
+> > >>     containing the KUnit test cases, booting the UML kernel, and
+> > >>     formatting the output from the test cases.  This wrapper MUST NOT
+> > >>     be required to run the test cases or to determine a test result.
+> > >>     The formatting may provide additional analysis and improve
+> > >>     readability of a test result.
+> > >>
+> > >>   - .... There is more that belongs here, but I'm getting side tracked
+> > >>     here, when I'm trying to instead convert devicetree unittests to
+> > >>     KUnit and want to get back to that.
+> > >
+> > > Sure, I think that's a great start! Thanks for that. I hope you don't
+> > > mind if I copy and paste some of it.
+> >
+> > Please do.  And no need to credit me.
+> >
+> >
+> > > It kind of sounds like you are talking about more of a requirements
+> > > doc than the design doc I was imagining in my reply to you on the
+> > > cover letter, which is fine. The documentation is primarily for people
+> > > other than me, so whatever you and others think is useful, I will do.
+> > >
+> >
+> > I wasn't really sure what to label it as.  My inspiration was based
+> > a little bit on reading through the Linux 5.5 KUnit source and
+> > documentation, and trying to understand the expectations of the
+> > KUnit framework and what the test cases have to either obey or
+> > can expect.
+> >
+> > I think there is a lot of history that you know, but is only visible
+> > to test implementors if they read through the past couple of years
+> > email threads.
+>
+> Yeah, that's no good. We need to provide a better experience than
+> that. David has gotten deeply involved relatively recently: I suspect
+> that he might have some good insight on this.
+>
+> David, you mentioned offline that there are some philosophical changes
+> in how we think about KUnit that has happened that you feel have never
+> quite been captured in the docs. Do you think this is part of what
+> Frank has pointed out here? If not, do you have any thoughts about
+> what we should call this documentation section?
+>
+> Shuah's first KUnit PR seemed to imply that KUnit was primarily for
+> UML, or only fully supported under UML. So I think I might be the odd
+> one out thinking that that has changed and the documentation properly
+> conveys that.
 
-Do you mean userspace scripts?
+Yeah: I think the documentation could do with some improvements on
+these fronts: there are a few places which imply that KUnit requires
+UML, which is definitely not the case. We still want to encourage
+people to try UML: it's usually the quickest way of running tests, but
+KUnit itself should remain architecture-independent, as should as many
+tests as possible.
 
-> tpm_tis_spi_main.c. Then tpm_tis_spi-y can be used inside the makefile.
->=20
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: stable@vger.kernel.org
-> Fixes: 797c0113c9a4 ("tpm: tpm_tis_spi: Support cr50 devices")
-> Reported-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
+I think there are probably (at least) two different things that need
+doing to make these sorts of miscommunications less likely. The bulk
+of the documentation needs to stop referring to KUnit as something
+built upon or using UML (while still making it clear that some of our
+tooling defaults to or requires UML at the moment). This shows up in a
+lot of the "What is KUnit/Why use KUnit" sections in both the kernel
+docs and the KUnit website.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Secondly, we need to document the test environment (possibly alongside
+some test style best practises, possibly separately). Given that work
+like the debugfs stuff and how to support tests which need __init data
+or need to only run once is still ongoing, I'm not sure if we can
+definitively state what the solutions there will be yet, but noting
+that tests should not depend on a specific architecture like UML
+(unless they're testing architecture-specific code in a way that can't
+reasonably be made architecture independent) is worth doing sooner
+rather than later.
 
+I'll see if I can put a few doc patches together to update/fix at
+least some of the most egregious examples.
+
+Cheers,
+-- David
