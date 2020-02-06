@@ -7,146 +7,203 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215E3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DB2C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB36022314
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543D4227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Jtajd38x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0yrswra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgBFUBO (ORCPT
+        id S1727938AbgBFUBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:01:14 -0500
-Received: from mout.web.de ([212.227.17.12]:35751 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbgBFUBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:01:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1581018967;
-        bh=sHKBRtQ5MMP2lH0vSAPW5YT6SRR+Pv+IgL7Kc7G1Ewo=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Jtajd38xKe6rPo8vletnh/a1BKPBJ0JO73QAgAHtSWlkmdxm+leJd81FaVFfcqxjD
-         LKv9dgaRXTE3JBobkLNhEpxukqAjEuuD5RlztgaoGdiVdxexMrGEFql+sLJ4ITvsJD
-         99RtZy0jtPJS4PlD9OfAWiusGAmEB3m1XhZF5ilI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.144.33]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LxwiW-1jcL3L04G4-015Igw; Thu, 06
- Feb 2020 20:56:07 +0100
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Subject: Re: [PATCH v12 1/2] fs: New zonefs file system
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <02780281-ddb3-7a2f-b5af-cc317d4adf45@web.de>
-Date:   Thu, 6 Feb 2020 20:56:05 +0100
+        Thu, 6 Feb 2020 15:01:24 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39946 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgBFUBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 15:01:23 -0500
+Received: by mail-ed1-f67.google.com with SMTP id p3so7292929edx.7;
+        Thu, 06 Feb 2020 12:01:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=dHCJ0GU/k0LUdkJwFuDS6GhRaKd1FNUzW7NwvfeeXB0=;
+        b=E0yrswrabqrewEdIDTm0t4cqtbm9lQhJsgJQFJWJzVS2op9NSicOVFxg7JgBA38KZZ
+         IBBUUagOBSY7jhF4LC3WegnsMB43ZWmkyVeBB3tYVP1/zZlFYjrnbaFRdfEwecwTgkaJ
+         5ZFraI/b4Zh+ljvTRSVI21yjzP2+obMS7TcX2I3WybhAuvYJifkbbytTuw/DS0pvnwb8
+         L5//4P3Dn2G0Y53RLUXOajmWNKyBqmpqgy/PGNU8/UmkKhv5yA3+kTtoMPjRikJHKjGx
+         NQr2oniBNpJUnnnP2amhApChBxa9EqtTXzHI/FGQ6Z4fO71eTU1oNDi7mnCCjpQTaJkA
+         v1PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=dHCJ0GU/k0LUdkJwFuDS6GhRaKd1FNUzW7NwvfeeXB0=;
+        b=YhZxqLZcaZrQC8sVd+GgYOZUAgdE2NXjdvDj/rnn51eolGTIu5wspfRIaTBnhLQbTq
+         s/jVJFAqquQgdl89tZw/TDwE3nKRjVViZ3aHIT1GDPgmJPonjNby9urMNKf9YBh9enMz
+         rwgB39ARh5iuNYJaFcokvnimk3nGa3Bd75b+1k4QJYdn7KUSL42rhL+ix7Dlk0TC+qBG
+         x8XsoATe/DXzoNsYD5e1zMERXClHnWpLNqOJ2fA7E0JYthndyYwyZaL9j9apLb9GrT07
+         IqLflzCpE2+9F4UsqUwrTVtz7q4P9N/EErZ3AxHAaVC91m0XKKNxDAqKyg3q9uFlUtNW
+         MTfw==
+X-Gm-Message-State: APjAAAVwc/ITz5k91kkm7MGDDYXke+yllsJ0GyYGW32y1gilRtCtxzcU
+        A/ZU0MZGSjjN/V/mGyVQAf+xyb7S
+X-Google-Smtp-Source: APXvYqxItguTKiiQjR1DM7f48/kWCVSlXB7sunyAm9OMNBzHG9TurfQse8T/Xv0bYlkrFEdHAQf2AA==
+X-Received: by 2002:a17:906:5606:: with SMTP id f6mr4933676ejq.179.1581019281108;
+        Thu, 06 Feb 2020 12:01:21 -0800 (PST)
+Received: from [192.168.43.191] ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id cm24sm38600edb.59.2020.02.06.12.01.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 12:01:20 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
+ <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
+ <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
+ <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
+Date:   Thu, 6 Feb 2020 23:00:41 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xktzqL4FDMyeaTEy+oFlihkYsBuy+Ea4Ed64HAB3NiJPxts4Fj3
- kuH3USFWB5DkhIWu+7/e05vcrdtEaVDeaAcXbzzfLuKpuM8KpQfkbqrOH4gfZQstmZzxYsm
- +ki4nFnupmKy9qAJdnQ/X3czcjDy/uQ2zgNVTgzEV+muHsIEEvGuLb5teqJDO4W+0bQPHfY
- onCShYRJSN0hCOgF3BRrg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c7uh7dJU3uE=:iMcluD0RsxPnh5UrdqUA1w
- 8WBCk84kOjiErBkY3ZbV+SEMoAEPjOU7kvw1981cCtBO8pEKlMvSfWxAhEPVdP+4HJKo0oaTw
- l2PReHyUZ0RKFNDGj/OlFoF5PuAvMN9YsJbF90qptuEuHO7X3aeYmS+rrInc8L/RXwQstUOBF
- wslVNDoFOpfOOZPbfW6hW1xS754XvcIx5yDaKaF1bWdNM+zW8pWg0Cgy3/zGsYIYTUe0uMFcG
- EYRO2/W5w4JvP6TQb3EEJqGjyHHu5qdEuiP2OftCzT+bdvBCWNEIEdx7Wl/hpyTi6c0+gGXaI
- 1Bz6pYS8GWskD9c076jnKdLcFW9gNB8pghV3jyAtTD9jWYeeCKB9GYZG8ZBOsLTti8eM3Fu3c
- BxSolysBWmImC1t3Ek4ykNyxCjxewG8y9QwI14lHF57BwHoZuva5JcKEMNuE5gksSIYZWPbWc
- snU/9s7rAPTlz/YxDEy4Vi6WS2RLbBrCr/OQrKvK0oI1Wt3FWI3qh8HNpiIXdhkUoZ/2xo2pR
- l8REgO4IxK2VTwqxr2GWPng22L5c4ANbdNx+RoQ6utUVGgQ7s1IKGU7YRcfGqgz23t/uRqtIg
- HRjFtTuXVQlO24tSA+SpOKskgqa9juseyVQJh7NAeX6zP+KGhWRhCUiYVC/bn/f8Rjhi0qrqf
- 3l9K8P8CyJ7HdzNX32ZbZtDquKBlU/z8WhSlEv60i9C6zVJHpcOrda2C4REoSGe7POID5sfRK
- SJzfZPms4UhwhyWYwSlL4fDdwkiKL9iQUazqhESe/SaVZFpRPbMpAKypQhywwKrsYp8LIK9Tl
- la4Sqj4z4h9y4+qwduP1rRJYg9ZkOVGoH2Uj02ed5RBrJG0DKX1CSq4SYx1kt7GZdEnwwOstO
- JK8xidhA/aXVD2WrCO/PoDT/xZQJp5HDXW6+knivPNWCGJ1/08sp+KiQnqYv/5OdfLhKq5vEY
- faD4eUQAZRxg2rojIwnOC2XOf3g7PrUIsPGa4Eiozb16qtqrf38LWaNzxq4Qsd8WtWglHam1X
- kHCdv4TL7hSB+jk7li+Rj5LlKmYupGoilhJcPMGgZ31e2jSuUT1pWB2Gxmz1F6Zi7NUmPJE/I
- 4qBgvNXSjGvZ+kR9eJuJZKDBs13VhUCOIJN05EKDDS1FvXvN3vdNEep/L4DBh7Kpj0Y1I4yXq
- acIqxjbVCKhH8OtcyPl0gfs6ExYh9TrLey/goBTnqgd5T6p4tUuI7MI0tu35niilhd+lqkSTg
- lvv6eYd9/G7Bzo0tF
+In-Reply-To: <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> zonefs is a very simple file system =E2=80=A6
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL
+Content-Type: multipart/mixed; boundary="kAZLiVDR40gLonqaP1CHysU7AraRdk9LJ";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
+Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
+References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
+ <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
+ <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
+ <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+In-Reply-To: <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
 
-How do you think about to be consistent with the capitalisation
-at the beginning of such sentences?
-https://lore.kernel.org/linux-fsdevel/20200206052631.111586-1-damien.lemoa=
-l@wdc.com/
+--kAZLiVDR40gLonqaP1CHysU7AraRdk9LJ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 06/02/2020 22:56, Jens Axboe wrote:
+> On 2/6/20 10:16 AM, Pavel Begunkov wrote:
+>> On 06/02/2020 20:04, Pavel Begunkov wrote:
+>>> On 06/02/2020 19:51, Pavel Begunkov wrote:
+>>>> After defer, a request will be prepared, that includes allocating io=
+vec
+>>>> if needed, and then submitted through io_wq_submit_work() but not cu=
+stom
+>>>> handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll lea=
+k
+>>>> iovec, as it's in io-wq and the code goes as follows:
+>>>>
+>>>> io_read() {
+>>>> 	if (!io_wq_current_is_worker())
+>>>> 		kfree(iovec);
+>>>> }
+>>>>
+>>>> Put all deallocation logic in io_{read,write,send,recv}(), which wil=
+l
+>>>> leave the memory, if going async with -EAGAIN.
+>>>>
+>>> Interestingly, this will fail badly if it returns -EAGAIN from io-wq =
+context.
+>>> Apparently, I need to do v2.
+>>>
+>> Or not...
+>> Jens, can you please explain what's with the -EAGAIN handling in
+>> io_wq_submit_work()? Checking the code, it seems neither of
+>> read/write/recv/send can return -EAGAIN from async context (i.e.
+>> force_nonblock=3Dfalse). Are there other ops that can do it?
+>=20
+> Nobody should return -EAGAIN with force_nonblock=3Dfalse, they should
+> end the io_kiocb inline for that.
+>=20
+
+If so for those 4, then the patch should work well.
+
+--=20
+Pavel Begunkov
 
 
-=E2=80=A6
-> +++ b/fs/zonefs/super.c
-=E2=80=A6
-> +static int zonefs_create_zgroup(struct zonefs_zone_data *zd,
-> +				enum zonefs_ztype type)
-> +{
-=E2=80=A6
-> +	if (type =3D=3D ZONEFS_ZTYPE_CNV)
-> +		zgroup_name =3D "cnv";
-> +	else
-> +		zgroup_name =3D "seq";
+--kAZLiVDR40gLonqaP1CHysU7AraRdk9LJ--
 
-I find the following code variant more succinct.
+--lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-+	zgroup_name =3D (type =3D=3D ZONEFS_ZTYPE_CNV) ? "cnv" : "seq";
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl48cGkACgkQWt5b1Glr
++6UlOQ/8C07MHg79xSZfDRsCvoXFmBYemEBszWwSW7uZ/h/+/I9fxcjygxisu/Oa
+cLxxFD3sukWyBu0zN+dCKoGp7RRQZP+jZK3CppAGntxsE5ogZuRsRCHgh2U61YDp
+oiDdxdnx2D2YrW6kZEij/0rw6FaaUGSljiQPVk8vzwwVjdH34unC+1+2POdM2z+d
+Nn4V+cbdd74GYUdMMD0ExtDSapZ7xmWj6gskO5sIs7rJmkzrczf/8fduzGv12Gzu
+oxAU8WuiN7VESnU8kKtUQw7FN+Y1v6KczeNzCg2KGdOvrov4FXHulHaLUdOvW4Pr
+F0zWQymRmx3G6/DVq+cl8x9cDrEpj9OpTDIi3vmSNk3q/F2VF8ygBlhKCPz2s0WI
+9fy9ul/dLiQNHDqEF1Am93RTuJ6GS8qp9f8yvA55Oogz1g+E+21FxB9V7XsD5qVm
+BjnwEvejlWWq3R9CTprILZacamYIP7vzk0yjkYDEotpar1x4uDKwaXq/+4KFVXVE
+612Ic2UX4HJUsZU50aqj/BCetuRkWx+35C7xL4adL7VxDCRpRKuWmjlWEHY1AsxF
+icS2VAH7Kjn0zt5RDcgVNpMt22XJSG814MIpRgUd+X51ngWCmAavPt5HndxjgXQR
+Jm8L2YY/Ppo+aXwtOYYQXqfgs3aS6HPor9xkcaCOLm9DOC/GLBM=
+=wZkY
+-----END PGP SIGNATURE-----
 
-Regards,
-Markus
+--lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL--
