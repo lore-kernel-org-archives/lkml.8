@@ -2,208 +2,147 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DB2C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5670DC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543D4227BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23707218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0yrswra"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="lhfXKn28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBFUBY (ORCPT
+        id S1727957AbgBFUB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:01:24 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39946 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgBFUBX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:01:23 -0500
-Received: by mail-ed1-f67.google.com with SMTP id p3so7292929edx.7;
-        Thu, 06 Feb 2020 12:01:22 -0800 (PST)
+        Thu, 6 Feb 2020 15:01:26 -0500
+Received: from mail-eopbgr700108.outbound.protection.outlook.com ([40.107.70.108]:46432
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727703AbgBFUBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 15:01:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CazPA5CJqBtX54b3URvM6vWLqBPaEX7AIoP+VT6RLq1d3k0UP6paWojb+k1w5lYHEc/DZhRUcGmikGnTcP4qeuRltgAMHcN3NVJeNX4VmeiCOCOjmwAGdxtiF9UGxFmR/IdoJwC+25xJlmHbP283ZjalmhxaQma4jEtvormWcucJsxVk3BxDY6HjSy9kRViuVVZH1pL+NaZNiRy6TMGrIZDkKR89IRIEikBdo7zON53gDShyouoR1zmSW2nwhe1P/evOdU116+f6IeeXB3J1BiczXLEhWpeLA3cNKfdGtTPw7qSNoS+cUI/YHCh1ypRT8BT3s64ptdMIBSW+9ZFdtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCkEDuNPxXyoUb8puS3lidEq+LR/opn1kJCrFr/R9CA=;
+ b=KWnReVmFItjetO/n8LE8z8O8S7mMjYkHJE8qnHXqbZJIP4P+FpjQgnx33kpY0d4s8tnWWiLY93MJnNQoCqVrdTusDg53Eild3JDdNDzcN38rR/rG3uw67Kmg4cAPu2rvJfhGWFyjxuoF2NJGwntiWU9rrY3uo07yVt+SFuertmMIsnV1VLKBcitSjeybknFx8hd/aaKI7T8LObUw7zkw48XNQ7r0IdjNauWNoNb5rum/MWXS0GXVizqbSEL62uImUrD8f+M0ry1eui0cIYvFdeyWMOqDTfu/FiWoiYwJiGcy+xw+rFwVix89RB1DGRl1whDcjsbYJn2VZktoomcuXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=dHCJ0GU/k0LUdkJwFuDS6GhRaKd1FNUzW7NwvfeeXB0=;
-        b=E0yrswrabqrewEdIDTm0t4cqtbm9lQhJsgJQFJWJzVS2op9NSicOVFxg7JgBA38KZZ
-         IBBUUagOBSY7jhF4LC3WegnsMB43ZWmkyVeBB3tYVP1/zZlFYjrnbaFRdfEwecwTgkaJ
-         5ZFraI/b4Zh+ljvTRSVI21yjzP2+obMS7TcX2I3WybhAuvYJifkbbytTuw/DS0pvnwb8
-         L5//4P3Dn2G0Y53RLUXOajmWNKyBqmpqgy/PGNU8/UmkKhv5yA3+kTtoMPjRikJHKjGx
-         NQr2oniBNpJUnnnP2amhApChBxa9EqtTXzHI/FGQ6Z4fO71eTU1oNDi7mnCCjpQTaJkA
-         v1PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=dHCJ0GU/k0LUdkJwFuDS6GhRaKd1FNUzW7NwvfeeXB0=;
-        b=YhZxqLZcaZrQC8sVd+GgYOZUAgdE2NXjdvDj/rnn51eolGTIu5wspfRIaTBnhLQbTq
-         s/jVJFAqquQgdl89tZw/TDwE3nKRjVViZ3aHIT1GDPgmJPonjNby9urMNKf9YBh9enMz
-         rwgB39ARh5iuNYJaFcokvnimk3nGa3Bd75b+1k4QJYdn7KUSL42rhL+ix7Dlk0TC+qBG
-         x8XsoATe/DXzoNsYD5e1zMERXClHnWpLNqOJ2fA7E0JYthndyYwyZaL9j9apLb9GrT07
-         IqLflzCpE2+9F4UsqUwrTVtz7q4P9N/EErZ3AxHAaVC91m0XKKNxDAqKyg3q9uFlUtNW
-         MTfw==
-X-Gm-Message-State: APjAAAVwc/ITz5k91kkm7MGDDYXke+yllsJ0GyYGW32y1gilRtCtxzcU
-        A/ZU0MZGSjjN/V/mGyVQAf+xyb7S
-X-Google-Smtp-Source: APXvYqxItguTKiiQjR1DM7f48/kWCVSlXB7sunyAm9OMNBzHG9TurfQse8T/Xv0bYlkrFEdHAQf2AA==
-X-Received: by 2002:a17:906:5606:: with SMTP id f6mr4933676ejq.179.1581019281108;
-        Thu, 06 Feb 2020 12:01:21 -0800 (PST)
-Received: from [192.168.43.191] ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id cm24sm38600edb.59.2020.02.06.12.01.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 12:01:20 -0800 (PST)
-Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
- <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
- <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
- <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
-Date:   Thu, 6 Feb 2020 23:00:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCkEDuNPxXyoUb8puS3lidEq+LR/opn1kJCrFr/R9CA=;
+ b=lhfXKn288O1YpfVLhMM54124+jVJj3n8UhgQnhbvUOix5I/OXm3RnMZlhEiQXczbIbt9RX/ypddBi3BV2WqPtzLS6UxFT39PiBjZLbKIlpR0n6peeh0G/En6pGKCGR8Ss8Mk7lZU3rY1nHdLksi1HB+BC32bOi2v94iTSCFeQnU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=hoan@os.amperecomputing.com; 
+Received: from DM6PR01MB4090.prod.exchangelabs.com (20.176.105.203) by
+ DM6PR01MB5769.prod.exchangelabs.com (10.255.9.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Thu, 6 Feb 2020 20:01:23 +0000
+Received: from DM6PR01MB4090.prod.exchangelabs.com
+ ([fe80::e148:5333:b3b1:b153]) by DM6PR01MB4090.prod.exchangelabs.com
+ ([fe80::e148:5333:b3b1:b153%5]) with mapi id 15.20.2707.023; Thu, 6 Feb 2020
+ 20:01:23 +0000
+Subject: Re: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
+ NUMA
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        patches@os.amperecomputing.com
+References: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200206102340.GA17074@willie-the-truck>
+From:   Hoan Tran <hoan@os.amperecomputing.com>
+Message-ID: <c85dbc06-a72b-9c98-fe41-b25069114b2f@os.amperecomputing.com>
+Date:   Thu, 6 Feb 2020 12:01:19 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
+In-Reply-To: <20200206102340.GA17074@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CY4PR1201CA0020.namprd12.prod.outlook.com
+ (2603:10b6:910:16::30) To DM6PR01MB4090.prod.exchangelabs.com
+ (2603:10b6:5:27::11)
 MIME-Version: 1.0
-In-Reply-To: <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL"
+Received: from [192.168.0.184] (67.161.31.237) by CY4PR1201CA0020.namprd12.prod.outlook.com (2603:10b6:910:16::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend Transport; Thu, 6 Feb 2020 20:01:22 +0000
+X-Originating-IP: [67.161.31.237]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 681ef895-454b-45c8-4cc3-08d7ab3f5719
+X-MS-TrafficTypeDiagnostic: DM6PR01MB5769:
+X-Microsoft-Antispam-PRVS: <DM6PR01MB57699707EF403B528B89BF79F11D0@DM6PR01MB5769.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0305463112
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(39840400004)(396003)(136003)(346002)(189003)(199004)(4326008)(966005)(86362001)(6916009)(478600001)(31696002)(66946007)(66556008)(53546011)(956004)(2616005)(107886003)(66476007)(16576012)(5660300002)(26005)(6486002)(31686004)(8936002)(8676002)(316002)(81156014)(81166006)(2906002)(16526019)(52116002)(186003)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR01MB5769;H:DM6PR01MB4090.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+Received-SPF: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GaJyHS/8m/90oEp3EfdmXhiQDNvh+st2lNMpR68hsFCq8iPC7eKY5GFhOdpeEIkT5msm2tv1rE9NpAGkw++VCZhMBExLznc4th6Xk+aCsdislDUJF+gmJDsE5pkTzYld8dU9qApLyQw/RgFBBf9XELmHeFaIxXkh6DKcikiPbKzL8yTnaOvLBBuacZ3mShljn0jiHVyR4D0N+zWf86BcH0YsRHmewDU/akJDUXh4xrQcAwJam+fgozuYOfTEPo1rygBPE8sSJwkwvQhfECF1Bd/rh/d6kn/KVsMfjPXQoZjhwh2nwyAnfvINP+D637bh8WwEBPZgPsXBVLo5vkxtajXCGZaPDn2IPIA9RYvwCJN/yNjdIL0kSTlEFzOa12J1xMqTrAm81SbBo4KvsS468F6p4UMw8vjrKcerS6fFdqftimOqdRKrtrYGtSmHDpHjfVVKMz5KrIVAYL0U3u4OT5L5uF5+o8wWQ9XbeXu7h8DwjYF/DX4lZMz2FU+ei2Hum9JyQnINg4kctcKX/eH3/Q==
+X-MS-Exchange-AntiSpam-MessageData: 0IQLWH/mIsvZNftRnfN+FCij/KJAvk5Zu0P4i8eCAwkFIjo8JlSwx2kF3/ZdlQVamE9gLeNnQubCX6g9pgDBuu+tZraNPhB7Xbt6zafIlrj44zDf69XhfiyykLBzzlPM2aunxSdPnVqaas9npxB19Q==
+X-MS-Exchange-Transport-Forked: True
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 681ef895-454b-45c8-4cc3-08d7ab3f5719
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 20:01:23.1248
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jb//zUTzLLVW5GP/VUA6kCpn7VI6j6CjD59hT5xmyQPW85o8TeC0X8tgICeKcaGHPPdXHNizP2OMWzhwSgmtnGreU++B1FN1usRW90BiFgc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB5769
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL
-Content-Type: multipart/mixed; boundary="kAZLiVDR40gLonqaP1CHysU7AraRdk9LJ";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
-Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
-References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
- <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
- <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
- <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
-In-Reply-To: <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+Hi Will,
 
---kAZLiVDR40gLonqaP1CHysU7AraRdk9LJ
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On 2/6/20 2:23 AM, Will Deacon wrote:
+> On Mon, Feb 03, 2020 at 11:55:14AM -0800, Hoan Tran wrote:
+>> Some NUMA nodes have memory ranges that span other nodes.
+>> Even though a pfn is valid and between a node's start and end pfns,
+>> it may not reside on that node.
+>>
+>> This patch enables NODES_SPAN_OTHER_NODES config for NUMA to support
+>> this type of NUMA layout.
+>>
+>> Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
+>> ---
+>>   arch/arm64/Kconfig | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index e688dfa..939d28f 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -959,6 +959,13 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>>   config HOLES_IN_ZONE
+>>   	def_bool y
+>>   
+>> +# Some NUMA nodes have memory ranges that span other nodes.
+>> +# Even though a pfn is valid and between a node's start and end pfns,
+>> +# it may not reside on that node.
+>> +config NODES_SPAN_OTHER_NODES
+>> +	def_bool y
+>> +	depends on ACPI_NUMA
+>> +
+> 
+> I thought we agreed to do this in the core code?
+> 
+> https://lore.kernel.org/lkml/1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com
 
-On 06/02/2020 22:56, Jens Axboe wrote:
-> On 2/6/20 10:16 AM, Pavel Begunkov wrote:
->> On 06/02/2020 20:04, Pavel Begunkov wrote:
->>> On 06/02/2020 19:51, Pavel Begunkov wrote:
->>>> After defer, a request will be prepared, that includes allocating io=
-vec
->>>> if needed, and then submitted through io_wq_submit_work() but not cu=
-stom
->>>> handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll lea=
-k
->>>> iovec, as it's in io-wq and the code goes as follows:
->>>>
->>>> io_read() {
->>>> 	if (!io_wq_current_is_worker())
->>>> 		kfree(iovec);
->>>> }
->>>>
->>>> Put all deallocation logic in io_{read,write,send,recv}(), which wil=
-l
->>>> leave the memory, if going async with -EAGAIN.
->>>>
->>> Interestingly, this will fail badly if it returns -EAGAIN from io-wq =
-context.
->>> Apparently, I need to do v2.
->>>
->> Or not...
->> Jens, can you please explain what's with the -EAGAIN handling in
->> io_wq_submit_work()? Checking the code, it seems neither of
->> read/write/recv/send can return -EAGAIN from async context (i.e.
->> force_nonblock=3Dfalse). Are there other ops that can do it?
->=20
-> Nobody should return -EAGAIN with force_nonblock=3Dfalse, they should
-> end the io_kiocb inline for that.
->=20
+Yes, but it looks like Thomas didn't agree to apply this patch into x86.
 
-If so for those 4, then the patch should work well.
+https://lore.kernel.org/lkml/alpine.DEB.2.21.1907152042110.1767@nanos.tec.linutronix.de/
 
---=20
-Pavel Begunkov
+Regards
+Hoan
 
-
---kAZLiVDR40gLonqaP1CHysU7AraRdk9LJ--
-
---lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl48cGkACgkQWt5b1Glr
-+6UlOQ/8C07MHg79xSZfDRsCvoXFmBYemEBszWwSW7uZ/h/+/I9fxcjygxisu/Oa
-cLxxFD3sukWyBu0zN+dCKoGp7RRQZP+jZK3CppAGntxsE5ogZuRsRCHgh2U61YDp
-oiDdxdnx2D2YrW6kZEij/0rw6FaaUGSljiQPVk8vzwwVjdH34unC+1+2POdM2z+d
-Nn4V+cbdd74GYUdMMD0ExtDSapZ7xmWj6gskO5sIs7rJmkzrczf/8fduzGv12Gzu
-oxAU8WuiN7VESnU8kKtUQw7FN+Y1v6KczeNzCg2KGdOvrov4FXHulHaLUdOvW4Pr
-F0zWQymRmx3G6/DVq+cl8x9cDrEpj9OpTDIi3vmSNk3q/F2VF8ygBlhKCPz2s0WI
-9fy9ul/dLiQNHDqEF1Am93RTuJ6GS8qp9f8yvA55Oogz1g+E+21FxB9V7XsD5qVm
-BjnwEvejlWWq3R9CTprILZacamYIP7vzk0yjkYDEotpar1x4uDKwaXq/+4KFVXVE
-612Ic2UX4HJUsZU50aqj/BCetuRkWx+35C7xL4adL7VxDCRpRKuWmjlWEHY1AsxF
-icS2VAH7Kjn0zt5RDcgVNpMt22XJSG814MIpRgUd+X51ngWCmAavPt5HndxjgXQR
-Jm8L2YY/Ppo+aXwtOYYQXqfgs3aS6HPor9xkcaCOLm9DOC/GLBM=
-=wZkY
------END PGP SIGNATURE-----
-
---lNrp9eOjsQH0WL1w9H3roSOwYDJAm3gBL--
+> 
+> Will
+> 
