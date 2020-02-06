@@ -1,172 +1,116 @@
-Return-Path: <SRS0=fqu/=3Z=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B895C352A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FC2C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5116B217BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Feb 2020 23:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC022082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="q8siZ3RT"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="Dt1LR+DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgBEX6z (ORCPT
+        id S1727541AbgBFAKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 18:58:55 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1731 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgBEX6z (ORCPT
+        Wed, 5 Feb 2020 19:10:24 -0500
+Received: from mail.kmu-office.ch ([178.209.48.109]:60240 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbgBFAKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:58:55 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3b56af0001>; Wed, 05 Feb 2020 15:58:39 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 05 Feb 2020 15:58:54 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 05 Feb 2020 15:58:54 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb
- 2020 23:58:53 +0000
-Subject: Re: [PATCH v4 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
- reporting
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200204234117.2974687-1-jhubbard@nvidia.com>
- <20200204234117.2974687-11-jhubbard@nvidia.com>
- <20200205114325.4e2f5aghsusihpap@box>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <2b0656a2-3402-f376-7440-481124485bde@nvidia.com>
-Date:   Wed, 5 Feb 2020 15:58:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 5 Feb 2020 19:10:24 -0500
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 6D6175C406B;
+        Thu,  6 Feb 2020 01:10:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1580947822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=18oLXlafeIKEhZ+0cWGBZ+Cl0L84U2vqE062kcOq5w4=;
+        b=Dt1LR+DIWVzNUXR6Q4UeVY1xExAPyRwNMVsY65WEKxArSBkobJKSkPREkzavr61ClTQydT
+        RDe7/mMJUoWpgR9w43RlX3KZcC/En2vHX6HtHHIheOe5FfVFLzGPEsZuzGGu5i/JbUHZF5
+        qTFANSa0c2PDvF+XpZQx4fD7Q9H2FXc=
 MIME-Version: 1.0
-In-Reply-To: <20200205114325.4e2f5aghsusihpap@box>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580947120; bh=eQdMCwCy4bdZgoj0Xg2Rpo0F1Zl0hA5DYDsmhvn66Ys=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=q8siZ3RTxc5+A5vd839fLbpWstbJCB342l+V3JAD86hC7sc5zMybGJEIdeHlaUU3t
-         nt8p/HHnGlgEewmi2wqwV82PDvMFaUnROFOaGq9E5VdAJm/UCuV7cJ32B4j83bSfCa
-         b0qRd+rlKh8rW1cH1wfGJX7k6E4MlDKxO8ghq9VhtIHXcXE1P9K0Vfp6hfaL7BB/yk
-         c+zr+tqiK/XwRrfuETL1mOclWclbyz8VtlwdPzJDt5tePy+r7ECX6WrKoKFwCgffdn
-         tGYMGpuSkou9GRX9fLICp7SCBSrnz4AfS/bFdxbr8zqNaT7QLqEXY/KpjurVchpJA1
-         7sHUH/d9y79qw==
+Date:   Thu, 06 Feb 2020 01:10:22 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     arnd@arndb.de, linus.walleij@linaro.org, akpm@linux-foundation.org,
+        nsekhar@ti.com, mchehab+samsung@kernel.org,
+        bgolaszewski@baylibre.com, armlinux@m.disordat.com,
+        benjamin.gaignard@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] arm: make kexec depend on MMU
+In-Reply-To: <20200205235327.GV25745@shell.armlinux.org.uk>
+References: <5b595d37283f043df78259221f2b7d18e0cb0ce5.1580942558.git.stefan@agner.ch>
+ <20200205235327.GV25745@shell.armlinux.org.uk>
+User-Agent: Roundcube Webmail/1.4.1
+Message-ID: <1c36a14d742d4a0736de00d2c74d7137@agner.ch>
+X-Sender: stefan@agner.ch
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/5/20 3:43 AM, Kirill A. Shutemov wrote:
-> On Tue, Feb 04, 2020 at 03:41:15PM -0800, John Hubbard wrote:
->> Now that pages are "DMA-pinned" via pin_user_page*(), and unpinned via
->> unpin_user_pages*(), we need some visibility into whether all of this is
->> working correctly.
->>
->> Add two new fields to /proc/vmstat:
->>
->>     nr_foll_pin_acquired
->>     nr_foll_pin_released
->>
->> These are documented in Documentation/core-api/pin_user_pages.rst.
->> They represent the number of pages (since boot time) that have been
->> pinned ("nr_foll_pin_acquired") and unpinned ("nr_foll_pin_released"),
->> via pin_user_pages*() and unpin_user_pages*().
->>
->> In the absence of long-running DMA or RDMA operations that hold pages
->> pinned, the above two fields will normally be equal to each other.
->>
->> Also: update Documentation/core-api/pin_user_pages.rst, to remove an
->> earlier (now confirmed untrue) claim about a performance problem with
->> /proc/vmstat.
->>
->> Also: updated Documentation/core-api/pin_user_pages.rst to rename the
->> new /proc/vmstat entries, to the names listed here.
->>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> Please, clarify semantics for huge page. An user may want to know if we
-> count huge page as one pin-acquired or by number of pages.
+On 2020-02-06 00:53, Russell King - ARM Linux admin wrote:
+> Does patch 8951/1, which has been merged into mainline, not fix this?
+
+Yes, that should take care of it. 
+
+I discussed end of last year with Michal about this, and back then that
+patch wasn't around. Should have checked master before re-sending this
+patch. Sorry for the noise.
+
+--
+Stefan
 
 
-OK, I've added this for the next version:
-
-
-diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
-index 5776ad1ed5e4..2e939ff10b86 100644
---- a/Documentation/core-api/pin_user_pages.rst
-+++ b/Documentation/core-api/pin_user_pages.rst
-@@ -211,6 +211,33 @@ since the system was booted, via two new /proc/vmstat entries: ::
-     /proc/vmstat/nr_foll_pin_acquired
-     /proc/vmstat/nr_foll_pin_released
- 
-+Under normal conditions, these two values will be equal unless there are any
-+long-term [R]DMA pins in place, or during pin/unpin transitions.
-+
-+* nr_foll_pin_acquired: This is the number of logical pins that have been
-+  acquired since the system was powered on. For huge pages, the head page is
-+  pinned once for each page (head page and each tail page) within the huge page.
-+  This follows the same sort of behavior that get_user_pages() uses for huge
-+  pages: the head page is refcounted once for each tail or head page in the huge
-+  page, when get_user_pages() is applied to a huge page.
-+
-+* nr_foll_pin_released: The number of logical pins that have been released since
-+  the system was powered on. Note that pages are released (unpinned) on a
-+  PAGE_SIZE granularity, even if the original pin was applied to a huge page.
-+  Becaused of the pin count behavior described above in "nr_foll_pin_acquired",
-+  the accounting balances out, so that after doing this::
-+
-+    pin_user_pages(huge_page);
-+    for (each page in huge_page)
-+        unpin_user_page(page);
-+
-+...the following is expected::
-+
-+    nr_foll_pin_released == nr_foll_pin_acquired
-+
-+(...unless it was already out of balance due to a long-term RDMA pin being in
-+place.)
-+
- Other diagnostics
- =================
- 
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> 
-> Otherwise looks good (given Jan concern is addressed).
-> 
+> On Wed, Feb 05, 2020 at 11:43:44PM +0100, Stefan Agner wrote:
+>> From: Michal Hocko <mhocko@suse.com>
+>>
+>> arm nommu config with KEXEC enabled doesn't compile
+>> arch/arm/kernel/setup.c: In function 'reserve_crashkernel':
+>> arch/arm/kernel/setup.c:1005:25: error: 'SECTION_SIZE' undeclared (first
+>> use in this function)
+>>              crash_size, SECTION_SIZE);
+>>
+>> since 61603016e212 ("ARM: kexec: fix crashkernel= handling") which is
+>> over one year without anybody noticing. I have only noticed beause of
+>> my testing nommu config which somehow gained CONFIG_KEXEC without
+>> an intention. This suggests that nobody is actually using KEXEC
+>> on nommu ARM configs. It is even a question whether kexec works with
+>> nommu.
+>>
+>> Make KEXEC depend on MMU to make this clear. If somebody wants to enable
+>> there will be probably more things to take care.
+>>
+>> Signed-off-by: Michal Hocko <mhocko@suse.com>
+>> Reviewed-by: Stefan Agner <stefan@agner.ch>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  arch/arm/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 96dab76da3b3..59ce8943151f 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -1906,6 +1906,7 @@ config KEXEC
+>>  	bool "Kexec system call (EXPERIMENTAL)"
+>>  	depends on (!SMP || PM_SLEEP_SMP)
+>>  	depends on !CPU_V7M
+>> +	depends on MMU
+>>  	select KEXEC_CORE
+>>  	help
+>>  	  kexec is a system call that implements the ability to shutdown your
+>> --
+>> 2.25.0
+>>
+>>
