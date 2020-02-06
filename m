@@ -2,117 +2,97 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E30C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68FCC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13ABA20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE88021775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UDJWWrKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgBFTWc (ORCPT
+        id S1728064AbgBFTWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:22:32 -0500
-Received: from mga12.intel.com ([192.55.52.136]:22504 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727630AbgBFTWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:22:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 11:22:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="232140746"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 06 Feb 2020 11:22:30 -0800
-Date:   Thu, 6 Feb 2020 11:22:30 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 14/19] KVM: Clean up local variable usage in
- __kvm_set_memory_region()
-Message-ID: <20200206192230.GE13067@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-15-sean.j.christopherson@intel.com>
- <20200206190641.GA700495@xz-x1>
+        Thu, 6 Feb 2020 14:22:46 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46472 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgBFTWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 14:22:45 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z124so3212725pgb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:22:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:cc:to:from:user-agent:date;
+        bh=77zEgP4+kvjzTDiKwzePB4Pg1qZYvQ9rh1jBzop1Cfo=;
+        b=UDJWWrKmyAku8utbdUF/Ir+N8v/ND76ypMceKgDu7fS4zXsNrq+sw4xiy6otRjvqNn
+         +ttDwYybEZg2A7GqfJwbjc3aV4UiF67/sYc9c/93Oy3JDYmIE5yKua4ATLykNnIjQh4k
+         81KgxcGBkJ3hKV6ws5TtT7IUmIpU437MTbHJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:cc:to:from
+         :user-agent:date;
+        bh=77zEgP4+kvjzTDiKwzePB4Pg1qZYvQ9rh1jBzop1Cfo=;
+        b=D8XBLAe1298Uca9attNvfIuWMQM6k/dNT3Zusy5+hPwy8/d1r+/w/anosNwm0KGiEA
+         I7lIq8cMWsfHqQzUd0kb46hyOouYfEkFeprilihQVKOhKXNKko+YG584MYnvzQEi9jRC
+         Wg1jiwetpd9bD+XyyNEYu+OM2ManLuD2kye2TDnfORqYIburGZZLKWz+5jmXIadBu/Gr
+         d1qSLlPWI/2gjjwc92nGnYmfOJE1k0mdseiJkr8/baenmfMrt0IlWcurAcfGrsQ0Xgt2
+         YHDLAgZDs0w4TXnbUwWUi0px9sCUl/dJgU/5w1jF7Nnxn9vuo7p90nqqsHboNODs2gEo
+         dy3w==
+X-Gm-Message-State: APjAAAX89Ppwo40U5xVMLIFTy812xu6ve8+0YWvQOCVGiamIjNM2YR0P
+        a2wVudR+1VKTGgW/etAjMfSV8Q==
+X-Google-Smtp-Source: APXvYqx15GV6iXPlg6VEgBbt5XLtoCLhj9G1kgJ4mJJ+PUEVWX9tF8+ZXmb7/HjMq5ZD3BXw5H8Yng==
+X-Received: by 2002:a63:1f54:: with SMTP id q20mr5053928pgm.400.1581016965253;
+        Thu, 06 Feb 2020 11:22:45 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e1sm171231pfl.98.2020.02.06.11.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 11:22:44 -0800 (PST)
+Message-ID: <5e3c6784.1c69fb81.34ded.0a42@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206190641.GA700495@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
+References: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>, stable@vger.kernel.org,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 06 Feb 2020 11:22:44 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 02:06:41PM -0500, Peter Xu wrote:
-> On Tue, Jan 21, 2020 at 02:31:52PM -0800, Sean Christopherson wrote:
-> 
-> [...]
-> 
-> > @@ -1101,52 +1099,55 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >  	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
-> >  		return -EINVAL;
-> >  
-> > -	slot = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> > -	base_gfn = mem->guest_phys_addr >> PAGE_SHIFT;
-> > -	npages = mem->memory_size >> PAGE_SHIFT;
-> > -
-> > -	if (npages > KVM_MEM_MAX_NR_PAGES)
-> > -		return -EINVAL;
-> > -
-> >  	/*
-> >  	 * Make a full copy of the old memslot, the pointer will become stale
-> >  	 * when the memslots are re-sorted by update_memslots().
-> >  	 */
-> > -	old = *slot;
-> > +	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> > +	old = *tmp;
-> > +	tmp = NULL;
-> 
-> Shall we keep this chunk to the patch where it will be used?  Other
-> than that, it looks good to me.
+Quoting Jarkko Sakkinen (2020-02-05 12:38:18)
+> Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could break
+> the build script. This can be achieved by renaming tpm_tis_spi.c as
 
-I assume you're talking about doing this instead of using @tmp?
+Do you mean userspace scripts?
 
-	old = *id_to_memslot(__kvm_memslots(kvm, as_id), id);
+> tpm_tis_spi_main.c. Then tpm_tis_spi-y can be used inside the makefile.
+>=20
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: stable@vger.kernel.org
+> Fixes: 797c0113c9a4 ("tpm: tpm_tis_spi: Support cr50 devices")
+> Reported-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
 
-It's obviously possible, but I really like resulting diff for
-__kvm_set_memory_region() in "KVM: Terminate memslot walks via used_slots"
-when tmp is used.
-
-@@ -1104,8 +1203,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
-         * when the memslots are re-sorted by update_memslots().
-         */
-        tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
--       old = *tmp;
--       tmp = NULL;
-+       if (tmp) {
-+               old = *tmp;
-+               tmp = NULL;
-+       } else {
-+               memset(&old, 0, sizeof(old));
-+               old.id = id;
-+       }
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
