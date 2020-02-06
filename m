@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA8EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ACDC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7862621775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C3521741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHmP2Y0J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTC5mVd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgBFIAq (ORCPT
+        id S1728373AbgBFIAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:00:46 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33575 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbgBFIAp (ORCPT
+        Thu, 6 Feb 2020 03:00:51 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34887 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbgBFIAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:00:45 -0500
-Received: by mail-wr1-f68.google.com with SMTP id u6so5962389wrt.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:00:43 -0800 (PST)
+        Thu, 6 Feb 2020 03:00:50 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w12so5954667wrt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:00:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=APfflRhO4/tzwp2vW1hianE0xPgvyD/AvtSbcCHEmyo=;
-        b=hHmP2Y0JJmFqc97yXsqggVUNX4wL3ky6p1RdRi5g23Y2RmpwSSIMSId3tN5Y6c1v1l
-         Mc2I2j7IfvTsYV/kineOwVhMvUH9RHykbR/vlKeqYSJkbPnJHZm0wGtwWJwJrgdXqSHs
-         4+Uvsn+ghwCQdCyj4X2qPpX9t4ROM2EXihzxl3zrCeSI8f/1o2RFltx8GfyPuqa2GgIa
-         D9bgO+AcKltaIj/FwUdmhspSW9MXACJk3J4c1v8OnGqM9/c6gqQKTTXAldIZ+4g92maP
-         IBbPAv6ls+EObDkJkNRET0lePQjz0E9pRJKuHtzp/JE5k+nx0H/iaZazhuC00G0N3TKh
-         RLig==
+        bh=dnYcLVKIvd6ueAGqMuFsO7/hDtBaHHSvjKuQVV0KtNU=;
+        b=ZTC5mVd7KIiDzl+3/rGwlCWPYx8GuV7dUnSs38gSsQgnuvxgxEN53XONUYs5X6WOWn
+         sQYYzlqqAgNKF0gDxCs3HsBA4Sc0CWikYZyE8EntwXqPAtHKUXKYDZPYNuHGZo5J2Z8x
+         w5epXOsZ/C0/vFFTBlr9pHK6wqUqp8DjdiRl8C1X9Lcj+mKa6rRgAGa6tRYgUxtnVG9G
+         rA8kFoAaQ2cgzXD6lBFkvkXDl7G3Q/r+PpDfQYVRfAg50NMK2z7sLYoxjiYZjNaWu1x/
+         94k2efw2I2f2k5EwNhmEHJxZHfLL9+06Oxa1sctA5Z15ZCZ+kzeuEprW320JJWm2eg51
+         UVhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=APfflRhO4/tzwp2vW1hianE0xPgvyD/AvtSbcCHEmyo=;
-        b=e4VRaiEYbuYD2KogUR6A4f56b36Dr12WYDpfewdQ+/PNcoYCG5tP3421q+mfnKmsje
-         tHcIMZrQ0aNzQnjjOYelkoPXhsgQqgR/XQv124j20Zg/ySChJGuLA4y4Q9Do/YKlaf4E
-         5jhClkuIE8dlJcNx0m1tKHwC0uCSEwJ1KXuEc2mV0jlckBBEoDM6HSCUglMUfDrc6VnR
-         mFjpBAOaAk+iSSgYgwWloDF8bgiBnkdd7p5oZq+7P038/eC+CzJgUHt8s/q9MLSlpsPP
-         kPgG8cEsA8QH5e1fznzMz7GdDqUEpsPHgSFGLTYWeLvziGtCQ8aebqqBX+jJKXF60AgE
-         0Pfw==
-X-Gm-Message-State: APjAAAUvzOFgpMcpZiYcvz+yMmbs2Ap1GwW2AI69Op9QE61wUFHENNlT
-        OmF7yc+Zj3daBsvxgoD9e3ZTaPnQ2Vk=
-X-Google-Smtp-Source: APXvYqzaQ8jg92IYvt5pJdfXMNBK8bX6qLc6se2t5Y67WS/PAMWBLjhGC2RBs6xV6t/JB1Ci/vTGfA==
-X-Received: by 2002:adf:e781:: with SMTP id n1mr2529245wrm.56.1580976042546;
-        Thu, 06 Feb 2020 00:00:42 -0800 (PST)
+        bh=dnYcLVKIvd6ueAGqMuFsO7/hDtBaHHSvjKuQVV0KtNU=;
+        b=c8n7Y6vtURJ3grKMWJ3QTPP9P5N9FHzFCLPMgq1njDQgFubnGfvf/nNXNBgUAjp6Fv
+         4FTQ7T+sYi1YFWhTGntUjxn4vmiR1BRnUall46gm1nKCMJJIzNfGnMVUxIlaycd3mY6W
+         v0Vgskk/B9Y3wDNtLj6DOPP7ykjvgx1j9WJms/FOkCN0JvUvBQUeZiPOqHuWDsaGNhal
+         p+L9qI/Epp3SCR9jErb2nOLh2Wg6SNTnJN4hplS+RG6WXV1VM1+nM2yFG64gYBXTz7Ng
+         K4na0giVvDMEdcLjbFWSNhmfZgOtowMJAlWEJBmHijUczrC3MD48CMnCnFoxySL9XNiP
+         rWJA==
+X-Gm-Message-State: APjAAAXeT76SVZV3PUGoxm37a6/1SCbx0hcApyaB7cVDQePv7Mw2HbnX
+        6vw0LylxrFsQ7NQPzJ1j5UOHF2UTlko=
+X-Google-Smtp-Source: APXvYqyAhAlyrIzzwOq/fYbZMTdtwl0Q1LiTeL2+KpFHE6hsl5b+eVt6niJMouHYMILRVDOjtCLofQ==
+X-Received: by 2002:adf:a35e:: with SMTP id d30mr2194737wrb.33.1580976046402;
+        Thu, 06 Feb 2020 00:00:46 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id u8sm2635132wmm.15.2020.02.06.00.00.39
+        by smtp.googlemail.com with ESMTPSA id u8sm2635132wmm.15.2020.02.06.00.00.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:00:42 -0800 (PST)
+        Thu, 06 Feb 2020 00:00:45 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
         rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
 Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/12] drm/i915/crt: automatic conversion to drm_device based logging macros.
-Date:   Thu,  6 Feb 2020 11:00:06 +0300
-Message-Id: <20200206080014.13759-6-wambui.karugax@gmail.com>
+Subject: [PATCH v2 06/12] drm/i915/dp_aux_backlight: convert to drm_device based logging macros.
+Date:   Thu,  6 Feb 2020 11:00:07 +0300
+Message-Id: <20200206080014.13759-7-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200206080014.13759-1-wambui.karugax@gmail.com>
 References: <20200206080014.13759-1-wambui.karugax@gmail.com>
@@ -75,246 +75,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replaces various instances of the printk based logging macros with the
-struct drm_device based logging macros in i915/display/intel_crt.c using
-the following coccinelle script that matches based on the existence of a
-drm_i915_private device pointer:
-@@
-identifier fn, T;
-@@
+Conversion of the printk based drm logging macros to the struct
+drm_device based logging macros in display/intel_dp_aux_backlight.c.
+This also involves extracting the drm_i915_private device pointer from
+various intel types to use in the macros.
 
-fn(...,struct drm_i915_private *T,...) {
-<+...
-(
--DRM_INFO(
-+drm_info(&T->drm,
-...)
-|
--DRM_ERROR(
-+drm_err(&T->drm,
-...)
-|
--DRM_WARN(
-+drm_warn(&T->drm,
-...)
-|
--DRM_DEBUG(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_DRIVER(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_KMS(
-+drm_dbg_kms(&T->drm,
-...)
-|
--DRM_DEBUG_ATOMIC(
-+drm_dbg_atomic(&T->drm,
-...)
-)
-...+>
-}
+Note that this converts DRM_DEBUG_DRIVER to drm_dbg().
 
-@@
-identifier fn, T;
-@@
-
-fn(...) {
-...
-struct drm_i915_private *T = ...;
-<+...
-(
--DRM_INFO(
-+drm_info(&T->drm,
-...)
-|
--DRM_ERROR(
-+drm_err(&T->drm,
-...)
-|
--DRM_WARN(
-+drm_warn(&T->drm,
-...)
-|
--DRM_DEBUG(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_KMS(
-+drm_dbg_kms(&T->drm,
-...)
-|
--DRM_DEBUG_DRIVER(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_ATOMIC(
-+drm_dbg_atomic(&T->drm,
-...)
-)
-...+>
-}
-
-Checkpatch warnings were addressed manually.
-
+References: https://lists.freedesktop.org/archives/dri-devel/2020-January/253381.html
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/i915/display/intel_crt.c | 49 +++++++++++++++---------
- 1 file changed, 31 insertions(+), 18 deletions(-)
+ .../drm/i915/display/intel_dp_aux_backlight.c | 72 ++++++++++++-------
+ 1 file changed, 45 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_crt.c b/drivers/gpu/drm/i915/display/intel_crt.c
-index 0e2f63b0d458..45ecc7d9c829 100644
---- a/drivers/gpu/drm/i915/display/intel_crt.c
-+++ b/drivers/gpu/drm/i915/display/intel_crt.c
-@@ -420,7 +420,8 @@ static int hsw_crt_compute_config(struct intel_encoder *encoder,
- 	/* LPT FDI RX only supports 8bpc. */
- 	if (HAS_PCH_LPT(dev_priv)) {
- 		if (pipe_config->bw_constrained && pipe_config->pipe_bpp < 24) {
--			DRM_DEBUG_KMS("LPT only supports 24bpp\n");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "LPT only supports 24bpp\n");
- 			return -EINVAL;
- 		}
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+index e86feebef299..83d9c76e4da9 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+@@ -35,8 +35,9 @@ static void set_aux_backlight_enable(struct intel_dp *intel_dp, bool enable)
  
-@@ -449,7 +450,8 @@ static bool ilk_crt_detect_hotplug(struct drm_connector *connector)
- 		crt->force_hotplug_required = false;
+ 	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_EDP_DISPLAY_CONTROL_REGISTER,
+ 			      &reg_val) < 0) {
+-		DRM_DEBUG_KMS("Failed to read DPCD register 0x%x\n",
+-			      DP_EDP_DISPLAY_CONTROL_REGISTER);
++		drm_dbg_kms(&dp_to_i915(intel_dp)->drm,
++			    "Failed to read DPCD register 0x%x\n",
++			    DP_EDP_DISPLAY_CONTROL_REGISTER);
+ 		return;
+ 	}
+ 	if (enable)
+@@ -46,8 +47,9 @@ static void set_aux_backlight_enable(struct intel_dp *intel_dp, bool enable)
  
- 		save_adpa = adpa = intel_de_read(dev_priv, crt->adpa_reg);
--		DRM_DEBUG_KMS("trigger hotplug detect cycle: adpa=0x%x\n", adpa);
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "trigger hotplug detect cycle: adpa=0x%x\n", adpa);
- 
- 		adpa |= ADPA_CRT_HOTPLUG_FORCE_TRIGGER;
- 		if (turn_off_dac)
-@@ -461,7 +463,8 @@ static bool ilk_crt_detect_hotplug(struct drm_connector *connector)
- 					    crt->adpa_reg,
- 					    ADPA_CRT_HOTPLUG_FORCE_TRIGGER,
- 					    1000))
--			DRM_DEBUG_KMS("timed out waiting for FORCE_TRIGGER");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "timed out waiting for FORCE_TRIGGER");
- 
- 		if (turn_off_dac) {
- 			intel_de_write(dev_priv, crt->adpa_reg, save_adpa);
-@@ -475,7 +478,8 @@ static bool ilk_crt_detect_hotplug(struct drm_connector *connector)
- 		ret = true;
- 	else
- 		ret = false;
--	DRM_DEBUG_KMS("ironlake hotplug adpa=0x%x, result %d\n", adpa, ret);
-+	drm_dbg_kms(&dev_priv->drm, "ironlake hotplug adpa=0x%x, result %d\n",
-+		    adpa, ret);
- 
- 	return ret;
+ 	if (drm_dp_dpcd_writeb(&intel_dp->aux, DP_EDP_DISPLAY_CONTROL_REGISTER,
+ 			       reg_val) != 1) {
+-		DRM_DEBUG_KMS("Failed to %s aux backlight\n",
+-			      enable ? "enable" : "disable");
++		drm_dbg_kms(&dp_to_i915(intel_dp)->drm,
++			    "Failed to %s aux backlight\n",
++			    enable ? "enable" : "disable");
+ 	}
  }
-@@ -505,7 +509,8 @@ static bool valleyview_crt_detect_hotplug(struct drm_connector *connector)
- 	reenable_hpd = intel_hpd_disable(dev_priv, crt->base.hpd_pin);
  
- 	save_adpa = adpa = intel_de_read(dev_priv, crt->adpa_reg);
--	DRM_DEBUG_KMS("trigger hotplug detect cycle: adpa=0x%x\n", adpa);
-+	drm_dbg_kms(&dev_priv->drm,
-+		    "trigger hotplug detect cycle: adpa=0x%x\n", adpa);
+@@ -65,8 +67,9 @@ static u32 intel_dp_aux_get_backlight(struct intel_connector *connector)
+ 	if (drm_dp_dpcd_readb(&intel_dp->aux,
+ 			      DP_EDP_BACKLIGHT_MODE_SET_REGISTER,
+ 			      &mode_reg) != 1) {
+-		DRM_DEBUG_KMS("Failed to read the DPCD register 0x%x\n",
+-			      DP_EDP_BACKLIGHT_MODE_SET_REGISTER);
++		drm_dbg_kms(&dp_to_i915(intel_dp)->drm,
++			    "Failed to read the DPCD register 0x%x\n",
++			    DP_EDP_BACKLIGHT_MODE_SET_REGISTER);
+ 		return 0;
+ 	}
  
- 	adpa |= ADPA_CRT_HOTPLUG_FORCE_TRIGGER;
+@@ -80,8 +83,9 @@ static u32 intel_dp_aux_get_backlight(struct intel_connector *connector)
  
-@@ -513,7 +518,8 @@ static bool valleyview_crt_detect_hotplug(struct drm_connector *connector)
+ 	if (drm_dp_dpcd_read(&intel_dp->aux, DP_EDP_BACKLIGHT_BRIGHTNESS_MSB,
+ 			     &read_val, sizeof(read_val)) < 0) {
+-		DRM_DEBUG_KMS("Failed to read DPCD register 0x%x\n",
+-			      DP_EDP_BACKLIGHT_BRIGHTNESS_MSB);
++		drm_dbg_kms(&dp_to_i915(intel_dp)->drm,
++			    "Failed to read DPCD register 0x%x\n",
++			    DP_EDP_BACKLIGHT_BRIGHTNESS_MSB);
+ 		return 0;
+ 	}
+ 	level = read_val[0];
+@@ -111,7 +115,8 @@ intel_dp_aux_set_backlight(const struct drm_connector_state *conn_state, u32 lev
+ 	}
+ 	if (drm_dp_dpcd_write(&intel_dp->aux, DP_EDP_BACKLIGHT_BRIGHTNESS_MSB,
+ 			      vals, sizeof(vals)) < 0) {
+-		DRM_DEBUG_KMS("Failed to write aux backlight level\n");
++		drm_dbg_kms(&dp_to_i915(intel_dp)->drm,
++			    "Failed to write aux backlight level\n");
+ 		return;
+ 	}
+ }
+@@ -133,7 +138,8 @@ static bool intel_dp_aux_set_pwm_freq(struct intel_connector *connector)
  
- 	if (intel_de_wait_for_clear(dev_priv, crt->adpa_reg,
- 				    ADPA_CRT_HOTPLUG_FORCE_TRIGGER, 1000)) {
--		DRM_DEBUG_KMS("timed out waiting for FORCE_TRIGGER");
+ 	freq = dev_priv->vbt.backlight.pwm_freq_hz;
+ 	if (!freq) {
+-		DRM_DEBUG_KMS("Use panel default backlight frequency\n");
 +		drm_dbg_kms(&dev_priv->drm,
-+			    "timed out waiting for FORCE_TRIGGER");
- 		intel_de_write(dev_priv, crt->adpa_reg, save_adpa);
++			    "Use panel default backlight frequency\n");
+ 		return false;
  	}
  
-@@ -524,7 +530,8 @@ static bool valleyview_crt_detect_hotplug(struct drm_connector *connector)
- 	else
- 		ret = false;
+@@ -146,13 +152,14 @@ static bool intel_dp_aux_set_pwm_freq(struct intel_connector *connector)
+ 	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
  
--	DRM_DEBUG_KMS("valleyview hotplug adpa=0x%x, result %d\n", adpa, ret);
-+	drm_dbg_kms(&dev_priv->drm,
-+		    "valleyview hotplug adpa=0x%x, result %d\n", adpa, ret);
- 
- 	if (reenable_hpd)
- 		intel_hpd_enable(dev_priv, crt->base.hpd_pin);
-@@ -564,7 +571,8 @@ static bool intel_crt_detect_hotplug(struct drm_connector *connector)
- 		/* wait for FORCE_DETECT to go off */
- 		if (intel_de_wait_for_clear(dev_priv, PORT_HOTPLUG_EN,
- 					    CRT_HOTPLUG_FORCE_DETECT, 1000))
--			DRM_DEBUG_KMS("timed out waiting for FORCE_DETECT to go off");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "timed out waiting for FORCE_DETECT to go off");
+ 	if (fxp_min > fxp_actual || fxp_actual > fxp_max) {
+-		DRM_DEBUG_KMS("Actual frequency out of range\n");
++		drm_dbg_kms(&dev_priv->drm, "Actual frequency out of range\n");
+ 		return false;
  	}
  
- 	stat = intel_de_read(dev_priv, PORT_HOTPLUG_STAT);
-@@ -635,13 +643,16 @@ static bool intel_crt_detect_ddc(struct drm_connector *connector)
- 		 * have to check the EDID input spec of the attached device.
- 		 */
- 		if (!is_digital) {
--			DRM_DEBUG_KMS("CRT detected via DDC:0x50 [EDID]\n");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "CRT detected via DDC:0x50 [EDID]\n");
- 			ret = true;
- 		} else {
--			DRM_DEBUG_KMS("CRT not detected via DDC:0x50 [EDID reports a digital panel]\n");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "CRT not detected via DDC:0x50 [EDID reports a digital panel]\n");
+ 	if (drm_dp_dpcd_writeb(&intel_dp->aux,
+ 			       DP_EDP_BACKLIGHT_FREQ_SET, (u8) f) < 0) {
+-		DRM_DEBUG_KMS("Failed to write aux backlight freq\n");
++		drm_dbg_kms(&dev_priv->drm,
++			    "Failed to write aux backlight freq\n");
+ 		return false;
+ 	}
+ 	return true;
+@@ -162,14 +169,16 @@ static void intel_dp_aux_enable_backlight(const struct intel_crtc_state *crtc_st
+ 					  const struct drm_connector_state *conn_state)
+ {
+ 	struct intel_connector *connector = to_intel_connector(conn_state->connector);
++	struct drm_i915_private *i915 = to_i915(connector->base.dev);
+ 	struct intel_dp *intel_dp = intel_attached_dp(connector);
+ 	struct intel_panel *panel = &connector->panel;
+ 	u8 dpcd_buf, new_dpcd_buf, edp_backlight_mode;
+ 
+ 	if (drm_dp_dpcd_readb(&intel_dp->aux,
+ 			DP_EDP_BACKLIGHT_MODE_SET_REGISTER, &dpcd_buf) != 1) {
+-		DRM_DEBUG_KMS("Failed to read DPCD register 0x%x\n",
+-			      DP_EDP_BACKLIGHT_MODE_SET_REGISTER);
++		drm_dbg_kms(&i915->drm,
++			    "Failed to read DPCD register 0x%x\n",
++			    DP_EDP_BACKLIGHT_MODE_SET_REGISTER);
+ 		return;
+ 	}
+ 
+@@ -186,7 +195,8 @@ static void intel_dp_aux_enable_backlight(const struct intel_crtc_state *crtc_st
+ 		if (drm_dp_dpcd_writeb(&intel_dp->aux,
+ 				       DP_EDP_PWMGEN_BIT_COUNT,
+ 				       panel->backlight.pwmgen_bit_count) < 0)
+-			DRM_DEBUG_KMS("Failed to write aux pwmgen bit count\n");
++			drm_dbg_kms(&i915->drm,
++				    "Failed to write aux pwmgen bit count\n");
+ 
+ 		break;
+ 
+@@ -203,7 +213,8 @@ static void intel_dp_aux_enable_backlight(const struct intel_crtc_state *crtc_st
+ 	if (new_dpcd_buf != dpcd_buf) {
+ 		if (drm_dp_dpcd_writeb(&intel_dp->aux,
+ 			DP_EDP_BACKLIGHT_MODE_SET_REGISTER, new_dpcd_buf) < 0) {
+-			DRM_DEBUG_KMS("Failed to write aux backlight mode\n");
++			drm_dbg_kms(&i915->drm,
++				    "Failed to write aux backlight mode\n");
  		}
- 	} else {
--		DRM_DEBUG_KMS("CRT not detected via DDC:0x50 [no valid EDID found]\n");
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "CRT not detected via DDC:0x50 [no valid EDID found]\n");
  	}
  
- 	kfree(edid);
-@@ -666,7 +677,7 @@ intel_crt_load_detect(struct intel_crt *crt, u32 pipe)
- 	u8 st00;
- 	enum drm_connector_status status;
- 
--	DRM_DEBUG_KMS("starting load-detect on CRT\n");
-+	drm_dbg_kms(&dev_priv->drm, "starting load-detect on CRT\n");
- 
- 	bclrpat_reg = BCLRPAT(pipe);
- 	vtotal_reg = VTOTAL(pipe);
-@@ -807,9 +818,9 @@ intel_crt_detect(struct drm_connector *connector,
- 	int status, ret;
- 	struct intel_load_detect_pipe tmp;
- 
--	DRM_DEBUG_KMS("[CONNECTOR:%d:%s] force=%d\n",
--		      connector->base.id, connector->name,
--		      force);
-+	drm_dbg_kms(&dev_priv->drm, "[CONNECTOR:%d:%s] force=%d\n",
-+		    connector->base.id, connector->name,
-+		    force);
- 
- 	if (i915_modparams.load_detect_test) {
- 		wakeref = intel_display_power_get(dev_priv,
-@@ -830,11 +841,13 @@ intel_crt_detect(struct drm_connector *connector,
- 		 * only trust an assertion that the monitor is connected.
- 		 */
- 		if (intel_crt_detect_hotplug(connector)) {
--			DRM_DEBUG_KMS("CRT detected via hotplug\n");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "CRT detected via hotplug\n");
- 			status = connector_status_connected;
- 			goto out;
- 		} else
--			DRM_DEBUG_KMS("CRT not detected via hotplug\n");
-+			drm_dbg_kms(&dev_priv->drm,
-+				    "CRT not detected via hotplug\n");
+@@ -237,9 +248,11 @@ static u32 intel_dp_aux_calc_max_backlight(struct intel_connector *connector)
+ 	 * minimum value will applied automatically. So no need to check that.
+ 	 */
+ 	freq = i915->vbt.backlight.pwm_freq_hz;
+-	DRM_DEBUG_KMS("VBT defined backlight frequency %u Hz\n", freq);
++	drm_dbg_kms(&i915->drm, "VBT defined backlight frequency %u Hz\n",
++		    freq);
+ 	if (!freq) {
+-		DRM_DEBUG_KMS("Use panel default backlight frequency\n");
++		drm_dbg_kms(&i915->drm,
++			    "Use panel default backlight frequency\n");
+ 		return max_backlight;
  	}
  
- 	if (intel_crt_detect_ddc(connector)) {
-@@ -930,7 +943,7 @@ void intel_crt_reset(struct drm_encoder *encoder)
- 		intel_de_write(dev_priv, crt->adpa_reg, adpa);
- 		intel_de_posting_read(dev_priv, crt->adpa_reg);
- 
--		DRM_DEBUG_KMS("crt adpa set to 0x%x\n", adpa);
-+		drm_dbg_kms(&dev_priv->drm, "crt adpa set to 0x%x\n", adpa);
- 		crt->force_hotplug_required = true;
+@@ -254,12 +267,14 @@ static u32 intel_dp_aux_calc_max_backlight(struct intel_connector *connector)
+ 	 */
+ 	if (drm_dp_dpcd_readb(&intel_dp->aux,
+ 			      DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min) != 1) {
+-		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap min\n");
++		drm_dbg_kms(&i915->drm,
++			    "Failed to read pwmgen bit count cap min\n");
+ 		return max_backlight;
+ 	}
+ 	if (drm_dp_dpcd_readb(&intel_dp->aux,
+ 			      DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max) != 1) {
+-		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap max\n");
++		drm_dbg_kms(&i915->drm,
++			    "Failed to read pwmgen bit count cap max\n");
+ 		return max_backlight;
+ 	}
+ 	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+@@ -268,7 +283,8 @@ static u32 intel_dp_aux_calc_max_backlight(struct intel_connector *connector)
+ 	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
+ 	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
+ 	if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
+-		DRM_DEBUG_KMS("VBT defined backlight frequency out of range\n");
++		drm_dbg_kms(&i915->drm,
++			    "VBT defined backlight frequency out of range\n");
+ 		return max_backlight;
  	}
  
+@@ -279,10 +295,11 @@ static u32 intel_dp_aux_calc_max_backlight(struct intel_connector *connector)
+ 			break;
+ 	}
+ 
+-	DRM_DEBUG_KMS("Using eDP pwmgen bit count of %d\n", pn);
++	drm_dbg_kms(&i915->drm, "Using eDP pwmgen bit count of %d\n", pn);
+ 	if (drm_dp_dpcd_writeb(&intel_dp->aux,
+ 			       DP_EDP_PWMGEN_BIT_COUNT, pn) < 0) {
+-		DRM_DEBUG_KMS("Failed to write aux pwmgen bit count\n");
++		drm_dbg_kms(&i915->drm,
++			    "Failed to write aux pwmgen bit count\n");
+ 		return max_backlight;
+ 	}
+ 	panel->backlight.pwmgen_bit_count = pn;
+@@ -319,7 +336,8 @@ intel_dp_aux_display_control_capable(struct intel_connector *connector)
+ 	if (intel_dp->edp_dpcd[1] & DP_EDP_TCON_BACKLIGHT_ADJUSTMENT_CAP &&
+ 	    (intel_dp->edp_dpcd[2] & DP_EDP_BACKLIGHT_BRIGHTNESS_AUX_SET_CAP) &&
+ 	    !(intel_dp->edp_dpcd[2] & DP_EDP_BACKLIGHT_BRIGHTNESS_PWM_PIN_CAP)) {
+-		DRM_DEBUG_KMS("AUX Backlight Control Supported!\n");
++		drm_dbg_kms(&dp_to_i915(intel_dp)->drm,
++			    "AUX Backlight Control Supported!\n");
+ 		return true;
+ 	}
+ 	return false;
+@@ -328,8 +346,8 @@ intel_dp_aux_display_control_capable(struct intel_connector *connector)
+ int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_connector)
+ {
+ 	struct intel_panel *panel = &intel_connector->panel;
+-	enum intel_backlight_type type =
+-		to_i915(intel_connector->base.dev)->vbt.backlight.type;
++	struct drm_i915_private *i915 = to_i915(intel_connector->base.dev);
++	enum intel_backlight_type type = i915->vbt.backlight.type;
+ 
+ 	if (i915_modparams.enable_dpcd_backlight == 0 ||
+ 	    (i915_modparams.enable_dpcd_backlight == -1 &&
+@@ -337,7 +355,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_connector)
+ 		return -ENODEV;
+ 
+ 	if (type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
+-		DRM_DEBUG_DRIVER("Ignoring VBT backlight type\n");
++		drm_dbg(&i915->drm, "Ignoring VBT backlight type\n");
+ 
+ 	panel->backlight.setup = intel_dp_aux_setup_backlight;
+ 	panel->backlight.enable = intel_dp_aux_enable_backlight;
 -- 
 2.25.0
 
