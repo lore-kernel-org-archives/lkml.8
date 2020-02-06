@@ -2,101 +2,157 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6343C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B85C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EA922464
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F1A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aOFKtqcA"
+	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="kwHFPJh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBFPYa (ORCPT
+        id S1727818AbgBFPYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:24:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33332 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727675AbgBFPY2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:24:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581002667;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=hZQ1bZXwx73UG2QTjcRZPYs7EAoVSiICeHspPztTjlk=;
-        b=aOFKtqcA/k6U9LP97h0uuGkNZAJRa3sABRy78g5T0wXCpSDYK1CUNtz1RMbh+fRywcuUbA
-        ZSxkhhgSWTTauII8gvfKFSD0mHQJV4bYWvcqhsbXCdFBFmFMqZ2vKKz5WO6x2w/iLhngsb
-        Mbicjy1c0VYCELPALT8vERk6bdwqLBI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-1K3yg_kbMku4_OgZzL34Kw-1; Thu, 06 Feb 2020 10:24:24 -0500
-X-MC-Unique: 1K3yg_kbMku4_OgZzL34Kw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33D2D80588D;
-        Thu,  6 Feb 2020 15:24:23 +0000 (UTC)
-Received: from llong.com (ovpn-124-223.rdu2.redhat.com [10.10.124.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EC901001B05;
-        Thu,  6 Feb 2020 15:24:22 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v6 2/6] locking/lockdep: Display irq_context names in /proc/lockdep_chains
-Date:   Thu,  6 Feb 2020 10:24:04 -0500
-Message-Id: <20200206152408.24165-3-longman@redhat.com>
-In-Reply-To: <20200206152408.24165-1-longman@redhat.com>
-References: <20200206152408.24165-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 6 Feb 2020 10:24:34 -0500
+Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:15398
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727505AbgBFPYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:24:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f5li6/WwksEhWpqWuRoavSTtFhiK8LR1iGLCfbcE7WlMaTwvIC9O52UOqBfsiGXm7abtfTZld7UmqeHmkuK/I57UmL21Mie2s7iQZk+QZlmvdBndbxGaR5ZLrlNf7MPcAF9aOLE+izOR7KRX/TIN4Jp1Zvj50t9SE6gOQW22P7+b0MCAmWSUDGjVLAZDZEEr6Qrh8gKZYSP/L2XGAiMbCPdDd7vKjYhzzA3lvdk43/tuR2jro9DA+4F3WdYLlpZU73a+yx81O9HkyHkHE9eWUS1H1/XiN6pTKKeZ4TT0ZlINDyDhOMv7Pu7CKFlnIYM3bZqD37kNSvrnklGQDxiDWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=toZDouw/ofV3eZGQ1rB/FHy1riorfgb0UqXJmUf6LhA=;
+ b=TJ1NjjaR2odUb8bPSxf6dyvIpBTKpCVmxJtJWNuZ9JGbrcUFbJbNiHtx/7FyAxrw0OJqKFzF2Nxo4VTDzfmk514cZgtiovivj7I9mLixKHiVSjcjNOKDUcHjZJ+Hm2iEnypLze3sR7ibc9iCxLBOz6gjPpnQiME+gUvGYrW6QugQmcPSkplHzuCJSIYB8Uu0e5vrYvejtKPBSrYoAcvG0kHccwvck9FvqEWN87Ih/pyrvfKDq2Z2cvmHNznFl4M2zH+We5NF8rUr6jfRoIU49x6osC5jmHfH3XkBxg1OCia/AZk9RKBUsLKYcMPuLUIQZt8GIDXwRx5a3FyAlBp/+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kococonnector.com; dmarc=pass action=none
+ header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=toZDouw/ofV3eZGQ1rB/FHy1riorfgb0UqXJmUf6LhA=;
+ b=kwHFPJh9cpcXN/tj6GqkA4fYohrFt0c70y5mzkmilVxHk296YQqbGiEhqq2BJJrYmpJP21peF53cxvwE8ZSebzoORtDNNdIOP6ZBCzCaQcEIfPb2WaIrRqhYKJqas01k6Em8+jGuGipJvw/lK5LERJr3ypm69JrO6EQHdpbH8QM=
+Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
+ DB6PR0902MB1847.eurprd09.prod.outlook.com (10.171.76.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Thu, 6 Feb 2020 15:24:09 +0000
+Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
+ ([fe80::406b:dddb:f0d2:7ea7]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
+ ([fe80::406b:dddb:f0d2:7ea7%7]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
+ 15:24:09 +0000
+Received: from localhost (193.47.161.132) by GV0P278CA0034.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:28::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 15:24:09 +0000
+From:   Oliver Graute <oliver.graute@kococonnector.com>
+To:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>
+CC:     "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "peng.fan@nxp.com" <peng.fan@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 3/5] arm64: dts: imx8qm: added sata node
+Thread-Topic: [PATCH 3/5] arm64: dts: imx8qm: added sata node
+Thread-Index: AQHV3QF6DWUgMDjwi0S3VULcsUehEQ==
+Date:   Thu, 6 Feb 2020 15:24:09 +0000
+Message-ID: <20200206152222.31095-4-oliver.graute@kococonnector.com>
+References: <20200206152222.31095-1-oliver.graute@kococonnector.com>
+In-Reply-To: <20200206152222.31095-1-oliver.graute@kococonnector.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: GV0P278CA0034.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:28::21) To DB6PR0902MB2072.eurprd09.prod.outlook.com
+ (2603:10a6:6:8::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oliver.graute@kococonnector.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [193.47.161.132]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e77b47a4-5b1e-4cdf-2d42-08d7ab189cc7
+x-ms-traffictypediagnostic: DB6PR0902MB1847:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0902MB1847D31AAC7E1977ABE743F1EB1D0@DB6PR0902MB1847.eurprd09.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:296;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39830400003)(346002)(376002)(136003)(366004)(199004)(189003)(508600001)(4326008)(64756008)(186003)(5660300002)(2906002)(6486002)(66446008)(6916009)(81166006)(81156014)(44832011)(16526019)(956004)(2616005)(26005)(66556008)(66946007)(66476007)(54906003)(7416002)(6496006)(8676002)(52116002)(86362001)(36756003)(8936002)(71200400001)(1076003)(316002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1847;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: kococonnector.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Np/PsX60n0JhU895OcLcw52xUUYSVtZ17/NUTyRM5MQuxJ2gKgRVZP43fbMNxIJJ/3kSmMpHzm0qPkrqEQ1D81LkTiB6PCbvyJ3HcF+1DSiDuNo7SbBrrYHlajdoNu8gKoKNlqCNr5Mfk/jXNpMyT9JGzKJ7kGQKvUX0qiIYVGL+rn7o0mr5Hg0bai8IRiDAR3ryslDVFK4Prk2JXPqI2TfWb1O2XvlKLmIq/pahTfODluo4W/CehYjsMCSyptH4oCKsD/1LiyCNIcR7NFeGuLt9ZR8MA4QCdV5GWX+zt71UPykiHgS9/xaW5Aiy0yEfxrU8g8hDjz36NYXWEVFGlCoQRTMTSfztWUlT2sUvc+PKoNkMHT8Kg6YL7ZeEx+teuSqx7URF9j217VoPIsE2HfwRD4Yp8wzF2XtPP0IetaFV63wBd7MbYnQqCcJ+2m8X5lB8FOD1HNl4dIyUrsZZyZVrlh/s8PEuO0PXvc+LEB8=
+x-ms-exchange-antispam-messagedata: 7eq2JA12m677xrIHsdXpytwSZtDeUIvgtIeA7FKlVxd6JG14RE82WZdIzQ2IcDLWYDmRkJgnUiHQon93d8tOacxie8E3CtPy79uiNz0/aa7EDX2N329QMqTWmy4h6EnE8TUKVsZuGzzzBxyM2aJhuA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: kococonnector.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e77b47a4-5b1e-4cdf-2d42-08d7ab189cc7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 15:24:09.5207
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r2od5b4DMLr0ssHOK2tqNSQOH7bA/bNTEvE3YH0YSPsX06Qs/e6wqOXIqvssDzzeRoqcC7jnN3bqVj4jlCNMaS7xStcIbpWS7iypN595iLg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1847
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the irq_context field of a lock chains displayed in
-/proc/lockdep_chains is just a number. It is likely that many people
-may not know what a non-zero number means. To make the information more
-useful, print the actual irq names ("softirq" and "hardirq") instead.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
 ---
- kernel/locking/lockdep_proc.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 9bb6d2497b04..0f6842bcfba8 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -128,6 +128,13 @@ static int lc_show(struct seq_file *m, void *v)
- 	struct lock_chain *chain = v;
- 	struct lock_class *class;
- 	int i;
-+	static const char * const irq_strs[] = {
-+		[0]			     = "0",
-+		[LOCK_CHAIN_HARDIRQ_CONTEXT] = "hardirq",
-+		[LOCK_CHAIN_SOFTIRQ_CONTEXT] = "softirq",
-+		[LOCK_CHAIN_SOFTIRQ_CONTEXT|
-+		 LOCK_CHAIN_HARDIRQ_CONTEXT] = "hardirq|softirq",
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8qm.dtsi
+index fa827ed04e09..5d96be5fec1b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+@@ -140,6 +140,29 @@
+ 		method =3D "smc";
+ 	};
+=20
++	sata: sata@5f020000 {
++		compatible =3D "fsl,imx8qm-ahci";
++		reg =3D <0x0 0x5f020000 0x0 0x10000>, /* Controller reg */
++			<0x0 0x5f1a0000 0x0 0x10000>; /* PHY reg */
++		reg-names =3D "ctl", "phy";
++		interrupts =3D <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++/*
++		clocks =3D <&clk IMX8QM_HSIO_SATA_CLK>,
++			 <&clk IMX8QM_HSIO_PHY_X1_PCLK>,
++			 <&clk IMX8QM_HSIO_SATA_EPCS_TX_CLK>,
++			 <&clk IMX8QM_HSIO_SATA_EPCS_RX_CLK>,
++			 <&clk IMX8QM_HSIO_PHY_X2_PCLK_0>,
++			 <&clk IMX8QM_HSIO_PHY_X2_PCLK_1>,
++			 <&clk IMX8QM_HSIO_PHY_X1_APB_CLK>;
++		clock-names =3D "sata", "sata_ref", "epcs_tx", "epcs_rx",
++				"phy_pclk0", "phy_pclk1", "phy_apbclk";
++*/
++		hsio =3D <&hsio>;
++		//power-domains =3D <&pd_sata0>;
++		iommus =3D <&smmu 0x13 0x7f80>;
++		status =3D "disabled";
 +	};
- 
- 	if (v == SEQ_START_TOKEN) {
- 		if (nr_chain_hlocks > MAX_LOCKDEP_CHAIN_HLOCKS)
-@@ -136,7 +143,7 @@ static int lc_show(struct seq_file *m, void *v)
- 		return 0;
- 	}
- 
--	seq_printf(m, "irq_context: %d\n", chain->irq_context);
-+	seq_printf(m, "irq_context: %s\n", irq_strs[chain->irq_context]);
- 
- 	for (i = 0; i < chain->depth; i++) {
- 		class = lock_chain_get_class(chain, i);
--- 
-2.18.1
++
+ 	smmu: iommu@51400000 {
+ 		compatible =3D "arm,mmu-500";
+ 		interrupt-parent =3D <&gic>;
+--=20
+2.17.1
 
