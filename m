@@ -2,160 +2,119 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274EBC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58EEC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F276D21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79935214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qNTRgwYE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aLSDRmcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgBFIe1 (ORCPT
+        id S1728112AbgBFIge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:34:27 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44892 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728112AbgBFIe0 (ORCPT
+        Thu, 6 Feb 2020 03:36:34 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27578 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727947AbgBFIge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:34:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580978066; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=0QPHwcbbdGzwFbjMF8BKhJjd+FmE0ln4G8K2GXEyDI0=; b=qNTRgwYEJ6Y05QbDQ8VtkzcruMqOmWsT0GBoKbLoGKrOYgsBflSznBZTzcJrvCkNX5gjhlmV
- FCCTA6MOG2Wbq2wTaQTjYe109YJlJknQ2c9v0lgGwH55K/il+OJAuUnwCqneP0L4T1DZVfTz
- TQPlAAKhY0CHiqF6/ngIAwUz+mk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3bcf8d.7f4d0d5358b8-smtp-out-n01;
- Thu, 06 Feb 2020 08:34:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 09153C433CB; Thu,  6 Feb 2020 08:34:20 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F02A7C43383;
-        Thu,  6 Feb 2020 08:34:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F02A7C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pedro Sousa <sousa@synopsys.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v7 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
-Date:   Thu,  6 Feb 2020 00:33:27 -0800
-Message-Id: <1580978008-9327-9-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
-References: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
+        Thu, 6 Feb 2020 03:36:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580978193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=74n076s+3DHQh3T3bcXdZPPlzGYWoamkk1gc54HiO/8=;
+        b=aLSDRmcZ2y9lV/rDRAVk0cTg0MNu+jbzh1YtuTvY7E+NMWSaMmNCzvK6s6vi+aY/3qKAzf
+        DsX0Ne5fT2vcrmLog2+rB53ECslAXdueLgPpBZX49MCZz+cT9PeLohScVCov8PXi6bONZ4
+        vDiH2XqHWHObmHzKF5fExVvpXU93I34=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-_L4Io6mqPRCix_yZrxR5qg-1; Thu, 06 Feb 2020 03:36:31 -0500
+X-MC-Unique: _L4Io6mqPRCix_yZrxR5qg-1
+Received: by mail-qk1-f200.google.com with SMTP id a132so3105660qkg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:36:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=74n076s+3DHQh3T3bcXdZPPlzGYWoamkk1gc54HiO/8=;
+        b=Aoz9QiNYbbjoDEpHaoQXU/ErddXSyl9bLqqEvyu82jInh3FXgkQRUY5L9j5Qx/6WP9
+         Yg8pUcJ3lNB2DRuzG8+Koe1VLg/u1xNu+5SlZXOIcNkFYvmfRewefdDa8napW9Xt5b9s
+         XbvGTWm2pmmB+R1KHaZji5UuqQtcu5ZgGnz2Zhc/lr6MbklhvlILaHnnVVx6LCKC628M
+         nrCp5QLuZi3UZ5kDiCteLA+LDDDX0dblCC3lQD9bVW127nXyCRGR09L9aYK3qo/MiXhE
+         Et4koXAnSerS6ehSUW99PLSdT/+i4RKY2gyETs6PUutPBsH+ezg3DJ9t09Wt8zoMrOsJ
+         XPGQ==
+X-Gm-Message-State: APjAAAXA5HePEOrW3FKBl25cOAxKugyLEgGyqxZGAsRxYzisR6/TAipf
+        fP3X0dyesSbHJB1iHjPtRbQTkfkZqLG2fDsGLMi3wtgd90Eh4KVYPRQqqn4kz2NkdYu5waWBw1M
+        vTfboeYd16xceRXIfV7DNQGCA
+X-Received: by 2002:aed:204d:: with SMTP id 71mr1650672qta.116.1580978191351;
+        Thu, 06 Feb 2020 00:36:31 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwOjwDIx6ECH63BTSKTS7qQDsEkSPH49BMWkAwLbEf63JTlbiX87dRDwKUJa0Z97Qca2pYdzw==
+X-Received: by 2002:aed:204d:: with SMTP id 71mr1650665qta.116.1580978191144;
+        Thu, 06 Feb 2020 00:36:31 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id x126sm1099710qkc.42.2020.02.06.00.36.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 00:36:30 -0800 (PST)
+Date:   Thu, 6 Feb 2020 03:36:26 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Liang Li <liang.z.li@intel.com>
+Subject: Re: [PATCH v1 1/3] virtio-balloon: Fix memory leak when unloading
+ while hinting is in progress
+Message-ID: <20200206033617-mutt-send-email-mst@kernel.org>
+References: <20200205163402.42627-1-david@redhat.com>
+ <20200205163402.42627-2-david@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205163402.42627-2-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ADAPT is added specifically for HS Gear4 mode only, select INITIAL adapt
-before do power mode change to G4 and select no adapt before switch to
-non-G4 modes.
+On Wed, Feb 05, 2020 at 05:34:00PM +0100, David Hildenbrand wrote:
+> When unloading the driver while hinting is in progress, we will not
+> release the free page blocks back to MM, resulting in a memory leak.
+> 
+> Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: Wei Wang <wei.w.wang@intel.com>
+> Cc: Liang Li <liang.z.li@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd.c | 14 +++++++++++++-
- drivers/scsi/ufs/ufshci.h |  1 +
- drivers/scsi/ufs/unipro.h |  7 +++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 20fa509..e0bf551 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4071,6 +4071,17 @@ static int ufshcd_change_power_mode(struct ufs_hba *hba,
- 		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HSSERIES),
- 						pwr_mode->hs_rate);
- 
-+	if (hba->ufs_version >= UFSHCI_VERSION_30) {
-+		if (pwr_mode->gear_tx == UFS_HS_G4)
-+			/* INITIAL ADAPT */
-+			ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXHSADAPTTYPE),
-+					PA_INITIAL_ADAPT);
-+		else
-+			/* NO ADAPT */
-+			ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXHSADAPTTYPE),
-+					PA_NO_ADAPT);
-+	}
-+
- 	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA0),
- 			DL_FC0ProtectionTimeOutVal_Default);
- 	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA1),
-@@ -8449,7 +8460,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
- 	    (hba->ufs_version != UFSHCI_VERSION_11) &&
- 	    (hba->ufs_version != UFSHCI_VERSION_20) &&
--	    (hba->ufs_version != UFSHCI_VERSION_21))
-+	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-+	    (hba->ufs_version != UFSHCI_VERSION_30))
- 		dev_err(hba->dev, "invalid UFS version 0x%x\n",
- 			hba->ufs_version);
- 
-diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
-index c2961d3..f2ee816 100644
---- a/drivers/scsi/ufs/ufshci.h
-+++ b/drivers/scsi/ufs/ufshci.h
-@@ -104,6 +104,7 @@ enum {
- 	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
- 	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
- 	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
-+	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
- };
- 
- /*
-diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
-index 3dc4d8b..5a724b2 100644
---- a/drivers/scsi/ufs/unipro.h
-+++ b/drivers/scsi/ufs/unipro.h
-@@ -146,6 +146,12 @@
- #define PA_SLEEPNOCONFIGTIME	0x15A2
- #define PA_STALLNOCONFIGTIME	0x15A3
- #define PA_SAVECONFIGTIME	0x15A4
-+#define PA_TXHSADAPTTYPE	0x15D4
-+
-+/* Adpat type for PA_TXHSADAPTTYPE attribute */
-+#define PA_REFRESH_ADAPT	0x00
-+#define PA_INITIAL_ADAPT	0x01
-+#define PA_NO_ADAPT		0x03
- 
- #define PA_TACTIVATE_TIME_UNIT_US	10
- #define PA_HIBERN8_TIME_UNIT_US		100
-@@ -203,6 +209,7 @@ enum ufs_hs_gear_tag {
- 	UFS_HS_G1,		/* HS Gear 1 (default for reset) */
- 	UFS_HS_G2,		/* HS Gear 2 */
- 	UFS_HS_G3,		/* HS Gear 3 */
-+	UFS_HS_G4,		/* HS Gear 4 */
- };
- 
- enum ufs_unipro_ver {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> ---
+>  drivers/virtio/virtio_balloon.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 8e400ece9273..abef2306c899 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -968,6 +968,10 @@ static void remove_common(struct virtio_balloon *vb)
+>  		leak_balloon(vb, vb->num_pages);
+>  	update_balloon_size(vb);
+>  
+> +	/* There might be free pages that are being reported: release them. */
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+> +		return_free_pages_to_mm(vb, ULONG_MAX);
+> +
+>  	/* Now we reset the device so we can clean up the queues. */
+>  	vb->vdev->config->reset(vb->vdev);
+>  
+> -- 
+> 2.24.1
+
