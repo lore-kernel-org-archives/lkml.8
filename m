@@ -2,149 +2,90 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB20C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8830DC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017E321775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="UkIqrxpj"
+	by mail.kernel.org (Postfix) with ESMTP id 50D12222D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgBFUhB (ORCPT
+        id S1727916AbgBFUhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:37:01 -0500
-Received: from www.linux-watchdog.org ([185.87.125.42]:50056 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgBFUhA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:37:00 -0500
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id 47C7D4065D; Thu,  6 Feb 2020 20:47:37 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 47C7D4065D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1581018457;
-        bh=UDRkZMKHbV1Ws+6JHIMGt7Ei1nb/ogRNQru6w0+tZXI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UkIqrxpjYMqxSpmlNdNmfr3iWoBr+ou8d7kmtu7k8f0Fzm9rNyTXop3ZNJFtA0XIl
-         3gkGyOHYXadfmyfUZSeX/gQDXIu3Dw1Nme/XeJNSP1jug8wWeQje1QO2+EIiPqzFXO
-         OFTngwMkIlSg7JqUuli/qP6lScQ5XXd0mhRVeIos=
-Date:   Thu, 6 Feb 2020 20:47:37 +0100
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Christophe Roullier <christophe.roullier@st.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Jack Mitchell <ml@embed.me.uk>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Vincent Prince <Vincent.PRINCE.fr@gmail.com>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Wang@www.linux-watchdog.org,
-        "Peng 1." <peng.1.wang@nokia-sbell.com>,
-        "yong.liang" <yong.liang@mediatek.com>
-Subject: [GIT PULL REQUEST] watchdog - v5.6 Merge window
-Message-ID: <20200206194737.GA12072@www.linux-watchdog.org>
+        Thu, 6 Feb 2020 15:37:33 -0500
+Received: from mga11.intel.com ([192.55.52.93]:45767 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727773AbgBFUhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 15:37:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 12:37:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="226268571"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Feb 2020 12:37:32 -0800
+Message-ID: <b0e7e487d1bf92bf19df2ecf199b90c76d9097dd.camel@intel.com>
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Date:   Thu, 06 Feb 2020 12:17:30 -0800
+In-Reply-To: <af5ee976-3b57-4afe-6304-fcab8de45c77@infradead.org>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+         <20200205181935.3712-2-yu-cheng.yu@intel.com>
+         <af5ee976-3b57-4afe-6304-fcab8de45c77@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, 2020-02-05 at 16:16 -0800, Randy Dunlap wrote:
+> Hi,
+> 
+> I have a few comments and a question (please see inline below).
+> 
+> 
+> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+[...]
+> > +arch_prctl(ARCH_X86_CET_LOCK)
+> > +    Lock in CET feature.
+> 
+> which feature?
 
-Please pull the watchdog changes for the v5.6 release cycle.
+Both SHSTK and IBT are locked.  They cannot be turned off afterwards.
 
-This series contains:
-* add IT8786 chipset
-* addition of sam9x60 compatible watchdog
-* da9062 improvements
-* fix UAF in reboot notifier handling in watchdog core code
-* other fixes and small improvements
+I will check things you pointed out.
 
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
-
-  Linux 5.5 (2020-01-26 16:23:03 -0800)
-
-are available in the git repository at:
-
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.6-rc1
-
-for you to fetch changes up to 057b52b4b3d58f4ee5944171da50f77b00a1bb0d:
-
-  watchdog: da9062: make restart handler atomic safe (2020-01-27 15:55:49 +0100)
-
-----------------------------------------------------------------
-linux-watchdog 5.6-rc1 tag
-
-----------------------------------------------------------------
-Christophe Roullier (1):
-      drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
-
-Eugen Hristev (1):
-      watchdog: sama5d4_wdt: addition of sam9x60 compatible watchdog
-
-Jack Mitchell (1):
-      watchdog: dw_wdt: ping watchdog to reset countdown before start
-
-Marco Felsch (3):
-      watchdog: da9062: add power management ops
-      dt-bindings: watchdog: da9062: add suspend disable option
-      watchdog: da9062: make restart handler atomic safe
-
-Sai Prakash Ranjan (1):
-      watchdog: qcom: Use platform_get_irq_optional() for bark irq
-
-Srinivas Neeli (1):
-      watchdog: cadence: Skip printing pointer value
-
-Vincent Prince (1):
-      watchdog: it87_wdt: add IT8786 ID
-
-Vladis Dronov (1):
-      watchdog: fix UAF in reboot notifier handling in watchdog core code
-
-Wang, Peng 1. (NSB - CN/Hangzhou) (1):
-      watchdog: make DesignWare watchdog allow users to set bigger timeout value
-
-yong.liang (4):
-      dt-bindings: mediatek: mt8183: Add #reset-cells
-      dt-bindings: mediatek: mt2712: Add #reset-cells
-      watchdog: mtk_wdt: mt8183: Add reset controller
-      watchdog: mtk_wdt: mt2712: Add reset controller
-
- .../devicetree/bindings/watchdog/da9062-wdt.txt    |   5 +
- .../devicetree/bindings/watchdog/mtk-wdt.txt       |  11 ++-
- drivers/watchdog/at91sam9_wdt.h                    |  21 ++++
- drivers/watchdog/cadence_wdt.c                     |   5 +-
- drivers/watchdog/da9062_wdt.c                      |  35 ++++++-
- drivers/watchdog/dw_wdt.c                          |  11 ++-
- drivers/watchdog/it87_wdt.c                        |   2 +
- drivers/watchdog/mtk_wdt.c                         | 105 +++++++++++++++++++-
- drivers/watchdog/qcom-wdt.c                        |   2 +-
- drivers/watchdog/sama5d4_wdt.c                     | 109 ++++++++++++++++-----
- drivers/watchdog/stm32_iwdg.c                      |  18 ++++
- drivers/watchdog/watchdog_core.c                   |  35 +++++++
- drivers/watchdog/watchdog_dev.c                    |  36 +------
- .../dt-bindings/reset-controller/mt2712-resets.h   |  22 +++++
- .../dt-bindings/reset-controller/mt8183-resets.h   |  17 ++++
- 15 files changed, 361 insertions(+), 73 deletions(-)
- create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
+Thanks,
+Yu-cheng
 
