@@ -6,64 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540B5C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB510C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265AE20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C621214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580977208;
-	bh=x/Z+3ox+n70Ij8MeDWggupUpPb7A+5YTIm3ylIbHhtA=;
+	s=default; t=1580977218;
+	bh=+a8SlHhRX279q2JAwWIk7frfnbVohQ6cL/UcWS0GeC4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=PBHsbV4M9f9v8H8SatwcLmWDWVj90zTf4lQwsaFhZe9jLf4vE6gHCYEV8rZClwpYY
-	 ytIVb7gCElyoxx1WjPJSzAM8VJ9OgxKwKDQ1A+XUdl8rI09Xp39LVyLtRlZXet0QCz
-	 u7czDpiFfzDimvFXOgUdnfdbaPjJRI2/1FvYkyn4=
+	b=qMAVMULKHYP8jsp+8Y4FH0HFNhw2lAPe7PhVP9/BH3YukCAf31OMlgLDMdjT2TlYb
+	 g4Amb9arBAj0fMVhcO4hGXM0dbRUHwvFO2UjLhvJK3uc8/G6W93BjoHOyw8/bTz25s
+	 xp6BUkyHOCknT5x1dUHm3+t1cGbvoZyIoz6WQTvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgBFIUF (ORCPT
+        id S1727975AbgBFIUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:20:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39540 "EHLO mail.kernel.org"
+        Thu, 6 Feb 2020 03:20:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgBFIUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:20:04 -0500
-Subject: Re: [GIT PULL] xfs: moar new code for 5.6
+        id S1726673AbgBFIUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 03:20:17 -0500
+Subject: Re: [GIT PULL] Smack patch for v5.6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580977204;
-        bh=x/Z+3ox+n70Ij8MeDWggupUpPb7A+5YTIm3ylIbHhtA=;
+        s=default; t=1580977216;
+        bh=+a8SlHhRX279q2JAwWIk7frfnbVohQ6cL/UcWS0GeC4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DU+UAj81Y/UawspfOXA8cN/k+sZk/YfCXLNjYG1WyJ6yHfn4EHT4vjsim8drkw5eP
-         hMIvLswTlEqeKU0e+uTnLBpFphkQU/wbzGjETaHf26fpNO2FqP/gaRNvCFwjf5c5cT
-         A5lwYanNzOIcpTS9psEtHe9gOzt/qI3oq5yid1yk=
+        b=e7UofIQxwpu0b5wkUFYZsK6p77PWWqdkpgJNwAm01NW+IMfmr0NL3ppwrGDPZwU8g
+         VNcnIr3AzVwZibobzN7vwKklh9v0NFsL9rme6Fk8OxhkpIYzWSemXqOy3sagJ1Wj2P
+         LTyLpr+HR8mkQz5vbPlKFlpAKhnhp6Htwd5OKshU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200205224303.GF6870@magnolia>
-References: <20200205224303.GF6870@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200205224303.GF6870@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.6-merge-8
-X-PR-Tracked-Commit-Id: cdbcf82b86ea24aa942991b4233cd8ddf13f590c
+In-Reply-To: <7300e604-6fb5-16b1-4e1b-dfae7b494853@schaufler-ca.com>
+References: <7300e604-6fb5-16b1-4e1b-dfae7b494853.ref@schaufler-ca.com>
+ <7300e604-6fb5-16b1-4e1b-dfae7b494853@schaufler-ca.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <7300e604-6fb5-16b1-4e1b-dfae7b494853@schaufler-ca.com>
+X-PR-Tracked-Remote: https://github.com/cschaufler/smack-next
+ tags/Smack-for-5.6
+X-PR-Tracked-Commit-Id: 87fbfffcc89b92a4281b0aa53bd06af714087889
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 99be3f60989b4813f625b5421427fa9ab01e3a23
-Message-Id: <158097720405.4470.3412212509981376071.pr-tracker-bot@kernel.org>
-Date:   Thu, 06 Feb 2020 08:20:04 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+X-PR-Merge-Commit-Id: 85e5529625f0e41beefe8939eb08baf33131f7d6
+Message-Id: <158097721690.4470.13197189246194891263.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Feb 2020 08:20:16 +0000
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 5 Feb 2020 14:43:04 -0800:
+The pull request you sent on Wed, 5 Feb 2020 18:07:09 -0800:
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.6-merge-8
+> https://github.com/cschaufler/smack-next tags/Smack-for-5.6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/99be3f60989b4813f625b5421427fa9ab01e3a23
+https://git.kernel.org/torvalds/c/85e5529625f0e41beefe8939eb08baf33131f7d6
 
 Thank you!
 
