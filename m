@@ -2,100 +2,117 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEACC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44230C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8253C21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6E620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:11:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RETquQFs";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ii3Gi2Jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBFPKn (ORCPT
+        id S1727798AbgBFPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:10:43 -0500
-Received: from smtp.gentoo.org ([140.211.166.183]:55970 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727773AbgBFPKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:10:41 -0500
-Received: from alexis.zapto.org (85-171-52-99.rev.numericable.fr [85.171.52.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aballier)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 94BEE34E821;
-        Thu,  6 Feb 2020 15:10:39 +0000 (UTC)
-From:   Alexis Ballier <aballier@gentoo.org>
-Cc:     Alexis Ballier <aballier@gentoo.org>, devicetree@vger.kernel.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: rockchip: rk3399-orangepi: Explicitly pinmix the regulator configuration GPIOs
-Date:   Thu,  6 Feb 2020 16:10:25 +0100
-Message-Id: <20200206151025.3813-2-aballier@gentoo.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200206151025.3813-1-aballier@gentoo.org>
-References: <20200206151025.3813-1-aballier@gentoo.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 6 Feb 2020 10:11:02 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42150 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbgBFPLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:11:01 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016F88fb142764;
+        Thu, 6 Feb 2020 15:09:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=AQVBQBMgJcTfDEg0yhow3tN7Q1Pax4n2aKD0EtCvB5g=;
+ b=RETquQFs1fKBNgdO+SC2SKpV6GWy5hV1i6FjD5q/B6GQBX8NMZgGSGwslbGnMjUAMH8h
+ sz79oy25yNCDycr10XBDLE9qKIExG5CDzEbIuspzC+peq54XpVgoeFngdSfxyV0xlUbu
+ 014Tl2bkra1YN10IpCFl4049jCasEKgAUyka/EL9KnXexmn9t7HzAqxnJwcIiIBxqFTl
+ BS6j1NV8LTywu8SyKTvjaTBG9tU7cV0JvF07f4gXqtSr5NAhe6Kvs9UzW0gVv0XiksMm
+ WGECtcChxo4rDcnweBbffZtu5Ae3sSdy5qrwCAvrZQJiOceChSl/ubPzWT/zBfzFGran 4g== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=AQVBQBMgJcTfDEg0yhow3tN7Q1Pax4n2aKD0EtCvB5g=;
+ b=Ii3Gi2JbGgiAKKS/t752ah8Ri/uNKai0T0tPf1ragsVrp5cqzPPI3LxYQhCKpNg+qWjB
+ 3PedLb328GrnnSY4hg6fi1rj6d1UidrnOmUsmmqElyjpqN8DHQqrbs6c1R9Tqbr7JzsL
+ Gdi8uMJxNrB1JHnJN1y7dpF9seVuSJxk8tPpvW2NebllgAmuk9PULMCn6/qSSis5D2Jw
+ MiAo3vj+xX4SyfGNb90Ej01m1JGH0FLrZB91qMz06VGIaKfpEa1hCU0ri6BEOrNnurfo
+ /xmzmi0jc/GBmLh/5ezGct7Bbec+XI1RG6vxuBi/1NpMfCcksGGw2VLvv2CDZbtuX2y/ WA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xykbpaa96-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 15:09:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016F9IaR146695;
+        Thu, 6 Feb 2020 15:09:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2y0jfxuft2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 15:09:52 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016F9oZY026720;
+        Thu, 6 Feb 2020 15:09:51 GMT
+Received: from dhcp-10-175-186-149.vpn.oracle.com (/10.175.186.149)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 07:09:50 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, shuah@kernel.org, mhiramat@kernel.org
+Cc:     mingo@redhat.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        colin.king@canonical.com
+Subject: [PATCH 0/2] ftrace/selftests: clean up failure cases
+Date:   Thu,  6 Feb 2020 15:09:18 +0000
+Message-Id: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=925
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=992 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Those GPIOs define which register is used by the GPU & CPUB regulators
-for sleep mode. The register is defined here, so better have the GPIOs
-explicitly set too.
+When running the ftrace selftests, 2 failures and 6 unresolved
+cases were observed.  The failures can be avoided by setting
+a sysctl prior to test execution (fixed in patch 1) and the
+unresolved cases result from absence of testing modules which
+are built based on CONFIG options being set and program
+availability (fixed in patch 2).
 
-Signed-off-by: Alexis Ballier <aballier@gentoo.org>
-Cc: devicetree@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+These seem more like "unsupported" than "unresolved" errors,
+since for the ftrace tests "unresolved" cases cause the test
+(and thus kselftest) to report failure.  With these changes
+in place, the unresolved cases become unsupported and the
+test failures disappear, resulting in the ftracetest program
+exiting with "ok" status.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-index 1767015e684c..f9f7246d4d2f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-@@ -432,6 +432,8 @@ vdd_cpu_b: regulator@40 {
- 		compatible = "silergy,syr827";
- 		reg = <0x40>;
- 		fcs,suspend-voltage-selector = <1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cpu_b_sleep>;
- 		regulator-name = "vdd_cpu_b";
- 		regulator-min-microvolt = <712500>;
- 		regulator-max-microvolt = <1500000>;
-@@ -449,6 +451,8 @@ vdd_gpu: regulator@41 {
- 		compatible = "silergy,syr828";
- 		reg = <0x41>;
- 		fcs,suspend-voltage-selector = <1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpu_sleep>;
- 		regulator-name = "vdd_gpu";
- 		regulator-min-microvolt = <712500>;
- 		regulator-max-microvolt = <1500000>;
-@@ -561,6 +565,14 @@ phy_rstb: phy-rstb {
- 	};
- 
- 	pmic {
-+		cpu_b_sleep: cpu-b-sleep {
-+			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
-+		gpu_sleep: gpu-sleep {
-+			rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins =
- 				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
+Alan Maguire (2):
+  ftrace/selftests: workaround cgroup RT scheduling issues
+  ftrace/selftest: absence of modules/programs should trigger
+    unsupported errors
+
+ tools/testing/selftests/ftrace/ftracetest          | 23 ++++++++++++++++++++++
+ .../ftrace/test.d/direct/ftrace-direct.tc          |  2 +-
+ .../ftrace/test.d/direct/kprobe-direct.tc          |  2 +-
+ .../selftests/ftrace/test.d/event/trace_printk.tc  |  2 +-
+ .../ftrace/test.d/ftrace/func_mod_trace.tc         |  2 +-
+ .../ftrace/test.d/kprobe/kprobe_module.tc          |  2 +-
+ .../selftests/ftrace/test.d/selftest/bashisms.tc   |  2 +-
+ 7 files changed, 29 insertions(+), 6 deletions(-)
+
 -- 
-2.25.0
+1.8.3.1
 
