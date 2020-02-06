@@ -7,106 +7,89 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722B2C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780ADC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C53218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45656218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021973;
-	bh=vqnje4SrK7zmksL6qpw8d1YvwCA2XTOc+khujOgY4kM=;
+	s=default; t=1581021975;
+	bh=af4PLSnafY906SvjpN1hR69Go8XQb27ra81bq2aCGyM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xUCpC2jXTbUd4rmzaR9lTL6vtNePo9Xa9eXNeVNLs0dtEsTcEzdRh2895I7JTk2wt
-	 0X9V5tBgdJ117GPkAli5B18f4sS957HRdU2NxWoalV2Zdm7I9JY6B3ozGwiNj1mPOk
-	 zhyHame74qSJjZH75q+37tZjtDYk1ew4Xow2L4KY=
+	b=aDliSkdl1vgQRBOBJ10DEF2vlF/z2MvwUtuANFQ7/53G209UhLGX2D0cNCJALbS10
+	 tjhv2qABraGWXrkc+q6OJy0B2S14rqK6vCUQPYek2t1XiN3KtWulievYAFbnoammhN
+	 CRYyn5FJslXIEKkQf2OUERVwHMMpZ4p4pzvjH51c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgBFUqM (ORCPT
+        id S1728189AbgBFUqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:12 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33799 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgBFUqI (ORCPT
+        Thu, 6 Feb 2020 15:46:14 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43541 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbgBFUqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:46:08 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j4so3356516pgi.1;
-        Thu, 06 Feb 2020 12:46:08 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u131so3333318pgc.10;
+        Thu, 06 Feb 2020 12:46:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8CEel95Qe0K0FMLgiCiTMequMG6yZDFIWpQ5eQwLax4=;
-        b=qwuTV2bGE5go6Dr3hk/G9xxmRw/YSrJGgeLoMC/iiRzHARB7EdSUgLGnOZ8JhU2Gku
-         Bh17V0Pl0N7l4wP9FW+PsyLFWmV7DSZVxkzSkIwbfnttYiswqubQ6xFWP2MFn3bdcwCc
-         1ChkoSEDaCcK/Rlu+gx6tEHQqZYzKwrRHBgVvpDMB6xk1+KxMDFZ0dLGpcBO8rU0aGs4
-         9aNIYSMfTrAw1uvCfwoFomiQ/kS6xkmDLUkS9cYxoc7iJT9BgvxDzHrCS6qsbhhHDH+z
-         ei/BSlk2JI3D/oh5o4eY/fDwmHuZHXIMEOPADI4UGy1MzrDin1/JTYVGIZxK0q4WhHjA
-         WxlA==
-X-Gm-Message-State: APjAAAV6NYTIp93DnC93iPZ6EVCMy/KuYo/XmbTNRThDB6O/Y77d0O6z
-        EYbXdUEfM3mFuUV5LGna3shnuRpJ5Q==
-X-Google-Smtp-Source: APXvYqx1NnBAhQrChlAlk+joiqFOCP58iYcXSFU1wddrjPp0aH7Qq0MEkUwXPJE9lP0gLPlBBbd93w==
-X-Received: by 2002:a62:8246:: with SMTP id w67mr5850174pfd.107.1581021968038;
-        Thu, 06 Feb 2020 12:46:08 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zUJVXEe9nmb8lzTi4rWGnunn6uT7SLbqo7l18w5TMkM=;
+        b=WuqzAx4IQ2bRl4/nWYyFkvAiATskqse55LaTeb1APvx+wWXd8kE6Ib3cdOEjXujLfR
+         b28yo6DDN2s5zYUWqLbTrn1UEiqiwNrQfukIPMqNOGfoOK2xyHhTly2MXGs+Bs4i9MtR
+         i3Fq1BhDz347+78R7RdW9gDseZLKa/180qz9vREqVtbDNYoOgF5BbWHeHHMloOAu9HCY
+         HbqKS2dHeoUzw1n2CLDru3A/XfDbgXHzfF+d52Xj5K0ZH3qX2iWTxGJb/CYjLRRrygi8
+         crC93/AXpEgcZUrFyNe4MeE0w0nVEWwqbrfyGEMwAgdcNWsO19lrAbHEmSuA6S9jNYXW
+         ++5A==
+X-Gm-Message-State: APjAAAVHduqLx+BoVuSJaTqGC0dUGMSKeR+WV4MwuwvCBs9VsFEh7fe5
+        6FNjZDWrfRmT+QKGFQqcNw==
+X-Google-Smtp-Source: APXvYqwPyQbSQo7BMvabDsbXOSck7ihIN04c3RRAFzLU27liOcRjuh4U6Ul11wxJFT9owm46O1L3Mw==
+X-Received: by 2002:a63:e04a:: with SMTP id n10mr5591161pgj.341.1581021970134;
+        Thu, 06 Feb 2020 12:46:10 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id 133sm293844pfy.14.2020.02.06.12.46.06
+        by smtp.gmail.com with ESMTPSA id v10sm292858pgk.24.2020.02.06.12.46.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:07 -0800 (PST)
-Received: (nullmailer pid 27633 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:30:53 -0000
-Date:   Thu, 6 Feb 2020 18:30:53 +0000
+        Thu, 06 Feb 2020 12:46:09 -0800 (PST)
+Received: (nullmailer pid 11196 invoked by uid 1000);
+        Thu, 06 Feb 2020 18:39:05 -0000
+Date:   Thu, 6 Feb 2020 18:39:05 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Cc:     linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: dts: imx7s: add snvs clock to pwrkey
-Message-ID: <20200206183053.GA27553@bogus>
-References: <20200130204516.4760-1-git@andred.net>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv2 1/2] dt-bindings: watchdog: Convert QCOM watchdog timer
+ bindings to YAML
+Message-ID: <20200206183905.GA11134@bogus>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200130204516.4760-1-git@andred.net>
+In-Reply-To: <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020 20:45:14 +0000, =?UTF-8?q?Andr=C3=A9=20Draszik?= wrote:
-> On i.MX7, the SNVS requires a clock. This is similar to the clock
-> bound to the SNVS RTC node, but if the SNVS RTC driver isn't enabled,
-> then SNVS doesn't work, and as such the pwrkey driver doesn't
-> work (i.e. hangs the kernel, as the clock isn't enabled).
+On Sat,  1 Feb 2020 20:59:48 +0530, Sai Prakash Ranjan wrote:
+> Convert QCOM watchdog timer bindings to DT schema format using
+> json-schema.
 > 
-> Also see commit ec2a844ef7c1
-> ("ARM: dts: imx7s: add snvs rtc clock")
-> for a similar fix.
-> 
-> Signed-off-by: André Draszik <git@andred.net>
-> Cc: Anson Huang <Anson.Huang@nxp.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: "Horia Geantă" <horia.geanta@nxp.com>
-> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
->  .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++
->  arch/arm/boot/dts/imx7s.dtsi                    |  2 ++
->  2 files changed, 19 insertions(+)
+>  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 ------------
+>  .../bindings/watchdog/qcom-wdt.yaml           | 44 +++++++++++++++++++
+>  2 files changed, 44 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
