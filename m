@@ -2,114 +2,143 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D9DC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0D0C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBF5217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29902217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="M/XsjuOE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H1a55yPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgBFI1d (ORCPT
+        id S1727881AbgBFI3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:27:33 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39635 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbgBFI1d (ORCPT
+        Thu, 6 Feb 2020 03:29:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35488 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727509AbgBFI3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:27:33 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so6017160wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:27:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=9kljaJ45DR7PK3QOBkDdJqbWjqa2Tn065YYQ2Cnf0cU=;
-        b=M/XsjuOEGL4+SDRcqZM4k7xs5BWiR5BWhcOiQUTN4Iq+uK335R0Z2fZKFz04p+ty8K
-         gmFnwUfDFrDM3vFLB0o0htXtQ/vl+TmeboSwIe3sdy0wEfuF+/2CSGUINcfyNQsmBOdw
-         7N4Vi1GfzzkciICyvJPRYNQ8KTus8C/ZJjmJ+ydKONjVr+Qx1Mw/h7HrQV9fJWk7cIl6
-         Ex2I3Tefye97+rhQIT6I1sAFpzfUVbzrWroMKin7AeFe3hTLyxKTLfkI3ie61CaRs1kC
-         VDLC1inK51KM0OS5tpeA/1yLAwRWhzdASQDKE0sgdDxI0ycsKoGx8kcC5B5C6mEvJGV7
-         yclQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=9kljaJ45DR7PK3QOBkDdJqbWjqa2Tn065YYQ2Cnf0cU=;
-        b=XaP/yWYSuPvqo9y3cocnmbmHc71QZa/lSfbJxWjPGh/rqedSPR1Ouci/TXYanPH5AY
-         FvVf+J//a39UUp5PYF/IbcxSXiSwH6ZmQOsVSkOuwB4HfuBI92NaKsXZKrAgElp+bmJj
-         +2II/2FudW+D7F6o7rZeOEIx3rdacJgAlcLbDArDVu4YJE1M29Z8oP48q4btOau3zXuT
-         o7AkgW7aZVpIeFxgXCiEL/4XqdmM+/rJD8wgS1y/JjQQOP73sK0KU8XdbGbM1hnhyg8X
-         zy4EeHOcZcuuDzTeCxo7Usw/AxQUYXeD94IVkmTbkthnwcu3tEF5rTIB0i1pvweE0KjF
-         j+hw==
-X-Gm-Message-State: APjAAAXADXBPkh+GX3CYxw9HQtxhERZCk/TyoyrUbI5nTqfuQISX6EoP
-        gVijtQYRZHoY4+FVEUjbdNki95kZ2Ik=
-X-Google-Smtp-Source: APXvYqx8yxt1KY4kzNaVuOxm7JyXWMOe8beX4W95UoZ08fJdBJtFC4At07M9rapBBTwcDh+bVp5smA==
-X-Received: by 2002:adf:dd46:: with SMTP id u6mr2376014wrm.13.1580977649868;
-        Thu, 06 Feb 2020 00:27:29 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id c13sm3320923wrn.46.2020.02.06.00.27.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:27:29 -0800 (PST)
-References: <20200205232802.29184-1-sboyd@kernel.org>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 0/4] clk_phase error caching problems
-In-reply-to: <20200205232802.29184-1-sboyd@kernel.org>
-Date:   Thu, 06 Feb 2020 09:27:28 +0100
-Message-ID: <1jtv44aznz.fsf@starbuckisacylon.baylibre.com>
+        Thu, 6 Feb 2020 03:29:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580977778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=tmBfyZu8JUKP6eH1jfCqX5u48/UqerhW2hGS86sF3A8=;
+        b=H1a55yPAwVthwoKeyT49nXLDspM8mf1cr7ec9Zzo3qclHFsrfi0s5y1c3IIQkHEQcBAfrG
+        ZGL/01DcDn38D5TfpEFYbaf81k7Ba8EAgtfZUcxKwvoCpHj+fnigJG4nXsehyywDkaTEmW
+        Lt26EJ6subY0clMqGEH1Ng3f10imPdk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-wsOMaCNYO3qzlCTcYWjvuA-1; Thu, 06 Feb 2020 03:29:34 -0500
+X-MC-Unique: wsOMaCNYO3qzlCTcYWjvuA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9FA6800D55;
+        Thu,  6 Feb 2020 08:29:33 +0000 (UTC)
+Received: from [10.36.117.188] (ovpn-117-188.ams2.redhat.com [10.36.117.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B820A5C1B0;
+        Thu,  6 Feb 2020 08:29:28 +0000 (UTC)
+Subject: Re: [PATCH] virtio_balloon: prevent pfn array overflow
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org
+References: <20200206074644.1177551-1-mst@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <7ccd0cff-b132-aa90-7117-5058df29810f@redhat.com>
+Date:   Thu, 6 Feb 2020 09:29:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200206074644.1177551-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06.02.20 08:47, Michael S. Tsirkin wrote:
+> Make sure, at build time, that pfn array is big enough to hold a single
+> page.  It happens to be true since the PAGE_SHIFT value at the moment is
+> 20, which is 1M - exactly 256 4K balloon pages.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  drivers/virtio/virtio_balloon.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 8e400ece9273..2457c54b6185 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -158,6 +158,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
+>  {
+>  	unsigned int i;
+>  
+> +	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
+> +
+>  	/*
+>  	 * Set balloon pfns pointing at this page.
+>  	 * Note that the first pfn points at start of the page.
+> 
 
-On Thu 06 Feb 2020 at 00:27, Stephen Boyd <sboyd@kernel.org> wrote:
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-> This patch series is a follow up to[1] which I sent out a few months
-> ago. We no longer cache the clk phase if it's an error value, so that
-> things like debugfs don't return us nonsense values for the phase.
->
-> Futhermore, the last patch fixes up the locking so that debugfs code
-> can avoid doing a recursive prepare lock because we know what we're
-> doing in that case. While we get some more functions, we avoid taking
-> the lock again.
->
-> Changes from v1:
->  * A pile of new patches
->  * Rebased to clk-next
->  * New patch to bail out of registration if getting the phase fails
+-- 
+Thanks,
 
-Series look good - comment on patch 1 is just a nitpick
-
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-
->
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
->
-> Stephen Boyd (4):
->   clk: Don't cache errors from clk_ops::get_phase()
->   clk: Use 'parent' to shorten lines in __clk_core_init()
->   clk: Move rate and accuracy recalc to mostly consumer APIs
->   clk: Bail out when calculating phase fails during clk registration
->
->  drivers/clk/clk.c | 119 +++++++++++++++++++++++++++-------------------
->  1 file changed, 70 insertions(+), 49 deletions(-)
->
-> [1] https://lkml.kernel.org/r/20191001174439.182435-1-sboyd@kernel.org
->
-> base-commit: 5df867145f8adad9e5cdf9d67db1fbc0f71351e9
+David / dhildenb
 
