@@ -2,150 +2,75 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7F3C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9685C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9FA218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7BF217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580996162;
+	bh=KQ1zNlhQGY64IHdB8I6m2LzafLRqPGfU8AX+YoBdzQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P+pnqeYN+p5jcpT1PCrGpVU2m1I4mOq3VB0K7PasnS+zenke9Ax7KdG0BsQN6wUBa
+	 sHwM0PIWWpD3hYLrC02EWOaH0AJ+SROqk10XiprGjGc7PgMudnHotKqLk/M8+RErms
+	 QpitjFmKqbA7kFcV6m6ZqO4zzTipMKQ3L1gZus3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgBFNfU (ORCPT
+        id S1727901AbgBFNgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:35:20 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2388 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727415AbgBFNfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:35:19 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 4AA88E637377685659F8;
-        Thu,  6 Feb 2020 13:35:17 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 6 Feb 2020 13:35:16 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Feb 2020
- 13:35:16 +0000
-Subject: Re: [PATCH v2] EDAC/mc: Fix use-after-free and memleaks during device
- removal
-To:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-CC:     Aristeu Rozanski <aris@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200205212444.10382-1-rrichter@marvell.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b5c40201-4521-b9c8-3adb-ee227bf2ffb4@huawei.com>
-Date:   Thu, 6 Feb 2020 13:35:15 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 6 Feb 2020 08:36:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgBFNgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:36:01 -0500
+Received: from localhost (unknown [122.178.198.215])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 330B22082E;
+        Thu,  6 Feb 2020 13:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580996161;
+        bh=KQ1zNlhQGY64IHdB8I6m2LzafLRqPGfU8AX+YoBdzQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kJBPHTJYzmbvrcRG634TwPmCRb2rG0lb2roFVEyErmRYAkCTzhIau1RYoal97rzba
+         n/QItxXcTNTsnRDzk1f8fEi7JAAGN3moK1meFBhESojb+HexZiMJ2XjAiPd42H8pLi
+         RmZzEcv7pEmtwCNcV4PfEZObyh/EXotjJCHKKoCk=
+Date:   Thu, 6 Feb 2020 19:05:54 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: fix a possible endless loop
+Message-ID: <20200206133554.GO2618@vkoul-mobl>
+References: <20200206132147.22874-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200205212444.10382-1-rrichter@marvell.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206132147.22874-1-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/02/2020 21:24, Robert Richter wrote:
-> A test kernel with the options set below revealed several issues when
-> removing a mci device:
-> 
->   DEBUG_TEST_DRIVER_REMOVE
->   KASAN
->   DEBUG_KMEMLEAK
-> 
-> Issues seen:
-> 
-> 1) Use-after-free:
-> 
-> On 27.11.19 17:07:33, John Garry wrote:
->> [   22.104498] BUG: KASAN: use-after-free in
->> edac_remove_sysfs_mci_device+0x148/0x180
-> 
-> The use-after-free is caused by the mci_for_each_dimm() iterator that
-> is called in edac_remove_sysfs_mci_device(). The iterator was
-> introduced with commit c498afaf7df8 ("EDAC: Introduce an
-> mci_for_each_dimm() iterator"). The iterator loop calls function
-> device_unregister(&dimm->dev), which removes the sysfs entry of the
-> device, but also frees the dimm struct in dimm_attr_release(). When
-> incrementing the loop in mci_for_each_dimm(), the dimm struct is
-> accessed again, but it is already freed.
-> 
-> The fix is to free all the mci device's subsequent dimm and csrow
-> objects at a later point when the mci device is freed. This keeps the
-> data structures intact and the mci device can be fully used until its
-> removal.
-> 
-> 2) Memory leaks:
-> 
-> Following memory leaks have been detected:
-> 
->   # grep edac /sys/kernel/debug/kmemleak | sort | uniq -c
->         1     [<000000003c0f58f9>] edac_mc_alloc+0x3bc/0x9d0      # mci->csrows
->        16     [<00000000bb932dc0>] edac_mc_alloc+0x49c/0x9d0      # csr->channels
->        16     [<00000000e2734dba>] edac_mc_alloc+0x518/0x9d0      # csr->channels[chn]
->         1     [<00000000eb040168>] edac_mc_alloc+0x5c8/0x9d0      # mci->dimms
->        34     [<00000000ef737c29>] ghes_edac_register+0x1c8/0x3f8 # see edac_mc_alloc()
-> 
-> All leaks are from memory created by edac_mc_alloc().
-> 
-> Note: The test above shows that edac_mc_alloc() was called here from
-> ghes_edac_register(), thus both functions show up in the stack dump,
-> but the driver causing the leaks is edac_mc. The comments with the
-> data structures involved were made manually by analyzing the objdump.
-> 
-> The data structures listed above and created by edac_mc_alloc() are
-> not properly removed during device removal, which is done in
-> edac_mc_free(). There are two paths implemented to remove the device
-> depending on device registration, _edac_mc_free() is called if the
-> device is not registered and edac_unregister_sysfs() otherwise. The
-> implemenations differ. For the sysfs case the mci device removal lacks
-> the removal of subsequent data structures (csrows, channels, dimms).
-> This causes the memory leaks (see mci_attr_release()).
-> 
-> Fixing this as follows:
-> 
-> Unify code and implement a mci_release() function which is used to
-> remove a struct mci regardless of the device registration status. Use
-> put_device() to release the struct. Free all subsequent data structs
-> of the mci's children in that release function. An effect of this is
-> that no data is freed in edac_mc_sysfs.c (except the "mc" sysfs root
-> node). All sysfs entries have the mci device as a parent, so its
-> refcount will keep the mci parent as long as sysfs entries exist. This
-> prevents struct mci from being freed until all sysfs entries have been
-> removed which is done in edac_remove_sysfs_mci_device(). With the
-> changes made the mci_for_each_dimm() loop is now save to release dimm
-> devices from sysfs.
-> 
-> The patch has been tested with the above kernel options, no issues
-> seen any longer.
-> 
-> Reported-by: John Garry <john.garry@huawei.com>
-> Fixes: c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator")
-> Fixes: faa2ad09c01c ("edac_mc: edac_mc_free() cannot assume mem_ctl_info is registered in sysfs.")
-> Fixes: 7a623c039075 ("edac: rewrite the sysfs code to use struct device")
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> Acked-by: Aristeu Rozanski <aris@redhat.com>
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
-> V2:
+On 06-02-20, 21:21, Dejin Zheng wrote:
+> It forgot to reduce the value of the variable retry in a while loop
+> in the ethqos_configure() function. It may cause an endless loop and
+> without timeout.
 
-Kasan warnings and leak reports are gone:
-Tested-by: John Garry <john.garry@huawei.com>
+Thanks for the fix.
 
-Cheers
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
+We should add:
+Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
 
+Also, I think this should be CCed stable
+
+-- 
+~Vinod
