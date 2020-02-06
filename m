@@ -2,164 +2,157 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3564C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C05C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F1A20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="amzS7/EU";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jF0XGycM"
+	by mail.kernel.org (Postfix) with ESMTP id 163E420838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgBFPMw (ORCPT
+        id S1727690AbgBFPM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:12:52 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:55088 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgBFPMw (ORCPT
+        Thu, 6 Feb 2020 10:12:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27734 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727518AbgBFPM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:12:52 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016FBR27164704;
-        Thu, 6 Feb 2020 15:11:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=VF7RaskOxU0ICZ79gQNL/Eu75aks0GZtpmw5lql+XJg=;
- b=amzS7/EUlZrHpzmfj17Wmz8LZ4A/44lO7mchUI4EM0hOlGYK8L1+KZXdzmt4uOO+GjrD
- s65TP17mIwS4eO9Wu0rmrR3JUIdvDi49Hcx9bOz5GO7SGGlFdvRZ5xjTXXtXJCDspRlu
- ykv3NQt4NR+WOhkA+fLho8wvhg8yNw4Aw5y9u4HAg3c6FLiBy4UIQrg8C6xtcT9gqWSg
- 6JD2BqDMdZfYDgAMVnR+ZG7Zwet1Km+reZYIHLmRd5FySVQOeRYnU/dsYL07nVIyEPOg
- hzPjPpTXM2tGbJCW7+QIeYhoDfbh7QVGnUBxHEiLyXvMifuGzTMIi4eDdEK048D1fanG YQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=VF7RaskOxU0ICZ79gQNL/Eu75aks0GZtpmw5lql+XJg=;
- b=jF0XGycMDLNNFvTGpuqoBUVhYzcGRIRutu5Qw5Yib5zQwbt8o/kTFMrJPnSerMlJMtNU
- W72VNtsHWAvjS+MHnqlyeZ1HKX/aP+XWIfoe4kOP01XYudVdekAddtzs/JPxX3RgTHbb
- gAVR4nnFeA/kG5yUBGbl++kwQzDCG8FZa+GB7RhwVkLTzuJZag9aJMWNw+sSXDuIgYYC
- yirUPNsbM/LgKCgTe19X0YxRk0OdXDG9YAZ9YG3LwgneSZjlnKUykv50JAKnAIPNy9mK
- oH1DHp98ZtNqT8nUMkHY3Z3yhaLuT0IjnrXljqKhkBU2o2BlbbppT3wbYnKqnsYf6tSB Uw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xykbpa9s5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 15:11:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016F9Hk3135230;
-        Thu, 6 Feb 2020 15:09:54 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2y0mnjteet-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 15:09:54 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016F9rmH026826;
-        Thu, 6 Feb 2020 15:09:53 GMT
-Received: from dhcp-10-175-186-149.vpn.oracle.com (/10.175.186.149)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Feb 2020 07:09:52 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     rostedt@goodmis.org, shuah@kernel.org, mhiramat@kernel.org
-Cc:     mingo@redhat.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        colin.king@canonical.com
-Subject: [PATCH 1/2] ftrace/selftests: workaround cgroup RT scheduling issues
-Date:   Thu,  6 Feb 2020 15:09:19 +0000
-Message-Id: <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002060116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002060116
+        Thu, 6 Feb 2020 10:12:57 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016F7xDb189415
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2020 10:12:56 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhnsnqwu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:12:41 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 6 Feb 2020 15:12:26 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Feb 2020 15:12:23 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016FCMTf47513742
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 15:12:22 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0AFBEAE05D;
+        Thu,  6 Feb 2020 15:12:22 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5B48AE04D;
+        Thu,  6 Feb 2020 15:12:21 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.61])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Feb 2020 15:12:21 +0000 (GMT)
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
+ crashes in KVM guests after reboot
+To:     eperezma@redhat.com
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>
+References: <c022e1d6-0d57-ae07-5e6b-8e40d3b01f4b@de.ibm.com>
+ <20191218100926-mutt-send-email-mst@kernel.org>
+ <2ffdbd95-e375-a627-55a1-6990b0a0e37a@de.ibm.com>
+ <20200106054041-mutt-send-email-mst@kernel.org>
+ <08ae8d28-3d8c-04e8-bdeb-0117d06c6dc7@de.ibm.com>
+ <20200107042401-mutt-send-email-mst@kernel.org>
+ <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+ <20200107065434-mutt-send-email-mst@kernel.org>
+ <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
+ <20200120012724-mutt-send-email-mst@kernel.org>
+ <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
+ <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Thu, 6 Feb 2020 16:12:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020615-0008-0000-0000-0000035057B5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020615-0009-0000-0000-00004A70EC21
+Message-Id: <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ mlxlogscore=787 bulkscore=0 priorityscore=1501 adultscore=0 suspectscore=1
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002060114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
-fail due to the chrt command returning:
 
- chrt: failed to set pid 0's policy: Operation not permitted.
 
-To work around this, temporarily disable grout RT scheduling
-during ftracetest execution.  Restore original value on
-test run completion.  With these changes in place, both
-tests consistently pass.
+On 06.02.20 15:22, eperezma@redhat.com wrote:
+> Hi Christian.
+> 
+> Could you try this patch on top of ("38ced0208491 vhost: use batched version by default")?
+> 
+> It will not solve your first random crash but it should help with the lost of network connectivity.
+> 
+> Please let me know how does it goes.
 
-Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
-Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- tools/testing/selftests/ftrace/ftracetest | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 063ecb2..3207bbf 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -29,8 +29,26 @@ err_ret=1
- # kselftest skip code is 4
- err_skip=4
- 
-+# cgroup RT scheduling prevents chrt commands from succeeding, which
-+# induces failures in test wakeup tests.  Disable for the duration of
-+# the tests.
-+sched_rt_runtime=$(sysctl -n kernel.sched_rt_runtime_us)
-+
-+set_sysctl() {
-+  sysctl -qw ${1}=${2} >/dev/null 2>&1
-+}
-+
-+setup() {
-+  set_sysctl kernel.sched_rt_runtime_us -1
-+}
-+
-+cleanup() {
-+  set_sysctl kernel.sched_rt_runtime_us $sched_rt_runtime
-+}
-+
- errexit() { # message
-   echo "Error: $1" 1>&2
-+  cleanup
-   exit $err_ret
- }
- 
-@@ -39,6 +57,8 @@ if [ `id -u` -ne 0 ]; then
-   errexit "this must be run by root user"
- fi
- 
-+setup
-+
- # Utilities
- absdir() { # file_path
-   (cd `dirname $1`; pwd)
-@@ -235,6 +255,7 @@ TOTAL_RESULT=0
- 
- INSTANCE=
- CASENO=0
-+
- testcase() { # testfile
-   CASENO=$((CASENO+1))
-   desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
-@@ -406,5 +427,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
- prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
- prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
- 
-+cleanup
-+
- # if no error, return 0
- exit $TOTAL_RESULT
--- 
-1.8.3.1
+38ced0208491 + this seem to be ok.
+
+Not sure if you can make out anything of this (and the previous git bisect log)
 
