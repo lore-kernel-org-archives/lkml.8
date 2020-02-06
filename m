@@ -2,130 +2,112 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CFDC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DA821741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B316721741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cft+KM4y";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dHf6zWpp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iAp/+gmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbgBFRb0 (ORCPT
+        id S1727822AbgBFRcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:31:26 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46186 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFRbZ (ORCPT
+        Thu, 6 Feb 2020 12:32:03 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48618 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBFRcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:31:25 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016HT02e086564;
-        Thu, 6 Feb 2020 17:30:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=K7CsAWV2I/Wti1tewqOHLMGUyy3ZOyrmWzgUJOIuDs8=;
- b=cft+KM4yzNXLP8s8te4EHuys/zL2HE6HROTBRYHZHoNua5cV5+sHx6ovQBIPmYrPVqob
- YWStUNHZsixtEZIy1FOK0rUSIHLRnn7aojxNXfWR8D6t9m+X8845KYOQS7Qk8Reudja+
- VYxh3ESrExFP0vPGvfvHSVOIeV01KhnBx1+njmsOwHO1XWcSfpoDtPKF2sYiEzRDMRtZ
- YODeQUYUiqPRA3RfMhtcGoIk5ajMqFavzbP3c+Sn73izq07LRlu25aADSwwkrHhgFqqW
- wNkyPzCdM2UKkpJOkvJA6T6Bkvx8Nf9XVQVoH0IcYo8Kf1IKN9oxMWin/RLqlWljEJpx Qg== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=K7CsAWV2I/Wti1tewqOHLMGUyy3ZOyrmWzgUJOIuDs8=;
- b=dHf6zWppr3Yia16MMaFkgbgR/O4RMxwWOWlQnBousthFxssHT7I0WbGPh3A5vDP3mWg3
- ADww0m2V2syA4CY2CDBHkT8OPLWOyd4rb/j7kt+0vBlocn3GUji+u42TAcBy7KSbZxJo
- +ZBySFbPx9okyIvV4sYJUSh9TFCAw2PMli3rW8gLNBlC1LY9Z/H/lcWhrShZPr1GPGWG
- 36N8x6XFCFDb2yMPwN5D85Q9ox0WUL7G03p1qzYBdq1rKsJsQtMmmntpe0fjghGiqU3Q
- lQ/uhEbusHi7lbyvB22hjYQW2cGB9yGMULLMblhEm7njR7PhIl308A75ysWYiw83LgmP Yw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xykbpk84s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 17:30:51 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016HTkeZ172387;
-        Thu, 6 Feb 2020 17:30:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2y0mnk3g76-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 17:30:51 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 016HUmfl017145;
-        Thu, 6 Feb 2020 17:30:48 GMT
-Received: from dhcp-10-65-154-237.vpn.oracle.com (/10.65.154.237)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Feb 2020 09:30:48 -0800
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [RFC PATCH 1/2] ima: Implement support for uncompressed module
- appended signatures
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-In-Reply-To: <fda8b3e4-e3aa-a83a-0ddc-8ec096e67316@linux.microsoft.com>
-Date:   Thu, 6 Feb 2020 10:30:45 -0700
-Cc:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, dhowells@redhat.com, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
-        tglx@linutronix.de, bauerman@linux.ibm.com, mpe@ellerman.id.au,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9347B826-F924-4625-89CF-713303D8336D@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
- <20200206164226.24875-2-eric.snowberg@oracle.com>
- <fda8b3e4-e3aa-a83a-0ddc-8ec096e67316@linux.microsoft.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-X-Mailer: Apple Mail (2.3273)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002060132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002060132
+        Thu, 6 Feb 2020 12:32:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5qqLfcCzZqb9lsXWveDQ2LL6r9oP/9a7+gTw/Jw44lg=; b=iAp/+gmvhiXYw+HT6nED2uCPqx
+        wcdbO7CICi5P3VZHW5Wk/M9cRq18evzlINEmuUVpP93Uf1fLMXQJfEdvUL27uigxWmZymgZJOEYQU
+        9awyC7PjBa0ZeZBouQlvObyti8zFjP4+j3bK1FwhoU9YZAN0PH/LZn6Fiq2OwjT44ECFAgXmJGBQM
+        fzM/gSkDxF1iAJU9ECU/v/t751cLc0q5NyaVt8NVY0CtYxypYBPYc6NsQJ57o+ef1+/HOG9aCgBwf
+        oC68OdKifGB3EAMArOVUSX5++WsSGODisyZSf4T7dnHGX/yHnvMuziWQO0EcZydkQF2pD/ACOFVeY
+        k+KH9nsg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izl0O-0006Yb-33; Thu, 06 Feb 2020 17:31:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 35A333016E5;
+        Thu,  6 Feb 2020 18:30:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB2962B813A87; Thu,  6 Feb 2020 18:31:53 +0100 (CET)
+Date:   Thu, 6 Feb 2020 18:31:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v6 6/6] locking/lockdep: Reuse freed chain_hlocks entries
+Message-ID: <20200206173153.GX14914@hirez.programming.kicks-ass.net>
+References: <20200206152408.24165-1-longman@redhat.com>
+ <20200206152408.24165-7-longman@redhat.com>
+ <20200206161640.GW14914@hirez.programming.kicks-ass.net>
+ <29fbb4c6-aa8f-f6ce-6115-232db5f2db52@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29fbb4c6-aa8f-f6ce-6115-232db5f2db52@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 06, 2020 at 12:08:20PM -0500, Waiman Long wrote:
+> On 2/6/20 11:16 AM, Peter Zijlstra wrote:
+> > On Thu, Feb 06, 2020 at 10:24:08AM -0500, Waiman Long wrote:
+> >> +static int alloc_chain_hlocks(int req)
+> >> +{
+> >> +	int bucket, curr, size;
+> >> +
+> >> +	/*
+> >> +	 * We rely on the MSB to act as an escape bit to denote freelist
+> >> +	 * pointers. Make sure this bit isn't set in 'normal' class_idx usage.
+> >> +	 */
+> >> +	BUILD_BUG_ON((MAX_LOCKDEP_KEYS-1) & CHAIN_BLK_FLAG);
+> >> +
+> >> +	init_data_structures_once();
+> >> +
+> >> +	if (nr_free_chain_hlocks < req)
+> >> +		return -1;
+> >> +
+> >> +	/*
+> >> +	 * We require a minimum of 2 (u16) entries to encode a freelist
+> >> +	 * 'pointer'.
+> >> +	 */
+> >> +	req = max(req, 2);
+> >> +	bucket = size_to_bucket(req);
+> >> +	curr = chain_block_buckets[bucket];
+> >> +
+> >> +	if (bucket && (curr >= 0)) {
+> >> +		del_chain_block(bucket, req, chain_block_next(curr));
+> >> +		return curr;
+> >> +	} else if (bucket) {
+> >> +		/* Try bucket 0 */
+> >> +		curr = chain_block_buckets[0];
+> >> +	}
+> > 	if (bucket) {
+> > 		if (curr >= 0) {
+> > 			del_chain_block(bucket, req, chain_block_next(curr));
+> > 			return curr;
+> > 		}
+> > 		/* Try bucket 0 */
+> > 		curr = chain_block_bucket[0];
+> > 	}
+> >
+> > reads much easier IMO.
+> 
+> Yes, that is simpler. I can send out an updated patch if you want, or
+> you can apply the change when you pull the patch.
 
-> On Feb 6, 2020, at 10:07 AM, Lakshmi Ramasubramanian =
-<nramas@linux.microsoft.com> wrote:
->=20
-> On 2/6/2020 8:42 AM, Eric Snowberg wrote:
->=20
->>  @@ -31,6 +32,7 @@ static const char * const =
-keyring_name[INTEGRITY_KEYRING_MAX] =3D {
->>  	".ima",
->>  #endif
->>  	".platform",
->> +	".builtin_trusted_keys",
->>  };
->>    #ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
->> @@ -45,8 +47,11 @@ static struct key *integrity_keyring_from_id(const =
-unsigned int id)
->>  		return ERR_PTR(-EINVAL);
->>    	if (!keyring[id]) {
->> -		keyring[id] =3D
->> -			request_key(&key_type_keyring, keyring_name[id], =
-NULL);
->> +		if (id =3D=3D INTEGRITY_KEYRING_KERNEL)
->> +			keyring[id] =3D VERIFY_USE_SECONDARY_KEYRING;
->=20
-> Since "Built-In Trusted Keyring" or "Secondary Trusted Keyring" is =
-used, would it be more appropriate to name this identifier =
-INTEGRITY_KEYRING_BUILTIN_OR_SECONDARY?
-
-I=E2=80=99m open to changing INTEGRITY_KEYRING_KERNEL to =
-INTEGRITY_KEYRING_BUILTIN_OR_SECONDARY if that seems more appropriate.
-
+I'll frob it. Thanks!
