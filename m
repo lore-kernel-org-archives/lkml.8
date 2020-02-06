@@ -2,100 +2,115 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7533AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C27AC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C26217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E171921741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rX4kb+AM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBSnrko3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBFNuQ (ORCPT
+        id S1728068AbgBFNu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:50:16 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38163 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgBFNuQ (ORCPT
+        Thu, 6 Feb 2020 08:50:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53330 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727060AbgBFNu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:50:16 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t6so2381108plj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 05:50:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q0BdBCYUrqfjFVvkubnw3NGbt6uVGwl1GZxSoEc+RNI=;
-        b=rX4kb+AMG78lYebzHJRfVvcxmA3l00utGJ/IQp5BSZdVR/x4OMKnpqV7sWo7ak+Ga9
-         MNFQI/d8MyqLIwL9ouHjSHS7Qw9MRKK+MGYK5ih7QBEtFs/fab0H+A41zxD1sEJL11km
-         3nq/A1NiO8ugrN74Qbt2Eow6Z1oWNIaBX/Ctf9l5VdOmXtNSEnciU76WCAed9mux4wUc
-         QxeDzHfZ+jgXkFnmQ9aRmla/nDVCX6GxaqJ9kluPqLN+uRdxTbqm177sv7Esy3u9CCVs
-         9ZgKWOEq+WphVA4ax9o2JBZcE3jiA4841NCfuIXT53GRBmBjESQ1vu67YH4lDm984qs6
-         E+Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q0BdBCYUrqfjFVvkubnw3NGbt6uVGwl1GZxSoEc+RNI=;
-        b=aJbYNdQ+Nf0iJrlYjM9KTl1vL6Kjdox+9N0lvs4EYD5WyZIkzqZuiWQAC49tw5coOB
-         +uRw7LXHU1CbUbh7F1DIefZt9/JyiIsYQ0bNtTcQHzkNA77QgduP5elXmcoWf6iKAPwn
-         pt5yN7MgGVboV5SF5VZKFC9fozQ9xhGKukPFZEjDED5j+6HGezRWxcL32hgIsjvHsTcv
-         5S7DLENYO/qgEeUMZcXk+X0iwRgx7bBtwwno31jBZVGNLcdcZYI74BSzfVfwSMdb17Oy
-         lbwPCUHueli8pclghPFPbu9gRfT2jZntGNCszd6i5mC7DtrgLxma/Svxv0u6hAEIs65v
-         qdEw==
-X-Gm-Message-State: APjAAAXN4/NuMaQ5y1o/+rnTriEIedD7D7UkAcdG7YfUZByVvJiiVHh3
-        EG79ViH2XToz3pmZ0d21b7I=
-X-Google-Smtp-Source: APXvYqxh0nu36Pb3x629QJnjPf4bdZYxMDEikt+yBm2PTf2zhnL7dcueTERFEmGVe0rmuy89raLMcQ==
-X-Received: by 2002:a17:90a:db0b:: with SMTP id g11mr4245600pjv.140.1580997015260;
-        Thu, 06 Feb 2020 05:50:15 -0800 (PST)
-Received: from localhost.localdomain ([49.207.56.20])
-        by smtp.gmail.com with ESMTPSA id y3sm3581126pff.52.2020.02.06.05.50.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 06 Feb 2020 05:50:14 -0800 (PST)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     support.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com
-Cc:     axel.lin@ingics.com, lgirdwood@gmail.com, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH] regulator: da9063: remove redundant return statement
-Date:   Thu,  6 Feb 2020 19:19:56 +0530
-Message-Id: <1580996996-28798-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Feb 2020 08:50:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580997027;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=W5cANr4eZW1Ze25yG7ClVn5wTKGraXdr9//7Uu9WkcI=;
+        b=EBSnrko3/QIMsqyTo04Xwt16qF0s80bfzoRuP5c1jcJv8dcB5IqXsZnXkDgfUiWyB6WnHQ
+        07HiIBIQJguOX8eur154PUbvGKD6BU/dZo/O+fYYUhLj9ShT2YXCFlN0neqB+axbqpQXNj
+        dx8zXVRB4/l/DNj+iomIsFd8tuO/lpM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-y_daEZWhN9CaDR13pcBrDw-1; Thu, 06 Feb 2020 08:50:23 -0500
+X-MC-Unique: y_daEZWhN9CaDR13pcBrDw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE93D18AB2E9;
+        Thu,  6 Feb 2020 13:50:21 +0000 (UTC)
+Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2BF0F5DA7D;
+        Thu,  6 Feb 2020 13:50:18 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 21:50:16 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
+Message-ID: <20200206135016.GA25537@MiWiFi-R3L-srv>
+References: <20200206125343.9070-1-richardw.yang@linux.intel.com>
+ <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The devm_request_threaded_irq() already returns 0 on success
-and negative error code on failure. So return from this itself
-can be used while preserving error log in case of failure.
+On 02/06/20 at 02:28pm, David Hildenbrand wrote:
+> On 06.02.20 13:53, Wei Yang wrote:
+> > When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
+> > doesn't work before sparse_init_one_section() is called. This leads to a
+> > crash when hotplug memory.
+> > 
+> > We should use memmap as it did.
+> > 
+> > Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> > CC: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  mm/sparse.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index 5a8599041a2a..2efb24ff8f96 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+> >  	 * Poison uninitialized struct pages in order to catch invalid flags
+> >  	 * combinations.
+> >  	 */
+> > -	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
+> > +	page_init_poison(memmap, sizeof(struct page) * nr_pages);
+> 
+> If you add sub-sections that don't fall onto the start of the section,
+> 
+> pfn_to_page(start_pfn) != memmap
+> 
+> and your patch would break that under SPARSEMEM_VMEMMAP if I am not wrong.
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
----
- drivers/regulator/da9063-regulator.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+It returns the pfn_to_page(pfn) from __populate_section_memmap() and
+assign to memmap in vmemmap case, how come it breaks anything. Correct
+me if I was wrong.
 
-diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
-index 2aceb3b..70554b0 100644
---- a/drivers/regulator/da9063-regulator.c
-+++ b/drivers/regulator/da9063-regulator.c
-@@ -867,12 +867,10 @@ static int da9063_regulator_probe(struct platform_device *pdev)
- 				NULL, da9063_ldo_lim_event,
- 				IRQF_TRIGGER_LOW | IRQF_ONESHOT,
- 				"LDO_LIM", regulators);
--	if (ret) {
-+	if (ret)
- 		dev_err(&pdev->dev, "Failed to request LDO_LIM IRQ.\n");
--		return ret;
--	}
- 
--	return 0;
-+	return ret;
- }
- 
- static struct platform_driver da9063_regulator_driver = {
--- 
-2.7.4
+> 
+> Instead of memmap, there would have to be something like
+> 
+> memmap + (start_pfn - SECTION_ALIGN_DOWN(start_pfn))
+> 
+> If I am not wrong :)
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
