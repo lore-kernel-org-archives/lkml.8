@@ -2,163 +2,282 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC13C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29CBC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D9D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C07217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c6aRcoHT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CvXrtfZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBFNzw (ORCPT
+        id S1728096AbgBFN4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:55:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32361 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726765AbgBFNzv (ORCPT
+        Thu, 6 Feb 2020 08:56:12 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14835 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727060AbgBFN4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:55:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580997349;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=yZyWFExahmIL+pKrIhPrnBOif7Zxf0rFgpyQk3nVZ80=;
-        b=c6aRcoHTOSenU/1oD+6Mt3xa+TTwf5GYW8kPSJ/TzFgG0rvJ2gRDjzUGR574jwIB0qYDHY
-        SCy0bRy1vGrHBOYXfGsrDC801q9Wd9ZESnGQN8FunTM3X9bDlsGAlHQwKoQyDA578Ow7R+
-        Edypdcycne8QyorxtvwoCNaWAdRdrVI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-jByo8eqyOOemEJTZ1mNJFQ-1; Thu, 06 Feb 2020 08:55:45 -0500
-X-MC-Unique: jByo8eqyOOemEJTZ1mNJFQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 6 Feb 2020 08:56:12 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580997371; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=vl/gIxiBZYHP/CySTb94sGV3BKfRnMZhF+th9yYcAsI=; b=CvXrtfZiEiVim+LVfW9vr6liEDAB8RwTXayHxSVWRKje74DZyX+XF3AVLiXjVFxtgAgTZ8CJ
+ nztgmXnFgJkxmSFCEH8LYWHaKV/MyD+NrIHeaAyExvoCGRMJ1ie2P60bkBUeerRZpXRMj8zU
+ ncV3mFVpLKRiFt4EkspKJBl8pes=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3c1af7.7f787ad0f570-smtp-out-n03;
+ Thu, 06 Feb 2020 13:56:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 33219C4479C; Thu,  6 Feb 2020 13:56:07 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54E891349A7;
-        Thu,  6 Feb 2020 13:55:44 +0000 (UTC)
-Received: from [10.36.118.128] (unknown [10.36.118.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B85315C1B0;
-        Thu,  6 Feb 2020 13:55:42 +0000 (UTC)
-Subject: Re: [PATCH] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200206125343.9070-1-richardw.yang@linux.intel.com>
- <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
- <20200206135016.GA25537@MiWiFi-R3L-srv>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <87bb4563-481d-cce9-b916-50a098558210@redhat.com>
-Date:   Thu, 6 Feb 2020 14:55:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200206135016.GA25537@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90B36C433CB;
+        Thu,  6 Feb 2020 13:56:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90B36C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V3 1/2] mfd: qcom-spmi-pmic: Convert bindings to .yaml format
+Date:   Thu,  6 Feb 2020 19:25:26 +0530
+Message-Id: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.02.20 14:50, Baoquan He wrote:
-> On 02/06/20 at 02:28pm, David Hildenbrand wrote:
->> On 06.02.20 13:53, Wei Yang wrote:
->>> When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
->>> doesn't work before sparse_init_one_section() is called. This leads to a
->>> crash when hotplug memory.
->>>
->>> We should use memmap as it did.
->>>
->>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>> CC: Dan Williams <dan.j.williams@intel.com>
->>> ---
->>>  mm/sparse.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/mm/sparse.c b/mm/sparse.c
->>> index 5a8599041a2a..2efb24ff8f96 100644
->>> --- a/mm/sparse.c
->>> +++ b/mm/sparse.c
->>> @@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->>>  	 * Poison uninitialized struct pages in order to catch invalid flags
->>>  	 * combinations.
->>>  	 */
->>> -	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
->>> +	page_init_poison(memmap, sizeof(struct page) * nr_pages);
->>
->> If you add sub-sections that don't fall onto the start of the section,
->>
->> pfn_to_page(start_pfn) != memmap
->>
->> and your patch would break that under SPARSEMEM_VMEMMAP if I am not wrong.
-> 
-> It returns the pfn_to_page(pfn) from __populate_section_memmap() and
-> assign to memmap in vmemmap case, how come it breaks anything. Correct
-> me if I was wrong.
+Convert the bindings from .txt to .yaml format.
 
-I'm sorry, I can't follow :) Can you elaborate?
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |  80 --------------
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    | 115 +++++++++++++++++++++
+ 2 files changed, 115 insertions(+), 80 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
 
-Was your comment targeted at why the old code cannot be broken or why
-this patch cannot be broken?
-
-
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+deleted file mode 100644
+index fffc8fd..0000000
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ /dev/null
+@@ -1,80 +0,0 @@
+-          Qualcomm SPMI PMICs multi-function device bindings
+-
+-The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
+-PMICs.  These PMICs use a QPNP scheme through SPMI interface.
+-QPNP is effectively a partitioning scheme for dividing the SPMI extended
+-register space up into logical pieces, and set of fixed register
+-locations/definitions within these regions, with some of these regions
+-specifically used for interrupt handling.
+-
+-The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
+-interfaced to the chip via the SPMI (System Power Management Interface) bus.
+-Support for multiple independent functions are implemented by splitting the
+-16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
+-each. A function can consume one or more of these fixed-size register regions.
+-
+-Required properties:
+-- compatible:      Should contain one of:
+-                   "qcom,pm8941",
+-                   "qcom,pm8841",
+-                   "qcom,pma8084",
+-                   "qcom,pm8019",
+-                   "qcom,pm8226",
+-                   "qcom,pm8110",
+-                   "qcom,pma8084",
+-                   "qcom,pmi8962",
+-                   "qcom,pmd9635",
+-                   "qcom,pm8994",
+-                   "qcom,pmi8994",
+-                   "qcom,pm8916",
+-                   "qcom,pm8004",
+-                   "qcom,pm8909",
+-                   "qcom,pm8950",
+-                   "qcom,pmi8950",
+-                   "qcom,pm8998",
+-                   "qcom,pmi8998",
+-                   "qcom,pm8005",
+-                   or generalized "qcom,spmi-pmic".
+-- reg:             Specifies the SPMI USID slave address for this device.
+-                   For more information see:
+-                   Documentation/devicetree/bindings/spmi/spmi.txt
+-
+-Required properties for peripheral child nodes:
+-- compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
+-
+-Optional properties for peripheral child nodes:
+-- interrupts:      Interrupts are specified as a 4-tuple. For more information
+-                   see:
+-                   Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+-- interrupt-names: Corresponding interrupt name to the interrupts property
+-
+-Each child node of SPMI slave id represents a function of the PMIC. In the
+-example below the rtc device node represents a peripheral of pm8941
+-SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
+-
+-Example:
+-
+-	spmi {
+-		compatible = "qcom,spmi-pmic-arb";
+-
+-		pm8941@0 {
+-			compatible = "qcom,pm8941", "qcom,spmi-pmic";
+-			reg = <0x0 SPMI_USID>;
+-
+-			rtc {
+-				compatible = "qcom,rtc";
+-				interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
+-				interrupt-names = "alarm";
+-			};
+-		};
+-
+-		pm8941@1 {
+-			compatible = "qcom,pm8941", "qcom,spmi-pmic";
+-			reg = <0x1 SPMI_USID>;
+-
+-			regulator {
+-				compatible = "qcom,regulator";
+-				regulator-name = "8941_boost";
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+new file mode 100644
+index 0000000..affc169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+@@ -0,0 +1,115 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/mfd/qcom,spmi-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm SPMI PMICs multi-function device bindings
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++  - Stephen Boyd <sboyd@codeaurora.org>
++
++description: |
++  The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
++  PMICs.  These PMICs use a QPNP scheme through SPMI interface.
++  QPNP is effectively a partitioning scheme for dividing the SPMI extended
++  register space up into logical pieces, and set of fixed register
++  locations/definitions within these regions, with some of these regions
++  specifically used for interrupt handling.
++
++  The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
++  interfaced to the chip via the SPMI (System Power Management Interface) bus.
++  Support for multiple independent functions are implemented by splitting the
++  16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
++  each. A function can consume one or more of these fixed-size register regions.
++
++properties:
++  compatible:
++    enum:
++      - qcom,pm8941
++      - qcom,pm8841
++      - qcom,pma8084
++      - qcom,pm8019
++      - qcom,pm8226
++      - qcom,pm8110
++      - qcom,pma8084
++      - qcom,pmi8962
++      - qcom,pmd9635
++      - qcom,pm8994
++      - qcom,pmi8994
++      - qcom,pm8916
++      - qcom,pm8004
++      - qcom,pm8909
++      - qcom,pm8950
++      - qcom,pmi8950
++      - qcom,pm8998
++      - qcom,pmi8998
++      - qcom,pm8005
++      - qcom,spmi-pmic
++
++  reg:
++    maxItems: 1
++    description:
++      Specifies the SPMI USID slave address for this device.
++      For more information see Documentation/devicetree/bindings/spmi/spmi.txt
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++    description:
++      Each child node of SPMI slave id represents a function of the PMIC. In the
++      example below the rtc device node represents a peripheral of pm8941
++      SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
++
++    properties:
++      compatible:
++        description:
++          Compatible of the PMIC device.
++
++      interrupts:
++        maxItems: 2
++        description:
++          Interrupts are specified as a 4-tuple. For more information
++          see Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++
++      interrupt-names:
++        description:
++          Corresponding interrupt name to the interrupts property
++
++    required:
++      - compatible
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    spmi {
++        compatible = "qcom,spmi-pmic-arb";
++        #address-cells = <2>;
++        #size-cells = <0>;
++
++       pm8941@0 {
++         compatible = "qcom,pm8941";
++         reg = <0x0 0x0>;
++
++         rtc {
++           compatible = "qcom,rtc";
++           interrupts = <0x0 0x61 0x1 0x1>;
++           interrupt-names = "alarm";
++         };
++       };
++
++       pm8941@1 {
++         compatible = "qcom,pm8941";
++         reg = <0x1 0x0>;
++
++         regulator {
++           compatible = "qcom,regulator";
++           regulator-name = "8941_boost";
++         };
++       };
++    };
++...
 -- 
-Thanks,
-
-David / dhildenb
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
