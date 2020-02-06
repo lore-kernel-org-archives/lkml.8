@@ -2,207 +2,153 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6593C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4522FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73463214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aF9yMTGP"
+	by mail.kernel.org (Postfix) with ESMTP id 1B782217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580983440;
+	bh=Hg4nfjOj1qAK61ueiJUQAoDHErrNERmZ2ORckrbMPRg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gwFZUwV3PTvNLFQT7FjpaIZpWEW+7I6/q8NMf+FbACLaGfufjj1ZjmfOmKetJ7DPj
+	 V4np6YYgFx4JykDp0zjbdtOJwxud6pqNjoBu4rCHBmFZI27EfflQJxY/ZTo3ZY46VT
+	 0ikwnhhwVz7lSZ8AbTqaXSgSnscSShn8Paik3HMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgBFKDL (ORCPT
+        id S1728353AbgBFKD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:03:11 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20800 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728064AbgBFKDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:03:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580983389;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=5B2vDrqJ8yh1lU2bY0g0W9/OapwSnDHZPbZW4gcPNJQ=;
-        b=aF9yMTGP3W70UEBXMtQbYfCz9l8icG8jtSHlUvZxqn06unZTjOyty2BA9NWUonAuXaC4x+
-        ii81RJF+c9Z/q/dFUfrGbKHxixsKF3OIjlj4vAz9qCNaBpmTv7R97u1UmaYz9Vl4hFnYjS
-        cQTYW9Ch2E8ylPxoop/RfW7uQxb449s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-71pbSiJdNPG6AXHEqCEU6w-1; Thu, 06 Feb 2020 05:03:04 -0500
-X-MC-Unique: 71pbSiJdNPG6AXHEqCEU6w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 6 Feb 2020 05:03:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbgBFKD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:03:59 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C029D19057A0;
-        Thu,  6 Feb 2020 10:03:02 +0000 (UTC)
-Received: from [10.36.117.188] (ovpn-117-188.ams2.redhat.com [10.36.117.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E9FE26571;
-        Thu,  6 Feb 2020 10:02:56 +0000 (UTC)
-Subject: Re: [PATCH] mm/hotplug: Adjust shrink_zone_span() to keep the old
- logic
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        mhocko@suse.com, osalvador@suse.de
-References: <20200206053912.1211-1-bhe@redhat.com>
- <7ecaf36f-9f70-05bd-05fc-6dec82b7d559@redhat.com>
- <20200206093530.GO8965@MiWiFi-R3L-srv>
- <f2b6b83d-8a96-2aef-f132-f66d7009df9c@redhat.com>
- <20200206100029.GP8965@MiWiFi-R3L-srv>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <9e5ccff5-faa4-837d-7cdb-d94b8b5870a8@redhat.com>
-Date:   Thu, 6 Feb 2020 11:02:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A31214AF;
+        Thu,  6 Feb 2020 10:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580983438;
+        bh=Hg4nfjOj1qAK61ueiJUQAoDHErrNERmZ2ORckrbMPRg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f+d6Z+rjgGmXa7P9Pk5HAzIdLSNlZ1lFl00wtvtnuShZL8x0RLl7WEzyRaytVmuD6
+         ol4N6nAbLsKVyOGMkjvT2xI/P0rLERv3jHPxZnMRZBThUUUkGzEPWZN5EWITFSrOil
+         jUc4tgt4TnFE9QE9j09qvon5HSI2iG9jAerpWsMk=
+Date:   Thu, 6 Feb 2020 10:03:54 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5 V2] staging: iio: adc: ad7192: removed spi_device_id
+Message-ID: <20200206100354.1dfae679@archlinux>
+In-Reply-To: <20200205171511.25912-4-alexandru.tachici@analog.com>
+References: <20200202162215.50915c83@archlinux>
+        <20200205171511.25912-1-alexandru.tachici@analog.com>
+        <20200205171511.25912-4-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200206100029.GP8965@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.02.20 11:00, Baoquan He wrote:
-> On 02/06/20 at 10:48am, David Hildenbrand wrote:
->> On 06.02.20 10:35, Baoquan He wrote:
->>> On 02/06/20 at 09:50am, David Hildenbrand wrote:
->>>> On 06.02.20 06:39, Baoquan He wrote:
->>>>> In commit 950b68d9178b ("mm/memory_hotplug: don't check for "all holes"
->>>>> in shrink_zone_span()"), the zone->zone_start_pfn/->spanned_pages
->>>>> resetting is moved into the if()/else if() branches, if the zone becomes
->>>>> empty. However the 2nd resetting code block may cause misunderstanding.
->>>>>
->>>>> So take the resetting codes out of the conditional checking and handling
->>>>> branches just as the old code does, the find_smallest_section_pfn()and
->>>>> find_biggest_section_pfn() searching have done the the same thing as
->>>>> the old for loop did, the logic is kept the same as the old code. This
->>>>> can remove the possible confusion.
->>>>>
->>>>> Signed-off-by: Baoquan He <bhe@redhat.com>
->>>>> ---
->>>>>  mm/memory_hotplug.c | 14 ++++++--------
->>>>>  1 file changed, 6 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->>>>> index 089b6c826a9e..475d0d68a32c 100644
->>>>> --- a/mm/memory_hotplug.c
->>>>> +++ b/mm/memory_hotplug.c
->>>>> @@ -398,7 +398,7 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
->>>>>  static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->>>>>  			     unsigned long end_pfn)
->>>>>  {
->>>>> -	unsigned long pfn;
->>>>> +	unsigned long pfn = zone->zone_start_pfn;
->>>>>  	int nid = zone_to_nid(zone);
->>>>>  
->>>>>  	zone_span_writelock(zone);
->>>>> @@ -414,9 +414,6 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->>>>>  		if (pfn) {
->>>>>  			zone->spanned_pages = zone_end_pfn(zone) - pfn;
->>>>>  			zone->zone_start_pfn = pfn;
->>>>> -		} else {
->>>>> -			zone->zone_start_pfn = 0;
->>>>> -			zone->spanned_pages = 0;
->>>>>  		}
->>>>>  	} else if (zone_end_pfn(zone) == end_pfn) {
->>>>>  		/*
->>>>> @@ -429,10 +426,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->>>>>  					       start_pfn);
->>>>>  		if (pfn)
->>>>>  			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
->>>>> -		else {
->>>>> -			zone->zone_start_pfn = 0;
->>>>> -			zone->spanned_pages = 0;
->>>>> -		}
->>>>> +	}
->>>>> +
->>>>> +	if (!pfn) {
->>>>> +		zone->zone_start_pfn = 0;
->>>>> +		zone->spanned_pages = 0;
->>>>>  	}
->>>>>  	zone_span_writeunlock(zone);
->>>>>  }
->>>>>
->>>>
->>>> So, what if your zone starts at pfn 0? Unlikely that we can actually
->>>> offline that, but still it is more confusing than the old code IMHO.
->>>> Then I prefer to drop the second else case as discussed instead.
->>>
->>> Hmm, pfn is initialized as zone->zone_start_pfn, does it matter?
->>> The impossible empty zone won't go wrong if it really happen.
->>>
->>
->> If you offline any memory block that belongs to the lowest zone
->> (zone->zone_start_pfn == 0) but does not fall on a boundary (so that you
->> can actually shrink), you would mark the whole zone offline. That's
->> broken unless I am missing something.
+On Wed, 5 Feb 2020 19:15:09 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+
+> This patch removes spi_device_id table and moves the
+> init data (id of the chip) in the .data field
+> of of_device_id table.
 > 
-> AFAIK, the page 0 is reserved. No valid zone can start at 0, only empty
-> zone is. Please correct me if I am wrong.
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 
-At least on x86 it indeed is :) So if this holds true for all archs
+Good.  A few comments inline that'll make this more compact.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/staging/iio/adc/ad7192.c | 29 +++++++++++++----------------
+>  1 file changed, 13 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+> index 8f2fa154876a..e75d808a2f41 100644
+> --- a/drivers/staging/iio/adc/ad7192.c
+> +++ b/drivers/staging/iio/adc/ad7192.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/err.h>
+>  #include <linux/sched.h>
+>  #include <linux/delay.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> @@ -876,8 +877,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id ad7192_of_match[];
 
-Thanks!
+Move the table rather than a forward reference?
 
+> +
+>  static int ad7192_probe(struct spi_device *spi)
+>  {
+> +	const struct of_device_id *match;
+>  	struct ad7192_state *st;
+>  	struct iio_dev *indio_dev;
+>  	int ret, voltage_uv = 0;
+> @@ -927,8 +931,12 @@ static int ad7192_probe(struct spi_device *spi)
+>  		goto error_disable_avdd;
+>  	}
+>  
+> +	match = of_match_device(ad7192_of_match, &spi->dev);
 
--- 
-Thanks,
+Can step the intermediate point by using of_device_get_match_data
 
-David / dhildenb
+> +	if (!match)
+> +		return -EINVAL;
+> +
+>  	spi_set_drvdata(spi, indio_dev);
+> -	st->devid = spi_get_device_id(spi)->driver_data;
+> +	st->devid = (unsigned long)match->data;
+>  	indio_dev->dev.parent = &spi->dev;
+>  	indio_dev->name = spi_get_device_id(spi)->name;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> @@ -1010,21 +1018,11 @@ static int ad7192_remove(struct spi_device *spi)
+>  	return 0;
+>  }
+>  
+> -static const struct spi_device_id ad7192_id[] = {
+> -	{"ad7190", ID_AD7190},
+> -	{"ad7192", ID_AD7192},
+> -	{"ad7193", ID_AD7193},
+> -	{"ad7195", ID_AD7195},
+> -	{}
+> -};
+> -
+> -MODULE_DEVICE_TABLE(spi, ad7192_id);
+> -
+>  static const struct of_device_id ad7192_of_match[] = {
+> -	{ .compatible = "adi,ad7190" },
+> -	{ .compatible = "adi,ad7192" },
+> -	{ .compatible = "adi,ad7193" },
+> -	{ .compatible = "adi,ad7195" },
+> +	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190},
+> +	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
+> +	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
+> +	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
+>  	{}
+>  };
+>  
+> @@ -1037,7 +1035,6 @@ static struct spi_driver ad7192_driver = {
+>  	},
+>  	.probe		= ad7192_probe,
+>  	.remove		= ad7192_remove,
+> -	.id_table	= ad7192_id,
+>  };
+>  module_spi_driver(ad7192_driver);
+>  
 
