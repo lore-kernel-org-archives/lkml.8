@@ -2,139 +2,213 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1EFC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2565C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D35720658
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BB0214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSAL6LD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgBFKRV (ORCPT
+        id S1728417AbgBFKSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:17:21 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:50450 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728263AbgBFKRV (ORCPT
+        Thu, 6 Feb 2020 05:18:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55025 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728064AbgBFKSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:17:21 -0500
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 6 Feb 2020 05:18:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580984332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qYx7nxy35oQa847aQrZyTE+tisI9xWrPZxJO4oWsCAg=;
+        b=iSAL6LD3QopjessPwfTfKGIUbw3wUCX9YSusR1G2rwFfBpwjO4cnNbP3afrhPlRH1cOsUQ
+        cprJOvqUGup//C+xE5gUgKNkWVtYDiFaTS6p/Kv7MioLRqPXUv4P52b6UWX6LUm7/k5fif
+        DzkJ4s9qILTrhTMTCIQb7RemBf8MuO0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-HKibw01BPSaRy8qccL2PHQ-1; Thu, 06 Feb 2020 05:18:48 -0500
+X-MC-Unique: HKibw01BPSaRy8qccL2PHQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 167B167A900;
-        Thu,  6 Feb 2020 11:17:16 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 6 Feb 2020
- 11:17:15 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Thu, 6 Feb 2020 11:17:15 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work
- on i.mx8mm
-Thread-Topic: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work
- on i.mx8mm
-Thread-Index: AQHVctvU4cuMSjzwIEqWCaN8EgDgaac8IOgAgAA51YCAAks3gIDQEMQA
-Date:   Thu, 6 Feb 2020 10:17:15 +0000
-Message-ID: <862c498f-3c15-fac4-4f17-a30c2e11bb3e@kontron.de>
-References: <20190610081753.11422-12-yibin.gong@nxp.com>
- <29cf9f29-bdb4-94db-00b0-56ec36386f7a@kontron.de>
- <VE1PR04MB6638639EF4F580E04689538E89870@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <1307d229-4c49-80e3-04ba-377c0caeae9c@kontron.de>
- <VE1PR04MB6638B066EE28781A3C21973D89810@VE1PR04MB6638.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB6638B066EE28781A3C21973D89810@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D04AC711B1A41C4A8E13C635F1736633@snt-world.com>
-Content-Transfer-Encoding: base64
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5945D8010F6;
+        Thu,  6 Feb 2020 10:18:46 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81F21790E7;
+        Thu,  6 Feb 2020 10:18:38 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 18:18:33 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Salman Qazi <sqazi@google.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O
+ scheduler in one go
+Message-ID: <20200206101833.GA20943@ming.t460p>
+References: <20200205045526.GA15286@ming.t460p>
+ <20200205195706.49438-1-sqazi@google.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 167B167A900.A2B18
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, vkoul@kernel.org,
-        yibin.gong@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205195706.49438-1-sqazi@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIDI3LjA5LjE5IDAzOjU1LCBSb2JpbiBHb25nIHdyb3RlOg0KPiBPbiAyMDE5LTkt
-MjUgMjI6NTMgU2NocmVtcGYgRnJpZWRlciA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPiB3
-cm90ZToNCj4+IE9uIDI1LjA5LjE5IDEzOjI2LCBSb2JpbiBHb25nIHdyb3RlOg0KPj4+IE9uIDIw
-MTktOS0yNCAyMToyOCBTY2hyZW1wZiBGcmllZGVyIDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24u
-ZGU+DQo+PiB3cm90ZToNCj4+Pj4NCj4+Pj4gSGkgUm9iaW4sDQo+Pj4+DQo+Pj4+PiBGcm9tOiBS
-b2JpbiBHb25nIDx5aWJpbi5nb25nIGF0IG54cC5jb20+DQo+Pj4+Pg0KPj4+Pj4gQmVjYXVzZSB0
-aGUgbnVtYmVyIG9mIGVjc3BpMSByeCBldmVudCBvbiBpLm14OG1tIGlzIDAsIHRoZSBjb25kaXRp
-b24NCj4+Pj4+IGNoZWNrIGlnbm9yZSBzdWNoIHNwZWNpYWwgY2FzZSB3aXRob3V0IGRtYSBjaGFu
-bmVsIGVuYWJsZWQsIHdoaWNoDQo+Pj4+PiBjYXVzZWQNCj4+Pj4+IGVjc3BpMSByeCB3b3JrcyBm
-YWlsZWQuIEFjdHVhbGx5LCBubyBuZWVkIHRvIGNoZWNrDQo+Pj4+PiBldmVudF9pZDAvZXZlbnRf
-aWQxIGFuZCByZXBsYWNlIGNoZWNraW5nICdldmVudF9pZDEnIHdpdGgNCj4+Pj4+ICdETUFfREVW
-X1RPX0RFVicsIHNvIHRoYXQgY29uZmlndXJlDQo+Pj4+PiBldmVudF9pZDEgb25seSBpbiBjYXNl
-IERFVl9UT19ERVYuDQo+Pj4+Pg0KPj4+Pj4gU2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWli
-aW4uZ29uZyBhdCBueHAuY29tPg0KPj4+Pj4gQWNrZWQtYnk6IFZpbm9kIEtvdWwgPHZrb3VsIGF0
-IGtlcm5lbC5vcmc+DQo+Pj4+DQo+Pj4+IEkgaGF2ZSBhIGN1c3RvbSBib2FyZCB3aXRoIGkuTVg4
-TU0gYW5kIFNQSSBmbGFzaCBvbiBlY3NwaTEuIEknbQ0KPj4+PiBjdXJyZW50bHkgdGVzdGluZyB3
-aXRoIHY1LjMgYW5kIGFzIFNQSSBkaWRuJ3Qgd29yaywgSSB0cmllZCB0d28gZGlmZmVyZW50DQo+
-PiB0aGluZ3M6DQo+Pj4+DQo+Pj4+IDEuIFJlbW92aW5nICdkbWFzJyBhbmQgJ2RtYS1uYW1lcycg
-ZnJvbSB0aGUgZWNzcGkxIG5vZGUgaW4NCj4+IGlteDhtbS5kdHNpLA0KPj4+PiAgICAgICB0byB1
-c2UgUElPIGluc3RlYWQgb2YgRE1BLiBUaGlzIHdvcmtzIGFzIGV4cGVjdGVkIGFuZCB0aGUgZHJp
-dmVyDQo+Pj4+ICAgICAgIGJvb3RzIHdpdGggdGhlIGZvbGxvd2luZyBtZXNzYWdlczoNCj4+Pj4N
-Cj4+Pj4gICAgICAgICAgIHNwaV9pbXggMzA4MjAwMDAuc3BpOiBkbWEgc2V0dXAgZXJyb3IgLTE5
-LCB1c2UgcGlvDQo+Pj4+ICAgICAgICAgICBtMjVwODAgc3BpMC4wOiBteDI1djgwMzVmICgxMDI0
-IEtieXRlcykNCj4+Pj4gICAgICAgICAgIHNwaV9pbXggMzA4MjAwMDAuc3BpOiBwcm9iZWQNCj4+
-Pj4NCj4+Pj4gMi4gQXBwbHlpbmcgeW91ciBwYXRjaHNldCBhbmQgdXNlIERNQS4gSW4gdGhpcyBj
-YXNlLCB0aGUgZmxhc2ggYWxzbw0KPj4+PiAgICAgICB3b3JrcyBmaW5lLCBidXQgdGhlcmUgYXJl
-IHNvbWUgZXJyb3IgbWVzc2FnZXMgcHJpbnRlZCB3aGlsZQ0KPj4gYm9vdGluZzoNCj4+Pj4NCj4+
-Pj4gICAgICAgICAgIHNwaV9tYXN0ZXIgc3BpMDogSS9PIEVycm9yIGluIERNQSBSWA0KPj4+PiAg
-ICAgICAgICAgbTI1cDgwIHNwaTAuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMA0KPj4+PiAg
-ICAgICAgICAgc3BpX21hc3RlciBzcGkwOiBmYWlsZWQgdG8gdHJhbnNmZXIgb25lIG1lc3NhZ2Ug
-ZnJvbSBxdWV1ZQ0KPj4+PiAgICAgICAgICAgbTI1cDgwIHNwaTAuMDogbXgyNXY4MDM1ZiAoMTAy
-NCBLYnl0ZXMpDQo+Pj4+ICAgICAgICAgICBzcGlfaW14IDMwODIwMDAwLnNwaTogcHJvYmVkDQo+
-Pj4+DQo+Pj4+IEl0IHdvdWxkIGJlIGdyZWF0IHRvIGdldCB5b3VyIHBhdGNoZXMgbWVyZ2VkIGFu
-ZCBmaXggU1BJICsgRE1BLCBidXQNCj4+Pj4gZm9yIGkuTVg4TU0sIHdlIG5lZWQgdG8gZ2V0IHJp
-ZCBvZiB0aGUgZXJyb3IgbWVzc2FnZXMuIERvIHlvdSBoYXZlIGFuDQo+Pj4+IGlkZWEsIHdoYXQn
-cyB3cm9uZz8NCj4+DQo+Pj4gQ291bGQgeW91IGNoZWNrIGlmIHRoZSBsZW5ndGggb2Ygc3BpIG1l
-c3NhZ2UgaXMgYmlnZ2VyIHRoYW4gZmlmb19zaXplDQo+Pj4gZHVyaW5nIHNwaV9ub3IgcHJvYmU/
-IElmIHllcywgYXQgdGhhdCB0aW1lIG1heWJlIHNkbWEgZmlybXdhcmUgbm90IGxvYWRlZC4NCj4+
-PiBpZiAodHJhbnNmZXItPmxlbiA8IHNwaV9pbXgtPmRldnR5cGVfZGF0YS0+Zmlmb19zaXplKQ0K
-Pj4NCj4+IEluZGVlZCwgbW9zdCBvZiB0aGUgdHJhbnNmZXJzIHRyaWdnZXJlZCBieSB0aGUgU1BJ
-IE5PUiBkaXJ2ZXIgYXJlIGJlbG93DQo+PiBmaWZvX3NpemUgYW5kIHdvcmsgZmluZSwgYnV0IHNv
-bWUgYXJlIGJpZ2dlci4gVGhlIHRyYW5zZmVycyB0aGVyZWZvcmUgdHJ5IHRvDQo+PiB1c2UgRE1B
-LCBidXQgdGhlIGZpcm13YXJlIGlzIG5vdCBsb2FkZWQgeWV0Lg0KPj4NCj4+IEhvdyBpcyB0aGlz
-IHN1cHBvc2VkIHRvIHdvcms/IFNob3VsZG4ndCBhbGwgdHJhbnNmZXJzIHVzZSBQSU8gYXMgbG9u
-ZyBhcyB0aGUNCj4+IFNETUEgZmlybXdhcmUgaXMgbm90IGxvYWRlZCB5ZXQ/DQo+IFllcywgZm9y
-IGVjc3BpIHNob3VsZCB3b3JrIHdpdGggcmFtIHNjcmlwdCwgaXQncyBiZXR0ZXIgY2hlY2sgaWYg
-c2RtYSBmaXJtd2FyZQ0KPiBpcyByZWFkeSBpbiBzcGlfaW14X2RtYV9jb25maWd1cmUoKSwgbmVl
-ZCBtb2RpZmljYXRpb24gaW4gc2RtYSBkcml2ZXIgdG9vLg0KPiBJJ2xsIGNyZWF0ZSBhbm90aGVy
-IHBhdGNoIGFmdGVyIHRoaXMgcGF0Y2ggc2V0IGFjY2VwdGVkLg0KDQpUaGlzIHN0aWxsIHNlZW1z
-IHRvIGJlIGJyb2tlbiB1cHN0cmVhbS4gSXMgYW55b25lIHdvcmtpbmcgb24gZml4aW5nIFNQSSAN
-CisgRE1BIGZvciBpLk1YOE1NPyBPdGhlcndpc2UgSSB3aWxsIHNlbmQgYSBwYXRjaCB0aGF0IHJl
-bW92ZXMgdGhlIERNQSANCmZyb20gdGhlIGVjc3BpIG5vZGVzIGluIHRoZSBkZXZpY2V0cmVlLg0K
-DQpUaGFua3MsDQpGcmllZGVy
+On Wed, Feb 05, 2020 at 11:57:06AM -0800, Salman Qazi wrote:
+> Flushes bypass the I/O scheduler and get added to hctx->dispatch
+> in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+> hctx->run_work work item and is past the point in
+> blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
+> 
+> The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+> because the I/O scheduler can feed an arbitrary number of commands.
+> 
+> Since we have only one hctx->run_work, the commands waiting in
+> hctx->dispatch will wait an arbitrary length of time for run_work to be
+> rerun.
+> 
+> A similar phenomenon exists with dispatches from the software queue.
+> 
+> The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+> blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+> rerun.
+> 
+> Signed-off-by: Salman Qazi <sqazi@google.com>
+> ---
+>  block/blk-mq-sched.c | 37 +++++++++++++++++++++++++++++++------
+>  1 file changed, 31 insertions(+), 6 deletions(-)
+> 
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index ca22afd47b3d..52249fddeb66 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -84,12 +84,16 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+>   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+>   * its queue by itself in its completion handler, so we don't need to
+>   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+> + *
+> + * Returns true if hctx->dispatch was found non-empty and
+> + * run_work has to be run again.
+>   */
+> -static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> +static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  {
+>  	struct request_queue *q = hctx->queue;
+>  	struct elevator_queue *e = q->elevator;
+>  	LIST_HEAD(rq_list);
+> +	bool ret = false;
+>  
+>  	do {
+>  		struct request *rq;
+> @@ -97,6 +101,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+>  			break;
+>  
+> +		if (!list_empty_careful(&hctx->dispatch)) {
+> +			ret = true;
+> +			break;
+> +		}
+> +
+>  		if (!blk_mq_get_dispatch_budget(hctx))
+>  			break;
+>  
+> @@ -113,6 +122,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  		 */
+>  		list_add(&rq->queuelist, &rq_list);
+>  	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+> +
+> +	return ret;
+>  }
+>  
+>  static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+> @@ -130,16 +141,25 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+>   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+>   * its queue by itself in its completion handler, so we don't need to
+>   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+> + *
+> + * Returns true if hctx->dispatch was found non-empty and
+> + * run_work has to be run again.
+>   */
+> -static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+> +static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+>  {
+>  	struct request_queue *q = hctx->queue;
+>  	LIST_HEAD(rq_list);
+>  	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
+> +	bool ret = false;
+>  
+>  	do {
+>  		struct request *rq;
+>  
+> +		if (!list_empty_careful(&hctx->dispatch)) {
+> +			ret = true;
+> +			break;
+> +		}
+> +
+>  		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+>  			break;
+>  
+> @@ -165,6 +185,7 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+>  	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+>  
+>  	WRITE_ONCE(hctx->dispatch_from, ctx);
+> +	return ret;
+>  }
+>  
+>  void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> @@ -172,6 +193,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+>  	struct request_queue *q = hctx->queue;
+>  	struct elevator_queue *e = q->elevator;
+>  	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
+> +	bool run_again = false;
+>  	LIST_HEAD(rq_list);
+>  
+>  	/* RCU or SRCU read lock is needed before checking quiesced flag */
+> @@ -208,19 +230,22 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+>  		blk_mq_sched_mark_restart_hctx(hctx);
+>  		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+>  			if (has_sched_dispatch)
+> -				blk_mq_do_dispatch_sched(hctx);
+> +				run_again = blk_mq_do_dispatch_sched(hctx);
+>  			else
+> -				blk_mq_do_dispatch_ctx(hctx);
+> +				run_again = blk_mq_do_dispatch_ctx(hctx);
+>  		}
+>  	} else if (has_sched_dispatch) {
+> -		blk_mq_do_dispatch_sched(hctx);
+> +		run_again = blk_mq_do_dispatch_sched(hctx);
+>  	} else if (hctx->dispatch_busy) {
+>  		/* dequeue request one by one from sw queue if queue is busy */
+> -		blk_mq_do_dispatch_ctx(hctx);
+> +		run_again = blk_mq_do_dispatch_ctx(hctx);
+>  	} else {
+>  		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+>  		blk_mq_dispatch_rq_list(q, &rq_list, false);
+>  	}
+> +
+> +	if (run_again)
+> +		blk_mq_run_hw_queue(hctx, true);
+
+One improvement may be to run again locally in this function by
+limited times(such as 1) first, then switch to blk_mq_run_hw_queue()
+if run again is still needed.
+
+This way may save one async run hw queue.
+
+Thanks,
+Ming
+
