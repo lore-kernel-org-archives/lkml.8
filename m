@@ -2,86 +2,104 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4707DC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BD9C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECE921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022038;
-	bh=scZ6gvM4fDZ8bKwOqo6zd/bAlIB8tkl+0YZp5Tp7RVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tjNpSagEXUjCJ6SDQkDF7tRihJmTpXS8aL+EkG6CSKKNgcXNsMrQyvf6e1xXsAlWm
-	 Du2UOUk9t4RGAWCL5cbyQ2pHOue6EWcXJFgE9FDCHQdeZdiSOvI71EtoxS9rYlEuYb
-	 TViQfJb0hvml1T7FyiBoPe5h38b3IXgI3/Ru9JVs=
+	by mail.kernel.org (Postfix) with ESMTP id A2B4A21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fV8krVOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgBFUpk (ORCPT
+        id S1727874AbgBFUvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:40 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35114 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgBFUpi (ORCPT
+        Thu, 6 Feb 2020 15:51:04 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39736 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBFUvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:45:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y73so60853pfg.2;
-        Thu, 06 Feb 2020 12:45:36 -0800 (PST)
+        Thu, 6 Feb 2020 15:51:03 -0500
+Received: by mail-qt1-f195.google.com with SMTP id c5so184820qtj.6;
+        Thu, 06 Feb 2020 12:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pJ+PCl9owsjzMtwfpKCLj2al72aKvWc2eFjTPYl02mY=;
+        b=fV8krVOK0ci36HGl7TfYuz7ULLZR/ooTXleCyIgs6mElCaaqyYsm4dmXsd6KlExdxl
+         rD8CkhqIqwWxSGVrNr2aYasuFkfaQSULuVQ2BmPn2hlbEa4X7nqzRqX5nype+v1zRwpE
+         sAXOEPcXWrV7UwbpeJ72eKe10WYAXJWLiDrE4U1k/tQffqp4odhs1Oj52PlFnTCoCzrg
+         hO4UHWRRTNRZsbV3t8OqouMcm+5HDzoS3tgqbctpRp4Df8Ls4XhRzbci89K7KRndG5fR
+         9Prv5vkmsfnKYIgVkso4dpmJNvF5CrMnXnGsiGVbctqQEURLhRKWJS5ctnF2P71cT70Z
+         K9oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p3IMIbr/J9CTW2/B2PDo91i8UjkmasWwxiEZYW81UxQ=;
-        b=rF0rqyQDa4P9YFcwRjqnRA0YMozYq0fcTwY67TcCRJDdrIDQMPh1ltUSjYvAeKwau6
-         LeJyF8HmGsKRf+Jmmrm6jRofhv9zh6zyfxx3yGhLMmcJXm88MrIF+cW5Fn54H+dhPwLa
-         NrAg8CaElGLvEYN5RTI1FYRI3sbTqAc60edagJoI4hfB9YWSTYTmtt9mXF8sH5+uo/QW
-         ZIyZe1WeyzbEmfokgbo2IctLWbGEQrvSxh+im1q43wNFkQuVvxoLnR65tqlGWLZFTzgm
-         7uvXvFyu1ic0PAl/Wds9zXxE8BIkeMNuQvV2O4EtVWSEbRafS6ulhlqI2aBkbriWl8mo
-         1bNA==
-X-Gm-Message-State: APjAAAUuCWNFyeUfpesue2AA5psmQcm+kBnvh/9jP6NfvugaC8pQIDHL
-        FfqMEgj8XKM5i929JlMmIQ==
-X-Google-Smtp-Source: APXvYqzPL+ZDB178qEFY2njUEyFS57NH70RPQPC702j/FcQGVNzk0fFb3Yshxc5YmsTqVemI7K/DHg==
-X-Received: by 2002:a63:4c60:: with SMTP id m32mr5523373pgl.433.1581021936531;
-        Thu, 06 Feb 2020 12:45:36 -0800 (PST)
-Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id i66sm282634pfg.85.2020.02.06.12.45.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:35 -0800 (PST)
-Received: (nullmailer pid 19744 invoked by uid 1000);
-        Thu, 06 Feb 2020 19:10:57 -0000
-Date:   Thu, 6 Feb 2020 19:10:57 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: regulator: add document bindings for
- mp5416
-Message-ID: <20200206191057.GA19653@bogus>
-References: <20200204110419.25933-1-sravanhome@gmail.com>
- <20200204110419.25933-2-sravanhome@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pJ+PCl9owsjzMtwfpKCLj2al72aKvWc2eFjTPYl02mY=;
+        b=Pfy9wJI+6yt4pYCSWcVVAXG2q3JAB3jsiNe9Y6ANBmgSR5gRPZoPefTEsfOTAm9vdJ
+         XBM8B3DhNR08iweUOTwAod5RwNO63bhoz1OmAYTEC3hX8TshmkNY8qqvRLxdZUqSweXX
+         6iYf0kBOpYODW5Ce/tqgEU3DNQ9B1HD1lyDEkABGfdycw++i0xoQ12ELfsi0StuQ5X5T
+         D7sujwdLZYiqYge9NONBp+gLK2OtYJDDqA4Wn5kaCljXeHqWnDHUVd4bv0M6JxVHDRlp
+         jmwyxkzyveAS0zPb3wxK6R64519JlVdU6oyHgdWYpEa6ZY8pL8N5vaeTO6wEQX6V31Gf
+         r2fg==
+X-Gm-Message-State: APjAAAXxCc2eMLUNpsgvxTIfniREYo9NcwQdiT80bfmoJu3t1UR5TIbT
+        a1FYcAtSjtDywnBS271+Ybd9d9333tOtgYtz+g==
+X-Google-Smtp-Source: APXvYqx9s64pEdRcqjTxq93/s2ysYPXRLujSqv+wEkib9QEYCZ3+b1DPRKRQwp8VMGTJH9ZiVM+Bt4zL0nLvhfNuKuM=
+X-Received: by 2002:ac8:5513:: with SMTP id j19mr4454880qtq.143.1581022260994;
+ Thu, 06 Feb 2020 12:51:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204110419.25933-2-sravanhome@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200206083418.3a6025f6@canb.auug.org.au> <20200206163019.CCE0E214AF@mail.kernel.org>
+In-Reply-To: <20200206163019.CCE0E214AF@mail.kernel.org>
+From:   Rob Herring <robherring2@gmail.com>
+Date:   Thu, 6 Feb 2020 13:50:46 -0700
+Message-ID: <CAL_JsqKxJ9T9a9sDUdVnHgmk5B=24KcXgXm3808EWf-NY=sq7g@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the clk tree with the
+ devicetree-fixes tree
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  4 Feb 2020 12:04:17 +0100, Saravanan Sekar wrote:
-> Add device tree binding information for mp5416 regulator driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  .../bindings/regulator/mps,mp5416.yaml        | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
-> 
+On Thu, Feb 6, 2020 at 9:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Stephen Rothwell (2020-02-05 13:34:18)
+> > Hi all,
+> >
+> > Today's linux-next merge of the clk tree got conflicts in:
+> >
+> >   Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml
+> >   Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> >
+> > between commit:
+> >
+> >   04dbd86539fd ("dt-bindings: Fix paths in schema $id fields")
+> >
+> > from the devicetree-fixes tree and commits:
+> >
+> >   e6747e24f15d ("dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998")
+> >   8cff43d46cfc ("dt-bindings: clock: Cleanup qcom,videocc bindings for sdm845/sc7180")
+> >
+> > from the clk tree.
+> >
+> > I fixed it up (the latter changes seem to have included the former,
+> > plus I removed Documentation/devicetree/bindings/clock/qcom,gpucc.yaml)
+> > and can carry the fix as necessary.
+>
+> Thanks Stephen. Rob, you may want to drop the change to qcom,gpucc.yaml
+> so that conflicts are reduced.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It's already in Linus' master.
+
+Rob
