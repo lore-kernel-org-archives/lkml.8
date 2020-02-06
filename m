@@ -2,96 +2,130 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62992C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87FDC352A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A72D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFFA20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qv5ntAM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgBFC1q (ORCPT
+        id S1727669AbgBFCkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 21:27:46 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10155 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbgBFC1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 21:27:46 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D2F2FD7277A99D30D65F;
-        Thu,  6 Feb 2020 10:27:42 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Feb 2020
- 10:27:32 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: nVMX: Fix some comment typos and coding style
-Date:   Thu, 6 Feb 2020 10:29:22 +0800
-Message-ID: <1580956162-5609-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 5 Feb 2020 21:40:07 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36554 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727548AbgBFCkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 21:40:07 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580956806; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=x3250bc90bbLo/8nZIXvtLUJ7DKa2tZzcGBIY7u8bik=;
+ b=Qv5ntAM929Si9SDcpTuCy9uw0QcJske/k08xOYdDv9/k8Zcb+fkYXx1uFr8+sDRp3jG8+Y71
+ lPQkIj2TlnEaQIiMey1bqbqbYvHIZ2n5Gb7tq5UMvHmCIstROic+Xn5RdBEAFH5JZ5BHMahy
+ sQmkAOc1auNIJRV7sRcuPAYpwvo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3b7c80.7f99b82640a0-smtp-out-n03;
+ Thu, 06 Feb 2020 02:40:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 75EDEC447A4; Thu,  6 Feb 2020 02:39:58 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9CEAFC43383;
+        Thu,  6 Feb 2020 02:39:57 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Feb 2020 10:39:57 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     kuohong.wang@mediatek.com, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, hongwus@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 6/8] scsi: ufs: Add dev ref clock gating wait time
+ support
+In-Reply-To: <1580950556.27391.11.camel@mtksdccf07>
+References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+ <1580721472-10784-7-git-send-email-cang@codeaurora.org>
+ <1580871040.21785.7.camel@mtksdccf07>
+ <d37515ab264b0c46848ee2b88ba0a676@codeaurora.org>
+ <1580950556.27391.11.camel@mtksdccf07>
+Message-ID: <8b6603db0bb793365542c39d33a64a0e@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On 2020-02-06 08:55, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Wed, 2020-02-05 at 12:52 +0800, Can Guo wrote:
+> 
+> 
+>> Hi Stanley,
+>> 
+>> We used to ask vendors about it, 50 is somehow agreed by them. Do you
+>> have a
+>> better value in mind?
+>> 
+>> For me, I just wanted to give it 10, so that we can directly use
+>> usleep_range
+>> with it, no need to decide whether to use udelay or usleep_range.
+> 
+> Actually I do not have any value in mind because I guess the 50us here
+> is just a margin time added for safety as your comments: "Give it more
+> time to be on the safe side".
+> 
+> An example case is that some vendors only specify 1us in
+> bRefClkGatingWaitTime, so this 50us may be too long compared to 
+> device's
+> requirement. If such device really needs this additional 50us, it shall
+> be specified in bRefClkGatingWaitTime.
+> 
+> So if this additional delay does not have any special reason or not
+> mentioned by UFS specification, would you consider move it to vendor
+> specific implementations. By this way, it would be more flexible to be
+> controlled by vendors or by platforms.
+> 
+> Thanks,
+> Stanley
+> 
+>> 
+>> Thanks,
+>> Can Guo.
+>> 
+>> >>  				      &dev_info->model, SD_ASCII_STD);
 
-Fix some typos in the comments. Also fix coding style.
+Hi Stanley,
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/vmx/nested.c       | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+FYI, the default values in bRefClkGatingWaitTime from vendors are around
+50 - 100.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 4dffbc10d3f8..8196a4a0df8b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -782,7 +782,7 @@ struct kvm_vcpu_arch {
- 
- 	/*
- 	 * Indicate whether the access faults on its page table in guest
--	 * which is set when fix page fault and used to detect unhandeable
-+	 * which is set when fix page fault and used to detect unhandleable
- 	 * instruction.
- 	 */
- 	bool write_fault_to_shadow_pgtable;
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 657c2eda357c..e7faebccd733 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -544,7 +544,8 @@ static void nested_vmx_disable_intercept_for_msr(unsigned long *msr_bitmap_l1,
- 	}
- }
- 
--static inline void enable_x2apic_msr_intercepts(unsigned long *msr_bitmap) {
-+static inline void enable_x2apic_msr_intercepts(unsigned long *msr_bitmap)
-+{
- 	int msr;
- 
- 	for (msr = 0x800; msr <= 0x8ff; msr += BITS_PER_LONG) {
-@@ -1981,7 +1982,7 @@ static int nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
- 	}
- 
- 	/*
--	 * Clean fields data can't de used on VMLAUNCH and when we switch
-+	 * Clean fields data can't be used on VMLAUNCH and when we switch
- 	 * between different L2 guests as KVM keeps a single VMCS12 per L1.
- 	 */
- 	if (from_launch || evmcs_gpa_changed)
--- 
-2.19.1
+I agree with you. I will just remove the extra delay here and let's
+handle it in our own platform drivers.
 
+Thanks,
+Can Guo.
