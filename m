@@ -4,56 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88406C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D436C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A48720838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E96E2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581004497;
-	bh=XRsxlOOvt6Mr/97I38EpGo1VRFP1DjByyFIoLCVTe6M=;
+	s=default; t=1581004511;
+	bh=ZYnEIPP7q2cr/ofAeP6RGbutyNKAE6Npg33DBpWWr7g=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vv1ABU2WgakVVRl3pfhXrxTqffMSqGh42UtDpLaEiOuo/wjL1mvMrscHqaSB+y2m8
-	 NmWIEYdI6ckPVTAsU/vKCmIR6UqEk8wjT6JId85n93Sxs5CNqUb4D8oYBrEr15nN1O
-	 BP4A1e0v1fSLPRoJhZWANWRwAlGK5Zt/d9ZRbzPU=
+	b=ibMozLManrUxvSj6+Uom56GpPMo8D5XpNzmYlwQcKpCPuEW3b6AEGIYbYbzQdGAF8
+	 VnUV3uFJ303VWSa3+UGolYb2wOlH6+0agVk+6FBUh5bDpfvCSEwDSKRV58iGyGDUIu
+	 lm+LSpx/vNbnCxIKeLmDJpv57IGW2BIoaf+E+Ah0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgBFPy4 (ORCPT
+        id S1727710AbgBFPzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:54:56 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48246 "EHLO
+        Thu, 6 Feb 2020 10:55:10 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48644 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbgBFPyz (ORCPT
+        with ESMTP id S1727389AbgBFPzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:54:55 -0500
+        Thu, 6 Feb 2020 10:55:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=06SZkkWNYV0dzpqU3VFXxiSszGgP4ghCFb22tKeSYmM=; b=uwgvbwIDXjy9
-        D8UI8zcbEAFNpuzzeTCEifBV2Iq+6znEoGHfULSLQp3iQBHg6hXr9V6BHbG2zc9jLYJ83zBVdUlYO
-        8OvEdh5OhzEbOuHMZMMOB/cA3yNqr+FofhcS2dj0Sllw+fjUDiDnBIP5ECNvxzgbHKsQFU2gSZgHH
-        EE7t4=;
+        List-Archive; bh=eFZpDdmMDc+jg0LQsv6cOH8jUl8NU8Wb3prM5WogJw4=; b=CZkbK0934Flb
+        PlFSFEfPcSC1DjY1rrTXiRvPEKG+WXzVzsaZIi6UK4y2ymJdtolZb3Irl4t3RaVV79EDZ6Ar1PqD3
+        8Kpfxol4XRvMuLUI15TW/hU8ZpTWH9TaeosaZplboZyJQrJ5Iv6EEn1Q7CUHw7TY3WrSuoJSg4uUo
+        5UJAA=;
 Received: from fw-tnat-cam2.arm.com ([217.140.106.50] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1izjUQ-0002ld-Q7; Thu, 06 Feb 2020 15:54:50 +0000
+        id 1izjUL-0002lU-O2; Thu, 06 Feb 2020 15:54:45 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 81A80D02D58; Thu,  6 Feb 2020 15:54:50 +0000 (GMT)
+        id 29824D02A55; Thu,  6 Feb 2020 15:54:45 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x" to the spi tree
-In-Reply-To: <20200204124816.16735-2-vigneshr@ti.com>
-Message-Id: <applied-20200204124816.16735-2-vigneshr@ti.com>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     alsa-devel@alsa-project.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>
+Subject: Applied "ASoC: fsl_sai: Fix exiting path on probing failure" to the asoc tree
+In-Reply-To: <20200205160436.3813642-1-oleksandr.suvorov@toradex.com>
+Message-Id: <applied-20200205160436.3813642-1-oleksandr.suvorov@toradex.com>
 X-Patchwork-Hint: ignore
-Date:   Thu,  6 Feb 2020 15:54:50 +0000 (GMT)
+Date:   Thu,  6 Feb 2020 15:54:45 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +72,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x
+   ASoC: fsl_sai: Fix exiting path on probing failure
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,101 +97,67 @@ to this mail.
 Thanks,
 Mark
 
-From e4e8276a4f652be2c7bb783a0155d4adb85f5d7d Mon Sep 17 00:00:00 2001
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Date: Tue, 4 Feb 2020 18:18:15 +0530
-Subject: [PATCH] spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x
+From d1520889782dff58610c0b6b54d4cf3211ceb690 Mon Sep 17 00:00:00 2001
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date: Wed, 5 Feb 2020 18:04:36 +0200
+Subject: [PATCH] ASoC: fsl_sai: Fix exiting path on probing failure
 
-On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
-enabled. Therefore populate master->max_transfer_size callback to
-inform client drivers of this restriction when DMA channels are
-available.
+If the imx-sdma driver is built as a module, the fsl-sai device doesn't
+disable on probing failure, which causes the warning in the next probing:
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20200204124816.16735-2-vigneshr@ti.com
+==================================================================
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+==================================================================
+
+Disabling the device properly fixes the issue.
+
+Fixes: 812ad463e089 ("ASoC: fsl_sai: Add support for runtime pm")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Link: https://lore.kernel.org/r/20200205160436.3813642-1-oleksandr.suvorov@toradex.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c                 | 26 +++++++++++++++++++
- include/linux/platform_data/spi-omap2-mcspi.h |  1 +
- 2 files changed, 27 insertions(+)
+ sound/soc/fsl/fsl_sai.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 7e2292c11d12..e9bc9cf984d6 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -130,6 +130,7 @@ struct omap2_mcspi {
- 	int			fifo_depth;
- 	bool			slave_aborted;
- 	unsigned int		pin_dir:1;
-+	size_t			max_xfer_len;
- };
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 8c3ea7300972..9d436b0c5718 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -1020,12 +1020,24 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_component,
+ 			&fsl_sai_dai, 1);
+ 	if (ret)
+-		return ret;
++		goto err_pm_disable;
  
- struct omap2_mcspi_cs {
-@@ -1305,6 +1306,18 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
- 	return (xfer->len >= DMA_MIN_BYTES);
+-	if (sai->soc_data->use_imx_pcm)
+-		return imx_pcm_dma_init(pdev, IMX_SAI_DMABUF_SIZE);
+-	else
+-		return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
++	if (sai->soc_data->use_imx_pcm) {
++		ret = imx_pcm_dma_init(pdev, IMX_SAI_DMABUF_SIZE);
++		if (ret)
++			goto err_pm_disable;
++	} else {
++		ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
++		if (ret)
++			goto err_pm_disable;
++	}
++
++	return ret;
++
++err_pm_disable:
++	pm_runtime_disable(&pdev->dev);
++
++	return ret;
  }
  
-+static size_t omap2_mcspi_max_xfer_size(struct spi_device *spi)
-+{
-+	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
-+	struct omap2_mcspi_dma *mcspi_dma =
-+		&mcspi->dma_channels[spi->chip_select];
-+
-+	if (mcspi->max_xfer_len && mcspi_dma->dma_rx)
-+		return mcspi->max_xfer_len;
-+
-+	return SIZE_MAX;
-+}
-+
- static int omap2_mcspi_controller_setup(struct omap2_mcspi *mcspi)
- {
- 	struct spi_master	*master = mcspi->master;
-@@ -1373,6 +1386,11 @@ static struct omap2_mcspi_platform_config omap4_pdata = {
- 	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
- };
- 
-+static struct omap2_mcspi_platform_config am654_pdata = {
-+	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
-+	.max_xfer_len = SZ_4K - 1,
-+};
-+
- static const struct of_device_id omap_mcspi_of_match[] = {
- 	{
- 		.compatible = "ti,omap2-mcspi",
-@@ -1382,6 +1400,10 @@ static const struct of_device_id omap_mcspi_of_match[] = {
- 		.compatible = "ti,omap4-mcspi",
- 		.data = &omap4_pdata,
- 	},
-+	{
-+		.compatible = "ti,am654-mcspi",
-+		.data = &am654_pdata,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, omap_mcspi_of_match);
-@@ -1439,6 +1461,10 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 		mcspi->pin_dir = pdata->pin_dir;
- 	}
- 	regs_offset = pdata->regs_offset;
-+	if (pdata->max_xfer_len) {
-+		mcspi->max_xfer_len = pdata->max_xfer_len;
-+		master->max_transfer_size = omap2_mcspi_max_xfer_size;
-+	}
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	mcspi->base = devm_ioremap_resource(&pdev->dev, r);
-diff --git a/include/linux/platform_data/spi-omap2-mcspi.h b/include/linux/platform_data/spi-omap2-mcspi.h
-index 0bf9fddb8306..3b400b1919a9 100644
---- a/include/linux/platform_data/spi-omap2-mcspi.h
-+++ b/include/linux/platform_data/spi-omap2-mcspi.h
-@@ -11,6 +11,7 @@ struct omap2_mcspi_platform_config {
- 	unsigned short	num_cs;
- 	unsigned int regs_offset;
- 	unsigned int pin_dir:1;
-+	size_t max_xfer_len;
- };
- 
- struct omap2_mcspi_device_config {
+ static int fsl_sai_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
