@@ -2,75 +2,80 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704ECC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E855C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D9221741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6497821741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sRLuL+ZY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpIpws3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgBFO00 (ORCPT
+        id S1727986AbgBFO2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:26:26 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41653 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727415AbgBFO00 (ORCPT
+        Thu, 6 Feb 2020 09:28:53 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51744 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFO2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:26:26 -0500
-Received: by mail-io1-f65.google.com with SMTP id m25so6489998ioo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 06:26:25 -0800 (PST)
+        Thu, 6 Feb 2020 09:28:53 -0500
+Received: by mail-pj1-f68.google.com with SMTP id fa20so54331pjb.1;
+        Thu, 06 Feb 2020 06:28:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=p19oP9rAShwHnrZ6I0lQPYswxVWimInnaxXF/O9xV8g=;
-        b=sRLuL+ZYZ1mHJ9JzmN+K+3bN8/VG6BkcFKf1MtjNw1A82YrRKTxSvEvUcANj/1tUfA
-         Wv15JzdAUTZXWVZaXTLhwSnP/urKWyvFumMrwTqaKLHq/K/EGCt7N36fC7oaUfpReypE
-         mDxiYIhzR9aQrNqNaOQMPp/Zqy4RDY6yrO33G7IFNPj311Q6lEpWujuDlMsRVdtTpYs/
-         Y8jn/CjiJVpxYmIMUsfkiNNf7kTGpb4QbMASprTY7owa22+ONSjSYglz4PLkW/zR6yju
-         ASVKsRqet3GDWnmPbXEsXoY3CTRV8nnW07NN/e72QNHwP0VPTipRDogRgqK9lrHq3gaI
-         UMog==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W9ALG/NMrSP99dg/aoNyLPey5VzoAsXx3y2vXq62GYo=;
+        b=rpIpws3O+HZ6Lc5x7VQmH9T+d9xppIoTRipGopSQPkoQS2xnsk3TLOQv4FtwQYzG3I
+         k0y9r9KbPGTXDIOYe6G4qhsRv1jvyVSWILQVCBFe4z46lVIJ8zFerkNGvOnzFANm5EJP
+         cALTN4f1ZUpo0iNdbF5ziyUro1SlI5gNgKsEVrbBQUpHgDIfTsvTtcvbQuuUUFCdYxGG
+         IamcTadDO8iudiB5NoNCpik6T2unp0iTHGV9tQYFnPICFM4wKXpxVwvLh3C1QlbTaynq
+         NjyM/gImrbOBZ/pmX7ydJ+8N/2ryNOaZV8QBIcgcMl1byItSYfUFXP9BZtNtaom2u7f1
+         kdUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=p19oP9rAShwHnrZ6I0lQPYswxVWimInnaxXF/O9xV8g=;
-        b=I5LMDq/Opvq5jgmmF7MD7+Fd4LawueHqwSJ7tBfpuRF8ZU432yK/NrFHBTp/LrPREo
-         6KdFzsFanc4JbO/B9IZofGhfL4oggLGSteiQ03tOzdX2IaypT+eV8YXFdVaHsOXwUxjt
-         EnsKVkLPNacnkA/KKvekwhoKZvNX7T0H83hnhRVpwMJ6pz9MRMweOe8fLL6YYCcGISsS
-         W2QNbuFWGXpmaU5FTDXcQLbvGOQZJmPcd7fjLynKfQ88xnS9Pn86ALWDh5I5BzTvD6OV
-         dA3zrWwXdoPIoWqVioueovdXUzKyZr15x5e7iuoD7knOcDJQucs42kW2PSX3T2ZOs9Ss
-         5Lyg==
-X-Gm-Message-State: APjAAAWGzVv2/JxF0Jspx1iJK2q6UBBC8rfM5KTMzgGtTLXWAwPxVGMn
-        QQxewrblWw9Wf3L7ctJ4erV/hzv1uPk=
-X-Google-Smtp-Source: APXvYqw51s/D1fk4n7Ob4XE4Hc14tBW8H6X8kOo3/+J0i5NFi1HV5SRfSTCV1fsBIR2i+U8YVwhLnQ==
-X-Received: by 2002:a5d:970e:: with SMTP id h14mr32952567iol.201.1580999184935;
-        Thu, 06 Feb 2020 06:26:24 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s21sm894587ioa.33.2020.02.06.06.26.24
+        bh=W9ALG/NMrSP99dg/aoNyLPey5VzoAsXx3y2vXq62GYo=;
+        b=IDUnJNjWDM6mkaaAIfpE8UzWRCaWzNz7CODGlzrJs5PZ8E0vGxYwK8ZVSIkOpwS2Gl
+         jupKsvQNDesQWClDkLLU5C5EAaAugk793NSwuDRmPi/wFpS6/ywgxRdrTRSEc08pNX0B
+         mBR51PLIP+S7WqoDL61xMEKMglg5r9m7IH7B1hG4mZN1SL6Dwh2TdmHulc2hHHSmCseO
+         nk5Smyt9lqYwwV5QzBPRhJ1Wuwzl1SYOW509IUzIpP+7k8vuiuKyb0YGcesghjUiWfWw
+         WL1EebVSz5420nPL/EtltwP3n3BbasANBKTlLIOdRNoU+V1Xz4ti+87t//bGBW0dQsid
+         AZcg==
+X-Gm-Message-State: APjAAAWhuZ33Vfty7odHlLxjlip6So3LciL3lv4MTKeQRXpmsbGI2eJp
+        OA1qK8x/8GtV2E4VhFToimc=
+X-Google-Smtp-Source: APXvYqypBydYNQeTB/d0ng2TllaB9XhTxAS1bYyMp/rv9X9YNy19vLVchiY5bHtUHbFElaUXwPsUnw==
+X-Received: by 2002:a17:902:fe10:: with SMTP id g16mr4009622plj.93.1580999332830;
+        Thu, 06 Feb 2020 06:28:52 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g10sm3968225pgc.87.2020.02.06.06.28.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 06:26:24 -0800 (PST)
-Subject: Re: [PATCH 0/3] io_uring: clean wq path
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1580928112.git.asml.silence@gmail.com>
- <1fdfd8bf-c0cd-04c0-e22e-bc0945ef1734@gmail.com>
- <8c0639c6-78ad-6240-0c18-d3ef8936e2f4@kernel.dk>
- <8ad4a84e-9796-6431-c73e-1d34eed0b0fb@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <858563a9-8a99-dfc2-c4df-53ae09ffdfeb@kernel.dk>
-Date:   Thu, 6 Feb 2020 07:26:23 -0700
+        Thu, 06 Feb 2020 06:28:52 -0800 (PST)
+Subject: Re: [PATCH 3/3] watchdog: da9062: add power management ops
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
+        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-4-m.felsch@pengutronix.de>
+ <20200123205132.GA13377@roeck-us.net>
+ <20200206090010.ya6p2kvab452kedr@pengutronix.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <76f08a4c-b8cd-8efe-f122-aa1f48e79e91@roeck-us.net>
+Date:   Thu, 6 Feb 2020 06:28:50 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <8ad4a84e-9796-6431-c73e-1d34eed0b0fb@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200206090010.ya6p2kvab452kedr@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,32 +83,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 2:51 AM, Pavel Begunkov wrote:
-> On 2/6/2020 5:50 AM, Jens Axboe wrote:
->> On 2/5/20 3:29 PM, Pavel Begunkov wrote:
->>> On 05/02/2020 22:07, Pavel Begunkov wrote:
->>>> This is the first series of shaving some overhead for wq-offloading.
->>>> The 1st removes extra allocations, and the 3rd req->refs abusing.
->>>
->>> Rechecked a couple of assumptions, this patchset is messed up.
->>> Drop it for now.
->>
->> OK, will do, haven't had time to look at it yet anyway.
+On 2/6/20 1:00 AM, Marco Felsch wrote:
+> Hi Guenter,
 > 
-> Sorry for the fuss. I'll return to it later.
+> On 20-01-23 12:51, Guenter Roeck wrote:
+>> On Wed, Jan 08, 2020 at 10:57:04AM +0100, Marco Felsch wrote:
+>>> Disable the watchdog during suspend if it is enabled and re-enable it on
+>>> resume. So we can sleep without the interruptions.
+>>>
+>>> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+>>> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> I got an kbuild email so I checked the linux-next master tree. On
+> linux-next this patch isn't used instead the old v1 was used...
+> 
 
-No worries
+FWIW, The subject line of this patch doesn't include "v2".
 
->> Are you going to do the ->has_user removal? We should just do that
->> separately first.
-> Yes. I've spotted a few bugs, so I'm going to patch them first with
-> merging/backporting in mind, and then deal with ->has_user. IMO, this
-> order makes more sense.
+Guenter
 
-I think it probably makes sense to do it in the opposite order, as the
-->has_user cleanup/clarification should go into 5.6 whereas the other
-stuff is likely 5.7 material.
-
--- 
-Jens Axboe
+> Regards,
+>    Marco
+> 
+>>> ---
+>>> v2:
+>>> - add dlg,use-sw-pm check to differentiate between automatic and manual
+>>>    disabling/enabling.
+>>> ---
+>>>   drivers/watchdog/da9062_wdt.c | 37 +++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 37 insertions(+)
+>>>
+>>> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+>>> index e149e66a6ea9..c9b9d6394525 100644
+>>> --- a/drivers/watchdog/da9062_wdt.c
+>>> +++ b/drivers/watchdog/da9062_wdt.c
+>>> @@ -15,6 +15,7 @@
+>>>   #include <linux/jiffies.h>
+>>>   #include <linux/mfd/da9062/registers.h>
+>>>   #include <linux/mfd/da9062/core.h>
+>>> +#include <linux/property.h>
+>>>   #include <linux/regmap.h>
+>>>   #include <linux/of.h>
+>>>   
+>>> @@ -30,6 +31,7 @@ static const unsigned int wdt_timeout[] = { 0, 2, 4, 8, 16, 32, 65, 131 };
+>>>   struct da9062_watchdog {
+>>>   	struct da9062 *hw;
+>>>   	struct watchdog_device wdtdev;
+>>> +	bool use_sw_pm;
+>>>   };
+>>>   
+>>>   static unsigned int da9062_wdt_timeout_to_sel(unsigned int secs)
+>>> @@ -198,6 +200,8 @@ static int da9062_wdt_probe(struct platform_device *pdev)
+>>>   	if (!wdt)
+>>>   		return -ENOMEM;
+>>>   
+>>> +	wdt->use_sw_pm = device_property_present(dev, "dlg,use-sw-pm");
+>>> +
+>>>   	wdt->hw = chip;
+>>>   
+>>>   	wdt->wdtdev.info = &da9062_watchdog_info;
+>>> @@ -212,6 +216,7 @@ static int da9062_wdt_probe(struct platform_device *pdev)
+>>>   	watchdog_set_restart_priority(&wdt->wdtdev, 128);
+>>>   
+>>>   	watchdog_set_drvdata(&wdt->wdtdev, wdt);
+>>> +	dev_set_drvdata(dev, &wdt->wdtdev);
+>>>   
+>>>   	ret = devm_watchdog_register_device(dev, &wdt->wdtdev);
+>>>   	if (ret < 0)
+>>> @@ -220,10 +225,42 @@ static int da9062_wdt_probe(struct platform_device *pdev)
+>>>   	return da9062_wdt_ping(&wdt->wdtdev);
+>>>   }
+>>>   
+>>> +static int __maybe_unused da9062_wdt_suspend(struct device *dev)
+>>> +{
+>>> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
+>>> +	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
+>>> +
+>>> +	if (!wdt->use_sw_pm)
+>>> +		return 0;
+>>> +
+>>> +	if (watchdog_active(wdd))
+>>> +		return da9062_wdt_stop(wdd);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused da9062_wdt_resume(struct device *dev)
+>>> +{
+>>> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
+>>> +	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
+>>> +
+>>> +	if (!wdt->use_sw_pm)
+>>> +		return 0;
+>>> +
+>>> +	if (watchdog_active(wdd))
+>>> +		return da9062_wdt_start(wdd);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static SIMPLE_DEV_PM_OPS(da9062_wdt_pm_ops,
+>>> +			 da9062_wdt_suspend, da9062_wdt_resume);
+>>> +
+>>>   static struct platform_driver da9062_wdt_driver = {
+>>>   	.probe = da9062_wdt_probe,
+>>>   	.driver = {
+>>>   		.name = "da9062-watchdog",
+>>> +		.pm = &da9062_wdt_pm_ops,
+>>>   		.of_match_table = da9062_compatible_id_table,
+>>>   	},
+>>>   };
+>>
+> 
 
