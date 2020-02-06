@@ -2,132 +2,127 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA9C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B07C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F8C21927
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267B9214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:30:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Ld6PaD37"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pjgmdhml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgBFHa1 (ORCPT
+        id S1727984AbgBFHaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 02:30:27 -0500
-Received: from mail-eopbgr40057.outbound.protection.outlook.com ([40.107.4.57]:23438
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727904AbgBFHa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 02:30:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cc6sAe9fPlIttTG8dfENGGNxuEdinRdHOGfEInA9M1xZD7AZHU2G99QxXXcESpjpSNSxx6fgd6MPHnfd8Lj/Aznc9fQ22baZFf9m92nwPlmIwu787JbeIDd8Wan7TcM0bAb2xAcO6j0a20uSNeRAePGw/SIDsYo6qhWnRiNzNTm4oUeIpNDpUsmUGZlUdRGp6hiXZdUSNRVSKaA0lbfrII9rh0aNHUJHC+gHgN5KxuHxLtB6KC9UoFZjLJdXj98Mi27usHEzM8A39q4QxkZj4FmD6ORYhwFe82mfJzS00684/cmyGUh+aM4e67wayAr7ECeEKGVZbHSs/FEk23emOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZwAV2qlksA6YChr6UNE4kFlDPkmy0EXusnEqLepTHrM=;
- b=IIurxGNFGLILrH/S2Wo+GmjyA66KyiucAoSdjq5J6qKoxy1RnsVeUAVZqYaYfIYNBdlJuKZBvTFlv5M5jTvKVujJj4ybjMVJQ3JCE2C5Gc9uNx+EldRs19XLWfuKNkP38WgKMms68rPRCKZqxRoRzU947b76JhPiwv/VU8tkJ31qWtl31lCOiB+Lu0tkKGL7hYDFz8PU3gbINx/2UCxA/zl7U208Xsi4utEfETWuzpa1LRPSbzF12EiJTPP/Tu8sImS/rUUagZgCMwtWDBjm7osWINUeOvXUuYbmWYOg3C29lSB7n25XGY6C7i6uH1ml4C+dKRWKk507Ug1MAz5WrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZwAV2qlksA6YChr6UNE4kFlDPkmy0EXusnEqLepTHrM=;
- b=Ld6PaD377rscZWSsdlcxslKYthkoZZSxqtpisK44rh5qHYMHupE9b9eK3NjJaq+hVhbSXOl63UcmJqa8i/NM5+mDZsfTEySZsAeLRAPopsqRMIeIr327T9A6fYW5nShRMxNpvJVI4XoyjmDquLeXfvOaDSoY41Qc8PDDvkyCIvw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=leonro@mellanox.com; 
-Received: from AM0PR05MB6401.eurprd05.prod.outlook.com (20.179.33.209) by
- AM0PR05MB4530.eurprd05.prod.outlook.com (52.133.60.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Thu, 6 Feb 2020 07:30:21 +0000
-Received: from AM0PR05MB6401.eurprd05.prod.outlook.com
- ([fe80::696a:cf1d:c438:bcd5]) by AM0PR05MB6401.eurprd05.prod.outlook.com
- ([fe80::696a:cf1d:c438:bcd5%7]) with mapi id 15.20.2686.034; Thu, 6 Feb 2020
- 07:30:21 +0000
-Date:   Thu, 6 Feb 2020 09:30:19 +0200
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jan 30 + 20200206
- (drivers/infiniband/hw/mlx5/)
-Message-ID: <20200206073019.GC414821@unreal>
-References: <20200130152852.6056b5d8@canb.auug.org.au>
- <df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org>
- <ee5f17b6-3282-2137-7e9d-fa0008f9eeb0@infradead.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee5f17b6-3282-2137-7e9d-fa0008f9eeb0@infradead.org>
-X-ClientProxiedBy: FRYP281CA0010.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::20)
- To AM0PR05MB6401.eurprd05.prod.outlook.com (2603:10a6:208:13e::17)
+        Thu, 6 Feb 2020 02:30:55 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46183 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727904AbgBFHaz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 02:30:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580974253;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RDgB6g2ZvA/Ut5iIJr1OGLu1IXUQU97q2dZMGoQowgc=;
+        b=PjgmdhmlV8KFQMsFKFlIimxxiQjGe1YbsF8KMLrEgPVsgZhRjXrPBoPX6LMVevG/RJfamX
+        Kv9Rl3aSFRFTw8IU62Xs7Wh8ILZzc2P4V9UFuaP7sl7InJbf6sN/SAns4wlVuyTJj5Gp4I
+        3khSUu3ZRb/Akws8Y2mMH1IzB/bv3iA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-235-Go4GNvNyO-GK14Jg8jQ9uw-1; Thu, 06 Feb 2020 02:30:51 -0500
+X-MC-Unique: Go4GNvNyO-GK14Jg8jQ9uw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3388FDB2E;
+        Thu,  6 Feb 2020 07:30:49 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-108.pek2.redhat.com [10.72.12.108])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 526AB5C1B2;
+        Thu,  6 Feb 2020 07:30:42 +0000 (UTC)
+Subject: Re: [PATCH 0/2] printk: replace ringbuffer
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <dc4ca9b5-d2a2-03af-c186-204a3aad2399@redhat.com>
+ <20200205044848.GH41358@google.com> <20200205050204.GI41358@google.com>
+ <88827ae2-7af5-347b-29fb-cffb94350f8f@redhat.com>
+ <20200205063640.GJ41358@google.com> <877e11h0ir.fsf@linutronix.de>
+ <20200205110522.GA456@jagdpanzerIV.localdomain>
+ <87wo919grz.fsf@linutronix.de>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <06915ce1-f3ec-bb39-c00e-d0bcd63189eb@redhat.com>
+Date:   Thu, 6 Feb 2020 15:30:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Received: from localhost (193.47.165.251) by FRYP281CA0010.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 07:30:21 +0000
-X-Originating-IP: [193.47.165.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 11554267-29a1-4024-99e0-08d7aad66c52
-X-MS-TrafficTypeDiagnostic: AM0PR05MB4530:
-X-Microsoft-Antispam-PRVS: <AM0PR05MB45303831FF10A80A005FF894B01D0@AM0PR05MB4530.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-Forefront-PRVS: 0305463112
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(189003)(199004)(9686003)(956004)(66476007)(66556008)(52116002)(66946007)(186003)(53546011)(5660300002)(316002)(54906003)(81166006)(81156014)(8676002)(6496006)(86362001)(6486002)(33716001)(478600001)(8936002)(33656002)(26005)(16526019)(2906002)(1076003)(6916009)(4744005)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4530;H:AM0PR05MB6401.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pJtRCL0rANp7tf1P8IiJg6wpLWahCUiHlr+0zmyr6pNG0RYeaiP7/tmjqCKx0rjnQYO35dEDOB2gv87iy+yeWZ6vR9kr8emm4jBrJlyOt3806aKMOp+HVHa6BInp7tifu55kVqUzCZYbOsltpzkAmIf3VurXfbUX17yQdDSePfc+0ATlZJX5y7X27+VKLM6o/NIUMWxGg6n6BBRJuOxxL/bc/b+MCyYHs1EPlcTaTagbTqTnu9ly/fhxYgbnIeoYEV/gIvlWAv0NBgOt2SYT4Kwe3vgE6JDe12/NxZTBKz01oIpnyFsb6BOF4Eox1Joeql5Bbj9bgb/ma6MSxmo/BH81npIofZVbJl0/7jBtU18iLHsX/YvGgfBBtlFJaobSBP3kFRodweX+9UcYT3/3R4ZYsIRLtCbBjrmm9E/OmKLatHELzlv2PamNA4QdrSPH
-X-MS-Exchange-AntiSpam-MessageData: v3zTRxPXd4gXJ2kFjSsFlWdDLwBM7ATjgpiNGnbLNA9KUBv0NuYY7YJkGD791POdijiP2NQEtuRxJciG3idd6+or/3b0u5wO2WVPykLhszEH91eQlRjZ3QNWVFUCYsorz68oNg0DLscUt4rTSydcQg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11554267-29a1-4024-99e0-08d7aad66c52
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 07:30:21.4599
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YMk2hCQa82Rcn1rb/s70whecCYXpjIav/7wzfd9BKM6en1u/AXzxZeWn7dZWMiJVI1XWc4A7m8PnCTThGJ4bNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4530
+In-Reply-To: <87wo919grz.fsf@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 09:31:15PM -0800, Randy Dunlap wrote:
-> On 1/30/20 5:47 AM, Randy Dunlap wrote:
-> > On 1/29/20 8:28 PM, Stephen Rothwell wrote:
-> >> Hi all,
-> >>
-> >> Please do not add any v5.7 material to your linux-next included
-> >> branches until after v5.6-rc1 has been released.
-> >>
-> >> Changes since 20200129:
-> >>
-> >
-> > on i386:
-> >
-> > ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> > ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> >
-> >
-> > Full randconfig file is attached.
-> >
-> >
->
-> I am still seeing this on linux-next of 20200206.
+=E5=9C=A8 2020=E5=B9=B402=E6=9C=8805=E6=97=A5 23:48, John Ogness =E5=86=99=
+=E9=81=93:
+> On 2020-02-05, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+>> 3BUG: KASAN: wild-memory-access in copy_data+0x129/0x220>
+>> 3Write of size 4 at addr 5a5a5a5a5a5a5a5a by task cat/474>
+>=20
+> The problem was due to an uninitialized pointer.
+>=20
+> Very recently the ringbuffer API was expanded so that it could
+> optionally count lines in a record. This made it possible for me to
+> implement record_print_text_inline(), which can do all the kmsg_dump
+> multi-line madness without requiring a temporary buffer. Rather than
+> passing an extra argument around for the optional line count, I added
+> the text_line_count pointer to the printk_record struct. And since line
+> counting is rarely needed, it is only performed if text_line_count is
+> non-NULL.
+>=20
+> I oversaw that devkmsg_open() setup a printk_record and so I did not se=
+e
+> to add the extra NULL initialization of text_line_count. There should b=
+e
+> be an initializer function/macro to avoid this danger.
+>=20
+Good findings. Thanks for the quick fixup, it works well.
 
-Sorry, I was under wrong impression that this failure is connected to
-other issue reported by you.
+Lianbo
 
-I'm looking on it right now.
+> John Ogness
+>=20
+> The quick fixup:
+>=20
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index d0d24ee1d1f4..5ad67ff60cd9 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -883,6 +883,7 @@ static int devkmsg_open(struct inode *inode, struct=
+ file *file)
+>  	user->record.text_buf_size =3D sizeof(user->text_buf);
+>  	user->record.dict_buf =3D &user->dict_buf[0];
+>  	user->record.dict_buf_size =3D sizeof(user->dict_buf);
+> +	user->record.text_line_count =3D NULL;
+> =20
+>  	logbuf_lock_irq();
+>  	user->seq =3D prb_first_seq(prb);
+>=20
 
-Thanks
-
->
-> --
-> ~Randy
->
