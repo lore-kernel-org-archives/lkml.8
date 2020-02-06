@@ -2,118 +2,163 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068F4C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC13C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF160214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D9D214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ekOSgGtx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c6aRcoHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgBFNzK (ORCPT
+        id S1728068AbgBFNzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:55:10 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46689 "EHLO
+        Thu, 6 Feb 2020 08:55:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32361 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726765AbgBFNzJ (ORCPT
+        with ESMTP id S1726765AbgBFNzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:55:09 -0500
+        Thu, 6 Feb 2020 08:55:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580997308;
+        s=mimecast20190719; t=1580997349;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=e6p0SFz0Jv43cXhkS8QIK3x+xLQwRZMBziFvM+wBMj0=;
-        b=ekOSgGtxPQ0hOXmatLpf7LYaCGp1RpoiJ1JF45ds5ZNyZfx9DWLEQnYarAXZ+YQJLlmh2W
-        GBg7z5b7YcZfJ7CSnzDq9c/bS0XUOoqhfAOWVFyNXgzNspKeMGZcW35iAXayQrplXv5Heq
-        +Ha/ihwMIMzqP2RySBcpVC+ZJu7t16M=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=yZyWFExahmIL+pKrIhPrnBOif7Zxf0rFgpyQk3nVZ80=;
+        b=c6aRcoHTOSenU/1oD+6Mt3xa+TTwf5GYW8kPSJ/TzFgG0rvJ2gRDjzUGR574jwIB0qYDHY
+        SCy0bRy1vGrHBOYXfGsrDC801q9Wd9ZESnGQN8FunTM3X9bDlsGAlHQwKoQyDA578Ow7R+
+        Edypdcycne8QyorxtvwoCNaWAdRdrVI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-1Wj7ErYIPxWnB2U87MHFlA-1; Thu, 06 Feb 2020 08:55:04 -0500
-X-MC-Unique: 1Wj7ErYIPxWnB2U87MHFlA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-408-jByo8eqyOOemEJTZ1mNJFQ-1; Thu, 06 Feb 2020 08:55:45 -0500
+X-MC-Unique: jByo8eqyOOemEJTZ1mNJFQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 242D410883B8;
-        Thu,  6 Feb 2020 13:55:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-218.rdu2.redhat.com [10.10.120.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6075110016DA;
-        Thu,  6 Feb 2020 13:55:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix service call disconnection
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54E891349A7;
+        Thu,  6 Feb 2020 13:55:44 +0000 (UTC)
+Received: from [10.36.118.128] (unknown [10.36.118.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B85315C1B0;
+        Thu,  6 Feb 2020 13:55:42 +0000 (UTC)
+Subject: Re: [PATCH] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 06 Feb 2020 13:55:01 +0000
-Message-ID: <158099730157.2198513.14087711871251670411.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.19
+References: <20200206125343.9070-1-richardw.yang@linux.intel.com>
+ <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
+ <20200206135016.GA25537@MiWiFi-R3L-srv>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <87bb4563-481d-cce9-b916-50a098558210@redhat.com>
+Date:   Thu, 6 Feb 2020 14:55:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200206135016.GA25537@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent patch that substituted a flag on an rxrpc_call for the
-connection pointer being NULL as an indication that a call was disconnected
-puts the set_bit in the wrong place for service calls.  This is only a
-problem if a call is implicitly terminated by a new call coming in on the
-same connection channel instead of a terminating ACK packet.
+On 06.02.20 14:50, Baoquan He wrote:
+> On 02/06/20 at 02:28pm, David Hildenbrand wrote:
+>> On 06.02.20 13:53, Wei Yang wrote:
+>>> When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
+>>> doesn't work before sparse_init_one_section() is called. This leads to a
+>>> crash when hotplug memory.
+>>>
+>>> We should use memmap as it did.
+>>>
+>>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>> CC: Dan Williams <dan.j.williams@intel.com>
+>>> ---
+>>>  mm/sparse.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/sparse.c b/mm/sparse.c
+>>> index 5a8599041a2a..2efb24ff8f96 100644
+>>> --- a/mm/sparse.c
+>>> +++ b/mm/sparse.c
+>>> @@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+>>>  	 * Poison uninitialized struct pages in order to catch invalid flags
+>>>  	 * combinations.
+>>>  	 */
+>>> -	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
+>>> +	page_init_poison(memmap, sizeof(struct page) * nr_pages);
+>>
+>> If you add sub-sections that don't fall onto the start of the section,
+>>
+>> pfn_to_page(start_pfn) != memmap
+>>
+>> and your patch would break that under SPARSEMEM_VMEMMAP if I am not wrong.
+> 
+> It returns the pfn_to_page(pfn) from __populate_section_memmap() and
+> assign to memmap in vmemmap case, how come it breaks anything. Correct
+> me if I was wrong.
 
-In such a case, rxrpc_input_implicit_end_call() calls
-__rxrpc_disconnect_call(), which is now (incorrectly) setting the
-disconnection bit, meaning that when rxrpc_release_call() is later called,
-it doesn't call rxrpc_disconnect_call() and so the call isn't removed from
-the peer's error distribution list and the list gets corrupted.
+I'm sorry, I can't follow :) Can you elaborate?
 
-KASAN finds the issue as an access after release on a call, but the
-position at which it occurs is confusing as it appears to be related to a
-different call (the call site is where the latter call is being removed
-from the error distribution list and either the next or pprev pointer
-points to a previously released call).
+Was your comment targeted at why the old code cannot be broken or why
+this patch cannot be broken?
 
-Fix this by moving the setting of the flag from __rxrpc_disconnect_call()
-to rxrpc_disconnect_call() in the same place that the connection pointer
-was being cleared.
 
-Fixes: 5273a191dca6 ("rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+-- 
+Thanks,
 
- net/rxrpc/conn_object.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index c0b3154f7a7e..19e141eeed17 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -171,8 +171,6 @@ void __rxrpc_disconnect_call(struct rxrpc_connection *conn,
- 
- 	_enter("%d,%x", conn->debug_id, call->cid);
- 
--	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
--
- 	if (rcu_access_pointer(chan->call) == call) {
- 		/* Save the result of the call so that we can repeat it if necessary
- 		 * through the channel, whilst disposing of the actual call record.
-@@ -225,6 +223,7 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
- 	__rxrpc_disconnect_call(conn, call);
- 	spin_unlock(&conn->channel_lock);
- 
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
- 	conn->idle_timestamp = jiffies;
- }
- 
-
+David / dhildenb
 
