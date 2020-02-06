@@ -2,88 +2,181 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FD2C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BB1C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4FA20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E005622314
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N0dxLHzv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hl++Kmx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgBFIzs (ORCPT
+        id S1728195AbgBFI4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:55:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35079 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728016AbgBFIzs (ORCPT
+        Thu, 6 Feb 2020 03:56:12 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24645 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727895AbgBFI4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:55:48 -0500
+        Thu, 6 Feb 2020 03:56:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580979347;
+        s=mimecast20190719; t=1580979370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lidKg4bME34cT2lBAp3X3adgq0pupsYNedp4gCMJOiw=;
-        b=N0dxLHzvY9Zr5ZiHqEO04dViAcsuRVk3k/yWBaUAX7AeUlFEOoEjoN3GpG/wNPvu5BvOO8
-        pSRNK8F6/BkTxxSxGdAFE2C6qrEeaXGc2ZPN7rKuDU67swX7emS/OJjqdbZQEAdWsk9wO3
-        mZO7e1I5Dhzt1c4qH2cZY9+7i65HYVw=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=gqQOI+bfGGyM7YD25jxthxCu+nwDoPfU8NJ9we9XwYw=;
+        b=Hl++Kmx0P6y9vJJw4sT97j3fSQRLdBjfm1kpcrOeqDQJRM+H4MdxhZamSSm9a37ai8lTk5
+        BFgvKdAWKIJUySGvnVkSKKv5G7SVLlJklKKOO3sno87ZdDh7NGQExeZEBFXzhwafNwUUx4
+        WPx+OXjgKHiawVwK3bVlp3O69tT/jnA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-E5-DoGFDM6CyTIgV6pnwxg-1; Thu, 06 Feb 2020 03:55:43 -0500
-X-MC-Unique: E5-DoGFDM6CyTIgV6pnwxg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-96-bPG5zITuP0CtCfDHv1QTWA-1; Thu, 06 Feb 2020 03:56:06 -0500
+X-MC-Unique: bPG5zITuP0CtCfDHv1QTWA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1F7D1937FC4;
-        Thu,  6 Feb 2020 08:55:41 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 672025DA75;
-        Thu,  6 Feb 2020 08:55:41 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 8510C1747D; Thu,  6 Feb 2020 09:55:40 +0100 (CET)
-Date:   Thu, 6 Feb 2020 09:55:40 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] drm/virtio: move virtio_gpu_mem_entry initialization
- to new function
-Message-ID: <20200206085540.pa6py4ieoi242gma@sirius.home.kraxel.org>
-References: <20200205105955.28143-1-kraxel@redhat.com>
- <20200205105955.28143-5-kraxel@redhat.com>
- <CAPaKu7RxijC_oS4GPukS9wEe9gn8DPQgaGZKwG6g8M8xwTnsig@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD4998010E6;
+        Thu,  6 Feb 2020 08:56:04 +0000 (UTC)
+Received: from [10.36.117.188] (ovpn-117-188.ams2.redhat.com [10.36.117.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87CD01001B07;
+        Thu,  6 Feb 2020 08:56:00 +0000 (UTC)
+Subject: Re: [PATCH v3] mm/hotplug: Only respect mem= parameter during boot
+ stage
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
+        jgross@suse.com, bsingharora@gmail.com
+References: <20200204050643.20925-1-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <e374a011-4f13-ee7a-fc31-dae6878037d4@redhat.com>
+Date:   Thu, 6 Feb 2020 09:55:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7RxijC_oS4GPukS9wEe9gn8DPQgaGZKwG6g8M8xwTnsig@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200204050643.20925-1-bhe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+On 04.02.20 06:06, Baoquan He wrote:
+> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
+> parameter") a global varialbe max_mem_size is added to store
+> the value parsed from 'mem= ', then checked when memory region is
+> added. This truly stops those DIMMs from being added into system memory
+> during boot-time.
+> 
+> However, it also limits the later memory hotplug functionality. Any
+> DIMM can't be hotplugged any more if its region is beyond the
+> max_mem_size. We will get errors like:
+> 
+> [  216.387164] acpi PNP0C80:02: add_memory failed
+> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+> [  216.392187] acpi PNP0C80:02: Enumeration failure
+> 
+> This will cause issue in a known use case where 'mem=' is added to
+> the hypervisor. The memory that lies after 'mem=' boundary will be
+> assigned to KVM guests. After commit 357b4da50a62 merged, memory
+> can't be extended dynamically if system memory on hypervisor is not
+> sufficient.
+> 
+> So fix it by also checking if it's during boot-time restricting to add
+> memory. Otherwise, skip the restriction.
+> 
+> And also add this use case to document of 'mem=' kernel parameter.
+> 
+> Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem= parameter")
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+> v2->v3:
+>   In discussion of v1 and v2, People have concern about the use case
+>   related to the code change. So add the use case into patch log and
+>   document of 'mem=' in kernel-parameters.txt.
+> 
+>  Documentation/admin-guide/kernel-parameters.txt | 13 +++++++++++--
+>  mm/memory_hotplug.c                             |  8 +++++++-
+>  2 files changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ddc5ccdd4cd1..b809767e5f74 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2533,13 +2533,22 @@
+>  			For details see: Documentation/admin-guide/hw-vuln/mds.rst
+>  
+>  	mem=nn[KMG]	[KNL,BOOT] Force usage of a specific amount of memory
+> -			Amount of memory to be used when the kernel is not able
+> -			to see the whole system memory or for test.
+> +			Amount of memory to be used in cases as follows:
+> +
+> +			1 for test;
+> +			2 when the kernel is not able to see the whole system memory;
+> +			3 memory that lies after 'mem=' boundary is excluded from
+> +			 the hypervisor, then assigned to KVM guests.
 
-> >         virtio_gpu_cmd_resource_attach_backing(vgdev, obj->hw_res_handle,
-> > -                                              ents, nents,
-> > +                                              obj->ents, obj->nents,
-> >                                                fence);
-> > +       obj->ents = NULL;
-> > +       obj->nents = 0;
-> Hm, if the entries are temporary, can we allocate and initialize them
-> in this function?
+I remember that there were more use cases, but forgot where that was
+documented :)
 
-Well, the plan for CREATE_RESOURCE_BLOB is to use obj->ents too ...
+I do wonder if we want to change that now without anybody complaining.
+Yes, I brought up a possible use case but don't know if it is relevant
+in practice (IOW, nobody complained yet :) ).
 
-cheers,
-  Gerd
+Would like to get Michals opinion on this.
+
+-- 
+Thanks,
+
+David / dhildenb
 
