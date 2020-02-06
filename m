@@ -2,244 +2,116 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D5EC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E49DC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB6520659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NnOVue9i";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GDEa7pjC"
+	by mail.kernel.org (Postfix) with ESMTP id 1DE9921741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgBFTIl (ORCPT
+        id S1727851AbgBFTKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:08:41 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44334 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbgBFTIl (ORCPT
+        Thu, 6 Feb 2020 14:10:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59586 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727703AbgBFTK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:08:41 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016J8WpA172908;
-        Thu, 6 Feb 2020 19:08:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=yansYJidJ2HRyuM/DKZHN3c8dM+VvdkGZN7ODN38+Bc=;
- b=NnOVue9i1GmzVur0C8YB31uthCY0qMvGVdbGkRGMtlhvH8I2FZetuvMJhwnUts9PaQYf
- 8uPKLMOjp7XQciZKJJCYBjDBl085aJlitqMCaPvme0NGhOTL31s9oQ8D4z19RPlgolbZ
- ITirbPbus7AFFuER/QogvcOWKInGN+9lOglWqXDLd0ge6B1RylxLuK9QSfTd+PCS6sZ0
- 98GK5zy4bcr6FDdcHQsEs93e5JXAfjYTMmCAlARfpK/BmHPI/vaFMHruEfH3aF9VTxfD
- Giua3WjIA46v5JMQVaR0jRdOdbNVR4XWY+LUFkXbkeszm3o2LVNzvoO/lYpfkOf+K7V2 GA== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=yansYJidJ2HRyuM/DKZHN3c8dM+VvdkGZN7ODN38+Bc=;
- b=GDEa7pjC00TmLwoBuPhDKYUIrpHyz5eNq1KBKuQT7KOZPnDdsATODw+mszGtyfZeRR86
- 1zjJXlCMP+ks7wUSqI0Lk83zd/o3bmHcsx8gwb9liK/6velPYWslcZ68izHj/OdMDQnR
- VJ/n+UTEY/EvWHoGzwb7BdxFHd4lvijEYlPp4Gca1Bm4vODNvW+jrRaAxs8YQaJVwNum
- kzKlOcC7khpOKxjHcgEkuPFfGZL9tyNFaDriP/Iv3jTuwRIRVD7VtfB7UGT6fmS4chmv
- sRVu9BGBOzzg6led5NUcrDLK0a6mh6gbWP4C/ZS1ohFgSyQVfJWunqn2xr9vmd8yaYgs /Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xykbpksa6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 19:08:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016J8Pmf088015;
-        Thu, 6 Feb 2020 19:08:31 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2y0mnk9qbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 19:08:31 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 016J8UIY015928;
-        Thu, 6 Feb 2020 19:08:30 GMT
-Received: from localhost.localdomain (/10.159.247.143)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Feb 2020 11:08:30 -0800
-Subject: Re: [PATCH v4 3/3] selftests: KVM: SVM: Add vmcall test
-To:     Wei Huang <wei.huang2@amd.com>, Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com,
-        thuth@redhat.com, drjones@redhat.com
-References: <20200206104710.16077-1-eric.auger@redhat.com>
- <20200206104710.16077-4-eric.auger@redhat.com>
- <20200206173931.GC2465308@weiserver.amd.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <556d20b2-d6cf-e13c-635c-809836316b80@oracle.com>
-Date:   Thu, 6 Feb 2020 11:08:28 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200206173931.GC2465308@weiserver.amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002060140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002060140
+        Thu, 6 Feb 2020 14:10:29 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016J6VlQ106676
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2020 14:10:28 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0p3jwnw5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 14:10:28 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 6 Feb 2020 19:10:26 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Feb 2020 19:10:21 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016JAJcU53674176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 19:10:20 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C811252051;
+        Thu,  6 Feb 2020 19:10:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.140.59])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5EFF252050;
+        Thu,  6 Feb 2020 19:10:18 +0000 (GMT)
+Subject: Re: [RFC PATCH 1/2] ima: Implement support for uncompressed module
+ appended signatures
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        dhowells@redhat.com, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
+        tglx@linutronix.de, bauerman@linux.ibm.com, mpe@ellerman.id.au,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 06 Feb 2020 14:10:17 -0500
+In-Reply-To: <73919AC1-E13A-4B35-B811-B0FFBC7E8644@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+         <20200206164226.24875-2-eric.snowberg@oracle.com>
+         <1581012329.5585.439.camel@linux.ibm.com>
+         <73919AC1-E13A-4B35-B811-B0FFBC7E8644@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020619-0012-0000-0000-0000038460E2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020619-0013-0000-0000-000021C0CFF4
+Message-Id: <1581016217.5585.449.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_03:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 spamscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-02-06 at 12:01 -0700, Eric Snowberg wrote:
+> > On Feb 6, 2020, at 11:05 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > 
+> > On Thu, 2020-02-06 at 11:42 -0500, Eric Snowberg wrote:
+> >> Currently IMA can validate compressed modules containing appended
+> >> signatures.  This adds the ability to also validate uncompressed
+> >> modules when appraise_type=imasig|modsig.
+> >> 
+> >> Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+> > 
+> > Your patch description in no way matches the code.
+> > 
+> 
+> How about if I changed the description to the following:
+> 
+> Currently IMA can only validate compressed modules containing appended
+> signatures when appraise_type=imasig|modsig.  An uncompressed module that 
+> is internally signed must still be ima signed.  
+> 
+> Add the ability to validate the uncompress module by validating it against
+> keys contained within the .builtin_trusted_keys keyring. Now when using a
+> policy such as:
+> 
+> appraise func=MODULE_CHECK appraise_type=imasig|modsig
+> 
+> It will load modules containing an appended signature when either compressed
+> or uncompressed.
 
-On 2/6/20 9:39 AM, Wei Huang wrote:
-> On 02/06 11:47, Eric Auger wrote:
->> L2 guest calls vmcall and L1 checks the exit status does
->> correspond.
->>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-> I verified this patch with my AMD box, both with nested=1 and nested=0. I
-> also intentionally changed the assertion of exit_code to a different
-> value (0x082) and the test complained about it. So the test is good.
->
-> # selftests: kvm: svm_vmcall_test
-> # ==== Test Assertion Failure ====
-> #   x86_64/svm_vmcall_test.c:64: false
-> #   pid=2485656 tid=2485656 - Interrupted system call
-> #      1        0x0000000000401387: main at svm_vmcall_test.c:72
-> #      2        0x00007fd0978d71a2: ?? ??:0
-> #      3        0x00000000004013ed: _start at ??:?
-> #   Failed guest assert: vmcb->control.exit_code == SVM_EXIT_VMMCALL
-> # Testing guest mode: PA-bits:ANY, VA-bits:48,  4K pages
-> # Guest physical address width detected: 48
-> not ok 15 selftests: kvm: svm_vmcall_test # exit=254
->
->> ---
->>
->> v3 -> v4:
->> - remove useless includes
->> - collected Lin's R-b
->>
->> v2 -> v3:
->> - remove useless comment and add Vitaly's R-b
->> ---
->>   tools/testing/selftests/kvm/Makefile          |  1 +
->>   .../selftests/kvm/x86_64/svm_vmcall_test.c    | 79 +++++++++++++++++++
->>   2 files changed, 80 insertions(+)
->>   create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
->>
->> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
->> index 2e770f554cae..b529d3b42c02 100644
->> --- a/tools/testing/selftests/kvm/Makefile
->> +++ b/tools/testing/selftests/kvm/Makefile
->> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
->>   TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
->>   TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
->>   TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
->> +TEST_GEN_PROGS_x86_64 += x86_64/svm_vmcall_test
->>   TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->>   TEST_GEN_PROGS_x86_64 += dirty_log_test
->>   TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
->> diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
->> new file mode 100644
->> index 000000000000..6d3565aab94e
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-> Probably rename the file to svm_nested_vmcall_test.c. This matches with
-> the naming convention of VMX's nested tests. Otherwise people might not know
-> it is a nested one.
+We - Nayna and I - will be commenting on the cover letter shortly.  I
+think that will help clarify the problem(s).
 
-Is it better to give this file a generic name, say, nsvm_tests or 
-something like that, and place all future nested SVM tests in it, rather 
-than creating a separate file for each nested test ?
->
-> Everything else looks good.
->
->> @@ -0,0 +1,79 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * svm_vmcall_test
->> + *
->> + * Copyright (C) 2020, Red Hat, Inc.
->> + *
->> + * Nested SVM testing: VMCALL
->> + */
->> +
->> +#include "test_util.h"
->> +#include "kvm_util.h"
->> +#include "processor.h"
->> +#include "svm_util.h"
->> +
->> +#define VCPU_ID		5
->> +
->> +static struct kvm_vm *vm;
->> +
->> +static inline void l2_vmcall(struct svm_test_data *svm)
->> +{
->> +	__asm__ __volatile__("vmcall");
->> +}
->> +
->> +static void l1_guest_code(struct svm_test_data *svm)
->> +{
->> +	#define L2_GUEST_STACK_SIZE 64
->> +	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
->> +	struct vmcb *vmcb = svm->vmcb;
->> +
->> +	/* Prepare for L2 execution. */
->> +	generic_svm_setup(svm, l2_vmcall,
->> +			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
->> +
->> +	run_guest(vmcb, svm->vmcb_gpa);
->> +
->> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
->> +	GUEST_DONE();
->> +}
->> +
->> +int main(int argc, char *argv[])
->> +{
->> +	vm_vaddr_t svm_gva;
->> +
->> +	nested_svm_check_supported();
->> +
->> +	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
->> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
->> +
->> +	vcpu_alloc_svm(vm, &svm_gva);
->> +	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
->> +
->> +	for (;;) {
->> +		volatile struct kvm_run *run = vcpu_state(vm, VCPU_ID);
->> +		struct ucall uc;
->> +
->> +		vcpu_run(vm, VCPU_ID);
->> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
->> +			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
->> +			    run->exit_reason,
->> +			    exit_reason_str(run->exit_reason));
->> +
->> +		switch (get_ucall(vm, VCPU_ID, &uc)) {
->> +		case UCALL_ABORT:
->> +			TEST_ASSERT(false, "%s",
->> +				    (const char *)uc.args[0]);
->> +			/* NOT REACHED */
->> +		case UCALL_SYNC:
->> +			break;
->> +		case UCALL_DONE:
->> +			goto done;
->> +		default:
->> +			TEST_ASSERT(false,
->> +				    "Unknown ucall 0x%x.", uc.cmd);
->> +		}
->> +	}
->> +done:
->> +	kvm_vm_free(vm);
->> +	return 0;
->> +}
->
+Mimi
+
