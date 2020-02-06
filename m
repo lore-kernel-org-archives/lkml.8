@@ -2,104 +2,113 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285D8C35254
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67930C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA902166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:20:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VB5nnMZq"
+	by mail.kernel.org (Postfix) with ESMTP id 48A6A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgBFDUo (ORCPT
+        id S1727848AbgBFDVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:20:44 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60297 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727307AbgBFDUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:20:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580959242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VAlJIEy4W7LryrILkAsZre4wcOnjEJkFgrUe9djfLWE=;
-        b=VB5nnMZqIb+eDV5bxhbJGGgacI12h8UAbJosuQFpDSsprZoBsA4px5MMUVWMUz7TrgCe7h
-        cTrLL/Z0NnxzIESxfYEAIKQjV+1vBHUAJxI6v5yfFqqDMnqk2XmbbP3y7mn4Anna77gr7I
-        r3Kx8eXBwPyZpCnsO4WTxP1xs7MQE98=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-raeigLSNMYihxScUEsnOvQ-1; Wed, 05 Feb 2020 22:20:39 -0500
-X-MC-Unique: raeigLSNMYihxScUEsnOvQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D462F8018A1;
-        Thu,  6 Feb 2020 03:20:36 +0000 (UTC)
-Received: from [10.72.13.85] (ovpn-13-85.pek2.redhat.com [10.72.13.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AE12F790CF;
-        Thu,  6 Feb 2020 03:20:27 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v4] virtio_net: add XDP meta data support
-To:     Yuya Kusakabe <yuya.kusakabe@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        mst@redhat.com, songliubraving@fb.com, yhs@fb.com, kuba@kernel.org,
-        andriin@fb.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <8da1b560-3128-b885-b453-13de5c7431fb@redhat.com>
- <20200204071655.94474-1-yuya.kusakabe@gmail.com>
- <9a0a1469-c8a7-8223-a4d5-dad656a142fc@redhat.com>
- <1100837f-075f-dc97-cd14-758c96f2ac1d@gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0c5eaba2-dd5a-fc3f-0e8f-154f7ad52881@redhat.com>
-Date:   Thu, 6 Feb 2020 11:20:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 5 Feb 2020 22:21:36 -0500
+Received: from mga09.intel.com ([134.134.136.24]:30365 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727474AbgBFDVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 22:21:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 19:21:35 -0800
+X-IronPort-AV: E=Sophos;i="5.70,408,1574150400"; 
+   d="scan'208";a="224871203"
+Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.249.175.127]) ([10.249.175.127])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 05 Feb 2020 19:21:30 -0800
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+To:     Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Shahaf Shuler <shahafs@mellanox.com>,
+        Tiwei Bie <tiwei.bie@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "dan.daly@intel.com" <dan.daly@intel.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+ <20200205020247.GA368700@___>
+ <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <112858a4-1a01-f4d7-e41a-1afaaa1cad45@redhat.com>
+ <20200205125648.GV23346@mellanox.com>
+ <20200205081210-mutt-send-email-mst@kernel.org>
+ <55b050d6-b31d-f8a2-2a15-0fc68896d47f@redhat.com>
+From:   Zhu Lingshan <lingshan.zhu@linux.intel.com>
+Message-ID: <4b1753eb-b281-17e0-6636-849ac20cbe50@linux.intel.com>
+Date:   Thu, 6 Feb 2020 11:21:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <1100837f-075f-dc97-cd14-758c96f2ac1d@gmail.com>
+In-Reply-To: <55b050d6-b31d-f8a2-2a15-0fc68896d47f@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/2/5 =E4=B8=8B=E5=8D=885:18, Yuya Kusakabe wrote:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case XDP_TX:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 stats->xdp_tx++;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 x=
-dp.data_meta =3D xdp.data;
->> Any reason for doing this?
-> XDP_TX can not support metadata for now, because if metasize > 0, __vir=
-tnet_xdp_xmit_one() returns EOPNOTSUPP.
+On 2/6/2020 11:11 AM, Jason Wang wrote:
 >
-> static int __virtnet_xdp_xmit_one(struct virtnet_info *vi,
-> 				   struct send_queue *sq,
-> 				   struct xdp_frame *xdpf)
-> {
-> 	struct virtio_net_hdr_mrg_rxbuf *hdr;
-> 	int err;
+> On 2020/2/5 下午9:14, Michael S. Tsirkin wrote:
+>> On Wed, Feb 05, 2020 at 08:56:48AM -0400, Jason Gunthorpe wrote:
+>>> On Wed, Feb 05, 2020 at 03:50:14PM +0800, Jason Wang wrote:
+>>>>> Would it be better for the map/umnap logic to happen inside each 
+>>>>> device ?
+>>>>> Devices that needs the IOMMU will call iommu APIs from inside the 
+>>>>> driver callback.
+>>>> Technically, this can work. But if it can be done by vhost-vpda it 
+>>>> will make
+>>>> the vDPA driver more compact and easier to be implemented.
+>>> Generally speaking, in the kernel, it is normal to not hoist code of
+>>> out drivers into subsystems until 2-3 drivers are duplicating that
+>>> code. It helps ensure the right design is used
+>>>
+>>> Jason
+>> That's up to the sybsystem maintainer really, as there's also some
+>> intuition involved in guessing a specific API is widely useful.
+>> In-kernel APIs are flexible, if we find something isn't needed we just
+>> drop it.
+>>
 >
-> 	/* virtqueue want to use data area in-front of packet */
-> 	if (unlikely(xdpf->metasize > 0))
-> 		return -EOPNOTSUPP;
+> If I understand correctly. At least Intel (Ling Shan) and Brodcom 
+> (Rob) doesn't want to deal with DMA stuffs in their driver.
 >
+> Anyway since the DMA bus operations is optional, driver may still 
+> choose to do DMA by itself if they want even if it requires platform 
+> IOMMU to work.
 >
-
-I see.
-
-Then I think it's better to fix __virtnet_xdp_xmit_one() instead.
-
-Thanks
-
-
+> Thanks
+>
+Many Thanks if this could be done. The parent device has DMA 
+capabilities and dma ops implemented, we hope can make use of it, as 
+discussed in the vdpa thread.
