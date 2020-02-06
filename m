@@ -2,120 +2,163 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73F6C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1DBC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935E3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0E8214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kPIbp8Ej"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzjuQ7Gs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBFSQO (ORCPT
+        id S1727866AbgBFSRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:16:14 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40869 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgBFSQN (ORCPT
+        Thu, 6 Feb 2020 13:17:05 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35006 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBFSRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:16:13 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i6so6390954otr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:16:13 -0800 (PST)
+        Thu, 6 Feb 2020 13:17:04 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f8so7000682edv.2;
+        Thu, 06 Feb 2020 10:17:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hqXyWTPsRk1sbEhv4F9kR6Aqgito1sCOBhDIlov5OKo=;
-        b=kPIbp8EjtDr3arTeSUaNQfsuunB6rDyUC15mM8xmbQzCU6cCM9dZcABgKrZu4aA4ot
-         zGuPoZjW03Kp1BP9L3alLJLvShDanfAxcTC0vG5bq/BAE5FXyJVYDAKHvx5m39Yiv3MX
-         3y6ca5OVMQ8AlQEMGZpuo2T9mcNKYt6EI8Z4OfEFgWzxk2cutJWG3VAKPyeJMZETw3Se
-         7IhrMnmTt3fKkQ7CP84POfDcoJX7OVACnImZLwfi4pnotY7FBPiwV+g1jHcv+pYo2k/3
-         zhAr8gEiBDGGaCaQ9VTVp+Kqfq3MxqzKgQw5MLl4pU9oEDHH8EUydogxSexQaL4d5J7x
-         ogaA==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FDNhC9WMlrP1LhXrRyNHyiDOG67giK/5xeZUkY6OGb8=;
+        b=OzjuQ7GsD5pMv7xXrCU3SwSvWEuiZNWOnzoOAi4qdyrLDEBs293wDpCCd/3j/wwW6U
+         veyrB1fVhcfDBcsaGC/3Q/rGrIVO54Ch6/lk+BPj4m6731rqxuKAfv1E/v+M1Zf/QVpX
+         RiNvBxeOtmNFq2bErF79oCO2Q8XSw3MhPXTiTaS0nF3/SSZeX9+JqI64X1Lv7HIB97n1
+         vXmP8r130y3NuL56h+ps1xMsrKQi9RJPMal4ifSZ4FtbzjfsvjkgA/3vsz96yQGmSkOe
+         Y7f7JSHL3kDMSv/oHob1F/WaqMHRgC8Szqqb9521hDpqsBv3UjqLWzdMoBl5emw3bDdq
+         /Wdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hqXyWTPsRk1sbEhv4F9kR6Aqgito1sCOBhDIlov5OKo=;
-        b=P/OoT6HvIu74bF90/BY7OJAe1lb+T2xvToog1s1t8wmg28pmyWhNQzVnv/Nw3CkYnX
-         /lOVcS9r+7Oaa4xCRmxLHHbzhnsaU2jqkkxdYNW1cmcHfgI93bIJaK8DoskhiVQGbY8/
-         aJwoIB35QQ6R4/BTiaDaxMDvtgL4M6/JIoCl659WzO4jmY1HG1ZbXJVg4mTPKd5GgXvw
-         tg0rg0uQjKAb/M5cLzS9Uiza+hSK9gq1CYw8kyHchPC2DUjOR0HgN7jcDdYQmfkLX0Mx
-         foHoDtfYBEDTBC5eXpcUCsTyxTgow+VgDNhzDIHP5jbQZkF1GsKKVrjTq2M158vJBkYJ
-         MsAg==
-X-Gm-Message-State: APjAAAVC5R51OYsnrPNp6J33rbdF7CdDvlUl/+7n8YaNv0QTJ6MZxo09
-        dTh9q/qwZzaG1pArmW+XMssHLd4PBOul4n+8VC/RiUuWThE=
-X-Google-Smtp-Source: APXvYqwaTckcrFH7bGMSbhTZKw9pvz/Uc/msLLj+ylmlNbFufkDY6NdmzFxf2raQY1DpieW73ZkZW/Hdk58JVEhIdNA=
-X-Received: by 2002:a9d:6a2:: with SMTP id 31mr30905207otx.313.1581012972461;
- Thu, 06 Feb 2020 10:16:12 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FDNhC9WMlrP1LhXrRyNHyiDOG67giK/5xeZUkY6OGb8=;
+        b=rQFD9oclwRuB2tEay/Oh7rxh6mNtVqzer/MwPO37k8ZiG3dla5uZSMQ4eb7VQZmNtA
+         wrzZbtyw+5EYt5dXB3se5X1ii+hE9qDMNYWtL5BewFjeVGz+J5Klv9hgThuD1q8xyZ+T
+         zH+eCD/j4b6n3kLdBSFRTj7Kf3FV3r8PCTskNuZ74KsnuVvG5pJ7yCpVxjgOdDJsdis5
+         ehM6LBSJxB0jZbneIde0bDlW2bbO5iT5YqdwTQ+QoGpkZ4eNvG8ytZ7k6LozGFPig0Dm
+         PHuPjk3pvZaSaOIi4bRJ5RXVo1K5dBT3DaN6IKljpnW4vsJpK22AYY6qK18NljBY379M
+         ftCw==
+X-Gm-Message-State: APjAAAXAJIolfhcdUExzLUtY+nVdI5nCciVql7yANQ3SXBaoJw6UQ7O4
+        q0VVwEmajNyZs1xgpW+AGqwY970p
+X-Google-Smtp-Source: APXvYqxKsSxAckbPtZqtY+huWTHiiIk/6Ntj+OuEcFhnmjdagXVqKT3uv/SQgJsZLMY3t4mt3OG5Kw==
+X-Received: by 2002:a05:6402:17aa:: with SMTP id j10mr4051042edy.256.1581013022914;
+        Thu, 06 Feb 2020 10:17:02 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id n11sm24909eje.86.2020.02.06.10.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 10:17:02 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: fix delayed mm check
+Date:   Thu,  6 Feb 2020 21:16:09 +0300
+Message-Id: <5c7db203bb5aa23c22f16925ac00d50bdbe406e0.1581012158.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-2-almasrymina@google.com> <a48fbdd1-fc0e-f17d-09c2-1492c8466254@oracle.com>
-In-Reply-To: <a48fbdd1-fc0e-f17d-09c2-1492c8466254@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 6 Feb 2020 10:16:01 -0800
-Message-ID: <CAHS8izOYB3cz+EP4G8qNJygO7Zjq6AFbpnGrjthCXKi4DHUx3A@mail.gmail.com>
-Subject: Re: [PATCH v11 2/9] hugetlb_cgroup: add interface for charge/uncharge
- hugetlb reservations
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 2:08 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 2/3/20 3:22 PM, Mina Almasry wrote:
-> > Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
-> > usage or hugetlb reservation counter.
-> >
-> > Adds a new interface to uncharge a hugetlb_cgroup counter via
-> > hugetlb_cgroup_uncharge_counter.
-> >
-> > Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
-> > hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> > Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> > Acked-by: David Rientjes <rientjes@google.com>
-> >
-> > ---
-> >
-> > Changes in v11:
-> > - Changed all 'reserved' or 'reservation' to 'rsvd' to reflect the user
-> > interface.
->
-> Thanks.
->
-> Small nit,
->
-> > @@ -450,8 +496,7 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
-> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
-> >
-> >       counter = &h_cg->hugepage[MEMFILE_IDX(of_cft(of)->private)];
-> > -     rsvd_counter =
-> > -             &h_cg->rsvd_hugepage[MEMFILE_IDX(of_cft(of)->private)];
-> > +     rsvd_counter = &h_cg->rsvd_hugepage[MEMFILE_IDX(of_cft(of)->private)];
-> >
->
-> That looks like a change just to reformat a line added in the first patch?
->
-> >       switch (MEMFILE_ATTR(of_cft(of)->private)) {
-> >       case RES_MAX_USAGE:
->
+Fail fast if can't grab mm, so past that requests always have an mm
+when required. This fixes not checking mm fault for
+IORING_OP_{READ,WRITE}, as well allows to remove req->has_user
+altogether.
 
-Gah, my bad. I'll move this to patch 1.
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
 
-> --
-> Mike Kravetz
+v2: remove ->has_user (Jens)
+
+ fs/io_uring.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ce3dbd2b1b5c..1914351ebd5e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -516,6 +516,7 @@ enum {
+ 	REQ_F_TIMEOUT_NOSEQ	= BIT(REQ_F_TIMEOUT_NOSEQ_BIT),
+ 	/* completion under lock */
+ 	REQ_F_COMP_LOCKED	= BIT(REQ_F_COMP_LOCKED_BIT),
++
+ };
+ 
+ /*
+@@ -548,7 +549,6 @@ struct io_kiocb {
+ 	 * llist_node is only used for poll deferred completions
+ 	 */
+ 	struct llist_node		llist_node;
+-	bool				has_user;
+ 	bool				in_async;
+ 	bool				needs_fixed_file;
+ 	u8				opcode;
+@@ -2051,9 +2051,6 @@ static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
+ 		return iorw->size;
+ 	}
+ 
+-	if (!req->has_user)
+-		return -EFAULT;
+-
+ #ifdef CONFIG_COMPAT
+ 	if (req->ctx->compat)
+ 		return compat_import_iovec(rw, buf, sqe_len, UIO_FASTIOV,
+@@ -4418,7 +4415,6 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
+ 	}
+ 
+ 	if (!ret) {
+-		req->has_user = (work->flags & IO_WQ_WORK_HAS_MM) != 0;
+ 		req->in_async = true;
+ 		do {
+ 			ret = io_issue_sqe(req, NULL, &nxt, false);
+@@ -4922,6 +4918,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 	for (i = 0; i < nr; i++) {
+ 		const struct io_uring_sqe *sqe;
+ 		struct io_kiocb *req;
++		int err;
+ 
+ 		req = io_get_req(ctx, statep);
+ 		if (unlikely(!req)) {
+@@ -4938,20 +4935,23 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 		submitted++;
+ 
+ 		if (unlikely(req->opcode >= IORING_OP_LAST)) {
+-			io_cqring_add_event(req, -EINVAL);
++			err = -EINVAL;
++fail_req:
++			io_cqring_add_event(req, err);
+ 			io_double_put_req(req);
+ 			break;
+ 		}
+ 
+ 		if (io_op_defs[req->opcode].needs_mm && !*mm) {
+ 			mm_fault = mm_fault || !mmget_not_zero(ctx->sqo_mm);
+-			if (!mm_fault) {
+-				use_mm(ctx->sqo_mm);
+-				*mm = ctx->sqo_mm;
++			if (unlikely(mm_fault)) {
++				err = -EFAULT;
++				goto fail_req;
+ 			}
++			use_mm(ctx->sqo_mm);
++			*mm = ctx->sqo_mm;
+ 		}
+ 
+-		req->has_user = *mm != NULL;
+ 		req->in_async = async;
+ 		req->needs_fixed_file = async;
+ 		trace_io_uring_submit_sqe(ctx, req->opcode, req->user_data,
+-- 
+2.24.0
+
