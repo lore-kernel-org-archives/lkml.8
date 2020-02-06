@@ -2,102 +2,150 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AB0C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4896C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305AD21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vP4Bf8wH"
+	by mail.kernel.org (Postfix) with ESMTP id 8E508214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgBFVRW (ORCPT
+        id S1727586AbgBFVVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:17:22 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:38360 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFVRW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:17:22 -0500
-Received: by mail-pl1-f202.google.com with SMTP id t17so3930047ply.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 13:17:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=6zFcQXxOd0AoSDoUqg6z5isQ/0sW7jX3LPLgTPoylbY=;
-        b=vP4Bf8wHbtqzl59NmCRJTaPR2n5wX4ZSrXrJNID22SE8DI55UfIBhBJh3luYclTmHA
-         6e1aPnCGZt9aluu6/yuB4QOEGRi/vd75bY80CqYK3NRmimEjHTd44VL3InyfFxAtRbWr
-         Nppf17834U0//WH8jjkqkffz9CpSvfJF+l2cXIm6iUbiIME2GoY9N1rbEKsmaHTyOYRU
-         TWkJVCvaFoHovqGTp/ssYzmB2KYd3cRJRpIbl8BFSxCOgriT7scP7xKCnjCZvzv4VyWo
-         nKLuBdDmjP7JKyEGSVXIE8rBuHZzDdY7BVR5GAiYJ40PBmjje8DTZ0j1t60/jJN4wh1F
-         BxuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=6zFcQXxOd0AoSDoUqg6z5isQ/0sW7jX3LPLgTPoylbY=;
-        b=Clt97UCBC0xYYg8Z307yJu0avFaSMicHFsXZAPJaL0tX+4fcR8FXIMT/wLmhD6yIGG
-         nLHuPsi+TabN+uG8Fs9QT9idnG15ytSe7pKtRsUls6SFE039caKUFk3YUJbwu7r+OuWm
-         5L0W2IJebmAn04+j7e93S/A5Ln0baVRid5QAMWsKUt9rgdBNwgMuS1Jk39uYFgYIG4Gs
-         zJKtuXouqLPNUqFQiUOBBh/rJPudGA1vxlQ9GZxDr4EKRPH8ITLB03yd0Fdz8n8HXmpL
-         HfZ2SP6JOM1BpRt6cCvKriDKBWQVSFgEM6nsfDIgmrFaVWky0VnAoqSYJQqUgpP2qFQY
-         s0iQ==
-X-Gm-Message-State: APjAAAUm74sma3J+i30NgfGxvdjkRKztJHpXFL4qe1pV1kb8tF9o06t5
-        uoIgNbywFgtrWsKLzZGQ+2tQAeBb+mh+ZjQ=
-X-Google-Smtp-Source: APXvYqzPVS9brXynVC6CJDUEfyYzzmFRTdnK/23UvbznArAKwqWH9tbV7OeVpsvavmtAlSJC0jjyrYSMAAOSKRo=
-X-Received: by 2002:a63:381a:: with SMTP id f26mr6083736pga.40.1581023841400;
- Thu, 06 Feb 2020 13:17:21 -0800 (PST)
-Date:   Thu,  6 Feb 2020 13:14:31 -0800
-Message-Id: <20200206211430.150615-1-smoreland@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v2] security: selinux: allow per-file labeling for bpffs
-From:   Steven Moreland <smoreland@google.com>
-To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Cc:     "Connor O'Brien" <connoro@google.com>,
-        Steven Moreland <smoreland@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Feb 2020 16:21:22 -0500
+Received: from mga12.intel.com ([192.55.52.136]:31710 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgBFVVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 16:21:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 13:21:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,411,1574150400"; 
+   d="scan'208";a="250191235"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 06 Feb 2020 13:21:20 -0800
+Date:   Thu, 6 Feb 2020 13:21:20 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
+ dirty log functions
+Message-ID: <20200206212120.GF13067@linux.intel.com>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-16-sean.j.christopherson@intel.com>
+ <20200206200200.GC700495@xz-x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206200200.GC700495@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Connor O'Brien <connoro@google.com>
+On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
+> On Tue, Jan 21, 2020 at 02:31:53PM -0800, Sean Christopherson wrote:
+> 
+> [...]
+> 
+> > -int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm, struct kvm_clear_dirty_log *log)
+> > +void kvm_arch_dirty_log_tlb_flush(struct kvm *kvm,
+> > +				  struct kvm_memory_slot *memslot)
+> 
+> If it's to flush TLB for a memslot, shall we remove the "dirty_log" in
+> the name of the function, because it has nothing to do with dirty
+> logging any more?  And...
 
-Add support for genfscon per-file labeling of bpffs files. This allows
-for separate permissions for different pinned bpf objects, which may
-be completely unrelated to each other.
+I kept the "dirty_log" to allow arch code to implement logic specific to a
+TLB flush during dirty logging, e.g. x86's lockdep assert on slots_lock.
+And similar to the issue with MIPS below, to deter usage of the hook for
+anything else, i.e. to nudge people to using kvm_flush_remote_tlbs()
+directly.
 
-Signed-off-by: Connor O'Brien <connoro@google.com>
-Signed-off-by: Steven Moreland <smoreland@google.com>
----
- security/selinux/hooks.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> >  {
+> > -	struct kvm_memslots *slots;
+> > -	struct kvm_memory_slot *memslot;
+> > -	bool flush = false;
+> > -	int r;
+> > -
+> > -	mutex_lock(&kvm->slots_lock);
+> > -
+> > -	r = kvm_clear_dirty_log_protect(kvm, log, &flush);
+> > -
+> > -	if (flush) {
+> > -		slots = kvm_memslots(kvm);
+> > -		memslot = id_to_memslot(slots, log->slot);
+> > -
+> > -		/* Let implementation handle TLB/GVA invalidation */
+> > -		kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
+> > -	}
+> > -
+> > -	mutex_unlock(&kvm->slots_lock);
+> > -	return r;
+> > +	/* Let implementation handle TLB/GVA invalidation */
+> > +	kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
+> 
+> ... This may not directly related to the current patch, but I'm
+> confused on why MIPS cannot use kvm_flush_remote_tlbs() to flush TLBs.
+> I know nothing about MIPS code, but IIUC here flush_shadow_memslot()
+> is a heavier operation that will also invalidate the shadow pages.
+> Seems to be an overkill here when we only changed write permission of
+> the PTEs?  I tried to check the first occurance (2a31b9db15353) but I
+> didn't find out any clue of it so far.
+> 
+> But that matters to this patch because if MIPS can use
+> kvm_flush_remote_tlbs(), then we probably don't need this
+> arch-specific hook any more and we can directly call
+> kvm_flush_remote_tlbs() after sync dirty log when flush==true.
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 116b4d644f68..d7b11188dc8d 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -750,7 +750,8 @@ static int selinux_set_mnt_opts(struct super_block *sb,
- 	if (strcmp(sb->s_type->name, "proc") == 0)
- 		sbsec->flags |= SE_SBPROC | SE_SBGENFS;
- 
--	if (!strcmp(sb->s_type->name, "debugfs") ||
-+	if (!strcmp(sb->s_type->name, "bpf") ||
-+	    !strcmp(sb->s_type->name, "debugfs") ||
- 	    !strcmp(sb->s_type->name, "tracefs") ||
- 	    !strcmp(sb->s_type->name, "pstore"))
- 		sbsec->flags |= SE_SBGENFS;
--- 
-2.25.0.341.g760bfbb309-goog
+Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
+that prevents calling kvm_flush_remote_tlbs() directly, but I have no
+clue as to the important of that code.
 
-v1 -> v2
-- Rebased to be on upstream selinux tree
-- Removed Android specific 'Change-Id'
+> >  }
+> >  
+> >  long kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+> > diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+> > index 97ce6c4f7b48..0adaf4791a6d 100644
+> > --- a/arch/powerpc/kvm/book3s.c
+> > +++ b/arch/powerpc/kvm/book3s.c
+> > @@ -799,6 +799,11 @@ int kvmppc_core_check_requests(struct kvm_vcpu *vcpu)
+> >  	return vcpu->kvm->arch.kvm_ops->check_requests(vcpu);
+> >  }
+> >  
+> > +void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
+> 
+> Since at it, maybe we can start to use __weak attribute for new hooks
+> especially when it's empty for most archs?
+> 
+> E.g., define:
+> 
+> void __weak kvm_arch_sync_dirty_log(...) {}
+> 
+> In the common code, then only define it again in arch that has
+> non-empty implementation of this method?
 
+I defer to Paolo, I'm indifferent at this stage.
