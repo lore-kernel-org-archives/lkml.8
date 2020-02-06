@@ -2,104 +2,91 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9719BC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE133C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A41218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:33:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HkQEYk3N"
+	by mail.kernel.org (Postfix) with ESMTP id 988CD218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581024870;
+	bh=TEMPhnjHIXFHaDLjPc+38+Pw+SIobeIpWuv1OvYsk/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hMoTPbG6ay9+bsQM+UxPYG0YpVbqJQkLGBWHKDp/hRvX9UB90vYrHpTeKlUOqa33p
+	 Ze35bDO2sqOAwxpGjx4lw0ucI1AXbFzwuDoummX8evaHy5DaT7EozUyKZpuWFsj/V3
+	 Xt6IjQLnNeUKYJq5b5Y/jSofoW1RX7++CUKyCOLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgBFVc7 (ORCPT
+        id S1727848AbgBFVea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:32:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49158 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFVc6 (ORCPT
+        Thu, 6 Feb 2020 16:34:30 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41177 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbgBFVe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:32:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BN/T3iMnshevhsyreqpehr4+Oh90ZbYGm4K+QPmJ9jM=; b=HkQEYk3NOb8LurbbgnSTfjHPrQ
-        JN9NrBJ4Sv6+SJ0w98XBDtUuGXXCd6d58f198Hbo37Io7B9400fEXAd9srxLhxe1bW9p0N1k/XKNh
-        KezL8bg3sjH7Fku6t2ezLJZ8y4TIXvq4Cz0Z1ZkzC8bgxGfmY50z34fdYAUvlRQ71TC+vbAw1dRjP
-        oRj1jKUChwM1VIEPbPvKZf1Qj2ZDLIhv2xt2fbXEylMZZ/8jTgRAnPCiylS+8Rf3JaI5LA6KnxUOc
-        DQ4xxaEmYujFG3hy7gtGT+dxjic1Qa/mCTgCrAwsL9kR/yaEOACH/awyZLveYpuf/sd5za29tHrcW
-        eDs/rClA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izolb-0007wN-Lu; Thu, 06 Feb 2020 21:32:55 +0000
-Date:   Thu, 6 Feb 2020 13:32:55 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: always consider THP when adjusting min_free_kbytes
-Message-ID: <20200206213255.GC8731@bombadil.infradead.org>
-References: <20200204194156.61672-1-mike.kravetz@oracle.com>
- <alpine.DEB.2.21.2002041218580.58724@chino.kir.corp.google.com>
- <8cc18928-0b52-7c2e-fbc6-5952eb9b06ab@oracle.com>
- <20200204215319.GO8731@bombadil.infradead.org>
- <b6979214-3f0e-6c12-ed63-681b40c6e16c@oracle.com>
- <2ba63021-d05c-a648-f280-6c751e01adf6@oracle.com>
- <20200206203945.GZ8731@bombadil.infradead.org>
- <5e7800f2-3df3-a597-c164-5537b7f66417@oracle.com>
+        Thu, 6 Feb 2020 16:34:29 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l3so3396831pgi.8;
+        Thu, 06 Feb 2020 13:34:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F+A5Nf6jojAXkMgoriymn50UInA7zWvy6KKfk99TRuU=;
+        b=I5rCqRlE1E954co/J/Umj2y2j4f5TvQtqattYqLiKLhwnEyjyVskPc0Sm5Draz5JH3
+         wQXDz2Yf9TIwM1TupAzRQ/gtniUV0QXQTJ4PoGyxpFMWmH3dpsWepxFxjksbVNSWyNOJ
+         82AWVWNUj+MY/EuVtamf2YyUEpcNOqDWQDvZtFWD1GemjIyq/ES4Dz0MUawV5HmNCeE7
+         aCyBgHi9kVIYosxdq+Xj+tC/dfaH2d9EUimCSHSdRtJCqvlf3yyaOhntO99GZFNWVI35
+         SJck0Sl2EetF7CGI8mUBUa1iUD0Wzez30NjeXYBroh6Ay5YvjY+gpJ+NB7ThQzA9XSap
+         SFfA==
+X-Gm-Message-State: APjAAAX+hygaLNEmzGeKM6MNfrELXkSNQi4bdQdV0kRa/JxWzgF8UBed
+        BTYopnaR8rLowKDb+SI8hQ==
+X-Google-Smtp-Source: APXvYqwYy/+XAYue+7uOsYCEUX9rEtJ+clY7s1oHaWp5FDC4KLqoEfxmAKeYxPfZNh4BMD/dzqO/UQ==
+X-Received: by 2002:a63:8a42:: with SMTP id y63mr5814347pgd.266.1581024868913;
+        Thu, 06 Feb 2020 13:34:28 -0800 (PST)
+Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
+        by smtp.gmail.com with ESMTPSA id w26sm332548pfj.119.2020.02.06.13.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 13:34:28 -0800 (PST)
+Received: (nullmailer pid 14123 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:34:27 -0000
+Date:   Thu, 6 Feb 2020 14:34:27 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, biabeniamin@outlook.com,
+        knaack.h@gmx.de, mark.rutland@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 4/5] dt-bindings: iio: amplifiers: Add docs for
+ HMC425A Step Attenuator
+Message-ID: <20200206213427.GA12507@bogus>
+References: <20200206151149.32122-1-beniamin.bia@analog.com>
+ <20200206151149.32122-4-beniamin.bia@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5e7800f2-3df3-a597-c164-5537b7f66417@oracle.com>
+In-Reply-To: <20200206151149.32122-4-beniamin.bia@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:23:21PM -0800, Mike Kravetz wrote:
-> On 2/6/20 12:39 PM, Matthew Wilcox wrote:
-> > On Wed, Feb 05, 2020 at 05:36:44PM -0800, Mike Kravetz wrote:
-> >> The value of min_free_kbytes is calculated in two routines:
-> >> 1) init_per_zone_wmark_min based on available memory
-> >> 2) set_recommended_min_free_kbytes may reserve extra space for
-> >>    THP allocations
-> >>
-> >> In both of these routines, a user defined min_free_kbytes value will
-> >> be overwritten if the value calculated in the code is larger. No message
-> >> is logged if the user value is overwritten.
-> >>
-> >> Change code to never overwrite user defined value.  However, do log a
-> >> message (once per value) showing the value calculated in code.
-> > 
-> > But what if the user set min_free_kbytes to, say, half of system memory,
-> > and then hot-unplugs three quarters of their memory?  I think the kernel
-> > should protect itself against such foolishness.
+On Thu, Feb 06, 2020 at 05:11:48PM +0200, Beniamin Bia wrote:
+> From: Michael Hennerich <michael.hennerich@analog.com>
 > 
-> I'm not sure what we should set it to in this case.  Previously you said,
+> Document support for Analog Devices MC425A Step Attenuator.
 > 
-> >> I'm reluctant to suggest we do a more complex adjustment of the value
-> >> (eg figure out what the adjustment would have been, then apply some
-> >> fraction of that adjustment to keep the ratios in proportion) because
-> >> we don't really know why they adjusted it.
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> ---
+> Changes in v5:
+> -minItems added for ctrl_gpios
 > 
-> So, I suspect you would suggest setting it to the default computed value?
-> But then, when do we start adjusting?  What if they only remove a small
-> amount of memory?  And, then add the same amount back in?
+>  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
 
-I don't know about the default computed value ... we don't seem to have
-any protection against the user setting min_free_kbytes to double the
-amount of memory in the machine today.  Which would presumably cause
-problems if I asked to maintain 32GB free at all times on my 16GB laptop?
-
-Maybe we should have such protection?
-
-> BTW - In the above scenario existing code would not change min_free_kbytes
-> because the user defined value is greater than value computed in code.
-
-True!
+Reviewed-by: Rob Herring <robh@kernel.org>
