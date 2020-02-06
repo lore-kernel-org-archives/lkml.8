@@ -2,115 +2,162 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C27AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32695C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E171921741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FA721741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBSnrko3"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kLr9YHP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBFNu2 (ORCPT
+        id S1728116AbgBFNuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:50:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53330 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727060AbgBFNu2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:50:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580997027;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W5cANr4eZW1Ze25yG7ClVn5wTKGraXdr9//7Uu9WkcI=;
-        b=EBSnrko3/QIMsqyTo04Xwt16qF0s80bfzoRuP5c1jcJv8dcB5IqXsZnXkDgfUiWyB6WnHQ
-        07HiIBIQJguOX8eur154PUbvGKD6BU/dZo/O+fYYUhLj9ShT2YXCFlN0neqB+axbqpQXNj
-        dx8zXVRB4/l/DNj+iomIsFd8tuO/lpM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-y_daEZWhN9CaDR13pcBrDw-1; Thu, 06 Feb 2020 08:50:23 -0500
-X-MC-Unique: y_daEZWhN9CaDR13pcBrDw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE93D18AB2E9;
-        Thu,  6 Feb 2020 13:50:21 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2BF0F5DA7D;
-        Thu,  6 Feb 2020 13:50:18 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 21:50:16 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
-Message-ID: <20200206135016.GA25537@MiWiFi-R3L-srv>
-References: <20200206125343.9070-1-richardw.yang@linux.intel.com>
- <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Thu, 6 Feb 2020 08:50:32 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:28533 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgBFNub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:50:31 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48D0F03DN3z9v995;
+        Thu,  6 Feb 2020 14:50:28 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=kLr9YHP0; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id wtA-ON8Bgv8n; Thu,  6 Feb 2020 14:50:28 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48D0F01zYPz9v994;
+        Thu,  6 Feb 2020 14:50:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580997028; bh=0bH7Q8+ZCms42huP9MeIAQx+Q6qVGMr1gRSJSDwrjGU=;
+        h=From:Subject:To:Cc:Date:From;
+        b=kLr9YHP0JPqaJb7IyJSKyCkLltCvd/qg1dd/t8EfgAmFAVV8xI9PyWHXL1dE/AsuD
+         wAWZaUgPeHARvDoEpGNNlBC0OKmazuQ+Yj1a2iz206hkdBY0QvpWcWXYSADydAs9ov
+         hjWo3VqoCeglpbDRVm8IXZZSwjRniwMwpP9Pzi90=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9FBBB8B887;
+        Thu,  6 Feb 2020 14:50:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JhwneTyJXOp4; Thu,  6 Feb 2020 14:50:29 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50AFB8B864;
+        Thu,  6 Feb 2020 14:50:29 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id CD126652B7; Thu,  6 Feb 2020 13:50:28 +0000 (UTC)
+Message-Id: <90ec56a2315be602494619ed0223bba3b0b8d619.1580997007.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/hugetlb: Fix 512k hugepages on 8xx with 16k page size
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  6 Feb 2020 13:50:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/20 at 02:28pm, David Hildenbrand wrote:
-> On 06.02.20 13:53, Wei Yang wrote:
-> > When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
-> > doesn't work before sparse_init_one_section() is called. This leads to a
-> > crash when hotplug memory.
-> > 
-> > We should use memmap as it did.
-> > 
-> > Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> > CC: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  mm/sparse.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index 5a8599041a2a..2efb24ff8f96 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
-> >  	 * Poison uninitialized struct pages in order to catch invalid flags
-> >  	 * combinations.
-> >  	 */
-> > -	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
-> > +	page_init_poison(memmap, sizeof(struct page) * nr_pages);
-> 
-> If you add sub-sections that don't fall onto the start of the section,
-> 
-> pfn_to_page(start_pfn) != memmap
-> 
-> and your patch would break that under SPARSEMEM_VMEMMAP if I am not wrong.
+Commit 55c8fc3f4930 ("powerpc/8xx: reintroduce 16K pages with HW
+assistance") redefined pte_t as a struct of 4 pte_basic_t, because
+in 16K pages mode there are four identical entries in the
+page table. But the size of hugepage tables is calculated based
+of the size of (void *). Therefore, we end up with page tables
+of size 1k instead of 4k for 512k pages.
 
-It returns the pfn_to_page(pfn) from __populate_section_memmap() and
-assign to memmap in vmemmap case, how come it breaks anything. Correct
-me if I was wrong.
+As 512k hugepage tables are the same size as standard page tables,
+ie 4k, use the standard page tables instead of PGT_CACHE tables.
 
-> 
-> Instead of memmap, there would have to be something like
-> 
-> memmap + (start_pfn - SECTION_ALIGN_DOWN(start_pfn))
-> 
-> If I am not wrong :)
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+Fixes: 3fb69c6a1a13 ("powerpc/8xx: Enable 512k hugepage support with HW assistance")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/mm/hugetlbpage.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index c61032580185..edf511c2a30a 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -54,20 +54,24 @@ static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
+ 	if (pshift >= pdshift) {
+ 		cachep = PGT_CACHE(PTE_T_ORDER);
+ 		num_hugepd = 1 << (pshift - pdshift);
++		new = NULL;
+ 	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
+-		cachep = PGT_CACHE(PTE_INDEX_SIZE);
++		cachep = NULL;
+ 		num_hugepd = 1;
++		new = pte_alloc_one(mm);
+ 	} else {
+ 		cachep = PGT_CACHE(pdshift - pshift);
+ 		num_hugepd = 1;
++		new = NULL;
+ 	}
+ 
+-	if (!cachep) {
++	if (!cachep && !new) {
+ 		WARN_ONCE(1, "No page table cache created for hugetlb tables");
+ 		return -ENOMEM;
+ 	}
+ 
+-	new = kmem_cache_alloc(cachep, pgtable_gfp_flags(mm, GFP_KERNEL));
++	if (cachep)
++		new = kmem_cache_alloc(cachep, pgtable_gfp_flags(mm, GFP_KERNEL));
+ 
+ 	BUG_ON(pshift > HUGEPD_SHIFT_MASK);
+ 	BUG_ON((unsigned long)new & HUGEPD_SHIFT_MASK);
+@@ -98,7 +102,10 @@ static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
+ 	if (i < num_hugepd) {
+ 		for (i = i - 1 ; i >= 0; i--, hpdp--)
+ 			*hpdp = __hugepd(0);
+-		kmem_cache_free(cachep, new);
++		if (cachep)
++			kmem_cache_free(cachep, new);
++		else
++			pte_free(mm, new);
+ 	} else {
+ 		kmemleak_ignore(new);
+ 	}
+@@ -325,8 +332,7 @@ static void free_hugepd_range(struct mmu_gather *tlb, hugepd_t *hpdp, int pdshif
+ 	if (shift >= pdshift)
+ 		hugepd_free(tlb, hugepte);
+ 	else if (IS_ENABLED(CONFIG_PPC_8xx))
+-		pgtable_free_tlb(tlb, hugepte,
+-				 get_hugepd_cache_index(PTE_INDEX_SIZE));
++		pgtable_free_tlb(tlb, hugepte, 0);
+ 	else
+ 		pgtable_free_tlb(tlb, hugepte,
+ 				 get_hugepd_cache_index(pdshift - shift));
+@@ -640,12 +646,13 @@ static int __init hugetlbpage_init(void)
+ 		 * if we have pdshift and shift value same, we don't
+ 		 * use pgt cache for hugepd.
+ 		 */
+-		if (pdshift > shift && IS_ENABLED(CONFIG_PPC_8xx))
+-			pgtable_cache_add(PTE_INDEX_SIZE);
+-		else if (pdshift > shift)
+-			pgtable_cache_add(pdshift - shift);
+-		else if (IS_ENABLED(CONFIG_PPC_FSL_BOOK3E) || IS_ENABLED(CONFIG_PPC_8xx))
++		if (pdshift > shift) {
++			if (!IS_ENABLED(CONFIG_PPC_8xx))
++				pgtable_cache_add(pdshift - shift);
++		} else if (IS_ENABLED(CONFIG_PPC_FSL_BOOK3E) ||
++			   IS_ENABLED(CONFIG_PPC_8xx)) {
+ 			pgtable_cache_add(PTE_T_ORDER);
++		}
+ 
+ 		configured = true;
+ 	}
+-- 
+2.25.0
 
