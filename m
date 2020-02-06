@@ -2,118 +2,141 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED186C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B08EC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC01F217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmAE1w2y"
+	by mail.kernel.org (Postfix) with ESMTP id 2FB9A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:31:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBFMae (ORCPT
+        id S1727936AbgBFMbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:30:34 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42397 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727574AbgBFMad (ORCPT
+        Thu, 6 Feb 2020 07:31:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62144 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727571AbgBFMbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:30:33 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j132so4376921oih.9;
-        Thu, 06 Feb 2020 04:30:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+1wFfKBBcLtp5HsDjSSxgCzKCPvIDHcwsEvjBCHh2bw=;
-        b=XmAE1w2yO9wC3BL7kPK/ffAw0IykNlf2BpmVlytSEbHAAlZV3ImRK2behv6USpYxN4
-         9bJhoUm0wrS1s5kuc2ordkStKKY5YryUDTlRyVSPTyWZO1jyw4WhbrjqwJdeLLjbtnQF
-         2q7h2gyAlb+IVrgoCFCc5jDh7Ef8TvRUbaB8zQfdofnFKddV8CMmmbhhgp/2e38UIWSB
-         SPwdpBmruKXr93RgnU+hH2AM0RbHQFdiBi6FBy+TDXdKbXiDVvVNG/by5u2ouslSnwMl
-         g82QMp/WeFhrUP1UVBugeqQw2S2YOh/O7dCTJNh1GXJ6OHp3ffmqY6KXquXwInTCCg6j
-         I0TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+1wFfKBBcLtp5HsDjSSxgCzKCPvIDHcwsEvjBCHh2bw=;
-        b=L9bm3QAvZA3iVEnj/RnY05RpK8z8wBCYWg2w3HNVbcYML7JQeYegc457tuyqt/bhUn
-         mUap05BIQdilch7F4EQPuqNrVTb1IGlBhLm+UYPZ1G1+HD42nmoWelrmhQyhYq6/9DDi
-         ykSHzP0q8nymrjyKxpeyek0uDRB1iZQvU8XVw0+tIRVgJs18EkqM8wheT7OhqSwfJuAI
-         pszNdzOAMMHzBF4pUu7oY3oFVSDE7p2uEPjDg1+g8hgfoNtRJWChT8zBTx9Ja2NCdXYU
-         Brlcd7rUuR01GizCJBWJzVKpgSso1L9+ybcFCcXIFj4oCdvtWfL08DSlo74o43/A4g1e
-         E9OA==
-X-Gm-Message-State: APjAAAXA6q4VPR+Z0JLF68KmrAdshaMabl1qbLguvsbiKik5JMtpncd/
-        JBx5SrQe1WTlsOpSTn8oAIVP5oqqt7kbwxD9LLc=
-X-Google-Smtp-Source: APXvYqxs9v7rOqTlKGdsKrcP18kSV7Lc+clMK7meuUj9srtzLfK8vGc9JfTNWAm94gxg0dSiQqzyhYlvkSnurGXfseE=
-X-Received: by 2002:aca:1a17:: with SMTP id a23mr6403203oia.84.1580992232881;
- Thu, 06 Feb 2020 04:30:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20200206084443.209719-1-gch981213@gmail.com> <20200206084443.209719-2-gch981213@gmail.com>
- <20200206113158.GK3897@sirena.org.uk>
-In-Reply-To: <20200206113158.GK3897@sirena.org.uk>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Thu, 6 Feb 2020 20:30:21 +0800
-Message-ID: <CAJsYDVKnOv+4NT8V+9fFy_0KE7QSoeTL0jHTdq31Z=88vBzHgQ@mail.gmail.com>
-Subject: Re: [PATCH resend 1/2] spi: add driver for ar934x spi controller
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Thu, 6 Feb 2020 07:31:23 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016CPGw8064234
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2020 07:31:21 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xyhm8hnma-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 07:31:21 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 6 Feb 2020 12:31:19 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Feb 2020 12:31:15 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016CVEm047906816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 12:31:14 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 547D911C04C;
+        Thu,  6 Feb 2020 12:31:14 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 663DA11C05B;
+        Thu,  6 Feb 2020 12:31:13 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.140.59])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Feb 2020 12:31:13 +0000 (GMT)
+Subject: Re: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Thu, 06 Feb 2020 07:31:12 -0500
+In-Reply-To: <17bfd3e2b7fa4f31a46a6688e4a6e34f@huawei.com>
+References: <20200205103317.29356-1-roberto.sassu@huawei.com>
+         <20200205103317.29356-3-roberto.sassu@huawei.com>
+         <1580936432.5585.309.camel@linux.ibm.com>
+         <b1507c1121b64b3abc00e154fcfeef65@huawei.com>
+         <1580991426.5585.334.camel@linux.ibm.com>
+         <17bfd3e2b7fa4f31a46a6688e4a6e34f@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020612-0008-0000-0000-000003504B1D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020612-0009-0000-0000-00004A70DEEB
+Message-Id: <1580992272.5585.337.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 clxscore=1015 adultscore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 7:31 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Feb 06, 2020 at 04:44:42PM +0800, Chuanhong Guo wrote:
->
-> This looks good, just a couple of comments below:
->
-> > --- /dev/null
-> > +++ b/drivers/spi/spi-ar934x.c
-> > @@ -0,0 +1,230 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * SPI controller driver for Qualcomm Atheros AR934x/QCA95xx SoCs
->
-> Please make the entire comment block a C++ one so things look
-> more intentional.
+On Thu, 2020-02-06 at 12:28 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
+> > Sent: Thursday, February 6, 2020 1:17 PM
+> > To: Roberto Sassu <roberto.sassu@huawei.com>;
+> > James.Bottomley@HansenPartnership.com;
+> > jarkko.sakkinen@linux.intel.com
+> > Cc: linux-integrity@vger.kernel.org; linux-security-module@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; Silviu Vlasceanu
+> > <Silviu.Vlasceanu@huawei.com>; stable@vger.kernel.org
+> > Subject: Re: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot
+> > aggregate
+> > 
+> > On Thu, 2020-02-06 at 09:36 +0000, Roberto Sassu wrote:
+> > > > Hi Roberto,
+> > > >
+> > > > On Wed, 2020-02-05 at 11:33 +0100, Roberto Sassu wrote:
+> > > >
+> > > > <snip>
+> > > >
+> > > > > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > > > > Suggested-by: James Bottomley
+> > > > <James.Bottomley@HansenPartnership.com>
+> > > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > > > > Cc: stable@vger.kernel.org
+> > > >
+> > > > Cc'ing stable resulted in Sasha's automated message.  If you're going
+> > > > to Cc stable, then please include the stable kernel release (e.g. Cc:
+> > > > stable@vger.kernel.org # v5.3).  Also please include a "Fixes" tag.
+> > > >  Normally only bug fixes are backported.
+> > >
+> > > Ok, will add the kernel version. I also thought which commit I should
+> > > mention in the Fixes tag. IMA always read the SHA1 bank from the
+> > > beginning. I could mention the patch that introduces the new API
+> > > to read other banks, but I'm not sure. What do you think?
+> > 
+> > This patch is dependent on nr_allocated_banks.  Please try applying
+> > this patch to the earliest stable kernel with the commit that
+> > introduces nr_allocated_banks and test to make sure it works properly.
+> 
+> It also depends on 879b589210a9 ("tpm: retrieve digest size of unknown"
+> algorithms with PCR read") which exported the mapping between TPM
+> algorithm ID and crypto ID, and changed the definition of tpm_pcr_read()
+> to read non-SHA1 PCR banks. It requires many patches, so backporting it
+> is not a trivial task. I think the earliest kernel this patch can be backported to
+> is 5.1.
 
-Got it. I'll do this in v2.
+Agreed.  Thank you for checking.
 
->
-> > +static int ar934x_spi_transfer_one(struct spi_controller *master,
-> > +                                struct spi_message *m)
-> > +{
-> > +     struct ar934x_spi *sp = spi_controller_get_devdata(master);
-> > +     struct spi_transfer *t = NULL;
->
-> ...
->
-> > +
-> > +     m->actual_length = 0;
-> > +     list_for_each_entry(t, &m->transfers, transfer_list) {
->
-> It looks like this could just be a transfer_one() operation
-> instead of transfer_one_message() (which is what this is in spite
-> of the name)?  There's nothing custom outside this loop that I
-> can see.
+Mimi
 
-Chipselect is also handled during transfer. Controller asserts
-corresponding chipselect in SHIFT_CTRL register, and if SHIFT_TERM bit
-is set, controller will deassert chipselect after current transfer is
-done. I need to know whether this is the last transfer and set
-SHIFT_TERM accordingly.
-
-Regards,
-Chuanhong Guo
