@@ -2,120 +2,92 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C295C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF65C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33BA21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CC121775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021967;
-	bh=Gpq79vs6g0KI1yq9+ifnOnhggH6Ni50qtKscuHXUsAE=;
+	s=default; t=1581021969;
+	bh=jKEDO/f6GLMRK0hzGOQz0jPx359j89/rfsSqV9tJI8A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MfrSKZnkK3uSDo/mGwpBGVmsgJh9KjiXKMFiWE7UXsDkobo6nNdKgkmPAs2FFy7MT
-	 eHUVk6s2LFMkOqc4xcSnDJ9aKQZaI8gazhj6iJpo/NZiZH0gDnT51L+z4HArwnYJtB
-	 PGQAgrbFBBeEMeZv/cJkVZ/qxq4DiQPWzK6ko7p4=
+	b=CNf+vW6syxuGoptdHJn/ITRDA8PkKYYHfdxIDEIP26LU5UgzAxotKDmCF5OZJmm8S
+	 XOjTEKkWOGi7xyce0lWsAuHy6Bs6gyYqZZTev1OMQzodMgjfcHx089Ui7HtYP76zGj
+	 FO9ICQggDPRGSklhdgrWP845vNZZ3tNAee1kEBRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgBFUqF (ORCPT
+        id S1728154AbgBFUqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:05 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42186 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728096AbgBFUp5 (ORCPT
+        Thu, 6 Feb 2020 15:46:08 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34007 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbgBFUqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:45:57 -0500
-Received: by mail-pg1-f195.google.com with SMTP id w21so3340533pgl.9;
-        Thu, 06 Feb 2020 12:45:57 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:03 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j7so49508plt.1;
+        Thu, 06 Feb 2020 12:46:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TDSSUXzp+jY2mafKrqhbmPqt3x8XToH1UVPF0nShXrw=;
-        b=UuvbW5AxB50syt66YGG0LQZddxQqanSBCtgSiAHBmGkAI5bcaxo7KjeTTId976R7rQ
-         +ZpTCBN8h8aHEkmd2eEHNXfn0sDitDTlUbETD7as6pBBhJOnxOnHticK+jLU+/hqHbJ+
-         wOIGsnPNA98HUDhTd7FfaT/Qd8+SQBtEChgyHv82ZV1ooeHPFkLX+w4VRfq4JhcMjFdC
-         JcKuZ2H2cdzBj4yB/Kj4o/Fd50CGD9mhscGQyuRmsi57hHmz0lXU0lJ9fUkVnqjGn60z
-         sPsPi18eVR+IiPGkjPE4ACXn9+cfuoY/bZwbEeeL0otABiX7V9VCNVZj09hOwwyoOirj
-         3liQ==
-X-Gm-Message-State: APjAAAU9lqQhycR+fKj5WhcpZ4TAKTn/q9YxdG7PLqgiqWGctlUEKZbP
-        Fo+LOLWd/Iuxwqgktm5gmQ==
-X-Google-Smtp-Source: APXvYqyKjJUU76EY2SMDKH/N4kc6OvY/ZOAHowg2c6/pV5A8+7AkkIOuBxeq4e48NlDl4hjXDTlmrA==
-X-Received: by 2002:a63:ed14:: with SMTP id d20mr5610058pgi.267.1581021956822;
-        Thu, 06 Feb 2020 12:45:56 -0800 (PST)
+        bh=bRRz/TTbJY0rJVFxdXphgTRilr7A8yPPTS0Uy1cOzYI=;
+        b=U3V79h9TSWs2+NjyAZ5bXwbSOquZUDtVZr0t/Q9NV+sdq2PD7URT47FtyKjI4bUnDs
+         MSpjr1+oN5QDeuOF7182pYXkzyBlJJeVUtCp5zUWcxetn3Qxr6SfxEJs5TWLtOgpRfCL
+         QJb2BP0qStLdf9fL9+MmyWCg1S2tKnVX6I+scfOMX5tC55yTqcPoZUMTQeEz6MfnxseU
+         ftB+wz9c61c9KKcK0VeTT62cB0aVbD9AdQIUyz7j0mJiIsw1QqyXzhVX3bqz22fLyADR
+         KZeusHlF1g7v46CKG6uCyn7QhvzyzgQIy+6eYhOgVq2/OksEgy3jHyOex2EQ2KzLlpig
+         HmYg==
+X-Gm-Message-State: APjAAAXQGeQCXZCHAkgtJJgjfS4a+CBDusAI4JYb9NYAzD2tIjyK47Ue
+        GNkWgbKEqv3WXY1QrguPSw==
+X-Google-Smtp-Source: APXvYqw3i21zG8VchiKpwOClmmNNxvpGfIuuGeynfglACClOjdMJZK6wsS2Vbxahnpkys1QVUyi9wQ==
+X-Received: by 2002:a17:902:8a83:: with SMTP id p3mr6197742plo.56.1581021962092;
+        Thu, 06 Feb 2020 12:46:02 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id x12sm287256pfr.47.2020.02.06.12.45.54
+        by smtp.gmail.com with ESMTPSA id r7sm288783pfg.34.2020.02.06.12.46.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:56 -0800 (PST)
-Received: (nullmailer pid 13377 invoked by uid 1000);
-        Thu, 06 Feb 2020 19:24:37 -0000
-Date:   Thu, 6 Feb 2020 19:24:37 +0000
+        Thu, 06 Feb 2020 12:46:01 -0800 (PST)
+Received: (nullmailer pid 20625 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:35:36 -0000
+Date:   Thu, 6 Feb 2020 17:35:36 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "james.tai" <james.tai@realtek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 00/12] dt-bindings: arm: bcm: Convert boards to YAML
-Message-ID: <20200206192437.GB30325@bogus>
-References: <20200204235552.7466-1-f.fainelli@gmail.com>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, biabeniamin@outlook.com,
+        knaack.h@gmx.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: amplifiers: Add docs for
+ HMC425A Step Attenuator
+Message-ID: <20200206173536.GA20564@bogus>
+References: <20200129142301.13918-1-beniamin.bia@analog.com>
+ <20200129142301.13918-5-beniamin.bia@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204235552.7466-1-f.fainelli@gmail.com>
+In-Reply-To: <20200129142301.13918-5-beniamin.bia@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 03:55:40PM -0800, Florian Fainelli wrote:
-> Hi Rob, Maxime,
+On Wed, 29 Jan 2020 16:23:00 +0200, Beniamin Bia wrote:
+> From: Michael Hennerich <michael.hennerich@analog.com>
 > 
-> This patch series converts most files under D/dt-bindings/arm/bcm/ with
-> the exception of bcm63138 and brcmstb to the YAML format. Those two may
-> be split accordingly later on since document not just the root node.
+> Document support for Analog Devices MC425A Step Attenuator.
 > 
-> Changes in v2:
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> ---
+>  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
 > 
-> - fixed typo in Vulcan binding
-> - simplified how SoC compatible strings are specified
-> - fixed filename in bcm2835 firmware binding
-> - added 'secondary-boot-reg' constraint
-> 
-> 
-> Florian Fainelli (12):
->   dt-bindings: arm: bcm: Convert Cygnus to YAML
->   dt-bindings: arm: bcm: Convert Hurricane 2 to YAML
->   dt-bindings: arm: bcm: Convert Northstar Plus to YAML
->   dt-bindings: arm: bcm: Convert Northstar 2 to YAML
->   dt-bindings: arm: bcm: Convert Stingray to YAML
->   dt-bindings: arm: bcm: Convert BCM21664 to YAML
->   dt-bindings: arm: bcm: Convert BCM23550 to YAML
->   dt-bindings: arm: bcm: Convert BCM4708 to YAML
->   dt-bindings: arm: bcm: Convert BCM11351 to YAML
->   dt-bindings: arm: bcm: Convert Vulcan to YAML
->   dt-bindings: arm: Document Broadcom SoCs 'secondary-boot-reg'
-
-For all the above,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
->   dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML
-> 
