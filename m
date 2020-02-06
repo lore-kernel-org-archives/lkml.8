@@ -2,79 +2,136 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9DFC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22ABC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E64521775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A0C217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="px17xW9V"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ek6SC1TA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgBFLyO (ORCPT
+        id S1727821AbgBFLzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:54:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:37194 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgBFLyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:54:14 -0500
-Received: from zn.tnic (p200300EC2F0B4B00F16B0FD9F8D3445C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4b00:f16b:fd9:f8d3:445c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CEB9C1EC0C51;
-        Thu,  6 Feb 2020 12:54:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1580990053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=f7ChmiHX9FL0Z79PYUHfecPXhdKL4+QNl1JEAwKSqPk=;
-        b=px17xW9VoAJxnUb4qjAyocCrfn1IhZgiBqcqnMGuvX1OqYssOuCyL7mW9vRYOVcujEsWwC
-        4bEAZP0lkRisNoYA2P4NHb7t8HplhUdxDyRhsaUl+srCVBbwUs6TajRrn6NaGRoWOyjNMO
-        GwJdZLJDMv8fXW1912k5Z4eHmIThXvU=
-Date:   Thu, 6 Feb 2020 12:54:05 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config support
-Message-ID: <20200206115405.GA22608@zn.tnic>
-References: <20200114210316.450821675@goodmis.org>
- <20200114210336.259202220@goodmis.org>
+        Thu, 6 Feb 2020 06:55:06 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41050 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbgBFLzF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:55:05 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 016Bt0hH091917;
+        Thu, 6 Feb 2020 05:55:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580990100;
+        bh=2Coh5p3qK7LHZQttiOinvCEs7fyz7VfDVezsyJy7rYQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ek6SC1TAl5DzeYgwPpr9VSihDWTPoxgPuhzqO81fOexKs5XkSwS+tx++DPywyPBO2
+         JlnyeUMWiZTJwhSAXkaAr075Skh4H9qAUeqI0lNCzF9jTBqhZaQFZTPVX6UKiHa6Vk
+         yxBu8UH35HsY3jWQJ1XVxzWSnkvcGx39JUMuCPeI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 016Bt0os083904;
+        Thu, 6 Feb 2020 05:55:00 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 6 Feb
+ 2020 05:55:00 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 6 Feb 2020 05:55:00 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 016BswWh069423;
+        Thu, 6 Feb 2020 05:54:58 -0600
+Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+To:     Hans de Goede <hdegoede@redhat.com>, <axboe@kernel.dk>
+CC:     <vigneshr@ti.com>, <nsekhar@ti.com>, <linux-ide@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20200206111728.6703-1-rogerq@ti.com>
+ <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <50ad68d2-39e2-d2f0-1794-cf7b499cb1f0@ti.com>
+Date:   Thu, 6 Feb 2020 13:54:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200114210336.259202220@goodmis.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
-> diff --git a/init/Kconfig b/init/Kconfig
-> index a34064a031a5..63450d3bbf12 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
->  
->  endif
->  
-> +config BOOT_CONFIG
-> +	bool "Boot config support"
-> +	select LIBXBC
-> +	default y
+Hans,
 
-Any particular reason this is default y? Why should it be enabled by
-default on all boxes?
+On 06/02/2020 13:50, Hans de Goede wrote:
+> Hi,
+> 
+> On 2/6/20 12:17 PM, Roger Quadros wrote:
+>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
+>> Restrict it to 32-bit.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   drivers/ata/ahci_platform.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+>> index 3aab2e3d57f3..b925dc54cfa5 100644
+>> --- a/drivers/ata/ahci_platform.c
+>> +++ b/drivers/ata/ahci_platform.c
+>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
+>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
+>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
+>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
+>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
+>> +
+> 
+> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
+> is e.g. also used on some exynos devices. So using that to key the
+> setting of the 32 bit flag seems wrong to me.
+
+You are right, Vignesh also pointed this out to me offline.
+
+snps,dwc-ahci does indeed support 64-bit addressing, so this patch is wrong.
+
+> 
+> IMHO it would be better to introduce a TI specific compatible
+> and use that to match on instead (and also adjust the dts files
+> accordingly).
+
+The TI platform's TRM does say it has only 36-bits of the controller wired
+in the device. If that was the case and DDR address never goes beyond
+36-bits, we don't understand why it fails in the first place.
+
+80000000-afcfffff : System RAM
+b0000000-feffffff : System RAM
+200000000-27fffffff : System RAM
+
+cheers,
+-roger
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+>>       port = acpi_device_get_match_data(dev);
+>>       if (!port)
+>>           port = &ahci_port_info;
+>>
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
