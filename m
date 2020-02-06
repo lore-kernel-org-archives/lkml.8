@@ -2,112 +2,227 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF0EC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96039C47409
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8DD21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B1921775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XtU6R1g1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cqVmZRJO";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QEOGG3Dr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBFWaI (ORCPT
+        id S1727129AbgBFWb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:30:08 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53192 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726543AbgBFWaI (ORCPT
+        Thu, 6 Feb 2020 17:31:58 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34074 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbgBFWb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:30:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581028206;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y9cBxEKgtYZ4SHZJ2KCZ291mafsQUmmbyOmTI5C6x9c=;
-        b=XtU6R1g1DzR7pDkOvp+BNKtATHbXUm90+/6GQRFQ9uNmo8psreNAsY2ftxMiGhOS92tTCK
-        FqguwxiD1MhiFn+CRt1r9PB391onsqLQdmK/iW/zXKIraySs/NP8xsLMIUIcxDY1chJMPP
-        8eIvakGDCKnQ+J8Mo6ManhkTvzGnOY8=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-beDS3rP4NV21BYC19vvukA-1; Thu, 06 Feb 2020 17:30:05 -0500
-X-MC-Unique: beDS3rP4NV21BYC19vvukA-1
-Received: by mail-qt1-f197.google.com with SMTP id o18so260603qtt.19
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 14:30:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y9cBxEKgtYZ4SHZJ2KCZ291mafsQUmmbyOmTI5C6x9c=;
-        b=PJFhrnwDWrYMHuPdfTnNtRw0MpLcXCb2TvDmx+wElprq4z1RiCgtsqEoCbNliDbijF
-         3mNj6hHQLrodpg9r9qPKXw3VsHz578LsMlPfra3/67LDdfm7GpZdhWQ2MwVD3ZF5b8Gb
-         DxWr4Y5JMn2tiITCT1Ha5IWXRz0FH5XeEZgLCc1V3pvv/1NoIlgP2XTDMIzfx5ek1LnO
-         wkzRPdX9k0eqYIs/V/RvIjwxZ/VUssN+dkVt7H3GGqRcBmWrzheqXo6xDYlcvO9d7ND2
-         O/53l/NBBGRHAj7paRkwusmpdqilQVkZoIwgsBb7fW2+Y6hbuIscZ3TsY7haw5y93YaU
-         om+Q==
-X-Gm-Message-State: APjAAAXTaOIM17s8DGcSX4e9BlaLNzYFsMnyGNRUpotnGqiu9jZ5+BPc
-        a8R9IGiGgTAFjwCSVSkhql//8uIUvWP+ZBwv6SiHklk1dR7NtChdC7v0wQBsq/xL2tQCxj+35rg
-        OOih8Q1Dv3VY28NZFFud7b6b9
-X-Received: by 2002:a37:7884:: with SMTP id t126mr4700916qkc.288.1581028204600;
-        Thu, 06 Feb 2020 14:30:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzvEhS0XgXcsen5IJpPtTelaoRM0D8F8yYe4NbZxtsmBW+xmvTRWnxA6Vkem/WNxI4KksN37A==
-X-Received: by 2002:a37:7884:: with SMTP id t126mr4700901qkc.288.1581028204379;
-        Thu, 06 Feb 2020 14:30:04 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id z185sm352349qkb.116.2020.02.06.14.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 14:30:03 -0800 (PST)
-Date:   Thu, 6 Feb 2020 17:30:01 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 19/19] KVM: selftests: Add test for
- KVM_SET_USER_MEMORY_REGION
-Message-ID: <20200206223001.GJ700495@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-20-sean.j.christopherson@intel.com>
+        Thu, 6 Feb 2020 17:31:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016MO59D128029;
+        Thu, 6 Feb 2020 22:31:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=1dCQzBF1Cy1VWMoh0IXhksIqAR1fyX3kpp5QSoJp0Fw=;
+ b=cqVmZRJOQqRb+8a78dIoQFixTd3UhMeWOw931Ihmokotg1vASd711h9Hh0WWZtQijSvJ
+ VjLFglBkrlQGbk+MA/xFbq8dH/eENq/+7+SaSI6GaQgwsJ0pDQnWOFiz4p0SuMlieQ5V
+ UHpxaglv8zW7f7Kgj2d+tmpgK0kkqI5RfO8AJbokVnZi5GEifH3vFK2T5tW7HMJm+p17
+ LaAFCjGCW/5CJ45xqqdSVNNe6CcbTmOAvRnsW732CUbxTPFWNp3ZUq+ZruMW4OoisB1o
+ Go5dXCXvufxN4N9Igk+ULW4Mghu5KdGiZ3U9oGbXquaPuf7ihzLs8oFf27tbrskOAras Dw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=1dCQzBF1Cy1VWMoh0IXhksIqAR1fyX3kpp5QSoJp0Fw=;
+ b=QEOGG3DrrUHxV3xUm43ars+LaIjQMuvppX08nVNAFGDn9SxuhI3AbfQYuJpAefKfFkN9
+ Go+HaUhJwksZqQqansJcaPnpJFEOwBGP+ssuibZKLUK1hJhYDpL7aDNohKtvbwB9TP4X
+ 0v1p29PmGJ/04u36yGb9+gw9dOulEcsvSbcDmV7LMbrFr0AeOJ5ADXVzfZbRDXMFfJhd
+ rr0uAz+wxk0b83NFA9V4QSRhqz6QZBtABUYYN6UxhTJ3LTaDb+kXBAb8BybFx8c1m7Wc
+ wrtH4yI103ik2kkRuU5A6qoUAG9OWSkLKXJoNSSHpU6BIpUaHFulOyYOhJGazbuuzeJ7 ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xykbpcs55-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 22:31:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016MO9Ag190696;
+        Thu, 6 Feb 2020 22:31:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2y0jfytahp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 22:31:49 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016MVmgm024222;
+        Thu, 6 Feb 2020 22:31:48 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 14:31:48 -0800
+Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-6-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
+Date:   Thu, 6 Feb 2020 14:31:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200203232248.104733-6-almasrymina@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121223157.15263-20-sean.j.christopherson@intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060162
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:31:57PM -0800, Sean Christopherson wrote:
-> Add a KVM selftest to test moving the base gfn of a userspace memory
-> region.  Although the basic concept of moving memory regions is not x86
-> specific, the assumptions regarding large pages and MMIO shenanigans
-> used to verify the correctness make this x86_64 only for the time being.
+On 2/3/20 3:22 PM, Mina Almasry wrote:
+> Support MAP_NORESERVE accounting as part of the new counter.
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> For each hugepage allocation, at allocation time we check if there is
+> a reservation for this allocation or not. If there is a reservation for
+> this allocation, then this allocation was charged at reservation time,
+> and we don't re-account it. If there is no reserevation for this
+> allocation, we charge the appropriate hugetlb_cgroup.
+> 
+> The hugetlb_cgroup to uncharge for this allocation is stored in
+> page[3].private. We use new APIs added in an earlier patch to set this
+> pointer.
 
-(I'm a bit curious why write 2 first before 1...)
+Ah!  That reminded me to look at the migration code.  Turns out that none
+of the existing cgroup information (page[2]) is being migrated today.  That
+is a bug. :(  I'll confirm and fix in a patch separate from this series.
+We will need to make sure that new information added by this series in page[3]
+is also migrated.  That would be in an earlier patch where the use of the
+field is introduced.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+> 
+> Changes in v10:
+> - Refactored deferred_reserve check.
+> 
+> ---
+>  mm/hugetlb.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 33818ccaf7e89..ec0b55ea1506e 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1339,6 +1339,9 @@ static void __free_huge_page(struct page *page)
+>  	clear_page_huge_active(page);
+>  	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+>  				     page, false);
+> +	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+> +				     page, true);
+> +
 
+When looking at the code without change markings, the two above lines
+look so similar my first thought is there must be a mistake.
+
+A suggestion for better code readability:
+- hugetlb_cgroup_uncharge_page could just take "struct hstate *h" and
+  get both hstate_index(h) and pages_per_huge_page(h).
+- Perhaps make hugetlb_cgroup_uncharge_page and
+  hugetlb_cgroup_uncharge_page_rsvd be wrappers around a common routine.
+  Then the above would look like:
+
+  hugetlb_cgroup_uncharge_page(h, page);
+  hugetlb_cgroup_uncharge_page_rsvd(h, page);
+  
+
+>  	if (restore_reserve)
+>  		h->resv_huge_pages++;
+> 
+> @@ -2172,6 +2175,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  	long gbl_chg;
+>  	int ret, idx;
+>  	struct hugetlb_cgroup *h_cg;
+> +	bool deferred_reserve;
+> 
+>  	idx = hstate_index(h);
+>  	/*
+> @@ -2209,10 +2213,20 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  			gbl_chg = 1;
+>  	}
+> 
+> +	/* If this allocation is not consuming a reservation, charge it now.
+> +	 */
+> +	deferred_reserve = map_chg || avoid_reserve || !vma_resv_map(vma);
+> +	if (deferred_reserve) {
+> +		ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h),
+> +						   &h_cg, true);
+> +		if (ret)
+> +			goto out_subpool_put;
+> +	}
+> +
+>  	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg,
+>  					   false);
+
+Hmmm?  I'm starting to like the wrapper idea more as a way to help with
+readability of the bool rsvd argument.
+
+hugetlb_cgroup_charge_cgroup_rsvd()
+hugetlb_cgroup_charge_cgroup()
+
+At least to me it makes it easier to read.
 -- 
-Peter Xu
+Mike Kravetz
 
+>  	if (ret)
+> -		goto out_subpool_put;
+> +		goto out_uncharge_cgroup_reservation;
+> 
+>  	spin_lock(&hugetlb_lock);
+>  	/*
+> @@ -2236,6 +2250,14 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  	}
+>  	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page,
+>  				     false);
+> +	/* If allocation is not consuming a reservation, also store the
+> +	 * hugetlb_cgroup pointer on the page.
+> +	 */
+> +	if (deferred_reserve) {
+> +		hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg,
+> +					     page, true);
+> +	}
+> +
+>  	spin_unlock(&hugetlb_lock);
+> 
+>  	set_page_private(page, (unsigned long)spool);
+> @@ -2261,6 +2283,10 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  out_uncharge_cgroup:
+>  	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg,
+>  				       false);
+> +out_uncharge_cgroup_reservation:
+> +	if (deferred_reserve)
+> +		hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h),
+> +					       h_cg, true);
+>  out_subpool_put:
+>  	if (map_chg || avoid_reserve)
+>  		hugepage_subpool_put_pages(spool, 1);
+> --
+> 2.25.0.341.g760bfbb309-goog
