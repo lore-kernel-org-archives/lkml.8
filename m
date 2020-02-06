@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E0AC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB047C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED0C20658
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8D1217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgBFWIm (ORCPT
+        id S1727941AbgBFWIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:08:42 -0500
-Received: from mga02.intel.com ([134.134.136.20]:30021 "EHLO mga02.intel.com"
+        Thu, 6 Feb 2020 17:08:39 -0500
+Received: from mga14.intel.com ([192.55.52.115]:64211 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727571AbgBFWIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727717AbgBFWIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Feb 2020 17:08:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 14:08:38 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 14:08:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,411,1574150400"; 
-   d="scan'208";a="404625100"
+   d="scan'208";a="404625085"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga005.jf.intel.com with ESMTP; 06 Feb 2020 14:08:37 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] KVM: nVMX: Drop unnecessary check on ept caps for execute-only
-Date:   Thu,  6 Feb 2020 14:08:36 -0800
-Message-Id: <20200206220836.22743-8-sean.j.christopherson@intel.com>
+Subject: [PATCH 2/7] KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+Date:   Thu,  6 Feb 2020 14:08:31 -0800
+Message-Id: <20200206220836.22743-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200206220836.22743-1-sean.j.christopherson@intel.com>
 References: <20200206220836.22743-1-sean.j.christopherson@intel.com>
@@ -50,37 +50,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the call to cpu_has_vmx_ept_execute_only() when calculating which
-EPT capabilities will be exposed to L1 for nested EPT.  The resulting
-configuration is immediately sanitized by the passed in @ept_caps, and
-except for the call from vmx_check_processor_compat(), @ept_caps is the
-capabilities that are queried by cpu_has_vmx_ept_execute_only().  For
-vmx_check_processor_compat(), KVM *wants* to ignore vmx_capability.ept
-so that a divergence in EPT capabilities between CPUs is detected.
+Define PT_MAX_FULL_LEVELS as PT64_ROOT_MAX_LEVEL, i.e. 5, to fix shadow
+paging for 5-level guest page tables.  PT_MAX_FULL_LEVELS is used to
+size the arrays that track guest pages table information, i.e. using a
+"max levels" of 4 causes KVM to access garbage beyond the end of an
+array when querying state for level 5 entries.  E.g. FNAME(gpte_changed)
+will read garbage and most likely return %true for a level 5 entry,
+soft-hanging the guest because FNAME(fetch) will restart the guest
+instead of creating SPTEs because it thinks the guest PTE has changed.
 
+Fixes: 855feb673640 ("KVM: MMU: Add 5 level EPT & Shadow page table support.")
+Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/paging_tmpl.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 8cab6f21f356..68e524824136 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -6070,10 +6070,9 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
- 			VMX_EPT_PAGE_WALK_4_BIT |
- 			VMX_EPT_PAGE_WALK_5_BIT |
- 			VMX_EPTP_WB_BIT |
--			VMX_EPT_INVEPT_BIT;
--		if (cpu_has_vmx_ept_execute_only())
--			msrs->ept_caps |=
--				VMX_EPT_EXECUTE_ONLY_BIT;
-+			VMX_EPT_INVEPT_BIT |
-+			VMX_EPT_EXECUTE_ONLY_BIT;
-+
- 		msrs->ept_caps &= ept_caps;
- 		msrs->ept_caps |= VMX_EPT_EXTENT_GLOBAL_BIT |
- 			VMX_EPT_EXTENT_CONTEXT_BIT | VMX_EPT_2MB_PAGE_BIT |
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 4e1ef0473663..6b15b58f3ecc 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -33,7 +33,7 @@
+ 	#define PT_GUEST_ACCESSED_SHIFT PT_ACCESSED_SHIFT
+ 	#define PT_HAVE_ACCESSED_DIRTY(mmu) true
+ 	#ifdef CONFIG_X86_64
+-	#define PT_MAX_FULL_LEVELS 4
++	#define PT_MAX_FULL_LEVELS PT64_ROOT_MAX_LEVEL
+ 	#define CMPXCHG cmpxchg
+ 	#else
+ 	#define CMPXCHG cmpxchg64
+@@ -66,7 +66,7 @@
+ 	#define PT_GUEST_ACCESSED_SHIFT 8
+ 	#define PT_HAVE_ACCESSED_DIRTY(mmu) ((mmu)->ept_ad)
+ 	#define CMPXCHG cmpxchg64
+-	#define PT_MAX_FULL_LEVELS 4
++	#define PT_MAX_FULL_LEVELS PT64_ROOT_MAX_LEVEL
+ #else
+ 	#error Invalid PTTYPE value
+ #endif
 -- 
 2.24.1
 
