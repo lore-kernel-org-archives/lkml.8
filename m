@@ -2,201 +2,72 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CCEC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E05DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7140D21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:52:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PVmS/Sek"
+	by mail.kernel.org (Postfix) with ESMTP id 09565222D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgBFMwD (ORCPT
+        id S1727807AbgBFMxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:52:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55677 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727585AbgBFMwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:52:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580993521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+cSUL+K/rXHlYkmV2kRSp+5Fbri1CKFQQdzfpWgF9qI=;
-        b=PVmS/Sek408PEZhufLV1YQFOEDdrpEF3AnR3T0HeBBpG7fVa0FmErAtyF7bqRDs5Sd/FnR
-        zcVKb9B0O8VyUd+W7dzCdfdo0ZJ5HiFWtN/2rkXMpoZkzY/kbJY7CDYUSsoLb2zRh/IKzn
-        P7RIS+OaVgI5AerYbDQQAxUCe7sr1Nc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-c1iio9CtNYqKXzNuxDsi6w-1; Thu, 06 Feb 2020 07:51:53 -0500
-X-MC-Unique: c1iio9CtNYqKXzNuxDsi6w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 943A08C2FF4;
-        Thu,  6 Feb 2020 12:51:50 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ACB65C1B0;
-        Thu,  6 Feb 2020 12:51:37 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 07:51:35 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20200206125135.u4dmybkmvxfgui2b@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
- <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com>
- <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca>
- <CAHC9VhSsfBbfYmqLoR=QBgF5_VwbA8Dqqz97MjqwwJ6Jq6fHwA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSsfBbfYmqLoR=QBgF5_VwbA8Dqqz97MjqwwJ6Jq6fHwA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Thu, 6 Feb 2020 07:53:31 -0500
+Received: from mga02.intel.com ([134.134.136.20]:53131 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727613AbgBFMxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 07:53:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 04:53:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,409,1574150400"; 
+   d="scan'208";a="255079976"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Feb 2020 04:53:28 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, david@redhat.com,
+        bhe@redhat.com, Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
+Date:   Thu,  6 Feb 2020 20:53:43 +0800
+Message-Id: <20200206125343.9070-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05 17:56, Paul Moore wrote:
-> On Tue, Feb 4, 2020 at 7:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-01-22 16:29, Paul Moore wrote:
-> > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > >
-> > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> > > > process in a non-init user namespace the capability to set audit
-> > > > container identifiers.
-> > > >
-> > > > Provide /proc/$PID/audit_capcontid interface to capcontid.
-> > > > Valid values are: 1==enabled, 0==disabled
-> > >
-> > > It would be good to be more explicit about "enabled" and "disabled" in
-> > > the commit description.  For example, which setting allows the target
-> > > task to set audit container IDs of it's children processes?
-> >
-> > Ok...
-> >
-> > > > Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
-> > > > opid= capcontid= old-capcontid=
-> > > >
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > ---
-> > > >  fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/audit.h      | 14 ++++++++++++
-> > > >  include/uapi/linux/audit.h |  1 +
-> > > >  kernel/audit.c             | 35 +++++++++++++++++++++++++++++
-> > > >  4 files changed, 105 insertions(+)
-> 
-> ...
-> 
-> > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > index 1287f0b63757..1c22dd084ae8 100644
-> > > > --- a/kernel/audit.c
-> > > > +++ b/kernel/audit.c
-> > > > @@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
-> > > >         return false;
-> > > >  }
-> > > >
-> > > > +int audit_set_capcontid(struct task_struct *task, u32 enable)
-> > > > +{
-> > > > +       u32 oldcapcontid;
-> > > > +       int rc = 0;
-> > > > +       struct audit_buffer *ab;
-> > > > +
-> > > > +       if (!task->audit)
-> > > > +               return -ENOPROTOOPT;
-> > > > +       oldcapcontid = audit_get_capcontid(task);
-> > > > +       /* if task is not descendant, block */
-> > > > +       if (task == current)
-> > > > +               rc = -EBADSLT;
-> > > > +       else if (!task_is_descendant(current, task))
-> > > > +               rc = -EXDEV;
-> > >
-> > > See my previous comments about error code sanity.
-> >
-> > I'll go with EXDEV.
-> >
-> > > > +       else if (current_user_ns() == &init_user_ns) {
-> > > > +               if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-> > > > +                       rc = -EPERM;
-> > >
-> > > I think we just want to use ns_capable() in the context of the current
-> > > userns to check CAP_AUDIT_CONTROL, yes?  Something like this ...
-> >
-> > I thought we had firmly established in previous discussion that
-> > CAP_AUDIT_CONTROL in anything other than init_user_ns was completely irrelevant
-> > and untrustable.
-> 
-> In the case of a container with multiple users, and multiple
-> applications, one being a nested orchestrator, it seems relevant to
-> allow that container to control which of it's processes are able to
-> exercise CAP_AUDIT_CONTROL.  Granted, we still want to control it
-> within the overall host, e.g. the container in question must be
-> allowed to run a nested orchestrator, but allowing the container
-> itself to provide it's own granularity seems like the right thing to
-> do.
+When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
+doesn't work before sparse_init_one_section() is called. This leads to a
+crash when hotplug memory.
 
-Looking back to discussion on the v6 patch 2/10 (2019-05-30 15:29 Paul
-Moore[1], 2019-07-08 14:05 RGB[2]) , it occurs to me that the
-ns_capable(CAP_AUDIT_CONTROL) application was dangerous since there was
-no parental accountability in storage or reporting.  Now that is in
-place, it does seem a bit more reasonable to allow it, but I'm still not
-clear on why we would want both mechanisms now.  I don't understand what
-the last line in that email meant: "We would probably still want a
-ns_capable(CAP_AUDIT_CONTROL) restriction in this case."  Allow
-ns_capable(CAP_AUDIT_CONTROL) to govern these actions, or restrict
-ns_capable(CAP_AUDIT_CONTROL) from being used to govern these actions?
+We should use memmap as it did.
 
-If an unprivileged user has been given capcontid to be able run their
-own container orchestrator/engine and spawns a user namespace with
-CAP_AUDIT_CONTROL, what matters is capcontid, and not CAP_AUDIT_CONTROL.
-I could see needing CAP_AUDIT_CONTROL *in addition* to capcontid to give
-it finer grained control, but since capcontid would have to be given to
-each process explicitly anways, I don't see the point.
+Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+---
+ mm/sparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If that unprivileged user had not been given capcontid,
-giving itself or one of its descendants CAP_AUDIT_CONTROL should not let
-it jump into the game all of a sudden unless the now chained audit
-container identifiers are deemed accountable enough.  And then now we
-need those hard limits on container depth and network namespace
-container membership.
-
-> > >   if (current_user_ns() != &init_user_ns) {
-> > >     if (!ns_capable(CAP_AUDIT_CONTROL) || !audit_get_capcontid())
-> > >       rc = -EPERM;
-> > >   } else if (!capable(CAP_AUDIT_CONTROL))
-> > >     rc = -EPERM;
-> > >
-> 
-> paul moore
-
-[1] https://www.redhat.com/archives/linux-audit/2019-May/msg00085.html
-	https://lkml.org/lkml/2019/5/30/1380
-[2] https://www.redhat.com/archives/linux-audit/2019-July/msg00003.html
-	https://lkml.org/lkml/2019/7/8/1051
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 5a8599041a2a..2efb24ff8f96 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+ 	 * Poison uninitialized struct pages in order to catch invalid flags
+ 	 * combinations.
+ 	 */
+-	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
++	page_init_poison(memmap, sizeof(struct page) * nr_pages);
+ 
+ 	ms = __nr_to_section(section_nr);
+ 	set_section_nid(section_nr, nid);
+-- 
+2.17.1
 
