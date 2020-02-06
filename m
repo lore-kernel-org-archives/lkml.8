@@ -4,67 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0040C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC59EC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7F521775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7104220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:59:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="k+qdiP8S"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hXQcGxFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBFH7Z (ORCPT
+        id S1728274AbgBFH7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 02:59:25 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52960 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbgBFH7Z (ORCPT
+        Thu, 6 Feb 2020 02:59:35 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44299 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbgBFH7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 02:59:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so5176588wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 23:59:23 -0800 (PST)
+        Thu, 6 Feb 2020 02:59:34 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m16so5897740wrx.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 23:59:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=eoegjXhvNrzq/yPyDDY1fsYH13mDAjgXSwvtXb8bIp0=;
-        b=k+qdiP8SXubzdN35uHnwmScHPsqUObqr9t7ajuc4nzrMPqUgHIu5GUCp/jIH8vLWtb
-         D0iZfBQ6gzthNokG+tF+TwHsuCi7BOOnC/J1a2hLvOQmtOEP+hMOu3pi3fKk2b58KKGu
-         CSPAahFuMjGuJdJZaUnnwzaiuDVYd+p9v0OGOMmHTHDR3fa6PhNwNfCj+nnCCio905bL
-         lCSd2E1FYDqDsmBRM4rIEofPZ+rp9anRZeQBLNKTzigXwR7ouV+Fd/f/alLu+h74+vvI
-         V4O+/DndT3wC9/0ZWxuY1w3IF/2ZTcXTpuJK/28l1X8DiApd72z6jXa+HcIIq8OdcKq1
-         u2Ow==
+        bh=4T6JHJ65S3gXlsUQCQJOHLGtGG3rfW0klSWmfZGHV6Q=;
+        b=hXQcGxFvwgqmKUVJXTK5dRsdGmXT443hFPx7aWanGILU7aaEo8Ixui1iQimx94k9fg
+         YcUkCzGkWSmptK0vz47v4dKQGkfdqkc6aCUtottdOAtVQAEkoAxR/QtmUZFJgLiaqvmt
+         eokVIu3bGf/viZ3txj0qeoZ6xi7gQe9kAh4BEfSXOhVKRa1ckb7I/7uXHJFCey+U1eJd
+         gN8ZsvtG+K9PB3agSS2OwsqqqiFmWFewuyEHbEPFmAzJ7aC27RE4GzJHIoSmExhp6Zsa
+         aWvWTaqBsI/zLWRY1G72Sh1694tP6QN+3+lBXg3eJu8mWn6WWIcmVX9wBJr/mGSTUmZV
+         izvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=eoegjXhvNrzq/yPyDDY1fsYH13mDAjgXSwvtXb8bIp0=;
-        b=QZG2jb9UHg/RJRDafiJ9mTPugDXIq89nXBUED4Lew5S0twLTIOSfYsyrAU/KkZMPjB
-         S2inIG7yMViYuy0BpsZKO6RksvFEte5kqkfwkn0ai7UPJNU9k4f+M0xTE5Jv/FjBcG2/
-         BFtiY026k71fTfYmWu7oLVU4OaP8mQcLACMIvCyyBIq0J2Wg9JHCZe9YJgoq9j2qdRP8
-         oFX/i85oVk6l7m/QYGmABCOQgLnqSvErHqS9d1vIFnEpZCrFfqJsrS1rdN7URqyFfzHj
-         m6HpaiG8cTLV0UtfPOfhW1ZtcyR+pvJ8hArFIQyKL75fEqjd+YpVLXRXRYug60D64ooP
-         S5wA==
-X-Gm-Message-State: APjAAAVMWe+5cw+fzL0dt/64FL7CGoAEbFVyng55ipbvJC0djLDKnAbP
-        9duTwtWQfjPxbBK0f30+OFZHqr+VkjpoYg==
-X-Google-Smtp-Source: APXvYqwCSdXddW98myM3fnl5L7QuVyagLqkVr9JPqdGl0MA51WmppRzXvShIjTHAUFVFJeLVJigrmQ==
-X-Received: by 2002:a7b:cae2:: with SMTP id t2mr2935471wml.180.1580975962206;
-        Wed, 05 Feb 2020 23:59:22 -0800 (PST)
+        bh=4T6JHJ65S3gXlsUQCQJOHLGtGG3rfW0klSWmfZGHV6Q=;
+        b=p6WeEuwMAeodYemn8k7A1IvrE37fHW0BX3Bc0wIbKTFsrqJGT3F9EsjRScxL+1ezOw
+         hr6RfIE174MFLNKRbqpJdHz55CY4i0rEXx+B5SO8ncuHjuC7SRnC72K4ryEW2etTPaDf
+         niXjXmyq4T0pJXpC1BaMS0MVPD6XCRwDTGLOpA02Jg6Ep9U2ngtyG666Mvs6B3DczBVN
+         eNBVy9ppB2ZWPcSoZGBRr1+vKdjtAoz9Ber6etHGK6s1If511FvSMt+N0Km1/mzMFnly
+         aiqGmOw4UWO0npqfLWbrdI+31+JURazZLoWsHyIZqaxMb1mAiE6Nf+F12W46zDqtedUA
+         DU3g==
+X-Gm-Message-State: APjAAAVxeUViQ1FSrcdT8I4XF7ay8uR7lzoWtGpEWUg8DEufh662VSBJ
+        Fa7Zv9/B2h83rhpUfYBITMpj5Ql/WeSuWQ==
+X-Google-Smtp-Source: APXvYqzx41NwzMCoqYIOAllKMOLxPou7/sAGiCzfWqTv6wy/CaL2N5bZLO3CjxwgWAUV7du5c4X1Zg==
+X-Received: by 2002:adf:fc4b:: with SMTP id e11mr2405074wrs.326.1580975971911;
+        Wed, 05 Feb 2020 23:59:31 -0800 (PST)
 Received: from ?IPv6:2a01:e35:2ec0:82b0:7d33:17f7:8097:ecc7? ([2a01:e35:2ec0:82b0:7d33:17f7:8097:ecc7])
-        by smtp.gmail.com with ESMTPSA id t1sm2744394wma.43.2020.02.05.23.59.21
+        by smtp.gmail.com with ESMTPSA id p5sm3096757wrt.79.2020.02.05.23.59.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 23:59:21 -0800 (PST)
-Subject: Re: [PATCH] media: meson: vdec: don't resume instantly if not
- streaming capture
+        Wed, 05 Feb 2020 23:59:31 -0800 (PST)
+Subject: Re: [PATCH] media: meson: vdec: fix OUTPUT buffer size configuration
 To:     Maxime Jourdan <mjourdan@baylibre.com>, mchehab@kernel.org,
         hans.verkuil@cisco.com
 Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200124155631.7063-1-mjourdan@baylibre.com>
+References: <20200127151953.10592-1-mjourdan@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -116,12 +115,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <2d432fe2-b476-df53-4509-4bffe26e8b8a@baylibre.com>
-Date:   Thu, 6 Feb 2020 08:59:20 +0100
+Message-ID: <d6f50786-16d9-8933-30ff-418b47089149@baylibre.com>
+Date:   Thu, 6 Feb 2020 08:59:30 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200124155631.7063-1-mjourdan@baylibre.com>
+In-Reply-To: <20200127151953.10592-1-mjourdan@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -130,36 +129,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/01/2020 16:56, Maxime Jourdan wrote:
-> In case userspace configured the capture queue before the source change
-> event, do not resume decoding instantly if it wasn't streamed on yet.
+On 27/01/2020 16:19, Maxime Jourdan wrote:
+> There's a bug currently where we always override the OUTPUT buffer size
+> in try_fmt to the default value (1M), preventing userspace from setting
+> a higher or lower size.
+> 
+> Now, only update the size in try_fmt if userspace passed 0.
 > 
 > Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 > ---
 > 
-> Note: this patch is based off Neil's series:
-> [v4,0/4] media: meson: vdec: Add compliant H264 support
+> Note: this patch depends on Neil's series:
+> media: meson: vdec: Add compliant H264 support
+> https://patchwork.kernel.org/cover/11336953/
 > 
->  drivers/staging/media/meson/vdec/vdec_helpers.c | 3 ++-
+>  drivers/staging/media/meson/vdec/vdec.c | 3 ++-
 >  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> index ff4333074197..a4970ec1bf2e 100644
-> --- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-> +++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> @@ -417,7 +417,8 @@ void amvdec_src_change(struct amvdec_session *sess, u32 width,
->  	 * Check if the capture queue is already configured well for our
->  	 * usecase. If so, keep decoding with it and do not send the event
->  	 */
-> -	if (sess->width == width &&
-> +	if (sess->streamon_cap &&
-> +	    sess->width == width &&
->  	    sess->height == height &&
->  	    dpb_size <= sess->num_dst_bufs) {
->  		sess->fmt_out->codec_ops->resume(sess);
-> --
-> 2.20.1
+> diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
+> index 1be67b122546..2f30945ce916 100644
+> --- a/drivers/staging/media/meson/vdec/vdec.c
+> +++ b/drivers/staging/media/meson/vdec/vdec.c
+> @@ -519,7 +519,8 @@ vdec_try_fmt_common(struct amvdec_session *sess, u32 size,
+>  	output_size = get_output_size(pixmp->width, pixmp->height);
+>  
+>  	if (f->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+> -		pfmt[0].sizeimage = sess->src_buffer_size;
+> +		if (!pfmt[0].sizeimage)
+> +			pfmt[0].sizeimage = sess->src_buffer_size;
+>  		pfmt[0].bytesperline = 0;
+>  		pixmp->num_planes = 1;
+>  	} else if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
 > 
+
 
 Will squash into v5 of "media: meson: vdec: Add compliant H264 support"
 
