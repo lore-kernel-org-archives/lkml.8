@@ -2,348 +2,506 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98533C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531E5C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F989214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580988419;
-	bh=zDweZ3pVi5chcCvpvlKM6/sBvHkzKqjnodN7WSMLmm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MKCL4lRznc/Yuc/fjVcXflWCBzIFZpaSNVqYoKh0QUYOFoOfcCUA63R/MCepe1W1y
-	 lwhyx2+YEEcVrAy4WhZ1pY9sxPAn8Efyjjde/e99RBGpJTXrzcC7avQVAKMAemVGCr
-	 M9X5snTCvhG1WCa1cqIQMkbOZMSXLfNKZG7COMDY=
+	by mail.kernel.org (Postfix) with ESMTP id 153C720730
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="muKUaEKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbgBFL06 (ORCPT
+        id S1727575AbgBFL1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:26:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbgBFL06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:26:58 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C33120730;
-        Thu,  6 Feb 2020 11:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580988416;
-        bh=zDweZ3pVi5chcCvpvlKM6/sBvHkzKqjnodN7WSMLmm4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jcRSfTR/1YfSmP1xfZ0Pkao74lxFdCpWxQn1jt/7HWPNY6WL5qdEjjLk94ZEsQ2Gi
-         AqX9zaXzZ5ViWQ45wxcCXzAD94D62KYE2U/iP8NAAfx74+/ke2ID1vXu5Gx9AhJl4h
-         f/47XF1eICi1GyXt5WhkuWUHwcI3luGZ5/fwas74=
-Date:   Thu, 6 Feb 2020 11:26:51 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] iio: vncl4000: Enable runtime pm for
- vcnl4200/4040
-Message-ID: <20200206112651.2b85e3a8@archlinux>
-In-Reply-To: <60fa4c2a739448778ae56fe3f2fdb10302055c59.1580721204.git.agx@sigxcpu.org>
-References: <cover.1580721204.git.agx@sigxcpu.org>
-        <60fa4c2a739448778ae56fe3f2fdb10302055c59.1580721204.git.agx@sigxcpu.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Feb 2020 06:27:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35190 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbgBFL13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:27:29 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so6637108wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:27:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=DhWg+zpdSqsW8rxWEiaaZAwp7E2BBzkWJY6y23Nf9HU=;
+        b=muKUaEKfnmdex2xux9VRn97Fyh2mmm6dgo7Z4NzuaTE++qIXJ3R+6ePGB7umg//9LW
+         FKN8elSrBErbld5boWBqNcSUvl9pfVrv5mXp/pXO4BJttqmkjgY0cXSVs/+rjGvOSO9T
+         BJWwgPlHrfLqo6Vqvheynora+vQInsIBdKAeqmdTynbzPpodGpNnscfk2ehufxwe6kWn
+         wa3TVmsyD5xn0x14Po47+2nP1X5mI+WnG0ieORzop8RanyKcUjy/C9auh+w4baTf7HUH
+         TKFxO+wROoPQ/kz2lX7bVEozXVIA+esLEtqH1slZtgJCwB2HnbE6kiJsAs7e5ut0+R8g
+         ncjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=DhWg+zpdSqsW8rxWEiaaZAwp7E2BBzkWJY6y23Nf9HU=;
+        b=QWO/niRx14CFA6Ce8m/qRjDUxaS9RXT1IeNVK/z1aR+On5/EjDLsE70iJ9XFXfqNAa
+         ux622hNIyWcDetvJhr+YfJcwjkuaRuVlcyIY1I9/LEFIYpf1VJrkt5olJlyjcP0jRvwS
+         BuzUWw6/f+YEOzSPvxv+MOsbuMnS+OM48SLGkoEpYQIAGp65+AoqyrSJAobWzbW1BXFK
+         ikU88sKs3EgIyyzQsCJiTwyu7vYhNBYIwfzjqsV4cHHSNw3GcyNeqFnq4doKvmV8HZ0H
+         AayaH8eECyllOqgHWXvLkkOLroY1rvxWnmuFKQcn2t3Y+TnYnQO4p+trb1Z7IrL51x7C
+         dLOw==
+X-Gm-Message-State: APjAAAUxBsxx5Z1WuXu9ZHUkBI0+9auO+Qr03sSFwRhTO1gv0CWKfKiW
+        p+5OxBfiW1jxsT6TRsaFzhBPnA==
+X-Google-Smtp-Source: APXvYqwSsh7dUxDsfBDsS/7Q3iLOvZND5C4QfZ6rnRc8hHTEMsls6EvjrbZbVmJ14vQg12Ie6nC2vA==
+X-Received: by 2002:a7b:cb49:: with SMTP id v9mr4221349wmj.160.1580988445988;
+        Thu, 06 Feb 2020 03:27:25 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:94e8:de94:574e:efb1])
+        by smtp.gmail.com with ESMTPSA id o4sm3721797wrx.25.2020.02.06.03.27.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 03:27:25 -0800 (PST)
+Date:   Thu, 6 Feb 2020 11:27:23 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
+Message-ID: <20200206112723.GA19388@big-machine>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
+ <20200113100931.GG42593@e119886-lin.cambridge.arm.com>
+ <DB8PR04MB67476FE40D1396B2F61F5683841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB8PR04MB67476FE40D1396B2F61F5683841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Feb 2020 10:17:02 +0100
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+On Thu, Feb 06, 2020 at 11:04:29AM +0000, Z.q. Hou wrote:
+> Hi Andrew,
+> 
+> Thanks a lot for your comments!
+> Sorry for my delay respond!
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2020年1月13日 18:10
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > bhelgaas@google.com; robh+dt@kernel.org; arnd@arndb.de;
+> > mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
+> > shawnguo@kernel.org; m.karthikeyan@mobiveil.co.in; Leo Li
+> > <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
+> > catalin.marinas@arm.com; will.deacon@arm.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
+> > <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
+> > 
+> > On Wed, Nov 20, 2019 at 03:45:23AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > The Mobiveil PCIe controller can work in either Root Complex mode or
+> > > Endpoint mode. So introduce a new structure root_port, and abstract
+> > > the RC related members into it.
+> > 
+> > The first sentence explains the trigger for this work, the second explains what
+> > you are changing, it would be helpful to also describe why you need to make
+> > this change. You could do this by extending the last sentence, e.g.
+> > 
+> > "So introduce a new structure root_port, and abstract the RC  related
+> > members into it such that it can be used by both ..."
+> > 
+> > As this series doesn't actually add a EP driver, this abstraction isn't needed
+> > now - but it is nice to have - it may be helpful to explain this.
+> > 
+> > The email subject could also more precisely explain what this patch does.
+> 
+> Thanks for the good suggestions! Will change in v10.
+> 
+> > 
+> > 
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > ---
+> > > V9:
+> > >  - New patch splited from the #1 of V8 patches to make it easy to review.
+> > 
+> > Indeed, it's much nicer to review - thanks.
+> > 
+> > 
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 99
+> > > ++++++++++++++++----------
+> > >  1 file changed, 60 insertions(+), 39 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 3a696ca45bfa..5fd26e376af2 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -3,7 +3,10 @@
+> > >   * PCIe host controller driver for Mobiveil PCIe Host controller
+> > >   *
+> > >   * Copyright (c) 2018 Mobiveil Inc.
+> > > + * Copyright 2019 NXP
+> > > + *
+> > >   * Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > > + * Recode: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > 
+> > As per my previous feedback, I'm not sure the value of using the term refactor
+> > or a synonym of it. And I certaintly don't want to encourage anyone that
+> > modifies this file to add a similar tag when the information is easily visible via
+> > GIT and the get_maintainers script.
+> 
+> Will remove the recode tag in v10.
+> 
+> > 
+> > >   */
+> > >
+> > >  #include <linux/delay.h>
+> > > @@ -138,22 +141,27 @@ struct mobiveil_msi {			/* MSI
+> > information */
+> > >  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);  };
+> > >
+> > > +struct root_port {
+> > > +	char root_bus_nr;
+> > > +	void __iomem *config_axi_slave_base;	/* endpoint config base */
+> > > +	struct resource *ob_io_res;
+> > > +	int irq;
+> > > +	raw_spinlock_t intx_mask_lock;
+> > > +	struct irq_domain *intx_domain;
+> > > +	struct mobiveil_msi msi;
+> > > +	struct pci_host_bridge *bridge;
+> > > +};
+> > 
+> > Please prefix with mobiveil given we have mobiveil related structures inside it.
+> 
+> Do you mean s/root_port/mobiveil_root_port/ ?
 
-> This is modelled after the vcnl4035 driver. For the vcnl40{0,1,2}0
-> we don't do anything since they use on demand measurement.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+Yes!
 
-I won't push this out as a non rebasing branch for a week or so yet,
-hence plenty of time for others to comment even though I have it queued
-up!
+Thanks,
 
-Jonathan
+Andrew Murray
 
-> ---
->  drivers/iio/light/vcnl4000.c | 129 +++++++++++++++++++++++++++++++----
->  1 file changed, 117 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 8f198383626b..3b71c7d538af 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -22,6 +22,7 @@
->  #include <linux/i2c.h>
->  #include <linux/err.h>
->  #include <linux/delay.h>
-> +#include <linux/pm_runtime.h>
-> =20
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> @@ -57,6 +58,8 @@
->  #define VCNL4000_AL_OD		BIT(4) /* start on-demand ALS measurement */
->  #define VCNL4000_PS_OD		BIT(3) /* start on-demand proximity measurement =
-*/
-> =20
-> +#define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspe=
-nd */
-> +
->  enum vcnl4000_device_ids {
->  	VCNL4000,
->  	VCNL4010,
-> @@ -87,6 +90,7 @@ struct vcnl4000_chip_spec {
->  	int (*init)(struct vcnl4000_data *data);
->  	int (*measure_light)(struct vcnl4000_data *data, int *val);
->  	int (*measure_proximity)(struct vcnl4000_data *data, int *val);
-> +	int (*set_power_state)(struct vcnl4000_data *data, bool on);
->  };
-> =20
->  static const struct i2c_device_id vcnl4000_id[] =3D {
-> @@ -99,6 +103,12 @@ static const struct i2c_device_id vcnl4000_id[] =3D {
->  };
->  MODULE_DEVICE_TABLE(i2c, vcnl4000_id);
-> =20
-> +static int vcnl4000_set_power_state(struct vcnl4000_data *data, bool on)
-> +{
-> +	/* no suspend op */
-> +	return 0;
-> +}
-> +
->  static int vcnl4000_init(struct vcnl4000_data *data)
->  {
->  	int ret, prod_id;
-> @@ -127,9 +137,31 @@ static int vcnl4000_init(struct vcnl4000_data *data)
->  	data->al_scale =3D 250000;
->  	mutex_init(&data->vcnl4000_lock);
-> =20
-> -	return 0;
-> +	return data->chip_spec->set_power_state(data, true);
->  };
-> =20
-> +static int vcnl4200_set_power_state(struct vcnl4000_data *data, bool on)
-> +{
-> +	u16 val =3D on ? 0 /* power on */ : 1 /* shut down */;
-> +	int ret;
-> +
-> +	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (on) {
-> +		/* Wait at least one integration cycle before fetching data */
-> +		data->vcnl4200_al.last_measurement =3D ktime_get();
-> +		data->vcnl4200_ps.last_measurement =3D ktime_get();
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int vcnl4200_init(struct vcnl4000_data *data)
->  {
->  	int ret, id;
-> @@ -155,14 +187,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
-> =20
->  	data->rev =3D (ret >> 8) & 0xf;
-> =20
-> -	/* Set defaults and enable both channels */
-> -	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
-> -	if (ret < 0)
-> -		return ret;
-> -	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	data->vcnl4200_al.reg =3D VCNL4200_AL_DATA;
->  	data->vcnl4200_ps.reg =3D VCNL4200_PS_DATA;
->  	switch (id) {
-> @@ -180,11 +204,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
->  		data->al_scale =3D 120000;
->  		break;
->  	}
-> -	data->vcnl4200_al.last_measurement =3D ktime_set(0, 0);
-> -	data->vcnl4200_ps.last_measurement =3D ktime_set(0, 0);
->  	mutex_init(&data->vcnl4200_al.lock);
->  	mutex_init(&data->vcnl4200_ps.lock);
-> =20
-> +	ret =3D data->chip_spec->set_power_state(data, true);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	return 0;
->  };
-> =20
-> @@ -291,24 +317,28 @@ static const struct vcnl4000_chip_spec vcnl4000_chi=
-p_spec_cfg[] =3D {
->  		.init =3D vcnl4000_init,
->  		.measure_light =3D vcnl4000_measure_light,
->  		.measure_proximity =3D vcnl4000_measure_proximity,
-> +		.set_power_state =3D vcnl4000_set_power_state,
->  	},
->  	[VCNL4010] =3D {
->  		.prod =3D "VCNL4010/4020",
->  		.init =3D vcnl4000_init,
->  		.measure_light =3D vcnl4000_measure_light,
->  		.measure_proximity =3D vcnl4000_measure_proximity,
-> +		.set_power_state =3D vcnl4000_set_power_state,
->  	},
->  	[VCNL4040] =3D {
->  		.prod =3D "VCNL4040",
->  		.init =3D vcnl4200_init,
->  		.measure_light =3D vcnl4200_measure_light,
->  		.measure_proximity =3D vcnl4200_measure_proximity,
-> +		.set_power_state =3D vcnl4200_set_power_state,
->  	},
->  	[VCNL4200] =3D {
->  		.prod =3D "VCNL4200",
->  		.init =3D vcnl4200_init,
->  		.measure_light =3D vcnl4200_measure_light,
->  		.measure_proximity =3D vcnl4200_measure_proximity,
-> +		.set_power_state =3D vcnl4200_set_power_state,
->  	},
->  };
-> =20
-> @@ -323,6 +353,23 @@ static const struct iio_chan_spec vcnl4000_channels[=
-] =3D {
->  	}
->  };
-> =20
-> +static int vcnl4000_set_pm_runtime_state(struct vcnl4000_data *data, boo=
-l on)
-> +{
-> +	struct device *dev =3D &data->client->dev;
-> +	int ret;
-> +
-> +	if (on) {
-> +		ret =3D pm_runtime_get_sync(dev);
-> +		if (ret < 0)
-> +			pm_runtime_put_noidle(dev);
-> +	} else {
-> +		pm_runtime_mark_last_busy(dev);
-> +		ret =3D pm_runtime_put_autosuspend(dev);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int vcnl4000_read_raw(struct iio_dev *indio_dev,
->  				struct iio_chan_spec const *chan,
->  				int *val, int *val2, long mask)
-> @@ -332,6 +379,10 @@ static int vcnl4000_read_raw(struct iio_dev *indio_d=
-ev,
-> =20
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> +		ret =3D vcnl4000_set_pm_runtime_state(data, true);
-> +		if  (ret < 0)
-> +			return ret;
-> +
->  		switch (chan->type) {
->  		case IIO_LIGHT:
->  			ret =3D data->chip_spec->measure_light(data, val);
-> @@ -346,6 +397,7 @@ static int vcnl4000_read_raw(struct iio_dev *indio_de=
-v,
->  		default:
->  			ret =3D -EINVAL;
->  		}
-> +		vcnl4000_set_pm_runtime_state(data, false);
->  		return ret;
->  	case IIO_CHAN_INFO_SCALE:
->  		if (chan->type !=3D IIO_LIGHT)
-> @@ -394,7 +446,22 @@ static int vcnl4000_probe(struct i2c_client *client,
->  	indio_dev->name =3D VCNL4000_DRV_NAME;
->  	indio_dev->modes =3D INDIO_DIRECT_MODE;
-> =20
-> -	return devm_iio_device_register(&client->dev, indio_dev);
-> +	ret =3D pm_runtime_set_active(&client->dev);
-> +	if (ret < 0)
-> +		goto fail_poweroff;
-> +
-> +	ret =3D iio_device_register(indio_dev);
-> +	if (ret < 0)
-> +		goto fail_poweroff;
-> +
-> +	pm_runtime_enable(&client->dev);
-> +	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4000_SLEEP_DELAY_MS);
-> +	pm_runtime_use_autosuspend(&client->dev);
-> +
-> +	return 0;
-> +fail_poweroff:
-> +	data->chip_spec->set_power_state(data, false);
-> +	return ret;
->  }
-> =20
->  static const struct of_device_id vcnl_4000_of_match[] =3D {
-> @@ -422,13 +489,51 @@ static const struct of_device_id vcnl_4000_of_match=
-[] =3D {
->  };
->  MODULE_DEVICE_TABLE(of, vcnl_4000_of_match);
-> =20
-> +static int vcnl4000_remove(struct i2c_client *client)
-> +{
-> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
-> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
-> +
-> +	pm_runtime_dont_use_autosuspend(&client->dev);
-> +	pm_runtime_disable(&client->dev);
-> +	iio_device_unregister(indio_dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +
-> +	return data->chip_spec->set_power_state(data, false);
-> +}
-> +
-> +static int __maybe_unused vcnl4000_runtime_suspend(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
-> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
-> +
-> +	return data->chip_spec->set_power_state(data, false);
-> +}
-> +
-> +static int __maybe_unused vcnl4000_runtime_resume(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
-> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
-> +
-> +	return data->chip_spec->set_power_state(data, true);
-> +}
-> +
-> +static const struct dev_pm_ops vcnl4000_pm_ops =3D {
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +	SET_RUNTIME_PM_OPS(vcnl4000_runtime_suspend,
-> +			   vcnl4000_runtime_resume, NULL)
-> +};
-> +
->  static struct i2c_driver vcnl4000_driver =3D {
->  	.driver =3D {
->  		.name   =3D VCNL4000_DRV_NAME,
-> +		.pm	=3D &vcnl4000_pm_ops,
->  		.of_match_table =3D vcnl_4000_of_match,
->  	},
->  	.probe  =3D vcnl4000_probe,
->  	.id_table =3D vcnl4000_id,
-> +	.remove	=3D vcnl4000_remove,
->  };
-> =20
->  module_i2c_driver(vcnl4000_driver);
-
+> 
+> Thanks,
+> Zhiqiang
+> 
+> > 
+> > (Also on your respin, please rebase as per Olof's feedback).
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +
+> > >  struct mobiveil_pcie {
+> > >  	struct platform_device *pdev;
+> > > -	void __iomem *config_axi_slave_base;	/* endpoint config base */
+> > >  	void __iomem *csr_axi_slave_base;	/* root port config base */
+> > >  	void __iomem *apb_csr_base;	/* MSI register base */
+> > >  	phys_addr_t pcie_reg_base;	/* Physical PCIe Controller Base */
+> > > -	struct irq_domain *intx_domain;
+> > > -	raw_spinlock_t intx_mask_lock;
+> > > -	int irq;
+> > >  	int apio_wins;
+> > >  	int ppio_wins;
+> > >  	int ob_wins_configured;		/* configured outbound windows */
+> > >  	int ib_wins_configured;		/* configured inbound windows */
+> > > -	struct resource *ob_io_res;
+> > > -	char root_bus_nr;
+> > > -	struct mobiveil_msi msi;
+> > > +	struct root_port rp;
+> > >  };
+> > >
+> > >  /*
+> > > @@ -281,16 +289,17 @@ static bool mobiveil_pcie_link_up(struct
+> > > mobiveil_pcie *pcie)  static bool mobiveil_pcie_valid_device(struct
+> > > pci_bus *bus, unsigned int devfn)  {
+> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
+> > > +	struct root_port *rp = &pcie->rp;
+> > >
+> > >  	/* Only one device down on each root port */
+> > > -	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
+> > > +	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
+> > >  		return false;
+> > >
+> > >  	/*
+> > >  	 * Do not read more than one device on the bus directly
+> > >  	 * attached to RC
+> > >  	 */
+> > > -	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+> > > +	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+> > >  		return false;
+> > >
+> > >  	return true;
+> > > @@ -304,13 +313,14 @@ static void __iomem
+> > *mobiveil_pcie_map_bus(struct pci_bus *bus,
+> > >  					   unsigned int devfn, int where)  {
+> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
+> > > +	struct root_port *rp = &pcie->rp;
+> > >  	u32 value;
+> > >
+> > >  	if (!mobiveil_pcie_valid_device(bus, devfn))
+> > >  		return NULL;
+> > >
+> > >  	/* RC config access */
+> > > -	if (bus->number == pcie->root_bus_nr)
+> > > +	if (bus->number == rp->root_bus_nr)
+> > >  		return pcie->csr_axi_slave_base + where;
+> > >
+> > >  	/*
+> > > @@ -325,7 +335,7 @@ static void __iomem
+> > *mobiveil_pcie_map_bus(struct
+> > > pci_bus *bus,
+> > >
+> > >  	mobiveil_csr_writel(pcie, value,
+> > PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+> > >
+> > > -	return pcie->config_axi_slave_base + where;
+> > > +	return rp->config_axi_slave_base + where;
+> > >  }
+> > >
+> > >  static struct pci_ops mobiveil_pcie_ops = { @@ -339,7 +349,8 @@
+> > > static void mobiveil_pcie_isr(struct irq_desc *desc)
+> > >  	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > >  	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
+> > >  	struct device *dev = &pcie->pdev->dev;
+> > > -	struct mobiveil_msi *msi = &pcie->msi;
+> > > +	struct root_port *rp = &pcie->rp;
+> > > +	struct mobiveil_msi *msi = &rp->msi;
+> > >  	u32 msi_data, msi_addr_lo, msi_addr_hi;
+> > >  	u32 intr_status, msi_status;
+> > >  	unsigned long shifted_status;
+> > > @@ -365,7 +376,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> > >  		shifted_status >>= PAB_INTX_START;
+> > >  		do {
+> > >  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> > > -				virq = irq_find_mapping(pcie->intx_domain,
+> > > +				virq = irq_find_mapping(rp->intx_domain,
+> > >  							bit + 1);
+> > >  				if (virq)
+> > >  					generic_handle_irq(virq);
+> > > @@ -424,15 +435,16 @@ static int mobiveil_pcie_parse_dt(struct
+> > mobiveil_pcie *pcie)
+> > >  	struct device *dev = &pcie->pdev->dev;
+> > >  	struct platform_device *pdev = pcie->pdev;
+> > >  	struct device_node *node = dev->of_node;
+> > > +	struct root_port *rp = &pcie->rp;
+> > >  	struct resource *res;
+> > >
+> > >  	/* map config resource */
+> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > >  					   "config_axi_slave");
+> > > -	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> > > -	if (IS_ERR(pcie->config_axi_slave_base))
+> > > -		return PTR_ERR(pcie->config_axi_slave_base);
+> > > -	pcie->ob_io_res = res;
+> > > +	rp->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> > > +	if (IS_ERR(rp->config_axi_slave_base))
+> > > +		return PTR_ERR(rp->config_axi_slave_base);
+> > > +	rp->ob_io_res = res;
+> > >
+> > >  	/* map csr resource */
+> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, @@
+> > -455,9
+> > > +467,9 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+> > >  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
+> > >  		pcie->ppio_wins = MAX_PIO_WINDOWS;
+> > >
+> > > -	pcie->irq = platform_get_irq(pdev, 0);
+> > > -	if (pcie->irq <= 0) {
+> > > -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
+> > > +	rp->irq = platform_get_irq(pdev, 0);
+> > > +	if (rp->irq <= 0) {
+> > > +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+> > >  		return -ENODEV;
+> > >  	}
+> > >
+> > > @@ -564,9 +576,9 @@ static int mobiveil_bringup_link(struct
+> > > mobiveil_pcie *pcie)  static void mobiveil_pcie_enable_msi(struct
+> > > mobiveil_pcie *pcie)  {
+> > >  	phys_addr_t msg_addr = pcie->pcie_reg_base;
+> > > -	struct mobiveil_msi *msi = &pcie->msi;
+> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
+> > >
+> > > -	pcie->msi.num_of_vectors = PCI_NUM_MSI;
+> > > +	msi->num_of_vectors = PCI_NUM_MSI;
+> > >  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
+> > >
+> > >  	writel_relaxed(lower_32_bits(msg_addr),
+> > > @@ -579,7 +591,8 @@ static void mobiveil_pcie_enable_msi(struct
+> > > mobiveil_pcie *pcie)
+> > >
+> > >  static int mobiveil_host_init(struct mobiveil_pcie *pcie)  {
+> > > -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > > +	struct root_port *rp = &pcie->rp;
+> > > +	struct pci_host_bridge *bridge = rp->bridge;
+> > >  	u32 value, pab_ctrl, type;
+> > >  	struct resource_entry *win;
+> > >
+> > > @@ -629,8 +642,8 @@ static int mobiveil_host_init(struct mobiveil_pcie
+> > *pcie)
+> > >  	 */
+> > >
+> > >  	/* config outbound translation window */
+> > > -	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
+> > > -			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+> > > +	program_ob_windows(pcie, WIN_NUM_0, rp->ob_io_res->start, 0,
+> > > +			   CFG_WINDOW_TYPE, resource_size(rp->ob_io_res));
+> > >
+> > >  	/* memory inbound translation window */
+> > >  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE,
+> > > IB_WIN_SIZE); @@ -667,32 +680,36 @@ static void
+> > > mobiveil_mask_intx_irq(struct irq_data *data)  {
+> > >  	struct irq_desc *desc = irq_to_desc(data->irq);
+> > >  	struct mobiveil_pcie *pcie;
+> > > +	struct root_port *rp;
+> > >  	unsigned long flags;
+> > >  	u32 mask, shifted_val;
+> > >
+> > >  	pcie = irq_desc_get_chip_data(desc);
+> > > +	rp = &pcie->rp;
+> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+> > > -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> > > +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
+> > >  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> > >  	shifted_val &= ~mask;
+> > >  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> > > -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> > > +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
+> > >  }
+> > >
+> > >  static void mobiveil_unmask_intx_irq(struct irq_data *data)  {
+> > >  	struct irq_desc *desc = irq_to_desc(data->irq);
+> > >  	struct mobiveil_pcie *pcie;
+> > > +	struct root_port *rp;
+> > >  	unsigned long flags;
+> > >  	u32 shifted_val, mask;
+> > >
+> > >  	pcie = irq_desc_get_chip_data(desc);
+> > > +	rp = &pcie->rp;
+> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+> > > -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> > > +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
+> > >  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> > >  	shifted_val |= mask;
+> > >  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> > > -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> > > +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
+> > >  }
+> > >
+> > >  static struct irq_chip intx_irq_chip = { @@ -760,7 +777,7 @@ static
+> > > int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
+> > >  					 unsigned int nr_irqs, void *args)  {
+> > >  	struct mobiveil_pcie *pcie = domain->host_data;
+> > > -	struct mobiveil_msi *msi = &pcie->msi;
+> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
+> > >  	unsigned long bit;
+> > >
+> > >  	WARN_ON(nr_irqs != 1);
+> > > @@ -787,7 +804,7 @@ static void mobiveil_irq_msi_domain_free(struct
+> > > irq_domain *domain,  {
+> > >  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> > >  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
+> > > -	struct mobiveil_msi *msi = &pcie->msi;
+> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
+> > >
+> > >  	mutex_lock(&msi->lock);
+> > >
+> > > @@ -808,9 +825,9 @@ static int mobiveil_allocate_msi_domains(struct
+> > > mobiveil_pcie *pcie)  {
+> > >  	struct device *dev = &pcie->pdev->dev;
+> > >  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> > > -	struct mobiveil_msi *msi = &pcie->msi;
+> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
+> > >
+> > > -	mutex_init(&pcie->msi.lock);
+> > > +	mutex_init(&msi->lock);
+> > >  	msi->dev_domain = irq_domain_add_linear(NULL,
+> > msi->num_of_vectors,
+> > >  						&msi_domain_ops, pcie);
+> > >  	if (!msi->dev_domain) {
+> > > @@ -834,18 +851,19 @@ static int mobiveil_pcie_init_irq_domain(struct
+> > > mobiveil_pcie *pcie)  {
+> > >  	struct device *dev = &pcie->pdev->dev;
+> > >  	struct device_node *node = dev->of_node;
+> > > +	struct root_port *rp = &pcie->rp;
+> > >  	int ret;
+> > >
+> > >  	/* setup INTx */
+> > > -	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> > > -						  &intx_domain_ops, pcie);
+> > > +	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> > > +						&intx_domain_ops, pcie);
+> > >
+> > > -	if (!pcie->intx_domain) {
+> > > +	if (!rp->intx_domain) {
+> > >  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> > >  		return -ENOMEM;
+> > >  	}
+> > >
+> > > -	raw_spin_lock_init(&pcie->intx_mask_lock);
+> > > +	raw_spin_lock_init(&rp->intx_mask_lock);
+> > >
+> > >  	/* setup MSI */
+> > >  	ret = mobiveil_allocate_msi_domains(pcie);
+> > > @@ -862,6 +880,7 @@ static int mobiveil_pcie_probe(struct
+> > platform_device *pdev)
+> > >  	struct pci_bus *child;
+> > >  	struct pci_host_bridge *bridge;
+> > >  	struct device *dev = &pdev->dev;
+> > > +	struct root_port *rp;
+> > >  	int ret;
+> > >
+> > >  	/* allocate the PCIe port */
+> > > @@ -870,6 +889,8 @@ static int mobiveil_pcie_probe(struct
+> > platform_device *pdev)
+> > >  		return -ENOMEM;
+> > >
+> > >  	pcie = pci_host_bridge_priv(bridge);
+> > > +	rp = &pcie->rp;
+> > > +	rp->bridge = bridge;
+> > >
+> > >  	pcie->pdev = pdev;
+> > >
+> > > @@ -904,12 +925,12 @@ static int mobiveil_pcie_probe(struct
+> > platform_device *pdev)
+> > >  		return ret;
+> > >  	}
+> > >
+> > > -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
+> > > +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+> > >
+> > >  	/* Initialize bridge */
+> > >  	bridge->dev.parent = dev;
+> > >  	bridge->sysdata = pcie;
+> > > -	bridge->busnr = pcie->root_bus_nr;
+> > > +	bridge->busnr = rp->root_bus_nr;
+> > >  	bridge->ops = &mobiveil_pcie_ops;
+> > >  	bridge->map_irq = of_irq_parse_and_map_pci;
+> > >  	bridge->swizzle_irq = pci_common_swizzle;
+> > > --
+> > > 2.17.1
+> > >
