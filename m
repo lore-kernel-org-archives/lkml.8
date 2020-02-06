@@ -6,102 +6,97 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5802C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81556C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95685217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBEF214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgBFQ1c (ORCPT
+        id S1727835AbgBFQ1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:27:32 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2389 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727654AbgBFQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:27:31 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C4144856613477B90F86;
-        Thu,  6 Feb 2020 16:27:29 +0000 (GMT)
-Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 6 Feb 2020 16:27:29 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 6 Feb 2020 17:27:28 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Thu, 6 Feb 2020 17:27:28 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
- template digests
-Thread-Topic: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
- template digests
-Thread-Index: AQHV3A/+rAKtbF80BkqxEfHd/18hO6gORlUAgAAVOaA=
-Date:   Thu, 6 Feb 2020 16:27:28 +0000
-Message-ID: <0b91e6977bac4cd5a638041adb3e76eb@huawei.com>
-References: <20200205103317.29356-1-roberto.sassu@huawei.com>
-         <20200205103317.29356-6-roberto.sassu@huawei.com>
- <1581005284.5585.422.camel@linux.ibm.com>
-In-Reply-To: <1581005284.5585.422.camel@linux.ibm.com>
-Accept-Language: en-US
+        Thu, 6 Feb 2020 11:27:52 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36737 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgBFQ1w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:27:52 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-185-_Inpmhi_MReCPYBTeRnDtw-1; Thu, 06 Feb 2020 16:27:47 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 6 Feb 2020 16:27:46 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 6 Feb 2020 16:27:46 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jann Horn' <jannh@google.com>, Kees Cook <keescook@chromium.org>
+CC:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: RE: [RFC PATCH 06/11] x86: make sure _etext includes function
+ sections
+Thread-Topic: [RFC PATCH 06/11] x86: make sure _etext includes function
+ sections
+Thread-Index: AQHV3O+Uub3eyEmx20OwpNUdqmwARKgOWIJQ
+Date:   Thu, 6 Feb 2020 16:27:46 +0000
+Message-ID: <9293be85241d49c182e614ffd7186bca@AcuMS.aculab.com>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-7-kristen@linux.intel.com>
+ <202002060408.84005CEFFD@keescook>
+ <CAG48ez19kRC_5+ykvQCnZxLq6Qg3xUy7fEMf3pYrG46vBZt6jQ@mail.gmail.com>
+In-Reply-To: <CAG48ez19kRC_5+ykvQCnZxLq6Qg3xUy7fEMf3pYrG46vBZt6jQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-MC-Unique: _Inpmhi_MReCPYBTeRnDtw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
-em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDYsIDIwMjAg
-NTowOCBQTQ0KPiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsN
-Cj4gSmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbTsNCj4gamFya2tvLnNha2tp
-bmVuQGxpbnV4LmludGVsLmNvbQ0KPiBDYzogbGludXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtc2VjdXJpdHktbW9kdWxlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgU2lsdml1IFZsYXNjZWFudQ0KPiA8U2lsdml1LlZsYXNjZWFudUBo
-dWF3ZWkuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDUvOF0gaW1hOiBTd2l0Y2ggdG8g
-ZHluYW1pY2FsbHkgYWxsb2NhdGVkIGJ1ZmZlciBmb3INCj4gdGVtcGxhdGUgZGlnZXN0cw0KPiAN
-Cj4gSGkgUm9iZXJ0bywNCj4gDQo+IE9uIFdlZCwgMjAyMC0wMi0wNSBhdCAxMTozMyArMDEwMCwg
-Um9iZXJ0byBTYXNzdSB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGR5bmFtaWNhbGx5IGFsbG9jYXRl
-cyB0aGUgYXJyYXkgb2YgdHBtX2RpZ2VzdCBzdHJ1Y3R1cmVzIGluDQo+ID4gaW1hX2FsbG9jX2lu
-aXRfdGVtcGxhdGUoKSBhbmQgaW1hX3Jlc3RvcmVfdGVtcGxhdGVfZGF0YSgpLiBUaGUgc2l6ZSBv
-Zg0KPiB0aGUNCj4gPiBhcnJheSwgc3RvcmVkIGluIGltYV9udW1fdGVtcGxhdGVfZGlnZXN0cywg
-aXMgaW5pdGlhbGx5IGVxdWFsIHRvIDEgKFNIQTEpDQo+ID4gYW5kIHdpbGwgYmUgZGV0ZXJtaW5l
-ZCBpbiB0aGUgdXBjb21pbmcgcGF0Y2hlcyBkZXBlbmRpbmcgb24gdGhlDQo+IGFsbG9jYXRlZA0K
-PiA+IFBDUiBiYW5rcyBhbmQgdGhlIGNob3NlbiBkZWZhdWx0IElNQSBhbGdvcml0aG0uDQo+ID4N
-Cj4gPiBDYWxjdWxhdGluZyB0aGUgU0hBMSBkaWdlc3QgaXMgbWFuZGF0b3J5LCBhcyBTSEExIHN0
-aWxsIHJlbWFpbnMgdGhlIGRlZmF1bHQNCj4gPiBoYXNoIGFsZ29yaXRobSBmb3IgdGhlIG1lYXN1
-cmVtZW50IGxpc3QuIFdoZW4gSU1BIHdpbGwgc3VwcG9ydCB0aGUNCj4gQ3J5cHRvDQo+ID4gQWdp
-bGUgZm9ybWF0LCByZW1haW5pbmcgZGlnZXN0cyB3aWxsIGJlIGFsc28gcHJvdmlkZWQuDQo+ID4N
-Cj4gPiBUaGUgcG9zaXRpb24gaW4gdGhlIGFycmF5IG9mIHRoZSBTSEExIGRpZ2VzdCBpcyBzdG9y
-ZWQgaW4gdGhlIGltYV9zaGExX2lkeA0KPiA+IGdsb2JhbCB2YXJpYWJsZSBhbmQgaXQgaXMgZGV0
-ZXJtaW5lZCBhdCBJTUEgaW5pdGlhbGl6YXRpb24gdGltZS4NCj4gPg0KPiA+IENoYW5nZWxvZw0K
-PiA+DQo+ID4gdjE6DQo+ID4gLSBtb3ZlIGltYV9zaGExX2lkeCB0byBpbWFfY3J5cHRvLmMNCj4g
-PiAtIGludHJvZHVjZSBpbWFfbnVtX3RlbXBsYXRlX2RpZ2VzdHMgKHN1Z2dlc3RlZCBieSBNaW1p
-KQ0KPiANCj4gSW5zdGVhZCBvZiBoYXJkY29kaW5nICJucl9hbGxvY2F0ZWRfYmFua3MgKyAxIiBv
-ciBucl9hbGxvY2F0ZWRfYmFua3MgKw0KPiAyIiwgSSBzdWdnZXN0ZWQgZGVmaW5pbmcgIm5yX2Fs
-bG9jYXRlZF9iYW5rcyArIGV4dHJhIiwgd2hlcmUgImV4dHJhIg0KPiBjb3VsZCBiZSAwLCAxLCBv
-ciAyLg0KPiANCj4gVGhlIHJlc3Qgb2YgdGhlIGNvZGUgd291bGQgcmVtYWluIGV4YWN0bHkgdGhl
-IHNhbWUgYXMgeW91IGhhZC4NCg0KT2suIEkgZGlkIGEgc21hbGwgaW1wcm92ZW1lbnQuIFNpbmNl
-IHdlIGRldGVybWluZSB0aGUgbnVtYmVyIG9mDQpyZXF1aXJlZCBlbGVtZW50cyBvZiBpbWFfYWxn
-b19hcnJheSBiZWZvcmUga21hbGxvYygpIEkgdGhvdWdodCBpdA0Kd2FzIG9rIHRvIGRpcmVjdGx5
-IHNldCB0aGF0IG51bWJlciBvZiBlbGVtZW50cyBpbiBhIHNpbmdsZSB2YXJpYWJsZS4NCg0KSWYg
-eW91IHRoaW5rIHRoYXQgaGF2aW5nIHR3byB2YXJpYWJsZXMgaXMgYmV0dGVyLCBJIHdpbGwgY2hh
-bmdlIGl0Lg0KDQpUaGFua3MNCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9HSUVTIER1ZXNz
-ZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcsIExpIEpp
-YW4sIFNoaSBZYW5saQ0K
+RnJvbTogSmFubiBIb3JuDQo+IFNlbnQ6IDA2IEZlYnJ1YXJ5IDIwMjAgMTM6MTYNCi4uLg0KPiA+
+IEkgY2Fubm90IGZpbmQgZXZpZGVuY2UgZm9yDQo+ID4gd2hhdCBmdW5jdGlvbiBzdGFydCBhbGln
+bm1lbnQgc2hvdWxkIGJlLg0KPiANCj4gVGhlcmUgaXMgbm8gYXJjaGl0ZWN0dXJhbGx5IHJlcXVp
+cmVkIGFsaWdubWVudCBmb3IgZnVuY3Rpb25zLCBidXQNCj4gSW50ZWwncyBPcHRpbWl6YXRpb24g
+TWFudWFsDQo+ICg8aHR0cHM6Ly93d3cuaW50ZWwuY29tL2NvbnRlbnQvZGFtL3d3dy9wdWJsaWMv
+dXMvZW4vZG9jdW1lbnRzL21hbnVhbHMvNjQtaWEtMzItYXJjaGl0ZWN0dXJlcy0NCj4gb3B0aW1p
+emF0aW9uLW1hbnVhbC5wZGY+KQ0KPiByZWNvbW1lbmRzIGluIHNlY3Rpb24gMy40LjEuNSwgIkNv
+ZGUgQWxpZ25tZW50IjoNCj4gDQo+IHwgQXNzZW1ibHkvQ29tcGlsZXIgQ29kaW5nIFJ1bGUgMTIu
+IChNIGltcGFjdCwgSCBnZW5lcmFsaXR5KQ0KPiB8IEFsbCBicmFuY2ggdGFyZ2V0cyBzaG91bGQg
+YmUgMTYtYnl0ZSBhbGlnbmVkLg0KPiANCj4gQUZBSUsgdGhpcyBpcyByZWNvbW1lbmRlZCBiZWNh
+dXNlLCBhcyBkb2N1bWVudGVkIGluIHNlY3Rpb24gMi4zLjIuMSwNCj4gIkxlZ2FjeSBEZWNvZGUg
+UGlwZWxpbmUiIChkZXNjcmliaW5nIHRoZSBmcm9udGVuZCBvZiBTYW5keSBCcmlkZ2UsIGFuZA0K
+PiB1c2VkIGFzIHRoZSBiYXNlIGZvciBuZXdlciBtaWNyb2FyY2hpdGVjdHVyZXMpOg0KPiANCj4g
+fCBBbiBpbnN0cnVjdGlvbiBmZXRjaCBpcyBhIDE2LWJ5dGUgYWxpZ25lZCBsb29rdXAgdGhyb3Vn
+aCB0aGUgSVRMQg0KPiBhbmQgaW50byB0aGUgaW5zdHJ1Y3Rpb24gY2FjaGUuDQo+IHwgVGhlIGlu
+c3RydWN0aW9uIGNhY2hlIGNhbiBkZWxpdmVyIGV2ZXJ5IGN5Y2xlIDE2IGJ5dGVzIHRvIHRoZQ0K
+PiBpbnN0cnVjdGlvbiBwcmUtZGVjb2Rlci4NCj4gDQo+IEFGQUlLIHRoaXMgbWVhbnMgdGhhdCBp
+ZiBhIGJyYW5jaCBlbmRzIGNsb3NlIHRvIHRoZSBlbmQgb2YgYSAxNi1ieXRlDQo+IGJsb2NrLCB0
+aGUgZnJvbnRlbmQgaXMgbGVzcyBlZmZpY2llbnQgYmVjYXVzZSBpdCBtYXkgaGF2ZSB0byBydW4g
+dHdvDQo+IGluc3RydWN0aW9uIGZldGNoZXMgYmVmb3JlIHRoZSBmaXJzdCBpbnN0cnVjdGlvbiBj
+YW4gZXZlbiBiZSBkZWNvZGVkLg0KDQpTZWUgYWxzbyBUaGUgbWljcm9hcmNoaXRlY3R1cmUgb2Yg
+SW50ZWwsIEFNRCBhbmQgVklBIENQVXMgZnJvbSB3d3cuYWduZXIub3JnL29wdGltaXplIA0KDQpN
+eSBzdXNwaWNpb24gaXMgdGhhdCByZWR1Y2luZyB0aGUgY2FjaGUgc2l6ZSAoc28gbW9yZSBjb2Rl
+IGZpdHMgaW4pDQp3aWxsIGFsbW9zdCBhbHdheXMgYmUgYSB3aW4gb3ZlciBhbGlnbmluZyBicmFu
+Y2ggdGFyZ2V0cyBhbmQgZW50cnkgcG9pbnRzLg0KSWYgdGhlIGFsaWdubWVudCBvZiBhIGZ1bmN0
+aW9uIG1hdHRlcnMgdGhlbiB0aGVyZSBhcmUgcHJvYmFibHkgb3RoZXINCmNoYW5nZXMgdG8gdGhh
+dCBiaXQgb2YgY29kZSB0aGF0IHdpbGwgZ2l2ZSBhIGxhcmdlciBiZW5lZml0Lg0KDQoJRGF2aWQN
+Cg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
+cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYg
+KFdhbGVzKQ0K
+
