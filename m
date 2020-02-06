@@ -2,104 +2,106 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BD9C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F34FC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B4A21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fV8krVOK"
+	by mail.kernel.org (Postfix) with ESMTP id 2B1A9218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581022514;
+	bh=C5elUljcR4J1dZcYIeXO8WfDASuwlosA0Vl8KlP2M48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O4LacewAxX8OtBrstaNlefzqPK3b2kCDpJQOdbsTAMErGwhjcyWa85YqXxVTbJu77
+	 IB4LjtPvnt4vaW1vZSTcDKetzD47q8S2MiSfDObNV9zOI8IoiAaGqUsNso72BVs7i0
+	 brssvc2882dP6poEK2ISPJ4RIb3WkkgzBc4XKa6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgBFUvE (ORCPT
+        id S1727877AbgBFUzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:51:04 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39736 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBFUvD (ORCPT
+        Thu, 6 Feb 2020 15:55:13 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37310 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727526AbgBFUzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:51:03 -0500
-Received: by mail-qt1-f195.google.com with SMTP id c5so184820qtj.6;
-        Thu, 06 Feb 2020 12:51:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJ+PCl9owsjzMtwfpKCLj2al72aKvWc2eFjTPYl02mY=;
-        b=fV8krVOK0ci36HGl7TfYuz7ULLZR/ooTXleCyIgs6mElCaaqyYsm4dmXsd6KlExdxl
-         rD8CkhqIqwWxSGVrNr2aYasuFkfaQSULuVQ2BmPn2hlbEa4X7nqzRqX5nype+v1zRwpE
-         sAXOEPcXWrV7UwbpeJ72eKe10WYAXJWLiDrE4U1k/tQffqp4odhs1Oj52PlFnTCoCzrg
-         hO4UHWRRTNRZsbV3t8OqouMcm+5HDzoS3tgqbctpRp4Df8Ls4XhRzbci89K7KRndG5fR
-         9Prv5vkmsfnKYIgVkso4dpmJNvF5CrMnXnGsiGVbctqQEURLhRKWJS5ctnF2P71cT70Z
-         K9oA==
+        Thu, 6 Feb 2020 15:55:13 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so49911plz.4;
+        Thu, 06 Feb 2020 12:55:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJ+PCl9owsjzMtwfpKCLj2al72aKvWc2eFjTPYl02mY=;
-        b=Pfy9wJI+6yt4pYCSWcVVAXG2q3JAB3jsiNe9Y6ANBmgSR5gRPZoPefTEsfOTAm9vdJ
-         XBM8B3DhNR08iweUOTwAod5RwNO63bhoz1OmAYTEC3hX8TshmkNY8qqvRLxdZUqSweXX
-         6iYf0kBOpYODW5Ce/tqgEU3DNQ9B1HD1lyDEkABGfdycw++i0xoQ12ELfsi0StuQ5X5T
-         D7sujwdLZYiqYge9NONBp+gLK2OtYJDDqA4Wn5kaCljXeHqWnDHUVd4bv0M6JxVHDRlp
-         jmwyxkzyveAS0zPb3wxK6R64519JlVdU6oyHgdWYpEa6ZY8pL8N5vaeTO6wEQX6V31Gf
-         r2fg==
-X-Gm-Message-State: APjAAAXxCc2eMLUNpsgvxTIfniREYo9NcwQdiT80bfmoJu3t1UR5TIbT
-        a1FYcAtSjtDywnBS271+Ybd9d9333tOtgYtz+g==
-X-Google-Smtp-Source: APXvYqx9s64pEdRcqjTxq93/s2ysYPXRLujSqv+wEkib9QEYCZ3+b1DPRKRQwp8VMGTJH9ZiVM+Bt4zL0nLvhfNuKuM=
-X-Received: by 2002:ac8:5513:: with SMTP id j19mr4454880qtq.143.1581022260994;
- Thu, 06 Feb 2020 12:51:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OuAJn7WSGOIJnnpXDg8F5nxy89HqURtzW0F35vLyP6A=;
+        b=FzWp6iBriEPNqRB5Iitby5FzCV3Ku0KzsKMIQ/GEllF+sgTn351+cqyRP0D4gS/xo9
+         Wa1R1H8B9E49euVqnHGruK6dyYouy/8LbpYW+PFunZ4q1yfrulno9BR6jWgCJuiigWdi
+         pAk0+ImGZ+SfMaGgr0MrweMfgM5TuBYnUIWHDJ80pr2ngh11nFyfnJEjqZwVASjfNYRs
+         qd2Co0e0eE+Ec4ynHZm0YVFCYzVItwrU/9wtRaX6m1SZR1m7IB/VgjKLOGgLs/xPmUkq
+         2jtgo4+XFIxLcr9S68I56bnnJ9QbIun5z7aF9LyOqdW1GGoK8USCSW5SG3g7geJ3F2YD
+         1CKg==
+X-Gm-Message-State: APjAAAVHwTYGCb1a6wr5mp0ImSjFqXXJ3hCgZQKKdbLjNrMDT1iCY+qS
+        SRr/ovPyCBx1udbte+Fz/A==
+X-Google-Smtp-Source: APXvYqwzww5ASCKOY9x4mLqTAZ3M1++KPHZ1rFjTTY7Y/4cZkAbzX+uP/eMMe0O5j9mSg67KwQHQbA==
+X-Received: by 2002:a17:902:b210:: with SMTP id t16mr5822035plr.65.1581022512276;
+        Thu, 06 Feb 2020 12:55:12 -0800 (PST)
+Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
+        by smtp.gmail.com with ESMTPSA id c74sm294768pfb.135.2020.02.06.12.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 12:55:11 -0800 (PST)
+Received: (nullmailer pid 14236 invoked by uid 1000);
+        Thu, 06 Feb 2020 20:55:07 -0000
+Date:   Thu, 6 Feb 2020 13:55:07 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        maxime@cerno.tech, jsarha@ti.com, tomi.valkeinen@ti.com,
+        praneeth@ti.com, mparab@cadence.com, sjakhade@cadence.com,
+        yamonkar@cadence.com
+Subject: Re: [PATCH v4 02/13] dt-bindings: phy: Add Cadence MHDP PHY bindings
+ in YAML format.
+Message-ID: <20200206205507.GA13685@bogus>
+References: <1580969461-16981-1-git-send-email-yamonkar@cadence.com>
+ <1580969461-16981-3-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-References: <20200206083418.3a6025f6@canb.auug.org.au> <20200206163019.CCE0E214AF@mail.kernel.org>
-In-Reply-To: <20200206163019.CCE0E214AF@mail.kernel.org>
-From:   Rob Herring <robherring2@gmail.com>
-Date:   Thu, 6 Feb 2020 13:50:46 -0700
-Message-ID: <CAL_JsqKxJ9T9a9sDUdVnHgmk5B=24KcXgXm3808EWf-NY=sq7g@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the clk tree with the
- devicetree-fixes tree
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580969461-16981-3-git-send-email-yamonkar@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 9:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Stephen Rothwell (2020-02-05 13:34:18)
-> > Hi all,
-> >
-> > Today's linux-next merge of the clk tree got conflicts in:
-> >
-> >   Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml
-> >   Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
-> >
-> > between commit:
-> >
-> >   04dbd86539fd ("dt-bindings: Fix paths in schema $id fields")
-> >
-> > from the devicetree-fixes tree and commits:
-> >
-> >   e6747e24f15d ("dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998")
-> >   8cff43d46cfc ("dt-bindings: clock: Cleanup qcom,videocc bindings for sdm845/sc7180")
-> >
-> > from the clk tree.
-> >
-> > I fixed it up (the latter changes seem to have included the former,
-> > plus I removed Documentation/devicetree/bindings/clock/qcom,gpucc.yaml)
-> > and can carry the fix as necessary.
->
-> Thanks Stephen. Rob, you may want to drop the change to qcom,gpucc.yaml
-> so that conflicts are reduced.
+On Thu, 6 Feb 2020 07:10:50 +0100, Yuti Amonkar wrote:
+> - Add Cadence MHDP PHY bindings in YAML format.
+> - Add Torrent PHY reference clock bindings.
+> - Add sub-node bindings for each group of PHY lanes based on PHY type.
+>   Each sub-node includes properties such as master lane number, link reset,
+>   phy type, number of lanes etc.
+> - Add reset support including PHY reset and individual lane reset.
+> - Add a new compatible string used for TI SoCs using Torrent PHY.
+> This will not affect ABI as the driver has never been functional,
+> and therefore do not exist in any active use case.
+> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  .../bindings/phy/phy-cadence-torrent.yaml     | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> 
 
-It's already in Linus' master.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Rob
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Error: Documentation/devicetree/bindings/phy/phy-cadence-torrent.example.dts:33.42-43 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/phy/phy-cadence-torrent.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/phy-cadence-torrent.example.dt.yaml] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1234141
+Please check and re-submit.
