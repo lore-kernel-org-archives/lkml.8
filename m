@@ -2,116 +2,135 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4623C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA379C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741DC21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51F221775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="umbtkvnI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUcEMnCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgBFW1H (ORCPT
+        id S1727178AbgBFW2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:27:07 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42362 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBFW1H (ORCPT
+        Thu, 6 Feb 2020 17:28:22 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36384 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBFW2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:27:07 -0500
-Received: by mail-wr1-f66.google.com with SMTP id k11so302096wrd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 14:27:06 -0800 (PST)
+        Thu, 6 Feb 2020 17:28:22 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so620090wma.1;
+        Thu, 06 Feb 2020 14:28:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MNds49IcWx4nfR2y5vEmKA96Wni6tdn8XwP9GpCdGmk=;
-        b=umbtkvnIwclCPt3UU0MxXi1sKX6Z4RURUTaypSwYLTsotPQC/vhtVE8Rp7LK1q6laJ
-         YqnMjYPZ95gA+6NRsrCMUkYRe6Z2wPKdDZ7eqhmuj0vaJoVsj4t5cgclTUqFXY9nS/hY
-         0pl4OszNVWVu6xRsYBLNNYpjtuSVpvH1io2HehhxZa1AdLt8vfWuJNLX8WePAmwdtdXN
-         rSnC+vqlbTkvOExIRa7j1s4klGJNzAVtCob5UD04VZd2ThOy/4VC1L4rG8t0SM5AJML0
-         9I8EQDgV2dM3L1G6dDhi5UD5iY6PJQGWmLAphruH4Zdvo4fad48AH0G2s6Z2R8etBUru
-         6yYA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/XKdc786BlHsuS391XW0HO1yo5xwSNIfmNJ4CcftD44=;
+        b=TUcEMnCRxzOwEQdj6EGxD1ELjXTLsU59pYxsRmSjgeWAmt8GKg9r4ujwIUg/gHS+Nd
+         woIOl2FuXZDQso1roMFkgaCMdP4+5FTP2vwkW3ZSXGo5wqYpWnLyoYs4gMhgPzXjRjoC
+         jigHGaLFexaoH1dT4xMxtlRZh1pNKYZa6N+u3HqIcfVlXp8C2yMH8eS8CBYs3T5whHnD
+         nFh4iD9Paij/wAMUpMe05EIJK4b8tfDBYypdbU4J6zdX6u8DdfEjakpy8GcH8aBn2vFl
+         /ZFWzJ7fUXtiqdyDC5MGbzjv/SzV40IZIqEtOM0K8ndOeRFwbi5CWyCs+W2PSvGriIES
+         +cjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MNds49IcWx4nfR2y5vEmKA96Wni6tdn8XwP9GpCdGmk=;
-        b=is3l/P/Ixua/bibSN3wFSkLvHrNZ0+pY6vGXc88oLNvCkKeSn4XkpkCDYOp3e9v3sl
-         HOSPvKh+4mKdbull04GPAKfpHm6L3uv4YX31h1TN/s720tWyvPNQKT5koLa/cHno4TCk
-         2yw63cW2UA4mzLiYjh2O5n10LD5kqXtbSHWLpUkG88Qw/4yevUc3DttdqdlIwy4Xv/N2
-         Yt/uaBDTEkDnRAX/h5CYqx865XXEl3fLkQKaOBQ71gV28Ukk3JLK4ka5Dav6ENQnt2KM
-         cx9cta4VaoCSxyAETRKWoWDFPpGeovHjsf87LIhUJ9nlTzXDyWtNjifTkyzfX4LXl1bQ
-         0ysg==
-X-Gm-Message-State: APjAAAXTb822OANvv0BUnx6MbWTzyW9ktF2Sxfe4vevYbl35dGnpJ225
-        30wJDnAPZoIs4j7/BXTIZo2oMe51sJ7/HUKZ9culsQ==
-X-Google-Smtp-Source: APXvYqxUCp/JBFhD831bn2alN/uVeNrgyIAVbjvFEIr2YFrvvlqq5ugPf1xEfY1aKbMa7eYQC2HkgJrigsjyy5cJ+s8=
-X-Received: by 2002:adf:e9d2:: with SMTP id l18mr189290wrn.344.1581028025651;
- Thu, 06 Feb 2020 14:27:05 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/XKdc786BlHsuS391XW0HO1yo5xwSNIfmNJ4CcftD44=;
+        b=hZTZNx66hmfAuc9HJrBUSUofIT7VCLo6x784dumZQBQWyF5pWyx/e7f0JEAcP/tOXC
+         Mi4fe1l8KQwZLZHhsTLKOKEj63cGEqjxd7E+iTcH/hnKIz+x1KBD3wVHsyzjDksOQef2
+         J5dN4fohuJ97anyUH/8ly9GzxX1Os6PqWxv6ah2gE7U7UeGbTgopzHtFhflwFiO6euiy
+         zOmOYfRLdOgTJUIx4nEpkj851iS2EM27AhA84P8JdkIaTAdYYX74POuQwr8VgYrTb5/B
+         RwhQX+9iMSCdlxVEGSycYr8bqzCEX2eIJRJEa5K47crexwjuLRqUVKIv2UO4xI6wL3rI
+         hpww==
+X-Gm-Message-State: APjAAAUF34DgTxZ0wISqppEe1hTERBS8XvT+yVD/51izEh93GXPY4q+l
+        tAkFMNMf/rnhNNKAZwdzV/lUMCLi
+X-Google-Smtp-Source: APXvYqydod22hrGLFmw6z29Dtgq3ueK6x6Jx7VLXKNSnCJqQEFk+pPKaNq0sd3Aos7g0pKCoVlVBGw==
+X-Received: by 2002:a05:600c:54d:: with SMTP id k13mr13248wmc.188.1581028100271;
+        Thu, 06 Feb 2020 14:28:20 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:ccdf:10a:e87a:1f49? (p200300EA8F296000CCDF010AE87A1F49.dip0.t-ipconnect.de. [2003:ea:8f29:6000:ccdf:10a:e87a:1f49])
+        by smtp.googlemail.com with ESMTPSA id 21sm990642wmo.8.2020.02.06.14.28.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 14:28:19 -0800 (PST)
+Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
+ feature
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com
+Cc:     linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200204181319.27381-1-dmurphy@ti.com>
+ <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
+ <47b9b462-6649-39a7-809f-613ce832bd5c@ti.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <59ce70e0-4404-cade-208d-d089ed238f30@gmail.com>
+Date:   Thu, 6 Feb 2020 23:28:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
-In-Reply-To: <20200206083149.GK2667@lahna.fi.intel.com>
-From:   =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>
-Date:   Thu, 6 Feb 2020 23:26:54 +0100
-Message-ID: <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
- ACPI GPIO numbers
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <47b9b462-6649-39a7-809f-613ce832bd5c@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 9:31 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Wed, Feb 05, 2020 at 08:48:04PM +0100, Michal Stanek wrote:
-> > Dropping custom Linux GPIO translation caused some Intel_Strago based Chromebooks
-> > with old firmware to detect GPIOs incorrectly. Add quirk which restores some code removed by
-> > commit 03c4749dd6c7ff94 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO translation").
->
-> Hi,
->
-> Can you elaborate this? I was under the impression that all the
-> different Strago systems have been already worked around by patches from
-> Dmitry (Cc'd).
+On 06.02.2020 23:13, Dan Murphy wrote:
+> Heiner
+> 
+> On 2/5/20 3:16 PM, Heiner Kallweit wrote:
+>> On 04.02.2020 19:13, Dan Murphy wrote:
+>>> Set the speed optimization bit on the DP83867 PHY.
+>>> This feature can also be strapped on the 64 pin PHY devices
+>>> but the 48 pin devices do not have the strap pin available to enable
+>>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>>
+>>> With this bit set the PHY will auto negotiate and report the link
+>>> parameters in the PHYSTS register.  This register provides a single
+>>> location within the register set for quick access to commonly accessed
+>>> information.
+>>>
+>>> In this case when auto negotiation is on the PHY core reads the bits
+>>> that have been configured or if auto negotiation is off the PHY core
+>>> reads the BMCR register and sets the phydev parameters accordingly.
+>>>
+>>> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
+>>> 4-wire cable.  If this should occur the PHYSTS register contains the
+>>> current negotiated speed and duplex mode.
+>>>
+>>> In overriding the genphy_read_status the dp83867_read_status will do a
+>>> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
+>>> register is read and the phydev speed and duplex mode settings are
+>>> updated.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>> v2 - Updated read status to call genphy_read_status first, added link_change
+>>> callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/
+>>>
+>> As stated in the first review, it would be appreciated if you implement
+>> also the downshift tunable. This could be a separate patch in this series.
+>> Most of the implementation would be boilerplate code.
+> 
+> 
+> I looked at this today and there are no registers that allow tuning the downshift attempts.  There is only a RO register that tells you how many attempts it took to achieve a link.  So at the very least we could put in the get_tunable but there will be no set.
+> 
+The get operation for the downshift tunable should return after how many failed
+attempts the PHY starts a downshift. This doesn't match with your description of
+this register, so yes: Implementing the tunable for this PHY doesn't make sense.
 
-Hi Mika,
+However this register may be useful in the link_change_notify() callback to
+figure out whether a downshift happened, to trigger the info message you had in
+your first version.
 
-The previous patches from Dmitry handled IRQ numbering, here we have a
-similar issue with GPIO to pin translation - hardcoded values in FW
-which do not agree with the (non-consecutive) numbering in newer
-kernels.
-
-> What GPIO(s) we are talking about and how does it show up to the user?
-
-As an example, the issue manifests itself when you run 'crossystem
-wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
-of 0 when the write protect screw is removed.
-
-
-> > +             /*
-> > +              * Some Braswell based Google Chromebooks need custom ACPI GPIO
-> > +              * number translation due to hardcoded GPIO numbers in firmware.
-> > +              */
-> > +             .ident = "Intel_Strago based Chromebooks (All models)",
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
-> > +                     DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
->
-> Same comment here. Are you saying all Stragos are broken in the current
-> mainline?
-
-Yes, I believe all Braswell based Chromebooks are affected.
-Yes, I believe all Braswell based Chromebooks are affected.
+> So we should probably skip this for this PHY.
+> 
+> Dan
+> 
+Heiner
