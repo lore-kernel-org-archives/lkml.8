@@ -6,98 +6,124 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B43C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53032C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3458C20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DF820659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E1ti8rvM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMig0ZJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgBFTEc (ORCPT
+        id S1727872AbgBFTGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:04:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33545 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727698AbgBFTEc (ORCPT
+        Thu, 6 Feb 2020 14:06:49 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25137 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727698AbgBFTGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:04:32 -0500
+        Thu, 6 Feb 2020 14:06:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581015871;
+        s=mimecast20190719; t=1581016008;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=eqPIoVcEMGbnA2FeJ8SA7ZoTHkVUXEq8MW9ue55rthI=;
-        b=E1ti8rvMIKwLh1TP1Jozb8++5bG1oUudhf7atbiKhVQTYDfbCWqstt8+S0IxWIAaoGEB9a
-        ewLIdoYkHVj9xxKA+myFEfZSUQIQ/Eb24Xr7oKI7hOJaMmlW+RskvfvEtw2QVGoUoM5N0/
-        3UAWi3d/2I8w8TdQ/JkBpx5NINJvr/A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-_Rt8vjb3O06xq2lcfFv-7g-1; Thu, 06 Feb 2020 14:04:21 -0500
-X-MC-Unique: _Rt8vjb3O06xq2lcfFv-7g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D16CF1835A14;
-        Thu,  6 Feb 2020 19:04:19 +0000 (UTC)
-Received: from krava (ovpn-204-87.brq.redhat.com [10.40.204.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA236863AB;
-        Thu,  6 Feb 2020 19:04:17 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 20:04:12 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, irogers@google.com,
-        songliubraving@fb.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
-Message-ID: <20200206190412.GD1669706@krava>
-References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
+        bh=vFP4U5ATaHC0RXndwUcuwuU/AxffnBhPUu6Oesq1zsE=;
+        b=CMig0ZJZRaAqHlsnvjVsEx+MtxpPk1YT3y+XGps0s9Cep+i9cLmG3DlHH0yKMMLPKiRZ3M
+        eNDUCltDDuXwem3fJCR2Q5ZopVAkI88Notwq1/oPhcWp3qfH9uNYerOVhaWrrGBNDjrgyD
+        /UQWaWdZZbZO+jjyoz0M6+cy1Zq9Tqc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-MPflXH8fPrmXWlnDfJ2GdA-1; Thu, 06 Feb 2020 14:06:46 -0500
+X-MC-Unique: MPflXH8fPrmXWlnDfJ2GdA-1
+Received: by mail-qt1-f199.google.com with SMTP id e8so4548389qtg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:06:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vFP4U5ATaHC0RXndwUcuwuU/AxffnBhPUu6Oesq1zsE=;
+        b=WYYH2MOQOc2JesdVgKJBmqK5s4u5xBKvsUR1Ajuam+lNMBpTPoQcj4k3hpNzclyMi0
+         OdDFs/HqWj3MyUn/TwD/jNygJ4QyRaDU1q92DNd+pxrjiVufjfv/skUdtUb6XT55Svka
+         TUAZkhnL3Y3xrifvcVQHfzvBqVl2NkuKPKWaDBhYaP84CsPIH0VSLvKaDtMpQHdoUzko
+         t5ruHWfMuHdHX/eWBzmaZ+KpMuHyPGEc0w41iRxf11FIOwGZTsPSCgsSVspUiURkQNtv
+         1gJFDQusGAYQB6wEq4HS0ohrmPqNWfs87QuMbtulC9FSwAet0XdwM244RCqEa3RujIhU
+         johw==
+X-Gm-Message-State: APjAAAVqtkuQN2ogQ8p4QgwyxWkOgV1CM72+OaBC9XE1QShSAY5yegqb
+        ILLW1Mp3+RUDR8I2y79+9tFJ8avvelXwLacNqvEJgDG5XIcMZ0Y7XMg65iEsRRH2Vk3UwlksRSf
+        jyY3Pq+nDySICe162H0KLUgBf
+X-Received: by 2002:a37:9d8c:: with SMTP id g134mr3831593qke.128.1581016005752;
+        Thu, 06 Feb 2020 11:06:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwcm5P+4dPwvjCn12J5PDi86Wcm35+8jmeWD2jbAE2DUKQO5334DVnipyStraLYLoHf0dGJ6w==
+X-Received: by 2002:a37:9d8c:: with SMTP id g134mr3831559qke.128.1581016005447;
+        Thu, 06 Feb 2020 11:06:45 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id m27sm111381qta.21.2020.02.06.11.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 11:06:44 -0800 (PST)
+Date:   Thu, 6 Feb 2020 14:06:41 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 14/19] KVM: Clean up local variable usage in
+ __kvm_set_memory_region()
+Message-ID: <20200206190641.GA700495@xz-x1>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-15-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200121223157.15263-15-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
-> Few fixes / improvements related to perf annotate.
-> 
-> v2: https://lore.kernel.org/r/20200124080432.8065-1-ravi.bangoria@linux.ibm.com
-> 
-> v2->v3:
->  - [PATCH v3 2/6] New function annotation_line__exit() to clear
->    annotation_line objects.
+On Tue, Jan 21, 2020 at 02:31:52PM -0800, Sean Christopherson wrote:
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+[...]
 
-thanks,
-jirka
+> @@ -1101,52 +1099,55 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>  	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
+>  		return -EINVAL;
+>  
+> -	slot = id_to_memslot(__kvm_memslots(kvm, as_id), id);
+> -	base_gfn = mem->guest_phys_addr >> PAGE_SHIFT;
+> -	npages = mem->memory_size >> PAGE_SHIFT;
+> -
+> -	if (npages > KVM_MEM_MAX_NR_PAGES)
+> -		return -EINVAL;
+> -
+>  	/*
+>  	 * Make a full copy of the old memslot, the pointer will become stale
+>  	 * when the memslots are re-sorted by update_memslots().
+>  	 */
+> -	old = *slot;
+> +	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
+> +	old = *tmp;
+> +	tmp = NULL;
 
-> 
-> v1: http://lore.kernel.org/r/20200117092612.30874-1-ravi.bangoria@linux.ibm.com
-> 
-> v1->v2:
->  - Split [PATCH v1 1/3] into two patches.
->  - Patch 5 and patch 6 are new.
-> 
-> Ravi Bangoria (6):
->   perf annotate: Remove privsize from symbol__annotate() args
->   perf annotate: Simplify disasm_line allocation and freeing code
->   perf annotate: Align struct annotate_args
->   perf annotate: Fix segfault with source toggle
->   perf annotate: Make few functions static
->   perf annotate: Get rid of annotation->nr_jumps
-> 
->  tools/perf/builtin-top.c     |   2 +-
->  tools/perf/ui/gtk/annotate.c |   2 +-
->  tools/perf/util/annotate.c   | 115 ++++++++++++++---------------------
->  tools/perf/util/annotate.h   |   8 +--
->  4 files changed, 49 insertions(+), 78 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
+Shall we keep this chunk to the patch where it will be used?  Other
+than that, it looks good to me.
+
+Thanks,
+
+-- 
+Peter Xu
 
