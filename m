@@ -2,100 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B8C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814332082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:39:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ys8PYYc/"
+	by mail.kernel.org (Postfix) with ESMTP id 852F5214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581000066;
+	bh=5F+DVXttfezw5xirpmvxPSy/Sk+UV6Nkj38IRu6gU5U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DRFbS+dJlU/VTAEAMmz0Wu2IBDoScCQ5SqlbQVvhb/N2zpssGnMEZYLm0g9FCWCwK
+	 DwJwAFzClnHOTMsECW5SBxrko32Iz3qRzYM53JrY7ndWglq73PKIZR06DNW/LZ1ysx
+	 t3XMnyIBZQ8UNKp+ewqrj2zLbcnNrdWdahJ52LNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgBFOjq (ORCPT
+        id S1728069AbgBFOlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:39:46 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38869 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgBFOjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:39:46 -0500
-Received: by mail-qt1-f195.google.com with SMTP id c24so4636011qtp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 06:39:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i8ZXRcb1q1ZSxQ8Q/mjcQROT9/CmLPHcpBtDmaBy1Do=;
-        b=Ys8PYYc/0KffCBFLBHCfIiPTSWh7o1gs3pvRab778kYvcRem+EEiC9ArZsRPtdj/MU
-         qz8rh87ZY4R8tPufcXRQ3WJZSBAv4EHo4oS6iNeaIewlyDE1i2lE1m5TCGmLzxJk3ol/
-         bIjLXlLTmfXIX3l79fRVQWu9wo+eXgVNQju9mZliLwvBZu35Br26tMCtk4f1h9HiFUjG
-         sqkZpxTdi4r1pM8uPb/wfWgmgOrA4ZR86hVUtj42PSRmET8iDZsrhaJh7VaGFlhJOZE2
-         1/EHItqP5lbpohrYWipysvn41cif3BBCHN/jgOlcUgnUJFTodDjrrsqjuEC185sijP9c
-         nJwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i8ZXRcb1q1ZSxQ8Q/mjcQROT9/CmLPHcpBtDmaBy1Do=;
-        b=UqpNyLlvY/Qs3Gchjd1t87Kndbh1V2Rwh0oms1NU+3gSdoMiYq2/TkqZWNlaL6azLZ
-         P1hHuOVmGyardXFnBe5lDni/N7v64lFWX0NkIOjRLOp9YudMTbNL7bciDro/YHpQxOX6
-         m9x5dpxXi4+5EyxDmikUZIwQuPwKFnBFkVTL69Cqwmfe9t5stXWsEKjA+q0UmJV1iUE0
-         u/hYIzAWlNZgV6ylrQaZelZcTEO0RXiLaDN3hFDBnJXolPDUsxWlS9r+9wmP6RTXxpMJ
-         IpV9lwlv61uj9ZJ7Cfv6nYt8jAs51Y3hJov9BZRHE54KNlGJ9sG6ytF3AJWPIDoPIzav
-         iMDQ==
-X-Gm-Message-State: APjAAAUJEZoybR2NdpG+/VYzI6155lWTROKE3zh5wZf/wa+lTgUAhcOm
-        m4ihM9lWg2C2kBtJ1h7VShc=
-X-Google-Smtp-Source: APXvYqyhDdGz3eHPZG7fiLYgFKopt6WoAXsJMOS9fseDCa61oFpV5/CBKfnx7SYfx4rk1uiOCCLshQ==
-X-Received: by 2002:ac8:75d8:: with SMTP id z24mr2850675qtq.193.1580999985259;
-        Thu, 06 Feb 2020 06:39:45 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c45sm1787163qtd.43.2020.02.06.06.39.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 06:39:45 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 6 Feb 2020 09:39:43 -0500
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function
- sections
-Message-ID: <20200206143941.GA3044151@rani.riverdale.lan>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-7-kristen@linux.intel.com>
- <202002060408.84005CEFFD@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202002060408.84005CEFFD@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 6 Feb 2020 09:41:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgBFOlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 09:41:05 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2331E20838;
+        Thu,  6 Feb 2020 14:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581000064;
+        bh=5F+DVXttfezw5xirpmvxPSy/Sk+UV6Nkj38IRu6gU5U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LyYbmzsb7DqZFk/mVKGIxTigWRVuM8b72E+rp347Aj6aoBGBD/N4akrO+uHDnx6BT
+         lA7uJ6Xo04zDCKsis2drjhUiV/SDJ/Knoe9ttGeW6T+tLeeGE1asoCqF1P4SniD0K0
+         Yxl+hXLC7f3qVZyDQJyrzoTVZiZMyw8VmRWP5JgE=
+Date:   Thu, 6 Feb 2020 23:41:00 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config
+ support
+Message-Id: <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
+In-Reply-To: <20200206115405.GA22608@zn.tnic>
+References: <20200114210316.450821675@goodmis.org>
+        <20200114210336.259202220@goodmis.org>
+        <20200206115405.GA22608@zn.tnic>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 04:26:23AM -0800, Kees Cook wrote:
-> I know x86_64 stack alignment is 16 bytes. I cannot find evidence for
-> what function start alignment should be. It seems the linker is 16 byte
-> aligning these functions, when I think no alignment is needed for
-> function starts, so we're wasting some memory (average 8 bytes per
-> function, at say 50,000 functions, so approaching 512KB) between
-> functions. If we can specify a 1 byte alignment for these orphan
-> sections, that would be nice, as mentioned in the cover letter: we lose
-> a 4 bits of entropy to this alignment, since all randomized function
-> addresses will have their low bits set to zero.
+Hi,
+
+On Thu, 6 Feb 2020 12:54:05 +0100
+Borislav Petkov <bp@alien8.de> wrote:
+
+> On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index a34064a031a5..63450d3bbf12 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
+> >  
+> >  endif
+> >  
+> > +config BOOT_CONFIG
+> > +	bool "Boot config support"
+> > +	select LIBXBC
+> > +	default y
 > 
+> Any particular reason this is default y? Why should it be enabled by
+> default on all boxes?
 
-The default function alignment is 16-bytes for x64 at least with gcc.
-You can use -falign-functions to specify a different alignment.
+Oh, you are not the first person asked that :)
 
-There was some old discussion on reducing it [1] but it doesn't seem to
-have been merged.
+https://lkml.org/lkml/2019/12/9/563
 
-[1] https://lore.kernel.org/lkml/tip-4874fe1eeb40b403a8c9d0ddeb4d166cab3f37ba@git.kernel.org/
+And yes, I think this is important that will useful for most developers
+and admins. Since the bootconfig already covers kernel and init options,
+this can be a new standard way to pass args to kernel boot.
+
+And as I reported above thread, the memory footpoint of view, most code
+and working memory are released after boot. Also, as Linus's suggested,
+now this feature is enabled only if user gives "bootconfig" on the kernel
+command line. So the side effect is minimized.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
