@@ -2,116 +2,141 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4D4C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB14C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9811420730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2071F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580991480;
+	bh=FjgGnBgBvon/B65YoGpHoOuV1f02D9RUlOO9st7qV28=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=c6mrT287rr4iwe4bz/M0f5+dSQ1lohidt/e7aoxnjP7eJysPD6bNOHY+DWNvDpnhA
+	 N2M8V5Em6azM3ROs7P0AmEF8gfCP34OOENp+MUO0Z/cjQebDIwqse+HvHhfyCZUych
+	 nJ/dOIinmIKGd7j9vzVIL8XTFMtyCGPccr15EEz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBFMRS (ORCPT
+        id S1727940AbgBFMR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:17:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44812 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727111AbgBFMRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:17:18 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016C9sxO113138
-        for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2020 07:17:17 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn5e31g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 07:17:16 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 6 Feb 2020 12:17:12 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 6 Feb 2020 12:17:08 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016CH7Ms58720370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Feb 2020 12:17:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 869F552051;
-        Thu,  6 Feb 2020 12:17:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.140.59])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 99E505204F;
-        Thu,  6 Feb 2020 12:17:06 +0000 (GMT)
-Subject: Re: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Thu, 06 Feb 2020 07:17:06 -0500
-In-Reply-To: <b1507c1121b64b3abc00e154fcfeef65@huawei.com>
-References: <20200205103317.29356-1-roberto.sassu@huawei.com>
-         <20200205103317.29356-3-roberto.sassu@huawei.com>
-         <1580936432.5585.309.camel@linux.ibm.com>
-         <b1507c1121b64b3abc00e154fcfeef65@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020612-0012-0000-0000-0000038443A0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020612-0013-0000-0000-000021C0B155
-Message-Id: <1580991426.5585.334.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002060093
+        Thu, 6 Feb 2020 07:17:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727815AbgBFMR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 07:17:59 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8210920730;
+        Thu,  6 Feb 2020 12:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580991478;
+        bh=FjgGnBgBvon/B65YoGpHoOuV1f02D9RUlOO9st7qV28=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FTqMznmKWf3vacIggfHWN427phyU6z1Y8ILChETefsSYVFiV9gsPPPbiUaHGOs9Zw
+         KiDw8ZhL7CP3+C3kiLyX7kH8lVhpiL1cf5z8LNbso5XTSJzp1La2L/3BS9/q/Mtr2y
+         3983c72a3WVYM5nAWsH/WJW60ljP0N/LmADYi2Vc=
+Date:   Thu, 6 Feb 2020 12:17:53 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS)
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+Message-ID: <20200206121753.7b809631@archlinux>
+In-Reply-To: <20200205190028.183069-11-pmalani@chromium.org>
+References: <20200205190028.183069-1-pmalani@chromium.org>
+        <20200205190028.183069-11-pmalani@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-06 at 09:36 +0000, Roberto Sassu wrote:
-> > Hi Roberto,
-> > 
-> > On Wed, 2020-02-05 at 11:33 +0100, Roberto Sassu wrote:
-> > 
-> > <snip>
-> > 
-> > > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > Suggested-by: James Bottomley
-> > <James.Bottomley@HansenPartnership.com>
-> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > Cc: stable@vger.kernel.org
-> > 
-> > Cc'ing stable resulted in Sasha's automated message.  If you're going
-> > to Cc stable, then please include the stable kernel release (e.g. Cc:
-> > stable@vger.kernel.org # v5.3).  Also please include a "Fixes" tag.
-> >  Normally only bug fixes are backported.
+On Wed,  5 Feb 2020 11:00:13 -0800
+Prashant Malani <pmalani@chromium.org> wrote:
+
+> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
+> which does the message buffer setup and cleanup.
 > 
-> Ok, will add the kernel version. I also thought which commit I should
-> mention in the Fixes tag. IMA always read the SHA1 bank from the
-> beginning. I could mention the patch that introduces the new API
-> to read other banks, but I'm not sure. What do you think?
+> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
+> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
+> function.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
-This patch is dependent on nr_allocated_banks.  Please try applying
-this patch to the earliest stable kernel with the commit that
-introduces nr_allocated_banks and test to make sure it works properly.
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-thanks,
-
-Mimi
+> ---
+> 
+> Changes in v2:
+> - Updated to use new function name and parameter list.
+> - Used C99 element setting to initialize param struct.
+> - For second usage, replaced cros_ec_cmd_xfer_status() with
+>   cros_ec_cmd_xfer() which is functionally similar.
+> 
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index d3a3626c7cd834..94e22e7d927631 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>  					     u16 cmd_offset, u16 cmd, u32 *mask)
+>  {
+>  	int ret;
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		union {
+> -			struct ec_params_get_cmd_versions params;
+> -			struct ec_response_get_cmd_versions resp;
+> -		};
+> -	} __packed buf = {
+> -		.msg = {
+> -			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> -			.insize = sizeof(struct ec_response_get_cmd_versions),
+> -			.outsize = sizeof(struct ec_params_get_cmd_versions)
+> -			},
+> -		.params = {.cmd = cmd}
+> +	struct ec_params_get_cmd_versions params = {
+> +		.cmd = cmd,
+>  	};
+> +	struct ec_response_get_cmd_versions resp = {0};
+>  
+> -	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> +	ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> +			  &params, sizeof(params), &resp, sizeof(resp), NULL);
+>  	if (ret >= 0)
+> -		*mask = buf.resp.version_mask;
+> +		*mask = resp.version_mask;
+>  	return ret;
+>  }
+>  
+> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+>  
+>  	memcpy(state->msg->data, &state->param, sizeof(state->param));
+>  
+> -	ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+> +	ret = cros_ec_cmd_xfer(state->ec, state->msg);
+>  	if (ret < 0)
+>  		return ret;
+> +	else if (state->msg->result != EC_RES_SUCCESS)
+> +		return -EPROTO;
+>  
+>  	if (ret &&
+>  	    state->resp != (struct ec_response_motion_sense *)state->msg->data)
 
