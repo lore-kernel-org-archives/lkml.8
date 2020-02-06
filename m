@@ -2,96 +2,136 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85E6C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29531C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B930C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B67206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:57:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fN7rHpfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgBFGye (ORCPT
+        id S1727959AbgBFG5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 01:54:34 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51180 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgBFGyd (ORCPT
+        Thu, 6 Feb 2020 01:57:10 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:36447 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727945AbgBFG5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 01:54:33 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izb3P-0089QE-Ua; Thu, 06 Feb 2020 06:54:24 +0000
-Date:   Thu, 6 Feb 2020 06:54:23 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        'Namjae Jeon' <linkinjeon@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, sj1557.seo@samsung.com,
-        pali.rohar@gmail.com, arnd@arndb.de,
-        'Christoph Hellwig' <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] exfat: update file system parameter handling
-Message-ID: <20200206065423.GZ23230@ZenIV.linux.org.uk>
-References: <297144.1580786668@turing-police>
- <CGME20200204060659epcas1p1968fda93ab3a2cbbdb812b33c12d8a55@epcas1p1.samsung.com>
- <20200204060654.GB31675@lst.de>
- <003701d5db27$d3cd1ce0$7b6756a0$@samsung.com>
- <252365.1580963202@turing-police>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <252365.1580963202@turing-police>
+        Thu, 6 Feb 2020 01:57:09 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580972229; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=qPkoBZcjFDDffVZqOjSoc0Prt/FQJ0KkDvb0IVj8YME=; b=fN7rHpfeYG7NfsGW4OBxjlNGi0TbZEGicaI/RKZP5tvllySGPQ6r4G86/o+pZM/ZCjxAHnc+
+ K+E1KPh8aX8onYDts5AioGfeqz/Mj1SfYaGgISj6s93hHMSlQNNMQusH/x2MPDanvWPc1XzY
+ 2ooHbGJaADLHvkVGcmsFnzZsjdI=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3bb8c2.7f6a06bc5570-smtp-out-n03;
+ Thu, 06 Feb 2020 06:57:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D0E38C4479C; Thu,  6 Feb 2020 06:57:04 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B1E4C433CB;
+        Thu,  6 Feb 2020 06:57:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B1E4C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Sayali Lokhande <sayalil@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/8] scsi: ufs: Flush exception event before suspend
+Date:   Wed,  5 Feb 2020 22:56:44 -0800
+Message-Id: <1580972212-29881-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1580972212-29881-1-git-send-email-cang@codeaurora.org>
+References: <1580972212-29881-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 11:26:42PM -0500, Valdis Klētnieks wrote:
-> On Tue, 04 Feb 2020 15:53:38 +0900, "Namjae Jeon" said:
-> > > > Al Viro recently reworked the way file system parameters are handled
-> > > > Update super.c to work with it in linux-next 20200203.
-> 
-> > Acked-by: Namjae Jeon <namjae.jeon@samsung.com>
-> >
-> > If I need to make v14 patch series for this, Let me know it.
-> 
-> Hmm... That's a process/git question that somebody else (probably Al Viro) will
-> have to answer.
-> 
-> fs/exfat/super.c won't compile on next-20200203 or later without the patch, and
-> as a practical matter the version that finally goes into the main tree will need the patch.
-> 
-> On the one hand, the proper way to track the history of that patch would be to
-> cherry-pick it into the proper spot in your patch series, right after the
-> commit that adds super.c.  Then the git history reflects what code came from
-> where.
-> 
-> On the other hand, it leaves a really small window where a git bisect can land
-> exactly on the commit that adds the unpatched version of super.c and fail to
-> buiild.  If all the Signed-off-by's were from one person, the obvious answer is
-> to fold the fix into the commit that adds super.c - but that loses the git
-> history.
-> 
-> So I'm going to dodge the question by saying "What would Al Viro do?" :)
+From: Sayali Lokhande <sayalil@codeaurora.org>
 
-	The situation with #work.fs_parse is simple: I'm waiting for NFS series
-to get in (git://git.linux-nfs.org/projects/anna/linux-nfs.git, that is).
- As soon as it happens, I'm sending #work.fs_parse + merge with nfs stuff +
-fixups for said nfs stuff (as in
-https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/commit/?id=c354ed1)
-to Linus.  In case Anna decides to skip this cycle (and I've seen nothing that
-might indicates that), I will just send #work.fs_parse as-is.
+Exception event can be raised by the device when system
+suspend is in progress. This will result in unclocked
+register access in exception event handler as clocks will
+be turned off during suspend. This change makes sure to flush
+exception event handler work in suspend before disabling
+clocks to avoid unclocked register access issue.
 
-	I *can* rebase #work.fs_parse on top of NFS series (and vboxsf, and
-exfat, etc.) and send it to Linus right before -rc1, with obviously identical
-final state.  That would avoid all issues with bisect hazards, but Linus is
-usually unhappy about rebases.  And bisect hazard window is narrow...
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 
-	Again, I've no problem with such rebase (hell, with additional
-branch ending in the same tree as #merge.nfs-fs_parse, verifiable by
-simple git diff - compare vfs.git merge.nfs-fs_parse.0 and
-merge.nfs-fs_parse.1, the latter being a rebase on top of #nfs-next).
-Linus, up to you...
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index abd0e6b..10dbc0c 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4730,8 +4730,15 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+ 			 * UFS device needs urgent BKOPs.
+ 			 */
+ 			if (!hba->pm_op_in_progress &&
+-			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
+-				schedule_work(&hba->eeh_work);
++			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr) &&
++			    schedule_work(&hba->eeh_work)) {
++				/*
++				 * Prevent suspend once eeh_work is scheduled
++				 * to avoid deadlock between ufshcd_suspend
++				 * and exception event handler.
++				 */
++				pm_runtime_get_noresume(hba->dev);
++			}
+ 			break;
+ 		case UPIU_TRANSACTION_REJECT_UPIU:
+ 			/* TODO: handle Reject UPIU Response */
+@@ -5184,7 +5191,14 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
+ 
+ out:
+ 	ufshcd_scsi_unblock_requests(hba);
+-	pm_runtime_put_sync(hba->dev);
++	/*
++	 * pm_runtime_get_noresume is called while scheduling
++	 * eeh_work to avoid suspend racing with exception work.
++	 * Hence decrement usage counter using pm_runtime_put_noidle
++	 * to allow suspend on completion of exception event handler.
++	 */
++	pm_runtime_put_noidle(hba->dev);
++	pm_runtime_put(hba->dev);
+ 	return;
+ }
+ 
+@@ -7924,6 +7938,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 			goto enable_gating;
+ 	}
+ 
++	flush_work(&hba->eeh_work);
+ 	ret = ufshcd_link_state_transition(hba, req_link_state, 1);
+ 	if (ret)
+ 		goto set_dev_active;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
