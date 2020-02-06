@@ -2,145 +2,102 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF61BC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A469C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B823A217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FAD21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="Tv8MZfQy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rvfROt3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBFT0y (ORCPT
+        id S1727872AbgBFT2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:26:54 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39576 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbgBFT0x (ORCPT
+        Thu, 6 Feb 2020 14:28:14 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:47094 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBFT2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:26:53 -0500
-Received: by mail-vs1-f65.google.com with SMTP id p14so4547728vsq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:26:53 -0800 (PST)
+        Thu, 6 Feb 2020 14:28:14 -0500
+Received: by mail-ot1-f65.google.com with SMTP id g64so6585044otb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:28:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=S7KpLMUY7LiWZq/Kj/eAi+yNVL0NiKccJvwviJrN6LU=;
-        b=Tv8MZfQyvsljJl/L3IaZhjvF0zhvW7SGNWz006rU+AEOnWunbxolvEn+ld89B6WyJW
-         yn7gHQ2DktgOFMcX/tw2hqsr4MwhiimED2xSWJRNi0Apz814aNulaQTHc9vuGeK9IDNT
-         It5U1ReUUYb4xFG50FuVrDTevCZD9OT1L6gMNuK6aOR8E6g97ydSvQuyTUAWyDPrMdh6
-         vnjEkFc16T2U61hgk19+NgLZQA6IzseSsUaAl2CKt1oSsru/HYy478Lyv/RNrNgsMfJg
-         E34mx0+Ekt0XJqgazqxe82zwubl03+fz1uevMPW37HhjqMn6CPFGAdE0XsKrux2KOFyn
-         AYyw==
+         :cc;
+        bh=PPzXTmDRqSItJwjA4stEZr45/Nmk9dtQCp0t0GcfvJw=;
+        b=rvfROt3nBVHeNCQfPYWwuOMBfp5sQZIqkXiywCwoSlbuLD0R8zkM8I/44uAiL/SsWG
+         m8pc4hnzhgAK7O7L9Mm0YtzToA4+uNCENjfatqKVEHKStfKAnwMD4IWW7jHLRQikdM9a
+         QJsAft3GrJ6L4V0NEvCvWSIXW0n6YGuCLzvZUfoSNUXAozdf2Vmo01BVSUvel13iFfOV
+         69wXY7b+REnUDlrLcBKbNwTH9NJhbfMsmO1PE3DYyzdQTiCvNH1RsZucMAwq8qvUXXW3
+         LZDAShSyOYZQgIpYGlMYQAd/U72LOUhUYpHMb+S8g6auBLeO5B7nblSGM5a6u9TbkR7i
+         jBkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=S7KpLMUY7LiWZq/Kj/eAi+yNVL0NiKccJvwviJrN6LU=;
-        b=lHDNWIC08x/fv45y3j934x989hDvgiXYamtJrNCwo4VR8Rvr0xJ3D0wgnv5EK4X4BM
-         Yugayaw0JSkJJZU5MGMGQVwkZeiRYaePaRUhtwbyupMgHwfT5ioKYKNrdjBjPY2BVePn
-         aLM7ESOx0dMwJIBdcTE8qnjXJ5Dvz26/aRVQ44HDiDQUtwIcbMUGb2FHXuF6yLaX1x/n
-         m8uDrmHP/BLqEM3JhD7Os5tWdxJZiFk4pwI45C2yFaTGfwHwztEiCctsyboaOrzCwCqf
-         9SUcM0CwPfNYCuI0VNd7zchIrPJ+8joXjeUFlHQT0TVua36cJ8PLLB8onpV1HASCLvyb
-         rh9Q==
-X-Gm-Message-State: APjAAAViEc92QLX1c9CZY4v5d7SjLxYHZFs4mXJYzresfg5/8hgtK2nk
-        jzFskRzBVByuhygS1Y90BfKBEbS+/LKGlxlHVTlgRg==
-X-Google-Smtp-Source: APXvYqwoojhOiE1bY8Keza3r5GUPbzrgIujBGiCbM5sfzEmHarjYTwY433tNBdAO58ymcgqBI0TN5G4Kv1fiGkD0b+o=
-X-Received: by 2002:a67:d011:: with SMTP id r17mr2575599vsi.159.1581017212681;
- Thu, 06 Feb 2020 11:26:52 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=PPzXTmDRqSItJwjA4stEZr45/Nmk9dtQCp0t0GcfvJw=;
+        b=i6DlYBRN7kaGL7j9Q6SNcR4TB+6tWdBHDbB+8PbwFxjPqr2dIV67/mrBWl3rnQhguD
+         G8JxxuC6xlAUbPIQ9NRTRJu4XLtYbikARd3reLT5PF98ey8WIQqEcwKrCoAR3mw4S4Fp
+         baHExL2fFNhUohrkKOnVJNt8r1/LXCB/lTp69dl1jfGfoo6klkuGQ4JIxcEfMIAFLf2H
+         anra8XqNtJ7Gwjz3gn5/NnycYNglUQeRRsGDgz5jEl1A1T1p41RlZdq7FGmzyzB8butC
+         vOxHTEZV8PKYS78CZSl0Hf/Da7FV6beARupRXsxqBR6KqREtok7n6sfIZjsP7TkR3qg+
+         1a9w==
+X-Gm-Message-State: APjAAAUyAvLFzS2YgScZ6S7vDy3b00hQcW9hap8i5CvEeODKetbZJQHz
+        jDb/+JwWcsTKBpnsxsVy27EpQZzsF4b2MUaFWqJp1w==
+X-Google-Smtp-Source: APXvYqwapGv/xZdFoWT4kXntbEcAkmogFT8Lk8w4susmDyaYarkU1eo5zWOTQAKb9bTDmLS5csh5ZQ5ckZLHFH+u4w8=
+X-Received: by 2002:a05:6830:22cc:: with SMTP id q12mr32387120otc.110.1581017291747;
+ Thu, 06 Feb 2020 11:28:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219172823.1652600-1-anarsoul@gmail.com> <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
- <20200206155703.fyry7nh473mc7pqy@core.my.home>
-In-Reply-To: <20200206155703.fyry7nh473mc7pqy@core.my.home>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 7 Feb 2020 00:56:41 +0530
-Message-ID: <CAHLCerMLFYRNUfPAzbUTZkn33P7LG5PtHMNiSJ2GMCoJ=0k74w@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-To:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-10-kristen@linux.intel.com> <202002060428.08B14F1@keescook>
+ <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
+In-Reply-To: <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 6 Feb 2020 20:27:45 +0100
+Message-ID: <CAG48ez2SucOZORUhHNxt-9juzqcWjTZRD9E_PhP51LpH1UqeLg@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/11] kallsyms: hide layout and expose seed
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 9:27 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
-:
->
-> Hi Amit,
->
-> On Thu, Feb 06, 2020 at 07:43:59PM +0530, Amit Kucheria wrote:
-> > Hi Vasily,
+On Thu, Feb 6, 2020 at 6:51 PM Kristen Carlson Accardi
+<kristen@linux.intel.com> wrote:
+> On Thu, 2020-02-06 at 04:32 -0800, Kees Cook wrote:
+> > In the past, making kallsyms entirely unreadable seemed to break
+> > weird
+> > stuff in userspace. How about having an alternative view that just
+> > contains a alphanumeric sort of the symbol names (and they will
+> > continue
+> > to have zeroed addresses for unprivileged users)?
 > >
-> > For this entire series, the DTS files don't contain any trip points.
-> > Did I miss some other series?
+> > Or perhaps we wait to hear about this causing a problem, and deal
+> > with
+> > it then? :)
 > >
-> > At a minimum, you should add some "hot" or "critical" trip points
-> > since then don't require a cooling-map with throttling actions. If you
-> > have "passive" trip points, then you need to provide cooling-maps.
-> >
-> > Since this series has been merged, could you please follow up with a
-> > fixup series to add the trip points?
 >
-> I don't think lack of trip points causes runtime issues. Or does it? I pl=
-anned
-> to send update with some trip points and cooling maps for 5.7 merge windo=
-w.
-> Is this acceptable?
+> Yeah - I don't know what people want here. Clearly, we can't leave
+> kallsyms the way it is. Removing it entirely is a pretty fast way to
+> figure out how people use it though :).
 
-Yes, I think that would be fine.
+FYI, a pretty decent way to see how people are using an API is
+codesearch.debian.net, which searches through the source code of all
+the packages debian ships:
 
-> If not, I can send a patch that adds:
->
-> + trips {
-> +         cpu-very-hot {
-> +                 temperature =3D <100000>;
-> +                 hysteresis =3D <0>;
-> +                 type =3D "critical";
-> +         };
-> + };
->
-> and
->
-> + trips {
-> +         gpu-very-hot {
-> +                 temperature =3D <100000>;
-> +                 hysteresis =3D <0>;
-> +                 type =3D "critical";
-> +         };
-> + };
->
-> everywhere where appropriate. Though that will make rebase of out of
-> tree patches that already have a more complicated setup to be sent for th=
-e next
-> merge window a bit tedious.
-
-Right, don't do that.
-
-> thank you,
->         Ondrej
->
-> > Regards,
-> > Amit
-> > p.s. We should catch all this automatically, I'll send out yaml
-> > bindings for the thermal framework soon that should catch this stuff.
+https://codesearch.debian.net/search?q=%2Fproc%2Fkallsyms&literal=1
