@@ -2,139 +2,99 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A0EC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1199C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3F8217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8200E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgBFXHC (ORCPT
+        id S1727524AbgBFXHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 18:07:02 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:45232 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBFXGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 18:06:54 -0500
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 0335E29A97; Thu,  6 Feb 2020 18:06:53 -0500 (EST)
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Message-Id: <5504c0c416525ed8c7b8440e5f9971f2a7b59f28.1581030073.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1581030073.git.fthain@telegraphics.com.au>
-References: <cover.1581030073.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH v2 1/3] fbdev/g364fb: Fix build failure
+        Thu, 6 Feb 2020 18:07:31 -0500
+Received: from mga02.intel.com ([134.134.136.20]:34047 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgBFXHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 18:07:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 15:07:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,411,1574150400"; 
+   d="scan'208";a="225391166"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Feb 2020 15:07:30 -0800
+Date:   Thu, 6 Feb 2020 15:07:30 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] KVM: x86/mmu: Fix struct guest_walker arrays for
+ 5-level paging
+Message-ID: <20200206230730.GA24556@linux.intel.com>
+References: <20200206220836.22743-1-sean.j.christopherson@intel.com>
+ <20200206220836.22743-3-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 07 Feb 2020 10:01:13 +1100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206220836.22743-3-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch resolves these compiler errors and warnings --
+On Thu, Feb 06, 2020 at 02:08:31PM -0800, Sean Christopherson wrote:
+> Define PT_MAX_FULL_LEVELS as PT64_ROOT_MAX_LEVEL, i.e. 5, to fix shadow
+> paging for 5-level guest page tables.  PT_MAX_FULL_LEVELS is used to
+> size the arrays that track guest pages table information, i.e. using a
+> "max levels" of 4 causes KVM to access garbage beyond the end of an
+> array when querying state for level 5 entries.  E.g. FNAME(gpte_changed)
+> will read garbage and most likely return %true for a level 5 entry,
+> soft-hanging the guest because FNAME(fetch) will restart the guest
+> instead of creating SPTEs because it thinks the guest PTE has changed.
+> 
+> Fixes: 855feb673640 ("KVM: MMU: Add 5 level EPT & Shadow page table support.")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/mmu/paging_tmpl.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+> index 4e1ef0473663..6b15b58f3ecc 100644
+> --- a/arch/x86/kvm/mmu/paging_tmpl.h
+> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
+> @@ -33,7 +33,7 @@
+>  	#define PT_GUEST_ACCESSED_SHIFT PT_ACCESSED_SHIFT
+>  	#define PT_HAVE_ACCESSED_DIRTY(mmu) true
+>  	#ifdef CONFIG_X86_64
+> -	#define PT_MAX_FULL_LEVELS 4
+> +	#define PT_MAX_FULL_LEVELS PT64_ROOT_MAX_LEVEL
+>  	#define CMPXCHG cmpxchg
+>  	#else
+>  	#define CMPXCHG cmpxchg64
+> @@ -66,7 +66,7 @@
+>  	#define PT_GUEST_ACCESSED_SHIFT 8
+>  	#define PT_HAVE_ACCESSED_DIRTY(mmu) ((mmu)->ept_ad)
+>  	#define CMPXCHG cmpxchg64
+> -	#define PT_MAX_FULL_LEVELS 4
+> +	#define PT_MAX_FULL_LEVELS PT64_ROOT_MAX_LEVEL
 
-  CC      drivers/video/fbdev/g364fb.o
-drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
-drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
-drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
-drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
-drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
-drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
-drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
+Doh, the nested EPT change belongs in the next patch.  I'll retest tomorrow
+and send a v2 when by brain is less mushy.
 
-The MIPS Magnum framebuffer console now works when tested in QEMU.
-
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
----
- drivers/video/fbdev/g364fb.c | 29 +++--------------------------
- 1 file changed, 3 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
-index 845b79da2a7c..05837a3b985c 100644
---- a/drivers/video/fbdev/g364fb.c
-+++ b/drivers/video/fbdev/g364fb.c
-@@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
- static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
- 			    u_int blue, u_int transp,
- 			    struct fb_info *info);
--static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
- static int g364fb_blank(int blank, struct fb_info *info);
- 
- static const struct fb_ops g364fb_ops = {
-@@ -119,28 +118,8 @@ static const struct fb_ops g364fb_ops = {
- 	.fb_fillrect	= cfb_fillrect,
- 	.fb_copyarea	= cfb_copyarea,
- 	.fb_imageblit	= cfb_imageblit,
--	.fb_cursor	= g364fb_cursor,
- };
- 
--int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
--{
--	
--	switch (cursor->enable) {
--	case CM_ERASE:
--		*(unsigned int *) CTLA_REG |= CURS_TOGGLE;
--		break;
--
--	case CM_MOVE:
--	case CM_DRAW:
--		*(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
--		*(unsigned int *) CURS_POS_REG =
--		    ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
--						  info->var.yoffset);
--		break;
--	}
--	return 0;
--}
--
- /*
-  *  Pan or Wrap the Display
-  *
-@@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
-  */
- int __init g364fb_init(void)
- {
--	volatile unsigned int *pal_ptr =
--	    (volatile unsigned int *) CLR_PAL_REG;
- 	volatile unsigned int *curs_pal_ptr =
- 	    (volatile unsigned int *) CURS_PAL_REG;
--	int mem, i, j;
-+	int mem, i;
- 
- 	if (fb_get_options("g364fb", NULL))
- 		return -ENODEV;
-@@ -230,8 +207,8 @@ int __init g364fb_init(void)
- 	 */
- 	*(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
- 	*(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
--	fb_var.xres_virtual = fbvar.xres;
--	fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
-+	fb_var.xres_virtual = fb_var.xres;
-+	fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
- 	fb_fix.smem_start = 0x40000000;	/* physical address */
- 	/* get size of video memory; this is special for the JAZZ hardware */
- 	mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
--- 
-2.24.1
-
+>  #else
+>  	#error Invalid PTTYPE value
+>  #endif
+> -- 
+> 2.24.1
+> 
