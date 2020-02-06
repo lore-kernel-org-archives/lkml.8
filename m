@@ -2,256 +2,96 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEC5C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85E6C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633B920720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B930C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgBFGuv (ORCPT
+        id S1727884AbgBFGye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 01:50:51 -0500
-Received: from mga03.intel.com ([134.134.136.65]:1525 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727698AbgBFGuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 01:50:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 22:50:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,408,1574150400"; 
-   d="scan'208";a="432122980"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Feb 2020 22:50:48 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1izazw-0007Ln-4G; Thu, 06 Feb 2020 14:50:48 +0800
-Date:   Thu, 06 Feb 2020 14:50:41 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.01.22a] BUILD SUCCESS
- bc4523184c4ce2876c8ffc789e2e81aa762b09d7
-Message-ID: <5e3bb741.UjoX3++DxQDKaJho%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 6 Feb 2020 01:54:34 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:51180 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbgBFGyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 01:54:33 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izb3P-0089QE-Ua; Thu, 06 Feb 2020 06:54:24 +0000
+Date:   Thu, 6 Feb 2020 06:54:23 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        'Namjae Jeon' <linkinjeon@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, sj1557.seo@samsung.com,
+        pali.rohar@gmail.com, arnd@arndb.de,
+        'Christoph Hellwig' <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] exfat: update file system parameter handling
+Message-ID: <20200206065423.GZ23230@ZenIV.linux.org.uk>
+References: <297144.1580786668@turing-police>
+ <CGME20200204060659epcas1p1968fda93ab3a2cbbdb812b33c12d8a55@epcas1p1.samsung.com>
+ <20200204060654.GB31675@lst.de>
+ <003701d5db27$d3cd1ce0$7b6756a0$@samsung.com>
+ <252365.1580963202@turing-police>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <252365.1580963202@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.01.22a
-branch HEAD: bc4523184c4ce2876c8ffc789e2e81aa762b09d7  locktorture: Allow CPU-hotplug to be disabled via --bootargs
+On Wed, Feb 05, 2020 at 11:26:42PM -0500, Valdis Klētnieks wrote:
+> On Tue, 04 Feb 2020 15:53:38 +0900, "Namjae Jeon" said:
+> > > > Al Viro recently reworked the way file system parameters are handled
+> > > > Update super.c to work with it in linux-next 20200203.
+> 
+> > Acked-by: Namjae Jeon <namjae.jeon@samsung.com>
+> >
+> > If I need to make v14 patch series for this, Let me know it.
+> 
+> Hmm... That's a process/git question that somebody else (probably Al Viro) will
+> have to answer.
+> 
+> fs/exfat/super.c won't compile on next-20200203 or later without the patch, and
+> as a practical matter the version that finally goes into the main tree will need the patch.
+> 
+> On the one hand, the proper way to track the history of that patch would be to
+> cherry-pick it into the proper spot in your patch series, right after the
+> commit that adds super.c.  Then the git history reflects what code came from
+> where.
+> 
+> On the other hand, it leaves a really small window where a git bisect can land
+> exactly on the commit that adds the unpatched version of super.c and fail to
+> buiild.  If all the Signed-off-by's were from one person, the obvious answer is
+> to fold the fix into the commit that adds super.c - but that loses the git
+> history.
+> 
+> So I'm going to dodge the question by saying "What would Al Viro do?" :)
 
-elapsed time: 10589m
+	The situation with #work.fs_parse is simple: I'm waiting for NFS series
+to get in (git://git.linux-nfs.org/projects/anna/linux-nfs.git, that is).
+ As soon as it happens, I'm sending #work.fs_parse + merge with nfs stuff +
+fixups for said nfs stuff (as in
+https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/commit/?id=c354ed1)
+to Linus.  In case Anna decides to skip this cycle (and I've seen nothing that
+might indicates that), I will just send #work.fs_parse as-is.
 
-configs tested: 193
-configs skipped: 1
+	I *can* rebase #work.fs_parse on top of NFS series (and vboxsf, and
+exfat, etc.) and send it to Linus right before -rc1, with obviously identical
+final state.  That would avoid all issues with bisect hazards, but Linus is
+usually unhappy about rebases.  And bisect hazard window is narrow...
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-i386                             allyesconfig
-microblaze                      mmu_defconfig
-nds32                               defconfig
-parisc                         b180_defconfig
-s390                             alldefconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-ia64                             alldefconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nios2                         3c120_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-m68k                          multi_defconfig
-m68k                       m5475evb_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                           sun3_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-x86_64               randconfig-a001-20200129
-i386                 randconfig-a001-20200129
-x86_64               randconfig-a002-20200129
-i386                 randconfig-a002-20200129
-i386                 randconfig-a003-20200129
-x86_64               randconfig-a003-20200129
-riscv                randconfig-a001-20200129
-alpha                randconfig-a001-20200129
-parisc               randconfig-a001-20200129
-m68k                 randconfig-a001-20200129
-mips                 randconfig-a001-20200129
-nds32                randconfig-a001-20200129
-alpha                randconfig-a001-20200206
-m68k                 randconfig-a001-20200206
-mips                 randconfig-a001-20200206
-nds32                randconfig-a001-20200206
-parisc               randconfig-a001-20200206
-riscv                randconfig-a001-20200206
-c6x                  randconfig-a001-20200130
-h8300                randconfig-a001-20200130
-microblaze           randconfig-a001-20200130
-nios2                randconfig-a001-20200130
-sparc64              randconfig-a001-20200130
-c6x                  randconfig-a001-20200206
-h8300                randconfig-a001-20200206
-microblaze           randconfig-a001-20200206
-nios2                randconfig-a001-20200206
-sparc64              randconfig-a001-20200206
-xtensa               randconfig-a001-20200130
-openrisc             randconfig-a001-20200130
-csky                 randconfig-a001-20200130
-sh                   randconfig-a001-20200130
-s390                 randconfig-a001-20200130
-csky                 randconfig-a001-20200206
-openrisc             randconfig-a001-20200206
-s390                 randconfig-a001-20200206
-sh                   randconfig-a001-20200206
-xtensa               randconfig-a001-20200206
-x86_64               randconfig-b002-20200129
-i386                 randconfig-b003-20200129
-i386                 randconfig-b001-20200129
-i386                 randconfig-b002-20200129
-x86_64               randconfig-b001-20200129
-x86_64               randconfig-b003-20200129
-i386                 randconfig-c003-20200129
-x86_64               randconfig-c003-20200129
-x86_64               randconfig-c002-20200129
-x86_64               randconfig-c001-20200129
-i386                 randconfig-c001-20200129
-i386                 randconfig-c002-20200129
-i386                 randconfig-d003-20200130
-x86_64               randconfig-d002-20200130
-i386                 randconfig-d001-20200130
-i386                 randconfig-d002-20200130
-x86_64               randconfig-d003-20200130
-x86_64               randconfig-d001-20200130
-x86_64               randconfig-e001-20200130
-x86_64               randconfig-e002-20200130
-x86_64               randconfig-e003-20200130
-i386                 randconfig-e001-20200130
-i386                 randconfig-e002-20200130
-i386                 randconfig-e003-20200130
-x86_64               randconfig-f001-20200206
-x86_64               randconfig-f002-20200206
-x86_64               randconfig-f003-20200206
-i386                 randconfig-f001-20200206
-i386                 randconfig-f002-20200206
-i386                 randconfig-f003-20200206
-x86_64               randconfig-g001-20200206
-x86_64               randconfig-g002-20200206
-x86_64               randconfig-g003-20200206
-i386                 randconfig-g001-20200206
-i386                 randconfig-g002-20200206
-i386                 randconfig-g003-20200206
-i386                 randconfig-g003-20200129
-x86_64               randconfig-g003-20200129
-x86_64               randconfig-g001-20200129
-i386                 randconfig-g001-20200129
-x86_64               randconfig-g002-20200129
-i386                 randconfig-g002-20200129
-x86_64               randconfig-h003-20200129
-x86_64               randconfig-h002-20200129
-i386                 randconfig-h001-20200129
-i386                 randconfig-h003-20200129
-x86_64               randconfig-h001-20200129
-i386                 randconfig-h002-20200129
-arc                  randconfig-a001-20200130
-arm                  randconfig-a001-20200130
-arm64                randconfig-a001-20200130
-ia64                 randconfig-a001-20200130
-powerpc              randconfig-a001-20200130
-sparc                randconfig-a001-20200130
-arc                  randconfig-a001-20200206
-arm                  randconfig-a001-20200206
-arm64                randconfig-a001-20200206
-ia64                 randconfig-a001-20200206
-powerpc              randconfig-a001-20200206
-sparc                randconfig-a001-20200206
-riscv                          rv32_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                    nommu_virt_defconfig
-riscv                            allyesconfig
-s390                              allnoconfig
-s390                          debug_defconfig
-s390                             allmodconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-s390                             allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+	Again, I've no problem with such rebase (hell, with additional
+branch ending in the same tree as #merge.nfs-fs_parse, verifiable by
+simple git diff - compare vfs.git merge.nfs-fs_parse.0 and
+merge.nfs-fs_parse.1, the latter being a rebase on top of #nfs-next).
+Linus, up to you...
