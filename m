@@ -4,329 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA81EC47409
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E1C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68598218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4032B218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022009;
-	bh=0xWsIls+HxdnXPkAokxsd8+bZVrj7fluG13Qn9cks+8=;
+	s=default; t=1581022013;
+	bh=jlrgbcL3A7WUALPOOnfR78+nRHZ1zmecPt6NXQ+9MuU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MrUbZ9yWM7+f5rUGs4AYtlnqE0JpXNWMW+Joi8vw15ZKxntgEoqkOK0qy6nLmYID2
-	 RdZS09XNHqJcJb5EoGEP6YDbKVdIKqjTSlkDQycHxbI/GXJ5zVcz8rdR6yfeyJIBfC
-	 F21HbYpqzsWUylapo/uE8Po+bje0oDpln80Y6w+U=
+	b=R90lQ/Sxb7z7uI+uY0PIaNi65UvckIsrAerfo3sEHXYBkMSAnSjG6RIwG1sDLHEFn
+	 oifrE3zogSTZRN3M7BNExciKm5l3HAX9W6FBDxlGGFvqNCHbli5C7FPlQz2hwk5Lip
+	 d+I7koityed59i7OwiKpmqDRu82y85jSrWFrKc84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgBFUqs (ORCPT
+        id S1728301AbgBFUqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:48 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45194 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgBFUq0 (ORCPT
+        Thu, 6 Feb 2020 15:46:52 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33075 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbgBFUqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:46:26 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so24620pls.12;
-        Thu, 06 Feb 2020 12:46:25 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:19 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so3358617pgk.0;
+        Thu, 06 Feb 2020 12:46:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5OOXYFIqEU+LJl0CSasuKCfoYnWm1dEiiEdMWamRXfA=;
-        b=Blb3sZcBa2MsghHipinQGxFwyzfIlLmoh1E0HazvmABVP+ceUTIFwCMUV9nddZTWDN
-         0ajd7HFw0vsr82D1i+6nZtdHc8kBpTIzkVLeQxORv4Ec7CqMXx7rACaIsHKhHYZaVoSk
-         OIZ2ISbghr8qZpf9RPeOgXOMHfwBcjV/loC02Y758cOJ5s0bqoUnFIQ2V4AWeTrDeo+x
-         /Nc94tBhO+Rwc6Ki3SqA4GgPgYu/1bq9AetXRqq8n/JFMhakycewBHA3fSKwXan3SSwC
-         YCxembxCu2bFzs0TbEEt2AN4iuOJqfUPz7V3XpVLmSPlvc3WyQ5xVL12V/jA4+HE9Q8j
-         JLew==
-X-Gm-Message-State: APjAAAW/iO+diwbtdfHKbax/F6tyH2XX1KAFfdPpQPML7c13Oa57KR3T
-        JYwWqm2t3UXg7laOnHFZNQ==
-X-Google-Smtp-Source: APXvYqxMKyyGgfS4SNqE734iihQ1ZSY1xsIAJkFzRqu4B/i+hbGP+oW2VzzUFxFzAEqoHOJ1wkbqVA==
-X-Received: by 2002:a17:902:7203:: with SMTP id ba3mr5720574plb.249.1581021985220;
-        Thu, 06 Feb 2020 12:46:25 -0800 (PST)
+        bh=OMFNCbQ2YO6A1Z0/9//8yj3l6sKmNNuU0vkSgP75wls=;
+        b=pAgicw6kLfYLDepjVg5ydX2FNhYma5pLivSQyzTRebhtAqH5eEcBepMKR/4XzxKaZp
+         LK5O4beOkYjO8iRXVshWXTleNGwJrqPlyyAeiRHlgb0MEWOgibL6lxt+99ppdxWqsknf
+         3ML6TcXgx89/U3G3o9FGxWRcZQSxpmulfMCh6rWpF636clareLNIdoP6JM7TgZKgY5Jv
+         KmHxYORz6oCT7S+W3YRhOwbekgFe9gu/Rh7LVt167o/MXdCRs4gHfh3wRWPUoRwMORbh
+         aazkeItuZi+9rXd1+dd+27uslySWkiyAROeQv/8QYgXgxZrbPD5igAad05lI7g1yhKtj
+         TlGw==
+X-Gm-Message-State: APjAAAVLjM3ky8I6xwTFmPOtpb68h0IhwuSTZNk1k07sj2WJT5iC6MJj
+        atfJFTpOfg1KSPgXsjFK0Q==
+X-Google-Smtp-Source: APXvYqwH78fxlFILftQEY20o54bUm9mztPia+dIoyrhMNnALF+J3ZEFdR49H/rI11iwOjeJV6j3e4w==
+X-Received: by 2002:aa7:86c2:: with SMTP id h2mr5915628pfo.45.1581021978524;
+        Thu, 06 Feb 2020 12:46:18 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id x11sm283522pfn.53.2020.02.06.12.46.23
+        by smtp.gmail.com with ESMTPSA id w11sm292136pfn.4.2020.02.06.12.46.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:24 -0800 (PST)
-Received: (nullmailer pid 21869 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:10:45 -0000
-Date:   Thu, 6 Feb 2020 18:10:45 +0000
+        Thu, 06 Feb 2020 12:46:18 -0800 (PST)
+Received: (nullmailer pid 9330 invoked by uid 1000);
+        Thu, 06 Feb 2020 18:38:08 -0000
+Date:   Thu, 6 Feb 2020 18:38:08 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
-        lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
-Subject: Re: [PATCH v2 1/9] dt-bindings: sound: tegra: add DT binding for AHUB
-Message-ID: <20200206181045.GA31521@bogus>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-2-git-send-email-spujar@nvidia.com>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+Message-ID: <20200206183808.GA5019@bogus>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580380422-3431-2-git-send-email-spujar@nvidia.com>
+In-Reply-To: <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 04:03:34PM +0530, Sameer Pujar wrote:
-> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
-> pre-processing and post-processing and a programmable full crossbar for
-> audio routing across these accelerators. This patch adds YAML schema for DT
-> binding of AHUB and few of its following components. These devices will be
-> registered as ASoC components.
->  * ADMAIF
->  * I2S
->  * DMIC
->  * DSPK
+On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
+> Add missing compatible for watchdog timer on QCS404,
+> SC7180, SDM845 and SM8150 SoCs.
+
+That's not what the commit does. You are changing what's valid.
+
+One string was valid, now 2 are required.
+
 > 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
->  .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++++++++++++
->  .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 +++++++++++++++++++++
->  .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 ++++++++++++++++
->  .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++++++++++++
->  .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 ++++++++++++++
->  5 files changed, 617 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+>  .../bindings/watchdog/qcom-wdt.yaml           | 21 ++++++++++++-------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> new file mode 100644
-> index 0000000..dc9fef3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/nvidia,tegra186-dspk.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tegra186 DSPK Controller Device Tree Bindings
-> +
-> +description: |
-> +  The Digital Speaker Controller (DSPK) can be viewed as a Pulse
-> +  Density Modulation (PDM) transmitter that up-samples the input to
-> +  the desired sampling rate by interpolation and then converts the
-> +  over sampled Pulse Code Modulation (PCM) input to the desired 1-bit
-> +  output via Delta Sigma Modulation (DSM).
-> +
-> +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Sameer Pujar <spujar@nvidia.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-
-Drop 'items' for a single entry.
-
-> +          const: nvidia,tegra186-dspk
-> +      - items:
-> +          - enum:
-> +              - nvidia,tegra194-dspk
-> +          - enum:
-> +              - nvidia,tegra186-dspk
-
-This can be a 'const'
-
-> +
-> +  reg:
-> +    description: offset and length of the register set for the device.
-
-That's every 'reg'. Drop.
-
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: must contain an entry for each entry in clock-names.
-> +      See ../clocks/clocks-bindings.txt for details.
-> +    minItems: 1
-
-Drop description and minItems. minItems is implied by the length of 
-'items'.
-
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> index 5448cc537a03..7180c64f54fb 100644
+> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> @@ -14,14 +14,19 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - qcom,kpss-timer
+> -      - qcom,kpss-wdt
+> -      - qcom,kpss-wdt-apq8064
+> -      - qcom,kpss-wdt-ipq4019
+> -      - qcom,kpss-wdt-ipq8064
+> -      - qcom,kpss-wdt-msm8960
+> -      - qcom,scss-timer
 > +    items:
-> +      - description: Module clock
-> +
-> +  clock-names:
-> +    description: must contain clock names for each corresponding entry in clocks.
-> +      See ../clocks/clocks-bindings.txt for details.
-> +    minItems: 1
-
-ditto
-
-> +    items:
-> +      - const: dspk
-> +
-> +  assigned-clocks:
-> +    description: list of input clocks and dividers for the audio system.
-> +      See ../clocks/clock-bindings.txt for details.
-> +    minItems: 1
-
-ditto
-
-> +    items:
-> +      - description: Module clock
-> +
-> +  assigned-clock-parents:
-> +    description: parent clock for each entry in assigned-clocks
-> +      See ../clocks/clock-bindings.txt for details.
-> +    minItems: 1
-
-ditto
-
-> +    items:
-> +      - description: Parent for module clock
-> +
-> +  assigned-clock-rates:
-> +    description: clock rate for each entry in assigned-clocks
-> +      See ../clocks/clock-bindings.txt for details.
-
-ditto
-
-> +    items:
-> +      - description: initial module clock rate
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +  sound-name-prefix:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      Used as prefix for sink/source names of the component. Must be a
-> +      unique string among multiple instances of the same component.
-> +      The name can be "DSPK1" or "DSPKx", where x depends on the maximum
-
-Sounds like a constraint.
-
-> +      available instances on a Tegra SoC.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - assigned-clocks
-> +  - assigned-clock-parents
-> +  - "#sound-dai-cells"
-> +
-> +examples:
-> +  - |
-> +    #include<dt-bindings/clock/tegra186-clock.h>
-> +
-> +    tegra_dspk1: dspk@2905000 {
-> +        compatible = "nvidia,tegra186-dspk";
-> +        reg = <0x2905000 0x100>;
-> +        clocks = <&bpmp TEGRA186_CLK_DSPK1>;
-> +        clock-names = "dspk";
-> +        assigned-clocks = <&bpmp TEGRA186_CLK_DSPK1>;
-> +        assigned-clock-parents = <&bpmp TEGRA186_CLK_PLL_A_OUT0>;
-> +        assigned-clock-rates = <12288000>;
-> +        #sound-dai-cells = <1>;
-> +        sound-name-prefix = "DSPK1";
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-> new file mode 100644
-> index 0000000..a8a41ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-> @@ -0,0 +1,165 @@
-> +# SPAT-License-Identifier: (GPL-2.0)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/nvidia,tegra210-admaif.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tegra210 ADMAIF Device Tree Bindings
-> +
-> +description: |
-> +  ADMAIF is the interface between ADMA and AHUB. Each ADMA channel
-> +  that sends/receives data to/from AHUB must interface through an
-> +  ADMAIF channel. ADMA channel sending data to AHUB pairs with ADMAIF
-> +  Tx channel and ADMA channel receiving data from AHUB pairs with
-> +  ADMAIF Rx channel.
-> +
-> +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Sameer Pujar <spujar@nvidia.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          const: nvidia,tegra210-admaif
-> +      - items:
-> +          const: nvidia,tegra186-admaif
-
-These 2 can be a single enum.
-
-> +      - items:
-> +          - enum:
-> +             - nvidia,tegra194-admaif
-> +          - enum:
-> +             - nvidia,tegra186-admaif
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas: true
-> +
-> +  dma-names: true
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: nvidia,tegra210-admaif
-> +
-> +then:
-> +  properties:
-> +    dmas:
-> +      $ref: /schemas/types.yaml#/definitions/phandle-array
-
-Drop. Common properties already have a type.
-
-Plus this is wrong. A '$ref' means all other keywords are ignored (until 
-we move to draft8).
-
-> +      description:
-> +        Two or more DMA channel specifiers, equally divided for Tx and Rx.
-> +      minItems: 2
-> +      maxItems: 20
-> +    dma-names:
-> +      $ref: /schemas/types.yaml#/definitions/string-array
-
-drop
-
-> +      description:
-> +        There must be at least one channel named "tx1" for transmit and "rx1"
-> +        for receive. If more channels need to be specified then "tx1",
-> +        "tx2" ... "tx10" can be used. Similarly for Rx channels as well.
-
-Sounds like constraints.
-
-
-Stopping there. Similar issues on the rest...
+> +      - enum:
+> +          - qcom,apss-wdt-qcs404
+> +          - qcom,apss-wdt-sc7180
+> +          - qcom,apss-wdt-sdm845
+> +          - qcom,apss-wdt-sm8150
+> +          - qcom,kpss-timer
+> +          - qcom,kpss-wdt-apq8064
+> +          - qcom,kpss-wdt-ipq4019
+> +          - qcom,kpss-wdt-ipq8064
+> +          - qcom,kpss-wdt-msm8960
+> +          - qcom,scss-timer
+> +      - const: qcom,kpss-wdt
+>  
+>    reg:
+>      maxItems: 1
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
