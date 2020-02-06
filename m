@@ -2,91 +2,150 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71EAC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EE6C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B372521927
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8DC222D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QIbaUe4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgBFUKZ (ORCPT
+        id S1727860AbgBFUMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:10:25 -0500
-Received: from mga01.intel.com ([192.55.52.88]:52228 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbgBFUKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:10:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 12:10:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="225348205"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Feb 2020 12:10:23 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id F37893003A2; Thu,  6 Feb 2020 12:10:22 -0800 (PST)
-Date:   Thu, 6 Feb 2020 12:10:22 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Message-ID: <20200206201022.GN302770@tassilo.jf.intel.com>
-References: <20200131052522.7267-1-kjain@linux.ibm.com>
- <20200206184510.GA1669706@krava>
+        Thu, 6 Feb 2020 15:12:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46442 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727526AbgBFUMT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 15:12:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581019938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dc03bS7vb6AnFmrkfHvUVYpca8hGe8BfMxylHA6Yclg=;
+        b=QIbaUe4KWx5IbtVqdyE6a/Y/KKopeVBu6UtbKBsuNlCRwcVgHxylzJXZmvLbfWQTQjF84s
+        pQLfC/sg+1d0rwr9TXOGkwTBfP3vlWLwyD5XCK5sUeDMKYErhY6byj+n1Wa4CkIDjYRdzI
+        LzriANJ7PsSDG/hV84xS1EAnO6jNdmw=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-yf0-HZM7PW6xnaiJyIDt0Q-1; Thu, 06 Feb 2020 15:12:16 -0500
+X-MC-Unique: yf0-HZM7PW6xnaiJyIDt0Q-1
+Received: by mail-oi1-f200.google.com with SMTP id m127so3409433oig.19
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:12:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dc03bS7vb6AnFmrkfHvUVYpca8hGe8BfMxylHA6Yclg=;
+        b=gsXqL5Wy9X5xs4A+N0/8RGTy3IFfzdms0AeAX1CW8SlrILGcv0FpX9NBAtsCOF+28C
+         1PDJrxx9omvol1uAeTKWKUZ4U8ScH040Fni+YfxPoyZI5Yydq0OvvfqQ6lqWspw0sLx6
+         ExK2d6iT/CKti3s49NvXesDo5cCgNVhIGqTUb8RzseBVMT3VGyp4Aajx/DOOl5/WWMQK
+         ZY9stCbX4s2x3vamOLNcKsG6Y6zZnMdPCq06hoquUpCbRbaoy+bdKXJoD5BLdTjPV3JN
+         X7OWpBaxtb7fPwIhEPCujNFNFymMHBjqFsxoa68hjrj5r1QBFSuyzh+ET5RlcxClSL2+
+         EvPA==
+X-Gm-Message-State: APjAAAXlNYKsAFqFTcoRYUIFQYJ8/20IOSHA/tBvhJ19GOmc9CkSFG5a
+        PwXfl72m+tx+DZr7HqZwmJ5qSxVZaAXPfMhOD4jHcYlPYGZskQrais/z/UPcypI9K76ZpWzfEXH
+        H4wnpmMzld9ggoNxamgU1fwj14TadDTZrPKnaZ+hv
+X-Received: by 2002:aca:c1c2:: with SMTP id r185mr8574801oif.19.1581019935466;
+        Thu, 06 Feb 2020 12:12:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwCE4YGrcrqxJ3vc8/5E1V7khl8YoaBsmxia7QqkAOBDVH5AS1SxI2KJDEm+KAx0o3nST9WGdr5QNqKAlbLYKM=
+X-Received: by 2002:aca:c1c2:: with SMTP id r185mr8574790oif.19.1581019935179;
+ Thu, 06 Feb 2020 12:12:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206184510.GA1669706@krava>
+References: <20200131142943.120459-1-sgarzare@redhat.com> <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
+ <CAGxU2F6qvW28=ULNUi-UHethus2bO6VXYX127HOcH_KPToZC-w@mail.gmail.com>
+ <ec04cb8f-01e8-6289-2fd4-6dec8a8e2c02@kernel.dk> <548cb67b-bb43-c22a-f3c6-e707e2c07c13@kernel.dk>
+In-Reply-To: <548cb67b-bb43-c22a-f3c6-e707e2c07c13@kernel.dk>
+From:   Stefano Garzarella <sgarzare@redhat.com>
+Date:   Thu, 6 Feb 2020 21:12:03 +0100
+Message-ID: <CAGxU2F7MWwvLw7dgGSoY0uFeZVe6JbYcvhmKRMfTpzVBwho3yg@mail.gmail.com>
+Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 07:45:10PM +0100, Jiri Olsa wrote:
-> On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
-> 
-> SNIP
-> 
-> >  				ev->metric_leader = metric_events[i];
-> >  			}
-> > +			j++;
-> >  		}
-> > +		ev = metric_events[i];
-> > +		evlist_used[ev->idx] = true;
-> >  	}
-> >  
-> >  	return metric_events[0];
-> > @@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
-> >  	int ret = 0;
-> >  	struct egroup *eg;
-> >  	struct evsel *evsel;
-> > +	bool evlist_used[perf_evlist->core.nr_entries];
-> > +
-> > +	memset(evlist_used, 0, perf_evlist->core.nr_entries);
-> 
-> I know I posted this in the previous email, but are we sure bool
-> is always 1 byte?  would sizeod(evlist_used) be safer?
-> 
-> other than that it looks ok
-> 
-> Andi, you're ok with this?
+On Thu, Feb 6, 2020 at 8:51 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 2/6/20 12:15 PM, Jens Axboe wrote:
+> > On 2/6/20 10:33 AM, Stefano Garzarella wrote:
+> >>
+> >>
+> >> On Fri, Jan 31, 2020 at 4:39 PM Jens Axboe <axboe@kernel.dk> wrote:
+> >>>
+> >>> On 1/31/20 7:29 AM, Stefano Garzarella wrote:
+> >>>> Hi Jens,
+> >>>> this is a v2 of the epoll test.
+> >>>>
+> >>>> v1 -> v2:
+> >>>>     - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
+> >>>>     - add 2 new tests to test epoll with IORING_FEAT_NODROP
+> >>>>     - cleanups
+> >>>>
+> >>>> There are 4 sub-tests:
+> >>>>     1. test_epoll
+> >>>>     2. test_epoll_sqpoll
+> >>>>     3. test_epoll_nodrop
+> >>>>     4. test_epoll_sqpoll_nodrop
+> >>>>
+> >>>> In the first 2 tests, I try to avoid to queue more requests than we have room
+> >>>> for in the CQ ring. These work fine, I have no faults.
+> >>>
+> >>> Thanks!
+> >>>
+> >>>> In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
+> >>>> much as I can until I get a -EBUSY, but they often fail in this way:
+> >>>> the submitter manages to submit everything, the receiver receives all the
+> >>>> submitted bytes, but the cleaner loses completion events (I also tried to put a
+> >>>> timeout to epoll_wait() in the cleaner to be sure that it is not related to the
+> >>>> patch that I send some weeks ago, but the situation doesn't change, it's like
+> >>>> there is still overflow in the CQ).
+> >>>>
+> >>>> Next week I'll try to investigate better which is the problem.
+> >>>
+> >>> Does it change if you have an io_uring_enter() with GETEVENTS set? I wonder if
+> >>> you just pruned the CQ ring but didn't flush the internal side.
+> >>
+> >> If I do io_uring_enter() with GETEVENTS set and wait_nr = 0 it solves
+> >> the issue, I think because we call io_cqring_events() that flushes the
+> >> overflow list.
+> >>
+> >> At this point, should we call io_cqring_events() (that flushes the
+> >> overflow list) in io_uring_poll()?
+> >> I mean something like this:
+> >>
+> >> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> >> index 77f22c3da30f..2769451af89a 100644
+> >> --- a/fs/io_uring.c
+> >> +++ b/fs/io_uring.c
+> >> @@ -6301,7 +6301,7 @@ static __poll_t io_uring_poll(struct file *file, poll_table *wait)
+> >>         if (READ_ONCE(ctx->rings->sq.tail) - ctx->cached_sq_head !=
+> >>             ctx->rings->sq_ring_entries)
+> >>                 mask |= EPOLLOUT | EPOLLWRNORM;
+> >> -       if (READ_ONCE(ctx->rings->cq.head) != ctx->cached_cq_tail)
+> >> +       if (!io_cqring_events(ctx, false))
+> >>                 mask |= EPOLLIN | EPOLLRDNORM;
+> >>
+> >>         return mask;
+> >
+> > That's not a bad idea, would just have to verify that it is indeed safe
+> > to always call the flushing variant from there.
+>
+> Double checked, and it should be fine. We may be invoked with
+> ctx->uring_lock held, but that's fine.
+>
 
-Yes.
+Maybe yes, I'll check better and I'll send a patch :-)
 
--Andi
+Thanks,
+Stefano
+
