@@ -2,169 +2,153 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE484C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E253AC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8157320720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75D420720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R/640TDy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="McrXmcwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgBFIJV (ORCPT
+        id S1727881AbgBFIKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:09:21 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:58912 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727822AbgBFIJU (ORCPT
+        Thu, 6 Feb 2020 03:10:12 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22270 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbgBFIKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:09:20 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580976559; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=UR4pcD6kHt3ajr7Ug3n5divxQiNCuXB4xxvOg0HUq6k=;
- b=R/640TDy5ajtQKp2zHRXw7ntnP96ekeZwdfas56VYOVvI7+eF6LRzZNIEDe6/rixptf7KC6Y
- tagoUtvJoeNg2kcGqLcjZOC/OM6GnAdQqNXD0nL7Y/wtG7P/iTG61qmd+/kACn+6ES31m34O
- e5HS5R1wxokyf4bEBJL1lWKghPI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3bc9a7.7f7f24ee1228-smtp-out-n01;
- Thu, 06 Feb 2020 08:09:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 028E6C447A2; Thu,  6 Feb 2020 08:09:10 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D74F5C43383;
-        Thu,  6 Feb 2020 08:09:09 +0000 (UTC)
+        Thu, 6 Feb 2020 03:10:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580976611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pNqlj/aIPtqooHVrOVDSEY2d6+X7P8FExh0I8Cp7N+M=;
+        b=McrXmcwkZxmBrf0fk2DjVFtKG+cuBOkHIo7R3HGeWWSn87eq70c43KlfbSDAqUwo9pRzfk
+        w+QhRQ57pr6FGBSju0NeloVyAR8apBJfpZHjMp7fN1Q3KYNySxmnGjXDoSQ5XgG8sNb1Sl
+        hwbSi9zsopiljoibR7oiGDbCPNgz4es=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-YJvyVyNaP3efqkA9Stcgzg-1; Thu, 06 Feb 2020 03:10:04 -0500
+X-MC-Unique: YJvyVyNaP3efqkA9Stcgzg-1
+Received: by mail-qk1-f198.google.com with SMTP id i135so3051965qke.14
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:10:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pNqlj/aIPtqooHVrOVDSEY2d6+X7P8FExh0I8Cp7N+M=;
+        b=Hqw0Bj+4zArw5hbAay55NLjpKUMOjFVhXE1lSLIAFKbhRGg83gkPYnt4WsHP7cJGkK
+         691giLuuBQX20C37Knoq0JzY5eP1LRNjTA4j17vp8iXTm7cZjyn07nv0CKiytqD1u4SF
+         k12p4nKgl62XwQYyaX63K++cQFGyMwsMcQrH44SmETDlhj4Zbu8nkjN9p+dVdkwx9e0U
+         bWuvJtFW9ZGFTW9XghFtaLSzbOImm304RVEWJRREig+ED5+SUfP+fLhhIaLw01rE3nzT
+         zOwXXrPTFsW2Zm0sWnZLw2PnxZD4Go5InWNx+6if9fzljw2BfKSYzop75A9PuOB3bS09
+         wxHg==
+X-Gm-Message-State: APjAAAUBCrvmjLArVEJKtws347Zz1K0PSbEYn8GqYfAoMwSI/zZNSxh+
+        wvIQ1y7GyBb7r+BP2yeTO/bb1q0kvoGPj3CWpYpWO8luHVyrAOm2CC74YSwAWeWNpxCl3UqtjpF
+        l+R6T8OV4hfrpkh6NppbXFs+BBMzLrrncsn/7MsCK
+X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr1392222qkg.27.1580976604405;
+        Thu, 06 Feb 2020 00:10:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyF+uGZ8Ea+EIqllofbuMHnsKLrT5VS1cxbxgTen+ILjpjQqajo5Rbpeqqd2pOVLfnRIYnnbagS1R64wN2XaTQ=
+X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr1392204qkg.27.1580976604136;
+ Thu, 06 Feb 2020 00:10:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 06 Feb 2020 16:09:09 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/8] scsi: ufs: Add dev ref clock gating wait time support
-In-Reply-To: <MN2PR04MB69914C6980E32674B38F9152FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1580972212-29881-1-git-send-email-cang@codeaurora.org>
- <1580972212-29881-7-git-send-email-cang@codeaurora.org>
- <MN2PR04MB69914C6980E32674B38F9152FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <6222003c478f11ce6fb6564e722800a0@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200126194513.6359-1-martyn@welchs.me.uk> <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com>
+ <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk>
+ <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
+ <nycvar.YFH.7.76.2002031100500.31058@cbobk.fhfr.pm> <CAO-hwJ+k8fxULS1xC-28jHmhZLZVN5EGc=kY5sqNX1GCNKpt4A@mail.gmail.com>
+ <nycvar.YFH.7.76.2002031218230.26888@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.2002031218230.26888@cbobk.fhfr.pm>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 6 Feb 2020 09:09:53 +0100
+Message-ID: <CAO-hwJJk411hGTJ6uSdzAFCzf1WJehhifdN0r5kMG6aqL=dnpw@mail.gmail.com>
+Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Roderick Colenbrander <thunderbird2k@gmail.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        linux-input <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Conn O'Griofa" <connogriofa@gmail.com>,
+        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-06 15:57, Avri Altman wrote:
->> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime 
->> defines
->> the minimum time for which the reference clock is required by device 
->> during
->> transition to LS-MODE or HIBERN8 state. Make this change to reflect 
->> the new
->> requirement by adding delays before turning off the clock.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
->> Reviewed-by: Bean Huo <beanhuo@micron.com>
->> 
->> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
->> index cfe3803..990cb48 100644
->> --- a/drivers/scsi/ufs/ufs.h
->> +++ b/drivers/scsi/ufs/ufs.h
->> @@ -167,6 +167,7 @@ enum attr_idn {
->>         QUERY_ATTR_IDN_FFU_STATUS               = 0x14,
->>         QUERY_ATTR_IDN_PSA_STATE                = 0x15,
->>         QUERY_ATTR_IDN_PSA_DATA_SIZE            = 0x16,
->> +       QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME = 0x17,
->>  };
->> 
->>  /* Descriptor idn for Query requests */
->> @@ -534,6 +535,8 @@ struct ufs_dev_info {
->>         u16 wmanufacturerid;
->>         /*UFS device Product Name */
->>         u8 *model;
->> +       u16 wspecversion;
->> +       u32 clk_gating_wait_us;
->>  };
->> 
->>  /**
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index e8f7f9d..76beaf9 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -91,6 +91,9 @@
->>  /* default delay of autosuspend: 2000 ms */
->>  #define RPM_AUTOSUSPEND_DELAY_MS 2000
->> 
->> +/* Default value of wait time before gating device ref clock */
->> +#define UFSHCD_REF_CLK_GATING_WAIT_US 0xFF /* microsecs */
->> +
->>  #define ufshcd_toggle_vreg(_dev, _vreg, _on)                          
->>  \
->>         ({                                                             
->>  \
->>                 int _ret;                                              
->>  \
->> @@ -3281,6 +3284,29 @@ static inline int
->> ufshcd_read_unit_desc_param(struct ufs_hba *hba,
->>                                       param_offset, param_read_buf, 
->> param_size);
->>  }
->> 
->> +static int ufshcd_get_ref_clk_gating_wait(struct ufs_hba *hba)
->> +{
->> +       int err = 0;
->> +       u32 gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
->> +
->> +       if (hba->dev_info.wspecversion >= 0x300) {
->> +               err = ufshcd_query_attr_retry(hba,
->> UPIU_QUERY_OPCODE_READ_ATTR,
->> +                               
->> QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME, 0, 0,
->> +                               &gating_wait);
->> +               if (err)
->> +                       dev_err(hba->dev, "Failed reading 
->> bRefClkGatingWait. err =
->> %d, use default %uus\n",
->> +                                        err, gating_wait);
->> +
->> +               if (gating_wait == 0) {
->> +                       gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
->> +                       dev_err(hba->dev, "Undefined ref clk gating 
->> wait time, use
->> default %uus\n",
->> +                                        gating_wait);
->> +               }
-> 
-> You forgot to set
-> hba->dev_info.clk_gating_wait_us = gating_wait
-> 
-> Thanks,
-> Avri
+Hi,
 
-oops, shall add it back. Thanks.
+On Mon, Feb 3, 2020 at 12:23 PM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Mon, 3 Feb 2020, Benjamin Tissoires wrote:
+>
+> > I am definitely not in favour of that :(
+> >
+> > The basic problem we have here is that some vendors are overriding your
+> > VID/PIDs, and this is nasty. And I do not see any reasons why you can't
+> > say: "well, we broke it, sorry, but we only support *our* devices, not
+> > third party ones".
+>
+> Well, it's not about "we broke it" in the first place, as far as I
+> can tell.
+>
+> Roderick's concern is that 3rd party devices with overriden VID/PID
+> malfunction for completely unrelated reason to (correctly working) changes
+> done in favor of stock Sony devices, but it'll be Sony receiving all the
+> reports/blame.
 
-Can Guo
+After re-reading the code, I am not sure we can easily detect the
+clones. So at some point, I think we will break them, but there is not
+much we can do. I don't really have a solution for that :(
+
+>
+> > One thing that comes to my mind (probably not the best solution), is to
+> > taint the kernel if you are facing a non genuine product. We do that for
+> > nvidia, and basically, we can say: "well, supporting the nvidia blob is
+> > done on a best effort case, and see with them directly if you have an
+> > issue". Tainting the kernel is a little bit rough, but maybe adding an
+> > info message in the dmesg if you detect one of those can lead to a
+> > situation were we can count on you for supporting the official products,
+> > and you can get community support for the clones.
+>
+> Yeah; which I wouldn't like to do for upstream kernel, but Sony could
+> definitely do this for the products they ship.
+>
+> The same way distros are tainting their kernels when unsupported modules
+> (but otherwise perfectly fine wrt. GPL and everything else) are loaded
+> into distro-supported kernels.
+>
+> > One last thing. Roderick, I am not sure if I mentioned that or not, but
+> > I am heavily adding regression tests for HID in
+> > https://gitlab.freedesktop.org/libevdev/hid-tools/
+>
+> ... and words can't express how thankful I am for that :)
+>
+
+OK, I played with that idea earlier this week:
+https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/74
+I only have a Sixaxis controller, and I only implemented the USB part
+of it (AFAICT).
+Currently this ensures the button mapping is correct, and that the
+LEDs are working properly.
+We are still missing a few bits and pieces, but the initialization
+(requests made by the kernel to start the device and press on the PS
+button) is handled properly.
+
+If this is something Roderick would be interested in, we can then try
+to extend this initial work on Bluetooth controllers and the DualShock
+ones.
+Adding the clones ones based on the current kernel code is something
+doable, but I do not expect Sony to be involved in that process.
+
+That being said, before we merge this particular patch about Gasia
+controllers, now we need to implement a regression test first :)
+
+Cheers,
+Benjamin
+
