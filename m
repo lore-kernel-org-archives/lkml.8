@@ -2,229 +2,100 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B356BC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96565C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3B921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D29822527
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="MGESQ+Ix"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+igVjrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgBFTXt (ORCPT
+        id S1728001AbgBFTX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:23:49 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:41736 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbgBFTXs (ORCPT
+        Thu, 6 Feb 2020 14:23:56 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41578 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgBFTX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:23:48 -0500
-Received: by mail-vk1-f196.google.com with SMTP id p191so1938193vkf.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:23:47 -0800 (PST)
+        Thu, 6 Feb 2020 14:23:56 -0500
+Received: by mail-pl1-f193.google.com with SMTP id t14so2730903plr.8;
+        Thu, 06 Feb 2020 11:23:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2t7kk/1bpGDazBh7M5TloR9sVuVnHpzkthWO4hHktzU=;
-        b=MGESQ+IxWEt/9Y1lL3WS7J6QtOa7pHsGxDEv6zoGQxpXoKioee+39Ysl5vZ4c45W1o
-         nk7zSxpiBM0gCPx3YLVZZovnkssHejQnY2vxOIUXgvQ+nUE97QCC4VRLm0TIOepv+h/k
-         5/A9XbflEPqcZTjuHR+DICIfzCf4Jds09wIVxkjjyF8FigS1XE7K8/P9TIZq13UW00Ar
-         q3XCbs3/A65vyh9vpOwiOQW9a/l0SFcUA9ubz7oMGPGKWP5ANbZip8azUKHi15C1z32e
-         nAu5Sn3eiqQoxTV0aOHDiSvO75+j/PiSHjyYVqJAEAhLrYNiFNzWoWHou+mMTWLo4867
-         SKQQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nf9jca+hMQs7Cat5Jz2CzrqqiXuLOSBdlIq3cfbrt0Y=;
+        b=o+igVjrUCEk9msksxFBcXk9Q+L11WU67C1VVsy6UaVs0g/1ubFuji25ig5OqemOH6J
+         KSPfMbN7+mSVRSe0jgApAr37A8Laolj0tnrWCc8m7JlCR0lOcsAAi/Sd9jdQlLyDVqLv
+         gjaPgMU9TNMshy6HinckZZnq4hpNtxXD4WdjGjfVeA912uwX1KcB2ZyF1E0Y2/+rJLv9
+         CM1PypQ4zqv3ac/SL+4kz/wmJJCKP7az4ox+ukvPsOwzMUm2ZQKpgSOb4EnWae9CRc/0
+         noOpOfVqK9ToBDh3JNukCWhwR/ezFKe6DKu8srrL8j5BBWSvxHSjSQfHo4MVgdYavYYp
+         TkEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2t7kk/1bpGDazBh7M5TloR9sVuVnHpzkthWO4hHktzU=;
-        b=nDEe1s9XlIG/OywuK/wYak1jbuMUXdAg3HXcMKSC5+RSzZ4Dlc8166xygIcxUeJ6cB
-         nxp6AOcIFx5entxcf7+IcyixBAKJZD9lLGCLiv9hLVVbAi+pwRNEYReYny9JqB4yHrAb
-         BvKLSHVKSLFHui/csm4DmWU0BbP6F2tw8kxNsYLj0tI0CsGATlUn/mGAnyC8I8WBCpUC
-         TTiyL0WzxvnpmB5t0e6C4zNHwG/V79ibxQ6M8KXEpW6oeYJivsYSCwkXRePKnX+9hAhd
-         iOiHWuuUFkCRFkkjZ/Yf0hyKPSN2o2WmVEQXZhmiEQqThk6zlhaziuIUwVhIIbwip0UC
-         qOpg==
-X-Gm-Message-State: APjAAAUl9hJy9ck0B8C5yH0m8HaFNvxzKrryeJlpWkJUMGkLv8eET+nE
-        ER9t20f2itgd64dx9c8mubQ7W3oTbiMfyvwA9+mbsw==
-X-Google-Smtp-Source: APXvYqw0uOUcEtkACNs/U0sJtZSRFEeaRY33nIGAsIIaR8s4C4Kp0W76YvfhYf/D8oYAtyZFNHsWstF/geBfUtugtow=
-X-Received: by 2002:ac5:c7a9:: with SMTP id d9mr2720800vkn.79.1581017027140;
- Thu, 06 Feb 2020 11:23:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219172823.1652600-1-anarsoul@gmail.com> <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
- <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
-In-Reply-To: <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 7 Feb 2020 00:53:36 +0530
-Message-ID: <CAHLCerPir-7DEpweGZ9qoowm+u3BtDdLyB-B18KibMo9y+Q_DQ@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nf9jca+hMQs7Cat5Jz2CzrqqiXuLOSBdlIq3cfbrt0Y=;
+        b=HQ0MQAriN7QqvV9yp0cccvOjPepnBVXJygk7TloTg6dUhSjY6xub37W2hFjnIMBpB+
+         /qUbCvPJw0l6iv/ok2eQyI62IoZSA06oafOlTnjyJCl3zNJTVbal4IIfhpwYxxGSCvFo
+         sN9W+M8PHnGakP5IyjTyfN2YP21B3SNV0UccYkKOfhvpuM63TqVMpmuim9nSE8zW+zEg
+         59z5l52UpAFdIScB/0+KxJW2r1uW4b9eYx2V8Zke69/MI8en6DqCmyVWdlNoHMMzPo8x
+         gMOdqDZ2LtJJXBnZKgAoRFo+abBX3thsGB6q/boBAN3hY6eB/1QCpOlkMuB247xLmRxy
+         TxKg==
+X-Gm-Message-State: APjAAAVydKLtcXkjIrI84aIwKzSfK9naQ7m7Hl9mkaaJW1dMsDeu8a2a
+        oNP5bXeJkbzZNoJnTGsJTtVzDegF
+X-Google-Smtp-Source: APXvYqxxvSpSuR5gMDf2ApuoNK5fINQtOs2zbk3AK9+Tt35oqUihS/rk23F3BtcNnfKaeYn9fJJrDg==
+X-Received: by 2002:a17:90b:4015:: with SMTP id ie21mr6396030pjb.1.1581017035236;
+        Thu, 06 Feb 2020 11:23:55 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f18sm204715pgn.2.2020.02.06.11.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 11:23:54 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
+Date:   Thu,  6 Feb 2020 11:23:52 -0800
+Message-Id: <20200206192352.19939-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 10:16 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Amit,
->
-> On 06/02/2020 15:13, Amit Kucheria wrote:
-> > Hi Vasily,
-> >
-> > For this entire series, the DTS files don't contain any trip points.
-> > Did I miss some other series?
-> >
-> > At a minimum, you should add some "hot" or "critical" trip points
-> > since then don't require a cooling-map with throttling actions. If you
-> > have "passive" trip points, then you need to provide cooling-maps.
->
-> Except I'm misunderstanding the bindings, a thermal zone must define
-> these required properties:
->
-> - polling-delay
-> - polling-delay-passive
-> - thermal-sensors
-> - trips
-> - cooling-maps
+The 7445 switch clocking profiles do not allow us to run the IMP port at
+2Gb/sec in a way that it is reliable and consistent. Make sure that the
+setting is only applied to the 7278 family.
 
-Right, except for the cooling-maps. Those are exempted if there is the
-trip type is not passive. That is my understanding of the existing
-bindings.
+Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/dsa/bcm_sf2.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Trip type critical triggers a shutdown and trip type hot only triggers
-a notification - see thermal_core.c:handle_critical_trips(). So we
-only need cooling maps for passive trip types.
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 3e8635311d0d..d1955543acd1 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -68,7 +68,9 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
+ 
+ 		/* Force link status for IMP port */
+ 		reg = core_readl(priv, offset);
+-		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
++		reg |= (MII_SW_OR | LINK_STS);
++		if (priv->type == BCM7278_DEVICE_ID)
++			reg |= GMII_SPEED_UP_2G;
+ 		core_writel(priv, reg, offset);
+ 
+ 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+-- 
+2.17.1
 
-> > Since this series has been merged, could you please follow up with a
-> > fixup series to add the trip points?
-> >
-> > Regards,
-> > Amit
-> > p.s. We should catch all this automatically, I'll send out yaml
-> > bindings for the thermal framework soon that should catch this stuff.
->
-> +1
->
-> There was a small discussion about converting the binding to a schema:
->
-> https://www.spinics.net/lists/devicetree/msg332424.html
-
-
-Aah, I missed that. I started working on something last week that
-looks similar to your discussion. Pushed a WIP branch here[1], it
-looks like I had a similar idea on how to split the bindings. Hope to
-finish this up tomorrow for an RFC.
-
-Regards,
-Amit
-
-[1] https://github.com/idlethread/linux/commits/up/thermal/yaml-conversion-=
-v1
-
-> > On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com>=
- wrote:
-> >>
-> >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> >> H6 and R40 SoCs.
-> >>
-> >> v8:
-> >>         - [vasily] Address more Maxime's comments for dt-schema
-> >>         - [vasily] Add myself to MAINTAINERS for the driver and schema
-> >>         - [vasily] Round calibration data size to word boundary for H6=
- and A64
-> >>         - [vasily] Change offset for A64 since it reports too low temp=
- otherwise.
-> >>                    Likely conversion formula in user manual is not cor=
-rect.
-> >>
-> >> v7:
-> >>         - [vasily] Address Maxime's comments for dt-schema
-> >>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.=
-dtsi
-> >>         - [vasily] Add Maxime's a-b to the driver patch
-> >>
-> >> v6:
-> >>         - [ondrej, vasily] Squash all driver related changes into a
-> >>                            single patch
-> >>         - [ondrej] Rename calib -> calibration
-> >>         - [ondrej] Fix thermal zone registration check
-> >>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/senso=
-r
-> >>         - [ondrej] Rework scale/offset values, H6 calibration
-> >>         - [ondrej] Explicitly set mod clock to 24 MHz
-> >>         - [ondrej] Set undocumented bits in CTRL0 for H6
-> >>         - [ondrej] Add support for A83T
-> >>         - [ondrej] Add dts changes for A83T, H3, H5, H6
-> >>         - [vasily] Add dts changes for A64
-> >>         - [vasily] Address Maxime's comments for YAML scheme
-> >>         - [vasily] Make .calc_temp callback mandatory
-> >>         - [vasily] Set .max_register in regmap config, so regs can be
-> >>                    inspected using debugfs
-> >>
-> >> Ondrej Jirman (4):
-> >>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
-> >>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
-> >>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
-> >>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
-> >>
-> >> Vasily Khoruzhick (1):
-> >>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
-> >>
-> >> Yangtao Li (2):
-> >>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
-> >>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
-> >>     bindings
-> >>
-> >>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
-> >>  MAINTAINERS                                   |   8 +
-> >>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
-> >>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
-> >>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
-> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
-> >>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
-> >>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
-> >>  drivers/thermal/Kconfig                       |  14 +
-> >>  drivers/thermal/Makefile                      |   1 +
-> >>  drivers/thermal/sun8i_thermal.c               | 639 +++++++++++++++++=
-+
-> >>  11 files changed, 985 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinne=
-r,sun8i-a83t-ths.yaml
-> >>  create mode 100644 drivers/thermal/sun8i_thermal.c
-> >>
-> >> --
-> >> 2.24.1
-> >>
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
