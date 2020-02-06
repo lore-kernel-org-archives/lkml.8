@@ -2,120 +2,291 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595BAC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4C0C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F01D21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R8IzOy3P"
+	by mail.kernel.org (Postfix) with ESMTP id 7369F21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgBFQOa (ORCPT
+        id S1727723AbgBFQOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Feb 2020 11:14:31 -0500
+Received: from mga09.intel.com ([134.134.136.24]:40497 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727379AbgBFQOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Feb 2020 11:14:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41846 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727478AbgBFQOa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:14:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581005668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zD2zZ3ak+8ZDNOjl3NQ0JmucKO3t2SwHGRlR5dLOuQs=;
-        b=R8IzOy3PbqLLVuuDy68gIXoQXxIjX+xHxwBqD0VOxcW/gLUXvBYGYV2n/Bcw6m5Gx9RmU/
-        MZ7LoYslmYl2mszi7W9JjTZ6JUG0BsHaYQGQY0nA1cEeoHmDwRiQQA98qEgcTJzfF5IQcp
-        AcpvIRgJfI/G8w6SeQtBVLBLhmosR2s=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-IqmNypd3M-2vMLk3Hi47Zg-1; Thu, 06 Feb 2020 11:14:21 -0500
-X-MC-Unique: IqmNypd3M-2vMLk3Hi47Zg-1
-Received: by mail-qt1-f198.google.com with SMTP id l25so4179784qtu.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 08:14:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zD2zZ3ak+8ZDNOjl3NQ0JmucKO3t2SwHGRlR5dLOuQs=;
-        b=EQbIiCjGPopIR+ftJdWXb7qV7cleAam5sT/CHyPgWTWo9NXq4fwe4+CP/pfTaD8nVX
-         FC1o9D3fH6suu/7/FcAtxr3Ox46kgg78SWS18clecf1M+btJ3633+m2t5Moquud2vsN/
-         TZdHrOZ+Dp061iQSEA0hxxoGzVcM7om5UA0URdtcdUYGwqZZW5i4LMp9aTCx3+5Elc07
-         f11RjqvyxATA8zssJkLbaSAtYDivWX+M3ZAHJkEwJW7Df7rHVhFkB09DGBiwqqB7KubR
-         R7EpocvtS7p4S2p7P3/T42HwxYf4xKb0SLfKQLg6MGyBmJXeylCJd1rJBF7+qDAZbb9l
-         3QFw==
-X-Gm-Message-State: APjAAAVInnLVExW0QWgLvbP23iHRcnSrHzY4PzU/qRkJdW6AEWLSTrt5
-        bNjoO9VMbyoxIcVW824/wv2Hv2dMmOUX0othWANB2psMRfHVqGEvGTb3FksppL8HaVhhykF1mhS
-        RXC1jl1Exy2V4/UrZRurfqPsN
-X-Received: by 2002:ac8:6f27:: with SMTP id i7mr3235321qtv.253.1581005660654;
-        Thu, 06 Feb 2020 08:14:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzCPmrX47EJacBvj/8AwtDA4K9i5Vm/4QY2t/yuwCUp2i98pBnWQFyP1cxUVQ9RQgxjF7p4Wg==
-X-Received: by 2002:ac8:6f27:: with SMTP id i7mr3235285qtv.253.1581005660385;
-        Thu, 06 Feb 2020 08:14:20 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id 136sm1590227qkn.109.2020.02.06.08.14.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 08:14:19 -0800 (PST)
-Date:   Thu, 6 Feb 2020 11:14:15 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 12/19] KVM: Move memslot deletion to helper function
-Message-ID: <20200206161415.GA695333@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-13-sean.j.christopherson@intel.com>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 08:14:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="225291111"
+Received: from ssp-tglu-cdi358.jf.intel.com ([10.54.55.34])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Feb 2020 08:14:29 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, andriy.shevchenko@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2] perf/x86: Add Intel Tiger Lake uncore support
+Date:   Thu,  6 Feb 2020 08:15:27 -0800
+Message-Id: <20200206161527.3529-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121223157.15263-13-sean.j.christopherson@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:31:50PM -0800, Sean Christopherson wrote:
-> Move memslot deletion into its own routine so that the success path for
-> other memslot updates does not need to use kvm_free_memslot(), i.e. can
-> explicitly destroy the dirty bitmap when necessary.  This paves the way
-> for dropping @dont from kvm_free_memslot(), i.e. all callers now pass
-> NULL for @dont.
-> 
-> Add a comment above the code to make a copy of the existing memslot
-> prior to deletion, it is not at all obvious that the pointer will become
-> stale during sorting and/or installation of new memslots.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Could you help explain a bit on this explicit comment?  I can follow
-up with the patch itself which looks all correct to me, but I failed
-to catch what this extra comment wants to emphasize...
+For MSR type of uncore units, there is no difference between Ice Lake
+and Tiger Lake. Share the same code with Ice Lake.
 
-Thanks,
+Tiger Lake has two MCs. Both of them are located at 0:0:0. The BAR
+offset is still 0x48. The offset of the two MCs is 0x10000.
+Each MC has three counters to count every read/write/total issued by the
+Memory Controller to DRAM. The counters can be accessed by MMIO.
+They are free-running counters.
 
-> 
-> Note, kvm_arch_commit_memory_region() allows an architecture to free
-> resources when moving a memslot or changing its flags, e.g. x86 frees
-> its arch specific memslot metadata during commit_memory_region().
+The offset of counters are different for TIGERLAKE_L and TIGERLAKE.
+Add separated mmio_init() functions.
 
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+
+Changes since V1:
+- Remove comma at the end of terminator line
+- Refine the code style of tgl_uncore_imc_freerunning_init_box()
+
+ arch/x86/events/intel/uncore.c     |  12 +++
+ arch/x86/events/intel/uncore.h     |   2 +
+ arch/x86/events/intel/uncore_snb.c | 157 +++++++++++++++++++++++++++++
+ 3 files changed, 171 insertions(+)
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 86467f85c383..63922e3a34f5 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1470,6 +1470,16 @@ static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
+ 	.pci_init = skl_uncore_pci_init,
+ };
+ 
++static const struct intel_uncore_init_fun tgl_uncore_init __initconst = {
++	.cpu_init = icl_uncore_cpu_init,
++	.mmio_init = tgl_uncore_mmio_init,
++};
++
++static const struct intel_uncore_init_fun tgl_l_uncore_init __initconst = {
++	.cpu_init = icl_uncore_cpu_init,
++	.mmio_init = tgl_l_uncore_mmio_init,
++};
++
+ static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
+ 	.cpu_init = snr_uncore_cpu_init,
+ 	.pci_init = snr_uncore_pci_init,
+@@ -1505,6 +1515,8 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_L,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE,	  icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_TIGERLAKE_L,	  tgl_l_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_TIGERLAKE,	  tgl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_D, snr_uncore_init),
+ 	{},
+ };
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index bbfdaa720b45..1204dcc9fe9b 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -527,6 +527,8 @@ void snb_uncore_cpu_init(void);
+ void nhm_uncore_cpu_init(void);
+ void skl_uncore_cpu_init(void);
+ void icl_uncore_cpu_init(void);
++void tgl_uncore_mmio_init(void);
++void tgl_l_uncore_mmio_init(void);
+ int snb_pci2phy_map_init(int devid);
+ 
+ /* uncore_snbep.c */
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index c37cb12d0ef6..ab67b23b2106 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -44,6 +44,11 @@
+ #define PCI_DEVICE_ID_INTEL_WHL_UD_IMC		0x3e35
+ #define PCI_DEVICE_ID_INTEL_ICL_U_IMC		0x8a02
+ #define PCI_DEVICE_ID_INTEL_ICL_U2_IMC		0x8a12
++#define PCI_DEVICE_ID_INTEL_TGL_U1_IMC		0x9a02
++#define PCI_DEVICE_ID_INTEL_TGL_U2_IMC		0x9a04
++#define PCI_DEVICE_ID_INTEL_TGL_U3_IMC		0x9a12
++#define PCI_DEVICE_ID_INTEL_TGL_U4_IMC		0x9a14
++#define PCI_DEVICE_ID_INTEL_TGL_H_IMC		0x9a36
+ 
+ 
+ /* SNB event control */
+@@ -1002,3 +1007,155 @@ void nhm_uncore_cpu_init(void)
+ }
+ 
+ /* end of Nehalem uncore support */
++
++/* Tiger Lake MMIO uncore support */
++
++static const struct pci_device_id tgl_uncore_pci_ids[] = {
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U1_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U2_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U3_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_U4_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGL_H_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* end: all zeroes */ }
++};
++
++enum perf_tgl_uncore_imc_freerunning_types {
++	TGL_MMIO_UNCORE_IMC_DATA_TOTAL,
++	TGL_MMIO_UNCORE_IMC_DATA_READ,
++	TGL_MMIO_UNCORE_IMC_DATA_WRITE,
++	TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
++};
++
++static struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
++	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x5040, 0x0, 0x0, 1, 64 },
++	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x5058, 0x0, 0x0, 1, 64 },
++	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0x50A0, 0x0, 0x0, 1, 64 },
++};
++
++static struct freerunning_counters tgl_uncore_imc_freerunning[] = {
++	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0xd840, 0x0, 0x0, 1, 64 },
++	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0xd858, 0x0, 0x0, 1, 64 },
++	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xd8A0, 0x0, 0x0, 1, 64 },
++};
++
++static struct uncore_event_desc tgl_uncore_imc_events[] = {
++	INTEL_UNCORE_EVENT_DESC(data_total,         "event=0xff,umask=0x10"),
++	INTEL_UNCORE_EVENT_DESC(data_total.scale,   "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(data_total.unit,    "MiB"),
++
++	INTEL_UNCORE_EVENT_DESC(data_read,         "event=0xff,umask=0x20"),
++	INTEL_UNCORE_EVENT_DESC(data_read.scale,   "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(data_read.unit,    "MiB"),
++
++	INTEL_UNCORE_EVENT_DESC(data_write,        "event=0xff,umask=0x30"),
++	INTEL_UNCORE_EVENT_DESC(data_write.scale,  "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(data_write.unit,   "MiB"),
++
++	{ /* end: all zeroes */ }
++};
++
++static struct pci_dev *tgl_uncore_get_mc_dev(void)
++{
++	const struct pci_device_id *ids = tgl_uncore_pci_ids;
++	struct pci_dev *mc_dev = NULL;
++
++	while (ids && ids->vendor) {
++		mc_dev = pci_get_device(PCI_VENDOR_ID_INTEL, ids->device, NULL);
++		if (mc_dev)
++			return mc_dev;
++		ids++;
++	}
++
++	return mc_dev;
++}
++
++#define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
++
++static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
++{
++	struct pci_dev *pdev = tgl_uncore_get_mc_dev();
++	struct intel_uncore_pmu *pmu = box->pmu;
++	resource_size_t addr;
++	u32 mch_bar;
++
++	if (!pdev) {
++		pr_warn("perf uncore: Cannot find matched IMC device.\n");
++		return;
++	}
++
++	pci_read_config_dword(pdev, SNB_UNCORE_PCI_IMC_BAR_OFFSET, &mch_bar);
++	/* MCHBAR is disabled */
++	if (!(mch_bar & BIT(0))) {
++		pr_warn("perf uncore: MCHBAR is disabled. Failed to map IMC free-running counters.\n");
++		return;
++	}
++	mch_bar &= ~BIT(0);
++	addr = (resource_size_t)(mch_bar + TGL_UNCORE_MMIO_IMC_MEM_OFFSET * pmu->pmu_idx);
++
++	pci_read_config_dword(pdev, SNB_UNCORE_PCI_IMC_BAR_OFFSET + 4, &mch_bar);
++	addr |= ((resource_size_t)mch_bar << 32);
++
++	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
++}
++
++static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
++	.init_box	= tgl_uncore_imc_freerunning_init_box,
++	.exit_box	= uncore_mmio_exit_box,
++	.read_counter	= uncore_mmio_read_counter,
++	.hw_config	= uncore_freerunning_hw_config,
++};
++
++static struct attribute *tgl_uncore_imc_formats_attr[] = {
++	&format_attr_event.attr,
++	&format_attr_umask.attr,
++	NULL
++};
++
++static const struct attribute_group tgl_uncore_imc_format_group = {
++	.name = "format",
++	.attrs = tgl_uncore_imc_formats_attr,
++};
++
++static struct intel_uncore_type tgl_uncore_imc_free_running = {
++	.name			= "imc_free_running",
++	.num_counters		= 3,
++	.num_boxes		= 2,
++	.num_freerunning_types	= TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX,
++	.freerunning		= tgl_uncore_imc_freerunning,
++	.ops			= &tgl_uncore_imc_freerunning_ops,
++	.event_descs		= tgl_uncore_imc_events,
++	.format_group		= &tgl_uncore_imc_format_group,
++};
++
++static struct intel_uncore_type *tgl_mmio_uncores[] = {
++	&tgl_uncore_imc_free_running,
++	NULL
++};
++
++void tgl_l_uncore_mmio_init(void)
++{
++	tgl_uncore_imc_free_running.freerunning = tgl_l_uncore_imc_freerunning;
++	uncore_mmio_uncores = tgl_mmio_uncores;
++}
++
++void tgl_uncore_mmio_init(void)
++{
++	uncore_mmio_uncores = tgl_mmio_uncores;
++}
++
++/* end of Tiger Lake MMIO uncore support */
 -- 
-Peter Xu
+2.21.0
 
