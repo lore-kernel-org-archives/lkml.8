@@ -2,153 +2,127 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8144C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DBAC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B668D20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CB220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFNMZpN4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V53GVGtE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgBFIv5 (ORCPT
+        id S1726673AbgBFIwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:51:57 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38873 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgBFIv4 (ORCPT
+        Thu, 6 Feb 2020 03:52:04 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34197 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbgBFIwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:51:56 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so2773303pfc.5;
-        Thu, 06 Feb 2020 00:51:56 -0800 (PST)
+        Thu, 6 Feb 2020 03:52:04 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r18so5099382edl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:52:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=t0ZkRPw1qrQ0f8z2RbPGrKw+AhhQtmfGX+r47zBC98M=;
-        b=jFNMZpN4IFFd7xlgs1ZxDnyah6Ow817U7LGePFtJ+sgo4JsuNfZmjidc7Sj7wx6Peb
-         Sntu4XWIWJDfaZqeimicxI1mut1EltEoC+RUk0tvVrYwYZh5iQGaSRXb1fajv9u8sL5t
-         /HmZYkPtqtREnJnpgPZgX8PnTNxF26SGplC6LxkXNrqFbEI4rsCCxVxvhc0vksuFPRU0
-         93GXN9sTOZMF6apAdNSGV3JMMVc/CtRqHnaQNR4qt0l9GS6sFcYhlOGqrqhfFhCTXl18
-         uw68LhzkLbceRUHCCmnIzeaG1o88dqe5zkwS+sQC1DgN9JFTZmxiKk78PoHaJHB7r82p
-         XmXg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=We7DoVh7zLbEobTGikMeJVx0fJF9wa4d1jWsJYX+VpE=;
+        b=V53GVGtE+FiWi1Ic1qjEMrk3/vEvAhXyW5H0b0fxm+6774kxmE8OyeaawuPxs1gH4b
+         c+0FT6j2HTkSaJT6uEthX7ZOUXERC0g8efQ01yJ78SbJsqPTMPOADs6e2eP5V0D4MgrQ
+         5mxhqpf+6HI1BZDpX71QwLwNyugqDu8duGIlY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=t0ZkRPw1qrQ0f8z2RbPGrKw+AhhQtmfGX+r47zBC98M=;
-        b=QvgdIcU8y+lRl5bwOYrLm2QAqDtTx62LbXgGEpCTazRy9ejOtEoWvT18+oksqHGV9l
-         wf9xB7YGljZjfnq2QqkKHmBuHjNlRx4EzMWwYOxIfE+VgL/hKmpPrgW08UAYg5FTVEt3
-         qmvcb4A5htolk0/1GZIBV3FjMvByjsGXmmdCqfAoqx/Eavl8rEJBNR7HOhxINi2FWeor
-         3ldqB1sfgJw2il8VCA+Mf1PzdTpbZ3us9lk3/VnMC7lO5lXCcx/4BB8NR+0Cen1Zd6lv
-         pVnxntxCLRZ6uEopu/N9s+LDVpwRhZ0nzUl8lxCzN8Ksq1PMRfDWJtrl1eLFcISJ56m6
-         hXiQ==
-X-Gm-Message-State: APjAAAVw4Py/2Y1Q5UYJ32tMzRyjyhe+ZoZZPjxKb/gA2RbykovS6XyE
-        YECIMj3Wuqzmm8TNgFwyeYM=
-X-Google-Smtp-Source: APXvYqz7zwqjfYp7765xQJVFaYWE1h56slZ8fsZD1XutBVqtq8ln44kJyOJ1auv9oH3SAWPbyYUoUw==
-X-Received: by 2002:aa7:95a3:: with SMTP id a3mr2701203pfk.193.1580979115652;
-        Thu, 06 Feb 2020 00:51:55 -0800 (PST)
-Received: from localhost.localdomain ([106.254.212.20])
-        by smtp.gmail.com with ESMTPSA id b3sm2432450pfr.88.2020.02.06.00.51.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:51:54 -0800 (PST)
-From:   sj38.park@gmail.com
-To:     shuah@kernel.org, akpm@linux-foundation.org
-Cc:     urezki@gmail.com, mhiramat@kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH] selftests/vm: Add missed tests in run_vmtests
-Date:   Thu,  6 Feb 2020 08:51:44 +0000
-Message-Id: <20200206085144.29126-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=We7DoVh7zLbEobTGikMeJVx0fJF9wa4d1jWsJYX+VpE=;
+        b=I4liVZHlrK4KlXghwW3FPz/NYZ6TzNX9k/AopkLewuHTpnEi1td/QET/JT8Dk0LLkr
+         FMwJ4Fl+npUrRu62AE6DY3M+y/e1fXaBVbY5eM+OXsO2RvE2RcstsunBhi8k9flgyYDE
+         b3r2lTZ45P9zGbjM/6rey8Ay14f1NSJsH0wyPTfwtPf+fPTig5pEp3GEZEMAIbFgKDoN
+         mSf9MAOZtepGZDuPjygT55Vnz3iCe0QyOxwmTtYZ7gSise8jl/7pk2krvtQ6So2JOLI3
+         FVYqMABSTq3xablRRKaEfBYigHWRkLYGOayc/FrXY/y+8bgsVAEllF40CJq7K3yf6GqY
+         MNqg==
+X-Gm-Message-State: APjAAAVdNpIphTkf9WjBg/IzsfRX2jyeiSQZ9Eeely11sNS0fFyRRjGA
+        ot0ZGRFz5tkmkxA48jTriFq0j3XKg+1F0A==
+X-Google-Smtp-Source: APXvYqxJrgCJQbdZbj7H5tLW7y847YzvWyjdBhKHMe6I2Ue+gH5v7TTaQFASdp8WkxF9kTJUSPxjmg==
+X-Received: by 2002:a05:6402:6cc:: with SMTP id n12mr2096523edy.344.1580979122353;
+        Thu, 06 Feb 2020 00:52:02 -0800 (PST)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
+        by smtp.gmail.com with ESMTPSA id n11sm215998edv.66.2020.02.06.00.52.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 00:52:01 -0800 (PST)
+Received: by mail-wr1-f52.google.com with SMTP id m16so6071549wrx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:52:00 -0800 (PST)
+X-Received: by 2002:adf:f58a:: with SMTP id f10mr2727400wro.105.1580979119629;
+ Thu, 06 Feb 2020 00:51:59 -0800 (PST)
+MIME-Version: 1.0
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-13-senozhatsky@chromium.org> <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
+ <CAAFQd5DN0FSJ=pXG3J32AXocnbkR+AB8yKKDk0tZS4s7K04Z9Q@mail.gmail.com>
+ <560ba621-5396-1ea9-625e-a9f83622e052@xs4all.nl> <CAAFQd5D27xaKhxg8UuPH6XXdzgBBsCeDL8wYw37r6AK+6sWcbg@mail.gmail.com>
+ <c23618a9-4bf8-1d9a-6e52-d616c79ff289@xs4all.nl> <CAAFQd5BGA-mnirgwQJP_UHkNzpVvf19xeRu-n7GLQci8nYGB2A@mail.gmail.com>
+ <20200204025021.GF41358@google.com>
+In-Reply-To: <20200204025021.GF41358@google.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 6 Feb 2020 17:51:46 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5B1cDCHexRR7UaqhHuxOgbAZDFHrZEVA1E2bcH14Ve5_A@mail.gmail.com>
+Message-ID: <CAAFQd5B1cDCHexRR7UaqhHuxOgbAZDFHrZEVA1E2bcH14Ve5_A@mail.gmail.com>
+Subject: Re: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks
+ to dma-sg
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Tue, Feb 4, 2020 at 11:50 AM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (20/02/03 19:04), Tomasz Figa wrote:
+> [..]
+> > > I very much agree with that. But this should be very clearly documented.
+> > > Should V4L2_CAP_MEMORY_NON_CONSISTENT always be set in this case?
+> > >
+> >
+> > Yes, IMHO that would make sense. My understanding is that currently
+> > the consistency of allocated memory is unspecified, so it can be
+> > either. With V4L2_FLAG_MEMORY_NON_CONSISTENT, the userspace can
+> > explicitly ask for inconsistent memory.
+> >
+> > Moreover, I'd vote for setting V4L2_CAP_MEMORY_NON_CONSISTENT when
+> > V4L2_FLAG_MEMORY_NON_CONSISTENT is guaranteed to return inconsistent
+> > memory to avoid "optional" features or "hints" without guaranteed
+> > behavior.
+>
+> Documentation/DMA-attributes.txt says the following
+>
+>   DMA_ATTR_NON_CONSISTENT
+>   -----------------------
+>
+>   DMA_ATTR_NON_CONSISTENT lets the platform to choose to return either
+>   consistent or non-consistent memory as it sees fit.  By using this API,
+>   you are guaranteeing to the platform that you have all the correct and
+>   necessary sync points for this memory in the driver.
 
-The commits introducing 'mlock-random-test'[1], 'map_fiex_noreplace'[2],
-and 'thuge-gen'[3] have not added those in the 'run_vmtests' script and
-thus the 'run_tests' command of kselftests doesn't run those.  This
-commit adds those in the script.
+Good point. And I also realized that some platforms just have no way
+to make the memory inconsistent, because they may have hardware
+coherency.
 
-'gup_benchmark' and 'transhuge-stress' are also not included in the
-'run_vmtests', but this commit does not add those because those are for
-performance measurement rather than pass/fail tests.
+Then we need to keep it a hint only.
 
-[1] commit 26b4224d9961 ("selftests: expanding more mlock selftest")
-[2] commit 91cbacc34512 ("tools/testing/selftests/vm/map_fixed_noreplace.c: add test for MAP_FIXED_NOREPLACE")
-[3] commit fcc1f2d5dd34 ("selftests: add a test program for variable huge page sizes in mmap/shmget")
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- tools/testing/selftests/vm/run_vmtests | 33 ++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftests/vm/run_vmtests
-index a692ea828317..f33714843198 100755
---- a/tools/testing/selftests/vm/run_vmtests
-+++ b/tools/testing/selftests/vm/run_vmtests
-@@ -112,6 +112,17 @@ echo "NOTE: The above hugetlb tests provide minimal coverage.  Use"
- echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
- echo "      hugetlb regression testing."
- 
-+echo "---------------------------"
-+echo "running map_fixed_noreplace"
-+echo "---------------------------"
-+./map_fixed_noreplace
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=1
-+else
-+	echo "[PASS]"
-+fi
-+
- echo "-------------------"
- echo "running userfaultfd"
- echo "-------------------"
-@@ -186,6 +197,17 @@ else
- 	echo "[PASS]"
- fi
- 
-+echo "-------------------------"
-+echo "running mlock-random-test"
-+echo "-------------------------"
-+./mlock-random-test
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=1
-+else
-+	echo "[PASS]"
-+fi
-+
- echo "--------------------"
- echo "running mlock2-tests"
- echo "--------------------"
-@@ -197,6 +219,17 @@ else
- 	echo "[PASS]"
- fi
- 
-+echo "-----------------"
-+echo "running thuge-gen"
-+echo "-----------------"
-+./thuge-gen
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=1
-+else
-+	echo "[PASS]"
-+fi
-+
- if [ $VADDR64 -ne 0 ]; then
- echo "-----------------------------"
- echo "running virtual_address_range"
-
-base-commit: d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
--- 
-2.17.1
-
+Best regards,
+Tomasz
