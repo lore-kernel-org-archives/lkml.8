@@ -2,100 +2,159 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F121AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E5BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD19D20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887AC2192A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:09:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eoY7YT/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgBFPI4 (ORCPT
+        id S1727548AbgBFPJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:08:56 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:52805 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBFPIz (ORCPT
+        Thu, 6 Feb 2020 10:09:58 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56376 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727389AbgBFPJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:08:55 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: bU0gwNkrQaz7SxAOkj+o8ZrY/EAOeCPK1sgvVhJFXqiLPUFwUwJE96dX7h6Jsfgu+ML1FN2ga+
- STfwTxJHerwPdyijuF3N962x3dmBoTzDMx92fJ8+Vc/XGUxKY0r3rY3SRaB2B8ONDwG+JXKSYv
- JW/p4V61YRDzomR6CwTsO0W5lRFqNKRC4wXlo9dYrcgxXSIKs/sOI4tN4Wtcw/pSdyC8Nmca6S
- VYj4i7J97JPKUMkLSQZYCdVKGbtyZyLS+m2x7k75k9h8M6unbob7ubd0WIDezQGFvOK1TaOKFv
- +/U=
-X-IronPort-AV: E=Sophos;i="5.70,410,1574146800"; 
-   d="scan'208";a="63368692"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Feb 2020 08:08:54 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Feb 2020 08:08:53 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 6 Feb 2020 08:08:51 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
-        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] net: dsa: microchip: enable module autoprobe
-Date:   Thu, 6 Feb 2020 17:08:37 +0200
-Message-ID: <20200206150837.12009-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 6 Feb 2020 10:09:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581001797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EZiBMYoM5ngA1SWJXac8F1p5eppKDaYXsn4jaAv3LSk=;
+        b=eoY7YT/kuC3ITEJdwBR241xbCV6nv1zgSARCNfwEdybEm3UAQfDmHYtim2wUFTMTpXnEHc
+        06zQHfkMKJrD7M4Ddgd6enZKV4xmcl0J8bIqmZei29scPjZNBLFgIcNMR4AbZP6IsDQSTR
+        3iRyokNn7P3hxEDaED3CWZWAtHH2408=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-MaYk6OVgMuC9t-3MiZbzew-1; Thu, 06 Feb 2020 10:09:56 -0500
+X-MC-Unique: MaYk6OVgMuC9t-3MiZbzew-1
+Received: by mail-wm1-f72.google.com with SMTP id s25so129437wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 07:09:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=EZiBMYoM5ngA1SWJXac8F1p5eppKDaYXsn4jaAv3LSk=;
+        b=tv0xi5KcvtKWcrmjmR63xYrDJkZmQl68FQbHGNt3g3v0A8E+UznlOqxahQmu7gHE4A
+         YJ5rJl38N/AXr2FrskWbEQxqDdZKvaz6Xvx4qjE+pEsjdcUUbdv6VI80j1f43sUWmP+s
+         j7W1tpR5X8TA1K8OcRc3hObKGW2NFrxsqUga43w916lkPjBx+AhrX4PrCTjMZog5mwyr
+         Yypj9B56sUypSebOLmqnZVkbi+6jCQxOG7CAImvdJb+BHjfJf//+v03R1+7vu7JBPXPa
+         iyRQadjY6iusSYahbmb7mGNBNKulI9Ld/ERa/Gedkm5E+8/OMdfywix69jjx0yQsVK0P
+         HIAA==
+X-Gm-Message-State: APjAAAX4WyG1wA9MIbYoprwAH0zsOQS96MnwaTXexb0/hs2IZAIsWdcg
+        pfQjAwu/2DM9QDuWA2GQ0VnMO7b8XzmSsqMxV5p6srZTUyOQWzjWZGZR/Aj3RXZhmYbKy+4uao2
+        tZR9MC4xXwKglOKVShlzBSKAz
+X-Received: by 2002:a1c:151:: with SMTP id 78mr4844280wmb.182.1581001794876;
+        Thu, 06 Feb 2020 07:09:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy7PZM8qvaN6WfZLfowxyRpKK0ElKwo8vzNSQ8xUj7u0xgC7aIvhuRCNLsPUGIuGsyl4qCxbg==
+X-Received: by 2002:a1c:151:: with SMTP id 78mr4844246wmb.182.1581001794592;
+        Thu, 06 Feb 2020 07:09:54 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id q130sm4453532wme.19.2020.02.06.07.09.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 07:09:54 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 04/61] KVM: x86: Clean up error handling in kvm_dev_ioctl_get_cpuid()
+In-Reply-To: <20200201185218.24473-5-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-5-sean.j.christopherson@intel.com>
+Date:   Thu, 06 Feb 2020 16:09:53 +0100
+Message-ID: <87mu9vg3b2.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-This matches /sys/devices/.../spi1.0/modalias content.
+> Clean up the error handling in kvm_dev_ioctl_get_cpuid(), which has
+> gotten a bit crusty as the function has evolved over the years.
+>
+> Opportunistically hoist the static @funcs declaration to the top of the
+> function to make it more obvious that it's a "static const".
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 19 +++++++------------
+>  1 file changed, 7 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index de52cbb46171..11d5f311ef10 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -889,45 +889,40 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+>  			    struct kvm_cpuid_entry2 __user *entries,
+>  			    unsigned int type)
+>  {
+> -	struct kvm_cpuid_entry2 *cpuid_entries;
+> -	int nent = 0, r = -E2BIG, i;
+> -
+>  	static const u32 funcs[] = {
+>  		0, 0x80000000, CENTAUR_CPUID_SIGNATURE, KVM_CPUID_SIGNATURE,
+>  	};
+>  
+> +	struct kvm_cpuid_entry2 *cpuid_entries;
+> +	int nent = 0, r, i;
+> +
+>  	if (cpuid->nent < 1)
+> -		goto out;
+> +		return -E2BIG;
+>  	if (cpuid->nent > KVM_MAX_CPUID_ENTRIES)
+>  		cpuid->nent = KVM_MAX_CPUID_ENTRIES;
+>  
+>  	if (sanity_check_entries(entries, cpuid->nent, type))
+>  		return -EINVAL;
+>  
+> -	r = -ENOMEM;
+>  	cpuid_entries = vzalloc(array_size(sizeof(struct kvm_cpuid_entry2),
+>  					   cpuid->nent));
+>  	if (!cpuid_entries)
+> -		goto out;
+> +		return -ENOMEM;
+>  
+> -	r = 0;
+>  	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
+>  		r = get_cpuid_func(cpuid_entries, funcs[i], &nent, cpuid->nent,
+>  				   type);
+>  		if (r)
+>  			goto out_free;
+>  	}
+> +	cpuid->nent = nent;
+>  
+> -	r = -EFAULT;
+>  	if (copy_to_user(entries, cpuid_entries,
+>  			 nent * sizeof(struct kvm_cpuid_entry2)))
+> -		goto out_free;
+> -	cpuid->nent = nent;
+> -	r = 0;
+> +		r = -EFAULT;
+>  
+>  out_free:
+>  	vfree(cpuid_entries);
+> -out:
+>  	return r;
+>  }
 
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
- 1 file changed, 1 insertion(+)
+Please [partially] disregard my comment on PATCH 02
 
-diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
-index c5f64959a184..248b69c74b45 100644
---- a/drivers/net/dsa/microchip/ksz9477_spi.c
-+++ b/drivers/net/dsa/microchip/ksz9477_spi.c
-@@ -101,6 +101,7 @@ static struct spi_driver ksz9477_spi_driver = {
- 
- module_spi_driver(ksz9477_spi_driver);
- 
-+MODULE_ALIAS("spi:ksz8563");
- MODULE_AUTHOR("Woojung Huh <Woojung.Huh@microchip.com>");
- MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI access Driver");
- MODULE_LICENSE("GPL");
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.20.1
+Vitaly
 
