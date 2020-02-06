@@ -2,101 +2,108 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4BC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DB0C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852F5214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581000066;
-	bh=5F+DVXttfezw5xirpmvxPSy/Sk+UV6Nkj38IRu6gU5U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DRFbS+dJlU/VTAEAMmz0Wu2IBDoScCQ5SqlbQVvhb/N2zpssGnMEZYLm0g9FCWCwK
-	 DwJwAFzClnHOTMsECW5SBxrko32Iz3qRzYM53JrY7ndWglq73PKIZR06DNW/LZ1ysx
-	 t3XMnyIBZQ8UNKp+ewqrj2zLbcnNrdWdahJ52LNk=
+	by mail.kernel.org (Postfix) with ESMTP id 27FF020838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:45:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbOGeDbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgBFOlF (ORCPT
+        id S1728019AbgBFOpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:41:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgBFOlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:41:05 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2331E20838;
-        Thu,  6 Feb 2020 14:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581000064;
-        bh=5F+DVXttfezw5xirpmvxPSy/Sk+UV6Nkj38IRu6gU5U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LyYbmzsb7DqZFk/mVKGIxTigWRVuM8b72E+rp347Aj6aoBGBD/N4akrO+uHDnx6BT
-         lA7uJ6Xo04zDCKsis2drjhUiV/SDJ/Knoe9ttGeW6T+tLeeGE1asoCqF1P4SniD0K0
-         Yxl+hXLC7f3qVZyDQJyrzoTVZiZMyw8VmRWP5JgE=
-Date:   Thu, 6 Feb 2020 23:41:00 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config
- support
-Message-Id: <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
-In-Reply-To: <20200206115405.GA22608@zn.tnic>
-References: <20200114210316.450821675@goodmis.org>
-        <20200114210336.259202220@goodmis.org>
-        <20200206115405.GA22608@zn.tnic>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 6 Feb 2020 09:45:09 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55382 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgBFOpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 09:45:09 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so64024pjz.5;
+        Thu, 06 Feb 2020 06:45:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZE5pr5H6hvMlDNS4zB/gxs27dYvMV2BawxvYH6pi0do=;
+        b=gbOGeDbGejEATAJsmupRXx1OGbSnuQtdiKRVXy4T9gze0qsJnKxVyTiLmyI8x2PVlX
+         pRM2lpZ9pB17Ac3HXKZXYC2qVCXIh4fAirTQI/DFzMeQQAz3udH43jigUxIUdzxmj2cE
+         VgO28E+kbX8blTr3I7lXVJBV5XJ5ziOnNNS1iY7MRLliYI/01hXtPIwuD6mGpwXhCWua
+         vTNhs1KM0+FVlUii5tG/+gt21H1bj1G0VYPumP+Wt+bG/YJ8gUOjvsC2waPoBM8VF7BA
+         CnfdtixJ6cEGCfBSl390qw837d14+NHUprWug8Bz/hgkBPURLhkRL0XtQBy0m5LWDjOH
+         eung==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZE5pr5H6hvMlDNS4zB/gxs27dYvMV2BawxvYH6pi0do=;
+        b=DgaHgMae0foR2hmcV0gdmcB3jzrIq41yGnQDUganrwpYAWVyOOjACV2gZ/BFx1DNEW
+         h0/DWMdn+yO9hAxiqWXqvtIsrldM/xXymVlsg9Mai2VA7HISMiDd2hslUxEaYkPQnOad
+         ve+9mrUu0kIPYbSCqROviabad+WMXMnfO2cRnn9rUAUJXhBVWp6mSJdxBeK8LoOAua7O
+         vZ4wLo/pdMxusgV5NBs6CTSvHRqA6eXPQwQdYNEj4JIfiFDbm2gGar8xxnfwym2kgpIb
+         HLCg5KnVwhU2sM4x+p36RPqWc55QeNRV7cstV4V9nP2cVucvSJ1Gsn+pFy8Dab2KoYgz
+         a++A==
+X-Gm-Message-State: APjAAAXZjOpgn16XTnxC4+LBuuu49Kotj7KhkPbATvZdQHXDKhKK5jZS
+        Fpd7kEOsak1C2TIdZZkCr1U=
+X-Google-Smtp-Source: APXvYqx9ZszK8VTATue0ZKY28pvbrF7QUbfFxeax1OgidxbBs3YHS3LARjrq5lekGFQGbd6HOTz1Og==
+X-Received: by 2002:a17:902:a984:: with SMTP id bh4mr4153989plb.281.1581000307332;
+        Thu, 06 Feb 2020 06:45:07 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n14sm3853937pgf.79.2020.02.06.06.45.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 06:45:06 -0800 (PST)
+Subject: Re: [PATCH 3/3] watchdog: da9062: add power management ops
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
+        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-4-m.felsch@pengutronix.de>
+ <20200123205132.GA13377@roeck-us.net>
+ <20200206090010.ya6p2kvab452kedr@pengutronix.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <a5d61822-c4fa-d5d3-c3ef-174b57a651bc@roeck-us.net>
+Date:   Thu, 6 Feb 2020 06:45:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200206090010.ya6p2kvab452kedr@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, 6 Feb 2020 12:54:05 +0100
-Borislav Petkov <bp@alien8.de> wrote:
-
-> On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
-> > diff --git a/init/Kconfig b/init/Kconfig
-> > index a34064a031a5..63450d3bbf12 100644
-> > --- a/init/Kconfig
-> > +++ b/init/Kconfig
-> > @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
-> >  
-> >  endif
-> >  
-> > +config BOOT_CONFIG
-> > +	bool "Boot config support"
-> > +	select LIBXBC
-> > +	default y
+On 2/6/20 1:00 AM, Marco Felsch wrote:
+> Hi Guenter,
 > 
-> Any particular reason this is default y? Why should it be enabled by
-> default on all boxes?
+> On 20-01-23 12:51, Guenter Roeck wrote:
+>> On Wed, Jan 08, 2020 at 10:57:04AM +0100, Marco Felsch wrote:
+>>> Disable the watchdog during suspend if it is enabled and re-enable it on
+>>> resume. So we can sleep without the interruptions.
+>>>
+>>> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+>>> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> I got an kbuild email so I checked the linux-next master tree. On
+> linux-next this patch isn't used instead the old v1 was used...
+> 
 
-Oh, you are not the first person asked that :)
+Yes, it appears that I picked the wrong version as well, and Wim picked it
+up from there. But, really, what do you expect if you don't tag your
+submissions with version numbers ?
 
-https://lkml.org/lkml/2019/12/9/563
+I would suggest to send a follow-up patch to fix what is in -next.
 
-And yes, I think this is important that will useful for most developers
-and admins. Since the bootconfig already covers kernel and init options,
-this can be a new standard way to pass args to kernel boot.
-
-And as I reported above thread, the memory footpoint of view, most code
-and working memory are released after boot. Also, as Linus's suggested,
-now this feature is enabled only if user gives "bootconfig" on the kernel
-command line. So the side effect is minimized.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Guenter
