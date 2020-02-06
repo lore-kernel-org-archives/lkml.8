@@ -2,107 +2,68 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE21C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2861C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B954214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E835214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580992216;
+	bh=eV/InsG0hyZln8PijgT1RSVEsRX2h+dSa380+9ElccI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=QvNXniAa64Fc5wV9Cn2erE4gKHBKIHXV18x3RMHph4u9VOjxZr06a0nfa3hhBIQeX
+	 9XNkICx44Y1DhNAtAgIDHagbnr6m1jO3Hf/8VLQMmv3VaXs8JNA3a52DPieFMIytkJ
+	 4+Rj91l2kiaq21Nj3detKPWxjtGZ4nzZfkl5OmPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgBFM2V (ORCPT
+        id S1727615AbgBFMaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:28:21 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2387 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726744AbgBFM2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:28:21 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 48935563F0E88C196A82;
-        Thu,  6 Feb 2020 12:28:19 +0000 (GMT)
-Received: from fraeml703-chm.china.huawei.com (10.206.15.52) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 6 Feb 2020 12:28:18 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 6 Feb 2020 13:28:18 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Thu, 6 Feb 2020 13:28:18 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
-Thread-Topic: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
-Thread-Index: AQHV3A/jJwoPNNxgYk6BJdeHa69IC6gNBbgAgADjWLCAABy9AIAAEWug
-Date:   Thu, 6 Feb 2020 12:28:18 +0000
-Message-ID: <17bfd3e2b7fa4f31a46a6688e4a6e34f@huawei.com>
-References: <20200205103317.29356-1-roberto.sassu@huawei.com>
-         <20200205103317.29356-3-roberto.sassu@huawei.com>
-         <1580936432.5585.309.camel@linux.ibm.com>
-         <b1507c1121b64b3abc00e154fcfeef65@huawei.com>
- <1580991426.5585.334.camel@linux.ibm.com>
-In-Reply-To: <1580991426.5585.334.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Thu, 6 Feb 2020 07:30:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbgBFMaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 07:30:15 -0500
+Subject: Re: [GIT PULL] Ceph updates for 5.6-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580992214;
+        bh=eV/InsG0hyZln8PijgT1RSVEsRX2h+dSa380+9ElccI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=dWokWOz9bVOjRkur79AqrCLPT7/oDhSXNj8w0WStay8+bydsS5pnWZ0f0HYMaHLyH
+         ZsFGqpyhET7jwZovnlaWhrVE/Dtjb+gmRD3HmUr2qKirSSKMmAlllCQH72eN7tG4Dp
+         u+oTUjOOMl2b3ODi84x4+EN6G6+7qukgby3XZgA8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200206094804.29473-1-idryomov@gmail.com>
+References: <20200206094804.29473-1-idryomov@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200206094804.29473-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
+ tags/ceph-for-5.6-rc1
+X-PR-Tracked-Commit-Id: 3325322f773bae68b20d8fa0e9e8ebb005271db5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4c46bef2e96a92df0f40fc91848e56889ef7c15e
+Message-Id: <158099221490.14061.493398077206202783.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Feb 2020 12:30:14 +0000
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
-em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDYsIDIwMjAg
-MToxNyBQTQ0KPiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsN
-Cj4gSmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbTsNCj4gamFya2tvLnNha2tp
-bmVuQGxpbnV4LmludGVsLmNvbQ0KPiBDYzogbGludXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtc2VjdXJpdHktbW9kdWxlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgU2lsdml1IFZsYXNjZWFudQ0KPiA8U2lsdml1LlZsYXNjZWFudUBo
-dWF3ZWkuY29tPjsgc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENI
-IHYyIDIvOF0gaW1hOiBTd2l0Y2ggdG8gaW1hX2hhc2hfYWxnbyBmb3IgYm9vdA0KPiBhZ2dyZWdh
-dGUNCj4gDQo+IE9uIFRodSwgMjAyMC0wMi0wNiBhdCAwOTozNiArMDAwMCwgUm9iZXJ0byBTYXNz
-dSB3cm90ZToNCj4gPiA+IEhpIFJvYmVydG8sDQo+ID4gPg0KPiA+ID4gT24gV2VkLCAyMDIwLTAy
-LTA1IGF0IDExOjMzICswMTAwLCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiA+ID4NCj4gPiA+IDxz
-bmlwPg0KPiA+ID4NCj4gPiA+ID4gUmVwb3J0ZWQtYnk6IEplcnJ5IFNuaXRzZWxhYXIgPGpzbml0
-c2VsQHJlZGhhdC5jb20+DQo+ID4gPiA+IFN1Z2dlc3RlZC1ieTogSmFtZXMgQm90dG9tbGV5DQo+
-ID4gPiA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT4NCj4gPiA+ID4gU2ln
-bmVkLW9mZi1ieTogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPg0KPiA+
-ID4gPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4NCj4gPiA+IENjJ2luZyBzdGFi
-bGUgcmVzdWx0ZWQgaW4gU2FzaGEncyBhdXRvbWF0ZWQgbWVzc2FnZS7CoMKgSWYgeW91J3JlIGdv
-aW5nDQo+ID4gPiB0byBDYyBzdGFibGUsIHRoZW4gcGxlYXNlIGluY2x1ZGUgdGhlIHN0YWJsZSBr
-ZXJuZWwgcmVsZWFzZSAoZS5nLiBDYzoNCj4gPiA+IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcgIyB2
-NS4zKS4gwqBBbHNvIHBsZWFzZSBpbmNsdWRlIGEgIkZpeGVzIiB0YWcuDQo+ID4gPiDCoE5vcm1h
-bGx5IG9ubHkgYnVnIGZpeGVzIGFyZSBiYWNrcG9ydGVkLg0KPiA+DQo+ID4gT2ssIHdpbGwgYWRk
-IHRoZSBrZXJuZWwgdmVyc2lvbi4gSSBhbHNvIHRob3VnaHQgd2hpY2ggY29tbWl0IEkgc2hvdWxk
-DQo+ID4gbWVudGlvbiBpbiB0aGUgRml4ZXMgdGFnLiBJTUEgYWx3YXlzIHJlYWQgdGhlIFNIQTEg
-YmFuayBmcm9tIHRoZQ0KPiA+IGJlZ2lubmluZy4gSSBjb3VsZCBtZW50aW9uIHRoZSBwYXRjaCB0
-aGF0IGludHJvZHVjZXMgdGhlIG5ldyBBUEkNCj4gPiB0byByZWFkIG90aGVyIGJhbmtzLCBidXQg
-SSdtIG5vdCBzdXJlLiBXaGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+IFRoaXMgcGF0Y2ggaXMgZGVw
-ZW5kZW50IG9uIG5yX2FsbG9jYXRlZF9iYW5rcy4gwqBQbGVhc2UgdHJ5IGFwcGx5aW5nDQo+IHRo
-aXMgcGF0Y2ggdG8gdGhlIGVhcmxpZXN0IHN0YWJsZSBrZXJuZWwgd2l0aCB0aGUgY29tbWl0IHRo
-YXQNCj4gaW50cm9kdWNlcyBucl9hbGxvY2F0ZWRfYmFua3MgYW5kIHRlc3QgdG8gbWFrZSBzdXJl
-IGl0IHdvcmtzIHByb3Blcmx5Lg0KDQpJdCBhbHNvIGRlcGVuZHMgb24gODc5YjU4OTIxMGE5ICgi
-dHBtOiByZXRyaWV2ZSBkaWdlc3Qgc2l6ZSBvZiB1bmtub3duIg0KYWxnb3JpdGhtcyB3aXRoIFBD
-UiByZWFkIikgd2hpY2ggZXhwb3J0ZWQgdGhlIG1hcHBpbmcgYmV0d2VlbiBUUE0NCmFsZ29yaXRo
-bSBJRCBhbmQgY3J5cHRvIElELCBhbmQgY2hhbmdlZCB0aGUgZGVmaW5pdGlvbiBvZiB0cG1fcGNy
-X3JlYWQoKQ0KdG8gcmVhZCBub24tU0hBMSBQQ1IgYmFua3MuIEl0IHJlcXVpcmVzIG1hbnkgcGF0
-Y2hlcywgc28gYmFja3BvcnRpbmcgaXQNCmlzIG5vdCBhIHRyaXZpYWwgdGFzay4gSSB0aGluayB0
-aGUgZWFybGllc3Qga2VybmVsIHRoaXMgcGF0Y2ggY2FuIGJlIGJhY2twb3J0ZWQgdG8NCmlzIDUu
-MS4NCg0KUm9iZXJ0bw0K
+The pull request you sent on Thu,  6 Feb 2020 10:48:04 +0100:
+
+> https://github.com/ceph/ceph-client.git tags/ceph-for-5.6-rc1
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4c46bef2e96a92df0f40fc91848e56889ef7c15e
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
