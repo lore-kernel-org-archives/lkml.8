@@ -2,245 +2,135 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MISSING_MIMEOLE,MSGID_FROM_MTA_HEADER,PI_IMPORTANCE_HIGH,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF247C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF56C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22AB20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E3C20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="AVQFSjWs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngP4xCY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgBFRjh (ORCPT
+        id S1727747AbgBFRl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:39:37 -0500
-Received: from mail-dm6nam10on2063.outbound.protection.outlook.com ([40.107.93.63]:11745
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726990AbgBFRjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:39:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PCqrpGCTZuC2t+dOeTo9Wa6S5O62T6xze+r14gFk/41skCvu7X3LvgZcFmcEToy7Ni2B/GoDcdVfCbSpANkAFXnQbBvODexDDZERK0p0Zhx/y/TT+AxQmi1OqBON1RZO2O8kNT/0OhXNphxENIrsYZSX6xeFzzfCxh5xPINPhCmTaiUl6potpXs4YmJIzvaH1JQPLIeH8a9RTyZpVYvagu/XmqvxoSGlyYIljygb7hUeSPXzRYBojGXegRkg2c9zgm19yKpSYnOW45yNOtesSwT9f363/9pMo6lFIIi4jXfQq0ysV0ww/ABNMeSqwtjfmci2XQhLLWicI/n8gV7uAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=snc/DdR4L4PAbS/XUnBteQWuw7ThV0Mo1OdDmjI22EY=;
- b=UuKEPBBzPvhDVtzek12B/1d1i+9PZqDDMazFbMNBjCQ7HVrOXAU4CMEm4BRC6xmO13d//4OLnFgyoEBIg62h6VKlOL2KuuJBwfVGm8blcDXEzTV363KHDUXdgrWaWmFfblpOTQXMWOqBXiHbFT+WpOibIytsuDooi4ZljvvIe9Xcax7VHkMSzT7MVIIQ3J2f4PuPDusKP74n4PZomgjagHkVjMwl8Kz9pVqX2fnLcwCp7kCWxRcTfeaElVhA498M6mqfMqeebUIu7yACuqFItQvz29oVoiCjJXUvJSJTsgIwmIHhp5QjWkmvThNQob0TfITn3s+UzmZoQ/JwPMLICw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 6 Feb 2020 12:41:56 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45263 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbgBFRl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 12:41:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a6so8203793wrx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 09:41:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=snc/DdR4L4PAbS/XUnBteQWuw7ThV0Mo1OdDmjI22EY=;
- b=AVQFSjWsreROkvuyaOdQcoomU7gOSO9trM4/Ot1gUyltSX5JZyUqT10zMCr7Bv2p3Kr/sGTVxmFbUXDZNaEjfVvcGDrIvn6a6sF1n6ntPBfmDeYG4/M5NcJovbTCyczhHMsTTwGwXQmrIwQsInOB8EcXRdByP9WJody7Q4+X9kE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Wei.Huang2@amd.com; 
-Received: from MN2PR12MB3999.namprd12.prod.outlook.com (10.255.239.219) by
- MN2PR12MB3261.namprd12.prod.outlook.com (20.179.84.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Thu, 6 Feb 2020 17:39:33 +0000
-Received: from MN2PR12MB3999.namprd12.prod.outlook.com
- ([fe80::a867:e7ad:695c:d87d]) by MN2PR12MB3999.namprd12.prod.outlook.com
- ([fe80::a867:e7ad:695c:d87d%6]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
- 17:39:33 +0000
-Date:   Thu, 6 Feb 2020 11:39:31 -0600
-From:   Wei Huang <wei.huang2@amd.com>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com,
-        thuth@redhat.com, drjones@redhat.com
-Subject: Re: [PATCH v4 3/3] selftests: KVM: SVM: Add vmcall test
-Message-ID: <20200206173931.GC2465308@weiserver.amd.com>
-References: <20200206104710.16077-1-eric.auger@redhat.com>
- <20200206104710.16077-4-eric.auger@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206104710.16077-4-eric.auger@redhat.com>
-X-ClientProxiedBy: DM6PR08CA0048.namprd08.prod.outlook.com
- (2603:10b6:5:1e0::22) To MN2PR12MB3999.namprd12.prod.outlook.com
- (2603:10b6:208:158::27)
-Importance: high
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U9OXcPG12UwPDGhba8aZ3jjsJVsDnAQO2tciRVW5geM=;
+        b=ngP4xCY6wacbOmTHhsdVSF55kYaEkRBzdNC8IfeIIDmlXeTpghQhsdfTcqEOact+Z8
+         45/VpoCP29aWKah4DwRmKwNs9rB5TnJQMP3eoL3o/e/NxbxkPEDV2ug2LllijRL7uCt1
+         ZrvYPmZ3ZoP9z8eHheKw7Hoz02m5DRcSGZS2iXLBYre6cHLXbEtp5o4XZ9b1qMR6HO4A
+         MG97uN8mP70pXGy9OOZwpB2DuXyMPS/xT+MTZKfRygbX/FcMTu+7/1ERA4ugH+WWpkzp
+         WpT4m6ifOEQlHgemP3J31mMROxAuru0BVPIT/PNUaWkh/TGJcn2KIMRuD1Z2goXHfkTN
+         aYyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U9OXcPG12UwPDGhba8aZ3jjsJVsDnAQO2tciRVW5geM=;
+        b=O+iPSo/7BbOuhFGUnxFQzMGXSQWVCJTg4EEixgKyYPhMMDlrLTzgbzh/RNzoBMTZZK
+         Ph5EPOmUIDkqTetXHHGyqwY1Uk0LvcNNnYjDS+eaGhsPFrOPS12NKTweN7TRVAduQod9
+         b5y8stnrldTTkA7/ZxGQjjbs1JAmeSVeDqPwp+LUjth/PrOnjxBsHs1fY9TYJHcLlH2U
+         VfpCfqq5i8GVEP+Jsxeq04QW3J89RKhBdthOdsbCPwQ1YM+1ONTsMxxhe8KH6M5IlZoI
+         eNAeCbhPC9ZocyIH+gj97vXEQqOAwrrVme/mpPfNR91d+3NQdcWvt1uWUTz8hszNFIj+
+         Ub3A==
+X-Gm-Message-State: APjAAAWUDQ6Eo66yyTuZTheiaFjsNsuPFUduVdpKb7emDzCYZCnEooj1
+        DDQXr47CTcJfw+I9jxuIHtuQPdD53nk41+UjZ08h3g==
+X-Google-Smtp-Source: APXvYqzjet/hfRBYfmZFgn0400om2VW1KPBkeTebjwpDzwK/tu31IXYR6QjG29lShPEHGwpObeWmwfJOA7LMKGTzCvE=
+X-Received: by 2002:adf:e683:: with SMTP id r3mr5226274wrm.38.1581010912572;
+ Thu, 06 Feb 2020 09:41:52 -0800 (PST)
 MIME-Version: 1.0
-Received: from localhost (165.204.77.1) by DM6PR08CA0048.namprd08.prod.outlook.com (2603:10b6:5:1e0::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.24 via Frontend Transport; Thu, 6 Feb 2020 17:39:32 +0000
-X-Priority: 1 (Highest)
-X-MSMail-Priority: High
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f2d5b1fc-aff1-483d-8a22-08d7ab2b86c1
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3261:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3261C02DEE7D996974CF6993CF1D0@MN2PR12MB3261.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:169;
-X-Forefront-PRVS: 0305463112
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(199004)(189003)(81166006)(16526019)(186003)(4326008)(6496006)(6486002)(66476007)(66556008)(66946007)(52116002)(86362001)(956004)(8936002)(33656002)(26005)(6916009)(8676002)(81156014)(5660300002)(1076003)(2906002)(478600001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3261;H:MN2PR12MB3999.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RpucU+FX8nCkPPfPmNAowlODXgI9kBRAE1DcIVAnlzyR51ZzgLNYSNXieIX1VSNv0ihUyO4tyUC0tOAs0tvr+ilZjJsPzIamPXbX3m7Y2S8LCKXx67/zHfH+1RtT8hkeIYWzzT/rj8UwPpr1exsbooT8Adm3UYPrxmtjKE0M6MgAfC1q+2QR1pfFEJFbcupNnOZ3h/2X9jJ1ixYTVufkVhX3JYydLdZCU8Ujta8YQw2BIFNFtnPvKHFzHgKvVbgYpkAIcCmJzCdZF799WhgCyd0b1s1cG4+v04/WsgqsDUKqDbLdflB5+24LMBrw7k5YD/0K6AZLX+352i1fChz5KbvYMcb7qCTM88LGOzIZjkToMlA+5Dr4TPaqK1gxKhu16PTT5uZ8OyVSTItyOk/ouRZuctSQVkTLmOsZ+htTKpwm43BhXE+U14J5xwTpqbh0
-X-MS-Exchange-AntiSpam-MessageData: G4VSbHwkKpjSRouvHGU2SKDOuLCxkA253TOPkibrDR3q9eKM7BLDAszYigAJ+5aq1BDc2WAB0rQjkPaZpUIP4eCejpgXXNmUrn/rha4Ziqbw7TE/zNpzSHyUgocdFtkdgW9YUqKwcrjqCOJNvZNA8Q==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2d5b1fc-aff1-483d-8a22-08d7ab2b86c1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 17:39:33.2466
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +Bu/gtVInOzdGxooQifpI42yj3P45ZWkx9gTxn5Dgv4ZBE5cssEX5pb8sUCoTxB1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3261
+References: <20200206165527.211350-1-smoreland@google.com> <91465612-2fb2-5985-ba45-d4d9fcf0f70c@tycho.nsa.gov>
+ <c61fc8f6-55c2-c717-5090-e535b7bdbb4f@tycho.nsa.gov>
+In-Reply-To: <c61fc8f6-55c2-c717-5090-e535b7bdbb4f@tycho.nsa.gov>
+From:   Steven Moreland <smoreland@google.com>
+Date:   Thu, 6 Feb 2020 09:41:41 -0800
+Message-ID: <CAKLm694DMH0JCpHuT4HgMd4yCNJZPFMpex8iEiRF9kRjPb0d6g@mail.gmail.com>
+Subject: Re: [PATCH] security: selinux: allow per-file labeling for bpffs
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     paul@paul-moore.com, eparis@parisplace.org, keescook@chromium.org,
+        anton@enomsg.org, Colin Cross <ccross@android.com>,
+        tony.luck@intel.com, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        "Connor O'Brien" <connoro@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06 11:47, Eric Auger wrote:
-> L2 guest calls vmcall and L1 checks the exit status does
-> correspond.
-> 
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+On Thu, Feb 6, 2020 at 9:35 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+>
+> On 2/6/20 12:21 PM, Stephen Smalley wrote:
+> > On 2/6/20 11:55 AM, Steven Moreland wrote:
+> >> From: Connor O'Brien <connoro@google.com>
+> >>
+> >> Add support for genfscon per-file labeling of bpffs files. This allows
+> >> for separate permissions for different pinned bpf objects, which may
+> >> be completely unrelated to each other.
+> >
+> > Do you want bpf fs to also support userspace labeling of files via
+> > setxattr()?  If so, you'll want to also add it to
+> > selinux_is_genfs_special_handling() as well.
+> >
 
-I verified this patch with my AMD box, both with nested=1 and nested=0. I
-also intentionally changed the assertion of exit_code to a different
-value (0x082) and the test complained about it. So the test is good.
+Android doesn't currently have this use case.
 
-# selftests: kvm: svm_vmcall_test
-# ==== Test Assertion Failure ====
-#   x86_64/svm_vmcall_test.c:64: false
-#   pid=2485656 tid=2485656 - Interrupted system call
-#      1        0x0000000000401387: main at svm_vmcall_test.c:72
-#      2        0x00007fd0978d71a2: ?? ??:0
-#      3        0x00000000004013ed: _start at ??:?
-#   Failed guest assert: vmcb->control.exit_code == SVM_EXIT_VMMCALL
-# Testing guest mode: PA-bits:ANY, VA-bits:48,  4K pages
-# Guest physical address width detected: 48
-not ok 15 selftests: kvm: svm_vmcall_test # exit=254
+> > The only caveat I would note here is that it appears that bpf fs
+> > supports rename, link, unlink, rmdir etc by userspace, which means that
+> > name-based labeling via genfscon isn't necessarily safe/stable.  See
+> > https://github.com/SELinuxProject/selinux-kernel/issues/2
+> >
 
-> 
-> ---
-> 
-> v3 -> v4:
-> - remove useless includes
-> - collected Lin's R-b
-> 
-> v2 -> v3:
-> - remove useless comment and add Vitaly's R-b
-> ---
->  tools/testing/selftests/kvm/Makefile          |  1 +
->  .../selftests/kvm/x86_64/svm_vmcall_test.c    | 79 +++++++++++++++++++
->  2 files changed, 80 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 2e770f554cae..b529d3b42c02 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
->  TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
->  TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
->  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
-> +TEST_GEN_PROGS_x86_64 += x86_64/svm_vmcall_test
->  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->  TEST_GEN_PROGS_x86_64 += dirty_log_test
->  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
-> diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-> new file mode 100644
-> index 000000000000..6d3565aab94e
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+Android restricts ownership of these files to a single process (bpfloader) and
+so this isn't a concern in our architecture. Is it a concern in general?
 
-Probably rename the file to svm_nested_vmcall_test.c. This matches with
-the naming convention of VMX's nested tests. Otherwise people might not know
-it is a nested one.
+> >> Change-Id: I03ae28d3afea70acd6dc53ebf810b34b357b6eb5
+> >
+> > Drop Change-Ids from patches submitted upstream please since they aren't
+> > meaningful outside of Android.
+> >
 
-Everything else looks good.
+Yeah, will resubmit, thanks.
 
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * svm_vmcall_test
-> + *
-> + * Copyright (C) 2020, Red Hat, Inc.
-> + *
-> + * Nested SVM testing: VMCALL
-> + */
-> +
-> +#include "test_util.h"
-> +#include "kvm_util.h"
-> +#include "processor.h"
-> +#include "svm_util.h"
-> +
-> +#define VCPU_ID		5
-> +
-> +static struct kvm_vm *vm;
-> +
-> +static inline void l2_vmcall(struct svm_test_data *svm)
-> +{
-> +	__asm__ __volatile__("vmcall");
-> +}
-> +
-> +static void l1_guest_code(struct svm_test_data *svm)
-> +{
-> +	#define L2_GUEST_STACK_SIZE 64
-> +	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-> +	struct vmcb *vmcb = svm->vmcb;
-> +
-> +	/* Prepare for L2 execution. */
-> +	generic_svm_setup(svm, l2_vmcall,
-> +			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-> +
-> +	run_guest(vmcb, svm->vmcb_gpa);
-> +
-> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-> +	GUEST_DONE();
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	vm_vaddr_t svm_gva;
-> +
-> +	nested_svm_check_supported();
-> +
-> +	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
-> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-> +
-> +	vcpu_alloc_svm(vm, &svm_gva);
-> +	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
-> +
-> +	for (;;) {
-> +		volatile struct kvm_run *run = vcpu_state(vm, VCPU_ID);
-> +		struct ucall uc;
-> +
-> +		vcpu_run(vm, VCPU_ID);
-> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-> +			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
-> +			    run->exit_reason,
-> +			    exit_reason_str(run->exit_reason));
-> +
-> +		switch (get_ucall(vm, VCPU_ID, &uc)) {
-> +		case UCALL_ABORT:
-> +			TEST_ASSERT(false, "%s",
-> +				    (const char *)uc.args[0]);
-> +			/* NOT REACHED */
-> +		case UCALL_SYNC:
-> +			break;
-> +		case UCALL_DONE:
-> +			goto done;
-> +		default:
-> +			TEST_ASSERT(false,
-> +				    "Unknown ucall 0x%x.", uc.cmd);
-> +		}
-> +	}
-> +done:
-> +	kvm_vm_free(vm);
-> +	return 0;
-> +}
+> >> Signed-off-by: Connor O'Brien <connoro@google.com>
+> >> Signed-off-by: Steven Moreland <smoreland@google.com>
+> >> ---
+> >>   security/selinux/hooks.c | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> >> index de4887742d7c..4f9396e6ce8c 100644
+> >> --- a/security/selinux/hooks.c
+> >> +++ b/security/selinux/hooks.c
+> >> @@ -872,6 +872,7 @@ static int selinux_set_mnt_opts(struct super_block
+> >> *sb,
+> >>           !strcmp(sb->s_type->name, "sysfs") ||
+> >>           !strcmp(sb->s_type->name, "pstore") ||
+> >>           !strcmp(sb->s_type->name, "binder") ||
+> >> +        !strcmp(sb->s_type->name, "bpf") ||
+> >>           !strcmp(sb->s_type->name, "cgroup") ||
+> >>           !strcmp(sb->s_type->name, "cgroup2"))
+> >>           sbsec->flags |= SE_SBGENFS;
+> >>
+>
+> Also, your patch appears to be based on an old kernel and won't apply
+> upstream; see
+> https://github.com/SELinuxProject/selinux-kernel/blob/master/README.md
+>
 
-
+Will resubmit, thanks.
