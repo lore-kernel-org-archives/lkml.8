@@ -2,96 +2,171 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAFFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93805C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610EC206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:10:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Smq2qw4W"
+	by mail.kernel.org (Postfix) with ESMTP id 737A5206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgBFLKr (ORCPT
+        id S1727571AbgBFLMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:10:47 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51857 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbgBFLKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:10:47 -0500
-Received: by mail-pj1-f66.google.com with SMTP id fa20so2350408pjb.1;
-        Thu, 06 Feb 2020 03:10:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=e5bLXiJOBz0Ase0LVV8R1Fx1vvqaJOML/0lFN7HcaZU=;
-        b=Smq2qw4WUvll9A/rFWOvbkhduTCjDjPZkIJMIxhMbv3GMECgkuSbzbLxEAdvSOoq0W
-         wbIvLDVwXZKPxum1LiaNn0rg5TgZyj+Ocb4BsxAvDIgIG6hivVMVMfVWDUHQKWVc2V4l
-         NjlWXVxx0jX4wIJQ+sStu8ghUjoF5sPGuoUpbybI2o4lhYs3CZKpx4yqKKRCaRdthA8G
-         U9tbAG8MooVaJgLv3MwIovjhRwvpEJQfq4Az9aEDWF258LQ2jJUjh8GsniWBXRfoCHXF
-         H4t4q0lo04F/y5yl6XtXaPa49jXYS/uHQKTUd4I9H83GC+sIcw9eJRxKoVTrJ0qnMyOy
-         MroA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=e5bLXiJOBz0Ase0LVV8R1Fx1vvqaJOML/0lFN7HcaZU=;
-        b=pdwVYrgWX9ssxMlSZVMYdOSOwOl91QfZlbuQjgdN4R4yrnSzCIhtcfITNJUP1NVAAw
-         68xXyRSqbS05m1Jw9Jpyiq78ZM6Vx82rxa58TYDAy7vH9r4Wkh2gABBtR3WiqjhXbTp2
-         Y9IN/MtqFEQJWYMy+Mg1y0/9KCOmCorJ/9slEMzOiwVMpEqzxAGjjucahyJGU6JWkZuG
-         VF424V35SNPagdH+6zGAX0cNEzQBT21cZ6prtR8WxH1LGYmp4MZUy3B/MYAOGbWLE0SU
-         mlNWrcrMeDLdYOwSHk6NVHBom1CH/Xz+YYsuAlDl2I5dOmCZjkvc1H1egGgNY0aROkAM
-         lYOg==
-X-Gm-Message-State: APjAAAWZbYbaBgcAxfqNX4bwWZLz4bQbhfnSRCTErJBY8cqNVMY2sguG
-        AcHSjGUIWbraU+cSdZhfQIa9u1d4
-X-Google-Smtp-Source: APXvYqyu2ymfaN1fNgVOUAtbUKxh+mZ4NtTnfPCWva5qPDk6n/O/ZNGsy0OPwmuODYQngfqaNRVIaw==
-X-Received: by 2002:a17:902:7b86:: with SMTP id w6mr3008916pll.317.1580987446579;
-        Thu, 06 Feb 2020 03:10:46 -0800 (PST)
-Received: from huyue2.ccdomain.com ([103.29.143.67])
-        by smtp.gmail.com with ESMTPSA id b4sm2996287pfd.18.2020.02.06.03.10.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Feb 2020 03:10:45 -0800 (PST)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, corbet@lwn.net
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        huyue2@yulong.com, zbestahu@163.com
-Subject: [PATCH] Documentation: zram: fix the description about orig_data_size of mm_stat
-Date:   Thu,  6 Feb 2020 19:10:31 +0800
-Message-Id: <20200206111031.9524-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1.windows.2
+        Thu, 6 Feb 2020 06:12:05 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36448 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727560AbgBFLMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:12:05 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 90BFE2624F6B1E4B9F84;
+        Thu,  6 Feb 2020 19:11:55 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Feb 2020
+ 19:11:46 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <axboe@kernel.dk>, <ming.lei@redhat.com>,
+        <chaitanya.kulkarni@wdc.com>, <damien.lemoal@wdc.com>,
+        <bvanassche@acm.org>, <dhowells@redhat.com>,
+        <asml.silence@gmail.com>, <ajay.joshi@wdc.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>,
+        <zhangxiaoxu5@huawei.com>, <luoshijie1@huawei.com>
+Subject: [PATCH] block: revert pushing the final release of request_queue to a workqueue.
+Date:   Thu, 6 Feb 2020 19:10:52 +0800
+Message-ID: <20200206111052.45356-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <zbestahu@163.com>
+syzbot is reporting use after free bug in debugfs_remove[1].
 
-orig_data_size counted the same_pages by commit 51f9f82c855d ("zram:
-count same page write as page_stored"), so let's fix it.
+This is because in request_queue, 'q->debugfs_dir' and
+'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
+blk_mq_debugfs_unregister() will remove everything inside the dir.
 
-Signed-off-by: Yue Hu <zbestahu@163.com>
+With futher investigation of the reporduce repro, the problem can be
+reporduced by following procedure:
+
+1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
+create the dir.
+2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
+3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
+will fail because the dir aready exist.
+4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
+5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
+delete the files created in step 4.
+6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
+And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
+try to release the two files created in step 4, wich are aready released
+in step 5.
+
+|thread1		  |kworker	             |thread2               |
+| ----------------------- | ------------------------ | -------------------- |
+|loop_control_ioctl       |                          |                      |
+| loop_add                |                          |                      |
+|  blk_mq_debugfs_register|                          |                      |
+|   debugfs_create_dir    |                          |                      |
+|loop_control_ioctl       |                          |                      |
+| loop_remove		  |                          |                      |
+|  blk_release_queue      |                          |                      |
+|   schedule_work         |                          |                      |
+|			  |			     |loop_control_ioctl    |
+|			  |			     | loop_add             |
+|			  |			     |  ...                 |
+|			  |			     |blk_trace_ioctl       |
+|			  |			     | __blk_trace_setup    |
+|			  |			     |   debugfs_create_file|
+|			  |__blk_release_queue       |                      |
+|			  | blk_mq_debugfs_unregister|                      |
+|			  |  debugfs_remove_recursive|                      |
+|			  |			     |loop_control_ioctl    |
+|			  |			     | loop_remove          |
+|			  |			     |  ...                 |
+|			  |__blk_release_queue       |                      |
+|			  | blk_trace_shutdown       |                      |
+|			  |  debugfs_remove          |                      |
+
+commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
+final release of request_queue to a workqueue, witch is not necessary
+since commit 1e9364283764 ("blk-sysfs: Rework documention of
+__blk_release_queue").
+
+[1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
+References: CVE-2019-19770
+Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
+Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
- Documentation/admin-guide/blockdev/zram.rst | 2 --
- 1 file changed, 2 deletions(-)
+ block/blk-sysfs.c      | 18 +++++-------------
+ include/linux/blkdev.h |  2 --
+ 2 files changed, 5 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
-index 27c77d853028..a6fd1f9b5faf 100644
---- a/Documentation/admin-guide/blockdev/zram.rst
-+++ b/Documentation/admin-guide/blockdev/zram.rst
-@@ -251,8 +251,6 @@ line of text and contains the following stats separated by whitespace:
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index fca9b158f4a0..3f448292099d 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -862,8 +862,8 @@ static void blk_exit_queue(struct request_queue *q)
  
-  ================ =============================================================
-  orig_data_size   uncompressed size of data stored in this disk.
--		  This excludes same-element-filled pages (same_pages) since
--		  no memory is allocated for them.
-                   Unit: bytes
-  compr_data_size  compressed size of data stored in this disk
-  mem_used_total   the amount of memory allocated for this disk. This
+ 
+ /**
+- * __blk_release_queue - release a request queue
+- * @work: pointer to the release_work member of the request queue to be released
++ * blk_release_queue - release a request queue
++ * @@kobj:    the kobj belonging to the request queue to be released
+  *
+  * Description:
+  *     This function is called when a block device is being unregistered. The
+@@ -873,9 +873,10 @@ static void blk_exit_queue(struct request_queue *q)
+  *     of the request queue reaches zero, blk_release_queue is called to release
+  *     all allocated resources of the request queue.
+  */
+-static void __blk_release_queue(struct work_struct *work)
++static void blk_release_queue(struct kobject *kobj)
+ {
+-	struct request_queue *q = container_of(work, typeof(*q), release_work);
++	struct request_queue *q =
++		container_of(kobj, struct request_queue, kobj);
+ 
+ 	if (test_bit(QUEUE_FLAG_POLL_STATS, &q->queue_flags))
+ 		blk_stat_remove_callback(q, q->poll_cb);
+@@ -904,15 +905,6 @@ static void __blk_release_queue(struct work_struct *work)
+ 	call_rcu(&q->rcu_head, blk_free_queue_rcu);
+ }
+ 
+-static void blk_release_queue(struct kobject *kobj)
+-{
+-	struct request_queue *q =
+-		container_of(kobj, struct request_queue, kobj);
+-
+-	INIT_WORK(&q->release_work, __blk_release_queue);
+-	schedule_work(&q->release_work);
+-}
+-
+ static const struct sysfs_ops queue_sysfs_ops = {
+ 	.show	= queue_attr_show,
+ 	.store	= queue_attr_store,
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 04cfa798a365..dff4d032c78a 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -580,8 +580,6 @@ struct request_queue {
+ 
+ 	size_t			cmd_size;
+ 
+-	struct work_struct	release_work;
+-
+ #define BLK_MAX_WRITE_HINTS	5
+ 	u64			write_hints[BLK_MAX_WRITE_HINTS];
+ };
 -- 
-2.11.0
+2.17.2
 
