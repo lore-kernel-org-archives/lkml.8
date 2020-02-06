@@ -2,100 +2,178 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB36C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBF7C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215C121775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB99421775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581025454;
-	bh=XEeMRGFS8+v5zfWzgtUZzsIQNENQlOeHplIsoBYYwAU=;
+	s=default; t=1581025797;
+	bh=PNLeOa/B2GLhZdzCuPeHzTPi1Ot/5D1FhqRvKDQafoY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bTYy9f0GGJFc9BVm3aC0BUUrv/beJFMPK/sxZHSdsUxQJC9AAj15gJgGqZS2a4fCs
-	 leRS2AF3IRCuDXZc/es2ZrjJkNxq+ET6+ZQhDWd7wiX0iLD183DIVoqK3rl95XwQSK
-	 jwWtMY7A6siFYpnNYsuHkvTZuDNyIKK6mscKT8Lo=
+	b=cpCFSPjL8j/0LUY/uZRcs3jNo+rNvW6xjnlkHtuHvXhDRhk+DMepWDqwc0C4ZzcU8
+	 6E8cIJxJWeYMu4wJnNKq/aZPwmsymg+fy/aG+tV+szTGFJUxgJ72urbgtJRF1Nr2Oz
+	 4jIwBoS3RzRByh79P2TmNmWfMUXaAH6dOAo5TNRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgBFVoN (ORCPT
+        id S1727557AbgBFVt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:44:13 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42504 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbgBFVoN (ORCPT
+        Thu, 6 Feb 2020 16:49:56 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35937 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFVt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:44:13 -0500
-Received: by mail-pl1-f193.google.com with SMTP id e8so90304plt.9;
-        Thu, 06 Feb 2020 13:44:11 -0800 (PST)
+        Thu, 6 Feb 2020 16:49:56 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so12795pjb.1;
+        Thu, 06 Feb 2020 13:49:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nCZ9ayqGFGGOYCf7mf3ecb4tbvZDda1tYkdu0cB2PR4=;
-        b=U4giyh4y0NAhxuyDtd+A9nir0lC/F2p9rdV3VpM1LFY6Jp+EiXSrd3W0STUI63nIEL
-         tl6sQF2CmpkihNdl+51XXjLlk3PAzpT4P1HP+O5EpWrgLj5MqnRjzssIPRVRKtoFS3V1
-         24OGKscdWR6lXArp9QwA3acuqsWEJrIFwTkjna4pHiE3IisuGvSISSGw0xffgi8BrKSl
-         E0aBIo1YdA4fH4tChU0wXfJ1EEqPKBKVPEsPYsqdXZDwLRNref0HOC85nNkOwgpfgRJD
-         fC5/w009hEs9hd6d+cTsDsIsSmK9GvXJY5KUv4delQub3V6QiVRxoqB8zYYC8ytAesW5
-         fTjQ==
-X-Gm-Message-State: APjAAAVxltD438GEjilld/m6b/3fj8GW3+jX7h7C4KOBwibPUP5FaaTu
-        IDN64M/be7KDCtYIJhvZAQ==
-X-Google-Smtp-Source: APXvYqzPnEQi9AlKJV7dkCP3bX1PSsZSNp5hyLTeKDDKyOAazqddsO1VbrfRdnm25lzXK+TMcPs0QQ==
-X-Received: by 2002:a17:902:8d83:: with SMTP id v3mr6259832plo.282.1581025451046;
-        Thu, 06 Feb 2020 13:44:11 -0800 (PST)
+        bh=rLHr9RkGPW2j2XQRzleEq5XgRf6xszSSLPZxWj4wwdQ=;
+        b=TNfKDmob8zK8gBVpftfEL0XJhSAS9qQmRvggNoWraApLqX/8e20VDHhZeD/RGC6cb9
+         bEcu0c22U2RAF0dYIN+vk+4VcUKlq+Wcqfx0h+SA64vD3B7aigXx7b7KxcIsCwPqEe5P
+         ehmSuk5cQK6D3NqWqmMZmG1AFyAMGsygGeluz0tyqf4riU8qV3GgyqMoL8Shdvn5hEd+
+         TLJweBslDFF/shjzqFB+xaCe2xFE8/NwYyFMwPEBWCoE9IZ5+/6qztg21Pz5fsjhxF0z
+         Kje8vGJaeV5rX4DSva5kWMBiznxbfgZHHcNAV19TbQDmIHs1ta6S/+4AOg7LOI+4RuO6
+         LMjA==
+X-Gm-Message-State: APjAAAX9rniwNUEVNwzFruTD0vsfmKbhqEkPRZ3Do8jLWPK+EpNFOGgJ
+        4OrgBVZWQmmcWKszdk09bQ==
+X-Google-Smtp-Source: APXvYqwkwapEilpTs36vHDOSSgYgt04Nnz3fqFepzi44J73hw88iaNQ98Bk3mxxDhgjhBse4LxyTew==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr5937233plv.297.1581025795514;
+        Thu, 06 Feb 2020 13:49:55 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id a18sm340710pfl.138.2020.02.06.13.44.09
+        by smtp.gmail.com with ESMTPSA id 84sm350093pgg.90.2020.02.06.13.49.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:44:10 -0800 (PST)
-Received: (nullmailer pid 30200 invoked by uid 1000);
-        Thu, 06 Feb 2020 21:44:08 -0000
-Date:   Thu, 6 Feb 2020 14:44:08 -0700
+        Thu, 06 Feb 2020 13:49:55 -0800 (PST)
+Received: (nullmailer pid 7220 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:49:53 -0000
+Date:   Thu, 6 Feb 2020 14:49:53 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
-        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 3/6] dt-bindings: soc: qcom: Add RSC power domain
- specifier
-Message-ID: <20200206214408.GA30136@bogus>
-References: <1580905572-22712-1-git-send-email-mkshah@codeaurora.org>
- <1580905572-22712-4-git-send-email-mkshah@codeaurora.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 3/6] dt-binding: tegra: Add VI and CSI bindings
+Message-ID: <20200206214953.GA4995@bogus>
+References: <1580937806-17376-1-git-send-email-skomatineni@nvidia.com>
+ <1580937806-17376-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580905572-22712-4-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1580937806-17376-4-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  5 Feb 2020 17:56:09 +0530, Maulik Shah wrote:
-> In addition to transmitting resource state requests to the remote
-> processor, the RSC is responsible for powering off/lowering the
-> requirements from CPUs subsystem for the associated hardware like
-> buses, clocks, and regulators when all CPUs and cluster is powered down.
+On Wed, Feb 05, 2020 at 01:23:23PM -0800, Sowjanya Komatineni wrote:
+> Tegra contains VI controller which can support up to 6 MIPI CSI
+> camera sensors.
 > 
-> The power domain is configured to a low power state and when all the
-> CPUs are powered down, the RSC can lower resource state requirements
-> and power down the rails that power the CPUs.
+> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+> VI channel and can capture from an external camera sensor or
+> from built-in test pattern generator.
 > 
-> Add PM domain specifier property for RSC controller.
+> This patch adds dt-bindings for Tegra VI and CSI.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+>  1 file changed, 47 insertions(+), 8 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thierry is working on converting this to schema, so you'll need to 
+coordinate.
+
+Rob
+
+> 
+> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> index 9999255ac5b6..3d0ed540a646 100644
+> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> @@ -40,14 +40,24 @@ of the following host1x client modules:
+>  
+>    Required properties:
+>    - compatible: "nvidia,tegra<chip>-vi"
+> -  - reg: Physical base address and length of the controller's registers.
+> +  - reg: Physical base address and length of the controller registers.
+>    - interrupts: The interrupt outputs from the controller.
+> -  - clocks: Must contain one entry, for the module clock.
+> +  - clocks: Must contain an entry for the module clock "vi"
+>      See ../clocks/clock-bindings.txt for details.
+>    - resets: Must contain an entry for each entry in reset-names.
+>      See ../reset/reset.txt for details.
+> -  - reset-names: Must include the following entries:
+> -    - vi
+> +  - reset-names: Must include the entry "vi"
+> +
+> +  Tegra210 has CSI part of VI sharing same host interface and register
+> +  space. So, VI device node should have CSI child node.
+> +
+> +  - csi: mipi csi interface to vi
+> +
+> +    Required properties:
+> +    - compatible: "nvidia,tegra<chip>-csi"
+> +    - reg: Physical base address and length of the controller registers.
+> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+> +      See ../clocks/clock-bindings.txt for details.
+>  
+>  - epp: encoder pre-processor
+>  
+> @@ -310,12 +320,41 @@ Example:
+>  		};
+>  
+>  		vi {
+> -			compatible = "nvidia,tegra20-vi";
+> -			reg = <0x54080000 0x00040000>;
+> +			compatible = "nvidia,tegra210-vi";
+> +			reg = <0x0 0x54080000 0x0 0x700>;
+>  			interrupts = <0 69 0x04>;
+> -			clocks = <&tegra_car TEGRA20_CLK_VI>;
+> -			resets = <&tegra_car 100>;
+> +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+> +			clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			clock-names = "vi";
+> +			resets = <&tegra_car 20>;
+>  			reset-names = "vi";
+> +
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +
+> +			ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
+> +
+> +			csi@0x54080838 {
+> +				compatible = "nvidia,tegra210-csi";
+> +				reg = <0x0 0x54080838 0x0 0x2000>;
+> +				status = "disabled";
+> +				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+> +						  <&tegra_car TEGRA210_CLK_CILCD>,
+> +						  <&tegra_car TEGRA210_CLK_CILE>;
+> +				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>;
+> +				assigned-clock-rates = <102000000>,
+> +						       <102000000>,
+> +						       <102000000>;
+> +				clocks = <&tegra_car TEGRA210_CLK_CSI>,
+> +					 <&tegra_car TEGRA210_CLK_CILAB>,
+> +					 <&tegra_car TEGRA210_CLK_CILCD>,
+> +					 <&tegra_car TEGRA210_CLK_CILE>;
+> +				clock-names = "csi", "cilab", "cilcd", "cile";
+> +			};
+> +
+>  		};
+>  
+>  		epp {
+> -- 
+> 2.7.4
+> 
