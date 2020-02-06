@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DADAC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D45C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A10D20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D444D20720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBFC7h (ORCPT
+        id S1727794AbgBFC7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 21:59:37 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39044 "EHLO huawei.com"
+        Wed, 5 Feb 2020 21:59:40 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38866 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727768AbgBFC7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 21:59:37 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 52DF747A5013EB16FEA8;
+        id S1727770AbgBFC7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 21:59:38 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2004A7B2BCFD0EE927FF;
         Thu,  6 Feb 2020 10:59:35 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
  (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Feb 2020
- 10:59:27 +0800
+ 10:59:28 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -33,9 +33,9 @@ To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
 CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
         Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v3 2/6] powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
-Date:   Thu, 6 Feb 2020 10:58:21 +0800
-Message-ID: <20200206025825.22934-3-yanaijie@huawei.com>
+Subject: [PATCH v3 4/6] powerpc/fsl_booke/64: do not clear the BSS for the second pass
+Date:   Thu, 6 Feb 2020 10:58:23 +0800
+Message-ID: <20200206025825.22934-5-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200206025825.22934-1-yanaijie@huawei.com>
 References: <20200206025825.22934-1-yanaijie@huawei.com>
@@ -48,9 +48,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like the 32bit code, we introduce reloc_kernel_entry() helper to prepare
-for the KASLR 64bit version. And move the C declaration of this function
-out of CONFIG_PPC32 and use long instead of int for the parameter 'addr'.
+The BSS section has already cleared out in the first pass. No need to
+clear it again. This can save some time when booting with KASLR
+enabled.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Scott Wood <oss@buserror.net>
@@ -62,47 +62,27 @@ Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
 ---
- arch/powerpc/kernel/exceptions-64e.S | 13 +++++++++++++
- arch/powerpc/mm/mmu_decl.h           |  3 ++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/head_64.S | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-index e4076e3c072d..1b9b174bee86 100644
---- a/arch/powerpc/kernel/exceptions-64e.S
-+++ b/arch/powerpc/kernel/exceptions-64e.S
-@@ -1679,3 +1679,16 @@ _GLOBAL(setup_ehv_ivors)
- _GLOBAL(setup_lrat_ivor)
- 	SET_IVOR(42, 0x340) /* LRAT Error */
- 	blr
-+
-+/*
-+ * Return to the start of the relocated kernel and run again
-+ * r3 - virtual address of fdt
-+ * r4 - entry of the kernel
-+ */
-+_GLOBAL(reloc_kernel_entry)
-+	mfmsr	r7
-+	rlwinm	r7, r7, 0, ~(MSR_IS | MSR_DS)
-+
-+	mtspr	SPRN_SRR0,r4
-+	mtspr	SPRN_SRR1,r7
-+	rfi
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index 8e99649c24fc..3e1c85c7d10b 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -140,9 +140,10 @@ extern void adjust_total_lowmem(void);
- extern int switch_to_as1(void);
- extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
- void create_kaslr_tlb_entry(int entry, unsigned long virt, phys_addr_t phys);
--void reloc_kernel_entry(void *fdt, int addr);
- extern int is_second_reloc;
- #endif
-+
-+void reloc_kernel_entry(void *fdt, long addr);
- extern void loadcam_entry(unsigned int index);
- extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 744624140fb8..8c644e7c3eaf 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -914,6 +914,13 @@ start_here_multiplatform:
+ 	bl      relative_toc
+ 	tovirt(r2,r2)
  
++	/* Do not clear the BSS for the second pass if randomized */
++	LOAD_REG_ADDR(r3, kernstart_virt_addr)
++	lwz     r3,0(r3)
++	LOAD_REG_IMMEDIATE(r4, KERNELBASE)
++	cmpw	r3,r4
++	bne	4f
++
+ 	/* Clear out the BSS. It may have been done in prom_init,
+ 	 * already but that's irrelevant since prom_init will soon
+ 	 * be detached from the kernel completely. Besides, we need
 -- 
 2.17.2
 
