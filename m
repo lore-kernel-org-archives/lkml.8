@@ -2,88 +2,83 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FE3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA1FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0533220838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5C520702
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:14:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="PAu6LbFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgBFEOB (ORCPT
+        id S1727777AbgBFEOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 23:14:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbgBFEOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 23:14:00 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9B620702;
-        Thu,  6 Feb 2020 04:13:57 +0000 (UTC)
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Subject: [git pull] m68knommu changes for v5.6
-To:     torvalds@linux-foundation.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux/m68k <linux-m68k@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Message-ID: <70537bf1-51e2-e668-4d82-7e4ab73abbca@linux-m68k.org>
-Date:   Thu, 6 Feb 2020 14:13:50 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 5 Feb 2020 23:14:25 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37215 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727731AbgBFEOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 23:14:25 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d3so4249513otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 20:14:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4YK4pLNzComAb4RRWalE9dRpSr6kTwplmClgTn0UWb4=;
+        b=PAu6LbFgkInaD/I3fnt77LxSZJFmHkyKDvDWEI5UyTUgY4uuCecKZ5XYEHCcYTGNvC
+         IhqmrP40a27uFYDl0Jz0ux8ycH5Rcfu4JQtztjYSwvsbQwNBagxztJwKr4B0asvQ0aie
+         mLkpDgi2UxItCv2DzBnCMjpPTdYFyJCo3xPPBTkItapDE3C2obwsQg3x1X+mhr7HPzkr
+         KRvCSYglf5a++dFraoZDYbL+qKevobyDPYtYLh5jk36+1/l+SqAK4nrW2OfiOg+iib/o
+         pgHViExC6kXu6hGg5bH6018gdDWdtM9+BwXRCMAuhqNNSK5H1jZYU6ctfO7iOW69GAZJ
+         wOWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4YK4pLNzComAb4RRWalE9dRpSr6kTwplmClgTn0UWb4=;
+        b=Q4n1dJtlnQOEG/LwKPoXCo4r4zck8ur0uAygzOELwUOkdCV9jUHqi3kyEhc4vfp9CC
+         WhOjFDV8lFgOZG0sJPgpRUUWtxv/tIK+tjljWZ/TldPisFuuznLwXjSlAxBlKVDG/pQW
+         DjrILv6lFwf1qQ59ABbvpL/sO05Nu3fJWPmKLAdpD9gbmal9WCbOYqoVdU6L1waCkQcX
+         yBzMJ3Ijla49rSrowm6be2n8o7ZoHkgEDvqY0sXg+l35h08ndIXkjraDJq5MwmLHaJ32
+         lN7mqSOK3IJVo1S/0V08g3ZuwIFxuv30YOuvi918BGmI/Lp1H0/pQT6mAWArOaftI2pJ
+         3M7w==
+X-Gm-Message-State: APjAAAUji2jhXClaB+VFtZQqvXK2Olz3b78Edx3T7bpn1VaVTl8DaMDd
+        no7AOCVp918TQ+dwvGi5+Ws+KQXiG21Qq1Lo3YJMcNyj
+X-Google-Smtp-Source: APXvYqxI4mUzUsqZ0Sa+xPDkLkdtxf71TqFdTm7+a8LDEGYPR1/1v8JMu9QEFrR9x3MOi2R+O/ZUnkHrFPijAeBuNbU=
+X-Received: by 2002:a9d:6f11:: with SMTP id n17mr28615291otq.126.1580962464419;
+ Wed, 05 Feb 2020 20:14:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <ca53823fc5d25c0be32ad937d0207a0589c08643.camel@perches.com>
+In-Reply-To: <ca53823fc5d25c0be32ad937d0207a0589c08643.camel@perches.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 5 Feb 2020 20:14:13 -0800
+Message-ID: <CAPcyv4g65_Jxv3GUHsTtH6KmR=AYbx4s+TAC+tLE8YeLNiH8pw@mail.gmail.com>
+Subject: Re: [PATCH] get_maintainer: Remove uses of P: for maintainer name
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 5, 2020 at 7:23 PM Joe Perches <joe@perches.com> wrote:
+>
+> commit 1ca84ed6425f ("MAINTAINERS: Reclaim the P: tag for
+> Maintainer Entry Profile") changed the use of the "P:" tag
+> from "Person" to "Profile (ie: special subsystem coding styles
+> and characteristics)"
+>
+> Change how get_maintainer.pl parses the "P:" tag to match.
 
-Hi Linus,
+Looks ok to me:
 
-Can you please pull the m68knommu git tree, for-next branch.
+Acked-by: Dan Williams <dan.j.william@intel.com>
 
-A couple of changes. One to remove old CONFIG options from the
-m68knommu defconfig files. Another to fix a warning in the m68k
-non-MMU get_user() macro.
-
-Regards
-Greg
-
-
-
-The following changes since commit def9d2780727cec3313ed3522d0123158d87224d:
-
-   Linux 5.5-rc7 (2020-01-19 16:02:49 -0800)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git for-next
-
-for you to fetch changes up to 8044aad70a1fbd66376cdb2a13e536db9dd6c132:
-
-   m68knommu: fix memcpy() out of bounds warning in get_user() (2020-02-03 14:43:35 +1000)
-
-----------------------------------------------------------------
-Greg Ungerer (1):
-       m68knommu: fix memcpy() out of bounds warning in get_user()
-
-Krzysztof Kozlowski (1):
-       m68k: configs: Cleanup old Kconfig IO scheduler options
-
-  arch/m68k/configs/amcore_defconfig   |  1 -
-  arch/m68k/configs/m5208evb_defconfig |  2 --
-  arch/m68k/configs/m5249evb_defconfig |  2 --
-  arch/m68k/configs/m5272c3_defconfig  |  2 --
-  arch/m68k/configs/m5275evb_defconfig |  2 --
-  arch/m68k/configs/m5307c3_defconfig  |  2 --
-  arch/m68k/configs/m5407c3_defconfig  |  2 --
-  arch/m68k/configs/m5475evb_defconfig |  2 --
-  arch/m68k/include/asm/uaccess_no.h   | 19 +++++++++++--------
-  9 files changed, 11 insertions(+), 23 deletions(-)
+...although I was not able to trigger any unexpected results running
+against drivers/nvdimm/.
