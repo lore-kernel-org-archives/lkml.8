@@ -2,103 +2,126 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF39C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F6DC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6F9218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:32:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AqdlXmru"
+	by mail.kernel.org (Postfix) with ESMTP id 7B156222D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbgBFPcN (ORCPT
+        id S1727517AbgBFPeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:32:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55245 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727279AbgBFPcN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:32:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581003132;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JkkJGmIOTY9azTSJOAyBmE/D2+0ai1ViZFBb2hElwXY=;
-        b=AqdlXmrukIN1dSjBGLgl0WWXYapV9ibPs0KMy28+CHasnKPW+uJQj0YBECl5fnxZ/8uZVA
-        5WiBYCIjpxIq04f1TF4Laa9aubDLrF0l1Ac75gCxYIo8S2L4bVQ0UD8Fz3m/qZ+8Tk0sX6
-        Eo11lJ8+tzGckpkTGCGqiBk2ibbFqQw=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-E9hVrmbXN-GZIrNez2Jw6A-1; Thu, 06 Feb 2020 10:32:11 -0500
-X-MC-Unique: E9hVrmbXN-GZIrNez2Jw6A-1
-Received: by mail-oi1-f198.google.com with SMTP id 3so2981183oij.21
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 07:32:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JkkJGmIOTY9azTSJOAyBmE/D2+0ai1ViZFBb2hElwXY=;
-        b=rW/gyo32fI/NZFuV6fu3bZN+QVucX6eCm4lAnktQ8Nod86/4bndAPKMll+TlozCg6I
-         8+zweOMCwxzVuvQ77OFA6LnOtHan9G1H5wk9rrASGaxS4rNUFs0E228hNPA+uSG0DUQw
-         zFjNbAaHn7ZBQyxcUMUgmWqpj03OszKGuj+GCT7Rt8aLvB90iwgNNtXJiefglzfzc9SL
-         R6hGhCb51T1GRbhE1kHqNByz/xsRFvR5UAU7vjbPuYrmqwjCBzcvcb5lOQweX9EAurYU
-         c2aZVWJdgvjJFR3zZLNLHc/6GpFMUrigWel3a4TkBO38BqPNSgO8Gd6zWm5SB/MfVkxr
-         KoMA==
-X-Gm-Message-State: APjAAAW+bbVlgQ996Jy5p4NF+/me6P6HtF/5B1pwkenSOtrz+Xoxcws/
-        0HJ7cSIfO+AUrY++mfNvx4iKXdylH0gLTx6Kmu7HIiXgcpmoyVaVMSYy7cDkrG0T1E/1SSBsvuU
-        K6LSxwgc/Pw7Ww3x81CQh+gmnFtxqNm+by0PCDw4Z
-X-Received: by 2002:aca:48d0:: with SMTP id v199mr7121514oia.10.1581003130605;
-        Thu, 06 Feb 2020 07:32:10 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz63b3BCvjFz9bZiKofXwlA69pEYM2GvuAIssv4co0has6j21zg9p8DSROFpl+t1g3/AiFAiFF1ObcmOqpV8Jw=
-X-Received: by 2002:aca:48d0:: with SMTP id v199mr7121485oia.10.1581003130363;
- Thu, 06 Feb 2020 07:32:10 -0800 (PST)
+        Thu, 6 Feb 2020 10:34:13 -0500
+Received: from mga07.intel.com ([134.134.136.100]:61661 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgBFPeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:34:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 07:34:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="430535622"
+Received: from dgbrowne-mobl.ger.corp.intel.com (HELO localhost) ([10.252.14.106])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Feb 2020 07:34:07 -0800
+Date:   Thu, 6 Feb 2020 17:34:06 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        Serge Ayoun <serge.ayoun@intel.com>
+Subject: Re: [PATCH v25 07/21] x86/sgx: Enumerate and track EPC sections
+Message-ID: <20200206153406.GA9694@linux.intel.com>
+References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
+ <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
+ <20200205195700.GJ4877@linux.intel.com>
+ <20200205231147.GD28111@linux.intel.com>
 MIME-Version: 1.0
-References: <20200114161225.309792-1-hch@lst.de> <20200114161225.309792-6-hch@lst.de>
-In-Reply-To: <20200114161225.309792-6-hch@lst.de>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 6 Feb 2020 16:31:58 +0100
-Message-ID: <CAHc6FU45m59PjBWWO=F740_jyOtKSwc__XfYhP84WkpK0uqcWQ@mail.gmail.com>
-Subject: Re: [Cluster-devel] [PATCH 05/12] gfs2: fix O_SYNC write handling
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        cluster-devel <cluster-devel@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205231147.GD28111@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Thu, Feb 06, 2020 at 01:11:47AM +0200, Jarkko Sakkinen wrote:
+> On Wed, Feb 05, 2020 at 11:57:00AM -0800, Sean Christopherson wrote:
+> > > +		ret = __eremove(sgx_epc_addr(page));
+> > > +		if (!WARN_ON_ONCE(ret)) {
+> > 
+> > Sadly, this WARN can fire after kexec() on systems with multiple EPC
+> > sections if the SECS has child pages in another section.
+> 
+> What causes this?
 
-thanks for this patch, and sorry for taking so long to react.
+Ah obviously this can happen given that the final loop is done per
+section before other sections are processed.
 
-On Tue, Jan 14, 2020 at 5:54 PM Christoph Hellwig <hch@lst.de> wrote:
-> Don't ignore the return value from generic_write_sync for the direct to
-> buffered I/O callback case when written is non-zero.  Also don't bother
-> to call generic_write_sync for the pure direct I/O case, as iomap_dio_rw
-> already takes care of that.
+Lets fix the code first rather than change the approach based on code
+that has an underlying regression. Performance can be fine tuned even
+after upstreaming. Especially if the performance increases complexity it
+is better to work that after there is a mainline code base.
 
-I like the idea, but the patch as is doesn't quite work: iomap_dio_rw
-already bumps iocb->ki_pos, so we end up with the wrong value by
-adding the (direct + buffered) write size again.
-We'd probably also be better served by replacing
-filemap_write_and_wait_range with generic_write_sync + IOCB_DSYNC in
-the buffered fallback case. I'll send an update that you'll hopefully
-like.
+Given that the loop is done in separate thread anyway, I'm not sure how
+bad performance issue there is anyway. Performance based changes should
+be always done based on a workloads and statistics.
 
-Andreas
+I think you'd fix this issue by first changing the functions as:
 
+static void sgx_sanitize_section(struct sgx_epc_section *section)
+{
+	struct sgx_epc_page *page, *tmp;
+	LIST_HEAD(secs_list);
+	int ret;
+
+	while (!list_empty(&section->unsanitized_page_list)) {
+		if (kthread_should_stop())
+			return;
+
+		spin_lock(&section->lock);
+
+		page = list_first_entry(&section->unsanitized_page_list,
+					struct sgx_epc_page, list);
+
+		ret = __eremove(sgx_epc_addr(page));
+		if (!ret)
+			list_move(&page->list, &section->page_list);
+		else
+			list_move_tail(&page->list, &secs_list);
+
+		spin_unlock(&section->lock);
+
+		cond_resched();
+	}
+
+	list_move_tail(&secs_list, &section->unsanitized_list);
+}
+
+Then in ksgxswapd() you'd
+
+for (i = 0; i < sgx_nr_epc_sections; i++)
+	sgx_sanitize_section(&sgx_epc_sections[i]);
+
+/* 2nd round for SECS */
+for (i = 0; i < sgx_nr_epc_sections; i++)
+	sgx_sanitize_section(&sgx_epc_sections[i]);
+
+Finally you'd:
+
+for (i = 0; i < sgx_nr_epc_sections; i++)
+	WARN_ONCE(!list_empty(&sgx_epc_sections[i]->unsanitized_list));
+
+/Jarkko
