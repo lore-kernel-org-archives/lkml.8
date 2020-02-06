@@ -2,181 +2,205 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5276BC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8C3C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273EA217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA90214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:26:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D63fMXu7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGtDmfka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgBFM01 (ORCPT
+        id S1728079AbgBFM0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:26:27 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38312 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgBFM01 (ORCPT
+        Thu, 6 Feb 2020 07:26:53 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41458 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgBFM0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:26:27 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so5288978oth.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 04:26:26 -0800 (PST)
+        Thu, 6 Feb 2020 07:26:52 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c26so5709262eds.8;
+        Thu, 06 Feb 2020 04:26:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NOY8bS0asHpD+z721OXmKaafugnpGdhKSAQgjErq5zs=;
-        b=D63fMXu7FJZcwQhCNxkpNOfFGC8DypWspcBegFsiI4VcZrFqIotWhCwDMPATuBJiaR
-         0r3jy3H4r1OuKl9TP/+9jyIGTeAMZImp8EiuyJVDRquG6f8GWM5vL3Aj2ekMsgH52lKL
-         DQ/0fYPfdM1hK/ifrIFdCc6Yi/9yUC+XTDLto=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TPeReHZ/YnjriyOJ8Sth6S24xjy53mXcSx71JSIWQ7s=;
+        b=BGtDmfka/MVNX9OjZh21QaD5yTgdNowi20aPryBLrJLeVhTjYQrVc0TeskJsZXW1Lt
+         l2P7gilfRPI1r8/MXsnR4XnoS+3KDb9wu9/9yL1JHX4wRvQT2C59u4fLwnxeuR4q8LnO
+         4+wwLPRMGfL4SIrvps3d11pJlH30vGJNHcfsc69AiQMs7P2E4zivq2Z1jjy8U8WKp/I/
+         8vzgdfUw52YM5mWu9lH6MQV1U19jEikHtv4ysuwcr+2sue3Fy9AwTBsKM9h7H2wQRB6Y
+         1BiAzVY7IT7EuPDTx9qJwKrkAEAYFQpj/yt+WW6iwwG3IZq6sfgMP3qf8dLfoEl3Opjk
+         8nOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NOY8bS0asHpD+z721OXmKaafugnpGdhKSAQgjErq5zs=;
-        b=FER23FHH1lrfuDi7SSS7QkpkesXk0KI36VO9a/yuijRkMu4mJirxPrPMmmVxTfUZS6
-         1eLa+aDjcq5tXqanHLwpTRGkdk0taXf3/fFMDIvqPlRP0W0TQ7rpAIXTrFpK7H76XiqR
-         OER0dGUZCCekQxs/HRd8SGYb1sZdKEuddR+dC2q29o/jmvxsv7Nfd30nRvZ9ZVw5ea1D
-         J4XPRjhaab2om416eDXi+Znn1COy1tnfZuQqleXLZaG7Ine6BiJjkFWu+o6o7sg7WXV/
-         1KWZcg/NsMfe+k2Tb7EMPF3rVaJW4WAPVsK/vXIlD7yDNSN2zMR4yV0yQ+PWShr7ehFz
-         hffQ==
-X-Gm-Message-State: APjAAAUtYFbfZ7zrYARPZtcvohQ6+49xTaNUYy6qewbJ+0Go8Ef/PY4J
-        3gEVDE56QI/KbbkRNCKW7UJagw==
-X-Google-Smtp-Source: APXvYqwEZlN/eh3Ye+I2c+zEIeVmfOEkt+iEawFFgaC+cF+h2RqeLLo4LxogwNsdAQFa4PrpwOMMiQ==
-X-Received: by 2002:a9d:7357:: with SMTP id l23mr28943725otk.10.1580991985931;
-        Thu, 06 Feb 2020 04:26:25 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g5sm1040821otp.10.2020.02.06.04.26.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 04:26:24 -0800 (PST)
-Date:   Thu, 6 Feb 2020 04:26:23 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function
- sections
-Message-ID: <202002060408.84005CEFFD@keescook>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-7-kristen@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TPeReHZ/YnjriyOJ8Sth6S24xjy53mXcSx71JSIWQ7s=;
+        b=aYnvty6E4GPhVF3s5/YfEB1oT+re8P3VKoDEC8aaKKMSi+LaEHcdKA1azi2pyyxeHM
+         WfQpZwlPKa1pfLaz9fHLYICdQ1DFAFw9wKQLhvji0heHlBnS3fIDs5GDDKLk2McTElq5
+         oJqc5MFoTzJMyiw1k8UOp7HPLCluMq6bwB5LyhclQ3KtT4JAacj6gk8CvOIIJeyTkHe3
+         falvQGQbnNyTvd87zgFe7BpbnczqMf9UUufFyFzmVqEmmwfvUkRqAmqe0E7ccI1m0MA8
+         dIqOvuYhNQi/s/AI90cZhN1Tlqo0JXB+KMJKzwdb/ScW7XNtHu5TErITK65mhavjw7vb
+         HtQQ==
+X-Gm-Message-State: APjAAAVZ4e4D1bZMW9QzO1pvSHvdDlBY6gZtPVByuESjBccV3bqcz197
+        RCvhfCZi8h/NUgvhiSdPtmiNwlSiIj1r2CeAUAQ=
+X-Google-Smtp-Source: APXvYqzV7bgwJCvtBNZ0J+QRHZFkWN+4h0Dp34I5qe6LC52nzIQnHsbndnwgh+v/1qgXFS6owuu9kYB6RBVMh8j+ivE=
+X-Received: by 2002:aa7:d9c6:: with SMTP id v6mr2835147eds.107.1580992010730;
+ Thu, 06 Feb 2020 04:26:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205223950.1212394-7-kristen@linux.intel.com>
+References: <20190918094323.17515-1-e.velu@criteo.com> <20191127150729.860625-1-e.velu@criteo.com>
+ <20191127150729.860625-2-e.velu@criteo.com> <20200206132430.6082fa87@endymion>
+In-Reply-To: <20200206132430.6082fa87@endymion>
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+Date:   Thu, 6 Feb 2020 13:25:16 +0100
+Message-ID: <CAL2JzuzbU4ZcURzxWMrBK-eysb0pWYWfY_mp4raV5SpAJEJeYg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] firmware/dmi: Report DMI Embedded Firmware release
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Erwan Velu <e.velu@criteo.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        "Robert P. J. Day" <rpjday@crashcourse.ca>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 02:39:45PM -0800, Kristen Carlson Accardi wrote:
-> We will be using -ffunction-sections to place each function in
-> it's own text section so it can be randomized at load time. The
-> linker considers these .text.* sections "orphaned sections", and
-> will place them after the first similar section (.text). However,
-> we need to move _etext so that it is after both .text and .text.*
-> We also need to calculate text size to include .text AND .text.*
+Thanks for the feedback Jean.
+I will update the patch accordingly.
 
-The dependency on the linker's orphan section handling is, I feel,
-rather fragile (during work on CFI and generally building kernels with
-Clang's LLD linker, we keep tripping over difference between how BFD and
-LLD handle orphans). However, this is currently no way to perform a
-section "pass through" where input sections retain their name as an
-output section. (If anyone knows a way to do this, I'm all ears).
-
-Right now, you can only collect sections like this:
-
-        .text :  AT(ADDR(.text) - LOAD_OFFSET) {
-		*(.text.*)
-	}
-
-or let them be orphans, which then the linker attempts to find a
-"similar" (code, data, etc) section to put them near:
-https://sourceware.org/binutils/docs-2.33.1/ld/Orphan-Sections.html
-
-So, basically, yes, this works, but I'd like to see BFD and LLD grow
-some kind of /PASSTHRU/ special section (like /DISCARD/), that would let
-a linker script specify _where_ these sections should roughly live.
-
-Related thoughts:
-
-I know x86_64 stack alignment is 16 bytes. I cannot find evidence for
-what function start alignment should be. It seems the linker is 16 byte
-aligning these functions, when I think no alignment is needed for
-function starts, so we're wasting some memory (average 8 bytes per
-function, at say 50,000 functions, so approaching 512KB) between
-functions. If we can specify a 1 byte alignment for these orphan
-sections, that would be nice, as mentioned in the cover letter: we lose
-a 4 bits of entropy to this alignment, since all randomized function
-addresses will have their low bits set to zero.
-
-And we can't adjust function section alignment, or there is some
-benefit to a larger alignment, I would like to have a way for the linker
-to specify the inter-section padding (or fill) bytes. Right now, the
-FILL(0xnn) (or =0xnn) can be used to specify the padding bytes _within_
-a section, but not between sections. Right now, BFD appears to 0-pad. I'd
-like that to be 0xCC so "guessing" addresses incorrectly will trigger
-a trap.
-
--Kees
-
-> 
-> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> ---
->  arch/x86/kernel/vmlinux.lds.S     | 18 +++++++++++++++++-
->  include/asm-generic/vmlinux.lds.h |  2 +-
->  2 files changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index 3a1a819da137..e54e9ac5b429 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -146,8 +146,24 @@ SECTIONS
->  #endif
->  	} :text =0xcccc
->  
-> -	/* End of text section, which should occupy whole number of pages */
-> +#ifdef CONFIG_FG_KASLR
-> +	/*
-> +	 * -ffunction-sections creates .text.* sections, which are considered
-> +	 * "orphan sections" and added after the first similar section (.text).
-> +	 * Adding this ALIGN statement causes the address of _etext
-> +	 * to be below that of all the .text.* orphaned sections
-> +	 */
-> +	. = ALIGN(PAGE_SIZE);
-> +#endif
->  	_etext = .;
-> +
-> +	/*
-> +	 * the size of the .text section is used to calculate the address
-> +	 * range for orc lookups. If we just use SIZEOF(.text), we will
-> +	 * miss all the .text.* sections. Calculate the size using _etext
-> +	 * and _stext and save the value for later.
-> +	 */
-> +	text_size = _etext - _stext;
->  	. = ALIGN(PAGE_SIZE);
->  
->  	X86_ALIGN_RODATA_BEGIN
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index e00f41aa8ec4..edf19f4296e2 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -798,7 +798,7 @@
->  	. = ALIGN(4);							\
->  	.orc_lookup : AT(ADDR(.orc_lookup) - LOAD_OFFSET) {		\
->  		orc_lookup = .;						\
-> -		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
-> +		. += (((text_size + LOOKUP_BLOCK_SIZE - 1) /	\
->  			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
->  		orc_lookup_end = .;					\
->  	}
-> -- 
-> 2.24.1
-> 
-
--- 
-Kees Cook
+Le jeu. 6 f=C3=A9vr. 2020 =C3=A0 13:25, Jean Delvare <jdelvare@suse.de> a =
+=C3=A9crit :
+>
+> On Wed, 27 Nov 2019 16:07:26 +0100, Erwan Velu wrote:
+> > Servers that have a BMC encodes the release version of their firmwarein=
+ the
+>
+> encodes -> encode
+> firmwarein -> firmware in
+>
+> >  "Embedded Controller Firmware {Major|Minor} Release" fields of Type 0.
+> >
+> > This information is used to know which BMC release actually runs.
+> > It could be used for some quirks, debugging sessions or inventory tasks=
+.
+> >
+> > A typical output for a Dell system running the 3.75 bios is :
+> >
+> >     [root@t1700 ~]# cat /sys/devices/virtual/dmi/id/fw_release
+> >     3.75
+> >     [root@t1700 ~]#
+> >
+> > Signed-off-by: Erwan Velu <e.velu@criteo.com>
+> > ---
+> >  drivers/firmware/dmi-id.c       | 3 +++
+> >  drivers/firmware/dmi_scan.c     | 1 +
+> >  include/linux/mod_devicetable.h | 1 +
+> >  scripts/mod/file2alias.c        | 1 +
+> >  4 files changed, 6 insertions(+)
+> >
+> > diff --git a/drivers/firmware/dmi-id.c b/drivers/firmware/dmi-id.c
+> > index a2aac65ff771..93eca3222fb0 100644
+> > --- a/drivers/firmware/dmi-id.c
+> > +++ b/drivers/firmware/dmi-id.c
+> > @@ -43,6 +43,7 @@ DEFINE_DMI_ATTR_WITH_SHOW(bios_version,             0=
+444, DMI_BIOS_VERSION);
+> >  DEFINE_DMI_ATTR_WITH_SHOW(bios_date,         0444, DMI_BIOS_DATE);
+> >  DEFINE_DMI_ATTR_WITH_SHOW(sys_vendor,                0444, DMI_SYS_VEN=
+DOR);
+> >  DEFINE_DMI_ATTR_WITH_SHOW(bios_release,         0444, DMI_BIOS_RELEASE=
+);
+> > +DEFINE_DMI_ATTR_WITH_SHOW(fw_release,           0444, DMI_EMBEDDED_FW_=
+RELEASE);
+>
+> I suggest naming the define DMI_EC_FIRMWARE_RELEASE. "EC" is the
+> commonly accepted abbreviation for "embedded controller". "FW" on the
+> other hand is ambiguous as it can stand for firmware but also firewire
+> or firewall.
+>
+> Likewise I think the sysfs attribute should be named
+> "ec_firmware_release".
+>
+> >  DEFINE_DMI_ATTR_WITH_SHOW(product_name,              0444, DMI_PRODUCT=
+_NAME);
+> >  DEFINE_DMI_ATTR_WITH_SHOW(product_version,   0444, DMI_PRODUCT_VERSION=
+);
+> >  DEFINE_DMI_ATTR_WITH_SHOW(product_serial,    0400, DMI_PRODUCT_SERIAL)=
+;
+> > @@ -80,6 +81,7 @@ static ssize_t get_modalias(char *buffer, size_t buff=
+er_size)
+> >               { "bvr", DMI_BIOS_VERSION },
+> >               { "bd",  DMI_BIOS_DATE },
+> >               { "br",  DMI_BIOS_RELEASE },
+> > +             { "efr", DMI_EMBEDDED_FW_RELEASE },
+> >               { "svn", DMI_SYS_VENDOR },
+> >               { "pn",  DMI_PRODUCT_NAME },
+> >               { "pvr", DMI_PRODUCT_VERSION },
+> > @@ -190,6 +192,7 @@ static void __init dmi_id_init_attr_table(void)
+> >       ADD_DMI_ATTR(bios_version,      DMI_BIOS_VERSION);
+> >       ADD_DMI_ATTR(bios_date,         DMI_BIOS_DATE);
+> >       ADD_DMI_ATTR(bios_release,      DMI_BIOS_RELEASE);
+> > +     ADD_DMI_ATTR(fw_release,        DMI_EMBEDDED_FW_RELEASE);
+> >       ADD_DMI_ATTR(sys_vendor,        DMI_SYS_VENDOR);
+> >       ADD_DMI_ATTR(product_name,      DMI_PRODUCT_NAME);
+> >       ADD_DMI_ATTR(product_version,   DMI_PRODUCT_VERSION);
+> > diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> > index d010c915c1ab..5394aa553140 100644
+> > --- a/drivers/firmware/dmi_scan.c
+> > +++ b/drivers/firmware/dmi_scan.c
+> > @@ -467,6 +467,7 @@ static void __init dmi_decode(const struct dmi_head=
+er *dm, void *dummy)
+> >               dmi_save_ident(dm, DMI_BIOS_VERSION, 5);
+> >               dmi_save_ident(dm, DMI_BIOS_DATE, 8);
+> >               dmi_save_release(dm, DMI_BIOS_RELEASE, 21);
+> > +             dmi_save_release(dm, DMI_EMBEDDED_FW_RELEASE, 23);
+> >               break;
+> >       case 1:         /* System Information */
+> >               dmi_save_ident(dm, DMI_SYS_VENDOR, 4);
+> > diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_device=
+table.h
+> > index 618933d770e6..ad64a101676d 100644
+> > --- a/include/linux/mod_devicetable.h
+> > +++ b/include/linux/mod_devicetable.h
+> > @@ -533,6 +533,7 @@ enum dmi_field {
+> >       DMI_BIOS_VERSION,
+> >       DMI_BIOS_DATE,
+> >       DMI_BIOS_RELEASE,
+> > +     DMI_EMBEDDED_FW_RELEASE,
+> >       DMI_SYS_VENDOR,
+> >       DMI_PRODUCT_NAME,
+> >       DMI_PRODUCT_VERSION,
+> > diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> > index cc48930cc02a..c0e1d379d9df 100644
+> > --- a/scripts/mod/file2alias.c
+> > +++ b/scripts/mod/file2alias.c
+> > @@ -937,6 +937,7 @@ static const struct dmifield {
+> >       { "bvr", DMI_BIOS_VERSION },
+> >       { "bd",  DMI_BIOS_DATE },
+> >       { "br",  DMI_BIOS_RELEASE },
+> > +     { "efr", DMI_EMBEDDED_FW_RELEASE },
+> >       { "svn", DMI_SYS_VENDOR },
+> >       { "pn",  DMI_PRODUCT_NAME },
+> >       { "pvr", DMI_PRODUCT_VERSION },
+>
+> Also, as already mentioned during my first review, please merge both
+> patches together. They touch exactly the same areas, they are doing
+> basically the same thing, and will never be backported individually, so
+> splitting them creates more paperwork with no benefit.
+>
+> --
+> Jean Delvare
+> SUSE L3 Support
