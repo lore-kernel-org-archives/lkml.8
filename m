@@ -2,163 +2,277 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40031C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C54C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1073E20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74ED220720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 04:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Whkwu/LR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCagjpxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgBFEfT (ORCPT
+        id S1727806AbgBFEgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 23:35:19 -0500
-Received: from ozlabs.org ([203.11.71.1]:36391 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbgBFEfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 23:35:19 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ClwM2XjNz9s29;
-        Thu,  6 Feb 2020 15:35:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580963716;
-        bh=59zFNalJmp/WvnEScCF3ArwVDsj2RfvIy0ivPyUHgHA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Whkwu/LRfqatjhKrdPr0f6xAsscgI2GAcwnucCINarqZf1GbbRhy7k46Mc95LWSxm
-         qrw0UUlfp3K2Y5GLbLZ5L6O2QFWD7qzytCKVyZlR99x5BsGuSsWxCI9EU07mIe+fQb
-         bpSF1e9l2lrORXLJK8P2vkZRljA3gDojwjw/eKNOTAuvcg6gBadUo2Tj+HPeTgRAob
-         FvYXHJbaAlsaWTzMt2Bo8615d2IFgJ8jDochbh0K3L2rvqFAY6nExHRirdN9p2hfiK
-         s7nrhSFtwublQSzPKXjUpdIVC2rn+cSC8CoTDJ4i41+Ptpg2R3Em4zZ6IoRxHwp7bN
-         rB/awUKLetxHQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        DTML <devicetree@vger.kernel.org>,
-        Darren Stevens <darren@stevens-zone.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@ozlabs.org, "contact\@a-eon.com" <contact@a-eon.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
-        mad skateman <madskateman@gmail.com>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
-In-Reply-To: <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de>
-References: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net> <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de>
-Date:   Thu, 06 Feb 2020 15:35:10 +1100
-Message-ID: <87tv441gg1.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Feb 2020 23:36:17 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44271 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbgBFEgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 23:36:17 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d9so1789341plo.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 20:36:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gPdvdOINV5KdEbblXYq9Y9a8LB18bMVj3SYD6IoaOG4=;
+        b=eCagjpxLstAkSeNbFvjIaE9E7HMKm3eiG6pIY5P0mAmo/+C6Z5+oRIiiGfeqsSUoRh
+         DoLKmf0jrEz/j1of418zOBLAXTlaBIbLuox3JpuHIPwrnhui+mZkWD3qqo12Yqr9wERg
+         buTGEMNt4VO0o+xWEODcenUB/95+sgHuQFJWVWeii23RonPL/+LtKdPfhZdIiY1zJA13
+         dK5s/Mj60FwMuXjhnb1jxJGUzuU3Aqi608iEOJDAd16L2wamZiVaA2nDqkJvu5sohiOn
+         PIdw5EWfzQf92k/SqkVz2n5o9997Sw44STpI2euWG12J7ZnLBoN9O6DZhiKB+HxkuZnF
+         R/0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gPdvdOINV5KdEbblXYq9Y9a8LB18bMVj3SYD6IoaOG4=;
+        b=LJz7XF+Y7eUnvzxG15wj4WMQpqnDJTff90mtX5yV7Tc0ZKWuws9x/QJQp6dNfemHyF
+         4O2KiwESFgeyb68P6BmwKNiZGRmuDMBT+/zQKYGoBcSTe3EzD2YZ6udyJeesA44MfJJb
+         EFLXfXyxRupIb0/jngfvDzzggGh4b5re21ssI6gaehd+IhCzLjFncd1l6lTHWcDFe6WV
+         V1lK5lNsSbtfPVkO7erwfsMqojVy1Fy+Ac8lM7Dr9U8E9eg/tmugDrC60vEmMvl65OwS
+         L1yLKmiGuuC4192PGDwsp7RvKgSjmCxqJDJC70NH/5Xl3NmmZlRLVEFKER2qdTNVypUr
+         PCXw==
+X-Gm-Message-State: APjAAAWvgTmQjy/GNHcbkt1KKaR0gOQyR9SLiZGjzzvC4YPFRMGwJvFr
+        JHfFa00tOznI3K0yblwTUQc=
+X-Google-Smtp-Source: APXvYqwRQZ3py5dPOwgEdHma0ZSKzj/+uH32+uloyAUk34j744jTMB/XQ7Ca2Y8oK/cMKRDShQ4ejA==
+X-Received: by 2002:a17:902:b78b:: with SMTP id e11mr1765027pls.129.1580963776304;
+        Wed, 05 Feb 2020 20:36:16 -0800 (PST)
+Received: from localhost.localdomain ([49.207.56.20])
+        by smtp.gmail.com with ESMTPSA id ci5sm1295454pjb.5.2020.02.05.20.36.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 05 Feb 2020 20:36:15 -0800 (PST)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     support.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com
+Cc:     axel.lin@ingics.com, lgirdwood@gmail.com, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
+Subject: [PATCH] regulator: da9063: remove redundant return statement
+Date:   Thu,  6 Feb 2020 10:06:01 +0530
+Message-Id: <1580963761-24964-1-git-send-email-gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Zigotzky <chzigotzky@xenosoft.de> writes:
-> Kernel 5.5 PowerPC is also affected.
+The devm_request_threaded_irq() already returns 0 on success
+and negative error code on failure. So return from this itself
+can be used while preserving error log in case of failure.
 
-I don't know what you mean by that. What sha are you talking about?
+This commit also fixes checkpatch.pl errors & warnings:
+- WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+- WARNING: line over 80 characters
+- ERROR: space prohibited before that ',' (ctx:WxW)
+- ERROR: code indent should use tabs where possible
+- WARNING: Block comments use * on subsequent lines
 
-I have a system with avahi running and everything's fine.
+Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+---
+ drivers/regulator/da9063-regulator.c | 64 ++++++++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 28 deletions(-)
 
-  # grep use- /etc/avahi/avahi-daemon.conf=20
-  use-ipv4=3Dyes
-  use-ipv6=3Dyes
-=20=20
-  # systemctl status -l --no-pager avahi-daemon
-  =E2=97=8F avahi-daemon.service - Avahi mDNS/DNS-SD Stack
-     Loaded: loaded (/lib/systemd/system/avahi-daemon.service; enabled; ven=
-dor preset: enabled)
-     Active: active (running) since Thu 2020-02-06 14:55:34 AEDT; 38min ago
-   Main PID: 1884 (avahi-daemon)
-     Status: "avahi-daemon 0.7 starting up."
-     CGroup: /system.slice/avahi-daemon.service
-             =E2=94=9C=E2=94=801884 avahi-daemon: running [mpe-ubuntu-le.lo=
-cal]
-             =E2=94=94=E2=94=801888 avahi-daemon: chroot helper
-=20=20
-  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
- record for fe80::5054:ff:fe66:2a19 on eth0.*.
-  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
- record for 10.61.141.81 on eth0.IPv4.
-  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
- record for ::1 on lo.*.
-  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
- record for 127.0.0.1 on lo.IPv4.
-  Feb 06 14:55:34 mpe-ubuntu-le systemd[1]: Started Avahi mDNS/DNS-SD Stack.
-  Feb 06 14:55:35 mpe-ubuntu-le avahi-daemon[1884]: Server startup complete=
-. Host name is mpe-ubuntu-le.local. Local service cookie is 3972418141.
-  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Leaving mDNS multicast =
-group on interface eth0.IPv6 with address fe80::5054:ff:fe66:2a19.
-  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Joining mDNS multicast =
-group on interface eth0.IPv6 with address fd69:d75f:b8b5:61:5054:ff:fe66:2a=
-19.
-  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
- record for fd69:d75f:b8b5:61:5054:ff:fe66:2a19 on eth0.*.
-  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Withdrawing address rec=
-ord for fe80::5054:ff:fe66:2a19 on eth0.
-=20=20
-  # uname -r
-  5.5.0-gcc-8.2.0
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 2aceb3b..aaa9942 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -66,7 +66,7 @@ struct da9063_regulator_data {
+ };
+ 
+ struct da9063_regulators_pdata {
+-	unsigned			n_regulators;
++	unsigned int			n_regulators;
+ 	struct da9063_regulator_data	*regulator_data;
+ };
+ 
+@@ -131,7 +131,7 @@ struct da9063_regulator_info {
+ /* Defines asignment of regulators info table to chip model */
+ struct da9063_dev_model {
+ 	const struct da9063_regulator_info	*regulator_info;
+-	unsigned				n_regulators;
++	unsigned int				n_regulators;
+ 	enum da9063_type			type;
+ };
+ 
+@@ -150,7 +150,7 @@ struct da9063_regulator {
+ 
+ /* Encapsulates all information for the regulators driver */
+ struct da9063_regulators {
+-	unsigned				n_regulators;
++	unsigned int				n_regulators;
+ 	/* Array size to be defined during init. Keep at end. */
+ 	struct da9063_regulator			regulator[0];
+ };
+@@ -165,38 +165,46 @@ enum {
+ 
+ /* Regulator operations */
+ 
+-/* Current limits array (in uA) for BCORE1, BCORE2, BPRO.
+-   Entry indexes corresponds to register values. */
++/*
++ * Current limits array (in uA) for BCORE1, BCORE2, BPRO.
++ * Entry indexes corresponds to register values.
++ */
+ static const unsigned int da9063_buck_a_limits[] = {
+ 	 500000,  600000,  700000,  800000,  900000, 1000000, 1100000, 1200000,
+ 	1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 2000000
+ };
+ 
+-/* Current limits array (in uA) for BMEM, BIO, BPERI.
+-   Entry indexes corresponds to register values. */
++/*
++ * Current limits array (in uA) for BMEM, BIO, BPERI.
++ * Entry indexes corresponds to register values.
++ */
+ static const unsigned int da9063_buck_b_limits[] = {
+ 	1500000, 1600000, 1700000, 1800000, 1900000, 2000000, 2100000, 2200000,
+ 	2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000
+ };
+ 
+-/* Current limits array (in uA) for merged BCORE1 and BCORE2.
+-   Entry indexes corresponds to register values. */
++/*
++ * Current limits array (in uA) for merged BCORE1 and BCORE2.
++ * Entry indexes corresponds to register values.
++ */
+ static const unsigned int da9063_bcores_merged_limits[] = {
+ 	1000000, 1200000, 1400000, 1600000, 1800000, 2000000, 2200000, 2400000,
+ 	2600000, 2800000, 3000000, 3200000, 3400000, 3600000, 3800000, 4000000
+ };
+ 
+-/* Current limits array (in uA) for merged BMEM and BIO.
+-   Entry indexes corresponds to register values. */
++/*
++ * Current limits array (in uA) for merged BMEM and BIO.
++ * Entry indexes corresponds to register values.
++ */
+ static const unsigned int da9063_bmem_bio_merged_limits[] = {
+ 	3000000, 3200000, 3400000, 3600000, 3800000, 4000000, 4200000, 4400000,
+ 	4600000, 4800000, 5000000, 5200000, 5400000, 5600000, 5800000, 6000000
+ };
+ 
+-static int da9063_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
++static int da9063_buck_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	unsigned val;
++	unsigned int val;
+ 
+ 	switch (mode) {
+ 	case REGULATOR_MODE_FAST:
+@@ -221,7 +229,7 @@ static int da9063_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
+  * There are 3 modes to map to: FAST, NORMAL, and STANDBY.
+  */
+ 
+-static unsigned da9063_buck_get_mode(struct regulator_dev *rdev)
++static unsigned int da9063_buck_get_mode(struct regulator_dev *rdev)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+ 	struct regmap_field *field;
+@@ -271,10 +279,10 @@ static unsigned da9063_buck_get_mode(struct regulator_dev *rdev)
+  * There are 2 modes to map to: NORMAL and STANDBY (sleep) for each state.
+  */
+ 
+-static int da9063_ldo_set_mode(struct regulator_dev *rdev, unsigned mode)
++static int da9063_ldo_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	unsigned val;
++	unsigned int val;
+ 
+ 	switch (mode) {
+ 	case REGULATOR_MODE_NORMAL:
+@@ -290,7 +298,7 @@ static int da9063_ldo_set_mode(struct regulator_dev *rdev, unsigned mode)
+ 	return regmap_field_write(regl->sleep, val);
+ }
+ 
+-static unsigned da9063_ldo_get_mode(struct regulator_dev *rdev)
++static unsigned int da9063_ldo_get_mode(struct regulator_dev *rdev)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+ 	struct regmap_field *field;
+@@ -383,7 +391,8 @@ static int da9063_suspend_disable(struct regulator_dev *rdev)
+ 	return regmap_field_write(regl->suspend, 0);
+ }
+ 
+-static int da9063_buck_set_suspend_mode(struct regulator_dev *rdev, unsigned mode)
++static int da9063_buck_set_suspend_mode(struct regulator_dev *rdev,
++				unsigned int mode)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+ 	int val;
+@@ -405,10 +414,11 @@ static int da9063_buck_set_suspend_mode(struct regulator_dev *rdev, unsigned mod
+ 	return regmap_field_write(regl->mode, val);
+ }
+ 
+-static int da9063_ldo_set_suspend_mode(struct regulator_dev *rdev, unsigned mode)
++static int da9063_ldo_set_suspend_mode(struct regulator_dev *rdev,
++				unsigned int mode)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	unsigned val;
++	unsigned int val;
+ 
+ 	switch (mode) {
+ 	case REGULATOR_MODE_NORMAL:
+@@ -593,7 +603,7 @@ static irqreturn_t da9063_ldo_lim_event(int irq, void *data)
+ 	struct da9063_regulators *regulators = data;
+ 	struct da9063 *hw = regulators->regulator[0].hw;
+ 	struct da9063_regulator *regl;
+-	int bits, i , ret;
++	int bits, i, ret;
+ 
+ 	ret = regmap_read(hw->regmap, DA9063_REG_STATUS_D, &bits);
+ 	if (ret < 0)
+@@ -605,10 +615,10 @@ static irqreturn_t da9063_ldo_lim_event(int irq, void *data)
+ 			continue;
+ 
+ 		if (BIT(regl->info->oc_event.lsb) & bits) {
+-		        regulator_lock(regl->rdev);
++			regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
+-		        regulator_unlock(regl->rdev);
++			regulator_unlock(regl->rdev);
+ 		}
+ 	}
+ 
+@@ -833,7 +843,7 @@ static int da9063_regulator_probe(struct platform_device *pdev)
+ 
+ 		if (regl->info->suspend_sleep.reg) {
+ 			regl->suspend_sleep = devm_regmap_field_alloc(&pdev->dev,
+-					da9063->regmap, regl->info->suspend_sleep);
++				da9063->regmap, regl->info->suspend_sleep);
+ 			if (IS_ERR(regl->suspend_sleep))
+ 				return PTR_ERR(regl->suspend_sleep);
+ 		}
+@@ -867,12 +877,10 @@ static int da9063_regulator_probe(struct platform_device *pdev)
+ 				NULL, da9063_ldo_lim_event,
+ 				IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+ 				"LDO_LIM", regulators);
+-	if (ret) {
++	if (ret)
+ 		dev_err(&pdev->dev, "Failed to request LDO_LIM IRQ.\n");
+-		return ret;
+-	}
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static struct platform_driver da9063_regulator_driver = {
+-- 
+2.7.4
 
-
-The key question is what ioctl is it complaining about. You should be
-able to find that via strace.
-
-cheers
-
-> Christian Zigotzky wrote:
->
-> Hi All,
->
-> The issue with the avahi-daemon still exist in the latest Git kernel. It'=
-s a PowerPC issue. I compiled the latest Git kernel on a PC today and there=
- aren't any issues with the avahi daemon. Another Power Mac user reported t=
-he same issue on his G5. I tested with the AmigaOne X1000 and X5000 in the =
-last days.
->
-> I bisected today but I think the result isn't correct because it found th=
-e other problem with ordering of PCSCSI definition in esp_rev enum. I don't=
- know how to bisect if there is another issue at the same time. Maybe "git =
-bisect skip"?
->
-> 2086faae3c55a652cfbd369e18ecdb703aacc493 is the first bad commit
-> commit 2086faae3c55a652cfbd369e18ecdb703aacc493
-> Author: Kars de Jong <jongk@linux-m68k.org>
-> Date:   Tue Nov 19 21:20:20 2019 +0100
->
->     scsi: esp_scsi: Correct ordering of PCSCSI definition in esp_rev enum
->
->     The order of the definitions in the esp_rev enum is important. The va=
-lues
->     are used in comparisons for chip features.
->
->     Add a comment to the enum explaining this.
->
->     Also, the actual values for the enum fields are irrelevant, so remove=
- the
->     explicit values (suggested by Geert Uytterhoeven). This makes adding =
-a new
->     field in the middle of the enum easier.
->
->     Finally, move the PCSCSI definition to the right place in the enum. I=
-n its
->     previous location, at the end of the enum, the wrong values are writt=
-en to
->     the CONFIG3 register when used with FAST-SCSI targets.
->
->     Link: https://lore.kernel.org/r/20191119202021.28720-2-jongk@linux-m6=
-8k.org
->     Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
->     Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
->
-> :040000 040000 cdc128596e33fb60406b5de9b17b79623c187c1a 48ceab06439f95285=
-e8b30181e75f9a68c25fcb5 M    drivers
