@@ -6,67 +6,69 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4115AC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C167C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08819218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020A122314
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="o2TJ5na9"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YYJZJvMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgBFTzm (ORCPT
+        id S1727874AbgBFT5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:55:42 -0500
-Received: from mail-io1-f48.google.com ([209.85.166.48]:43048 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbgBFTzl (ORCPT
+        Thu, 6 Feb 2020 14:57:01 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43467 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbgBFT5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:55:41 -0500
-Received: by mail-io1-f48.google.com with SMTP id n21so7589659ioo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:55:40 -0800 (PST)
+        Thu, 6 Feb 2020 14:57:01 -0500
+Received: by mail-io1-f66.google.com with SMTP id n21so7594146ioo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:56:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=7EJDgXJItKSHtBqDlGpPXjVpKLFySBu/jYXtj6UBSqk=;
-        b=o2TJ5na94rRJqPrzLey6UhOyaQeCV+fXbL9oXrunqYSqw1pwJlDwE0G22NET61LtcX
-         71Y43oiTYDi6ldv8WMbqqKkoHJuW46Sb6CMXM1sgTSxOnwduZanEhmT7m7J/SefDAARM
-         WME4XkeUq+Tjzu58vXSPJcs1J/nt7mk8T/Aw8hZHo5geX6yvkdIN0k4KQ3kFAvgFfJXu
-         Tb0rOVdECcmuDt8vO8Dt+F+UW7zAygiLBmZsp75DS4xfoM8xyfxlrWpA1UfRV2j7EFCG
-         PV/p2CV73wg1i6YzpM2OfI0FqGMDtCvk2tfrTvK17Su/oj8ajn6MIeK5YacgEwzw9kD0
-         2btg==
+        bh=Q1s66fc5wEyyCtqAZ1fxyuIa4B0bjzdDWKhuT8omqjw=;
+        b=YYJZJvMgL+oKB4Kf9hFzm3HKoaJu4d8ykkFQ54Qte3tsBTUxwnRX9PA8npvcW4R9JY
+         q3LrSwfGvqC1MZVMiPx2jzWpkrmI45mvpBJqG1TIqBlepEoNV1jCbazWZ2k9YzKAHWU/
+         mz+YiPwzqojbBKLyr2B6babbXal5qxQ849vDtTPPSSc7LNkgyPHZIr6J97sA9lrBeqQ/
+         bWo6rkPlM795YTm1cLiKWR2AKWCqHJGZxpPJp+3Xm0rlJ25V5pDr/iBP3HeS67VEmdJ5
+         jPHG7XsWJ69BLrtvkHg+Q6gyCE1F0nBFysQG9DC4DlMqBTjfMRjGakcrcWQlLdahOJ2f
+         Mq8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7EJDgXJItKSHtBqDlGpPXjVpKLFySBu/jYXtj6UBSqk=;
-        b=dMonPL8eW8+y7Xc63f/y8UHWzRMcKWOr+vGPlSnaOod1tphWtzQVF/7qYKFx/tsqSS
-         A3l21q/yUY9oKO2oeLyzO8yaJvxXzbpaduGY+n/DX7JKRm7Q4qSAE1V5wz3RINQvlGuR
-         87DjqtejAlOLjT7qili46MXD9Du2jGprcCVKpDsYSirJgEcMKiodz1ucXkb3IDM0+nrC
-         5VhSRlRsh5XoqRjiqiLFJfdLIsSWNjyiFpTJHkSSno/CsXG4+z3n6pFzqTTIuqp0LZ4S
-         Q8TqS6eyC9AEz2Nsm/13Fhwgq+nIqYpFCpTP97imw22upJU7ZQFiY0rqHmqUiHfXo+Ln
-         di3A==
-X-Gm-Message-State: APjAAAUE+6l4jsx211Owt6MM6AB9W3fCUQD1cDjaRUF7TB688xsmzy8a
-        LQZSHTsyb84XVi0H32o43t3oRw==
-X-Google-Smtp-Source: APXvYqwQ64mS6HQ41I/nwk6tzAjLMk/IwBf+dBUv+mgTa6HnkXBxFKkS7atl+hATRkpB/LmRUwAIyA==
-X-Received: by 2002:a5e:8b03:: with SMTP id g3mr34012728iok.279.1581018939563;
-        Thu, 06 Feb 2020 11:55:39 -0800 (PST)
+        bh=Q1s66fc5wEyyCtqAZ1fxyuIa4B0bjzdDWKhuT8omqjw=;
+        b=mTKznBRfkuf5i1fDYpK5yihiM6aZfU34YQC36wrETXuNuYrGc7e5VKApF/6fzp060z
+         VdTl99gRCHwI0h3V8sSb42oYxwpjjJunAYaDwiNIBJwN6mWEKXehrC2cvrJIP91x9X9N
+         1MIvvQRUHhx33LaleiB09IDpSN5gGW/7oaTOZfCUsS1DsVayxqzh0Ur2XPI5sbt1KKPT
+         ymzg+Ur1KsAaMvhP1pD3L2neETJf0ei0gcl03b5oqbXmeJGBFu45jWAbQQqFppOfKQ57
+         amOq5w5XtjcWVM3bEeL2KzHbKR20/DJgdtHsOHUF4JAeR6fW+t9d2bB/wat/iLGJkrVc
+         UQ1g==
+X-Gm-Message-State: APjAAAX6uzXD81IhkjFesXeWUZxGXHP+l8K315Frhi0FWI3lJX59NLOa
+        vagz1b/K/Oc3T/+lHgLaJB3qHzuJBuU=
+X-Google-Smtp-Source: APXvYqz+QvSEt+Y4gfc2jJkwH7BWM2Rg6NhieoRYQgbqTyY53hfJxMdb04HI/dWIHvGF6PgyppNXgg==
+X-Received: by 2002:a6b:5902:: with SMTP id n2mr24866691iob.298.1581019018760;
+        Thu, 06 Feb 2020 11:56:58 -0800 (PST)
 Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u10sm282505ilq.1.2020.02.06.11.55.38
+        by smtp.gmail.com with ESMTPSA id o1sm156128ioo.56.2020.02.06.11.56.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 11:55:39 -0800 (PST)
-Subject: Re: io_uring: io_grab_files() misses taking files->count?
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>, io-uring@vger.kernel.org
-References: <f0d2b7d3-2f6b-7eb2-aee0-4ff6a7daa35c@virtuozzo.com>
+        Thu, 06 Feb 2020 11:56:58 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
+ <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
+ <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b004838f-602d-0992-cb1d-2d083227186c@kernel.dk>
-Date:   Thu, 6 Feb 2020 12:55:38 -0700
+Message-ID: <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+Date:   Thu, 6 Feb 2020 12:56:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <f0d2b7d3-2f6b-7eb2-aee0-4ff6a7daa35c@virtuozzo.com>
+In-Reply-To: <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,30 +77,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 9:32 AM, Kirill Tkhai wrote:
-> Hi, Jens,
-> 
-> in io_grab_files() we take pointer to current->files without taking
-> files->count.  Later, this files become attached to worker in
-> io_worker_handle_work() also without any manipulation with counter.
-> 
-> But files->count is used for different optimizations. Say, in
-> expand_fdtable() we avoid synchonize_rcu() in case of there is only
-> files user. In case of there are more users, missing of
-> synchronize_rcu() is not safe.
-> 
-> Is this correct? Or maybe there is some hidden logic in io_uring,
-> which prevents this problem? Say, IORING_OP_OPENAT/CLOSE/ETC can't be
-> propagated to worker etc...
+On 2/6/20 10:16 AM, Pavel Begunkov wrote:
+> On 06/02/2020 20:04, Pavel Begunkov wrote:
+>> On 06/02/2020 19:51, Pavel Begunkov wrote:
+>>> After defer, a request will be prepared, that includes allocating iovec
+>>> if needed, and then submitted through io_wq_submit_work() but not custom
+>>> handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll leak
+>>> iovec, as it's in io-wq and the code goes as follows:
+>>>
+>>> io_read() {
+>>> 	if (!io_wq_current_is_worker())
+>>> 		kfree(iovec);
+>>> }
+>>>
+>>> Put all deallocation logic in io_{read,write,send,recv}(), which will
+>>> leave the memory, if going async with -EAGAIN.
+>>>
+>> Interestingly, this will fail badly if it returns -EAGAIN from io-wq context.
+>> Apparently, I need to do v2.
+>>
+> Or not...
+> Jens, can you please explain what's with the -EAGAIN handling in
+> io_wq_submit_work()? Checking the code, it seems neither of
+> read/write/recv/send can return -EAGAIN from async context (i.e.
+> force_nonblock=false). Are there other ops that can do it?
 
-We track requests that grab files on the side, since we can't safely
-grab a reference to the file table. We could have our own ring fd in the
-file table, and thus create a circular reference if we incremented
-files->count here.
-
-Looks like we might need a 2nd way to know if we need to use
-synchronize_rcu() or not, though I need to look into this particular
-case.
+Nobody should return -EAGAIN with force_nonblock=false, they should
+end the io_kiocb inline for that.
 
 -- 
 Jens Axboe
