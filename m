@@ -2,110 +2,348 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571A5C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98533C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2814820730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:26:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UBRy7ulQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6F989214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580988419;
+	bh=zDweZ3pVi5chcCvpvlKM6/sBvHkzKqjnodN7WSMLmm4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MKCL4lRznc/Yuc/fjVcXflWCBzIFZpaSNVqYoKh0QUYOFoOfcCUA63R/MCepe1W1y
+	 lwhyx2+YEEcVrAy4WhZ1pY9sxPAn8Efyjjde/e99RBGpJTXrzcC7avQVAKMAemVGCr
+	 M9X5snTCvhG1WCa1cqIQMkbOZMSXLfNKZG7COMDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgBFL0p (ORCPT
+        id S1727540AbgBFL06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:26:45 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22968 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbgBFL0p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:26:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580988403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5piNXc1fMT29Zpv4Z7TyeSYOjlJ928bleKih104+/Vg=;
-        b=UBRy7ulQ06UGkmM+jakhjLKna+KOi4UO3Olz0AT5rWGUfTUipfucm83GK5uZaruHqrVTJ0
-        N53LinAgRSN6kL1MeHduSctPQ1oW1h+uCQ8mNcSXLcI2vhXQFr2hCZjb+h942k1wC9CWpc
-        IAMXJjJO6qCvBD3tDBkrGa25r+U4wCU=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-Vx9_9YUKPcKMYpoeYHZb1w-1; Thu, 06 Feb 2020 06:26:42 -0500
-X-MC-Unique: Vx9_9YUKPcKMYpoeYHZb1w-1
-Received: by mail-qt1-f197.google.com with SMTP id r9so3611436qtc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:26:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5piNXc1fMT29Zpv4Z7TyeSYOjlJ928bleKih104+/Vg=;
-        b=YUc1S1V1mWf9rm6SoUwe/SI3/nP4A7Doiz32C49KiuufkgFyymXDBgny0JvNiEpjyw
-         /4wmxR1Yl2mQl+c+vp1KGwZS4KgWyHo2ROQnX2XqzXWIDaKZhXeyCApBTLGYhglLGwQt
-         r2GsQsHvlaCK0PH9zxDFYnYuqRLOEHSvPvQR67vOo9R7lHqo24cIv6D5huS7QXe2Iog+
-         cdqDZwwxH29unrnnYG8Vb03mU+X8bn2dfgy6O97eT1px6ykMYZE0pOlR/cVargmZNfJH
-         E5CSkicrTeEcXK/81tHHMt1gnAEsAGqt8KG36jV1dfnLvu2ddJGC9l4i+Pw8kJURMLd+
-         fLdQ==
-X-Gm-Message-State: APjAAAURMarFLBUyUjbAK1Fe3i9CMLzDZTdY2DmT2RDNUoOSE3qxOn1y
-        ItZT43Gf79ZWR5YxRTDQIm/l1//QSBNUf71UNEgu+AoWGzb1F7maElj+x2s9ib/hNqTTRIWL6IT
-        rPh9nEJvQ3Y5oElRvF1AT9HzQ
-X-Received: by 2002:ad4:4434:: with SMTP id e20mr1838484qvt.157.1580988401904;
-        Thu, 06 Feb 2020 03:26:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzs2H4Ue1BislOS6JG/nHk8GpbKHgxSbqwXwcwg9tcef/fex6WCKz5lI8ZaFpUYEjzL720t+A==
-X-Received: by 2002:ad4:4434:: with SMTP id e20mr1838467qvt.157.1580988401685;
-        Thu, 06 Feb 2020 03:26:41 -0800 (PST)
-Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
-        by smtp.gmail.com with ESMTPSA id b24sm1422245qto.71.2020.02.06.03.26.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 03:26:40 -0800 (PST)
-Date:   Thu, 6 Feb 2020 06:26:35 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Wang, Wei W" <wei.w.wang@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "tysand@google.com" <tysand@google.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "alexander.h.duyck@linux.intel.com" 
-        <alexander.h.duyck@linux.intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "penguin-kernel@i-love.sakura.ne.jp" 
-        <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
-Message-ID: <20200206062558-mutt-send-email-mst@kernel.org>
-References: <1580976107-16013-1-git-send-email-wei.w.wang@intel.com>
- <20200206035749-mutt-send-email-mst@kernel.org>
- <286AC319A985734F985F78AFA26841F73E4238A5@shsmsx102.ccr.corp.intel.com>
- <20200206042824-mutt-send-email-mst@kernel.org>
- <286AC319A985734F985F78AFA26841F73E42395B@shsmsx102.ccr.corp.intel.com>
+        Thu, 6 Feb 2020 06:26:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727505AbgBFL06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:26:58 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C33120730;
+        Thu,  6 Feb 2020 11:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580988416;
+        bh=zDweZ3pVi5chcCvpvlKM6/sBvHkzKqjnodN7WSMLmm4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jcRSfTR/1YfSmP1xfZ0Pkao74lxFdCpWxQn1jt/7HWPNY6WL5qdEjjLk94ZEsQ2Gi
+         AqX9zaXzZ5ViWQ45wxcCXzAD94D62KYE2U/iP8NAAfx74+/ke2ID1vXu5Gx9AhJl4h
+         f/47XF1eICi1GyXt5WhkuWUHwcI3luGZ5/fwas74=
+Date:   Thu, 6 Feb 2020 11:26:51 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] iio: vncl4000: Enable runtime pm for
+ vcnl4200/4040
+Message-ID: <20200206112651.2b85e3a8@archlinux>
+In-Reply-To: <60fa4c2a739448778ae56fe3f2fdb10302055c59.1580721204.git.agx@sigxcpu.org>
+References: <cover.1580721204.git.agx@sigxcpu.org>
+        <60fa4c2a739448778ae56fe3f2fdb10302055c59.1580721204.git.agx@sigxcpu.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <286AC319A985734F985F78AFA26841F73E42395B@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 09:43:10AM +0000, Wang, Wei W wrote:
-> On Thursday, February 6, 2020 5:31 PM, Michael S. Tsirkin wrote:
-> > 
-> > How about just making this a last resort thing to be compatible with existing
-> > hypervisors? if someone wants to change behaviour that really should use a
-> > feature bit ...
-> 
-> Yeah, sounds good to me to control via feature bits.
-> 
-> Best,
-> Wei
+On Mon,  3 Feb 2020 10:17:02 +0100
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-To clarify, shrinker use could be a feature bit. OOM behaviour was
-there for years and has been used to dynamically size guests.
+> This is modelled after the vcnl4035 driver. For the vcnl40{0,1,2}0
+> we don't do anything since they use on demand measurement.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
--- 
-MST
+I won't push this out as a non rebasing branch for a week or so yet,
+hence plenty of time for others to comment even though I have it queued
+up!
+
+Jonathan
+
+> ---
+>  drivers/iio/light/vcnl4000.c | 129 +++++++++++++++++++++++++++++++----
+>  1 file changed, 117 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 8f198383626b..3b71c7d538af 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+> +#include <linux/pm_runtime.h>
+> =20
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> @@ -57,6 +58,8 @@
+>  #define VCNL4000_AL_OD		BIT(4) /* start on-demand ALS measurement */
+>  #define VCNL4000_PS_OD		BIT(3) /* start on-demand proximity measurement =
+*/
+> =20
+> +#define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspe=
+nd */
+> +
+>  enum vcnl4000_device_ids {
+>  	VCNL4000,
+>  	VCNL4010,
+> @@ -87,6 +90,7 @@ struct vcnl4000_chip_spec {
+>  	int (*init)(struct vcnl4000_data *data);
+>  	int (*measure_light)(struct vcnl4000_data *data, int *val);
+>  	int (*measure_proximity)(struct vcnl4000_data *data, int *val);
+> +	int (*set_power_state)(struct vcnl4000_data *data, bool on);
+>  };
+> =20
+>  static const struct i2c_device_id vcnl4000_id[] =3D {
+> @@ -99,6 +103,12 @@ static const struct i2c_device_id vcnl4000_id[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, vcnl4000_id);
+> =20
+> +static int vcnl4000_set_power_state(struct vcnl4000_data *data, bool on)
+> +{
+> +	/* no suspend op */
+> +	return 0;
+> +}
+> +
+>  static int vcnl4000_init(struct vcnl4000_data *data)
+>  {
+>  	int ret, prod_id;
+> @@ -127,9 +137,31 @@ static int vcnl4000_init(struct vcnl4000_data *data)
+>  	data->al_scale =3D 250000;
+>  	mutex_init(&data->vcnl4000_lock);
+> =20
+> -	return 0;
+> +	return data->chip_spec->set_power_state(data, true);
+>  };
+> =20
+> +static int vcnl4200_set_power_state(struct vcnl4000_data *data, bool on)
+> +{
+> +	u16 val =3D on ? 0 /* power on */ : 1 /* shut down */;
+> +	int ret;
+> +
+> +	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (on) {
+> +		/* Wait at least one integration cycle before fetching data */
+> +		data->vcnl4200_al.last_measurement =3D ktime_get();
+> +		data->vcnl4200_ps.last_measurement =3D ktime_get();
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int vcnl4200_init(struct vcnl4000_data *data)
+>  {
+>  	int ret, id;
+> @@ -155,14 +187,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+> =20
+>  	data->rev =3D (ret >> 8) & 0xf;
+> =20
+> -	/* Set defaults and enable both channels */
+> -	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
+> -	if (ret < 0)
+> -		return ret;
+> -	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	data->vcnl4200_al.reg =3D VCNL4200_AL_DATA;
+>  	data->vcnl4200_ps.reg =3D VCNL4200_PS_DATA;
+>  	switch (id) {
+> @@ -180,11 +204,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+>  		data->al_scale =3D 120000;
+>  		break;
+>  	}
+> -	data->vcnl4200_al.last_measurement =3D ktime_set(0, 0);
+> -	data->vcnl4200_ps.last_measurement =3D ktime_set(0, 0);
+>  	mutex_init(&data->vcnl4200_al.lock);
+>  	mutex_init(&data->vcnl4200_ps.lock);
+> =20
+> +	ret =3D data->chip_spec->set_power_state(data, true);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+>  };
+> =20
+> @@ -291,24 +317,28 @@ static const struct vcnl4000_chip_spec vcnl4000_chi=
+p_spec_cfg[] =3D {
+>  		.init =3D vcnl4000_init,
+>  		.measure_light =3D vcnl4000_measure_light,
+>  		.measure_proximity =3D vcnl4000_measure_proximity,
+> +		.set_power_state =3D vcnl4000_set_power_state,
+>  	},
+>  	[VCNL4010] =3D {
+>  		.prod =3D "VCNL4010/4020",
+>  		.init =3D vcnl4000_init,
+>  		.measure_light =3D vcnl4000_measure_light,
+>  		.measure_proximity =3D vcnl4000_measure_proximity,
+> +		.set_power_state =3D vcnl4000_set_power_state,
+>  	},
+>  	[VCNL4040] =3D {
+>  		.prod =3D "VCNL4040",
+>  		.init =3D vcnl4200_init,
+>  		.measure_light =3D vcnl4200_measure_light,
+>  		.measure_proximity =3D vcnl4200_measure_proximity,
+> +		.set_power_state =3D vcnl4200_set_power_state,
+>  	},
+>  	[VCNL4200] =3D {
+>  		.prod =3D "VCNL4200",
+>  		.init =3D vcnl4200_init,
+>  		.measure_light =3D vcnl4200_measure_light,
+>  		.measure_proximity =3D vcnl4200_measure_proximity,
+> +		.set_power_state =3D vcnl4200_set_power_state,
+>  	},
+>  };
+> =20
+> @@ -323,6 +353,23 @@ static const struct iio_chan_spec vcnl4000_channels[=
+] =3D {
+>  	}
+>  };
+> =20
+> +static int vcnl4000_set_pm_runtime_state(struct vcnl4000_data *data, boo=
+l on)
+> +{
+> +	struct device *dev =3D &data->client->dev;
+> +	int ret;
+> +
+> +	if (on) {
+> +		ret =3D pm_runtime_get_sync(dev);
+> +		if (ret < 0)
+> +			pm_runtime_put_noidle(dev);
+> +	} else {
+> +		pm_runtime_mark_last_busy(dev);
+> +		ret =3D pm_runtime_put_autosuspend(dev);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int vcnl4000_read_raw(struct iio_dev *indio_dev,
+>  				struct iio_chan_spec const *chan,
+>  				int *val, int *val2, long mask)
+> @@ -332,6 +379,10 @@ static int vcnl4000_read_raw(struct iio_dev *indio_d=
+ev,
+> =20
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> +		ret =3D vcnl4000_set_pm_runtime_state(data, true);
+> +		if  (ret < 0)
+> +			return ret;
+> +
+>  		switch (chan->type) {
+>  		case IIO_LIGHT:
+>  			ret =3D data->chip_spec->measure_light(data, val);
+> @@ -346,6 +397,7 @@ static int vcnl4000_read_raw(struct iio_dev *indio_de=
+v,
+>  		default:
+>  			ret =3D -EINVAL;
+>  		}
+> +		vcnl4000_set_pm_runtime_state(data, false);
+>  		return ret;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		if (chan->type !=3D IIO_LIGHT)
+> @@ -394,7 +446,22 @@ static int vcnl4000_probe(struct i2c_client *client,
+>  	indio_dev->name =3D VCNL4000_DRV_NAME;
+>  	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> =20
+> -	return devm_iio_device_register(&client->dev, indio_dev);
+> +	ret =3D pm_runtime_set_active(&client->dev);
+> +	if (ret < 0)
+> +		goto fail_poweroff;
+> +
+> +	ret =3D iio_device_register(indio_dev);
+> +	if (ret < 0)
+> +		goto fail_poweroff;
+> +
+> +	pm_runtime_enable(&client->dev);
+> +	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4000_SLEEP_DELAY_MS);
+> +	pm_runtime_use_autosuspend(&client->dev);
+> +
+> +	return 0;
+> +fail_poweroff:
+> +	data->chip_spec->set_power_state(data, false);
+> +	return ret;
+>  }
+> =20
+>  static const struct of_device_id vcnl_4000_of_match[] =3D {
+> @@ -422,13 +489,51 @@ static const struct of_device_id vcnl_4000_of_match=
+[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, vcnl_4000_of_match);
+> =20
+> +static int vcnl4000_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +
+> +	pm_runtime_dont_use_autosuspend(&client->dev);
+> +	pm_runtime_disable(&client->dev);
+> +	iio_device_unregister(indio_dev);
+> +	pm_runtime_set_suspended(&client->dev);
+> +
+> +	return data->chip_spec->set_power_state(data, false);
+> +}
+> +
+> +static int __maybe_unused vcnl4000_runtime_suspend(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +
+> +	return data->chip_spec->set_power_state(data, false);
+> +}
+> +
+> +static int __maybe_unused vcnl4000_runtime_resume(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +
+> +	return data->chip_spec->set_power_state(data, true);
+> +}
+> +
+> +static const struct dev_pm_ops vcnl4000_pm_ops =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(vcnl4000_runtime_suspend,
+> +			   vcnl4000_runtime_resume, NULL)
+> +};
+> +
+>  static struct i2c_driver vcnl4000_driver =3D {
+>  	.driver =3D {
+>  		.name   =3D VCNL4000_DRV_NAME,
+> +		.pm	=3D &vcnl4000_pm_ops,
+>  		.of_match_table =3D vcnl_4000_of_match,
+>  	},
+>  	.probe  =3D vcnl4000_probe,
+>  	.id_table =3D vcnl4000_id,
+> +	.remove	=3D vcnl4000_remove,
+>  };
+> =20
+>  module_i2c_driver(vcnl4000_driver);
 
