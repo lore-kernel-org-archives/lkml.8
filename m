@@ -2,199 +2,89 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58160C352A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CDC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC81214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0825020674
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bBclXKWH"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EvYkwqsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgBFDFB (ORCPT
+        id S1727770AbgBFDHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:05:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58967 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727558AbgBFDFB (ORCPT
+        Wed, 5 Feb 2020 22:07:08 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5153 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727307AbgBFDHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:05:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580958299;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dZmilr4tlxmSPvlBFFTM+7GZjr7g54JZ6ybjetf90JQ=;
-        b=bBclXKWHqE0FmkFxHVOKEBkvMde4umICaVTEnS4TtKSyTx4Q5Me/DgH8V4l33o8+IWgqyy
-        /DmV8YAn/VPxiK+dvQ9QpFtzeETE8Monq6YzFOZaLX3/j5UXSSWQ8JZLEis/U7Yg3VE4Jo
-        fiWKJz95vox2rkS2JqqiPDGbNmaZYw4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-X0XgH6JIPi2zxsSJw37NDg-1; Wed, 05 Feb 2020 22:04:58 -0500
-X-MC-Unique: X0XgH6JIPi2zxsSJw37NDg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 784FA2F60;
-        Thu,  6 Feb 2020 03:04:55 +0000 (UTC)
-Received: from [10.72.13.85] (ovpn-13-85.pek2.redhat.com [10.72.13.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3A4D5C1B2;
-        Thu,  6 Feb 2020 03:04:42 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-To:     Shahaf Shuler <shahafs@mellanox.com>,
-        Tiwei Bie <tiwei.bie@intel.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "dan.daly@intel.com" <dan.daly@intel.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
- <20200205020247.GA368700@___>
- <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <112858a4-1a01-f4d7-e41a-1afaaa1cad45@redhat.com>
- <AM0PR0502MB3795AD42233D69F350402A8AC3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <8af7b9b1-f721-8d1c-dd1c-403424ee20b9@redhat.com>
-Date:   Thu, 6 Feb 2020 11:04:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 5 Feb 2020 22:07:08 -0500
+X-UUID: b173328609774f689a7a2d88ea64cc44-20200206
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=T7kvNsa0joGaKP0pe9UMwN6WD2P1Rppfsrt81EbaJM0=;
+        b=EvYkwqsUcuh+csHXMVTcsfWr9Qtl0cq1SP2aTFBfImdFSOFS1BWXud9TC3PotZITKIMZrPcVCXSW+wptVODVBheU6kiFcmU0js2jit0LrYP3HDA7TYMJQMmhMfkiyr5qNHqcG3AiuSM3hduo1Q3ExxoPmBeaagFjHCkjOqavVNI=;
+X-UUID: b173328609774f689a7a2d88ea64cc44-20200206
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 53172226; Thu, 06 Feb 2020 11:07:01 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 6 Feb 2020 11:06:14 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 6 Feb 2020 11:07:18 +0800
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>, <wen.su@mediatek.com>
+Subject: [PATCH v2 0/4] Add Support for MediaTek PMIC MT6359 Regulator
+Date:   Thu, 6 Feb 2020 11:06:47 +0800
+Message-ID: <1580958411-2478-1-git-send-email-Wen.Su@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <AM0PR0502MB3795AD42233D69F350402A8AC3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/2/5 =E4=B8=8B=E5=8D=885:30, Shahaf Shuler wrote:
-> Wednesday, February 5, 2020 9:50 AM, Jason Wang:
->> Subject: Re: [PATCH] vhost: introduce vDPA based backend
->> On 2020/2/5 =E4=B8=8B=E5=8D=883:15, Shahaf Shuler wrote:
->>> Wednesday, February 5, 2020 4:03 AM, Tiwei Bie:
->>>> Subject: Re: [PATCH] vhost: introduce vDPA based backend
->>>>
->>>> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
->>>>> On 2020/1/31 =E4=B8=8A=E5=8D=8811:36, Tiwei Bie wrote:
->>>>>> This patch introduces a vDPA based vhost backend. This backend is
->>>>>> built on top of the same interface defined in virtio-vDPA and
->>>>>> provides a generic vhost interface for userspace to accelerate the
->>>>>> virtio devices in guest.
->>>>>>
->>>>>> This backend is implemented as a vDPA device driver on top of the
->>>>>> same ops used in virtio-vDPA. It will create char device entry
->>>>>> named vhost-vdpa/$vdpa_device_index for userspace to use.
->> Userspace
->>>>>> can use vhost ioctls on top of this char device to setup the backe=
-nd.
->>>>>>
->>>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
->>> [...]
->>>
->>>>>> +static long vhost_vdpa_do_dma_mapping(struct vhost_vdpa *v) {
->>>>>> +	/* TODO: fix this */
->>>>> Before trying to do this it looks to me we need the following durin=
-g
->>>>> the probe
->>>>>
->>>>> 1) if set_map() is not supported by the vDPA device probe the IOMMU
->>>>> that is supported by the vDPA device
->>>>> 2) allocate IOMMU domain
->>>>>
->>>>> And then:
->>>>>
->>>>> 3) pin pages through GUP and do proper accounting
->>>>> 4) store GPA->HPA mapping in the umem
->>>>> 5) generate diffs of memory table and using IOMMU API to setup the
->>>>> dma mapping in this method
->>>>>
->>>>> For 1), I'm not sure parent is sufficient for to doing this or need
->>>>> to introduce new API like iommu_device in mdev.
->>>> Agree. We may also need to introduce something like the iommu_device=
-.
->>>>
->>> Would it be better for the map/umnap logic to happen inside each devi=
-ce ?
->>> Devices that needs the IOMMU will call iommu APIs from inside the dri=
-ver
->> callback.
->>
->>
->> Technically, this can work. But if it can be done by vhost-vpda it wil=
-l make the
->> vDPA driver more compact and easier to be implemented.
-> Need to see the layering of such proposal but am not sure.
-> Vhost-vdpa is generic framework, while the DMA mapping is vendor specif=
-ic.
-> Maybe vhost-vdpa can have some shared code needed to operate on iommu, =
-so drivers can re-use it.  to me it seems simpler than exposing a new iom=
-mu device.
-
-
-I think you mean on-chip IOMMU here. For shared code, I guess this only=20
-thing that could be shared is the mapping (rbtree) and some helpers. Or=20
-is there any other in your mind?
-
-
->>
->>> Devices that has other ways to do the DMA mapping will call the
->> proprietary APIs.
->>
->>
->> To confirm, do you prefer:
->>
->> 1) map/unmap
-> It is not only that. AFAIR there also flush and invalidate calls, right=
-?
-
-
-unmap will accept a range so it it can do flush and invalidate.
-
-
->
->> or
->>
->> 2) pass all maps at one time?
-> To me this seems more straight forward.
-> It is correct that under hotplug and large number of memory segments th=
-e driver will need to understand the diff (or not and just reload the new=
- configuration). However, my assumption here is that memory hotplug is he=
-avy flow anyway, and the driver extra cycles will not be that visible
-
-
-Yes, and vhost can provide helpers to generate the diffs.
-
-Thanks
-
-
->
->> Thanks
->>
->>
+VGhpcyBwYXRjaHNldCBhZGQgc3VwcG9ydCB0byBNVDYzNTkgUE1JQyByZWd1bGF0b3IuIE1UNjM1
+OSBpcyBwcmltYXJ5DQpQTUlDIGZvciBNVDY3NzkgcGxhdGZvcm0uDQoNCkNoYW5nZXMgc2luY2Ug
+djI6DQotIHJlbW92ZSBvcGVuIGNvZGluZyBpbiB0aGUgbXQ2MzU5IHJlZ3VsYXRvciBmb3Igdm9s
+dF90YWJsZSB0eXBlIHJlZ3VsYXRvcnMNCi0gcmVmaW5lIGNvZGluZyBzdHlsZSBpbiB0aGUgbXQ2
+MzU5IHJlZ3VsYXRvciB0byBhdm9pZCB1c2luZyB0ZXJuZXJ5IG9wZXJhdG9yDQotIHJlbW92ZSB1
+bm5lY2Vzc2FyeSByZWplY3Qgb3BlcmF0aW9uIGluIG10NjM1OSByZWd1bGF0b3Igc2V0IG1vZGUg
+ZnVuY3Rpb24NCg0KDQpXZW4gU3UgKDQpOg0KICBkdC1iaW5kaW5nczogcmVndWxhdG9yOiBBZGQg
+ZG9jdW1lbnQgZm9yIE1UNjM1OSByZWd1bGF0b3INCiAgbWZkOiBBZGQgZm9yIFBNSUMgTVQ2MzU5
+IHJlZ2lzdGVycyBkZWZpbml0aW9uDQogIHJlZ3VsYXRvcjogbXQ2MzU5OiBBZGQgc3VwcG9ydCBm
+b3IgTVQ2MzU5IHJlZ3VsYXRvcg0KICBhcm02NDogZHRzOiBtdDYzNTk6IGFkZCBQTUlDIE1UNjM1
+OSByZWxhdGVkIG5vZGVzDQoNCiAuLi4vYmluZGluZ3MvcmVndWxhdG9yL210NjM1OS1yZWd1bGF0
+b3IudHh0ICAgICAgICB8ICA1OCArKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
+MzU5LmR0c2kgICAgICAgICAgIHwgMzA2ICsrKysrKysrKw0KIGRyaXZlcnMvcmVndWxhdG9yL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICsNCiBkcml2ZXJzL3JlZ3VsYXRv
+ci9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQogZHJpdmVycy9yZWd1
+bGF0b3IvbXQ2MzU5LXJlZ3VsYXRvci5jICAgICAgICAgICAgICAgfCA3MzggKysrKysrKysrKysr
+KysrKysrKysrDQogaW5jbHVkZS9saW51eC9tZmQvbXQ2MzU5L3JlZ2lzdGVycy5oICAgICAgICAg
+ICAgICAgfCA1MzEgKysrKysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9yZWd1bGF0b3IvbXQ2
+MzU5LXJlZ3VsYXRvci5oICAgICAgICAgfCAgNTggKysNCiA3IGZpbGVzIGNoYW5nZWQsIDE3MDEg
+aW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcmVndWxhdG9yL210NjM1OS1yZWd1bGF0b3IudHh0DQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2MzU5LmR0c2kNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9yZWd1bGF0b3IvbXQ2MzU5LXJlZ3VsYXRvci5jDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL210NjM1OS9yZWdpc3RlcnMuaA0KIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3JlZ3VsYXRvci9tdDYzNTktcmVndWxhdG9yLmgN
+Cg0KLS0gDQoxLjkuMQ0K
 
