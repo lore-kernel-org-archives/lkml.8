@@ -2,179 +2,89 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3B9C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC144C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA3F21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B650A21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fsF/+l7I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRgGZaaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgBFNul (ORCPT
+        id S1728208AbgBFNvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:50:41 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19742 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbgBFNuk (ORCPT
+        Thu, 6 Feb 2020 08:51:08 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45845 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbgBFNvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:50:40 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3c19740000>; Thu, 06 Feb 2020 05:49:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Feb 2020 05:50:39 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 05:50:39 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
- 2020 13:50:37 +0000
-Subject: Re: [PATCH v7 14/19] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200202222854.18409-1-digetx@gmail.com>
- <20200202222854.18409-15-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ca0f71ef-ba16-73bc-d904-1f5351c69931@nvidia.com>
-Date:   Thu, 6 Feb 2020 13:50:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 08:51:07 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d9so4465374qte.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 05:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/Yp62VZP/TU4EmOXICph4TFUdvh/hYbSj8U+q1EI+IM=;
+        b=lRgGZaaRwSTSRspiGoLl4svQOd+yGPep4dvyDaduy1JLRDaMFAHwnh5pSSHmzPVd+i
+         CCKY2m8qkIrqsognf/5omzUmWm6Ag6GMdxirURhGnAtbdc/nH8xb5iiKRP8iDlqMsjcJ
+         c+neRcE5iDIzJKIFmI4088kKq0V1FQffPRc6xLpKwK+hT4G+9S5TWDm5W2RB/eg5X99+
+         abdZEIhptucrgMD9RMbn1lfJ9Ok2DZb+o4l7x74fHkwLm0iSDKL6mdyMZip0bY+Jd8bJ
+         DG4kvy6qSKr/iJe7iycW/x7vBGRY2Nt0SjkNg7J7+T3ksxx1KXr+8b9k5ZkAakVIeD3Q
+         /Tfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/Yp62VZP/TU4EmOXICph4TFUdvh/hYbSj8U+q1EI+IM=;
+        b=f6qCu7hQlZGCN8at0dbQYeVmao9N4OmMysn2SaYskb4iy3nSPvK4gYW4OfdEn2+bKV
+         dCAVyRjh2jj6Tven+IgxK8Mxaa+UiD65z9z1hRxpJYmlRlG15jhGGtIlzVMJ9b5rb5Hz
+         w8WRdOZW2b4zS7LpbcS61NJRNcW3oj+WX7ZXpPggnpx77cLk/bKQ95X9Tk33FDznaGMK
+         tioO5b12Ln/zfG09aCB88Iwv47JcdjWzKx7T7s6nKOT9uKdCUVfZcTaxEHDvVLZxa8Pe
+         WceYd2X2VrXwwtqS2wwioBZydt0a5mdH956BN9X7oa4iS/pY9opHr2PlFmZ94uJSwbeS
+         2GFA==
+X-Gm-Message-State: APjAAAX41oGoxRvulfWF68iCGQZHkr4p4kdqdTRGjgzCjW52UW+jbhrx
+        R35TBa1VWKEPRTImTmpOjbDaZqzv0d6wrGlyvaNQqA==
+X-Google-Smtp-Source: APXvYqxsLqw/+YtMF5EF3fE9C3DWLc8jrUtlh0iFPiIk3b39txMeWxl415cH6yU6K97xCiQ+k0uvcM16GDcrQDYxwIo=
+X-Received: by 2002:ac8:34b2:: with SMTP id w47mr2604233qtb.142.1580997066532;
+ Thu, 06 Feb 2020 05:51:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200202222854.18409-15-digetx@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580996981; bh=4hvHZitSsy3srR7ePbJSExrRxuRMgu3w7SYaTU6yDGA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fsF/+l7IWaQb6/AqlvjCPk6jyI/Qn8iVdRGVfRl55Xskzw5B1P7dBHBcnS2zsqpZW
-         blLxtNWeupwYqwJ5pyFURZ42FrB5cmYniUCrrFL8GdadmF2r6cOLwnp7pNdpoTgc1n
-         Hxc4vKTd+Vjg1scKjwnR5yv6NLSCVkGPSLb+RS9sf5PKsd6ylWBneURin5erMiagc4
-         7G0EXEagSU1JloKqwX//ot9H1TMP3uSkykX/2JlG55faTW0cyiLsZxxrOCzk7+zWb6
-         KZnpFzyBfrbaIVZYTa/uyBTrvpj2+EqD5J/dJ/g8bczeCYjMN2MS8A9diKsvfcOURt
-         +76eriBfUY6rg==
+References: <1580963761-24964-1-git-send-email-gupt21@gmail.com> <20200206113248.GL3897@sirena.org.uk>
+In-Reply-To: <20200206113248.GL3897@sirena.org.uk>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Thu, 6 Feb 2020 19:20:55 +0530
+Message-ID: <CALUj-gsY5dYYMejnYNH1YbuBysEOp=PpqxV-jCZ+hbAgoi2qiQ@mail.gmail.com>
+Subject: Re: [PATCH] regulator: da9063: remove redundant return statement
+To:     Mark Brown <broonie@kernel.org>
+Cc:     support.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com,
+        Axel Lin <axel.lin@ingics.com>, lgirdwood@gmail.com,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Done, thanks for guidance.
 
-On 02/02/2020 22:28, Dmitry Osipenko wrote:
-> It's a bit impractical to enable hardware's clock at the time of DMA
-> channel's allocation because most of DMA client drivers allocate DMA
-> channel at the time of the driver's probing, and thus, DMA clock is kept
-> always-enabled in practice, defeating the whole purpose of runtime PM.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++-----------
->  1 file changed, 24 insertions(+), 11 deletions(-)
-What about something like ...
-
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 22b88ccff05d..d60532f19a43 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -570,6 +570,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
- 	if (list_empty(&tdc->pending_sg_req)) {
- 		dev_err(tdc2dev(tdc), "DMA is running without req\n");
- 		tegra_dma_stop(tdc);
-+		pm_runtime_put(tdc->tdma->dev);
- 		return false;
- 	}
- 
-@@ -581,6 +582,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
- 	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
- 	if (!hsgreq->configured) {
- 		tegra_dma_stop(tdc);
-+		pm_runtime_put(tdc->tdma->dev);
- 		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
- 		tegra_dma_abort_all(tdc);
- 		return false;
-@@ -616,9 +618,14 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
- 	list_add_tail(&sgreq->node, &tdc->free_sg_req);
- 
- 	/* Do not start DMA if it is going to be terminate */
--	if (to_terminate || list_empty(&tdc->pending_sg_req))
-+	if (to_terminate)
- 		return;
- 
-+	if (list_empty(&tdc->pending_sg_req)) {
-+		pm_runtime_put(tdc->tdma->dev);
-+		return;
-+	}
-+
- 	tdc_start_head_req(tdc);
- }
- 
-@@ -731,6 +738,10 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
- 		goto end;
- 	}
- 	if (!tdc->busy) {
-+		err = pm_runtime_get_sync(tdc->tdma->dev);
-+		if (err < 0)
-+			return err;
-+
- 		tdc_start_head_req(tdc);
- 
- 		/* Continuous single mode: Configure next req */
-@@ -786,6 +797,8 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	}
- 	tegra_dma_resume(tdc);
- 
-+	pm_runtime_put(tdc->tdma->dev);
-+
- skip_dma_stop:
- 	tegra_dma_abort_all(tdc);
- 
-@@ -1280,22 +1293,15 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
- static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
--	struct tegra_dma *tdma = tdc->tdma;
--	int ret;
- 
- 	dma_cookie_init(&tdc->dma_chan);
- 
--	ret = pm_runtime_get_sync(tdma->dev);
--	if (ret < 0)
--		return ret;
--
- 	return 0;
- }
- 
- static void tegra_dma_free_chan_resources(struct dma_chan *dc)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
--	struct tegra_dma *tdma = tdc->tdma;
- 	struct tegra_dma_desc *dma_desc;
- 	struct tegra_dma_sg_req *sg_req;
- 	struct list_head dma_desc_list;
-@@ -1328,7 +1334,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
- 		list_del(&sg_req->node);
- 		kfree(sg_req);
- 	}
--	pm_runtime_put(tdma->dev);
- 
- 	tdc->slave_id = TEGRA_APBDMA_SLAVE_ID_INVALID;
- }
-
--- 
-nvpublic
+On Thu, Feb 6, 2020 at 5:02 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Feb 06, 2020 at 10:06:01AM +0530, Rishi Gupta wrote:
+> > The devm_request_threaded_irq() already returns 0 on success
+> > and negative error code on failure. So return from this itself
+> > can be used while preserving error log in case of failure.
+> >
+> > This commit also fixes checkpatch.pl errors & warnings:
+> > - WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+> > - WARNING: line over 80 characters
+> > - ERROR: space prohibited before that ',' (ctx:WxW)
+> > - ERROR: code indent should use tabs where possible
+> > - WARNING: Block comments use * on subsequent lines
+>
+> This should be split into separate patches, each doing one thing
+> as covered in submitting-patchs.rst.
