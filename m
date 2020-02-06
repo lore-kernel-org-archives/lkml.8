@@ -2,190 +2,187 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB7C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BD8C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8844214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B08214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lgvMv7Qc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jmp6AYha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgBFSrn (ORCPT
+        id S1727851AbgBFSuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:47:43 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52260 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgBFSrm (ORCPT
+        Thu, 6 Feb 2020 13:50:06 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33723 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFSuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:47:42 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep11so354575pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:47:40 -0800 (PST)
+        Thu, 6 Feb 2020 13:50:06 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d5so5354748qto.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rx4sRzOip+Mq3tGXU7kM2rwUAP/FgU+xMoujRQ/y4dA=;
-        b=lgvMv7Qc1FR7VzTuur5zQETjZ4R1hLqWvzzOgqfbayhBhP23i0+A0FqGpEuB7DKUBV
-         qUU9Exb4rnQCoSYh7ld+zLT8gVbRvAoq7i+qdijRiM80OtiTWIgeQeYfScSMWKrN5lTr
-         sh8GL0Thd6+Mk8gjOO1VtjNrXhZISbfIHIfuRZihLSeUaz/gKrNAV+pJhJTLbJd+XVis
-         JjIAfW0KRiSdumBRagvfqbpvjlU+I2lSPuqP5hAupoK2wrq+jJ9W/MgeBGv/0WfSWOxY
-         JdckjHdCGrx/36SdGls8IO/qyexTSmGzzfw+LoXRTxQoROJUVHIRp/HRKVQs7/q6znL1
-         bufQ==
+        bh=YuwfgwqB0dqYPKLzWqU8tOo9ajVtA4MOIL0J1xcdpbQ=;
+        b=Jmp6AYhao4RBdM36/OZcBwP8eZpbBSisVdzTFp/cBTMVEzM/X09roTZwjCtgyplUpE
+         wF66O3llkIOnTrTFo8XMsFkg6MEoDLTBynExQbscY6OyV9nF/YQEoaRXvRmpC1ME/d5g
+         FZkJJi0QFViNalvad0dtKa79RHFVk6naOtJpg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rx4sRzOip+Mq3tGXU7kM2rwUAP/FgU+xMoujRQ/y4dA=;
-        b=d20VyDJT3SD19Io2F+TyOkB/7sMdiLSn9U+4FEaKfgzUirRdFuWT3F80qQsQp0H7wQ
-         z/bbJifBYIIPEbPj642KutNPW+tAqLrQJqvVcxUeZj34ZHJcQxYFPj03xDop9nsG07c1
-         aQylKMzyxxJRH9R6qTiuFeGcmhBvUeP/IoG5q+HVVjD/TwU4GYe2wFLi+mCw2GpOZdwY
-         7eeycHu+fL6zqhZFIMgpuAbwoq5eNjAX7JOEPr0MnmS6JUPA9X9K/Ikmz/wzc/rN3VhK
-         dnsdTZ96mTDBW71tDTx7L6+W+9S05G7BAblPhD/MYzCuQAhkxfGqGJCRIpyJmXahesr8
-         bZnQ==
-X-Gm-Message-State: APjAAAUUAJofnMCzNymb/JztFptzVyu9213MuIrCUeXmpnJDA95hqYTC
-        PtCn4jwGermlYG7yH20YHcSrsy7YpwIr8liCqf1rfQ==
-X-Google-Smtp-Source: APXvYqwoMLnyphmn9jqUaL6zuzdMwQhZMO0C2FVmu1LrHrHVcviCyfV/O9rId5UR/by0bAMcdwlU6ZoLG29qVB4ScLk=
-X-Received: by 2002:a17:90a:6c26:: with SMTP id x35mr5868897pjj.84.1581014860109;
- Thu, 06 Feb 2020 10:47:40 -0800 (PST)
+        bh=YuwfgwqB0dqYPKLzWqU8tOo9ajVtA4MOIL0J1xcdpbQ=;
+        b=duu+iuWO4z2Um13Kyjo9HB95RoS9B0uEMjbicHPW0vC/V+HJQHpID3WQkfG12WOxSS
+         HE/Ct+25IR9fbvdyx8e6pikcWSI4ZrdBPWLjC1415RN6wkMYfBxzZGrqUkfrpvyT/RT2
+         BHtF3HJWjm0zU9cfcrH9IQoDEu7e0K3vlGMxaX+whICWLTBAMkh9XTBwLnm8JltDwKP0
+         tWLA9XiU9Ibc+FIOsnHsv/7ylMUH7gRQnx60PBmt6b6ZgWhpsUyFeZ4PPPY1cpXyG3xQ
+         3hpKTmqOS6gJDhF44N0LVgrjIwhoMpe2TBo2ZUBCnEu5swsrrGxnETw1HfSXhKCOouDI
+         6Oxw==
+X-Gm-Message-State: APjAAAV8CWOc9sbZXkgEaLdnK8BNSIXI+ZsXYJDE32NGWUz7p+bDuvcc
+        CCflQPnYadgCZjS9Kf27L/VmDrwD3NNrMLsEagSSow==
+X-Google-Smtp-Source: APXvYqwgk5WKRhBnLW+OKDR8M0PFQhkyjJ+kJb/0KadIL2EQmjhvrCJaEBVvozZT3SJFZo4/pjuBx1j3Ga2Gb5/LEJM=
+X-Received: by 2002:ac8:7b29:: with SMTP id l9mr3851104qtu.141.1581015004918;
+ Thu, 06 Feb 2020 10:50:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-6-brendanhiggins@google.com> <69582db9-d379-7d2a-1342-6de9a5d79141@gmail.com>
-In-Reply-To: <69582db9-d379-7d2a-1342-6de9a5d79141@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 6 Feb 2020 10:47:28 -0800
-Message-ID: <CAFd5g45jHKXoMU4k103cqfeTAtUpaZh7ZK2ALpzHkRZTuVYa-g@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] kunit: test: add test plan to KUnit TAP format
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
+References: <20200205190028.183069-1-pmalani@chromium.org> <20200205190028.183069-11-pmalani@chromium.org>
+ <20200206121753.7b809631@archlinux> <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
+In-Reply-To: <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Thu, 6 Feb 2020 10:49:53 -0800
+Message-ID: <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 3:01 PM Frank Rowand <frowand.list@gmail.com> wrote:
+Hi Enric,
+
+Thanks for taking a look at the patch. Please see my response inline:
+
+On Thu, Feb 6, 2020 at 5:45 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
 >
-> On 1/30/20 5:08 PM, Brendan Higgins wrote:
-> > TAP 14 allows an optional test plan to be emitted before the start of
-> > the start of testing[1]; this is valuable because it makes it possible
-> > for a test harness to detect whether the number of tests run matches the
-> > number of tests expected to be run, ensuring that no tests silently
-> > failed.
-> >
-> > Link[1]: https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >  lib/kunit/executor.c                          | 17 +++++
-> >  lib/kunit/test.c                              | 11 ---
-> >  tools/testing/kunit/kunit_parser.py           | 74 ++++++++++++++++---
-> >  .../test_is_test_passed-all_passed.log        |  1 +
-> >  .../test_data/test_is_test_passed-crash.log   |  1 +
-> >  .../test_data/test_is_test_passed-failure.log |  1 +
-> >  6 files changed, 82 insertions(+), 23 deletions(-)
-> >
-> > diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-> > index b75a46c560847..7fd16feff157e 100644
-> > --- a/lib/kunit/executor.c
-> > +++ b/lib/kunit/executor.c
-> > @@ -11,11 +11,28 @@ extern struct kunit_suite * const * const __kunit_suites_end[];
-> >
-> >  #if IS_BUILTIN(CONFIG_KUNIT)
-> >
-> > +static void kunit_print_tap_header(void)
-> > +{
-> > +     struct kunit_suite * const * const *suites, * const *subsuite;
-> > +     int num_of_suites = 0;
-> > +
-> > +     for (suites = __kunit_suites_start;
-> > +          suites < __kunit_suites_end;
-> > +          suites++)
-> > +             for (subsuite = *suites; *subsuite != NULL; subsuite++)
-> > +                     num_of_suites++;
-> > +
-> > +     pr_info("TAP version 14\n");
-> > +     pr_info("1..%d\n", num_of_suites);
-> > +}
-> > +
+> Hi Prashant,
 >
-> Subsuites are not in Linux 5.5, as far as I can tell, so it is hard to review
-> this.
+> On 6/2/20 13:17, Jonathan Cameron wrote:
+> > On Wed,  5 Feb 2020 11:00:13 -0800
+> > Prashant Malani <pmalani@chromium.org> wrote:
+> >
+> >> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
+> >> which does the message buffer setup and cleanup.
+> >>
+> >> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
+> >> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
+> >> function.
+> >>
+> >> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> >
+> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >
+> >> ---
+> >>
+> >> Changes in v2:
+> >> - Updated to use new function name and parameter list.
+> >> - Used C99 element setting to initialize param struct.
+> >> - For second usage, replaced cros_ec_cmd_xfer_status() with
+> >>   cros_ec_cmd_xfer() which is functionally similar.
+> >>
+> >>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
+> >>  1 file changed, 9 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> >> index d3a3626c7cd834..94e22e7d927631 100644
+> >> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> >> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> >> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> >>                                           u16 cmd_offset, u16 cmd, u32 *mask)
+> >>  {
+> >>      int ret;
+> >> -    struct {
+> >> -            struct cros_ec_command msg;
+> >> -            union {
+> >> -                    struct ec_params_get_cmd_versions params;
+> >> -                    struct ec_response_get_cmd_versions resp;
+> >> -            };
+> >> -    } __packed buf = {
+> >> -            .msg = {
+> >> -                    .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> >> -                    .insize = sizeof(struct ec_response_get_cmd_versions),
+> >> -                    .outsize = sizeof(struct ec_params_get_cmd_versions)
+> >> -                    },
+> >> -            .params = {.cmd = cmd}
+> >> +    struct ec_params_get_cmd_versions params = {
+> >> +            .cmd = cmd,
+> >>      };
+> >> +    struct ec_response_get_cmd_versions resp = {0};
+> >>
+> >> -    ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> >> +    ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> >> +                      &params, sizeof(params), &resp, sizeof(resp), NULL);
+> >>      if (ret >= 0)
+> >> -            *mask = buf.resp.version_mask;
+> >> +            *mask = resp.version_mask;
+> >>      return ret;
+> >>  }
+> >>
+> >> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+> >>
+> >>      memcpy(state->msg->data, &state->param, sizeof(state->param));
+> >>
+> >> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+> >> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
+> >>      if (ret < 0)
+> >>              return ret;
+> >> +    else if (state->msg->result != EC_RES_SUCCESS)
+> >> +            return -EPROTO;
+> >>
 >
-> But I think this observation will still be valid even though I am not up
-> to speed on subsuites.
+> There is no way to use the new cros_ec_cmd here?
 
-"substitutes" are just an artifact from having to group together all
-suites that occur in a module. It should be mostly immaterial to most
-users, but we have to have all the suites that occur in a module
-grouped together in order to support KUnit tests as loadable modules.
+I think it is doable. From looking at the code I felt the factors we
+need to be careful about are:
+- The function cros_ec_motion_send_host_cmd() is called from a few
+other files, each of which set up the struct cros_ec_command
+differently (reference:
+https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
+- It is not clear to me how readability will be affected by making the
+change to cros_ec_cmd().
 
-I just call them subsuites here because I didn't know what else to
-call them. Still, the relationship between them should be mostly
-ignored by users as you seem to recognize below.
+Due to the above two factors, but primarily because I wanted to avoid
+making such an involved large change in this 17 patch series, I
+reasoned it would be better to make the transition to cros_ec_cmd()
+for these files in a separate patch/series.
+My plan after this patch series is to work on this driver(perhaps we
+can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
+cros_ec_cmd_xfer() usage.
 
-Also, module support for KUnit was just recently accepted into torvalds/master:
+WDYT?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=08a3ef8f6b0b1341c670caba35f782c9a452d488
+Best regards,
 
-You should be able to apply this change to torvalds/master now.
 
-> num_of_suites is all test suites declared (as built in).  In Linux 5.5,
-> each kunit_suite contains one or more test cases.  Each test case leads
-> to either "ok" or "not ok".  So instead of counting number of tests
-> suites, the number of test cases needs to be counted.
-
-Nope, but I think you understand correctly below...
-
-> Ahhh, I think my lack of visibility of what tree this series is against
-> is about to lead me astray!  Are the test cases in the subsuite
-> implemented as what TAP 14 calls "subtests"?  If so, then the above
-> code that counts suites instead of test cases would be correct.
-
-Yep! You got it! Test cases are "subtests" in TAP 14. So there is a
-ok/not ok line for each suite, and nested as subtests above that are
-indented ok/not ok lines for each test case. KUnit already does this
-today. We are just moving some of the printing logic out so we can
-count the suites and print a test plan.
-
-Technically, what we print today (before this change) is legal TAP 14.
-The test plan is not required. However, the test plan is very helpful
-as it makes it possible to know if some tests just never ran for some
-reason.
-
-> I'm spinning my wheels now, since I don't know what I am
-> reviewing against, so I'm going to stop reviewing, other
-> than maybe a quick scan.
-
-I just applied this patch series against torvalds/master which I
-pulled this morning, and it applied cleanly. I will specify in any
-subsequent revisions that this is based on linux-kselftest/kunit since
-that's where these patches will be applied, but they should apply
-against any rc of 5.6 just fine once they are cut.
-
-Cheers!
+>
+>
+> >>      if (ret &&
+> >>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
+> >
