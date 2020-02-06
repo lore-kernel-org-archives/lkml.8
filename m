@@ -2,254 +2,125 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7ABC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA403C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF3F20674
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD76D20720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tzu/fv1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgBFDME (ORCPT
+        id S1727924AbgBFDMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:12:04 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64088 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727703AbgBFDMD (ORCPT
+        Wed, 5 Feb 2020 22:12:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30806 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727912AbgBFDMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:12:03 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0163A8vm081052;
-        Wed, 5 Feb 2020 22:11:32 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhmnq7ya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 22:11:32 -0500
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0163BVmo087245;
-        Wed, 5 Feb 2020 22:11:31 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhmnq7xt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 22:11:31 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01637kEB016717;
-        Thu, 6 Feb 2020 03:11:30 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 2xykc9hses-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 03:11:30 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0163BSNf63898042
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Feb 2020 03:11:28 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 873E5BE054;
-        Thu,  6 Feb 2020 03:11:28 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DA34BE051;
-        Thu,  6 Feb 2020 03:11:09 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.163.250])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Feb 2020 03:11:08 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Steven Price <steven.price@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH v6 06/11] powerpc/mm/book3s64/hash: Use functions to track lockless pgtbl walks
-Date:   Thu,  6 Feb 2020 00:08:55 -0300
-Message-Id: <20200206030900.147032-7-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200206030900.147032-1-leonardo@linux.ibm.com>
-References: <20200206030900.147032-1-leonardo@linux.ibm.com>
+        Wed, 5 Feb 2020 22:12:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580958732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RspSNO+p1yr02wpcehjk1h3AeZBEyxIwLa/kF1BxhEY=;
+        b=Tzu/fv1+x57PPEYYLKMdcqmju0mpoP7/vTvkoKseGP3HEPZfXPa6OPdgaFqvEuNWxp2i1J
+        rTS2hH0KS9B/cnzajxOAcikwiBJnieqsB4Lu1Hlqlx95vWMoYKAVIApXWQTnnT8JxX+AOU
+        P6L9SYGk/bzTklPNYE4Wen+Xtfd9TbU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-IABUdiBpNvaQmA4HuVYVBQ-1; Wed, 05 Feb 2020 22:12:10 -0500
+X-MC-Unique: IABUdiBpNvaQmA4HuVYVBQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4495D8018A5;
+        Thu,  6 Feb 2020 03:12:07 +0000 (UTC)
+Received: from [10.72.13.85] (ovpn-13-85.pek2.redhat.com [10.72.13.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AAA85C1B2;
+        Thu,  6 Feb 2020 03:11:53 +0000 (UTC)
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Shahaf Shuler <shahafs@mellanox.com>,
+        Tiwei Bie <tiwei.bie@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "dan.daly@intel.com" <dan.daly@intel.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+ <20200205020247.GA368700@___>
+ <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <112858a4-1a01-f4d7-e41a-1afaaa1cad45@redhat.com>
+ <20200205125648.GV23346@mellanox.com>
+ <20200205081210-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <55b050d6-b31d-f8a2-2a15-0fc68896d47f@redhat.com>
+Date:   Thu, 6 Feb 2020 11:11:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_06:2020-02-04,2020-02-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=749
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 clxscore=1015
- malwarescore=0 suspectscore=0 phishscore=0 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002060022
+In-Reply-To: <20200205081210-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applies the new tracking functions to all hash-related functions that do
-lockless pagetable walks.
 
-hash_page_mm: Adds comment that explain that there is no need to
-local_int_disable/save given that it is only called from DataAccess
-interrupt, so interrupts are already disabled.
+On 2020/2/5 =E4=B8=8B=E5=8D=889:14, Michael S. Tsirkin wrote:
+> On Wed, Feb 05, 2020 at 08:56:48AM -0400, Jason Gunthorpe wrote:
+>> On Wed, Feb 05, 2020 at 03:50:14PM +0800, Jason Wang wrote:
+>>>> Would it be better for the map/umnap logic to happen inside each dev=
+ice ?
+>>>> Devices that needs the IOMMU will call iommu APIs from inside the dr=
+iver callback.
+>>> Technically, this can work. But if it can be done by vhost-vpda it wi=
+ll make
+>>> the vDPA driver more compact and easier to be implemented.
+>> Generally speaking, in the kernel, it is normal to not hoist code of
+>> out drivers into subsystems until 2-3 drivers are duplicating that
+>> code. It helps ensure the right design is used
+>>
+>> Jason
+> That's up to the sybsystem maintainer really, as there's also some
+> intuition involved in guessing a specific API is widely useful.
+> In-kernel APIs are flexible, if we find something isn't needed we just
+> drop it.
+>
 
-local_irq_{save,restore} is already inside {begin,end}_lockless_pgtbl_walk,
-so there is no need to repeat it here.
+If I understand correctly. At least Intel (Ling Shan) and Brodcom (Rob)=20
+doesn't want to deal with DMA stuffs in their driver.
 
-Variable that saves the	irq mask was renamed from flags to irq_mask so it
-doesn't lose meaning now it's not directly passed to local_irq_* functions.
+Anyway since the DMA bus operations is optional, driver may still choose=20
+to do DMA by itself if they want even if it requires platform IOMMU to wo=
+rk.
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/mm/book3s64/hash_tlb.c   |  6 +++---
- arch/powerpc/mm/book3s64/hash_utils.c | 27 +++++++++++++++++----------
- 2 files changed, 20 insertions(+), 13 deletions(-)
-
-diff --git a/arch/powerpc/mm/book3s64/hash_tlb.c b/arch/powerpc/mm/book3s64/hash_tlb.c
-index 4a70d8dd39cd..86547c4151f6 100644
---- a/arch/powerpc/mm/book3s64/hash_tlb.c
-+++ b/arch/powerpc/mm/book3s64/hash_tlb.c
-@@ -194,7 +194,7 @@ void __flush_hash_table_range(struct mm_struct *mm, unsigned long start,
- {
- 	bool is_thp;
- 	int hugepage_shift;
--	unsigned long flags;
-+	unsigned long irq_mask;
- 
- 	start = _ALIGN_DOWN(start, PAGE_SIZE);
- 	end = _ALIGN_UP(end, PAGE_SIZE);
-@@ -209,7 +209,7 @@ void __flush_hash_table_range(struct mm_struct *mm, unsigned long start,
- 	 * to being hashed). This is not the most performance oriented
- 	 * way to do things but is fine for our needs here.
- 	 */
--	local_irq_save(flags);
-+	irq_mask = begin_lockless_pgtbl_walk();
- 	arch_enter_lazy_mmu_mode();
- 	for (; start < end; start += PAGE_SIZE) {
- 		pte_t *ptep = find_current_mm_pte(mm->pgd, start, &is_thp,
-@@ -229,7 +229,7 @@ void __flush_hash_table_range(struct mm_struct *mm, unsigned long start,
- 			hpte_need_flush(mm, start, ptep, pte, hugepage_shift);
- 	}
- 	arch_leave_lazy_mmu_mode();
--	local_irq_restore(flags);
-+	end_lockless_pgtbl_walk(irq_mask);
- }
- 
- void flush_tlb_pmd_range(struct mm_struct *mm, pmd_t *pmd, unsigned long addr)
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 523d4d39d11e..e6d4ab42173b 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -1341,12 +1341,16 @@ int hash_page_mm(struct mm_struct *mm, unsigned long ea,
- 		ea &= ~((1ul << mmu_psize_defs[psize].shift) - 1);
- #endif /* CONFIG_PPC_64K_PAGES */
- 
--	/* Get PTE and page size from page tables */
-+	/* Get PTE and page size from page tables :
-+	 * Called in from DataAccess interrupt (data_access_common: 0x300),
-+	 * interrupts are disabled here.
-+	 */
-+	__begin_lockless_pgtbl_walk(false);
- 	ptep = find_linux_pte(pgdir, ea, &is_thp, &hugeshift);
- 	if (ptep == NULL || !pte_present(*ptep)) {
- 		DBG_LOW(" no PTE !\n");
- 		rc = 1;
--		goto bail;
-+		goto bail_pgtbl_walk;
- 	}
- 
- 	/* Add _PAGE_PRESENT to the required access perm */
-@@ -1359,7 +1363,7 @@ int hash_page_mm(struct mm_struct *mm, unsigned long ea,
- 	if (!check_pte_access(access, pte_val(*ptep))) {
- 		DBG_LOW(" no access !\n");
- 		rc = 1;
--		goto bail;
-+		goto bail_pgtbl_walk;
- 	}
- 
- 	if (hugeshift) {
-@@ -1383,7 +1387,7 @@ int hash_page_mm(struct mm_struct *mm, unsigned long ea,
- 		if (current->mm == mm)
- 			check_paca_psize(ea, mm, psize, user_region);
- 
--		goto bail;
-+		goto bail_pgtbl_walk;
- 	}
- 
- #ifndef CONFIG_PPC_64K_PAGES
-@@ -1457,6 +1461,8 @@ int hash_page_mm(struct mm_struct *mm, unsigned long ea,
- #endif
- 	DBG_LOW(" -> rc=%d\n", rc);
- 
-+bail_pgtbl_walk:
-+	__end_lockless_pgtbl_walk(0, false);
- bail:
- 	exception_exit(prev_state);
- 	return rc;
-@@ -1545,7 +1551,7 @@ static void hash_preload(struct mm_struct *mm, unsigned long ea,
- 	unsigned long vsid;
- 	pgd_t *pgdir;
- 	pte_t *ptep;
--	unsigned long flags;
-+	unsigned long irq_mask;
- 	int rc, ssize, update_flags = 0;
- 	unsigned long access = _PAGE_PRESENT | _PAGE_READ | (is_exec ? _PAGE_EXEC : 0);
- 
-@@ -1567,11 +1573,12 @@ static void hash_preload(struct mm_struct *mm, unsigned long ea,
- 	vsid = get_user_vsid(&mm->context, ea, ssize);
- 	if (!vsid)
- 		return;
-+
- 	/*
- 	 * Hash doesn't like irqs. Walking linux page table with irq disabled
- 	 * saves us from holding multiple locks.
- 	 */
--	local_irq_save(flags);
-+	irq_mask = begin_lockless_pgtbl_walk();
- 
- 	/*
- 	 * THP pages use update_mmu_cache_pmd. We don't do
-@@ -1616,7 +1623,7 @@ static void hash_preload(struct mm_struct *mm, unsigned long ea,
- 				   mm_ctx_user_psize(&mm->context),
- 				   pte_val(*ptep));
- out_exit:
--	local_irq_restore(flags);
-+	end_lockless_pgtbl_walk(irq_mask);
- }
- 
- /*
-@@ -1679,16 +1686,16 @@ u16 get_mm_addr_key(struct mm_struct *mm, unsigned long address)
- {
- 	pte_t *ptep;
- 	u16 pkey = 0;
--	unsigned long flags;
-+	unsigned long irq_mask;
- 
- 	if (!mm || !mm->pgd)
- 		return 0;
- 
--	local_irq_save(flags);
-+	irq_mask = begin_lockless_pgtbl_walk();
- 	ptep = find_linux_pte(mm->pgd, address, NULL, NULL);
- 	if (ptep)
- 		pkey = pte_to_pkey_bits(pte_val(READ_ONCE(*ptep)));
--	local_irq_restore(flags);
-+	end_lockless_pgtbl_walk(irq_mask);
- 
- 	return pkey;
- }
--- 
-2.24.1
+Thanks
 
