@@ -2,175 +2,188 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074CAC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1752DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD92F227BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iXx0fGDH"
+	by mail.kernel.org (Postfix) with ESMTP id DBF7D22527
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgBFNZa (ORCPT
+        id S1727901AbgBFN0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:25:30 -0500
-Received: from mail-eopbgr80050.outbound.protection.outlook.com ([40.107.8.50]:47744
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726765AbgBFNZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:25:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dWizBTB75c5ENkyfH2yud+csi0XzbR0qCDKVP5m0LEl540IAUcnl3c6D/w4llrJtkBQPq4cJv+5cABiMbtWOKxuuDASkOnnNfu4WP1K2zkq2xFpcf/by95Ht61CUreClrBoNsf+HlOh3IJYwSg5NSX201RM0Oudysf8fljGWJzrnIUm1b+5bxwf9exVzTH3Z0mDg9u3YDh8n35ua4cqo5pVXcO1m6Yee+hIjLgworpDhCHl8cNhgUwirpYyBdEEHlr9Dx/G4YAuUpp0MJ1d3gCK6xE7XR+gguc8TVSQm+I5KgqyW0OlgzOST9xd5D+qV2+z7p5SoPfZfLLUSI+p1Qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Moj2P6Pst7s2pRvGPPgfFbmQI3n/kB5PPgcbGG9hwkY=;
- b=PPkg89W9nGesaVIm7IKdDgVIbI+wihUE/2P87dTKhoz3G8syQNnvayVFruBhwIjFfZWq10aUsJKkFjvSQDPwulvupmhBUe/ZB75rllBaHJtbSzAhzH7gSbioTDSHMnQjnOhQavrkelf7+1eWgziCZ0nvjzmbBVthBVYT9VUprewCz28dBeeTTccMyz1JkcNIWEn7LK1GIieySATKTuqEqaoIH9qz6lZG9ukCjiBottgKrsVtj+YYmjBLBhqi5fbEk33VKpDC6arM4gSjGhPwHVHV4Ap7wXEjScInfxb8JAcQ4e/YOPFF1dQwX5DD2hdT683vG0vWLk0T+77lQ67qxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Moj2P6Pst7s2pRvGPPgfFbmQI3n/kB5PPgcbGG9hwkY=;
- b=iXx0fGDH0gz0bjqBk4sYP/wRLWdMrt+69VaMQna1VUWEE61PWoY8xiKxjf2KETU7JXDronTepUlQy9kEFWXenURV9cexqtzdoBuYgcQJ5GL1AZ7z0S637rSyMv19c2nqEV3C7toseU85dyR032eX+Gk/u8vxBokrLXv+TxvZj74=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6844.eurprd04.prod.outlook.com (52.133.240.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.29; Thu, 6 Feb 2020 13:25:25 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
- 13:25:25 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv9 06/12] PCI: mobiveil: Add callback function for link up
- check
-Thread-Topic: [PATCHv9 06/12] PCI: mobiveil: Add callback function for link up
- check
-Thread-Index: AQHVn1UEYLWmKTdIpEiL1397xUm0IKfoyLAAgCRXEqA=
-Date:   Thu, 6 Feb 2020 13:25:25 +0000
-Message-ID: <DB8PR04MB6747A07EA7111D8694B0D57C841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-7-Zhiqiang.Hou@nxp.com>
- <20200113112201.GL42593@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20200113112201.GL42593@e119886-lin.cambridge.arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 66b59dd2-4b4d-40b6-db92-08d7ab0806ab
-x-ms-traffictypediagnostic: DB8PR04MB6844:|DB8PR04MB6844:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6844BD62D5C99987E0CCB9C9841D0@DB8PR04MB6844.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0305463112
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(4326008)(7696005)(86362001)(8676002)(66946007)(66476007)(66556008)(81156014)(26005)(81166006)(76116006)(66446008)(64756008)(6506007)(53546011)(478600001)(52536014)(6916009)(316002)(54906003)(33656002)(2906002)(8936002)(9686003)(7416002)(55016002)(5660300002)(71200400001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6844;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1X6RGJCUAD34lH3Kd2vZcqeKerFGwNfRMtmjWVQn47iiitqh6HbDNfOFda4pECbXUsAdb0xnOTpyXFucZ9/74vlYXtfU9uC6WxdY8cTRoWQBU/6WkgSqTA9wKGli1W3xSScTojh1Pw8X9w9Z2uaOBpsBc7tVVIwRMzNUbpIgNIVqx4fGpbcSiMWexg3rQuSEsXRYGb0L1lzyeY5r0Kd/F74+0taW+Syf+dpdLwsaUyb59BJLHuX/bmc+3d9mQ4Q/Cx8kiRbzx7tD1uidWPOSgdgmhkuaEHfJFeA6BeqClskgWt+WFo2hjiSY3bbUde6Ur6k+hKIch/1hG++lnE9cNYkgLJMvdN/X7VVeGByby6CuothrWQryjgN0qQf/yuiR88VFR+q8hdZea4xi0O2tas/1U5SB1dYtrq7BB5BZLCEOFxJAkqDu8aHid8RfE9+9
-x-ms-exchange-antispam-messagedata: XFE8NIe95f6O/Gf5JtPv7D1inckdVbzv9zR44bQFZi1CMb+1qIzKy7NMTUcBqbtJxkRV2ACpRhxW6wXAxheOyd9CWSVx6f8tNlBkwhdhNo0Pjrmt2JkQxMF/cu3+Dv2X19vys+hwb6NeuWsFuZc/cA==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66b59dd2-4b4d-40b6-db92-08d7ab0806ab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 13:25:25.4789
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /4EH4UCC8fD1sApzNL5kWjaeytfGzyRVqjw7WcVRXI4fo/5YHYERm5J4HEYCAH3+qbeaLikyU0txLOWmK4ZYow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6844
+        Thu, 6 Feb 2020 08:26:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47438 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgBFN0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:26:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 02E40AFA9;
+        Thu,  6 Feb 2020 13:26:35 +0000 (UTC)
+Date:   Thu, 06 Feb 2020 14:26:34 +0100
+Message-ID: <s5hv9ojq22d.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.6-rc1
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3IQ0KDQpCLlIsDQpaaGlx
-aWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHJldyBNdXJy
-YXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gU2VudDogMjAyMMTqMdTCMTPI1SAxOToyMg0K
-PiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgtcGNpQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
-Cj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBhcm5kQGFybmRiLmRl
-Ow0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbjsN
-Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgbS5rYXJ0aGlrZXlhbkBtb2JpdmVpbC5jby5pbjsgTGVv
-IExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0K
-PiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgTWluZ2thaSBI
-dQ0KPiA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5j
-b20+OyBYaWFvd2VpIEJhbw0KPiA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSHY5IDA2LzEyXSBQQ0k6IG1vYml2ZWlsOiBBZGQgY2FsbGJhY2sgZnVuY3Rpb24gZm9y
-IGxpbmsgdXANCj4gY2hlY2sNCj4gDQo+IE9uIFdlZCwgTm92IDIwLCAyMDE5IGF0IDAzOjQ1OjU3
-QU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlh
-bmcuSG91QG54cC5jb20+DQo+ID4NCj4gPiBUaGUgcGxhdGZvcm1zLCBpbiB3aGljaCB0aGUgTW9i
-aXZlaWwgR1BFWCBpcyBpbnRlZ3JhdGVkLCBtYXkgaGF2ZQ0KPiA+IHRoZWlyIHNwZWNpZmljIG1l
-Y2hhbmlzbSB0byBjaGVjayBsaW5rIHVwIHN0YXR1cy4NCj4gPiBUaGlzIHBhdGNoIGlzIHRvIGVu
-YWJsZSB0aGVzZSBwbGF0Zm9ybXMgdG8gaW1wbGVtZW50IHRoZWlycy4NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0tDQo+
-ID4gVjk6DQo+ID4gIC0gTmV3IHBhdGNoIHNwbGl0ZWQgZnJvbSB0aGUgIzEgb2YgVjggcGF0Y2hl
-cyB0byBtYWtlIGl0IGVhc3kgdG8gcmV2aWV3Lg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jIHwgMyArKysNCj4gPiBkcml2ZXJzL3BjaS9j
-b250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaCB8IDUgKysrKysNCj4gPiAgMiBmaWxl
-cyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGIvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmMNCj4gPiBpbmRleCAyNzczZjgy
-M2M5ZWEuLmI5ZWQyZDk1NjQxYyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jDQo+ID4gQEAgLTEyNSw2ICsxMjUsOSBAQCB2
-b2lkIG1vYml2ZWlsX2Nzcl93cml0ZShzdHJ1Y3QgbW9iaXZlaWxfcGNpZQ0KPiA+ICpwY2llLCB1
-MzIgdmFsLCB1MzIgb2ZmLA0KPiA+DQo+ID4gIGJvb2wgbW9iaXZlaWxfcGNpZV9saW5rX3VwKHN0
-cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKSAgew0KPiA+ICsJaWYgKHBjaWUtPm9wcy0+bGlua191
-cCkNCj4gPiArCQlyZXR1cm4gcGNpZS0+b3BzLT5saW5rX3VwKHBjaWUpOw0KPiA+ICsNCj4gPiAg
-CXJldHVybiAobW9iaXZlaWxfY3NyX3JlYWRsKHBjaWUsIExUU1NNX1NUQVRVUykgJg0KPiA+ICAJ
-CUxUU1NNX1NUQVRVU19MMF9NQVNLKSA9PSBMVFNTTV9TVEFUVVNfTDA7DQo+IA0KPiBPbiB0aGUg
-cHJldmlvdXMgcGF0Y2ggSSBzdWdnZXN0ZWQgdGhhdCB3ZSBkb24ndCBtaXggdXAgdGhlIGxpbmtf
-dXAgbG9naWMgd2l0aA0KPiB0aGUgbG9naWMgdGhhdCBkZWNpZGVzIHdoaWNoIGZ1bmN0aW9uIHRv
-IGNhbGwuIEluIHRoaXMgY2FzZSB0aGUgbGlua191cCBsb2dpYyBpcw0KPiB0cml2aWFsLiBTbyB0
-aGlzIGlzIHByb2JhYmx5IE9LLg0KPiANCj4gUmV2aWV3ZWQtYnk6IEFuZHJldyBNdXJyYXkgPGFu
-ZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gDQo+ID4gIH0NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiBiL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oDQo+ID4gaW5kZXggMThkODU4
-MDZhN2ZjLi45NWQyZTdjODA5YjggMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KPiA+IEBAIC0xNDgsNiArMTQ4LDEwIEBA
-IHN0cnVjdCByb290X3BvcnQgew0KPiA+ICAJc3RydWN0IHBjaV9ob3N0X2JyaWRnZSAqYnJpZGdl
-Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gK3N0cnVjdCBtb2JpdmVpbF9wYWJfb3BzIHsNCj4gPiArCWlu
-dCAoKmxpbmtfdXApKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKTsgfTsNCj4gPiArDQo+ID4g
-IHN0cnVjdCBtb2JpdmVpbF9wY2llIHsNCj4gPiAgCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXY7DQo+ID4gIAl2b2lkIF9faW9tZW0gKmNzcl9heGlfc2xhdmVfYmFzZTsJLyogcm9vdCBwb3J0
-IGNvbmZpZyBiYXNlICovDQo+ID4gQEAgLTE1Nyw2ICsxNjEsNyBAQCBzdHJ1Y3QgbW9iaXZlaWxf
-cGNpZSB7DQo+ID4gIAlpbnQgcHBpb193aW5zOw0KPiA+ICAJaW50IG9iX3dpbnNfY29uZmlndXJl
-ZDsJCS8qIGNvbmZpZ3VyZWQgb3V0Ym91bmQgd2luZG93cyAqLw0KPiA+ICAJaW50IGliX3dpbnNf
-Y29uZmlndXJlZDsJCS8qIGNvbmZpZ3VyZWQgaW5ib3VuZCB3aW5kb3dzICovDQo+ID4gKwljb25z
-dCBzdHJ1Y3QgbW9iaXZlaWxfcGFiX29wcyAqb3BzOw0KPiA+ICAJc3RydWN0IHJvb3RfcG9ydCBy
-cDsNCj4gPiAgfTsNCj4gPg0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
+Linus,
+
+please pull sound fixes for v5.6-rc1 from:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.6-rc1
+
+The topmost commit is 6954b323a183dc18fa9bf2ad700e0ed344918c5f
+
+----------------------------------------------------------------
+
+sound fixes for 5.6-rc1
+
+A collection of pending small fixes since the previous PR.
+
+ALSA core:
+- PCM memory leak fix
+
+ASoC:
+- Lots of SOF and Intel driver fixes
+- Addition of COMMON_CLK for wcd934x
+- Regression fixes for AMD and Tegra platforms
+
+HD-audio:
+- DP-MST HDMI regression fix, Tegra workarounds, HP quirk fix
+
+Others:
+- A few fixes relevant with the recent uapi-updates
+- Sparse warnings and endianness fixes
+
+----------------------------------------------------------------
+
+Akshu Agrawal (1):
+      ASoC: amd: Fix simultaneous playback and capture
+
+Bard Liao (1):
+      ASoC: intel: soc-acpi-intel-icl-match: fix rt715 ADR
+
+Geert Uytterhoeven (1):
+      ASoC: wcd934x: Add missing COMMON_CLK dependency to SND_SOC_ALL_CODECS
+
+Guennadi Liakhovetski (2):
+      ASoC: SOF: fix an Oops, caused by invalid topology
+      ASoC: Intel: consistent HDMI codec probing code
+
+Jon Hunter (1):
+      ASoC: tegra: Revert 24 and 32 bit support
+
+Kai Vehmanen (3):
+      ASoC: SOF: Intel: refactor i915_get/put functions
+      ASoC: SOF: Intel: do not disable i915 power during probe
+      ASoC: SOF: trace: fix unconditional free in trace release
+
+Kailang Yang (1):
+      ALSA: hda/realtek - Fixed one of HP ALC671 platform Headset Mic supported
+
+Marek Szyprowski (1):
+      ASoC: max98090: silence lockdep warning
+
+Mohan Kumar (2):
+      ALSA: hda: Reset stream if DMA RUN bit not cleared
+      ALSA: hda: Clear RIRB status before reading WP
+
+Nathan Chancellor (1):
+      ASoC: rt1015: Remove unnecessary const
+
+Nikhil Mahale (1):
+      ALSA: hda - Fix DP-MST support for NVIDIA codecs
+
+Oder Chiou (1):
+      MAINTAINERS: Remove the Bard Liao from the MAINTAINERS of Realtek CODECs
+
+Pan Xiuli (1):
+      ASoC: SOF: pci: add missing default_fw_name of JasperLake
+
+Pierre-Louis Bossart (2):
+      ASoC: SOF: core: free trace on errors
+      ASoC: SOF: core: release resources on errors in probe_continue
+
+Ranjani Sridharan (1):
+      ALSA: uapi: Fix sparse warning
+
+Ravulapati Vishnu vardhan rao (1):
+      ASoC: amd: Fix for Subsequent Playback issue.
+
+Srinivas Kandagatla (1):
+      ASoC: wcd934x: Add missing COMMON_CLK dependency
+
+Takashi Iwai (11):
+      ASoC: rt1308-sdw: Add __maybe_unused to PM callbacks
+      ASoC: rt700: Add __maybe_unused to PM callbacks
+      ASoC: rt711: Add __maybe_unused to PM callbacks
+      ASoC: rt715: Add __maybe_unused to PM callbacks
+      ALSA: pcm: Fix memory leak at closing a stream without hw_free
+      ALSA: pcm: Fix sparse warnings wrt snd_pcm_state_t
+      ALSA: usb-audio: Fix endianess in descriptor validation
+      ALSA: usb-audio: Annotate endianess in Scarlett gen2 quirk
+      ALSA: dummy: Fix PCM format loop in proc output
+      ALSA: emu10k1: Fix annotation and cast for the recent uapi header change
+      ALSA: hdsp: Make the firmware loading ioctl a bit more readable
+
+Yong Zhi (2):
+      ALSA: hda: Add JasperLake PCI ID and codec vid
+      ASoC: SOF: Intel: add PCI ID for JasperLake
+
+---
+ MAINTAINERS                                       |   1 -
+ include/sound/pcm.h                               |   4 +-
+ include/uapi/sound/asound.h                       |   4 +-
+ sound/core/pcm_compat.c                           |   8 +-
+ sound/core/pcm_native.c                           | 211 ++++++++++++++--------
+ sound/drivers/dummy.c                             |   2 +-
+ sound/hda/hdac_stream.c                           |  31 ++--
+ sound/pci/emu10k1/emufx.c                         | 180 ++++++++++--------
+ sound/pci/hda/hda_controller.c                    |  11 +-
+ sound/pci/hda/hda_intel.c                         |   2 +
+ sound/pci/hda/patch_hdmi.c                        |  95 ++++++----
+ sound/pci/hda/patch_realtek.c                     |   1 +
+ sound/pci/rme9652/hdsp.c                          |   7 +-
+ sound/soc/amd/raven/acp3x-i2s.c                   |  12 +-
+ sound/soc/amd/raven/acp3x-pcm-dma.c               |  14 +-
+ sound/soc/codecs/Kconfig                          |   3 +-
+ sound/soc/codecs/max98090.c                       |   3 +-
+ sound/soc/codecs/rt1015.c                         |   2 +-
+ sound/soc/codecs/rt1308-sdw.c                     |   4 +-
+ sound/soc/codecs/rt700-sdw.c                      |   4 +-
+ sound/soc/codecs/rt711-sdw.c                      |   4 +-
+ sound/soc/codecs/rt715-sdw.c                      |   4 +-
+ sound/soc/intel/boards/bxt_da7219_max98357a.c     |  14 +-
+ sound/soc/intel/boards/bxt_rt298.c                |  14 +-
+ sound/soc/intel/boards/cml_rt1011_rt5682.c        |  13 +-
+ sound/soc/intel/boards/glk_rt5682_max98357a.c     |  16 +-
+ sound/soc/intel/boards/sof_rt5682.c               |  15 +-
+ sound/soc/intel/common/soc-acpi-intel-icl-match.c |   2 +-
+ sound/soc/sof/core.c                              |  38 ++--
+ sound/soc/sof/intel/hda-codec.c                   |  21 +--
+ sound/soc/sof/intel/hda.c                         |   3 +-
+ sound/soc/sof/intel/hda.h                         |   7 +-
+ sound/soc/sof/pcm.c                               |  10 +
+ sound/soc/sof/pm.c                                |   4 +
+ sound/soc/sof/sof-pci-dev.c                       |   3 +
+ sound/soc/sof/trace.c                             |   7 +-
+ sound/soc/tegra/tegra30_i2s.c                     |  25 +--
+ sound/usb/mixer_scarlett_gen2.c                   |  46 ++---
+ sound/usb/validate.c                              |   6 +-
+ 39 files changed, 489 insertions(+), 362 deletions(-)
+
