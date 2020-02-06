@@ -2,109 +2,173 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F8C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25613C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2DF21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E536A217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PX6L81YY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DDoVu9ah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgBFLsE (ORCPT
+        id S1727697AbgBFLsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:48:04 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43159 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgBFLsE (ORCPT
+        Thu, 6 Feb 2020 06:48:07 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40186 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbgBFLsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:48:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so5153850oth.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:48:03 -0800 (PST)
+        Thu, 6 Feb 2020 06:48:06 -0500
+Received: by mail-qk1-f194.google.com with SMTP id b7so5186828qkl.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:48:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=tf7UfAXF0+7+R/0CR/EhvROtYInc8epHQipEfshPVGs=;
-        b=PX6L81YYJdfK1dzYbHAtJvW+q7p3T/0pcVLlue5FeG4q7vAYgtvwTOkmic7TMKGuuO
-         +Kv/qr++XIOZZEokHxFHqatEdlf/ZNap1h7uIHw40ejP2uWu7PRmNoRic/wvHYFAd3Zk
-         wKRp8P+VQP4V4FtxKgDx6FYxSI0lZ5z57RMqU=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/u8lvgk0NC69lCwcmVZfuM0logUMbV9/5K5IshgRyII=;
+        b=DDoVu9ahZ+Ap+93u8MAGwzuX2sk5Fyh9mTYGH24hkEoBupe8V1s8r1tyc3HymNXU2x
+         goOv+bWqcswbeO80n2CVXvsC3zImb4a5rL/rh+b/xvlqXLdj4UHGN0YVgr6h6WVWuKHD
+         92Bomcob7JYlvlI0fz6cahfSwAMWrSubdV6UBXpuKPFm5+QYhijBppU/Jwzm9LiTYx7e
+         EomJLK7n5LSqxmVOxWIaPgQ+PxPEcEm5Vd5Ijgb1CKxmuJaUWysw81Ipuia7cAQW4uRf
+         AdyjlFAzpOiOf7Rt+671CiLauqwcpVdSdgURzRYWCaJD39UwsLUZ6qd1rufp7QRvqyPL
+         C4NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tf7UfAXF0+7+R/0CR/EhvROtYInc8epHQipEfshPVGs=;
-        b=gbKX2IDFUwX0Eb0ND/dXAzEKTOW15thlZVcobNDqngPsqVZG3n5Og8Uz5Em1ubS3Ie
-         kHvdiou+98+Hksxe+V688hwT2nkD6GPjfRKG38+0AT6xPF1O11CjPkbc1wLgsrODLZPD
-         MDcWQSML8lL0ZYLsT8JCJ70C5LOjbPWZ12xCfOz97PGtavsPJ8GrsZAgxWqMAktI8PAo
-         JNGRAjPzEgeoQDtqFe51xFQBr25NijerAIYKqs9/8HrBBapcTHUvU8v5ilt8kbBVA290
-         JqAIrkDfU4l+Xbo8swhFpk+a42ysq4ixI8BuhLD3xyU5BfCNqfzA7dokSm1F/5bj2Wv5
-         V57A==
-X-Gm-Message-State: APjAAAXZ48PzwrQCmnFz8L5/334c/TztWBhdeZl9c7tCC+KJKiiw8xj1
-        lQhLPCiSq5CW5/rzAYemSoTN4Q==
-X-Google-Smtp-Source: APXvYqwjnYccMXUVd+n93iR5zMBTFfXt5QHWYG9PKa/8tWlaPADduZNq1u0fLkVynUJQ4it71oULeg==
-X-Received: by 2002:a9d:5885:: with SMTP id x5mr29462319otg.132.1580989683562;
-        Thu, 06 Feb 2020 03:48:03 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l207sm860711oih.25.2020.02.06.03.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 03:48:02 -0800 (PST)
-Date:   Thu, 6 Feb 2020 03:48:01 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 03/11] x86/boot: Allow a "silent" kaslr random byte
- fetch
-Message-ID: <202002060345.FAF7517CA4@keescook>
-References: <20200205223950.1212394-4-kristen@linux.intel.com>
- <B173D69E-DC6C-4658-B5CB-391D3C6A6597@amacapital.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/u8lvgk0NC69lCwcmVZfuM0logUMbV9/5K5IshgRyII=;
+        b=HV8RxXs0jDUMOAJN7NM/3V2m0dTVY54zj/geeHKYkYj4vPql3L7cVyGk0jgQu2uxjO
+         zuRFW6xvRzTgTR1dZCEPILrEgJrg7hHfBg1ZjCsUiRqRfmmzrSteXPuqbhMGjtJD3EyV
+         KaUOFG3mbDt4RAesRruoTEGUENH8adewzLBRlmmSMY3FsMRT8CPCVsZorJE8Kj2SK0Ew
+         f+hDnI4uSc6asENgGn8Fo50TLPPdF8LKeFiIXXrI5sWSV9Eh8krNTvhDW4pi0pWgDuyT
+         GMemLcFWQQ3g0Es5wdu6UrBpnWMtAC4bqflNlZrrTV++VWQGxfWs7F2BZ29cfxqRdIBo
+         zo6g==
+X-Gm-Message-State: APjAAAXcmHVnuZd+kO/owYDFWklm+MRZgavviTqTb589ESf9bQmlHrQZ
+        0+SbmmYhhjC047PNTUiVJsgOA0SokLpKP6qoRSQPhw==
+X-Google-Smtp-Source: APXvYqzYYH+tW5YrglZD3ssrPMzlN82itd1CZ/QvnglBZm1r41ASPrFGsYEMpm4ullIwMLaJv6uPYWuFCaSzUvvy43I=
+X-Received: by 2002:a37:9c8a:: with SMTP id f132mr2057012qke.432.1580989685049;
+ Thu, 06 Feb 2020 03:48:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <B173D69E-DC6C-4658-B5CB-391D3C6A6597@amacapital.net>
+References: <20200203015203.27882-1-leo.yan@linaro.org> <20200203015203.27882-5-leo.yan@linaro.org>
+In-Reply-To: <20200203015203.27882-5-leo.yan@linaro.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 6 Feb 2020 11:47:54 +0000
+Message-ID: <CAJ9a7VipUiYZYVkOA-rEakmOhRJp0EhKzoZMFQO0QZmfKhvScg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] perf cs-etm: Optimize copying last branches
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Robert Walker <robert.walker@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 05:08:55PM -0800, Andy Lutomirski wrote:
-> 
-> 
-> > On Feb 5, 2020, at 2:39 PM, Kristen Carlson Accardi <kristen@linux.intel.com> wrote:
-> > 
-> > ﻿From: Kees Cook <keescook@chromium.org>
-> > 
-> > Under earlyprintk, each RNG call produces a debug report line. When
-> > shuffling hundreds of functions, this is not useful information (each
-> > line is identical and tells us nothing new). Instead, allow for a NULL
-> > "purpose" to suppress the debug reporting.
-> 
-> Have you counted how many RDRAND calls this causes?  RDRAND is
-> exceedingly slow on all CPUs I’ve looked at. The whole “RDRAND
-> has great bandwidth” marketing BS actually means that it has decent
-> bandwidth if all CPUs hammer it at the same time. The latency is abysmal.
-> I have asked Intel to improve this, but the latency of that request will
-> be quadrillions of cycles :)
+Reviewed by: Mike Leach <mike.leach@linaro.org>
 
-In an earlier version of this series, it was called once per function
-section (so, about 50,000 times). The (lack of) speed was quite
-measurable.
+On Mon, 3 Feb 2020 at 01:53, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> If an instruction range packet can generate multiple instruction
+> samples, these samples share the same last branches; it's not necessary
+> to copy the same last branches repeatedly for these samples within the
+> same packet.
+>
+> This patch moves out the last branches copying from function
+> cs_etm__synth_instruction_sample(), and execute it prior to generating
+> instruction samples.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/cs-etm.c | 22 +++++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index c5a05f728eac..dbddf1eec2be 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1134,10 +1134,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+>
+>         cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
+>
+> -       if (etm->synth_opts.last_branch) {
+> -               cs_etm__copy_last_branch_rb(etmq, tidq);
+> +       if (etm->synth_opts.last_branch)
+>                 sample.branch_stack = tidq->last_branch;
+> -       }
+>
+>         if (etm->synth_opts.inject) {
+>                 ret = cs_etm__inject_event(event, &sample,
+> @@ -1407,6 +1405,10 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+>                  */
+>                 u64 instrs_over = instrs_executed;
+>
+> +               /* Prepare last branches for instruction sample */
+> +               if (etm->synth_opts.last_branch)
+> +                       cs_etm__copy_last_branch_rb(etmq, tidq);
+> +
+>                 /*
+>                  * 'head' is the instructions number of the head in the new
+>                  * packet, it combines with the tail of previous packet to
+> @@ -1526,6 +1528,11 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>
+>         if (etmq->etm->synth_opts.last_branch &&
+>             tidq->prev_packet->sample_type == CS_ETM_RANGE) {
+> +               u64 addr;
+> +
+> +               /* Prepare last branches for instruction sample */
+> +               cs_etm__copy_last_branch_rb(etmq, tidq);
+> +
+>                 /*
+>                  * Generate a last branch event for the branches left in the
+>                  * circular buffer at the end of the trace.
+> @@ -1533,7 +1540,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>                  * Use the address of the end of the last reported execution
+>                  * range
+>                  */
+> -               u64 addr = cs_etm__last_executed_instr(tidq->prev_packet);
+> +               addr = cs_etm__last_executed_instr(tidq->prev_packet);
+>
+>                 err = cs_etm__synth_instruction_sample(
+>                         etmq, tidq, addr,
+> @@ -1587,11 +1594,16 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
+>          */
+>         if (etmq->etm->synth_opts.last_branch &&
+>             tidq->prev_packet->sample_type == CS_ETM_RANGE) {
+> +               u64 addr;
+> +
+> +               /* Prepare last branches for instruction sample */
+> +               cs_etm__copy_last_branch_rb(etmq, tidq);
+> +
+>                 /*
+>                  * Use the address of the end of the last reported execution
+>                  * range.
+>                  */
+> -               u64 addr = cs_etm__last_executed_instr(tidq->prev_packet);
+> +               addr = cs_etm__last_executed_instr(tidq->prev_packet);
+>
+>                 err = cs_etm__synth_instruction_sample(
+>                         etmq, tidq, addr,
+> --
+> 2.17.1
+>
 
-> I would suggest adding a little ChaCha20 DRBG or similar to the KASLR
-> environment instead. What crypto primitives are available there?
-
-Agreed. The simple PRNG in the next patch was most just a POC initially,
-but Kristen kept it due to its debugging properties (specifying an
-external seed). Pulling in ChaCha20 seems like a good approach.
 
 -- 
-Kees Cook
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
