@@ -2,104 +2,153 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1B8C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7BBC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B2920720
+	by mail.kernel.org (Postfix) with ESMTP id F314E21D7D
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 06:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8IIrGyZ"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="kPxNNb1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgBFGns (ORCPT
+        id S1727851AbgBFGpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 01:43:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39793 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726673AbgBFGnr (ORCPT
+        Thu, 6 Feb 2020 01:45:49 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43350 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgBFGps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 01:43:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580971426;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XebUo49bNGViZWk1x3tbVzqCjVaBGOH4dpQ4jrfUf70=;
-        b=G8IIrGyZ0tDw9PlKycW93pRaNUgjewlPRBrSS+dnyXv46fW9DZTY8tTi8vs3eRvFXS9uyR
-        8acNnY28kTdqWroEEIug0M7Xy3Unn3cx5MxkcAZqESY1l3zgEssozykBA/t2jk2b4mL5Dc
-        /e1gyA05qJPkqpoVJjF/EEmD9bV23GE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-nfSFAOAsPsGxoUg6EfvKSg-1; Thu, 06 Feb 2020 01:43:42 -0500
-X-MC-Unique: nfSFAOAsPsGxoUg6EfvKSg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E93A21081FA0;
-        Thu,  6 Feb 2020 06:43:39 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DA945C1B0;
-        Thu,  6 Feb 2020 06:43:39 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 9C9639D7F; Thu,  6 Feb 2020 07:43:38 +0100 (CET)
-Date:   Thu, 6 Feb 2020 07:43:38 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] drm/virtio: resource teardown tweaks
-Message-ID: <20200206064338.badm6ijgyo2p5mmc@sirius.home.kraxel.org>
-References: <20200205105955.28143-1-kraxel@redhat.com>
- <20200205105955.28143-3-kraxel@redhat.com>
- <CAPaKu7SCk_3yeTtzFTTU_y-tyo8EDS7vR8i+mk829=0D-UjLQA@mail.gmail.com>
+        Thu, 6 Feb 2020 01:45:48 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so3683854qtj.10;
+        Wed, 05 Feb 2020 22:45:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3EVIjHgWrOpnpthbeHK3KwPNytdJutxDfwFaEAYC1gU=;
+        b=kPxNNb1gcQ6fkdKVzTu5wRf8dMBIvy78gz+ZmakHsUODJyPFAI9Cxs9Aerh6dtn8ue
+         9S3HPYp07C/wCW8bZC0OA1mtnLl8+OkfKuxFq+k5IDzYmqxDYBc+ieFAoNEiOnWFfUZ8
+         mFtR5H8qOqrJxBmw1ANT4V4HWd69qwfomQRWY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3EVIjHgWrOpnpthbeHK3KwPNytdJutxDfwFaEAYC1gU=;
+        b=F5IHTgb3Gs8+B9Ni6BOf2bJGpC9vT7RKGaeWSCD/u4vxODh6v5eDBId/EjioeZ08IP
+         oF2vspVyIejRKi1wRHz7SlA8aDFJClTVd4TpU8PT3IeuRjpUvR0WUm0e4d5HhcVL7mHI
+         Y77VnTMPZtlRfGGSZiN5Z25Lpg0806hj1ecRKteRgesGhuMoqcXJsmOk7DG4wLzPCNq0
+         EGGKzKqQZ2neKGLIveehyTz7ai9Q0MgFA+PUy+9YMPECrJdpYSosdnR1i7GSPZMv2ubG
+         jtEfBMYdnwvpuE4GPBxyv8t0pSZWR+Ly7hnImzHflfOrVcjAdYvDyl3jIIh7OiqLOHnF
+         RxPg==
+X-Gm-Message-State: APjAAAWMo3u0Hzj8YPpfJJecrAl1cVEM4bCYOgxFEje8vDJC+YoYhz3r
+        ylpbSfqTekBVBgdBysbr6ppx/aHY/+kn+fRJ4Vo=
+X-Google-Smtp-Source: APXvYqyGXHiEc83j2FSMVVBuD58V9HxdxZyJTom9oCVKE6Ua2SjX6fetXzWVhlF65eXiKXP/Ck/X9d5riSepkdRtgIg=
+X-Received: by 2002:ac8:7396:: with SMTP id t22mr1332817qtp.269.1580971547324;
+ Wed, 05 Feb 2020 22:45:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7SCk_3yeTtzFTTU_y-tyo8EDS7vR8i+mk829=0D-UjLQA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200205215511.80333-1-geissonator@gmail.com>
+In-Reply-To: <20200205215511.80333-1-geissonator@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 6 Feb 2020 06:45:33 +0000
+Message-ID: <CACPK8XcGJ61mgCL+vZQEzTmcwu+jZ0hpKrnOz7B7K14y79cvFQ@mail.gmail.com>
+Subject: Re: [PATCH linux dev-5.4 v2] ARM: dts: aspeed: witherspoon: Add gpio
+ line names
+To:     Andrew Geissler <geissonator@gmail.com>
+Cc:     OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Geissler <geissonator@yahoo.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > -
-> > -       drm_gem_shmem_free_object(obj);
-> > +       if (bo->created) {
-> > +               virtio_gpu_cmd_unref_resource(vgdev, bo);
-> > +               /* completion handler calls virtio_gpu_cleanup_object() */
-> nitpick: we don't need this comment when virtio_gpu_cmd_unref_cb is
-> defined by this file and passed to virtio_gpu_cmd_unref_resource.
+On Wed, 5 Feb 2020 at 21:55, Andrew Geissler <geissonator@gmail.com> wrote:
+>
+> From: Andrew Geissler <geissonator@yahoo.com>
+>
+> Name the gpios so libgiod will work with them
 
-I want virtio_gpu_cmd_unref_cb + virtio_gpu_cmd_unref_resource being
-placed next to each other so it is easier to see how they work hand in
-hand.
+Perhaps: "Name the GPIOs to help userspace work with them."
 
-> I happen to be looking at our error handling paths.  I think we want
-> virtio_gpu_queue_fenced_ctrl_buffer to call vbuf->resp_cb on errors.
+You could also mention that the names are describe the functionality
+that the lines provide, and not a net or ball name.
 
-/me was thinking about that too.  Yes, we will need either that,
-or a separate vbuf->error_cb callback.  That'll be another patch
-though.
+A heads up: when you send patches upstream to the kernel mailing list,
+we don't include the "linux dev-X.y" stuff in the subject.
 
-> > +       /*
-> > +        * We are in the release callback and do NOT want refcount
-> > +        * bo, so do NOT use virtio_gpu_array_add_obj().
-> > +        */
-> > +       vbuf->objs = virtio_gpu_array_alloc(1);
-> > +       vbuf->objs->objs[0] = &bo->base.base
-> This is an abuse of obj array.  Add "void *private_data;" to
-> virtio_gpu_vbuffer and use that maybe?
+> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+> ---
+> v2: added upstream to patch
+>     prepended fsi- on fsi related gpios
+>     prepended led- on led related gpios
+>     prepended presence on presence related gpios
+>     dropped pin_gpio_a1 definition
+> ---
+>  .../boot/dts/aspeed-bmc-opp-witherspoon.dts   | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> index 515f0f208ee6..2519722928a4 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> @@ -193,6 +193,42 @@
+>
+>  };
+>
+> +&gpio {
+> +    status = "okay";
 
-I'd name that *cb_data, but yes, that makes sense.
+The status=okay is harmless but redundant, as this node is already enabled.
 
-cheers,
-  Gerd
+> +       gpio-line-names =
+> +       /*A0-A7*/       "","cfam-reset","","","","","fsi-mux","",
+> +       /*B0-B7*/       "","","","","","air-water","","",
+> +       /*C0-C7*/       "","","","","","","","",
+> +       /*D0-D7*/       "fsi-enable","","","","","","","",
+> +       /*E0-E7*/       "fsi-data","","","","","","","",
+> +       /*F0-F7*/       "","","","","","","","",
+> +       /*G0-G7*/       "","","","","","","","",
+> +       /*H0-H7*/       "","","","","","","","",
+> +       /*I0-I7*/       "","","","","","","","",
+> +       /*J0-J7*/       "","","checkstop","","","","","",
+> +       /*K0-K7*/       "","","","","","","","",
+> +       /*L0-L7*/       "","","","","","","","",
+> +       /*M0-M7*/       "","","","","","","","",
+> +       /*N0-N7*/       "presence-ps1","","led-rear-fault","led-rear-power",
+> +                       "led-rear-id","","","",
+> +       /*O0-O7*/       "","","","","","","","",
+> +       /*P0-P7*/       "","","","","","","","presence-ps0",
+> +       /*Q0-Q7*/       "","","","","","","","",
+> +       /*R0-R7*/       "","","fsi-trans","","","power-button","","",
+> +       /*S0-S7*/       "","","","","","","","",
+> +       /*T0-T7*/       "","","","","","","","",
+> +       /*U0-U7*/       "","","","","","","","",
+> +       /*V0-V7*/       "","","","","","","","",
+> +       /*W0-W7*/       "","","","","","","","",
+> +       /*X0-X7*/       "","","","","","","","",
+> +       /*Y0-Y7*/       "","","","","","","","",
+> +       /*Z0-Z7*/       "","","","","","","","",
+> +       /*AA0-AA7*/     "fsi-clock","","","","","","","",
+> +       /*AB0-AB7*/     "","","","","","","","",
+> +       /*AC0-AC7*/     "","","","","","","","";
+> +
 
+Cean up the line of whitespace here.
+
+> +};
+> +
+>  &fmc {
+>         status = "okay";
+>
+> --
+> 2.21.0 (Apple Git-122)
+>
