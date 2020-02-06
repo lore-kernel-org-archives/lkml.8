@@ -2,120 +2,97 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC818C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D2CC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89800218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580983024;
-	bh=w5Y3Ebc9eXglcMDX0+yLDXi/+gEfId6scYpQlhbnOB4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GBVWNtOFWd9DmJ+sX8Bd8bds9a8I1kSRhX4yuB51PKsVk5LYugRHXnUGqeCxS2zkp
-	 4i3/W07iyzLVRot7UmKEsxjgWbp9Fb3CYx7dWSNJ1ZkarUE29Guq0t9irYcpeniC/Y
-	 raVNE0YOXu6pc2dFGBoQBMtXrC3gN/LXgfo3ZpdE=
+	by mail.kernel.org (Postfix) with ESMTP id 384A5218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgBFJ5E (ORCPT
+        id S1728286AbgBFKA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34838 "EHLO mail.kernel.org"
+        Thu, 6 Feb 2020 05:00:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:56630 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbgBFJ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:57:03 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D00218AC;
-        Thu,  6 Feb 2020 09:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580983022;
-        bh=w5Y3Ebc9eXglcMDX0+yLDXi/+gEfId6scYpQlhbnOB4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yDRQhegVLxfBg/vQDPaq2zQYj8Lg5yMrJ9+FCjaLE20fPcNZHTx/p6oZH1mj7O20j
-         vmRB283zBbLC9ieUPnzOjQ7lrNTL8pz5DR3PbPsnooWd0GX3ey0ZOpjO9260TmrEQc
-         5sUOIlRZb9l/S13iTd50BZCPeL5TchmY1GZQOWcE=
-Date:   Thu, 6 Feb 2020 09:56:59 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5 V2] staging: iio: adc: ad7192: fail probe on
- get_voltage
-Message-ID: <20200206095659.639218f7@archlinux>
-In-Reply-To: <20200205171511.25912-2-alexandru.tachici@analog.com>
-References: <20200202162215.50915c83@archlinux>
-        <20200205171511.25912-1-alexandru.tachici@analog.com>
-        <20200205171511.25912-2-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727768AbgBFKA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:00:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF7581FB;
+        Thu,  6 Feb 2020 02:00:28 -0800 (PST)
+Received: from [10.1.36.209] (e121487-lin.cambridge.arm.com [10.1.36.209])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 315B43F6CF;
+        Thu,  6 Feb 2020 02:00:26 -0800 (PST)
+Subject: Re: [PATCH] arm: make kexec depend on MMU
+To:     Stefan Agner <stefan@agner.ch>, linux@armlinux.org.uk
+Cc:     Michal Hocko <mhocko@suse.com>, arnd@arndb.de,
+        linus.walleij@linaro.org, nsekhar@ti.com,
+        linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        benjamin.gaignard@linaro.org, mchehab+samsung@kernel.org,
+        armlinux@m.disordat.com, akpm@linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+References: <5b595d37283f043df78259221f2b7d18e0cb0ce5.1580942558.git.stefan@agner.ch>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <14e4919a-0089-c2e7-567c-1e7fcfef9769@arm.com>
+Date:   Thu, 6 Feb 2020 10:00:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <5b595d37283f043df78259221f2b7d18e0cb0ce5.1580942558.git.stefan@agner.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020 19:15:07 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
-
-> This patch makes the ad7192_probe fail in case
-> regulator_get_voltage will return an error.
+On 2/5/20 10:43 PM, Stefan Agner wrote:
+> From: Michal Hocko <mhocko@suse.com>
 > 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-
-There is a subtlety in here we should handle.
-
+> arm nommu config with KEXEC enabled doesn't compile
+> arch/arm/kernel/setup.c: In function 'reserve_crashkernel':
+> arch/arm/kernel/setup.c:1005:25: error: 'SECTION_SIZE' undeclared (first
+> use in this function)
+>              crash_size, SECTION_SIZE);
+> 
+> since 61603016e212 ("ARM: kexec: fix crashkernel= handling") which is
+> over one year without anybody noticing. I have only noticed beause of
+> my testing nommu config which somehow gained CONFIG_KEXEC without
+> an intention. This suggests that nobody is actually using KEXEC
+> on nommu ARM configs. It is even a question whether kexec works with
+> nommu.
+> 
+> Make KEXEC depend on MMU to make this clear. If somebody wants to enable
+> there will be probably more things to take care.
+> 
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> Reviewed-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > ---
->  drivers/staging/iio/adc/ad7192.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  arch/arm/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-> index bf3e2a9cc07f..4780ddf99b13 100644
-> --- a/drivers/staging/iio/adc/ad7192.c
-> +++ b/drivers/staging/iio/adc/ad7192.c
-> @@ -899,10 +899,13 @@ static int ad7192_probe(struct spi_device *spi)
->  
->  	voltage_uv = regulator_get_voltage(st->avdd);
->
-I had to dig a bit to check this as it's not documented.
-regulator_get_voltage returns negative for error, not 0.
-0 typically means the voltage has not been set or has been
-explicitly set to 0. 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 96dab76da3b3..59ce8943151f 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1906,6 +1906,7 @@ config KEXEC
+>  	bool "Kexec system call (EXPERIMENTAL)"
+>  	depends on (!SMP || PM_SLEEP_SMP)
+>  	depends on !CPU_V7M
+> +	depends on MMU
+>  	select KEXEC_CORE
+>  	help
+>  	  kexec is a system call that implements the ability to shutdown your
+> 
 
-So if it is set to 0 I suppose we could try setting it as it
-might be a variable high precision reference?
+Vincenzo sent similar patch [1] some time ago. I prefer his patch since CPU_V7M already imply !MMU.
 
-Perhaps for now just spitting out an error is the best plan.
+[1] https://lore.kernel.org/linux-arm-kernel/20200110123125.51092-1-vincenzo.frascino@arm.com/T/
 
-  
-> -	if (voltage_uv)
-> +	if (voltage_uv) {
->  		st->int_vref_mv = voltage_uv / 1000;
-> -	else
-> +	} else {
-> +		ret = voltage_uv;
->  		dev_err(&spi->dev, "Device tree error, reference voltage undefined\n");
-> +		goto error_disable_avdd;
-> +	}
->  
->  	spi_set_drvdata(spi, indio_dev);
->  	st->devid = spi_get_device_id(spi)->driver_data;
-> @@ -957,6 +960,7 @@ static int ad7192_probe(struct spi_device *spi)
->  	ret = iio_device_register(indio_dev);
->  	if (ret < 0)
->  		goto error_disable_clk;
-> +
-We shouldn't have stray white space changes in a patch making a real change.
-
-Thanks,
-
-Jonathan
-
->  	return 0;
->  
->  error_disable_clk:
-
+Cheers
+Vladimir
