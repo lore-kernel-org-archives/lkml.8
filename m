@@ -2,170 +2,117 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4E0C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720AAC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EA421741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E7621741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WtfTXcpx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jb+xeGHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgBFOcE (ORCPT
+        id S1728023AbgBFOdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:32:04 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34062 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgBFOcE (ORCPT
+        Thu, 6 Feb 2020 09:33:39 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4636 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFOdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:32:04 -0500
-Received: by mail-qt1-f195.google.com with SMTP id h12so4624682qtu.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 06:32:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pyov8FWczadKme8MmKIuLoy6Cco1Gr8F1ki//7JnOus=;
-        b=WtfTXcpxEKjugOdoQ3xRt6ZtM85WSP/qurSvrIDFedMQ2O9pvih8+hrmBuSGbGmtGa
-         N1n3Fw8knLnnvb4ofVFPGUTG8T0U0PeyP8xMS3/9Phf4gnK3Xkuo5liOPa6zSihQt050
-         bHZ6g4WV7jzYWWvSMRUIjVeclvvWj1QN/pRkO/wlWK/FS9lTji60yAGE2RAh4DvLbG3A
-         AJscWPn+Yr6fwftqrnGtCXO/BsrB/LhpM8M7B90l4AynGy1W+ewNGKa5Hg98AllDlDfW
-         F8d0+S5Wal6FlyjvAqBXml5yz3NfepnpIaBxYYKBSvjyeI6ovASl9pm85dJE0IsAYwq1
-         2pPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pyov8FWczadKme8MmKIuLoy6Cco1Gr8F1ki//7JnOus=;
-        b=jStBjWUJMf3LQO3n+jKzI5UY4hd40Ehs4wOldMqWCEIKabY58Nti1pCb8s22ybiz8b
-         su0RTKcqVPDCRfLkLaIvjMkgpv42FAwWqZlcMui5UeWyyivtWEhNA65bH1BGiFaG73YE
-         2+rTCN4PAtVl37MdQTQ6qEFhnY/tn62xqA+JLtGy0o9MHc/JXwvD9Mdw7j9AaxNbY9bp
-         kBFb9ARzyX/iKekPhczY57frrozI0fTbFcu2c1Ho5ehw46uHwzczlT+35Rg/bT9oqWMt
-         yDoTX30q7oNON4Woh1KLjVt+XZDZzD8We1CROfC0E1wGulIxATWsGGOk2z8WrfZpFzVd
-         +igQ==
-X-Gm-Message-State: APjAAAWq3rHlrzzrg/vk9wowqBwVXFBcd+8ReDLBzYOnWyjnIjK9iQqN
-        EPc+Kr7LqNBOOB/MDpwR5dQlN5St7wE=
-X-Google-Smtp-Source: APXvYqxaFmlEZVaYCGxniyRdpgnZCuo+d+DFXAYGbH+kt4gdysoKdLuey3EiRMl+NGSIfVqKZgszig==
-X-Received: by 2002:ac8:7695:: with SMTP id g21mr2570013qtr.99.1580999522855;
-        Thu, 06 Feb 2020 06:32:02 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 69sm1464198qkk.106.2020.02.06.06.32.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Feb 2020 06:32:02 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iziCH-0005pg-Sr; Thu, 06 Feb 2020 10:32:01 -0400
-Date:   Thu, 6 Feb 2020 10:32:01 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leonro@mellanox.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jan 30 + 20200206
- (drivers/infiniband/hw/mlx5/)
-Message-ID: <20200206143201.GF25297@ziepe.ca>
-References: <20200130152852.6056b5d8@canb.auug.org.au>
- <df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org>
- <ee5f17b6-3282-2137-7e9d-fa0008f9eeb0@infradead.org>
- <20200206073019.GC414821@unreal>
- <20200206114033.GF414821@unreal>
+        Thu, 6 Feb 2020 09:33:39 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3c23a90000>; Thu, 06 Feb 2020 06:33:13 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 06:33:38 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 06:33:38 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
+ 2020 14:33:36 +0000
+Subject: Re: [PATCH v7 14/19] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200202222854.18409-1-digetx@gmail.com>
+ <20200202222854.18409-15-digetx@gmail.com>
+ <ca0f71ef-ba16-73bc-d904-1f5351c69931@nvidia.com>
+ <3133d4e3-7623-9342-f26c-5de8b4e6b8c6@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <422a3043-9674-9860-eb98-e7a8eac73c58@nvidia.com>
+Date:   Thu, 6 Feb 2020 14:33:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200206114033.GF414821@unreal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <3133d4e3-7623-9342-f26c-5de8b4e6b8c6@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580999593; bh=JIt4CiWKyQvqHZzMOvI6LbtPuH6fvx16CRXo3Yd9Sx4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jb+xeGHOr3HnJFRCnV4GvJ3hnwtFp1JvGj5CG/jGy9uMZLggQcGe5kG/R8kJn6poe
+         7aOAtJ0iT0e5gaCQIOjHYzeq96BfAx8xF8cR3OjnLmdFr2kx2aCOs75l3MHfrTpQ7o
+         5q49onAQxun6OOyYVT3Hs5TrgG20C1ABTs5n/+qDa1q47KGoeeUvw4Ajf0XWFgxEp3
+         1+wHuqeYTdQVNy9XeEKtBZ3Rli6OoeoMotWy/80wQBk4vYpjYifGwu4yMtMtzQnJyH
+         FPTeiR+11gg8FzRLjVYZVDsMMBOs3I49jDp0VDpZZoJHdEaaf9/RizAPmTysMhvqGZ
+         +p6FSgfi7PauA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:40:33PM +0200, Leon Romanovsky wrote:
-> On Thu, Feb 06, 2020 at 09:30:19AM +0200, Leon Romanovsky wrote:
-> > On Wed, Feb 05, 2020 at 09:31:15PM -0800, Randy Dunlap wrote:
-> > > On 1/30/20 5:47 AM, Randy Dunlap wrote:
-> > > > On 1/29/20 8:28 PM, Stephen Rothwell wrote:
-> > > >> Hi all,
-> > > >>
-> > > >> Please do not add any v5.7 material to your linux-next included
-> > > >> branches until after v5.6-rc1 has been released.
-> > > >>
-> > > >> Changes since 20200129:
-> > > >>
-> > > >
-> > > > on i386:
-> > > >
-> > > > ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> > > > ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> > > >
-> > > >
-> > > > Full randconfig file is attached.
-> > > >
-> > > >
-> > >
-> > > I am still seeing this on linux-next of 20200206.
-> >
-> > Sorry, I was under wrong impression that this failure is connected to
-> > other issue reported by you.
-> >
-> > I'm looking on it right now.
-> 
-> Randy,
-> 
-> I'm having hard time to reproduce the failure.
-> ➜  kernel git:(a0c61bf1c773) ✗ git fixes
-> Fixes: a0c61bf1c773 ("Add linux-next specific files for 20200206")
-> ➜  kernel git:(a0c61bf1c773) ✗ wget https://lore.kernel.org/lkml/df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org/2-config-r9621
-> from https://lore.kernel.org/lkml/df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org/
-> ➜  kernel git:(a0c61bf1c773) ✗ mv 2-config-r9621 .config
-> ➜  kernel git:(a0c61bf1c773) ✗ make ARCH=i386 -j64 -s M=drivers/infiniband/hw/mlx5
-> ➜  kernel git:(a0c61bf1c773) ✗ file drivers/infiniband/hw/mlx5/mlx5_ib.ko
-> drivers/infiniband/hw/mlx5/mlx5_ib.ko: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), BuildID[sha1]=49f81f5d56f7caf95d4a6cc9097391622c34f4ba, not stripped
-> 
-> on my 64bit system:
-> ➜  kernel git:(rdma-next) file drivers/infiniband/hw/mlx5/mlx5_ib.ko
-> drivers/infiniband/hw/mlx5/mlx5_ib.ko: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), BuildID[sha1]=2dcb1e30d0bba9885d5a824f6f57488a98f0c95d, with debug_info, not stripped
 
-You need to link to see it..
+On 06/02/2020 14:31, Dmitry Osipenko wrote:
+> 06.02.2020 16:50, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 02/02/2020 22:28, Dmitry Osipenko wrote:
+>>> It's a bit impractical to enable hardware's clock at the time of DMA
+>>> channel's allocation because most of DMA client drivers allocate DMA
+>>> channel at the time of the driver's probing, and thus, DMA clock is kep=
+t
+>>> always-enabled in practice, defeating the whole purpose of runtime PM.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++-----------
+>>>  1 file changed, 24 insertions(+), 11 deletions(-)
+>> What about something like ......
+>> @@ -581,6 +582,7 @@ static bool handle_continuous_head_request(struct te=
+gra_dma_channel *tdc,
+>>  	hsgreq =3D list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), nod=
+e);
+>>  	if (!hsgreq->configured) {
+>>  		tegra_dma_stop(tdc);
+>> +		pm_runtime_put(tdc->tdma->dev);
+>>  		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
+>>  		tegra_dma_abort_all(tdc);
+>>  		return false;
+>=20
+> Yes, that it's what you suggested to do in the reply to v6.
+>=20
+> Alright, I'll drop v7 patch #13 and add the put to this patch #14.
 
-From bee7b242c2c6a3bfb696cd5fa37d83a731f3ab15 Mon Sep 17 00:00:00 2001
-From: Jason Gunthorpe <jgg@mellanox.com>
-Date: Thu, 6 Feb 2020 10:27:54 -0400
-Subject: [PATCH] IB/mlx5: Use div64_u64 for num_var_hw_entries calculation
+Yes I was not sure if it was clear. However, this seems a bit of an
+easier change and should keep the 'busy' status somewhat consistent with
+the rpm state.
 
-On i386:
+Jon
 
-ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-
-Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR capabilities")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/infiniband/hw/mlx5/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index 0ca9581432808c..9b88935f805ba2 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -6543,7 +6543,7 @@ static int mlx5_ib_init_var_table(struct mlx5_ib_dev *dev)
- 					doorbell_bar_offset);
- 	bar_size = (1ULL << log_doorbell_bar_size) * 4096;
- 	var_table->stride_size = 1ULL << log_doorbell_stride;
--	var_table->num_var_hw_entries = bar_size / var_table->stride_size;
-+	var_table->num_var_hw_entries = div64_u64(bar_size, var_table->stride_size);
- 	mutex_init(&var_table->bitmap_lock);
- 	var_table->bitmap = bitmap_zalloc(var_table->num_var_hw_entries,
- 					  GFP_KERNEL);
--- 
-2.25.0
-
+--=20
+nvpublic
