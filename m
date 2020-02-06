@@ -2,71 +2,133 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEF0C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC750C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CAC21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0CE20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580980558;
+	bh=rQxdXGb3JBObZixrLXhy0G1L2s3YNcGekksClrmrHRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sJN4KmQZ0T+pxpTrJZfMCJ2M8qiJcJxi0PXPExLteQEt/+jPFd5xvWbZ96qmo7Ol0
+	 4+6mLVCKmQOZLvEIhJEq03YPFfIg6r89LWz2yTfV1frmscoA+qfr1JDhMmJO23MLD1
+	 otKMsEFXrmxoQdfyAuwP792/jMVxcTbR7l0n/YiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgBFJOX (ORCPT
+        id S1728318AbgBFJP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:14:23 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:60913 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgBFJOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:14:23 -0500
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 46D46200003;
-        Thu,  6 Feb 2020 09:14:18 +0000 (UTC)
-Message-ID: <6ed9447de70d49289ded71751e57923d0c4ab3b4.camel@hadess.net>
-Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Roderick Colenbrander <thunderbird2k@gmail.com>,
-        Martyn Welch <martyn@welchs.me.uk>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Conn O'Griofa <connogriofa@gmail.com>,
-        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
-Date:   Thu, 06 Feb 2020 10:14:17 +0100
-In-Reply-To: <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
-References: <20200126194513.6359-1-martyn@welchs.me.uk>
-         <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com>
-         <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk>
-         <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 6 Feb 2020 04:15:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgBFJP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 04:15:57 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3001206CC;
+        Thu,  6 Feb 2020 09:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580980556;
+        bh=rQxdXGb3JBObZixrLXhy0G1L2s3YNcGekksClrmrHRo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DHREm+Ty+0AsFxcgp5M0I4HD7EFZJvI1s2CepcnjEDWaMxgL35WipfJK4R73meckj
+         2VrfXkdrnGk108m+83h+r33Y7R4b2Ke453jmIRAURghZwoGftr+9DSUTd2gCOWVDUm
+         jsRcF2c11YdSD18KTefyAHVzStDT7MhXZ+pccbt4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1izdGM-003HSq-Vh; Thu, 06 Feb 2020 09:15:55 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 06 Feb 2020 09:15:54 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>,
+        tglx@linutronix.de, jason@lakedaemon.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        siva.durga.paladugu@xilinx.com, anirudha.sarangi@xilinx.com
+Subject: Re: [PATCH v2] irqchip: xilinx: Add support for multiple instances
+In-Reply-To: <575c6350-139b-65b9-f9e2-2633656baa85@xilinx.com>
+References: <1580911535-19415-1-git-send-email-mubin.usman.sayyed@xilinx.com>
+ <b8e7b9120bc6cd306bda3347cde117ff@kernel.org>
+ <3d6077c1-2b13-acc6-e8f4-3d1ab23dc159@xilinx.com>
+ <8b5c5b5d601856ddc3f4388e267c4cd0@kernel.org>
+ <575c6350-139b-65b9-f9e2-2633656baa85@xilinx.com>
+Message-ID: <a3008824af22411034a6172cf09b450f@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: michal.simek@xilinx.com, mubin.usman.sayyed@xilinx.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, siva.durga.paladugu@xilinx.com, anirudha.sarangi@xilinx.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-28 at 22:22 -0800, Roderick Colenbrander wrote:
-> As you can see this creates an awkward situation. I'm sure there
-> other
-> such devices as well e.g. counterfeit Logitech keyboards, USB serial
-> adapters and other periperhals with similar challenges. In an ideal
-> world the support would live in another driver, but since in case of
-> this "fake" PS3 controller it "share" our product / vendor ids it is
-> tricky. At this point there is not a strong enough case yet to
-> augment
-> the "hid-quirks" to do so, but perhaps if it became a serious issue
-> (e.g. for newer controllers) maybe we need to think of something.
+On 2020-02-06 09:11, Michal Simek wrote:
+> On 06. 02. 20 10:09, Marc Zyngier wrote:
+>> On 2020-02-06 07:06, Michal Simek wrote:
+>>> On 05. 02. 20 17:53, Marc Zyngier wrote:
+>>>> On 2020-02-05 14:05, Mubin Usman Sayyed wrote:
+>> 
+>> [...]
+>> 
+>>>>>  unsigned int xintc_get_irq(void)
+>>>>>  {
+>>>>> -       unsigned int hwirq, irq = -1;
+>>>>> +       int hwirq, irq = -1;
+>>>>> 
+>>>>> -       hwirq = xintc_read(IVR);
+>>>>> +       hwirq = xintc_read(primary_intc->base + IVR);
+>>>>>         if (hwirq != -1U)
+>>>>> -               irq = irq_find_mapping(xintc_irqc->root_domain, 
+>>>>> hwirq);
+>>>>> +               irq = irq_find_mapping(primary_intc->root_domain,
+>>>>> hwirq);
+>>>>> 
+>>>>>         pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
+>>>> 
+>>>> I have the ugly feeling I'm reading the same code twice... Surely 
+>>>> you
+>>>> can
+>>>> make these two functions common code.
+>>> 
+>>> I have some questions regarding this.
+>>> I have updated one patchset which is adding support for Microblaze 
+>>> SMP.
+>>> And when I was looking at current wiring of this driver I have 
+>>> decided
+>>> to change it.
+>>> 
+>>> I have enabled  GENERIC_IRQ_MULTI_HANDLER and HANDLE_DOMAIN_IRQ.
+>>> This driver calls set_handle_irq(xil_intc_handle_irq)
+>>> and MB do_IRQ() call handle_arch_irq()
+>>> and IRQ routine here is using handle_domain_irq().
+>>> 
+>>> I would expect that this chained IRQ handler can also use
+>>> handle_domain_irq().
+>>> 
+>>> Is that correct understanding?
+>> 
+>> handle_domain_irq() implies that you have a set of pt_regs, 
+>> representing
+>> the context you interrupted. You can't fake that up, so I can't see 
+>> how
+>> you use it in a chained context.
+> 
+> ok. What's your recommendation for chained controller? Just go with
+> irq_find_mapping?
 
-I'm pretty certain that the only reason why those use "fake" VID/PID
-combinations is because that's the only thing the consoles will
-accept. 
+For now, yes. I have (distant) plans to improve this.
 
-That's par for the course when you try to close off your ecosystem that
-those that try to enter it will use the means at their disposal to do
-that.
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
