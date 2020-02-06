@@ -2,157 +2,135 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B871C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B125FC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0CE20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832AF20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yXPSwqOv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FoC4/Iud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbgBFP7t (ORCPT
+        id S1727593AbgBFQDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:59:49 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.234]:23843 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727358AbgBFP7t (ORCPT
+        Thu, 6 Feb 2020 11:03:47 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:41370 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727390AbgBFQDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:59:49 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id E468511C4E7
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2020 09:59:47 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id zjZDiI0RSSl8qzjZDi3GOQ; Thu, 06 Feb 2020 09:59:47 -0600
-X-Authority-Reason: nr=8
+        Thu, 6 Feb 2020 11:03:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3x27GKoJpid13+Ve8WU7D8py7LuYdaBCUUELnv2Ntxg=; b=yXPSwqOvxzWHfuOQYI3nSlY/d+
-        /srKGPErQSU+0e0EKWR9M/Z81KgxRXMyngZTe+nTfNSTBY/UA7SXcZa+OrmOKUBVXCc/XxYNmCVs5
-        xa6egrFQdfpUcDQrRysJIkQrTvgaFaaAIbMuvociEPK2jZhmFbfjC6PyNG87vwsl4rmmChM4bUbeD
-        Raf0GfTzWcGYLEhlWEQzCx7lyJKP16dMiOpR05Wzu/Jgdd3xx7+tVzHt5PufrDZeLaXokZ5SA+xOE
-        gpcaWxMInK8JsQgqEXRKVlYwveQ71EK/glTx19UwuqMYSoGWt/wrrkcCp2wGBAUP35/22b9LIAVne
-        TLRH/SLg==;
-Received: from [201.144.174.45] (port=19798 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1izjZD-000e7P-Gv; Thu, 06 Feb 2020 09:59:47 -0600
-Subject: Re: [PATCH] COPYING: state that all contributions really are covered
- by this file
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>
-References: <20200206154800.GA3754085@kroah.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <56c799b5-a4b2-11b4-f89f-a6cc02ffe0e4@embeddedor.com>
-Date:   Thu, 6 Feb 2020 10:02:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5bXJ5Rw26RpYjEWcuqqQmXts3e2aBzD3XsiSch9tXCk=; b=FoC4/Iud91mZ7T1371q+55R/r+
+        m3u1CBnxN9VEqvfk0qyw9fIX4u6PR1MTbTIuRqEhsXApPmLZiFH+LIbKwMimFbRqXCGhEIH3+SIHx
+        Q/UDN9HnJ3MlG98HPsnVjQ0CW1BWNg1sr79UMXj8apEh89wLh2zdLhdy+Lcugrc57CjJAA+Xxclhx
+        75EGzdQoT8t6I9d6O1qY2L3GJ/mDae8aXFYgjZ0TGLQ/ZE1mbg10lJOnkd2OGiZHwLhIFjtzJYjji
+        mXP/bSKaPEie+qh5O8IQFyeTa1EWsrjiWS957YFjoq7F71JvGYCN0y2gby6yOJe0OoY7qTjmTAroZ
+        zeZQfJ/A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izjcw-00058S-D4; Thu, 06 Feb 2020 16:03:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC0103008A9;
+        Thu,  6 Feb 2020 17:01:48 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EBAC52B72EEBF; Thu,  6 Feb 2020 17:03:34 +0100 (CET)
+Date:   Thu, 6 Feb 2020 17:03:34 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v6 6/6] locking/lockdep: Reuse freed chain_hlocks entries
+Message-ID: <20200206160334.GV14914@hirez.programming.kicks-ass.net>
+References: <20200206152408.24165-1-longman@redhat.com>
+ <20200206152408.24165-7-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200206154800.GA3754085@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.144.174.45
-X-Source-L: No
-X-Exim-ID: 1izjZD-000e7P-Gv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [201.144.174.45]:19798
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206152408.24165-7-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 06, 2020 at 10:24:08AM -0500, Waiman Long wrote:
+> +#define for_each_chain_block(bucket, prev, curr)		\
+> +	for ((prev) = -1, (curr) = chain_block_buckets[bucket];	\
+> +	     (curr) >= 0;					\
+> +	     (prev) = (curr), (curr) = chain_block_next(curr))
 
-
-On 2/6/20 09:48, Greg Kroah-Hartman wrote:
-> Explicitly state that all contributions to the kernel source tree
-> really are covered under this COPYING file in case someone thought
-> otherwise.  Lawyers love to be pedantic, even more so than software
-> engineers at times, and this sentence makes them sleep easier.
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-> ---
->  COPYING | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/COPYING b/COPYING
-> index da4cb28febe6..a635a38ef940 100644
-> --- a/COPYING
-> +++ b/COPYING
-> @@ -16,3 +16,5 @@ In addition, other licenses may also apply. Please see:
->  	Documentation/process/license-rules.rst
->  
->  for more details.
+> +static inline void add_chain_block(int offset, int size)
+> +{
+> +	int bucket = size_to_bucket(size);
+> +	int next = chain_block_buckets[bucket];
+> +	int prev, curr;
 > +
-> +All contributions to the Linux Kernel are subject to this COPYING file.
-> 
+> +	if (unlikely(size < 2)) {
+> +		/*
+> +		 * We can't store single entries on the freelist. Leak them.
+> +		 *
+> +		 * One possible way out would be to uniquely mark them, other
+> +		 * than with CHAIN_BLK_FLAG, such that we can recover them when
+> +		 * the block before it is re-added.
+> +		 */
+> +		if (size)
+> +			nr_lost_chain_hlocks++;
+> +		return;
+> +	}
+> +
+> +	nr_free_chain_hlocks += size;
+> +	if (!bucket) {
+> +		nr_large_chain_blocks++;
+> +
+> +		if (unlikely(next >= 0)) {
+
+I was surprised by this condition..
+
+> +			/*
+> +			 * Variable sized, sort large to small.
+> +			 */
+> +			for_each_chain_block(0, prev, curr) {
+> +				if (size >= chain_block_size(curr))
+> +					break;
+> +			}
+
+Because if that is not so, then here:
+	@curr == @next
+	@prev == -1
+
+> +			init_chain_block(offset, curr, 0, size);
+
+and this will be identical to:
+
+	init_chain_block(offset, next, bucket, size);
+
+
+> +			if (prev < 0)
+> +				chain_block_buckets[0] = offset;
+> +			else
+> +				init_chain_block(prev, offset, 0, 0);
+
+and this will be:
+
+	chain_block_buckets[bucket] = offset;
+
+
+Or am I missing something?
+
+> +			return;
+> +		}
+> +	}
+> +	/*
+> +	 * Fixed size or bucket[0] empty, add to head.
+> +	 */
+> +	init_chain_block(offset, next, bucket, size);
+> +	chain_block_buckets[bucket] = offset;
+> +}
