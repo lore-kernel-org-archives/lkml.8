@@ -2,171 +2,172 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C4C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C938FC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C7021775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940B7218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:41:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gxSHfEE4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MUQOEJuu";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CyPAlgYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgBFVlP (ORCPT
+        id S1727833AbgBFVlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:41:15 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28019 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727526AbgBFVlP (ORCPT
+        Thu, 6 Feb 2020 16:41:17 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:45068 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbgBFVlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:41:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581025274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fv7hocxnCQMQx/Ef0JfmL5g1BsW3yRUgDUYfbGA1aT0=;
-        b=gxSHfEE4jjQSGZgcjqOLnkFzstB3p5uO+9jEWAeUY0+COObnX7XI+EVMPNXqAqaEcOYR30
-        ZyufSrqVQNP4E7bRzl7x5bzm6V1LC0MtMN85oqL8F4XO1sQEKWMR7Nw2GAEh8rrEInxVoD
-        OWH+pa1QJbbGcyZ0obujPIXziBez8tY=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-Wv-7LZ25PAuAs2HnsmvX1w-1; Thu, 06 Feb 2020 16:41:12 -0500
-X-MC-Unique: Wv-7LZ25PAuAs2HnsmvX1w-1
-Received: by mail-qv1-f72.google.com with SMTP id p3so4593004qvt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 13:41:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fv7hocxnCQMQx/Ef0JfmL5g1BsW3yRUgDUYfbGA1aT0=;
-        b=rflVW3dR3G/IuXeZxWXv3CIuBTn5To/XJItwDos38WV861pBnKr6tb3GaGNuXnEvYd
-         i2Dl8q2r7TRW5jnQMxJJycYzkOAlZu3QP6JmN8YSBu69NIpQ34k7CMcqBaIw7QFiMxCX
-         fBArtvH4Nchh/GskqSHgDqwsj4PlrM0bfMuUIVHMv4fBfwHoTFLYEoA9usWTlHaR3+Sq
-         pGV0+w61KTvzVTpLMT2tNSMjzNfP9G5eRI+DqjTjzIetoSi2ESaE/TGn1KOdJe5nszzu
-         tQ36PieI/gXLS/m+ikRQUPVwQLiShlR1ARZoHImXxuTKlu4v5ykDA+7Z3D5AJGOvz3Rd
-         2Cpw==
-X-Gm-Message-State: APjAAAU0IT8AMx5KPmMPItpBLrPgo3BYrDffa12d3sN9d+pJ3LpXMqTJ
-        XpaKpf6Zt+y/9gGzYCSS6A3oWNfWwBS4zgS4OCzn+07KrivfJ53QPxZEwh8XkfVoLkszJK72S2w
-        myWLiFfoJPeXdgzY6K+mBhMhG
-X-Received: by 2002:a05:620a:7f2:: with SMTP id k18mr4541153qkk.207.1581025271641;
-        Thu, 06 Feb 2020 13:41:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxJgBpP+Sn/XW78feM1lgNrPZNv0ribzryOvpKTws4jf2FMfbWVePD88+Gb3lvt+IGO4p+aFA==
-X-Received: by 2002:a05:620a:7f2:: with SMTP id k18mr4541080qkk.207.1581025270452;
-        Thu, 06 Feb 2020 13:41:10 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id w9sm304509qka.71.2020.02.06.13.41.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:41:09 -0800 (PST)
-Date:   Thu, 6 Feb 2020 16:41:06 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20200206214106.GG700495@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-16-sean.j.christopherson@intel.com>
- <20200206200200.GC700495@xz-x1>
- <20200206212120.GF13067@linux.intel.com>
-MIME-Version: 1.0
+        Thu, 6 Feb 2020 16:41:16 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016LchfD110848;
+        Thu, 6 Feb 2020 21:40:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=RVw98UuA753CD7zWY4l2J2dJK4NDnsK13hhkc8QW+gI=;
+ b=MUQOEJuuVTrXF3LMpiKU6vj27rvvoPw1slXWyVSXzsda5JTkJlbvr20z8xWZR0oqN3vM
+ bo6SwICvci4S9Z10VcU1AVr9UAVyqqrY1b9Yu8nQGDdy2iV0dvIhLGrnRIHe/Iz2QGd5
+ vc9AzRrEaTA7CRSk4ej4OAhhABnzia8vPWD+zSAOyQCCEeBV6ppaJPhGO5voVPfMwXi7
+ Os9V1vRXT898/0223hmqC+8zRBIcInshsUHFMiX2oNmX3eBE2GeGL6WahuEn66GXXLfw
+ PTPniqFdbZBhkEpkPAJ01OG/3gyCW5bP7FfqJs5yz2ObU6GsTWTuzvJp9ooVikeEs8x4 8w== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=RVw98UuA753CD7zWY4l2J2dJK4NDnsK13hhkc8QW+gI=;
+ b=CyPAlgYFQb63uLSwARflxnQGU8oQBBtpPjXbqFAuPyvvKCjlbB/Z3IMf6xUJDXCBV+M8
+ i9BCErB1DsuiPgLz5EFzjowWK2cap3pedpjm/hCwS6qHXbfuZlATzHwYGYER0n/qZB0f
+ ZkT3wkTyaf2g5xyBp+23b6ktdh0lIUYK8awpa2l4hN+8+mEszriNFAN6kfE42E/2wTNz
+ mcyk20ZHSsD/GkM4ZyRDWbAe04xMiNuaT6jtOrxDGHcFAG6T641+zS1SM0UOXBEo+vSB
+ rlC+zuYGBE5eKbcisvQgiNZTUnBgCZ9yeblwnhYE7wD86aPc7vzwFKVjcYNEVaDtr0gF iQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xykbpch43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 21:40:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016Ld8ek098311;
+        Thu, 6 Feb 2020 21:40:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y0mjvxjdy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 21:40:47 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016LefZk024879;
+        Thu, 6 Feb 2020 21:40:41 GMT
+Received: from dhcp-10-65-154-237.vpn.oracle.com (/10.65.154.237)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 13:40:41 -0800
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200206212120.GF13067@linux.intel.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Eric Snowberg <eric.snowberg@oracle.com>
+In-Reply-To: <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+Date:   Thu, 6 Feb 2020 14:40:40 -0700
+Cc:     dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+ <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+To:     Nayna <nayna@linux.vnet.ibm.com>
+X-Mailer: Apple Mail (2.3273)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:21:20PM -0800, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
-> > On Tue, Jan 21, 2020 at 02:31:53PM -0800, Sean Christopherson wrote:
-> > 
-> > [...]
-> > 
-> > > -int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm, struct kvm_clear_dirty_log *log)
-> > > +void kvm_arch_dirty_log_tlb_flush(struct kvm *kvm,
-> > > +				  struct kvm_memory_slot *memslot)
-> > 
-> > If it's to flush TLB for a memslot, shall we remove the "dirty_log" in
-> > the name of the function, because it has nothing to do with dirty
-> > logging any more?  And...
-> 
-> I kept the "dirty_log" to allow arch code to implement logic specific to a
-> TLB flush during dirty logging, e.g. x86's lockdep assert on slots_lock.
-> And similar to the issue with MIPS below, to deter usage of the hook for
-> anything else, i.e. to nudge people to using kvm_flush_remote_tlbs()
-> directly.
 
-The x86's lockdep assert is not that important afaict, since the two
-callers of the new tlb_flush() hook will be with slots_lock for sure.
+> On Feb 6, 2020, at 1:22 PM, Nayna <nayna@linux.vnet.ibm.com> wrote:
+>=20
+>=20
+> On 2/6/20 11:42 AM, Eric Snowberg wrote:
+>> When booting with either "ima_policy=3Dsecure_boot =
+module.sig_enforce=3D1"
+>> or building a kernel with CONFIG_IMA_ARCH_POLICY and booting with
+>> "ima_policy=3Dsecure_boot", module loading behaves differently based =
+on if
+>> the module is compressed or not.  Originally when appraising a module
+>> with ima it had to be uncompressed and ima signed.  Recent changes in =
+5.4
+>> have allowed internally signed modules to load [1].  But this only =
+works
+>> if the internally signed module is compressed.  The uncompressed =
+module
+>> that is internally signed must still be ima signed. This patch series
+>> tries to bring the two in line.
+>=20
+> We (Mimi and I) have been trying to understand the cover letter. It =
+seems "by internally signed" you are referring to modules signed with =
+build time generated keys.
 
-> 
-> > >  {
-> > > -	struct kvm_memslots *slots;
-> > > -	struct kvm_memory_slot *memslot;
-> > > -	bool flush = false;
-> > > -	int r;
-> > > -
-> > > -	mutex_lock(&kvm->slots_lock);
-> > > -
-> > > -	r = kvm_clear_dirty_log_protect(kvm, log, &flush);
-> > > -
-> > > -	if (flush) {
-> > > -		slots = kvm_memslots(kvm);
-> > > -		memslot = id_to_memslot(slots, log->slot);
-> > > -
-> > > -		/* Let implementation handle TLB/GVA invalidation */
-> > > -		kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
-> > > -	}
-> > > -
-> > > -	mutex_unlock(&kvm->slots_lock);
-> > > -	return r;
-> > > +	/* Let implementation handle TLB/GVA invalidation */
-> > > +	kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
-> > 
-> > ... This may not directly related to the current patch, but I'm
-> > confused on why MIPS cannot use kvm_flush_remote_tlbs() to flush TLBs.
-> > I know nothing about MIPS code, but IIUC here flush_shadow_memslot()
-> > is a heavier operation that will also invalidate the shadow pages.
-> > Seems to be an overkill here when we only changed write permission of
-> > the PTEs?  I tried to check the first occurance (2a31b9db15353) but I
-> > didn't find out any clue of it so far.
-> > 
-> > But that matters to this patch because if MIPS can use
-> > kvm_flush_remote_tlbs(), then we probably don't need this
-> > arch-specific hook any more and we can directly call
-> > kvm_flush_remote_tlbs() after sync dirty log when flush==true.
-> 
-> Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
-> that prevents calling kvm_flush_remote_tlbs() directly, but I have no
-> clue as to the important of that code.
+I am referring to any module that includes an appended signature.  They =
+could be signed at build time or anytime afterwards using =
+/usr/src/kernels/$(uname -r)/scripts/sign-file.  As long as the public =
+key is contained in the builtin kernel trusted keyring.
 
-As said above I think the x86 lockdep is really not necessary, then
-considering MIPS could be the only one that will use the new hook
-introduced in this patch...  Shall we figure that out first?
 
-Thanks,
+> Our interpretation of the cover letter is that IMA originally did not =
+support appended signatures and now does.
 
--- 
-Peter Xu
+Correct, before the changes added to 5.4 [1], it was not possible to =
+have a digital signature based appraisal policy that worked with a =
+compressed module.  This is because you can=E2=80=99t ima sign a =
+compressed module, since the signature would be lost by the time it gets =
+to the init_module syscall.  With the changes in [1] you can, if you =
+include =E2=80=9Cmodsig=E2=80=9D to your policy, which allows the =
+appended module to be checked instead.
+
+
+> Since the modules are signed with build time generated keys, the =
+signature verification still fails, as the keys are only available on =
+the .builtin keyring and not the .ima keyring.
+
+Currently the upstream code will fail if the module is uncompressed.  If =
+you compress the same module it will load with the current upstream =
+code.
+
+> Lastly, there is nothing in these patches that indicate that the =
+kernel modules being compressed/uncompressed is related to the signature =
+verification.
+>=20
+
+Basically if you have the following setup:
+
+Kernel built with CONFIG_IMA_ARCH_POLICY or kernel booted with =
+module.sig_enforce=3D1 along with the following ima policy:
+
+appraise func=3DMODULE_CHECK appraise_type=3Dimasig|modsig
+
+If you have a module foo.ko that contains a valid appended signature but =
+is not ima signed, it will fail to load.  Now if the enduser simply =
+compresses the same foo.ko, making it foo.ko.xz.  The module will load.
+
+Modules can be loaded thru two different syscalls, finit_module and =
+init_module.  The changes added in [1] work if you use the init_module =
+syscall.  My change adds support when the finit_module syscall gets used =
+instead.
+
+
+[1] https://patchwork.kernel.org/cover/10986023
 
