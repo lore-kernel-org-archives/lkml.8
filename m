@@ -2,145 +2,225 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0CAC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66A9C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F5A20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46B620659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:30:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Y9elrmdX"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="czxS3H7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBFSaT (ORCPT
+        id S1727923AbgBFSaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:30:19 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:42459 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFSaT (ORCPT
+        Thu, 6 Feb 2020 13:30:24 -0500
+Received: from USFB19PA36.eemsg.mail.mil ([214.24.26.199]:55613 "EHLO
+        USFB19PA36.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBFSaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:30:19 -0500
-Received: by mail-qv1-f67.google.com with SMTP id dc14so3309682qvb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:30:18 -0800 (PST)
+        Thu, 6 Feb 2020 13:30:23 -0500
+X-EEMSG-check-017: 53517712|USFB19PA36_ESA_OUT06.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.70,410,1574121600"; 
+   d="scan'208";a="53517712"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by USFB19PA36.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 06 Feb 2020 18:30:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JL75aBY+rZk3H0gime7n0VDi14qO+XDQsjQrhb4dCCU=;
-        b=Y9elrmdXu1s9jb4qNTQQZUlZo0MoZAxDXVkEZWGy5Apy1XGOSW9zfqDQo3nVJbY5fC
-         YCMWsAm4hhcP6dc0XH9FWLY/AkzQRA7nzkNeIDEy6D9oa/pZVm7K6CGiitTsGu3NdOHG
-         m67nOhGjy+AgB1kxy+8BFcq3maoPJuImfvyNbWQW3PmEv3O3D8bavTKDdnAvb6fj/Ks8
-         eQgr6QblA/2YHlNn4V8WHhDdLThemHXeWmAms7F3a3TkmRdKS4BmdsC4PVMyyPOBfqDG
-         YZUGHVwc0kH96ooz/AAA1b0yYmdmTog2EuBPMr76Aj9nrXCad4LF+Da7xt0L8lfPHC6e
-         hmxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JL75aBY+rZk3H0gime7n0VDi14qO+XDQsjQrhb4dCCU=;
-        b=aFYXZWakS+3CeEFE0/YKV4YmEmVujMPSU5FTQv59b8hHC1rFpLq0E+rnzaAilPPVId
-         kr4G4BeeDyO4GByWHapIdB0JNx2UkEy83ZPwTv+mPlA0R2NdYgNhBDV+jl9gqEev71DO
-         riic9iqQR0YrYwQrbB50EcLsnkDqDdIMMkk/PFh1pnfMOS+3RvN8cLFC31XEV9LoSYC0
-         vHXfHsTpb8Qi769/qJAYAIYn7g4bV2EstttbWOhswm0CVGuvk5/jx0vKLQ1WHcp2Qz1i
-         IzG02yIBP6O5w6p7rAijzv2yyOnKR29eqlsugxzZiv1DwBCgNaHDiiLflcPTMiPwqr6r
-         A6GA==
-X-Gm-Message-State: APjAAAUcLwnO3oJRUGNd8DHJS/JOhfHYbTlRoyJWVbTzYZjLnu9C7Qv/
-        SCUGfREeY/lCDxKDQp+7rPLf+w==
-X-Google-Smtp-Source: APXvYqw0/Xgpcw3i5p54MgfadehdUhtQtZo43pmPlIku1IX9sHJPd9raCVM06PrDzr6VJDwPEzShbQ==
-X-Received: by 2002:ad4:57c7:: with SMTP id y7mr3407811qvx.174.1581013818171;
-        Thu, 06 Feb 2020 10:30:18 -0800 (PST)
-Received: from Qians-MBP.fios-router (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id f17sm55169qtq.19.2020.02.06.10.30.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Feb 2020 10:30:17 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, jhubbard@nvidia.com, ira.weiny@intel.com,
-        dan.j.williams@intel.com, jack@suse.cz, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next v2] mm: mark an intentional data race in page_zonenum
-Date:   Thu,  6 Feb 2020 13:30:00 -0500
-Message-Id: <20200206183000.913-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1581013805; x=1612549805;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=GIuxHJNaxkFgGYFU+0k1ATkzz7KYxG6sstbiSLNyjtA=;
+  b=czxS3H7tDzxz3LzjylHylJdD0dL3P1TQ5ebuOvGfMW/bfHLLhkZ0DXxj
+   8uV0r2xkzgsLY7bWnX5hkDTmh6VEb2fX/TBbNO6Lp4YLU7k5XRj3fa2uQ
+   uyVKGSxvE+YCKgcnUXNzILN/bHXuS29MAI3oe8cKLAXD53FYY2a/ZwWOu
+   rvH+1tLdSomHeEK9UFi0zccW8n9qgGIKwCjdoXwRJasYeRH23V+YqEkWZ
+   K+8DRXLdx5W4Z1M600G++rupuQ3o7i93PJeQuGEBj7PARjyTjwAhlYjDY
+   uoHGhaVisZVSzeDaiJx0ediZFC2y7835yPeJbRq2tRXKA0wf+paJSGT9t
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.70,410,1574121600"; 
+   d="scan'208";a="38773436"
+IronPort-PHdr: =?us-ascii?q?9a23=3ArKBTTR+HdHScVP9uRHKM819IXTAuvvDOBiVQ1K?=
+ =?us-ascii?q?B91OkfIJqq85mqBkHD//Il1AaPAdyHra8fwLOP6+igATVGvc/a9ihaMdRlbF?=
+ =?us-ascii?q?wssY0uhQsuAcqIWwXQDcXBSGgEJvlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk?=
+ =?us-ascii?q?2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+IA+5oAnMucQam4tvJ6g+xh?=
+ =?us-ascii?q?fUv3dEZ/ldyWd0KV6OhRrx6dq88ZB5/yhMp/4t8tNLXLnncag/UbFWFiktPX?=
+ =?us-ascii?q?ov5M3suxnDTA+P6WUZX24LjBdGABXL4Q/jUJvpvST0quRy2C+BPc3rVr80Qi?=
+ =?us-ascii?q?it771qSBDzligKMSMy/XzNhcxxiKJbpw+hpwB6zoXJboyZKOZyc6XAdt4BW2?=
+ =?us-ascii?q?FPQtheWDBAAoOkbosAEewBPfpDr4Lgo1cCtAayCRWwCO/qzDJHiGX23akn2O?=
+ =?us-ascii?q?o/Fw/I0hErE9YXvHjKqNj5MaEfWv23wqbV1zXOd+5Y1ynz6IbIcR4vr/+DUr?=
+ =?us-ascii?q?1yfsXNxkciDB/Fg1eKpID5Iz+Y2OYAvm6G5ORgT+KvjGsnphlsrDiz2Mgsko?=
+ =?us-ascii?q?nJiZwTylvZ6Ct5xZw6Jdm8SEFlYd+vDZxdtzqHOIttWc4iX2Fptzo6yr0Bo5?=
+ =?us-ascii?q?K7ejMKx449yx7QbPyHbZGF7xT+X+ifJjd4gWhqeLO5hxuq8kiv1Pf8Vs+q31?=
+ =?us-ascii?q?ZOtCZFlcPMtn8V2xzc68iHVvt9/lq61jqVyw/T7eRELVgxlaXBLZ4swKQ8lp?=
+ =?us-ascii?q?0JsUTMGCL9hUb4jLeOe0k59eWl5P7rb7X7qpOGKYN5hR/yPr4zlsG5HO82KB?=
+ =?us-ascii?q?IBX3KB9uS5zLDj+Er5T6hUgfAuianZtYzaJdwcpq6kHw9ZyoYj5Ai7DzehyN?=
+ =?us-ascii?q?kYgWMILEhEeBKalIjlIVDOIPb2Dfe4mFSjjitky+raPrzhHprNLn/DnK3nfb?=
+ =?us-ascii?q?lh8E5T1BA/zdVe55JQEr0BIfTzVVHttNHAExM0PAO5z/znBdlgzI8SR22CDr?=
+ =?us-ascii?q?GDPK/PqVOI4/ggI+iIZI8bojb9LP0l6ub1jXAkgl8QZrWp3JsLZ3C4GfRqOU?=
+ =?us-ascii?q?OZYWH2jdsbHmcKuRQ+QPTwiFKeST5Te2qyX6Uk6z4hDIKpE4jCSZ6tgbCbxy?=
+ =?us-ascii?q?i7A4BZaXpAClCPFnfoaZ6JW/MNaCKUP89gnSYIVbmnS489yx6usBX2xKZgLu?=
+ =?us-ascii?q?rR4icYr47s1MBp5+3PkhE/7T50D8Ga02GXVWF0n3gISiQw3K9lpExy1FaD3b?=
+ =?us-ascii?q?J/g/xCGtxZ/+lJXRsiNZ7A0+x6DMj/WhnfcdeTR1apXM6rATErQdI1x98PY0?=
+ =?us-ascii?q?B9F8++gRDE2iqgG6UVmKCTBJwo7qLc2GD8J95jxHbayqYhlVgnT9BONW2giK?=
+ =?us-ascii?q?5/7RLcCJPXnEqDiqmmb6Mc3DTC9G2b12qBoFlYUBJsUaXCRX0QfFfZrdHn6U?=
+ =?us-ascii?q?7ZTL+hF64nMg1fxs6GMKdKbcfpjVpeTvf5JNvee36xm3u3BRuQw7OMbYzqe2?=
+ =?us-ascii?q?oa3CjGEkgLjR0c/XacOggiHCuuv2XeDDl2H1L1f0zs6fV+qG+8TkIszQGKaE?=
+ =?us-ascii?q?ph17yv9R4On/CcT+kc3rIYuCcgrTV7AlC90snSC9qBoQphYapdbck84FdByW?=
+ =?us-ascii?q?LWqQh9Moa8IKBlg14Uax53sF/21xVrFoVAltAno2kxzApuMq+Y001Odyme3Z?=
+ =?us-ascii?q?/uPr3bMG7y/Aqga6TOwFHRzM6W+rsT6PQ/s1jisgCpFk4m83h80NlazWGc5p?=
+ =?us-ascii?q?PUAwoWS57xVVw39xdirbHAfiY9/5/U1WFrMaSsqj/Nwc8pBO84yha7ZNpfK7?=
+ =?us-ascii?q?mLFArpHMIAHcSuL/Yqm1exZBIeIO9S7LI0P9+hd/ae3a6rJPhvkSm4gmRD5I?=
+ =?us-ascii?q?ByzFiM9y9mRe7OxZoFwuyX0hGdWDfhlF2hqNz4mZhYZTEOGWqy0TLrBI1Ka6?=
+ =?us-ascii?q?12fIYLD3quIsKtytV/gZ7tR2BX9Fq5C1wa38+pfAKYb0bh0g1IyUQXvXunlD?=
+ =?us-ascii?q?Okzzx7lzEoobGS3CjPw+TkaRoHJnRLRG5kjVftLom4lc0VU1awZQgziBSl/V?=
+ =?us-ascii?q?r6x7RcpKlnMWbTW11Hfy73L254VKu9rbWCY8lI6JMntSVYTv6wbkydSr74ux?=
+ =?us-ascii?q?EayT/sH3NCxDAncDGnopT5nxhniG2GNnlzt3rZdt9ryBjF59zTX/tR0SAHRC?=
+ =?us-ascii?q?VilTbXAV28NcGz/dqIj5fDrvy+V2W5W51RdinryZiAuzGg6G1wHxKwgvCzlc?=
+ =?us-ascii?q?f7EQQgzSD70NxqXz3SrBngeonry7i6MeV/c0lsBV/87dd6G45nnoszmp4Qw3?=
+ =?us-ascii?q?4aiYuR/Xccj2fzPstU2bjkYHoOWzEL2djV7xbh2EF5KXKJ3Y35XG2HwsR9f9?=
+ =?us-ascii?q?m6fn8W2iUl4sBLDqeU8KJLnS9srlq3owLQbuNwnjMcyfs19H4amPsFuAQ3zi?=
+ =?us-ascii?q?qDHL8dAFdXPTfvlxSU6NC+tL9bZGG1cbi/zEB+h8yuDKmeogFAX3b0YpMiHS?=
+ =?us-ascii?q?527sViP1PAyWbz5Z/4d9nNd9ITtwGUkhfZg+hQL5I+i+cKhS55Nm/mo30lxP?=
+ =?us-ascii?q?A0jQZ00ZG5ooeHMWNt87y9AhJCMT31fcwT8Cn3jalChsaWw5yvHpJ5FzUQQp?=
+ =?us-ascii?q?ToSfOoEDQPtfXoLAuODjI8pWmBGbbFHg+Q9l1mr3TRHJCvLX2XI2MZzdp6Th?=
+ =?us-ascii?q?mHOENfmBwUXCk9npMhEgCqxcrhcFp25zwI/FH4sB5MxvtrNxbhSGffohmnaj?=
+ =?us-ascii?q?MvRZibLRpW9R1C51zPPcyf6OJzETtY8Ye8owOTMGOUeh5EDWYTWkyLH1rjJK?=
+ =?us-ascii?q?Wh5cHc8+iEAeqzN//OYbSIqexDWPaI3Yqv3Zd/8zmRKMqPIGJvD/k62kpYQX?=
+ =?us-ascii?q?B5AN7VmzIOSiwTjS3CdNWbqA27+i1tocC16O7rVx735YuTF7tSNs1i+xS3ga?=
+ =?us-ascii?q?eFKu6Riz91KS5C2ZMWxH/I06QQ0UUMiyFhaTatC64MtS3TQ6LKnK9YERobZz?=
+ =?us-ascii?q?l0NMtS4KI2xhNNNtLDitPpyr54ieY4C1BdVVz7ncGpa80KI2WjO1/eAEaLNa?=
+ =?us-ascii?q?+GJSHQzsHzYKO8UqFQjP5Oux2rtzaXCUnjMSqfl2qhaxf6GOVBnCyKdDZDtI?=
+ =?us-ascii?q?i7cRFzQTzqSN/2Zwz9OsJ7hDs1xqMcgnLMKH5aMD5gfkcLpbqVu2cQoPx6Fn?=
+ =?us-ascii?q?cJy31/N+if03Kb6u7CMJcNmf1iByl10eVA7yJ+g4BY9i5JDNx8nC/DqJY6uF?=
+ =?us-ascii?q?y8neSnyjNjVAtI7D1MgdTP9X1vJajDvqtBW3Lf4AgEpTGIBggHvclNC9vhoa?=
+ =?us-ascii?q?lcx9HD0qXpJ2EGu/vO+8IYC8+cA8udLnMlMR2hFDOcKQYBSnb/PGraimRene?=
+ =?us-ascii?q?uU+3nTqYI1/NykuZwBTfd+U1gzH+lSXkFkGtMFCI16UjMtjfiQi8teoTL0rh?=
+ =?us-ascii?q?7WQsxB+JTOVu6TB/jpADKYi6RUIRoO3b78a48UM8ezj05lbV9zh8LOEkrMXN?=
+ =?us-ascii?q?ZApAVlbwkpsANM9mRzSis43EezLkuE5HIDGP/8pQI/kAxgZuUx8ymkt14sOn?=
+ =?us-ascii?q?LJqTE2nU13ns/q13TZTz/1KO+cUIhdDCy841cwNpfTQAtvawC220t+O2GAD4?=
+ =?us-ascii?q?pYkr8oUGlgiwLGo5JUUapERLBAfQQ43viSbfxu1k5T/GHv4E5M5eLIDdNPkA?=
+ =?us-ascii?q?8na5ulqToU3hpuRNMxIaHKIaNPiFlcwKuT6HyGzOc0lTQCKl4N/WXaQysBvE?=
+ =?us-ascii?q?gFJ/FyPCaz1vB94gyF3T1YcS4DUOR88aEizV80J+nVl3Go6LVEME3kcrXFfq?=
+ =?us-ascii?q?4=3D?=
+X-IPAS-Result: =?us-ascii?q?A2DvAgACWjxe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgXuBf?=
+ =?us-ascii?q?YEYVSASKoQViQOGYQEBAQEBAQaBN4lwkUsJAQEBAQEBAQEBLQoBAYFMgi9FA?=
+ =?us-ascii?q?oJhOBMCEAEBAQQBAQEBAQUDAQFshTcMgjspAYMCAQUjFS0UEAsYAgImAgJXB?=
+ =?us-ascii?q?gEMBgIBAYJjPwGCViUPrSiBMoRJQUCDVYE+gQ4qiVqCY3mBB4E4D4JdPoJkA?=
+ =?us-ascii?q?QEBAQKEcYJeBJAchyJGl2eCRIJOhHyOdgYbgkh4l0stjjWBS4chlEgigVgrC?=
+ =?us-ascii?q?AIYCCEPgycJFjEYDY5VgzuFFIUIAVQjAzACBQaOPQEB?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 06 Feb 2020 18:30:02 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 016IT9Ng204923;
+        Thu, 6 Feb 2020 13:29:09 -0500
+Subject: Re: [PATCH v6 01/10] capabilities: introduce CAP_PERFMON to kernel
+ and user space
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+References: <576a6141-36d4-14c0-b395-8d195892b916@linux.intel.com>
+ <a4c5da70-b6d1-b133-9b64-34e164834b03@linux.intel.com>
+ <5be0f67c-17e2-7861-37f3-a0f8a82be8f0@tycho.nsa.gov>
+ <1bcb4cb1-98c4-cc1a-b8e3-fd8a0e1e606f@linux.intel.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <06cdca0e-65f2-b58d-a84e-5a1907aa9eb5@tycho.nsa.gov>
+Date:   Thu, 6 Feb 2020 13:30:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1bcb4cb1-98c4-cc1a-b8e3-fd8a0e1e606f@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-page->flags could be accessed concurrently as noticied by KCSAN,
+On 2/6/20 1:26 PM, Alexey Budankov wrote:
+> 
+> On 06.02.2020 21:23, Stephen Smalley wrote:
+>> On 2/5/20 12:30 PM, Alexey Budankov wrote:
+>>>
+>>> Introduce CAP_PERFMON capability designed to secure system performance
+>>> monitoring and observability operations so that CAP_PERFMON would assist
+>>> CAP_SYS_ADMIN capability in its governing role for performance monitoring
+>>> and observability subsystems.
+>>>
+>>> CAP_PERFMON hardens system security and integrity during performance
+>>> monitoring and observability operations by decreasing attack surface that
+>>> is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
+>>> to system performance monitoring and observability operations under CAP_PERFMON
+>>> capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
+>>> chances to misuse the credentials and makes the operation more secure.
+>>> Thus, CAP_PERFMON implements the principal of least privilege for performance
+>>> monitoring and observability operations (POSIX IEEE 1003.1e: 2.2.2.39 principle
+>>> of least privilege: A security design principle that states that a process
+>>> or program be granted only those privileges (e.g., capabilities) necessary
+>>> to accomplish its legitimate function, and only for the time that such
+>>> privileges are actually required)
+>>>
+>>> CAP_PERFMON meets the demand to secure system performance monitoring and
+>>> observability operations for adoption in security sensitive, restricted,
+>>> multiuser production environments (e.g. HPC clusters, cloud and virtual compute
+>>> environments), where root or CAP_SYS_ADMIN credentials are not available to
+>>> mass users of a system, and securely unblocks accessibility of system performance monitoring and observability operations beyond root and CAP_SYS_ADMIN use cases.
+>>>
+>>> CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
+>>> monitoring and observability operations and balances amount of CAP_SYS_ADMIN
+>>> credentials following the recommendations in the capabilities man page [1]
+>>> for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
+>>> developers, below." For backward compatibility reasons access to system
+>>> performance monitoring and observability subsystems of the kernel remains
+>>> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
+>>> usage for secure system performance monitoring and observability operations
+>>> is discouraged with respect to the designed CAP_PERFMON capability.
+>>>
+>>> Although the software running under CAP_PERFMON can not ensure avoidance
+>>> of related hardware issues, the software can still mitigate these issues
+>>> following the official hardware issues mitigation procedure [2]. The bugs
+>>> in the software itself can be fixed following the standard kernel development
+>>> process [3] to maintain and harden security of system performance monitoring
+>>> and observability operations.
+>>>
+>>> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+>>> [2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+>>> [3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+>>>
+>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>
+>> This will require a small update to the selinux-testsuite to correctly reflect the new capability requirements, but that's easy enough.
+> 
+> Is the suite a part of the kernel sources or something else?
 
- BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
+It is external,
+https://github.com/SELinuxProject/selinux-testsuite
 
- write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
-  page_cpupid_xchg_last+0x51/0x80
-  page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
-  wp_page_reuse+0x3e/0xc0
-  wp_page_reuse at mm/memory.c:2453
-  do_wp_page+0x472/0x7b0
-  do_wp_page at mm/memory.c:2798
-  __handle_mm_fault+0xcb0/0xd00
-  handle_pte_fault at mm/memory.c:4049
-  (inlined by) __handle_mm_fault at mm/memory.c:4163
-  handle_mm_fault+0xfc/0x2f0
-  handle_mm_fault at mm/memory.c:4200
-  do_page_fault+0x263/0x6f9
-  do_user_addr_fault at arch/x86/mm/fault.c:1465
-  (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
-  page_fault+0x34/0x40
-
- read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
-  put_page+0x15a/0x1f0
-  page_zonenum at include/linux/mm.h:923
-  (inlined by) is_zone_device_page at include/linux/mm.h:929
-  (inlined by) page_is_devmap_managed at include/linux/mm.h:948
-  (inlined by) put_page at include/linux/mm.h:1023
-  wp_page_copy+0x571/0x930
-  wp_page_copy at mm/memory.c:2615
-  do_wp_page+0x107/0x7b0
-  __handle_mm_fault+0xcb0/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-Both the read and write are done only with the non-exclusive mmap_sem
-held. Since the read only check for a specific bit range (up to 3 bits)
-in the flag but the write here never change those 3 bits, so load
-tearing would be harmless here. Thus, just mark it as an intentional
-data races using the data_race() macro which is designed for those
-situations [1].
-
-[1] https://lore.kernel.org/linux-fsdevel/CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: update the commit log.
-
- include/linux/mm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..cafccad584c2 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -920,7 +920,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf);
- 
- static inline enum zone_type page_zonenum(const struct page *page)
- {
--	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
-+	return data_race((page->flags >> ZONES_PGSHIFT) & ZONES_MASK);
- }
- 
- #ifdef CONFIG_ZONE_DEVICE
--- 
-2.21.0 (Apple Git-122.2)
-
+I wasn't suggesting that your patch be blocked on updating the 
+testsuite, just noting that it will need to be done.
