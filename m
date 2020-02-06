@@ -2,89 +2,163 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8AC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4E5C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F7D217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581026558;
-	bh=3BJiOfiUA7V9MKtVnYPxCmXpQ9JY+qQviE6h0RLL86I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a4cJewWsgEJBSpTTJo7sSE0eVrXIVws8O+0RuzlfQ2lBqwmy0SpkOCZmWg0QVE7tD
-	 ACOECsCayARLgieXruAkn5sZ6djw0RKhTDhgKtksrpReZOXZ1bt90iav7bSyQ1s24s
-	 DkAyAQyPjF/uU523BehaFdM5kDQi+oKUXs7VGvBE=
+	by mail.kernel.org (Postfix) with ESMTP id B5097218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:04:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCrBK0sG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgBFWCi (ORCPT
+        id S1727570AbgBFWEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:02:38 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42239 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbgBFWCi (ORCPT
+        Thu, 6 Feb 2020 17:04:02 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40719 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727443AbgBFWEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:02:38 -0500
-Received: by mail-pg1-f194.google.com with SMTP id w21so11221pgl.9;
-        Thu, 06 Feb 2020 14:02:37 -0800 (PST)
+        Thu, 6 Feb 2020 17:04:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581026641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dz1uoo006UjtoREFQWYnwIS83IIptUYIWImaDlSbYB4=;
+        b=ZCrBK0sGmA2QLXYWI0UERoKto8eD3raHVkkCSbFavG+XfSrNa4L4MSl9onBWSCdCneCPhF
+        DmUNUGtKzzzbW1OcKj7Bk6wfMGoQiW6vgy8YyPt36tJsso5HI2JhHHC7DiXApbBfhSoS6i
+        hxJqt5UgpyJBuNvBTMv/x5Ysa0AOsvs=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-xZYlByaWNfuMU0CQYQBEuw-1; Thu, 06 Feb 2020 17:03:59 -0500
+X-MC-Unique: xZYlByaWNfuMU0CQYQBEuw-1
+Received: by mail-qv1-f69.google.com with SMTP id e26so4642312qvb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 14:03:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QZbN+Rw9Wauw1FSQRjx1EufFnK6c8lNge5XZrv7SCxo=;
-        b=WLxAuLsrk0BLIIjCIj1hd09ok9/djewmgjNAB3QIEEYMX1KmaGd1JhkvgslSsToKD0
-         qz9vYV1Ir36QmADuueWSYWw4r5uipWsoLfnG+rCN6nQinAfIqDWE0MtbChestRzVdIU2
-         675vbOaWw2n2ogV1s9iDwoGfG9MqrnMynmj7183lutXYVZ9Ne6BH0unxPh65sCj1ETs/
-         UDo9vpTpWfJqFAaMQ4B1eLAa+iMgO80X7CzW+iEa/hcsy5aug1XHIaYklmj1vn1n8DZ+
-         wgRfQgNL4TPvDjlNPAXU65zadFBtPDOVLGK4lGMh+ZnhejgGCoAb3VeOaYpk/U4ShqKl
-         USJg==
-X-Gm-Message-State: APjAAAUQ7MCCxXhxnmzXdn8lNSGx+hvFwm8gZk5s4XtgPeAnjS61z5H6
-        Y4eyr1Nl4jsZOOjCnWvrxA==
-X-Google-Smtp-Source: APXvYqzgCtK5jer0WP+jTalui8imMwVqNKHQY63IVhlORAQ77cic7EYV5b0qZ4PiE7a9I22N4V4rIA==
-X-Received: by 2002:aa7:87c5:: with SMTP id i5mr6347609pfo.114.1581026557162;
-        Thu, 06 Feb 2020 14:02:37 -0800 (PST)
-Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id e1sm348605pff.188.2020.02.06.14.02.35
+         :mime-version:content-disposition:in-reply-to;
+        bh=dz1uoo006UjtoREFQWYnwIS83IIptUYIWImaDlSbYB4=;
+        b=CInvmc/LsCTdVaax8/q6F1kzbTbZkYKA2NgMRKGeliEZj4QHVOYHKwPeqbPJ49zd1d
+         FE2QFoT+tBfpnG+7BVUVT64GysjYT4Lu/shlYMbZpFiNGouAgzj4FkMsTFxjgW16STjZ
+         0TOY5NCEmAnUt3PgK38i3F5CrlldAVVI2s33utbfcC4T0MhTbarTrvvHSQ+TmNwnHSSe
+         G+jP7vQXL6941FOPyrJ63tpQeKCRYuVJR5mq4NQMS4KYn3Cj0gnyx/stvBJ10NLx2PKD
+         KGSHKtTJumFU+NH/p7viplIZ0HJvejKiDPtQNam6BSy4GEEuAlGf1zSFygbQdxK/to8o
+         /Fxg==
+X-Gm-Message-State: APjAAAU8hgD19HqjUEdiRZZABP+gjfnWyZNY7Wbsy2tpo1pz4qSza7av
+        9mufcjb7ai43NibiRc1MyJqsHkXyAXaja5eL97W8l3ouV6v3OPgfy3VMJndCoo7KZgtbbigJvj5
+        IRUe5C60IA+dhN/BU/aN44VHA
+X-Received: by 2002:ac8:7396:: with SMTP id t22mr4707008qtp.269.1581026639165;
+        Thu, 06 Feb 2020 14:03:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwu2LJdikIjEQUWHwIaSDYrGQrBVVncwkTn7Iy+PzbVsPREs+ohxiEeOt5zr/YlX26hX6iftw==
+X-Received: by 2002:ac8:7396:: with SMTP id t22mr4706974qtp.269.1581026638877;
+        Thu, 06 Feb 2020 14:03:58 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id i7sm312515qki.83.2020.02.06.14.03.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 14:02:36 -0800 (PST)
-Received: (nullmailer pid 28125 invoked by uid 1000);
-        Thu, 06 Feb 2020 22:02:34 -0000
-Date:   Thu, 6 Feb 2020 15:02:34 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
-        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
-        philippe.cornu@st.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v4 3/3] dt-bindings: panel: Convert orisetech,otm8009a to
- json-schema
-Message-ID: <20200206220234.GA28073@bogus>
-References: <20200206133344.724-1-benjamin.gaignard@st.com>
- <20200206133344.724-4-benjamin.gaignard@st.com>
+        Thu, 06 Feb 2020 14:03:58 -0800 (PST)
+Date:   Thu, 6 Feb 2020 17:03:55 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v4 16/19] KVM: Ensure validity of memslot with respect to
+ kvm_get_dirty_log()
+Message-ID: <20200206220355.GH700495@xz-x1>
+References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
+ <20191217204041.10815-17-sean.j.christopherson@intel.com>
+ <20191224181930.GC17176@xz-x1>
+ <20200114182506.GF16784@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200206133344.724-4-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200114182506.GF16784@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020 14:33:44 +0100, Benjamin Gaignard wrote:
-> Convert orisetech,otm8009a to json-schema.
+On Tue, Jan 14, 2020 at 10:25:07AM -0800, Sean Christopherson wrote:
+> On Tue, Dec 24, 2019 at 01:19:30PM -0500, Peter Xu wrote:
+> > On Tue, Dec 17, 2019 at 12:40:38PM -0800, Sean Christopherson wrote:
+> > > +int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
+> > > +		      int *is_dirty, struct kvm_memory_slot **memslot)
+> > >  {
+> > >  	struct kvm_memslots *slots;
+> > > -	struct kvm_memory_slot *memslot;
+> > >  	int i, as_id, id;
+> > >  	unsigned long n;
+> > >  	unsigned long any = 0;
+> > >  
+> > > +	*memslot = NULL;
+> > > +	*is_dirty = 0;
+> > > +
+> > >  	as_id = log->slot >> 16;
+> > >  	id = (u16)log->slot;
+> > >  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+> > >  		return -EINVAL;
+> > >  
+> > >  	slots = __kvm_memslots(kvm, as_id);
+> > > -	memslot = id_to_memslot(slots, id);
+> > > -	if (!memslot->dirty_bitmap)
+> > > +	*memslot = id_to_memslot(slots, id);
+> > > +	if (!(*memslot)->dirty_bitmap)
+> > >  		return -ENOENT;
+> > >  
+> > > -	n = kvm_dirty_bitmap_bytes(memslot);
+> > > +	kvm_arch_sync_dirty_log(kvm, *memslot);
+> > 
+> > Should this line belong to previous patch?
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../bindings/display/panel/orisetech,otm8009a.txt  | 23 ----------
->  .../bindings/display/panel/orisetech,otm8009a.yaml | 53 ++++++++++++++++++++++
->  2 files changed, 53 insertions(+), 23 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
+> No.
 > 
+> The previous patch, "KVM: Provide common implementation for generic dirty
+> log functions", is consolidating the implementation of dirty log functions
+> for architectures with CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y.
+> 
+> This code is being moved from s390's kvm_vm_ioctl_get_dirty_log(), as s390
+> doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.  It's functionally a nop
+> as kvm_arch_sync_dirty_log() is empty for PowerPC, the only other arch that
+> doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.
+> 
+> Arguably, the call to kvm_arch_sync_dirty_log() should be moved in a
+> separate prep patch.  It can't be a follow-on patch as that would swap the
+> ordering of kvm_arch_sync_dirty_log() and kvm_dirty_bitmap_bytes(), etc...
+> 
+> My reasoning for not splitting it to a separate patch is that prior to this
+> patch, the common code and arch specific code are doing separate memslot
+> lookups via id_to_memslot(), i.e. moving the kvm_arch_sync_dirty_log() call
+> would operate on a "different" memslot.   It can't actually be a different
+> memslot because slots_lock is held, it just felt weird.
+> 
+> All that being said, I don't have a strong opinion on moving the call to
+> kvm_arch_sync_dirty_log() in a separate patch; IIRC, I vascillated between
+> the two options when writing the code.  If anyone wants it to be a separate
+> patch I'll happily split it out.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+(Sorry to respond so late)
+
+I think the confusing part is the subject, where you only mentioned
+the memslot change.  IMHO you can split the change to make it clearer,
+or at least would you mind mention that kvm_arch_sync_dirty_log() move
+in the commit message?  Thanks,
+
+-- 
+Peter Xu
+
