@@ -2,66 +2,65 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D493C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58433C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5938421927
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5EC21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgBFJlx convert rfc822-to-8bit (ORCPT
+        id S1728276AbgBFJnO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:41:53 -0500
-Received: from mga03.intel.com ([134.134.136.65]:13110 "EHLO mga03.intel.com"
+        Thu, 6 Feb 2020 04:43:14 -0500
+Received: from mga05.intel.com ([192.55.52.43]:56501 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgBFJlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:41:52 -0500
+        id S1727548AbgBFJnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 04:43:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 01:41:51 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 01:43:13 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,409,1574150400"; 
-   d="scan'208";a="311644917"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga001.jf.intel.com with ESMTP; 06 Feb 2020 01:41:51 -0800
-Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 6 Feb 2020 01:41:50 -0800
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- fmsmsx116.amr.corp.intel.com (10.18.116.20) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 6 Feb 2020 01:41:50 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.225]) with mapi id 14.03.0439.000;
- Thu, 6 Feb 2020 17:41:49 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     'Alex Williamson' <alex.williamson@redhat.com>
-CC:     "'eric.auger@redhat.com'" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "'jacob.jun.pan@linux.intel.com'" <jacob.jun.pan@linux.intel.com>,
-        "'joro@8bytes.org'" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "'jean-philippe.brucker@arm.com'" <jean-philippe.brucker@arm.com>,
-        "'peterx@redhat.com'" <peterx@redhat.com>,
-        "'iommu@lists.linux-foundation.org'" 
-        <iommu@lists.linux-foundation.org>,
-        "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v3 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Topic: [RFC v3 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Index: AQHV1pyWdXmNxNYiSUCDLwZiDlOrAKgBy+IAgALeXlCACUe2gA==
-Date:   Thu, 6 Feb 2020 09:41:48 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A1B1B5E@SHSMSX104.ccr.corp.intel.com>
-References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
-        <1580299912-86084-2-git-send-email-yi.l.liu@intel.com>
- <20200129165540.335774d5@w520.home>
- <A2975661238FB949B60364EF0F2C25743A1993E8@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A1993E8@SHSMSX104.ccr.corp.intel.com>
+   d="scan'208";a="379019323"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga004.jf.intel.com with ESMTP; 06 Feb 2020 01:43:13 -0800
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Feb 2020 01:43:12 -0800
+Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
+ fmsmsx158.amr.corp.intel.com (10.18.116.75) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Feb 2020 01:43:12 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.126]) by
+ SHSMSX104.ccr.corp.intel.com ([169.254.5.5]) with mapi id 14.03.0439.000;
+ Thu, 6 Feb 2020 17:43:10 +0800
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "tysand@google.com" <tysand@google.com>,
+        "david@redhat.com" <david@redhat.com>,
+        "alexander.h.duyck@linux.intel.com" 
+        <alexander.h.duyck@linux.intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "penguin-kernel@i-love.sakura.ne.jp" 
+        <penguin-kernel@i-love.sakura.ne.jp>
+Subject: RE: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
+Thread-Topic: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
+Thread-Index: AQHV3Mq/N+pHUOUW3kyXc/hsfZBMQqgNWSSAgACHU1D//4AhgIAAiIvA
+Date:   Thu, 6 Feb 2020 09:43:10 +0000
+Message-ID: <286AC319A985734F985F78AFA26841F73E42395B@shsmsx102.ccr.corp.intel.com>
+References: <1580976107-16013-1-git-send-email-wei.w.wang@intel.com>
+ <20200206035749-mutt-send-email-mst@kernel.org>
+ <286AC319A985734F985F78AFA26841F73E4238A5@shsmsx102.ccr.corp.intel.com>
+ <20200206042824-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200206042824-mutt-send-email-mst@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -69,8 +68,6 @@ X-MS-TNEF-Correlator:
 dlp-product: dlpe-windows
 dlp-version: 11.2.0.6
 dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODk5Y2JlYjEtZjRjMi00ZTI3LWJjNTYtY2NlZmMyZWZhYjBlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaVZFb3VjY1ZoWEVKd3JcL1F1dEhIamZ3NDE2RzdISUZRdlZ2UzBlbzIzVmpqcDVxa3FSWDE5c3VDRFYxNkRrTVEifQ==
 x-originating-ip: [10.239.127.40]
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
@@ -80,51 +77,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Friday, January 31, 2020 8:41 PM
-> To: Alex Williamson <alex.williamson@redhat.com>
-> Subject: RE: [RFC v3 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+On Thursday, February 6, 2020 5:31 PM, Michael S. Tsirkin wrote:
 > 
-> Hi Alex,
-> 
-> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > Sent: Thursday, January 30, 2020 7:56 AM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
-> > Subject: Re: [RFC v3 1/8] vfio: Add
-> > VFIO_IOMMU_PASID_REQUEST(alloc/free)
-> >
-> > On Wed, 29 Jan 2020 04:11:45 -0800
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >
-> > > From: Liu Yi L <yi.l.liu@intel.com>
-> > >
-[...]
-> > > +
-> > > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max) {
-> > > +	ioasid_t pasid;
-> > > +	int ret = -ENOSPC;
-> > > +
-> > > +	mutex_lock(&vmm->pasid_lock);
-> > > +	if (vmm->pasid_count >= vmm->pasid_quota) {
-> > > +		ret = -ENOSPC;
-> > > +		goto out_unlock;
-> > > +	}
-> > > +	/* Track ioasid allocation owner by mm */
-> > > +	pasid = ioasid_alloc((struct ioasid_set *)vmm->mm, min,
-> > > +				max, NULL);
-> >
-> > Is mm effectively only a token for this?  Maybe we should have a
-> > struct vfio_mm_token since gets and puts are not creating a reference
-> > to an mm, but to an "mm token".
-> 
-> yes, it is supposed to be a kind of token. vfio_mm_token is better naming. :-)
+> How about just making this a last resort thing to be compatible with existing
+> hypervisors? if someone wants to change behaviour that really should use a
+> feature bit ...
 
-Hi Alex,
+Yeah, sounds good to me to control via feature bits.
 
-Just to double check if I got your point. Your point is to have a separate structure
-which is only wrap of mm or just renaming current vfio_mm would be enough?
-
-
-Regards,
-Yi Liu
-
+Best,
+Wei
