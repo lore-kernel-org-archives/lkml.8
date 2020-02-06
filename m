@@ -2,196 +2,116 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC6CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4D4C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC49820730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9811420730
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgBFMQm (ORCPT
+        id S1727918AbgBFMRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:16:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53050 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgBFMQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:16:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A79BEB1FA;
-        Thu,  6 Feb 2020 12:16:38 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 13:16:30 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Erwan Velu <erwanaliasr1@gmail.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Changbin Du <changbin.du@intel.com>,
-        "Robert P. J. Day" <rpjday@crashcourse.ca>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 1/2] firmware/dmi: Report DMI Bios release
-Message-ID: <20200206131630.4b18472e@endymion>
-In-Reply-To: <20191127150729.860625-1-e.velu@criteo.com>
-References: <20190918094323.17515-1-e.velu@criteo.com>
-        <20191127150729.860625-1-e.velu@criteo.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Feb 2020 07:17:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44812 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727111AbgBFMRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 07:17:18 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016C9sxO113138
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2020 07:17:17 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn5e31g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 07:17:16 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 6 Feb 2020 12:17:12 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Feb 2020 12:17:08 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016CH7Ms58720370
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 12:17:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 869F552051;
+        Thu,  6 Feb 2020 12:17:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.140.59])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 99E505204F;
+        Thu,  6 Feb 2020 12:17:06 +0000 (GMT)
+Subject: Re: [PATCH v2 2/8] ima: Switch to ima_hash_algo for boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Thu, 06 Feb 2020 07:17:06 -0500
+In-Reply-To: <b1507c1121b64b3abc00e154fcfeef65@huawei.com>
+References: <20200205103317.29356-1-roberto.sassu@huawei.com>
+         <20200205103317.29356-3-roberto.sassu@huawei.com>
+         <1580936432.5585.309.camel@linux.ibm.com>
+         <b1507c1121b64b3abc00e154fcfeef65@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020612-0012-0000-0000-0000038443A0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020612-0013-0000-0000-000021C0B155
+Message-Id: <1580991426.5585.334.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+ suspectscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Erwan,
-
-Once again, sorry for the late answer.
-
-On Wed, 27 Nov 2019 16:07:25 +0100, Erwan Velu wrote:
-> Some vendors like HPe or Dell, encode the release version of their BIOS
-> in the "System BIOS {Major|Minor} Release" fields of Type 0.
+On Thu, 2020-02-06 at 09:36 +0000, Roberto Sassu wrote:
+> > Hi Roberto,
+> > 
+> > On Wed, 2020-02-05 at 11:33 +0100, Roberto Sassu wrote:
+> > 
+> > <snip>
+> > 
+> > > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > > Suggested-by: James Bottomley
+> > <James.Bottomley@HansenPartnership.com>
+> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > > Cc: stable@vger.kernel.org
+> > 
+> > Cc'ing stable resulted in Sasha's automated message.  If you're going
+> > to Cc stable, then please include the stable kernel release (e.g. Cc:
+> > stable@vger.kernel.org # v5.3).  Also please include a "Fixes" tag.
+> >  Normally only bug fixes are backported.
 > 
-> This information is used to know which bios release actually runs.
-> It could be used for some quirks, debugging sessions or inventory tasks.
-> 
-> A typical output for a Dell system running the 65.27 bios is :
-> 
-> 	[root@t1700 ~]# cat /sys/devices/virtual/dmi/id/bios_release
-> 	65.27
-> 	[root@t1700 ~]#
-> 
-> This commit add  dmi_save_release() function have the logic to
-> check if the field is valid. If so, it reports the actual value.
-> 
-> Signed-off-by: Erwan Velu <e.velu@criteo.com>
-> ---
->  drivers/firmware/dmi-id.c       |  3 +++
->  drivers/firmware/dmi_scan.c     | 29 +++++++++++++++++++++++++++++
->  include/linux/mod_devicetable.h |  1 +
->  scripts/mod/file2alias.c        |  1 +
->  4 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/firmware/dmi-id.c b/drivers/firmware/dmi-id.c
-> index ff39f64f2aae..a2aac65ff771 100644
-> --- a/drivers/firmware/dmi-id.c
-> +++ b/drivers/firmware/dmi-id.c
-> @@ -42,6 +42,7 @@ DEFINE_DMI_ATTR_WITH_SHOW(bios_vendor,		0444, DMI_BIOS_VENDOR);
->  DEFINE_DMI_ATTR_WITH_SHOW(bios_version,		0444, DMI_BIOS_VERSION);
->  DEFINE_DMI_ATTR_WITH_SHOW(bios_date,		0444, DMI_BIOS_DATE);
->  DEFINE_DMI_ATTR_WITH_SHOW(sys_vendor,		0444, DMI_SYS_VENDOR);
-> +DEFINE_DMI_ATTR_WITH_SHOW(bios_release,         0444, DMI_BIOS_RELEASE);
->  DEFINE_DMI_ATTR_WITH_SHOW(product_name,		0444, DMI_PRODUCT_NAME);
->  DEFINE_DMI_ATTR_WITH_SHOW(product_version,	0444, DMI_PRODUCT_VERSION);
->  DEFINE_DMI_ATTR_WITH_SHOW(product_serial,	0400, DMI_PRODUCT_SERIAL);
-> @@ -78,6 +79,7 @@ static ssize_t get_modalias(char *buffer, size_t buffer_size)
->  		{ "bvn", DMI_BIOS_VENDOR },
->  		{ "bvr", DMI_BIOS_VERSION },
->  		{ "bd",  DMI_BIOS_DATE },
-> +		{ "br",  DMI_BIOS_RELEASE },
->  		{ "svn", DMI_SYS_VENDOR },
->  		{ "pn",  DMI_PRODUCT_NAME },
->  		{ "pvr", DMI_PRODUCT_VERSION },
-> @@ -187,6 +189,7 @@ static void __init dmi_id_init_attr_table(void)
->  	ADD_DMI_ATTR(bios_vendor,       DMI_BIOS_VENDOR);
->  	ADD_DMI_ATTR(bios_version,      DMI_BIOS_VERSION);
->  	ADD_DMI_ATTR(bios_date,         DMI_BIOS_DATE);
-> +	ADD_DMI_ATTR(bios_release,      DMI_BIOS_RELEASE);
->  	ADD_DMI_ATTR(sys_vendor,        DMI_SYS_VENDOR);
->  	ADD_DMI_ATTR(product_name,      DMI_PRODUCT_NAME);
->  	ADD_DMI_ATTR(product_version,   DMI_PRODUCT_VERSION);
-> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> index 1e21fc3e9851..d010c915c1ab 100644
-> --- a/drivers/firmware/dmi_scan.c
-> +++ b/drivers/firmware/dmi_scan.c
-> @@ -181,6 +181,34 @@ static void __init dmi_save_ident(const struct dmi_header *dm, int slot,
->  	dmi_ident[slot] = p;
->  }
->  
-> +static void __init dmi_save_release(const struct dmi_header *dm, int slot,
-> +		int index)
-> +{
-> +	const u8 *minor, *major;
-> +	char *s;
-> +
-> +	/* If the table doesn't have the field, let's return */
-> +	if (dmi_ident[slot] || dm->length < index)
-> +		return;
-> +
-> +	minor = (u8 *) dm + index;
-> +	major = (u8 *) dm + index - 1;
-> +
-> +	/* As per the spec, if the system doesn't support this field,
-> +	 * the value is FF
-> +	 */
-> +	if (major[0] == 0xFF && minor[0] == 0xFF)
+> Ok, will add the kernel version. I also thought which commit I should
+> mention in the Fixes tag. IMA always read the SHA1 bank from the
+> beginning. I could mention the patch that introduces the new API
+> to read other banks, but I'm not sure. What do you think?
 
-When using a pointer to a single entity, the common practice is to use
-*major rather than major[0].
+This patch is dependent on nr_allocated_banks.  Please try applying
+this patch to the earliest stable kernel with the commit that
+introduces nr_allocated_banks and test to make sure it works properly.
 
-> +		return;
-> +
-> +	s = dmi_alloc(4);
+thanks,
 
-4 bytes (3 + 1) were enough when you encoded a single byte. Now that you
-encode 2 bytes separates by a dot, you need 8 (3 + 1 + 3 + 1).
+Mimi
 
-> +	if (!s)
-> +		return;
-> +
-> +	sprintf(s, "%u.%u", major[0], minor[0]);
-
-Here too, *major would be preferred.
-
-> +
-> +	dmi_ident[slot] = s;
-> +}
-> +
->  static void __init dmi_save_uuid(const struct dmi_header *dm, int slot,
->  		int index)
->  {
-> @@ -438,6 +466,7 @@ static void __init dmi_decode(const struct dmi_header *dm, void *dummy)
->  		dmi_save_ident(dm, DMI_BIOS_VENDOR, 4);
->  		dmi_save_ident(dm, DMI_BIOS_VERSION, 5);
->  		dmi_save_ident(dm, DMI_BIOS_DATE, 8);
-> +		dmi_save_release(dm, DMI_BIOS_RELEASE, 21);
->  		break;
->  	case 1:		/* System Information */
->  		dmi_save_ident(dm, DMI_SYS_VENDOR, 4);
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index 5714fd35a83c..618933d770e6 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -532,6 +532,7 @@ enum dmi_field {
->  	DMI_BIOS_VENDOR,
->  	DMI_BIOS_VERSION,
->  	DMI_BIOS_DATE,
-> +	DMI_BIOS_RELEASE,
->  	DMI_SYS_VENDOR,
->  	DMI_PRODUCT_NAME,
->  	DMI_PRODUCT_VERSION,
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index c91eba751804..cc48930cc02a 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-> @@ -936,6 +936,7 @@ static const struct dmifield {
->  	{ "bvn", DMI_BIOS_VENDOR },
->  	{ "bvr", DMI_BIOS_VERSION },
->  	{ "bd",  DMI_BIOS_DATE },
-> +	{ "br",  DMI_BIOS_RELEASE },
->  	{ "svn", DMI_SYS_VENDOR },
->  	{ "pn",  DMI_PRODUCT_NAME },
->  	{ "pvr", DMI_PRODUCT_VERSION },
-
-
--- 
-Jean Delvare
-SUSE L3 Support
