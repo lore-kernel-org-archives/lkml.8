@@ -2,98 +2,74 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3DFC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73064C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D45121741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A471218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgBFNr7 (ORCPT
+        id S1728208AbgBFNsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:47:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:58780 "EHLO foss.arm.com"
+        Thu, 6 Feb 2020 08:48:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36218 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgBFNr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:47:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A200730E;
-        Thu,  6 Feb 2020 05:47:57 -0800 (PST)
-Received: from e123648.arm.com (unknown [10.37.12.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 489483F52E;
-        Thu,  6 Feb 2020 05:47:44 -0800 (PST)
-From:   lukasz.luba@arm.com
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        Chris.Redpath@arm.com, ionela.voinescu@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net
-Subject: [PATCH v2 4/4] drm/panfrost: Register to the Energy Model with devfreq device
-Date:   Thu,  6 Feb 2020 13:46:40 +0000
-Message-Id: <20200206134640.11367-5-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200206134640.11367-1-lukasz.luba@arm.com>
-References: <20200206134640.11367-1-lukasz.luba@arm.com>
+        id S1727060AbgBFNsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:48:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 48E8EAC5F;
+        Thu,  6 Feb 2020 13:48:02 +0000 (UTC)
+Date:   Thu, 06 Feb 2020 14:48:01 +0100
+Message-ID: <s5hr1z7q12m.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Cc:     kbuild test robot <lkp@intel.com>, Takashi Iwai <tiwai@suse.de>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: sound/pci/hda/patch_hdmi.c:1086: undefined reference to `snd_hda_get_num_devices'
+In-Reply-To: <alpine.DEB.2.21.2002061531350.2957@eliteleevi.tm.intel.com>
+References: <202002061809.r3UYBZGx%lkp@intel.com>
+        <alpine.DEB.2.21.2002061531350.2957@eliteleevi.tm.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Luba <lukasz.luba@arm.com>
+On Thu, 06 Feb 2020 14:40:17 +0100,
+Kai Vehmanen wrote:
+> 
+> Hey,
+> 
+> On Thu, 6 Feb 2020, kbuild test robot wrote:
+> 
+> >    ld: sound/pci/hda/patch_hdmi.o: in function `intel_not_share_assigned_cvt':
+> > >> sound/pci/hda/patch_hdmi.c:1086: undefined reference to `snd_hda_get_num_devices'
+> > >> ld: sound/pci/hda/patch_hdmi.c:1098: undefined reference to `snd_hda_get_dev_select'
+> > >> ld: sound/pci/hda/patch_hdmi.c:1099: undefined reference to `snd_hda_set_dev_select'
+> 
+> hmm, this seems similar case as the previous one today w.r.t 
+> hda_dsp_common.c:76. Patch_hdmi.c is built-in while snd-hda is a module. 
+> Maybe we need to just drop the dependency from the ASoC board files to 
+> SND_HDA_CODEC_HDMI. We don't have one for SND_HDA_CODEC either.
 
-Add device to the Energy Model framework. It will create a dedicated
-and unified data structures used i.e. in the thermal framework.
-The power model used in dev_pm_opp subsystem is simplified and created
-based on DT 'dynamic-power-coefficient', volatage and frequency. It is
-similar to the CPU model used in Energy Aware Scheduler.
+The problem is that SOF tries to do reverse-select the legacy HD-audio 
+codec, but it doesn't work in general.  Or it must be done very
+carefully.
 
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 3 +++
- 1 file changed, 3 insertions(+)
+If something gets selected, all dependencies have to be
+reverse-selected, too.  But the legacy HDA is built up in a way of
+standard top-down selection (i.e. SND_HDA_CODEC_* depends on SND_HDA,
+not other way round).
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 413987038fbf..d527a5113950 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -105,6 +105,8 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	}
- 	pfdev->devfreq.devfreq = devfreq;
- 
-+	dev_pm_opp_of_register_em(dev, NULL);
-+
- 	cooling = of_devfreq_cooling_register(dev->of_node, devfreq);
- 	if (IS_ERR(cooling))
- 		DRM_DEV_INFO(dev, "Failed to register cooling device\n");
-@@ -118,6 +120,7 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
- {
- 	if (pfdev->devfreq.cooling)
- 		devfreq_cooling_unregister(pfdev->devfreq.cooling);
-+	dev_pm_opp_of_unregister_em(&pfdev->pdev->dev);
- 	dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
- }
- 
--- 
-2.17.1
 
+Takashi
