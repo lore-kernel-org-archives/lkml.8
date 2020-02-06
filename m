@@ -2,139 +2,97 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2ACC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12540C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B339420838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E369D217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgBFHJn (ORCPT
+        id S1728011AbgBFHLR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 02:09:43 -0500
-Received: from mga04.intel.com ([192.55.52.120]:56103 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgBFHJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 02:09:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 23:09:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,408,1574150400"; 
-   d="scan'208";a="231957263"
-Received: from lxy-dell.sh.intel.com ([10.239.13.109])
-  by orsmga003.jf.intel.com with ESMTP; 05 Feb 2020 23:09:34 -0800
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com
-Cc:     peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v3 6/8] kvm: vmx: Extend VMX's #AC interceptor to handle split lock #AC happens in guest
-Date:   Thu,  6 Feb 2020 15:04:10 +0800
-Message-Id: <20200206070412.17400-7-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200206070412.17400-1-xiaoyao.li@intel.com>
-References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+        Thu, 6 Feb 2020 02:11:17 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:60618 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727934AbgBFHLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 02:11:16 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id D587DB9182AE8958FF50;
+        Thu,  6 Feb 2020 15:11:13 +0800 (CST)
+Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Feb 2020 15:11:13 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme764-chm.china.huawei.com (10.3.19.110) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 6 Feb 2020 15:11:13 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Thu, 6 Feb 2020 15:11:13 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: [Question] some questions about vmx
+Thread-Topic: [Question] some questions about vmx
+Thread-Index: AdXctsDpt9tK4MsDR4G7KtucfHatEQ==
+Date:   Thu, 6 Feb 2020 07:11:12 +0000
+Message-ID: <70c0804949234ad8b6c1834cc9b109ca@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two types of #AC can be generated in Intel CPUs:
- 1. legacy alignment check #AC;
- 2. split lock #AC;
+Hi all:
+	I'am investigating the vmx code and encounter some questions. It's very nice of you if you can
+help me fix these.
 
-Legacy alignment check #AC can be injected to guest if guest has enabled
-alignemnet check.
+About wbinvd.
+1. Which way (ctxt->ops->wbinvd)(ctxt) is called? If cpu_has_vmx_wbinvd_exit(), wbinvd instruction would
+be handled by handle_wbinvd and instruction emulate is skipped...
 
-when host enables split lock detectin, i.e., split_lock_detect != off,
-there will be an unexpected #AC in guest and intercepted by KVM because
-KVM doesn't virtualize this feature to guest and hardware value of
-MSR_TEST_CTRL.SLD bit stays unchanged when vcpu is running.
+2. What is the purpose of set local cpu into wbinvd_dirty_mask in kvm_emulate_wbinvd_noskip()? It seems
+local cpu is ignored in smp_call_function_many(). And so local cpu wbinvd is missed ?
 
-To handle this unexpected #AC, treat guest just like host usermode that
-calling handle_user_split_lock():
- - If host is sld_warn, it warns and set TIF_SLD so that __switch_to_xtra()
-   does the MSR_TEST_CTRL.SLD bit switching when control transfer to/from
-   this vcpu.
- - If host is sld_fatal, forward #AC to userspace, the similar as sending
-   SIGBUS.
+3. Commit (2eec73437487: KVM: x86: Avoid issuing wbinvd twice) said we may call wbinvd twice. Could you
+please explain how it could execute it twice in detail ?
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
-v3:
- - Use handle_user_split_lock() to handle unexpected #AC in guest.
----
- arch/x86/kvm/vmx/vmx.c | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+About nWMX.
+When nested_vmx_handle_enlightened_vmptrld() return 0, it do not inject any exception or set rflags to
+Indicate VMLAUNCH instruction failed and skip this instruction. This would cause nested_vmx_run()
+return 1 and resume guest and retry this instruction. When the error causing nested_vmx_handle_enlightened_vmptrld()
+failed can't be handled, would deadloop ouucr ?
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c475fa2aaae0..822211975e6c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4557,6 +4557,12 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
-+{
-+	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-+	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
-+}
-+
- static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4622,9 +4628,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		return handle_rmode_exception(vcpu, ex_no, error_code);
- 
- 	switch (ex_no) {
--	case AC_VECTOR:
--		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
--		return 1;
- 	case DB_VECTOR:
- 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
- 		if (!(vcpu->guest_debug &
-@@ -4653,6 +4656,28 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
- 		kvm_run->debug.arch.exception = ex_no;
- 		break;
-+	case AC_VECTOR:
-+		/*
-+		 * Inject #AC back to guest only when guest enables legacy
-+		 * alignment check.
-+		 * Otherwise, it must be an unexpected split lock #AC of guest
-+		 * since hardware SPLIT_LOCK_DETECT bit keeps unchanged set
-+		 * when vcpu is running. In this case, treat guest the same as
-+		 * user space application that calls handle_user_split_lock():
-+		 *  - If sld_state = sld_warn, it sets TIF_SLD and disables SLD
-+		 *    for this vcpu thread.
-+		 *  - If sld_state = sld_fatal, we forward #AC to userspace,
-+		 *    similar as sending SIGBUS.
-+		 */
-+		if (!split_lock_detect_enabled() ||
-+		    guest_cpu_alignment_check_enabled(vcpu)) {
-+			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-+			return 1;
-+		}
-+
-+		if (handle_user_split_lock(kvm_rip_read(vcpu)))
-+			return 1;
-+		/* fall through */
- 	default:
- 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
- 		kvm_run->ex.exception = ex_no;
--- 
-2.23.0
+About defer setting of CR2 (see commit (da998b46d244: kvm: x86: Defer setting of CR2 until #PF delivery))
+How defer setting of CR2 until #PF delivery works? In inject_pending_event(), the payload of exception is loaded into
+vmcs12' exit_qualification without setting CR2 via nested_vmx_check_exception() in kvm_x86_ops-> check_nested_events();
+But CR2 is unconditionally set to exception.payload via vmx_queue_exception() before we enter L1.
+So CR2 is modified before L1 hypervisor could intercept the fault.
 
+Where's the wrong in my understand? Please help me figure it out. Any answer would be very appreciated.
+Thanks in advance! ^_^
+
+Best wishes!
