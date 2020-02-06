@@ -2,145 +2,195 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B376C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB35C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69099217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E026520838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iqj8wJKo";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WXVQpb1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgBFPKS (ORCPT
+        id S1727675AbgBFPKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:10:18 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41350 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727641AbgBFPKO (ORCPT
+        Thu, 6 Feb 2020 10:10:34 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:41682 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbgBFPKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:10:14 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016F0MbL011997;
-        Thu, 6 Feb 2020 10:09:54 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xyhm94w1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 10:09:54 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 016F9qBt017045
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 6 Feb 2020 10:09:52 -0500
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 6 Feb 2020
- 10:09:52 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 6 Feb 2020 07:09:52 -0800
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 016F9VRZ021605;
-        Thu, 6 Feb 2020 10:09:42 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v5 4/5] dt-bindings: iio: amplifiers: Add docs for HMC425A Step Attenuator
-Date:   Thu, 6 Feb 2020 17:11:48 +0200
-Message-ID: <20200206151149.32122-4-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200206151149.32122-1-beniamin.bia@analog.com>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002060114
+        Thu, 6 Feb 2020 10:10:33 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016F87F9142665;
+        Thu, 6 Feb 2020 15:09:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=ARPonP1U7McuPo6Qy5eAIFbn137aCvnTTbf1VmVmhp0=;
+ b=iqj8wJKodIMyaMhZ4RoBknQTCdn2KxRTDl3wNGcP+Gi2NSykO89ELRAwM9F1TqCrylWC
+ kdEvrXDjckAZnFzjbcuGKtkF+uN9RZu2FeuKGVIUVP6YlMVUkRYg8YCx2O35UY9xjImP
+ SV3x42bWPfpvn4wn6oAuwUicULbOGqNVS9eCZIQDsK4fFjzVSAyS5FtOJxprRRpUhJd3
+ Fyt3rz6xFEPqC5fQjPKHi/r+0ttnE7vUETdhkLZYzMGev3AI1GmsqwoiMMswvTStLx4B
+ SDwejtMmXiRhgydsRB8b3AvMel4y2xQOOkrzVHB7xIaXGwlSLu2NVj6jcm2LTOYrchrn 0A== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=ARPonP1U7McuPo6Qy5eAIFbn137aCvnTTbf1VmVmhp0=;
+ b=WXVQpb1OLnwYAD1qisJmzC7CtQOjMDttQCNf5lb4VthK5pDecqKQZHJ1Q9sxmFu86XuA
+ OwNwGZ33sZxdtU5MDnFg1B02p4opI7qBnHZItKodUyQGx2tFGRqTaiCuJjDZgbksFde3
+ XyAh8C/Xp1U7Zk72oQStN0w9WcfD+sTv/4U67SWbZLnDVtKRyAZKZdcW/5TIjsq2SZjU
+ UzSf+0oDZ0zUbprVrEBBLDlNvpIUBgFW2ZGLmn+Kbs4oOCn341tYYzd6HFB3mX2U8kvu
+ MfrVkGUeE2OFGtJKrqw73GpbaTal+OM1Zp44GUjMGT6NZz3/bNRAQdu60udHT2puhrjB 8w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xykbpaaa1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 15:09:57 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016F9JEA135306;
+        Thu, 6 Feb 2020 15:09:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2y0mnjtej0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 15:09:56 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016F9tUX010096;
+        Thu, 6 Feb 2020 15:09:55 GMT
+Received: from dhcp-10-175-186-149.vpn.oracle.com (/10.175.186.149)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 07:09:55 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, shuah@kernel.org, mhiramat@kernel.org
+Cc:     mingo@redhat.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        colin.king@canonical.com
+Subject: [PATCH 2/2] ftrace/selftest: absence of modules/programs should trigger unsupported errors
+Date:   Thu,  6 Feb 2020 15:09:20 +0000
+Message-Id: <1581001760-29831-3-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
+References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9522 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+In a number of cases, the ftrace tests check for the presence of
+ftrace testing-related modules (ftrace-direct, trace-printk) and
+programs (checkbashisms), returning exit_unresolved if these
+are not found.  The problem is, exit_unresolved causes execution
+of ftracetest to return an error, when really our tests are
+failing due to not having the requisite kernel configuration/tools
+present, which is I think more of an unsupported error condition.
+With these fixed, we see no unresolved test cases and ftracetest
+returns success ("ok" when run via kselftest).
 
-Document support for Analog Devices MC425A Step Attenuator.
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
+Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
+Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
+Fixes: ff431b1390cb ("selftests/ftrace: Add a test to probe module functions")
+Fixes: 4a075bd4e13f ("selftests/ftrace: Add checkbashisms meta-testcase")
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 ---
-Changes in v5:
--minItems added for ctrl_gpios
+ tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
+ tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
+ tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
+ tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
+ tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
+ tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc     | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
- .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-new file mode 100644
-index 000000000000..1c6d49685e9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HMC425A 6-bit Digital Step Attenuator
-+
-+maintainers:
-+- Michael Hennerich <michael.hennerich@analog.com>
-+- Beniamin Bia <beniamin.bia@analog.com>
-+
-+description: |
-+  Digital Step Attenuator IIO device with gpio interface.
-+  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,hmc425a
-+
-+  vcc-supply: true
-+
-+  ctrl-gpios:
-+    description:
-+      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-+      connected to the control pins V1-V6.
-+    minItems: 6
-+    maxItems: 6
-+
-+required:
-+  - compatible
-+  - ctrl-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    gpio_hmc425a: hmc425a {
-+      compatible = "adi,hmc425a";
-+      ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-+        <&gpio 39 GPIO_ACTIVE_HIGH>,
-+        <&gpio 38 GPIO_ACTIVE_HIGH>,
-+        <&gpio 37 GPIO_ACTIVE_HIGH>,
-+        <&gpio 36 GPIO_ACTIVE_HIGH>,
-+        <&gpio 35 GPIO_ACTIVE_HIGH>;
-+      vcc-supply = <&foo>;
-+    };
-+...
+diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+index d75a869..3d6189e 100644
+--- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
++++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+@@ -5,7 +5,7 @@
+ rmmod ftrace-direct ||:
+ if ! modprobe ftrace-direct ; then
+   echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
+-  exit_unresolved;
++  exit_unsupported;
+ fi
+ 
+ echo "Let the module run a little"
+diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+index 801ecb6..3d0e3ca 100644
+--- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
++++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+@@ -5,7 +5,7 @@
+ rmmod ftrace-direct ||:
+ if ! modprobe ftrace-direct ; then
+   echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
+-  exit_unresolved;
++  exit_unsupported;
+ fi
+ 
+ if [ ! -f kprobe_events ]; then
+diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+index b02550b..dd8b10d 100644
+--- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
++++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+@@ -5,7 +5,7 @@
+ rmmod trace-printk ||:
+ if ! modprobe trace-printk ; then
+   echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
+-  exit_unresolved;
++  exit_unsupported;
+ fi
+ 
+ echo "Waiting for irq work"
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+index 9330c87..fc22ac0 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+@@ -13,7 +13,7 @@ echo '*:mod:trace_printk' > set_ftrace_filter
+ if ! modprobe trace-printk ; then
+   echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+ m"
+-  exit_unresolved;
++  exit_unsupported;
+ fi
+ 
+ : "Wildcard should be resolved after loading module"
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+index d861bd7..4e07c69 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+@@ -8,7 +8,7 @@ rmmod trace-printk ||:
+ if ! modprobe trace-printk ; then
+   echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+ m"
+-  exit_unresolved;
++  exit_unsupported;
+ fi
+ 
+ MOD=trace_printk
+diff --git a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+index 1b081e9..1b339bd 100644
+--- a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
++++ b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+@@ -9,7 +9,7 @@ fi
+ 
+ if ! which checkbashisms > /dev/null 2>&1 ; then
+   echo "No checkbashisms found. skipped."
+-  exit_unresolved
++  exit_unsupported
+ fi
+ 
+ checkbashisms $FTRACETEST_ROOT/ftracetest
 -- 
-2.17.1
+1.8.3.1
 
