@@ -2,137 +2,215 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CA5C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CE4C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F9F20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CA320720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Topcon.com header.i=@Topcon.com header.b="cn6tL8rV"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S0F7eAPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBFFxr (ORCPT
+        id S1727814AbgBFFyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 00:53:47 -0500
-Received: from mail-bn8nam12on2059.outbound.protection.outlook.com ([40.107.237.59]:6105
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgBFFxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 00:53:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S0BBjdo+cnJhHo+IWE/SMUPms0sEZP7z5i61NsCeJWNeYzY+SEh4HXmv3WraT1sXc8QmqHx6/L7ft8LVZ8H3Ty1KQdJLA+GTh3PIVgLISWDiJk0WcyujMvWb39DI+DjRbZcEQvuyFyAvRBwDdDPBwX9u/pNU8FBvTXSg0bBYtwTKass/NS/RTG9jDgnorUFZzIklF3pZ6FiBFgYUTEGwBztr6vOoHV9wPCo2kUY7ICNe9+1YOBOl+KIO1ns98lvlWmzAYhElFfaY5IUe7R5BE6DDqAzBrJYEj8B+r8z4Q/TdMLKAidkfjJrbtikONZ9qLbSMw2774wc+6hxzFuGzUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p+jYRfZj/dIXmloAFTj7QBnotoIT1ICWjxySZYiP+fE=;
- b=nlvqYSyZDDzGG3dsVDHrs2zMjDCIhja0rgX+57jdeqPqBMvqAUUxq3G/8jUjVOSIxNzE5PWf65Tx0X0jV/ZOcaXe8f3l8Ol2pMxIMj12THUjMno4akPgdZYce6ydnS77fogmqiwT5I8Ssmr5gATmDsldhhY87kgRuQIDtTdhy4Yf+LYULMMiQ3+3muzid/fHcdEVLOcGecE4yILJrBW2Y6GISdmPdwI21yJeaQn9K39tfheeKW9WPlIYKlBAjL5APel58LtOkSU+PMun+DaZdk8t8Qj5gcZ2zCn+iImvwW7d8gJHJhSukpglMOjdcJ0Lsvvi9SmTsbr2Z9jAyPBYEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=topcon.com; dmarc=pass action=none header.from=topcon.com;
- dkim=pass header.d=topcon.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Topcon.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p+jYRfZj/dIXmloAFTj7QBnotoIT1ICWjxySZYiP+fE=;
- b=cn6tL8rVrVYe5dtz9FffL+Q9bnZ4nATzgBu2KIi3JaxnaoQu9Spk/SyuXZLRjy1m9vLTZr6340Gvpvs8lVlFnEivRU691cy2ZyY/f3RI6muSYhlCANmVw3T3LT39O56FvE0vlhaI1TPJieTsfUGc7OVApP/Vhjmxld6tDAj8EHM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=NShubin@topcon.com; 
-Received: from MN2PR06MB5742.namprd06.prod.outlook.com (20.179.148.96) by
- MN2PR06MB6128.namprd06.prod.outlook.com (20.178.245.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Thu, 6 Feb 2020 05:53:40 +0000
-Received: from MN2PR06MB5742.namprd06.prod.outlook.com
- ([fe80::9405:d1a5:a151:b165]) by MN2PR06MB5742.namprd06.prod.outlook.com
- ([fe80::9405:d1a5:a151:b165%6]) with mapi id 15.20.2707.020; Thu, 6 Feb 2020
- 05:53:40 +0000
-From:   Nikita Shubin <NShubin@topcon.com>
-Cc:     NShubin@topcon.com, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] remoteproc: warn on kick missing
-Date:   Thu,  6 Feb 2020 08:54:19 +0300
-Message-Id: <20200206055419.15897-1-NShubin@topcon.com>
-X-Mailer: git-send-email 2.24.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: FR2P281CA0022.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::9) To MN2PR06MB5742.namprd06.prod.outlook.com
- (2603:10b6:208:131::32)
+        Thu, 6 Feb 2020 00:54:44 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:9160 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgBFFyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 00:54:44 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Cnh11K9LzB09b4;
+        Thu,  6 Feb 2020 06:54:41 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=S0F7eAPt; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id PeyJBm5d3ZjO; Thu,  6 Feb 2020 06:54:41 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Cnh06jH1zB09b3;
+        Thu,  6 Feb 2020 06:54:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580968480; bh=+f8zGT9Ebstem/Pxu4Cc5kGrF5RDE+p8c6MevcVDVRY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S0F7eAPt7dAILYlJsklcUf+6F62oSjTIx7JnglrKhz714+RhC1qH7YiuZIag86/SP
+         iOtkJ41PYMq7as/vgcVlvIC7B892qJ2prn5WkGVNA7Lrn6l0P75rW/jvDwBTaO5tcr
+         bjeXm4IrDa8ro+bGiE5QSFM5FtpGZAbMttDt3MeM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B002F8B787;
+        Thu,  6 Feb 2020 06:54:41 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id EalpXgNeYE9k; Thu,  6 Feb 2020 06:54:41 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0AEA38B776;
+        Thu,  6 Feb 2020 06:54:40 +0100 (CET)
+Subject: Re: [PATCH v6 01/11] asm-generic/pgtable: Adds generic functions to
+ track lockless pgtable walks
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200206030900.147032-1-leonardo@linux.ibm.com>
+ <20200206030900.147032-2-leonardo@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f55e593c-27d5-df12-602f-ea217f62c5a1@c-s.fr>
+Date:   Thu, 6 Feb 2020 06:54:39 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Received: from NShubin.TOPCON.COM (193.232.110.5) by FR2P281CA0022.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:14::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 05:53:38 +0000
-X-Mailer: git-send-email 2.24.1
-X-Originating-IP: [193.232.110.5]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 20085c89-d4f6-4aa9-fd4e-08d7aac8ea5b
-X-MS-TrafficTypeDiagnostic: MN2PR06MB6128:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR06MB61289BC810E8205C048A6AD5D91D0@MN2PR06MB6128.namprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0305463112
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(136003)(366004)(396003)(39860400002)(376002)(199004)(189003)(6486002)(36756003)(2616005)(52116002)(956004)(7696005)(66556008)(4326008)(66946007)(66476007)(86362001)(5660300002)(478600001)(316002)(26005)(8936002)(81156014)(81166006)(8676002)(2906002)(6666004)(1076003)(186003)(16526019)(54906003)(109986005)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR06MB6128;H:MN2PR06MB5742.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: topcon.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hd+Bg4GSbx/65fNvt9vXIY0bWOPrB/1qpSSQC+/Mcl7oJLMAZLBn5A9B25ufVsI/mBSQND2pBCbvKHmqvSEa52Ixa7YkMkB182wYjVzgGcWxxo34ceDd2SEu6wApPezlhME8drKLLilUgQQrAa2uLwMwFHdRPIAc/gRLPXFld3hzcmTayfqCE69u7+REdMld+gP/MieBkzcBzzfzyzJfLQAZ3uX34OCME8xeE7OFKGl0wlNs4dUySgvNvwLvNwe9i0Y0vLaBctICPZC8bAqVPOo0lJzaTqDkKo5miyCKN6GayOdCO/vAgty8Y+fwG0ddRw2gxqTPGN603GuCNkUulvRdt6kAEwtreiRPibyEMi3oycCp3nSWncVm8fgSARb9n1CbnNHuws9aPAZpTWBM4yWWnnGEkP9mDHQy20EyL4/+UH2EdC383sU8GdFBJ39yGwY1y4pQE2+mPXjWTJWFNmkx9bcRZqJGf1Y0bmn6yJk=
-X-MS-Exchange-AntiSpam-MessageData: 13hzBTKZdpWPsIVjivBB+wUZUPITF0V2UVi37JX9/MEUIkOrNvFy8DYkWfQrqB8eSX0i4c7QQjpotVwkjgSnMdECExbcl2vESlPmZtEzO3v+wifVnPfzMaboWHCUTblwd7swlEyGTxy+rGGOsZzJmQ==
-X-OriginatorOrg: Topcon.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20085c89-d4f6-4aa9-fd4e-08d7aac8ea5b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 05:53:40.1341
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 96c2c3ba-19d3-47b6-ba0b-8f7471bd1f14
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y/6DcAlTv+7x6iTfv5zbXJwgFemfWDFE4m10oo8h7I2Mb+hHG6nrwpst1vvhqRrrHQ5Te0HoLUcbcaDfRwQoGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR06MB6128
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200206030900.147032-2-leonardo@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.kick method not set in rproc_ops will result in:
 
-8<--- cut here ---
-Unable to handle kernel NULL pointer dereference
 
-in rproc_virtio_notify, after firmware loading.
+Le 06/02/2020 à 04:08, Leonardo Bras a écrit :
+> It's necessary to track lockless pagetable walks, in order to avoid doing
+> THP splitting/collapsing during them.
+> 
+> The default solution is to disable irq before lockless pagetable walks and
+> enable it after it's finished.
+> 
+> On code, this means you can find local_irq_disable() and local_irq_enable()
+> around some pieces of code, usually without comments on why it is needed.
+> 
+> This patch proposes a set of generic functions to be called before starting
+> and after finishing a lockless pagetable walk. It is supposed to make clear
+> that a lockless pagetable walk happens there, and also carries information
+> on why the irq disable/enable is needed.
+> 
+> begin_lockless_pgtbl_walk()
+>          Insert before starting any lockless pgtable walk
+> end_lockless_pgtbl_walk()
+>          Insert after the end of any lockless pgtable walk
+>          (Mostly after the ptep is last used)
+> 
+> A memory barrier was also added just to make sure there is no speculative
+> read outside the interrupt disabled area. Other than that, it is not
+> supposed to have any change of behavior from current code.
 
-At least a warning needed on attempt to call missing method.
+Is that speculative barrier necessary for all architectures ? Does it 
+impact performance ? Shouldn't this be another patch ?
 
-Signed-off-by: Nikita Shubin <NShubin@topcon.com>
----
- drivers/remoteproc/remoteproc_virtio.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> 
+> It is planned to allow arch-specific versions, so that additional steps can
+> be added while keeping the code clean.
+> 
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>   include/asm-generic/pgtable.h | 51 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 51 insertions(+)
+> 
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index e2e2bef07dd2..8d368d3c0974 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -1222,6 +1222,57 @@ static inline bool arch_has_pfn_modify_check(void)
+>   #endif
+>   #endif
+>   
+> +#ifndef __HAVE_ARCH_LOCKLESS_PGTBL_WALK_CONTROL
+> +/*
+> + * begin_lockless_pgtbl_walk: Must be inserted before a function call that does
+> + *   lockless pagetable walks, such as __find_linux_pte()
+> + */
+> +static inline
+> +unsigned long begin_lockless_pgtbl_walk(void)
 
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/re=
-moteproc_virtio.c
-index 8c07cb2ca8ba..77a81f331e3f 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -32,6 +32,12 @@ static bool rproc_virtio_notify(struct virtqueue *vq)
+What about keeping the same syntax as local_irq_save(), something like:
 
-        dev_dbg(&rproc->dev, "kicking vq index: %d\n", notifyid);
+#define begin_lockless_pgtbl_walk(flags) \
+do {
+	local_irq_save(flags);
+	smp_mb();
+} while (0)
 
-+       if (unlikely(rproc->ops->kick =3D=3D NULL)) {
-+               WARN_ONCE(rproc->ops->kick =3D=3D NULL, ".kick method not d=
-efined for %s",
-+                       rproc->name);
-+               return false;
-+       }
-+
-        rproc->ops->kick(rproc, notifyid);
-        return true;
- }
---
-2.24.1
+> +{
+> +	unsigned long irq_mask;
+> +
+> +	/*
+> +	 * Interrupts must be disabled during the lockless page table walk.
+> +	 * That's because the deleting or splitting involves flushing TLBs,
+> +	 * which in turn issues interrupts, that will block when disabled.
+> +	 */
+> +	local_irq_save(irq_mask);
+> +
+> +	/*
+> +	 * This memory barrier pairs with any code that is either trying to
+> +	 * delete page tables, or split huge pages. Without this barrier,
+> +	 * the page tables could be read speculatively outside of interrupt
+> +	 * disabling.
+> +	 */
+> +	smp_mb();
+> +
+> +	return irq_mask;
+> +}
+> +
+> +/*
+> + * end_lockless_pgtbl_walk: Must be inserted after the last use of a pointer
+> + *   returned by a lockless pagetable walk, such as __find_linux_pte()
+> + */
+> +static inline void end_lockless_pgtbl_walk(unsigned long irq_mask)
 
-Confidentiality Notice: This message (including attachments) is a private c=
-ommunication solely for use of the intended recipient(s). If you are not th=
-e intended recipient(s) or believe you received this message in error, noti=
-fy the sender immediately and then delete this message. Any other use, rete=
-ntion, dissemination or copying is prohibited and may be a violation of law=
-, including the Electronic Communication Privacy Act of 1986.   =AD=AD
+Same
+
+#define end_lockless_pgtbl_walk(flags) \
+do {
+	smp_mb();
+	local_irq_restore(flags);
+} while (0);
+
+> +{
+> +	/*
+> +	 * This memory barrier pairs with any code that is either trying to
+> +	 * delete page tables, or split huge pages. Without this barrier,
+> +	 * the page tables could be read speculatively outside of interrupt
+> +	 * disabling.
+> +	 */
+> +	smp_mb();
+> +
+> +	/*
+> +	 * Interrupts must be disabled during the lockless page table walk.
+> +	 * That's because the deleting or splitting involves flushing TLBs,
+> +	 * which in turn issues interrupts, that will block when disabled.
+> +	 */
+> +	local_irq_restore(irq_mask);
+> +}
+> +#endif
+> +
+>   /*
+>    * On some architectures it depends on the mm if the p4d/pud or pmd
+>    * layer of the page table hierarchy is folded or not.
+> 
+
+Christophe
