@@ -2,144 +2,278 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59688C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6969CC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E39B217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B59C20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMDPsRAY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VYItJjyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgBFANa (ORCPT
+        id S1727605AbgBFAQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 19:13:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35912 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727149AbgBFAN3 (ORCPT
+        Wed, 5 Feb 2020 19:16:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:45324 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbgBFAQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 19:13:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580948008;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gjNSHKpcN0ERcFppftZia74xuUlFNrC3nkefsHrS3V8=;
-        b=eMDPsRAYHU+93UEAqhIJ8lYmTWYNMx7LseXkSN+hdHkFP5ND1Km0Tel8217hGjWmhRkt0d
-        +FAkmco6cTPkHv0usfG059rQP+julK74qX0umMKZWlgGtQfWjI8OM4uqEIKiPL7+DQu7my
-        cJes6xJMlzWW4Hh4h3ApZgwKNABUlU0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-FD_rIqVvP92U9i_TiHpb2w-1; Wed, 05 Feb 2020 19:13:25 -0500
-X-MC-Unique: FD_rIqVvP92U9i_TiHpb2w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3D97801E6C;
-        Thu,  6 Feb 2020 00:13:23 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 944C560BF7;
-        Thu,  6 Feb 2020 00:13:20 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 08:13:17 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Easier calculation to get pages to
- next section boundary
-Message-ID: <20200206001317.GH8965@MiWiFi-R3L-srv>
-References: <20200205135251.37488-1-david@redhat.com>
- <20200205231945.GB28446@richard>
- <20200205235007.GA28870@richard>
+        Wed, 5 Feb 2020 19:16:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=ONubYgjHMQd/QUjVT/2+vNT4AEftHzZPUf0RGx/Ds5Y=; b=VYItJjyL0hBs9F+E+CLjEd7/mu
+        pwdN3TQPG1gKdnbZuxcHXYG42hp3nHLwpa9hSC3gIX6HCQB8nA6WGHpArabyYETmRJy4jklSbEtYr
+        7eSkYwqqKQrY+Glvg1U/hzkhyGiQJwt5ydSFkA+J4h44b3POF46vQztG2bup1WE73rrZqjWj87w4R
+        wN3yMd5/3oP+eFqwTJC4v0WpPSER17l9IzXCJtNW3ne+erzV4ChqeJ8Nozno7lO0uJhmlyL1rgk0B
+        5fdN39eZhJ+HCpMxOgHZjh5uV9QmikmSgdGT9KSmnDhmlAgmpSIzAGp+WSxQl7keB6sROVQAUZjWb
+        FMREOMKA==;
+Received: from [2603:3004:32:9a00::c7a3]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izUq6-0002Hf-7n; Thu, 06 Feb 2020 00:16:14 +0000
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-2-yu-cheng.yu@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <af5ee976-3b57-4afe-6304-fcab8de45c77@infradead.org>
+Date:   Wed, 5 Feb 2020 16:16:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205235007.GA28870@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200205181935.3712-2-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/20 at 07:50am, Wei Yang wrote:
-> On Thu, Feb 06, 2020 at 07:19:45AM +0800, Wei Yang wrote:
-> >On Wed, Feb 05, 2020 at 02:52:51PM +0100, David Hildenbrand wrote:
-> >>Let's use a calculation that's easier to understand and calculates the
-> >>same result. Reusing existing macros makes this look nicer.
-> >>
-> >>We always want to have the number of pages (> 0) to the next section
-> >>boundary, starting from the current pfn.
-> >>
-> >>Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
-> >>Cc: Andrew Morton <akpm@linux-foundation.org>
-> >>Cc: Michal Hocko <mhocko@kernel.org>
-> >>Cc: Oscar Salvador <osalvador@suse.de>
-> >>Cc: Baoquan He <bhe@redhat.com>
-> >>Cc: Wei Yang <richardw.yang@linux.intel.com>
-> >>Signed-off-by: David Hildenbrand <david@redhat.com>
-> >
-> >Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
-> >
-> >BTW, I got one question about hotplug size requirement.
-> >
-> >I thought the hotplug range should be section size aligned, while taking a
-> >look into current code function check_hotplug_memory_range() guard the range.
+Hi,
 
-A good question. The current code should be block size aligned. I
-remember in some places we assume each block comprise all the sections.
-Can't imagine one or some of them are half section filled.
+I have a few comments and a question (please see inline below).
 
-It truly has a risk that system ram is very huge to make the block
-size is 2G, someone try to insert a 1G memory board. However, it should
-only exist in experiment environment, e.g build a guest with enough ram,
-then hot add 1G DIMM. In reality, we don't need to worry about it, at
-least what I saw is 512G order of magnitude.
 
-> >
-> >This function says the range should be block_size aligned. And if I am
-> >correct, block size on x86 should be in the range
-> >
-> >    [MIN_MEMORY_BLOCK_SIZE, MEM_SIZE_FOR_LARGE_BLOCK]
-> >    
-> >And MIN_MEMORY_BLOCK_SIZE is section size.
-
-No, if I got it right, the range on x86 is
-[MIN_MEMORY_BLOCK_SIZE, MAX_BLOCK_SIZE].
-
-MEM_SIZE_FOR_LARGE_BLOCK is the starting point from which block size can
-be adjusted. Otherwise it's MIN_MEMORY_BLOCK_SIZE.
-
-/* Amount of ram needed to start using large blocks */                                                                                            
-#define MEM_SIZE_FOR_LARGE_BLOCK (64UL << 30)
-
-> >
-> >Seems currently we support subsection hotplug? Then how a subsection range got
-> >hotplug? Or this patch is a pre-requisite?
-
-The sub-section hotplug feature was added by your colleague Dan
-Williams. It intends to fix a nvdimms issue that nvdimms device could be
-mapped into a non section size aligned starting address. And nvdimms
-makes use of the existing memory hotplug mechanism to manage pages.
-Not sure if we are saying the same thing.
-
-> >
+On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> Explain no_cet_shstk/no_cet_ibt kernel parameters, and introduce a new
+> document on Control-flow Enforcement Technology (CET).
 > 
-> One more question is we support hot-add subsection memory but not support
-> hot-online subsection memory.
-> 
-> Is my understanding correct?
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |   6 +
+>  Documentation/x86/index.rst                   |   1 +
+>  Documentation/x86/intel_cet.rst               | 294 ++++++++++++++++++
+>  3 files changed, 301 insertions(+)
+>  create mode 100644 Documentation/x86/intel_cet.rst
 > 
 
+> diff --git a/Documentation/x86/intel_cet.rst b/Documentation/x86/intel_cet.rst
+> new file mode 100644
+> index 000000000000..71e2462fea5c
+> --- /dev/null
+> +++ b/Documentation/x86/intel_cet.rst
+> @@ -0,0 +1,294 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========================================
+> +Control-flow Enforcement Technology (CET)
+> +=========================================
+> +
+
+...
+
+> +
+> +[5] CET system calls
+> +====================
+> +
+> +The following arch_prctl() system calls are added for CET:
+> +
+> +arch_prctl(ARCH_X86_CET_STATUS, unsigned long *addr)
+> +    Return CET feature status.
+> +
+> +    The parameter 'addr' is a pointer to a user buffer.
+> +    On returning to the caller, the kernel fills the following
+> +    information::
+> +
+> +        *addr       = SHSTK/IBT status
+> +        *(addr + 1) = SHSTK base address
+> +        *(addr + 2) = SHSTK size
+> +
+> +arch_prctl(ARCH_X86_CET_DISABLE, unsigned long features)
+> +    Disable SHSTK and/or IBT specified in 'features'.  Return -EPERM
+> +    if CET is locked.
+> +
+> +arch_prctl(ARCH_X86_CET_LOCK)
+> +    Lock in CET feature.
+
+which feature?
+
+> +
+> +arch_prctl(ARCH_X86_CET_ALLOC_SHSTK, unsigned long *addr)
+> +    Allocate a new SHSTK and put a restore token at top.
+> +
+> +    The parameter 'addr' is a pointer to a user buffer and indicates
+> +    the desired SHSTK size to allocate.  On returning to the caller,
+> +    the kernel fills '*addr' with the base address of the new SHSTK.
+> +
+> +arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE, unsigned long *addr)
+> +    Mark an address range as IBT legacy code.
+> +
+> +    The parameter 'addr' is a pointer to a user buffer that has the
+> +    following information::
+> +
+> +        *addr       = starting linear address of the legacy code
+> +        *(addr + 1) = size of the legacy code
+> +        *(addr + 2) = set (1); clear (0)
+> +
+> +Note:
+> +  There is no CET-enabling arch_prctl function.  By design, CET is
+> +  enabled automatically if the binary and the system can support it.
+> +
+> +  The parameters passed are always unsigned 64-bit.  When an IA32
+> +  application passing pointers, it should only use the lower 32 bits.
+> +
+> +[6] The implementation of the SHSTK
+> +===================================
+> +
+> +SHSTK size
+> +----------
+> +
+> +A task's SHSTK is allocated from memory to a fixed size of
+> +RLIMIT_STACK.  A compat-mode thread's SHSTK size is 1/4 of
+> +RLIMIT_STACK.  The smaller 32-bit thread SHSTK allows more threads to
+> +share a 32-bit address space.
+> +
+> +Signal
+> +------
+> +
+> +The main program and its signal handlers use the same SHSTK.  Because
+> +the SHSTK stores only return addresses, a large SHSTK will cover the
+> +condition that both the program stack and the sigaltstack run out.
+> +
+> +The kernel creates a restore token at the SHSTK restoring address and
+> +verifies that token when restoring from the signal handler.
+> +
+> +IBT for signal delivering and sigreturn is the same as the main
+> +program's setup; except for WAIT_ENDBR status, which can be read from
+
+s/;/,/
+
+> +MSR_IA32_U_CET.  In general, a task is in WAIT_ENDBR after an
+> +indirect CALL/JMP and before the next instruction starts.
+> +
+> +A task's WAIT_ENDBR is reset for its signal handler, but preserved on
+> +the task's stack; and then restored from sigreturn.
+
+s/;/,/
+
+> +
+> +Fork
+> +----
+> +
+> +The SHSTK's vma has VM_SHSTK flag set; its PTEs are required to be
+> +read-only and dirty.  When a SHSTK PTE is not present, RO, and dirty,
+> +a SHSTK access triggers a page fault with an additional SHSTK bit set
+> +in the page fault error code.
+> +
+> +When a task forks a child, its SHSTK PTEs are copied and both the
+> +parent's and the child's SHSTK PTEs are cleared of the dirty bit.
+> +Upon the next SHSTK access, the resulting SHSTK page fault is handled
+> +by page copy/re-use.
+> +
+> +When a pthread child is created, the kernel allocates a new SHSTK for
+> +the new thread.
+> +
+> +Setjmp/Longjmp
+> +--------------
+> +
+> +Longjmp unwinds SHSTK until it matches the program stack.
+> +
+> +Ucontext
+> +--------
+> +
+> +In GLIBC, getcontext/setcontext is implemented in similar way as
+> +setjmp/longjmp.
+> +
+> +When makecontext creates a new ucontext, a new SHSTK is allocated for
+> +that context with ARCH_X86_CET_ALLOC_SHSTK syscall.  The kernel
+> +creates a restore token at the top of the new SHSTK and the user-mode
+> +code switches to the new SHSTK with the RSTORSSP instruction.
+> +
+> +[7] The management of read-only & dirty PTEs for SHSTK
+> +======================================================
+> +
+> +A RO and dirty PTE exists in the following cases:
+> +
+> +(a) A page is modified and then shared with a fork()'ed child;
+> +(b) A R/O page that has been COW'ed;
+> +(c) A SHSTK page.
+> +
+> +The processor only checks the dirty bit for (c).  To prevent the use
+> +of non-SHSTK memory as SHSTK, we use a spare bit of the 64-bit PTE as
+> +DIRTY_SW for (a) and (b) above.  This results to the following PTE
+> +settings::
+> +
+> +    Modified PTE:             (R/W + DIRTY_HW)
+> +    Modified and shared PTE:  (R/O + DIRTY_SW)
+> +    R/O PTE, COW'ed:          (R/O + DIRTY_SW)
+> +    SHSTK PTE:                (R/O + DIRTY_HW)
+> +    SHSTK PTE, COW'ed:        (R/O + DIRTY_HW)
+> +    SHSTK PTE, shared:        (R/O + DIRTY_SW)
+> +
+> +Note that DIRTY_SW is only used in R/O PTEs but not R/W PTEs.
+> +
+> +[8] The implementation of IBT legacy bitmap
+> +===========================================
+> +
+> +When IBT is active, a non-IBT-capable legacy library can be executed
+> +if its address ranges are specified in the legacy code bitmap.  The
+> +bitmap covers the whole user-space address, which is TASK_SIZE_MAX
+> +for 64-bit and TASK_SIZE for IA32, and its each bit indicates a 4-KB
+
+confusing:
+                                          its each bit
+
+> +legacy code page.  It is read-only from an application, and setup by
+> +the kernel as a special mapping when the first time the application
+
+                           drop:   when
+
+> +calls arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE).  The application
+> +manages the bitmap through the arch_prctl.
+
+                      through the arch_prctl() interface.
+
+
+cheers.
+-- 
+~Randy
