@@ -2,101 +2,114 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C009DC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FCBC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DDA20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C65B20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJLL31cI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="of3NEExB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBFSWG (ORCPT
+        id S1727932AbgBFSWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:22:06 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53417 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgBFSWG (ORCPT
+        Thu, 6 Feb 2020 13:22:13 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37476 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727910AbgBFSWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:22:06 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so324379pjc.3;
-        Thu, 06 Feb 2020 10:22:06 -0800 (PST)
+        Thu, 6 Feb 2020 13:22:13 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f129so1185656wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:22:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=54PTuSGsMZatUFJRggtY0ZPnRku13hgus2gUwpQbThU=;
-        b=DJLL31cIptj/JwJcmnMQuxDCWzG2NMEB6d9KrNH6uxNCq67elwx9LgMDTuxpVwRbbk
-         XwEOrvQvrCHraqAaw816Izx2l8FxTFAlH1kq1VvfyscsvOEZH7dqaZyoaZg5JzgQbHbk
-         xcQqN98XAUYsu2rtjhS4TpFtiSDKxD1eyofrc5299fFy3rXmINeMHuogOsz5FsolJmJ8
-         F6HgLdZEh5GkHzD4RrsqSRerTI7s1+YUUu73wDW409NSCyyLbMY78MJ5NxPmfUVRDCGL
-         sO+9U4iMiVhcmLBDvShR+6d/bDHtpI15r1jti12JrNM60KxMeiQ8jpyITR8LBZnZV5FJ
-         4zag==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d9qzkt0YHl1j1zQLYfgUtStKm8RvBNZBr/cpsyPQQSI=;
+        b=of3NEExBfV2fM3I7sikgdT51i48Le7uGtsh0aom2rPnbXnlRVzXZslTrwBengkOpRM
+         xzK9PhZ54PL14asPAWbWPNlJ0XAfSFKw6J6kaRrdWkqiEuWbJK8SFRCG9HF0bvux/Xuh
+         3qKGCz/THV4rH4Oatl7fJiyyny9fVGqB3mVVzR4/VWmnxFJCgEddpFJ8btmrPAKOKttM
+         on1g6h5SGxVJj/KVPgMz8gWdgpHugVI7ovgGKwP4yJtjPtt8mmIkspa3iqgztzpXaIje
+         S4GLKh1iz044JTZVSGbLejM9DJIpQQXbTamJ3tlthKcVWzCAzNm95u5mI5/OTy+hRRdA
+         6A2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=54PTuSGsMZatUFJRggtY0ZPnRku13hgus2gUwpQbThU=;
-        b=sxnwUBvbWTsfsRu4pBOC6kHzGCFeMom9CYJb0rm4/hLpPYytUNyczuo+kbdTRcEhva
-         Ko2BdUohrx8p6ocbPFUvgxaezTQmWk0401cYKMPFRozrgjQXV39UQyU4Qn2ouO0agDg6
-         iyWbUAbrnscCbOvaZ8f7WL4g5t+v1wcBzrojfW9wm1KgYmVNBPxjQurpbVC85GaSo6qB
-         GnfwJ4biDhkEoIDw/XtvgytjrcOfZ2dTZWluzYY98aNysVPoB/Mspsx/LCiekfhi6HKL
-         77CxUaejjAVgPhYVqYnpUXjGkDye+LbymbiVlLMuEW3HxACkvD1xuSMjUq+UlLu48Fg3
-         5wBQ==
-X-Gm-Message-State: APjAAAWcdIfla3B7byywFHw4XVqJ4i+wy5d0F0sUXZ+KGWHpfU4Mbo5B
-        hfrlLaerEOEDPUVf1UqMPH4=
-X-Google-Smtp-Source: APXvYqx9NC0lS1YLI/cu7N2wMO7HYmfx9BmQLUKvvEnN5VeJHLaRrQvN2FMNEpsoEBLSR6NhFv5h+w==
-X-Received: by 2002:a17:902:a984:: with SMTP id bh4mr5291321plb.281.1581013325916;
-        Thu, 06 Feb 2020 10:22:05 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id i6sm95146pgm.93.2020.02.06.10.22.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 10:22:05 -0800 (PST)
-Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     cai@lca.pw, Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <1580841629-7102-1-git-send-email-cai@lca.pw>
- <20200206163844.GA432041@zx2c4.com>
- <453212cf-8987-9f05-ceae-42a4fc3b0876@gmail.com>
- <CAHmME9pGhQoY8MjR8uvEZpF66Y_DvReAjKBx8L4SRiqbL_9itw@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <495f79f5-ae27-478a-2a1d-6d3fba2d4334@gmail.com>
-Date:   Thu, 6 Feb 2020 10:22:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d9qzkt0YHl1j1zQLYfgUtStKm8RvBNZBr/cpsyPQQSI=;
+        b=Q/M12ejfs0WOsXr7DxIcyDBTrMS59NI8N9Rul01hsOBPkpXw7dW3VpHIxEg/gQHY0i
+         8zwVwStV5/1PkvpBTMg+J0GEDtesiCFPBPT2WBnIt0REkSIXQblFkOXM5ko7ylRSo3yp
+         +0Eq/zanohHig3HyFzbUuNhp6zhJ+ETWw7fuKTAs+4oKN/6jjyjFV3l6AQ4RAYFm++aA
+         SkMgqSKEDlfvazRV48kHbX0g6PM15rUBRbCW/mveYhIITXLTaFRgNwTR28Ijm05XCNj1
+         10EtcQlSKVE/INAbjUDPrcnPPYfApL2LwTPV7DfrEJY0qyBM8dPEs1LPiqc2DLWGoHxL
+         pVTA==
+X-Gm-Message-State: APjAAAUkUlbKCWMoLJyUpvcAAxjUELD09beCDfyTeJIWS/fGg6+vP2Gd
+        b0CPCsTdkt9dlJ7rmdzu9GXqjMCPhDvTjReEszbKtA==
+X-Google-Smtp-Source: APXvYqxWWrye1vWcP96iwDxzT2tJqI9xuz4NXwRoyq4OWYzF4N+GWFWa2hejgtOa5MtGKqBmdpTXY7Rv6Aq3NkdTIf4=
+X-Received: by 2002:a7b:c119:: with SMTP id w25mr6125664wmi.112.1581013330505;
+ Thu, 06 Feb 2020 10:22:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHmME9pGhQoY8MjR8uvEZpF66Y_DvReAjKBx8L4SRiqbL_9itw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200115182816.33892-1-trishalfonso@google.com>
+ <dce24e66d89940c8998ccc2916e57877ccc9f6ae.camel@sipsolutions.net>
+ <CAKFsvU+sUdGC9TXK6vkg5ZM9=f7ePe7+rh29DO+kHDzFXacx2w@mail.gmail.com>
+ <4f382794416c023b6711ed2ca645abe4fb17d6da.camel@sipsolutions.net> <b55720804de8e56febf48c7c3c11b578d06a8c9f.camel@sipsolutions.net>
+In-Reply-To: <b55720804de8e56febf48c7c3c11b578d06a8c9f.camel@sipsolutions.net>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Thu, 6 Feb 2020 10:21:59 -0800
+Message-ID: <CAKFsvUJu7NZpM0ER45zhSzte3ovkAvXBKx3Tppxci7O=0TwJMg@mail.gmail.com>
+Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     richard@nod.at, jdike@addtoit.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-um@lists.infradead.org, David Gow <davidgow@google.com>,
+        aryabinin@virtuozzo.com, Dmitry Vyukov <dvyukov@google.com>,
+        anton.ivanov@cambridgegreys.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 16, 2020 at 12:03 AM Johannes Berg
+<johannes@sipsolutions.net> wrote:
+>
+> On Thu, 2020-01-16 at 08:57 +0100, Johannes Berg wrote:
+> >
+> > And if I remember from looking at KASAN, some of the constructors there
+> > depended on initializing after the KASAN data structures were set up (or
+> > at least allocated)? It may be that you solved that by allocating the
+> > shadow so very early though.
+>
+> Actually, no ... it's still after main(), and the constructors run
+> before.
+>
+> So I _think_ with the CONFIG_CONSTRUCTORS revert, this will no longer
+> work (but happy to be proven wrong!), if so then I guess we do have to
+> find a way to initialize the KASAN things from another (somehow
+> earlier?) constructor ...
+>
+> Or find a way to fix CONFIG_CONSTRUCTORS and not revert, but I looked at
+> it quite a bit and didn't.
+>
+> johannes
 
 
-On 2/6/20 10:12 AM, Jason A. Donenfeld wrote:
-> On Thu, Feb 6, 2020 at 6:10 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->> Unfortunately we do not have ADD_ONCE() or something like that.
-> 
-> I guess normally this is called "atomic_add", unless you're thinking
-> instead about something like this, which generates the same
-> inefficient code as WRITE_ONCE:
-> 
-> #define ADD_ONCE(d, s) *(volatile typeof(d) *)&(d) += (s)
-> 
+I've looked at this quite extensively over the past week or so. I was
+able to initialize KASAN as one of the first things that gets executed
+in main(), but constructors are, in fact, needed before main(). I
+think it might be best to reintroduce constructors in a limited way to
+allow KASAN to work in UML. I have done as much testing as I can on my
+machine and this limited version seems to work, except when
+STATIC_LINK is set. I will send some patches of what I have done so
+far and we can talk more about it there. I would like to add your
+name, Johannes, as a co-developed-by on that patch. If there is a
+better way to give you credit for this, please let me know.
 
-Dmitry Vyukov had a nice suggestion few months back how to implement this.
 
-https://lkml.org/lkml/2019/10/5/6
-
+-- 
+Patricia Alfonso
