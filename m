@@ -1,459 +1,150 @@
 Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE54C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ACAC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160C320659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AD1218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R5FZX0iM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgBFK4Z (ORCPT
+        id S1728377AbgBFK5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:56:25 -0500
-Received: from smtprelay0129.hostedemail.com ([216.40.44.129]:55114 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727698AbgBFK4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:56:24 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id F3517837F27D;
-        Thu,  6 Feb 2020 10:56:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: ink51_5482e4a147944
-X-Filterd-Recvd-Size: 15578
-Received: from XPS-9350 (unknown [172.58.43.208])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  6 Feb 2020 10:56:20 +0000 (UTC)
-Message-ID: <4ba111ba18f14f0630cc550b58dbe5dbc82a48ac.camel@perches.com>
-Subject: [PATCH] rtw88: 8822[bc]: Make tables const, reduce data object size
-From:   Joe Perches <joe@perches.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Thu, 06 Feb 2020 02:54:38 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 6 Feb 2020 05:57:25 -0500
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:61566
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727698AbgBFK5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:57:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FRRF/TsOUFVifwhfm56aTo3Dki2xAw2PNVG3UcY7522UsB0Z2U1OsNeaR8gJa4qQqJAiHa640QcNO9Gr/ynr+ViFlFGli1zREoFw3LIkoGjFEfGzGEfIZCq96nWYznNeI8Yc/NM03iay37FFZBw/QZifsnSQ4X85PE6J0NeuN9BdVQh6MiqQpO2nOalVkg6JkDtojF0w1wx54LOGV9F2Iy553GvefSh6vZFBRE4VsZ2xuCpB5NaDPXmRNhwqfTy/i011CoaxfoePNQqcpcvhhMJAgmKrIxAQNOFJd3pUXI4PhL8RwaJElWqDMRTanrog5eiPA/d314pdsWDhFz08fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LUUITFqmrpTrBulNn1KbrwxOh/awNv3JleG3gGEIkaQ=;
+ b=E94nREJnsPqyKAyxzvZJLoysWH7gX4wPubjaqUfvC4z0IYFARgHb4tPGLoGowDaq1ERo+ZMmtegVL9ngwjM0FzZ82zW09HcSFiRwgkztTmfASSO7H+CuPVt6drI75B+o+xSJYZ1aX8FXyCF0yDQWLSBOUKtF8I4wujTQf5KQZNRMBcIQ6feY+xfio9+k17uQ+XgBjKCNi0U3U8ORhmtDsm/WrzyDxigxBOYwbQ107LJQBuD49Nd683YRoVY2lhGHZPiC4wAKghtmlGlrLnhiDN3Zb3Sx6gjwc4+YNocoS5zu9UsSG8HT5+fywFoPGQwdbN2tEwdUatfOjFLootPtwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LUUITFqmrpTrBulNn1KbrwxOh/awNv3JleG3gGEIkaQ=;
+ b=R5FZX0iMpoSfJIJVEX2NC0QfBEEKeeh+GC+XlmkVQPJii19G29FnxVECvLH0g0wgljoLL/PuH8+jVt5FucudAKwwT22dqahXiMhX++gWQVpACNGq8NlMQ+Pk0DQ2MKNifV3ApDUcV6FN2ZrhjNq7sQ8w4LH3W7QM1YMQYzM0XGA=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6732.eurprd04.prod.outlook.com (20.179.251.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Thu, 6 Feb 2020 10:57:22 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
+ 10:57:21 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Olof Johansson <olof@lixom.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Topic: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHVn1Tsfp+9ZVhNFU2th1+s/za9wae4ifkAgAU/LmCAJo7igIAAGaaAgCh8UlA=
+Date:   Thu, 6 Feb 2020 10:57:21 +0000
+Message-ID: <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+In-Reply-To: <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 764ab8d2-64a1-471f-bc82-08d7aaf35798
+x-ms-traffictypediagnostic: DB8PR04MB6732:|DB8PR04MB6732:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6732A0523DE19CF114AD1CFA841D0@DB8PR04MB6732.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(199004)(189003)(6506007)(53546011)(8936002)(81166006)(81156014)(8676002)(110136005)(54906003)(316002)(64756008)(71200400001)(66476007)(52536014)(66556008)(66946007)(5660300002)(76116006)(66446008)(9686003)(4326008)(55016002)(7696005)(33656002)(2906002)(186003)(86362001)(26005)(7416002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6732;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RgEQ561lZXehOH8R3AOSRNcjETKSaS3WFglDHqgcC0uXR+3W/4w9c+chKHDBy1X+Q/tbfvtcONQmnRuyN6evGAQva9U+D2UXYxv5VqN+TxUMu8KZQZLUXRUejQCORtbC8Oaeb0+Pw+UWVW534Fn/etCEPL06iRN4BdleUniZUKIDi2ma8FFB1KWU91xUDRYmDInevb0Km3//qwdHNro2s+1+7MUlNY+sCWjXP8mt/hp/OcFynZpIkAu8/Vq6c/FZ0r1iyExHm8Lc2cV4XmNcFlEkUljm8CGlDJxZ1+6tdIFZXb+kYo9PWTPyutzAr0m+JnUwOyRjWn/5kP0eCCH/rXr2YWnyxErONdAji8yHe1+hf+cgthfNaTWp4xKVrt95xMHrodkOGSxDlRukusVQnDiKXgHkgr9Pyjmtrs08WIfVxJ00HuKT66r91W5FsCvW
+x-ms-exchange-antispam-messagedata: yCZ/EtPRPoV8kV/Tta2hG2kW8PpoZnTQohevi5BHIjSyOeqPZ7gZhnVA83SA3pxIvD4wQ9iCr36T2PBHSpX99LLSVt3j6Zlyi/o2zLk9oSf7XJIUanX1V4lZM7XH5ER0Twt+lbLaSNaT4qbqabKB+Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 764ab8d2-64a1-471f-bc82-08d7aaf35798
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 10:57:21.7098
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fXTo6qZuSDlZMq2ERXcz3MKIQ+CeX41rlojxWuEwHeR3D2wnXBZCg+7ooc5U9gZv+zEycT9dLBWIeJIpzZj30w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6732
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce the data size 2kb or 3kb by making tables const.
-Add const to pointer declarations to make compilation work too.
-
-(x86-64 defconfig)
-$ size drivers/net/wireless/realtek/rtw88/rtw8822?.o*
-   text	   data	    bss	    dec	    hex	filename
-  25054	    672	      8	  25734	   6486	drivers/net/wireless/realtek/rtw88/rtw8822b.o.new
-  23870	   1872	      8	  25750	   6496	drivers/net/wireless/realtek/rtw88/rtw8822b.o.old
-  53646	    828	      0	  54474	   d4ca	drivers/net/wireless/realtek/rtw88/rtw8822c.o.new
-  52846	   1652	      0	  54498	   d4e2	drivers/net/wireless/realtek/rtw88/rtw8822c.o.old
-
-(x86-64 allyesconfig)
-$ size drivers/net/wireless/realtek/rtw88/rtw8822?.o*
-   text	   data	    bss	    dec	    hex	filename
-  45811	   6280	    128	  52219	   cbfb	drivers/net/wireless/realtek/rtw88/rtw8822b.o.new
-  44211	   7880	    128	  52219	   cbfb	drivers/net/wireless/realtek/rtw88/rtw8822b.o.old
- 100195	   8128	      0	 108323	  1a723	drivers/net/wireless/realtek/rtw88/rtw8822c.o.new
-  98947	   9376	      0	 108323	  1a723	drivers/net/wireless/realtek/rtw88/rtw8822c.o.old
-
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/net/wireless/realtek/rtw88/mac.c      | 19 +++++++++---------
- drivers/net/wireless/realtek/rtw88/main.h     | 22 ++++++++++-----------
- drivers/net/wireless/realtek/rtw88/pci.c      |  2 +-
- drivers/net/wireless/realtek/rtw88/rtw8822b.c | 28 +++++++++++++--------------
- drivers/net/wireless/realtek/rtw88/rtw8822c.c | 28 +++++++++++++--------------
- 5 files changed, 50 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtw88/mac.c b/drivers/net/wireless/realtek/rtw88/mac.c
-index cadf0a..0b98d3 100644
---- a/drivers/net/wireless/realtek/rtw88/mac.c
-+++ b/drivers/net/wireless/realtek/rtw88/mac.c
-@@ -101,7 +101,7 @@ static int rtw_mac_pre_system_cfg(struct rtw_dev *rtwdev)
- }
- 
- static int rtw_pwr_cmd_polling(struct rtw_dev *rtwdev,
--			       struct rtw_pwr_seq_cmd *cmd)
-+			       const struct rtw_pwr_seq_cmd *cmd)
- {
- 	u8 value;
- 	u8 flag = 0;
-@@ -139,9 +139,10 @@ static int rtw_pwr_cmd_polling(struct rtw_dev *rtwdev,
- }
- 
- static int rtw_sub_pwr_seq_parser(struct rtw_dev *rtwdev, u8 intf_mask,
--				  u8 cut_mask, struct rtw_pwr_seq_cmd *cmd)
-+				  u8 cut_mask,
-+				  const struct rtw_pwr_seq_cmd *cmd)
- {
--	struct rtw_pwr_seq_cmd *cur_cmd;
-+	const struct rtw_pwr_seq_cmd *cur_cmd;
- 	u32 offset;
- 	u8 value;
- 
-@@ -183,13 +184,13 @@ static int rtw_sub_pwr_seq_parser(struct rtw_dev *rtwdev, u8 intf_mask,
- }
- 
- static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
--			      struct rtw_pwr_seq_cmd **cmd_seq)
-+			      const struct rtw_pwr_seq_cmd **cmd_seq)
- {
- 	u8 cut_mask;
- 	u8 intf_mask;
- 	u8 cut;
- 	u32 idx = 0;
--	struct rtw_pwr_seq_cmd *cmd;
-+	const struct rtw_pwr_seq_cmd *cmd;
- 	int ret;
- 
- 	cut = rtwdev->hal.cut_version;
-@@ -223,7 +224,7 @@ static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
- static int rtw_mac_power_switch(struct rtw_dev *rtwdev, bool pwr_on)
- {
- 	struct rtw_chip_info *chip = rtwdev->chip;
--	struct rtw_pwr_seq_cmd **pwr_seq;
-+	const struct rtw_pwr_seq_cmd **pwr_seq;
- 	u8 rpwm;
- 	bool cur_pwr;
- 
-@@ -705,7 +706,7 @@ int rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
- 
- static u32 get_priority_queues(struct rtw_dev *rtwdev, u32 queues)
- {
--	struct rtw_rqpn *rqpn = rtwdev->fifo.rqpn;
-+	const struct rtw_rqpn *rqpn = rtwdev->fifo.rqpn;
- 	u32 prio_queues = 0;
- 
- 	if (queues & BIT(IEEE80211_AC_VO))
-@@ -793,7 +794,7 @@ void rtw_mac_flush_queues(struct rtw_dev *rtwdev, u32 queues, bool drop)
- static int txdma_queue_mapping(struct rtw_dev *rtwdev)
- {
- 	struct rtw_chip_info *chip = rtwdev->chip;
--	struct rtw_rqpn *rqpn = NULL;
-+	const struct rtw_rqpn *rqpn = NULL;
- 	u16 txdma_pq_map = 0;
- 
- 	switch (rtw_hci_type(rtwdev)) {
-@@ -882,7 +883,7 @@ static int priority_queue_cfg(struct rtw_dev *rtwdev)
- {
- 	struct rtw_fifo_conf *fifo = &rtwdev->fifo;
- 	struct rtw_chip_info *chip = rtwdev->chip;
--	struct rtw_page_table *pg_tbl = NULL;
-+	const struct rtw_page_table *pg_tbl = NULL;
- 	u16 pubq_num;
- 	int ret;
- 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.h b/drivers/net/wireless/realtek/rtw88/main.h
-index f334d2..a55635 100644
---- a/drivers/net/wireless/realtek/rtw88/main.h
-+++ b/drivers/net/wireless/realtek/rtw88/main.h
-@@ -948,10 +948,10 @@ struct rtw_wow_param {
- };
- 
- struct rtw_intf_phy_para_table {
--	struct rtw_intf_phy_para *usb2_para;
--	struct rtw_intf_phy_para *usb3_para;
--	struct rtw_intf_phy_para *gen1_para;
--	struct rtw_intf_phy_para *gen2_para;
-+	const struct rtw_intf_phy_para *usb2_para;
-+	const struct rtw_intf_phy_para *usb3_para;
-+	const struct rtw_intf_phy_para *gen1_para;
-+	const struct rtw_intf_phy_para *gen2_para;
- 	u8 n_usb2_para;
- 	u8 n_usb3_para;
- 	u8 n_gen1_para;
-@@ -1048,13 +1048,13 @@ struct rtw_chip_info {
- 
- 	/* init values */
- 	u8 sys_func_en;
--	struct rtw_pwr_seq_cmd **pwr_on_seq;
--	struct rtw_pwr_seq_cmd **pwr_off_seq;
--	struct rtw_rqpn *rqpn_table;
--	struct rtw_page_table *page_table;
--	struct rtw_intf_phy_para_table *intf_table;
-+	const struct rtw_pwr_seq_cmd **pwr_on_seq;
-+	const struct rtw_pwr_seq_cmd **pwr_off_seq;
-+	const struct rtw_rqpn *rqpn_table;
-+	const struct rtw_page_table *page_table;
-+	const struct rtw_intf_phy_para_table *intf_table;
- 
--	struct rtw_hw_reg *dig;
-+	const struct rtw_hw_reg *dig;
- 	u32 rf_base_addr[2];
- 	u32 rf_sipi_addr[2];
- 
-@@ -1500,7 +1500,7 @@ struct rtw_fifo_conf {
- 	u16 rsvd_cpu_instr_addr;
- 	u16 rsvd_fw_txbuf_addr;
- 	u16 rsvd_csibuf_addr;
--	struct rtw_rqpn *rqpn;
-+	const struct rtw_rqpn *rqpn;
- };
- 
- struct rtw_fw_state {
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 1fbc14..82b1f86 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -1248,7 +1248,7 @@ static void rtw_pci_interface_cfg(struct rtw_dev *rtwdev)
- static void rtw_pci_phy_cfg(struct rtw_dev *rtwdev)
- {
- 	struct rtw_chip_info *chip = rtwdev->chip;
--	struct rtw_intf_phy_para *para;
-+	const struct rtw_intf_phy_para *para;
- 	u16 cut;
- 	u16 value;
- 	u16 offset;
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822b.c b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-index 4bc14b..ded1e9f 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-@@ -1543,7 +1543,7 @@ static void rtw8822b_bf_config_bfee(struct rtw_dev *rtwdev, struct rtw_vif *vif,
- 		rtw_warn(rtwdev, "wrong bfee role\n");
- }
- 
--static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822b[] = {
-+static const struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822b[] = {
- 	{0x0086,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_SDIO_MSK,
-@@ -1581,7 +1581,7 @@ static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822b[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822b[] = {
-+static const struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822b[] = {
- 	{0x0012,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_ALL_MSK,
-@@ -1714,7 +1714,7 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822b[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822b[] = {
-+static const struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822b[] = {
- 	{0x0003,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_SDIO_MSK,
-@@ -1787,7 +1787,7 @@ static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822b[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822b[] = {
-+static const struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822b[] = {
- 	{0x0005,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_SDIO_MSK,
-@@ -1905,26 +1905,26 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822b[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd *card_enable_flow_8822b[] = {
-+static const struct rtw_pwr_seq_cmd *card_enable_flow_8822b[] = {
- 	trans_carddis_to_cardemu_8822b,
- 	trans_cardemu_to_act_8822b,
- 	NULL
- };
- 
--static struct rtw_pwr_seq_cmd *card_disable_flow_8822b[] = {
-+static const struct rtw_pwr_seq_cmd *card_disable_flow_8822b[] = {
- 	trans_act_to_cardemu_8822b,
- 	trans_cardemu_to_carddis_8822b,
- 	NULL
- };
- 
--static struct rtw_intf_phy_para usb2_param_8822b[] = {
-+static const struct rtw_intf_phy_para usb2_param_8822b[] = {
- 	{0xFFFF, 0x00,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_ALL,
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para usb3_param_8822b[] = {
-+static const struct rtw_intf_phy_para usb3_param_8822b[] = {
- 	{0x0001, 0xA841,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_D,
-@@ -1935,7 +1935,7 @@ static struct rtw_intf_phy_para usb3_param_8822b[] = {
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para pcie_gen1_param_8822b[] = {
-+static const struct rtw_intf_phy_para pcie_gen1_param_8822b[] = {
- 	{0x0001, 0xA841,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_C,
-@@ -1982,7 +1982,7 @@ static struct rtw_intf_phy_para pcie_gen1_param_8822b[] = {
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para pcie_gen2_param_8822b[] = {
-+static const struct rtw_intf_phy_para pcie_gen2_param_8822b[] = {
- 	{0x0001, 0xA841,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_C,
-@@ -2029,7 +2029,7 @@ static struct rtw_intf_phy_para pcie_gen2_param_8822b[] = {
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para_table phy_para_table_8822b = {
-+static const struct rtw_intf_phy_para_table phy_para_table_8822b = {
- 	.usb2_para	= usb2_param_8822b,
- 	.usb3_para	= usb3_param_8822b,
- 	.gen1_para	= pcie_gen1_param_8822b,
-@@ -2046,12 +2046,12 @@ static const struct rtw_rfe_def rtw8822b_rfe_defs[] = {
- 	[5] = RTW_DEF_RFE(8822b, 5, 5),
- };
- 
--static struct rtw_hw_reg rtw8822b_dig[] = {
-+static const struct rtw_hw_reg rtw8822b_dig[] = {
- 	[0] = { .addr = 0xc50, .mask = 0x7f },
- 	[1] = { .addr = 0xe50, .mask = 0x7f },
- };
- 
--static struct rtw_page_table page_table_8822b[] = {
-+static const struct rtw_page_table page_table_8822b[] = {
- 	{64, 64, 64, 64, 1},
- 	{64, 64, 64, 64, 1},
- 	{64, 64, 0, 0, 1},
-@@ -2059,7 +2059,7 @@ static struct rtw_page_table page_table_8822b[] = {
- 	{64, 64, 64, 64, 1},
- };
- 
--static struct rtw_rqpn rqpn_table_8822b[] = {
-+static const struct rtw_rqpn rqpn_table_8822b[] = {
- 	{RTW_DMA_MAPPING_NORMAL, RTW_DMA_MAPPING_NORMAL,
- 	 RTW_DMA_MAPPING_LOW, RTW_DMA_MAPPING_LOW,
- 	 RTW_DMA_MAPPING_EXTRA, RTW_DMA_MAPPING_HIGH},
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822c.c b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-index 386509..5b2f594 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-@@ -3399,7 +3399,7 @@ static void rtw8822c_pwr_track(struct rtw_dev *rtwdev)
- 	dm_info->pwr_trk_triggered = false;
- }
- 
--static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
-+static const struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
- 	{0x0086,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_SDIO_MSK,
-@@ -3442,7 +3442,7 @@ static struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
-+static const struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
- 	{0x0000,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_USB_MSK | RTW_PWR_INTF_SDIO_MSK,
-@@ -3551,7 +3551,7 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822c[] = {
-+static const struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822c[] = {
- 	{0x0093,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_ALL_MSK,
-@@ -3614,7 +3614,7 @@ static struct rtw_pwr_seq_cmd trans_act_to_cardemu_8822c[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822c[] = {
-+static const struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822c[] = {
- 	{0x0005,
- 	 RTW_PWR_CUT_ALL_MSK,
- 	 RTW_PWR_INTF_SDIO_MSK,
-@@ -3677,47 +3677,47 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_carddis_8822c[] = {
- 	 RTW_PWR_CMD_END, 0, 0},
- };
- 
--static struct rtw_pwr_seq_cmd *card_enable_flow_8822c[] = {
-+static const struct rtw_pwr_seq_cmd *card_enable_flow_8822c[] = {
- 	trans_carddis_to_cardemu_8822c,
- 	trans_cardemu_to_act_8822c,
- 	NULL
- };
- 
--static struct rtw_pwr_seq_cmd *card_disable_flow_8822c[] = {
-+static const struct rtw_pwr_seq_cmd *card_disable_flow_8822c[] = {
- 	trans_act_to_cardemu_8822c,
- 	trans_cardemu_to_carddis_8822c,
- 	NULL
- };
- 
--static struct rtw_intf_phy_para usb2_param_8822c[] = {
-+static const struct rtw_intf_phy_para usb2_param_8822c[] = {
- 	{0xFFFF, 0x00,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_ALL,
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para usb3_param_8822c[] = {
-+static const struct rtw_intf_phy_para usb3_param_8822c[] = {
- 	{0xFFFF, 0x0000,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_ALL,
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para pcie_gen1_param_8822c[] = {
-+static const struct rtw_intf_phy_para pcie_gen1_param_8822c[] = {
- 	{0xFFFF, 0x0000,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_ALL,
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para pcie_gen2_param_8822c[] = {
-+static const struct rtw_intf_phy_para pcie_gen2_param_8822c[] = {
- 	{0xFFFF, 0x0000,
- 	 RTW_IP_SEL_PHY,
- 	 RTW_INTF_PHY_CUT_ALL,
- 	 RTW_INTF_PHY_PLATFORM_ALL},
- };
- 
--static struct rtw_intf_phy_para_table phy_para_table_8822c = {
-+static const struct rtw_intf_phy_para_table phy_para_table_8822c = {
- 	.usb2_para	= usb2_param_8822c,
- 	.usb3_para	= usb3_param_8822c,
- 	.gen1_para	= pcie_gen1_param_8822c,
-@@ -3734,12 +3734,12 @@ static const struct rtw_rfe_def rtw8822c_rfe_defs[] = {
- 	[2] = RTW_DEF_RFE(8822c, 0, 0),
- };
- 
--static struct rtw_hw_reg rtw8822c_dig[] = {
-+static const struct rtw_hw_reg rtw8822c_dig[] = {
- 	[0] = { .addr = 0x1d70, .mask = 0x7f },
- 	[1] = { .addr = 0x1d70, .mask = 0x7f00 },
- };
- 
--static struct rtw_page_table page_table_8822c[] = {
-+static const struct rtw_page_table page_table_8822c[] = {
- 	{64, 64, 64, 64, 1},
- 	{64, 64, 64, 64, 1},
- 	{64, 64, 0, 0, 1},
-@@ -3747,7 +3747,7 @@ static struct rtw_page_table page_table_8822c[] = {
- 	{64, 64, 64, 64, 1},
- };
- 
--static struct rtw_rqpn rqpn_table_8822c[] = {
-+static const struct rtw_rqpn rqpn_table_8822c[] = {
- 	{RTW_DMA_MAPPING_NORMAL, RTW_DMA_MAPPING_NORMAL,
- 	 RTW_DMA_MAPPING_LOW, RTW_DMA_MAPPING_LOW,
- 	 RTW_DMA_MAPPING_EXTRA, RTW_DMA_MAPPING_HIGH},
-
+SGkgT2xvZiwNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KQW5kIHNvcnJ5IGZv
+ciBteSBkZWxheSByZXNwb25kIQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IE9sb2YgSm9oYW5zc29uIDxvbG9mQGxpeG9tLm5ldD4NCj4gU2VudDogMjAyMOW5tDHmnIgx
+MeaXpSAxOjA2DQo+IFRvOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJt
+LmNvbT4NCj4gQ2M6IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGJoZWxnYWFzQGdv
+b2dsZS5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgYXJuZEBhcm5k
+Yi5kZTsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28u
+aW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IG0ua2FydGhpa2V5YW5AbW9iaXZlaWwuY28uaW47
+IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207
+IHdpbGwuZGVhY29uQGFybS5jb207IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsNCj4gTWluZ2thaSBI
+dSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+
+Ow0KPiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSHY5IDAwLzEyXSBQQ0k6IFJlY29kZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIEdl
+bjQNCj4gZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2FwZSBTb0NzDQo+IA0KPiBPbiBGcmksIEphbiAx
+MCwgMjAyMCBhdCA3OjMzIEFNIExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBh
+cm0uY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IE9uIFR1ZSwgRGVjIDE3LCAyMDE5IGF0IDAyOjUw
+OjE1QU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+ID4gSGkgTG9yZW56bywNCj4gPiA+DQo+
+ID4gPiBUaGUgdjkgcGF0Y2hlcyBoYXZlIGFkZHJlc3NlZCB0aGUgY29tbWVudHMgZnJvbSBBbmRy
+ZXcsIGFuZCBpdCBoYXMNCj4gPiA+IGJlZW4gZHJpZWQgYWJvdXQgMSBtb250aCwgY2FuIHlvdSBo
+ZWxwIHRvIGFwcGx5IHRoZW0/DQo+ID4NCj4gPiBXZSBzaGFsbCBoYXZlIGEgbG9vayBiZWdpbm5p
+bmcgb2YgbmV4dCB3ZWVrLCBzb3JyeSBmb3IgdGhlIGRlbGF5IGluDQo+ID4gZ2V0dGluZyBiYWNr
+IHRvIHlvdS4NCj4gDQo+IE5vdGUgdGhhdCB0aGUgcGF0Y2ggc2V0IG5vIGxvbmdlciBhcHBsaWVz
+IHNpbmNlIHRoZSByZWZhY3RvcmluZ3MgY29uZmxpY3Qgd2l0aA0KPiBuZXcgZGV2ZWxvcG1lbnQg
+Ynkgb3RoZXJzLg0KPiANCj4gWmhpcWlhbmcsIGNhbiB5b3UgcmViYXNlIGFuZCBwb3N0IGEgbmV3
+IHZlcnNpb24gb2YgdGhlIHBhdGNoIHNldD8NCg0KWWVzLCBJIHdpbGwgcmViYXNlIHRoZSBwYXRj
+aGVzIHRvIHRoZSBsYXRlc3QgY29kZSBiYXNlLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQogDQo+
+IA0KPiAtT2xvZg0K
