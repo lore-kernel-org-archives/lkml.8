@@ -2,227 +2,324 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96039C47409
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3E9C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B1921775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54892218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cqVmZRJO";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QEOGG3Dr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txaA0eVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgBFWb6 (ORCPT
+        id S1727317AbgBFWcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:31:58 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34074 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgBFWb5 (ORCPT
+        Thu, 6 Feb 2020 17:32:10 -0500
+Received: from mail-il1-f172.google.com ([209.85.166.172]:38703 "EHLO
+        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgBFWcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:31:57 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016MO59D128029;
-        Thu, 6 Feb 2020 22:31:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=1dCQzBF1Cy1VWMoh0IXhksIqAR1fyX3kpp5QSoJp0Fw=;
- b=cqVmZRJOQqRb+8a78dIoQFixTd3UhMeWOw931Ihmokotg1vASd711h9Hh0WWZtQijSvJ
- VjLFglBkrlQGbk+MA/xFbq8dH/eENq/+7+SaSI6GaQgwsJ0pDQnWOFiz4p0SuMlieQ5V
- UHpxaglv8zW7f7Kgj2d+tmpgK0kkqI5RfO8AJbokVnZi5GEifH3vFK2T5tW7HMJm+p17
- LaAFCjGCW/5CJ45xqqdSVNNe6CcbTmOAvRnsW732CUbxTPFWNp3ZUq+ZruMW4OoisB1o
- Go5dXCXvufxN4N9Igk+ULW4Mghu5KdGiZ3U9oGbXquaPuf7ihzLs8oFf27tbrskOAras Dw== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=1dCQzBF1Cy1VWMoh0IXhksIqAR1fyX3kpp5QSoJp0Fw=;
- b=QEOGG3DrrUHxV3xUm43ars+LaIjQMuvppX08nVNAFGDn9SxuhI3AbfQYuJpAefKfFkN9
- Go+HaUhJwksZqQqansJcaPnpJFEOwBGP+ssuibZKLUK1hJhYDpL7aDNohKtvbwB9TP4X
- 0v1p29PmGJ/04u36yGb9+gw9dOulEcsvSbcDmV7LMbrFr0AeOJ5ADXVzfZbRDXMFfJhd
- rr0uAz+wxk0b83NFA9V4QSRhqz6QZBtABUYYN6UxhTJ3LTaDb+kXBAb8BybFx8c1m7Wc
- wrtH4yI103ik2kkRuU5A6qoUAG9OWSkLKXJoNSSHpU6BIpUaHFulOyYOhJGazbuuzeJ7 ig== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xykbpcs55-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 22:31:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016MO9Ag190696;
-        Thu, 6 Feb 2020 22:31:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2y0jfytahp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 22:31:49 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016MVmgm024222;
-        Thu, 6 Feb 2020 22:31:48 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Feb 2020 14:31:48 -0800
-Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-6-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
-Date:   Thu, 6 Feb 2020 14:31:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 17:32:10 -0500
+Received: by mail-il1-f172.google.com with SMTP id f5so73246ilq.5;
+        Thu, 06 Feb 2020 14:32:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:message-id:subject:from:to:cc:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=7/Bes3cNLricskFz3U4XIFBnsvX6Y4giyFoJ+2MLEl4=;
+        b=txaA0eVKTJ4u1/q5ac5IeqCgAw7iDg7J+iKTAGUJ+DbpFHipV2QDYvk45NsbcgTzWe
+         3HCquQPM+LCuU4fKY5A50RWGtabOxk706MHwKa5uW+ux0I32FJimeBza4caTS973ctaF
+         1N3w2rqqB3c+Kid/oNk7a2QjxbkWXvLno6OiyNBd3h5fGtUCJZyetGaO9+98HkVmgnbt
+         ivSRRBr/beH+tr2Dg2BzJawPenR7MEVqH3WCyHqwWQ4BIwoMVFjFHgtsg2n5EB/VBDHF
+         XQX40psldoU1PfSAM4qxQuokIMC9wrBMmALmcd0bnFGXb3VvskwvAdusNKgJ9FGqoli+
+         qXZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:message-id:subject:from:to:cc
+         :mime-version:date:user-agent:content-transfer-encoding;
+        bh=7/Bes3cNLricskFz3U4XIFBnsvX6Y4giyFoJ+2MLEl4=;
+        b=OEBes/UBzvycvAxplg/sG6yArXa+7GWIqJKCs9nBfIVsyrwUsmOtubPZ1q9ACnbUh4
+         d5w5DWauPCAkqd4Teyn7qQLKM4TpV22A2HpQb6DUqSozCz8QC/NxNlkfSQpG99Y/52Xu
+         0ngRio0Q6MFZ04rHzuvU2802DYoJ9wpQsXiKz2DXc+DcMfogQ1/bovzZFJLi+2IulBql
+         y02Gogv8RNDdLBeDgJGqH4lsz1zHNOJlulzZanIzeVq1WIVYhMbRt0pLHn/+XfUqggcJ
+         699Ulft189gYv3uxUzKl6L67RUKwK0p7a9J3OQgtRtTU6cw3pgMrCqY7hgRtLMDwEinp
+         mEUQ==
+X-Gm-Message-State: APjAAAVf/IhIbh+WalBOzUr/RDZZJ2BsaSILdjSJKUd7D9NUxUySlsu3
+        C/FC8r2Xhfye/x1aO1Gb3nGEydv9
+X-Google-Smtp-Source: APXvYqwxWFbGcB0yvpWUrB3Z5mLGf6wsHrn/xhdIZzEaz6Pmi4/Mk5r1403nZ+tmKX4C6oU+2u6jBQ==
+X-Received: by 2002:a92:990d:: with SMTP id p13mr6063659ili.129.1581028329085;
+        Thu, 06 Feb 2020 14:32:09 -0800 (PST)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.googlemail.com with ESMTPSA id e23sm433303ild.37.2020.02.06.14.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 14:32:08 -0800 (PST)
+Message-ID: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
+Subject: [GIT PULL] Please pull NFS client updates for Linux 5.6
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-In-Reply-To: <20200203232248.104733-6-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Date:   Thu, 06 Feb 2020 17:31:18 -0500
+User-Agent: Evolution 3.34.3 
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002060162
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002060162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 3:22 PM, Mina Almasry wrote:
-> Support MAP_NORESERVE accounting as part of the new counter.
-> 
-> For each hugepage allocation, at allocation time we check if there is
-> a reservation for this allocation or not. If there is a reservation for
-> this allocation, then this allocation was charged at reservation time,
-> and we don't re-account it. If there is no reserevation for this
-> allocation, we charge the appropriate hugetlb_cgroup.
-> 
-> The hugetlb_cgroup to uncharge for this allocation is stored in
-> page[3].private. We use new APIs added in an earlier patch to set this
-> pointer.
+Hi Linus,
 
-Ah!  That reminded me to look at the migration code.  Turns out that none
-of the existing cgroup information (page[2]) is being migrated today.  That
-is a bug. :(  I'll confirm and fix in a patch separate from this series.
-We will need to make sure that new information added by this series in page[3]
-is also migrated.  That would be in an earlier patch where the use of the
-field is introduced.
+The following changes since commit 95e20af9fb9ce572129b930967dcb762a318c588:
 
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> ---
-> 
-> Changes in v10:
-> - Refactored deferred_reserve check.
-> 
-> ---
->  mm/hugetlb.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 33818ccaf7e89..ec0b55ea1506e 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1339,6 +1339,9 @@ static void __free_huge_page(struct page *page)
->  	clear_page_huge_active(page);
->  	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
->  				     page, false);
-> +	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
-> +				     page, true);
-> +
+  Merge tag 'nfs-for-5.5-2' of git://git.linux-nfs.org/projects/anna/linux-nfs
+(2020-01-14 13:33:14 -0800)
 
-When looking at the code without change markings, the two above lines
-look so similar my first thought is there must be a mistake.
+are available in the Git repository at:
 
-A suggestion for better code readability:
-- hugetlb_cgroup_uncharge_page could just take "struct hstate *h" and
-  get both hstate_index(h) and pages_per_huge_page(h).
-- Perhaps make hugetlb_cgroup_uncharge_page and
-  hugetlb_cgroup_uncharge_page_rsvd be wrappers around a common routine.
-  Then the above would look like:
+  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.6-1
 
-  hugetlb_cgroup_uncharge_page(h, page);
-  hugetlb_cgroup_uncharge_page_rsvd(h, page);
-  
+for you to fetch changes up to 7dc2993a9e51dd2eee955944efec65bef90265b7:
 
->  	if (restore_reserve)
->  		h->resv_huge_pages++;
-> 
-> @@ -2172,6 +2175,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
->  	long gbl_chg;
->  	int ret, idx;
->  	struct hugetlb_cgroup *h_cg;
-> +	bool deferred_reserve;
-> 
->  	idx = hstate_index(h);
->  	/*
-> @@ -2209,10 +2213,20 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
->  			gbl_chg = 1;
->  	}
-> 
-> +	/* If this allocation is not consuming a reservation, charge it now.
-> +	 */
-> +	deferred_reserve = map_chg || avoid_reserve || !vma_resv_map(vma);
-> +	if (deferred_reserve) {
-> +		ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h),
-> +						   &h_cg, true);
-> +		if (ret)
-> +			goto out_subpool_put;
-> +	}
-> +
->  	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg,
->  					   false);
+  NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals (2020-02-04
+12:27:55 -0500)
 
-Hmmm?  I'm starting to like the wrapper idea more as a way to help with
-readability of the bool rsvd argument.
+----------------------------------------------------------------
+Stable bugfixes:
+- Fix memory leaks and corruption in readdir # v2.6.37+
+- Directory page cache needs to be locked when read # v2.6.37+
 
-hugetlb_cgroup_charge_cgroup_rsvd()
-hugetlb_cgroup_charge_cgroup()
+New features:
+- Convert NFS to use the new mount API
+- Add "softreval" mount option to let clients use cache if server goes down
+- Add a config option to compile without UDP support
+- Limit the number of inactive delegations the client can cache at once
+- Improved readdir concurrency using iterate_shared()
 
-At least to me it makes it easier to read.
--- 
-Mike Kravetz
+Other bugfixes and cleanups:
+- More 64-bit time conversions
+- Add additional diagnostic tracepoints
+- Check for holes in swapfiles, and add dependency on CONFIG_SWAP
+- Various xprtrdma cleanups to prepare for 5.7's changes
+- Several fixes for NFS writeback and commit handling
+- Fix acls over krb5i/krb5p mounts
+- Recover from premature loss of openstateids
+- Fix NFS v3 chacl and chmod bug
+- Compare creds using cred_fscmp()
+- Use kmemdup_nul() in more places
+- Optimize readdir cache page invalidation
+- Lease renewal and recovery fixes
 
->  	if (ret)
-> -		goto out_subpool_put;
-> +		goto out_uncharge_cgroup_reservation;
-> 
->  	spin_lock(&hugetlb_lock);
->  	/*
-> @@ -2236,6 +2250,14 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
->  	}
->  	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page,
->  				     false);
-> +	/* If allocation is not consuming a reservation, also store the
-> +	 * hugetlb_cgroup pointer on the page.
-> +	 */
-> +	if (deferred_reserve) {
-> +		hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg,
-> +					     page, true);
-> +	}
-> +
->  	spin_unlock(&hugetlb_lock);
-> 
->  	set_page_private(page, (unsigned long)spool);
-> @@ -2261,6 +2283,10 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
->  out_uncharge_cgroup:
->  	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg,
->  				       false);
-> +out_uncharge_cgroup_reservation:
-> +	if (deferred_reserve)
-> +		hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h),
-> +					       h_cg, true);
->  out_subpool_put:
->  	if (map_chg || avoid_reserve)
->  		hugepage_subpool_put_pages(spool, 1);
-> --
-> 2.25.0.341.g760bfbb309-goog
+Thanks,
+Anna
+
+----------------------------------------------------------------
+Al Viro (15):
+      saner calling conventions for nfs_fs_mount_common()
+      nfs: stash server into struct nfs_mount_info
+      nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
+      nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+      nfs: don't bother setting/restoring export_path around do_nfs_root_mount()
+      nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
+      nfs: lift setting mount_info from nfs_xdev_mount()
+      nfs: stash nfs_subversion reference into nfs_mount_info
+      nfs: don't bother passing nfs_subversion to ->try_mount() and
+nfs_fs_mount_common()
+      nfs: merge xdev and remote file_system_type
+      nfs: unexport nfs_fs_mount_common()
+      nfs: don't pass nfs_subversion to ->create_server()
+      nfs: get rid of mount_info ->fill_super()
+      nfs_clone_sb_security(): simplify the check for server bogosity
+      nfs: get rid of ->set_security()
+
+Alex Shi (1):
+      NFS: remove unused macros
+
+Arnd Bergmann (5):
+      sunrpc: convert to time64_t for expiry
+      nfs: use timespec64 in nfs_fattr
+      nfs: fscache: use timespec64 in inode auxdata
+      nfs: remove timespec from xdr_encode_nfstime
+      nfs: encode nfsv4 timestamps as 64-bit
+
+Chuck Lever (13):
+      SUNRPC: Capture signalled RPC tasks
+      NFS: Introduce trace events triggered by page writeback errors
+      NFS4: Report callback authentication errors
+      SUNRPC: call_connect_status should handle -EPROTO
+      xprtrdma: Eliminate ri_max_send_sges
+      xprtrdma: Make sendctx queue lifetime the same as connection lifetime
+      xprtrdma: Refactor initialization of ep->rep_max_requests
+      xprtrdma: Eliminate per-transport "max pages"
+      xprtrdma: Refactor frwr_is_supported
+      xprtrdma: Allocate and map transport header buffers at connect time
+      xprtrdma: Destroy rpcrdma_rep when Receive is flushed
+      xprtrdma: Destroy reps from previous connection instance
+      xprtrdma: DMA map rr_rdma_buf as each rpcrdma_rep is created
+
+Colin Ian King (1):
+      NFS: Add missing null check for failed allocation
+
+Dai Ngo (1):
+      nfs: optimise readdir cache page invalidation
+
+David Howells (9):
+      NFS: Move mount parameterisation bits into their own file
+      NFS: Constify mount argument match tables
+      NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
+      NFS: Split nfs_parse_mount_options()
+      NFS: Deindent nfs_fs_context_parse_option()
+      NFS: Add a small buffer in nfs_fs_context to avoid string dup
+      NFS: Do some tidying of the parsing code
+      NFS: Add fs_context support.
+      nfs: Return EINVAL rather than ERANGE for mount parse errors
+
+Geert Uytterhoeven (1):
+      nfs: NFS_SWAP should depend on SWAP
+
+Julia Lawall (1):
+      SUNRPC: constify copied structure
+
+Murphy Zhou (1):
+      fs/nfs, swapon: check holes in swapfile
+
+Olga Kornievskaia (3):
+      NFSv4 fix acl retrieval over krb5i/krb5p mounts
+      NFSv4.x recover from pre-mature loss of openstateid
+      NFS: allow deprecation of NFS UDP protocol
+
+Robert Milkowski (2):
+      NFSv4: try lease recovery on NFS4ERR_EXPIRED
+      NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+
+Scott Mayhew (4):
+      NFS: rename nfs_fs_context pointer arg in a few functions
+      NFS: Convert mount option parsing to use functionality from fs_parser.h
+      NFS: Additional refactoring for fs_context conversion
+      NFS: Attach supplementary error information to fs_context.
+
+Su Yanjun (1):
+      NFSv3: FIx bug when using chacl and chmod to change acl
+
+Trond Myklebust (32):
+      NFS: Revalidate the file size on a fatal write error
+      NFS: Revalidate the file mapping on all fatal writeback errors
+      SUNRPC: Remove broken gss_mech_list_pseudoflavors()
+      NFS: Fix up fsync() when the server rebooted
+      NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
+      NFSv4: Improve read/write/commit tracing
+      NFS: Fix fix of show_nfs_errors
+      pNFS/flexfiles: Record resend attempts on I/O failure
+      NFS: Clean up generic file read tracepoints
+      NFS: Clean up generic writeback tracepoints
+      NFS: Clean up generic file commit tracepoint
+      pNFS/flexfiles: Add tracing for layout errors
+      NFS: Improve tracing of permission calls
+      NFS: When resending after a short write, reset the reply count to zero
+      NFS: Fix nfs_direct_write_reschedule_io()
+      NFS: Trust cached access if we've already revalidated the inode once
+      NFS: Add mount option 'softreval'
+      NFS: Add softreval behaviour to nfs_lookup_revalidate()
+      NFSv4: pnfs_roc() must use cred_fscmp() to compare creds
+      NFS: nfs_access_get_cached_rcu() should use cred_fscmp()
+      NFS: nfs_find_open_context() should use cred_fscmp()
+      NFSv4: nfs_inode_evict_delegation() should set NFS_DELEGATION_RETURNING
+      NFS: Clear NFS_DELEGATION_RETURN_IF_CLOSED when the delegation is returned
+      NFSv4: Try to return the delegation immediately when marked for return on
+close
+      NFSv4: Add accounting for the number of active delegations held
+      NFSv4: Limit the total number of cached delegations
+      NFS: Replace various occurrences of kstrndup() with kmemdup_nul()
+      SUNRPC: Use kmemdup_nul() in rpc_parse_scope_id()
+      NFS: Fix memory leaks and corruption in readdir
+      NFS: Directory page cache pages need to be locked when read
+      NFS: Use kmemdup_nul() in nfs_readdir_make_qstr()
+      NFS: Switch readdir to using iterate_shared()
+
+Wenwen Wang (1):
+      NFS: Fix memory leaks
+
+zhengbin (2):
+      NFS4: Remove unneeded semicolon
+      NFS: move dprintk after nfs_alloc_fattr in nfs3_proc_lookup
+
+ fs/nfs/Kconfig                         |   11 +-
+ fs/nfs/Makefile                        |    2 +-
+ fs/nfs/callback_xdr.c                  |   11 +-
+ fs/nfs/client.c                        |   84 ++--
+ fs/nfs/delegation.c                    |   80 +++-
+ fs/nfs/delegation.h                    |    1 +
+ fs/nfs/dir.c                           |   83 ++--
+ fs/nfs/direct.c                        |    7 +-
+ fs/nfs/dns_resolve.c                   |    2 +-
+ fs/nfs/file.c                          |   49 ++-
+ fs/nfs/flexfilelayout/flexfilelayout.c |   34 +-
+ fs/nfs/fs_context.c                    | 1437
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfs/fscache-index.c                 |    6 +-
+ fs/nfs/fscache.c                       |   20 +-
+ fs/nfs/fscache.h                       |    8 +-
+ fs/nfs/getroot.c                       |   73 +--
+ fs/nfs/inode.c                         |   10 +-
+ fs/nfs/internal.h                      |  143 +++---
+ fs/nfs/mount_clnt.c                    |    2 -
+ fs/nfs/namespace.c                     |  146 +++---
+ fs/nfs/nfs2xdr.c                       |   12 +-
+ fs/nfs/nfs3_fs.h                       |    2 +-
+ fs/nfs/nfs3client.c                    |    6 +-
+ fs/nfs/nfs3proc.c                      |   28 +-
+ fs/nfs/nfs3xdr.c                       |    5 +-
+ fs/nfs/nfs42proc.c                     |   40 +-
+ fs/nfs/nfs4_fs.h                       |   19 +-
+ fs/nfs/nfs4client.c                    |   99 ++---
+ fs/nfs/nfs4file.c                      |    1 +
+ fs/nfs/nfs4namespace.c                 |  298 +++++++------
+ fs/nfs/nfs4proc.c                      |  104 +++--
+ fs/nfs/nfs4renewd.c                    |    5 +-
+ fs/nfs/nfs4state.c                     |    7 +-
+ fs/nfs/nfs4super.c                     |  257 ++++-------
+ fs/nfs/nfs4trace.c                     |    4 +
+ fs/nfs/nfs4trace.h                     |  237 ++++++++--
+ fs/nfs/nfs4xdr.c                       |   17 +-
+ fs/nfs/nfstrace.h                      |  279 +++++++++---
+ fs/nfs/pnfs.c                          |    4 +-
+ fs/nfs/pnfs.h                          |    8 +-
+ fs/nfs/pnfs_nfs.c                      |    7 +-
+ fs/nfs/proc.c                          |   24 +-
+ fs/nfs/read.c                          |    7 +-
+ fs/nfs/super.c                         | 2218 ++++++++++++---------------------
+-----------------------------------------------------------
+ fs/nfs/write.c                         |   32 +-
+ include/linux/nfs_fs.h                 |    3 +
+ include/linux/nfs_fs_sb.h              |    1 +
+ include/linux/nfs_xdr.h                |   11 +-
+ include/linux/sunrpc/auth.h            |    2 -
+ include/linux/sunrpc/gss_api.h         |    7 +-
+ include/linux/sunrpc/gss_krb5.h        |    2 +-
+ include/trace/events/rpcrdma.h         |   12 +-
+ include/trace/events/sunrpc.h          |    1 +
+ net/sunrpc/addr.c                      |    2 +-
+ net/sunrpc/auth.c                      |   49 ---
+ net/sunrpc/auth_gss/auth_gss.c         |    1 -
+ net/sunrpc/auth_gss/gss_krb5_mech.c    |   12 +-
+ net/sunrpc/auth_gss/gss_krb5_seal.c    |    8 +-
+ net/sunrpc/auth_gss/gss_krb5_unseal.c  |    6 +-
+ net/sunrpc/auth_gss/gss_krb5_wrap.c    |   16 +-
+ net/sunrpc/auth_gss/gss_mech_switch.c  |   31 +-
+ net/sunrpc/auth_gss/svcauth_gss.c      |    4 +-
+ net/sunrpc/clnt.c                      |    1 +
+ net/sunrpc/sched.c                     |    4 +-
+ net/sunrpc/xdr.c                       |    2 +-
+ net/sunrpc/xprtrdma/backchannel.c      |    4 +
+ net/sunrpc/xprtrdma/frwr_ops.c         |  104 ++---
+ net/sunrpc/xprtrdma/rpc_rdma.c         |   20 +-
+ net/sunrpc/xprtrdma/transport.c        |   17 +-
+ net/sunrpc/xprtrdma/verbs.c            |  213 +++++----
+ net/sunrpc/xprtrdma/xprt_rdma.h        |   14 +-
+ 71 files changed, 3404 insertions(+), 3072 deletions(-)
+ create mode 100644 fs/nfs/fs_context.c
+
