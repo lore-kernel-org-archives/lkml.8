@@ -2,262 +2,427 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9726C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EFCC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24D20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246E221775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5Ofpsxn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smav1Dn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgBFQqm (ORCPT
+        id S1727864AbgBFQqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:46:42 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55443 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbgBFQqm (ORCPT
+        Thu, 6 Feb 2020 11:46:46 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36899 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727593AbgBFQqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:46:42 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so708230wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 08:46:39 -0800 (PST)
+        Thu, 6 Feb 2020 11:46:45 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so812634wmf.2;
+        Thu, 06 Feb 2020 08:46:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=loAhNVzsToCeFUtt4Vedin+3l88IYbYUEEJOgJLXKKQ=;
-        b=L5OfpsxnjoEDYBIyYUTzAo7zosppZZUJ8kJHjeUACZsXoPWR8SKkQUeq6LppLGKR6M
-         mnSEjWYZqSpbLbRema8M0rmg0kR1aQbjDXHseKLfCZnshvsaN8QB1dSF7FHMLOSfZcE6
-         DD4UFj4ZFEvYLtpwHzP4HUOy/8NP8bG4K0unxTECGHq3823dWCrH/XB1xhdxXgAAPZVi
-         EQpvoP3K3kAaHMRaYvpz2uYeJbhGd8hSR1XdBajUri03bLMH6F03fHG2J5YHyuRxmAgV
-         2qTf2k/aMNwTUAorK20DCJ5+X0oj9PyHl2i2l8+wUz/fiJi2r1SGXuEaPuFGqKGCLBV9
-         1Msg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wUnXfgSgnNmu56cvC7CfJncoSF9G9qEgH4w6vXBb080=;
+        b=smav1Dn7EXl+YvPaqnsrkK5OdII5/B1+7blMjoYdZa0BjMqwjSHtI0PjEpNz5sgLwj
+         XKL+K4YzdykrLslpE0JlpHkktTOwZ2qWiBcbLKbfMt5MYlHlnWzJGeZhz9qG8vqKJ1LK
+         Bs93cYobln1zqsFXkrzfj3tuewZiatYRGbVNhdZ9fg18QOIk/4NSFlZ2EXyyVGLgOqdD
+         /zVRtfSLDaSzlEgfo3bzYJobFGwdiKIaUheLJvaD3ElY5Q0fJ02zzkuUe2kYqzimbWSP
+         5FUsJQWImVm9dxAlj5YwaS2CG1TewhvpLRE3zwi6yrJrSxwhhZWWvQdS+xL+cxitBgh5
+         fFcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=loAhNVzsToCeFUtt4Vedin+3l88IYbYUEEJOgJLXKKQ=;
-        b=RAxAgLdsJz67TcF0ATLSKIIExRhQu1cLDiPwfgevBvugbAaXM5tZuCgKmQH2SDSfNC
-         +A5M5aM4R1Kvt2dBSlyWfJBO8+hALlFzRIix849H9CviV5n56FgN53nAZABhAmYERQWN
-         eEoZDQglNGaos4/uOWxUFmgQQA6klCFQ8Y/8BUtJDMwvQaOIRaiGhjaeWl9LBj0k7Cva
-         CgvXdCTrGbekNMXkkSrcVn4HYhojFvJS1nylPr8h9PDtu4n/7NlPubv8X8IRHunNivmj
-         GxfIgWhXp+/r6am+ibvt5YOOtfYmfmPZSGQG8iz3JotKbJzZ69CLRrh5QZ3guq7iRs5S
-         nIYg==
-X-Gm-Message-State: APjAAAWesU9ELN1GbDQDJHZUKAMcgX1cm2Yfq0ge+VRQ9K7kPb5R1wUH
-        s/IYKbRTgdQr9/wDl78ia+CU01KrmpE=
-X-Google-Smtp-Source: APXvYqxUIGgf+91RMGU87pH6ddlf8OdSzFvpq7OzlYWuVQVnJEXRmpnLXxWRpBO01WNSdSgh4m7AEw==
-X-Received: by 2002:a1c:4383:: with SMTP id q125mr5516331wma.88.1581007598592;
-        Thu, 06 Feb 2020 08:46:38 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3889:2de0:ee2:ab1f? ([2a01:e34:ed2f:f020:3889:2de0:ee2:ab1f])
-        by smtp.googlemail.com with ESMTPSA id f189sm114612wmf.16.2020.02.06.08.46.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 08:46:38 -0800 (PST)
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-To:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
-Date:   Thu, 6 Feb 2020 17:46:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wUnXfgSgnNmu56cvC7CfJncoSF9G9qEgH4w6vXBb080=;
+        b=mlrXqUk36FRTtnv/FxcSBvDl4DFKsbyS4PLMjaejuzbyLRp/Q4y1mXjcmg54YSGrpD
+         ubFROiaAHR+oBQ2+PZ7pb/rJW0h1C7Ivtx+PxKOypUThVA/7WqA0M9ltH1oiwhqbPtG6
+         kYTqJ9Dcu8ATUGojZ9D8EhjjqEsTTai2fkDfLh8opcPd9sfVxe3AN1M+VO5+8u7YkL5o
+         sCz2GoOMeATWipdF38Z7JMo4+U2/5E/HkGpSiEUoEAZWr/RXWb+0jseCkE3rUbpyP+iO
+         Ey4fI1lYK9UUoXxSisM3n10HMX8yZ8sAOJ+ZiT3jfZaaGBIO8J21dtRTDky1vgP0aV12
+         Wxfw==
+X-Gm-Message-State: APjAAAUTfqz4A378kYpJVm+LzAw2wxgL1+eaZ8GyPPVfZhxIJ0Wtl6Mp
+        p386lo61T9DcShMfkITp7dg=
+X-Google-Smtp-Source: APXvYqwMljafdZnMQ27eNfgVJEqR6DehQRw+E3wLOJOJft/Jq12Ak3Z13XYi3dQ8phS3P/ewVHFkpw==
+X-Received: by 2002:a1c:a515:: with SMTP id o21mr5574898wme.85.1581007601957;
+        Thu, 06 Feb 2020 08:46:41 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id q124sm14476939wme.2.2020.02.06.08.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 08:46:40 -0800 (PST)
+Date:   Thu, 6 Feb 2020 17:46:39 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, bjorn@helgaas.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
+Message-ID: <20200206164639.GA2182011@ulmo>
+References: <20200103174935.5612-1-vidyas@nvidia.com>
+ <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
+ <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
+ <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
+ <20200120111042.GA203160@ulmo>
+ <20200120151849.GA24402@e121166-lin.cambridge.arm.com>
+ <20200121134435.GC899558@ulmo>
+ <20200123104941.GA7179@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <20200123104941.GA7179@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Amit,
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/2020 15:13, Amit Kucheria wrote:
-> Hi Vasily,
-> 
-> For this entire series, the DTS files don't contain any trip points.
-> Did I miss some other series?
-> 
-> At a minimum, you should add some "hot" or "critical" trip points
-> since then don't require a cooling-map with throttling actions. If you
-> have "passive" trip points, then you need to provide cooling-maps.
+On Thu, Jan 23, 2020 at 10:49:41AM +0000, Lorenzo Pieralisi wrote:
+> On Tue, Jan 21, 2020 at 02:44:35PM +0100, Thierry Reding wrote:
+> > On Mon, Jan 20, 2020 at 03:18:49PM +0000, Lorenzo Pieralisi wrote:
+> > > On Mon, Jan 20, 2020 at 12:10:42PM +0100, Thierry Reding wrote:
+> > >=20
+> > > [...]
+> > >=20
+> > > > > > Currently the BSP has the kernel booting through Device Tree me=
+chanism
+> > > > > > and there is a plan to support UEFI based boot as well in the f=
+uture software
+> > > > > > releases for which we need this quirky way of handling ECAM.
+> > > > > > Tegra194 is going to be the only and last chip with this issue =
+and next chip
+> > > > > > in line in Tegra SoC series will be fully compliant with ECAM.
+> > > > >=20
+> > > > > ACPI on ARM64 works on a standard subset of systems, defined by t=
+he
+> > > > > ARM SBSA:
+> > > > >=20
+> > > > > http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_=
+Base_System_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
+> > > >=20
+> > > > I don't understand what you're saying here. Are you saying that you=
+ want
+> > > > to prevent vendors from upstreaming code that they need to support =
+their
+> > > > ACPI based platforms? I understand that the lack of support for pro=
+per
+> > > > ECAM means that a platform will not be SBSA compatible, but I wasn't
+> > > > aware that lack of SBSA compatibility meant that a platform would be
+> > > > prohibited from implementing ACPI support in an upstream kernel.
+> > >=20
+> > > ACPI on ARM64 requires a set of HW components described in the SBSA.
+> > >=20
+> > > If those HW requirements are not fulfilled you can't bootstrap an ARM=
+64
+> > > system with ACPI - it is as simple as that.
+> >=20
+> > That's an odd statement. We do in fact have an ARM64 system that doesn't
+> > fulfill the ECAM requirement and yet it successfully boots with ACPI.
+>=20
+> I know very well (but that's not a reason to break the PCIe
+> specification).
+>=20
+> Still, the mistake you are making is thinking that ACPI compliancy
+> stops at the MCFG quirk. Adding another quirk to the MCFG list will make
+> PCI enumerates but there is more to that, eg MSI/IOMMU and that's
+> just an example.
+>=20
+> There are platforms in that MCFG list that eg can't do MSI which
+> basically means they are useless - you look at it as yet another hook
+> into MCFG, I look at it with history in mind and from an ACPI ARM64
+> maintainership perspective.
+>=20
+> So first thing to do is to post full support for this host controller
+> inclusive of MSI/INTx (which AFAICS is another piece of HW that is
+> not SBSA compliant since DWC uses a funnel to trigger MSIs) and
+> IOMMU, then we will see how to proceed.
+>=20
+> Look at this (and again, that's just an example but AFAICS it applies to
+> this host bridge as well):
+>=20
+> https://lore.kernel.org/linux-pci/VE1PR04MB67029FB127DBF4A725CB9698904E0@=
+VE1PR04MB6702.eurprd04.prod.outlook.com
 
-Except I'm misunderstanding the bindings, a thermal zone must define
-these required properties:
+So it turns out we indeed have the same issue with MSIs since Tegra194
+uses the same DesignWare controller that others do (looks like at least
+HiSilicon and Annapurna Labs are in the same boat). That said, most
+drivers fallback to legacy interrupts and that works fine. Agreed that
+it isn't ideal, but it's about as good as it's going to get on this
+hardware.
 
-- polling-delay
-- polling-delay-passive
-- thermal-sensors
-- trips
-- cooling-maps
+> > >                                             It is not even appropriate
+> > > to discuss this on a Linux mailing list anymore since it is HW
+> > > requirements and it has been public information since ACPI on ARM64 w=
+as
+> > > first enabled.
+> >=20
+> > Erm... we're discussing Linux patches. Why would it be inappropriate to
+> > discuss them on a Linux mailing list?
+>=20
+> I am not discussing Linux patches at all - I am telling you that the
+> DWC host controller is not a) PCIe spec compliant b) SBSA compliant
+> and there is nothing to review from a Linux kernel code perspective.
+>=20
+> This is just another quirk to enumerate with ACPI a non-compliant
+> system, if Bjorn is willing to take it go for it.
 
+Yeah, I'd like to hear Bjorn's opinion on this. I understand that this
+is far from an ideal situation and I'd much prefer that this chip was
+compliant. But for historical reasons it isn't. This chip was designed
+before SBSA became the quasi standard. Tegra194 also isn't a server
+chip to begin with, so SBSA compliance would likely not have been the
+main objective.
 
-> Since this series has been merged, could you please follow up with a
-> fixup series to add the trip points?
-> 
-> Regards,
-> Amit
-> p.s. We should catch all this automatically, I'll send out yaml
-> bindings for the thermal framework soon that should catch this stuff.
+> > > > > These patches will have to be carried out of tree, the MCFG quirk
+> > > > > mechanism (merged as Bjorn said more than three years ago) was su=
+pposed
+> > > > > to be a temporary plaster to bootstrap server platforms with teet=
+hing
+> > > > > issues, the aim is to remove it eventually not to add more code t=
+o it
+> > > > > indefinitely.
+> > > >=20
+> > > > Now, I fully agree that quirks are suboptimal and we'd all prefer i=
+f we
+> > > > didn't have to deal with them. Unfortunately the reality is that
+> > > > mistakes happen and hardware doesn't always work the way we want it=
+ to.
+> > > > There's plenty of other quirk mechanisms in the kernel, and frankly=
+ this
+> > > > one isn't really that bad in comparison.
+> > >=20
+> > > Because you don't have to maintain it ;) - I think I said what I had =
+to
+> > > say about the MCFG mechanism in the past - it has been three years
+> > > and counting - it is time to remove it rather that adding to it.
+> >=20
+> > What makes you think you can simply remove this without breaking support
+> > for all of the devices that currently rely on the quirks?
+>=20
+> Don't you think I know ? I said "eventually" for a reason, read what
+> I write.
 
-+1
+I read what you wrote. My point is that even "eventually" things are
+going to break if you just rip out the quirks.
 
-There was a small discussion about converting the binding to a schema:
+> > > > > So I am afraid but this quirk (and any other coming our way) will=
+ not be
+> > > > > merged in an upstream kernel anymore - for any queries please put=
+ Nvidia
+> > > > > in touch.
+> > > >=20
+> > > > Again, I don't understand what you're trying to achieve here. You s=
+eem
+> > > > to be saying that we categorically can't support this hardware beca=
+use
+> > > > it isn't fully SBSA compatible.
+> > >=20
+> > > I am not trying to achieve anything - I am just stating public
+> > > information - let me repeat it again for interested readers: to
+> > > bootstrap an ARM64 system with ACPI the platform HW design must follow
+> > > the SBSA guidelines.
+> >=20
+> > Can you clarify for me where I can find this public information? What
+> > I've been able to find suggests that that SBSA-compliant systems would
+> > typically run ACPI, but I can't find anything about SBSA compliance
+> > being a prerequisite for booting a system with ACPI.
+>=20
+> https://developer.arm.com/architectures/platform-design/server-systems
+>=20
+> Read: SBSA/SBBR
+>=20
+> /Documentation/arm64/arm-acpi.rst
+>=20
+> > I can understand why someone might *wish* for that to always be true,
+> > but it seems to be a bit far removed from reality.
+>=20
+> It is reality and it is not a *wish*, Nvidia will comply - even if
+> *eventually* we end up merging this code.
 
-https://www.spinics.net/lists/devicetree/msg332424.html
+I already said that we reported these findings to the hardware team and
+this is hopefully going to allow us to be SBSA compliant in future
+chips. However, it's too late for Tegra194 and we can't retroactively
+fix it.
 
+> > > > Do you have any alternative suggestions on how we can support this =
+in an
+> > > > upstream kernel?
+> > >=20
+> > > Booting with a device tree ?
+> >=20
+> > We can already do that, but should that prevent us from making UEFI and
+> > ACPI an alternative boot mechanism?
+>=20
+> Why do you need ACPI support ? What for ?
 
+Customers have requested it and they want to be able to use an upstream
+kernel.
 
-> On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->>
->> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
->> H6 and R40 SoCs.
->>
->> v8:
->>         - [vasily] Address more Maxime's comments for dt-schema
->>         - [vasily] Add myself to MAINTAINERS for the driver and schema
->>         - [vasily] Round calibration data size to word boundary for H6 and A64
->>         - [vasily] Change offset for A64 since it reports too low temp otherwise.
->>                    Likely conversion formula in user manual is not correct.
->>
->> v7:
->>         - [vasily] Address Maxime's comments for dt-schema
->>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
->>         - [vasily] Add Maxime's a-b to the driver patch
->>
->> v6:
->>         - [ondrej, vasily] Squash all driver related changes into a
->>                            single patch
->>         - [ondrej] Rename calib -> calibration
->>         - [ondrej] Fix thermal zone registration check
->>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
->>         - [ondrej] Rework scale/offset values, H6 calibration
->>         - [ondrej] Explicitly set mod clock to 24 MHz
->>         - [ondrej] Set undocumented bits in CTRL0 for H6
->>         - [ondrej] Add support for A83T
->>         - [ondrej] Add dts changes for A83T, H3, H5, H6
->>         - [vasily] Add dts changes for A64
->>         - [vasily] Address Maxime's comments for YAML scheme
->>         - [vasily] Make .calc_temp callback mandatory
->>         - [vasily] Set .max_register in regmap config, so regs can be
->>                    inspected using debugfs
->>
->> Ondrej Jirman (4):
->>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
->>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
->>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
->>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
->>
->> Vasily Khoruzhick (1):
->>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
->>
->> Yangtao Li (2):
->>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
->>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
->>     bindings
->>
->>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
->>  MAINTAINERS                                   |   8 +
->>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
->>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
->>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
->>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
->>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
->>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
->>  drivers/thermal/Kconfig                       |  14 +
->>  drivers/thermal/Makefile                      |   1 +
->>  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
->>  11 files changed, 985 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
->>  create mode 100644 drivers/thermal/sun8i_thermal.c
->>
->> --
->> 2.24.1
->>
+> > > > We realized a while ago that we cannot achieve proper ECAM on Tegra=
+194
+> > > > because of some issues with the hardware and we've provided this as
+> > > > feedback to the hardware engineers. As a result, the next generatio=
+n of
+> > > > Tegra should no longer suffer from these issues.
+> > >=20
+> > > We will bootstrap next generation Tegra with ACPI then, there are
+> > > SBSA tests available for compliancy - again, that's a matter for
+> > > Nvidia and Arm to settle, not a mailing list discussion.
+> >=20
+> > I don't understand why you keep insisting on this. The mailing lists are
+> > where kernel patches are discussed, are they not?
+>=20
+> See above.
+>=20
+> > > > As for Tegra194, that chip taped out two years ago and it isn't pos=
+sible
+> > > > to make it fully ECAM compliant other than by revising the chip, wh=
+ich,
+> > > > frankly, isn't going to happen.
+> > > >=20
+> > > > So I see two options here: either we find a way of dealing with thi=
+s, by
+> > > > either merging this quirk or finding an alternative solution, or we=
+ make
+> > > > the decision that some hardware just can't be supported.
+> > > >=20
+> > > > The former is fairly common, whereas I've never heard of the latter.
+> > >=20
+> > > What does this mean ? Should I wreck the upstream kernel to make it b=
+oot
+> > > with ACPI on *any* ARM64 platform out there then ?
+> >=20
+> > Heh... you must have a very low opinion of the upstream kernel if you
+> > think merging these 100 lines of code is going to wreck it.
+>=20
+> I have a very high opinion of the upstream kernel and that's why
+> as I said above I think in terms of overall ACPI ARM64 maintainership
+> rather than a platform quirk to get ACPI PCI enumeration going.
 
+=46rom a maintenance point of view things aren't going to change much just
+because we add these additional quirks. These are for the same IP that's
+already supported by other quirks for other platforms and the code lives
+entirely in the DesignWare driver, so I don't see how this negatively
+impacts maintainability of the kernel.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> > And if you look at the patch, the bulk (95/109 lines) is actually in the
+> > Tegra194 PCIe driver and only 14/109 lines are added to the MCFG quirks.
+> > That's hardly the kind of change that's going to wreck the kernel.
+>=20
+> See above, show us the rest of the story.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Like I said, not much we can do about MSI support without more driver-
+specific code. But since we can fallback to legacy interrupts, things
+end up working fine.
 
+Again, I fully realize that this isn't ideal and I'd rather prefer we
+didn't have to add this. But I'm also realistic and understand that
+hardware designs aren't always perfect, no matter how much we want them
+to be. The best we can do is take the lessons learned and try to make
+the next chip better.
+
+> > > My stance is clear above and the ACPI PCI programming model - inclusi=
+ve
+> > > of firmware - has been there since ACPI was deployed, if ACPI support
+> > > is required HW must comply, either that or it is out of tree patches
+> > > and I can't be blamed for that.
+> >=20
+> > Looking at the existing quirks table, there's evidently a number of
+> > people that didn't get the memo. The issue seems to be fairly common,
+> > yet for some reason you're singling out Tegra194.
+>=20
+> The issue is not very common at all. I said it before and I repeat it
+> again: those MCFG quirks were merged more than three years ago to help
+> bootstrap ACPI ARM64 ecosystem on early HW and ACPI for ARM64 is meant
+> for server (SBSA/SBBR compliant) systems, for other platforms DT is the
+> firmware of choice, ACPI on those does not work well (and *I* will have
+> to work around it).
+
+Like I said, Tegra194 is not a server chip. But it turns out that people
+want to use ACPI on non-server systems as well. The website that you
+linked to above:
+
+	https://developer.arm.com/architectures/platform-design/server-systems
+
+even says that SBSA is being extended to other segments. So, again, this
+means that we either have to say, collectively, that we don't want to
+support ACPI on ARM64 except on systems that are fully SBSA compliant or
+we have to find a way to make things work. I'm not sure we really want
+the first option and the quirk is a good compromise to get us the second
+option.
+
+> I am not singling out anybody, read the mailing lists and you will
+> realize. You asked for this patch to be reviewed, I told you what
+> my thoughts are and this patch implications - you want to go ahead,
+> ask Bjorn to merge it but at least we do it with the broader
+> consequences in mind.
+
+You seemed to be categorically rejecting this patch only because the
+system wasn't fully SBSA compliant. Given that other, non-SBSA compliant
+devices are currently supported, it certainly seemed like you were
+singling out.
+
+Anyway, like you said, it's ultimately up to Bjorn to take this or not,
+so it's not productive to go back and forth on this between the two of
+us.
+
+Perhaps a more productive way to go forward would be to look at what you
+had in mind in terms of a deprecation plan for the MCFG quirks. One idea
+that came up as we were discussing this internally was to move the quirk
+code into the DesignWare driver. That is, instead of having this code
+live in the ACPI code and referencing the DesignWare code, it'd be the
+DesignWare driver itself that would initialize PCI. This would have the
+added benefit that MSIs could be used, since the DesignWare driver does
+have the means of decoding which MSI occurred. The same code that is
+used to do this when booting from DT could be reused when booting from
+ACPI.
+
+The benefits here would be that we'd move the code out of the quirks, so
+we'd be effectively relying less on those quirks, which in turn would
+help to deprecate them.
+
+Now, I'm not exactly sure I understand your concerns regarding
+maintainability of these quirks, so maybe that proposal isn't really
+what you're looking for. Perhaps you have a better idea?
+
+Thierry
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl48QuoACgkQ3SOs138+
+s6FINw/+IiaQso2PWwbDpJndE6aicM2XkpjFzV8J16kq+U5e3Tp/+hRBliLM+dKa
+hMPiX7tZyozHYad2ciK8PzFbxzMYgfc4Hh8z/3wkdk0igOnj81CyXgleL8CiDiVh
+U2yCP0y+yj30yxIds4j7jPT/+lzEaOmwMy7OYRsbKz4GeJox0JgEzZxo3J+8Uceo
+nyJcFPKt9LsWatFC7fVVmouEzJV7N69accsrjO0e1jB17Fe8VNy/BY0ha9obJ2UU
++rq1u7SMjQLxeJVMf/GEQ8e1dIJOMN2QorsLvPjRCh08p/CGXaF4NxesEIld2zoN
+1o989PFShzOH9fKGOehKFjhhQidVBvJCqdgC8FE6K4OaPrVjDKLEl1W2d6+xRsKT
+pWf1A6Amalo+Oo9RPWu89F/FUemp5ubfEMuUf0AEpkZYNZwdLGzJeQ4y99EGpuUA
+gYpUi/cxjLFogPabdu15O12kzRuP5H8AWtdgXWNK0v4bpVI5U4Nn0ELT/PFXI9OP
+aq19f0RjOFMhW7gEtZHRiduLZbNvYj9j5eZ3mLSW2YNXpQLjYe2zSVyojxBntvFZ
+0Uacra+kSs9UWBOmULkb2aaaZhxM2Ai20FmDZU03TsLB1l87/TsT6CpObTSAfedf
+XCr4PK7QVkt4Q8GBRc/qMQTDMl3IaLpEKjebDJo0DMBFTuJ31jM=
+=Nx6C
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
