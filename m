@@ -2,135 +2,113 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC5BC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515E9C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6DD206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28256214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7G9Vc2A"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oVc/RybZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgBFLH2 (ORCPT
+        id S1727530AbgBFLKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:07:28 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35122 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727478AbgBFLH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:07:27 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y73so2970259pfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:07:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B8bvNpykVDgQC9hk3603Rl2GIFzoG6wwUdwHDUabs1k=;
-        b=O7G9Vc2AuE7mWt1YBeW9+Ncjcl07/rGGQN4eDuXaG/UUfLFuxP67P/JA+D+N76FpW3
-         xmMRSR/LhBebqdf6QRe8A0SeF3nIYkxiQqEekdjDPArG7ziwyIeiA5IoibNZrhxP4U2l
-         9lr/87MlY0pDwN7xQ9BYGahOhhJLdYRua93qFY8i1S8Ys1MIW5v6fIuw6fE01GtRztld
-         XnSAQyEzMPlVl05jaW/a9RiELZgQw/N3jXa0G+JEIWQrXUvAT6ZdH7+5jmHPdYcaq/z8
-         +LleDSauaxtYE9cmn0D7JE3m8fpEEzUCcNOrJ6fmhQCyF0NTUNPLP954mm8i7rRobQOZ
-         kAqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B8bvNpykVDgQC9hk3603Rl2GIFzoG6wwUdwHDUabs1k=;
-        b=O/ZlJD35HQC/05NatRCS9ZECtkn0l8LYRBZYF6AQEL77zuWyGXbC1czAVjSxHdyNc0
-         MVNPv13SE6zpcW/+nKGMPewXq7PDSIgLQ1GeQvZeugoekYy09DfvSiJ1jSl7a+U64Q30
-         An/IdSQadlXaFKmiJgi2dGAQFOy5zgThEzQNgAOgVKvvIK+UtXWfNY9liiNpFFDLqCMT
-         AyVxBnNRWPt7TBMAYweFKm7kwZYZTesGRtJNLlgTsmydjooThOrAAy8tvSztrUdFcgbu
-         IwiSPbnE3+p5Qg37y1sMJywq72MJ7+Tgxi+WycH40psrZDCdL/YyI1KuR3p9ITNjvg8c
-         1FbA==
-X-Gm-Message-State: APjAAAU9CdF4uY9iBlB+5H7pH9dFDgr3aJ5U+g5gFeJ8/bi4bD93JQvh
-        PRsoAn7eJP2Dixqu1HfkXLG1IwU=
-X-Google-Smtp-Source: APXvYqz0wz9KCKiUmNhqSDan+ujm7+gwNzv7SyueZhaDtSnhgiRcO6R1GnrXKZ+e1JtT1HIrlYl7rQ==
-X-Received: by 2002:a17:902:9b93:: with SMTP id y19mr3063945plp.89.1580986859115;
-        Thu, 06 Feb 2020 03:00:59 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([218.248.46.83])
-        by smtp.gmail.com with ESMTPSA id y75sm3068441pfb.116.2020.02.06.03.00.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Feb 2020 03:00:58 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Thu, 6 Feb 2020 16:30:51 +0530
-To:     "Eric W. Biederman" <ebiederm@gmail.com>
-Cc:     madhuparnabhowmik10@gmail.com, ebiederm@xmission.com,
-        oleg@redhat.com, christian.brauner@ubuntu.com, guro@fb.com,
-        tj@kernel.org, linux-kernel@vger.kernel.org, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, frextrite@gmail.com
-Subject: Re: [PATCH] signal.c: Fix sparse warnings
-Message-ID: <20200206110051.GA4531@madhuparna-HP-Notebook>
-References: <20200205172437.10113-1-madhuparnabhowmik10@gmail.com>
- <87wo90myhj.fsf@x220.int.ebiederm.org>
+        Thu, 6 Feb 2020 06:10:08 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:58788 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727456AbgBFLKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:10:08 -0500
+Received: from zn.tnic (p200300EC2F0B4B00DD2F869FBA3C2645.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4b00:dd2f:869f:ba3c:2645])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 817641EC0304;
+        Thu,  6 Feb 2020 12:10:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1580987406;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=pXe8SYdnVSzszvpvgVbWGzJVV3VL4bu8127SNhL5Ys0=;
+        b=oVc/RybZz7qAJk/F3mhpReMzBViCnUdlN1po9m7V3XyJJratrE3Bd6gHGMEownoy6y8bp2
+        ODdJ+Jh9MgNU6Kx6+dhmD9x4jE9Gt+/VqrP+P0WXCqYKQqd/q1MFGJBGOrRUq/j7y92p2F
+        mxnfjHeRvzxWhYZElVm3JQk7iXZr5TQ=
+Date:   Thu, 6 Feb 2020 12:10:01 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
+Message-ID: <20200206110811.GC9741@zn.tnic>
+References: <20200205125831.20430-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87wo90myhj.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200205125831.20430-1-prarit@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 04:59:52PM -0600, Eric W. Biederman wrote:
-> madhuparnabhowmik10@gmail.com writes:
-> 
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> >
-> > This patch fixes the following two sparse warnings caused due to
-> > accessing RCU protected pointer tsk->parent without rcu primitives.
-> >
-> > kernel/signal.c:1948:65: warning: incorrect type in argument 1 (different address spaces)
-> > kernel/signal.c:1948:65:    expected struct task_struct *tsk
-> > kernel/signal.c:1948:65:    got struct task_struct [noderef] <asn:4> *parent
-> > kernel/signal.c:1949:40: warning: incorrect type in argument 1 (different address spaces)
-> > kernel/signal.c:1949:40:    expected void const volatile *p
-> > kernel/signal.c:1949:40:    got struct cred const [noderef] <asn:4> *[noderef] <asn:4> *
-> > kernel/signal.c:1949:40: warning: incorrect type in argument 1 (different address spaces)
-> > kernel/signal.c:1949:40:    expected void const volatile *p
-> > kernel/signal.c:1949:40:    got struct cred const [noderef] <asn:4> *[noderef] <asn:4> *
-> >
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > ---
-> >  kernel/signal.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index 9ad8dea93dbb..8227058ea8c4 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -1945,8 +1945,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
-> >  	 * correct to rely on this
-> >  	 */
-> >  	rcu_read_lock();
-> > -	info.si_pid = task_pid_nr_ns(tsk, task_active_pid_ns(tsk->parent));
-> > -	info.si_uid = from_kuid_munged(task_cred_xxx(tsk->parent, user_ns),
-> > +	info.si_pid = task_pid_nr_ns(tsk, task_active_pid_ns(rcu_dereference(tsk->parent)));
-> > +	info.si_uid = from_kuid_munged(task_cred_xxx(rcu_dereference(tsk->parent), user_ns),
-> >  				       task_uid(tsk));
-> >  	rcu_read_unlock();
-> 
-> 
-> Still wrong because that access fundamentally depends upon the
-> task_list_lock no the rcu_read_lock.  Things need to be consistent for
-> longer than the rcu_read_lock is held.
->
-Okay, then how about something like rcu_dereference_protected(tsk->parent, lockdep_is_held(&tasklist_lock))?
-Let me know if this looks fine to you.
+On Wed, Feb 05, 2020 at 07:58:31AM -0500, Prarit Bhargava wrote:
 
-Thank you,
-Madhuparna
+> Subject: Re: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
 
-> This patch makes sparse happy and confuses programmers who are trying to
-> read the code.
+That subject is unreadable for humans.
+
+> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
+> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
+> with the valid field (bit 63) set, the uncorrected error field (bit 61)
+> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
+> an MCA Error Code (bits [15:0]) of 0x0005."
 > 
-> 
-> Eric
+> Block these spurious errors from the console and logs.
+
+Are they being hit in the wild or why do we need this?
+
+> Links to Intel Specification updates:
+> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
+> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
+> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
+> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
+
+Those links tend to get stale with time. If you really want to refer to
+the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
+them there as an attachment and add the link to the entry to the commit
+message.
+
+> Signed-off-by: Alexander Krupp <centos@akr.yagii.de>
+
+What's that Signed-off-by: tag supposed to mean?
+
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: linux-edac@vger.kernel.org
+> ---
+>  arch/x86/kernel/cpu/mce/core.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+
+If at all, this should be done by adding an intel_filter_mce() function
+and called from filter_mce() so that such errors don't get logged.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
