@@ -2,254 +2,156 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AD4C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DE7C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA0020730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0152B20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:05:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7XFAFWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgBFXA4 convert rfc822-to-8bit (ORCPT
+        id S1727028AbgBFXFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 18:00:56 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:47061 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBFXAz (ORCPT
+        Thu, 6 Feb 2020 18:05:12 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40505 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgBFXFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 18:00:55 -0500
-Received: by mail-yb1-f195.google.com with SMTP id p129so283451ybc.13;
-        Thu, 06 Feb 2020 15:00:54 -0800 (PST)
+        Thu, 6 Feb 2020 18:05:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t14so634959wmi.5;
+        Thu, 06 Feb 2020 15:05:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ami2hxXB5JmpdB3plbUF7Q0OnVlJKfYsRMoJO0yAKHw=;
+        b=h7XFAFWk1Ab2fpnR3MhZ5UYyj4vFb9Fz2M4BCPwBZkSinKWu30iiU6HCmKLIttLub7
+         5vMZ6ebx4CijeHEJG9jhMLNY8yWCxNGJLlZ9g1zh70ZZ9gSxx8lVSDCine3EE19V0VpR
+         ZaLVXWeBr+U6NbhDhD28zfa8imFUqA/BfLBWimZGtVKElNbMSAsZ/bIFyKlhRXe88Q5H
+         5wbHfn0FxR+aRVgq6QdKs7hmF6XPUar6b1WxV/MLW2CZwrg0d9lWBjajZ2Z/9ZLTX6DW
+         rjGqMqZmJ4dZ4cBPN9EklULYD8E/ZZ+bO/XABt/cNZXnNIqKVJTDsHxXAe4I+t39QLRl
+         Rl5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VQYnEkzdsx6FcrPlo/D/oQKv9dN+G7wSduoN4f5PK8M=;
-        b=ug5LAawbJXxGhu9pqVPQRZlGLuXTRaUxcms89eTohEXyh8dNUBk6rrIqcloMMhCxvF
-         28BX8wKn6tLa9a4Vc8doUkcLc7M9R7mHnPFraHtmyt4nnFrdhv/EYWhxGtacn5TqOtp/
-         /vkHSYq62rtzDWEFILR5iO/SuDlzL7/9K9b9Q0QVItnJip9PjxMrJxWQispwRNx9lbA4
-         IuLsj82sUrLA5EWaq9Xnbf1ulUDcgg25mRsVrXKCtY6gAccmn/Gvr0lYcHIGvHPk/EXo
-         vZiPu4X6RFIoyqRzv496La3zva7P/HotY2dSu0DYnTeMJbbkPAJLoMe7euNRyWdHMsXM
-         vNuQ==
-X-Gm-Message-State: APjAAAXAmyPcmhhXyxmxY3UgvQLdyq/quoI7LCLKVMV3aiw5uYk+Dd4T
-        KFopE8ccXJXtMQyjz0OG/cYrzT2l8ED8NnF+/2c=
-X-Google-Smtp-Source: APXvYqyOB0JukSiXvpxti6fIGil3NzpwdBO3vGFGVcPJKWqMTSvfKT3wEmNZMFtDMAByjGMe2TA9r8AsZw8mPtb6prE=
-X-Received: by 2002:a25:ccc6:: with SMTP id l189mr5166473ybf.312.1581030052579;
- Thu, 06 Feb 2020 15:00:52 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ami2hxXB5JmpdB3plbUF7Q0OnVlJKfYsRMoJO0yAKHw=;
+        b=I+XBIk2XnWWPCGkoyG6M5UVlSGL6vO1UcG8swvJT2IeZzq4KfBIC5WThGN/qPWg6xS
+         m7VGU6QNBLfE3MjdmMIHnOAyKw3E1WPADqrkzC8zETPZdDWDhRv+gs0D3LZGjFSBEgdb
+         VTB8igbST/ZcjboVkvKGvQg8ZwJna3q9CQ8cGtrB6N/QlurxjaNah4N5mUbCk01RSyM8
+         RWl40xOzBsz6rFZuKzT+4YS+RfSKhKom1My+PEmc1ZnOzmOQ94t4i+PUitH2QHjzBcxx
+         us/5+rgPNBC1zCyJOW2Q4OEWoCVk2jxKK8U0AK+HJiXcxqtEoue0s+wZTGe4gCrzxroq
+         R3bw==
+X-Gm-Message-State: APjAAAWPYMRE/CnQBW3cz5/MpNe9Ic1cNQHUQGxA8gHplX7/L6+VBdqh
+        c6Z+PonuETqJPZrv40MqizkaXlFQ
+X-Google-Smtp-Source: APXvYqypIuaQlNpOIH+F8nt0TwfdiPQ5j4GH0rfvL7KL+avChAzHGUXoKm7U1qsoSbQzSM1mk6UWmw==
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr135250wmc.9.1581030307138;
+        Thu, 06 Feb 2020 15:05:07 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:ccdf:10a:e87a:1f49? (p200300EA8F296000CCDF010AE87A1F49.dip0.t-ipconnect.de. [2003:ea:8f29:6000:ccdf:10a:e87a:1f49])
+        by smtp.googlemail.com with ESMTPSA id x14sm1035234wmj.42.2020.02.06.15.05.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 15:05:06 -0800 (PST)
+Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
+ feature
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com
+Cc:     linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200204181319.27381-1-dmurphy@ti.com>
+ <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
+ <47b9b462-6649-39a7-809f-613ce832bd5c@ti.com>
+ <59ce70e0-4404-cade-208d-d089ed238f30@gmail.com>
+ <8fa98423-9c3c-62c9-1e5a-29b2eef555e3@ti.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <a0f1dfca-53c1-85be-c28c-73840c4f05fd@gmail.com>
+Date:   Fri, 7 Feb 2020 00:04:59 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <cover.1580610812.git.fthain@telegraphics.com.au>
- <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au>
- <CAAdtpL7SpzfqSmEcuVszNyXfrRegC20txoS5j7Ss3WkCmyRH+g@mail.gmail.com> <alpine.LNX.2.22.394.2002060829410.8@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.22.394.2002060829410.8@nippy.intranet>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Fri, 7 Feb 2020 00:00:41 +0100
-Message-ID: <CAAdtpL5Cz5YGKZVfbA=X8qMtP7jDc0G7igSj3EB=PfazM5JoDg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] fbdev/g364fb: Fix build failure
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Laurent Vivier <laurent@vivier.eu>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <8fa98423-9c3c-62c9-1e5a-29b2eef555e3@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 11:18 PM Finn Thain <fthain@telegraphics.com.au> wrote:
-> On Wed, 5 Feb 2020, Philippe Mathieu-Daudé wrote:
-> > On Sun, Feb 2, 2020 at 3:41 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> > >
-> > > This patch resolves these compiler errors and warnings --
-> > >
-> > >   CC      drivers/video/fbdev/g364fb.o
-> > > drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
-> > > drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
-> > > drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
-> > > drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
-> > > drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
-> > > drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
-> > > drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
-> > > drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
-> > > drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
-> > > drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
-> >
-> > 18 years unnoticed...
-> >
->
-> More likely, it was noticed by those without the skills or time to get it
-> fixed upstream.
->
-> Those with the hardware skills and platform knowledge to be affected by an
-> obscure bug aren't necessarily also capable of fixing a kernel bug,
-> sending a patch upstream and getting it past code review.
->
-> Getting a patch into the Linux kernel is itself a lot of work, unless
-> you've had years of experience with that constantly changing process
-> (which varies significantly between subsystems).
+On 06.02.2020 23:36, Dan Murphy wrote:
+> Heiner
+> 
+> On 2/6/20 4:28 PM, Heiner Kallweit wrote:
+>> On 06.02.2020 23:13, Dan Murphy wrote:
+>>> Heiner
+>>>
+>>> On 2/5/20 3:16 PM, Heiner Kallweit wrote:
+>>>> On 04.02.2020 19:13, Dan Murphy wrote:
+>>>>> Set the speed optimization bit on the DP83867 PHY.
+>>>>> This feature can also be strapped on the 64 pin PHY devices
+>>>>> but the 48 pin devices do not have the strap pin available to enable
+>>>>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>>>>
+>>>>> With this bit set the PHY will auto negotiate and report the link
+>>>>> parameters in the PHYSTS register.  This register provides a single
+>>>>> location within the register set for quick access to commonly accessed
+>>>>> information.
+>>>>>
+>>>>> In this case when auto negotiation is on the PHY core reads the bits
+>>>>> that have been configured or if auto negotiation is off the PHY core
+>>>>> reads the BMCR register and sets the phydev parameters accordingly.
+>>>>>
+>>>>> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
+>>>>> 4-wire cable.  If this should occur the PHYSTS register contains the
+>>>>> current negotiated speed and duplex mode.
+>>>>>
+>>>>> In overriding the genphy_read_status the dp83867_read_status will do a
+>>>>> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
+>>>>> register is read and the phydev speed and duplex mode settings are
+>>>>> updated.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>>> v2 - Updated read status to call genphy_read_status first, added link_change
+>>>>> callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/
+>>>>>
+>>>> As stated in the first review, it would be appreciated if you implement
+>>>> also the downshift tunable. This could be a separate patch in this series.
+>>>> Most of the implementation would be boilerplate code.
+>>>
+>>> I looked at this today and there are no registers that allow tuning the downshift attempts.  There is only a RO register that tells you how many attempts it took to achieve a link.  So at the very least we could put in the get_tunable but there will be no set.
+>>>
+>> The get operation for the downshift tunable should return after how many failed
+>> attempts the PHY starts a downshift. This doesn't match with your description of
+>> this register, so yes: Implementing the tunable for this PHY doesn't make sense.
+> True.  This register is only going to return 1,2,4 and 8.  And it is defaulted to 4 attempts.
+>>
+>> However this register may be useful in the link_change_notify() callback to
+>> figure out whether a downshift happened, to trigger the info message you had in
+>> your first version.
+> 
+> Thats a good idea but.. The register is defaulted to always report 4 attempts were made. It never reports 0 attempts so we would never know the truth behind the reporting.  Kinda like matching the speeds.
+> 
 
-I see, I'm not custom to kernel workflow.
+I just had a brief look at the datasheet here: http://www.ti.com/lit/ds/symlink/dp83867ir.pdf
+It says: The number of failed link attempts before falling back to 100-M operation is configurable. (p.45)
+Description of SPEED_OPT_ATTEMPT_CNT in CFG2 says "select attempt count", so it sounds like it's
+an RW register. It's marked as RO however, maybe it's a typo in the datasheet.
+Did you test whether register is writable?
+Last but not least this register is exactly what's needed for the downshift tunable.
 
-> Kernel developers are only human and do accidentally introduce breakage in
-> their work (as contributors) while ironically (as reviewers) they raise
-> the bar for random fixes from users not versed in the 10000+ lines of
-> Documentation/process/*.rst
->
-> Broken code does not mean zero potential users or zero frustrated users
-> yet I often hear kernel developers disingenuously claim that it does.
-> They have an incentive to make that claim and often there's no-one reading
-> the mailing lists to push back.
+Checking whether a downshift occurred should be possible by reading SPEED_OPT_EVENT_INT in ISR.
+In interrupt mode however this may require a custom interrupt handler (implementation of
+handle_interrupt callback).
 
-But broken code is also bad example of code. The removed code is still
-buried in the git tree.
+Alternatively you could check SPEED_OPT_STATUS in PHYSTS. It says "valid only during aneg"
+but that sounds a little bit weird. Would need to be tested whether bit remains set after
+downshifted aneg is finished.
 
-> > > drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
-> > > drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
-> > >
-> > > The MIPS Magnum framebuffer console now works when tested in QEMU.
-> > >
-> > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> >
-> > This commit is the kernel 'git origin' import, not the proper reference.
-> >
-> > The actual change is between v2.5.17/2.5.19:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/diff/drivers/video/g364fb.c?id=b30e6e183a728923267
-> > Date: 2002-05-22 07:52:33...
-> >
->
-> I think the driver was broken before that point. I didn't compile it, but
-> it seems that "xres" still has no declaration.
->
-> BTW, is it wise to cite a sha-1 that doesn't exist in mainline?
-
-I didn't want to suggest referencing an external sha1, but rather the full link.
-Anyway I later figured out your reference isn't incorrect, this code
-was really added in commit 1da177e4c3f4.
-
-Maybe you can use:
-Fixes: 1da177e4c3f4 (code modified earlier during v2.5.17-v2.5.19)
-
-Anyway I'm bike-shedding, whichever reference you choose will be fine, even
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-
->
-> $ git show b30e6e183a728923267
-> fatal: ambiguous argument 'b30e6e183a728923267': unknown revision or path
-> not in the working tree.
->
-> I'd prefer to use a tag like this,
-> References: https://git.kernel.org/tglx/history/c/b30e6e183a728923267
->
-> FWIW, if you search for "tglx.history" in git log, you can find other
-> stuff, like "Histroy Tree:" [sic] and "History-tree:". I don't know what
-> the canonical form is.
->
-> > The same commit introduced the changes in g364fb_cursor(), which was
-> > implemented previous to v2.4.0 so it is hard to follow from there.
-> >
-> > Nobody complains during 18 years so I doubt anyone care that
-> > g364fb_cursor() is removed.
->
-> Right. The .fb_cursor method is optional (not all framebuffers have a
-> hardware cursor).
->
-> > And by removing it, you improve the kernel quality, so:
-> > Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-> > (Maybe remove the unhelpful 'Fixes' tag).
-> >
->
-> In the past I've seen other reviewers of other patches say the same thing
-> ("Please remove Fixes: Linux 2.6.12-rc2"). I don't know why.
->
-> I used that tag because it indicates that the patch can be backported at
-> least as far as the stated commit. Certainly the bug exists in Linux
-> 2.6.12-rc2, so the "Fixes" tag is meaningful in that sense.
-
-Yes, agreed.
-
->
-> > > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> > > ---
-> > >  drivers/video/fbdev/g364fb.c | 29 +++--------------------------
-> > >  1 file changed, 3 insertions(+), 26 deletions(-)
-> > >
-> > > diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
-> > > index 223896cc5f7d..fb26230a3c7b 100644
-> > > --- a/drivers/video/fbdev/g364fb.c
-> > > +++ b/drivers/video/fbdev/g364fb.c
-> > > @@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
-> > >  static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
-> > >                             u_int blue, u_int transp,
-> > >                             struct fb_info *info);
-> > > -static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
-> > >  static int g364fb_blank(int blank, struct fb_info *info);
-> > >
-> > >  static struct fb_ops g364fb_ops = {
-> > > @@ -119,28 +118,8 @@ static struct fb_ops g364fb_ops = {
-> > >         .fb_fillrect    = cfb_fillrect,
-> > >         .fb_copyarea    = cfb_copyarea,
-> > >         .fb_imageblit   = cfb_imageblit,
-> > > -       .fb_cursor      = g364fb_cursor,
-> > >  };
-> > >
-> > > -int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
-> > > -{
-> > > -
-> > > -       switch (cursor->enable) {
-> > > -       case CM_ERASE:
-> > > -               *(unsigned int *) CTLA_REG |= CURS_TOGGLE;
-> > > -               break;
-> > > -
-> > > -       case CM_MOVE:
-> > > -       case CM_DRAW:
-> > > -               *(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
-> > > -               *(unsigned int *) CURS_POS_REG =
-> > > -                   ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
-> > > -                                                 info->var.yoffset);
-> > > -               break;
-> > > -       }
-> > > -       return 0;
-> > > -}
-> > > -
-> > >  /*
-> > >   *  Pan or Wrap the Display
-> > >   *
-> > > @@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
-> > >   */
-> > >  int __init g364fb_init(void)
-> > >  {
-> > > -       volatile unsigned int *pal_ptr =
-> > > -           (volatile unsigned int *) CLR_PAL_REG;
-> > >         volatile unsigned int *curs_pal_ptr =
-> > >             (volatile unsigned int *) CURS_PAL_REG;
-> > > -       int mem, i, j;
-> > > +       int mem, i;
-> > >
-> > >         if (fb_get_options("g364fb", NULL))
-> > >                 return -ENODEV;
-> > > @@ -230,8 +207,8 @@ int __init g364fb_init(void)
-> > >          */
-> > >         *(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
-> > >         *(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
-> > > -       fb_var.xres_virtual = fbvar.xres;
-> > > -       fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
-> > > +       fb_var.xres_virtual = fb_var.xres;
-> > > +       fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
-> > >         fb_fix.smem_start = 0x40000000; /* physical address */
-> > >         /* get size of video memory; this is special for the JAZZ hardware */
-> > >         mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
-> > > --
-> > > 2.24.1
-> > >
-> >
+> Dan
+> 
+Heiner
