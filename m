@@ -2,199 +2,132 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D3C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A769AC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E491521775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C45218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vfyUCEYv"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FFFkDGH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgBFUmW (ORCPT
+        id S1727831AbgBFUpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:42:22 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37708 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBFUmV (ORCPT
+        Thu, 6 Feb 2020 15:45:22 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:28469 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727711AbgBFUpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:42:21 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so37093plz.4;
-        Thu, 06 Feb 2020 12:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fFfXRy75SE2j99TG+GoZCaMqB60SsrG/AWbtbzm954o=;
-        b=vfyUCEYvfOWSkNNXqfG/5nISqzUTck+tjMPtcs9vkWIAwYR4PdMEd2JPuBPLk3MRBP
-         iB0DV7pGMZ30CksONlqCvv1BhUdPCTUfEoONuxoYlXI877TJmACrWBjuV1Q1eYqWyPyg
-         Pe8JauYeCeL2JEdhxNQHhs+pTQzIefbdBcP0VvQrT03GoO7TDWKVsOT7H7Q12FxJKI02
-         v3fkL4B1XNKYB18u6Yq0V9JLfS+TIG0xaUrUKtyEO85BxS5rNjR8sRX3ReI2Ex3JtGiK
-         GZgSPvO9NTJButHxyHjhe5vOCD4gPm+OaTsheqZtKNaTOt8c34y/Q5BsJ+ulB/j9MmXo
-         bkxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fFfXRy75SE2j99TG+GoZCaMqB60SsrG/AWbtbzm954o=;
-        b=GXp9KUYQQ6+avp5MCpfg4grHUabkny3mOn9cz+LKxBPLh6z6bacRPbx8f3vrW1qqmO
-         PPJjG9Ix1r3gkLBbpX3bvvqqw2Ry6tt+NGsXf8b7x8apxC/F2D7H25CzdrMy7NIa69bI
-         cjO+NNc6IwUMGsJ37Gl6NAiLXB4fGPMgxoz/jnKbrrX7n3TRtD0kDpqC1pX9bXFhMPm1
-         7JUjtiNgZAwYe4eE9YehXRXyLbkGhzabAwCZUIYx20e/58ggxu87yG97o65onJXeIlnu
-         x2LSq2Juf0vIpriwCmFvh8oiCBbe38nFApvJPyOOAFlpJopjlmIyIGZy/G6n3CfVUXzn
-         1BSQ==
-X-Gm-Message-State: APjAAAU63msMm0ZnaWQq9IGmrimM2LpBKo7nfu6gAm5Drc6qBEwtu39c
-        qeojd+a1qdU+jy9mTD/XySk=
-X-Google-Smtp-Source: APXvYqx5yR2ZczceH5wIR6HuJ+bErQxHhRXOcOq0d+aG9E/CJcFKyjSK7GF7CCEhOml3smJinBJ1mQ==
-X-Received: by 2002:a17:902:9890:: with SMTP id s16mr5737406plp.71.1581021740994;
-        Thu, 06 Feb 2020 12:42:20 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b12sm287311pfr.26.2020.02.06.12.42.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Feb 2020 12:42:20 -0800 (PST)
-Date:   Thu, 6 Feb 2020 12:42:19 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     Julian Calaby <julian.calaby@gmail.com>,
-        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 0/5] scsi: ufs: ufs device as a temperature sensor
-Message-ID: <20200206204218.GA23857@roeck-us.net>
-References: <MN2PR04MB69910152F14A7D481029E4ECFC000@MN2PR04MB6991.namprd04.prod.outlook.com>
- <20200203214733.GA30898@roeck-us.net>
- <BY5PR04MB69809A3BEFD629A67FB563CDFC030@BY5PR04MB6980.namprd04.prod.outlook.com>
- <MN2PR04MB6190D9E63717D37285DADBB09A1D0@MN2PR04MB6190.namprd04.prod.outlook.com>
- <CAGRGNgWG2fvY33j0m00SkguU8N4TJttY4KeNtOxZ7HzTTXA=yw@mail.gmail.com>
- <MN2PR04MB6991848EBC8DED439FCD7C49FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <CAGRGNgUA=LHbWqZY+hsYjfsTbyftc3uoGv6S3p8E4zPQyqsOGQ@mail.gmail.com>
- <MN2PR04MB699190E3474F82BEF9B91A58FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <CAGRGNgWob+0t35AYXfzCqKtLjBgw=p8MhqDCKF=5_JGe5veqtQ@mail.gmail.com>
- <MN2PR04MB699192FB02C86DE567785A83FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+        Thu, 6 Feb 2020 15:45:22 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581021921; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=DcZBAjG2VO2WTzYOcZCs8ZVgMYwd7rbCdreK1KsqE9E=; b=FFFkDGH50TF5qBwstZW9DQ/cKjKhw3evZtiqJEIDLe/rpPzbHeppKVbGg2cNo4HoBY5KDlv2
+ v5gMrpRlyOd6da04TtSgcrkdGQIdppEqyCUQX/1nqK1DRvZ5GQoC9pWD5FlJmy/eJFbMa5PN
+ L5pm6CrYEFgRILJdkUGSJusaZn0=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3c7adc.7f666d8d2030-smtp-out-n03;
+ Thu, 06 Feb 2020 20:45:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F21FC43383; Thu,  6 Feb 2020 20:45:16 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E80CC433CB;
+        Thu,  6 Feb 2020 20:45:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E80CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Thu, 6 Feb 2020 13:45:14 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, lsrao@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+Message-ID: <20200206204514.GB8107@codeaurora.org>
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
+ <20200203170832.GA38466@bogus>
+ <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
+ <20200204152132.GA44858@bogus>
+ <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
+ <20200205140603.GB38466@bogus>
+ <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
+ <20200205161816.GD38466@bogus>
+ <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <MN2PR04MB699192FB02C86DE567785A83FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 07:32:12PM +0000, Avri Altman wrote:
-> Hi Julian,
-> 
-> > 
-> > 
-> > Hi Avri,
-> > 
-> > On Fri, Feb 7, 2020 at 12:41 AM Avri Altman <Avri.Altman@wdc.com> wrote:
-> > >
-> > > >
-> > > > Hi Avri,
-> > > >
-> > > > On Thu, Feb 6, 2020 at 11:08 PM Avri Altman <Avri.Altman@wdc.com>
-> > > > wrote:
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > Hi Avi,
-> > > > > >
-> > > > > > On Thu, Feb 6, 2020 at 9:48 PM Avi Shchislowski
-> > > > > > <Avi.Shchislowski@wdc.com> wrote:
-> > > > > > >
-> > > > > > > As it become evident that the hwmon is not a viable option to
-> > > > implement
-> > > > > > ufs thermal notification, I would appreciate some concrete comments
-> > of
-> > > > this
-> > > > > > series.
-> > > > > >
-> > > > > > That isn't my reading of this thread.
-> > > > > >
-> > > > > > You have two options:
-> > > > > > 1. extend drivetemp if that makes sense for this particular application.
-> > > > > > 2. follow the model of other devices that happen to have a built-in
-> > > > > > temperature sensor and expose the hwmon compatible attributes as
-> > a
-> > > > > > subdevice
-> > > > > >
-> > > > > > It appears that option 1 isn't viable, so what about option 2?
-> > > > > This will require to export the ufs device management commands,
-> > > > > Which is privet to the ufs driver.
-> > > > >
-> > > > > This is not a viable option as well, because it will allow unrestricted
-> > access
-> > > > > (Including format etc.) to the storage device.
-> > > > >
-> > > > > Sorry for not making it clearer before.
-> > > >
-> > > > I should have clarified further: I meant having the UFS device
-> > > > register a HWMON driver using this API:
-> > > > https://www.kernel.org/doc/html/latest/hwmon/hwmon-kernel-
-> > api.html
-> > > >
-> > > > *Not* writing a separate HWMON driver that uses some private
-> > interface.
-> > > Ok.
-> > > Just one last question:
-> > > The ufs spec requires to be able to react upon an exception event from the
-> > device.
-> > > The thermal core provides an api in the form of
-> > thermal_notify_framework().
-> > > What would be the hwmon equivalent for that?
-> > 
-> > My understanding is that HWMON is just a standardised way to report
-> > hardware sensor data to userspace. There are "alarm" files that can be
-> > used to report fault conditions, so any action taken would have to be
-> > either managed by userspace or configured using thermal zones
-> > configured in the hardware's devicetree.
-> Those "alarms" are  implemented as part of the modules under drivers/hwmon/ isn't it?
-> We already established that this is not an option for the ufs driver.
+On Thu, Feb 06 2020 at 01:46 -0700, Ulf Hansson wrote:
+>On Wed, 5 Feb 2020 at 17:18, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>
+>> On Wed, Feb 05, 2020 at 04:55:17PM +0100, Ulf Hansson wrote:
+>> > On Wed, 5 Feb 2020 at 15:06, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> > >
+>> > > On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
+>> > > >
+>> > > > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
+>> > > > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
+>> > > > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
+>> > > > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
+>> > > > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
+>> > > > > > > >
+>> I was, but not anymore, especially if we want such changes in the kernel
+>> to do so.
+>>
+>> Just use OSI as that was the point of adding all these after years of
+>> discussion claiming it's more optimal compared to PC. Now telling that
+>> you need more changes to compare it with PC just doesn't make any sense
+>> at all to me.
+>
+>Fair enough.
+>
+>I was just pondering over if there are other reasons to why we may want this.
+>
+>One other thing that could be problematic to support, is when are
+>other resources, I/O controllers for example, sharing the same power
+>rail as a cluster. When such controller is in use, idle states of the
+>cluster must be prevented. Without using genpd to model the CPU
+>topology, it may be difficult to deal with this.
+>
+>Of course, using PC mode when trying to deal with this
+>platform/board-requirement would also be suboptimal. In other words,
+>your argument about when using OSI vs PC mode, still stands.
+>
+I understand the arguments for using PC vs OSI and agree with it. But
+what in PSCI is against Linux knowing when the last core is powering
+down when the PSCI is configured to do only Platform Cordinated.
+There should not be any objection to drivers knowing when all the cores
+are powered down, be it reference counting CPU PM notifications or using
+a cleaner approach like this where GendPD framwork does everything
+cleanly and gives a nice callback. ARM architecture allows for different
+aspects of CPU access be handled at different levels. I see this as an
+extension of that approach.
 
-You have established nothing. What exactly is not an option ?
-To create alarm attributes ? No one forces you to create any of those
-if you don't want to.
-
-> 
-> > 
-> > thermal_notify_framework() is a way to notify the "other side" of a
-> > thermal zone to do something to reduce the temperature of that zone.
-> > E.g. spin up a fan or switch to a lower-power state to cool a CPU.
-> > Looking at your code, you're only implementing the "sensor" side of
-> > the thermal zone functionality, so your calls to
-> > thermal_notify_framework() won't do anything.
-> Right.  The thermal core allows to react to such notifications,
-> Provided that the thermal zone device has a governor defined,
-> And/or notify ops etc.
-> 
-> Should the current patches implement those callbacks or not,
-> Can be discussed during their review process.
-> But the important thing is that the thermal core support it in an intuitive and simple way,
-> While the hwmon doesn't.
-> 
-> We are indifference with respect of which subsystem to use.
-
-Not really. Quite the opposite; you are quite obviously heavily
-opposed to a hwmon driver.
-
-> The thermal core was our first choice because we bumped into it,
-> Looking for a way to raise thermal exceptions.
-> It provides the functionality we need, and other devices uses it,
-> Why the insistence not to use it?
-> 
-
-As mentioned before, the hwmon subsystem lets you create a bridge
-to the thermal subsystem, it creates standard attributes to report
-temperatures instead of the private ones your patch provides,
-and it would result in simpler code.
-
-Why the insistence to _not_ use the hwmon subsystem ?
-
-Guenter
+-- Lina
