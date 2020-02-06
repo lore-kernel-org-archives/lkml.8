@@ -2,117 +2,174 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD31EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6AFC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F46820658
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804DB20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LXI/VJlT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQU6oPPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgBFKLD (ORCPT
+        id S1728379AbgBFKMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:11:03 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7743 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgBFKLC (ORCPT
+        Thu, 6 Feb 2020 05:12:18 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59362 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727864AbgBFKMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:11:02 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3be5fb0000>; Thu, 06 Feb 2020 02:10:03 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Feb 2020 02:11:01 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 02:11:01 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
- 2020 10:11:01 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 6 Feb 2020 10:11:01 +0000
-Received: from viswanathl-pc.nvidia.com (Not Verified[10.24.34.161]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3be6300014>; Thu, 06 Feb 2020 02:11:00 -0800
-From:   Viswanath L <viswanathl@nvidia.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <mkumard@nvidia.com>,
-        <jonathanh@nvidia.com>
-CC:     <arnd@arndb.de>, <yung-chuan.liao@linux.intel.com>,
-        <baolin.wang@linaro.org>, <kstewart@linuxfoundation.org>,
-        <Julia.Lawall@inria.fr>, <tglx@linutronix.de>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <spujar@nvidia.com>, <sharadg@nvidia.com>, <rlokhande@nvidia.com>,
-        <DRAMESH@nvidia.com>, <atalambedu@nvidia.com>,
-        Viswanath L <viswanathl@nvidia.com>
-Subject: [PATCH] ALSA: hda: Clear RIRB status before reading WP
-Date:   Thu, 6 Feb 2020 15:40:53 +0530
-Message-ID: <1580983853-351-1-git-send-email-viswanathl@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Feb 2020 05:12:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580983937;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=unxSq/DSKQjm74AUc62BAlZa/L3rRgvt3QzEBYnlLMA=;
+        b=OQU6oPPMNDBECYvWaxSxT1svmupgMgX6S6rcNx9ze5rgr3KslXzaHkmPzulzu1qDo5Hb0D
+        LUR35gqowMdDEPElpVOF5B3F/Kdk1QjgfNCaejPuhFAR2sseYtKruOU0vHh8ogAPUy7vJC
+        fydojpNrJ6IiGn/tktO2P5zypHmB1Uo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-qoAW3UfVPyCfK8TDjy4J9A-1; Thu, 06 Feb 2020 05:12:13 -0500
+X-MC-Unique: qoAW3UfVPyCfK8TDjy4J9A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE4341007275;
+        Thu,  6 Feb 2020 10:12:11 +0000 (UTC)
+Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F9E15C1D8;
+        Thu,  6 Feb 2020 10:12:08 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 18:12:05 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
+        mhocko@suse.com, osalvador@suse.de
+Subject: Re: [PATCH] mm/hotplug: Adjust shrink_zone_span() to keep the old
+ logic
+Message-ID: <20200206101205.GQ8965@MiWiFi-R3L-srv>
+References: <20200206053912.1211-1-bhe@redhat.com>
+ <7ecaf36f-9f70-05bd-05fc-6dec82b7d559@redhat.com>
+ <20200206093530.GO8965@MiWiFi-R3L-srv>
+ <f2b6b83d-8a96-2aef-f132-f66d7009df9c@redhat.com>
+ <20200206100029.GP8965@MiWiFi-R3L-srv>
+ <9e5ccff5-faa4-837d-7cdb-d94b8b5870a8@redhat.com>
+ <1f63318c-2200-cad9-559e-b1074c011392@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580983803; bh=e4WVFXFb11pvmP/iVTw7vCwJBQPl0YB7s5fvN/Yezig=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=LXI/VJlTfRMnqKotrPgGFLP7jUgGKNtuPKaFhO8xs+IcYprI8zYs1sTn5GpySaymv
-         ddgrweVLLJmAslI1JIDx8VTGguKZxEobTjrRnIz588CL5L5B7q2XjqM45RCvL1Oabi
-         6+j1C68e9+suKLkjwal5b8jJNQH7+RpGjiVBSfzpYy5Q+SQTCieCCB5S/YhnLzLWbn
-         5f1MX8W8fuK6t3rgUtXjhPR1wrmEGO0DkHrSGB/Rb0pfLzo0+All6i91mnnP29Ol5z
-         7438x1vXkfD1NsAMtz+Egy+60lF9/GeLTywRYaY5NVmUfra7md6MLScvJ1MCUwGMpR
-         XkzCEsofI0YLQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f63318c-2200-cad9-559e-b1074c011392@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohan Kumar <mkumard@nvidia.com>
+On 02/06/20 at 11:05am, David Hildenbrand wrote:
+> On 06.02.20 11:02, David Hildenbrand wrote:
+> > On 06.02.20 11:00, Baoquan He wrote:
+> >> On 02/06/20 at 10:48am, David Hildenbrand wrote:
+> >>> On 06.02.20 10:35, Baoquan He wrote:
+> >>>> On 02/06/20 at 09:50am, David Hildenbrand wrote:
+> >>>>> On 06.02.20 06:39, Baoquan He wrote:
+> >>>>>> In commit 950b68d9178b ("mm/memory_hotplug: don't check for "all holes"
+> >>>>>> in shrink_zone_span()"), the zone->zone_start_pfn/->spanned_pages
+> >>>>>> resetting is moved into the if()/else if() branches, if the zone becomes
+> >>>>>> empty. However the 2nd resetting code block may cause misunderstanding.
+> >>>>>>
+> >>>>>> So take the resetting codes out of the conditional checking and handling
+> >>>>>> branches just as the old code does, the find_smallest_section_pfn()and
+> >>>>>> find_biggest_section_pfn() searching have done the the same thing as
+> >>>>>> the old for loop did, the logic is kept the same as the old code. This
+> >>>>>> can remove the possible confusion.
+> >>>>>>
+> >>>>>> Signed-off-by: Baoquan He <bhe@redhat.com>
+> >>>>>> ---
+> >>>>>>  mm/memory_hotplug.c | 14 ++++++--------
+> >>>>>>  1 file changed, 6 insertions(+), 8 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> >>>>>> index 089b6c826a9e..475d0d68a32c 100644
+> >>>>>> --- a/mm/memory_hotplug.c
+> >>>>>> +++ b/mm/memory_hotplug.c
+> >>>>>> @@ -398,7 +398,7 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
+> >>>>>>  static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> >>>>>>  			     unsigned long end_pfn)
+> >>>>>>  {
+> >>>>>> -	unsigned long pfn;
+> >>>>>> +	unsigned long pfn = zone->zone_start_pfn;
+> >>>>>>  	int nid = zone_to_nid(zone);
+> >>>>>>  
+> >>>>>>  	zone_span_writelock(zone);
+> >>>>>> @@ -414,9 +414,6 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> >>>>>>  		if (pfn) {
+> >>>>>>  			zone->spanned_pages = zone_end_pfn(zone) - pfn;
+> >>>>>>  			zone->zone_start_pfn = pfn;
+> >>>>>> -		} else {
+> >>>>>> -			zone->zone_start_pfn = 0;
+> >>>>>> -			zone->spanned_pages = 0;
+> >>>>>>  		}
+> >>>>>>  	} else if (zone_end_pfn(zone) == end_pfn) {
+> >>>>>>  		/*
+> >>>>>> @@ -429,10 +426,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> >>>>>>  					       start_pfn);
+> >>>>>>  		if (pfn)
+> >>>>>>  			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
+> >>>>>> -		else {
+> >>>>>> -			zone->zone_start_pfn = 0;
+> >>>>>> -			zone->spanned_pages = 0;
+> >>>>>> -		}
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>> +	if (!pfn) {
+> >>>>>> +		zone->zone_start_pfn = 0;
+> >>>>>> +		zone->spanned_pages = 0;
+> >>>>>>  	}
+> >>>>>>  	zone_span_writeunlock(zone);
+> >>>>>>  }
+> >>>>>>
+> >>>>>
+> >>>>> So, what if your zone starts at pfn 0? Unlikely that we can actually
+> >>>>> offline that, but still it is more confusing than the old code IMHO.
+> >>>>> Then I prefer to drop the second else case as discussed instead.
+> >>>>
+> >>>> Hmm, pfn is initialized as zone->zone_start_pfn, does it matter?
+> >>>> The impossible empty zone won't go wrong if it really happen.
+> >>>>
+> >>>
+> >>> If you offline any memory block that belongs to the lowest zone
+> >>> (zone->zone_start_pfn == 0) but does not fall on a boundary (so that you
+> >>> can actually shrink), you would mark the whole zone offline. That's
+> >>> broken unless I am missing something.
+> >>
+> >> AFAIK, the page 0 is reserved. No valid zone can start at 0, only empty
+> >> zone is. Please correct me if I am wrong.
+> > 
+> > At least on x86 it indeed is :) So if this holds true for all archs
+> > 
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > 
+> > Thanks!
+> > 
+> > 
+> 
+> Correction
+> 
+> Nacked-by: David Hildenbrand <david@redhat.com>
+> 
+> s390x:
+> [linux1@rhkvm01 ~]$ cat /proc/zoneinfo
+> Node 0, zone      DMA
+>   per-node stats
+> [...]
+>   node_unreclaimable:  0
+>   start_pfn:           0
 
-RIRB interrupt status getting cleared after the write pointer is read
-causes a race condition, where last response(s) into RIRB may remain
-unserviced by IRQ, eventually causing azx_rirb_get_response to fall
-back to polling mode. Clearing the RIRB interrupt status ahead of
-write pointer access ensures that this condition is avoided.
-
-Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-Signed-off-by: Viswanath L <viswanathl@nvidia.com>
----
- sound/pci/hda/hda_controller.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
-index 9757667..2609e39 100644
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -1110,16 +1110,23 @@ irqreturn_t azx_interrupt(int irq, void *dev_id)
- 		if (snd_hdac_bus_handle_stream_irq(bus, status, stream_update))
- 			active = true;
- 
--		/* clear rirb int */
- 		status = azx_readb(chip, RIRBSTS);
- 		if (status & RIRB_INT_MASK) {
-+			/*
-+			 * Clearing the interrupt status here ensures that no
-+			 * interrupt gets masked after the RIRB wp is read in
-+			 * snd_hdac_bus_update_rirb. This avoids a possible
-+			 * race condition where codec response in RIRB may
-+			 * remain unserviced by IRQ, eventually falling back
-+			 * to polling mode in azx_rirb_get_response.
-+			 */
-+			azx_writeb(chip, RIRBSTS, RIRB_INT_MASK);
- 			active = true;
- 			if (status & RIRB_INT_RESPONSE) {
- 				if (chip->driver_caps & AZX_DCAPS_CTX_WORKAROUND)
- 					udelay(80);
- 				snd_hdac_bus_update_rirb(bus);
- 			}
--			azx_writeb(chip, RIRBSTS, RIRB_INT_MASK);
- 		}
- 	} while (active && ++repeat < 10);
- 
--- 
-2.7.4
+OK, it's very interesting, and good to know. This should be discarded.
 
