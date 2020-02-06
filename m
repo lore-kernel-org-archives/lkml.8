@@ -2,190 +2,130 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030A7C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35032C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA04721775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A2E218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021949;
-	bh=IKtvLJH3POdpqJGJPZGuuIFX0JHRAm8o5gtj6atoK6o=;
+	s=default; t=1581021955;
+	bh=cgKKtzw6ZHoRRkJpgQ0wAHcLhOTjX1Q+jc9b22oDSgI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yZXxbuxh0bqfIkbR8sy5URs2ah83yRRp+nghyTBk2zNr6hqThCruN6dbX8YGBxLYZ
-	 bcAq8lGiBO8MXGG5UmJ+XrP92fMbF8uFZcZUVXbrOV6WJUkLZciQqAxcR04I0OEtsi
-	 UBAnZHOU6yoCVgHWFWRKuvAjfe1u3zA2fYZ4+Qrw=
+	b=udg9gy5DRJPeZo0KsOJv3AYfNF+QFO2gdjLF1g2pnhekBrXqBliSCoGN725eNAe1T
+	 4dIDkebMO6K/WZwLClRbRKe5ZgZryQUCsxa8xpDtm21847SjRWJJZCQHi+ohbclpQw
+	 ovHqq6rEy2HC679C+RivapyLadeMkTxPl7OuJY8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgBFUps (ORCPT
+        id S1728078AbgBFUpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:48 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36737 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbgBFUpp (ORCPT
+        Thu, 6 Feb 2020 15:45:53 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46713 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728048AbgBFUps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:45:45 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so43447plm.3;
-        Thu, 06 Feb 2020 12:45:45 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:48 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so3324194pgb.13;
+        Thu, 06 Feb 2020 12:45:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCWnD6/En746LfUHwkqymcGUcnPpptz2DSpQ1Ez5SOo=;
-        b=JbMds/ho9nUpnm8cXEfGvud8BFeLZ9ipAnA4JLFKDUF4BYe3CIWXQOM5gR3m7gzeEA
-         1A+pTXVsEPit3pKuf5RnI5UvsfGEsEbcptcYSaKMsNvMcEs7dcEdc4aVdlQmLHrlXU5C
-         ueP24f3fTKcZQ0juWY+huACagivPU6mR7mL0bjvDiUnyUy6ZOmu4mkTU7UyT5cCQ5SDh
-         rcmQHKvmdqlhtYfxsB+MCOgmqVa6+wRmMm5aWAu3IPxTytIIqjmhbQK9V0j4LM9kL2D0
-         C+Gr0wiwyYJek2DPl5GT89WYFxI7Uo15f8OZ9cjSCfkzB1dBkVA06/5DYVv58ZAQTkka
-         85qA==
-X-Gm-Message-State: APjAAAViT93hNv9dMvBQzcmoLGdPiJogoExPCcAs3nPQhue4p1COiFk/
-        Qbjflp+s1dfXaTma6XGtfA==
-X-Google-Smtp-Source: APXvYqwe1ExZhSMFyKB8on4CDR61XtJcPmp+HJxgSNnoGXk7d9N9LdjNbUm6Le3nrUv0jQvz1qW0Pw==
-X-Received: by 2002:a17:90a:bf0c:: with SMTP id c12mr6380858pjs.112.1581021944891;
-        Thu, 06 Feb 2020 12:45:44 -0800 (PST)
+        bh=uZYjSiH3XWQR1AQ+aOWLLH8qNKRv66c457dG/e/iBCQ=;
+        b=UF4+CyhutzVFPw0k6MR5n67PJV8ObSkvgKMLBZNgL4Hqag/Li6qmWuzRYCSe5Mokvo
+         NWvSKbispsN6Z8Oiv52WGe2/Z/3R3Vj4m4H8UDqZfNaB+lMWbLyILmGF/ou+lYvhdcfG
+         qTWvEN9rnGTEw/pp6p3vTTwWuGwxAAj1Lwqf5cXierJIgc+ikuRWCM4S4CnOsUtSBgl1
+         3Zm2VMYMfStvdWcbICdAXZlNVPSijcJyLnY05XEgtDRJb+FM2EQQO9+tQkuCVUD0CgqY
+         exu8nDdHQr3gKn5L/Auf3exwmuxDTKZFrc6pVgHja3fe0fRMBTc5y/cZuF2iAGXSGSiR
+         tECg==
+X-Gm-Message-State: APjAAAVhq7XccHBAa6tYO0e2Jg7kBs4rCleq5nPx440tYqxwnjZTHvSi
+        5GsK9r2jHekkMWoVoxgupeW36Rhu8A==
+X-Google-Smtp-Source: APXvYqyt3hO12aCjMUyuWWO34YNsjGU2LbcEANvSDEEpEsNJVU3KoZRM/djs0hF17wMFMbFXcsWVRw==
+X-Received: by 2002:a63:9313:: with SMTP id b19mr5458024pge.273.1581021947057;
+        Thu, 06 Feb 2020 12:45:47 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id c6sm279450pgk.78.2020.02.06.12.45.43
+        by smtp.gmail.com with ESMTPSA id hg11sm170432pjb.14.2020.02.06.12.45.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:44 -0800 (PST)
-Received: (nullmailer pid 25171 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:56:51 -0000
-Date:   Thu, 6 Feb 2020 18:56:51 +0000
+        Thu, 06 Feb 2020 12:45:46 -0800 (PST)
+Received: (nullmailer pid 17814 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:34:10 -0000
+Date:   Thu, 6 Feb 2020 17:34:10 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add device tree binding for Arm
- CryptoCell trng engine
-Message-ID: <20200206185651.GA14044@bogus>
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
- <1580650021-8578-2-git-send-email-hadar.gat@arm.com>
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 2/8] dt-bindings: phy: qcom,qusb2: Add compatibles for
+ QUSB2 V2 phy and SC7180
+Message-ID: <20200206173409.GA8698@bogus>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <1580305919-30946-3-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580650021-8578-2-git-send-email-hadar.gat@arm.com>
+In-Reply-To: <1580305919-30946-3-git-send-email-sanm@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 03:26:59PM +0200, Hadar Gat wrote:
-> The Arm CryptoCell is a hardware security engine. This patch adds DT
-> bindings for its TRNG (True Random Number Generator) engine.
+On Wed, Jan 29, 2020 at 07:21:53PM +0530, Sandeep Maheswaram wrote:
+> Add compatibles for generic QUSB2 V2 phy which can be used for
+> sdm845 and sc7180.
 > 
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
->  .../devicetree/bindings/rng/arm-cctrng.yaml        | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+>  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> new file mode 100644
-> index 0000000..fe9422e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> index 90b3cc6..43082c8 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> @@ -15,10 +15,17 @@ description:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - qcom,msm8996-qusb2-phy
+> -      - qcom,msm8998-qusb2-phy
+> -      - qcom,sdm845-qusb2-phy
+> +    oneOf:
+> +      - items:
 
-Dual license new bindings:
+You can omit 'items' here.
 
-(GPL-2.0-only OR BSD-2-Clause)
+> +        - enum:
+> +          - qcom,msm8996-qusb2-phy
+> +          - qcom,msm8998-qusb2-phy
+> +          - qcom,qusb2-v2-phy
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Arm ZrustZone CryptoCell TRNG engine
-> +
-> +maintainers:
-> +  - Hadar Gat <hadar.gat@arm.com>
-> +
-> +description: |+
-> +  Arm ZrustZone CryptoCell TRNG (True Random Number Generator) engine.
-> +
-> +properties:
-> +  compatible:
-> +    description: Should be "arm,cryptocell-7x3-trng"
+This should not be valid alone. An SoC specific compatible is required.
 
-Drop. That's what the schema says.
+> +      - items:
+> +        - enum:
+> +          - qcom,sc7180-qusb2-phy
+> +          - qcom,sdm845-qusb2-phy
+> +        - const: qcom,qusb2-v2-phy
 
-> +    const: arm,cryptocell-7x3-trng
+Is your intention that qcom,sdm845-qusb2-phy alone is no longer valid? 
 
-Is 'x' a wildcard? We don't do wildcards unless you have other ways to 
-get the specific version.
+Rob
 
-> +
-> +  interrupts:
-> +    description: Interrupt number for the device.
-
-Drop. That's all 'interrupts'.
-
-> +    maxItems: 1
-> +
-> +  reg:
-> +    description: Base physical address of the engine and length of memory
-> +                 mapped region.
-
-Drop.
-
-> +    maxItems: 1
-> +
-> +  rosc-ratio:
-> +    description: Sampling ratio values from calibration for 4 ring oscillators.
-> +    maxItems: 1
-
-Is this an array?
-
-Needs a vendor prefix, a type ref and any constraints you can come up 
-with.
- 
-> +
-> +  clocks:
-> +    description: Reference to the crypto engine clock.
-
-How many clocks?
-
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +  - rosc-ratio
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    arm_cctrng: arm_cctrng@60000000 {
-
-rng@...
-
-> +        compatible = "arm,cryptocell-7x3-trng";
-> +        interrupts = <0 29 4>;
-> +        reg = <0x60000000 0x10000>;
-> +        rosc-ratio = <5000 1000 500 0>;
-> +    };
+>    reg:
+>      maxItems: 1
+>  
 > -- 
-> 2.7.4
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
 > 
