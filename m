@@ -2,115 +2,263 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB762C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E46C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6435214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F10F20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 05:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gf3ZYuJX"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="h8SXhH9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgBFFj1 (ORCPT
+        id S1727477AbgBFFqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 00:39:27 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57923 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbgBFFj0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 00:39:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580967565;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=+ZgCDJ3lYDHO7PerX7DHQHL7BbjicVXkT8EFJG70WMU=;
-        b=gf3ZYuJXHiNGRlxW1iral6tsOt3oVAS6LOfGPIbJglk8X26jOc5PP7xpGRWhfLjdqbOiNM
-        eFIDF8CKML6pb/xNgLxHOY0JwueWYF+vT4mgFvOU8uAIDRMGGedHt1MEw+rq+KQfXg5rk9
-        t4q5wlQdYYQWd2pY3izv1H3YM4VkomA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-IzDqwx8BMTm_-srL3eoidw-1; Thu, 06 Feb 2020 00:39:21 -0500
-X-MC-Unique: IzDqwx8BMTm_-srL3eoidw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25DF31800D42;
-        Thu,  6 Feb 2020 05:39:20 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A1F0185732;
-        Thu,  6 Feb 2020 05:39:14 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        richardw.yang@linux.intel.com, david@redhat.com, mhocko@suse.com,
-        osalvador@suse.de, bhe@redhat.com
-Subject: [PATCH] mm/hotplug: Adjust shrink_zone_span() to keep the old logic
-Date:   Thu,  6 Feb 2020 13:39:12 +0800
-Message-Id: <20200206053912.1211-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Thu, 6 Feb 2020 00:46:30 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:32408 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbgBFFqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 00:46:30 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48CnVW2zD1z9v024;
+        Thu,  6 Feb 2020 06:46:27 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=h8SXhH9C; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 6m1t9Kik8HIJ; Thu,  6 Feb 2020 06:46:27 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48CnVW1P9yz9v01y;
+        Thu,  6 Feb 2020 06:46:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580967987; bh=EEYv+zTzd9qo5V5Yah42Eq7K5Bol2cKDrKt1OC5EqeA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=h8SXhH9CINBhzxoawEfiaQhcpGYYlkCHb5JEs48IVhBekiJ64SiIpqe6fXiA3rqln
+         WAoKLqvJ1kBesxZn6PVqsffW9G05yXC4JbwiQZf52Ec5mt6qzFhf12fhUeD5nyKrUy
+         qSm9Tle02ACObMn+dv64Har56iHXDlphw+4s1C00=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 271E68B787;
+        Thu,  6 Feb 2020 06:46:27 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id qN1rH3Apcu68; Thu,  6 Feb 2020 06:46:27 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 04F048B776;
+        Thu,  6 Feb 2020 06:46:18 +0100 (CET)
+Subject: Re: [PATCH v6 03/11] powerpc/mm: Adds arch-specificic functions to
+ track lockless pgtable walks
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200206030900.147032-1-leonardo@linux.ibm.com>
+ <20200206030900.147032-4-leonardo@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1311ce1c-7e5a-f7c4-2ab2-c03e124ca1c1@c-s.fr>
+Date:   Thu, 6 Feb 2020 06:46:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200206030900.147032-4-leonardo@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 950b68d9178b ("mm/memory_hotplug: don't check for "all holes"
-in shrink_zone_span()"), the zone->zone_start_pfn/->spanned_pages
-resetting is moved into the if()/else if() branches, if the zone becomes
-empty. However the 2nd resetting code block may cause misunderstanding.
 
-So take the resetting codes out of the conditional checking and handling
-branches just as the old code does, the find_smallest_section_pfn()and
-find_biggest_section_pfn() searching have done the the same thing as
-the old for loop did, the logic is kept the same as the old code. This
-can remove the possible confusion.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- mm/memory_hotplug.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+Le 06/02/2020 à 04:08, Leonardo Bras a écrit :
+> On powerpc, we need to do some lockless pagetable walks from functions
+> that already have disabled interrupts, specially from real mode with
+> MSR[EE=0].
+> 
+> In these contexts, disabling/enabling interrupts can be very troubling.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 089b6c826a9e..475d0d68a32c 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -398,7 +398,7 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
- static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 			     unsigned long end_pfn)
- {
--	unsigned long pfn;
-+	unsigned long pfn = zone->zone_start_pfn;
- 	int nid = zone_to_nid(zone);
- 
- 	zone_span_writelock(zone);
-@@ -414,9 +414,6 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 		if (pfn) {
- 			zone->spanned_pages = zone_end_pfn(zone) - pfn;
- 			zone->zone_start_pfn = pfn;
--		} else {
--			zone->zone_start_pfn = 0;
--			zone->spanned_pages = 0;
- 		}
- 	} else if (zone_end_pfn(zone) == end_pfn) {
- 		/*
-@@ -429,10 +426,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 					       start_pfn);
- 		if (pfn)
- 			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
--		else {
--			zone->zone_start_pfn = 0;
--			zone->spanned_pages = 0;
--		}
-+	}
-+
-+	if (!pfn) {
-+		zone->zone_start_pfn = 0;
-+		zone->spanned_pages = 0;
- 	}
- 	zone_span_writeunlock(zone);
- }
--- 
-2.17.2
+When interrupts are already disabled, the flag returned when disabling 
+it will be such that when we restore it later, interrupts remain 
+disabled, so what's the problem ?
 
+> 
+> So, this arch-specific implementation features functions with an extra
+> argument that allows interrupt enable/disable to be skipped:
+> __begin_lockless_pgtbl_walk() and __end_lockless_pgtbl_walk().
+> 
+> Functions similar to the generic ones are also exported, by calling
+> the above functions with parameter {en,dis}able_irq = true.
+> 
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/book3s/64/pgtable.h |  6 ++
+>   arch/powerpc/mm/book3s64/pgtable.c           | 86 +++++++++++++++++++-
+>   2 files changed, 91 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> index 201a69e6a355..78f6ffb1bb3e 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> @@ -1375,5 +1375,11 @@ static inline bool pgd_is_leaf(pgd_t pgd)
+>   	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
+>   }
+>   
+> +#define __HAVE_ARCH_LOCKLESS_PGTBL_WALK_CONTROL
+> +unsigned long begin_lockless_pgtbl_walk(void);
+> +unsigned long __begin_lockless_pgtbl_walk(bool disable_irq);
+> +void end_lockless_pgtbl_walk(unsigned long irq_mask);
+> +void __end_lockless_pgtbl_walk(unsigned long irq_mask, bool enable_irq);
+> +
+
+Why not make them static inline just like the generic ones ?
+
+>   #endif /* __ASSEMBLY__ */
+>   #endif /* _ASM_POWERPC_BOOK3S_64_PGTABLE_H_ */
+> diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+> index 2bf7e1b4fd82..535613030363 100644
+> --- a/arch/powerpc/mm/book3s64/pgtable.c
+> +++ b/arch/powerpc/mm/book3s64/pgtable.c
+> @@ -82,6 +82,7 @@ static void do_nothing(void *unused)
+>   {
+>   
+>   }
+> +
+
+Is this blank line related to the patch ?
+
+>   /*
+>    * Serialize against find_current_mm_pte which does lock-less
+>    * lookup in page tables with local interrupts disabled. For huge pages
+> @@ -98,6 +99,89 @@ void serialize_against_pte_lookup(struct mm_struct *mm)
+>   	smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
+>   }
+>   
+> +/* begin_lockless_pgtbl_walk: Must be inserted before a function call that does
+> + *   lockless pagetable walks, such as __find_linux_pte().
+> + * This version allows setting disable_irq=false, so irqs are not touched, which
+> + *   is quite useful for running when ints are already disabled (like real-mode)
+> + */
+> +inline
+> +unsigned long __begin_lockless_pgtbl_walk(bool disable_irq)
+> +{
+> +	unsigned long irq_mask = 0;
+> +
+> +	/*
+> +	 * Interrupts must be disabled during the lockless page table walk.
+> +	 * That's because the deleting or splitting involves flushing TLBs,
+> +	 * which in turn issues interrupts, that will block when disabled.
+> +	 *
+> +	 * When this function is called from realmode with MSR[EE=0],
+> +	 * it's not needed to touch irq, since it's already disabled.
+> +	 */
+> +	if (disable_irq)
+> +		local_irq_save(irq_mask);
+> +
+> +	/*
+> +	 * This memory barrier pairs with any code that is either trying to
+> +	 * delete page tables, or split huge pages. Without this barrier,
+> +	 * the page tables could be read speculatively outside of interrupt
+> +	 * disabling or reference counting.
+> +	 */
+> +	smp_mb();
+> +
+> +	return irq_mask;
+> +}
+> +EXPORT_SYMBOL(__begin_lockless_pgtbl_walk);
+> +
+> +/* begin_lockless_pgtbl_walk: Must be inserted before a function call that does
+> + *   lockless pagetable walks, such as __find_linux_pte().
+> + * This version is used by generic code, and always assume irqs will be disabled
+> + */
+> +unsigned long begin_lockless_pgtbl_walk(void)
+> +{
+> +	return __begin_lockless_pgtbl_walk(true);
+> +}
+> +EXPORT_SYMBOL(begin_lockless_pgtbl_walk);
+
+Even more than begin_lockless_pgtbl_walk(), this one is worth being 
+static inline in the H file.
+
+> +
+> +/*
+> + * __end_lockless_pgtbl_walk: Must be inserted after the last use of a pointer
+> + *   returned by a lockless pagetable walk, such as __find_linux_pte()
+> + * This version allows setting enable_irq=false, so irqs are not touched, which
+> + *   is quite useful for running when ints are already disabled (like real-mode)
+> + */
+> +inline void __end_lockless_pgtbl_walk(unsigned long irq_mask, bool enable_irq)
+> +{
+> +	/*
+> +	 * This memory barrier pairs with any code that is either trying to
+> +	 * delete page tables, or split huge pages. Without this barrier,
+> +	 * the page tables could be read speculatively outside of interrupt
+> +	 * disabling or reference counting.
+> +	 */
+> +	smp_mb();
+> +
+> +	/*
+> +	 * Interrupts must be disabled during the lockless page table walk.
+> +	 * That's because the deleting or splitting involves flushing TLBs,
+> +	 * which in turn issues interrupts, that will block when disabled.
+> +	 *
+> +	 * When this function is called from realmode with MSR[EE=0],
+> +	 * it's not needed to touch irq, since it's already disabled.
+> +	 */
+> +	if (enable_irq)
+> +		local_irq_restore(irq_mask);
+> +}
+> +EXPORT_SYMBOL(__end_lockless_pgtbl_walk);
+> +
+> +/*
+> + * end_lockless_pgtbl_walk: Must be inserted after the last use of a pointer
+> + *   returned by a lockless pagetable walk, such as __find_linux_pte()
+> + * This version is used by generic code, and always assume irqs will be enabled
+> + */
+> +void end_lockless_pgtbl_walk(unsigned long irq_mask)
+> +{
+> +	__end_lockless_pgtbl_walk(irq_mask, true);
+> +}
+> +EXPORT_SYMBOL(end_lockless_pgtbl_walk);
+> +
+>   /*
+>    * We use this to invalidate a pmdp entry before switching from a
+>    * hugepte to regular pmd entry.
+> @@ -487,7 +571,7 @@ static int __init setup_disable_tlbie(char *str)
+>   	tlbie_capable = false;
+>   	tlbie_enabled = false;
+>   
+> -        return 1;
+> +	return 1;
+
+Is that related to this patch at all ?
+
+>   }
+>   __setup("disable_tlbie", setup_disable_tlbie);
+>   
+> 
+
+Christophe
