@@ -2,71 +2,69 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A730C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB65C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3094221741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939E620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJQxMPbV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EWUmgWyY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgBFIjR (ORCPT
+        id S1728011AbgBFIl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:39:17 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40673 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbgBFIjQ (ORCPT
+        Thu, 6 Feb 2020 03:41:57 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37211 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbgBFIl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:39:16 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q8so2731429pfh.7;
-        Thu, 06 Feb 2020 00:39:16 -0800 (PST)
+        Thu, 6 Feb 2020 03:41:57 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so5916677wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:41:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SiniMnh/RN6JalocAKlnItv6rVv3J8q3lmdsPVBexzY=;
-        b=oJQxMPbVfgSl5Sl68g/vbr6NzLcxWn/hc/hfI9v2ZGsNJTUJwP79jZBS3C1LTWDxZl
-         wYyootdu4wU9SnSIsjMdAO62ZIC5nmrAnjZBblZ1FE8EFSFib53wr/e3zgfoxAuKcYMy
-         kX3i6W91QQrx3GbVa8gEk71YEQ0/2dDWsaJi4xtcIIWTJSgsVp3joRf2kgWiAhnj5Ihf
-         QJS0P02DgHjYhjRoJU4VHZHEatwHgM8tsrgISc9/Me3uo/G+zuv1njZ6xXG+ELN0HFtK
-         E1GnqmEnXCnksDzC1wQCOefRv6l26wVGLd9eMM/lYKP/Ecq/O4KwkMirbHgd4MiPruJU
-         /s5Q==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RJqvynypNN2lA8IbNpaHHyxr5Ke0vEOMiboIN4OzW30=;
+        b=EWUmgWyYbs4rAFCAzmHJdrqGef/4kVGKIJZJFjPkDLKnJUx3XRmTnA13kqXJfQuwMI
+         svu35jlwowRUG+Dgdnxf2rti2CNYK308GJJhtFluIiuS5ndAEWJ9bpkzQXQoNYap7TW6
+         K5/Hs3ilY6TyGtFdZU/6pVwf1cJtZQLz67vjSXzQTy2m2icJwSn4jgb9MamPNXM52Udj
+         Zib81AptNFkyIiKzrVklvsXpPtr2BN85NQhi5wGvLSdNMYOr/KYhmmz3KhUZxOcw163t
+         RZJ/R+iIMzD+0kWMO4JZ0xnd9P4RIi0hCnstDMBGyiWtNpQnG+iuPUF9vqQnjxHXmdpl
+         olHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SiniMnh/RN6JalocAKlnItv6rVv3J8q3lmdsPVBexzY=;
-        b=MmwZ9O2QGJUugIvbTYVwq8lU338QrD+JhRQeolLJqFFs6qIs7raSH5me8dBu7krJZx
-         T5K7DlvFTi5yseGwuRK5eVbNaO9/FJrYOC71tDi+Gna67qr2ltsidzSGHVerodPDLVCf
-         07o+KLh8zhVmKU0rUh6FV60xpIeQG1l0FHsW6h5CHhvSVrPKlxMSuXP6Mz/BR3lMY7AI
-         IdIHS0Ze9Lx8OVEaGUm6rjiznsjGKAKln/kQTFj75d53sgVVunRpTQmBfRAdVAP4iwCu
-         rMJofs2nsATjXOhZEGO6mM+fRfezvO14BwpcKkrG8IWX73lfa91b3CMQDlaROZOb+edE
-         xFIw==
-X-Gm-Message-State: APjAAAUD3BX54w2yWEEB+VR6DP1xccC/KFinng1ZUXBFL5QdEPzMuv3i
-        Em9iLWD/ZSZnNngYGzwBtUD78Z3fJzeLIg==
-X-Google-Smtp-Source: APXvYqzN9pgf9JcM8hNHm1qgYTqQTBy9MWcPO0T3FepaIj4zxV6ty9yEuLwjv3B5E5HFH3/VhTte7g==
-X-Received: by 2002:a63:f312:: with SMTP id l18mr2427297pgh.178.1580978356103;
-        Thu, 06 Feb 2020 00:39:16 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:947:2855::fa3])
-        by smtp.gmail.com with ESMTPSA id y9sm2387631pjj.17.2020.02.06.00.39.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RJqvynypNN2lA8IbNpaHHyxr5Ke0vEOMiboIN4OzW30=;
+        b=i2L9CAPkn+uv+zw1iphesrs+y6rmfqRSq+EwmiCr0mTY2lAVLDSvLDM/DJoM59C7zO
+         uoRZ3AU7iLIbo/lbPf9yuxP1X62Y4bs1SwZLxskgsN8b9YJ5eE4xZXWc7MwSpvuhAmkz
+         7A6KdSkS9JkOBirKJovlRNCqGb0KFHxewhpQhkmGYKnl5lo1GSYAVzcsvol+KPVVMhQP
+         mUiEBTYByhs9/3COOe0ST1d/xfYBUikNLvTY6brQI9WYX6JlYIucdtJDCNHs7ukdgg2O
+         ruPiPpFFWrl13nLc7diFZ26ySfxQEBPoLTpg3EI2DGmRqegyEnhNJDCUYBQTAsCxQ+Zl
+         opCw==
+X-Gm-Message-State: APjAAAXBSn04f460FxunnSVGOOHt2EAUtEtfpz3bkcU1wRUa50cw56SP
+        bikThy9pT66T9H6pb0NH7566Ug==
+X-Google-Smtp-Source: APXvYqzSbMdoob4ZQGTDL4ScCNP7A8RXxjNyuUP5qriotInXR0cYNt/+fL8srgNKU603EKjDkzWWqQ==
+X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr3161258wmf.100.1580978514693;
+        Thu, 06 Feb 2020 00:41:54 -0800 (PST)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:7d33:17f7:8097:ecc7])
+        by smtp.gmail.com with ESMTPSA id r1sm3222760wrx.11.2020.02.06.00.41.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:39:15 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH 2/2] dt-binding: spi: add bindings for spi-ar934x
-Date:   Thu,  6 Feb 2020 16:38:22 +0800
-Message-Id: <20200206083822.204534-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200206083822.204534-1-gch981213@gmail.com>
-References: <20200206083822.204534-1-gch981213@gmail.com>
+        Thu, 06 Feb 2020 00:41:54 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mchehab@kernel.org, hans.verkuil@cisco.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] media: meson: vdec: Add VP9 decoding support
+Date:   Thu,  6 Feb 2020 09:41:47 +0100
+Message-Id: <20200206084152.7070-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,61 +72,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for SPI controller in Qualcomm Atheros
-AR934x/QCA95xx SoCs.
+Hello,
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
- .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+This patchset aims to bring VP9 decoding support to Amlogic GXL, G12A & SM1
+platforms for the amlogic stateful video decoder driver.
 
-diff --git a/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-new file mode 100644
-index 000000000000..8f0c520a571c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/qca,ar934x-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Atheros AR934x/QCA95xx SoC SPI controller
-+
-+maintainers:
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: qca,ar934x-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    spi: spi@1f000000 {
-+        compatible = "qca,ar934x-spi";
-+        reg = <0x1f000000 0x1c>;
-+        clocks = <&pll ATH79_CLK_AHB>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
+With this, it passes v4l2-compliance with streaming on Amlogic G12A and
+Amlogic SM1 SoCs successfully using the stream at [1] with a fixed
+pyv4l2compliance script for VP9 at [2].
+
+The original script kept the IVF headers in the stream, confusing the
+decoder. The fixed script only extracts the payload from the IVF container.
+
+The decoder has been tested using the Google CTS TestVectorsIttiam VP9 yuv420
+samples and the VP9 Decoder Performance streams at [5], decoding all streams from
+Profile 0 and 2 up to Level 4.1, with 10bit downsampling to 8bit.
+
+This patchset depends on :
+- H.264 and compliance at [4]
+
+Changes since v3 at [7]:
+- fixes necessary spare ref buffer handling in parser
+- added a comment to indicate how it's handled
+- fix VP9 on SM1, was working with G12A firmware, but needed some changed with SM1 specific firmware
+- pushed (gxl) and switched to missing (sm1) vp9 firmwares to linux-firmware repo
+
+Changes since v2 at [6]:
+- Rebased on H.264 and compliance at [4]
+
+Changes since v1 at [3]:
+- Fixed compliance for delta frame resize, but proper ref keeping is broken
+- Added warns for delta frame resize, to be fixed in a following patchset
+- Added VP9 probabilities parsing and transformation support to decore the VP9 performance streams
+- Fixed refs keeping, avoid deleting necessary refs for next frame
+- Properly used the kernel clamp_val() macros
+- Zeroed the workspace to avoid refs handling glitches
+- Add lock around the flush & stop to avoid race between IRQ and drain/stop
+
+[1] https://github.com/superna9999/pyv4l2compliance/raw/tests/output/Jellyfish_1080_10s_5MB.vp9.hdr
+[2] https://github.com/superna9999/pyv4l2compliance
+[3] https://lore.kernel.org/linux-media/
+[4] https://lore.kernel.org/linux-media/20200116133025.1903-1-narmstrong@baylibre.com
+[5] https://www.webmproject.org/vp9/levels/
+[6] https://lore.kernel.org/linux-media/20191217111939.10387-1-narmstrong@baylibre.com
+[7] https://lore.kernel.org/linux-media/20200116133437.2443-1-narmstrong@baylibre.com
+
+The compliance log is:
+# v4l2-compliance --stream-from-hdr Jellyfish_1080_10s_5MB.vp9.hdr -s 200
+v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
+
+Compliance test for meson-vdec device /dev/video0:
+
+Driver Info:
+	Driver name      : meson-vdec
+	Card type        : Amlogic Video Decoder
+	Bus info         : platform:meson-vdec
+	Driver version   : 5.5.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+	Detected Stateful Decoder
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	Video Capture Multiplanar: Captured 198 buffers   
+	test MMAP (select): OK
+	Video Capture Multiplanar: Captured 198 buffers   
+	test MMAP (epoll): OK
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Failed: 0, Warnings: 0
+
+Maxime Jourdan (4):
+  media: meson: vdec: add helpers for lossless framebuffer compression
+    buffers
+  media: meson: vdec: add common HEVC decoder support
+  media: meson: vdec: add VP9 input support
+  media: meson: vdec: add VP9 decoder support
+
+Neil Armstrong (1):
+  media: meson: vdec: align stride on 32 bytes
+
+ drivers/staging/media/meson/vdec/Makefile     |    4 +-
+ .../media/meson/vdec/codec_hevc_common.c      |  286 +++
+ .../media/meson/vdec/codec_hevc_common.h      |   77 +
+ drivers/staging/media/meson/vdec/codec_vp9.c  | 2138 +++++++++++++++++
+ drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
+ drivers/staging/media/meson/vdec/esparser.c   |  150 +-
+ drivers/staging/media/meson/vdec/hevc_regs.h  |  218 ++
+ drivers/staging/media/meson/vdec/vdec.c       |   15 +-
+ .../staging/media/meson/vdec/vdec_helpers.c   |   35 +-
+ .../staging/media/meson/vdec/vdec_helpers.h   |    4 +
+ drivers/staging/media/meson/vdec/vdec_hevc.c  |  231 ++
+ drivers/staging/media/meson/vdec/vdec_hevc.h  |   13 +
+ .../staging/media/meson/vdec/vdec_platform.c  |   38 +
+ 13 files changed, 3209 insertions(+), 13 deletions(-)
+ create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.c
+ create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.h
+ create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
+ create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
+ create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
+
 -- 
-2.24.1
+2.22.0
 
