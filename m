@@ -2,139 +2,161 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D7C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E277DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66939217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF00214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tFWWvENZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fw7B6IvD";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="DT7mRgg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbgBFNSJ (ORCPT
+        id S1727728AbgBFNUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:18:09 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35464 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727551AbgBFNSJ (ORCPT
+        Thu, 6 Feb 2020 08:20:13 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:61723 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgBFNUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:18:09 -0500
-Received: by mail-qk1-f194.google.com with SMTP id q15so5474991qki.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 05:18:08 -0800 (PST)
+        Thu, 6 Feb 2020 08:20:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580995212; x=1612531212;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Tci7fptay5cIyGHz1i0H9LCfHINfwD/bcMD9HqaGfjs=;
+  b=fw7B6IvDE7YTKUXsibp0goYRksX3jE+ICTGZZ8Ksjl4Fm8zvjL5Z1bRi
+   il6SclhcqH7TFlGMPRaHW02vsp0z6hac1QQqs3DCvinYPPB0VB5wKiMRp
+   krKDgieSwfvaanMO1WIJoynPNLNYC8mvws/fu6TC+xTKvFK13DGzlHJXX
+   pEGv1TBXcpWyaPbsLDm17zQySTP/I2BYP4xZmM4uw+BKV33l2KqEVAV9l
+   vzKF1DE/FnjyiFFCM/l77c14ls2He6u7+gYvWbw1Wu6SjQk8BBsJiVwbg
+   Slkwo85zV/Q8r8bIaKP4HCHllDNAkl7dmFQqJqSwwKTmrlEvEJZqos+b3
+   w==;
+IronPort-SDR: zY4WxZFka5XFBS3OqYwMIuqbhwXzbHdLc/lVn4XB5HgYoOHZ7roASaNHxZQWxSSaJIOPSlb82k
+ GBJS59iEBeV9UtYm7QoEMF+GfLsWuvHZXHZCW8vBRYPyPXjqMNfiAlLpEsKQYPAko5SSeljk+L
+ 3gPzjVubRUICdbMbUdEwycifOphbn336v8N6iOaiEcrxA2MCoil7fqnGmq8uLpKoubDJRiLCNa
+ xXdidZdTlBu1fl7YZ0G9+MCGLRe2YL35vY28y88vN6iGDKSnHxaRbTS5NQpWGbHTryQXuQ2sRL
+ BtQ=
+X-IronPort-AV: E=Sophos;i="5.70,409,1574092800"; 
+   d="scan'208";a="133602647"
+Received: from mail-bn7nam10lp2107.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.107])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Feb 2020 21:20:10 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TSi4d5Yc3b2Hc71vEj44GKONZwDiA8istSXLAAkI4TrdgtY6RWjFSHYwgutD+RGaxDtPUH9wyyaT9JSm3GCaXlyFJvr+RzmzNO6x7u/JAv7K6ZWCeEMqLgrbfDRLITBB0vKQYif+w2SPz9hFEtfz5SlR6reg5vkzbiXCwpz7kukWlw/HW6lrhev4+n18I8wxIE8A80cFeee1VT0W2z/ed+ZC+QGb9fMk+1WbREywR6C/hT8aqwET5b3GkfX8d2eQ6FKfg/vGuPgNyW33U0h6P4wMRQCe5XecV5Mi74OXDSRxV3128yGiSloRpwJOTzl+jkjXfidqD8PmjiyWEnZWUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tci7fptay5cIyGHz1i0H9LCfHINfwD/bcMD9HqaGfjs=;
+ b=Xzmf7Ux4lRhb1vd0zO8FVmWzjDRTQqjrvlKo0IbpPGBaMjDlnndeReI8RlNpKdTPjj77DQDFuna0LEA6/i+fpdR+LHh8nmo4+/CDG376HgcsNltuUhcWPUvZ44sQMoP7/N4ZTY6kf7z8VVfpddUpsdE7c76+uAq5R63LThz3Ab96KIfJWSivJ0ySkVdjl7wsHVRdF8ugH8pXMkTRSCDfk39sTGJDEPBJxIDUTAaosa1W4ievrh/F3gl9qFanJiwYLP4HfPJZWPeMHmlY26Ki0S4vHlBvKPkvKBQ42CA7vtEep55Ss+A+Fo3jFx1ze7svo3tDX9NoJW8fCXdHDGqG5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ij9zh2Fk/nM0oE+nmBPWJrs7hJT7Ohtzqp7VhxNOgEw=;
-        b=tFWWvENZgXMeUBTPLirkGTKiJo1/9BR1r1j5bawrE7mMiFlA2ER1lgLmCOlXG04Bd+
-         vDRC6QlgknoKXgQKWT6ajeaMKaWELFcccb0H499rMtSxIhn0nIN4ytrOK6g8DC1NGyTF
-         PHqeOBzMwZ4DKSAWlGxdIXCuqDUQwJsmonAN7KuFkJ4g2yePx/TlxMRyzbzJd9SW/JYm
-         DcuKOspROWKJHJNHx7jObKAJm7f4knoSkHrgJ8BkTsfWvadTDDc8w23EhkUuxHEXx7dR
-         xWqrL326W2vZ53EZiLTJGPL/K7Z5vg+AxLg2E7rs2Ge2qgk82L//dnsTTmnDz2A2NuOc
-         ISaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ij9zh2Fk/nM0oE+nmBPWJrs7hJT7Ohtzqp7VhxNOgEw=;
-        b=AfbtFbuB3pSIrU0trnFAOb6cg8O44c/YkrXepF12mVvIRFCR7bAVyLx/NR4K3vaHwG
-         gB+HMx/RcYRLAOQ/l6JL2rBS1czFMDQeb+ZyomRoqPgR1RsFUAbx5Fl29xUwN5Pf+e8+
-         caQd9uZ71q8brZqx6O4ro8oL2ymqXYRUn1xkmQqb9M3tsTCb91vE36KThlvAuYcWUIbe
-         LVj+TktRBzMG5hdJp7SJQL3cToqf0Hz/pBrdSsMMktJNwRa7DpLA7MtpD+hR22I0rUoe
-         IyyEO86+yV5gcyOMcXqfDAtIJn8liq8g9HyO9hXXPEuw+C5htH45h4+LpG0GB3NYEQCO
-         yMew==
-X-Gm-Message-State: APjAAAX+4FUoepw75Ckb3JzqrcVHq2OuMdSwdOMmnGGccrDq3XoCH+0V
-        r+bWeCKLjAy2GoV4+vOQI6jkBw==
-X-Google-Smtp-Source: APXvYqw2Ul5gH3QtRlvsUnOJ9sP1jJ5Rm5F3nofsswufI0dYo9OfEyPUqnxdVPQsK4yL6w4/c+ImEA==
-X-Received: by 2002:a05:620a:13fa:: with SMTP id h26mr2459891qkl.150.1580995088053;
-        Thu, 06 Feb 2020 05:18:08 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id m16sm1352738qka.8.2020.02.06.05.18.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Feb 2020 05:18:07 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     jhubbard@nvidia.com, ira.weiny@intel.com, dan.j.williams@intel.com,
-        jack@suse.cz, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm: fix a data race in put_page()
-Date:   Thu,  6 Feb 2020 08:17:50 -0500
-Message-Id: <1580995070-25139-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tci7fptay5cIyGHz1i0H9LCfHINfwD/bcMD9HqaGfjs=;
+ b=DT7mRgg17VK0x+526Zud+pBVWakijBRtR0MxeSPxuJMRgPIkovh7lZdhVqo/LP4kpW7Q7zI3XP8PiAu/xCqGfSfGnHA+BejUn3wVMmZk63mMFY3GSYEdXE+oyVYSstLRaMHOw5spKKDqVLuf9CbfO9mIyJzVXdYhz3jOzs8D/Yc=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB5662.namprd04.prod.outlook.com (20.179.20.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Thu, 6 Feb 2020 13:20:07 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2707.020; Thu, 6 Feb 2020
+ 13:20:07 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pedro Sousa <sousa@synopsys.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v7 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
+Thread-Topic: [PATCH v7 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
+Thread-Index: AQHV3MhOcPND5Q8f/kqjkSYvDk+3nKgOJc2A
+Date:   Thu, 6 Feb 2020 13:20:07 +0000
+Message-ID: <MN2PR04MB6991EA027BB31FA58EEBDA81FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
+ <1580978008-9327-9-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1580978008-9327-9-git-send-email-cang@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1726033a-1546-4a2c-3d0b-08d7ab0748f4
+x-ms-traffictypediagnostic: MN2PR04MB5662:
+x-microsoft-antispam-prvs: <MN2PR04MB566246AE152457BF753D6C3EFC1D0@MN2PR04MB5662.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(199004)(189003)(64756008)(66476007)(66446008)(66556008)(8676002)(71200400001)(81166006)(81156014)(8936002)(55016002)(9686003)(86362001)(76116006)(66946007)(6506007)(2906002)(7696005)(186003)(478600001)(26005)(4744005)(5660300002)(52536014)(4326008)(7416002)(33656002)(110136005)(316002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5662;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SYt/SdTAynx6CTqX5zUDAjR4sDWT7+Vn7tqs/E9q4NNH61xOpOxXTlSsJOszJjLQOxu4A0bSze4uJN6urJPorAv5qSPoI3E+0pXDH+ibFa8GY+W3f71OyRWJt2J8o6ZMFxxAa2MDhzNiE87tH/WwsZ+lLM8GvkHTotId6t528qDQcSSLMRW5ioaKPUpxaIAO39ToVu0RzdkhoVrrRP3hYO0oiRhbVw8yLAnBQ9m4q8nFvv8nqBt15oon1neqOjGliroI8QGa0PHWrw5TVa7U1P0ZmZ3dNSlZGz9neh+YwfKa9usJ4Qu6hg85B5M1Ul4m4NI2FuQ8y5aW5Yr1dBIu8UJ2CRq7dVgEwOwhHc8hlnoQf8oRoqLA0WHUmV1UfSkxEG1GMxMMZa4NgptPoOVuNw+EPaGAj2c8rMsw8cBGjAb6LgOrdPD4CEBbrmgIg4h2
+x-ms-exchange-antispam-messagedata: ZdwY18G+4CHbJhtRn8Vxp/tiOs2suQ+PwkES+bi8VgGKkRZl1dnbREnbgNqDbhBB03z7J3hpoKXmVm9vJYcWB45lOOr6AVmrAoTn8wgWKH3ReniYBNlhrLEoi1eHO3CyLSiTeT8Q3mUVbIiFFPyPVQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1726033a-1546-4a2c-3d0b-08d7ab0748f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 13:20:07.2225
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zExoRXxyy3sgLru2xkZf6SE9vvrB4CCdCGD4RL9IRqqdyo61Y5zx62D9LBc4CO/C7qyBE8FLJqo/fcISHCFgwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-page->flags could be accessed concurrently as noticied by KCSAN,
+Hi Can,
 
- BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
+=20
+> ADAPT is added specifically for HS Gear4 mode only, select INITIAL adapt
+> before do power mode change to G4 and select no adapt before switch to
+> non-G4 modes.
 
- write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
-  page_cpupid_xchg_last+0x51/0x80
-  page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
-  wp_page_reuse+0x3e/0xc0
-  wp_page_reuse at mm/memory.c:2453
-  do_wp_page+0x472/0x7b0
-  do_wp_page at mm/memory.c:2798
-  __handle_mm_fault+0xcb0/0xd00
-  handle_pte_fault at mm/memory.c:4049
-  (inlined by) __handle_mm_fault at mm/memory.c:4163
-  handle_mm_fault+0xfc/0x2f0
-  handle_mm_fault at mm/memory.c:4200
-  do_page_fault+0x263/0x6f9
-  do_user_addr_fault at arch/x86/mm/fault.c:1465
-  (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
-  page_fault+0x34/0x40
+UFSHCI 3.0 says:
+7.4.1 Adapt
+The use of Adapt isn't mandatory but the specification provides some guidel=
+ines on its use.
+The HCI should perform an Initial Adapt in the following cases if the link =
+is running at HS-G4
+speed:
+ - If DME_RESET is initiated.
+ - If an unused line is activated for HS-G4.
+ - If UECDME.EC is triggered with bit 3 set to '1'.
+ - If a change between Rate A and Rate B in HS-G4 is performed.
 
- read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
-  put_page+0x15a/0x1f0
-  page_zonenum at include/linux/mm.h:923
-  (inlined by) is_zone_device_page at include/linux/mm.h:929
-  (inlined by) page_is_devmap_managed at include/linux/mm.h:948
-  (inlined by) put_page at include/linux/mm.h:1023
-  wp_page_copy+0x571/0x930
-  wp_page_copy at mm/memory.c:2615
-  do_wp_page+0x107/0x7b0
-  __handle_mm_fault+0xcb0/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+If it's not mandatory - why are we setting this for all vendors on all plat=
+forms?
+Or am I miss-reading the spec?
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-Both the read and write are done only with the non-exclusive mmap_sem
-held. Since the read will check for specific bits (up to three bits for
-now) in the flag, load tearing could in theory trigger a logic bug.
-
-To fix it, it could introduce put_page_lockless() in those places but
-that could be an overkill, and difficult to use. Thus, just add
-READ_ONCE() for the read in page_zonenum() for now where it should not
-affect the performance and correctness with a small trade-off that
-compilers might generate less efficient optimization in some places.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/linux/mm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..f8529aa971c0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -920,7 +920,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
- 
- static inline enum zone_type page_zonenum(const struct page *page)
- {
--	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
-+	return (READ_ONCE(page->flags) >> ZONES_PGSHIFT) & ZONES_MASK;
- }
- 
- #ifdef CONFIG_ZONE_DEVICE
--- 
-1.8.3.1
-
+Thanks,
+Avri
