@@ -2,113 +2,99 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E271CC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04757C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B907B218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C053921927
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021999;
-	bh=aZV9knOAXi/0WajZqPpOgbFb+9AYqzq1ToPyIXh+tTs=;
+	s=default; t=1581022003;
+	bh=Fd2YhmJXyHWICE9xLRUhbR43QWIjp3P2ufjVNviVWns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kN3KgZ77dXqFsQpfJuLx5YTu5G+5+Qnh930ODjvZ39Lu2OpekXDaX9nhJQvviNup2
-	 xtHhezq3HgV0DWi6CCHVHs28vWsaIF27YqqfyJXPlYkhwxq6qKTOqXoqpQe1CFao2o
-	 eSZYRhO/Zxd8mg6OsknqzDzOc1AibLfYkkVTr6NE=
+	b=dnloXrIIGvv3rnktfyJeI/oGm5I2or+8kMcb38k4pk9hQaRhhx8oLxIuiBiPLhVaW
+	 SYP4TnjC/S62V6eTwhvKs6MyXB3fLLR57NFTei3CdnGjZEszjjsQ9ECnrcGnGRzrQA
+	 4gjkBX8EwWOguHOJgRzOs2JnkpR1ITmErR1vwzG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgBFUqi (ORCPT
+        id S1728254AbgBFUqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:38 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41780 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgBFUqe (ORCPT
+        Thu, 6 Feb 2020 15:46:30 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35955 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgBFUqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:46:34 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l3so3338806pgi.8;
-        Thu, 06 Feb 2020 12:46:32 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:21 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 185so59054pfv.3;
+        Thu, 06 Feb 2020 12:46:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ydXcMt/LQYTtC9+Pd4G5bVOYifXyo4gCLRUMdz5nmlc=;
-        b=izxZTnUEAW22RfqU1j51xkVaz4f4OhJha8Ap9BYyUUG54PWehpIlBQx4rzx46DJTPn
-         Em5fAElIFaTKZKysamF99ePfoXd7w+lbKDbuPF7Pj/c6SOhOkj+y4I4MTe6p8zQdiClg
-         HmNxu9xkEeFcmtKkThjVM3oJKAjLnm8jPyG7qD8HTVxxHKZZjEgk7UkKRd2XKeFWcbLy
-         73B4cBSOI91QI3EqXGUnhAaiUFzz8HxDuBybhy6x6MaebOcQh+f4WxE0LNRJOTE1OFiJ
-         TKlkOMsUGhzRdyLqvqnZSmgHOTl/GxyCcKr0wecnYjQVe0ZRAlUdhzbnE1kk77yLKo5J
-         od9w==
-X-Gm-Message-State: APjAAAX5JJKjJRqN8qT76kZhWxk85QA1MaCbEsIFvrGzEO+sd+hGfNeF
-        AMUEHAyI10v/5y6YFBAbQg==
-X-Google-Smtp-Source: APXvYqydDGv//MOaVcF+ltoSavNLLJxMyuRh6BXzPCHtlqH+bv6Q9/MQz/jK+pB7hWgEMXve5dqvDw==
-X-Received: by 2002:a62:2ad1:: with SMTP id q200mr6105224pfq.123.1581021991999;
-        Thu, 06 Feb 2020 12:46:31 -0800 (PST)
+        bh=ug/wlo0Kk7ZmWuOhLjsGf8WpCyfYM5yOAezTl3oLxGE=;
+        b=PKgrnsV5MKiUZIMMv8THQCJTRF/OfN/A2C2Uz0slq+rnPdh1JeeJtHSPDRphIcio+0
+         MeryKD3yM6dqE/SC+j55EOXV7JQw2OXW675E3qs8H7PFZBr6cmQ9I5k1ePyMMMhOZT/3
+         nDaScFYIicxyK8eJel8Rur3dtlwKwb/FgIKWZICxE42HbkuK34vj3c6hh350lY02D5N+
+         HcK0hHtqk7lz+99hEYwPJA/eO/DqYbDIXbHROjZDPZrDBpJdM37llOW+vUWlL3tyCq3m
+         QWQRUdmdW78uFj4dZOvy5QrN7S5RT+fYv2+ZN86VMFyQ4hDwVUMGrDIT2mv/UsZ1JqnX
+         Bwxw==
+X-Gm-Message-State: APjAAAVfOduh9fRLaV0hRJzxa0/+wc3yxYkGsQZnY3HZLEeFl4cDvUS0
+        6e3B8v203iB7SxQ5jm9QCA==
+X-Google-Smtp-Source: APXvYqzR75X0SOO8/Ci8hfXh+3pGKYvyPgI2KQi3sQN7ajgY/oC7QShvBli/8QrnOI53l84UKQeUKg==
+X-Received: by 2002:a65:4d0d:: with SMTP id i13mr3719314pgt.346.1581021981006;
+        Thu, 06 Feb 2020 12:46:21 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id r13sm170817pjp.14.2020.02.06.12.46.30
+        by smtp.gmail.com with ESMTPSA id a21sm287558pgd.12.2020.02.06.12.46.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:31 -0800 (PST)
-Received: (nullmailer pid 13921 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:40:30 -0000
-Date:   Thu, 6 Feb 2020 18:40:30 +0000
+        Thu, 06 Feb 2020 12:46:19 -0800 (PST)
+Received: (nullmailer pid 28310 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:15:32 -0000
+Date:   Thu, 6 Feb 2020 19:15:32 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-spi@vger.kernel.org, Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
- imx8mm, imx8qxp
-Message-ID: <20200206184030.GA11381@bogus>
-References: <20200202125950.1825013-1-aford173@gmail.com>
- <20200202125950.1825013-4-aford173@gmail.com>
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] Documentation: watchdog: qcom-wdt: Remove deprecated
+ compatible
+Message-ID: <20200206191532.GA24542@bogus>
+References: <20200204152104.13278-1-ansuelsmth@gmail.com>
+ <20200204152104.13278-2-ansuelsmth@gmail.com>
+ <20200204160958.GB17320@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200202125950.1825013-4-aford173@gmail.com>
+In-Reply-To: <20200204160958.GB17320@roeck-us.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
-> Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
+On Tue, Feb 04, 2020 at 08:09:58AM -0800, Guenter Roeck wrote:
+> On Tue, Feb 04, 2020 at 04:21:02PM +0100, Ansuel Smith wrote:
+> > "qcom,kpss-wdt-msm8960"
+> > "qcom,kpss-wdt-apq8064"
+> > "qcom,kpss-wdt-ipq8064"
+> > "qcom,kpss-wdt-ipq4019"
+> > 
+> > and deprectaed and not used in the driver code at all. Drop them and
+> > fix the example.
+> > 
+> Rob may correct me, but I don't think you can just remove
+> deprecated properties. It doesn't matter if the driver supports
+> it or not; after all, DT property descriptions are supposed
+> to be OS independent.
 
-s/do/to/
+Right.
 
-> document.
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V2: No change
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> index 2cd67eb727d4..7ac60d9fe357 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> @@ -2,6 +2,9 @@
->  
->  Required properties:
->    - compatible : Should be "nxp,lx2160a-fspi"
-> +			    "nxp,imx8qxp-fspi"
-> +			    "nxp,imx8mm-fspi"
+Also, there's a conversion of this to schema under review, so it will 
+need to be refactored if not dropped.
 
-All 3 are different and no compatibility?
-
-> +
->    - reg :        First contains the register location and length,
->                   Second contains the memory mapping address and length
->    - reg-names :  Should contain the resource reg names:
-> -- 
-> 2.24.0
-> 
+Rob
