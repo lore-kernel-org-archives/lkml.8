@@ -2,108 +2,118 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9804AC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068F4C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1CA21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580997248;
-	bh=GCzxJGLDhyzAc2+59nJJJlFFQZG+KekwiRcn/IX7tEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=12CHPnDwXbuVdplxcaW8K7VouWLnmM57hqUCyVE95COARv3dG6Hb+1caAE4OAWQxr
-	 Vupd+YNL9//JVfBU/Gr8mmNthsXEtWCZ697+xKwWC3MlqJKNo98z5lfl1hLNVCi6GT
-	 NlqMk+FeQiPJV7sNItrE/3I1O8oyHw4WdXdkIueI=
+	by mail.kernel.org (Postfix) with ESMTP id CF160214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ekOSgGtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgBFNyH (ORCPT
+        id S1728016AbgBFNzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:54:07 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42910 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFNyH (ORCPT
+        Thu, 6 Feb 2020 08:55:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46689 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726765AbgBFNzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:54:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GCzxJGLDhyzAc2+59nJJJlFFQZG+KekwiRcn/IX7tEw=; b=OQWErEdDb/s7SaXS1CW0VBVGO
-        zsh/6D9z+LcFFmHYN/TIyNXdiSVzPvzGz+DXiucYa9JFU5a8V1Zkk+deq/vRR4sMtgYiGw/r4IHnX
-        2qg+E3luQg91bzTitvqbqjY1NeeTiz3KlQyKLAbRRBwiEFVETeqx3WX56J6iPCTo2IApw=;
-Received: from fw-tnat-cam2.arm.com ([217.140.106.50] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1izhbY-0002Fm-Dn; Thu, 06 Feb 2020 13:54:04 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id E3403D01D7F; Thu,  6 Feb 2020 13:54:03 +0000 (GMT)
-Date:   Thu, 6 Feb 2020 13:54:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-spi@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH resend 1/2] spi: add driver for ar934x spi controller
-Message-ID: <20200206135403.GP3897@sirena.org.uk>
-References: <20200206084443.209719-1-gch981213@gmail.com>
- <20200206084443.209719-2-gch981213@gmail.com>
- <20200206113158.GK3897@sirena.org.uk>
- <CAJsYDVKnOv+4NT8V+9fFy_0KE7QSoeTL0jHTdq31Z=88vBzHgQ@mail.gmail.com>
- <CAJsYDV+C+-uqurM+yTS3XXXrEDe+G3XFrpYEAaZLvzECLNoF+A@mail.gmail.com>
+        Thu, 6 Feb 2020 08:55:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580997308;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=e6p0SFz0Jv43cXhkS8QIK3x+xLQwRZMBziFvM+wBMj0=;
+        b=ekOSgGtxPQ0hOXmatLpf7LYaCGp1RpoiJ1JF45ds5ZNyZfx9DWLEQnYarAXZ+YQJLlmh2W
+        GBg7z5b7YcZfJ7CSnzDq9c/bS0XUOoqhfAOWVFyNXgzNspKeMGZcW35iAXayQrplXv5Heq
+        +Ha/ihwMIMzqP2RySBcpVC+ZJu7t16M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-1Wj7ErYIPxWnB2U87MHFlA-1; Thu, 06 Feb 2020 08:55:04 -0500
+X-MC-Unique: 1Wj7ErYIPxWnB2U87MHFlA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 242D410883B8;
+        Thu,  6 Feb 2020 13:55:03 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-218.rdu2.redhat.com [10.10.120.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6075110016DA;
+        Thu,  6 Feb 2020 13:55:02 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix service call disconnection
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 06 Feb 2020 13:55:01 +0000
+Message-ID: <158099730157.2198513.14087711871251670411.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T6OnZCvW5HcnivXR"
-Content-Disposition: inline
-In-Reply-To: <CAJsYDV+C+-uqurM+yTS3XXXrEDe+G3XFrpYEAaZLvzECLNoF+A@mail.gmail.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The recent patch that substituted a flag on an rxrpc_call for the
+connection pointer being NULL as an indication that a call was disconnected
+puts the set_bit in the wrong place for service calls.  This is only a
+problem if a call is implicitly terminated by a new call coming in on the
+same connection channel instead of a terminating ACK packet.
 
---T6OnZCvW5HcnivXR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In such a case, rxrpc_input_implicit_end_call() calls
+__rxrpc_disconnect_call(), which is now (incorrectly) setting the
+disconnection bit, meaning that when rxrpc_release_call() is later called,
+it doesn't call rxrpc_disconnect_call() and so the call isn't removed from
+the peer's error distribution list and the list gets corrupted.
 
-On Thu, Feb 06, 2020 at 08:33:33PM +0800, Chuanhong Guo wrote:
-> On Thu, Feb 6, 2020 at 8:30 PM Chuanhong Guo <gch981213@gmail.com> wrote:
+KASAN finds the issue as an access after release on a call, but the
+position at which it occurs is confusing as it appears to be related to a
+different call (the call site is where the latter call is being removed
+from the error distribution list and either the next or pprev pointer
+points to a previously released call).
 
-> > Chipselect is also handled during transfer. Controller asserts
-> > corresponding chipselect in SHIFT_CTRL register, and if SHIFT_TERM bit
-> > is set, controller will deassert chipselect after current transfer is
-> > done. I need to know whether this is the last transfer and set
-> > SHIFT_TERM accordingly.
+Fix this by moving the setting of the flag from __rxrpc_disconnect_call()
+to rxrpc_disconnect_call() in the same place that the connection pointer
+was being cleared.
 
-> Oh, I remembered that I saw transfer_one function name somewhere and
-> thought maybe I could shorten the function name a bit. I'll correct
-> this back to ar934x_spi_transfer_one_message in v2.
+Fixes: 5273a191dca6 ("rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-OK, sounds good - I see the chip select handling now.
+ net/rxrpc/conn_object.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---T6OnZCvW5HcnivXR
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index c0b3154f7a7e..19e141eeed17 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -171,8 +171,6 @@ void __rxrpc_disconnect_call(struct rxrpc_connection *conn,
+ 
+ 	_enter("%d,%x", conn->debug_id, call->cid);
+ 
+-	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+-
+ 	if (rcu_access_pointer(chan->call) == call) {
+ 		/* Save the result of the call so that we can repeat it if necessary
+ 		 * through the channel, whilst disposing of the actual call record.
+@@ -225,6 +223,7 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
+ 	__rxrpc_disconnect_call(conn, call);
+ 	spin_unlock(&conn->channel_lock);
+ 
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+ 	conn->idle_timestamp = jiffies;
+ }
+ 
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl48GnkACgkQJNaLcl1U
-h9Abxwf/bD6z7Zyx5ZcODXIHhsjroI14CG3xmml4eA/SkHeU5P02YglZOlXrAjQK
-AxJfhBpbiDy+R/eKMrzK4bsFjEOWsVLBiJ9HItN0qnnUmTXwfm5hyyxgw5qeHejb
-Uzu6XVVf5KmUS9XrOZ4p4JIIO5HWitOpmCtrfMQtvjp7hi+5NIjApdSw5nCMZYxb
-edOMq+0DDhXeMdLytbsQOehx6Vflyi7nEZS9TNEeLYG1zQPotBJccAiHypEtU0P0
-l/T1U624W5dSwFkSARM+Ko6HNSVgriPTMS1ZVqz4RHnfB+U3g3IsnjAdNgU1nUQP
-okovYCXjjOzLRa1fubeUMcjxNrRaZg==
-=fyFm
------END PGP SIGNATURE-----
-
---T6OnZCvW5HcnivXR--
