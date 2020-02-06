@@ -2,506 +2,539 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531E5C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51A5C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153C720730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="muKUaEKf"
+	by mail.kernel.org (Postfix) with ESMTP id 9165F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580988515;
+	bh=GJcI9nYq59RUzy22koTUfdP4WIB6ekJBAEFQMZMEzGA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Z5bRMSyk8zOfa6A2yod+m05OieN0khpETfD7RaAnLd6rgjAWtBUMxsU2I3ajnvu/9
+	 lSMKu5OfusU7VYGl0dFKuQ9dlS5mBbK+keFmPkvbbvgBOqdHUQ/yq1BMVxXlT65APK
+	 cV11XnCQQ6N7qRhjQhQ60p0+RnN84xrBRLlzhkLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgBFL1a (ORCPT
+        id S1727589AbgBFL2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:27:30 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35190 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbgBFL13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:27:29 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so6637108wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:27:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DhWg+zpdSqsW8rxWEiaaZAwp7E2BBzkWJY6y23Nf9HU=;
-        b=muKUaEKfnmdex2xux9VRn97Fyh2mmm6dgo7Z4NzuaTE++qIXJ3R+6ePGB7umg//9LW
-         FKN8elSrBErbld5boWBqNcSUvl9pfVrv5mXp/pXO4BJttqmkjgY0cXSVs/+rjGvOSO9T
-         BJWwgPlHrfLqo6Vqvheynora+vQInsIBdKAeqmdTynbzPpodGpNnscfk2ehufxwe6kWn
-         wa3TVmsyD5xn0x14Po47+2nP1X5mI+WnG0ieORzop8RanyKcUjy/C9auh+w4baTf7HUH
-         TKFxO+wROoPQ/kz2lX7bVEozXVIA+esLEtqH1slZtgJCwB2HnbE6kiJsAs7e5ut0+R8g
-         ncjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DhWg+zpdSqsW8rxWEiaaZAwp7E2BBzkWJY6y23Nf9HU=;
-        b=QWO/niRx14CFA6Ce8m/qRjDUxaS9RXT1IeNVK/z1aR+On5/EjDLsE70iJ9XFXfqNAa
-         ux622hNIyWcDetvJhr+YfJcwjkuaRuVlcyIY1I9/LEFIYpf1VJrkt5olJlyjcP0jRvwS
-         BuzUWw6/f+YEOzSPvxv+MOsbuMnS+OM48SLGkoEpYQIAGp65+AoqyrSJAobWzbW1BXFK
-         ikU88sKs3EgIyyzQsCJiTwyu7vYhNBYIwfzjqsV4cHHSNw3GcyNeqFnq4doKvmV8HZ0H
-         AayaH8eECyllOqgHWXvLkkOLroY1rvxWnmuFKQcn2t3Y+TnYnQO4p+trb1Z7IrL51x7C
-         dLOw==
-X-Gm-Message-State: APjAAAUxBsxx5Z1WuXu9ZHUkBI0+9auO+Qr03sSFwRhTO1gv0CWKfKiW
-        p+5OxBfiW1jxsT6TRsaFzhBPnA==
-X-Google-Smtp-Source: APXvYqwSsh7dUxDsfBDsS/7Q3iLOvZND5C4QfZ6rnRc8hHTEMsls6EvjrbZbVmJ14vQg12Ie6nC2vA==
-X-Received: by 2002:a7b:cb49:: with SMTP id v9mr4221349wmj.160.1580988445988;
-        Thu, 06 Feb 2020 03:27:25 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:94e8:de94:574e:efb1])
-        by smtp.gmail.com with ESMTPSA id o4sm3721797wrx.25.2020.02.06.03.27.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 03:27:25 -0800 (PST)
-Date:   Thu, 6 Feb 2020 11:27:23 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Thu, 6 Feb 2020 06:28:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbgBFL2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:28:34 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB4520730;
+        Thu,  6 Feb 2020 11:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580988513;
+        bh=GJcI9nYq59RUzy22koTUfdP4WIB6ekJBAEFQMZMEzGA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1QUaqJh1fQnn9mSBJ2cQhTN0wOrKTr1cZG6oCzKXsGeLqlytmoih/5WRAF1SVehI2
+         it+QZuC9Z/m6LHD6jVIKjaxDyxIXPM+K4joB08g2OUDAsv+X+YMwrncr8s1klYEsJh
+         kK4alG0ZJrDHygZKxXzjE0N6q72nPznqqRkwrdx8=
+Date:   Thu, 6 Feb 2020 11:28:29 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
-Message-ID: <20200206112723.GA19388@big-machine>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
- <20200113100931.GG42593@e119886-lin.cambridge.arm.com>
- <DB8PR04MB67476FE40D1396B2F61F5683841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>
+Subject: Re: [PATCH 2/4] iio: imu: adis: Refactor adis_initial_startup
+Message-ID: <20200206112829.4aef53f3@archlinux>
+In-Reply-To: <c46b2821098a07b5fb8bf42b26605e1841672d77.camel@analog.com>
+References: <20200120142051.28533-1-alexandru.ardelean@analog.com>
+        <20200120142051.28533-2-alexandru.ardelean@analog.com>
+        <20200201170839.4ab98d8e@archlinux>
+        <da82db5f81e116c7ecc36f5d9833b90b4f7cd15d.camel@gmail.com>
+        <20200203120338.000044c1@Huawei.com>
+        <182c1f94c7311580aea1b4cabe0ab2ae26bed3a6.camel@analog.com>
+        <20200205145938.00006a35@Huawei.com>
+        <edea0212d5882842c92c638df13bb6e4ed8a1a82.camel@analog.com>
+        <20200206094501.68f47948@archlinux>
+        <c46b2821098a07b5fb8bf42b26605e1841672d77.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB67476FE40D1396B2F61F5683841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 11:04:29AM +0000, Z.q. Hou wrote:
-> Hi Andrew,
-> 
-> Thanks a lot for your comments!
-> Sorry for my delay respond!
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2020年1月13日 18:10
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; robh+dt@kernel.org; arnd@arndb.de;
-> > mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
-> > shawnguo@kernel.org; m.karthikeyan@mobiveil.co.in; Leo Li
-> > <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
-> > catalin.marinas@arm.com; will.deacon@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
-> > <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
-> > 
-> > On Wed, Nov 20, 2019 at 03:45:23AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > The Mobiveil PCIe controller can work in either Root Complex mode or
-> > > Endpoint mode. So introduce a new structure root_port, and abstract
-> > > the RC related members into it.
-> > 
-> > The first sentence explains the trigger for this work, the second explains what
-> > you are changing, it would be helpful to also describe why you need to make
-> > this change. You could do this by extending the last sentence, e.g.
-> > 
-> > "So introduce a new structure root_port, and abstract the RC  related
-> > members into it such that it can be used by both ..."
-> > 
-> > As this series doesn't actually add a EP driver, this abstraction isn't needed
-> > now - but it is nice to have - it may be helpful to explain this.
-> > 
-> > The email subject could also more precisely explain what this patch does.
-> 
-> Thanks for the good suggestions! Will change in v10.
-> 
-> > 
-> > 
-> > >
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > ---
-> > > V9:
-> > >  - New patch splited from the #1 of V8 patches to make it easy to review.
-> > 
-> > Indeed, it's much nicer to review - thanks.
-> > 
-> > 
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 99
-> > > ++++++++++++++++----------
-> > >  1 file changed, 60 insertions(+), 39 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 3a696ca45bfa..5fd26e376af2 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -3,7 +3,10 @@
-> > >   * PCIe host controller driver for Mobiveil PCIe Host controller
-> > >   *
-> > >   * Copyright (c) 2018 Mobiveil Inc.
-> > > + * Copyright 2019 NXP
-> > > + *
-> > >   * Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > + * Recode: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > 
-> > As per my previous feedback, I'm not sure the value of using the term refactor
-> > or a synonym of it. And I certaintly don't want to encourage anyone that
-> > modifies this file to add a similar tag when the information is easily visible via
-> > GIT and the get_maintainers script.
-> 
-> Will remove the recode tag in v10.
-> 
-> > 
-> > >   */
-> > >
-> > >  #include <linux/delay.h>
-> > > @@ -138,22 +141,27 @@ struct mobiveil_msi {			/* MSI
-> > information */
-> > >  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);  };
-> > >
-> > > +struct root_port {
-> > > +	char root_bus_nr;
-> > > +	void __iomem *config_axi_slave_base;	/* endpoint config base */
-> > > +	struct resource *ob_io_res;
-> > > +	int irq;
-> > > +	raw_spinlock_t intx_mask_lock;
-> > > +	struct irq_domain *intx_domain;
-> > > +	struct mobiveil_msi msi;
-> > > +	struct pci_host_bridge *bridge;
-> > > +};
-> > 
-> > Please prefix with mobiveil given we have mobiveil related structures inside it.
-> 
-> Do you mean s/root_port/mobiveil_root_port/ ?
+On Thu, 6 Feb 2020 10:19:09 +0000
+"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
 
-Yes!
+> On Thu, 2020-02-06 at 09:45 +0000, Jonathan Cameron wrote:
+> > On Wed, 5 Feb 2020 16:44:13 +0000
+> > "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+> >  =20
+> > > On Wed, 2020-02-05 at 14:59 +0000, Jonathan Cameron wrote: =20
+> > > > On Wed, 5 Feb 2020 12:25:40 +0000
+> > > > "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+> > > >    =20
+> > > > > On Mon, 2020-02-03 at 12:03 +0000, Jonathan Cameron wrote:   =20
+> > > > > > On Mon, 3 Feb 2020 10:31:30 +0100
+> > > > > > Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+> > > > > >      =20
+> > > > > > > Hi Jonathan,
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > On Sat, 2020-02-01 at 17:08 +0000, Jonathan Cameron
+> > > > > > > wrote:     =20
+> > > > > > > > On Mon, 20 Jan 2020 16:20:49 +0200
+> > > > > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> > > > > > > >        =20
+> > > > > > > > > From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > > > > > > >=20
+> > > > > > > > > All the ADIS devices perform, at the beginning, a self
+> > > > > > > > > test
+> > > > > > > > > to
+> > > > > > > > > make
+> > > > > > > > > sure
+> > > > > > > > > the device is in a sane state. Furthermore, some
+> > > > > > > > > drivers
+> > > > > > > > > also
+> > > > > > > > > do a
+> > > > > > > > > call
+> > > > > > > > > to `adis_reset()` before the test which is also a good
+> > > > > > > > > practice.
+> > > > > > > > > This
+> > > > > > > > > patch unifies all those operation so that, there's no
+> > > > > > > > > need
+> > > > > > > > > for
+> > > > > > > > > code
+> > > > > > > > > duplication. Furthermore, the rst pin is also checked
+> > > > > > > > > to
+> > > > > > > > > make
+> > > > > > > > > sure
+> > > > > > > > > the
+> > > > > > > > > device is not in HW reset. On top of this, some drivers
+> > > > > > > > > also
+> > > > > > > > > read
+> > > > > > > > > the
+> > > > > > > > > device product id and compare it with the device being
+> > > > > > > > > probed
+> > > > > > > > > to
+> > > > > > > > > make
+> > > > > > > > > sure the correct device is being handled. This can also
+> > > > > > > > > be
+> > > > > > > > > passed
+> > > > > > > > > to the
+> > > > > > > > > library by introducing a variable holding the PROD_ID
+> > > > > > > > > register
+> > > > > > > > > of
+> > > > > > > > > the
+> > > > > > > > > device.
+> > > > > > > > >=20
+> > > > > > > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > > > > > > > Signed-off-by: Alexandru Ardelean <     =20
+> > > > > > > > > alexandru.ardelean@analog.com>     =20
+> > > > > > > > > ---
+> > > > > > > > >  drivers/iio/imu/Kconfig      |  1 +
+> > > > > > > > >  drivers/iio/imu/adis.c       | 63
+> > > > > > > > > ++++++++++++++++++++++++++
+> > > > > > > > > ----
+> > > > > > > > > ------
+> > > > > > > > >  include/linux/iio/imu/adis.h | 15 ++++++++-
+> > > > > > > > >  3 files changed, 61 insertions(+), 18 deletions(-)
+> > > > > > > > >=20
+> > > > > > > > > diff --git a/drivers/iio/imu/Kconfig
+> > > > > > > > > b/drivers/iio/imu/Kconfig
+> > > > > > > > > index 60bb1029e759..63036cf473c7 100644
+> > > > > > > > > --- a/drivers/iio/imu/Kconfig
+> > > > > > > > > +++ b/drivers/iio/imu/Kconfig
+> > > > > > > > > @@ -85,6 +85,7 @@ endmenu
+> > > > > > > > > =20
+> > > > > > > > >  config IIO_ADIS_LIB
+> > > > > > > > >  	tristate
+> > > > > > > > > +	depends on GPIOLIB
+> > > > > > > > >  	help
+> > > > > > > > >  	  A set of IO helper functions for the Analog
+> > > > > > > > > Devices
+> > > > > > > > > ADIS*
+> > > > > > > > > device family.
+> > > > > > > > > =20
+> > > > > > > > > diff --git a/drivers/iio/imu/adis.c
+> > > > > > > > > b/drivers/iio/imu/adis.c
+> > > > > > > > > index d02b1911b0f2..1eca5271380e 100644
+> > > > > > > > > --- a/drivers/iio/imu/adis.c
+> > > > > > > > > +++ b/drivers/iio/imu/adis.c
+> > > > > > > > > @@ -7,6 +7,7 @@
+> > > > > > > > >   */
+> > > > > > > > > =20
+> > > > > > > > >  #include <linux/delay.h>
+> > > > > > > > > +#include <linux/gpio/consumer.h>
+> > > > > > > > >  #include <linux/mutex.h>
+> > > > > > > > >  #include <linux/device.h>
+> > > > > > > > >  #include <linux/kernel.h>
+> > > > > > > > > @@ -365,36 +366,64 @@ static int adis_self_test(struct
+> > > > > > > > > adis
+> > > > > > > > > *adis)
+> > > > > > > > >  }
+> > > > > > > > > =20
+> > > > > > > > >  /**
+> > > > > > > > > - * adis_inital_startup() - Performs device self-test
+> > > > > > > > > + * __adis_initial_startup() - Device initial setup
+> > > > > > > > >   * @adis: The adis device
+> > > > > > > > >   *
+> > > > > > > > > + * This functions makes sure the device is not in
+> > > > > > > > > reset,
+> > > > > > > > > via
+> > > > > > > > > rst
+> > > > > > > > > pin.
+> > > > > > > > > + * Furthermore it performs a SW reset (only in the
+> > > > > > > > > case we
+> > > > > > > > > are
+> > > > > > > > > not
+> > > > > > > > > coming from
+> > > > > > > > > + * reset already) and a self test. It also compares
+> > > > > > > > > the
+> > > > > > > > > product id
+> > > > > > > > > with the
+> > > > > > > > > + * device id if the prod_id_reg variable is set.
+> > > > > > > > > + *
+> > > > > > > > >   * Returns 0 if the device is operational, a negative
+> > > > > > > > > error
+> > > > > > > > > code
+> > > > > > > > > otherwise.
+> > > > > > > > >   *
+> > > > > > > > >   * This function should be called early on in the
+> > > > > > > > > device
+> > > > > > > > > initialization sequence
+> > > > > > > > >   * to ensure that the device is in a sane and known
+> > > > > > > > > state
+> > > > > > > > > and
+> > > > > > > > > that
+> > > > > > > > > it is usable.
+> > > > > > > > >   */
+> > > > > > > > > -int adis_initial_startup(struct adis *adis)
+> > > > > > > > > +int __adis_initial_startup(struct adis *adis)
+> > > > > > > > >  {
+> > > > > > > > >  	int ret;
+> > > > > > > > > -
+> > > > > > > > > -	mutex_lock(&adis->state_lock);
+> > > > > > > > > +	struct gpio_desc *gpio;
+> > > > > > > > > +	const struct adis_timeout *timeouts =3D adis- =20
+> > > > > > > > > >data-   =20
+> > > > > > > > > > timeouts;     =20
+> > > > > > > > > +	const char *iio_name =3D spi_get_device_id(adis- =20
+> > > > > > > > > >spi)-   =20
+> > > > > > > > > > name;     =20
+> > > > > > > > > +	u16 prod_id, dev_id;
+> > > > > > > > > +
+> > > > > > > > > +	/* check if the device has rst pin low */
+> > > > > > > > > +	gpio =3D devm_gpiod_get_optional(&adis->spi->dev,
+> > > > > > > > > "reset",
+> > > > > > > > > GPIOD_ASIS);
+> > > > > > > > > +	if (IS_ERR(gpio)) {
+> > > > > > > > > +		return PTR_ERR(gpio);       =20
+> > > > > > > >=20
+> > > > > > > > Given you are returning here, no need for else to follow
+> > > > > > > >=20
+> > > > > > > > if (gpio...
+> > > > > > > >        =20
+> > > > > > >=20
+> > > > > > > Definitely...
+> > > > > > >      =20
+> > > > > > > > > +	} else if (gpio &&
+> > > > > > > > > gpiod_get_value_cansleep(gpio)) {
+> > > > > > > > > +		/* bring device out of reset */
+> > > > > > > > > +		gpiod_set_value_cansleep(gpio,
+> > > > > > > > > 0);       =20
+> > > > > > > >=20
+> > > > > > > > Hmm. So is a software reset the best option if we have a
+> > > > > > > > hardware
+> > > > > > > > reset
+> > > > > > > > line but it's not currently in the reset mode?
+> > > > > > > >        =20
+> > > > > > >=20
+> > > > > > > Hmm, that's a fair question. Now that I think about it, if
+> > > > > > > we
+> > > > > > > do
+> > > > > > > have a
+> > > > > > > gpio we should just assume it's in reset and call
+> > > > > > > `gpiod_set_value_cansleep`. So, I guess we could just ditch
+> > > > > > > the
+> > > > > > > `gpiod_get_value_cansleep(gpio)` part.     =20
+> > > > > >=20
+> > > > > > Not sure I agree.   For example the driver may well have been
+> > > > > > unbound
+> > > > > > and rebound for some reason.     =20
+> > > > >=20
+> > > > > Yes, that is true..
+> > > > >    =20
+> > > > > > I would argue you should just do a set / reset cycle with
+> > > > > > appropriate
+> > > > > > sleep
+> > > > > > in between.  If it's already set then no harm done, if it
+> > > > > > isn't
+> > > > > > you
+> > > > > > force
+> > > > > > a hardware reset.     =20
+> > > > >=20
+> > > > > So, As Im understanding, it comes down to what should we
+> > > > > consider
+> > > > > as
+> > > > > default. You suggest to first do the sw reset and the check the
+> > > > > gpio
+> > > > > state and if needed, bring the device out of reset, right? Now
+> > > > > that
+> > > > > I
+> > > > > think about it, I think the only reason I haven't done like
+> > > > > that is
+> > > > > because you might end up sleeping quite some time (sw reset +
+> > > > > hw
+> > > > > reset). Either way, I'm fine with both options. Not sure if
+> > > > > Alex
+> > > > > has
+> > > > > something to add...   =20
+> > > >=20
+> > > > Either reset should be good on it's own.  I would use hardware
+> > > > reset
+> > > > if the pin is there. If it's not, then use the software reset.
+> > > >=20
+> > > > For hardware always set the pin explicitly to reset as that
+> > > > guarantees
+> > > > against any race conditions, even if something odd happens.
+> > > >=20
+> > > > Jonathan   =20
+> > >=20
+> > > Hmm, I think I'm not getting the point or maybe I failed to explain
+> > > what I was doing... So, on the code in this patch, there's no HW
+> > > reset.
+> > > It checks the reset pin and sees if the part is in reset and, if it
+> > > is,
+> > > it brings it out of reset. In that case, no need for sw reset since
+> > > we
+> > > are coming already from reset. On the other hand, if there's no
+> > > reset
+> > > pin configured or the part is already powered, then I was forcing a
+> > > sw
+> > > reset to guarantee a sane state when starting... =20
+> >=20
+> > Agreed that is what your patch is doing.   However I'm suggesting you
+> > do
+> > something different.  Decide which type of reset takes precedence.
+> > Normally that is hardware reset if it is wired up, but there is no
+> > particular reason it can't be the software reset if they do exactly
+> > the
+> > same thing.
+> >=20
+> > Plan a,
+> > If you decide the software takes precedence you need to check if the
+> > hardware reset is already set.  If so you need to release it and
+> > carry on.
+> > If hardware reset is not provided or not set then you just call the
+> > software
+> > reset.
+> >=20
+> > Plan b, which is the most common one for drivers IIRC...
+> > If you decide to make the hardware reset take precedence and it's
+> > there, then you
+> > 'always' set the pin for appropriate time to trigger a reset.  You
+> > don't
+> > care what state it was previously in as either it's already in reset
+> > in which
+> > case you are making no change, or not in which case you enter reset.
+> > Note this also works if you have an output only pin and no access to
+> > what
+> > its current state is (typically because it was set by firmware).
+> >=20
+> > Then you raise the gpio to take it out of reset and move on.  If the
+> > reset is not provided then you fall back to the software reset. =20
+>=20
+> Ok, Now I believe I got it. If Im understanding correctly, what is
+> happening right know is plan A. So, on plan B, we actually force the HW
+> reset (if the pin is there) instead of just bringing it out of reset...
 
-Thanks,
+Yup. Exactly that.
+>=20
+> I already spoke with Alex and we agreed he is sending v2 since he
+> started this series. So, He is deciding which plan to go for :)
 
-Andrew Murray
+Cool
 
-> 
-> Thanks,
-> Zhiqiang
-> 
-> > 
-> > (Also on your respin, please rebase as per Olof's feedback).
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +
-> > >  struct mobiveil_pcie {
-> > >  	struct platform_device *pdev;
-> > > -	void __iomem *config_axi_slave_base;	/* endpoint config base */
-> > >  	void __iomem *csr_axi_slave_base;	/* root port config base */
-> > >  	void __iomem *apb_csr_base;	/* MSI register base */
-> > >  	phys_addr_t pcie_reg_base;	/* Physical PCIe Controller Base */
-> > > -	struct irq_domain *intx_domain;
-> > > -	raw_spinlock_t intx_mask_lock;
-> > > -	int irq;
-> > >  	int apio_wins;
-> > >  	int ppio_wins;
-> > >  	int ob_wins_configured;		/* configured outbound windows */
-> > >  	int ib_wins_configured;		/* configured inbound windows */
-> > > -	struct resource *ob_io_res;
-> > > -	char root_bus_nr;
-> > > -	struct mobiveil_msi msi;
-> > > +	struct root_port rp;
-> > >  };
-> > >
-> > >  /*
-> > > @@ -281,16 +289,17 @@ static bool mobiveil_pcie_link_up(struct
-> > > mobiveil_pcie *pcie)  static bool mobiveil_pcie_valid_device(struct
-> > > pci_bus *bus, unsigned int devfn)  {
-> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >
-> > >  	/* Only one device down on each root port */
-> > > -	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
-> > > +	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
-> > >  		return false;
-> > >
-> > >  	/*
-> > >  	 * Do not read more than one device on the bus directly
-> > >  	 * attached to RC
-> > >  	 */
-> > > -	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
-> > > +	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
-> > >  		return false;
-> > >
-> > >  	return true;
-> > > @@ -304,13 +313,14 @@ static void __iomem
-> > *mobiveil_pcie_map_bus(struct pci_bus *bus,
-> > >  					   unsigned int devfn, int where)  {
-> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >  	u32 value;
-> > >
-> > >  	if (!mobiveil_pcie_valid_device(bus, devfn))
-> > >  		return NULL;
-> > >
-> > >  	/* RC config access */
-> > > -	if (bus->number == pcie->root_bus_nr)
-> > > +	if (bus->number == rp->root_bus_nr)
-> > >  		return pcie->csr_axi_slave_base + where;
-> > >
-> > >  	/*
-> > > @@ -325,7 +335,7 @@ static void __iomem
-> > *mobiveil_pcie_map_bus(struct
-> > > pci_bus *bus,
-> > >
-> > >  	mobiveil_csr_writel(pcie, value,
-> > PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-> > >
-> > > -	return pcie->config_axi_slave_base + where;
-> > > +	return rp->config_axi_slave_base + where;
-> > >  }
-> > >
-> > >  static struct pci_ops mobiveil_pcie_ops = { @@ -339,7 +349,8 @@
-> > > static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >  	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > >  	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct root_port *rp = &pcie->rp;
-> > > +	struct mobiveil_msi *msi = &rp->msi;
-> > >  	u32 msi_data, msi_addr_lo, msi_addr_hi;
-> > >  	u32 intr_status, msi_status;
-> > >  	unsigned long shifted_status;
-> > > @@ -365,7 +376,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >  		shifted_status >>= PAB_INTX_START;
-> > >  		do {
-> > >  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > > -				virq = irq_find_mapping(pcie->intx_domain,
-> > > +				virq = irq_find_mapping(rp->intx_domain,
-> > >  							bit + 1);
-> > >  				if (virq)
-> > >  					generic_handle_irq(virq);
-> > > @@ -424,15 +435,16 @@ static int mobiveil_pcie_parse_dt(struct
-> > mobiveil_pcie *pcie)
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > >  	struct platform_device *pdev = pcie->pdev;
-> > >  	struct device_node *node = dev->of_node;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >  	struct resource *res;
-> > >
-> > >  	/* map config resource */
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > >  					   "config_axi_slave");
-> > > -	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> > > -	if (IS_ERR(pcie->config_axi_slave_base))
-> > > -		return PTR_ERR(pcie->config_axi_slave_base);
-> > > -	pcie->ob_io_res = res;
-> > > +	rp->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> > > +	if (IS_ERR(rp->config_axi_slave_base))
-> > > +		return PTR_ERR(rp->config_axi_slave_base);
-> > > +	rp->ob_io_res = res;
-> > >
-> > >  	/* map csr resource */
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, @@
-> > -455,9
-> > > +467,9 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
-> > >  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
-> > >  		pcie->ppio_wins = MAX_PIO_WINDOWS;
-> > >
-> > > -	pcie->irq = platform_get_irq(pdev, 0);
-> > > -	if (pcie->irq <= 0) {
-> > > -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
-> > > +	rp->irq = platform_get_irq(pdev, 0);
-> > > +	if (rp->irq <= 0) {
-> > > +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
-> > >  		return -ENODEV;
-> > >  	}
-> > >
-> > > @@ -564,9 +576,9 @@ static int mobiveil_bringup_link(struct
-> > > mobiveil_pcie *pcie)  static void mobiveil_pcie_enable_msi(struct
-> > > mobiveil_pcie *pcie)  {
-> > >  	phys_addr_t msg_addr = pcie->pcie_reg_base;
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >
-> > > -	pcie->msi.num_of_vectors = PCI_NUM_MSI;
-> > > +	msi->num_of_vectors = PCI_NUM_MSI;
-> > >  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
-> > >
-> > >  	writel_relaxed(lower_32_bits(msg_addr),
-> > > @@ -579,7 +591,8 @@ static void mobiveil_pcie_enable_msi(struct
-> > > mobiveil_pcie *pcie)
-> > >
-> > >  static int mobiveil_host_init(struct mobiveil_pcie *pcie)  {
-> > > -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > > +	struct root_port *rp = &pcie->rp;
-> > > +	struct pci_host_bridge *bridge = rp->bridge;
-> > >  	u32 value, pab_ctrl, type;
-> > >  	struct resource_entry *win;
-> > >
-> > > @@ -629,8 +642,8 @@ static int mobiveil_host_init(struct mobiveil_pcie
-> > *pcie)
-> > >  	 */
-> > >
-> > >  	/* config outbound translation window */
-> > > -	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
-> > > -			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
-> > > +	program_ob_windows(pcie, WIN_NUM_0, rp->ob_io_res->start, 0,
-> > > +			   CFG_WINDOW_TYPE, resource_size(rp->ob_io_res));
-> > >
-> > >  	/* memory inbound translation window */
-> > >  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE,
-> > > IB_WIN_SIZE); @@ -667,32 +680,36 @@ static void
-> > > mobiveil_mask_intx_irq(struct irq_data *data)  {
-> > >  	struct irq_desc *desc = irq_to_desc(data->irq);
-> > >  	struct mobiveil_pcie *pcie;
-> > > +	struct root_port *rp;
-> > >  	unsigned long flags;
-> > >  	u32 mask, shifted_val;
-> > >
-> > >  	pcie = irq_desc_get_chip_data(desc);
-> > > +	rp = &pcie->rp;
-> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> > > -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
-> > >  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> > >  	shifted_val &= ~mask;
-> > >  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> > > -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
-> > >  }
-> > >
-> > >  static void mobiveil_unmask_intx_irq(struct irq_data *data)  {
-> > >  	struct irq_desc *desc = irq_to_desc(data->irq);
-> > >  	struct mobiveil_pcie *pcie;
-> > > +	struct root_port *rp;
-> > >  	unsigned long flags;
-> > >  	u32 shifted_val, mask;
-> > >
-> > >  	pcie = irq_desc_get_chip_data(desc);
-> > > +	rp = &pcie->rp;
-> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> > > -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
-> > >  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> > >  	shifted_val |= mask;
-> > >  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> > > -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
-> > >  }
-> > >
-> > >  static struct irq_chip intx_irq_chip = { @@ -760,7 +777,7 @@ static
-> > > int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
-> > >  					 unsigned int nr_irqs, void *args)  {
-> > >  	struct mobiveil_pcie *pcie = domain->host_data;
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >  	unsigned long bit;
-> > >
-> > >  	WARN_ON(nr_irqs != 1);
-> > > @@ -787,7 +804,7 @@ static void mobiveil_irq_msi_domain_free(struct
-> > > irq_domain *domain,  {
-> > >  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> > >  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >
-> > >  	mutex_lock(&msi->lock);
-> > >
-> > > @@ -808,9 +825,9 @@ static int mobiveil_allocate_msi_domains(struct
-> > > mobiveil_pcie *pcie)  {
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > >  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >
-> > > -	mutex_init(&pcie->msi.lock);
-> > > +	mutex_init(&msi->lock);
-> > >  	msi->dev_domain = irq_domain_add_linear(NULL,
-> > msi->num_of_vectors,
-> > >  						&msi_domain_ops, pcie);
-> > >  	if (!msi->dev_domain) {
-> > > @@ -834,18 +851,19 @@ static int mobiveil_pcie_init_irq_domain(struct
-> > > mobiveil_pcie *pcie)  {
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > >  	struct device_node *node = dev->of_node;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >  	int ret;
-> > >
-> > >  	/* setup INTx */
-> > > -	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> > > -						  &intx_domain_ops, pcie);
-> > > +	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> > > +						&intx_domain_ops, pcie);
-> > >
-> > > -	if (!pcie->intx_domain) {
-> > > +	if (!rp->intx_domain) {
-> > >  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> > >  		return -ENOMEM;
-> > >  	}
-> > >
-> > > -	raw_spin_lock_init(&pcie->intx_mask_lock);
-> > > +	raw_spin_lock_init(&rp->intx_mask_lock);
-> > >
-> > >  	/* setup MSI */
-> > >  	ret = mobiveil_allocate_msi_domains(pcie);
-> > > @@ -862,6 +880,7 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >  	struct pci_bus *child;
-> > >  	struct pci_host_bridge *bridge;
-> > >  	struct device *dev = &pdev->dev;
-> > > +	struct root_port *rp;
-> > >  	int ret;
-> > >
-> > >  	/* allocate the PCIe port */
-> > > @@ -870,6 +889,8 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >  		return -ENOMEM;
-> > >
-> > >  	pcie = pci_host_bridge_priv(bridge);
-> > > +	rp = &pcie->rp;
-> > > +	rp->bridge = bridge;
-> > >
-> > >  	pcie->pdev = pdev;
-> > >
-> > > @@ -904,12 +925,12 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >  		return ret;
-> > >  	}
-> > >
-> > > -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
-> > > +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
-> > >
-> > >  	/* Initialize bridge */
-> > >  	bridge->dev.parent = dev;
-> > >  	bridge->sysdata = pcie;
-> > > -	bridge->busnr = pcie->root_bus_nr;
-> > > +	bridge->busnr = rp->root_bus_nr;
-> > >  	bridge->ops = &mobiveil_pcie_ops;
-> > >  	bridge->map_irq = of_irq_parse_and_map_pci;
-> > >  	bridge->swizzle_irq = pci_common_swizzle;
-> > > --
-> > > 2.17.1
-> > >
+Jonathan
+
+>=20
+> Thanks for your explanation!
+> Nuno S=C3=A1
+> > Jonathan
+> >=20
+> >=20
+> >=20
+> >  =20
+> > > > > Nuno S=C3=A1    =20
+> > > > > > > > > +		msleep(timeouts->reset_ms);
+> > > > > > > > > +	} else {
+> > > > > > > > > +		ret =3D __adis_reset(adis);
+> > > > > > > > > +		if (ret)
+> > > > > > > > > +			return ret;
+> > > > > > > > > +	}
+> > > > > > > > > =20
+> > > > > > > > >  	ret =3D adis_self_test(adis);
+> > > > > > > > > -	if (ret) {
+> > > > > > > > > -		dev_err(&adis->spi->dev, "Self-test
+> > > > > > > > > failed,
+> > > > > > > > > trying
+> > > > > > > > > reset.\n");
+> > > > > > > > > -		__adis_reset(adis);
+> > > > > > > > > -		ret =3D adis_self_test(adis);
+> > > > > > > > > -		if (ret) {
+> > > > > > > > > -			dev_err(&adis->spi->dev,
+> > > > > > > > > "Second self-
+> > > > > > > > > test
+> > > > > > > > > failed, giving up.\n");
+> > > > > > > > > -			goto out_unlock;
+> > > > > > > > > -		}
+> > > > > > > > > -	}
+> > > > > > > > > +	if (ret)
+> > > > > > > > > +		return ret;
+> > > > > > > > > =20
+> > > > > > > > > -out_unlock:
+> > > > > > > > > -	mutex_unlock(&adis->state_lock);
+> > > > > > > > > -	return ret;
+> > > > > > > > > +	if (!adis->data->prod_id_reg)
+> > > > > > > > > +		return 0;
+> > > > > > > > > +
+> > > > > > > > > +	ret =3D adis_read_reg_16(adis, adis->data- =20
+> > > > > > > > > >prod_id_reg, =20
+> > > > > > > > > &prod_id);
+> > > > > > > > > +	if (ret)
+> > > > > > > > > +		return ret;
+> > > > > > > > > +
+> > > > > > > > > +	ret =3D sscanf(iio_name, "adis%hu\n",
+> > > > > > > > > &dev_id);       =20
+> > > > > > > >=20
+> > > > > > > > Hmm. I have a general dislike of pulling part name
+> > > > > > > > strings
+> > > > > > > > apart
+> > > > > > > > to
+> > > > > > > > get
+> > > > > > > > IDs.  It tends to break when someone comes along and adds
+> > > > > > > > a
+> > > > > > > > part
+> > > > > > > > with
+> > > > > > > > new
+> > > > > > > > branding.  Perhaps just put it in the relevant device
+> > > > > > > > part
+> > > > > > > > specific
+> > > > > > > > structures
+> > > > > > > > directly?
+> > > > > > > >        =20
+> > > > > > >=20
+> > > > > > > I'll admit that this to orientated to ADI devices and I
+> > > > > > > basically
+> > > > > > > just
+> > > > > > > took what all the drivers were doing and placed it inside
+> > > > > > > the
+> > > > > > > library...
+> > > > > > >=20
+> > > > > > > So, you mean passing this to each `chip_info` and then
+> > > > > > > passing
+> > > > > > > it
+> > > > > > > to
+> > > > > > > the library through `adis_data`?     =20
+> > > > > >=20
+> > > > > > Yes.  People don't tend to expect strings to need to take a
+> > > > > > particular form,
+> > > > > > so pulling them apart in a library can give unexpected
+> > > > > > results...
+> > > > > >      =20
+> > > > > > > > > +	if (ret !=3D 1)
+> > > > > > > > > +		return -EINVAL;
+> > > > > > > > > +
+> > > > > > > > > +	if (prod_id !=3D dev_id)
+> > > > > > > > > +		dev_warn(&adis->spi->dev,
+> > > > > > > > > +			 "Device ID(%u) and product
+> > > > > > > > > ID(%u) do
+> > > > > > > > > not
+> > > > > > > > > match.",
+> > > > > > > > > +			 dev_id, prod_id);
+> > > > > > > > > +
+> > > > > > > > > +	return 0;
+> > > > > > > > >  }
+> > > > > > > > > -EXPORT_SYMBOL_GPL(adis_initial_startup);
+> > > > > > > > > +EXPORT_SYMBOL_GPL(__adis_initial_startup);
+> > > > > > > > > =20
+> > > > > > > > >  /**
+> > > > > > > > >   * adis_single_conversion() - Performs a single sample
+> > > > > > > > > conversion
+> > > > > > > > > diff --git a/include/linux/iio/imu/adis.h
+> > > > > > > > > b/include/linux/iio/imu/adis.h
+> > > > > > > > > index d21a013d1122..c43e7922ab32 100644
+> > > > > > > > > --- a/include/linux/iio/imu/adis.h
+> > > > > > > > > +++ b/include/linux/iio/imu/adis.h
+> > > > > > > > > @@ -41,6 +41,7 @@ struct adis_timeout {
+> > > > > > > > >   * @glob_cmd_reg: Register address of the GLOB_CMD
+> > > > > > > > > register
+> > > > > > > > >   * @msc_ctrl_reg: Register address of the MSC_CTRL
+> > > > > > > > > register
+> > > > > > > > >   * @diag_stat_reg: Register address of the DIAG_STAT
+> > > > > > > > > register
+> > > > > > > > > + * @prod_id_reg: Register address of the PROD_ID
+> > > > > > > > > register
+> > > > > > > > >   * @self_test_reg: Register address to request self
+> > > > > > > > > test
+> > > > > > > > > command
+> > > > > > > > >   * @status_error_msgs: Array of error messgaes
+> > > > > > > > >   * @status_error_mask:
+> > > > > > > > > @@ -54,6 +55,7 @@ struct adis_data {
+> > > > > > > > >  	unsigned int glob_cmd_reg;
+> > > > > > > > >  	unsigned int msc_ctrl_reg;
+> > > > > > > > >  	unsigned int diag_stat_reg;
+> > > > > > > > > +	unsigned int prod_id_reg;
+> > > > > > > > > =20
+> > > > > > > > >  	unsigned int self_test_mask;
+> > > > > > > > >  	unsigned int self_test_reg;
+> > > > > > > > > @@ -299,6 +301,7 @@ static inline int
+> > > > > > > > > adis_read_reg_32(struct
+> > > > > > > > > adis
+> > > > > > > > > *adis, unsigned int reg,
+> > > > > > > > > =20
+> > > > > > > > >  int adis_enable_irq(struct adis *adis, bool enable);
+> > > > > > > > >  int __adis_check_status(struct adis *adis);
+> > > > > > > > > +int __adis_initial_startup(struct adis *adis);
+> > > > > > > > > =20
+> > > > > > > > >  static inline int adis_check_status(struct adis *adis)
+> > > > > > > > >  {
+> > > > > > > > > @@ -311,7 +314,17 @@ static inline int
+> > > > > > > > > adis_check_status(struct
+> > > > > > > > > adis *adis)
+> > > > > > > > >  	return ret;
+> > > > > > > > >  }
+> > > > > > > > > =20
+> > > > > > > > > -int adis_initial_startup(struct adis *adis);
+> > > > > > > > > +/* locked version of __adis_initial_startup() */
+> > > > > > > > > +static inline int adis_initial_startup(struct adis
+> > > > > > > > > *adis)
+> > > > > > > > > +{
+> > > > > > > > > +	int ret;
+> > > > > > > > > +
+> > > > > > > > > +	mutex_lock(&adis->state_lock);
+> > > > > > > > > +	ret =3D __adis_initial_startup(adis);
+> > > > > > > > > +	mutex_unlock(&adis->state_lock);
+> > > > > > > > > +
+> > > > > > > > > +	return ret;
+> > > > > > > > > +}
+> > > > > > > > > =20
+> > > > > > > > >  int adis_single_conversion(struct iio_dev *indio_dev,
+> > > > > > > > >  	const struct iio_chan_spec *chan, unsigned int
+> > > > > > > > > error_mask,       =20
+> > > > > > > >=20
+> > > > > > > >        =20
+> > > > > >=20
+> > > > > >      =20
+> > > >=20
+> > > >    =20
+>=20
+
