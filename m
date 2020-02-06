@@ -2,111 +2,99 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10E7C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EA2C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99847214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48155214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:07:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idIW/aiN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hsGIOcRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgBFRHB (ORCPT
+        id S1727906AbgBFRHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:07:01 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26560 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727060AbgBFRHA (ORCPT
+        Thu, 6 Feb 2020 12:07:06 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:48792 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbgBFRHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:07:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581008819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3pKJNNr147NV4iBcZUmPbcoeGNCKnZBNXgxrFA4/6SA=;
-        b=idIW/aiN062IxZK5IiJ9+BbxSI+hgmMr+TBFjJpfNsqXN1FuSFdYNRH28d/YfNixYHGADE
-        HjVShBArsWT6EcoJIApSl2nzOy88vSS2YXKNVzPa0pCgjVebVSK+Z1G/8CHX4tPmJRFDMS
-        UPQSRI4F2V9pwJKJ4AhPeRblktiZXFo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-90rAmeq-ML2Yb_pWyG-hcw-1; Thu, 06 Feb 2020 12:06:49 -0500
-X-MC-Unique: 90rAmeq-ML2Yb_pWyG-hcw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06B6F800EB2;
-        Thu,  6 Feb 2020 17:06:46 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-124-223.rdu2.redhat.com [10.10.124.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6925519C69;
-        Thu,  6 Feb 2020 17:06:45 +0000 (UTC)
-Subject: Re: [PATCH v6 6/6] locking/lockdep: Reuse freed chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20200206152408.24165-1-longman@redhat.com>
- <20200206152408.24165-7-longman@redhat.com>
- <20200206160334.GV14914@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <951c86c9-9340-c4af-35e6-8ac205d702ab@redhat.com>
-Date:   Thu, 6 Feb 2020 12:06:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 6 Feb 2020 12:07:05 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5D69420B7130;
+        Thu,  6 Feb 2020 09:07:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5D69420B7130
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581008824;
+        bh=hlwVzxb4UU8cnAPgCWYXMIzujw/M5LqObBrLV/WPdAQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hsGIOcRzVlgnAFz2oSVbcMwignzylsslDSCi4BNXDUebD6t0cGiFTCrRp6DTjvpo/
+         f97gPayBkib+gu1X0xoGC2sCDAhchXiGDPjLfDDh2zZAWMH/WUMsmeyiH2Zdlvl1Em
+         wSdzg/ItePKTkBY+mZ1kaAJIMftKIjNMFg74AZL4=
+Subject: Re: [RFC PATCH 1/2] ima: Implement support for uncompressed module
+ appended signatures
+To:     Eric Snowberg <eric.snowberg@oracle.com>, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com
+Cc:     dhowells@redhat.com, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
+        tglx@linutronix.de, bauerman@linux.ibm.com, mpe@ellerman.id.au,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+ <20200206164226.24875-2-eric.snowberg@oracle.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <fda8b3e4-e3aa-a83a-0ddc-8ec096e67316@linux.microsoft.com>
+Date:   Thu, 6 Feb 2020 09:07:28 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200206160334.GV14914@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200206164226.24875-2-eric.snowberg@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 11:03 AM, Peter Zijlstra wrote:
-> On Thu, Feb 06, 2020 at 10:24:08AM -0500, Waiman Long wrote:
->> +#define for_each_chain_block(bucket, prev, curr)		\
->> +	for ((prev) = -1, (curr) = chain_block_buckets[bucket];	\
->> +	     (curr) >= 0;					\
->> +	     (prev) = (curr), (curr) = chain_block_next(curr))
->> +static inline void add_chain_block(int offset, int size)
->> +{
->> +	int bucket = size_to_bucket(size);
->> +	int next = chain_block_buckets[bucket];
->> +	int prev, curr;
->> +
->> +	if (unlikely(size < 2)) {
->> +		/*
->> +		 * We can't store single entries on the freelist. Leak them.
->> +		 *
->> +		 * One possible way out would be to uniquely mark them, other
->> +		 * than with CHAIN_BLK_FLAG, such that we can recover them when
->> +		 * the block before it is re-added.
->> +		 */
->> +		if (size)
->> +			nr_lost_chain_hlocks++;
->> +		return;
->> +	}
->> +
->> +	nr_free_chain_hlocks += size;
->> +	if (!bucket) {
->> +		nr_large_chain_blocks++;
->> +
->> +		if (unlikely(next >= 0)) {
-> I was surprised by this condition..
+On 2/6/2020 8:42 AM, Eric Snowberg wrote:
 
-Yes, this condition is optional and the code will still work as expected
-without that. I added that so that for the common case where there is
-only 1 chain block in block 0 and it gets deleted and added
-repetitively, it will go to the simpler code path instead of the more
-complicated one.
+>   
+> @@ -31,6 +32,7 @@ static const char * const keyring_name[INTEGRITY_KEYRING_MAX] = {
+>   	".ima",
+>   #endif
+>   	".platform",
+> +	".builtin_trusted_keys",
+>   };
+>   
+>   #ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
+> @@ -45,8 +47,11 @@ static struct key *integrity_keyring_from_id(const unsigned int id)
+>   		return ERR_PTR(-EINVAL);
+>   
+>   	if (!keyring[id]) {
+> -		keyring[id] =
+> -			request_key(&key_type_keyring, keyring_name[id], NULL);
+> +		if (id == INTEGRITY_KEYRING_KERNEL)
+> +			keyring[id] = VERIFY_USE_SECONDARY_KEYRING;
 
-Cheers,
-Longman
+Since "Built-In Trusted Keyring" or "Secondary Trusted Keyring" is used, 
+would it be more appropriate to name this identifier 
+INTEGRITY_KEYRING_BUILTIN_OR_SECONDARY?
 
+> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+> index 73fc286834d7..63f0e6bff0e0 100644
+> --- a/security/integrity/integrity.h
+> +++ b/security/integrity/integrity.h
+> @@ -145,7 +145,8 @@ int integrity_kernel_read(struct file *file, loff_t offset,
+>   #define INTEGRITY_KEYRING_EVM		0
+>   #define INTEGRITY_KEYRING_IMA		1
+>   #define INTEGRITY_KEYRING_PLATFORM	2
+> -#define INTEGRITY_KEYRING_MAX		3
+> +#define INTEGRITY_KEYRING_KERNEL	3
+> +#define INTEGRITY_KEYRING_MAX		4
+
+
+  -lakshmi
