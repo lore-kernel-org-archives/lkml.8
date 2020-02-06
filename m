@@ -7,82 +7,84 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F11C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C33C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F121217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA90D20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YDPSl97I"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QKfLxKf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgBFMhm (ORCPT
+        id S1728135AbgBFMiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:37:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41610 "EHLO
+        Thu, 6 Feb 2020 07:38:55 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34168 "EHLO
         mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbgBFMhm (ORCPT
+        with ESMTP id S1727456AbgBFMiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:37:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so5297402otc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 04:37:41 -0800 (PST)
+        Thu, 6 Feb 2020 07:38:55 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so5327838otf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 04:38:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=6fXR/mbSdG/GuSMMWg/QMGok/jnDT6wVXIjTyBjsSus=;
-        b=YDPSl97I6ie5WoTko+sLjNuIbuKRJ0lnQHSRwMr5Y6HtI9GRn2CyTqHW9t0F/mCZTb
-         PrqWx1eIhx1UOYMGHk1pWUX0UhRN1FQd6pUSajEMJoSkwJGyfF4hMsofqz5ytpoefHyN
-         DN8hb4Rw0W7U6VO5nOyU0MyBMSfHWGyFgvovg=
+        bh=0yCsXDZ7Hq3Ej7Od8dbrQEEhSu2aGFReqoIYO2djUlc=;
+        b=QKfLxKf+NoFm4DBjWkoWWiW7eX2dRqD3gS03sqW2v3ztdidPcYvxnTJ0QoKe9UqRO+
+         o/jdO2CEZgQmKz+y8gJ47hiCcEIM82IGPom5ZNAFWuZ9886t6iz8A8vuo6BPFxwInoJb
+         bV6TQsivro3RT8xFE/8oWapetPU7B7vg22Vys=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6fXR/mbSdG/GuSMMWg/QMGok/jnDT6wVXIjTyBjsSus=;
-        b=LiZER6tppcrbFOzQtSP95IWHmIrhpRiXq1vmsXs8ZqI+M2RaNR+XlP+IbxnEltnMs2
-         vyCoecaJFB7bAM3ZhZrrkufEMgKuQbSkbazgOvEw9JNnME3Fh+aY3wel8Ma7M4ihR8F1
-         xp7XbvzY2RrgGwDC37VhAu+ppugW274lcg4jdj1SoVntUO6I552upu0L1GWUrK5tcrhh
-         rYkbgH2VxPyLUGc/Ej4D1qrwuS0SyzxdfNT9miju6Kv9r/1lvhIiP9hxkiBp0KRlG6fy
-         kTz9547KhECSoNMFK7es2CU2E+eRus3KS+NxkXNxhUqfD1qdaSWNmGIxenvxX162i5Ld
-         tEhw==
-X-Gm-Message-State: APjAAAUPOocJaaSiekQUXKK1HSvYFShwuz2yzhQqyWwo189Rj0Or8777
-        D20ljzGlFYL5vb29f3oavhfekNhqiWQ=
-X-Google-Smtp-Source: APXvYqxakL0/UPBmResyRSGCzxIsFRYduCjh/RPlXP67bb//K0x4goyhxhEXAJoeeeHituBlbyGvKQ==
-X-Received: by 2002:a9d:1928:: with SMTP id j40mr30813778ota.68.1580992661363;
-        Thu, 06 Feb 2020 04:37:41 -0800 (PST)
+        bh=0yCsXDZ7Hq3Ej7Od8dbrQEEhSu2aGFReqoIYO2djUlc=;
+        b=E3qopL10aoiosEiKJQepxXvXTFk/aWQ+gae5BcKlVeyfERxLd1TjoX1KMtcdfhtKOX
+         AD0yGHFcQolfbURu16XBObNuJnASGRD5Ldis94qGrapvPQr5AWSjDLG4Phdu9SxShxat
+         KRi5fPsKLf2RguUNpHhglQkSUh95Mg9i5MXfMZwop28lrYKXQ0dHca6lmSLghYzs5HpK
+         tWPGxIyFCNon8cEm5ljwAYxpC1lCEgu3wjGJof8zR5niheM6ycTt5IYiQpczIxsJoGlg
+         LFm3Hj9e0VOqv2BP+sm9BD33GSMj+3C7e48FFtC+G8NfpIlCr3Cn7eaidvuybBWeFuQJ
+         sXeQ==
+X-Gm-Message-State: APjAAAWTTJ0aJKKbWuDRWv0EMWmH8v9zN2/XqXfFpk58tP0TADqXZp8O
+        AJdu1SSoAWxcGYgoEz3PgDoWbA==
+X-Google-Smtp-Source: APXvYqynAxkaa1Q44AfR1w48j/Y6VPFRGOmR/85OyfO88x0+FLS7Y1TERPYpEugEag+KWDetTLeoOg==
+X-Received: by 2002:a05:6830:1251:: with SMTP id s17mr30044739otp.108.1580992735002;
+        Thu, 06 Feb 2020 04:38:55 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a14sm1061768otr.54.2020.02.06.04.37.40
+        by smtp.gmail.com with ESMTPSA id e206sm873200oia.24.2020.02.06.04.38.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 04:37:40 -0800 (PST)
-Date:   Thu, 6 Feb 2020 04:37:39 -0800
+        Thu, 06 Feb 2020 04:38:54 -0800 (PST)
+Date:   Thu, 6 Feb 2020 04:38:52 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Kristen Carlson Accardi <kristen@linux.intel.com>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
         arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
         linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 07/11] x86/tools: Adding relative relocs for
- randomized functions
-Message-ID: <202002060435.CF7BFB723@keescook>
+Subject: Re: [RFC PATCH 01/11] modpost: Support >64K sections
+Message-ID: <202002060438.C2C977F8@keescook>
 References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-8-kristen@linux.intel.com>
+ <20200205223950.1212394-2-kristen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205223950.1212394-8-kristen@linux.intel.com>
+In-Reply-To: <20200205223950.1212394-2-kristen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 02:39:46PM -0800, Kristen Carlson Accardi wrote:
-> If we are randomizing function sections, we are going to need
-> to recalculate relative offsets for relocs that are either in
-> the randomized sections, or refer to the randomized sections.
-> Add code to detect whether a reloc satisifies these cases, and if
-> so, add them to the appropriate reloc list.
+On Wed, Feb 05, 2020 at 02:39:40PM -0800, Kristen Carlson Accardi wrote:
+> According to the ELF specification, if the value of st_shndx
+> contains SH_XINDEX, the actual section header index is too
+> large to fit in the st_shndx field and you should use the
+> value out of the SHT_SYMTAB_SHNDX section instead. This table
+> was already being parsed and saved into symtab_shndx_start, however
+> it was not being used, causing segfaults when the number of
+> sections is greater than 64K. Check the st_shndx field for
+> SHN_XINDEX prior to using.
 > 
 > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-Looks good to me. :)
+Looking at "readelf" output continues to make me laugh. :)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
