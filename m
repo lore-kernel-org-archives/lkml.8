@@ -2,83 +2,103 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F9BC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290F3C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2693217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F351821D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580993972;
+	bh=6OY7DPI2yOZ1X/1zJRZnKqanPxQshh7/EXoL02sHfpY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tKPs89fO+fV9arq5JHuB/w0a9i3pCo+C3PtqLbyYx03XNEl56kYf0afWf8BfLlQE1
+	 K/E/oNift5xvOQaD96HdBspe+9JedM+HRj1jL9Bx7QLvQdmSOhr8IrJesJhAAUAnbs
+	 QUe6OYZFw/+lKzfHSaBZFGCk31NK6SfPMDUnaSVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgBFM72 (ORCPT
+        id S1727518AbgBFM72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 6 Feb 2020 07:59:28 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:59182 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFM71 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbgBFM71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Feb 2020 07:59:27 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 30A2914C6027B;
-        Thu,  6 Feb 2020 04:59:26 -0800 (PST)
-Date:   Thu, 06 Feb 2020 13:59:24 +0100 (CET)
-Message-Id: <20200206.135924.1302030268583776261.davem@davemloft.net>
-To:     cai@lca.pw
-Cc:     kuba@kernel.org, elver@google.com, eric.dumazet@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1580841629-7102-1-git-send-email-cai@lca.pw>
-References: <1580841629-7102-1-git-send-email-cai@lca.pw>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 06 Feb 2020 04:59:27 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DDB2192A;
+        Thu,  6 Feb 2020 12:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580993966;
+        bh=6OY7DPI2yOZ1X/1zJRZnKqanPxQshh7/EXoL02sHfpY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QEFZkBJhSZNCXOTa8av2d4HzjHuE/BqXM9vnRkZ1T0w7nQ/lzWrl9bxK23i0c49nO
+         L+OTfzCqYtSpvJhn8YUlKgo0JM4vJn4NpJCTpRbPqZXHOPrwQRmVlrlhyJwowP0yxM
+         P7GM0LepDBfNTFrz//gR7J0dhEslbO/HNJT8ZGYE=
+Received: by mail-lf1-f41.google.com with SMTP id 9so4016395lfq.10;
+        Thu, 06 Feb 2020 04:59:26 -0800 (PST)
+X-Gm-Message-State: APjAAAVW4/hyoKy9DiR+aAGGIkynoWOWrmHBj+cP+IvG0AnDZARtfdUL
+        8zJw93feOl2w0cIp1TOd0isgkgXR3GHN55ogPtE=
+X-Google-Smtp-Source: APXvYqxXmYq0CkBT0Cjv9peoxswFZXHCgyB59GVNonQ53ahGHtf1ogSPH5YE7w3/aQn7BCzLj014+bBH5621DMrKfcY=
+X-Received: by 2002:ac2:485c:: with SMTP id 28mr1744468lfy.118.1580993964531;
+ Thu, 06 Feb 2020 04:59:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20200127215453.15144-1-lukasz.luba@arm.com> <20200127215453.15144-4-lukasz.luba@arm.com>
+ <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+ <db3f2554-288d-81ab-2373-1447367ba673@arm.com> <20200131204118.GA27284@kozik-lap>
+ <c54e252d-dc55-5fa3-f97f-643d7efbfdc1@arm.com>
+In-Reply-To: <c54e252d-dc55-5fa3-f97f-643d7efbfdc1@arm.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 6 Feb 2020 13:59:13 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPfTjdtNMx=+dPVcQ53RiXx0y-r=KXBRhzA4jS77SHxciQ@mail.gmail.com>
+Message-ID: <CAJKOXPfTjdtNMx=+dPVcQ53RiXx0y-r=KXBRhzA4jS77SHxciQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
-Date: Tue,  4 Feb 2020 13:40:29 -0500
+On Wed, 5 Feb 2020 at 13:49, Lukasz Luba <lukasz.luba@arm.com> wrote:
+> >> As mentioned in response to patch 1/3. The fist patch would create MC
+> >> domain, something different than Energy Model or EAS. The decisions in
+> >> the scheduler would be different.
+> >>
+> >> I can merge 1/3 and 3/3 if you like, though.
+> >
+> > I understand now that their independent. Still, they are part of one
+> > goal to tune the scheduler for Exynos platform. Splitting these looks
+> > too much, like enabling multiple drivers one after another.
+> >
+> > However if you provide numbers for each of cases (before patches, multi
+> > core scheduler, energy model with DTS), then I see benefit of splitting
+> > it.  Each commit would have its own rationale.  I am not sure if it is
+> > worth such investigation - that's just defconfig... distros might ignore
+> > it anyway.
+>
+> Good point, and I agree that it would require more investigation, for
+> which unfortunately I don't have currently spare cycles.
+>
+> Should I merge patch 1/3 and 3/3 and send the v2 with a cover letter
+> which would have the test results?
 
-> sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
-> 
->  BUG: KCSAN: data-race in __skb_try_recv_from_queue / unix_dgram_sendmsg
-> 
->  read to 0xffff8a1b1d8a81c0 of 4 bytes by task 5371 on cpu 96:
->   unix_dgram_sendmsg+0x9a9/0xb70 include/linux/skbuff.h:1821
-> 				 net/unix/af_unix.c:1761
->   ____sys_sendmsg+0x33e/0x370
->   ___sys_sendmsg+0xa6/0xf0
->   __sys_sendmsg+0x69/0xf0
->   __x64_sys_sendmsg+0x51/0x70
->   do_syscall_64+0x91/0xb47
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
->  write to 0xffff8a1b1d8a81c0 of 4 bytes by task 1 on cpu 99:
->   __skb_try_recv_from_queue+0x327/0x410 include/linux/skbuff.h:2029
->   __skb_try_recv_datagram+0xbe/0x220
->   unix_dgram_recvmsg+0xee/0x850
->   ____sys_recvmsg+0x1fb/0x210
->   ___sys_recvmsg+0xa2/0xf0
->   __sys_recvmsg+0x66/0xf0
->   __x64_sys_recvmsg+0x51/0x70
->   do_syscall_64+0x91/0xb47
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Since only the read is operating as lockless, it could introduce a logic
-> bug in unix_recvq_full() due to the load tearing. Fix it by adding
-> a lockless variant of skb_queue_len() and unix_recvq_full() where
-> READ_ONCE() is on the read while WRITE_ONCE() is on the write similar to
-> the commit d7d16a89350a ("net: add skb_queue_empty_lockless()").
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Yes, let's do this way.
 
-Applied, thank you.
+Thanks for working on this!
+
+Best regards,
+Krzysztof
