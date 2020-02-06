@@ -2,138 +2,150 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506CCC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF589C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BA8217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GmJwhs+V"
+	by mail.kernel.org (Postfix) with ESMTP id BC89E21927
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgBFWOX (ORCPT
+        id S1727631AbgBFWOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:14:23 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55721 "EHLO ozlabs.org"
+        Thu, 6 Feb 2020 17:14:36 -0500
+Received: from mga18.intel.com ([134.134.136.126]:33157 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbgBFWOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:14:23 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48DCQN6Gm2z9sRR;
-        Fri,  7 Feb 2020 09:14:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581027260;
-        bh=A8ZkmoXRk52v2YSgwclUIU3fxx5CAge0vR2/vjgapwQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GmJwhs+VtDRhJz6vn51njO9UOKEZXEeEZBDh4MFJFiwXZ/CqfM1nVtmQKOJoxt68e
-         6baZM+XG1kz3stSx3gfRRzkTWI+Gbfy41ela0X5K8cEJ/uc9qihhK6faTooN+6cDSJ
-         qj/cFZV2wFfSHHbpvYCSAxQJ8Xsbz/IRgSKK704JOdsylBAPFleiw/MacpXjT1EqVX
-         nAmA1GN4/RWBp9XPUoHBfXGJ/93aqjW7UVvv+xQVieSny3iyIzIHmnTKFTiDNlZ/ek
-         0JE++hfYebgPr/AF6XSaDXw7y4qE9HszV93sAY9NPQipLKBNfwYI6qHahT0JGkb5qc
-         TQ9fUI8PH8MEw==
-Date:   Fri, 7 Feb 2020 09:14:20 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        zhengbin <zhengbin13@huawei.com>
-Subject: linux-next: manual merge of the vfs tree with the fuse tree
-Message-ID: <20200207091420.7a01cf4b@canb.auug.org.au>
+        id S1727441AbgBFWOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 17:14:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 14:14:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,411,1574150400"; 
+   d="scan'208";a="226291753"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Feb 2020 14:14:35 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86/mmu: Avoid retpoline on ->page_fault() with TDP
+Date:   Thu,  6 Feb 2020 14:14:34 -0800
+Message-Id: <20200206221434.23790-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NimPq_aa3RhVoJVZdgT6mys";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NimPq_aa3RhVoJVZdgT6mys
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Wrap calls to ->page_fault() with a small shim to directly invoke the
+TDP fault handler when the kernel is using retpolines and TDP is being
+used.  Denote the TDP fault handler by nullifying mmu->page_fault, and
+annotate the TDP path as likely to coerce the compiler into preferring
+the TDP path.
 
-Hi all,
+Rename tdp_page_fault() to kvm_tdp_page_fault() as it's exposed outside
+of mmu.c to allow inlining the shim.
 
-Today's linux-next merge of the vfs tree got a conflict in:
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-  fs/fuse/inode.c
+Haven't done any performance testing, this popped into my head when mucking
+with the 5-level page table crud as an easy way to shave cycles in the
+happy path.
 
-between commit:
+ arch/x86/kvm/mmu.h     | 13 +++++++++++++
+ arch/x86/kvm/mmu/mmu.c | 16 ++++++++++------
+ arch/x86/kvm/x86.c     |  2 +-
+ 3 files changed, 24 insertions(+), 7 deletions(-)
 
-  cabdb4fa2f66 ("fuse: use true,false for bool variable")
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index d55674f44a18..9277ee8a54a5 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -102,6 +102,19 @@ static inline void kvm_mmu_load_cr3(struct kvm_vcpu *vcpu)
+ 					      kvm_get_active_pcid(vcpu));
+ }
+ 
++int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
++		       bool prefault);
++
++static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
++					u32 err, bool prefault)
++{
++#ifdef CONFIG_RETPOLINE
++	if (likely(!vcpu->arch.mmu->page_fault))
++		return kvm_tdp_page_fault(vcpu, cr2_or_gpa, err, prefault);
++#endif
++	return vcpu->arch.mmu->page_fault(vcpu, cr2_or_gpa, err, prefault);
++}
++
+ /*
+  * Currently, we have two sorts of write-protection, a) the first one
+  * write-protects guest page to sync the guest modification, b) another one is
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 7011a4e54866..5267f1440677 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4219,8 +4219,8 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
+ }
+ EXPORT_SYMBOL_GPL(kvm_handle_page_fault);
+ 
+-static int tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+-			  bool prefault)
++int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
++		       bool prefault)
+ {
+ 	int max_level;
+ 
+@@ -4925,7 +4925,12 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+ 		return;
+ 
+ 	context->mmu_role.as_u64 = new_role.as_u64;
+-	context->page_fault = tdp_page_fault;
++#ifdef CONFIG_RETPOLINE
++	/* Nullify ->page_fault() to use direct kvm_tdp_page_fault() call. */
++	context->page_fault = NULL;
++#else
++	context->page_fault = kvm_tdp_page_fault;
++#endif
+ 	context->sync_page = nonpaging_sync_page;
+ 	context->invlpg = nonpaging_invlpg;
+ 	context->update_pte = nonpaging_update_pte;
+@@ -5436,9 +5441,8 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+ 	}
+ 
+ 	if (r == RET_PF_INVALID) {
+-		r = vcpu->arch.mmu->page_fault(vcpu, cr2_or_gpa,
+-					       lower_32_bits(error_code),
+-					       false);
++		r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa,
++					  lower_32_bits(error_code), false);
+ 		WARN_ON(r == RET_PF_INVALID);
+ 	}
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fbabb2f06273..39251ecafd2b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10182,7 +10182,7 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+ 	      work->arch.cr3 != vcpu->arch.mmu->get_cr3(vcpu))
+ 		return;
+ 
+-	vcpu->arch.mmu->page_fault(vcpu, work->cr2_or_gpa, 0, true);
++	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
+ }
+ 
+ static inline u32 kvm_async_pf_hash_fn(gfn_t gfn)
+-- 
+2.24.1
 
-from the fuse tree and commit:
-
-  76c50219b279 ("fuse: switch to use errorfc() et.al.")
-
-from the vfs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/fuse/inode.c
-index 77fef29ebe4f,557611dc2d46..000000000000
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@@ -499,23 -494,23 +494,23 @@@ static int fuse_parse_param(struct fs_c
- =20
-  	case OPT_ROOTMODE:
-  		if (!fuse_valid_type(result.uint_32))
-- 			return invalf(fc, "fuse: Invalid rootmode");
-+ 			return invalfc(fc, "Invalid rootmode");
-  		ctx->rootmode =3D result.uint_32;
- -		ctx->rootmode_present =3D 1;
- +		ctx->rootmode_present =3D true;
-  		break;
- =20
-  	case OPT_USER_ID:
-  		ctx->user_id =3D make_kuid(fc->user_ns, result.uint_32);
-  		if (!uid_valid(ctx->user_id))
-- 			return invalf(fc, "fuse: Invalid user_id");
-+ 			return invalfc(fc, "Invalid user_id");
- -		ctx->user_id_present =3D 1;
- +		ctx->user_id_present =3D true;
-  		break;
- =20
-  	case OPT_GROUP_ID:
-  		ctx->group_id =3D make_kgid(fc->user_ns, result.uint_32);
-  		if (!gid_valid(ctx->group_id))
-- 			return invalf(fc, "fuse: Invalid group_id");
-+ 			return invalfc(fc, "Invalid group_id");
- -		ctx->group_id_present =3D 1;
- +		ctx->group_id_present =3D true;
-  		break;
- =20
-  	case OPT_DEFAULT_PERMISSIONS:
-
---Sig_/NimPq_aa3RhVoJVZdgT6mys
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl48j7wACgkQAVBC80lX
-0GwTqwf/Ra+DuKCaCFeOB/Qag645dJEQWR/OayhGkAd7WP+2EumT/7DaDZYrbcN7
-Jf0Wvp2kLXTAF2j7qhZ9MKQ24FURxqJbQKQHfnjDH4II/PqV2V9BUYEbLfjFieWm
-l3hgRfAnOFL+BSzdm2S6lRsSLras4dODIR74/7/r4CBT+CmMH1nz9VAkBGUzVbgi
-QygVU4grO+DjTYqRNGyo28nZlMob0bJ+lL3UR+Uj+8ETfZfdoy/Y9Woviu1L6rFw
-ETMJIfaYU7CIepXxPBRW9agSUEZyMqA7ftZRXU4W/GdtDP+EIHLqMqV/AxJWz9Cd
-tI6Jbty7fTEcgaFmsB980FJo0uKnlA==
-=rM/r
------END PGP SIGNATURE-----
-
---Sig_/NimPq_aa3RhVoJVZdgT6mys--
