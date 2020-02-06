@@ -2,142 +2,136 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FBEC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2BFC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE91217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580980161;
-	bh=o5FYUNHWR4JnSDHrUMdC3nhqVzIDwQIn4yBc45ZxDb8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DTKn/gIOeQW/C7q9yPWZqVTwe/8uftSPZ5IbCG8PhsWuDLh0UagXuOs6qGQvLYhnm
-	 1AFrAR6lGVt0xe9pgXheWBI8apzst3IaHVID8EjDlvGFaXwvmD63KBIeetgURjTLdA
-	 FiTpqbhx2ConGYvfllCX42lu2ftyAnXL6ccy4y90=
+	by mail.kernel.org (Postfix) with ESMTP id 34655206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BB75OWtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgBFJJV (ORCPT
+        id S1728289AbgBFJJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:09:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbgBFJJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:09:20 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFEE3206CC;
-        Thu,  6 Feb 2020 09:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580980160;
-        bh=o5FYUNHWR4JnSDHrUMdC3nhqVzIDwQIn4yBc45ZxDb8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UiOq8E+c4EAjWNLFpgTWXyhiBSZdZcts6MCCsrMsOHNx0zxnY+i5a2rU4m1Yt0tVh
-         ugtRjr4NWauEOYlDScswJ9301WdrLIOfFhE7o/8U/qR9lVBZFvm1MOjWcKsnBAyNFw
-         cYK5TvfOmuO4drjALZ1HuwmwzYFKx7cCXtXGugFI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1izd9y-003HNt-2V; Thu, 06 Feb 2020 09:09:18 +0000
+        Thu, 6 Feb 2020 04:09:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29071 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726452AbgBFJJq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 04:09:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580980185;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=A1LG9DblC2cTdhxgTIVXCEtFlpZae6akT23NYT3sY/o=;
+        b=BB75OWtBDQSJ3x2VHUOK6ysM+fPp5SMXsyTb5MR5CMfu5jNRXHNRp0D/EoGwkIE8I5VNKK
+        sqppzFfnK43nU1lY8OUNyn6ZVQYds/J+yCy6C+ag1WEkvksOyHQCv/WOCoxyWQmT7o5rdH
+        ctrT/ByhmWyH0AABFvboLR2ksEpUV+A=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-4I8cYXz4M0K8Hxy9lF4N4A-1; Thu, 06 Feb 2020 04:09:44 -0500
+X-MC-Unique: 4I8cYXz4M0K8Hxy9lF4N4A-1
+Received: by mail-qk1-f198.google.com with SMTP id a23so250958qkl.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 01:09:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A1LG9DblC2cTdhxgTIVXCEtFlpZae6akT23NYT3sY/o=;
+        b=uDVdWcHdE2hvWMrqm4ykRvUClnmxPyCtJNyy9/MPaM5HLpL7HtDFOnNvYDy6ATtXKm
+         ncWvDAWa8Qo0N7Lm6yrs7fZ82EPtM4CPmKIG4miGoWajP1QZY5X4Zx8JXmZxvSi8QJjo
+         ckjzvB9nX/zzXfaLAAZBP1svo4EYTu0PUFJa2Lh/mbPXKcNl+PvGY/Fb+cXDOjtBaOUC
+         vwmg3pw4GIp/6+v9JcleRIcidaD4rpBLYmEBsPSHig4Bzta/bCJJG9gWue+ngralPOic
+         H5ILstFk4D4DYyzd9Xokcmc4xVxuSXjlQL8NNhznUt+jvE/lcAm5tbrIMKrXARuOBtFV
+         7q/g==
+X-Gm-Message-State: APjAAAVPniUeM6S/6Jpqx2yuSEol8rYT/fyHDYqeXpdiGYc+bUuDJMJb
+        TcJxIr2GtchZq0gd0OEyJjd/jXED1e8nR8GklE3WpsdV4KDi0zoxWidh7Y2BOhglh3XpHB9xhW2
+        SS0f83UuyEL4u4fQuvcVT7CWI
+X-Received: by 2002:a05:620a:ced:: with SMTP id c13mr1563611qkj.47.1580980183669;
+        Thu, 06 Feb 2020 01:09:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyfMTZ5Cg+M33ciqGE043zi3UGdLoIZDBLsziU6lg7yBA1llshc6iEL8HwIf8KHgdth7yTgAA==
+X-Received: by 2002:a05:620a:ced:: with SMTP id c13mr1563598qkj.47.1580980183446;
+        Thu, 06 Feb 2020 01:09:43 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id y27sm1418057qta.50.2020.02.06.01.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 01:09:42 -0800 (PST)
+Date:   Thu, 6 Feb 2020 04:09:38 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Tyler Sanderson <tysand@google.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Nadav Amit <namit@vmware.com>, Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Message-ID: <20200206040927-mutt-send-email-mst@kernel.org>
+References: <20200205163402.42627-1-david@redhat.com>
+ <20200205163402.42627-4-david@redhat.com>
+ <20200206013724-mutt-send-email-mst@kernel.org>
+ <51955928-5a4b-c922-ee34-6e94b6cdd385@redhat.com>
+ <20200206034916-mutt-send-email-mst@kernel.org>
+ <a5dc8a7c-7384-5efa-e251-1cd9a240e73a@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 06 Feb 2020 09:09:18 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>,
-        tglx@linutronix.de, jason@lakedaemon.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        siva.durga.paladugu@xilinx.com, anirudha.sarangi@xilinx.com
-Subject: Re: [PATCH v2] irqchip: xilinx: Add support for multiple instances
-In-Reply-To: <3d6077c1-2b13-acc6-e8f4-3d1ab23dc159@xilinx.com>
-References: <1580911535-19415-1-git-send-email-mubin.usman.sayyed@xilinx.com>
- <b8e7b9120bc6cd306bda3347cde117ff@kernel.org>
- <3d6077c1-2b13-acc6-e8f4-3d1ab23dc159@xilinx.com>
-Message-ID: <8b5c5b5d601856ddc3f4388e267c4cd0@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: michal.simek@xilinx.com, mubin.usman.sayyed@xilinx.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, siva.durga.paladugu@xilinx.com, anirudha.sarangi@xilinx.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5dc8a7c-7384-5efa-e251-1cd9a240e73a@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-06 07:06, Michal Simek wrote:
-> On 05. 02. 20 17:53, Marc Zyngier wrote:
->> On 2020-02-05 14:05, Mubin Usman Sayyed wrote:
-
-[...]
-
->>>  unsigned int xintc_get_irq(void)
->>>  {
->>> -       unsigned int hwirq, irq = -1;
->>> +       int hwirq, irq = -1;
->>> 
->>> -       hwirq = xintc_read(IVR);
->>> +       hwirq = xintc_read(primary_intc->base + IVR);
->>>         if (hwirq != -1U)
->>> -               irq = irq_find_mapping(xintc_irqc->root_domain, 
->>> hwirq);
->>> +               irq = irq_find_mapping(primary_intc->root_domain, 
->>> hwirq);
->>> 
->>>         pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
->> 
->> I have the ugly feeling I'm reading the same code twice... Surely you 
->> can
->> make these two functions common code.
+On Thu, Feb 06, 2020 at 10:05:43AM +0100, David Hildenbrand wrote:
+> >> commit bf50e69f63d21091e525185c3ae761412be0ba72
+> >> Author: Dave Hansen <dave@linux.vnet.ibm.com>
+> >> Date:   Thu Apr 7 10:43:25 2011 -0700
+> >>
+> >>     virtio balloon: kill tell-host-first logic
+> >>
+> >>     The virtio balloon driver has a VIRTIO_BALLOON_F_MUST_TELL_HOST
+> >>     feature bit.  Whenever the bit is set, the guest kernel must
+> >>     always tell the host before we free pages back to the allocator.
+> >>     Without this feature, we might free a page (and have another
+> >>     user touch it) while the hypervisor is unprepared for it.
+> >>
+> >>     But, if the bit is _not_ set, we are under no obligation to
+> >>     reverse the order; we're under no obligation to do _anything_.
+> >>     As of now, qemu-kvm defines the bit, but doesn't set it.
+> > 
+> > Well this is not what the spec says in the end.
 > 
-> I have some questions regarding this.
-> I have updated one patchset which is adding support for Microblaze SMP.
-> And when I was looking at current wiring of this driver I have decided
-> to change it.
+> I didn't check the spec, maybe I should do that :)
 > 
-> I have enabled  GENERIC_IRQ_MULTI_HANDLER and HANDLE_DOMAIN_IRQ.
-> This driver calls set_handle_irq(xil_intc_handle_irq)
-> and MB do_IRQ() call handle_arch_irq()
-> and IRQ routine here is using handle_domain_irq().
+> > To continue that commit message:
+> > 
+> >     This patch makes the "tell host first" logic the only case.  This
+> >     should make everybody happy, and reduce the amount of untested or
+> >     untestable code in the kernel.
 > 
-> I would expect that this chained IRQ handler can also use
-> handle_domain_irq().
+> Yeah, but this comment explains that the current deflate is only in
+> place, because it makes the code simpler (to support both cases). Of
+> course, doing the deflate might result in performance improvements.
+> (e.g., MADV_WILLNEED)
 > 
-> Is that correct understanding?
-
-handle_domain_irq() implies that you have a set of pt_regs, representing
-the context you interrupted. You can't fake that up, so I can't see how
-you use it in a chained context.
-
-[...]
-
->>> +       intc_dev->name = intc->full_name;
->> 
->> No. The world doesn't need to see the OF path of your interrupt
->> controller in /proc/cpuinfo.
->> The name that was there before was perfectly descriptive, please stick
->> to it.
+> > 
+> > you can try proposing the change to the virtio TC, see what do others
+> > think.
 > 
-> It should be showing name like interrupt-controller@41800000.
-> Do you think that we really should stick with just fixed name?
-> There could be multiple instances in the system and you will have no
-> idea how they are connected.
+> We can just drop the comment from this patch for now. The tell_host host
+> not be an issue AFAIKS.
 
-What is that used for? Debugging. We have a whole infrastructure for 
-that
-(GENERIC_IRQ_DEBUGFS), which is the right tool for the job. If it needs
-improvement, please let me know what is missing.
+I guess it's a good idea.
 
-Also, anything in /proc is ABI, so we don't change it randomly.
 
-Thanks,
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
