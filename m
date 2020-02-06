@@ -2,115 +2,94 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06BCC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B685C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F4C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580987698;
-	bh=oKSH5/XEvKb7FCMlrXnlx2H529bmxqZ5nEC/5MnwBd0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDit6uLWc7ba5z3I72F+vRFnrAyXf1+xhF4LKomdLHqX5Shkt7T8S36Ve50WBPtNn
-	 OKx+kXRUP9WqPO6BjVk0JcfMLTYD7PaNehL2dNlq8jGhqG6ZWTCsl6hiXzaGHtACiR
-	 bKEfsUwiv/xarxopTi3WFeMtSiQA5yA/W1J10xuM=
+	by mail.kernel.org (Postfix) with ESMTP id EFD61206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="E7jtNADX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgBFLO6 (ORCPT
+        id S1727705AbgBFLO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Feb 2020 06:14:59 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:42072 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727684AbgBFLO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Feb 2020 06:14:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbgBFLO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:14:57 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A6321741;
-        Thu,  6 Feb 2020 11:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580987697;
-        bh=oKSH5/XEvKb7FCMlrXnlx2H529bmxqZ5nEC/5MnwBd0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/2he1kJLxWTa/JU54kmcFXSYKkXmrlhU0cZVqrZm0iTXP9EgIp0M8/LBkHLsLeT/
-         5BEOJcom+EvSVkZdaHO4j7KjoRZ/b5rCTpaAFaMzvHPJjgR/MilEwcGsSizZrDrcey
-         EVIkVrLmRZQQ4S+lp0iacKGJGyFZf3MG1TsSnvQw=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] bootconfig: Remove unneeded CONFIG_LIBXBC
-Date:   Thu,  6 Feb 2020 20:14:53 +0900
-Message-Id: <158098769281.939.16293492056419481105.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CAMuHMdWx4FmrGaefwkEBMGqCmJUSYxtAfkmFc7HM++fab2U-cw@mail.gmail.com>
-References: <CAMuHMdWx4FmrGaefwkEBMGqCmJUSYxtAfkmFc7HM++fab2U-cw@mail.gmail.com>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Received: by mail-qk1-f179.google.com with SMTP id q15so5100379qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:14:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=WB+Kc4aaRBQVx/3SCitqv8cv9/UUnFK4MljQ4dR5GtU=;
+        b=E7jtNADXGzRu45M+dCDpGkfhxH+nb5Uu9EeGhAhz01oZIq1wdu1r5uLevbmmBtVQbE
+         zBKsMlYKn3+MDa5Uk/ruSCMXeOjQbZdcwU6zu090+cNAlEXOEYyaEG9uU4JH2oecn93B
+         1ueLlIdMi0B+W6fn2APTO/OibDLHXkcI0+gObobCMlZA4FGMr29NRoM12z4msLfkdXUt
+         Wif7H2ChB6lq7mk0OE8DgndujHdB1lHms2hMuyAD9ooIUHAhwIrieFqLYUi4ogyYLnDW
+         YX/eoIFyZhTwgiBXq5JhdAQDyN4bNgWAk2H0cDu/sPX3olTkF+9sAA3eCh03IqE/pKei
+         fYuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=WB+Kc4aaRBQVx/3SCitqv8cv9/UUnFK4MljQ4dR5GtU=;
+        b=BUdPQqRjhoszKL+4geFD7/sf6AQNvc3vYfyV275aqVhptmF1v/6mlvaWop5NqOg3Lb
+         HLNsjXllqrevIb3O/nsWFYNrWyLmChe154fq+wovn+uPALEYg8mMPEqa1oVGGZjLLjip
+         9U6MRNaIBJb9C9ubOpENe+fYqHGgrhAza3GQ3fCrdXMWrwEBRk9XWjq1LN4hrhpSdT/7
+         8gBvh5n+AOzUDDwqenjLnWgBs/QFrPI/k4D/MlKbJsnPHtLqKjrwI+PRJXck3GI2sp7G
+         YKSqqKLph+A3aptPlxMlO7759jUXHEVdn5a+qw2uI8B/EoA/BXxU0u85626t3r+sGjWZ
+         1HKA==
+X-Gm-Message-State: APjAAAW9Ki1BONQbkvTEllx9aDj8d8wftgSJUGSM+NEzhvvZ0DNeY057
+        LlacQBtj3SkLlpQ+Ha0c49z4NA==
+X-Google-Smtp-Source: APXvYqwvlxZN2Fs7dRKuWabEEgWbV/2Fzb0wdfDhk1fulIs8k8+rWzbgKsYVtvCjfNsLqu4oLpiP6w==
+X-Received: by 2002:a37:6241:: with SMTP id w62mr1981884qkb.197.1580987696372;
+        Thu, 06 Feb 2020 03:14:56 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z5sm1525247qta.7.2020.02.06.03.14.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 03:14:55 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next] mm: mark a intentional data race in page_zonenum()
+Date:   Thu, 6 Feb 2020 06:14:55 -0500
+Message-Id: <3E1FB0B8-F499-45F7-9B03-7B80395FFF19@lca.pw>
+References: <20200206090436.GF14001@quack2.suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>, akpm@linux-foundation.org,
+        ira.weiny@intel.com, dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200206090436.GF14001@quack2.suse.cz>
+To:     Jan Kara <jack@suse.cz>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is no user except CONFIG_BOOT_CONFIG and no plan
-to use it from other functions, CONFIG_LIBXBC can be removed
-and we can use CONFIG_BOOT_CONFIG directly.
 
-Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- init/Kconfig |    1 -
- lib/Kconfig  |    3 ---
- lib/Makefile |    2 +-
- 3 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 9506299a53e3..4a672c6629d0 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1218,7 +1218,6 @@ endif
- config BOOT_CONFIG
- 	bool "Boot config support"
- 	depends on BLK_DEV_INITRD
--	select LIBXBC
- 	default y
- 	help
- 	  Extra boot config allows system admin to pass a config file as
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 10012b646009..6e790dc55c5b 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -566,9 +566,6 @@ config DIMLIB
- config LIBFDT
- 	bool
- 
--config LIBXBC
--	bool
--
- config OID_REGISTRY
- 	tristate
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 75a64d2552a2..74c1223828c1 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -228,7 +228,7 @@ $(foreach file, $(libfdt_files), \
- 	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
- lib-$(CONFIG_LIBFDT) += $(libfdt_files)
- 
--lib-$(CONFIG_LIBXBC) += bootconfig.o
-+lib-$(CONFIG_BOOT_CONFIG) += bootconfig.o
- 
- obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
- obj-$(CONFIG_INTERVAL_TREE_TEST) += interval_tree_test.o
+> On Feb 6, 2020, at 4:04 AM, Jan Kara <jack@suse.cz> wrote:
+>=20
+> So in this particular case, store tearing is non-issue because we use
+> atomic operation to store the value in page_cpupid_xchg_last(). I think it=
 
+> would make some sense to use READ_ONCE(page->flags) here to prevent
+> compiler from loading page->flags several times - I have hard time finding=
+
+> a reason why a compiler would want to do that but conceptually that
+> protection makes sense, it is for free performance wise, and will still
+> allow KCSAN to find a race in case we ever grow a place that modifies
+> page's zone non-atomically (which might be a real problem). And it should
+> also silence the KCSAN warning AFAIU.
+
+Ah, read up to 3 bits might be an issue then. I=E2=80=99ll post an alternati=
+ve version which uses READ_ONCE() just for the old page ( because the new pa=
+ge has not been published yet) in wp_page_copy() then.=
