@@ -2,125 +2,162 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DE5C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D96C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DD520730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mtUcIQa5"
+	by mail.kernel.org (Postfix) with ESMTP id 63AAB20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgBFXgj (ORCPT
+        id S1727012AbgBFXmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 18:36:39 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19247 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBFXgj (ORCPT
+        Thu, 6 Feb 2020 18:42:03 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:34574 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726502AbgBFXmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 18:36:39 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3ca2ed0001>; Thu, 06 Feb 2020 15:36:13 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Feb 2020 15:36:38 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 15:36:38 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
- 2020 23:36:38 +0000
-Subject: Re: [PATCH] mm: fix a data race in put_page()
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Qian Cai <cai@lca.pw>, Jan Kara <jack@suse.cz>
-CC:     David Hildenbrand <david@redhat.com>, <akpm@linux-foundation.org>,
-        <ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-        <elver@google.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Marco Elver <elver@google.com>
-References: <20200206145501.GD26114@quack2.suse.cz>
- <D022CBB0-C8EC-4F5A-A0B0-893AA7A014AA@lca.pw>
- <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <1978a849-1db9-2d8a-d494-978eadc7d999@nvidia.com>
-Date:   Thu, 6 Feb 2020 15:36:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 6 Feb 2020 18:42:03 -0500
+Received: from dread.disaster.area (pa49-181-161-120.pa.nsw.optusnet.com.au [49.181.161.120])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 59C658214F9;
+        Fri,  7 Feb 2020 10:41:59 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1izqmU-0006dw-Gc; Fri, 07 Feb 2020 10:41:58 +1100
+Date:   Fri, 7 Feb 2020 10:41:58 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v12 2/2] zonefs: Add documentation
+Message-ID: <20200206234158.GB21953@dread.disaster.area>
+References: <20200206052631.111586-1-damien.lemoal@wdc.com>
+ <20200206052631.111586-3-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581032173; bh=QfvWhgIyJ16nW5czUmXs6GNFz2v/B+IzL+b/xu15Az4=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mtUcIQa5HqcEJuyfO/kq4QLOD2SkmY/1PmuqRULzeQlJCYFWLYDlVR6YRVI/MXgGU
-         ffhlajXj1n3CU25R7p7eeCF6gyGCKOU5C76gaUuf6Y0SUjL7R0pUdY4t+zkjq+kSL/
-         9pVi+V2kQwNChMx26YAkGddURZb5qdySj7ChUkJTX5pRN5kW9wWniCAediOEWk/TAc
-         dO1I9s4+Yr6HaxD8A/gzSt1mgM0C2qrJEH79WzTZilqEalUhvLHXpuJi+qLUKmlWjU
-         VMeDH13tL9c23FVB9tptlIf1clceOaHmr8H9TpSRRZlmeUl1L36yZCbSgNmtiBmNrZ
-         6hJg8aJl7zupg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206052631.111586-3-damien.lemoal@wdc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=SkgQWeG3jiSQFIjTo4+liA==:117 a=SkgQWeG3jiSQFIjTo4+liA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JF9118EUAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=pdmCJgB9B0VxgstGLv4A:9
+        a=CjuIK1q_8ugA:10 a=xVlTc564ipvMDusKsbsT:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 3:34 PM, John Hubbard wrote:
-> On 2/6/20 7:23 AM, Qian Cai wrote:
->>
->>
->>> On Feb 6, 2020, at 9:55 AM, Jan Kara <jack@suse.cz> wrote:
->>>
->>> I don't think the problem is real. The question is how to make KCSAN happy
->>> in a way that doesn't silence other possibly useful things it can find and
->>> also which makes it most obvious to the reader what's going on... IMHO
->>> using READ_ONCE() fulfills these targets nicely - it is free
->>> performance-wise in this case, it silences the checker without impacting
->>> other races on page->flags, its kind of obvious we don't want the load torn
->>> in this case so it makes sense to the reader (although a comment may be
->>> nice).
->>
->> Actually, use the data_race() macro there fulfilling the same purpose too, i.e, silence the splat here but still keep searching for other races.
->>
+On Thu, Feb 06, 2020 at 02:26:31PM +0900, Damien Le Moal wrote:
+> Add the new file Documentation/filesystems/zonefs.txt to document
+> zonefs principles and user-space tool usage.
 > 
-> Yes, but both READ_ONCE() and data_race() would be saying untrue things about this code,
-> and that somewhat offends my sense of perfection... :)
-> 
-> * READ_ONCE(): this field need not be restricted to being read only once, so the
->   name is immediately wrong. We're using side effects of READ_ONCE().
-> 
-> * data_race(): there is no race on the N bits worth of page zone number data. There
->   is only a perceived race, due to tools that look at word-level granularity.
-> 
-> I'd propose one or both of the following:
-> 
-> a) Hope that Marcus has an idea to enhance KCSAN so as to support this model of
->    access, and/or
-> 
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> ---
+>  Documentation/filesystems/zonefs.txt | 404 +++++++++++++++++++++++++++
+>  MAINTAINERS                          |   1 +
+>  2 files changed, 405 insertions(+)
+>  create mode 100644 Documentation/filesystems/zonefs.txt
 
+Looks largely OK to me. A few small nits below in the new error handling text,
+but otherwise
 
-arggh, make that "Marco Elver"! Really sorry for the typo on your name. 
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
+> +IO error handling
+> +-----------------
+> +
+> +Zoned block devices may fail I/O requests for reasons similar to regular block
+> +devices, e.g. due to bad sectors. However, in addition to such known I/O
+> +failure pattern, the standards governing zoned block devices behavior define
+> +additional conditions that result in I/O errors.
+> +
+> +* A zone may transition to the read-only condition (BLK_ZONE_COND_READONLY):
+> +  While the data already written in the zone is still readable, the zone can
+> +  no longer be written. No user action on the zone (zone management command or
+> +  read/write access) can change the zone condition back to a normal read/write
+> +  state. While the reasons for the device to transition a zone to read-only
+> +  state are not defined by the standards, a typical cause for such transition
+> +  would be a defective write head on an HDD (all zones under this head are
+> +  changed to read-only).
+> +
+> +* A zone may transition to the offline condition (BLK_ZONE_COND_OFFLINE):
+> +  An offline zone cannot be read nor written. No user action can transition an
+> +  offline zone back to an operational good state. Similarly to zone read-only
+> +  transitions, the reasons for a drive to transition a zone to the offline
+> +  condition are undefined. A typical cause would be a defective read-write head
+> +  on an HDD causing all zones on the platter under the broken head to be
+> +  inaccessible.
+> +
+> +* Unaligned write errors: These errors result from the host issuing write
+> +  requests with a start sector that does not correspond to a zone write pointer
+> +  position when the write request is executed by the device. Even though zonefs
+> +  enforces sequential file write for sequential zones, unaligned write errors
+> +  may still happen in the case of a partial failure of a very large direct I/O
+> +  operation split into multiple BIOs/requests or asynchronous I/O operations.
+> +  If one of the write request within the set of sequential write requests
+> +  issued to the device fails, all write requests after queued after it will
+> +  become unaligned and fail.
+> +
+> +* Delayed write errors: similarly to regular block devices, if the device side
+> +  write cache is enabled, write errors may occur in ranges of previously
+> +  completed writes when the device write cache is flushed, e.g. on fsync().
+> +  Similarly to the previous immediate unaligned write error case, delayed write
+> +  errors can propagate through a stream of cached sequential data for a zone
+> +  causing all data to be dropped after the sector that caused the error.
+> +
+> +All I/O errors detected by zonefs are always notified to the user with an error
 
-thanks,
+s/always//
+
+> +code return for the system call that trigered or detected the error. The
+> +recovery actions taken by zonefs in response to I/O errors depend on the I/O
+> +type (read vs write) and on the reason for the error (bad sector, unaligned
+> +writes or zone condition change).
+> +
+> +* For read I/O errors, zonefs does not execute any particular recovery action,
+> +  but only if the file zone is still in a good condition and there is no
+> +  inconsistency between the file inode size and its zone write pointer position.
+> +  If a problem is detected, I/O error recovery is executed (see below table).
+> +
+> +* For write I/O errors, zonefs I/O error recovery is always executed.
+> +
+> +* A zone condition change to read-only or offline also always triggers zonefs
+> +  I/O error recovery.
+> +
+> +Zonefs minimal I/O error recovery may change a file size and a file access
+> +permissions.
+> +
+> +* File size changes:
+> +  Immediate or delayed write errors in a sequential zone file may cause the file
+> +  inode size to be inconsistent with the amount of data successfully written in
+> +  the file zone. For instance, the partial failure of a multi-BIO large write
+> +  operation will cause the zone write pointer to advance partially, eventhough
+
+"even though"
+
+> +  the entire write operation will be reported as failed to the user. In such
+> +  case, the file inode size must be advanced to reflect the zone write pointer
+> +  change and eventually allow the user to restart writing at the end of the
+> +  file.
+> +  A file size may also be reduced to reflect a delayed write error detected on
+> +  fsync(): in this case, the amount of data effectively written in the zone may
+> +  be less than originally indicated by the file inode size. After such I/O
+> +  error zonefs always fixes a file inode size to reflect the amount of data
+
+"error, zonefs" ?
+
+Cheers,
+
+Dave.
 -- 
-John Hubbard
-NVIDIA
-
-> b) Add a new, better-named macro to indicate what's going on. Initial bikeshed-able
->    candidates:
-> 
-> 	READ_RO_BITS()
-> 	READ_IMMUTABLE_BITS()
-> 	...etc...
-> 
-> thanks,
-> 
+Dave Chinner
+david@fromorbit.com
