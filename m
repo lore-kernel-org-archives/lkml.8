@@ -2,317 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009C2C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FCC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C666920720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A413C20720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgBFC74 (ORCPT
+        id S1727678AbgBFDEY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 21:59:56 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38972 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727769AbgBFC7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 21:59:39 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 33D62BE2E78A7FCD217D;
-        Thu,  6 Feb 2020 10:59:35 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Feb 2020
- 10:59:27 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v3 3/6] powerpc/fsl_booke/64: implement KASLR for fsl_booke64
-Date:   Thu, 6 Feb 2020 10:58:22 +0800
-Message-ID: <20200206025825.22934-4-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200206025825.22934-1-yanaijie@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
+        Wed, 5 Feb 2020 22:04:24 -0500
+Received: from mga01.intel.com ([192.55.52.88]:40978 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbgBFDEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 22:04:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 19:04:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,408,1574150400"; 
+   d="scan'208";a="235819352"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga006.jf.intel.com with ESMTP; 05 Feb 2020 19:04:22 -0800
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 5 Feb 2020 19:04:22 -0800
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 5 Feb 2020 19:04:22 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.126]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.76]) with mapi id 14.03.0439.000;
+ Thu, 6 Feb 2020 11:04:20 +0800
+From:   "Li, Philip" <philip.li@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        "Chen, Rong A" <rong.a.chen@intel.com>
+CC:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "lkp@lists.01.org" <lkp@lists.01.org>
+Subject: RE: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Thread-Topic: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Thread-Index: AQHV3CP7oHnyuzYtyEun/ALZ1SFBP6gNe6eA
+Date:   Thu, 6 Feb 2020 03:04:19 +0000
+Message-ID: <831EE4E5E37DCC428EB295A351E6624952397CCF@shsmsx102.ccr.corp.intel.com>
+References: <20200205123216.GO12867@shao2-debian>
+ <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The implementation for Freescale BookE64 is similar as BookE32. One
-difference is that Freescale BookE64 set up a TLB mapping of 1G during
-booting. Another difference is that ppc64 needs the kernel to be
-64K-aligned. So we can randomize the kernel in this 1G mapping and make
-it 64K-aligned. This can save some code to creat another TLB map at
-early boot. The disadvantage is that we only have about 1G/64K = 16384
-slots to put the kernel in.
+> Subject: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops -5.5%
+> regression
+> 
+> On Wed, Feb 05, 2020 at 08:32:16PM +0800, kernel test robot wrote:
+> > Greeting,
+> >
+> > FYI, we noticed a -5.5% regression of will-it-scale.per_process_ops due to
+> commit:
+> >
+> >
+> > commit: 81ec3f3c4c4d78f2d3b6689c9816bfbdf7417dbb ("perf/x86: Add
+> check_period PMU callback")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> >
+> 
+> I'm fairly sure this bisect/result is bogus.
+Hi Peter, thanks for feedback, we will investigate this in earliest time.
 
-To support secondary cpu boot up, a variable __kaslr_offset was added in
-first_256B section. This can help secondary cpu get the kaslr offset
-before the 1:1 mapping has been setup.
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
----
- arch/powerpc/Kconfig                 |  2 +-
- arch/powerpc/kernel/exceptions-64e.S | 10 +++++++++
- arch/powerpc/kernel/head_64.S        |  7 ++++++
- arch/powerpc/kernel/setup_64.c       |  4 +++-
- arch/powerpc/mm/mmu_decl.h           | 16 +++++++-------
- arch/powerpc/mm/nohash/kaslr_booke.c | 33 +++++++++++++++++++++++++---
- 6 files changed, 59 insertions(+), 13 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index c150a9d49343..754aeb96bb1c 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -568,7 +568,7 @@ config RELOCATABLE
- 
- config RANDOMIZE_BASE
- 	bool "Randomize the address of the kernel image"
--	depends on (FSL_BOOKE && FLATMEM && PPC32)
-+	depends on (PPC_FSL_BOOK3E && FLATMEM)
- 	depends on RELOCATABLE
- 	help
- 	  Randomizes the virtual address at which the kernel image is
-diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-index 1b9b174bee86..c1c05b8684ca 100644
---- a/arch/powerpc/kernel/exceptions-64e.S
-+++ b/arch/powerpc/kernel/exceptions-64e.S
-@@ -1378,6 +1378,7 @@ skpinv:	addi	r6,r6,1				/* Increment */
- 1:	mflr	r6
- 	addi	r6,r6,(2f - 1b)
- 	tovirt(r6,r6)
-+	add	r6,r6,r19
- 	lis	r7,MSR_KERNEL@h
- 	ori	r7,r7,MSR_KERNEL@l
- 	mtspr	SPRN_SRR0,r6
-@@ -1400,6 +1401,7 @@ skpinv:	addi	r6,r6,1				/* Increment */
- 
- 	/* We translate LR and return */
- 	tovirt(r8,r8)
-+	add	r8,r8,r19
- 	mtlr	r8
- 	blr
- 
-@@ -1528,6 +1530,7 @@ a2_tlbinit_code_end:
-  */
- _GLOBAL(start_initialization_book3e)
- 	mflr	r28
-+	li	r19, 0
- 
- 	/* First, we need to setup some initial TLBs to map the kernel
- 	 * text, data and bss at PAGE_OFFSET. We don't have a real mode
-@@ -1570,6 +1573,12 @@ _GLOBAL(book3e_secondary_core_init)
- 	cmplwi	r4,0
- 	bne	2f
- 
-+	li	r19, 0
-+#ifdef CONFIG_RANDOMIZE_BASE
-+	LOAD_REG_ADDR_PIC(r19, __kaslr_offset)
-+	lwz	r19,0(r19)
-+	rlwinm  r19,r19,0,0,5
-+#endif
- 	/* Setup TLB for this core */
- 	bl	initial_tlb_book3e
- 
-@@ -1602,6 +1611,7 @@ _GLOBAL(book3e_secondary_core_init)
- 	lis	r3,PAGE_OFFSET@highest
- 	sldi	r3,r3,32
- 	or	r28,r28,r3
-+	add	r28,r28,r19
- 1:	mtlr	r28
- 	blr
- 
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-index ad79fddb974d..744624140fb8 100644
---- a/arch/powerpc/kernel/head_64.S
-+++ b/arch/powerpc/kernel/head_64.S
-@@ -104,6 +104,13 @@ __secondary_hold_acknowledge:
- 	.8byte	0x0
- 
- #ifdef CONFIG_RELOCATABLE
-+#ifdef CONFIG_RANDOMIZE_BASE
-+	. = 0x58
-+	.globl	__kaslr_offset
-+__kaslr_offset:
-+DEFINE_FIXED_SYMBOL(__kaslr_offset)
-+	.long	0
-+#endif
- 	/* This flag is set to 1 by a loader if the kernel should run
- 	 * at the loaded address instead of the linked address.  This
- 	 * is used by kexec-tools to keep the the kdump kernel in the
-diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-index 6104917a282d..a16b970a8d1a 100644
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -66,7 +66,7 @@
- #include <asm/feature-fixups.h>
- #include <asm/kup.h>
- #include <asm/early_ioremap.h>
--
-+#include <mm/mmu_decl.h>
- #include "setup.h"
- 
- int spinning_secondaries;
-@@ -300,6 +300,8 @@ void __init early_setup(unsigned long dt_ptr)
- 	/* Enable early debugging if any specified (see udbg.h) */
- 	udbg_early_init();
- 
-+	kaslr_early_init(__va(dt_ptr), 0);
-+
- 	udbg_printf(" -> %s(), dt_ptr: 0x%lx\n", __func__, dt_ptr);
- 
- 	/*
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index 3e1c85c7d10b..bbd721d1e3d7 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -147,14 +147,6 @@ void reloc_kernel_entry(void *fdt, long addr);
- extern void loadcam_entry(unsigned int index);
- extern void loadcam_multi(int first_idx, int num, int tmp_idx);
- 
--#ifdef CONFIG_RANDOMIZE_BASE
--void kaslr_early_init(void *dt_ptr, phys_addr_t size);
--void kaslr_late_init(void);
--#else
--static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
--static inline void kaslr_late_init(void) {}
--#endif
--
- struct tlbcam {
- 	u32	MAS0;
- 	u32	MAS1;
-@@ -164,6 +156,14 @@ struct tlbcam {
- };
- #endif
- 
-+#ifdef CONFIG_RANDOMIZE_BASE
-+void kaslr_early_init(void *dt_ptr, phys_addr_t size);
-+void kaslr_late_init(void);
-+#else
-+static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
-+static inline void kaslr_late_init(void) {}
-+#endif
-+
- #if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_FSL_BOOKE) || defined(CONFIG_PPC_8xx)
- /* 6xx have BATS */
- /* FSL_BOOKE have TLBCAM */
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index 07b036e98353..c6f5c1db1394 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -231,7 +231,7 @@ static __init unsigned long get_usable_address(const void *fdt,
- 	unsigned long pa;
- 	unsigned long pa_end;
- 
--	for (pa = offset; (long)pa > (long)start; pa -= SZ_16K) {
-+	for (pa = offset; (long)pa > (long)start; pa -= SZ_64K) {
- 		pa_end = pa + regions.kernel_size;
- 		if (overlaps_region(fdt, pa, pa_end))
- 			continue;
-@@ -265,14 +265,14 @@ static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long rando
- {
- 	unsigned long koffset = 0;
- 	unsigned long start;
--	unsigned long index;
- 	unsigned long offset;
- 
-+#ifdef CONFIG_PPC32
- 	/*
- 	 * Decide which 64M we want to start
- 	 * Only use the low 8 bits of the random seed
- 	 */
--	index = random & 0xFF;
-+	unsigned long index = random & 0xFF;
- 	index %= regions.linear_sz / SZ_64M;
- 
- 	/* Decide offset inside 64M */
-@@ -287,6 +287,15 @@ static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long rando
- 			break;
- 		index--;
- 	}
-+#else
-+	/* Decide kernel offset inside 1G */
-+	offset = random % (SZ_1G - regions.kernel_size);
-+	offset = round_down(offset, SZ_64K);
-+
-+	start = memstart_addr;
-+	offset = memstart_addr + offset;
-+	koffset = get_usable_address(dt_ptr, start, offset);
-+#endif
- 
- 	if (koffset != 0)
- 		koffset -= memstart_addr;
-@@ -325,6 +334,7 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
- 	else
- 		pr_warn("KASLR: No safe seed for randomizing the kernel base.\n");
- 
-+#ifdef CONFIG_PPC32
- 	ram = min_t(phys_addr_t, __max_low_memory, size);
- 	ram = map_mem_in_cams(ram, CONFIG_LOWMEM_CAM_NUM, true);
- 	linear_sz = min_t(unsigned long, ram, SZ_512M);
-@@ -332,6 +342,7 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
- 	/* If the linear size is smaller than 64M, do not randmize */
- 	if (linear_sz < SZ_64M)
- 		return 0;
-+#endif
- 
- 	/* check for a reserved-memory node and record its cell sizes */
- 	regions.reserved_mem = fdt_path_offset(dt_ptr, "/reserved-memory");
-@@ -363,6 +374,17 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 	unsigned long offset;
- 	unsigned long kernel_sz;
- 
-+#ifdef CONFIG_PPC64
-+	unsigned int *__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
-+	unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
-+
-+	if (*__run_at_load == 1)
-+		return;
-+
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = dt_ptr;
-+#endif
-+
- 	kernel_sz = (unsigned long)_end - (unsigned long)_stext;
- 
- 	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
-@@ -372,6 +394,7 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 	kernstart_virt_addr += offset;
- 	kernstart_addr += offset;
- 
-+#ifdef CONFIG_PPC32
- 	is_second_reloc = 1;
- 
- 	if (offset >= SZ_64M) {
-@@ -381,6 +404,10 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 		/* Create kernel map to relocate in */
- 		create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
- 	}
-+#else
-+	*__kaslr_offset = kernstart_virt_addr - KERNELBASE;
-+	*__run_at_load = 1;
-+#endif
- 
- 	/* Copy the kernel to it's new location and run */
- 	memcpy((void *)kernstart_virt_addr, (void *)_stext, kernel_sz);
--- 
-2.17.2
-
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
