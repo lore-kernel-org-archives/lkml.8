@@ -2,100 +2,81 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96565C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EE6C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D29822527
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+igVjrU"
+	by mail.kernel.org (Postfix) with ESMTP id C005E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581017069;
+	bh=Zp8OE5o5eZFyNVg5lP65tBnz3oUxVU4TkySEXhH+pTE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JHMLM/MZpAvvkh/UzzcLm59tPCK0h1Pf4F7EFuQN/HkcoM+xkz/KOev3U1z+0YH7K
+	 8TYdUf5IKQ6+HsP7rf87fS+pScNIyqLD7upEK/uAL2RCx1i30yX2oDO9SBL0j1DMDz
+	 zYkVNXnfkEymmFsEystvAz6mQapux6XN07K9ogQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgBFTX4 (ORCPT
+        id S1727999AbgBFTY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:23:56 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41578 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbgBFTX4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:23:56 -0500
-Received: by mail-pl1-f193.google.com with SMTP id t14so2730903plr.8;
-        Thu, 06 Feb 2020 11:23:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nf9jca+hMQs7Cat5Jz2CzrqqiXuLOSBdlIq3cfbrt0Y=;
-        b=o+igVjrUCEk9msksxFBcXk9Q+L11WU67C1VVsy6UaVs0g/1ubFuji25ig5OqemOH6J
-         KSPfMbN7+mSVRSe0jgApAr37A8Laolj0tnrWCc8m7JlCR0lOcsAAi/Sd9jdQlLyDVqLv
-         gjaPgMU9TNMshy6HinckZZnq4hpNtxXD4WdjGjfVeA912uwX1KcB2ZyF1E0Y2/+rJLv9
-         CM1PypQ4zqv3ac/SL+4kz/wmJJCKP7az4ox+ukvPsOwzMUm2ZQKpgSOb4EnWae9CRc/0
-         noOpOfVqK9ToBDh3JNukCWhwR/ezFKe6DKu8srrL8j5BBWSvxHSjSQfHo4MVgdYavYYp
-         TkEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nf9jca+hMQs7Cat5Jz2CzrqqiXuLOSBdlIq3cfbrt0Y=;
-        b=HQ0MQAriN7QqvV9yp0cccvOjPepnBVXJygk7TloTg6dUhSjY6xub37W2hFjnIMBpB+
-         /qUbCvPJw0l6iv/ok2eQyI62IoZSA06oafOlTnjyJCl3zNJTVbal4IIfhpwYxxGSCvFo
-         sN9W+M8PHnGakP5IyjTyfN2YP21B3SNV0UccYkKOfhvpuM63TqVMpmuim9nSE8zW+zEg
-         59z5l52UpAFdIScB/0+KxJW2r1uW4b9eYx2V8Zke69/MI8en6DqCmyVWdlNoHMMzPo8x
-         gMOdqDZ2LtJJXBnZKgAoRFo+abBX3thsGB6q/boBAN3hY6eB/1QCpOlkMuB247xLmRxy
-         TxKg==
-X-Gm-Message-State: APjAAAVydKLtcXkjIrI84aIwKzSfK9naQ7m7Hl9mkaaJW1dMsDeu8a2a
-        oNP5bXeJkbzZNoJnTGsJTtVzDegF
-X-Google-Smtp-Source: APXvYqxxvSpSuR5gMDf2ApuoNK5fINQtOs2zbk3AK9+Tt35oqUihS/rk23F3BtcNnfKaeYn9fJJrDg==
-X-Received: by 2002:a17:90b:4015:: with SMTP id ie21mr6396030pjb.1.1581017035236;
-        Thu, 06 Feb 2020 11:23:55 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f18sm204715pgn.2.2020.02.06.11.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:23:54 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
-Date:   Thu,  6 Feb 2020 11:23:52 -0800
-Message-Id: <20200206192352.19939-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Feb 2020 14:24:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727738AbgBFTY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 14:24:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D211F20659;
+        Thu,  6 Feb 2020 19:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581017068;
+        bh=Zp8OE5o5eZFyNVg5lP65tBnz3oUxVU4TkySEXhH+pTE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WlsrsrxM4UbQ7/Enn10hE3kLLvWcRbBx/+RtGv3BdR7jlcQYnYbI8U670eWiHqqj8
+         0+806ZfPfRMVpUQgmCGEiUj2q9Uc4wiKyZEKgEWulr4Bblll52CeeU9Sh3Uqt6ZmQd
+         CuC+xk7bf6G5+AQRXn9DdYe1FEzj51fMwgAsTDuM=
+Date:   Thu, 6 Feb 2020 17:56:06 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200206165606.GA3894455@kroah.com>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 7445 switch clocking profiles do not allow us to run the IMP port at
-2Gb/sec in a way that it is reliable and consistent. Make sure that the
-setting is only applied to the 7278 family.
+On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> +static void mhi_release_device(struct device *dev)
+> +{
+> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> +
+> +	if (mhi_dev->ul_chan)
+> +		mhi_dev->ul_chan->mhi_dev = NULL;
 
-Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/bcm_sf2.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+That looks really odd.  Why didn't you just drop the reference you
+should have grabbed here for this pointer?  You did properly increment
+it when you saved it, right?  :)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 3e8635311d0d..d1955543acd1 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -68,7 +68,9 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
- 
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
--		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
-+		reg |= (MII_SW_OR | LINK_STS);
-+		if (priv->type == BCM7278_DEVICE_ID)
-+			reg |= GMII_SPEED_UP_2G;
- 		core_writel(priv, reg, offset);
- 
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
--- 
-2.17.1
+> +
+> +	if (mhi_dev->dl_chan)
+> +		mhi_dev->dl_chan->mhi_dev = NULL;
 
+Same here.
+
+thanks,
+
+greg k-h
