@@ -2,105 +2,86 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CFBC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E94AC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7066121741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF5D21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgBFPON (ORCPT
+        id S1727652AbgBFPUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:14:13 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:59640 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727389AbgBFPOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:14:12 -0500
-Received: (qmail 2315 invoked by uid 2102); 6 Feb 2020 10:14:11 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 6 Feb 2020 10:14:11 -0500
-Date:   Thu, 6 Feb 2020 10:14:11 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     "Enderborg, Peter" <Peter.Enderborg@sony.com>
-cc:     Jiri Kosina <jikos@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.4 17/78] HID: Fix slab-out-of-bounds read in
- hid_field_extract (Broken!)
-In-Reply-To: <e80973cc-812a-df52-c54a-8edf500c0c75@sony.com>
-Message-ID: <Pine.LNX.4.44L0.2002061011140.1503-100000@iolanthe.rowland.org>
+        Thu, 6 Feb 2020 10:20:07 -0500
+Received: from david.siemens.de ([192.35.17.14]:41368 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727379AbgBFPUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:20:07 -0500
+X-Greylist: delayed 1443 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Feb 2020 10:20:06 EST
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 016EtMPK029030
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 15:55:22 +0100
+Received: from [139.25.68.37] ([139.25.68.37])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 016EtJ6p029933;
+        Thu, 6 Feb 2020 15:55:19 +0100
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH] x86: pat: Do not compile stubbed functions when X86_PAT is
+ off
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     x86 <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <198c94a8-12ea-88e7-6f08-b3456473e5c3@siemens.com>
+Date:   Thu, 6 Feb 2020 15:55:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020, Enderborg, Peter wrote:
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-> > Also, please post the output from "lsusb -v" for the StreamDeck.
-> 
-> Bus 002 Device 008: ID 0fd9:0060 Elgato Systems GmbH Stream Deck
-> Device Descriptor:
->   bLength                18
->   bDescriptorType         1
->   bcdUSB               2.00
->   bDeviceClass            0
->   bDeviceSubClass         0
->   bDeviceProtocol         0
->   bMaxPacketSize0        64
->   idVendor           0x0fd9 Elgato Systems GmbH
->   idProduct          0x0060
->   bcdDevice            1.00
->   iManufacturer           1
->   iProduct                2
->   iSerial                 3
->   bNumConfigurations      1
->   Configuration Descriptor:
->     bLength                 9
->     bDescriptorType         2
->     wTotalLength       0x0029
->     bNumInterfaces          1
->     bConfigurationValue     1
->     iConfiguration          0
->     bmAttributes         0xe0
->       Self Powered
->       Remote Wakeup
->     MaxPower              400mA
->     Interface Descriptor:
->       bLength                 9
->       bDescriptorType         4
->       bInterfaceNumber        0
->       bAlternateSetting       0
->       bNumEndpoints           2
->       bInterfaceClass         3 Human Interface Device
->       bInterfaceSubClass      0
->       bInterfaceProtocol      0
->       iInterface              0
->         HID Device Descriptor:
->           bLength                 9
->           bDescriptorType        33
->           bcdHID               1.11
->           bCountryCode            0 Not supported
->           bNumDescriptors         1
->           bDescriptorType        34 Report
->           wDescriptorLength     248
->          Report Descriptors:
->            ** UNAVAILABLE **
+Those are already provided by linux/io.h as stubs.
 
-I was hoping to see the report descriptors.  This would produce the 
-actual descriptors as sent by the device, not the kernel's 
-interpretation or modification of the descriptors.
+The conflict remains invisible until someone would pull {linux,asm}/io.h
+into memtype.c.
 
-I guess you have to unbind the device from the usbhid driver first in
-order for lsusb to get them.  Can you do that?
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ arch/x86/mm/pat/memtype.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Alan Stern
-
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index 394be8611748..a695e17bd4c7 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -801,6 +801,7 @@ void memtype_free_io(resource_size_t start, resource_size_t end)
+ 	memtype_free(start, end);
+ }
+ 
++#ifdef CONFIG_X86_PAT
+ int arch_io_reserve_memtype_wc(resource_size_t start, resource_size_t size)
+ {
+ 	enum page_cache_mode type = _PAGE_CACHE_MODE_WC;
+@@ -814,6 +815,7 @@ void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
+ 	memtype_free_io(start, start + size);
+ }
+ EXPORT_SYMBOL(arch_io_free_memtype_wc);
++#endif
+ 
+ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ 				unsigned long size, pgprot_t vma_prot)
+-- 
+2.16.4
