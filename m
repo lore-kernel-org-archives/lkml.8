@@ -2,125 +2,125 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC35C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE07C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4CC217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE26214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNCA16of"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s8WuItH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgBFNFc (ORCPT
+        id S1727636AbgBFNGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:05:32 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35845 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727111AbgBFNFb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:05:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580994330;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VK0cVU+EaUKEqVdhJY86wR9NaSgWi1ZgRcL6h4AgQY4=;
-        b=SNCA16of8eWq2uXT9siAjsxu15q/P3iQXndejfoRGJPZVAAUTndpR10AqNKAzQRDu8OVOt
-        JAlU6UY3XEPwDjwoLsbBDv0fbFnTK5e9mrllbr54bGFyxP9PV94QfB8KY1pq6PPp/dP72a
-        VhPZ4E45sX34sBsV5Q+jpFyCLtFjTyk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-RZYZ0dpDMyOQPkIOfvJQLw-1; Thu, 06 Feb 2020 08:05:27 -0500
-X-MC-Unique: RZYZ0dpDMyOQPkIOfvJQLw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D5E763AD8;
-        Thu,  6 Feb 2020 13:05:26 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32EEC863A5;
-        Thu,  6 Feb 2020 13:05:25 +0000 (UTC)
-Subject: Re: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Krupp <centos@akr.yagii.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org
-References: <20200205125831.20430-1-prarit@redhat.com>
- <20200206110811.GC9741@zn.tnic>
- <1f3f5f54-eb31-1e2a-27be-7ed4cb3dc2d3@redhat.com>
-Message-ID: <e4088217-78cc-91f5-fcc9-6152aaf12caf@redhat.com>
-Date:   Thu, 6 Feb 2020 08:05:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Feb 2020 08:06:50 -0500
+Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:17029
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726744AbgBFNGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:06:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c0BOZ26fYYJVZ7YA8J52saTPAZp33tE9o03T31AQ0/RVzCdgEnBk+L4wcZR/X3NhQwtAP/LtDZIWzGoSlo6e74h93jOpHGWljnsaWzHMx467afFKuUPsNnXBW9OZfeAIteZ/5RUKEw8ZZGLmCSG+YwEc+7OI2bf8hFngZgKb0up2LcLQEc4NdcMbxLEPo4ExIDQmmU+/Iv6XEvRrh0pkXUTfh7+jgKK0pn3z8auc1ZUoqv7+X8aHqlmiQiZt8CtnMT8b+/toSFwt2w0jWTBKK9NhM4kCAxkpn0rf1qsq9e0k1s0QWKM1+yB6/XD87PW1Lmg8Gg+aAB28oEi0L7uLTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CkvH+Q9AOBv6o4IB9gqkOV3V3maW0RSzeNKUxe4Nkwg=;
+ b=TkzQ5uShZspPDzWzuVkcetrknG2up3p1yDo45vjBFWcg1CwO4MtR3XrQI+CCS09qpnLFCwlP8E1qhvTAsbOHzVaAv47G7YKqOE7CxJbGyq4lybSSmo/v09MrFzG8JWcZaCYWZUE6rf4UN77vDmlazU0fQhJU7RkpFnKiU0tTPtGfeSMc5fS+iwcEwbHHdxj7PU2Swqtx1IvpfHqcnnw2ATg8dl7BEktbQCYtuo2+aj20Bsw/UmFEAwGkg3EengZOBX/pIPVHUe6bYIrI2zeA/MaueU+0Bp4Du/j4E1j7tqlKQVSLFjuaMG7yBVDKhn7FvrAKlL+7iorDrMdOdHWtyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CkvH+Q9AOBv6o4IB9gqkOV3V3maW0RSzeNKUxe4Nkwg=;
+ b=s8WuItH6uHm9rbNa2IRHdU/rAN3MGyVW8gG6VOAYXR14imtGpzxYSuhPDJm5Y5dlkk9vjCfYqiky1FHBt/HNlf4o7eIqMQWben2L+hGR7XoAafFBW+g9hT1yZuRknFr5OK5zcEN0kk6NxS68owAubN/ZonSceIWuIbDKy8hhZyQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4770.eurprd04.prod.outlook.com (20.177.41.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.32; Thu, 6 Feb 2020 13:06:46 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.020; Thu, 6 Feb 2020
+ 13:06:46 +0000
+From:   peng.fan@nxp.com
+To:     sudeep.holla@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andre.przywara@arm.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 0/2] firmware: arm_scmi: add smc/hvc transports support
+Date:   Thu,  6 Feb 2020 21:01:24 +0800
+Message-Id: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0136.apcprd02.prod.outlook.com
+ (2603:1096:202:16::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-In-Reply-To: <1f3f5f54-eb31-1e2a-27be-7ed4cb3dc2d3@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Received: from localhost.localdomain (119.31.174.66) by HK2PR02CA0136.apcprd02.prod.outlook.com (2603:1096:202:16::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 13:06:43 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fe40001c-2dfd-494c-2238-08d7ab056b80
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4770:|AM0PR04MB4770:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4770D49E8D440FC66D0421F6881D0@AM0PR04MB4770.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0305463112
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(86362001)(2616005)(956004)(36756003)(6486002)(6506007)(4326008)(6666004)(6512007)(9686003)(69590400006)(498600001)(26005)(186003)(16526019)(2906002)(66946007)(5660300002)(66476007)(52116002)(81166006)(81156014)(8676002)(8936002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4770;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vIJ1GosEGIVaL7dWcoQMbLgyE6Qg0UTD+9Ym2fdA97lxdTNX59X5NvRqn4w0Pd7YErLl///+brJXV1Fq1WN89FkuT/vRoo2CtreWw8UI39FJ9COJWZYlS7igWAfxMP8ybGzFFLTWNggNWX3GR1HnUIhHjH1fdYsFzRN6bZe5/HVYio1yqpgNvttllYuxEnD5mxXbWCqm7jYLpbnoGOBDe+2lAWwH2xnc8lM/XnPcd7R0hxk3j9HC/eVhpyBW4bnseEtmFMnTxEnUqUCk840JVr5V6jCmaPdhLzJVIIfvXBpIwpOmk9yWlf+WeJ5/4lbpasyJxUEkVWfImMdpp8764hLA++8oWs06EzBwzy1X2USwNk2IGXqZrKUYFR9QbKetKFVFXtSXPjr00jKWboP792NBtOIFEZgEFmVBXQpofYwMpxuvl6HlC2MwBzRw8SfMujewAxx5aq9MFgwQ9IaAvbPy72pxs2JOKUHi22qOdI3AMAMYyL5oaMj7vPDzyvH3rc4AKVb25BfP1vLwyG+DGtUHXWcbiQ9Kg3ubD0pSj50=
+X-MS-Exchange-AntiSpam-MessageData: jstqu2wCaeshREdD1+Y/qpDe0Do9WEw032AL4ABWpbbTbUIgx/wvRcW9KTbMN9ct7fqPCg7+dJqeXQlg//qLxQxtlfC7BOm8HuSp/E1iVspHrc9PHm9U5w1P4NF7NBlA6CrBcBWzXwRwUsi5vYbLYg==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe40001c-2dfd-494c-2238-08d7ab056b80
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 13:06:46.6897
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bKiHks4zi5/JoD5rKu+6BW/AibAOuNmbm5vt9ny4wy8BMkXT170xfSgIKARjSxu04uc7NcVtjTbn89C9krc2Vw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4770
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Peng Fan <peng.fan@nxp.com>
 
+This is to add smc/hvc transports support, based on Viresh's v6.
+SCMI firmware could be implemented in EL3, S-EL1, NS-EL2 or other
+A core exception level. Then smc/hvc could be used. And for vendor
+specific firmware, a wrapper layer could added in EL3, S-EL1,
+NS-EL2 and etc to translate SCMI calls to vendor specific firmware calls.
 
-On 2/6/20 7:53 AM, Prarit Bhargava wrote:
-> 
-> 
-> On 2/6/20 6:10 AM, Borislav Petkov wrote:
->> On Wed, Feb 05, 2020 at 07:58:31AM -0500, Prarit Bhargava wrote:
->>
->>> Subject: Re: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
->>
->> That subject is unreadable for humans.
-> 
-> Yeah :/  I couldn't think of a better one.  Maybe "Block spurious corrected
-> errors on some Intel processors"?  Any other suggestion?
-> 
->>
->>> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
->>> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
->>> with the valid field (bit 63) set, the uncorrected error field (bit 61)
->>> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
->>> an MCA Error Code (bits [15:0]) of 0x0005."
->>>
->>> Block these spurious errors from the console and logs.
->>
->> Are they being hit in the wild or why do we need this?
-> 
-> Alexander, cc'd, is being hit by this in the wild.
-> 
->>
->>> Links to Intel Specification updates:
->>> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
->>> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
->>> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
->>> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
->>
->> Those links tend to get stale with time. If you really want to refer to
->> the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
->> them there as an attachment and add the link to the entry to the commit
->> message.
->>
->>> Signed-off-by: Alexander Krupp <centos@akr.yagii.de>
->>
->> What's that Signed-off-by: tag supposed to mean?
+A new compatible string arm,scmi-smc is added. arm,scmi is still for
+mailbox transports.
 
-Sorry.  I missed this question, but I really don't understand the question.
-Alexander posted a patch in a kernel bugzilla @ Red Hat and I modified the patch
-with some additional changes.  I don't want him to lose credit for the work so
-he's got a proper Signed-off-by tag for this patch.
+Each protocol could use its own smc/hvc id or share the same smc/hvc id
+Each protocol could use its own shmem or share the same shmem
+Per smc/hvc, only Tx supported.
 
-P.
+Peng Fan (2):
+  dt-bindings: arm: arm,scmi: add smc/hvc transports
+  firmware: arm_scmi: add smc/hvc transports
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt |   4 +-
+ drivers/firmware/arm_scmi/Makefile                 |   2 +-
+ drivers/firmware/arm_scmi/common.h                 |   1 +
+ drivers/firmware/arm_scmi/driver.c                 |   1 +
+ drivers/firmware/arm_scmi/smc.c                    | 177 +++++++++++++++++++++
+ 5 files changed, 183 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/smc.c
+
+-- 
+2.16.4
 
