@@ -2,74 +2,94 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE471C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C7C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A081E206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A5222314
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgBFKcE (ORCPT
+        id S1728511AbgBFKcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:32:04 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2385 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728304AbgBFKcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:32:03 -0500
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id A72D42D9EF9F868C2866;
-        Thu,  6 Feb 2020 10:32:01 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 6 Feb 2020 10:32:01 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Feb 2020
- 10:32:01 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: Query on device links
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     Saravana Kannan <saravanak@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <7f7d9b37-3f10-fefb-db23-86c8f83e8885@huawei.com>
-Date:   Thu, 6 Feb 2020 10:31:59 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 6 Feb 2020 05:32:20 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:44890 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728304AbgBFKcT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:32:19 -0500
+Received: from 79.184.253.222.ipv4.supernova.orange.pl (79.184.253.222) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 40d7a63af6c90ca3; Thu, 6 Feb 2020 11:32:17 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>,
+        David Box <david.e.box@linux.intel.com>
+Subject: [PATCH] ACPI: EC: Fix flushing of pending work
+Date:   Thu, 06 Feb 2020 11:32:16 +0100
+Message-ID: <2209952.LFAxc7Zn43@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-According to "Limitations" section @ 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/driver-api/device_link.rst#n110, 
-for a managed link, lack of the supplier driver may cause indefinite 
-delay in probing of the consumer. Is there any way around this?
+Commit 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+introduced a subtle bug into the flushing of pending EC work while
+suspended to idle, which may cause the EC driver to fail to
+re-enable the EC GPE after handling a non-wakeup event (like a
+battery status change event, for example).
 
-So I just want the probe order attempt of the supplier and consumer to 
-be guaranteed, but the supplier probe may not be successful, i.e. does 
-not actually bind.
+The problem is that one of the work items flushed by the
+flush_scheduled_work() in __acpi_ec_flush_work() may disable the EC
+GPE and schedule another work item expected to re-enable it, but that
+new work item is not flushed, so __acpi_ec_flush_work() returns with
+the EC GPE disabled and the CPU running it goes into an idle state
+subsequently.  If all of the other CPUs are in idle states at that
+point, the EC GPE won't be re-enabled until at least one CPU is woken
+up by another interrupt source, so system wakeup events that would
+normally come from the EC then don't work.
 
-In my case, I would like to use device_link_add(supplier, consumer, 
-DL_FLAG_AUTOPROBE_CONSUMER), but I find the supplier probe may fail (and 
-not due to -EPROBE_DEFER), and my consumer remains in limbo.
+This is reproducible on a Dell XPS13 9360 in my office which
+sometimes stops reacting to power button and lid events (triggered
+by the EC on that machine) after switching from AC power to battery
+power or vice versa while suspended to idle (each of those switches
+causes the EC GPE to trigger for several times in a row, but they
+are not system wakeup events).
 
-You may ask my I want this ordering at all - it is because in 
-really_probe(), we do the device DMA configure before the actual device 
-driver probe, and I just need that ordering to be ensured between devices.
+To avoid this problem, change __acpi_ec_flush_work() to call
+drain_workqueue() on system_wq instead of flush_scheduled_work(),
+which is sufficient to make it go away on the machine mentioned
+above.
 
-Thanks,
-John
+Fixes: 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/ec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -535,7 +535,7 @@ static void acpi_ec_enable_event(struct
+ #ifdef CONFIG_PM_SLEEP
+ static void __acpi_ec_flush_work(void)
+ {
+-	flush_scheduled_work(); /* flush ec->work */
++	drain_workqueue(system_wq); /* flush ec->work */
+ 	flush_workqueue(ec_query_wq); /* flush queries */
+ }
+ 
+
+
+
