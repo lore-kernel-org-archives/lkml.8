@@ -2,112 +2,141 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CFDC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B31C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B316721741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1C021741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iAp/+gmv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHUkb/dC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgBFRcD (ORCPT
+        id S1727761AbgBFRd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:32:03 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:48618 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFRcC (ORCPT
+        Thu, 6 Feb 2020 12:33:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43662 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727358AbgBFRdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:32:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5qqLfcCzZqb9lsXWveDQ2LL6r9oP/9a7+gTw/Jw44lg=; b=iAp/+gmvhiXYw+HT6nED2uCPqx
-        wcdbO7CICi5P3VZHW5Wk/M9cRq18evzlINEmuUVpP93Uf1fLMXQJfEdvUL27uigxWmZymgZJOEYQU
-        9awyC7PjBa0ZeZBouQlvObyti8zFjP4+j3bK1FwhoU9YZAN0PH/LZn6Fiq2OwjT44ECFAgXmJGBQM
-        fzM/gSkDxF1iAJU9ECU/v/t751cLc0q5NyaVt8NVY0CtYxypYBPYc6NsQJ57o+ef1+/HOG9aCgBwf
-        oC68OdKifGB3EAMArOVUSX5++WsSGODisyZSf4T7dnHGX/yHnvMuziWQO0EcZydkQF2pD/ACOFVeY
-        k+KH9nsg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izl0O-0006Yb-33; Thu, 06 Feb 2020 17:31:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 35A333016E5;
-        Thu,  6 Feb 2020 18:30:07 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AB2962B813A87; Thu,  6 Feb 2020 18:31:53 +0100 (CET)
-Date:   Thu, 6 Feb 2020 18:31:53 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v6 6/6] locking/lockdep: Reuse freed chain_hlocks entries
-Message-ID: <20200206173153.GX14914@hirez.programming.kicks-ass.net>
-References: <20200206152408.24165-1-longman@redhat.com>
- <20200206152408.24165-7-longman@redhat.com>
- <20200206161640.GW14914@hirez.programming.kicks-ass.net>
- <29fbb4c6-aa8f-f6ce-6115-232db5f2db52@redhat.com>
+        Thu, 6 Feb 2020 12:33:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581010434;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BklOOZtpEbXR2lfLsVN/Nzs8K2IHl/5W7tD5xZRKzIw=;
+        b=VHUkb/dCf1lkz/dTqsEpTq08yK+skgf6XxRl0xd674ZeA6tabIVBbCk+W3PHfYsxzxYKDg
+        Thxl1zuPme50MS7F+DUazBQe2p+Oygs0QneI5dtTPuvxHGkBYsW0iHXkKnhJQUQwIIduPG
+        cGVa3u/7FI2WRuUKVtmSV9C9RQqAkCQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-60-9lJ2arPGN7mHAMEqyIiJFw-1; Thu, 06 Feb 2020 12:33:52 -0500
+X-MC-Unique: 9lJ2arPGN7mHAMEqyIiJFw-1
+Received: by mail-wm1-f72.google.com with SMTP id a10so363710wme.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 09:33:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BklOOZtpEbXR2lfLsVN/Nzs8K2IHl/5W7tD5xZRKzIw=;
+        b=L1MByaNqFF2jQ6idzJcpuwNXLELp0gVP7NYtL8o0+vFXpvizlN6eZteT/oEnuIf68T
+         BCWIFX4l5+mYsUiGBTwNvYwUA7l32M2zF2s0jADiZMYdMq8HfHDV5lqOFEuwP/D7Rn77
+         +aBk685Hk8IJrZO1JkctJJV0pw1xS9ZDN0g+jV2ISKBX8wHEYzJJ04og/1Vj7ZbfxzKM
+         Skki2Ulx0IanGb/zR8fjObJufkT+MuSjiN0dwWg/tVR4fNDu/FUr15mrWtqPz8qHUX0Q
+         /+S42ppnEBpJBmT7nE03rnnPIaev5lmXS3u8DjMEkMQBtBxBRe1r0SL8LrTMzYX5T4qM
+         0DcA==
+X-Gm-Message-State: APjAAAVNbzeDpj0o0DYX9BY50Xsx8qDHGD1Ij+HQ9gaHONcKplHV6o+l
+        ztwyariWFkdddkh7KWG1B2H0PHMXuOQyYJQAvLEeyfdyIBv6xT0qhIKIDXlcxSg0zxYMnh4o04g
+        V0TGoKScXB4Avjr4kUBveeBRE
+X-Received: by 2002:a1c:7915:: with SMTP id l21mr5504745wme.112.1581010431052;
+        Thu, 06 Feb 2020 09:33:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz/LgvjhDqPglzyKZz65I/FvXOuZVvP6MOg0sTKNxQjVoAU4NrjaJmmLB1IwT7DfEihNiQf7w==
+X-Received: by 2002:a1c:7915:: with SMTP id l21mr5504712wme.112.1581010430684;
+        Thu, 06 Feb 2020 09:33:50 -0800 (PST)
+Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id z133sm263777wmb.7.2020.02.06.09.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 09:33:50 -0800 (PST)
+Date:   Thu, 6 Feb 2020 18:33:48 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
+Message-ID: <CAGxU2F6qvW28=ULNUi-UHethus2bO6VXYX127HOcH_KPToZC-w@mail.gmail.com>
+References: <20200131142943.120459-1-sgarzare@redhat.com>
+ <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <29fbb4c6-aa8f-f6ce-6115-232db5f2db52@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 12:08:20PM -0500, Waiman Long wrote:
-> On 2/6/20 11:16 AM, Peter Zijlstra wrote:
-> > On Thu, Feb 06, 2020 at 10:24:08AM -0500, Waiman Long wrote:
-> >> +static int alloc_chain_hlocks(int req)
-> >> +{
-> >> +	int bucket, curr, size;
-> >> +
-> >> +	/*
-> >> +	 * We rely on the MSB to act as an escape bit to denote freelist
-> >> +	 * pointers. Make sure this bit isn't set in 'normal' class_idx usage.
-> >> +	 */
-> >> +	BUILD_BUG_ON((MAX_LOCKDEP_KEYS-1) & CHAIN_BLK_FLAG);
-> >> +
-> >> +	init_data_structures_once();
-> >> +
-> >> +	if (nr_free_chain_hlocks < req)
-> >> +		return -1;
-> >> +
-> >> +	/*
-> >> +	 * We require a minimum of 2 (u16) entries to encode a freelist
-> >> +	 * 'pointer'.
-> >> +	 */
-> >> +	req = max(req, 2);
-> >> +	bucket = size_to_bucket(req);
-> >> +	curr = chain_block_buckets[bucket];
-> >> +
-> >> +	if (bucket && (curr >= 0)) {
-> >> +		del_chain_block(bucket, req, chain_block_next(curr));
-> >> +		return curr;
-> >> +	} else if (bucket) {
-> >> +		/* Try bucket 0 */
-> >> +		curr = chain_block_buckets[0];
-> >> +	}
-> > 	if (bucket) {
-> > 		if (curr >= 0) {
-> > 			del_chain_block(bucket, req, chain_block_next(curr));
-> > 			return curr;
-> > 		}
-> > 		/* Try bucket 0 */
-> > 		curr = chain_block_bucket[0];
-> > 	}
-> >
-> > reads much easier IMO.
-> 
-> Yes, that is simpler. I can send out an updated patch if you want, or
-> you can apply the change when you pull the patch.
 
-I'll frob it. Thanks!
+
+On Fri, Jan 31, 2020 at 4:39 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 1/31/20 7:29 AM, Stefano Garzarella wrote:
+> > Hi Jens,
+> > this is a v2 of the epoll test.
+> >
+> > v1 -> v2:
+> >     - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
+> >     - add 2 new tests to test epoll with IORING_FEAT_NODROP
+> >     - cleanups
+> >
+> > There are 4 sub-tests:
+> >     1. test_epoll
+> >     2. test_epoll_sqpoll
+> >     3. test_epoll_nodrop
+> >     4. test_epoll_sqpoll_nodrop
+> >
+> > In the first 2 tests, I try to avoid to queue more requests than we have room
+> > for in the CQ ring. These work fine, I have no faults.
+>
+> Thanks!
+>
+> > In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
+> > much as I can until I get a -EBUSY, but they often fail in this way:
+> > the submitter manages to submit everything, the receiver receives all the
+> > submitted bytes, but the cleaner loses completion events (I also tried to put a
+> > timeout to epoll_wait() in the cleaner to be sure that it is not related to the
+> > patch that I send some weeks ago, but the situation doesn't change, it's like
+> > there is still overflow in the CQ).
+> >
+> > Next week I'll try to investigate better which is the problem.
+>
+> Does it change if you have an io_uring_enter() with GETEVENTS set? I wonder if
+> you just pruned the CQ ring but didn't flush the internal side.
+
+If I do io_uring_enter() with GETEVENTS set and wait_nr = 0 it solves
+the issue, I think because we call io_cqring_events() that flushes the
+overflow list.
+
+At this point, should we call io_cqring_events() (that flushes the
+overflow list) in io_uring_poll()?
+I mean something like this:
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 77f22c3da30f..2769451af89a 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6301,7 +6301,7 @@ static __poll_t io_uring_poll(struct file *file, poll_table *wait)
+        if (READ_ONCE(ctx->rings->sq.tail) - ctx->cached_sq_head !=
+            ctx->rings->sq_ring_entries)
+                mask |= EPOLLOUT | EPOLLWRNORM;
+-       if (READ_ONCE(ctx->rings->cq.head) != ctx->cached_cq_tail)
++       if (!io_cqring_events(ctx, false))
+                mask |= EPOLLIN | EPOLLRDNORM;
+
+        return mask;
+
+Thanks,
+Stefano
+
