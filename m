@@ -2,56 +2,65 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EA2C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5627CC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48155214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F966214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hsGIOcRz"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="izaxrCPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBFRHG (ORCPT
+        id S1727872AbgBFRIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:07:06 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48792 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727872AbgBFRHF (ORCPT
+        Thu, 6 Feb 2020 12:08:07 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:34420 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727657AbgBFRIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:07:05 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5D69420B7130;
-        Thu,  6 Feb 2020 09:07:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5D69420B7130
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1581008824;
-        bh=hlwVzxb4UU8cnAPgCWYXMIzujw/M5LqObBrLV/WPdAQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hsGIOcRzVlgnAFz2oSVbcMwignzylsslDSCi4BNXDUebD6t0cGiFTCrRp6DTjvpo/
-         f97gPayBkib+gu1X0xoGC2sCDAhchXiGDPjLfDDh2zZAWMH/WUMsmeyiH2Zdlvl1Em
-         wSdzg/ItePKTkBY+mZ1kaAJIMftKIjNMFg74AZL4=
-Subject: Re: [RFC PATCH 1/2] ima: Implement support for uncompressed module
- appended signatures
-To:     Eric Snowberg <eric.snowberg@oracle.com>, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com
-Cc:     dhowells@redhat.com, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
-        tglx@linutronix.de, bauerman@linux.ibm.com, mpe@ellerman.id.au,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
- <20200206164226.24875-2-eric.snowberg@oracle.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <fda8b3e4-e3aa-a83a-0ddc-8ec096e67316@linux.microsoft.com>
-Date:   Thu, 6 Feb 2020 09:07:28 -0800
+        Thu, 6 Feb 2020 12:08:07 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581008886; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=IG8sscW63scxx0Id6zzYrwJOnoKRGNZHgeCJTEZRJWw=; b=izaxrCPyZx041PMvr5vB3w/5krTnWOqKxif4Dq8uW7U9G0FGmGaCHyiK71tnEt/mbMVH1a//
+ r7fAHhQj9jy+uryaqI56/t9iLlZpDUIoetClpo/oWL4t/RWC9vqLcmi2R7OMPxOqrLXCuYZF
+ bHAlyn4I3rQO9ZuhweQxb8I7Lqs=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3c47f3.7ff3de8f1298-smtp-out-n03;
+ Thu, 06 Feb 2020 17:08:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3D14AC447A0; Thu,  6 Feb 2020 17:08:03 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 885B7C433CB;
+        Thu,  6 Feb 2020 17:08:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 885B7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <073b09d4-51fe-f5fc-bbaf-1a168eac0881@codeaurora.org>
+Date:   Thu, 6 Feb 2020 10:08:00 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200206164226.24875-2-eric.snowberg@oracle.com>
+In-Reply-To: <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,41 +69,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/2020 8:42 AM, Eric Snowberg wrote:
+On 1/31/2020 6:49 AM, Manivannan Sadhasivam wrote:
+> This commit adds support for registering MHI controller drivers with
+> the MHI stack. MHI controller drivers manages the interaction with the
+> MHI client devices such as the external modems and WiFi chipsets. They
+> are also the MHI bus master in charge of managing the physical link
+> between the host and client device.
+> 
+> This is based on the patch submitted by Sujeev Dias:
+> https://lkml.org/lkml/2018/7/9/987
+> 
+> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> [jhugo: added static config for controllers and fixed several bugs]
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> [mani: removed DT dependency, splitted and cleaned up for upstream]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
->   
-> @@ -31,6 +32,7 @@ static const char * const keyring_name[INTEGRITY_KEYRING_MAX] = {
->   	".ima",
->   #endif
->   	".platform",
-> +	".builtin_trusted_keys",
->   };
->   
->   #ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
-> @@ -45,8 +47,11 @@ static struct key *integrity_keyring_from_id(const unsigned int id)
->   		return ERR_PTR(-EINVAL);
->   
->   	if (!keyring[id]) {
-> -		keyring[id] =
-> -			request_key(&key_type_keyring, keyring_name[id], NULL);
-> +		if (id == INTEGRITY_KEYRING_KERNEL)
-> +			keyring[id] = VERIFY_USE_SECONDARY_KEYRING;
+> +/**
+> + * enum mhi_device_type - Device types
+> + * @MHI_DEVICE_XFER: Handles data transfer
+> + * @MHI_DEVICE_TIMESYNC: Use for timesync feature
+> + * @MHI_DEVICE_CONTROLLER: Control device
+> + */
+> +enum mhi_device_type {
+> +	MHI_DEVICE_XFER,
+> +	MHI_DEVICE_TIMESYNC,
+> +	MHI_DEVICE_CONTROLLER,
+> +};
 
-Since "Built-In Trusted Keyring" or "Secondary Trusted Keyring" is used, 
-would it be more appropriate to name this identifier 
-INTEGRITY_KEYRING_BUILTIN_OR_SECONDARY?
+Time sync support was removed, no?  I don't see MHI_DEVICE_TIMESYNC used 
+anywhere in the code.
 
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-> index 73fc286834d7..63f0e6bff0e0 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -145,7 +145,8 @@ int integrity_kernel_read(struct file *file, loff_t offset,
->   #define INTEGRITY_KEYRING_EVM		0
->   #define INTEGRITY_KEYRING_IMA		1
->   #define INTEGRITY_KEYRING_PLATFORM	2
-> -#define INTEGRITY_KEYRING_MAX		3
-> +#define INTEGRITY_KEYRING_KERNEL	3
-> +#define INTEGRITY_KEYRING_MAX		4
+> +/**
+> + * enum mhi_er_data_type - Event ring data types
+> + * @MHI_ER_DATA: Only client data over this ring
+> + * @MHI_ER_CTRL: MHI control data and client data
+> + * @MHI_ER_TSYNC: Time sync events
+> + */
+> +enum mhi_er_data_type {
+> +	MHI_ER_DATA,
+> +	MHI_ER_CTRL,
+> +	MHI_ER_TSYNC,
+> +};
+
+Time sync support was removed, no?  I don't see MHI_ER_TSYNC used 
+anywhere in the code.
+
+> +/**
+> + * struct mhi_controller - Master MHI controller structure
+> + * @dev: Driver model device node for the controller (required)
+> + * @mhi_dev: MHI device instance for the controller
+> + * @regs: Base address of MHI MMIO register space (required)
+> + * @iova_start: IOMMU starting address for data (required)
+> + * @iova_stop: IOMMU stop address for data (required)
+> + * @fw_image: Firmware image name for normal booting (required)
+> + * @edl_image: Firmware image name for emergency download mode (optional)
+> + * @sbl_size: SBL image size downloaded through BHIe (optional)
+> + * @seg_len: BHIe vector size (optional)
+> + * @mhi_chan: Points to the channel configuration table
+> + * @lpm_chans: List of channels that require LPM notifications
+> + * @irq: base irq # to request (required)
+> + * @max_chan: Maximum number of channels the controller supports
+> + * @total_ev_rings: Total # of event rings allocated
+> + * @hw_ev_rings: Number of hardware event rings
+> + * @sw_ev_rings: Number of software event rings
+> + * @nr_irqs_req: Number of IRQs required to operate (optional)
+> + * @nr_irqs: Number of IRQ allocated by bus master (required)
+> + * @mhi_event: MHI event ring configurations table
+> + * @mhi_cmd: MHI command ring configurations table
+> + * @mhi_ctxt: MHI device context, shared memory between host and device
+> + * @pm_mutex: Mutex for suspend/resume operation
+> + * @pm_lock: Lock for protecting MHI power management state
+> + * @timeout_ms: Timeout in ms for state transitions
+> + * @pm_state: MHI power management state
+> + * @db_access: DB access states
+> + * @ee: MHI device execution environment
+> + * @dev_wake: Device wakeup count
+> + * @pending_pkts: Pending packets for the controller
+> + * @transition_list: List of MHI state transitions
+> + * @transition_lock: Lock for protecting MHI state transition list
+> + * @wlock: Lock for protecting device wakeup
+> + * @st_worker: State transition worker
+> + * @fw_worker: Firmware download worker
+> + * @syserr_worker: System error worker
+> + * @state_event: State change event
+> + * @status_cb: CB function to notify power states of the device (required)
+> + * @link_status: CB function to query link status of the device (required)
+> + * @wake_get: CB function to assert device wake (optional)
+> + * @wake_put: CB function to de-assert device wake (optional)
+> + * @wake_toggle: CB function to assert and de-assert device wake (optional)
+> + * @runtime_get: CB function to controller runtime resume (required)
+> + * @runtimet_put: CB function to decrement pm usage (required)
+> + * @buffer_len: Bounce buffer length
+> + * @bounce_buf: Use of bounce buffer
+> + * @fbc_download: MHI host needs to do complete image transfer (optional)
+> + * @pre_init: MHI host needs to do pre-initialization before power up
+> + * @wake_set: Device wakeup set flag
+> + */
+
+I'm happy the optional/required is listed.  However if I look at this 
+from the perspective of someone writing a controller for the first time, 
+I'm not confident the required/optional annotations are clear enough. 
+Perhaps a quick sentance explaining that those annotations indicate 
+fields which must be populated prior to mhi_register_controller() ?
+
+> +
+> +/**
+> + * struct mhi_device - Structure representing a MHI device which binds
+> + *                     to channels
+> + * @id: Pointer to MHI device ID struct
+> + * @chan_name: Name of the channel to which the device binds
+> + * @mhi_cntrl: Controller the device belongs to
+> + * @ul_chan: UL channel for the device
+> + * @dl_chan: DL channel for the device
+> + * @dev: Driver model device node for the MHI device
+> + * @dev_type: MHI device type
+> + * @tiocm: Device current terminal settings
+> + * @dev_wake: Device wakeup counter
+> + */
+> +struct mhi_device {
+> +	const struct mhi_device_id *id;
+> +	const char *chan_name;
+> +	struct mhi_controller *mhi_cntrl;
+> +	struct mhi_chan *ul_chan;
+> +	struct mhi_chan *dl_chan;
+> +	struct device dev;
+> +	enum mhi_device_type dev_type;
+> +	u32 tiocm;
+
+This was for the old ioctl support, right?  I don't see it used anywhere.
+
+> +	u32 dev_wake;
+> +};
 
 
-  -lakshmi
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
