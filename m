@@ -2,156 +2,145 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A18C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4FDC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9848F20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:56:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="rqeN+hsc"
+	by mail.kernel.org (Postfix) with ESMTP id B51D4217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581004619;
+	bh=VKqamuuY9AprEgBPWpz0hs7y962lBR3ehzi3JQvK4YU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AVsquEaS+hYlP82bdPt390TrcR30MzxSlpWjxSCxBKQeI3AOn+CCjuAaDyzzMKN2E
+	 MSqtl3mTNbGpIz43z+BgvcKVkU7+RonbCgxI+wq+p9mghSJ0wT1nlpEz+DEElCRF1r
+	 j8Zov4bIiktObcLSrp0wVAnxE/fH78BDiJjwK8sU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgBFP4F (ORCPT
+        id S1727663AbgBFP47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:56:05 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:59505 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbgBFP4F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:56:05 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 6h9h5IANTjBVIdngWIoWTVGYg1NFI5+Q9NqvJgVL8sPWkt5UndEtHfOTUumDgn99mOG8Vay4Ju
- vhZjYapIY+LmkyEuorXLTrm0ACXemGttjoEPmfWCZs5arn/7nKfEO1dhGL5oNURPPrC66MCPty
- cTVseixOVTXc36Nl1lWujB4lQAvhUUfnni0f65g1G+JgVqS9+WrD6/gncFIbSkvmRYpafFUcnt
- KlISFjowr5jp82d/axKi4F2CaHkXMqXk9VdBaggpy6IqjqulQTedgGMRGVe2lVWz/RswqDHZTc
- lPo=
-X-IronPort-AV: E=Sophos;i="5.70,410,1574146800"; 
-   d="scan'208";a="1534780"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Feb 2020 08:55:53 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Feb 2020 08:55:49 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 6 Feb 2020 08:55:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ErAmMJGMRSrRqfVTmK0tWNk/aJoMSOKCE5Ryaht226EEYFGjJloFZ2eCC/OCxhjseb7Yoq5YY7BTP3dAco8YHpSY5nmjlpgYz1yXhNGpX+/pMREwLlpClzunMddzxQG9TqULlqRN50U47aWGqGQ9CmcqIsHb721PJbKdHs3DpLX6aHKxOvG8Q3sBi6ZG2jFDFNO3qmsxApVU+JFDNxvhOcWuf2zTqoL3tqMBcZBZnvdHs9bp6UdySup+RSZ4jrixUsMu9djBqP55gA+VI39WoKYJAX2pD9tP8sLLCMKaGrvq0bOC+E02YN+mUtj/HVFSqtCEWeFb0Oy+C/v88J58Pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9b3j16FE7TEHCGse2+44knl5d6uKGsJOjiVyH70cmzY=;
- b=BERftpYtqkd/XU70lXlJs5bAvMStIYkQfz+7DsErpCWEMje4anjCe1jBBJr8KAxv6BXQ1jgK1lriZcWPG0JXjxMLNXScFW6sI0SWHv7jIWc+ayEhd0PGefK6XKyXSEdDjuu3JqdB/kZnIXLXQt4P6KuOEKvI58diRWaoS9nHyAiDeP9h2ZA6mH2fOOnRUIJKfz25QQsIW5fUQH+oON+VRxx68l8nhittxCwQqVgo/X5UUtlO+TXI1xUYg0dCL3h1GiVl9vj38hQmDdaeL6tUTKnCaz0yG81KkVnupWRSBTP5iL9OBGEJiVsp3AnyCEEdUKUcvuG9axauRGzd5JhLwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9b3j16FE7TEHCGse2+44knl5d6uKGsJOjiVyH70cmzY=;
- b=rqeN+hsclA7CUh4VMpmCU1rAwY1zb8/dngkYFxi84J8S0JWcnGJiqyk8/IRNCJR/FPi+x2hFwDU6oBO0bNslF0Xgh2xji2l1SvOktEsIdpFIp42p0mF9FbMi3Y0knkJGpwgZjYtgNjHZmOi+3xY6EoFvfEDRDfbcYcAacSctYoo=
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
- BY5PR11MB4372.namprd11.prod.outlook.com (52.132.252.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Thu, 6 Feb 2020 15:55:47 +0000
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::6189:c32:b55b:b3fd]) by BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::6189:c32:b55b:b3fd%5]) with mapi id 15.20.2686.034; Thu, 6 Feb 2020
- 15:55:47 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <andrew@lunn.ch>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Woojung.Huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
-        <vivien.didelot@gmail.com>, <f.fainelli@gmail.com>,
-        <davem@davemloft.net>, <razvan.stefanescu@microchip.com>
-Subject: Re: [PATCH] net: dsa: microchip: enable module autoprobe
-Thread-Topic: [PATCH] net: dsa: microchip: enable module autoprobe
-Thread-Index: AQHV3P9syVNYOkbVUU+ZQ5V6GAUdX6gOS+8AgAAF2oA=
-Date:   Thu, 6 Feb 2020 15:55:47 +0000
-Message-ID: <96093569-21ea-ea3a-6bfe-ed9903944b69@microchip.com>
-References: <20200206150837.12009-1-codrin.ciubotariu@microchip.com>
- <20200206153448.GA30090@lunn.ch>
-In-Reply-To: <20200206153448.GA30090@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 490c2bc3-8df7-465b-e2f4-08d7ab1d081c
-x-ms-traffictypediagnostic: BY5PR11MB4372:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB437282DED2D5B5D7DECC8241E71D0@BY5PR11MB4372.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0305463112
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(346002)(39860400002)(396003)(189003)(199004)(86362001)(478600001)(6916009)(31696002)(186003)(6506007)(53546011)(26005)(54906003)(31686004)(316002)(2616005)(71200400001)(36756003)(76116006)(66946007)(5660300002)(66476007)(66556008)(64756008)(66446008)(8936002)(4326008)(81156014)(6486002)(107886003)(2906002)(81166006)(8676002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4372;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: g8Ypd1rBsgJIYiGOupVCAPiwOx8lAp7My0P1w8CvNAF5LLUckJsh6eG3J3pFLCW2fliVMJ/zdcdKNgPAS08JmvHHeOay1YXYhwab1UtOKospzhg71P5pge2U7Vlf72+J7tUQ8Fi5ZZrTcnzNZzQDpcJMLM32CXpYKI6erDeCXRAS1xvX4Qy8XWlJFqpkqSgDJuTF7bidddrvG+mnW/T8S6Z6jkb5gCL+vCU28FdaMqLIo/Dx+2BgO9Z/m6YwfYfXFzNk4Vt/A808Ojfit4JVCwsw8VVKtWb6QoMQkMn6yt+QaLXTlymS5cgUwAcvzeCFtNrUzwM+0tDDM/Lk9O2zdZJ0/1IVnGg0MIEnynytd0wjT+5ou1U6elYmar57PTS0LSFqnMzwYJNgr4TkJldwx6jv2kFZwkOmq26BelR/BbUW0q7J6+BLSHF17UPn+0wm
-x-ms-exchange-antispam-messagedata: tnfe94RlYeHZifwc8IY/nj0PSBAc1E3A68FBHm4zMeRK28LDRxH/0Cj3kJWYnORdH0MVM0+azXBNhqe7reFHXwjUDg35eX6GgsLVIhMzOzONx2aCSTZuNMPzbyStZTuKiNt9kIv6tNlM4JeEVO3qDw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B70AA61A150F914788230A16A2F8AA19@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 6 Feb 2020 10:56:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbgBFP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:56:58 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3696420838;
+        Thu,  6 Feb 2020 15:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581004617;
+        bh=VKqamuuY9AprEgBPWpz0hs7y962lBR3ehzi3JQvK4YU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=txIMRVX2+Gq6+l+q1z1eDgMtiXNtnm6sAoZ3a7ll7uKO1wovXKJKCTiZIcujGg7c1
+         QPAswGZjWIAS8dMx2rnv+LJ82LZoL9NqSQYGY5uLFmWAK1NbdSBKsySW7eWLypPOge
+         1v5vhGtiu6C4B4QG7HRrz45cx36SWnf+qmeMoYmE=
+Date:   Thu, 6 Feb 2020 16:56:51 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maennich@google.com, kernel-team@android.com
+Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+Message-ID: <20200206155651.GC16783@linux-8ccs>
+References: <20200129181541.105335-1-qperret@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 490c2bc3-8df7-465b-e2f4-08d7ab1d081c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 15:55:47.3747
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W72nfH4TKkqNNzpjwbGBUh82rMRNiNbSMPzQeYUgjHwvNYW2gE2gVPQM9cO71XmJX0vax09FjP9wgsHImhyJrwQcqwESz0hLepu65ZLuK0I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4372
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200129181541.105335-1-qperret@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDYuMDIuMjAyMCAxNzozNCwgQW5kcmV3IEx1bm4gd3JvdGU6DQo+IEVYVEVSTkFMIEVNQUlM
-OiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtub3cg
-dGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4gT24gVGh1LCBGZWIgMDYsIDIwMjAgYXQgMDU6MDg6
-MzdQTSArMDIwMCwgQ29kcmluIENpdWJvdGFyaXUgd3JvdGU6DQo+PiBGcm9tOiBSYXp2YW4gU3Rl
-ZmFuZXNjdSA8cmF6dmFuLnN0ZWZhbmVzY3VAbWljcm9jaGlwLmNvbT4NCj4+DQo+PiBUaGlzIG1h
-dGNoZXMgL3N5cy9kZXZpY2VzLy4uLi9zcGkxLjAvbW9kYWxpYXMgY29udGVudC4NCj4+DQo+PiBT
-aWduZWQtb2ZmLWJ5OiBSYXp2YW4gU3RlZmFuZXNjdSA8cmF6dmFuLnN0ZWZhbmVzY3VAbWljcm9j
-aGlwLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IENvZHJpbiBDaXVib3Rhcml1IDxjb2RyaW4uY2l1
-Ym90YXJpdUBtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvbmV0L2RzYS9taWNy
-b2NoaXAva3N6OTQ3N19zcGkuYyB8IDEgKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZHNhL21pY3JvY2hpcC9rc3o5
-NDc3X3NwaS5jIGIvZHJpdmVycy9uZXQvZHNhL21pY3JvY2hpcC9rc3o5NDc3X3NwaS5jDQo+PiBp
-bmRleCBjNWY2NDk1OWExODQuLjI0OGI2OWM3NGI0NSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMv
-bmV0L2RzYS9taWNyb2NoaXAva3N6OTQ3N19zcGkuYw0KPj4gKysrIGIvZHJpdmVycy9uZXQvZHNh
-L21pY3JvY2hpcC9rc3o5NDc3X3NwaS5jDQo+PiBAQCAtMTAxLDYgKzEwMSw3IEBAIHN0YXRpYyBz
-dHJ1Y3Qgc3BpX2RyaXZlciBrc3o5NDc3X3NwaV9kcml2ZXIgPSB7DQo+Pg0KPj4gICBtb2R1bGVf
-c3BpX2RyaXZlcihrc3o5NDc3X3NwaV9kcml2ZXIpOw0KPj4NCj4+ICtNT0RVTEVfQUxJQVMoInNw
-aTprc3o4NTYzIik7DQo+IA0KPiBJcyB0aGlzIHN1ZmZpY2llbnQgZm9yIGFsbCB0aGUgZGlmZmVy
-ZW50IHZhcmlhbnRzIHRoaXMgZHJpdmVyDQo+IHN1cHBvcnRzPw0KDQpQcm9iYWJseSBub3QuIEFs
-bCB0aGUgYXZhaWxhYmxlIHZhcmlhbnRzIHNlZW0gdG8gYmUgdGhvc2UgZnJvbSB0aGUgDQpjb21w
-YXRpYmxlIGxpc3QuIEkgY2FuIG1ha2UgYWxpYXNlcyBmb3IgYWxsIG9mIHRoZW0sIGlmIGl0J3Mg
-b2sgZm9yIA0KZXZlcnlvbmUuDQoNCkJlc3QgcmVnYXJkcywNCkNvZHJpbg0K
++++ Quentin Perret [29/01/20 18:15 +0000]:
+>CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
+>from ksymtab. This works really well when using in-tree drivers, but
+>cannot be used in its current form if some of them are out-of-tree.
+>
+>Indeed, even if the list of symbols required by out-of-tree drivers is
+>known at compile time, the only solution today to guarantee these don't
+>get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
+>space, but also makes it difficult to control the ABI usable by vendor
+>modules in distribution kernels such as Android. Being able to control
+>the kernel ABI surface is particularly useful to ship a unique Generic
+>Kernel Image (GKI) for all vendors.
+>
+>As such, attempt to improve the situation by enabling users to specify a
+>symbol 'whitelist' at compile time. Any symbol specified in this
+>whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
+>even if it has no in-tree user. The whitelist is defined as a simple
+>text file, listing symbols, one per line.
+>
+>Signed-off-by: Quentin Perret <qperret@google.com>
+>
+>---
+>v2: make sure to quote the whitelist path properly (Nicolas)
+>---
+> init/Kconfig                | 12 ++++++++++++
+> scripts/adjust_autoksyms.sh |  1 +
+> 2 files changed, 13 insertions(+)
+>
+>diff --git a/init/Kconfig b/init/Kconfig
+>index a34064a031a5..d9c977ef7de5 100644
+>--- a/init/Kconfig
+>+++ b/init/Kconfig
+>@@ -2180,6 +2180,18 @@ config TRIM_UNUSED_KSYMS
+>
+> 	  If unsure, or if you need to build out-of-tree modules, say N.
+>
+>+config UNUSED_KSYMS_WHITELIST
+>+	string "Whitelist of symbols to keep in ksymtab"
+>+	depends on TRIM_UNUSED_KSYMS
+>+	help
+>+	  By default, all unused exported symbols will be trimmed from the
+>+	  build when TRIM_UNUSED_KSYMS is selected.
+
+Hm, I thought TRIM_UNUSED_KSYMS just *unexports* unused symbols, no?
+"Trimmed from the build" sounds like the symbols are not compiled in
+or dropped completely. Please correct me if I misunderstood.
+
+>+	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
+>+	  exported at all times, even in absence of in-tree users. The value to
+>+	  set here is the path to a text file containing the list of symbols,
+>+	  one per line.
+>+
+> endif # MODULES
+>
+> config MODULES_TREE_LOOKUP
+>diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+>index a904bf1f5e67..8e1b7f70e800 100755
+>--- a/scripts/adjust_autoksyms.sh
+>+++ b/scripts/adjust_autoksyms.sh
+>@@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
+> EOT
+> sed 's/ko$/mod/' modules.order |
+> xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+>+cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+> sort -u |
+> sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+
+In general, I agree with the motivation behind this patch, even though
+we try not to provide too much support for out-of-tree modules.
+However, in this particular case, I think it's fair to provide some
+mechanism to keep some exported symbols around that we know will have
+users, despite having no in-tree users for a particular
+configuration/build. For example, livepatch exports symbols that have
+no in-tree users (except for the sample livepatch module, but you'd
+have to enable SAMPLES), and all livepatch users will always be out of
+tree. 
+
+I also agree with Matthias' feedback, so assuming that gets
+incorporated into v3:
+
+Acked-by: Jessica Yu <jeyu@kernel.org>
+
+Thanks!
+
