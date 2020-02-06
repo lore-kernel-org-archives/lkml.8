@@ -4,102 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914D4C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB04DC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A9E214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88660214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Uqjk/2hS"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="12M286Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgBFVy0 (ORCPT
+        id S1727658AbgBFVzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:54:26 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44365 "EHLO ozlabs.org"
+        Thu, 6 Feb 2020 16:55:23 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:55175 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgBFVy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:54:26 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48DBzM4lLTz9sRR;
-        Fri,  7 Feb 2020 08:54:21 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581026064;
-        bh=mYPH9Gb///76EYDph8C/CQOz+b+iGKWGaTFGPWS/7xE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Uqjk/2hSTJuEGe126WD6P/BvPEm6kCMYLq/r7k93qS4IdRsqmTdsQAE4WDNBjvBBE
-         mVmfSPWdVsgfBqN4pwGoGhmkQIbN8ve8XCSI5yxWdPM69ZwnKjrlmYKKfKL1AtH3uq
-         yCOvens0+ssJYLV3n/zeSlmIRVwWc/frO4zHI4NJEZgxNITFj6dN3C+tq8tZZn3K1K
-         kBhiIM2zkIfrUt63jPzWm7t/LqcI+mX0qAjCGL2Z0yLvFOz7fCmKzzkHVQHk2Zto0i
-         Epv/QC06oAZ5VOXCgtV7Sgh3wAwl1RZ5tURsWKySKgGOZZFeE01z/U/RuxpHiemtAO
-         K8a/1jqCFN/Gw==
-Date:   Fri, 7 Feb 2020 08:54:16 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: linux-next: manual merge of the fuse tree with Linus' tree
-Message-ID: <20200207085416.3f35cd31@canb.auug.org.au>
+        id S1726765AbgBFVzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 16:55:23 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 76877a17;
+        Thu, 6 Feb 2020 21:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=iEyYXoQeVJvL9VxBSqdINnENhik=; b=12M286
+        QcFw7FfPyXUco6JL08r7fRheSId3gtQL4kmvo3WK+hCB+kd0toeYc/mghSa19jwq
+        tIPpgmpmkSjxghjAKTrRHPzbF+vhLq2CNgcx4F2UPCLtwbZdqHcjZ/a3zrOnHBBv
+        KFzIu/HCMm72R2I2G7vvFXkOg0JF5+d3YDoGgl7E0i8nbREKFyvF/SAFeNA/sygr
+        aPZOqTaftwxalanM8Iv2JBkwwOrFMaVWMYb6VZg7RMHpfYCkBUggltYHBSDziYSq
+        J7Rpy1elZ2M1mlN72uIQlxvU33NrlwdeA25FIGa0Qx7pDoVLwGeG25eY71yw2/7W
+        I+ro8sh+UWoIEh7w==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 3e4ade7e (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 6 Feb 2020 21:54:14 +0000 (UTC)
+Received: by mail-oi1-f173.google.com with SMTP id c16so6252794oic.3;
+        Thu, 06 Feb 2020 13:55:20 -0800 (PST)
+X-Gm-Message-State: APjAAAW2gXE9oxCaffzDOE4I9xsWxeiFYoXn3SDmBq4AoBTmWwEvMTuZ
+        A6ARu0WEO07l9dscrwKZRRvrKazNBVA3cFHR+CE=
+X-Google-Smtp-Source: APXvYqyEsdNrxjDdXuCYJDqUYruajj4xtoIZ5dk0Shwq1ewne2L7eFL197kHYxueoLyjEE5plCZkXk6x5VTXY0hNAgQ=
+X-Received: by 2002:aca:c383:: with SMTP id t125mr33887oif.122.1581026120166;
+ Thu, 06 Feb 2020 13:55:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Gof7_0U0_/LST=cfJTV12UL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1580841629-7102-1-git-send-email-cai@lca.pw> <20200206163844.GA432041@zx2c4.com>
+ <453212cf-8987-9f05-ceae-42a4fc3b0876@gmail.com> <CAHmME9pGhQoY8MjR8uvEZpF66Y_DvReAjKBx8L4SRiqbL_9itw@mail.gmail.com>
+ <495f79f5-ae27-478a-2a1d-6d3fba2d4334@gmail.com> <20200206184340.GA494766@zx2c4.com>
+In-Reply-To: <20200206184340.GA494766@zx2c4.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 6 Feb 2020 22:55:08 +0100
+X-Gmail-Original-Message-ID: <CAHmME9oaPDNwXOAZSLRHQLawhRBPfgH4OewNBZH9Z_uL6BDDhA@mail.gmail.com>
+Message-ID: <CAHmME9oaPDNwXOAZSLRHQLawhRBPfgH4OewNBZH9Z_uL6BDDhA@mail.gmail.com>
+Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     cai@lca.pw, Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Gof7_0U0_/LST=cfJTV12UL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the fuse tree got a conflict in:
-
-  Documentation/filesystems/index.rst
-
-between commit:
-
-  77ce1a47ebca ("docs: filesystems: add overlayfs to index.rst")
-
-from Linus' tree and commit:
-
-  8ab13bca428b ("Documentation: filesystems: convert fuse to RST")
-
-from the fuse tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Gof7_0U0_/LST=cfJTV12UL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl48iwgACgkQAVBC80lX
-0GyFpggAglhBWXFhhwTbkMaD+VvnVQWaBvQgeX7KMLwfROH1wKI+UtghSMSyoS02
-5fTQwg1sp4skRRr4FdNbnMzZrrElToeyiXh6Eo0s8U3ZWd5VMBNdxTpUZuBtODzZ
-yxsGIpNYTac7QRSodBz9OULuKrCewnS8yYOAORVj2DOvJICswcTMxkh/EPYWoBUD
-7SzyldrQicisbrMECI0pRc3kjXwrx/otuLcsbIGQfYs6kO0q1Zj7YdG7gq8gq6J5
-lxydi0gkdC2duZL6klFIDrOkJi9/xt+IKydqhhocCTAvlG8b1i8p/FVl4RhUio/A
-XMc7MA3JJHNiFUWaH1oN8pdPqwaxPQ==
-=bKAe
------END PGP SIGNATURE-----
-
---Sig_/Gof7_0U0_/LST=cfJTV12UL--
+Useful playground: https://godbolt.org/z/i7JFRW
