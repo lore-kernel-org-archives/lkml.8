@@ -2,140 +2,134 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C104C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D78C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020C321741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HR7uoCJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7D87C20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581014071;
+	bh=8EfBbMgBVEVvho7g3qQLiX+cMqOYaCWXuctqNjwnenM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=MQFP1xITn5cVeMGIkoObMVwTWJ/hlyA4DJtRg0+YPqywpL2Fv/5tPO9x8x1AQwwR7
+	 LMdy8e9Feel6bp5iOVrWeQu7rg4gaKShscuBX8UGfonNEltjzKbeINvX5F+1DiAUG3
+	 aLYSgyJwTJ2M8JeVQmZdnZQg3vniaSUxV2/shFeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgBFSdX (ORCPT
+        id S1727874AbgBFSea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:33:23 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33009 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFSdW (ORCPT
+        Thu, 6 Feb 2020 13:34:30 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35606 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbgBFSea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:33:22 -0500
-Received: by mail-wr1-f66.google.com with SMTP id u6so8455077wrt.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:33:20 -0800 (PST)
+        Thu, 6 Feb 2020 13:34:30 -0500
+Received: by mail-lf1-f65.google.com with SMTP id z18so4827379lfe.2;
+        Thu, 06 Feb 2020 10:34:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/o0TABmh3sA91z50JGeWR2QdDzZnMyxEswlhRW37yD8=;
-        b=HR7uoCJJz73XXlC0tOxO2Tberzt+iuXFO7P4ixPw59zFnM5LttKSdf1tK9bRyAf3ka
-         Cez5zxvwnBT7fJBnQ67tpaiouvNPQkKlpM62Rege6LCx2tSl2klKpsGsNk1zSshJSFRu
-         FuGRvMh/ZCCsriTwBwTmSYNjePD9OPMT33VMFZSVk0gM5mYVnvt+OEMeWjL6dkKTVCgF
-         sM0DFsahxxbvFSeltgIWn/b6lzvQQmDgav9bM2cUnKE9gHSBknhyx1jhX4s6EETMLgBX
-         +EjI/i9GazD9vusTFNnsYDo9J3GXYXUZTO47N9ILD/BLLdwQYAt85BoFNwitlYdzsY/d
-         /nsA==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=/+n2nkntJosFeYc6CO6AzXMJTC7jYibAIizSqTWcO7U=;
+        b=BvXRj5fNezVzMeLFqXLZKZAln3PgbE00jyL7mwyXkgO9VAiSfun2NOhJkSN/6ANuBJ
+         cOoPbbFKVPGNBlF96Rb+UEr8b5HSxM7aZubPDFkBrqOFvkBrOV05E34aojSueC9oSgQk
+         2UPsCGI6A576qKWmnYgYN0MT6TnrQo26VZXpIajVxKc/6JEJL6NGhEVStRBAloyVWbaF
+         3k3vs4PQ9LR0IAMO9IWKUjiTZv+W2UaVUKEK0eQVpe7jqotNcuYrNUOgITz07lkwnO4+
+         4wpIecZo83R7hZw6qnXx1uEW5C3J8v1uhoBOzbjqUAgE8soYVbF6l/nUWyCD82H9He4F
+         /QEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/o0TABmh3sA91z50JGeWR2QdDzZnMyxEswlhRW37yD8=;
-        b=fUPqSqZi35cBi3EXH92+YRPQXz+konL0xz4Zo0KCZBrhvYZ8RxTPP3eveqT6bWCrGX
-         QEAX9i6MvdYbajp0j1KAXrtkRG3G3zpH64KIVhKbfjvuPS/wGy+RNTviiRdPhtkvOxXa
-         /10tyTSgmuSRegv6ZnvRk6DqGJNKTEEE/U+nBWjevoy71ilF1SPRX86ALbp++j/6ReuC
-         nUONvJudAYeJ2WKbSFuH9mgGGRj6jrhPG9xHe6a2H+DYWxn2EbYZ1BCURWEMp8f0dqdp
-         TlJ0NBsZB1ka/HtNYYsfl8uK5SGX2EWPWy5BQTibnMyyFylo8TjCaa40lV+8ESCmZw3o
-         /PVQ==
-X-Gm-Message-State: APjAAAX34H4wZWVMRUfi3IsL9rSJdttY08tPXPXVFgIINK6BDGngkFJH
-        JYebu/dB7sLn/PB3loXnsjUdc+VORW9TgVNdLMq0Rw==
-X-Google-Smtp-Source: APXvYqyO7B6UBrWxHoZXCXiOleCEOatPxvuRTAcGxPS9KZaihVadCBanUHVq7vvpyCENHPfeoHcATMP4/PrwGyfLELQ=
-X-Received: by 2002:a05:6000:108e:: with SMTP id y14mr5254368wrw.338.1581013999924;
- Thu, 06 Feb 2020 10:33:19 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=/+n2nkntJosFeYc6CO6AzXMJTC7jYibAIizSqTWcO7U=;
+        b=cRttUStzJEWgZvD9D2zGFYJkB7w2MJMiy694ACGjMvro1SyjWwB2jNbZ9JaRUlxI1n
+         aepx+UUCKE6Y17vVc5QwpYGJCQ1jixPm4Oj1FJNHAFXzzB+R5gASFUm2gpGwKaBckv6W
+         PpiKUiGXgMzpRKM9s4IKpGMeCaRnyH27dFcmfuJ68ZsxUkpf9R/jMY790T1IPdo1kueb
+         KmsfLRzg1EnKxUxwB2VwumySUB49R+e8gvhsETHwuRwMcdC77xUFU9lwDm1qw1USmRLf
+         O/ew2BZuUEaAcKxdC6EhaJJAvCSuUM5z3oRtok4XqF1Hj23UfnJ123Kdkoo6oxjbeaWq
+         IYFg==
+X-Gm-Message-State: APjAAAXyLd2OvfeBzskrBkrVLSwHux0IMS4W+hfPpL+OGUJZ714xS6GC
+        +s/bVqSod0d8QBAlzGmp1JaOncutlGA=
+X-Google-Smtp-Source: APXvYqxnQQGKl5auHeuxeSsCWAnVHiddctLWR7EJGZzJSZKl8soTDt23+hh7pBDycDIXwatDJBVu1A==
+X-Received: by 2002:a19:c3c2:: with SMTP id t185mr2553485lff.56.1581014067986;
+        Thu, 06 Feb 2020 10:34:27 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id q13sm68396ljj.63.2020.02.06.10.34.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Feb 2020 10:34:27 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     John Keeping <john@metanate.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: dwc2: Implement set_selfpowered()
+In-Reply-To: <20200205164448.0c7532c1.john@metanate.com>
+References: <20200204152933.2216615-1-john@metanate.com> <87wo9156uy.fsf@kernel.org> <20200205164448.0c7532c1.john@metanate.com>
+Date:   Thu, 06 Feb 2020 20:34:23 +0200
+Message-ID: <877e0z5zv4.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com>
- <dce24e66d89940c8998ccc2916e57877ccc9f6ae.camel@sipsolutions.net>
- <CAKFsvU+sUdGC9TXK6vkg5ZM9=f7ePe7+rh29DO+kHDzFXacx2w@mail.gmail.com>
- <4f382794416c023b6711ed2ca645abe4fb17d6da.camel@sipsolutions.net>
- <b55720804de8e56febf48c7c3c11b578d06a8c9f.camel@sipsolutions.net>
- <CACT4Y+brqD-o-u3Vt=C-PBiS2Wz+wXN3Q3RqBhf3XyRYaRoZJw@mail.gmail.com>
- <2092169e6dd1f8d15f1db4b3787cc9fe596097b7.camel@sipsolutions.net>
- <CACT4Y+b6C+y9sDfMYPDy-nh=WTt5+u2kLcWx2LQmHc1A5L7y0A@mail.gmail.com>
- <CACT4Y+atPME1RYvusmr2EQpv_mNkKJ2_LjMeANv0HxF=+Uu5hw@mail.gmail.com>
- <CACT4Y+bsaZoPC1Q7_rV-e_aO=LVPA-cE3btT_VARStWYk6dcPA@mail.gmail.com> <CACT4Y+Z6_CwVyJhr3SdDejFsrXcM11LVY+gh4oKP6k03Pn95AA@mail.gmail.com>
-In-Reply-To: <CACT4Y+Z6_CwVyJhr3SdDejFsrXcM11LVY+gh4oKP6k03Pn95AA@mail.gmail.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Thu, 6 Feb 2020 10:33:08 -0800
-Message-ID: <CAKFsvULhg7i=tuw1LMS9avy4-NgDDfK2k-_kCa3CH3sNRXa0Qw@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Richard Weinberger <richard@nod.at>,
-        Jeff Dike <jdike@addtoit.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-um@lists.infradead.org, David Gow <davidgow@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        anton.ivanov@cambridgegreys.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 2:05 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+John Keeping <john@metanate.com> writes:
+
+> On Wed, 05 Feb 2020 18:36:21 +0200
+> Felipe Balbi <balbi@kernel.org> wrote:
 >
-> On Fri, Jan 17, 2020 at 11:03 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Fri, Jan 17, 2020 at 10:59 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > On Thu, Jan 16, 2020 at 10:39 PM Patricia Alfonso
-> > > <trishalfonso@google.com> wrote:
-> > > >
-> > > > On Thu, Jan 16, 2020 at 1:23 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > > >
-> > > > > On Thu, Jan 16, 2020 at 10:20 AM Johannes Berg
-> > > > > <johannes@sipsolutions.net> wrote:
-> > > > > >
-> > > > > > On Thu, 2020-01-16 at 10:18 +0100, Dmitry Vyukov wrote:
-> > > > > > >
-> > > > > > > This should resolve the problem with constructors (after they
-> > > > > > > initialize KASAN, they can proceed to do anything they need) and it
-> > > > > > > should get rid of most KASAN_SANITIZE (in particular, all of
-> > > > > > > lib/Makefile and kernel/Makefile) and should fix stack instrumentation
-> > > > > > > (in case it does not work now). The only tiny bit we should not
-> > > > > > > instrument is the path from constructor up to mmap call.
-> > > >
-
-By initializing KASAN as the first thing that executes, I have been
-able to get rid of most of the "KASAN_SANITIZE := n" lines and I am
-very happy about that. Thanks for the suggestions!
-
-> > > If that part of the code I mentioned is instrumented, manifestation
-> > > would be different -- stack instrumentation will try to access shadow,
-> > > shadow is not mapped yet, so it would crash on the shadow access.
-> > >
-> > > What you are seeing looks like, well, a kernel bug where it does a bad
-> > > stack access. Maybe it's KASAN actually _working_? :)
-> >
-> > Though, stack instrumentation may have issues with longjmp-like things.
-> > I would suggest first turning off stack instrumentation and getting
-> > that work. Solving problems one-by-one is always easier.
-> > If you need help debugging this, please post more info: patch, what
-> > you are doing, full kernel output (preferably from start, if it's not
-> > too lengthy).
+>> John Keeping <john@metanate.com> writes:
+>>=20
+>> > dwc2 always reports as self-powered in response to a device status
+>> > request.  Implement the set_selfpowered() operations so that the gadget
+>> > can report as bus-powered when appropriate.
+>> >
+>> > This is modelled on the dwc3 implementation.
+>> >
+>> > Signed-off-by: John Keeping <john@metanate.com>
+>> > ---=20=20
+>>=20
+>> what's the dependency here?
 >
-> I see syscall_stub_data does some weird things with stack (stack
-> copy?). Maybe we just need to ignore accesses there: individual
-> accesses, or whole function/file.
+> It depends on 6de1e301b9cf ("usb: dwc2: Fix SET/CLEAR_FEATURE and
+> GET_STATUS flows") in your testing/fixes tree.
+>
+> Sorry, I should have mentioned that in the original message.
 
-It is still not clear whether the syscall_stub_data errors are false
-positives, but while moving the kasan_init() to be as early as
-possible in main(), I ran into a few more stack-related errors like
-this(show_stack, dump_trace, and get_wchan). I will be taking your
-advice to focus on one thing at a time and temporarily disable stack
-instrumentation wherever possible.
+No worries, I'll wait until those reach mainline before merging
+$subject, then.
 
---
-Patricia Alfonso
+cheers
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl48XC8ACgkQzL64meEa
+mQawSA//bOMietY1wztRDRwp50omJNycVlgdFjSDrr8fs5Lwd0jKYkf3OFvnxZ+O
+1YN9NCQpdzyAjIzc4VckKon4qPW3Zae8Sx+Bs4BP+3tTy1XHBA/X+QKFlI2PIShy
+bJqr8U7Sn4SCeijFCZxSs8koH/ApEuSxuJT/f1vENk/LiVkumx3+6LMkoqhyk36e
+a7nFnObjjsayvMDYTEwukKgaPF0e72gGzXOYIGZIoM6dSyxQjf5aQp1Rau8oplL/
+M1IOui3iWkLaPED8XXT9nuFatn5C11UYVyyfgN6CRroGq/Pe3d+uS/zL0ILMZdRv
+D/jgoUSBs5QuXiB0HMjlA39zm9g0uBIHQqlK9b/yBecRc8k54gt82cu5la0MPVTc
+/lFkuq60ByuBt1smfn6sKJY8dIZjlEXM0uu02LUSTMqxLmszDvyfDPMz/79UxzmU
+4Qs/LnaIJBfzu1OAmWXk2lx8OTDMNA8MfJFydRqxT8AemEcMMfoXGKeTl9YHEPG3
+Cp2dc1VmJwKchxRkOeIjEViWAUKFwT8g9avoWEGfw3Jfzdbq+KOV28PxilNReTpI
+fT0cF2rV5Mc+owVntQ/YjAdTQE/njPBJ+VoO8NbD9d/5ka5sv8HqvJ2aIk/NVXVS
+IhrxC/zwMQkZNBCFJ+iNuLKyQtezaFOi4b3uThAE8xrGMGAvAEU=
+=EmVB
+-----END PGP SIGNATURE-----
+--=-=-=--
