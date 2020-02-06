@@ -2,101 +2,120 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51591C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC818C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EC520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZ06Iz3W"
+	by mail.kernel.org (Postfix) with ESMTP id 89800218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580983024;
+	bh=w5Y3Ebc9eXglcMDX0+yLDXi/+gEfId6scYpQlhbnOB4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GBVWNtOFWd9DmJ+sX8Bd8bds9a8I1kSRhX4yuB51PKsVk5LYugRHXnUGqeCxS2zkp
+	 4i3/W07iyzLVRot7UmKEsxjgWbp9Fb3CYx7dWSNJ1ZkarUE29Guq0t9irYcpeniC/Y
+	 raVNE0YOXu6pc2dFGBoQBMtXrC3gN/LXgfo3ZpdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgBFJvm (ORCPT
+        id S1728258AbgBFJ5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:51:42 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44622 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgBFJvm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:51:42 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so3619671lfa.11;
-        Thu, 06 Feb 2020 01:51:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=zpsQw0FsMu1esZwtnhxOYwLdZDPEvW+ldzRG34WJKqg=;
-        b=RZ06Iz3Wiwwxzdgrg39NMeemxzV4dUW756xB9IYXeN/ycCi3LZTQspIIa2uNC+zVkK
-         Ae0/UQiioZ8yoUd56c+PzRbsXg6vYEkyrXDVJOFuVMP2OmPeA5shLzstnA2EUWj+bQcb
-         Px/14ons56YBYcmzcl85WnYftSRe9GtpRSHFZKeKgNtkTRmV4BJnB7dulEarTwGolsZj
-         1spMsL1IXw1hKK9+VM2GMT/V0Dh+rjfJr4srFf/+zYzfZmQ1KcHaIK4nCDRqH+xX1HVB
-         VAayTR8oHCdTPrtJt+kB28ba45FNdIwM6bHyam69Kd31Rd004mMiZlpgBHWaznA3EESF
-         bpCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zpsQw0FsMu1esZwtnhxOYwLdZDPEvW+ldzRG34WJKqg=;
-        b=MaO30y9Avey1KFkwme2KWXrh19TghdaES2H82OJWH81JaaPFvl1yt1zTVxaKkWv1BD
-         mShjEBi1vtmtIepW2aY4ee3isgl0r3QoXObeUNK+PFRt5xf+6Ea0G90yWKWIvnBuHUlB
-         ynZnOf6mgWARmlqQr9euNNdt5k6uVxU50gU//cHf8Ghuhe2BWf3dPfNtgJW+PUQfWVVy
-         6FMdsop7lgyAIdneocYzxP9JiQoZwYPP1eNNnOoFhH5W+Xx5m6v4iIxauLDDHcYLDmdh
-         3s/VRRzVhMrOVVioEYc3/5Vo95U26ZafBuVmQt93W2UQfc5QaEH1nnr5iPFf0VDfTco6
-         N2Sw==
-X-Gm-Message-State: APjAAAWEoHQoQ7xyvQb7O3aN2cKHV+RLuFzRu9hGbIObty0y/b5KCCcb
-        bQ0GJEFKvE6xvQ8hJ8K2dfB/L1LuaqM=
-X-Google-Smtp-Source: APXvYqwMLPlKASPYFiMZ3+FMwU9jZeHKiqe43kOKK2EQqcnby02DkmT09c4riaf5Lm4tUz1ww8pdeQ==
-X-Received: by 2002:ac2:58cf:: with SMTP id u15mr1345559lfo.62.1580982697902;
-        Thu, 06 Feb 2020 01:51:37 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id 4sm1010871lfh.73.2020.02.06.01.51.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 01:51:37 -0800 (PST)
-Subject: Re: [PATCH 0/3] io_uring: clean wq path
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1580928112.git.asml.silence@gmail.com>
- <1fdfd8bf-c0cd-04c0-e22e-bc0945ef1734@gmail.com>
- <8c0639c6-78ad-6240-0c18-d3ef8936e2f4@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <8ad4a84e-9796-6431-c73e-1d34eed0b0fb@gmail.com>
-Date:   Thu, 6 Feb 2020 12:51:35 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 6 Feb 2020 04:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727543AbgBFJ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 04:57:03 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D00218AC;
+        Thu,  6 Feb 2020 09:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580983022;
+        bh=w5Y3Ebc9eXglcMDX0+yLDXi/+gEfId6scYpQlhbnOB4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yDRQhegVLxfBg/vQDPaq2zQYj8Lg5yMrJ9+FCjaLE20fPcNZHTx/p6oZH1mj7O20j
+         vmRB283zBbLC9ieUPnzOjQ7lrNTL8pz5DR3PbPsnooWd0GX3ey0ZOpjO9260TmrEQc
+         5sUOIlRZb9l/S13iTd50BZCPeL5TchmY1GZQOWcE=
+Date:   Thu, 6 Feb 2020 09:56:59 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/5 V2] staging: iio: adc: ad7192: fail probe on
+ get_voltage
+Message-ID: <20200206095659.639218f7@archlinux>
+In-Reply-To: <20200205171511.25912-2-alexandru.tachici@analog.com>
+References: <20200202162215.50915c83@archlinux>
+        <20200205171511.25912-1-alexandru.tachici@analog.com>
+        <20200205171511.25912-2-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <8c0639c6-78ad-6240-0c18-d3ef8936e2f4@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/2020 5:50 AM, Jens Axboe wrote:
-> On 2/5/20 3:29 PM, Pavel Begunkov wrote:
->> On 05/02/2020 22:07, Pavel Begunkov wrote:
->>> This is the first series of shaving some overhead for wq-offloading.
->>> The 1st removes extra allocations, and the 3rd req->refs abusing.
->>
->> Rechecked a couple of assumptions, this patchset is messed up.
->> Drop it for now.
+On Wed, 5 Feb 2020 19:15:07 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+
+> This patch makes the ad7192_probe fail in case
+> regulator_get_voltage will return an error.
 > 
-> OK, will do, haven't had time to look at it yet anyway.
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Sorry for the fuss. I'll return to it later.
+There is a subtlety in here we should handle.
 
+> ---
+>  drivers/staging/iio/adc/ad7192.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> Are you going to do the ->has_user removal? We should just do that
-> separately first.
-Yes. I've spotted a few bugs, so I'm going to patch them first with
-merging/backporting in mind, and then deal with ->has_user. IMO, this
-order makes more sense.
+> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+> index bf3e2a9cc07f..4780ddf99b13 100644
+> --- a/drivers/staging/iio/adc/ad7192.c
+> +++ b/drivers/staging/iio/adc/ad7192.c
+> @@ -899,10 +899,13 @@ static int ad7192_probe(struct spi_device *spi)
+>  
+>  	voltage_uv = regulator_get_voltage(st->avdd);
+>
+I had to dig a bit to check this as it's not documented.
+regulator_get_voltage returns negative for error, not 0.
+0 typically means the voltage has not been set or has been
+explicitly set to 0. 
 
--- 
-Pavel Begunkov
+So if it is set to 0 I suppose we could try setting it as it
+might be a variable high precision reference?
+
+Perhaps for now just spitting out an error is the best plan.
+
+  
+> -	if (voltage_uv)
+> +	if (voltage_uv) {
+>  		st->int_vref_mv = voltage_uv / 1000;
+> -	else
+> +	} else {
+> +		ret = voltage_uv;
+>  		dev_err(&spi->dev, "Device tree error, reference voltage undefined\n");
+> +		goto error_disable_avdd;
+> +	}
+>  
+>  	spi_set_drvdata(spi, indio_dev);
+>  	st->devid = spi_get_device_id(spi)->driver_data;
+> @@ -957,6 +960,7 @@ static int ad7192_probe(struct spi_device *spi)
+>  	ret = iio_device_register(indio_dev);
+>  	if (ret < 0)
+>  		goto error_disable_clk;
+> +
+We shouldn't have stray white space changes in a patch making a real change.
+
+Thanks,
+
+Jonathan
+
+>  	return 0;
+>  
+>  error_disable_clk:
+
