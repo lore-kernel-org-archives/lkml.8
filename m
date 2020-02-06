@@ -2,137 +2,124 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C49C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABCBC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695BB21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BD221775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 12:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KKXlyU3l"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="aw4ldkm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgBFMxq (ORCPT
+        id S1727904AbgBFMyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:53:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25999 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727613AbgBFMxq (ORCPT
+        Thu, 6 Feb 2020 07:54:15 -0500
+Received: from smtp11.infineon.com ([217.10.52.105]:19969 "EHLO
+        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgBFMyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 07:53:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580993625;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R41SlG6aMHK5jXUAarbhZUQ8sA4pF1/4Q8fbxyhZMA4=;
-        b=KKXlyU3l9G35LdTgAUDN7S05UGZi9gw6ejo/Q53mtff5sCLHmScAjzFzf9NoXnlclrr7KR
-        MPGdwCOQ+m+0qVkmT5yCXBGX0qUbiUmTlwQFyAQVou93iNgNkSa+IEp+fqeKNW6wuybrDk
-        ZOHkQDOh8eUBdlyC5dSF5cjakNU3yPg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-jjCyA0VZN5WkV74i1r8WRg-1; Thu, 06 Feb 2020 07:53:38 -0500
-X-MC-Unique: jjCyA0VZN5WkV74i1r8WRg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79F52108838F;
-        Thu,  6 Feb 2020 12:53:36 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BEA427060;
-        Thu,  6 Feb 2020 12:53:35 +0000 (UTC)
-Subject: Re: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Krupp <centos@akr.yagii.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org
-References: <20200205125831.20430-1-prarit@redhat.com>
- <20200206110811.GC9741@zn.tnic>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <1f3f5f54-eb31-1e2a-27be-7ed4cb3dc2d3@redhat.com>
-Date:   Thu, 6 Feb 2020 07:53:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Feb 2020 07:54:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1580993654; x=1612529654;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=+LOsqSZOwaErmcvYyHE4Zb+x4vf935b6KUHXPd1MNms=;
+  b=aw4ldkm8Md1LM7VL5bRQJUDyL5I4e7EgbFkPrSvugGv221KpfDBJK+hD
+   Z9dAZ3soQ/5pl/+mUvXdrPiBPdEubNvkKsoKvD3Om2aiYLk4yIakyC1aR
+   bAqxIAthONLtztwNbTYWefXlSo/AqZ+FxglgYhPQczG7utA1FiU65ansS
+   I=;
+IronPort-SDR: 3ajDCj45i+l3AxOjLL+D8zjefXWLzfftgrflXh5BML42yHT+uQB5hSEemkvDpkt0h59+BHxbGi
+ KZgI0Rep3ezmoyjdnn6aglQ6UbvOtqS9JiIC1Br+Yk34Sl6gdVzAbIx+1upgK5RunfniBKVjmW
+ mkpR5kUBOcQu8StBaArcsOnWUKjFi1PT+GWtjBb8c3/2l0qqIS8KFnKxkQLFCla3GgQZxsoeM3
+ lNYhpqfAMd3REvNnDouABWg4Er5OxL+hiMuwR5stp4cQ80qlAI28Oad8XgNdB2FsTo3/r6uHG9
+ e5Y=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9522"; a="148641042"
+X-IronPort-AV: E=Sophos;i="5.70,409,1574118000"; 
+   d="scan'208";a="148641042"
+Received: from unknown (HELO mucxv002.muc.infineon.com) ([172.23.11.17])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 13:54:12 +0100
+Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
+        by mucxv002.muc.infineon.com (Postfix) with ESMTPS;
+        Thu,  6 Feb 2020 13:54:12 +0100 (CET)
+Received: from [10.154.32.73] (172.23.8.247) by MUCSE708.infineon.com
+ (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1713.5; Thu, 6 Feb
+ 2020 13:54:12 +0100
+Subject: Re: [PATCH] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        <linux-integrity@vger.kernel.org>
+CC:     Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, <stable@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
+From:   Alexander Steffen <Alexander.Steffen@infineon.com>
+Message-ID: <f865a01e-83a1-b0e2-a9ca-45f874d86b4c@infineon.com>
+Date:   Thu, 6 Feb 2020 13:54:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200206110811.GC9741@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Originating-IP: [172.23.8.247]
+X-ClientProxiedBy: MUCSE703.infineon.com (172.23.7.73) To
+ MUCSE708.infineon.com (172.23.7.82)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05.02.2020 21:38, Jarkko Sakkinen wrote:
+> Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could break
+> the build script. This can be achieved by renaming tpm_tis_spi.c as
+> tpm_tis_spi_main.c. Then tpm_tis_spi-y can be used inside the makefile.
+> 
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: stable@vger.kernel.org
+> Fixes: 797c0113c9a4 ("tpm: tpm_tis_spi: Support cr50 devices")
+> Reported-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>   drivers/char/tpm/Makefile                              | 8 +++++---
+>   drivers/char/tpm/{tpm_tis_spi.c => tpm_tis_spi_main.c} | 0
+>   2 files changed, 5 insertions(+), 3 deletions(-)
+>   rename drivers/char/tpm/{tpm_tis_spi.c => tpm_tis_spi_main.c} (100%)
+> 
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 5a0d99d4fec0..9567e5197f74 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -21,9 +21,11 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
+>   tpm-$(CONFIG_OF) += eventlog/of.o
+>   obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+>   obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+> -obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi_mod.o
+> -tpm_tis_spi_mod-y := tpm_tis_spi.o
+> -tpm_tis_spi_mod-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
+> +
+> +obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+> +tpm_tis_spi-y := tpm_tis_spi_main.o
+> +tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
+> +
+>   obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
+>   obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
+>   obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
+> diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi_main.c
+> similarity index 100%
+> rename from drivers/char/tpm/tpm_tis_spi.c
+> rename to drivers/char/tpm/tpm_tis_spi_main.c
 
+Works for me, thank you very much :)
 
-On 2/6/20 6:10 AM, Borislav Petkov wrote:
-> On Wed, Feb 05, 2020 at 07:58:31AM -0500, Prarit Bhargava wrote:
-> 
->> Subject: Re: [PATCH] x86/mce: Enable HSD131, HSM142, HSW131, BDM48, and HSM142
-> 
-> That subject is unreadable for humans.
-
-Yeah :/  I couldn't think of a better one.  Maybe "Block spurious corrected
-errors on some Intel processors"?  Any other suggestion?
-
-> 
->> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
->> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
->> with the valid field (bit 63) set, the uncorrected error field (bit 61)
->> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
->> an MCA Error Code (bits [15:0]) of 0x0005."
->>
->> Block these spurious errors from the console and logs.
-> 
-> Are they being hit in the wild or why do we need this?
-
-Alexander, cc'd, is being hit by this in the wild.
-
-> 
->> Links to Intel Specification updates:
->> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
->> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
->> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
->> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
-> 
-> Those links tend to get stale with time. If you really want to refer to
-> the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
-> them there as an attachment and add the link to the entry to the commit
-> message.
-> 
->> Signed-off-by: Alexander Krupp <centos@akr.yagii.de>
-> 
-> What's that Signed-off-by: tag supposed to mean?
-> 
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> Cc: Tony Luck <tony.luck@intel.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: x86@kernel.org
->> Cc: linux-edac@vger.kernel.org
->> ---
->>  arch/x86/kernel/cpu/mce/core.c | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
-> 
-> If at all, this should be done by adding an intel_filter_mce() function
-> and called from filter_mce() so that such errors don't get logged.
-
-I'll take a look over there.
-
-P.
-
-> 
-> Thx.
-> 
-
+Alexander
