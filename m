@@ -2,188 +2,179 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0487EC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3B9C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C8D21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA3F21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tupqd5xr"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fsF/+l7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgBFNue (ORCPT
+        id S1728216AbgBFNul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:50:34 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:17745 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgBFNud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:50:33 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48D0F16K7Tz9v996;
-        Thu,  6 Feb 2020 14:50:29 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=tupqd5xr; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id BLdc-dv9CEj2; Thu,  6 Feb 2020 14:50:29 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48D0F14F70z9v994;
-        Thu,  6 Feb 2020 14:50:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580997029; bh=uc8VNbrzn2Tun7H3rxrb1NAqwgMomOLG/cwa2WL0XrI=;
-        h=From:Subject:To:Cc:Date:From;
-        b=tupqd5xrNQLdgEsO2AcJVhmkNDxeVYcsAPNRMq2Uqh4Qkesm61e/a+YtblrJKKXp1
-         jO/JQsA4HtEiK3X3aAeqySyH+OBdckfevM+EOprgf5TW2qd6imBoeWl/kcZrofSIiq
-         iGvJz6SCxIDeHpg/TOTvmADdmgZr2+YxOEoEV35U=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D46EE8B889;
-        Thu,  6 Feb 2020 14:50:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id zqimB3y9gjxp; Thu,  6 Feb 2020 14:50:30 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 425478B887;
-        Thu,  6 Feb 2020 14:50:30 +0100 (CET)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E46DD652B7; Thu,  6 Feb 2020 13:50:29 +0000 (UTC)
-Message-Id: <e744db1529271d11a3fdcdf641617846907b6ffd.1580997012.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/hugetlb: Fix 8M hugepages on 8xx
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        aneesh.kumar@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu,  6 Feb 2020 13:50:29 +0000 (UTC)
+        Thu, 6 Feb 2020 08:50:41 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19742 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbgBFNuk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:50:40 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3c19740000>; Thu, 06 Feb 2020 05:49:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 05:50:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 05:50:39 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
+ 2020 13:50:37 +0000
+Subject: Re: [PATCH v7 14/19] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200202222854.18409-1-digetx@gmail.com>
+ <20200202222854.18409-15-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <ca0f71ef-ba16-73bc-d904-1f5351c69931@nvidia.com>
+Date:   Thu, 6 Feb 2020 13:50:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200202222854.18409-15-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580996981; bh=4hvHZitSsy3srR7ePbJSExrRxuRMgu3w7SYaTU6yDGA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fsF/+l7IWaQb6/AqlvjCPk6jyI/Qn8iVdRGVfRl55Xskzw5B1P7dBHBcnS2zsqpZW
+         blLxtNWeupwYqwJ5pyFURZ42FrB5cmYniUCrrFL8GdadmF2r6cOLwnp7pNdpoTgc1n
+         Hxc4vKTd+Vjg1scKjwnR5yv6NLSCVkGPSLb+RS9sf5PKsd6ylWBneURin5erMiagc4
+         7G0EXEagSU1JloKqwX//ot9H1TMP3uSkykX/2JlG55faTW0cyiLsZxxrOCzk7+zWb6
+         KZnpFzyBfrbaIVZYTa/uyBTrvpj2+EqD5J/dJ/g8bczeCYjMN2MS8A9diKsvfcOURt
+         +76eriBfUY6rg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 55c8fc3f4930 ("powerpc/8xx: reintroduce 16K pages with HW
-assistance") redefined pte_t as a struct of 4 pte_basic_t, because
-in 16K pages mode there are four identical entries in the page table.
-But hugepd entries for 8k pages require only one entrie of size
-pte_basic_t. So there is no point in creating a cache for 4 entries
-page tables.
 
-Also, with HW assistance the entries must be 4k aligned, the 8xx
-drops the last 12 bits. Redefine HUGEPD_SHIFT_MASK to mask them out.
+On 02/02/2020 22:28, Dmitry Osipenko wrote:
+> It's a bit impractical to enable hardware's clock at the time of DMA
+> channel's allocation because most of DMA client drivers allocate DMA
+> channel at the time of the driver's probing, and thus, DMA clock is kept
+> always-enabled in practice, defeating the whole purpose of runtime PM.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++-----------
+>  1 file changed, 24 insertions(+), 11 deletions(-)
+What about something like ...
 
-Calculate PTE_T_ORDER using the size of pte_basic_t instead of pte_t.
-
-In 16k mode, define a specific set_huge_pte_at() function which writes
-the pte in a single entry instead of using set_pte_at() which writes
-4 identical entries. Define set_pte_filter() inline otherwise GCC
-doesn't inline it anymore because it is now used twice, and that gives
-a pretty suboptimal code because of pte_t being a struct of 4 entries.
-This function is also used for 512k pages which only require one entry
-as well allthough replicating it four times is harmless as 512k pages
-entries are spread every 128 bytes in the table.
-
-Fixes: 22569b881d37 ("powerpc/8xx: Enable 8M hugepage support with HW assistance")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/hugetlb.h |  5 +++++
- arch/powerpc/include/asm/page.h    |  5 +++++
- arch/powerpc/mm/hugetlbpage.c      |  3 ++-
- arch/powerpc/mm/pgtable.c          | 19 ++++++++++++++++++-
- 4 files changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
-index bd6504c28c2f..f43cfbcf014f 100644
---- a/arch/powerpc/include/asm/hugetlb.h
-+++ b/arch/powerpc/include/asm/hugetlb.h
-@@ -64,6 +64,11 @@ static inline void arch_clear_hugepage_flags(struct page *page)
- {
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 22b88ccff05d..d60532f19a43 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -570,6 +570,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+ 	if (list_empty(&tdc->pending_sg_req)) {
+ 		dev_err(tdc2dev(tdc), "DMA is running without req\n");
+ 		tegra_dma_stop(tdc);
++		pm_runtime_put(tdc->tdma->dev);
+ 		return false;
+ 	}
+ 
+@@ -581,6 +582,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+ 	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
+ 	if (!hsgreq->configured) {
+ 		tegra_dma_stop(tdc);
++		pm_runtime_put(tdc->tdma->dev);
+ 		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
+ 		tegra_dma_abort_all(tdc);
+ 		return false;
+@@ -616,9 +618,14 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
+ 	list_add_tail(&sgreq->node, &tdc->free_sg_req);
+ 
+ 	/* Do not start DMA if it is going to be terminate */
+-	if (to_terminate || list_empty(&tdc->pending_sg_req))
++	if (to_terminate)
+ 		return;
+ 
++	if (list_empty(&tdc->pending_sg_req)) {
++		pm_runtime_put(tdc->tdma->dev);
++		return;
++	}
++
+ 	tdc_start_head_req(tdc);
  }
  
-+#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
-+#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
-+void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte);
-+#endif
+@@ -731,6 +738,10 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
+ 		goto end;
+ 	}
+ 	if (!tdc->busy) {
++		err = pm_runtime_get_sync(tdc->tdma->dev);
++		if (err < 0)
++			return err;
 +
- #include <asm-generic/hugetlb.h>
+ 		tdc_start_head_req(tdc);
  
- #else /* ! CONFIG_HUGETLB_PAGE */
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index 86332080399a..080a0bf8e54b 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -295,8 +295,13 @@ static inline bool pfn_valid(unsigned long pfn)
- /*
-  * Some number of bits at the level of the page table that points to
-  * a hugepte are used to encode the size.  This masks those bits.
-+ * On 8xx, HW assistance requires 4k alignment for the hugepte.
-  */
-+#ifdef CONFIG_PPC_8xx
-+#define HUGEPD_SHIFT_MASK     0xfff
-+#else
- #define HUGEPD_SHIFT_MASK     0x3f
-+#endif
+ 		/* Continuous single mode: Configure next req */
+@@ -786,6 +797,8 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+ 	}
+ 	tegra_dma_resume(tdc);
  
- #ifndef __ASSEMBLY__
++	pm_runtime_put(tdc->tdma->dev);
++
+ skip_dma_stop:
+ 	tegra_dma_abort_all(tdc);
  
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 73d4873fc7f8..c61032580185 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -30,7 +30,8 @@ bool hugetlb_disabled = false;
- 
- #define hugepd_none(hpd)	(hpd_val(hpd) == 0)
- 
--#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_t)) - __builtin_ffs(sizeof(void *)))
-+#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_basic_t)) - \
-+			 __builtin_ffs(sizeof(void *)))
- 
- pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr, unsigned long sz)
+@@ -1280,22 +1293,15 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
+ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
  {
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index e3759b69f81b..7a38eaa6ca72 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -100,7 +100,7 @@ static pte_t set_pte_filter_hash(pte_t pte) { return pte; }
-  * as we don't have two bits to spare for _PAGE_EXEC and _PAGE_HWEXEC so
-  * instead we "filter out" the exec permission for non clean pages.
-  */
--static pte_t set_pte_filter(pte_t pte)
-+static inline pte_t set_pte_filter(pte_t pte)
- {
- 	struct page *pg;
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+-	struct tegra_dma *tdma = tdc->tdma;
+-	int ret;
  
-@@ -259,6 +259,23 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 	return changed;
- #endif
+ 	dma_cookie_init(&tdc->dma_chan);
+ 
+-	ret = pm_runtime_get_sync(tdma->dev);
+-	if (ret < 0)
+-		return ret;
+-
+ 	return 0;
  }
-+
-+#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
-+void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte)
-+{
-+	/*
-+	 * Make sure hardware valid bit is not set. We don't do
-+	 * tlb flush for this update.
-+	 */
-+	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
-+
-+	pte = pte_mkpte(pte);
-+
-+	pte = set_pte_filter(pte);
-+
-+	ptep->pte = pte_val(pte);
-+}
-+#endif
- #endif /* CONFIG_HUGETLB_PAGE */
  
- #ifdef CONFIG_DEBUG_VM
+ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+ {
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+-	struct tegra_dma *tdma = tdc->tdma;
+ 	struct tegra_dma_desc *dma_desc;
+ 	struct tegra_dma_sg_req *sg_req;
+ 	struct list_head dma_desc_list;
+@@ -1328,7 +1334,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+ 		list_del(&sg_req->node);
+ 		kfree(sg_req);
+ 	}
+-	pm_runtime_put(tdma->dev);
+ 
+ 	tdc->slave_id = TEGRA_APBDMA_SLAVE_ID_INVALID;
+ }
+
 -- 
-2.25.0
-
+nvpublic
