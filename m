@@ -2,190 +2,199 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB84FC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58160C352A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D8A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC81214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bTjvcohw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bBclXKWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbgBFDEj (ORCPT
+        id S1727789AbgBFDFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:04:39 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42831 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbgBFDEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:04:39 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 5 Feb 2020 22:05:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58967 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727558AbgBFDFB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 22:05:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580958299;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dZmilr4tlxmSPvlBFFTM+7GZjr7g54JZ6ybjetf90JQ=;
+        b=bBclXKWHqE0FmkFxHVOKEBkvMde4umICaVTEnS4TtKSyTx4Q5Me/DgH8V4l33o8+IWgqyy
+        /DmV8YAn/VPxiK+dvQ9QpFtzeETE8Monq6YzFOZaLX3/j5UXSSWQ8JZLEis/U7Yg3VE4Jo
+        fiWKJz95vox2rkS2JqqiPDGbNmaZYw4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-X0XgH6JIPi2zxsSJw37NDg-1; Wed, 05 Feb 2020 22:04:58 -0500
+X-MC-Unique: X0XgH6JIPi2zxsSJw37NDg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Cjvm083Hz9sRm;
-        Thu,  6 Feb 2020 14:04:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580958276;
-        bh=3GiIB+ybAW+Dkfv7Blu7I604G11RcvKHUbdqalJe2bI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=bTjvcohw1EBO03bDjNlvCHI6iEvcqDZ4AS4PSAjuGmlc2gr2UaQqLlF1CzQc9rct/
-         0NQWwYYGud0SZ+mPCsV/jJW0T1MvGxmZXUWYN8ao8IK0L1pjxvs4m3AUV+aqIWTTjD
-         mWPOEu9QplUmGKz71voVlgf8Lj19kltfU7Z3WRn8sOKxx0wYvH6sX+oq1lThXM/lsl
-         hB2nAwiH0k9AVx4QMsVmO0fC7lRuEK7gjxPck2NvombIxoTHKbUfekIssuhnA4Kmr6
-         GtHQsdqVxfI4Kxxtp2OEHtX1MU+0HtQ/78SOVjw2vvH8IRTSkzw6sXZ4q2wwI9ZPC+
-         3XD6Nh3IoBCRw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Joel Stanley <joel@jms.id.au>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: TI PCIe xHCI and kexec
-In-Reply-To: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
-References: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
-Date:   Thu, 06 Feb 2020 14:04:32 +1100
-Message-ID: <87zhdw1kn3.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 784FA2F60;
+        Thu,  6 Feb 2020 03:04:55 +0000 (UTC)
+Received: from [10.72.13.85] (ovpn-13-85.pek2.redhat.com [10.72.13.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3A4D5C1B2;
+        Thu,  6 Feb 2020 03:04:42 +0000 (UTC)
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+To:     Shahaf Shuler <shahafs@mellanox.com>,
+        Tiwei Bie <tiwei.bie@intel.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "dan.daly@intel.com" <dan.daly@intel.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
+ <20200205020247.GA368700@___>
+ <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <112858a4-1a01-f4d7-e41a-1afaaa1cad45@redhat.com>
+ <AM0PR0502MB3795AD42233D69F350402A8AC3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <8af7b9b1-f721-8d1c-dd1c-403424ee20b9@redhat.com>
+Date:   Thu, 6 Feb 2020 11:04:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <AM0PR0502MB3795AD42233D69F350402A8AC3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joel Stanley <joel@jms.id.au> writes:
-> I'm supporting a system that uses Linux-as-a-bootloader to load a
-> distro kernel via kexec, The systems have a TI TUSB73x0 PCIe
-> controller which goes out to lunch after a kexec. This is the distro
-> (post-kexec) kernel:
+
+On 2020/2/5 =E4=B8=8B=E5=8D=885:30, Shahaf Shuler wrote:
+> Wednesday, February 5, 2020 9:50 AM, Jason Wang:
+>> Subject: Re: [PATCH] vhost: introduce vDPA based backend
+>> On 2020/2/5 =E4=B8=8B=E5=8D=883:15, Shahaf Shuler wrote:
+>>> Wednesday, February 5, 2020 4:03 AM, Tiwei Bie:
+>>>> Subject: Re: [PATCH] vhost: introduce vDPA based backend
+>>>>
+>>>> On Tue, Feb 04, 2020 at 11:30:11AM +0800, Jason Wang wrote:
+>>>>> On 2020/1/31 =E4=B8=8A=E5=8D=8811:36, Tiwei Bie wrote:
+>>>>>> This patch introduces a vDPA based vhost backend. This backend is
+>>>>>> built on top of the same interface defined in virtio-vDPA and
+>>>>>> provides a generic vhost interface for userspace to accelerate the
+>>>>>> virtio devices in guest.
+>>>>>>
+>>>>>> This backend is implemented as a vDPA device driver on top of the
+>>>>>> same ops used in virtio-vDPA. It will create char device entry
+>>>>>> named vhost-vdpa/$vdpa_device_index for userspace to use.
+>> Userspace
+>>>>>> can use vhost ioctls on top of this char device to setup the backe=
+nd.
+>>>>>>
+>>>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>>> [...]
+>>>
+>>>>>> +static long vhost_vdpa_do_dma_mapping(struct vhost_vdpa *v) {
+>>>>>> +	/* TODO: fix this */
+>>>>> Before trying to do this it looks to me we need the following durin=
+g
+>>>>> the probe
+>>>>>
+>>>>> 1) if set_map() is not supported by the vDPA device probe the IOMMU
+>>>>> that is supported by the vDPA device
+>>>>> 2) allocate IOMMU domain
+>>>>>
+>>>>> And then:
+>>>>>
+>>>>> 3) pin pages through GUP and do proper accounting
+>>>>> 4) store GPA->HPA mapping in the umem
+>>>>> 5) generate diffs of memory table and using IOMMU API to setup the
+>>>>> dma mapping in this method
+>>>>>
+>>>>> For 1), I'm not sure parent is sufficient for to doing this or need
+>>>>> to introduce new API like iommu_device in mdev.
+>>>> Agree. We may also need to introduce something like the iommu_device=
+.
+>>>>
+>>> Would it be better for the map/umnap logic to happen inside each devi=
+ce ?
+>>> Devices that needs the IOMMU will call iommu APIs from inside the dri=
+ver
+>> callback.
+>>
+>>
+>> Technically, this can work. But if it can be done by vhost-vpda it wil=
+l make the
+>> vDPA driver more compact and easier to be implemented.
+> Need to see the layering of such proposal but am not sure.
+> Vhost-vdpa is generic framework, while the DMA mapping is vendor specif=
+ic.
+> Maybe vhost-vdpa can have some shared code needed to operate on iommu, =
+so drivers can re-use it.  to me it seems simpler than exposing a new iom=
+mu device.
+
+
+I think you mean on-chip IOMMU here. For shared code, I guess this only=20
+thing that could be shared is the mapping (rbtree) and some helpers. Or=20
+is there any other in your mind?
+
+
+>>
+>>> Devices that has other ways to do the DMA mapping will call the
+>> proprietary APIs.
+>>
+>>
+>> To confirm, do you prefer:
+>>
+>> 1) map/unmap
+> It is not only that. AFAIR there also flush and invalidate calls, right=
+?
+
+
+unmap will accept a range so it it can do flush and invalidate.
+
+
 >
-> [    0.235411] pci 0003:01:00.0: xHCI HW did not halt within 16000
-> usec status = 0x0
-> [    1.037298] xhci_hcd 0003:01:00.0: xHCI Host Controller
-> [    1.037367] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
-> bus number 1
-> [    1.053481] xhci_hcd 0003:01:00.0: Host halt failed, -110
-> [    1.053523] xhci_hcd 0003:01:00.0: can't setup: -110
-> [    1.053565] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
-> [    1.053629] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
-> [    1.053703] xhci_hcd: probe of 0003:01:00.0 failed with error -110
+>> or
+>>
+>> 2) pass all maps at one time?
+> To me this seems more straight forward.
+> It is correct that under hotplug and large number of memory segments th=
+e driver will need to understand the diff (or not and just reload the new=
+ configuration). However, my assumption here is that memory hotplug is he=
+avy flow anyway, and the driver extra cycles will not be that visible
+
+
+Yes, and vhost can provide helpers to generate the diffs.
+
+Thanks
+
+
 >
-> There were some fixes made a few years back to improve the situation,
-> but we've still had to carry some form of the patch below in the
-> bootloader kernel. I would like to rework it so it can be merged.
->
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index dbac0fa9748d..eaa94456dd9d 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -789,6 +789,9 @@ void xhci_shutdown(struct usb_hcd *hcd)
->      xhci_dbg_trace(xhci, trace_xhci_dbg_init,
->              "xhci_shutdown completed - status = %x",
->              readl(&xhci->op_regs->status));
-> +
-> +    /* TI XHCI controllers do not come back after kexec without this hack */
-> +    pci_reset_function_locked(to_pci_dev(hcd->self.sysdev));
->  }
->  EXPORT_SYMBOL_GPL(xhci_shutdown);
->
-> I would like some advice on how to implement it in a way that is
-> acceptable. Would a quirk on the pci id in xhci_shutdown be ok?
+>> Thanks
+>>
+>>
 
-Doing something on shutdown only helps the kexec case, where the first
-kernel shuts down cleanly.
-
-kdump kernels will still hit the issue, because there the first kernel
-has crashed and done no (or very little) shutdown.
-
-The ideal solution is to have the driver/bus code in the second kernel
-detect that the device is fubar and do something to reset it then.
-
-But I don't know enough about USB or this device to know if that's
-really feasible.
-
-I realise that doesn't actually solve the problem for the
-linux-as-bootloader case, because there you want to make it work even if
-the kernel you're loading hasn't been updated, so you have to do
-something on shutdown.
-
-cheers
-
-
-> [    1.037638] xhci_hcd 0003:01:00.0: xHCI Host Controller
-> [    1.037695] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
-> bus number 1
-> [    1.037789] xhci_hcd 0003:01:00.0: xHCI capability registers at
->     (ptrval):
-> [    1.037792] xhci_hcd 0003:01:00.0: CAPLENGTH AND HCIVERSION 0x960020:
-> [    1.037794] xhci_hcd 0003:01:00.0: CAPLENGTH: 0x20
-> [    1.037796] xhci_hcd 0003:01:00.0: HCIVERSION: 0x96
-> [    1.037798] xhci_hcd 0003:01:00.0: HCSPARAMS 1: 0x8000840
-> [    1.037800] xhci_hcd 0003:01:00.0:   Max device slots: 64
-> [    1.037802] xhci_hcd 0003:01:00.0:   Max interrupters: 8
-> [    1.037804] xhci_hcd 0003:01:00.0:   Max ports: 8
-> [    1.037806] xhci_hcd 0003:01:00.0: HCSPARAMS 2: 0xc0000f1
-> [    1.037808] xhci_hcd 0003:01:00.0:   Isoc scheduling threshold: 1
-> [    1.037810] xhci_hcd 0003:01:00.0:   Maximum allowed segments in
-> event ring: 15
-> [    1.037813] xhci_hcd 0003:01:00.0: HCSPARAMS 3 0x7ff000a:
-> [    1.037815] xhci_hcd 0003:01:00.0:   Worst case U1 device exit latency: 10
-> [    1.037816] xhci_hcd 0003:01:00.0:   Worst case U2 device exit latency: 2047
-> [    1.037819] xhci_hcd 0003:01:00.0: HCC PARAMS 0x270f06d:
-> [    1.037821] xhci_hcd 0003:01:00.0:   HC generates 64 bit addresses
-> [    1.037823] xhci_hcd 0003:01:00.0:   HC hasn't Contiguous Frame ID Capability
-> [    1.037825] xhci_hcd 0003:01:00.0:   HC can't generate Stopped -
-> Short Package event
-> [    1.037826] xhci_hcd 0003:01:00.0:   FIXME: more HCCPARAMS debugging
-> [    1.037829] xhci_hcd 0003:01:00.0: RTSOFF 0x4a0:
-> [    1.037831] xhci_hcd 0003:01:00.0: xHCI operational registers at
->      (ptrval):
-> [    1.037833] xhci_hcd 0003:01:00.0: USBCMD 0x0:
-> [    1.037835] xhci_hcd 0003:01:00.0:   HC is being stopped
-> [    1.037837] xhci_hcd 0003:01:00.0:   HC has finished hard reset
-> [    1.037839] xhci_hcd 0003:01:00.0:   Event Interrupts disabled
-> [    1.037841] xhci_hcd 0003:01:00.0:   Host System Error Interrupts disabled
-> [    1.037843] xhci_hcd 0003:01:00.0:   HC has finished light reset
-> [    1.037846] xhci_hcd 0003:01:00.0: USBSTS 0x0:
-> [    1.037847] xhci_hcd 0003:01:00.0:   Event ring is empty
-> [    1.037849] xhci_hcd 0003:01:00.0:   No Host System Error
-> [    1.037851] xhci_hcd 0003:01:00.0:   HC is running
-> [    1.037854] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
-> [    1.037857] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037860] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037862] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037865] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
-> [    1.037868] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037870] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037873] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037876] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0xe03
-> [    1.037878] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037881] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037884] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037886] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0xe03
-> [    1.037889] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037892] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037894] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037897] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
-> [    1.037900] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037902] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037905] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037908] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
-> [    1.037910] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037913] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037916] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037918] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
-> [    1.037921] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037924] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037926] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037929] xhci_hcd 0003:01:00.0:         (ptrval) port status reg = 0x2a0
-> [    1.037931] xhci_hcd 0003:01:00.0:         (ptrval) port power reg = 0x0
-> [    1.037934] xhci_hcd 0003:01:00.0:         (ptrval) port link reg = 0x0
-> [    1.037937] xhci_hcd 0003:01:00.0:         (ptrval) port reserved reg = 0x0
-> [    1.037939] xhci_hcd 0003:01:00.0: // Halt the HC
-> [    1.053945] xhci_hcd 0003:01:00.0: Host halt failed, -110
-> [    1.053987] xhci_hcd 0003:01:00.0: can't setup: -110
-> [    1.054032] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
-> [    1.054099] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
-> [    1.054165] xhci_hcd: probe of 0003:01:00.0 failed with error -110
