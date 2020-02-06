@@ -2,126 +2,80 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F6DC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C574AC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B156222D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA8221D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pQOyULch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgBFPeN (ORCPT
+        id S1727587AbgBFPex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:34:13 -0500
-Received: from mga07.intel.com ([134.134.136.100]:61661 "EHLO mga07.intel.com"
+        Thu, 6 Feb 2020 10:34:53 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:37378 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgBFPeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:34:13 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 07:34:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="430535622"
-Received: from dgbrowne-mobl.ger.corp.intel.com (HELO localhost) ([10.252.14.106])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Feb 2020 07:34:07 -0800
-Date:   Thu, 6 Feb 2020 17:34:06 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        Serge Ayoun <serge.ayoun@intel.com>
-Subject: Re: [PATCH v25 07/21] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20200206153406.GA9694@linux.intel.com>
-References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
- <20200204060545.31729-8-jarkko.sakkinen@linux.intel.com>
- <20200205195700.GJ4877@linux.intel.com>
- <20200205231147.GD28111@linux.intel.com>
+        id S1725535AbgBFPew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:34:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=cKeWrxfeVixH6vK7WVivOd6AqrxVMB3a/G5TvXBlN5A=; b=pQOyULchj/k0Xw9JGpHughvM89
+        +cCDcfsd8PeG+Iwcz1PIfl1YucTjO6vD7nGk28vE05skcbCe0/4h5A6iYM8zHk79We5xTf8EtmArJ
+        uvmkEZ+Y3dnGSI/sOEfCxwvrvphPsAjKqk7q5I8+vB6LFbrjN8lXYtmozYlYYhNjWLM4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1izjB2-0008JF-RY; Thu, 06 Feb 2020 16:34:48 +0100
+Date:   Thu, 6 Feb 2020 16:34:48 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        woojung.huh@microchip.com, UNGLinuxDriver@microchip.com,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Subject: Re: [PATCH] net: dsa: microchip: enable module autoprobe
+Message-ID: <20200206153448.GA30090@lunn.ch>
+References: <20200206150837.12009-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205231147.GD28111@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200206150837.12009-1-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:11:47AM +0200, Jarkko Sakkinen wrote:
-> On Wed, Feb 05, 2020 at 11:57:00AM -0800, Sean Christopherson wrote:
-> > > +		ret = __eremove(sgx_epc_addr(page));
-> > > +		if (!WARN_ON_ONCE(ret)) {
-> > 
-> > Sadly, this WARN can fire after kexec() on systems with multiple EPC
-> > sections if the SECS has child pages in another section.
+On Thu, Feb 06, 2020 at 05:08:37PM +0200, Codrin Ciubotariu wrote:
+> From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 > 
-> What causes this?
+> This matches /sys/devices/.../spi1.0/modalias content.
+> 
+> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+>  drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
+> index c5f64959a184..248b69c74b45 100644
+> --- a/drivers/net/dsa/microchip/ksz9477_spi.c
+> +++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+> @@ -101,6 +101,7 @@ static struct spi_driver ksz9477_spi_driver = {
+>  
+>  module_spi_driver(ksz9477_spi_driver);
+>  
+> +MODULE_ALIAS("spi:ksz8563");
 
-Ah obviously this can happen given that the final loop is done per
-section before other sections are processed.
+Is this sufficient for all the different variants this driver
+supports?
 
-Lets fix the code first rather than change the approach based on code
-that has an underlying regression. Performance can be fine tuned even
-after upstreaming. Especially if the performance increases complexity it
-is better to work that after there is a mainline code base.
-
-Given that the loop is done in separate thread anyway, I'm not sure how
-bad performance issue there is anyway. Performance based changes should
-be always done based on a workloads and statistics.
-
-I think you'd fix this issue by first changing the functions as:
-
-static void sgx_sanitize_section(struct sgx_epc_section *section)
-{
-	struct sgx_epc_page *page, *tmp;
-	LIST_HEAD(secs_list);
-	int ret;
-
-	while (!list_empty(&section->unsanitized_page_list)) {
-		if (kthread_should_stop())
-			return;
-
-		spin_lock(&section->lock);
-
-		page = list_first_entry(&section->unsanitized_page_list,
-					struct sgx_epc_page, list);
-
-		ret = __eremove(sgx_epc_addr(page));
-		if (!ret)
-			list_move(&page->list, &section->page_list);
-		else
-			list_move_tail(&page->list, &secs_list);
-
-		spin_unlock(&section->lock);
-
-		cond_resched();
-	}
-
-	list_move_tail(&secs_list, &section->unsanitized_list);
-}
-
-Then in ksgxswapd() you'd
-
-for (i = 0; i < sgx_nr_epc_sections; i++)
-	sgx_sanitize_section(&sgx_epc_sections[i]);
-
-/* 2nd round for SECS */
-for (i = 0; i < sgx_nr_epc_sections; i++)
-	sgx_sanitize_section(&sgx_epc_sections[i]);
-
-Finally you'd:
-
-for (i = 0; i < sgx_nr_epc_sections; i++)
-	WARN_ONCE(!list_empty(&sgx_epc_sections[i]->unsanitized_list));
-
-/Jarkko
+	Andrew
