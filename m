@@ -2,157 +2,169 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D39C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0710EC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D56214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="mACO56M4"
+	by mail.kernel.org (Postfix) with ESMTP id DBFFD214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgBFRU2 (ORCPT
+        id S1727866AbgBFRUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:20:28 -0500
-Received: from UPDC19PA22.eemsg.mail.mil ([214.24.27.197]:60836 "EHLO
-        UPDC19PA22.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgBFRU1 (ORCPT
+        Thu, 6 Feb 2020 12:20:32 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44183 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbgBFRUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:20:27 -0500
-X-EEMSG-check-017: 55614711|UPDC19PA22_ESA_OUT04.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,410,1574121600"; 
-   d="scan'208";a="55614711"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by UPDC19PA22.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 06 Feb 2020 17:20:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1581009623; x=1612545623;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=DxWny464dCc7tXzLelvSHfB6p/0gy/ETPq8LLco+Ggg=;
-  b=mACO56M4Z13pyLExa1iMpEmsuURqaiFyJ1y3QMC40ZQWV0q6wIo5j2iI
-   zjJvWMkOlkK8A5Tb4rbKY+LpAxon01It7SY4oL10ByctgadkFolmsUmMn
-   edWsKDeYiJ4rsPeaBZi1J/NwHBPDHzQ/lqUzwlZrP+RlNJW09+JFQbvDe
-   g0dJvvNo2pLkvbnigRXeI2uxucIt50+EUC5IeD2Fx8AN0PwGtcLllujcD
-   UTZLngXdgtdoGgRgm/OmkR4YQ2jyeHfpUt54VGD5kh4hI3OFd+gmxI6yb
-   Fz6+Nylm0d9p1hmga21xEC2frN7CgRQGqTI8emumYwKmXmpNCsNrsKTxe
-   A==;
-X-IronPort-AV: E=Sophos;i="5.70,410,1574121600"; 
-   d="scan'208";a="32771859"
-IronPort-PHdr: =?us-ascii?q?9a23=3AzXLgcRwIsNl2iJnXCy+O+j09IxM/srCxBDY+r6?=
- =?us-ascii?q?Qd0uwRKvad9pjvdHbS+e9qxAeQG9mCt7QZ0KGH7uigATVGvc/a9ihaMdRlbF?=
- =?us-ascii?q?wssY0uhQsuAcqIWwXQDcXBSGgEJvlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk?=
- =?us-ascii?q?2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+IA+5oAnMucQam4tvJ6g+xh?=
- =?us-ascii?q?bNonZDZuBayX91KV6JkBvw+8m98IR//yhMvv4q6tJNX7j9c6kkV7JTES4oM3?=
- =?us-ascii?q?oy5M3ltBnDSRWA634BWWgIkRRGHhbI4gjiUpj+riX1uOx92DKHPcLtVrA7RS?=
- =?us-ascii?q?6i76ZwRxD2jioMKiM0/3vWisx0i6JbvQ6hqhliyIPafI2ZKPxzdb7GcNgEWW?=
- =?us-ascii?q?ROQNpeVy1ZAoO9cYQPCfYBPf1FpIX5vlcCsAeyCRWpCO7pxDBInHv21rAk3e?=
- =?us-ascii?q?onHw/NwQgsE8sAvXnQqdn4MroZX+Kow6nS1TjNcu1Y2Tn95obLfB4ur/6DUr?=
- =?us-ascii?q?BsfsTe0kQvCwHIg0+MpYD5MT6Y1OIAuHWb4ep6UuKvjnYqpRxtojex3scsip?=
- =?us-ascii?q?fGhoQIwV7Z8CV22oI1JdmmR097fNWpF4BQuDyBN4ZtXsMjQ31nuCY9yrEcv5?=
- =?us-ascii?q?67ZzIFxI4oxx7YdfyKao6F6Q/tWuaWJDd3nnNleLSniha98Eig1u38VtSv31?=
- =?us-ascii?q?pQsiVFldzMu3YQ3BLQ8siKUuZx80iu1DqV1w3f9/tILV47mKbFMZIt37g9nY?=
- =?us-ascii?q?cJv0vZBC/5gkD2gbeTdkUj5+en9fzqYq7jpp+AL490jRz+Mrg2lsy/H+s4Ng?=
- =?us-ascii?q?8OUnCH+eumzr3j/FD5QK5Qgv03lKnZvpfaJd8FqaGlGQNVzoYi5Aq/Dzehyt?=
- =?us-ascii?q?gYm2UILElZdx6diojpOlXOLOj5Dfe5nVusjC9my+3JM7DuGJnALmXPnK3/cb?=
- =?us-ascii?q?ty9UJQ0hc/wcha551OC7EBJPzzWlX2tNzdFhI5KBG7w/38BdVh1oIRRWKPAq?=
- =?us-ascii?q?iDPKPUql+H/PgjI+aLZI8LoDr9MeQq5+byjX8lnl8QZbKp3Z4QaHCiAPtmJ1?=
- =?us-ascii?q?+WYXzxjdoaHmcKuQ0+TOPuiFKcSzJce3GyX6ck7DEhFI2mFZvDRpyqgLGZxC?=
- =?us-ascii?q?e0BIBWZmRdB1CUC3joaoGEV+4JaCKVJc9hiCILWaK9RI8m0BGkrBX6xKZ/Lu?=
- =?us-ascii?q?rI5i0Ysoru28Zt5+LJjxEy9Cd0At+F026XVWF0n3gIRycy3K9lvUNy1E2P0a?=
- =?us-ascii?q?9ig/xXDdZT/e9GUh8mNZ7AyOx3E9PyVRzfcdeSVFmmRdKmATIqQ90tw98OeU?=
- =?us-ascii?q?F9G9CjjhDe2iqmGbgVl6aEBJYs6KLTw2DxJ9phy3bBzKQulV8mQtdINW2gna?=
- =?us-ascii?q?Nw6Q7TB4nMk0WCmKamb6Mc3DTC9G2b12qBoFlYUBJsUaXCRX0QelfZrc7+5k?=
- =?us-ascii?q?PZVL+jEq4oMg1cxs6YLatKa8DmgU9aS/fkPdTUe3ixlHuoBRaU2rOMa5Lne3?=
- =?us-ascii?q?ka3CXbCEkIiQQT/WuaOgg9HSqhomTeDCBwGlLreU/j7e5+qHajRE8u0w6Kd1?=
- =?us-ascii?q?Fh16ay+hMNnvyTVfcT3rMCuCc8pDR5B0i9393IBNqavQZhf7tTYck74FhZ0W?=
- =?us-ascii?q?LVrQt9PoavL6p6nF4Rbxx3v1/y1xVwEohAlckqrHU3zAt9MK6Y001Odyme3Z?=
- =?us-ascii?q?/uPr3aMXfy/B+xZK7MwF3e08iZ+r0J6Psmr1XvpgapFlAt839/ydlaz2Oc5o?=
- =?us-ascii?q?nWDAoVSZ/xUVg49wJ8p77EZikx/p/U2mN2PqmxqTLNwdQpC/Y/yhanftdQLb?=
- =?us-ascii?q?mIGxP1E80fH8KuMvAlm0C1bhIYO+Bf7LI7P8Sgd/uA366rJuFgkSmpjWRA54?=
- =?us-ascii?q?B93UaM+DRmRuHU2JYFxqLQ4gzSbCvxklqn+uXwg41AbDceVj6kzC/+CYpYYK?=
- =?us-ascii?q?FacoEMBmOjZcaww4M6z4bkRnpw7Fe+AxYD38izdFyZaFm5lQBI3F4WulS/kD?=
- =?us-ascii?q?G51CRwmjok6K2F02iGwOnvbxEAPW1jT2l4ilLtPI3yiMoVGAChaRQukjOo40?=
- =?us-ascii?q?H/3Kcdo75wayHYSl1PZDPeJmduSKyxuvyJZMsLoI8vtzQRVPm3YnibTKLwp1?=
- =?us-ascii?q?0R1CanV3BTwDE9aiGCpJr0hVp5hXibIXI1q2DWPYl0xBHC9JnfSORX0z4uWi?=
- =?us-ascii?q?Z1k3/UC0K6Mt3v+s+b09/Av/q4WmbkSpBadAHiy4+asyq3o2ZtBE6Rhfe2z+?=
- =?us-ascii?q?b7HBA63Cmz7NxjUSHFvV6oeYXw/7irOuJgOE9zDRnz7NQsSdI2qZc5mJxFgS?=
- =?us-ascii?q?tSvZ6S53dS1D6oYNg=3D?=
-X-IPAS-Result: =?us-ascii?q?A2DWAgCfSTxe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgXuBf?=
- =?us-ascii?q?YEYVCESKoQViQOGZQEBAQaBEiWJcJB0A1QJAQEBAQEBAQEBKwwBAYRAAoJhO?=
- =?us-ascii?q?BMCEAEBAQQBAQEBAQUDAQFshTcMgjspAYMBAQEBAQIBIwQRQQULCw4HAwICJ?=
- =?us-ascii?q?gICVwYBDAYCAQGCYz8BglYFIA+rY3V/M4VKg1eBOAaBDiqMPXmBB4E4DAOCX?=
- =?us-ascii?q?T6CZAKEdYI8IgSWXWFGl2eCRIJOhHyOdgYCGYJIiBCQM45iiGyUSCI3gSErC?=
- =?us-ascii?q?AIYCCEPgydQGA2SEIocVSMDMI5KAQE?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 06 Feb 2020 17:20:21 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 016HJNJl163593;
-        Thu, 6 Feb 2020 12:19:23 -0500
-Subject: Re: [PATCH] security: selinux: allow per-file labeling for bpffs
-To:     Steven Moreland <smoreland@google.com>, paul@paul-moore.com,
-        eparis@parisplace.org, keescook@chromium.org, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Cc:     "Connor O'Brien" <connoro@google.com>
-References: <20200206165527.211350-1-smoreland@google.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <91465612-2fb2-5985-ba45-d4d9fcf0f70c@tycho.nsa.gov>
-Date:   Thu, 6 Feb 2020 12:21:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 12:20:31 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h9so6203335otj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 09:20:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MPn+BUojxUhOvsXrFiv8dsam9EtwMGmqIOyvBWWRIVg=;
+        b=my9T83Nh4DYegINCr+ppfvW59yjT/nHFV85HgfNXHa3thQ3lY+S93ZuELeJTzq+zKF
+         GbBko/eGNdW7z6llOITQPZE6HQ3FlCfIT1LnZBenGAOQE+KoLQKr7COtwq9P7h6TQkaO
+         hfmLu8y+s5YsMpLpih6W49bosB90wx0UldZy6/xIrfIq3eqV2NLDHvuTn14Fpf8nJFZn
+         9ugyHnnoYbvXN33dZB64e+l011CstmSuEweJC2yuaweK6CYpNFA4010Z0lWosmvcFvfK
+         W2f2PHoFKypshsMKDvKFLw6TedhkAGJjbKjcq89BCL6OKrHC6SUgEFSZ6VHnUO1WyEKg
+         Vm5g==
+X-Gm-Message-State: APjAAAUr5H/NAb/aPE65jRAhsjE0PKzBDDD3uaLxmnnEf/gXTKZsYyHv
+        eSGMWxIcxs+z+kqcC03is8700xM0xWbEiEMYBjC9Qxmo
+X-Google-Smtp-Source: APXvYqx+zyAEG5rElRpu+Yng0gLxdpYCjKKDUgx9uVlKE3hw10bdHLC72AOUE+idNkn/upnr3Y4BHBbMMqjQ8+LzpDI=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr31297201ots.250.1581009630530;
+ Thu, 06 Feb 2020 09:20:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200206165527.211350-1-smoreland@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200114210316.450821675@goodmis.org> <20200114210336.259202220@goodmis.org>
+ <20200206115405.GA22608@zn.tnic> <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
+In-Reply-To: <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 6 Feb 2020 18:20:15 +0100
+Message-ID: <CAMuHMdVq1FFBV+XBq-BkLbCb-ZmkKvVMQ4xACxF-+2Wc3mnnNg@mail.gmail.com>
+Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config support
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 11:55 AM, Steven Moreland wrote:
-> From: Connor O'Brien <connoro@google.com>
-> 
-> Add support for genfscon per-file labeling of bpffs files. This allows
-> for separate permissions for different pinned bpf objects, which may
-> be completely unrelated to each other.
+Hi Hiramatsu-san,
 
-Do you want bpf fs to also support userspace labeling of files via 
-setxattr()?  If so, you'll want to also add it to 
-selinux_is_genfs_special_handling() as well.
+On Thu, Feb 6, 2020 at 3:42 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> On Thu, 6 Feb 2020 12:54:05 +0100
+> Borislav Petkov <bp@alien8.de> wrote:
+> > On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
+> > > diff --git a/init/Kconfig b/init/Kconfig
+> > > index a34064a031a5..63450d3bbf12 100644
+> > > --- a/init/Kconfig
+> > > +++ b/init/Kconfig
+> > > @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
+> > >
+> > >  endif
+> > >
+> > > +config BOOT_CONFIG
+> > > +   bool "Boot config support"
+> > > +   select LIBXBC
+> > > +   default y
+> >
+> > Any particular reason this is default y? Why should it be enabled by
+> > default on all boxes?
+>
+> Oh, you are not the first person asked that :)
+>
+> https://lkml.org/lkml/2019/12/9/563
+>
+> And yes, I think this is important that will useful for most developers
+> and admins. Since the bootconfig already covers kernel and init options,
+> this can be a new standard way to pass args to kernel boot.
+>
+> And as I reported above thread, the memory footpoint of view, most code
+> and working memory are released after boot. Also, as Linus's suggested,
+> now this feature is enabled only if user gives "bootconfig" on the kernel
+> command line. So the side effect is minimized.
 
-The only caveat I would note here is that it appears that bpf fs 
-supports rename, link, unlink, rmdir etc by userspace, which means that 
-name-based labeling via genfscon isn't necessarily safe/stable.  See
-https://github.com/SELinuxProject/selinux-kernel/issues/2
+With m68k/atari_defconfig, bloat-o-meter says:
 
-> Change-Id: I03ae28d3afea70acd6dc53ebf810b34b357b6eb5
+    add/remove: 39/0 grow/shrink: 2/0 up/down: 13086/0 (13086)
 
-Drop Change-Ids from patches submitted upstream please since they aren't 
-meaningful outside of Android.
+which is IMHO not that small for a "default y" option that may or may not
+be used.
 
-> Signed-off-by: Connor O'Brien <connoro@google.com>
-> Signed-off-by: Steven Moreland <smoreland@google.com>
-> ---
->   security/selinux/hooks.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index de4887742d7c..4f9396e6ce8c 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -872,6 +872,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
->   	    !strcmp(sb->s_type->name, "sysfs") ||
->   	    !strcmp(sb->s_type->name, "pstore") ||
->   	    !strcmp(sb->s_type->name, "binder") ||
-> +	    !strcmp(sb->s_type->name, "bpf") ||
->   	    !strcmp(sb->s_type->name, "cgroup") ||
->   	    !strcmp(sb->s_type->name, "cgroup2"))
->   		sbsec->flags |= SE_SBGENFS;
-> 
+Especially:
 
+        Function                                     old     new   delta
+    xbc_nodes                                      -    8192   +8192
+
+Any chance xbc_nodes can be allocated dynamically, and only when needed?
+
+Yes, there are industrial products running Linux on a current ARM SoC
+using the builtin 8 or 10 MiB of SRAM (+ XIP for the kernel), so these
+definitely want to say CONFIG_BOOT_CONFIG=n.
+
+Thanks!
+
+add/remove: 39/0 grow/shrink: 2/0 up/down: 13086/0 (13086)
+Function                                     old     new   delta
+xbc_nodes                                      -    8192   +8192
+xbc_init                                       -     854    +854
+start_kernel                                1020    1580    +560
+copy_xbc_key_value_list                        -     362    +362
+__xbc_parse_value                              -     324    +324
+xbc_snprint_cmdline                            -     294    +294
+xbc_node_compose_key_after                     -     266    +266
+xbc_namebuf                                    -     256    +256
+xbc_add_sibling                                -     254    +254
+xbc_node_find_next_leaf                        -     186    +186
+xbc_node_find_child                            -     176    +176
+__xbc_add_key                                  -     162    +162
+proc_boot_config_init                          -     124    +124
+xbc_make_cmdline                               -     122    +122
+xbc_node_find_value                            -     104    +104
+xbc_node_find_next_key_value                   -     102    +102
+__xbc_close_brace                              -      92     +92
+find_match_node                                -      80     +80
+__xbc_parse_keys                               -      78     +78
+xbc_node_get_data                              -      64     +64
+xbc_parse_key                                  -      60     +60
+skip_comment                                   -      48     +48
+xbc_destroy_all                                -      42     +42
+xbc_node_get_parent                            -      38     +38
+xbc_parse_error                                -      36     +36
+xbc_node_get_child                             -      34     +34
+xbc_node_get_next                              -      32     +32
+boot_config_checksum                           -      30     +30
+boot_config_proc_show                          -      26     +26
+xbc_root_node                                  -      20     +20
+kzalloc.constprop                            810     830     +20
+xbc_node_index                                 -      14     +14
+xbc_node_num                                   -       4      +4
+xbc_data_size                                  -       4      +4
+xbc_data                                       -       4      +4
+saved_boot_config                              -       4      +4
+last_parent                                    -       4      +4
+extra_init_args                                -       4      +4
+extra_command_line                             -       4      +4
+__initcall_proc_boot_config_init5              -       4      +4
+xbc_debug_dump                                 -       2      +2
+Total: Before=3688860, After=3701946, chg +0.35%
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
