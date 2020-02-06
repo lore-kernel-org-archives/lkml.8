@@ -2,93 +2,171 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18806C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C8AC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41B721D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580998158;
-	bh=deex20fvTNfi1JN0BvdneLFwSQ0ubFngkNiBUmz2bAY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=agcgSNSFcIbcnxGzZ6ZKyPfO1HJk/oQ3oHjZDG+4jghvRGHf3Txdly6R5XDU2yj3T
-	 0sXwCsyK26pL++lkKkBbsGevXAgSk5c4FlMIxNZG+yz/9Vz0PVojUuVVfZc5Y5I4g1
-	 0wI76L6BfXxVGM6yfFmKSeg+N+7XQgtaVAUYEugU=
+	by mail.kernel.org (Postfix) with ESMTP id EDD12217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgBFOJR (ORCPT
+        id S1727901AbgBFONX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:09:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgBFOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:09:16 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 6 Feb 2020 09:13:23 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40400 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgBFONW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 09:13:22 -0500
+Received: from turingmachine.home (unknown [IPv6:2804:431:c7f5:7989:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AFCD2082E;
-        Thu,  6 Feb 2020 14:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580998156;
-        bh=deex20fvTNfi1JN0BvdneLFwSQ0ubFngkNiBUmz2bAY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BESN8LSSdF/3WrpATFFzi5HpbC60wvnr/FJydtZfdtTiholoSb7cszi4xjSLU5yE7
-         JIqxOhPgLWuQIDkyis+murk0bSJgy1q4rOLvG6mTKYUeFbVtadvu8OTw75w95zerEH
-         kvevY971eVtM0l0vjSqJnI0qGD6ZNTLQA+QRJUFw=
-Date:   Thu, 6 Feb 2020 08:09:15 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [GIT PULL] PCI fixes for v5.6
-Message-ID: <20200206140915.GA124818@google.com>
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A714729524A;
+        Thu,  6 Feb 2020 14:13:14 +0000 (GMT)
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de
+Cc:     kernel@collabora.com, krisman@collabora.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        ryao@gentoo.org, peterz@infradead.org, dvhart@infradead.org,
+        mingo@redhat.com, z.figura12@gmail.com, steven@valvesoftware.com,
+        pgriffais@valvesoftware.com,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH v2 0/4] Implement FUTEX_WAIT_MULTIPLE operation
+Date:   Thu,  6 Feb 2020 11:10:47 -0300
+Message-Id: <20200206141051.6124-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCI fixes:
+Hello,
 
-  - Define to_pci_sysdata() always to fix build breakage when
-    !CONFIG_PCI (Jason A. Donenfeld)
+This patchset implements a new futex operation, called FUTEX_WAIT_MULTIPLE,
+which allows a thread to wait on several futexes at the same time, and be
+awoken by any of them.
 
-  - Use PF PASID for VFs to fix VF IOMMU bind failures (Kuppuswamy
-    Sathyanarayanan)
+The use case lies in the Wine implementation of the Windows NT interface
+WaitMultipleObjects. This Windows API function allows a thread to sleep
+waiting on the first of a set of event sources (mutexes, timers, signal,
+console input, etc) to signal.  Considering this is a primitive
+synchronization operation for Windows applications, being able to quickly
+signal events on the producer side, and quickly go to sleep on the
+consumer side is essential for good performance of those running over Wine.
 
+Since this API exposes a mechanism to wait on multiple objects, and
+we might have multiple waiters for each of these events, a M->N
+relationship, the current Linux interfaces fell short on performance
+evaluation of large M,N scenarios.  We experimented, for instance, with
+eventfd, which has performance problems discussed below, but we also
+experimented with userspace solutions, like making each consumer wait on
+a condition variable guarding the entire list of objects, and then
+waking up multiple variables on the producer side, but this is
+prohibitively expensive since we either need to signal many condition
+variables or share that condition variable among multiple waiters, and
+then verify for the event being signaled in userspace, which means
+dealing with often false positive wakes ups.
 
-The following changes since commit d4e9056daedca3891414fe3c91de3449a5dad0f2:
+The natural interface to implement the behavior we want, also
+considering that one of the waitable objects is a mutex itself, would be
+the futex interface.  Therefore, this patchset proposes a mechanism for
+a thread to wait on multiple futexes at once, and wake up on the first
+futex that was awaken.
 
-  initramfs: do not show compression mode choice if INITRAMFS_SOURCE is empty (2020-02-03 17:31:43 +0000)
+In particular, using futexes in our Wine use case reduced the CPU
+utilization by 4% for the game Beat Saber and by 1.5% for the game
+Shadow of Tomb Raider, both running over Proton (a Wine based solution
+for Windows emulation), when compared to the eventfd interface. This
+implementation also doesn't rely of file descriptors, so it doesn't risk
+overflowing the resource.
 
-are available in the Git repository at:
+In time, we are also proposing modifications to glibc and libpthread to
+make this feature available for Linux native multithreaded applications
+using libpthread, which can benefit from the behavior of waiting on any
+of a group of futexes.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.6-fixes-1
+Technically, the existing FUTEX_WAIT implementation can be easily
+reworked by using futex_wait_multiple() with a count of one, and I
+have a patch showing how it works.  I'm not proposing it, since
+futex is such a tricky code, that I'd be more comfortable to have
+FUTEX_WAIT_MULTIPLE running upstream for a couple development cycles,
+before considering modifying FUTEX_WAIT.
 
-for you to fetch changes up to 2e34673be0bd6bb0c6c496a861cbc3f7431e7ce3:
+The patch series includes an extensive set of kselftests validating
+the behavior of the interface.  We also implemented support[1] on
+Syzkaller and survived the fuzzy testing.
 
-  PCI/ATS: Use PF PASID for VFs (2020-02-05 11:58:08 -0600)
+Finally, if you'd rather pull directly a branch with this set you can
+find it here:
 
-----------------------------------------------------------------
-pci-v5.6-fixes-1
+https://gitlab.collabora.com/tonyk/linux/commits/futex-dev
 
-----------------------------------------------------------------
-Jason A. Donenfeld (1):
-      x86/PCI: Define to_pci_sysdata() even when !CONFIG_PCI
+=== Performance of eventfd ===
 
-Kuppuswamy Sathyanarayanan (1):
-      PCI/ATS: Use PF PASID for VFs
+Polling on several eventfd contexts with semaphore semantics would
+provide us with the exact semantics we are looking for.  However, as
+shown below, in a scenario with sufficient producers and consumers, the
+eventfd interface itself becomes a bottleneck, in particular because
+each thread will compete to acquire a sequence of waitqueue locks for
+each eventfd context in the poll list. In addition, in the uncontended
+case, where the producer is ready for consumption, eventfd still
+requires going into the kernel on the consumer side.  
 
- arch/x86/include/asm/pci.h | 4 ++--
- drivers/pci/ats.c          | 6 ++++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+When a write or a read operation in an eventfd file succeeds, it will try
+to wake up all threads that are waiting to perform some operation to
+the file. The lock (ctx->wqh.lock) that hold the access to the file value
+(ctx->count) is the same lock used to control access the waitqueue. When
+all those those thread woke, they will compete to get this lock. Along
+with that, the poll() also manipulates the waitqueue and need to hold
+this same lock. This lock is specially hard to acquire when poll() calls
+poll_freewait(), where it tries to free all waitqueues associated with
+this poll. While doing that, it will compete with a lot of read and
+write operations that have been waken.
+
+In our use case, with a huge number of parallel reads, writes and polls,
+this lock is a bottleneck and hurts the performance of applications. Our
+implementation of futex, however, decrease the calls of spin lock by more
+than 80% in some user applications.
+
+Finally, eventfd operates on file descriptors, which is a limited
+resource that has shown its limitation in our use cases.  Despite the
+Windows interface not waiting on more than 64 objects at once, we still
+have multiple waiters at the same time, and we were easily able to
+exhaust the FD limits on applications like games.
+
+The RFC for this patch can be found here:
+
+https://lkml.org/lkml/2019/7/30/1399
+
+Thanks,
+    André
+
+[1] https://github.com/andrealmeid/syzkaller/tree/futex-wait-multiple
+
+Gabriel Krisman Bertazi (4):
+  futex: Implement mechanism to wait on any of several futexes
+  selftests: futex: Add FUTEX_WAIT_MULTIPLE timeout test
+  selftests: futex: Add FUTEX_WAIT_MULTIPLE wouldblock test
+  selftests: futex: Add FUTEX_WAIT_MULTIPLE wake up test
+
+ include/uapi/linux/futex.h                    |  20 +
+ kernel/futex.c                                | 356 +++++++++++++++++-
+ .../selftests/futex/functional/.gitignore     |   1 +
+ .../selftests/futex/functional/Makefile       |   3 +-
+ .../futex/functional/futex_wait_multiple.c    | 173 +++++++++
+ .../futex/functional/futex_wait_timeout.c     |  38 +-
+ .../futex/functional/futex_wait_wouldblock.c  |  28 +-
+ .../testing/selftests/futex/functional/run.sh |   3 +
+ .../selftests/futex/include/futextest.h       |  22 +
+ 9 files changed, 635 insertions(+), 7 deletions(-)
+ create mode 100644 tools/testing/selftests/futex/functional/futex_wait_multiple.c
+
+-- 
+2.25.0
+
