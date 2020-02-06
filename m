@@ -1,131 +1,259 @@
 Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB040C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E04C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7742020720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E0A21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZevkhdQ7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e6y6Xc0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBFIHJ (ORCPT
+        id S1727818AbgBFIIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:07:09 -0500
-Received: from mail-eopbgr690070.outbound.protection.outlook.com ([40.107.69.70]:19841
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726452AbgBFIHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:07:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fTD+MRzqHbuE3BeXuNA2b05scDfp1ALkt/RCAfRDGjcGlgNrvfGAsVdD5+M/tGbE6rKpNcDEGUr5lP7dS0ynxegeEPr82/nZF5nPzNrcMluco7rEGP0E1IOsv7bPfTt7gUbv59T2/2ns71KZdKUzkMpmbiXnM9xGsCKJhjVqLG4NltNy4ynMGLLcHEEPUZDpvb2zdEn1t6obaKw1UYAMeijJR5hm5u3qM0AFs1XVw1nFtBsGXak/Z20Eka8uPeJ5GgbiTlCqXaKywZKB/otlDEqn+wsQbarqqDB/yuOKyeEIioqLV1rQsHEnoFrzhHEhUIo+sf+SEsB5kO1A2gJmYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oqRw5X/KuYMAxZMNY2EF0oSUTXRToiN4F8o+Bl239JY=;
- b=NF2yQIZk15jcuXPLUSqqukCk/oTP41EjlqXIODXoP2RU5hOINiAaVtObI6FDHCHP+5CbjcRoMf+VHwY4FJ2zHSACggbv8iMDE+xfAj3IKnDOZDdbae46FR2Vm9X4yqwcaOqiF3lSZoGaBPFvUrhme+m/VEDo0PsROMyPdxRgJAYAdSFdrPtlMF/L9G8t461LA1B9loFjJH3m7Z8jkBbCVi07tGNoEn9kgQ/c+92SzR0o8w0WT9kClDAnh7mMvkhY/d2DEZVi4qfmytdw/iAl1ZYCBqtu45nquU+uM5h0txIy4Fk2DT2cYmgf9CvJxBSrD/lVXAoLW4TPKNFikRIdOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Thu, 6 Feb 2020 03:08:11 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36779 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBFIIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 03:08:10 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so5976354wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:08:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oqRw5X/KuYMAxZMNY2EF0oSUTXRToiN4F8o+Bl239JY=;
- b=ZevkhdQ74J5pzv9M9kmHyHwNPt4YaufcjeKNSJ8fln41uJsoHx+ngGGRHL7UeWGUcfQWX5ArjC58KeRxQf71UHFToppc/c2Ecrw9poSL+C5Pq7f/xenxJht8OvWxzhNOCarKt/um9p1gL3KJWeaWiDA1BsabUnJSQcBY2ISUs3Q=
-Received: from MN2PR02MB5727.namprd02.prod.outlook.com (20.179.85.153) by
- MN2PR02MB5935.namprd02.prod.outlook.com (20.179.86.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.34; Thu, 6 Feb 2020 08:07:06 +0000
-Received: from MN2PR02MB5727.namprd02.prod.outlook.com
- ([fe80::e09d:a160:5349:8ed0]) by MN2PR02MB5727.namprd02.prod.outlook.com
- ([fe80::e09d:a160:5349:8ed0%6]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
- 08:07:05 +0000
-From:   Mubin Usman Sayyed <MUBINUSM@xilinx.com>
-To:     Michal Simek <michals@xilinx.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Siva Durga Prasad Paladugu <sivadur@xilinx.com>,
-        Anirudha Sarangi <anirudh@xilinx.com>
-Subject: RE: [PATCH v2] irqchip: xilinx: Add support for multiple instances
-Thread-Topic: [PATCH v2] irqchip: xilinx: Add support for multiple instances
-Thread-Index: AQHV3C2hje5zExnZvkGSFN2foWGvfagMpPiAgAAK8gCAAR9x8A==
-Date:   Thu, 6 Feb 2020 08:07:05 +0000
-Message-ID: <MN2PR02MB5727F7A38A05B58C84672623A11D0@MN2PR02MB5727.namprd02.prod.outlook.com>
-References: <1580911535-19415-1-git-send-email-mubin.usman.sayyed@xilinx.com>
- <e0d01341ac5c417982da48074972f470@AcuMS.aculab.com>
- <06caee69-38a2-13d2-d7b1-d882e7438057@xilinx.com>
-In-Reply-To: <06caee69-38a2-13d2-d7b1-d882e7438057@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=MUBINUSM@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9fa8e24d-8c2c-49a7-2163-08d7aadb8e67
-x-ms-traffictypediagnostic: MN2PR02MB5935:|MN2PR02MB5935:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB593529B8BB7A2FEE4989A976A11D0@MN2PR02MB5935.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 0305463112
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(136003)(366004)(346002)(189003)(199004)(5660300002)(52536014)(76116006)(107886003)(4326008)(33656002)(71200400001)(478600001)(66946007)(66476007)(66556008)(186003)(64756008)(66446008)(316002)(53546011)(26005)(7696005)(6506007)(81166006)(8676002)(81156014)(8936002)(86362001)(110136005)(54906003)(55016002)(2906002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB5935;H:MN2PR02MB5727.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MK5UQM/XKYvke1UdBu1ziNh9CyLgH7+L0jh0j4lEej8aycrPagDTWQAHXKJt2a+6y/ejf2P1EX2ZCqRBO2cf/ceaB9WqYw3lQ8w5SKtzPqXMaBWxaocC1RELFWe8/D2zJooM/tUvm3SaZ7gBqTw4XSuWCsGqC6BNt3Z+0WOFTW3XX2uNfXvYuSBUVwmfeV+NY0rIY6rnZ/gE0OMQDPcWxvQyJm/jBeKoAqkZ7qaovVNusD01GudgeW6MEf/E5Nd7q/jiQrTL8r8P/9SBENJrGNkluo+7KZ74L27QgFwnMvkcMX3L/wFpJETwMzZ+lHVlYZrgxMUEgrzukIu/XaB3Ci3lNNcsDlzYj4EgbhTODMnWqSIsg93E8CcAPJSWiz5Ycgyswh7zZAvROwicVKPLLPn14tpZ07QV1lTMwLpRUiAM7Qqc++S4/46PKnQoZi46
-x-ms-exchange-antispam-messagedata: LAeYgdbg8NH3nUSsgSpz1XyPLdGn76iILfGjaEKL8TLG0Op7G6pTM+/yjQxGzANw37igHzklsI16LHzy/47cbQQXkobsscXtKN2JGRmm7SyL0soMDGkIP/wALv2Cbt3nsqLZ3flKJ14aKMAVA7yvIA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TG5tj3645N85QhmNWU8D99xKObIizGYbAhAWICc+ygs=;
+        b=e6y6Xc0CKTFK7D8lnZI+oqP6txhyrqcYHKag2cJFvZTCEIr3SECDvQXDx3itQzDjB5
+         VcImhKBHPPvajvrhMq019JiXtDYI7rPkHENrWf+RlWoff8hhxIoqXAAGG539WvLMo9Wn
+         4D71P/luHvNXtl8DTwCvA3ORNz+HUOP5ZxL1UO5APiCaTC8/ZPNQzeTJ6hTbYrnu0n3f
+         ZaxlWdiXnlcIYCRRWCP4VcRWCxRH2Ckcf4JgKak0CIzSdjzVGZ18XYVyTCcb2Rg8OQIw
+         y+eDECeAol8gs70LYTttGQEDtfFZ6a61YDj707iOvZFeg4203wX2gX3bv4I2qHAf9rfB
+         JnBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TG5tj3645N85QhmNWU8D99xKObIizGYbAhAWICc+ygs=;
+        b=QdiNm8nNKSOIgFl7VxTEEuUSoeeKCswSkiwqEfY3o5u4Xx/Y1LXYonoQzqEXnbtadw
+         hxio7eTk2vkzG7r12x6H8RZaeCvdZLsiHLz06HRr5xp5pORY96VPeew9/Ge0GIBkTWkr
+         v3Ge9A/Iv7T1lwO11zqNL2wpZ+v00vUaZB2r8zWN/DX9r5nWQdePYi+LGIiLD/8OhKgz
+         DfbpEgr58vYnrOH2rl3/7E0rUnncSOHieElxt1H2HjiOjCxpEBUUL2CGcsdlVyJiBnvq
+         3d8Amqf6xyhLZ61umksvhCfZX9M82uEYOweyjK22jBd/P5/NDFHE77/JkoPvqgD9rd+D
+         qc3g==
+X-Gm-Message-State: APjAAAVKaZ9zqZaql8qJ53IYk1H15+73QZCZanOVdsyxKWWUZoXrRbnD
+        spgwD84dxSGTcfjprEIWq1TrgwTayxANBQ==
+X-Google-Smtp-Source: APXvYqz9axYJCUH9PKldohM4SKpY8oaob9MbNHZHJR5bIvM99Z2dv6KBImKigANHI+cIqIl6FqvNTg==
+X-Received: by 2002:adf:c145:: with SMTP id w5mr2426249wre.205.1580976486971;
+        Thu, 06 Feb 2020 00:08:06 -0800 (PST)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:7d33:17f7:8097:ecc7? ([2a01:e35:2ec0:82b0:7d33:17f7:8097:ecc7])
+        by smtp.gmail.com with ESMTPSA id o4sm3096110wrx.25.2020.02.06.00.08.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 00:08:06 -0800 (PST)
+Subject: Re: [PATCH v3 5/5] media: meson: vdec: add VP9 decoder support
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200116133437.2443-1-narmstrong@baylibre.com>
+ <20200116133437.2443-6-narmstrong@baylibre.com>
+ <a4efcb4e1591ac9cf305742d34337335b6ff7f29.camel@ndufresne.ca>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <49e6168b-ffed-6011-3b1f-455224d3130b@baylibre.com>
+Date:   Thu, 6 Feb 2020 09:08:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fa8e24d-8c2c-49a7-2163-08d7aadb8e67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 08:07:05.6249
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MdtnjIwG6XSIYNlEpnhFpdgy87RM+IYOhjDS5ClTe8Lg3CTUkONfnxcIHUaW4VEUt+LdX9XqU7xMKqp6NvTxrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5935
+In-Reply-To: <a4efcb4e1591ac9cf305742d34337335b6ff7f29.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoYWwgU2lt
-ZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIEZlYnJ1YXJ5
-IDUsIDIwMjAgODoyNCBQTQ0KPiBUbzogRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAQUNVTEFC
-LkNPTT47IE11YmluIFVzbWFuIFNheXllZA0KPiA8TVVCSU5VU01AeGlsaW54LmNvbT47IHRnbHhA
-bGludXRyb25peC5kZTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7DQo+IG1hekBrZXJuZWwub3JnOyBN
-aWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNp
-dmEgRHVyZ2EgUHJhc2FkIFBhbGFkdWd1DQo+IDxzaXZhZHVyQHhpbGlueC5jb20+OyBBbmlydWRo
-YSBTYXJhbmdpIDxhbmlydWRoQHhpbGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJd
-IGlycWNoaXA6IHhpbGlueDogQWRkIHN1cHBvcnQgZm9yIG11bHRpcGxlIGluc3RhbmNlcw0KPiAN
-Cj4gT24gMDUuIDAyLiAyMCAxNToxNSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+PiBUaGlzIGVt
-YWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGludGVuZGVkIGZvciB0aGUgc29sZSB1c2Ugb2Yg
-dGhlDQo+ID4+IG5hbWVkIHJlY2lwaWVudChzKSBhbmQgY29udGFpbihzKSBjb25maWRlbnRpYWwg
-aW5mb3JtYXRpb24gdGhhdCBtYXkNCj4gPj4gYmUgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQgb3Ig
-Y29weXJpZ2h0ZWQgdW5kZXIgYXBwbGljYWJsZSBsYXcuIElmDQo+ID4+IHlvdSBhcmUgbm90IHRo
-ZSBpbnRlbmRlZCByZWNpcGllbnQsIGRvIG5vdCByZWFkLCBjb3B5LCBvciBmb3J3YXJkIHRoaXMN
-Cj4gZW1haWwgbWVzc2FnZSBvciBhbnkgYXR0YWNobWVudHMuIERlbGV0ZSB0aGlzIGVtYWlsIG1l
-c3NhZ2UgYW5kIGFueQ0KPiBhdHRhY2htZW50cyBpbW1lZGlhdGVseS4NCj4gPg0KPiA+IERlbGV0
-ZWQuLi4uLg0KPiANCj4gOi0pIEkgZ290IHR3byBjb3BpZXMuIE9uZSB3aXRob3V0IGl0IDotKQ0K
-PiANCj4gTXViaW46IFBsZWFzZSBmaXggaXQuDQoNClNvcnJ5LCBJIG1pc3NlZCB0byAgZml4IHRo
-YXQgZm9vdGVyLCAgd2lsbCBkbyBpdCBmcm9tIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzLA0KTXVi
-aW4gDQo+IA0KPiBUaGFua3MsDQo+IE1pY2hhbA0K
+On 03/02/2020 04:11, Nicolas Dufresne wrote:
+> Hi Neil,
+> 
+> Le jeudi 16 janvier 2020 à 14:34 +0100, Neil Armstrong a écrit :
+>> From: Maxime Jourdan <mjourdan@baylibre.com>
+>>
+>> This adds VP9 decoding for the Amlogic GXL, G12A & SM1 SoCs, using
+>> the commong "HEVC" HW decoder.
+>>
+>> For G12A & SM1, it uses the IOMMU support from the firmware.
+>>
+>> For 10bit decoding, the firmware can only decode in the proprietary
+>> Amlogic Framebuffer Compression format, but can output in 8bit NV12
+>> buffer while writing the decoded frame.
+>>
+>> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/staging/media/meson/vdec/Makefile     |    2 +-
+>>  drivers/staging/media/meson/vdec/codec_vp9.c  | 2139 +++++++++++++++++
+>>  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
+>>  drivers/staging/media/meson/vdec/hevc_regs.h  |    7 +
+>>  drivers/staging/media/meson/vdec/vdec.c       |    5 +
+>>  .../staging/media/meson/vdec/vdec_helpers.c   |    4 +
+>>  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
+>>  7 files changed, 2207 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
+>>  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
+>>
+
+[...]
+
+>> diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/staging/media/meson/vdec/vdec_platform.c
+>> index e9356a46828f..72a833b1cebd 100644
+>> --- a/drivers/staging/media/meson/vdec/vdec_platform.c
+>> +++ b/drivers/staging/media/meson/vdec/vdec_platform.c
+>> @@ -8,8 +8,10 @@
+>>  #include "vdec.h"
+>>  
+>>  #include "vdec_1.h"
+>> +#include "vdec_hevc.h"
+>>  #include "codec_mpeg12.h"
+>>  #include "codec_h264.h"
+>> +#include "codec_vp9.h"
+>>  
+>>  static const struct amvdec_format vdec_formats_gxbb[] = {
+>>  	{
+>> @@ -51,6 +53,18 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
+>>  
+>>  static const struct amvdec_format vdec_formats_gxl[] = {
+>>  	{
+>> +		.pixfmt = V4L2_PIX_FMT_VP9,
+>> +		.min_buffers = 16,
+>> +		.max_buffers = 24,
+>> +		.max_width = 3840,
+>> +		.max_height = 2160,
+>> +		.vdec_ops = &vdec_hevc_ops,
+>> +		.codec_ops = &codec_vp9_ops,
+>> +		.firmware_path = "meson/vdec/gxl_vp9.bin",
+> 
+> Is there a pull request pending for this firmware ? I could not test as
+> this firmware was missing. Note that it could be nice to remove the
+> format from the enumeration in that case, as it's very confusing
+> initially.
+
+It has been merged yesterday, sorry for the delay.
+
+With maxime's patch, we tested it using ffmpeg master, mpv master with drm-prime
+rendering. We have a buildroot repo with the changed needed :
+
+https://gitlab.com/baylibre/amlogic/atv/buildroot-yukawa
+
+I will respin a v4 with the small fix from maxime.
+
+Neil
+
+
+> 
+>> +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
+>> +		.flags = V4L2_FMT_FLAG_COMPRESSED |
+>> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
+>> +	}, {
+>>  		.pixfmt = V4L2_PIX_FMT_H264,
+>>  		.min_buffers = 2,
+>>  		.max_buffers = 24,
+>> @@ -127,6 +141,18 @@ static const struct amvdec_format vdec_formats_gxm[] = {
+>>  
+>>  static const struct amvdec_format vdec_formats_g12a[] = {
+>>  	{
+>> +		.pixfmt = V4L2_PIX_FMT_VP9,
+>> +		.min_buffers = 16,
+>> +		.max_buffers = 24,
+>> +		.max_width = 3840,
+>> +		.max_height = 2160,
+>> +		.vdec_ops = &vdec_hevc_ops,
+>> +		.codec_ops = &codec_vp9_ops,
+>> +		.firmware_path = "meson/vdec/g12a_vp9.bin",
+>> +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
+>> +		.flags = V4L2_FMT_FLAG_COMPRESSED |
+>> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
+>> +	}, {
+>>  		.pixfmt = V4L2_PIX_FMT_H264,
+>>  		.min_buffers = 2,
+>>  		.max_buffers = 24,
+>> @@ -165,6 +191,18 @@ static const struct amvdec_format vdec_formats_g12a[] = {
+>>  
+>>  static const struct amvdec_format vdec_formats_sm1[] = {
+>>  	{
+>> +		.pixfmt = V4L2_PIX_FMT_VP9,
+>> +		.min_buffers = 16,
+>> +		.max_buffers = 24,
+>> +		.max_width = 3840,
+>> +		.max_height = 2160,
+>> +		.vdec_ops = &vdec_hevc_ops,
+>> +		.codec_ops = &codec_vp9_ops,
+>> +		.firmware_path = "meson/vdec/g12a_vp9.bin",
+>> +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
+>> +		.flags = V4L2_FMT_FLAG_COMPRESSED |
+>> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
+>> +	}, {
+>>  		.pixfmt = V4L2_PIX_FMT_H264,
+>>  		.min_buffers = 2,
+>>  		.max_buffers = 24,
+> 
+
