@@ -2,278 +2,148 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6969CC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA37C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B59C20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VYItJjyL"
+	by mail.kernel.org (Postfix) with ESMTP id 1E402214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgBFAQn (ORCPT
+        id S1727617AbgBFA2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 19:16:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45324 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbgBFAQm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 19:16:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=ONubYgjHMQd/QUjVT/2+vNT4AEftHzZPUf0RGx/Ds5Y=; b=VYItJjyL0hBs9F+E+CLjEd7/mu
-        pwdN3TQPG1gKdnbZuxcHXYG42hp3nHLwpa9hSC3gIX6HCQB8nA6WGHpArabyYETmRJy4jklSbEtYr
-        7eSkYwqqKQrY+Glvg1U/hzkhyGiQJwt5ydSFkA+J4h44b3POF46vQztG2bup1WE73rrZqjWj87w4R
-        wN3yMd5/3oP+eFqwTJC4v0WpPSER17l9IzXCJtNW3ne+erzV4ChqeJ8Nozno7lO0uJhmlyL1rgk0B
-        5fdN39eZhJ+HCpMxOgHZjh5uV9QmikmSgdGT9KSmnDhmlAgmpSIzAGp+WSxQl7keB6sROVQAUZjWb
-        FMREOMKA==;
-Received: from [2603:3004:32:9a00::c7a3]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izUq6-0002Hf-7n; Thu, 06 Feb 2020 00:16:14 +0000
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Wed, 5 Feb 2020 19:28:21 -0500
+Received: from mga18.intel.com ([134.134.136.126]:58008 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727149AbgBFA2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 19:28:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 16:28:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="235779637"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by orsmga006.jf.intel.com with ESMTP; 05 Feb 2020 16:28:19 -0800
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-2-yu-cheng.yu@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <af5ee976-3b57-4afe-6304-fcab8de45c77@infradead.org>
-Date:   Wed, 5 Feb 2020 16:16:05 -0800
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
+ <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+Date:   Wed, 5 Feb 2020 16:28:18 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200205181935.3712-2-yu-cheng.yu@intel.com>
+In-Reply-To: <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-I have a few comments and a question (please see inline below).
-
-
-On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
-> Explain no_cet_shstk/no_cet_ibt kernel parameters, and introduce a new
-> document on Control-flow Enforcement Technology (CET).
+On 1/14/20 7:40 AM, Vineeth Remanan Pillai wrote:
+> On Mon, Jan 13, 2020 at 8:12 PM Tim Chen <tim.c.chen@linux.intel.com> wrote:
 > 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |   6 +
->  Documentation/x86/index.rst                   |   1 +
->  Documentation/x86/intel_cet.rst               | 294 ++++++++++++++++++
->  3 files changed, 301 insertions(+)
->  create mode 100644 Documentation/x86/intel_cet.rst
+>> I also encountered kernel panic with the v4 code when taking cpu offline or online
+>> when core scheduler is running.  I've refreshed the previous patch, along
+>> with 3 other patches to fix problems related to CPU online/offline.
+>>
+>> As a side effect of the fix, each core can now operate in core-scheduling
+>> mode or non core-scheduling mode, depending on how many online SMT threads it has.
+>>
+>> Vineet, are you guys planning to refresh v4 and update it to v5?  Aubrey posted
+>> a port to the latest kernel earlier.
+>>
+> Thanks for the updated patch Tim.
+> 
+> We have been testing with v4 rebased on 5.4.8 as RC kernels had given us
+> trouble in the past. v5 is due soon and we are planning to release v5 when
+> 5.5 comes out. As of now, v5 has your crash fixes and Aubrey's changes
+> related to load balancing. We are investigating a performance issue with
+> high overcommit io intensive workload and also we are trying to see if
+> we can add synchronization during VMEXITs so that a guest vm cannot run
+> run alongside with host kernel. We also need to think about the userland
+> interface for corescheduling in preparation for upstreaming work.
 > 
 
-> diff --git a/Documentation/x86/intel_cet.rst b/Documentation/x86/intel_cet.rst
-> new file mode 100644
-> index 000000000000..71e2462fea5c
-> --- /dev/null
-> +++ b/Documentation/x86/intel_cet.rst
-> @@ -0,0 +1,294 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================================
-> +Control-flow Enforcement Technology (CET)
-> +=========================================
-> +
+Vineet,
 
-...
+Have you guys been able to make progress on the issues with I/O intensive workload?
 
-> +
-> +[5] CET system calls
-> +====================
-> +
-> +The following arch_prctl() system calls are added for CET:
-> +
-> +arch_prctl(ARCH_X86_CET_STATUS, unsigned long *addr)
-> +    Return CET feature status.
-> +
-> +    The parameter 'addr' is a pointer to a user buffer.
-> +    On returning to the caller, the kernel fills the following
-> +    information::
-> +
-> +        *addr       = SHSTK/IBT status
-> +        *(addr + 1) = SHSTK base address
-> +        *(addr + 2) = SHSTK size
-> +
-> +arch_prctl(ARCH_X86_CET_DISABLE, unsigned long features)
-> +    Disable SHSTK and/or IBT specified in 'features'.  Return -EPERM
-> +    if CET is locked.
-> +
-> +arch_prctl(ARCH_X86_CET_LOCK)
-> +    Lock in CET feature.
+Can you explain a bit further what the problem is?  
+Is the VM doing lots of I/O, causing frequent VMEXITs?
+And the the host thread doing the I/O cannot run along side with vcpu
+thread, resulting in extra forced idle?  So you are trying not to put vcpu
+on the same core with such host thread?
 
-which feature?
+Tim
 
-> +
-> +arch_prctl(ARCH_X86_CET_ALLOC_SHSTK, unsigned long *addr)
-> +    Allocate a new SHSTK and put a restore token at top.
-> +
-> +    The parameter 'addr' is a pointer to a user buffer and indicates
-> +    the desired SHSTK size to allocate.  On returning to the caller,
-> +    the kernel fills '*addr' with the base address of the new SHSTK.
-> +
-> +arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE, unsigned long *addr)
-> +    Mark an address range as IBT legacy code.
-> +
-> +    The parameter 'addr' is a pointer to a user buffer that has the
-> +    following information::
-> +
-> +        *addr       = starting linear address of the legacy code
-> +        *(addr + 1) = size of the legacy code
-> +        *(addr + 2) = set (1); clear (0)
-> +
-> +Note:
-> +  There is no CET-enabling arch_prctl function.  By design, CET is
-> +  enabled automatically if the binary and the system can support it.
-> +
-> +  The parameters passed are always unsigned 64-bit.  When an IA32
-> +  application passing pointers, it should only use the lower 32 bits.
-> +
-> +[6] The implementation of the SHSTK
-> +===================================
-> +
-> +SHSTK size
-> +----------
-> +
-> +A task's SHSTK is allocated from memory to a fixed size of
-> +RLIMIT_STACK.  A compat-mode thread's SHSTK size is 1/4 of
-> +RLIMIT_STACK.  The smaller 32-bit thread SHSTK allows more threads to
-> +share a 32-bit address space.
-> +
-> +Signal
-> +------
-> +
-> +The main program and its signal handlers use the same SHSTK.  Because
-> +the SHSTK stores only return addresses, a large SHSTK will cover the
-> +condition that both the program stack and the sigaltstack run out.
-> +
-> +The kernel creates a restore token at the SHSTK restoring address and
-> +verifies that token when restoring from the signal handler.
-> +
-> +IBT for signal delivering and sigreturn is the same as the main
-> +program's setup; except for WAIT_ENDBR status, which can be read from
-
-s/;/,/
-
-> +MSR_IA32_U_CET.  In general, a task is in WAIT_ENDBR after an
-> +indirect CALL/JMP and before the next instruction starts.
-> +
-> +A task's WAIT_ENDBR is reset for its signal handler, but preserved on
-> +the task's stack; and then restored from sigreturn.
-
-s/;/,/
-
-> +
-> +Fork
-> +----
-> +
-> +The SHSTK's vma has VM_SHSTK flag set; its PTEs are required to be
-> +read-only and dirty.  When a SHSTK PTE is not present, RO, and dirty,
-> +a SHSTK access triggers a page fault with an additional SHSTK bit set
-> +in the page fault error code.
-> +
-> +When a task forks a child, its SHSTK PTEs are copied and both the
-> +parent's and the child's SHSTK PTEs are cleared of the dirty bit.
-> +Upon the next SHSTK access, the resulting SHSTK page fault is handled
-> +by page copy/re-use.
-> +
-> +When a pthread child is created, the kernel allocates a new SHSTK for
-> +the new thread.
-> +
-> +Setjmp/Longjmp
-> +--------------
-> +
-> +Longjmp unwinds SHSTK until it matches the program stack.
-> +
-> +Ucontext
-> +--------
-> +
-> +In GLIBC, getcontext/setcontext is implemented in similar way as
-> +setjmp/longjmp.
-> +
-> +When makecontext creates a new ucontext, a new SHSTK is allocated for
-> +that context with ARCH_X86_CET_ALLOC_SHSTK syscall.  The kernel
-> +creates a restore token at the top of the new SHSTK and the user-mode
-> +code switches to the new SHSTK with the RSTORSSP instruction.
-> +
-> +[7] The management of read-only & dirty PTEs for SHSTK
-> +======================================================
-> +
-> +A RO and dirty PTE exists in the following cases:
-> +
-> +(a) A page is modified and then shared with a fork()'ed child;
-> +(b) A R/O page that has been COW'ed;
-> +(c) A SHSTK page.
-> +
-> +The processor only checks the dirty bit for (c).  To prevent the use
-> +of non-SHSTK memory as SHSTK, we use a spare bit of the 64-bit PTE as
-> +DIRTY_SW for (a) and (b) above.  This results to the following PTE
-> +settings::
-> +
-> +    Modified PTE:             (R/W + DIRTY_HW)
-> +    Modified and shared PTE:  (R/O + DIRTY_SW)
-> +    R/O PTE, COW'ed:          (R/O + DIRTY_SW)
-> +    SHSTK PTE:                (R/O + DIRTY_HW)
-> +    SHSTK PTE, COW'ed:        (R/O + DIRTY_HW)
-> +    SHSTK PTE, shared:        (R/O + DIRTY_SW)
-> +
-> +Note that DIRTY_SW is only used in R/O PTEs but not R/W PTEs.
-> +
-> +[8] The implementation of IBT legacy bitmap
-> +===========================================
-> +
-> +When IBT is active, a non-IBT-capable legacy library can be executed
-> +if its address ranges are specified in the legacy code bitmap.  The
-> +bitmap covers the whole user-space address, which is TASK_SIZE_MAX
-> +for 64-bit and TASK_SIZE for IA32, and its each bit indicates a 4-KB
-
-confusing:
-                                          its each bit
-
-> +legacy code page.  It is read-only from an application, and setup by
-> +the kernel as a special mapping when the first time the application
-
-                           drop:   when
-
-> +calls arch_prctl(ARCH_X86_CET_MARK_LEGACY_CODE).  The application
-> +manages the bitmap through the arch_prctl.
-
-                      through the arch_prctl() interface.
-
-
-cheers.
--- 
-~Randy
