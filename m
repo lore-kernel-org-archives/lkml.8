@@ -2,123 +2,100 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDA4C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8665C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B35A21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CFF218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vzy/d/95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgBFTlQ (ORCPT
+        id S1727866AbgBFTqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:41:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:49994 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727479AbgBFTlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:41:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 11:41:16 -0800
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="236084936"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.24.10.96])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 11:41:15 -0800
-Message-ID: <75f0bd0365857ba4442ee69016b63764a8d2ad68.camel@linux.intel.com>
-Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function
- sections
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Date:   Thu, 06 Feb 2020 11:41:15 -0800
-In-Reply-To: <202002060408.84005CEFFD@keescook>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
-         <20200205223950.1212394-7-kristen@linux.intel.com>
-         <202002060408.84005CEFFD@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 6 Feb 2020 14:46:54 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42694 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbgBFTqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 14:46:54 -0500
+Received: by mail-il1-f196.google.com with SMTP id x2so6223758ila.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:46:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y+Qm2vuunUyIwT9FvbEtFr9J6rxqRNsvYMs4i9yZWHg=;
+        b=vzy/d/95WWKu7PQDilCrAEJK/+BvYvrlT2fLOpZP6ixvZnvv2a4sXqwjMcXqyIgq9H
+         EN9r/goqKuntaVTwMqDOGW/v6visAvmWs/nH3B2kj86dwwBwejEAzE8BMV0zbCC/fDMq
+         WzePSNIQa3UtNwtLHdHNDK+ZW3zogJ2MFZl2gewBHH8v6czTPqdl06zFEIOGuypQqzna
+         EIvN5c37/4OkK9P5qKqgMa+eAH8ZbCeO9dkeCHayol+DVcLPTpXyLjlsmd+pCfwD1dZK
+         XIGD1UzUlidkvTuqtRkCAFubhYr7Ii+rEmULGQ+41K0nesS/AEyRBpqqPQu5P82GYGgZ
+         mRNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y+Qm2vuunUyIwT9FvbEtFr9J6rxqRNsvYMs4i9yZWHg=;
+        b=ueGVArPR2MlKn3eDapOWs2hPWQHRZjpLSC/7hL8/no2KuDEU1ei2vfSurRBlbXEGKF
+         VN80BVamsuzepVnRNKKIWDxFF7RyxjALyMw6pCL351shj4HtUw/jl2GvuSZ19sOD7LBI
+         QJNLzeAWkZR/ScR5IfLAhBUwj9TMZbotlVtMJiF6ZcHpVmUgVE6NtKlnkOs/vKv/QyKn
+         xsDS8lgpleetnx8v8iEn1Z+AsELlaOKvDXyVf/Ojy193fvGUA+sMd9u8KZHNRsoRaLGm
+         EVDt0bVhdVKL0v0DXADXuDsGvZ2tyhEQWL2UYkaCU0HtSRKOieoVckL0JU/ZgwlWSStI
+         n4hA==
+X-Gm-Message-State: APjAAAWHMdrep/vg0qfuWv3PW8CqyoZdpK9Qu/Z0u1kTujNA5m/poSd1
+        9usem2LmP/d+BRFgfE68gDAsHg==
+X-Google-Smtp-Source: APXvYqzzT5Uf1j6WWUaNruAkal493BFlesJ6ootrwaINKDDVmguMA5dpYmg8FEKnhKslWtkKlTjDww==
+X-Received: by 2002:a92:990b:: with SMTP id p11mr5538668ili.254.1581018412609;
+        Thu, 06 Feb 2020 11:46:52 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id b12sm255491iln.62.2020.02.06.11.46.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 11:46:52 -0800 (PST)
+Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20200131142943.120459-1-sgarzare@redhat.com>
+ <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
+ <CAGxU2F6qvW28=ULNUi-UHethus2bO6VXYX127HOcH_KPToZC-w@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <57766a26-866b-3288-dc69-5104de3ac6b6@kernel.dk>
+Date:   Thu, 6 Feb 2020 12:46:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <CAGxU2F6qvW28=ULNUi-UHethus2bO6VXYX127HOcH_KPToZC-w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-06 at 04:26 -0800, Kees Cook wrote:
-> On Wed, Feb 05, 2020 at 02:39:45PM -0800, Kristen Carlson Accardi
-> wrote:
-> > We will be using -ffunction-sections to place each function in
-> > it's own text section so it can be randomized at load time. The
-> > linker considers these .text.* sections "orphaned sections", and
-> > will place them after the first similar section (.text). However,
-> > we need to move _etext so that it is after both .text and .text.*
-> > We also need to calculate text size to include .text AND .text.*
+On 2/6/20 10:33 AM, Stefano Garzarella wrote:
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 77f22c3da30f..2769451af89a 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -6301,7 +6301,7 @@ static __poll_t io_uring_poll(struct file *file, poll_table *wait)
+>         if (READ_ONCE(ctx->rings->sq.tail) - ctx->cached_sq_head !=
+>             ctx->rings->sq_ring_entries)
+>                 mask |= EPOLLOUT | EPOLLWRNORM;
+> -       if (READ_ONCE(ctx->rings->cq.head) != ctx->cached_cq_tail)
+> +       if (!io_cqring_events(ctx, false))
+>                 mask |= EPOLLIN | EPOLLRDNORM;
 > 
-> The dependency on the linker's orphan section handling is, I feel,
-> rather fragile (during work on CFI and generally building kernels
-> with
-> Clang's LLD linker, we keep tripping over difference between how BFD
-> and
-> LLD handle orphans). However, this is currently no way to perform a
-> section "pass through" where input sections retain their name as an
-> output section. (If anyone knows a way to do this, I'm all ears).
-> 
-> Right now, you can only collect sections like this:
-> 
->         .text :  AT(ADDR(.text) - LOAD_OFFSET) {
-> 		*(.text.*)
-> 	}
-> 
-> or let them be orphans, which then the linker attempts to find a
-> "similar" (code, data, etc) section to put them near:
-> https://sourceware.org/binutils/docs-2.33.1/ld/Orphan-Sections.html
-> 
-> So, basically, yes, this works, but I'd like to see BFD and LLD grow
-> some kind of /PASSTHRU/ special section (like /DISCARD/), that would
-> let
-> a linker script specify _where_ these sections should roughly live.
-> 
-> Related thoughts:
-> 
-> I know x86_64 stack alignment is 16 bytes. I cannot find evidence for
-> what function start alignment should be. It seems the linker is 16
-> byte
-> aligning these functions, when I think no alignment is needed for
-> function starts, so we're wasting some memory (average 8 bytes per
-> function, at say 50,000 functions, so approaching 512KB) between
-> functions. If we can specify a 1 byte alignment for these orphan
-> sections, that would be nice, as mentioned in the cover letter: we
-> lose
-> a 4 bits of entropy to this alignment, since all randomized function
-> addresses will have their low bits set to zero.
+>         return mask;
 
-So, when I was developing this patch set, I initially ignored the value
-of sh_addralign and just packed the functions in one right after
-another when I did the new layout. They were byte aligned :). I later
-realized that I should probably pay attention to alignment and thus
-started respecting the value that was in sh_addralign. There is
-actually nothing stopping me from ignoring it again, other than I am
-concerned that I will make runtime performance suffer even more than I
-already have.
+Are you going to send this as a proper patch? If so, I think you'll want
+to remove the '!' negation for that check.
 
-> 
-> And we can't adjust function section alignment, or there is some
-> benefit to a larger alignment, I would like to have a way for the
-> linker
-> to specify the inter-section padding (or fill) bytes. Right now, the
-> FILL(0xnn) (or =0xnn) can be used to specify the padding bytes
-> _within_
-> a section, but not between sections. Right now, BFD appears to 0-pad. 
-> I'd
-> like that to be 0xCC so "guessing" addresses incorrectly will trigger
-> a trap.
-
-Padding the space between functions with int3 is easy to add during
-boot time, and I've got it on my todo list.
-
+-- 
+Jens Axboe
 
