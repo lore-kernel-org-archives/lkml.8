@@ -2,91 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2ECC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C052C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2028921741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550A5214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sd/l60BD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvstfC2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgBFSli (ORCPT
+        id S1727872AbgBFSlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:41:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38550 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgBFSli (ORCPT
+        Thu, 6 Feb 2020 13:41:51 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39004 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFSlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:41:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Q08ftOUoyei97FPuiT9NtyQjBazlRzN9kuWqUvxH82M=; b=Sd/l60BDPZrpNVJCH76HWt2KQY
-        78r8ovu9yE0ts3Mz5ukvQXOuWS3r0hgZxMaUc24m2fEPFebomk2RCZf3C+pSzcetpwtHSymx6UANj
-        lXil3ylWqN9fg6idv8CR7oaUduchmPwqz3y/8RyeQl0T5hUcbW0gC1kgW0scwiLWmO//7aKNR66OL
-        fHvC3P7rn2pAOdtT2k1NNxcOlST5pjzUiwWt271ez9wE0mhwhRbheZCD+CjjdZKhVW84cZ3OnA1n6
-        8OzcWKOweAPV8HJ05OUTwV8usk/MeJbt9RscmKrhorxWx9qHFPBjRyljZiFJL5iv+UgSoypMnqAcC
-        421RZmBA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izm5m-0004hy-Gd; Thu, 06 Feb 2020 18:41:34 +0000
-Date:   Thu, 6 Feb 2020 10:41:34 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "Yang, Fei" <fei.yang@intel.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using
- adb over f_fs
-Message-ID: <20200206184134.GA11027@infradead.org>
-References: <20200122222645.38805-1-john.stultz@linaro.org>
- <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com>
- <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
- <87o8uu3wqd.fsf@kernel.org>
- <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
- <87lfpy3w1g.fsf@kernel.org>
- <CALAqxLUQ0ciJTLrmEAu9WKCJHAbpY9szuVm=+VapN2QWWGnNjA@mail.gmail.com>
- <20200206074005.GA28365@infradead.org>
- <87ftfn602u.fsf@kernel.org>
+        Thu, 6 Feb 2020 13:41:51 -0500
+Received: by mail-il1-f194.google.com with SMTP id f70so6049634ill.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 10:41:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rvfv9s/3mm0fiIdqT4gq2TIV6qswfw3gcSHxln5Qesg=;
+        b=EvstfC2C+SB/UiURgygiLq5HrwrbptH4mgesLSEhapDxG97zndtPhgViZiqgl4Glmp
+         sGqdACNG2iQfQgQz6LVZdzHl/uPm3O6aRtkKfZngKCMJKvttmKl3/csBAjlcy97CCS5U
+         0W8n6coud4RguAe6BS9SOmXB2QRPd0cvK9qNM1uSouk7DX5yDlOK6HHuTs4Sk7rCCfmw
+         Lr9vfKxVcDSLGXyGeyHF1oemrcenaY7RNXhhute37l/qxRI5mPORFGiUnUE/5//QI1A1
+         dBcRyC/KgLgBtg7iPUKkY7Q7OAcBTtTKy05hxRB44vBxv5m5pUZzdVW/1n/upw3isDoc
+         9vGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rvfv9s/3mm0fiIdqT4gq2TIV6qswfw3gcSHxln5Qesg=;
+        b=c8vZtiMa278h8gAQPC5VzHRq5e6GeDiau6SEc1TvBvSE6xZ747Q0trcmBEU9j0Glor
+         649bPr9AVsIEB1kwCqojP/i+fwy+nH1YPAm3vbFVAj7KiQWYnBPDAK8hqhkxlVfPubBI
+         G1M23ERWjMW0jLjj4BbAl0xM9sW7SufjORwi/jx9WU/a55Ami1PxtTwDlrdtCmhk12iM
+         4QJbz7wSVkLHOiFUw4mIXOcOm2lixBkXZilNihNwbWKumN/ThbIMnnaZyFZf3OS+MLQH
+         JnFPn3Coq+2swXy2u/Zo6MHqKWE8liYa4POwGXGcI2vo4utiDAxNgQGELUzQGUfAda9C
+         eGDg==
+X-Gm-Message-State: APjAAAXePlHi1X52zz3ybcM02WVerxiUosFXG7/Nxg/I8pLz+nNyzBpq
+        8D5nG8ayoiz1vWX9gBneoA9Y0YAEXdmj2QVIDXg=
+X-Google-Smtp-Source: APXvYqw/HdiF1QLiDq8FBR9ivWT4hH47VQKvqmRG8CV2Fh4h6/Y5ruVY2lyZwJyJBSbPZCdA81XhI1OmVffIWLIcKNI=
+X-Received: by 2002:a92:84ce:: with SMTP id y75mr5203539ilk.93.1581014510574;
+ Thu, 06 Feb 2020 10:41:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftfn602u.fsf@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200205105955.28143-1-kraxel@redhat.com> <20200205105955.28143-5-kraxel@redhat.com>
+ <CAPaKu7RxijC_oS4GPukS9wEe9gn8DPQgaGZKwG6g8M8xwTnsig@mail.gmail.com> <20200206085540.pa6py4ieoi242gma@sirius.home.kraxel.org>
+In-Reply-To: <20200206085540.pa6py4ieoi242gma@sirius.home.kraxel.org>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Thu, 6 Feb 2020 10:41:39 -0800
+Message-ID: <CAPaKu7RDZYnpjFB-Vou0RwiDGCxrD4ak2vLEf89UupdYm59ZYw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/virtio: move virtio_gpu_mem_entry initialization
+ to new function
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 08:29:45PM +0200, Felipe Balbi wrote:
-> > No, it shoudn't.  dma_map_sg returns the number of mapped segments,
-> > and the callers need to remember that.
-> 
-> We _do_ remember that:
+On Thu, Feb 6, 2020 at 12:55 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+>   Hi,
+>
+> > >         virtio_gpu_cmd_resource_attach_backing(vgdev, obj->hw_res_handle,
+> > > -                                              ents, nents,
+> > > +                                              obj->ents, obj->nents,
+> > >                                                fence);
+> > > +       obj->ents = NULL;
+> > > +       obj->nents = 0;
+> > Hm, if the entries are temporary, can we allocate and initialize them
+> > in this function?
+>
+> Well, the plan for CREATE_RESOURCE_BLOB is to use obj->ents too ...
+Is obj->ents needed after CREATE_RESOURCE_BLOB?  If not, having yet
+another helper
 
-That helps :)
+  ents = virtio_gpu_object_alloc_mem_entries(..., &count);
 
-> that req->request.num_mapped_sgs is the returned value. So you're saying
-> we should test for i == num_mapped_sgs, instead of using
-> sg_is_last(). Is that it?
+seems cleaner.  We would also be able to get rid of virtio_gpu_object_attach.
 
-Yes.
-
-> Fair enough. Just out of curiosity, then, when *should* we use
-> sg_is_last()?
-
-Outside of sg_next/sg_last it really shoud not be used at all as far
-as I'm concerned. 
+>
+> cheers,
+>   Gerd
+>
