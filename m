@@ -2,261 +2,141 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D98BC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6908C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE32B20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD38620702
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e6G11mRk"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Y9dh+j/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgBFCAl (ORCPT
+        id S1727658AbgBFCHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 21:00:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48673 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727599AbgBFCAk (ORCPT
+        Wed, 5 Feb 2020 21:07:13 -0500
+Received: from sonic301-36.consmr.mail.ne1.yahoo.com ([66.163.184.205]:36252
+        "EHLO sonic301-36.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727170AbgBFCHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 21:00:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580954438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ec9TwbgS40f1HHJSTqCodk4lJ8ooTtccnjfLpWEgAHQ=;
-        b=e6G11mRk+badold6PIMx7UkxIs/NNa/J/oHqzVWhreWf+CHHwPyiGbl2svkX6cUoMDrNNA
-        l0y2kDQ7m7ze750iEwMGs/J7XzPn2axZyEG7A+TPfDgjlvtge+RsTxrW8QwnzOVYikX2z+
-        mhpW1oK5FPdvKLXzW8XuAUZ9oRvytEc=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-k8WGbK7fNKqKsWRuEb337w-1; Wed, 05 Feb 2020 21:00:37 -0500
-X-MC-Unique: k8WGbK7fNKqKsWRuEb337w-1
-Received: by mail-qt1-f199.google.com with SMTP id n4so2789713qtv.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 18:00:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ec9TwbgS40f1HHJSTqCodk4lJ8ooTtccnjfLpWEgAHQ=;
-        b=XfgN8+KuvBRIhAf3xUMQiavJyn4n/Qju0v5Wd9U6KmCt1c8siE54OOLQiPFkzCozbo
-         TX3O+VOccMhWwPKQakzbKVfYPwQQf5CagebDV9iHNMBbOKxPv2CW4sXAhCvvdUjAiInn
-         Wq//MulYA6MMeNSn+wMaoQRXU0gph21CNzkai+v4p1BqAL6gNFOLY95BGP7anEJpETS5
-         11fRTzfEoHidgRqfTwJyk4+UhVWH9H027qUIXt+/qjow9Rk4wUdWjo5wpGHWTp5jtgki
-         MUwM4LjCQHRdoNc+RFNNaFcYv/Us7Yui8E7ERQ4w6deHnBDzdiv3q0MfrwYmqcfUy7qe
-         sMIg==
-X-Gm-Message-State: APjAAAXN4u82zoPJ3Dw4ZrWIpCT67nzFvQwupy+jgfg9MkZ8p/MJuGdj
-        gOobkyrXMp6MlF47gK0IJtB17fBz1eGcr1KZ3MbtJZRKTY7RcxPImR7rPnyPqsQ6R86Vdm5KEPA
-        +67ez9te3YM0L4cxTjtGB44mq
-X-Received: by 2002:a37:a289:: with SMTP id l131mr581958qke.234.1580954436019;
-        Wed, 05 Feb 2020 18:00:36 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwCnYHcTuHaXWdrFJXAi4fI4Sn+6tS69Z5gPJITmWbrn7xBR5si2+dj47c0ikTe1Yb4VnkJEQ==
-X-Received: by 2002:a37:a289:: with SMTP id l131mr581926qke.234.1580954435596;
-        Wed, 05 Feb 2020 18:00:35 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id k5sm706994qkk.117.2020.02.05.18.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 18:00:34 -0800 (PST)
-Date:   Wed, 5 Feb 2020 21:00:31 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 01/19] KVM: x86: Allocate new rmap and large page
- tracking when moving memslot
-Message-ID: <20200206020031.GJ387680@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-2-sean.j.christopherson@intel.com>
- <20200205214952.GD387680@xz-x1>
- <20200205235533.GA7631@linux.intel.com>
+        Wed, 5 Feb 2020 21:07:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1580954831; bh=TIVFsp+NPXGZBaGxmOvC9Zeza+LF8Vbe406NKWUfT5E=; h=To:Cc:From:Subject:Date:References:From:Subject; b=Y9dh+j/hJ7Ti5uWZvfIXvJRwUBhiXfhk9BqmgeXQ6UL+b4Jn8RKD5Pm1v/GxSkcVOVOh4d9UwhqbC6nIccrGWkrJ4Z04Vmi65L+KVIokCTMyNb0EsI9U8wDKFyzw4JSc8QZ1Td7JxhXPSz8oJBwqoETQSp2eP0UiAprf60PTIh5gWJkwC0h0l1eWFaCrrA17trY991+O6v0sl3QYAIRdtUV+NoYQw0zCZ4FHVxrzLkUcfpA2fGVyzYzJMK/XrBIB8Smxc6moTeJoC4VlsZwPX+VOc/9Y1a96Ss+5U5B16AIQuylnG3w1Cja0xmPRcaK8OKkB2sAqfNkSd3ENw82Yzw==
+X-YMail-OSG: IqrvWj4VM1kVB8uKEFMSKc0Tk9t0Y9k6rHmfcAyDGNpT8l_1Qx9ohkwobsCPQsy
+ 2Z0NfO5QXMEYqRAdsurImYJo.psCh5aP8CG0a_.g6q5dlU8LDZGR6u8U_hUMy_QKDM7OOq4RuQBE
+ FKHf6tEa7zuVtM7eiE.K8ZyzuJZs7Tx4Y.sN_i5M6dIEUR9VW4DpILev1qxjsb7UmngaO2HLQyou
+ hamNHt10I2qIeJM7b2J0D15u.4l6ZrYR65AS2fjSUlK9j_69IPsvXG1xV5b23e3ewRX3ksuWqvIr
+ 7ZklzXl6H3eui260EkXpYBBeCsyN6SlaMD8mxjLVaUShmQzQ80BsVZJM5b3ZNCdFUHTmd7QI7N.t
+ rlkp0u2CFQ..EBdjgYmZ9aXKDe6citFXailOXk7orYj7lzO.GLE_.8d291MpPZ29WRywKAIswr4U
+ y2liY7JAYZTPuppuE5srRABu9nWjX1Al1WJVSurBYa3U15bpAri0jdhqq7H_Bsvjha8O7hPMJLPV
+ t35JOE2KLRzs39JPNY_x4P8fX63ZlGHL1oHMorrxv4Gm.P0nOIbdDYEIPJePsd_JkBw9.GgsbCpL
+ 4fB4uorAmqJRiX6azRfExmIZz83C_u4Xyxxq8VS_EVZGhE_bEkKBT7ilzxij.Z512p7Av7AFQEkL
+ KfHrc1nXywlGHecKioiS08zEndqTb5Ew1cMR7BfS40PMmBk8gCHCxZTK7NCBSvTZU81hA6fiho7M
+ 7IINzKYDMol2k8H.NyTtPeXrIsFSq7ZQXpp0iFCVV5EPJDtwqVofUjPuCWbBDr_iD27haRxHtTrr
+ sKd6dyRw.hEDKk9_2985ochRqT.vxikzQYCYZKJXwMTHVaze_mxwhGpiJ4KlaQTta13yTpyabGj4
+ LirN8Noq.QeZMBe9zdGfBw4BAv5i9OL7qv7pVKN3UmbHcpcYelosKgHOS.PNgaNnOcrFQPsbZcug
+ OJuboGYS08HV3DWEiPnKNn2QXRQkW50l4j3WoqCn9evxmcxDbiBs.2LXI0so6v.FGYTV4XPtrYt.
+ yD3TvYqJIstWHaGecysh85WiFFlPvFJyX8I5dsafn2y_Z.sKb8w8YQxVL.kc2NA15dcaDiz0wjUX
+ n3Wnr_xnxun0adpBMQfZh1c6zko9kpKPcpiEMEghUl1Hr8cFaT2K42ng1CEtARVeQEfim71MmvBb
+ IZEuZPMVUGXlwXGLHwNP8sQ0fS0TARGclHrGI7ntjsalchkoHB3sqYErp5fwz30u.TfdlbrOfV3z
+ 5iBg5BbCZuH2hNkmz52AP0F2UlOvu8b6Gf105xOp3LtKF2XW1XppxXomWnoBJxBg1b02XNzH8D2E
+ fyrLrLqsNj1oDOkeaR_763WMH0Mq6lvWginmU3tnvSQT7NjZeuhPVI36zb_7WjM64WzUY0y7wwhc
+ zRBuN6RbFUiedSV3stoQVM.rHR9i5W4tL65ZAAWoNQga.xgYWpQFbaaATtmi_
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Thu, 6 Feb 2020 02:07:11 +0000
+Received: by smtp421.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID eb9d602dab41df94d54fff88437dd822;
+          Thu, 06 Feb 2020 02:07:10 +0000 (UTC)
+To:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Subject: [GIT PULL] Smack patch for v5.6
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <7300e604-6fb5-16b1-4e1b-dfae7b494853@schaufler-ca.com>
+Date:   Wed, 5 Feb 2020 18:07:09 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200205235533.GA7631@linux.intel.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+References: <7300e604-6fb5-16b1-4e1b-dfae7b494853.ref@schaufler-ca.com>
+X-Mailer: WebService/1.1.15185 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:55:33PM -0800, Sean Christopherson wrote:
-> On Wed, Feb 05, 2020 at 04:49:52PM -0500, Peter Xu wrote:
-> > On Tue, Jan 21, 2020 at 02:31:39PM -0800, Sean Christopherson wrote:
-> > > Reallocate a rmap array and recalcuate large page compatibility when
-> > > moving an existing memslot to correctly handle the alignment properties
-> > > of the new memslot.  The number of rmap entries required at each level
-> > > is dependent on the alignment of the memslot's base gfn with respect to
-> > > that level, e.g. moving a large-page aligned memslot so that it becomes
-> > > unaligned will increase the number of rmap entries needed at the now
-> > > unaligned level.
-> > > 
-> > > Not updating the rmap array is the most obvious bug, as KVM accesses
-> > > garbage data beyond the end of the rmap.  KVM interprets the bad data as
-> > > pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
-> > > 
-> > >   general protection fault: 0000 [#1] SMP
-> > >   CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
-> > >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-> > >   RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
-> > >   Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
-> > >   RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
-> > >   RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
-> > >   RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
-> > >   RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
-> > >   R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
-> > >   R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
-> > >   FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-> > >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > >   CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
-> > >   Call Trace:
-> > >    kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
-> > >    __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
-> > >    kvm_set_memory_region+0x45/0x60 [kvm]
-> > >    kvm_vm_ioctl+0x30f/0x920 [kvm]
-> > >    do_vfs_ioctl+0xa1/0x620
-> > >    ksys_ioctl+0x66/0x70
-> > >    __x64_sys_ioctl+0x16/0x20
-> > >    do_syscall_64+0x4c/0x170
-> > >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > >   RIP: 0033:0x7f7ed9911f47
-> > >   Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
-> > >   RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > >   RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
-> > >   RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
-> > >   RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
-> > >   R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
-> > >   R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
-> > >   Modules linked in: kvm_intel kvm irqbypass
-> > >   ---[ end trace 0c5f570b3358ca89 ]---
-> > > 
-> > > The disallow_lpage tracking is more subtle.  Failure to update results
-> > > in KVM creating large pages when it shouldn't, either due to stale data
-> > > or again due to indexing beyond the end of the metadata arrays, which
-> > > can lead to memory corruption and/or leaking data to guest/userspace.
-> > > 
-> > > Note, the arrays for the old memslot are freed by the unconditional call
-> > > to kvm_free_memslot() in __kvm_set_memory_region().
-> > 
-> > If __kvm_set_memory_region() failed, I think the old memslot will be
-> > kept and the new memslot will be freed instead?
-> 
-> This is referring to a successful MOVE operation to note that zeroing @arch
-> in kvm_arch_create_memslot() won't leak memory.
-> 
-> > > 
-> > > Fixes: 05da45583de9b ("KVM: MMU: large page support")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > ---
-> > >  arch/x86/kvm/x86.c | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index 4c30ebe74e5d..1953c71c52f2 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -9793,6 +9793,13 @@ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
-> > >  {
-> > >  	int i;
-> > >  
-> > > +	/*
-> > > +	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
-> > > +	 * old arrays will be freed by __kvm_set_memory_region() if installing
-> > > +	 * the new memslot is successful.
-> > > +	 */
-> > > +	memset(&slot->arch, 0, sizeof(slot->arch));
-> > 
-> > I actually gave r-b on this patch but it was lost... And then when I
-> > read it again I start to confuse on why we need to set these to zeros.
-> > Even if they're not zeros, iiuc kvm_free_memslot() will compare each
-> > of the array pointer and it will only free the changed pointers, then
-> > it looks fine even without zeroing?
-> 
-> It's for the failure path, the out_free label, which blindy calls kvfree()
-> and relies on un-allocated pointers being NULL.  If @arch isn't zeroed, the
-> failure path will free metadata from the previous memslot.
+Apologies for the late pull request. Testing on the originating
+configuration was unfortunately delayed.
+One fix for an obscure error found using an old version of
+ping(1) that did not use IPv6 sockets in the documented way.
 
-IMHO it won't, because kvm_free_memslot() will only free metadata if
-the pointer changed.  So:
+The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
 
-  - For succeeded kvcalloc(), the pointer will change in the new slot,
-    so kvm_free_memslot() will free it,
+  Linux 5.5 (2020-01-26 16:23:03 -0800)
 
-  - For failed kvcalloc(), the pointer will be NULL, so
-    kvm_free_memslot() will skip it,
+are available in the Git repository at:
 
-  - For untouched pointer, it'll be the same as the old, so
-    kvm_free_memslot() will skip it as well.
+  https://github.com/cschaufler/smack-next tags/Smack-for-5.6
 
-> 
-> > > +
-> > >  	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
-> > >  		struct kvm_lpage_info *linfo;
-> > >  		unsigned long ugfn;
-> > > @@ -9867,6 +9874,10 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
-> > >  				const struct kvm_userspace_memory_region *mem,
-> > >  				enum kvm_mr_change change)
-> > >  {
-> > > +	if (change == KVM_MR_MOVE)
-> > > +		return kvm_arch_create_memslot(kvm, memslot,
-> > > +					       mem->memory_size >> PAGE_SHIFT);
-> > > +
-> > 
-> > Instead of calling kvm_arch_create_memslot() explicitly again here,
-> > can it be replaced by below?
-> > 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 72b45f491692..85a7b02fd752 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -1144,7 +1144,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >                 new.dirty_bitmap = NULL;
-> >  
-> >         r = -ENOMEM;
-> > -       if (change == KVM_MR_CREATE) {
-> > +       if (change == KVM_MR_CREATE || change == KVM_MR_MOVE) {
-> >                 new.userspace_addr = mem->userspace_addr;
-> >  
-> >                 if (kvm_arch_create_memslot(kvm, &new, npages))
-> 
-> No, because other architectures don't need to re-allocate new metadata on
-> MOVE and rely on __kvm_set_memory_region() to copy @arch from old to new,
-> e.g. see kvmppc_core_create_memslot_hv().
+for you to fetch changes up to 87fbfffcc89b92a4281b0aa53bd06af714087889:
 
-Yes it's only required in x86, but iiuc it also will still work for
-ppc?  Say, in that case ppc won't copy @arch from old to new, and
-kvmppc_core_free_memslot_hv() will free the old, however it should
-still work.
+  broken ping to ipv6 linklocal addresses on debian buster (2020-02-05 14:16:27 -0800)
 
-> 
-> That being said, that's effectively what the x86 code looks like once
-> kvm_arch_create_memslot() gets merged into kvm_arch_prepare_memory_region().
+----------------------------------------------------------------
+Smack change for Linux 5.6
 
-Right.  I don't have strong opinion on this, but if my above analysis
-is correct, it's still slightly cleaner, imho, to have this patch as a
-oneliner as I provided, then in the other patch move the whole
-CREATE|MOVE into prepare_memory_region().  The final code should be
-the same.
+----------------------------------------------------------------
+Casey Schaufler (1):
+      broken ping to ipv6 linklocal addresses on debian buster
 
--- 
-Peter Xu
+ security/smack/smack_lsm.c | 41 +++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
