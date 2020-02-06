@@ -2,112 +2,163 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83939C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D92C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BC4222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B66E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:31:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rFy8JI1v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWUru7EM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgBFPaN (ORCPT
+        id S1727584AbgBFPbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:30:13 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45098 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgBFPaN (ORCPT
+        Thu, 6 Feb 2020 10:31:02 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42856 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgBFPbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:30:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so2468201pls.12;
-        Thu, 06 Feb 2020 07:30:11 -0800 (PST)
+        Thu, 6 Feb 2020 10:31:02 -0500
+Received: by mail-qt1-f193.google.com with SMTP id j5so4764085qtq.9;
+        Thu, 06 Feb 2020 07:31:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yvImeWdanhuXuKTpYgc+fUvWT1XXGf47f3QA3cS1IIo=;
-        b=rFy8JI1vDm33O8mChanZAaw9Ljfkv2cbVdDfPeB6ygWnADagveeIi5z8zmtsfjhtXk
-         tX/Hcd+yx6frFoD5raNVuvjk/3vnNIdFDP7R8yiJy2CxUbmqvk6e7GJoqIFIg2Byj4EA
-         XMSjcshvC9HFUwkmuc2dZP0x5lfcWssoZVFuunuHnSZEuTX5HfAQzUJjQIz+PQPbmwz8
-         GKRiviOt/4ZkcDTyuXqcrq3xuyinxw/KC2HxZAzjL+V+pTp1uHOJC7Tv01vRNfCYGtkK
-         4ATt7SzL7W7MvrYlowHvzlAmdqN+Y6UxmRwxpRZcHWZMlv4o6zEfEhISBxlAbX5xTxcC
-         dOAA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zJIsnWtJ6n2evNGIpW9qH/hDzRO+9AreswAO5JLIKDM=;
+        b=MWUru7EMpNINpFI2Kbou9inh2DohBOzojX5+OMJKMxaW2r8itjO0s36gd3ACqLwyU3
+         hLIdaZWbtz5nNkCjE9ZhGPpsjluBWJDWJAIr1la9Fxzbk6k5xw/lre0Xmd7AVhdveCgH
+         w0PuD5zBzeI8Wl8Dr/iif4VedjNmgy3LviMTcOHiheRNB1FeAny9mMNrdYOShLUx1euw
+         Yw7x4gVgVj/vcsQ3oo7rzMkH5yROoBG+4m38qQRTXYRfhkcEstkp1a92uh0VArmNzTrW
+         YAJ6ul2Eyvu07/2s1JkyH7PGYqtlY/94uOIWkbQFAJSPA5Yje6Po07oRJZWAzoJ2wsJH
+         ugOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yvImeWdanhuXuKTpYgc+fUvWT1XXGf47f3QA3cS1IIo=;
-        b=W5FaGgSc4uM14xTgxh6A1HRuuUuaBdvnbvhxyWj8M3z2i+Yy5w/+b79J0DaTgNDx3O
-         fxt29EKy+XscdD4Ond4D3AlRflbtTaknIqrgEWLmaruNNeiH3gTUvPMk41rxx66EosQ5
-         yE0wC5UX7RmJm1awfN57BoEcQwvYWKkExUK87dJdo/8GKvqE3027YF2+JcVzG9SSu1dV
-         FH7vbXYWXgc59I1BPX6Ij9MfuBnMJxY8zfmodiBnurRuTc92DCrL7kXhFEq+uuFxTv+4
-         qxmxrHaRotDjnkEP4JndlTf/1mvbPkKD163PVNSd2qhB1n/ugBdfH+m2amAtvDPo+rme
-         Fe3Q==
-X-Gm-Message-State: APjAAAVLg9QE1vRpD8i3BEfHkCxTL/yX/NUAHmXus/BMjPyi7Nm3kDyf
-        7VE0h8A6iW5SbaEShn6dW/0=
-X-Google-Smtp-Source: APXvYqzpVmwc8UDf4PLytIuzNQu7ecLLGVgM3QijN3zs88b3yKr+R6UlvDt1Mn1NA3D4q/iXZ4uqmA==
-X-Received: by 2002:a17:90a:2ec5:: with SMTP id h5mr5063197pjs.79.1581003011165;
-        Thu, 06 Feb 2020 07:30:11 -0800 (PST)
-Received: from localhost (104.128.80.227.16clouds.com. [104.128.80.227])
-        by smtp.gmail.com with ESMTPSA id f43sm3879247pje.23.2020.02.06.07.30.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Feb 2020 07:30:10 -0800 (PST)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     vkoul@kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net,
-        mcoquelin.stm32@gmail.com, niklas.cassel@linaro.org,
-        netdev@vger.kernel.org
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v3] net: stmmac: fix a possible endless loop
-Date:   Thu,  6 Feb 2020 23:29:17 +0800
-Message-Id: <20200206152917.25564-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zJIsnWtJ6n2evNGIpW9qH/hDzRO+9AreswAO5JLIKDM=;
+        b=RRYMwzP4EvJRFESz9u/2mCbr7YGGHztyaym23Mc5CalPkSwlURO97ykPj8sS2QIYZs
+         uVfga6SZ+VsPGT+cVsBfINSVJPgVzD85HH8ZAWE03AGJ2A1CBAOWKlqpWuJuRd5yUOLj
+         x1d5idNQIjZjC9SmUNHYq6vxVB6YOhWGMo5R0p+z6T0UPjVzJlqNLD69Q6LUYPy7T4QY
+         0Bdl5VU+vTosLIZy3tk11h3h4RCFUPyEa3dh6nz4BmeORApnWno6/Pxcasg9L7+6IWHh
+         CJorTwJsTapi69xbh2EUxcMbAWV7HPdvNDIPezp8RdDa+EsBNo/YG72RcEaO/53DGrzp
+         Jp6g==
+X-Gm-Message-State: APjAAAXLNxvGQP1lCjv5zWs1jcqP0dwFYTmbS6EMBW2DFXnmwRc9k7Cb
+        bZGlF6gqcaCB32HnliQ+QJgikk0hASD+QXeMwfo=
+X-Google-Smtp-Source: APXvYqwVxU0jT2a+ihuCOqkMwiMwEf4kdq9gMTFUcT6Vwkd2kC5V5fzZ/S71M+n4aJujEVTGsfU0KXwnAy4uvDaUeCc=
+X-Received: by 2002:ac8:70d5:: with SMTP id g21mr3073886qtp.46.1581003060838;
+ Thu, 06 Feb 2020 07:31:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200126194513.6359-1-martyn@welchs.me.uk> <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com>
+ <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk>
+ <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
+ <nycvar.YFH.7.76.2002031100500.31058@cbobk.fhfr.pm> <CAO-hwJ+k8fxULS1xC-28jHmhZLZVN5EGc=kY5sqNX1GCNKpt4A@mail.gmail.com>
+ <nycvar.YFH.7.76.2002031218230.26888@cbobk.fhfr.pm> <CAO-hwJJk411hGTJ6uSdzAFCzf1WJehhifdN0r5kMG6aqL=dnpw@mail.gmail.com>
+In-Reply-To: <CAO-hwJJk411hGTJ6uSdzAFCzf1WJehhifdN0r5kMG6aqL=dnpw@mail.gmail.com>
+From:   Roderick Colenbrander <thunderbird2k@gmail.com>
+Date:   Thu, 6 Feb 2020 07:30:49 -0800
+Message-ID: <CAEc3jaDC5ddBPDy_Z96eZs-VZQ3051LVAb91-U_Oce9jj1wk8Q@mail.gmail.com>
+Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Martyn Welch <martyn@welchs.me.uk>,
+        linux-input <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Conn O'Griofa" <connogriofa@gmail.com>,
+        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It forgot to reduce the value of the variable retry in a while loop
-in the ethqos_configure() function. It may cause an endless loop and
-without timeout.
+On Thu, Feb 6, 2020 at 12:10 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi,
+>
+> On Mon, Feb 3, 2020 at 12:23 PM Jiri Kosina <jikos@kernel.org> wrote:
+> >
+> > On Mon, 3 Feb 2020, Benjamin Tissoires wrote:
+> >
+> > > I am definitely not in favour of that :(
+> > >
+> > > The basic problem we have here is that some vendors are overriding your
+> > > VID/PIDs, and this is nasty. And I do not see any reasons why you can't
+> > > say: "well, we broke it, sorry, but we only support *our* devices, not
+> > > third party ones".
+> >
+> > Well, it's not about "we broke it" in the first place, as far as I
+> > can tell.
+> >
+> > Roderick's concern is that 3rd party devices with overriden VID/PID
+> > malfunction for completely unrelated reason to (correctly working) changes
+> > done in favor of stock Sony devices, but it'll be Sony receiving all the
+> > reports/blame.
+>
+> After re-reading the code, I am not sure we can easily detect the
+> clones. So at some point, I think we will break them, but there is not
+> much we can do. I don't really have a solution for that :(
+>
+> >
+> > > One thing that comes to my mind (probably not the best solution), is to
+> > > taint the kernel if you are facing a non genuine product. We do that for
+> > > nvidia, and basically, we can say: "well, supporting the nvidia blob is
+> > > done on a best effort case, and see with them directly if you have an
+> > > issue". Tainting the kernel is a little bit rough, but maybe adding an
+> > > info message in the dmesg if you detect one of those can lead to a
+> > > situation were we can count on you for supporting the official products,
+> > > and you can get community support for the clones.
+> >
+> > Yeah; which I wouldn't like to do for upstream kernel, but Sony could
+> > definitely do this for the products they ship.
+> >
+> > The same way distros are tainting their kernels when unsupported modules
+> > (but otherwise perfectly fine wrt. GPL and everything else) are loaded
+> > into distro-supported kernels.
+> >
+> > > One last thing. Roderick, I am not sure if I mentioned that or not, but
+> > > I am heavily adding regression tests for HID in
+> > > https://gitlab.freedesktop.org/libevdev/hid-tools/
+> >
+> > ... and words can't express how thankful I am for that :)
+> >
+>
+> OK, I played with that idea earlier this week:
+> https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/74
+> I only have a Sixaxis controller, and I only implemented the USB part
+> of it (AFAICT).
+> Currently this ensures the button mapping is correct, and that the
+> LEDs are working properly.
+> We are still missing a few bits and pieces, but the initialization
+> (requests made by the kernel to start the device and press on the PS
+> button) is handled properly.
+>
+> If this is something Roderick would be interested in, we can then try
+> to extend this initial work on Bluetooth controllers and the DualShock
+> ones.
 
-Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
----
+We can probably help out there (need to ask official permission). We
+have similar tests in Android (still adding more). Just in case you
+are not familiar this is their framework:
+https://android.googlesource.com/platform/cts/+/master/tests/tests/hardware/src/android/hardware/input/cts/tests/
 
-Hi David, I'm so sorry for that.
+It is a small Java class and then there is a json blob with the actual
+test (forgot where the json is). It defines the report descriptors
+etcetera.
 
-v3:
-remove an empty line between Fixes and other tags.
+Thanks,
+Roderick
 
-v2:
-add an appropriate Fixes tag.
-
- drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-index 7ec895407d23..e0a5fe83d8e0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -413,6 +413,7 @@ static int ethqos_configure(struct qcom_ethqos *ethqos)
- 			dll_lock = rgmii_readl(ethqos, SDC4_STATUS);
- 			if (dll_lock & SDC4_STATUS_DLL_LOCK)
- 				break;
-+			retry--;
- 		} while (retry > 0);
- 		if (!retry)
- 			dev_err(&ethqos->pdev->dev,
--- 
-2.25.0
-
+> Adding the clones ones based on the current kernel code is something
+> doable, but I do not expect Sony to be involved in that process.
+>
+> That being said, before we merge this particular patch about Gasia
+> controllers, now we need to implement a regression test first :)
+>
+> Cheers,
+> Benjamin
+>
