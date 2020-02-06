@@ -2,111 +2,145 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C79FC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F014EC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA4921741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C533120659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iK0F5TKR"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Grq6uFMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgBFTPZ (ORCPT
+        id S1727939AbgBFTPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:15:25 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38602 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgBFTPZ (ORCPT
+        Thu, 6 Feb 2020 14:15:53 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43774 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFTPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:15:25 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so3602694pfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:15:23 -0800 (PST)
+        Thu, 6 Feb 2020 14:15:52 -0500
+Received: by mail-io1-f65.google.com with SMTP id n21so7456769ioo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:15:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kttq95JJMgSrLLGiYe2dDFloBfbkzPtd5qLVcbb/oxM=;
-        b=iK0F5TKRcEFCg/q6knGyypxXgg/T5g020rre7/PPnqK99UpUSw3AOb8htr8ceJNCSy
-         Q+Xxby3XbbPIbDtWsK2bvZrmm8Hj3xU3xQR3umcHPQRWg6+wrQQfdKONFJmnHwn/nHOs
-         5PLXDCARUEdp9HUiBAZ9wTfpeso6EzrJG6RRU=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yyz692Z6QnWkYdRBwPjOV5YRM7wE4OOKfECgwMN1dhg=;
+        b=Grq6uFMgAOnJdzWKvD6ZREbmfO9JcWzNoe0EBRumz6W7fuDuDuTj/fMO82/kOD32Yw
+         gR5aluhel4VewaE9wMutb9gi4yhS+KUBIvNGv66ywt7H+XvGB4z0PiFBSmo2H7Op8zf0
+         hxwwN+ZEaxnAlo0/H2MDU85KF+qTk/2SWLMwiniMlqailA+T8U/uW4RGVVi4jgvyxfi4
+         VMjc9z9cA9zyxlIfQmtvefIjFs60wIJMyYQ2rTu5n5Ta+R45zP411g0UivDzTIJM2cH1
+         Ew1ace86wpP0pNy9E0uDWCZKxRQpDdle7AiiUWxSHG1yN8px1wO4P5ZpCJdMUnWXFd9W
+         yOcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Kttq95JJMgSrLLGiYe2dDFloBfbkzPtd5qLVcbb/oxM=;
-        b=rKJdkILRw2vkvNBNv/AVH0yWQn9X8td9FhrfFdsh3homu6amPC4Lwlzk7fdGexvECu
-         MseLNV6Xuef7H6gpgEwcyOagYrfVOBa1dqov2rqglIdDrVhMqDu1zYWn3/CR5aKEaQpV
-         uQo3BBTn5pHEaVTzoIFp8qhH18nT5PosT05m6PXlHinzRecdEdFX4UCNJr30POFa5/SD
-         QmRx91TgsF2E5okSCaX1NK9w6EFPsFJ370Ty6B+8qz5fnY8BLtr1wEUFKmKRL94mq4DL
-         pzkDuOzkgJycpsSb8oTj+Xhw0hL0Z6p0hT11jqqyFJq35vERTThtPeYFmVO5Bwc0jePF
-         J5dg==
-X-Gm-Message-State: APjAAAUwyXObzO0wAFVFC8Yb/0lOGLdnEDxUvBuAGXzjPPejRGJicBBl
-        eqmbyAJPyL1XanE/8a8XVC2UpA==
-X-Google-Smtp-Source: APXvYqzMIMztX/eSaIFKYBzf5jMxem4ngtPYJfpstOGEW3fwchMPDC0lt1UaVtT7e/geJODEC5Fnew==
-X-Received: by 2002:a63:64c5:: with SMTP id y188mr5248612pgb.10.1581016523239;
-        Thu, 06 Feb 2020 11:15:23 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r9sm157331pfl.136.2020.02.06.11.15.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:15:22 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v2] genirq: Clarify that irq wake state is orthogonal to enable/disable
-Date:   Thu,  6 Feb 2020 11:15:21 -0800
-Message-Id: <20200206191521.94559-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        bh=Yyz692Z6QnWkYdRBwPjOV5YRM7wE4OOKfECgwMN1dhg=;
+        b=QAmLW1NC5xahouP6LBWwzUJXJioLrVGLLMATjpKSkmMJdHhWRHqeib82NUC0XX9hx0
+         b4YVExI+VhZJPh5Uofn6XAheisEcM9kS7AQpsEQqZjMwB1vFGNlk9Qg5h249YOoFWS4a
+         U1pEbc5mgbKQi9NX9mUUt5pamXQwzatyEtRWiKeJaXPopEnnx/C0G92+MhnRLVIYKFwU
+         CwpUi1TcgD7brsprhCgWWO+BsCohfdBBpQGLr+/tYZRV4DTvtAjlCxvgExVLpmMT78X8
+         KsB5zSqj77PJbNqktGsCLH5dBncnUG0wVkVVceu1+svhoQ4qYFEChJH+HoKssAQX1Qeu
+         Yjrg==
+X-Gm-Message-State: APjAAAX4s+khoLkFi43VEuO8Qpu/833uAu0sgQ/YV4AEVl5lzA68WfcD
+        +9O6aI1/QJ3dGfYXKUS+ajZpmPuacAg=
+X-Google-Smtp-Source: APXvYqwAxlKBt6Kt7Uflv0GyW7aV1XqUXFmjeffsl54SJmX9ITExxUiW4HOZ1WOmH/79aGBqOtrLAw==
+X-Received: by 2002:a5e:9246:: with SMTP id z6mr35891873iop.232.1581016550692;
+        Thu, 06 Feb 2020 11:15:50 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id i11sm132553ion.1.2020.02.06.11.15.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 11:15:50 -0800 (PST)
+Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20200131142943.120459-1-sgarzare@redhat.com>
+ <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
+ <CAGxU2F6qvW28=ULNUi-UHethus2bO6VXYX127HOcH_KPToZC-w@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ec04cb8f-01e8-6289-2fd4-6dec8a8e2c02@kernel.dk>
+Date:   Thu, 6 Feb 2020 12:15:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGxU2F6qvW28=ULNUi-UHethus2bO6VXYX127HOcH_KPToZC-w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's some confusion around if an irq that's disabled with
-disable_irq() can still wake the system from sleep states such as
-"suspend to RAM". Let's clarify this in the kernel documentation for
-irq_set_irq_wake() so that it's clear that an irq can be disabled and
-still wake the system if it has been marked for wakeup.
+On 2/6/20 10:33 AM, Stefano Garzarella wrote:
+> 
+> 
+> On Fri, Jan 31, 2020 at 4:39 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 1/31/20 7:29 AM, Stefano Garzarella wrote:
+>>> Hi Jens,
+>>> this is a v2 of the epoll test.
+>>>
+>>> v1 -> v2:
+>>>     - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
+>>>     - add 2 new tests to test epoll with IORING_FEAT_NODROP
+>>>     - cleanups
+>>>
+>>> There are 4 sub-tests:
+>>>     1. test_epoll
+>>>     2. test_epoll_sqpoll
+>>>     3. test_epoll_nodrop
+>>>     4. test_epoll_sqpoll_nodrop
+>>>
+>>> In the first 2 tests, I try to avoid to queue more requests than we have room
+>>> for in the CQ ring. These work fine, I have no faults.
+>>
+>> Thanks!
+>>
+>>> In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
+>>> much as I can until I get a -EBUSY, but they often fail in this way:
+>>> the submitter manages to submit everything, the receiver receives all the
+>>> submitted bytes, but the cleaner loses completion events (I also tried to put a
+>>> timeout to epoll_wait() in the cleaner to be sure that it is not related to the
+>>> patch that I send some weeks ago, but the situation doesn't change, it's like
+>>> there is still overflow in the CQ).
+>>>
+>>> Next week I'll try to investigate better which is the problem.
+>>
+>> Does it change if you have an io_uring_enter() with GETEVENTS set? I wonder if
+>> you just pruned the CQ ring but didn't flush the internal side.
+> 
+> If I do io_uring_enter() with GETEVENTS set and wait_nr = 0 it solves
+> the issue, I think because we call io_cqring_events() that flushes the
+> overflow list.
+> 
+> At this point, should we call io_cqring_events() (that flushes the
+> overflow list) in io_uring_poll()?
+> I mean something like this:
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 77f22c3da30f..2769451af89a 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -6301,7 +6301,7 @@ static __poll_t io_uring_poll(struct file *file, poll_table *wait)
+>         if (READ_ONCE(ctx->rings->sq.tail) - ctx->cached_sq_head !=
+>             ctx->rings->sq_ring_entries)
+>                 mask |= EPOLLOUT | EPOLLWRNORM;
+> -       if (READ_ONCE(ctx->rings->cq.head) != ctx->cached_cq_tail)
+> +       if (!io_cqring_events(ctx, false))
+>                 mask |= EPOLLIN | EPOLLRDNORM;
+> 
+>         return mask;
 
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
+That's not a bad idea, would just have to verify that it is indeed safe
+to always call the flushing variant from there.
 
-Changes from v1:
- * Added the last sentence from tglx
-
- kernel/irq/manage.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 818b2802d3e7..e1e217d7778c 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -731,6 +731,13 @@ static int set_irq_wake_real(unsigned int irq, unsigned int on)
-  *
-  *	Wakeup mode lets this IRQ wake the system from sleep
-  *	states like "suspend to RAM".
-+ *
-+ *	Note: irq enable/disable state is completely orthogonal
-+ *	to the enable/disable state of irq wake. An irq can be
-+ *	disabled with disable_irq() and still wake the system as
-+ *	long as the irq has wake enabled. If this does not hold,
-+ *	then either the underlying irq chip and the related driver
-+ *	need to be investigated.
-  */
- int irq_set_irq_wake(unsigned int irq, unsigned int on)
- {
 -- 
-Sent by a computer, using git, on the internet
+Jens Axboe
 
