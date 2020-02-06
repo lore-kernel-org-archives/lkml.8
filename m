@@ -6,122 +6,92 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6FFC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693E3C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95F721741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAA421775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i363Huei"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KVrwWF2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgBFVYk (ORCPT
+        id S1727542AbgBFVcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:24:40 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50524 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727441AbgBFVYj (ORCPT
+        Thu, 6 Feb 2020 16:32:52 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39957 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727441AbgBFVcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:24:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581024278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mpppjCJmC0FyN5SMr7bSEAaCj98EBVmwQP8+IcdCU94=;
-        b=i363HueiuV1OWT94vJQk/U+8bVcf319Ra4HjDwMA9z/dfQ45H+j6LdkS1hPKWcaT+0t5Ey
-        u3ZOOZvSshxiIuL5lJkEq2w50SVu1YcNNCw6qz4qDrNIqKr81mvqe0PrU5haoPELTCNmLg
-        eBF2ZL3WoRl1yg0xTd7dtQwXXeu8Rmc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-129-ZjxP-FCDP6m0qqZq1tyDMA-1; Thu, 06 Feb 2020 16:24:35 -0500
-X-MC-Unique: ZjxP-FCDP6m0qqZq1tyDMA-1
-Received: by mail-qt1-f200.google.com with SMTP id x8so133818qtq.14
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 13:24:35 -0800 (PST)
+        Thu, 6 Feb 2020 16:32:51 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a142so6164561oii.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 13:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CZIR0O4XSSHJzQ5NKMOaMQy9m9LNXwiQasS8KWy7Rew=;
+        b=KVrwWF2SKiVwKyoIsPVvbAikP44PdWvjeMhQkEtI1By6Zls5EW4B3PSNuMcCWXxG/v
+         xusmhSnTOcGjtj7V7BFKf6KBGw/XRFI38EnRK/cpY6ftMFBmZV6TSFD8jSDg+m6fy/z9
+         kWyh4e+ldTYzBi4iEsjBLdfXYAQLpCU5u9Vdo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=mpppjCJmC0FyN5SMr7bSEAaCj98EBVmwQP8+IcdCU94=;
-        b=FHdjj5xv5R7T+1N2nzZF+E1pRkRsE9zF5OVkALHBk76VoyGIE2oZyPv1JTcSV8Hnn5
-         qv6Vyc6PDB6K9MId0LxbwEZ80bWTiQJ65LiN5gGVNeZ0ot13Q0Vf9o9tw4fSfwodQUkt
-         kYdH0gSInJeQ3aDpWrJBJSymFkgN692KOMQYDXIYm4PMsBdUAdVGPqZ5tGh82l73xcqM
-         zVuKYxolyJNlvye+ktgiOJMIqu9GUE1h3NjvkFTonJvynxYvTnZ9PDa/4TeRVIJwUq50
-         4t4B+2egFfP0eB7acNx4UY07JoQWekHMq6QyOHZl6P7VjFRHD78CUEVfG5CvbZVVYZQG
-         jriA==
-X-Gm-Message-State: APjAAAVVuSHr71/HZmZdWFOiCg2K6YHG+82oWcu644zv/jNDye8fZpOe
-        DYGWGolmPqYLfcoQIUSjuzRw98fuReFBMh3dF71/8B/N8CG4YFZ8yYHczNtMX5vAGVQog3NlOCY
-        zT7lmKLkrGhIWNmTkwVolM1OZ
-X-Received: by 2002:ae9:ebd8:: with SMTP id b207mr4579996qkg.353.1581024275409;
-        Thu, 06 Feb 2020 13:24:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz5VOLMiLzF1LhwmvuD3bg8z0IeFMhpmxCeKGC9RcbBKEXcR3SRyFUKynAlxMw185+NrKLCqw==
-X-Received: by 2002:ae9:ebd8:: with SMTP id b207mr4579963qkg.353.1581024275206;
-        Thu, 06 Feb 2020 13:24:35 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id v78sm278695qkb.48.2020.02.06.13.24.32
+        bh=CZIR0O4XSSHJzQ5NKMOaMQy9m9LNXwiQasS8KWy7Rew=;
+        b=PEWeiontZV1l/LbbwCBZ4q5udxiT46TFP5o87baNEAr8UPzSryERpGSHimT8l5TUKi
+         jG/OktsQLKfirvZ4MoGg0s9qdu9S3umv2rICn80166AqtiRAMQia4WXcP3E9pYM9fivJ
+         8PZ24/Zm9bHw1irFAf6laRLPjdSLuVyN7bqDKsmmrR9henSzksv9I9Xz475F6NqWiHef
+         G/4LO2jcfUl41PPWAOxzTR2kABpPYqkpgIYusZt5KrGTzekEa/5vJsIeMVMApIGSrl9U
+         5/DOhHpmYuKgfdIoUuZBe6Xv9FFTFGiq8BQ2Wz0e0KpURlYlCbnsxX1cM1J//OgZIWKj
+         OfOA==
+X-Gm-Message-State: APjAAAU1nV3Oj+Y4gtVpMDbm5kiK81Qyv+YUVU5tx685d7opgYYYQQsB
+        P1EHQDJbnagxHAjCZRzA6b69eQ==
+X-Google-Smtp-Source: APXvYqwvXjFqDoHHLLlHopScWku9ff/Blk8JGx7kXOUBy8QLwy4WBSOp/2rRgo7BA84Ute5uBspIMg==
+X-Received: by 2002:aca:cd46:: with SMTP id d67mr81999oig.156.1581024771067;
+        Thu, 06 Feb 2020 13:32:51 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o1sm286736otl.49.2020.02.06.13.32.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:24:34 -0800 (PST)
-Date:   Thu, 6 Feb 2020 16:24:31 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20200206212431.GF700495@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-16-sean.j.christopherson@intel.com>
+        Thu, 06 Feb 2020 13:32:50 -0800 (PST)
+Date:   Thu, 6 Feb 2020 13:32:48 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+Subject: Re: [RFC PATCH 11/11] x86/boot: Move "boot heap" out of .bss
+Message-ID: <202002061331.E5956EA@keescook>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-12-kristen@linux.intel.com>
+ <20200206001103.GA220377@rani.riverdale.lan>
+ <202002060251.681292DE63@keescook>
+ <20200206142557.GA3033443@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121223157.15263-16-sean.j.christopherson@intel.com>
+In-Reply-To: <20200206142557.GA3033443@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:31:53PM -0800, Sean Christopherson wrote:
+On Thu, Feb 06, 2020 at 09:25:59AM -0500, Arvind Sankar wrote:
+> On Thu, Feb 06, 2020 at 03:13:12AM -0800, Kees Cook wrote:
+> > Yes, thank you for the reminder. I couldn't find the ZO_INIT_SIZE when I
+> > was staring at this, since I only looked around the compressed/ directory.
+> > :)
+> > 
+> 
+> There's another thing I noticed -- you would need to ensure that the
+> init_size in the header covers your boot heap even if you did split it
+> out. The reason is that the bootloader will only know to reserve enough
+> memory for init_size: it's possible it might put the initrd or something
+> else following the kernel, or theoretically there might be reserved
+> memory regions or the end of physical RAM immediately following, so you
+> can't assume that area will be available when you get to extract_kernel.
 
-[...]
-
-> @@ -1333,6 +1369,7 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
->  	unsigned long i, n;
->  	unsigned long *dirty_bitmap;
->  	unsigned long *dirty_bitmap_buffer;
-> +	bool flush;
->  
->  	as_id = log->slot >> 16;
->  	id = (u16)log->slot;
-> @@ -1356,7 +1393,9 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
->  	    (log->num_pages < memslot->npages - log->first_page && (log->num_pages & 63)))
->  	    return -EINVAL;
->  
-> -	*flush = false;
-> +	kvm_arch_sync_dirty_log(kvm, memslot);
-
-Do we need this even for clear dirty log?
-
-> +
-> +	flush = false;
->  	dirty_bitmap_buffer = kvm_second_dirty_bitmap(memslot);
->  	if (copy_from_user(dirty_bitmap_buffer, log->dirty_bitmap, n))
->  		return -EFAULT;
+Yeah, that's what I was worrying about after I wrote that patch. Yours
+is the correct solution. :) (I Acked both of those now).
 
 -- 
-Peter Xu
-
+Kees Cook
