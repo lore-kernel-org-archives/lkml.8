@@ -2,111 +2,106 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0EFC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5802C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5811421927
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gn4MDNjT"
+	by mail.kernel.org (Postfix) with ESMTP id 95685217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgBFQ0q (ORCPT
+        id S1727830AbgBFQ1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:26:46 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44081 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727773AbgBFQ0q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:26:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581006405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=H3nLSU6aNBKxxlwzEldmN2l97fU6AU4NrctqbL5/r9Q=;
-        b=gn4MDNjTmTpfeJjdxoddze1SdOSY1oYCyvksA+OiIHFL+DUb5toFOXhTyBShhGAej2fba1
-        e5V1DHJI/gzfarbvX9ImQgl0wQKO4+xqhPjwynhMuwCvjFjM1tpy3vc+d7a5UrWi41fjMW
-        7lk1IxTLtUFZPsXhaZQPQPyNyH9RQVc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-9bJH2s3FPvOt6ZKnY7cvqg-1; Thu, 06 Feb 2020 11:26:44 -0500
-X-MC-Unique: 9bJH2s3FPvOt6ZKnY7cvqg-1
-Received: by mail-qk1-f200.google.com with SMTP id q2so3923474qkq.19
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 08:26:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H3nLSU6aNBKxxlwzEldmN2l97fU6AU4NrctqbL5/r9Q=;
-        b=Exx/QWMjZSPrtN9dLm1WbsfXnQ5J6CfFI8NKOReNbMwz0+14hHI5vl7CRCaheIFZtl
-         pVUfw493fdaVPbxsYLEsZ3+3FA61vmLe3K62n/crNtpdCdp7R18JT2Wo3lLS5Xv80XPp
-         iphj1d9owndXQupfEevMXI/noSceYTOtFUh9UmqEfdCULT/HSdd5SivFwQhC7AFWmC68
-         wRJEsBqA/EPoAk70BM/rkjfLd5wapYEKN4Hlth3r7FGh1zE+leZt6CxusF6m+BcIYyWN
-         OerhAjSGtqTbAbjjapoCndFPsEb9e+CZzCUpFVfj5sWFruKPWm9HyVj9gOPCWONh1XWX
-         yzLw==
-X-Gm-Message-State: APjAAAUYrrIvhvijAu9mNs7Is/1YVVymdRngNMk9905tCZ57Q2cNNn/Q
-        oa6d2DVozrUHdHRC1z1d4mUbRrlBvGJtONQwjmB2Z3ubrxSajki7Ir2VznYjGmhv4A7djJYwE0D
-        NphwRA4qLUyNMkRrQwbygYlm4
-X-Received: by 2002:ac8:1e08:: with SMTP id n8mr3297385qtl.175.1581006403786;
-        Thu, 06 Feb 2020 08:26:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxQlIJcJ9283T0k3SJBUCagGgD/4X0S4VFGYxAKtPxVCA909nX5ytULcXgwNYLmQcG3Ogy1yQ==
-X-Received: by 2002:ac8:1e08:: with SMTP id n8mr3297351qtl.175.1581006403586;
-        Thu, 06 Feb 2020 08:26:43 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id q7sm1618375qkc.43.2020.02.06.08.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 08:26:42 -0800 (PST)
-Date:   Thu, 6 Feb 2020 11:26:39 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 10/19] KVM: Drop "const" attribute from old memslot in
- commit_memory_region()
-Message-ID: <20200206162639.GC695333@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-11-sean.j.christopherson@intel.com>
+        Thu, 6 Feb 2020 11:27:32 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2389 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727654AbgBFQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:27:31 -0500
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id C4144856613477B90F86;
+        Thu,  6 Feb 2020 16:27:29 +0000 (GMT)
+Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
+ LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 6 Feb 2020 16:27:29 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 6 Feb 2020 17:27:28 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Thu, 6 Feb 2020 17:27:28 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
+ template digests
+Thread-Topic: [PATCH v2 5/8] ima: Switch to dynamically allocated buffer for
+ template digests
+Thread-Index: AQHV3A/+rAKtbF80BkqxEfHd/18hO6gORlUAgAAVOaA=
+Date:   Thu, 6 Feb 2020 16:27:28 +0000
+Message-ID: <0b91e6977bac4cd5a638041adb3e76eb@huawei.com>
+References: <20200205103317.29356-1-roberto.sassu@huawei.com>
+         <20200205103317.29356-6-roberto.sassu@huawei.com>
+ <1581005284.5585.422.camel@linux.ibm.com>
+In-Reply-To: <1581005284.5585.422.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121223157.15263-11-sean.j.christopherson@intel.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:31:48PM -0800, Sean Christopherson wrote:
-> Drop the "const" attribute from @old in kvm_arch_commit_memory_region()
-> to allow arch specific code to free arch specific resources in the old
-> memslot without having to cast away the attribute.  Freeing resources in
-> kvm_arch_commit_memory_region() paves the way for simplifying
-> kvm_free_memslot() by eliminating the last usage of its @dont param.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-Reviewed-by: Peter Xu <peterx@redhat.com>
-
--- 
-Peter Xu
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
+em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDYsIDIwMjAg
+NTowOCBQTQ0KPiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsN
+Cj4gSmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbTsNCj4gamFya2tvLnNha2tp
+bmVuQGxpbnV4LmludGVsLmNvbQ0KPiBDYzogbGludXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtc2VjdXJpdHktbW9kdWxlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgU2lsdml1IFZsYXNjZWFudQ0KPiA8U2lsdml1LlZsYXNjZWFudUBo
+dWF3ZWkuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDUvOF0gaW1hOiBTd2l0Y2ggdG8g
+ZHluYW1pY2FsbHkgYWxsb2NhdGVkIGJ1ZmZlciBmb3INCj4gdGVtcGxhdGUgZGlnZXN0cw0KPiAN
+Cj4gSGkgUm9iZXJ0bywNCj4gDQo+IE9uIFdlZCwgMjAyMC0wMi0wNSBhdCAxMTozMyArMDEwMCwg
+Um9iZXJ0byBTYXNzdSB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGR5bmFtaWNhbGx5IGFsbG9jYXRl
+cyB0aGUgYXJyYXkgb2YgdHBtX2RpZ2VzdCBzdHJ1Y3R1cmVzIGluDQo+ID4gaW1hX2FsbG9jX2lu
+aXRfdGVtcGxhdGUoKSBhbmQgaW1hX3Jlc3RvcmVfdGVtcGxhdGVfZGF0YSgpLiBUaGUgc2l6ZSBv
+Zg0KPiB0aGUNCj4gPiBhcnJheSwgc3RvcmVkIGluIGltYV9udW1fdGVtcGxhdGVfZGlnZXN0cywg
+aXMgaW5pdGlhbGx5IGVxdWFsIHRvIDEgKFNIQTEpDQo+ID4gYW5kIHdpbGwgYmUgZGV0ZXJtaW5l
+ZCBpbiB0aGUgdXBjb21pbmcgcGF0Y2hlcyBkZXBlbmRpbmcgb24gdGhlDQo+IGFsbG9jYXRlZA0K
+PiA+IFBDUiBiYW5rcyBhbmQgdGhlIGNob3NlbiBkZWZhdWx0IElNQSBhbGdvcml0aG0uDQo+ID4N
+Cj4gPiBDYWxjdWxhdGluZyB0aGUgU0hBMSBkaWdlc3QgaXMgbWFuZGF0b3J5LCBhcyBTSEExIHN0
+aWxsIHJlbWFpbnMgdGhlIGRlZmF1bHQNCj4gPiBoYXNoIGFsZ29yaXRobSBmb3IgdGhlIG1lYXN1
+cmVtZW50IGxpc3QuIFdoZW4gSU1BIHdpbGwgc3VwcG9ydCB0aGUNCj4gQ3J5cHRvDQo+ID4gQWdp
+bGUgZm9ybWF0LCByZW1haW5pbmcgZGlnZXN0cyB3aWxsIGJlIGFsc28gcHJvdmlkZWQuDQo+ID4N
+Cj4gPiBUaGUgcG9zaXRpb24gaW4gdGhlIGFycmF5IG9mIHRoZSBTSEExIGRpZ2VzdCBpcyBzdG9y
+ZWQgaW4gdGhlIGltYV9zaGExX2lkeA0KPiA+IGdsb2JhbCB2YXJpYWJsZSBhbmQgaXQgaXMgZGV0
+ZXJtaW5lZCBhdCBJTUEgaW5pdGlhbGl6YXRpb24gdGltZS4NCj4gPg0KPiA+IENoYW5nZWxvZw0K
+PiA+DQo+ID4gdjE6DQo+ID4gLSBtb3ZlIGltYV9zaGExX2lkeCB0byBpbWFfY3J5cHRvLmMNCj4g
+PiAtIGludHJvZHVjZSBpbWFfbnVtX3RlbXBsYXRlX2RpZ2VzdHMgKHN1Z2dlc3RlZCBieSBNaW1p
+KQ0KPiANCj4gSW5zdGVhZCBvZiBoYXJkY29kaW5nICJucl9hbGxvY2F0ZWRfYmFua3MgKyAxIiBv
+ciBucl9hbGxvY2F0ZWRfYmFua3MgKw0KPiAyIiwgSSBzdWdnZXN0ZWQgZGVmaW5pbmcgIm5yX2Fs
+bG9jYXRlZF9iYW5rcyArIGV4dHJhIiwgd2hlcmUgImV4dHJhIg0KPiBjb3VsZCBiZSAwLCAxLCBv
+ciAyLg0KPiANCj4gVGhlIHJlc3Qgb2YgdGhlIGNvZGUgd291bGQgcmVtYWluIGV4YWN0bHkgdGhl
+IHNhbWUgYXMgeW91IGhhZC4NCg0KT2suIEkgZGlkIGEgc21hbGwgaW1wcm92ZW1lbnQuIFNpbmNl
+IHdlIGRldGVybWluZSB0aGUgbnVtYmVyIG9mDQpyZXF1aXJlZCBlbGVtZW50cyBvZiBpbWFfYWxn
+b19hcnJheSBiZWZvcmUga21hbGxvYygpIEkgdGhvdWdodCBpdA0Kd2FzIG9rIHRvIGRpcmVjdGx5
+IHNldCB0aGF0IG51bWJlciBvZiBlbGVtZW50cyBpbiBhIHNpbmdsZSB2YXJpYWJsZS4NCg0KSWYg
+eW91IHRoaW5rIHRoYXQgaGF2aW5nIHR3byB2YXJpYWJsZXMgaXMgYmV0dGVyLCBJIHdpbGwgY2hh
+bmdlIGl0Lg0KDQpUaGFua3MNCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9HSUVTIER1ZXNz
+ZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcsIExpIEpp
+YW4sIFNoaSBZYW5saQ0K
