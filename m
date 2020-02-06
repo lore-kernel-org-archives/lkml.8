@@ -2,181 +2,137 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6176C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95603C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D55C218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1B821D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="U4I19q1P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHh9IMna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBFQtm (ORCPT
+        id S1727836AbgBFQuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:49:42 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:52929 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727662AbgBFQtm (ORCPT
+        Thu, 6 Feb 2020 11:50:04 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37795 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbgBFQuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:49:42 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ep11so214425pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 08:49:40 -0800 (PST)
+        Thu, 6 Feb 2020 11:50:02 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v17so6848069ljg.4;
+        Thu, 06 Feb 2020 08:49:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F2D9TyKC428lbsn4cOSkHZILE4+aGh4V0YXpbG4yTNE=;
-        b=U4I19q1PYKZgogEkFwqG/WZCgBsYOMFfbDIYFIVQJJ03KIP/ldqwtEwKxnpiu51/el
-         ZpQP69wgGSBlgFvEW0v/o31/EwZg8bht11Yu9ENzxaMBARNyIrgHsMLoWJWH6ANVP+xl
-         0ugwC1auDwF6n2+cy1JPmmSa3M1WXj+RSYeJ8=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rz0LRSNwEyC05fPXK6mf1Cdt7QThOLZZfr/HLHN5E7g=;
+        b=PHh9IMnal7LVehy5NVdPWmSIXmBATvpNMGAAbJVB/LYFbsVpkutCxV7HTdv01UfUM2
+         Tgqcr0tnHuPygnsjZxSUIKEhJPqMZlTMHKKlXV5yRr2c4PFe3FRnZ/m4kG5a9oksWZyX
+         KcJ6RmKmk1wROM0LupA5vznlEhk7xKx/Tv5NzWBGlh5DkeVDYgQqnKpGH+Bd+tYai0go
+         uYaQKOf0sTX+rPzllBIZPWlV9O90AoagdsiSeQwm4FVG5+sGuATmSsKDTGS7ReaEtcee
+         jUHwezctnurbVLRlEd2PXktH1LzRGSupSzSpw5HqHh0ok9FR3+JtZQ3ICWK0PhXC4K5c
+         GDUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F2D9TyKC428lbsn4cOSkHZILE4+aGh4V0YXpbG4yTNE=;
-        b=fELWA7TvngDcdAFB82mhovZsJujsFzbCP01ZKuJfq6LETWd606WnaB85ngQ2rbN89Z
-         TOdaY63wGFndvBfcZEKO4EGqAN9AK/t4QOxUQ9kVh1QhH7XtRChB9gHyW3t2WAjY6HQP
-         O4qKGlPwhWPO40/DewZTzlYoG3DPH5XLowgZahohZYKGy8YwnqTf8gU53jPFnZXrj3wr
-         /Z/Cn9aQc394k6BWAbCfCuUpnY1c/09m83CAA2rWxhDoHB8SbbFSKFy4V2A9gOqFKjL8
-         O7ioCI3oe6y/R28uFjK4s5oEWel5JvI4cKCc2a4LKL8Y5EDZFT1q947JrzThSbYI4i3W
-         4A4Q==
-X-Gm-Message-State: APjAAAVwhQcxZlfue+xSmQh0X5+3h9AwiAwC63znueg+2qxf53OCzmkZ
-        IbyOl8fnW3Ks9vJ0GmBZwAQJ1Q==
-X-Google-Smtp-Source: APXvYqzI3O0gS5rpCI7xJ8epJrB+LE43OEPQuIGFwJhT965v8/YZdDbXHbqOWzlQFWeDeuNtumnyMg==
-X-Received: by 2002:a17:90a:d985:: with SMTP id d5mr5702550pjv.73.1581007780413;
-        Thu, 06 Feb 2020 08:49:40 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id j21sm3965775pji.13.2020.02.06.08.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 08:49:39 -0800 (PST)
-Date:   Thu, 6 Feb 2020 11:49:38 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
-Message-ID: <20200206164938.GD55522@google.com>
-References: <20200128072740.21272-1-frextrite@gmail.com>
- <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
- <20200128170426.GA10277@workstation-portable>
- <CAG48ez3bLC3dzXn7Ep0YmBENg7wp6TMrocGa6q2RLtYoOdUSxg@mail.gmail.com>
- <20200129065738.GA17486@workstation-portable>
- <CAG48ez2Yc-J1gV4=sTMizySmeFkiZGU+j1NTnZaqyPPo1mYQ=Q@mail.gmail.com>
- <20200206013251.GC55522@google.com>
- <CAG48ez2+7L8YwejaLcm5MN7Z2DZ4d4H5CV6cUyo+j5S9b=tAtQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rz0LRSNwEyC05fPXK6mf1Cdt7QThOLZZfr/HLHN5E7g=;
+        b=ezFfZOC6j4b2dw/gSYaTwNzvmqZ1Q6tFti4BdJo+jz4uw39MTt4sjIlSjtyrqWpj7J
+         rXMFiaRjHnUDPp1TF+0SLtrdmRNbOLgNm/y3zxlZchLoN6MERhtyQZ1KUqgZNqo/SG7H
+         loR57S3C39SNEJ/Sh8BP5O5/oslQg1t42ZS8B+2g/QzAKMvNEAjEStjzTmgzeESfa0kW
+         q6XtOX9nqCJz3eaF63TG7ym87mNCCF8GPvqBrvXXFHtJhwwfTAl0AugATASkb9xG8OfB
+         ywWcD/ky/nVtQ1M75K3cIMpsMaugC0OiX1oT0hTH8e0meT6YBKgRyVnVzsxwNfjin9F+
+         bbeg==
+X-Gm-Message-State: APjAAAXRDpcp1RzvGccw0bx/mrzag5oSu1PiZlCeWKaG9Pa30yWmrrc6
+        dzs33ksjQEkNZ74xYuLHX2A=
+X-Google-Smtp-Source: APXvYqylplfy+0XtZ/0fP3I86GFfK9ygbsHF33Fl6eXd5pn7p64WdygUib4gE2B5b9AxF0UhvOHYUg==
+X-Received: by 2002:a2e:9a51:: with SMTP id k17mr2481251ljj.206.1581007799031;
+        Thu, 06 Feb 2020 08:49:59 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id s22sm1669570ljm.41.2020.02.06.08.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 08:49:58 -0800 (PST)
+Subject: Re: [PATCH v2 2/9] ASoC: tegra: add support for CIF programming
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-3-git-send-email-spujar@nvidia.com>
+ <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
+ <1305a6db-a492-eec2-111e-ddc801d58d86@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fb0a96bd-ac3c-0916-0337-0c86de196527@gmail.com>
+Date:   Thu, 6 Feb 2020 19:49:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2+7L8YwejaLcm5MN7Z2DZ4d4H5CV6cUyo+j5S9b=tAtQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1305a6db-a492-eec2-111e-ddc801d58d86@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 12:28:42PM +0100, Jann Horn wrote:
-[snip]
-> > > > > > > task_struct.cred doesn't actually have RCU semantics though, see
-> > > > > > > commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
-> > > > > > > it would probably be more correct to remove the __rcu annotation?
-> > > > > >
-> > > > > > Hi Jann,
-> > > > > >
-> > > > > > I went through the commit you mentioned. If I understand it correctly,
-> > > > > > ->cred was not being accessed concurrently (via RCU), hence, a non_rcu
-> > > > > > flag was introduced, which determined if the clean-up should wait for
-> > > > > > RCU grace-periods or not. And since, the changes were 'thread local'
-> > > > > > there was no need to wait for an entire RCU GP to elapse.
-> > > > >
-> > > > > Yeah.
-> > > > >
-> > > > > > The commit too, as you said, mentions the removal of __rcu annotation.
-> > > > > > However, simply removing the annotation won't work, as there are quite a
-> > > > > > few instances where RCU primitives are used. Even get_current_cred()
-> > > > > > uses RCU APIs to get a reference to ->cred.
-> > > > >
-> > > > > Luckily, there aren't too many places that directly access ->cred,
-> > > > > since luckily there are helper functions like get_current_cred() that
-> > > > > will do it for you. Grepping through the kernel, I see:
-> > > [...]
-> > > > > So actually, the number of places that already don't use RCU accessors
-> > > > > is much higher than the number of places that use them.
-> > > > >
-> > > > > > So, currently, maybe we
-> > > > > > should continue to use RCU APIs and leave the __rcu annotation in?
-> > > > > > (Until someone who takes it on himself to remove __rcu annotation and
-> > > > > > fix all the instances). Does that sound good? Or do you want me to
-> > > > > > remove __rcu annotation and get the process started?
-> > > > >
-> > > > > I don't think it's a good idea to add more uses of RCU APIs for
-> > > > > ->cred; you shouldn't "fix" warnings by making the code more wrong.
-> > > > >
-> > > > > If you want to fix this, I think it would be relatively easy to fix
-> > > > > this properly - as far as I can tell, there are only seven places that
-> > > > > you'll have to change, although you may have to split it up into three
-> > > > > patches.
-> > > >
-> > > > Thank you for the detailed analysis. I'll try my best and send you a
-> > > > patch.
-> >
-> > Amol, Jann, if I understand the discussion correctly, objects ->cred
-> > point (the subjective creds) are never (or never need to be) RCU-managed.
-> > This makes sense in light of the commit Jann pointed out
-> > (d7852fbd0f0423937fa287a598bfde188bb68c22).
-> >
-> > How about the following diff as a starting point?
-> >
-> > 1. Remove all ->cred accessing happening through RCU primitive.
+06.02.2020 14:56, Sameer Pujar пишет:
 > 
-> Sounds good.
 > 
-> > 2. Remove __rcu from task_struct ->cred
+> On 2/5/2020 10:32 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 30.01.2020 13:33, Sameer Pujar пишет:
+>> ...
+>>> +#include <linux/module.h>
+>>> +#include <linux/regmap.h>
+>>> +#include "tegra_cif.h"
+>>> +
+>>> +void tegra_set_cif(struct regmap *regmap, unsigned int reg,
+>>> +                struct tegra_cif_conf *conf)
+>>> +{
+>>> +     unsigned int value;
+>>> +
+>>> +     value = (conf->threshold << TEGRA_ACIF_CTRL_FIFO_TH_SHIFT) |
+>>> +             ((conf->audio_ch - 1) << TEGRA_ACIF_CTRL_AUDIO_CH_SHIFT) |
+>>> +             ((conf->client_ch - 1) <<
+>>> TEGRA_ACIF_CTRL_CLIENT_CH_SHIFT) |
+>>> +             (conf->audio_bits << TEGRA_ACIF_CTRL_AUDIO_BITS_SHIFT) |
+>>> +             (conf->client_bits << TEGRA_ACIF_CTRL_CLIENT_BITS_SHIFT) |
+>>> +             (conf->expand << TEGRA_ACIF_CTRL_EXPAND_SHIFT) |
+>>> +             (conf->stereo_conv << TEGRA_ACIF_CTRL_STEREO_CONV_SHIFT) |
+>>> +             (conf->replicate << TEGRA_ACIF_CTRL_REPLICATE_SHIFT) |
+>>> +             (conf->truncate << TEGRA_ACIF_CTRL_TRUNCATE_SHIFT) |
+>>> +             (conf->mono_conv << TEGRA_ACIF_CTRL_MONO_CONV_SHIFT);
+>>> +
+>>> +     regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(tegra_set_cif);
+>> Are you going to add more stuff into this source file later on?
 > 
-> Sounds good.
+> Yes I plan to add Tegra30 and Tegra124 CIF functions in this. Anything
+> related to CIF can be moved here.
+>>
+>> If not, then it's too much to have a separate driver module just for a
+>> single tiny function, you should move it into the header file (make it
+>> inline).
 > 
-> > 3. Also I removed the whole non_rcu flag, and introduced a new put_cred_non_rcu() API
-> >    which places that task-synchronously use ->cred can overwrite. Callers
-> >    doing such accesses like access() can use this API instead.
-> 
-> That's wrong, don't do that.
-> 
-> ->cred is a reference without RCU semantics, ->real_cred is a
-> reference with RCU semantics. If there have never been any references
-> with RCU semantics to a specific instance of struct cred, then that
-> instance can indeed be freed without an RCU grace period. But it would
-> be possible for some filesystem code to take a reference to
-> current->cred, and assign it to some pointer with RCU semantics
-> somewhere, then drop that reference with put_cred() immediately before
-> you reach put_cred_non_rcu(); with the result that despite using
-> put_cred(), the other side doesn't get RCU semantics.
-> 
-> Just leave the whole ->non_rcu thing exactly as it was.
 
-Can you point to an example in the kernel that actually uses ->cred this way?
-I'm just curious. That is, reads task's ->cred pointer, and assigns it to an
-RCU managed pointer?
+You should consider whether it's worth to move anything else to this
+module first, because if the functions are not reusable by the drivers,
+then the movement won't bring any benefits and final result could be
+negative in regards to the code's organization.
 
-I think such an example would be the point that the commit you mentioned
-addresses. The commit basically says "as long as nobody does get_cred() on
-the task_struct ->cred, we are good, but if somebody does do it, then we have
-to deferred-free it".  But I could not find such an example.
-
-That said, I agree the removal of non_rcu can be considered out of scope for
-this patch.
-
-thanks,
-
- - Joel
-
+I suggest to start clean and easy, without the driver module. You will
+be able to factor code into module later on, once there will a real need
+to do that.
