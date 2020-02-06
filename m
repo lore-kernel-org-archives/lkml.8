@@ -2,133 +2,256 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592B5C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6113CC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27B4217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:05:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BMnv4GKJ"
+	by mail.kernel.org (Postfix) with ESMTP id 31320217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581026803;
+	bh=v31/YJn+ggEQsxwtDL4yB8oaMd0jQK4sdR90PkaTxhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v1TZD/RxMC805unVZcdlaHb6OZWM5oiu6E8Aj+1BtXaFiUNghXOoWPTsMPX9HRo9S
+	 alPpHvjDk/dP3A9K7xS5Z9LdQpXeuZqaZNGVkmOWZQnMnLzUh2oN3C9iSy2tr2CKOR
+	 rVKzTUVef3jJSQnVZTU8Cu4cxSWJWzr1mU7pei90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbgBFWFX (ORCPT
+        id S1727558AbgBFWGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:05:23 -0500
-Received: from mail-db8eur05on2063.outbound.protection.outlook.com ([40.107.20.63]:27768
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726765AbgBFWFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:05:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jt+kP+ui1kZmQVTRzLzkvLtY/OIE8V45WB3VcIahHak8LX+nNTuFFMf5rd0WE9GAeaECoet8IEcaelSo9Nm3iIHJoUQt6UvInwpZZJC/tT1o1hCL9261bJ1256T1g51A09lNknCxanpiR4OZtE8M84mreRShTt9L8FSR5RzZh4/JpQKbjmqZiLhK2ZOWntmzJDDZfjAOqkHQPhthZ0qHdhf68qXGQ0dxGvSWCzrBGvDTa5O2X5rCKTL3LtlhlJ9g2bq3MTMeUxD+2FJyIBIS0H9MI43HgteWAxZAr7NQqDjI0eOeglRnYf0WznVSznO8SKQYyZQo51AdS0bLbzLNSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qdR4gpIVxJd550kKdP/INW3feEywfXEHvXdc41R5k/w=;
- b=oY7455CFUjEd1JOVnvEV03ZtLIEC4D/004Q7o2PYTA7wW6eFcpATh+cP5KnQyjGgZB/5BcKp2Ml+Rhm2z6Yk8YxzrckoLRlMUEBdpPp8r1mbBTw0zR/OKEMoMC1TQ2Q9GMCQEDcqod2LYd04RIynkqiCvGPg/A6JNOhH4ouy4mpvyFeJ3iA0pFFbG1uwI7uB8BFlVpQ2yJwhZ6GqZYllmEJnpO9NYYG8l6EW98ieYpdWSS1tUzPJ9Treu47l7Tyn6UvVn59SKRHuj6izyvfEsXr2QEG1eGE9B50eN/EWV5BbT4ZN+ZaGXzBNpYu70tA8FIrryq12oneyQP3ejI/BRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qdR4gpIVxJd550kKdP/INW3feEywfXEHvXdc41R5k/w=;
- b=BMnv4GKJix6xK6i34ZE7OjsGCzt8n0j7hTGxlc/y2UkrU3jQ4ZK/LAjQ5xbIZ/BQeFdQn0dqs4AxJtmIcw6nUGddreV4+aOI/OGSzxVlNqQvhe4x1AubAgmX1CNbVqak7P+G9qkSqI2NLYs/af3s6vHwJYjGZw4VmEgOQBCf9QI=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6432.eurprd04.prod.outlook.com (20.179.234.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Thu, 6 Feb 2020 22:05:19 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::b896:5bc0:c4dd:bd23]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::b896:5bc0:c4dd:bd23%2]) with mapi id 15.20.2686.036; Thu, 6 Feb 2020
- 22:05:19 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     "Roy Pledge (OSS)" <roy.pledge@oss.nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>
-Subject: RE: [PATCH 0/3] soc: fsl: dpio: Enable QMAN batch enqueuing
-Thread-Topic: [PATCH 0/3] soc: fsl: dpio: Enable QMAN batch enqueuing
-Thread-Index: AQHVsQ3AyGczVLMI40Km2qz47OLo96gO+P6AgAAW+uA=
-Date:   Thu, 6 Feb 2020 22:05:19 +0000
-Message-ID: <VE1PR04MB668700BA28E1E9DE514AD5488F1D0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <1576170032-3124-1-git-send-email-youri.querry_1@nxp.com>
- <a46accbc-becf-ad23-8504-70ce619e2b11@oss.nxp.com>
-In-Reply-To: <a46accbc-becf-ad23-8504-70ce619e2b11@oss.nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0382b7c3-6a3c-4355-4cad-08d7ab50a7ef
-x-ms-traffictypediagnostic: VE1PR04MB6432:|VE1PR04MB6432:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB643236A60493745F840737C88F1D0@VE1PR04MB6432.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0305463112
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(366004)(39860400002)(189003)(199004)(71200400001)(8936002)(8676002)(478600001)(81166006)(81156014)(76116006)(66946007)(64756008)(66446008)(66476007)(66556008)(316002)(110136005)(7696005)(6636002)(33656002)(86362001)(6506007)(55016002)(186003)(53546011)(26005)(9686003)(5660300002)(2906002)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6432;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fr662aR0DVwp3goEk+SXzvkBd+dJGznF/JAq8qis15MrrrQkM9QuzOWq1QEmFpacH3BsxL6Az+aAZBbilyr8QjoZZoBNdbOYaMITZwjKSpb3+tBdwmX8I1BJO13fmbvhJywXQ0LzDYqFt4wm05YTD/CTfZvIfdrMz+abvNd0fOIT0G5eGg+ffDOCPZSOxUCtQJ5Pk6Pp9/WUsMgqtHYniwMlts+EofzkpIw9AMcLXLaVDdjO8ItaIpkBEHeRfY4E9a8RXtII8ryIe+Kc/DpnPxli9YgngsAacgb0sPw+SfQ6EhK+JJ2vzNr2KLur/X2UuB+hjleNkIArvMXTSUV2w/w09kYzF9KzjW7jM3myB15EmGEuRJyq+Ipit/FLlwidZA9tNfLtFasNQQuJRO3gYBonL/t4Fa8V1yREycjrIZdLxKf9AWozKzzyu4iu7WSd
-x-ms-exchange-antispam-messagedata: TTvY70DYDQ7jBSXvSMhHYHoNiqHsLSXEYSFXELJmzTd7PcjalPwUH+v2z0XL7UkTkY1jxEP5iB/NDUcDRhAoDsR2j9e1CLI14eGU62Y3mIfDnkus0tqe02/K8+mvM9QDm4tqqzxqD8t0LlOmJJM9og==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 6 Feb 2020 17:06:42 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37081 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFWGm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 17:06:42 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z12so28064pgl.4;
+        Thu, 06 Feb 2020 14:06:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l+xsy+e2MiIYtNBrIyrqdyfGDG8iY0hLdKQLctRhiwQ=;
+        b=iuzMUBjJ99Yco7KgcNzAC0Jeor9ar8XBhCeiRZtt7R+L3fgz52R6wwoL6GBPJBaQLg
+         LjmFC0yZycVKZvq9oQbMmgHdc6qoQtrXD1Vio4F0HAQ/+qaak/Icysaw+QPrLQs8hVsR
+         r5Kd+UbfDXLhrfwZ6sOshNGdOagfWSwmJgnYuX0IipDum7vc2d1rxqyxIHJlHB6G9oO1
+         RTHekq30Hv45DWNvbNKMbS5DH0+/B8CDY1ZSSnKjX8+hyf/mF9hSJ9TWpK3OA8LkwSiW
+         XfqAb/2E1MGZPIalnJ6cOl7+3dz/PZTAJfuiRqXcP/ru1yXlzmb/AJ8Hph7ZYOhHfuL9
+         faCQ==
+X-Gm-Message-State: APjAAAVxwMB1Ng63Q6AzqxXqp6rJaXfP0qk87aB44c3wkedHXqffyO4n
+        h7FgsZMeo+ViXrNObSm2RQ==
+X-Google-Smtp-Source: APXvYqzC7Okgc6IGJX3X/XtZ5GX7hI/RTTnn/MrDM5Og+S7UdZVwwp9ofbMYGxoOuB+pn3OQB0yacg==
+X-Received: by 2002:aa7:8582:: with SMTP id w2mr6041556pfn.89.1581026801476;
+        Thu, 06 Feb 2020 14:06:41 -0800 (PST)
+Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
+        by smtp.gmail.com with ESMTPSA id i64sm373190pgc.51.2020.02.06.14.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 14:06:40 -0800 (PST)
+Received: (nullmailer pid 2119 invoked by uid 1000);
+        Thu, 06 Feb 2020 22:06:38 -0000
+Date:   Thu, 6 Feb 2020 15:06:38 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rnayak@codeaurora.org
+Subject: Re: [PATCH V3 1/2] mfd: qcom-spmi-pmic: Convert bindings to .yaml
+ format
+Message-ID: <20200206220638.GA28227@bogus>
+References: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
+ <5e3c63d0.1c69fb81.c2bba.0957@mx.google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0382b7c3-6a3c-4355-4cad-08d7ab50a7ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 22:05:19.8266
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mH2645N//jIobiWvbF/TsSmdqlVR2s+Y8YPAEaMynyfJuQ1DbwZQzYdiaZzgD3bpqZ5sfoTasZEo2b63uNlbDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6432
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e3c63d0.1c69fb81.c2bba.0957@mx.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm95IFBsZWRnZSAoT1NT
-KSA8cm95LnBsZWRnZUBvc3MubnhwLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDYs
-IDIwMjAgMjo0MCBQTQ0KPiBUbzogWW91cmkgUXVlcnJ5IDx5b3VyaS5xdWVycnlfMUBueHAuY29t
-PjsgUm95IFBsZWRnZQ0KPiA8cm95LnBsZWRnZUBueHAuY29tPjsgTGVvIExpIDxsZW95YW5nLmxp
-QG54cC5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2
-QGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IElvYW5hIENpb3JuZWkgPGlvYW5hLmNpb3JuZWlAbnhwLmNvbT47DQo+IEFsZXhhbmRydSBN
-YXJnaW5lYW4gPGFsZXhhbmRydS5tYXJnaW5lYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCAwLzNdIHNvYzogZnNsOiBkcGlvOiBFbmFibGUgUU1BTiBiYXRjaCBlbnF1ZXVpbmcNCj4g
-DQo+IE9uIDEyLzEyLzIwMTkgMTI6MDEgUE0sIFlvdXJpIFF1ZXJyeSB3cm90ZToNCj4gPiBUaGlz
-IHBhdGNoIHNldCBjb25zaXN0cyBvZjoNCj4gPiAtIFdlIGFkZGVkIGFuIGludGVyZmFjZSB0byBl
-bnF1ZXVlIHNldmVyYWwgcGFja2V0cyBhdCBhIHRpbWUgYW5kDQo+ID4gICAgaW1wcm92ZSBwZXJm
-b3JtYW5jZS4NCj4gPiAtIE1ha2UgdGhlIGFsZ29yaXRobSBkZWNpc2lvbnMgb25jZSBhdCBpbml0
-aWFsaXphdGlvbiBhbmQgdXNlDQo+ID4gICAgZnVuY3Rpb24gcG9pbnRlcnMgdG8gaW1wcm92ZSBw
-ZXJmb3JtYW5jZS4NCj4gPiAtIFJlcGxhY2VkIHRoZSBRTUFOIGVucXVldWUgYXJyYXkgbW9kZSBh
-bGdvcml0aG0gd2l0aCBhIHJpbmcNCj4gPiAgICBtb2RlIGFsZ29yaXRobS4gVGhpcyBpcyB0byBt
-YWtlIHRoZSBlbnF1ZXVlIG9mIHNldmVyYWwgZnJhbWVzDQo+ID4gICAgYXQgYSB0aW1lIG1vcmUg
-ZWZmZWN0aXZlLg0KPiA+DQo+ID4gWW91cmkgUXVlcnJ5ICgzKToNCj4gPiAgICBzb2M6IGZzbDog
-ZHBpbzogQWRkaW5nIFFNQU4gbXVsdGlwbGUgZW5xdWV1ZSBpbnRlcmZhY2UuDQo+ID4gICAgc29j
-OiBmc2w6IGRwaW86IFFNQU4gcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQuIEZ1bmN0aW9uIHBvaW50
-ZXINCj4gPiAgICAgIGluZGlyZWN0aW9uLg0KPiA+ICAgIHNvYzogZnNsOiBkcGlvOiBSZXBsYWNl
-IFFNQU4gYXJyYXkgbW9kZSBieSByaW5nIG1vZGUgZW5xdWV1ZS4NCj4gPg0KPiA+ICAgZHJpdmVy
-cy9zb2MvZnNsL2RwaW8vZHBpby1zZXJ2aWNlLmMgfCAgNjkgKysrLQ0KPiA+ICAgZHJpdmVycy9z
-b2MvZnNsL2RwaW8vcWJtYW4tcG9ydGFsLmMgfCA3NjYNCj4gKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKystLS0tDQo+ID4gICBkcml2ZXJzL3NvYy9mc2wvZHBpby9xYm1hbi1wb3J0YWwu
-aCB8IDE1OCArKysrKysrLQ0KPiA+ICAgaW5jbHVkZS9zb2MvZnNsL2RwYWEyLWlvLmggICAgICAg
-ICAgfCAgIDYgKy0NCj4gPiAgIDQgZmlsZXMgY2hhbmdlZCwgOTA3IGluc2VydGlvbnMoKyksIDky
-IGRlbGV0aW9ucygtKQ0KPiA+DQo+IEFja2VkLWJ5OiBSb3kgUGxlZGdlIDxyb3kucGxlZGdlQG54
-cC5jb20+DQo+IA0KPiBMZW8gLSBjYW4geW91IGxvb2sgYXQgdGhpcyBzZXJpZXMgc28gd2UgY2Fu
-IGdldCBpdCBpbnRlZ3JhdGVkPyBUaGFua3MNCg0KU3VyZS4gIFRoYW5rcyBmb3IgdGhlIHJldmll
-dy4gIEkgd2lsbCBxdWV1ZSB0aGVtIHVwIGZvciB2NS43Lg0KDQpSZWdhcmRzLA0KTGVvDQo=
+On Thu, Feb 06, 2020 at 11:06:55AM -0800, Stephen Boyd wrote:
+> Quoting Kiran Gunda (2020-02-06 05:55:26)
+> > Convert the bindings from .txt to .yaml format.
+> > 
+> > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> > ---
+> 
+> Did something change? Is there a cover letter?
+> 
+> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> > new file mode 100644
+> > index 0000000..affc169
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> > @@ -0,0 +1,115 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/bindings/mfd/qcom,spmi-pmic.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm SPMI PMICs multi-function device bindings
+> > +
+> > +maintainers:
+> > +  - Lee Jones <lee.jones@linaro.org>
+> > +  - Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Please change this to sboyd@kernel.org
+
+Should be the h/w owner, not applier of changes.
+
+> 
+> > +
+> > +description: |
+> > +  The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
+> > +  PMICs.  These PMICs use a QPNP scheme through SPMI interface.
+> 
+> This first sentence will need continual updating. Please drop it.
+> 
+> > +  QPNP is effectively a partitioning scheme for dividing the SPMI extended
+> > +  register space up into logical pieces, and set of fixed register
+> > +  locations/definitions within these regions, with some of these regions
+> > +  specifically used for interrupt handling.
+> > +
+> > +  The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
+> > +  interfaced to the chip via the SPMI (System Power Management Interface) bus.
+> > +  Support for multiple independent functions are implemented by splitting the
+> > +  16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
+> > +  each. A function can consume one or more of these fixed-size register regions.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,pm8941
+> > +      - qcom,pm8841
+> > +      - qcom,pma8084
+> > +      - qcom,pm8019
+> > +      - qcom,pm8226
+> > +      - qcom,pm8110
+> > +      - qcom,pma8084
+> > +      - qcom,pmi8962
+> > +      - qcom,pmd9635
+> > +      - qcom,pm8994
+> > +      - qcom,pmi8994
+> > +      - qcom,pm8916
+> > +      - qcom,pm8004
+> > +      - qcom,pm8909
+> > +      - qcom,pm8950
+> > +      - qcom,pmi8950
+> > +      - qcom,pm8998
+> > +      - qcom,pmi8998
+> > +      - qcom,pm8005
+> > +      - qcom,spmi-pmic
+> 
+> I think we want qcom,spmi-pmic to be there always. To do that we need it
+> to look like:
+> 
+>   compatible:
+>     items:
+>       enum:
+>         - qcom,pm8941
+>         ...
+>       enum:
+>         - qcom,spmi-pmic
+
+Yes, but missing '-' before the enum's.
+
+> 
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description:
+> > +      Specifies the SPMI USID slave address for this device.
+> > +      For more information see Documentation/devicetree/bindings/spmi/spmi.txt
+> > +
+> > +patternProperties:
+> > +  "^.*@[0-9a-f]+$":
+
+You are going to need to define the specific child nodes with the 
+schemas for them, but a SPMI bus schema may be useful.
+
+> > +    type: object
+> > +    description:
+> > +      Each child node of SPMI slave id represents a function of the PMIC. In the
+> > +      example below the rtc device node represents a peripheral of pm8941
+> > +      SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        description:
+> > +          Compatible of the PMIC device.
+> > +
+> > +      interrupts:
+> > +        maxItems: 2
+> > +        description:
+> > +          Interrupts are specified as a 4-tuple. For more information
+> > +          see Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+> 
+> Just make this bindings/spmi/qcom,spmi-pmic-arb.txt so that  we don't
+> have to worry about it. Why is max items 2? Isn't it 4? Is this property
+> supposed to be specified at all?
+> 
+> > +
+> > +      interrupt-names:
+> > +        description:
+> > +          Corresponding interrupt name to the interrupts property
+> 
+> Does this need to be specified either?
+> 
+> > +
+> > +    required:
+> > +      - compatible
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    spmi {
+> > +        compatible = "qcom,spmi-pmic-arb";
+> > +        #address-cells = <2>;
+> > +        #size-cells = <0>;
+> > +
+> > +       pm8941@0 {
+> 
+> pmic@0
+> 
+> > +         compatible = "qcom,pm8941";
+> > +         reg = <0x0 0x0>;
+> 
+> Why not include the header file to get the SPMI_USID macro?
+> 
+> > +
+> > +         rtc {
+> > +           compatible = "qcom,rtc";
+> > +           interrupts = <0x0 0x61 0x1 0x1>;
+> > +           interrupt-names = "alarm";
+> > +         };
+> > +       };
+> > +
+> > +       pm8941@1 {
+> 
+> pmic@1
+> 
+> > +         compatible = "qcom,pm8941";
+> > +         reg = <0x1 0x0>;
+> > +
+> > +         regulator {
+> > +           compatible = "qcom,regulator";
+> > +           regulator-name = "8941_boost";
+> > +         };
+> > +       };
+> > +    };
+> > +...
+> > -- 
+> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> >  a Linux Foundation Collaborative Project
