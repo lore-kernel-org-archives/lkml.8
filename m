@@ -2,162 +2,209 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB68C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1C2C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CC3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EFC214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/LKeGLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgBFSRb (ORCPT
+        id S1727887AbgBFSSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:17:31 -0500
-Received: from mga02.intel.com ([134.134.136.20]:13351 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgBFSRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:17:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 10:17:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
-   d="scan'208";a="226230816"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Feb 2020 10:17:29 -0800
-Date:   Thu, 6 Feb 2020 10:22:47 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 1/3] iommu/uapi: Define uapi version and capabilities
-Message-ID: <20200206102247.4eeb5791@jacob-builder>
-In-Reply-To: <699faadb-e714-e36d-152a-5b650c0a403f@redhat.com>
-References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1580277724-66994-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <699faadb-e714-e36d-152a-5b650c0a403f@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 6 Feb 2020 13:18:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29216 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727747AbgBFSSv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 13:18:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581013130;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5x2/ZaJGXQjcRm4wi5UDQcjXklaZ8VP1OiPe0LulP2g=;
+        b=W/LKeGLGvRKdwQ0hiy+bcFF294OEoDjMnGLpLDQibvAyO2OH/a7CS0cMyg72iMR6OZ/wbh
+        ZMX1wcuwGeIVbQyxZr6wWIW4op669Gx34e1G9uRK6gLhkOdtiyXFMUFFTLa/XNtIVgsyJr
+        Bbj8U+3Sv5/AfoRiwgf7Z0ibA1v75fM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-XelC2ffmM0mk96UujMCkzg-1; Thu, 06 Feb 2020 13:18:46 -0500
+X-MC-Unique: XelC2ffmM0mk96UujMCkzg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00A2E107B272;
+        Thu,  6 Feb 2020 18:18:44 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 207AC84DB8;
+        Thu,  6 Feb 2020 18:18:43 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 11:18:42 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com
+Subject: Re: [RFC PATCH 1/7] vfio: Include optional device match in
+ vfio_device_ops callbacks
+Message-ID: <20200206111842.705bf58a@w520.home>
+In-Reply-To: <20200206121419.69997326.cohuck@redhat.com>
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+        <158085754299.9445.4389176548645142886.stgit@gimli.home>
+        <20200206121419.69997326.cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020 11:14:27 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
+On Thu, 6 Feb 2020 12:14:19 +0100
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-> Hi Jacob,
-> On 1/29/20 7:02 AM, Jacob Pan wrote:
-> > Define a unified UAPI version to be used for compatibility
-> > checks between user and kernel.
+> On Tue, 04 Feb 2020 16:05:43 -0700
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+> 
+> > Allow bus drivers to provide their own callback to match a device to
+> > the user provided string.
 > > 
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 > > ---
-> >  include/uapi/linux/iommu.h | 48
-> > ++++++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 48
-> > insertions(+)
+> >  drivers/vfio/vfio.c  |   19 +++++++++++++++----
+> >  include/linux/vfio.h |    3 +++
+> >  2 files changed, 18 insertions(+), 4 deletions(-)
 > > 
-> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> > index fcafb6401430..65a26c2519ee 100644
-> > --- a/include/uapi/linux/iommu.h
-> > +++ b/include/uapi/linux/iommu.h
-> > @@ -8,6 +8,54 @@
+> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> > index 388597930b64..dda1726adda8 100644
+> > --- a/drivers/vfio/vfio.c
+> > +++ b/drivers/vfio/vfio.c
+> > @@ -875,11 +875,22 @@ EXPORT_SYMBOL_GPL(vfio_device_get_from_dev);
+> >  static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
+> >  						     char *buf)
+> >  {
+> > -	struct vfio_device *it, *device = NULL;
+> > +	struct vfio_device *it, *device = ERR_PTR(-ENODEV);
 > >  
-> >  #include <linux/types.h>
+> >  	mutex_lock(&group->device_lock);
+> >  	list_for_each_entry(it, &group->device_list, group_next) {
+> > -		if (!strcmp(dev_name(it->dev), buf)) {
+> > +		int ret;
+> > +
+> > +		if (it->ops->match) {
+> > +			ret = it->ops->match(it->device_data, buf);
+> > +			if (ret < 0 && ret != -ENODEV) {
+> > +				device = ERR_PTR(ret);
+> > +				break;
+> > +			}
+> > +		} else
+> > +			ret = strcmp(dev_name(it->dev), buf);  
+> 
+> The asymmetric braces look a bit odd.
+
+Ok
+
+> > +
+> > +		if (!ret) {
+> >  			device = it;
+> >  			vfio_device_get(device);
+> >  			break;
+> > @@ -1441,8 +1452,8 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
+> >  		return -EPERM;
 > >  
-> > +/**
-> > + * Current version of the IOMMU user API. This is intended for
-> > query
-> > + * between user and kernel to determine compatible data structures.
-> > + *
-> > + * Having a single UAPI version to govern the user-kernel data
-> > structures
-> > + * makes compatibility check straightforward. On the contrary,
-> > supporting
-> > + * combinations of multiple versions of the data can be a
-> > nightmare.  
-> I would rather put the above justification in the commit msg and not
-> here.
-make sense.
-
-> > + *
-> > + * UAPI version can be bumped up with the following rules:
-> > + * 1. All data structures passed between user and kernel space
-> > share
-> > + *    the same version number. i.e. any extension to to any
-> > structure  
-> s/to to/to
-will fix.
-
-> > + *    results in version bump up.  
-> in a version number increment?
-sounds good, more specific.
-
-> > + *
-> > + * 2. Data structures are open to extension but closed to
-> > modification.> + *    New fields must be added at the end of each
-> > data structure with
-> > + *    64bit alignment. Flag bits can be added without size change
-> > but
-> > + *    existing ones cannot be altered.
-> > + *
-> > + * 3. Versions are backward compatible.
-> > + *
-> > + * 4. Version to size lookup is supported by kernel internal API
-> > for each
-> > + *    API function type. @version is mandatory for new data
-> > structures
-> > + *    and must be at the beginning with type of __u32.
-> > + */
-> > +#define IOMMU_UAPI_VERSION	1
-> > +static inline int iommu_get_uapi_version(void)
-> > +{
-> > +	return IOMMU_UAPI_VERSION;
-> > +}
-> > +
-> > +/*
-> > + * Supported UAPI features that can be reported to user space.
-> > + * These types represent the capability available in the kernel.
-> > + *
-> > + * REVISIT: UAPI version also implies the capabilities. Should we
-> > + * report them explicitly?
-> > + */
-> > +enum IOMMU_UAPI_DATA_TYPES {
-> > +	IOMMU_UAPI_BIND_GPASID,
-> > +	IOMMU_UAPI_CACHE_INVAL,
-> > +	IOMMU_UAPI_PAGE_RESP,
-> > +	NR_IOMMU_UAPI_TYPE,
-> > +};
-> > +
-> > +#define IOMMU_UAPI_CAP_MASK ((1 << IOMMU_UAPI_BIND_GPASID)
-> > |	\
-> > +				(1 << IOMMU_UAPI_CACHE_INVAL)
-> > |	\
-> > +				(1 << IOMMU_UAPI_PAGE_RESP))
-> > +
-> >  #define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
-> >  #define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
-> >  #define IOMMU_FAULT_PERM_EXEC	(1 << 2) /* exec */
-> >   
-> Thanks
+> >  	device = vfio_device_get_from_name(group, buf);
+> > -	if (!device)
+> > -		return -ENODEV;
+> > +	if (IS_ERR(device))
+> > +		return PTR_ERR(device);
+> >  
+> >  	ret = device->ops->open(device->device_data);
+> >  	if (ret) {
+> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> > index e42a711a2800..755e0f0e2900 100644
+> > --- a/include/linux/vfio.h
+> > +++ b/include/linux/vfio.h
+> > @@ -26,6 +26,8 @@
+> >   *         operations documented below
+> >   * @mmap: Perform mmap(2) on a region of the device file descriptor
+> >   * @request: Request for the bus driver to release the device
+> > + * @match: Optional device name match callback (return: 0 for match, -ENODEV
+> > + *         (or >0) for no match and continue, other -errno: no match and stop)  
 > 
-> Eric
+> I'm wondering about these conventions.
 > 
+> If you basically want a tri-state return (match, don't match/continue,
+> don't match/stop), putting -ENODEV and >0 together feels odd. I would
+> rather expect either
+> - < 0 == don't match/stop, 0 == don't match/continue, > 0 == match, or
+
+So sort of a bool + errno.  I shied away from this because returning
+zero for success, or match, is such a common semantic, especially when
+we're replacing a simple strcmp().  I suppose it's logically just
+!strcmp() though, which avoids the abort case for a simple
+implementation like patch 2/7.
+
+> - 0 == match, -ENODEV (or some other defined error) == don't
+>   match/continue, all other values == don't match/abort?
+
+This is closest to what I arrived at in this version, but I found it
+necessary to exclude positive values from the no-match/abort and
+consider them as no-match/continue because I didn't want to assume the
+errno for that case.
+
+I think with your first option we arrive at something like this:
+
+diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+index dda1726adda8..b5609a411139 100644
+--- a/drivers/vfio/vfio.c
++++ b/drivers/vfio/vfio.c
+@@ -883,14 +883,15 @@ static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
+ 
+ 		if (it->ops->match) {
+ 			ret = it->ops->match(it->device_data, buf);
+-			if (ret < 0 && ret != -ENODEV) {
++			if (ret < 0) {
+ 				device = ERR_PTR(ret);
+ 				break;
+ 			}
+-		} else
+-			ret = strcmp(dev_name(it->dev), buf);
++		} else {
++			ret = !strcmp(dev_name(it->dev), buf);
++		}
+ 
+-		if (!ret) {
++		if (ret) {
+ 			device = it;
+ 			vfio_device_get(device);
+ 			break;
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index 755e0f0e2900..029694b977f2 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -26,8 +26,9 @@
+  *         operations documented below
+  * @mmap: Perform mmap(2) on a region of the device file descriptor
+  * @request: Request for the bus driver to release the device
+- * @match: Optional device name match callback (return: 0 for match, -ENODEV
+- *         (or >0) for no match and continue, other -errno: no match and stop)
++ * @match: Optional device name match callback (return: 0 for no-match, >0 for
++ *         match, -errno for abort (ex. match with insufficient or incorrect
++ *         additional args)
+  */
+ struct vfio_device_ops {
+ 	char	*name;
+
+
+I like that.  Thanks,
+
+Alex
+
