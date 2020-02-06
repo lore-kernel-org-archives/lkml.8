@@ -2,135 +2,203 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9B5C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A829C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7711921741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3143721775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTjfFX4w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pbRhghe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgBFIpp (ORCPT
+        id S1728112AbgBFIqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:45:45 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36626 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgBFIpp (ORCPT
+        Thu, 6 Feb 2020 03:46:12 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:35887 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgBFIqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:45:45 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so2069865plm.3;
-        Thu, 06 Feb 2020 00:45:45 -0800 (PST)
+        Thu, 6 Feb 2020 03:46:12 -0500
+Received: by mail-vk1-f193.google.com with SMTP id i4so1395572vkc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:46:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SiniMnh/RN6JalocAKlnItv6rVv3J8q3lmdsPVBexzY=;
-        b=hTjfFX4wJc781CINonn04AQZ1w/lSUFluU+ZgGw25i8Y3p0AkDMd+9KclIGdLgmVJe
-         UQuh/AIHacNBSG1PZ7zDoe59M1Q1/U//h/zgLmCEyX/NNPAa1VjfPKy/4lCwfMuPDxRr
-         CC/SXSl8ngzJyle30kJS7bMIKB3MxgzGlw3WB/gzO+ZuLNZSo02s3cc0khE3/syM0JQl
-         DhNretY+cix2Mt3zUbL3kGptMYFqxES/JL0II8p2710RvoInFNWf8SEmCdwucFdic1l8
-         JQn9q9NLG8pfDo68spKNAX3DfYxYt5CT47CYnynuhxz5Ev9Xg2zO79pj8QkIYk3j7D7W
-         9EXw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8SHAgobSEb546iBt5cNLjHLEI9u6dAs7lm7+/SJg7Jk=;
+        b=pbRhghe/7yBE+QvA+2niPDdMyXYY6Uxi+o3Wd1l4gPLoxZLbexr+qrjM5w3ZoBCt71
+         uNDS8Nkfc/dCOTAbqlK5ZmkYXagP5tP0mwoqBLCpzy5mw3Zrd6Yszfho47x35dVGJIMF
+         T7lfuzUC2HyXaoiJSSCiTovaSnpG0sTVbJUOkRbDo6wjoeJTjoRdEv6O4dISSBEqm4k/
+         7eaw08U4iH2SVIe8cr/3jE7QnA7VEoatzdj2wy7igjBZ0nMLOHbzwuwkmSJR/pev96bN
+         UTINzh3dw4ubVF2YD3m7ZZecM9W0CbXKJHw3zXH5OC5JyhUNglK1iD7WsOafjQms2sux
+         jR2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SiniMnh/RN6JalocAKlnItv6rVv3J8q3lmdsPVBexzY=;
-        b=NEkWQTyG4jTKMkUJg5MZNjHB0pyJ0Y9aGBxLsc4HvlKAppN0VtVUXW5wfkjO2dkMVR
-         MMHvMJyQpsdFVqqImhZbBWtg3ddVnyxMWWh2yHK4g/qSxtAdO3Hr6DYW7THAZVAjygzU
-         bmsyXy0ijSoPBUKJ0ZRhejqxer+cxKtjXOpRC62vBo0wrjl7rWEqFTVIHnPoNu+MiPYh
-         zCvLONVUj7qhLhifu54QSPwwLS5P8OSaEDlW1G1HJd9CWjeCnWJq7ETioXPtvA2KhaTV
-         OgJFtWC2ewmd6rbP9YDCuVu+9FewwfbCHLejxRTJJB25e9WlUkZAX74GnCH/do2DpaWo
-         f7lw==
-X-Gm-Message-State: APjAAAUNXP+NMj/2lfpUEQU8sBIiNKno5EzihUcQAQEDZm1+KnVpusNS
-        KPIW0isFH9P0spv7AvDX4FQL5/BOPqfoxg==
-X-Google-Smtp-Source: APXvYqxZF3bxh1VhPGEhNJEGf1eQQNcRMdlOX2LrkZK7zuHTNuo5O+zwlhNYMfRWLse70/QIByjk8g==
-X-Received: by 2002:a17:902:aa04:: with SMTP id be4mr2701711plb.41.1580978744512;
-        Thu, 06 Feb 2020 00:45:44 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:947:2855::fa3])
-        by smtp.gmail.com with ESMTPSA id 6sm2638370pgh.0.2020.02.06.00.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:45:43 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH resend 2/2] dt-binding: spi: add bindings for spi-ar934x
-Date:   Thu,  6 Feb 2020 16:44:43 +0800
-Message-Id: <20200206084443.209719-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200206084443.209719-1-gch981213@gmail.com>
-References: <20200206084443.209719-1-gch981213@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8SHAgobSEb546iBt5cNLjHLEI9u6dAs7lm7+/SJg7Jk=;
+        b=QVkmy1OHC0cp1Once42xSyT9F1yDNBZHibRdsVB2GLTvneIHPvMwDuKGDEaNNi4HP7
+         QW0Hf5TH6s4yk1Lu4H+zra3z3uE8ru6jVOFYGnslLMTN0QymwnUQVC6cA/Mx7ELmoXS0
+         SLICW93jYZw5EMjiS8C5Q0snCGbhx+DOQkper0yT45WWaY3bE5H5dogxJ0q2q9/UnSzF
+         Jcr68/7454dUBt3dVG64DfRdjIFIVI4f0KuD9k8uQaCBrD0AAlkQopAObKUOOu7s3Bt/
+         aPQ7RH/cLZFxvS3FefkAIV9caClYFZOuc/ZpE4e5xPsjDI8PC3ycugH5xwxRfpxPdAy+
+         AR4w==
+X-Gm-Message-State: APjAAAVlWVb+egNJtIK5av0hP+jBC4fbV76S6zx5mKFYuBii+3nNQKoS
+        Sawdyt+Hax9CIgUJm5yKY4IN+R5L6+oW9Gpr4oxNtw==
+X-Google-Smtp-Source: APXvYqyhaBupFPdxR9GuF8DCLqL3bWPkA59GP7Uflc2DvigCdd8wZzZQzSTTp4q1qRVGG3M64NLke2IWZ0RBxoBZK38=
+X-Received: by 2002:ac5:c844:: with SMTP id g4mr1195612vkm.25.1580978770270;
+ Thu, 06 Feb 2020 00:46:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-6-git-send-email-mkshah@codeaurora.org> <20200203170832.GA38466@bogus>
+ <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org> <20200204152132.GA44858@bogus>
+ <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org> <20200205140603.GB38466@bogus>
+ <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com> <20200205161816.GD38466@bogus>
+In-Reply-To: <20200205161816.GD38466@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 6 Feb 2020 09:45:34 +0100
+Message-ID: <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for SPI controller in Qualcomm Atheros
-AR934x/QCA95xx SoCs.
+On Wed, 5 Feb 2020 at 17:18, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Wed, Feb 05, 2020 at 04:55:17PM +0100, Ulf Hansson wrote:
+> > On Wed, 5 Feb 2020 at 15:06, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > >
+> > > On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
+> > > >
+> > > > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
+> > > > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
+> > > > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
+> > > > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
+> > > > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
+> > > > > > > >
+> > > > > > > > If the hierarchical CPU topology is used, but the OS initiated mode isn't
+> > > > > > > > supported, we need to rely solely on the regular cpuidle framework to
+> > > > > > > > manage the idle state selection, rather than using genpd and its
+> > > > > > > > governor.
+> > > > > > > >
+> > > > > > > > For this reason, introduce a new PSCI DT helper function,
+> > > > > > > > psci_dt_pm_domains_parse_states(), which parses and converts the
+> > > > > > > > hierarchically described domain idle states from DT, into regular flattened
+> > > > > > > > cpuidle states. The converted states are added to the existing cpuidle
+> > > > > > > > driver's array of idle states, which make them available for cpuidle.
+> > > > > > > >
+> > > > > > > And what's the main motivation for this if OSI is not supported in the
+> > > > > > > firmware ?
+> > > > > > Hi Sudeep,
+> > > > > >
+> > > > > > Main motivation is to do last-man activities before the CPU cluster can
+> > > > > > enter a deep idle state.
+> > > > > >
+> > > > > Details on those last-man activities will help the discussion. Basically
+> > > > > I am wondering what they are and why they need to done in OSPM ?
+> > > >
+> > > > Hi Sudeep,
+> > > >
+> > > > there are cases like,
+> > > >
+> > > > Last cpu going to deepest idle mode need to lower various resoruce
+> > > > requirements (for eg DDR freq).
+> > > >
+> > >
+> > > In PC mode, only PSCI implementation knows the last man and there shouldn't
+> > > be any notion of it in OS. If you need it, you may need OSI. You are still
+> > > mixing up the things. NACK for any such approach, sorry.
+> >
+> > Sudeep, I don't quite agree with your NACK to this. At least not yet. :-)
+> >
+>
+> OK, I am not surprised :-)
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
- .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+Apologize for troubling you again. :-)
 
-diff --git a/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-new file mode 100644
-index 000000000000..8f0c520a571c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/qca,ar934x-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Atheros AR934x/QCA95xx SoC SPI controller
-+
-+maintainers:
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: qca,ar934x-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    spi: spi@1f000000 {
-+        compatible = "qca,ar934x-spi";
-+        reg = <0x1f000000 0x1c>;
-+        clocks = <&pll ATH79_CLK_AHB>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
--- 
-2.24.1
+>
+> > I do agree that the best suited solution seems to be OSI, as to
+> > support this kind of SoC requirements.
+> >
+>
+> That's the main point. We need to draw some line as what we want to do
+> with PC and OSI mode. If we plan to take up all last man responsibility
+> in the kernel, what's the point in not supporting OSI in the firmware
+> then ? I can't buy it yet.
+>
+> > However, if for some reason the PC mode is being used, we could still
+> > allow Linux to control "last-man activities" as it knows what each CPU
+> > has voted for when going idle. Yes, the PSCI FW decides in the end,
+> > but that doesn't really matter. Or is there another technical reason
+> > to why you object?
+> >
+>
+> Precisely, FW decides and let it. Just because we can do in the kernel
+> doesn't mean we must do it. It's clear in the spec and doing it in the
+> kernel will be sub-optimal if PSCI f/w aborted entering the deeper
+> state that required some action in the first place.
 
+Yes, it may be suboptimal for PC-mode.
+
+On the other hand, we already fire CPU PM notifiers while exit/enter
+idle states (except for WFI). Those may also be suboptimal for kind of
+the similar reasons.
+
+Maybe it's not the best argument, but it sounds like allowing us to
+control cluster power on/off notifications for last-man activities,
+would just conform to the similar behaviour we already have. No?
+
+>
+> > As a matter of fact, if we allow support for PC mode with
+> > "last-man-activities", it would allow us to make a fair
+> > performance/energy comparison between the two PSCI CPU suspend modes,
+> > for the same SoC. I would be thrilled about looking into doing such
+> > tests, I bet you are as well!?
+> >
+>
+> I was, but not anymore, especially if we want such changes in the kernel
+> to do so.
+>
+> Just use OSI as that was the point of adding all these after years of
+> discussion claiming it's more optimal compared to PC. Now telling that
+> you need more changes to compare it with PC just doesn't make any sense
+> at all to me.
+
+Fair enough.
+
+I was just pondering over if there are other reasons to why we may want this.
+
+One other thing that could be problematic to support, is when are
+other resources, I/O controllers for example, sharing the same power
+rail as a cluster. When such controller is in use, idle states of the
+cluster must be prevented. Without using genpd to model the CPU
+topology, it may be difficult to deal with this.
+
+Of course, using PC mode when trying to deal with this
+platform/board-requirement would also be suboptimal. In other words,
+your argument about when using OSI vs PC mode, still stands.
+
+Kind regards
+Uffe
