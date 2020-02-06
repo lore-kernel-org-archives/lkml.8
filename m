@@ -4,86 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC39C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4707DC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EAC218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECE921775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022034;
-	bh=dLPRktdw/r9ySo6ztgytWzSFSOHllCAWY45zVysLi+U=;
+	s=default; t=1581022038;
+	bh=scZ6gvM4fDZ8bKwOqo6zd/bAlIB8tkl+0YZp5Tp7RVM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w4eVet6yGijkcAsL/aZV+FIacX456nueszPez3cA/2hUMkcrPXHl96sQUbbGWCZvQ
-	 IlLp/pnCqpGIjOramuzTgSamiJQP6yhvI/SA0gA6ZWJc7kcbMKtcxyo1lyvgOvpEN5
-	 KimLyeZwVzTZYnDd7uLEqLGg4c2U5C9N+CWOPXrg=
+	b=tjNpSagEXUjCJ6SDQkDF7tRihJmTpXS8aL+EkG6CSKKNgcXNsMrQyvf6e1xXsAlWm
+	 Du2UOUk9t4RGAWCL5cbyQ2pHOue6EWcXJFgE9FDCHQdeZdiSOvI71EtoxS9rYlEuYb
+	 TViQfJb0hvml1T7FyiBoPe5h38b3IXgI3/Ru9JVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgBFUpo (ORCPT
+        id S1727989AbgBFUpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:44 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35119 "EHLO
+        Thu, 6 Feb 2020 15:45:40 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35114 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgBFUpn (ORCPT
+        with ESMTP id S1727875AbgBFUpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:45:43 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y73so60956pfg.2;
-        Thu, 06 Feb 2020 12:45:42 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y73so60853pfg.2;
+        Thu, 06 Feb 2020 12:45:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+5+zudFLEE54RFgGYNUhud7P5ykhS6QeS0Eeg6mrByQ=;
-        b=FF3JRf8VMD/KZ/exI5b7luPx3w/x5cR6SJJdsW5MhM1ttMI86NLHmz9RUrYFkMJR+a
-         ihGftiCMJlJPdYjWQtME2SJaKMvjygDs31eMTGC6xGSW99kpE33w9KRxhHy2Ld86jpdR
-         DoiGkEN8Z8O/Xvxj+HCJYPVbhHIQo/Q5kYZl9KivV+2AhHbpmbrw561fdmylNut+quPY
-         UPZPVnRw9m1eBZOPGWEEWxLU/Q3Bwuye8gMEkhjzGBRQc7EAeVGk9R5PMfBXwfl3BeeN
-         qy+PzBv/JdLGeLhuI+fV4sYEG3eFWzW0hR9JYUTbdkihbK0nWUVgtPPiNQnTqD2ssH+t
-         CpeA==
-X-Gm-Message-State: APjAAAWgbHAoM3xd3TAQwOH2txUP2AtGLz/vLxpIuqwYQRrgkPqf6HLw
-        lTAxzAeooaC/wY6OWR/6tA==
-X-Google-Smtp-Source: APXvYqxx3xiy6suP140csN6jmTWRjdAkDcziJEtMyX+hlSDZ0vGdcdlTlihGnjZPFtNI/bKbll/9SA==
-X-Received: by 2002:a63:e044:: with SMTP id n4mr5612914pgj.338.1581021942409;
-        Thu, 06 Feb 2020 12:45:42 -0800 (PST)
+        bh=p3IMIbr/J9CTW2/B2PDo91i8UjkmasWwxiEZYW81UxQ=;
+        b=rF0rqyQDa4P9YFcwRjqnRA0YMozYq0fcTwY67TcCRJDdrIDQMPh1ltUSjYvAeKwau6
+         LeJyF8HmGsKRf+Jmmrm6jRofhv9zh6zyfxx3yGhLMmcJXm88MrIF+cW5Fn54H+dhPwLa
+         NrAg8CaElGLvEYN5RTI1FYRI3sbTqAc60edagJoI4hfB9YWSTYTmtt9mXF8sH5+uo/QW
+         ZIyZe1WeyzbEmfokgbo2IctLWbGEQrvSxh+im1q43wNFkQuVvxoLnR65tqlGWLZFTzgm
+         7uvXvFyu1ic0PAl/Wds9zXxE8BIkeMNuQvV2O4EtVWSEbRafS6ulhlqI2aBkbriWl8mo
+         1bNA==
+X-Gm-Message-State: APjAAAUuCWNFyeUfpesue2AA5psmQcm+kBnvh/9jP6NfvugaC8pQIDHL
+        FfqMEgj8XKM5i929JlMmIQ==
+X-Google-Smtp-Source: APXvYqzPL+ZDB178qEFY2njUEyFS57NH70RPQPC702j/FcQGVNzk0fFb3Yshxc5YmsTqVemI7K/DHg==
+X-Received: by 2002:a63:4c60:: with SMTP id m32mr5523373pgl.433.1581021936531;
+        Thu, 06 Feb 2020 12:45:36 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id m12sm158298pjf.25.2020.02.06.12.45.41
+        by smtp.gmail.com with ESMTPSA id i66sm282634pfg.85.2020.02.06.12.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:41 -0800 (PST)
-Received: (nullmailer pid 4349 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:35:33 -0000
-Date:   Thu, 6 Feb 2020 18:35:33 +0000
+        Thu, 06 Feb 2020 12:45:35 -0800 (PST)
+Received: (nullmailer pid 19744 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:10:57 -0000
+Date:   Thu, 6 Feb 2020 19:10:57 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, a.hajda@samsung.com, narmstrong@baylibre.com,
-        tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net
-Subject: Re: [PATCH v4 1/2] dt-bindings: display: bridge: Add documentation
- for Toshiba tc358768
-Message-ID: <20200206183533.GA4136@bogus>
-References: <20200131111553.472-1-peter.ujfalusi@ti.com>
- <20200131111553.472-2-peter.ujfalusi@ti.com>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: regulator: add document bindings for
+ mp5416
+Message-ID: <20200206191057.GA19653@bogus>
+References: <20200204110419.25933-1-sravanhome@gmail.com>
+ <20200204110419.25933-2-sravanhome@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200131111553.472-2-peter.ujfalusi@ti.com>
+In-Reply-To: <20200204110419.25933-2-sravanhome@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 13:15:52 +0200, Peter Ujfalusi wrote:
-> TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
+On Tue,  4 Feb 2020 12:04:17 +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mp5416 regulator driver.
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
->  .../display/bridge/toshiba,tc358768.yaml      | 159 ++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+>  .../bindings/regulator/mps,mp5416.yaml        | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
