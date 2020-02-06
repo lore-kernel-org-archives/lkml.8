@@ -2,117 +2,108 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF69C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E0AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4D02192A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E55222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:25:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BuIJ8GW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgBFUZQ (ORCPT
+        id S1727916AbgBFUZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:25:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25880 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727845AbgBFUZP (ORCPT
+        Thu, 6 Feb 2020 15:25:44 -0500
+Received: from mail-qv1-f43.google.com ([209.85.219.43]:43881 "EHLO
+        mail-qv1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgBFUZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:25:15 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016KDlEa060947;
-        Thu, 6 Feb 2020 15:22:12 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0kne6euw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 15:22:12 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 016KEXKf063196;
-        Thu, 6 Feb 2020 15:22:12 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0kne6eu6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 15:22:12 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 016KJUhW002391;
-        Thu, 6 Feb 2020 20:22:10 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma05wdc.us.ibm.com with ESMTP id 2xykc9qtdq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 20:22:10 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016KM90S34799880
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Feb 2020 20:22:09 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 171E9BE053;
-        Thu,  6 Feb 2020 20:22:09 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DE00BE054;
-        Thu,  6 Feb 2020 20:22:05 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.44.62])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Feb 2020 20:22:05 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
-To:     Eric Snowberg <eric.snowberg@oracle.com>,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com
-Cc:     zohar@linux.ibm.com, dhowells@redhat.com, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
-        tglx@linutronix.de, bauerman@linux.ibm.com, mpe@ellerman.id.au,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
-Date:   Thu, 6 Feb 2020 15:22:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200206164226.24875-1-eric.snowberg@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_03:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 adultscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002060149
+        Thu, 6 Feb 2020 15:25:44 -0500
+Received: by mail-qv1-f43.google.com with SMTP id p2so3478120qvo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=V+0pNskuD/SO3/Mfw6U/mhfbSMlYPhmeyrODwhcICD0=;
+        b=BuIJ8GW7w6Df9mfqCREKzGHB6DpPXsZ4ztoVTFY+qO/azoRbhsE09W4S2obz1HeZnj
+         JZamn3QfFjQM344UKbKr3fe0qQy7iwSI3Zzm+fKFrOIIMMbpXodpX2+WhNZn5ykHsSrP
+         Fhpvmz8uhh4ivXkl7m6tD4fRlm06bBo9E+9+KU+VcQhqzUPsKzNBtE+RcRZtfuGaVZpg
+         YJ63RbE5R2stvs2sTqaVTJxsgFOovWygZyKTjJjA6DeRGP659XZneGjKjk9FzC13SvqX
+         c0XTfyCUZ7+UgRUdmHQGcF2fnp5y0t/5EMCEaveITuM6XGr6bRKrytDvV8oN/U2lalJA
+         yS1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=V+0pNskuD/SO3/Mfw6U/mhfbSMlYPhmeyrODwhcICD0=;
+        b=g/YDi2grfkBCjDBrk1wr+arU95x231POElERRWu9IOsSRKtSkOtOL7CiME7GmRdTEz
+         wpi4uenfVk1/f1ABzU9grUbhuAFI1Psfs6VdbCncalTCfpZ9LjRcjbHNLXyih0uZaHSM
+         w5WwVU+7dujEMSuDzL9AfRlibHXa9+U1V2n+bEd/6j9ZG2klz+eaa1H7bIWIM0aZAqOZ
+         Lua78pUDQqc+4YO/zUHHyB7jTTOolAoVamMf1H/tAMOTUl2+yJ79EBj9XnWgU5PqccuP
+         3Idjoale7KmCuFwSUxyKq0CUOzgB/Jesbo5KYq8kjf+HiUxqkLa49tWraaQCKmioFtFl
+         qqeA==
+X-Gm-Message-State: APjAAAV8FhnWxWwL2kacuHjQsGQH4G8aZCOa49HVzEbhCDd19J7sk2mP
+        aGvQ3XBwjnJfuVJlRqlqzP1ZJg==
+X-Google-Smtp-Source: APXvYqzCKll75OCN7AjSN8WOJiMDS0hEzPjVuzKSdQb8837HoW/z7IfPuSBWdcD8inIkX07YirveTQ==
+X-Received: by 2002:a0c:edb2:: with SMTP id h18mr3898739qvr.94.1581020743007;
+        Thu, 06 Feb 2020 12:25:43 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r6sm193031qtm.63.2020.02.06.12.25.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Feb 2020 12:25:42 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH -next v2] mm: mark an intentional data race in
+ page_zonenum
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200206202005.GY8731@bombadil.infradead.org>
+Date:   Thu, 6 Feb 2020 15:25:41 -0500
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>, jhubbard@nvidia.com,
+        ira.weiny@intel.com, dan.j.williams@intel.com, jack@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <95A69596-D5F9-41EB-84A0-AE32D17FE320@lca.pw>
+References: <20200206183000.913-1-cai@lca.pw>
+ <20200206202005.GY8731@bombadil.infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2/6/20 11:42 AM, Eric Snowberg wrote:
-> When booting with either "ima_policy=secure_boot module.sig_enforce=1"
-> or building a kernel with CONFIG_IMA_ARCH_POLICY and booting with
-> "ima_policy=secure_boot", module loading behaves differently based on if
-> the module is compressed or not.  Originally when appraising a module
-> with ima it had to be uncompressed and ima signed.  Recent changes in 5.4
-> have allowed internally signed modules to load [1].  But this only works
-> if the internally signed module is compressed.  The uncompressed module
-> that is internally signed must still be ima signed. This patch series
-> tries to bring the two in line.
 
-We (Mimi and I) have been trying to understand the cover letter. It 
-seems "by internally signed" you are referring to modules signed with 
-build time generated keys.
+> On Feb 6, 2020, at 3:20 PM, Matthew Wilcox <willy@infradead.org> =
+wrote:
+>=20
+> On Thu, Feb 06, 2020 at 01:30:00PM -0500, Qian Cai wrote:
+>> Both the read and write are done only with the non-exclusive mmap_sem
+>> held. Since the read only check for a specific bit range (up to 3 =
+bits)
+>> in the flag but the write here never change those 3 bits, so load
+>> tearing would be harmless here. Thus, just mark it as an intentional
+>> data races using the data_race() macro which is designed for those
+>> situations [1].
+>=20
+> This changelog makes me think you don't really understand the =
+situation.
+>=20
+> A page never changes its zone number.  The zone number happens to be
+> stored in the same word as other bits which are modified, but the zone
+> number bits will never be modified by any other write.  So we can =
+accept
+> a reload of the zone bits after an intervening write and we don't need
+> to use READ_ONCE().
 
-Our interpretation of the cover letter is that IMA originally did not 
-support appended signatures and now does. Since the modules are signed 
-with build time generated keys, the signature verification still fails, 
-as the keys are only available on the .builtin keyring and not the .ima 
-keyring.
-
-Lastly, there is nothing in these patches that indicate that the kernel 
-modules being compressed/uncompressed is related to the signature 
-verification.
-
-Thanks & Regards,
-
-      - Nayna
-
+Maybe your explanation is better, but I did try to explain the same =
+thing.
+I=E2=80=99ll let Andrew to decide if he would like to update the commit =
+log a bit
+with your wording.=
