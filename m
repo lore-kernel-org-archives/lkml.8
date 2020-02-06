@@ -2,168 +2,98 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BF2C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA65C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98B421775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fPG9sOG4";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R59kAgEZ"
+	by mail.kernel.org (Postfix) with ESMTP id A9CF120720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgBFQpp (ORCPT
+        id S1727804AbgBFQqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:45:45 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38498 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbgBFQpp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:45:45 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016GdFQS031978;
-        Thu, 6 Feb 2020 16:42:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=rS7kfd+W+sxO4zQDEcEFqOFt8LYF0NN3PbNF2JF29cQ=;
- b=fPG9sOG4qc4YjrdSxixjfK7R1nQQlJTWDLjlTUrBLnOcdYgvzE8pzA0vrlQXFtL9mix6
- cgC3pQjG/OFfi61LXUz6NrO64rQuJDu31f5muBFzxf8hQhtP13AwuIeX4NHBDLTHdqXl
- XekORvMvPMPc1UdoFLexuHD0d3wmAOzDfViSPpYvlWSQoZg4l43lm4Q6AcimmSqeYo3y
- ATLqqnAIbJFMlcDacyygwKrGb0qio95Cq2Rc2KiNrphVHVP33jlWD8Sd8dl68AtWXy+f
- NXEC0RjoiRAsO/jzz8wfHGjAMdEcmuwlqey4FrrP6qCFMB6rCZDbxJAUUwVehFOOMdNP MQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=rS7kfd+W+sxO4zQDEcEFqOFt8LYF0NN3PbNF2JF29cQ=;
- b=R59kAgEZ8fr8djLyCAi4G2ysbpvi2c3CTKkUyPVTqFtLWLqdPfLIGHmTpD+J9x6EXc8F
- 0GWC+zSBu++m/SgeruI0mgO31jNGyQCtdJP15TRbWgnY0Uv3A9M7Q9xo8UpqpwwHevhQ
- 5Lpq0WtiGdrLRxRXBTTpU2HKw2kJ5PjSPsKjOyaVi3OLUO/6Tw/Uw+1yWVA0pLAa1GtM
- knowgtLA3zf2CsaAEj0WbZhqSIbwwSSPoORKqxqz3BflO1YMwM5eiCXoOKbx1XmELNRr
- td0vCHwlzZ4EaJjamqoLGzhLxTzWHzyQ/assVZMcO68XBBJuXbzKLLMcRb3mq0T3dFSc Rg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xykbpax3x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 16:42:47 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016GdL9C045670;
-        Thu, 6 Feb 2020 16:42:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2y0mjucpjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Feb 2020 16:42:45 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016Ggd1A008328;
-        Thu, 6 Feb 2020 16:42:39 GMT
-Received: from localhost.us.oracle.com (/10.147.27.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Feb 2020 08:42:38 -0800
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-To:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com
-Cc:     dhowells@redhat.com, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
-        eric.snowberg@oracle.com, tglx@linutronix.de,
-        bauerman@linux.ibm.com, mpe@ellerman.id.au,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/2] ima: Implement support for uncompressed module appended signatures
-Date:   Thu,  6 Feb 2020 11:42:25 -0500
-Message-Id: <20200206164226.24875-2-eric.snowberg@oracle.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20200206164226.24875-1-eric.snowberg@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002060127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002060127
+        Thu, 6 Feb 2020 11:46:18 -0500
+Received: from mga07.intel.com ([134.134.136.100]:2851 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgBFQqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:46:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 08:46:17 -0800
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="225069050"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 08:46:16 -0800
+Date:   Thu, 6 Feb 2020 08:46:14 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
+Message-ID: <20200206164614.GA20622@agluck-desk2.amr.corp.intel.com>
+References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com>
+ <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com>
+ <8CC9FBA7-D464-4E58-8912-3E14A751D243@gmail.com>
+ <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+ <20200203204155.GE19638@linux.intel.com>
+ <20200206004944.GA11455@agluck-desk2.amr.corp.intel.com>
+ <CALCETrWmuTbHn9YCpGsWLBjR9rV1QEoEQ-m63NDd9cu7SecV6Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWmuTbHn9YCpGsWLBjR9rV1QEoEQ-m63NDd9cu7SecV6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently IMA can validate compressed modules containing appended
-signatures.  This adds the ability to also validate uncompressed
-modules when appraise_type=imasig|modsig.
+On Wed, Feb 05, 2020 at 05:18:23PM -0800, Andy Lutomirski wrote:
+> On Wed, Feb 5, 2020 at 4:49 PM Luck, Tony <tony.luck@intel.com> wrote:
+> >
+> > In a context switch from a task that is detecting split locks
+> > to one that is not (or vice versa) we need to update the TEST_CTRL
+> > MSR. Currently this is done with the common sequence:
+> >         read the MSR
+> >         flip the bit
+> >         write the MSR
+> > in order to avoid changing the value of any reserved bits in the MSR.
+> >
+> > Cache the value of the TEST_CTRL MSR when we read it during initialization
+> > so we can avoid an expensive RDMSR instruction during context switch.
+> 
+> If something else that is per-cpu-ish gets added to the MSR in the
+> future, I will personally make fun of you for not making this percpu.
 
-Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
----
- security/integrity/digsig.c           | 9 +++++++--
- security/integrity/ima/ima_appraise.c | 3 +++
- security/integrity/integrity.h        | 3 ++-
- 3 files changed, 12 insertions(+), 3 deletions(-)
+Xiaoyao Li has posted a version using a percpu cache value:
 
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index ea1aae3d07b3..5e0c4d04ab9d 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -15,6 +15,7 @@
- #include <linux/key-type.h>
- #include <linux/digsig.h>
- #include <linux/vmalloc.h>
-+#include <linux/verification.h>
- #include <crypto/public_key.h>
- #include <keys/system_keyring.h>
- 
-@@ -31,6 +32,7 @@ static const char * const keyring_name[INTEGRITY_KEYRING_MAX] = {
- 	".ima",
- #endif
- 	".platform",
-+	".builtin_trusted_keys",
- };
- 
- #ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
-@@ -45,8 +47,11 @@ static struct key *integrity_keyring_from_id(const unsigned int id)
- 		return ERR_PTR(-EINVAL);
- 
- 	if (!keyring[id]) {
--		keyring[id] =
--			request_key(&key_type_keyring, keyring_name[id], NULL);
-+		if (id == INTEGRITY_KEYRING_KERNEL)
-+			keyring[id] = VERIFY_USE_SECONDARY_KEYRING;
-+		else
-+			keyring[id] = request_key(&key_type_keyring,
-+						  keyring_name[id], NULL);
- 		if (IS_ERR(keyring[id])) {
- 			int err = PTR_ERR(keyring[id]);
- 			pr_err("no %s keyring: %d\n", keyring_name[id], err);
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 300c8d2943c5..4c009c55d620 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -294,6 +294,9 @@ static int modsig_verify(enum ima_hooks func, const struct modsig *modsig,
- 	    func == KEXEC_KERNEL_CHECK)
- 		rc = integrity_modsig_verify(INTEGRITY_KEYRING_PLATFORM,
- 					     modsig);
-+	if (rc && func == MODULE_CHECK)
-+		rc = integrity_modsig_verify(INTEGRITY_KEYRING_KERNEL, modsig);
-+
- 	if (rc) {
- 		*cause = "invalid-signature";
- 		*status = INTEGRITY_FAIL;
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 73fc286834d7..63f0e6bff0e0 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -145,7 +145,8 @@ int integrity_kernel_read(struct file *file, loff_t offset,
- #define INTEGRITY_KEYRING_EVM		0
- #define INTEGRITY_KEYRING_IMA		1
- #define INTEGRITY_KEYRING_PLATFORM	2
--#define INTEGRITY_KEYRING_MAX		3
-+#define INTEGRITY_KEYRING_KERNEL	3
-+#define INTEGRITY_KEYRING_MAX		4
- 
- extern struct dentry *integrity_dir;
- 
--- 
-2.18.1
+https://lore.kernel.org/r/20200206070412.17400-4-xiaoyao.li@intel.com
 
+So take that if it makes you happier.  My patch only used the
+cached value to store the state of the reserved bits in the MSR
+and assumed those are the same for all cores.
+
+Xiaoyao Li's version updates with what was most recently written
+on each thread (but doesn't, and can't, make use of that because we
+know that the other thread on the core may have changed the actual
+value in the MSR).
+
+If more bits are implemented that need to be set at run time, we
+are likely up the proverbial creek. I'll see if I can find out if
+there are plans for that.
+
+-Tony
