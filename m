@@ -7,86 +7,88 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B9CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69430C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4088217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358AD218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:04:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ATqKup0L"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PKgXIA6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgBFNEq (ORCPT
+        id S1727569AbgBFNEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:04:46 -0500
-Received: from mail-eopbgr00070.outbound.protection.outlook.com ([40.107.0.70]:40961
+        Thu, 6 Feb 2020 08:04:50 -0500
+Received: from mail-eopbgr00077.outbound.protection.outlook.com ([40.107.0.77]:40480
         "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727111AbgBFNEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:04:45 -0500
+        id S1727111AbgBFNEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:04:49 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V/ntwDpVNDuPONw0DvVAQj9wiMC6RRlOiLPWG+SMPBWMUZmszukkuQZj+v8SlKJoGRoeLx14DIvTzptjRKYQWINNt7RFjxoVFeRo9sxkII5utZ0MFuE/PVZsCX7MPF9VkEVJZYL5DBvMURbs2o8+CFilyZZDHpgRNUjmeJ5A6LCWALK0a2s3rdT5CfCDLsYiGw6UHV1PMHdhKB6tXZhyM6+/I7vuJINwB73yn56FrkRxtpbve2y2h1kdjUePIhiFvkSuFytQdO4udooyFdTlwhVhOXDH+8E3jGHFbANniGwEXoZ8H/t33TYOX75JZAeSPgHcO9DtEQk9BrLjWX+d9A==
+ b=gq1xnb4kN9r/D9rqfB7aBHsywJptSuvsXMjX2VRuaPkHAKQuKqNL1rgixBZV9iXBBaCB7G7QLUbIaiipkpiu8snLPcvhvGcOdrM8AhX/e8qrZlS8XISfpdBlLoDDw3XRXJCpOO5tBp8Z6xiO2iMCf2r/DspBmbWE1BGH2zNMPI8Q5WGrdWoERjFvSkPKAgDYOb3/TdcVuca/KnjRRPHaOKnkxbn7F/lMI5PLnQneQ+lN7kfnbkePYS8Y6Ley/N2OfEFSZJ4kSv5yUzy6KvFgvQ8d2Y294A4RoAq8s+s1aPWrhf4TclwcRL7864Jm/6oBOIyKpyKwgb8j5kzGLetI8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mHfSijKilckf0Ocd/D/WiT7dQGm7dElsEx+7gO/odB0=;
- b=NIxsEWQIBDCbP7AT8Ro/x8nOBzZt5kYwSpGwzF68tt2jzwucQ7YtTjEfC1Qopp0WPc137ywE3GYZmiXU5bgxGdHQnsG0t3At86OwG5BxOpJVPPuezkyoYWwaDaaABnqVpVNQdc8CZp0F0R5qwxDsUMM1JIFhSKwSHOfH7PzWp/gYMT6kNg8OCTVUqi1rkBfPjAUPCXCjuT4naA1G3cy31N6jLUneK7SsX52Po5kGprfsrF9PJoAKouGHHPtOWGK95G5SuD9qTV2FGA1kG7RqFMl9Od2kSLcqWzVoPkHcJ+aAq5+EovNQDYSl0DIQq4qZFAAVfA0/hf7tExbMA2vfsA==
+ bh=5Z8z1cSIYcgQd/PvFzRA6l/PtF6FY1U/dzeHEd7uVeI=;
+ b=eQ31ieFSSFNAzvgmcHbkUPiGU09DpZEmRQiZ9KbDi2PWVsk0cCltXRA7cmkdJGxl+J9sq8GbMwHjQGIzlGIJ9JGQGoiZAOycYheFAau7xUZ+cmAYIsvqHSkv3+0m2ervqtCn/pbjtCrFMUw6I6A9YkLTLu2O20tHJIuISBvcFs3ERaqffKS4X4sZTjVin2ZN9ESMI/FQMJC8aSekWHFteW0BepDF4nzCOLYNQuXJZoMPbNhO68RhoQzbUIYbGN4HRTMVwRFvD7N4vehMIxMrqaD3Xr0tR+gEv4ZM1S+WKNYHtO3+N9pnn8zyrUhIgEXvh9nUlIWLrb4pW5oe1mP9cg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mHfSijKilckf0Ocd/D/WiT7dQGm7dElsEx+7gO/odB0=;
- b=ATqKup0LL3QbQlTQVQ6Bm+2A/Mnc4LBIsR+zldflHcNKYb5K6nOKrdhZNJlY27vFohNnWfEchkRj8FBMnrdwXya3kKXLsBNGKILkcZVKlBGPsJi4k7aVyn2AmC2mCPf1nWef1ps2D9/rKpG+BtHckCUkl8yxh1mayr43oz5dtlc=
+ bh=5Z8z1cSIYcgQd/PvFzRA6l/PtF6FY1U/dzeHEd7uVeI=;
+ b=PKgXIA6Vy0kIelsXyIRB0poDEHbhIbkqWiJ3F8tqrMl9W5nwcmN48RrkIAIXc9WqboVwsw+YpwCu4xDsJnYvAkqM5CbtlHJm3mJn/VJNfNEw6/x+ryZFz0CFEZScGT8wrHM0Vg1/gFNUBOj8BjK8D6PAeLfdUa6OCRagEp39vHs=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
  AM0PR04MB4770.eurprd04.prod.outlook.com (20.177.41.154) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Thu, 6 Feb 2020 13:04:43 +0000
+ 15.20.2686.32; Thu, 6 Feb 2020 13:04:45 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.020; Thu, 6 Feb 2020
- 13:04:42 +0000
+ 13:04:45 +0000
 From:   peng.fan@nxp.com
 To:     sudeep.holla@arm.com
 Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/2] firmware: arm_scmi: mailbox: share shmem for protocols
-Date:   Thu,  6 Feb 2020 20:59:25 +0800
-Message-Id: <1580993966-17757-1-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH 2/2] firmware: arm_scmi: mark channel free when init
+Date:   Thu,  6 Feb 2020 20:59:26 +0800
+Message-Id: <1580993966-17757-2-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580993966-17757-1-git-send-email-peng.fan@nxp.com>
+References: <1580993966-17757-1-git-send-email-peng.fan@nxp.com>
 Content-Type: text/plain
 X-ClientProxiedBy: HK2PR04CA0086.apcprd04.prod.outlook.com
  (2603:1096:202:15::30) To AM0PR04MB4481.eurprd04.prod.outlook.com
  (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0086.apcprd04.prod.outlook.com (2603:1096:202:15::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 13:04:40 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0086.apcprd04.prod.outlook.com (2603:1096:202:15::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 13:04:43 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ba963931-86ce-46a6-45de-08d7ab0521b1
+X-MS-Office365-Filtering-Correlation-Id: 3a551167-aa34-4f4d-44ea-08d7ab052365
 X-MS-TrafficTypeDiagnostic: AM0PR04MB4770:|AM0PR04MB4770:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB47702E6D4629E4A6CC555136881D0@AM0PR04MB4770.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1002;
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4770FF8BB9892DE3A05CDD9E881D0@AM0PR04MB4770.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
 X-Forefront-PRVS: 0305463112
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(189003)(199004)(86362001)(2616005)(956004)(36756003)(6486002)(6506007)(4326008)(6666004)(6512007)(9686003)(69590400006)(26005)(186003)(16526019)(2906002)(6916009)(4744005)(66946007)(5660300002)(66476007)(52116002)(15650500001)(81166006)(81156014)(8676002)(8936002)(478600001)(316002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4770;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(189003)(199004)(86362001)(2616005)(956004)(36756003)(6486002)(6506007)(4326008)(6666004)(6512007)(9686003)(69590400006)(26005)(186003)(16526019)(2906002)(6916009)(66946007)(5660300002)(66476007)(52116002)(81166006)(81156014)(8676002)(8936002)(478600001)(316002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4770;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EgesQtD41UpgvUQnfAgoegTQwDgwAHdAiMbmMDphFrZHiBug2vfysRBIzmJTYQOOxx2WGe9UfMe3gI5DokPYbgSYPNOBcr57V7aMc/Ip85igWK4fHKx3PHUNrjw19tuilQZFL4CCg8eGFfX8Sx6moxld/CZyoPZlxSfvctmbRwv0wZXMD+H8no2Xr65D8yjrFkqhvZFVnDPARvrFt3g4jZDcYJOHcOzOP4GQHUljaUbdVwVN6vExfzJeRnR+PW/1HW8p1qwGZ9lG5OTVkA/nX8EpY9dvbK0Krq0iRNJ8e4Q1h3NmzLQJv0UA5sgede8CGJYqaeK5waP2upC4I6X7btW/qPPbpZcOrb+gS1EvjZmguU2hjNUknCX+AXHeNjvXzM2KuJZL5VbVCvSoBonvPxPKEMgdEd4ZpM3XWkANx9sId7ViWGocg3Q1QqvzztEFH9vRAQpPA7iyE6p17C+/Cb2jYxa7O8VSCiK+gdJIfxm1RynqZZIp+ggWTYc6+ruscMZMz8AQMmYWQgWAKUD0G2RUk3MWw5eSZ75esH/V1AA=
-X-MS-Exchange-AntiSpam-MessageData: tiyv8m5VxH5wNrBsMknrCHUwPfCvjiJcbDTOkEZTEK9y3upAyZkEonLKLX0SfA+QlSfHvoUr6U4t6KG8Xnfrp4w9D1joCSjh8n5Ci3NRnbx8t/6jzn+dStlxpIyX6bh3l+44hYwmdD7likgx8mU15w==
+X-Microsoft-Antispam-Message-Info: //fOZncKUQCNUQblWstgrDUoB+sU/iwl/a1bxyb5qkHR5Je4rocEQqNLOpQaeZVAxsib99Tk57rGbXIoLeNR5Lpi8G01aN/sMsCb0KqfJjCZ87jMPknwzTlj/KSIrHjnLsKnD3pABvCYwUTojRKb0sQ10Z1TK7k8E8wuNEQ9G2wy3wD1PmYBV4dB1V/3cCYkFRMiCsMsU8vvRS25W7l2Ecz5P932WMoTlkz310gR9HFRaRxjvYeHrrLnfq7Dcw0OGcZr/ri7Bm+WF2oTeZ8NKvzy+XaQbcGK5FAab8Gvkx8goI+1zmivb+bGU7QnRUx4eqQpq2O7eb4ZaUu+rG31/bZE/9tL6KJGDrFgpp3zHK6sxeBqiiYk6LDXo4LkAflAw2Y4VKF9ZmW2HPd5qQqKNhqGNw9NZNLM/V7g8oe63y+mf9+KcOwQTZivja6sKNt6lnxRPKtU8ZKaauNyhrNGc64I2sFDRPw4z1TpespkNbksDoPXu7/D5tCJG69KExlcKEMjvOwpkgJkrMdNYKoqobyK5kQ8rNBGcz+I3fkV25M=
+X-MS-Exchange-AntiSpam-MessageData: SCcyMChouHPPUaDqjpr1yc9VOxaaWRzuPwowkJfh0z+BbjygUiq36oMuphfZXrWZ/OPIIQvViiKU/jWR+aODG6VBN6kCFCOEezFHB8krEnpNW/PhwcrY7NDw/7k0Nym7DRs0o6XNdKKDIFjj1yGPtg==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba963931-86ce-46a6-45de-08d7ab0521b1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 13:04:42.8694
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a551167-aa34-4f4d-44ea-08d7ab052365
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 13:04:45.5078
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qGjOvss0po+fYeAxX92CVLEtg9s4tcQ8tsVxfdOwI1itR2eVNc3uuTxegiCg6elFxB4mci9RJpCkmD+YDDWs+Q==
+X-MS-Exchange-CrossTenant-UserPrincipalName: SDCCeHeWh02CJbV3vmf9QeK28Cgz0OnbPcoLelIGHfNVgECukldoTV4EonJFtVxxwogtrCK0cZngXSl0cGnCrw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4770
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -95,30 +97,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-When shmem property of protocol is not specificed, let it use
-its parent's shmem property.
+The firmware itself might not mark channel free, so let's explicitly 
+mark it free when do initialization.
+
+Also move struct scmi_shared_mem to common.h
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
+ drivers/firmware/arm_scmi/common.h  | 19 +++++++++++++++++--
+ drivers/firmware/arm_scmi/mailbox.c |  2 ++
+ drivers/firmware/arm_scmi/shmem.c   | 18 ------------------
+ 3 files changed, 19 insertions(+), 20 deletions(-)
 
-Based on Viresh's V6 patchset.
-
- drivers/firmware/arm_scmi/mailbox.c | 2 ++
- 1 file changed, 2 insertions(+)
-
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index fd091a4ccbff..5df262a564a4 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -211,8 +211,23 @@ extern const struct scmi_desc scmi_mailbox_desc;
+ void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
+ void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
+ 
+-/* shmem related declarations */
+-struct scmi_shared_mem;
++/*
++ * SCMI specification requires all parameters, message headers, return
++ * arguments or any protocol data to be expressed in little endian
++ * format only.
++ */
++struct scmi_shared_mem {
++	__le32 reserved;
++	__le32 channel_status;
++#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
++#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
++	__le32 reserved1[2];
++	__le32 flags;
++#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
++	__le32 length;
++	__le32 msg_header;
++	u8 msg_payload[0];
++};
+ 
+ void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
+ 		      struct scmi_xfer *xfer);
 diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-index 73077bbc4ad9..68ed58e2a47a 100644
+index 68ed58e2a47a..2d34bf6e94e2 100644
 --- a/drivers/firmware/arm_scmi/mailbox.c
 +++ b/drivers/firmware/arm_scmi/mailbox.c
-@@ -69,6 +69,8 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
- 		return -ENOMEM;
+@@ -104,6 +104,8 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+ 	cinfo->transport_info = smbox;
+ 	smbox->cinfo = cinfo;
  
- 	shmem = of_parse_phandle(cdev->of_node, "shmem", idx);
-+	if (!shmem)
-+		shmem = of_parse_phandle(dev->of_node, "shmem", idx);
- 	ret = of_address_to_resource(shmem, 0, &res);
- 	of_node_put(shmem);
- 	if (ret) {
++	iowrite32(BIT(0), &smbox->shmem->channel_status);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/firmware/arm_scmi/shmem.c b/drivers/firmware/arm_scmi/shmem.c
+index 02c6c7540f42..c9e334654ba3 100644
+--- a/drivers/firmware/arm_scmi/shmem.c
++++ b/drivers/firmware/arm_scmi/shmem.c
+@@ -11,24 +11,6 @@
+ 
+ #include "common.h"
+ 
+-/*
+- * SCMI specification requires all parameters, message headers, return
+- * arguments or any protocol data to be expressed in little endian
+- * format only.
+- */
+-struct scmi_shared_mem {
+-	__le32 reserved;
+-	__le32 channel_status;
+-#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
+-#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
+-	__le32 reserved1[2];
+-	__le32 flags;
+-#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
+-	__le32 length;
+-	__le32 msg_header;
+-	u8 msg_payload[0];
+-};
+-
+ void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
+ 		      struct scmi_xfer *xfer)
+ {
 -- 
 2.16.4
 
