@@ -2,94 +2,174 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF76C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31772C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71DC21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E75214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580984626;
-	bh=fznLLoDfGfg3j/4UEm5cT+Z+SIUayCwPJ8HX78CG7PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dcZJQVwr6AgL7W2G/L2OBvW8XUih1dFuIH0gJ15Np/EBnaC54Vq6UIpqzjRqx8EOY
-	 AbjJ0p7s3C39ba6jAB0kkOQzNY7dhPA44YyXjbzzTmYa3aWZ1w9ALuucpMTE/d7unw
-	 qctUhuW57R9hqCXmuFxhN/LM1rndgxxczuj4Z2mQ=
+	s=default; t=1580984781;
+	bh=0JgSe6SPXxtiGzuqSpPoTEMWToGrknUcN1/s8u6Vf+M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=m8w65g3rkB6cFDBUvhlbrNJHTLVsm1BKWIPw2M7JF4UD26NfdSWcEu1y5XZPEQ3ZU
+	 Ur8n78NtgU3WTZweSAf5i2o1SoU2QmzkwucJE1Mlkt0/+EXUAXNFyckMDdxCpohEIK
+	 WGyp4+jQOCkuIXRHbm9j9FpxzmmNcecdbze58lfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgBFKXq (ORCPT
+        id S1728468AbgBFK0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:23:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
+        Thu, 6 Feb 2020 05:26:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728261AbgBFKXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:23:45 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1728394AbgBFK0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:26:20 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44DD7206CC;
-        Thu,  6 Feb 2020 10:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A94D206CC;
+        Thu,  6 Feb 2020 10:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580984625;
-        bh=fznLLoDfGfg3j/4UEm5cT+Z+SIUayCwPJ8HX78CG7PQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oHPX0Q/JFvQhIpKA+qOX3GhPwqPaAsgjwbCw2CGiV2FceU70zXoL6jfOQ6TilEhpn
-         d3KqxNF80Sejdl4AKeBO7/cK0Kgfp4Hxttccet8xx9fmce0+DEnhfeDYtshBn45WKc
-         xys0xmee8ckM9gJs/ensRBMhoF0viFouoAP+r2f8=
-Date:   Thu, 6 Feb 2020 10:23:40 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Hoan Tran <Hoan@os.amperecomputing.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        patches@os.amperecomputing.com
-Subject: Re: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
- NUMA
-Message-ID: <20200206102340.GA17074@willie-the-truck>
-References: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
+        s=default; t=1580984779;
+        bh=0JgSe6SPXxtiGzuqSpPoTEMWToGrknUcN1/s8u6Vf+M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MYc2c6ZZyJ8vOUJLwASgkPxI64n+PKHyG9kUruxfxfOcaXwKN20gVAa1F11rD/1xy
+         G1lY/SCl3pbS7xjd6cl5kCtzFLQlYb3Gnci0FlILhLL5dCrwmJ2ac/BY+pS2YCxybZ
+         zmLza8wlOPi9pRe8vIoNSVZmTvbr+VabbcbR7fR8=
+Date:   Thu, 6 Feb 2020 10:26:14 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "biabeniamin@outlook.com" <biabeniamin@outlook.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: amplifiers: Add docs for
+ HMC425A Step Attenuator
+Message-ID: <20200206102614.64593f10@archlinux>
+In-Reply-To: <17fefa85f2c441549bc07e08fb13994b10854fbf.camel@analog.com>
+References: <20200129142301.13918-1-beniamin.bia@analog.com>
+        <20200129142301.13918-5-beniamin.bia@analog.com>
+        <20200202105358.27b6b8a6@archlinux>
+        <17fefa85f2c441549bc07e08fb13994b10854fbf.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 11:55:14AM -0800, Hoan Tran wrote:
-> Some NUMA nodes have memory ranges that span other nodes.
-> Even though a pfn is valid and between a node's start and end pfns,
-> it may not reside on that node.
-> 
-> This patch enables NODES_SPAN_OTHER_NODES config for NUMA to support
-> this type of NUMA layout.
-> 
-> Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
-> ---
->  arch/arm64/Kconfig | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index e688dfa..939d28f 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -959,6 +959,13 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
->  config HOLES_IN_ZONE
->  	def_bool y
->  
-> +# Some NUMA nodes have memory ranges that span other nodes.
-> +# Even though a pfn is valid and between a node's start and end pfns,
-> +# it may not reside on that node.
-> +config NODES_SPAN_OTHER_NODES
-> +	def_bool y
-> +	depends on ACPI_NUMA
-> +
+On Mon, 3 Feb 2020 11:25:48 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-I thought we agreed to do this in the core code?
+> On Sun, 2020-02-02 at 10:53 +0000, Jonathan Cameron wrote:
+> > On Wed, 29 Jan 2020 16:23:00 +0200
+> > Beniamin Bia <beniamin.bia@analog.com> wrote:
+> >   
+> > > From: Michael Hennerich <michael.hennerich@analog.com>
+> > > 
+> > > Document support for Analog Devices MC425A Step Attenuator.
+> > > 
+> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> > > ---
+> > >  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 48 +++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > new file mode 100644
+> > > index 000000000000..d800639c14a5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > @@ -0,0 +1,48 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: HMC425A 6-bit Digital Step Attenuator
+> > > +
+> > > +maintainers:
+> > > +- Michael Hennerich <michael.hennerich@analog.com>
+> > > +- Beniamin Bia <beniamin.bia@analog.com>
+> > > +
+> > > +description: |
+> > > +  Digital Step Attenuator IIO device with gpio interface.
+> > > +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR,
+> > > 2.2 - 8.0 GHz
+> > > +  
+> > > https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - adi,hmc425a
+> > > +
+> > > +  vcc-supply: true
+> > > +
+> > > +  ctrl-gpios:
+> > > +    description:
+> > > +      Must contain an array of 6 GPIO specifiers, referring to the GPIO
+> > > pins
+> > > +      connected to the control pins V1-V6.
+> > > +    maxItems: 6  
+> > 
+> > Does this force exactly 6?  
+> 
+> I'm [also] a bit unsure whether to force this number in DT.
+> One idea [with this driver] would be to maybe have it support multiple of these
+> GPIO-controlled attenuators/amplifiers. And those could have a higher/lower
+> number of GPIOs.
+> 
+> In any case, we could enforce this as-is [for now], and see later when/if adding
+> new parts.
+> No strong opinion from my side about this though.
+It should be enforced for each of the devices supported.
+So for devices with less, it would only allow precisely that
+lesser number.
 
-https://lore.kernel.org/lkml/1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com
+One slight quirk is someone crazy might wire certain pins to high or low
+because they don't need the precision.
 
-Will
+Not sure how we handle that one but can deal with it when it happens.
+
+Jonathan
+
+> 
+> >   
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - ctrl-gpios
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    gpio_hmc425a: hmc425a {
+> > > +      compatible = "adi,hmc425a";
+> > > +      ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 39 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 38 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 37 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 36 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 35 GPIO_ACTIVE_HIGH>;
+> > > +      vcc-supply = <&foo>;
+> > > +    };
+> > > +...  
+
