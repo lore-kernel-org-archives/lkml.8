@@ -2,175 +2,150 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF41C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7F3C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1192C217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:34:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0z00dx/C"
+	by mail.kernel.org (Postfix) with ESMTP id 5A9FA218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgBFNeX (ORCPT
+        id S1728112AbgBFNfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:34:23 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43448 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728019AbgBFNeP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:34:15 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016DX36v016463;
-        Thu, 6 Feb 2020 14:33:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=uw83YHkEimIhhPOEeMx2nLPySoUUuETqUW2sGayUiPM=;
- b=0z00dx/CAms+OVIefxU9IODEGW7IBlVO6dXKyAw4L/yLkKeQ/hJo5Bn7vm+yIETHS+ST
- Z/ZMksUD2k4oCF6k6wpCzzGT4Yo181tnKQLXcIs0+gsL8ts5zpyb3uqM022YIXveWptK
- 9eai6YcIuHVvrFSm/w/g4sTHyOunPGXwytXayPEeC8R281Ixo3wfC2qmuea6f+dulzRb
- l4eWNPRc65ES71CgyoRxtRfK4mQL7HYi80QaZCK4M5Xd2daUZdyCsYvlrGsIG7MBvvmJ
- LM4zNz8uzt5hj2ZBxPZOdycdiKuBHXKjm3Ag6I2O2wcA/xQbFJGmoWHD3qXK1yXL+XCw 0Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhku156e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 14:33:53 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E536E10003B;
-        Thu,  6 Feb 2020 14:33:51 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D75B72BC7DB;
-        Thu,  6 Feb 2020 14:33:51 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 6 Feb 2020 14:33:51
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <thierry.reding@gmail.com>, <sam@ravnborg.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <philippe.cornu@st.com>
-CC:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 3/3] dt-bindings: panel: Convert orisetech,otm8009a to json-schema
-Date:   Thu, 6 Feb 2020 14:33:44 +0100
-Message-ID: <20200206133344.724-4-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200206133344.724-1-benjamin.gaignard@st.com>
-References: <20200206133344.724-1-benjamin.gaignard@st.com>
+        Thu, 6 Feb 2020 08:35:20 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2388 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727415AbgBFNfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:35:19 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 4AA88E637377685659F8;
+        Thu,  6 Feb 2020 13:35:17 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 6 Feb 2020 13:35:16 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Feb 2020
+ 13:35:16 +0000
+Subject: Re: [PATCH v2] EDAC/mc: Fix use-after-free and memleaks during device
+ removal
+To:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+CC:     Aristeu Rozanski <aris@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200205212444.10382-1-rrichter@marvell.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b5c40201-4521-b9c8-3adb-ee227bf2ffb4@huawei.com>
+Date:   Thu, 6 Feb 2020 13:35:15 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
+In-Reply-To: <20200205212444.10382-1-rrichter@marvell.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert orisetech,otm8009a to json-schema.
+On 05/02/2020 21:24, Robert Richter wrote:
+> A test kernel with the options set below revealed several issues when
+> removing a mci device:
+> 
+>   DEBUG_TEST_DRIVER_REMOVE
+>   KASAN
+>   DEBUG_KMEMLEAK
+> 
+> Issues seen:
+> 
+> 1) Use-after-free:
+> 
+> On 27.11.19 17:07:33, John Garry wrote:
+>> [   22.104498] BUG: KASAN: use-after-free in
+>> edac_remove_sysfs_mci_device+0x148/0x180
+> 
+> The use-after-free is caused by the mci_for_each_dimm() iterator that
+> is called in edac_remove_sysfs_mci_device(). The iterator was
+> introduced with commit c498afaf7df8 ("EDAC: Introduce an
+> mci_for_each_dimm() iterator"). The iterator loop calls function
+> device_unregister(&dimm->dev), which removes the sysfs entry of the
+> device, but also frees the dimm struct in dimm_attr_release(). When
+> incrementing the loop in mci_for_each_dimm(), the dimm struct is
+> accessed again, but it is already freed.
+> 
+> The fix is to free all the mci device's subsequent dimm and csrow
+> objects at a later point when the mci device is freed. This keeps the
+> data structures intact and the mci device can be fully used until its
+> removal.
+> 
+> 2) Memory leaks:
+> 
+> Following memory leaks have been detected:
+> 
+>   # grep edac /sys/kernel/debug/kmemleak | sort | uniq -c
+>         1     [<000000003c0f58f9>] edac_mc_alloc+0x3bc/0x9d0      # mci->csrows
+>        16     [<00000000bb932dc0>] edac_mc_alloc+0x49c/0x9d0      # csr->channels
+>        16     [<00000000e2734dba>] edac_mc_alloc+0x518/0x9d0      # csr->channels[chn]
+>         1     [<00000000eb040168>] edac_mc_alloc+0x5c8/0x9d0      # mci->dimms
+>        34     [<00000000ef737c29>] ghes_edac_register+0x1c8/0x3f8 # see edac_mc_alloc()
+> 
+> All leaks are from memory created by edac_mc_alloc().
+> 
+> Note: The test above shows that edac_mc_alloc() was called here from
+> ghes_edac_register(), thus both functions show up in the stack dump,
+> but the driver causing the leaks is edac_mc. The comments with the
+> data structures involved were made manually by analyzing the objdump.
+> 
+> The data structures listed above and created by edac_mc_alloc() are
+> not properly removed during device removal, which is done in
+> edac_mc_free(). There are two paths implemented to remove the device
+> depending on device registration, _edac_mc_free() is called if the
+> device is not registered and edac_unregister_sysfs() otherwise. The
+> implemenations differ. For the sysfs case the mci device removal lacks
+> the removal of subsequent data structures (csrows, channels, dimms).
+> This causes the memory leaks (see mci_attr_release()).
+> 
+> Fixing this as follows:
+> 
+> Unify code and implement a mci_release() function which is used to
+> remove a struct mci regardless of the device registration status. Use
+> put_device() to release the struct. Free all subsequent data structs
+> of the mci's children in that release function. An effect of this is
+> that no data is freed in edac_mc_sysfs.c (except the "mc" sysfs root
+> node). All sysfs entries have the mci device as a parent, so its
+> refcount will keep the mci parent as long as sysfs entries exist. This
+> prevents struct mci from being freed until all sysfs entries have been
+> removed which is done in edac_remove_sysfs_mci_device(). With the
+> changes made the mci_for_each_dimm() loop is now save to release dimm
+> devices from sysfs.
+> 
+> The patch has been tested with the above kernel options, no issues
+> seen any longer.
+> 
+> Reported-by: John Garry <john.garry@huawei.com>
+> Fixes: c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator")
+> Fixes: faa2ad09c01c ("edac_mc: edac_mc_free() cannot assume mem_ctl_info is registered in sysfs.")
+> Fixes: 7a623c039075 ("edac: rewrite the sysfs code to use struct device")
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> Acked-by: Aristeu Rozanski <aris@redhat.com>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+> V2:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/display/panel/orisetech,otm8009a.txt  | 23 ----------
- .../bindings/display/panel/orisetech,otm8009a.yaml | 53 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
+Kasan warnings and leak reports are gone:
+Tested-by: John Garry <john.garry@huawei.com>
 
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-deleted file mode 100644
-index 203b03eefb68..000000000000
---- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--Orise Tech OTM8009A 3.97" 480x800 TFT LCD panel (MIPI-DSI video mode)
--
--The Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD panel connected using
--a MIPI-DSI video interface. Its backlight is managed through the DSI link.
--
--Required properties:
--  - compatible: "orisetech,otm8009a"
--  - reg: the virtual channel number of a DSI peripheral
--
--Optional properties:
--  - reset-gpios: a GPIO spec for the reset pin (active low).
--  - power-supply: phandle of the regulator that provides the supply voltage.
--
--Example:
--&dsi {
--	...
--	panel@0 {
--		compatible = "orisetech,otm8009a";
--		reg = <0>;
--		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
--		power-supply = <&v1v8>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-new file mode 100644
-index 000000000000..6e6ac995c27b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/orisetech,otm8009a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Orise Tech OTM8009A 3.97" 480x800 TFT LCD panel (MIPI-DSI video mode)
-+
-+maintainers:
-+  - Philippe CORNU <philippe.cornu@st.com>
-+
-+description: |
-+             The Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD panel connected using
-+             a MIPI-DSI video interface. Its backlight is managed through the DSI link.
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+
-+  compatible:
-+    const: orisetech,otm8009a
-+
-+  reg:
-+    maxItems: 1
-+    description: DSI virtual channel
-+
-+  enable-gpios: true
-+  port: true
-+  power-supply: true
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    dsi@0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      panel@0 {
-+        compatible = "orisetech,otm8009a";
-+        reg = <0>;
-+        reset-gpios = <&gpiof 15 0>;
-+        power-supply = <&v1v8>;
-+      };
-+    };
-+...
-+
--- 
-2.15.0
+Cheers
+
 
