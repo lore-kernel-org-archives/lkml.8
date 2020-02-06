@@ -2,318 +2,145 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E116C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8A4C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE6921D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D9321775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021935;
-	bh=Vn998s63OSKGvhsxx59iuHRR4jcUmxVe8PhNMtTYO10=;
+	s=default; t=1581021939;
+	bh=b5L/7neZks6SxBsJUMzzaZtT0XdM3q38CPeJu18A/co=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UOC9X6GywQRxF1MKAjoRhuiFbPj8fw6cilfspN5kMxWcy34Lgxw5lOTevXv95kIPO
-	 sePt1cl1JXL5CI3r2eDjTXuEv80omR6wmH6lDYEDOhJrJzHKJO7GS8dMJtfpIgX+im
-	 7j8rKE9pQhzab9mAXr3bsoMF81uEgg3XTK7QGcss=
+	b=CiDui5VQuD0q79nVD26hvTUjz+m9r9VL6EM1Cv84q8S5MrtZsmIngZsUtLKXiciQg
+	 fgAcZdyTahPencSkH9xGCvfdtg38Y/jcOmw/97ftQH/IkYCuhY4MKCsdTgcvEUVKfv
+	 fCJ8FKZJ6kI6KACU7vlUf3fuGOqe5ywEaZ3DX/5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBFUpe (ORCPT
+        id S1727961AbgBFUpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:34 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41709 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgBFUpd (ORCPT
+        Thu, 6 Feb 2020 15:45:38 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33877 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgBFUpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:45:33 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l3so3337590pgi.8;
-        Thu, 06 Feb 2020 12:45:33 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:36 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so64517pfc.1;
+        Thu, 06 Feb 2020 12:45:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qIQ8hjlDUhZcArK+Q5WsTl5GNAhaa++UBQ6Modhac+E=;
-        b=kGXdVo1CwnaIsuzelyXAq3wU52Wy+xu8e8AniD53tA++AtdgqX9lM8WkZ/NU2azDTW
-         Fc7QMKKtkYl0Ng5dSyE0kV45Ear9kYfRDvtBbV5U7qWNitUeY9rG9SNq565eq4tzmqfi
-         XJ0pDI55OXmA8T5pV0+X8uV5FX9lx2oIMI133wKCENPRFEvb/Anax4IOi/iCBRvq2yzI
-         5WWZwjFIQRadR04VR/pxPEiRaJRy5PRzxaChuBGeH96fSjc5hUUTSnxzy7wjPSAPXd6B
-         brRaggwlPb14D/UKBlBhxyZzkq2MdAT9wBcHTAOL376vEG0tuNLwMc52HBGBXnw/eRb3
-         SCsg==
-X-Gm-Message-State: APjAAAVltdXATsmB11FQJsxbcN5Yem9qKBOL7DGufTiL0QQc/fD+wwaJ
-        8VxG59Eukk+zZByPh279zA==
-X-Google-Smtp-Source: APXvYqxp0gb4DCovJEikyOC6US+MZnvndVVAY5P6ZUyW0coT14JeNLGYWiVC5j97cQxJXe5/sJ3gbQ==
-X-Received: by 2002:a62:78c1:: with SMTP id t184mr5777570pfc.222.1581021932559;
-        Thu, 06 Feb 2020 12:45:32 -0800 (PST)
+        bh=UQjt4WVJ28WaJURpUjHhblvvrGRzOLhJAhseMuxTJOc=;
+        b=TOpwL3yNtPnkzaQ1hjrp+t58b2pHbZoU27pdiq5x7Eoyf1KeXVY3YEZPe9w0GFPTUU
+         V5llv0oMgVtFp3yydTNlfHXSkOWIvKQKgZanigHqOzmv3xFguP7FNLPuMo3g/LkCUDEk
+         ph9UhH//gBVOOMzp51rqdx4dsApvAemlh5cloumLerk9BN0UsJlqPcVvFLbRSlBIbei1
+         6G2VO02N3ghvOLoylPKRnRrGoU/mDOJ9ikhExia8NsUb9NLsNqmt/WpldNjx88ZQ7E+X
+         fuaZwAJ/MyYY5R/GaTsLML/38T7KYrhgZ+OH+d19wze/oThFprzKf56ryQZyPXyGk3t/
+         RAbg==
+X-Gm-Message-State: APjAAAUhJBNZGIMJBDkmJx10pOrzD1LR0jfe0Sosy61bgF/T1/Qr7yX1
+        67R46EuuCJYZXTm6HaVUUg==
+X-Google-Smtp-Source: APXvYqy59y0DOw/mTxpVJ6WbFI4h+r6pFsRuD3AZ2j+dQn50bkNfTE4aLed3JpZuFsPT5ruTsWdXSw==
+X-Received: by 2002:aa7:9633:: with SMTP id r19mr6165120pfg.90.1581021934395;
+        Thu, 06 Feb 2020 12:45:34 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id e84sm262700pfh.149.2020.02.06.12.45.31
+        by smtp.gmail.com with ESMTPSA id v7sm281923pfn.61.2020.02.06.12.45.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:31 -0800 (PST)
-Received: (nullmailer pid 22868 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:28:20 -0000
-Date:   Thu, 6 Feb 2020 18:28:20 +0000
+        Thu, 06 Feb 2020 12:45:33 -0800 (PST)
+Received: (nullmailer pid 8782 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:12:10 -0000
+Date:   Thu, 6 Feb 2020 17:12:10 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     dmitry.torokhov@gmail.com, mark.rutland@arm.com,
-        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        wim@linux-watchdog.org, linux@roeck-us.net, p.paillet@st.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
-Message-ID: <20200206182820.GA12162@bogus>
-References: <20200130154315.6260-1-benjamin.gaignard@st.com>
+To:     Mike Jones <michael-a1.jones@analog.com>
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net
+Subject: Re: [PATCH 3/3] hwmon: (pmbus/ltc2978): add support for more parts.
+Message-ID: <20200206171210.GA4241@bogus>
+References: <1580234400-2829-1-git-send-email-michael-a1.jones@analog.com>
+ <1580234400-2829-3-git-send-email-michael-a1.jones@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200130154315.6260-1-benjamin.gaignard@st.com>
+In-Reply-To: <1580234400-2829-3-git-send-email-michael-a1.jones@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 04:43:15PM +0100, Benjamin Gaignard wrote:
-> Convert stpmic1 bindings to json-schema.
+On Tue, Jan 28, 2020 at 11:00:00AM -0700, Mike Jones wrote:
+> LTC2972, LTC2979, LTC3884, LTC3889, LTC7880, LTM4664, LTM4677,
+> LTM4678, LTM4680, LTM4700.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
 > ---
->  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 ---
->  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ------
->  .../devicetree/bindings/mfd/st,stpmic1.yaml        | 205 +++++++++++++++++++++
->  .../bindings/regulator/st,stpmic1-regulator.txt    |  64 -------
->  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 --
->  5 files changed, 205 insertions(+), 164 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
->  delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+>  .../devicetree/bindings/hwmon/ltc2978.txt          |  22 ++-
 
+DT bindings should be a separate patch.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-> new file mode 100644
-> index 000000000000..5db86be683dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-> @@ -0,0 +1,205 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectonics STPMIC1 Power Management IC bindings
-> +
-> +description: STMicroelectronics STPMIC1 Power Management IC
-> +
-> +maintainers:
-> +  - pascal Paillet <p.paillet@st.com>
-> +
-> +allOf:
-> +  - $ref: ../input/input.yaml
-> +  - $ref: ../regulator/regulator.yaml
-
-The properties these define don't apply to the parent node here.
-
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stpmic1
-> +
-> +  reg:
-> +    const: 0x33
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  onkey:
-> +    type: object
-
-input.yaml goes here.
-
-> +
-> +    properties:
-> +      compatible:
-> +        const: st,stpmic1-onkey
-> +
-> +      interrupts:
-> +        items:
-> +          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
-> +          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
-> +
-> +      interrupt-names:
-> +        items:
-> +          - const: onkey-falling
-> +          - const: onkey-rising
-> +
-> +      st,onkey-clear-cc-flag:
-> +        description: onkey is able power on after an over-current shutdown event.
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +      st,onkey-pu-inactive:
-> +        description: onkey pull up is not active
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +      power-off-time-sec:
-> +        minimum: 1
-> +        maximum: 16
-> +
-> +    required:
-> +      - compatible
-> +      - interrupts
-> +      - interrupt-names
-> +
-> +  watchdog:
-> +    type: object
-
-watchdog.yaml here.
-
-> +
-> +    properties:
-> +      compatible:
-> +        const: st,stpmic1-wdt
-> +
-> +    required:
-> +      - compatible
-> +
-> +  regulators:
-> +    type: object
-> +
-> +    description: |
-> +      Available Regulators in STPMIC1 device are:
-> +        - buck1 for Buck BUCK1
-> +        - buck2 for Buck BUCK2
-> +        - buck3 for Buck BUCK3
-> +        - buck4 for Buck BUCK4
-> +        - ldo1 for LDO LDO1
-> +        - ldo2 for LDO LDO2
-> +        - ldo3 for LDO LDO3
-> +        - ldo4 for LDO LDO4
-> +        - ldo5 for LDO LDO5
-> +        - ldo6 for LDO LDO6
-> +        - vref_ddr for LDO Vref DDR
-> +        - boost for Buck BOOST
-> +        - pwr_sw1 for VBUS_OTG switch
-> +        - pwr_sw2 for SW_OUT switch
-> +      Switches are fixed voltage regulators with only enable/disable capability.
-> +
-> +    properties:
-> +      compatible:
-> +        const: st,stpmic1-regulators
-> +
-> +    required:
-> +      - compatible
-> +
-> +patternProperties:
-> +  "^(buck[1-4]|ldo[1-6]|vref_ddr|boost|)$":
-
-Should be a child of 'regulators'
-
-> +    type: object
-> +
-> +    properties:
-> +      st,mask-reset:
-> +        description: mask reset for this regulator,
-> +                     the regulator configuration is maintained during pmic reset.
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +      interrupts:
-> +        maxItems: 1
-> +
-> +      regulator-over-current-protection: true
-> +
-> +  "^(pwr_sw[1-2])$":
-> +    type: object
-> +
-> +    properties:
-> +      interrupts:
-> +        maxItems: 1
-> +
-> +      regulator-over-current-protection: true
-> +      regulator-active-discharge: true
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#interrupt-cells"
-> +  - interrupt-controller
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/mfd/st,stpmic1.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    i2c@0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      pmic@33 {
-> +        compatible = "st,stpmic1";
-> +        reg = <0x33>;
-> +        interrupt-parent = <&gpioa>;
-> +        interrupts = <0 2>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +
-> +        onkey {
-> +          compatible = "st,stpmic1-onkey";
-> +          interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-> +          interrupt-names = "onkey-falling", "onkey-rising";
-> +          power-off-time-sec = <10>;
-> +        };
-> +
-> +        watchdog {
-> +          compatible = "st,stpmic1-wdt";
-> +        };
-> +
-> +        regulators {
-> +          compatible = "st,stpmic1-regulators";
-> +
-> +          ldo6-supply = <&v3v3>;
-
-Not documented.
-
-> +
-> +          buck1 {
-> +            regulator-name = "vdd_core";
-> +            interrupts = <IT_CURLIM_BUCK1 0>;
-> +            st,mask-reset;
-> +            regulator-boot-on;
-> +            regulator-min-microvolt = <700000>;
-> +            regulator-max-microvolt = <1200000>;
-> +          };
-> +
-> +          buck3 {
-> +            regulator-name = "vdd";
-> +            regulator-min-microvolt = <3300000>;
-> +            regulator-max-microvolt = <3300000>;
-> +            regulator-boot-on;
-> +            regulator-pull-down;
-> +          };
-> +
-> +          buck4 {
-> +            regulator-name = "v3v3";
-> +            interrupts = <IT_CURLIM_BUCK4 0>;
-> +            regulator-min-microvolt = <3300000>;
-> +            regulator-max-microvolt = <3300000>;
-> +          };
-> +
-> +          ldo6 {
-> +            regulator-name = "v1v8";
-> +            regulator-min-microvolt = <1800000>;
-> +            regulator-max-microvolt = <1800000>;
-> +            regulator-over-current-protection;
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-> +...
+>  Documentation/hwmon/ltc2978.rst                    | 164 ++++++++++++++++-----
+>  drivers/hwmon/pmbus/Kconfig                        |  11 +-
+>  drivers/hwmon/pmbus/ltc2978.c                      |  92 +++++++++++-
+>  4 files changed, 238 insertions(+), 51 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> index b428a70..4e7f621 100644
+> --- a/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> @@ -2,20 +2,30 @@ ltc2978
+>  
+>  Required properties:
+>  - compatible: should contain one of:
+> +  * "lltc,ltc2972"
+>    * "lltc,ltc2974"
+>    * "lltc,ltc2975"
+>    * "lltc,ltc2977"
+>    * "lltc,ltc2978"
+> +  * "lltc,ltc2979"
+>    * "lltc,ltc2980"
+>    * "lltc,ltc3880"
+>    * "lltc,ltc3882"
+>    * "lltc,ltc3883"
+> +  * "lltc,ltc3884"
+>    * "lltc,ltc3886"
+>    * "lltc,ltc3887"
+> +  * "lltc,ltc3889"
+> +  * "lltc,ltc7880"
+>    * "lltc,ltm2987"
+> +  * "lltc,ltm4664"
+>    * "lltc,ltm4675"
+>    * "lltc,ltm4676"
+> +  * "lltc,ltm4677"
+> +  * "lltc,ltm4678"
+> +  * "lltc,ltm4680"
+>    * "lltc,ltm4686"
+> +  * "lltc,ltm4700"
+>  - reg: I2C slave address
+>  
+>  Optional properties:
+> @@ -25,13 +35,17 @@ Optional properties:
+>    standard binding for regulators; see regulator.txt.
+>  
+>  Valid names of regulators depend on number of supplies supported per device:
+> +  * ltc2972 vout0 - vout1
+>    * ltc2974, ltc2975 : vout0 - vout3
+> -  * ltc2977, ltc2980, ltm2987 : vout0 - vout7
+> +  * ltc2977, ltc2979, ltc2980, ltm2987 : vout0 - vout7
+>    * ltc2978 : vout0 - vout7
+> -  * ltc3880, ltc3882, ltc3886 : vout0 - vout1
+> +  * ltc3880, ltc3882, ltc3884, ltc3886, ltc3887, ltc3889 : vout0 - vout1
+> +  * ltc7880 : vout0 - vout1
+>    * ltc3883 : vout0
+> -  * ltm4676 : vout0 - vout1
+> -  * ltm4686 : vout0 - vout1
+> +  * ltm4664 : vout0 - vout1
+> +  * ltm4675, ltm4676, ltm4677, ltm4678 : vout0 - vout1
+> +  * ltm4680, ltm4686 : vout0 - vout1
+> +  * ltm4700 : vout0 - vout1
+>  
+>  Example:
+>  ltc2978@5e {
