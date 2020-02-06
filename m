@@ -2,136 +2,100 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C264AC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F121AC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9305A222D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqz+EvUc"
+	by mail.kernel.org (Postfix) with ESMTP id CD19D20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgBFPHB (ORCPT
+        id S1727529AbgBFPI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:07:01 -0500
-Received: from mail-pf1-f179.google.com ([209.85.210.179]:41291 "EHLO
-        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbgBFPHA (ORCPT
+        Thu, 6 Feb 2020 10:08:56 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:52805 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBFPIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:07:00 -0500
-Received: by mail-pf1-f179.google.com with SMTP id j9so3253718pfa.8;
-        Thu, 06 Feb 2020 07:07:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=G8bcinAwhlUKAuE74TFdnn/03DR7H2/LoI5cBt5NR84=;
-        b=sqz+EvUcpfmT6rf/EBl88O6Ils/FJVBwNArhARJV7LalyCl5HbAxm2ZsP0Qnit07l9
-         /rLBxD05vpp8K3bzE0hpMYt+SyECbwEq8ELSYMkL6IQIH2fpmit36gwiO3r2ex7wZYnL
-         DHxheh+mwtykjEITCAuaOqUskn9Ss+tav3dPc6R5+YITB3K7WHnPsdaLYFlZB0vJfmYe
-         6NW+7Hb2ZSnH6bgHuFXHi6p/o/c7anudMMvO1tVgWL1hnDeckvBzRkV4G3ndmI5XoMu6
-         DUcsn1a8AVC8N63bcvxPVKgGCpXQGcatVszjmQyftkf8JkcPgVwO9dAutXrSBV7u0PZ2
-         wRoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=G8bcinAwhlUKAuE74TFdnn/03DR7H2/LoI5cBt5NR84=;
-        b=hv5lUMc9knSYpaWKTaUsQ+b+DnX+EBxcGbqc6DYbxb6Bw1FN8gQYvkdocuQqTD/5el
-         5AFi0Bp1LAP5lug8FKihxp96hAMBhOHog3zrmM1EN+L9MHnQB/mZpF8DE0/QsxZipSm+
-         dynqnKbfgZdRZt1xAtY9eB5VfVGxFCV3h2cwCAvm3WmPoWwZziuLP7mjmzmnzeU5VtUa
-         UacyhOsJpcY6e5zOlsiUJgG/IFNoe0id1KciMJvnA9QVwR9PHRTqcdjj3NWcJ5OqzsYE
-         qvr7OULF33YkGYPgGkmS/ZFg84eYkH7SmI6eziX4G7oGjakCiLciqDTKk95e5/SxUW1i
-         QPpw==
-X-Gm-Message-State: APjAAAWQIkhlwG62fbjAXSo6Y5OhpRew6uS86sSmo2H9MfsUhuCFMH8Q
-        LAGXf7B539rNSUItBPm3tunSLEeC3JI=
-X-Google-Smtp-Source: APXvYqwamc8plCqTbprXCkhunsgWbC5c2htmzmXJcs4Y2ZztW1yziXirU+hE91UkVfIygEy4UV/NzA==
-X-Received: by 2002:a63:3154:: with SMTP id x81mr4200126pgx.32.1581001619559;
-        Thu, 06 Feb 2020 07:06:59 -0800 (PST)
-Received: from localhost.localdomain ([2001:19f0:7001:2668:5400:1ff:fe62:2bbd])
-        by smtp.gmail.com with ESMTPSA id 64sm3748157pfd.48.2020.02.06.07.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 07:06:59 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
-Date:   Thu,  6 Feb 2020 23:06:26 +0800
-Message-Id: <20200206150626.708649-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200206150626.708649-1-gch981213@gmail.com>
-References: <20200206150626.708649-1-gch981213@gmail.com>
+        Thu, 6 Feb 2020 10:08:55 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: bU0gwNkrQaz7SxAOkj+o8ZrY/EAOeCPK1sgvVhJFXqiLPUFwUwJE96dX7h6Jsfgu+ML1FN2ga+
+ STfwTxJHerwPdyijuF3N962x3dmBoTzDMx92fJ8+Vc/XGUxKY0r3rY3SRaB2B8ONDwG+JXKSYv
+ JW/p4V61YRDzomR6CwTsO0W5lRFqNKRC4wXlo9dYrcgxXSIKs/sOI4tN4Wtcw/pSdyC8Nmca6S
+ VYj4i7J97JPKUMkLSQZYCdVKGbtyZyLS+m2x7k75k9h8M6unbob7ubd0WIDezQGFvOK1TaOKFv
+ +/U=
+X-IronPort-AV: E=Sophos;i="5.70,410,1574146800"; 
+   d="scan'208";a="63368692"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Feb 2020 08:08:54 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Feb 2020 08:08:53 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 6 Feb 2020 08:08:51 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
+        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH] net: dsa: microchip: enable module autoprobe
+Date:   Thu, 6 Feb 2020 17:08:37 +0200
+Message-ID: <20200206150837.12009-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for SPI controller in Qualcomm Atheros
-AR934x/QCA95xx SoCs.
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+This matches /sys/devices/.../spi1.0/modalias content.
+
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 ---
-Changes since v1: none
- .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+ drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-new file mode 100644
-index 000000000000..8f0c520a571c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/qca,ar934x-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Atheros AR934x/QCA95xx SoC SPI controller
-+
-+maintainers:
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: qca,ar934x-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    spi: spi@1f000000 {
-+        compatible = "qca,ar934x-spi";
-+        reg = <0x1f000000 0x1c>;
-+        clocks = <&pll ATH79_CLK_AHB>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
+diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
+index c5f64959a184..248b69c74b45 100644
+--- a/drivers/net/dsa/microchip/ksz9477_spi.c
++++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+@@ -101,6 +101,7 @@ static struct spi_driver ksz9477_spi_driver = {
+ 
+ module_spi_driver(ksz9477_spi_driver);
+ 
++MODULE_ALIAS("spi:ksz8563");
+ MODULE_AUTHOR("Woojung Huh <Woojung.Huh@microchip.com>");
+ MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI access Driver");
+ MODULE_LICENSE("GPL");
 -- 
-2.24.1
+2.20.1
 
