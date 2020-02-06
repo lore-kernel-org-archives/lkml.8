@@ -2,189 +2,159 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52577C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F017C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288DF217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581003967;
-	bh=qkTT9QVfoW5Hqi+5sQCx4C739P1VAWdOEN6lyWVwXek=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KF9R1J9FI7j0b1268ssZOMBgtNreA/8bJshrmuCKDdn1D90EeqP8SZqJ3MDuna6Hv
-	 FOhBH9qvp30533FkomXk5mzmgTdWi/zyAJCAivvDDcXj8Qi9DNSPcMFMKkMEvHuBjh
-	 o/UDXfItNF6CTMfLnZSneHl19mq3kxOkgNHRHf+g=
+	by mail.kernel.org (Postfix) with ESMTP id 6421F21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0gXevC6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgBFPqG (ORCPT
+        id S1727695AbgBFPq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgBFPqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:46:06 -0500
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74C24214AF;
-        Thu,  6 Feb 2020 15:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581003965;
-        bh=qkTT9QVfoW5Hqi+5sQCx4C739P1VAWdOEN6lyWVwXek=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eZiEGmPzLMlAvJlOgWtAC1//RnQHWe6BlLdIFgB4P21fSmFf73hVfnIE568YwqCdy
-         6c1N/cnrZ39J4LVGQQbD3NH1KR9YIHKzsK2sxUGDUF40hT+LcM8ogCd019xQqqyfvp
-         TE5ilZjcZtI8o7sUYgnr8wMRMvvQ8XHjO305gjBA=
-Date:   Thu, 6 Feb 2020 16:45:59 +0100
-From:   Miquel Raynal <mraynal@kernel.org>
-To:     liaoweixiong <liaoweixiong@allwinnertech.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on
- pstore/blk
-Message-ID: <20200206164559.59c5eb6a@xps13>
-In-Reply-To: <e135f947-226f-8dd0-b328-fb87c5064914@allwinnertech.com>
-References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
-        <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
-        <20200120110306.32e53fd8@xps13>
-        <27226590-379c-8784-f461-f5d701015611@allwinnertech.com>
-        <20200121094802.61f8cb4d@xps13>
-        <2c6000b1-ae25-564b-911a-2879e9c244b2@allwinnertech.com>
-        <20200122184114.125b42c8@xps13>
-        <e135f947-226f-8dd0-b328-fb87c5064914@allwinnertech.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Feb 2020 10:46:28 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34094 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727663AbgBFPq1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:46:27 -0500
+Received: by mail-qk1-f193.google.com with SMTP id n184so1174858qkn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 07:46:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kRRvyBPWT8Es74STxomqTpDHCa76gQjLB2CCJUssayM=;
+        b=0gXevC6aEU0IZUlb9/scF02jWHTiU00qYk9LUijF/5hdiUCvqa3NevcaCnTmUvmIZJ
+         CYl8Ti03GJNi5pVRpJqPN5HOA8djad0yBQW9pK1tLsRFlhHCIXSm+pLiNRbNLQAJyYBb
+         8hB7k5FpnOV9OvPz6HvFNMEhfAGLY8OO2Tbooi/mlTZ1d0gBgQ7mhUyPkm0pn09Lr09x
+         dhaCfJ5w00U3iDJU2nz/apuWVj+wqT0tTZZjH+MAiTH97+aChNnm99JtRN1E3cl5C62J
+         uG+Z9gfVIqQMx3/mFI+VdLgQ+QdjDNLLJ5HtIe8hotQ+LY7VXECCoCGTXi7SuNk1OtnH
+         8ujQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kRRvyBPWT8Es74STxomqTpDHCa76gQjLB2CCJUssayM=;
+        b=BvgAGf6dbyN2r4V73ZXgPR1T9gCL/ACgiKMO/Yp2LaTYKrtl6lui4mQDE1Zqik4hrr
+         8DSEIyEXztqNFsoKIlLgWiIAnNjvSS1WwHtz5d+os3cbWVsMvvf2fQZlHmYU/H05bBjM
+         MI0GJ3scXDygLbaY/apf1FZ1921u0N2lDltCoEZZF8xZltFPSVO25s7OPMUcYMlCwNZX
+         yd3h+JeZJXfb8/IUaJIYcpp/gbdHEf8wYrZn2MCNpokDZEOhmysqZKO8hYZOkyh92mon
+         5EKPHRnNHDwcRb1zzd0leKgACAmz9UQMmNLAojSQyT2EDOo1yV2Xw1QzAlZcDUeaBWsb
+         IFzw==
+X-Gm-Message-State: APjAAAUTcfcHftHk9GcCCsBo8HPH/UAYyzlaDlfiFeRf76woS4++hY1q
+        mBk8o7JIhCpfIqIa8nMhpLY9qrTGz+k=
+X-Google-Smtp-Source: APXvYqyMsmQpyg9uEjfMfe0RGA/Dtl5TtuYO75M1CcYm9p74JGnF1dhnxvivzvRQG/vj+RNZiyRUkw==
+X-Received: by 2002:a05:620a:1112:: with SMTP id o18mr3046650qkk.126.1581003985950;
+        Thu, 06 Feb 2020 07:46:25 -0800 (PST)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id t7sm1574736qkm.136.2020.02.06.07.46.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 07:46:25 -0800 (PST)
+Date:   Thu, 6 Feb 2020 10:46:24 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Dan Schatzberg <dschatzberg@fb.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH 2/2] loop: charge i/o per cgroup
+Message-ID: <20200206154624.GB24735@cmpxchg.org>
+References: <20200205223348.880610-1-dschatzberg@fb.com>
+ <20200205223348.880610-3-dschatzberg@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205223348.880610-3-dschatzberg@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi liao,
+Hello Dan,
 
-liaoweixiong <liaoweixiong@allwinnertech.com> wrote on Thu, 6 Feb 2020
-21:10:47 +0800:
+On Wed, Feb 05, 2020 at 02:33:48PM -0800, Dan Schatzberg wrote:
+> @@ -1925,14 +1990,13 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
+>  	}
+>  
+>  	/* always use the first bio's css */
+> +	cmd->blk_css = NULL;
+>  #ifdef CONFIG_BLK_CGROUP
+> -	if (cmd->use_aio && rq->bio && rq->bio->bi_blkg) {
+> -		cmd->css = &bio_blkcg(rq->bio)->css;
+> -		css_get(cmd->css);
+> -	} else
+> +	if (rq->bio && rq->bio->bi_blkg)
+> +		cmd->blk_css = &bio_blkcg(rq->bio)->css;
+>  #endif
+> -		cmd->css = NULL;
+> -	kthread_queue_work(&lo->worker, &cmd->work);
+> +
+> +	loop_queue_work(lo, cmd);
+>  
+>  	return BLK_STS_OK;
+>  }
+> @@ -1942,6 +2006,9 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>  	struct request *rq = blk_mq_rq_from_pdu(cmd);
+>  	const bool write = op_is_write(req_op(rq));
+>  	struct loop_device *lo = rq->q->queuedata;
+> +#ifdef CONFIG_MEMCG
+> +	struct cgroup_subsys_state *mem_css;
+> +#endif
+>  	int ret = 0;
+>  
+>  	if (write && (lo->lo_flags & LO_FLAGS_READ_ONLY)) {
+> @@ -1949,8 +2016,24 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>  		goto failed;
+>  	}
+>  
+> +	if (cmd->blk_css) {
+> +#ifdef CONFIG_MEMCG
+> +		mem_css = cgroup_get_e_css(cmd->blk_css->cgroup,
+> +					&memory_cgrp_subsys);
+> +		memalloc_use_memcg(mem_cgroup_from_css(mem_css));
+> +#endif
+> +		kthread_associate_blkcg(cmd->blk_css);
+> +	}
+> +
+>  	ret = do_req_filebacked(lo, rq);
+> - failed:
+> +
+> +	if (cmd->blk_css) {
+> +		kthread_associate_blkcg(NULL);
+> +#ifdef CONFIG_MEMCG
+> +		memalloc_unuse_memcg();
+> +#endif
 
-> hi Miquel Raynal,
->=20
-> On 2020/1/23 AM 1:41, Miquel Raynal wrote:
-> > Hello,
-> >=20
-> >  =20
-> >>>>>> +/*
-> >>>>>> + * All zones will be read as pstore/blk will read zone one by one=
- when do
-> >>>>>> + * recover.
-> >>>>>> + */
-> >>>>>> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
-> >>>>>> +{
-> >>>>>> +	struct mtdpstore_context *cxt =3D &oops_cxt;
-> >>>>>> +	size_t retlen;
-> >>>>>> +	int ret;
-> >>>>>> +
-> >>>>>> +	if (mtdpstore_block_isbad(cxt, off))
-> >>>>>> +		return -ENEXT;
-> >>>>>> +
-> >>>>>> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
-> >>>>>> +	ret =3D mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
-> >>>>>> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size !=3D retlen)  { =20
-> >>>>>
-> >>>>> IIRC size !=3D retlen does not mean it failed, but that you should
-> >>>>> continue reading after retlen bytes, no? =20
-> >>>>>     >> =20
-> >>>> Yes, you are right. I will fix it. Thanks. =20
-> >>>>   >>>>> Also, mtd_is_bitflip() does not mean that you are reading a =
-false =20
-> >>>>> buffer, but that the data has been corrected as it contained bitfli=
-ps.
-> >>>>> mtd_is_eccerr() however, would be meaningful. =20
-> >>>>>     >> =20
-> >>>> Sure I know mtd_is_bitflip() does not mean failure, but I do not thi=
-nk
-> >>>> mtd_is_eccerr() should be here since the codes are ret < 0 and NOT
-> >>>> mtd_is_bitflip(). =20
-> >>>
-> >>> Yes, just drop this check, only keep ret < 0. =20
-> >>>    >> =20
-> >> If I don't get it wrong, it should not	 be dropped here. Like your wor=
-ds,
-> >> "mtd_is_bitflip() does not mean that you are reading a false buffer,
-> >> but that the data has been corrected as it contained bitflips.", the
-> >> data I get are valid even if mtd_is_bitflip() return true. It's correct
-> >> data and it's no need to go to handle error. To me, the codes
-> >> should be:
-> >> 	if (ret < 0 && !mit_is_bitflip())
-> >> 		[error handling] =20
-> >=20
-> > Please check the implementation of mtd_is_bitflip(). You'll probably
-> > figure out what I am saying.
-> >=20
-> > https://elixir.bootlin.com/linux/latest/source/include/linux/mtd/mtd.h#=
-L585
-> >  =20
->=20
-> How about the codes as follows:
->=20
-> for (done =3D 0, retlen =3D 0; done < size; done +=3D retlen) {
-> 	ret =3D mtd_read(..., &retlen, ...);
-> 	if (!ret)
-> 		continue;
-> 	/*
-> 	 * do nothing if bitflip and ecc error occurs because whether
-> 	 * it's bitflip or ECC error, just a small number of bits flip
-> 	 * and the impact on log data is so small. The mtdpstore just
-> 	 * hands over what it gets and user can judge whether the data
-> 	 * is valid or not.
-> 	 */
-> 	if (mtd_is_bitflip(ret)) {
-> 		dev_warn("bitflip at....");
-> 		continue;
+cgroup_get_e_css() acquires a reference, it looks like you're missing
+a css_put() here.
 
-I don't understand why do you check for bitflips. Bitflips have been
-corrected at this stage, you just get the information that there
-has been bitflips, but the data integrity is fine.
+I also wonder why you look up blk_css and mem_css in separate
+places. Since you already renamed cmd->css to cmd->blk_css, can you
+also add cmd->mem_css and pair up their lookup and refcounting?
 
-I am not against ignoring ECC errors in this case though. I would
-propose:
+This should make loop_handle_cmd() a bit more straight-forward:
 
-	for (...) {
-		if (ret < 0) {
-			complain;
-			return;
-		}
+	if (cmd->blk_css)
+		kthread_associate_blkcg(cmd->blk_css);
+	if (cmd->mem_css)
+		memalloc_use_memcg(mem_cgroup_from_css(mem_css));
 
-		if (mtd_is_eccerr())
-			complain;
-	}
-	=09
-> 	} else if (mtd_is_eccerr(ret)) {
-> 		dev_warn("eccerr at....");
-> 		retlen =3D retlen =3D=3D 0 ? size : retlen;
-> 		continue;
-> 	} else {
-> 		dev_err("read failure at...");
-> 		/* this zone is broken, try next one */
-> 		return -ENEXT;
-> 	}
-> }
->=20
+	ret = do_req_filebacked(lo, rq);
 
+	memalloc_unuse_memcg();
+	kthread_associate_blkcg(NULL);
 
-Thanks,
-Miqu=C3=A8l
+All these functions have dummy implementations for !CONFIG_BLK_CGROUP,
+!CONFIG_MEMCG etc., so it shouldn't require any additional ifdefs.
