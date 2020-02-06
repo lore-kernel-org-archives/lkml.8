@@ -2,111 +2,86 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E63C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE61C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05ABE21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E843221741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="BucAo8q5"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="mhDIUKV3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="R6BmjNIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgBFQLd (ORCPT
+        id S1727705AbgBFQMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:11:33 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53852 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgBFQLc (ORCPT
+        Thu, 6 Feb 2020 11:12:16 -0500
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:63438 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBFQMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:11:32 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so165368pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 08:11:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=ShO/ZVHIlXWBbnOBWlcqX5lFDNR31/CcbxL+NYy3uCs=;
-        b=BucAo8q5H6l+y/zkiWSHU/uS3/MdTExtLLSryAR0sLTOa7NCQHvC9SE1vOd3mwa7JD
-         Px/W1lQbZ/Ws2zsPbiWu4W3HImbTvt/8c4IFM+YBwXT9xiRc4cTIw1Y45AvvpsWWvpN/
-         oppgu5KccXuPdjobS3Imy34ND3dZn4Z+HeOq7BR2GmdgKx4NK4rxF7HJvQkTLEh/I3NS
-         U1kvnFjXkuDZIomK5HGX9p/C8wG1KVlPk50ZxgjoN8/6+h9u3Q7wcXyX+x9N+liA8I9Z
-         UWGNs50N/8tjc3VbemXUFHTAIow6n3alPnETR/ZPn+KfhgZNY7IHvFiG3ZNalnG0tb2L
-         waQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=ShO/ZVHIlXWBbnOBWlcqX5lFDNR31/CcbxL+NYy3uCs=;
-        b=L8kIahOvWUJmZoJkXb9aytfdGntnXYpf57qVU252lGLdohvnW5+1tvZXxDJOlwKNeq
-         H8rvyeJaM+mkisEZ/7PzFUrcSpZDnTaP/dQKpvy7GCa6skKScqxMAjnz2Co+Bwt+YKOL
-         Q1A32BU5Za+ihVeOKySCinVp4O4OZdueJJDBB9Wz1DM4J9k21nMhKBiZmV4V86FhncW/
-         /wsb7B+Q/pij4WjZMW6DFXrZ0VJXHnglVIutHhKk/EWVcCpsATxRmgmeicV3QzRuVt1b
-         c1zJtYQyE7cTvNdf+QvVeKIswGxWeLpb2UOWj7v/nM9+dcsipHi4K3U2vA/ozgnWdiPr
-         2OYw==
-X-Gm-Message-State: APjAAAWrtkTzOwnnkTwtH19JbQ04RKd2DhHaIRdtqMpKRq0wvfPZT+Mr
-        NsiwHtOB+bhgkINm9UGmpA+caw==
-X-Google-Smtp-Source: APXvYqzY/1V149Xc6NfSBQ5Gb8li0Zj7tK81ZlOtSgNffKALUeuhuKRkE0TSHk329flS3FxkOy5VyA==
-X-Received: by 2002:a17:90a:e981:: with SMTP id v1mr5371620pjy.131.1581005492066;
-        Thu, 06 Feb 2020 08:11:32 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:3448:2e42:e55:6113? ([2601:646:c200:1ef2:3448:2e42:e55:6113])
-        by smtp.gmail.com with ESMTPSA id i11sm4090079pjg.0.2020.02.06.08.11.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 08:11:31 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function sections
-Date:   Thu, 6 Feb 2020 08:11:30 -0800
-Message-Id: <B1282A43-1246-4956-917C-72135D9F0328@amacapital.net>
-References: <20200206152949.GA3055637@rani.riverdale.lan>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-In-Reply-To: <20200206152949.GA3055637@rani.riverdale.lan>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-X-Mailer: iPhone Mail (17C54)
+        Thu, 6 Feb 2020 11:12:15 -0500
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 7914E4267F;
+        Thu,  6 Feb 2020 11:12:14 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=s77iPB9oFfq1CkqBPIOEo+Qt9nE=; b=mhDIUK
+        V3+nFIBbZ4oaaKXKLwQ0WuAtfmTWW8hFHiJxq59f2BLifyQJx5YzvDJWcKNliDZ6
+        M4NLDIb/8wSgCazOxVDsloRrU/86KEr0LG+7PB1ZuxVpyNRx4Aid9S4d01P53K/8
+        9rEQD6i7//+ezo68eR5X/3hJstakKh7eiwI+U=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 6F96D4267E;
+        Thu,  6 Feb 2020 11:12:14 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=USAs6fd+3dK9Jv6668+jev/vMsJexfPZ6kNB/99uw7A=; b=R6BmjNIZ5BDDOmlSnNrBqmLNfxnLGYGd8rMdTe8MNtC246FoDErsshWuEf7NTNOGHW2vShefSbGg4hwVnm7xbzwR+UCbkT8EtDjfRwLlhcHEImL7rT0oLbWme8V8YMTsXSLCXXyBE8YQ0Irf/Ff3cB6LJPXnEurDdWYjtISpd4I=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id E52B94267D;
+        Thu,  6 Feb 2020 11:12:13 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id BB4C22DA03F4;
+        Thu,  6 Feb 2020 11:12:12 -0500 (EST)
+Date:   Thu, 6 Feb 2020 11:12:12 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Jessica Yu <jeyu@kernel.org>
+cc:     Quentin Perret <qperret@google.com>, masahiroy@kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maennich@google.com, kernel-team@android.com
+Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+In-Reply-To: <20200206155651.GC16783@linux-8ccs>
+Message-ID: <nycvar.YSQ.7.76.2002061103360.1559@knanqh.ubzr>
+References: <20200129181541.105335-1-qperret@google.com> <20200206155651.GC16783@linux-8ccs>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 6FE61F14-48FB-11EA-9CA5-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 6 Feb 2020, Jessica Yu wrote:
 
-> On Feb 6, 2020, at 7:29 AM, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->=20
-> =EF=BB=BFOn Thu, Feb 06, 2020 at 09:39:43AM -0500, Arvind Sankar wrote:
->>> On Thu, Feb 06, 2020 at 04:26:23AM -0800, Kees Cook wrote:
->>> I know x86_64 stack alignment is 16 bytes. I cannot find evidence for
->>> what function start alignment should be. It seems the linker is 16 byte
->>> aligning these functions, when I think no alignment is needed for
->>> function starts, so we're wasting some memory (average 8 bytes per
->>> function, at say 50,000 functions, so approaching 512KB) between
->>> functions. If we can specify a 1 byte alignment for these orphan
->>> sections, that would be nice, as mentioned in the cover letter: we lose
->>> a 4 bits of entropy to this alignment, since all randomized function
->>> addresses will have their low bits set to zero.
->>>=20
->>=20
->> The default function alignment is 16-bytes for x64 at least with gcc.
->> You can use -falign-functions to specify a different alignment.
->>=20
->> There was some old discussion on reducing it [1] but it doesn't seem to
->> have been merged.
->>=20
->> [1] https://lore.kernel.org/lkml/tip-4874fe1eeb40b403a8c9d0ddeb4d166cab3f=
-37ba@git.kernel.org/
->=20
-> Though I don't think the entropy loss is real. With 50k functions, you
-> can use at most log(50k!) =3D ~35 KiB worth of entropy in permuting them,
-> no matter what the alignment is. The only way you can get more is if you
-> have more than 50k slots to put them in.
+> Hm, I thought TRIM_UNUSED_KSYMS just *unexports* unused symbols, no?
+> "Trimmed from the build" sounds like the symbols are not compiled in
+> or dropped completely. Please correct me if I misunderstood.
 
-There is a security consideration here that has nothing to do with entropy p=
-er se. If an attacker locates two functions, they learn the distance between=
- them. This constrains what can fit in the gap. Padding reduces the strength=
- of this type of attack, as would some degree of random padding.=
+If they are unexposed, then it doesn't make much sense to keep them 
+around wasting space. So yes, the compiler is free to optimize away the 
+unused code at that point.
+
+Please see the first part of the following article where effective 
+kernel size reduction is is achieved with this feature:
+
+https://lwn.net/Articles/746780/
+
+
+Nicolas
