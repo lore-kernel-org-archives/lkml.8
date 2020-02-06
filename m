@@ -2,147 +2,171 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5670DC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C6EC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23707218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE22218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="lhfXKn28"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D1NLv/dH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgBFUB0 (ORCPT
+        id S1727967AbgBFUCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:01:26 -0500
-Received: from mail-eopbgr700108.outbound.protection.outlook.com ([40.107.70.108]:46432
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727703AbgBFUBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:01:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CazPA5CJqBtX54b3URvM6vWLqBPaEX7AIoP+VT6RLq1d3k0UP6paWojb+k1w5lYHEc/DZhRUcGmikGnTcP4qeuRltgAMHcN3NVJeNX4VmeiCOCOjmwAGdxtiF9UGxFmR/IdoJwC+25xJlmHbP283ZjalmhxaQma4jEtvormWcucJsxVk3BxDY6HjSy9kRViuVVZH1pL+NaZNiRy6TMGrIZDkKR89IRIEikBdo7zON53gDShyouoR1zmSW2nwhe1P/evOdU116+f6IeeXB3J1BiczXLEhWpeLA3cNKfdGtTPw7qSNoS+cUI/YHCh1ypRT8BT3s64ptdMIBSW+9ZFdtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OCkEDuNPxXyoUb8puS3lidEq+LR/opn1kJCrFr/R9CA=;
- b=KWnReVmFItjetO/n8LE8z8O8S7mMjYkHJE8qnHXqbZJIP4P+FpjQgnx33kpY0d4s8tnWWiLY93MJnNQoCqVrdTusDg53Eild3JDdNDzcN38rR/rG3uw67Kmg4cAPu2rvJfhGWFyjxuoF2NJGwntiWU9rrY3uo07yVt+SFuertmMIsnV1VLKBcitSjeybknFx8hd/aaKI7T8LObUw7zkw48XNQ7r0IdjNauWNoNb5rum/MWXS0GXVizqbSEL62uImUrD8f+M0ry1eui0cIYvFdeyWMOqDTfu/FiWoiYwJiGcy+xw+rFwVix89RB1DGRl1whDcjsbYJn2VZktoomcuXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OCkEDuNPxXyoUb8puS3lidEq+LR/opn1kJCrFr/R9CA=;
- b=lhfXKn288O1YpfVLhMM54124+jVJj3n8UhgQnhbvUOix5I/OXm3RnMZlhEiQXczbIbt9RX/ypddBi3BV2WqPtzLS6UxFT39PiBjZLbKIlpR0n6peeh0G/En6pGKCGR8Ss8Mk7lZU3rY1nHdLksi1HB+BC32bOi2v94iTSCFeQnU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=hoan@os.amperecomputing.com; 
-Received: from DM6PR01MB4090.prod.exchangelabs.com (20.176.105.203) by
- DM6PR01MB5769.prod.exchangelabs.com (10.255.9.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.29; Thu, 6 Feb 2020 20:01:23 +0000
-Received: from DM6PR01MB4090.prod.exchangelabs.com
- ([fe80::e148:5333:b3b1:b153]) by DM6PR01MB4090.prod.exchangelabs.com
- ([fe80::e148:5333:b3b1:b153%5]) with mapi id 15.20.2707.023; Thu, 6 Feb 2020
- 20:01:23 +0000
-Subject: Re: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
- NUMA
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        patches@os.amperecomputing.com
-References: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200206102340.GA17074@willie-the-truck>
-From:   Hoan Tran <hoan@os.amperecomputing.com>
-Message-ID: <c85dbc06-a72b-9c98-fe41-b25069114b2f@os.amperecomputing.com>
-Date:   Thu, 6 Feb 2020 12:01:19 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
-In-Reply-To: <20200206102340.GA17074@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CY4PR1201CA0020.namprd12.prod.outlook.com
- (2603:10b6:910:16::30) To DM6PR01MB4090.prod.exchangelabs.com
- (2603:10b6:5:27::11)
+        Thu, 6 Feb 2020 15:02:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30212 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727711AbgBFUCI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 15:02:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581019326;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/yqizwNchM67CZ4udbXR6GdfQrlh05oiSzFTK/80D3I=;
+        b=D1NLv/dH6yaBCyyEuaS0lZuYZ7jJsT/iHCNNwnY9XmbbuKZWGmcxXfPfQf5O8GgXoZIRys
+        UJprC2FPuAdZvP0WQGZUGxdwWJWVHaDm0tzcKR+PuZuNR9BxdUQeClj7DMpR30ev88GiQR
+        TsFTtAofDHqC0jvBEpiL2xGg3F7Ih6U=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-V6srSvYxOwW2Tclwuz6pNQ-1; Thu, 06 Feb 2020 15:02:05 -0500
+X-MC-Unique: V6srSvYxOwW2Tclwuz6pNQ-1
+Received: by mail-qt1-f199.google.com with SMTP id c22so4609197qtn.23
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:02:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/yqizwNchM67CZ4udbXR6GdfQrlh05oiSzFTK/80D3I=;
+        b=tMUUvfe69ItTGY6kg/2AEpGX/ChpUplfvwB2jD56aGnNFNgIgskWo9Vq6/mTYyKXU0
+         Bt0smJQb1bjzE91KLwFTrldLMzmWaF7/GzSGO41eRAXPOMdctENRmL+m3RF3o2Klxsmv
+         qGOzUw98d7jOTLGI1LQfpfrhXnaAMeqFI6DyYouwV96PhfvFOdEGtWzhjKA5W8nkSxCZ
+         BZSnsO1xF5iOZGEiaku7ldE0czafH1pRrax/chYYTP1JyMdtGzx5lUAfANY5gJYrO9hG
+         gcSCdPD4L1RtjhGaFCYVgTbMjDAK8bLpvUbHCuMK45k/HXD5bYWkq8qtsQWacB1K1/fx
+         Tl0Q==
+X-Gm-Message-State: APjAAAUmLjWrF3LFgmq2ounJ2unP8ZUBxJYimSSAZYHH+W6uAsdmImJM
+        W+vrabvDGPuKGxd0tPE7Ud+Xw+c7BpiDdoTocGuMmBg6Jfcitng3hhlKlHpz8z3FJqDndxHNyvL
+        CQE5wl0hNFwR5Zxp6VgOOGAdq
+X-Received: by 2002:ac8:19b6:: with SMTP id u51mr4287214qtj.319.1581019324651;
+        Thu, 06 Feb 2020 12:02:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzOujc3lNLMWX/FRlR8tea+183dvvLwpGv6w6oIURj933aU7qyXuyTi9CIJeDyrMsTLUQvKYA==
+X-Received: by 2002:ac8:19b6:: with SMTP id u51mr4287163qtj.319.1581019324320;
+        Thu, 06 Feb 2020 12:02:04 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id k50sm163595qtc.90.2020.02.06.12.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 12:02:03 -0800 (PST)
+Date:   Thu, 6 Feb 2020 15:02:00 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
+ dirty log functions
+Message-ID: <20200206200200.GC700495@xz-x1>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-16-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Received: from [192.168.0.184] (67.161.31.237) by CY4PR1201CA0020.namprd12.prod.outlook.com (2603:10b6:910:16::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend Transport; Thu, 6 Feb 2020 20:01:22 +0000
-X-Originating-IP: [67.161.31.237]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 681ef895-454b-45c8-4cc3-08d7ab3f5719
-X-MS-TrafficTypeDiagnostic: DM6PR01MB5769:
-X-Microsoft-Antispam-PRVS: <DM6PR01MB57699707EF403B528B89BF79F11D0@DM6PR01MB5769.prod.exchangelabs.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 0305463112
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(39840400004)(396003)(136003)(346002)(189003)(199004)(4326008)(966005)(86362001)(6916009)(478600001)(31696002)(66946007)(66556008)(53546011)(956004)(2616005)(107886003)(66476007)(16576012)(5660300002)(26005)(6486002)(31686004)(8936002)(8676002)(316002)(81156014)(81166006)(2906002)(16526019)(52116002)(186003)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR01MB5769;H:DM6PR01MB4090.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-Received-SPF: None (protection.outlook.com: os.amperecomputing.com does not
- designate permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GaJyHS/8m/90oEp3EfdmXhiQDNvh+st2lNMpR68hsFCq8iPC7eKY5GFhOdpeEIkT5msm2tv1rE9NpAGkw++VCZhMBExLznc4th6Xk+aCsdislDUJF+gmJDsE5pkTzYld8dU9qApLyQw/RgFBBf9XELmHeFaIxXkh6DKcikiPbKzL8yTnaOvLBBuacZ3mShljn0jiHVyR4D0N+zWf86BcH0YsRHmewDU/akJDUXh4xrQcAwJam+fgozuYOfTEPo1rygBPE8sSJwkwvQhfECF1Bd/rh/d6kn/KVsMfjPXQoZjhwh2nwyAnfvINP+D637bh8WwEBPZgPsXBVLo5vkxtajXCGZaPDn2IPIA9RYvwCJN/yNjdIL0kSTlEFzOa12J1xMqTrAm81SbBo4KvsS468F6p4UMw8vjrKcerS6fFdqftimOqdRKrtrYGtSmHDpHjfVVKMz5KrIVAYL0U3u4OT5L5uF5+o8wWQ9XbeXu7h8DwjYF/DX4lZMz2FU+ei2Hum9JyQnINg4kctcKX/eH3/Q==
-X-MS-Exchange-AntiSpam-MessageData: 0IQLWH/mIsvZNftRnfN+FCij/KJAvk5Zu0P4i8eCAwkFIjo8JlSwx2kF3/ZdlQVamE9gLeNnQubCX6g9pgDBuu+tZraNPhB7Xbt6zafIlrj44zDf69XhfiyykLBzzlPM2aunxSdPnVqaas9npxB19Q==
-X-MS-Exchange-Transport-Forked: True
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 681ef895-454b-45c8-4cc3-08d7ab3f5719
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 20:01:23.1248
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jb//zUTzLLVW5GP/VUA6kCpn7VI6j6CjD59hT5xmyQPW85o8TeC0X8tgICeKcaGHPPdXHNizP2OMWzhwSgmtnGreU++B1FN1usRW90BiFgc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB5769
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200121223157.15263-16-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Tue, Jan 21, 2020 at 02:31:53PM -0800, Sean Christopherson wrote:
 
-On 2/6/20 2:23 AM, Will Deacon wrote:
-> On Mon, Feb 03, 2020 at 11:55:14AM -0800, Hoan Tran wrote:
->> Some NUMA nodes have memory ranges that span other nodes.
->> Even though a pfn is valid and between a node's start and end pfns,
->> it may not reside on that node.
->>
->> This patch enables NODES_SPAN_OTHER_NODES config for NUMA to support
->> this type of NUMA layout.
->>
->> Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
->> ---
->>   arch/arm64/Kconfig | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index e688dfa..939d28f 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -959,6 +959,13 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
->>   config HOLES_IN_ZONE
->>   	def_bool y
->>   
->> +# Some NUMA nodes have memory ranges that span other nodes.
->> +# Even though a pfn is valid and between a node's start and end pfns,
->> +# it may not reside on that node.
->> +config NODES_SPAN_OTHER_NODES
->> +	def_bool y
->> +	depends on ACPI_NUMA
->> +
-> 
-> I thought we agreed to do this in the core code?
-> 
-> https://lore.kernel.org/lkml/1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com
+[...]
 
-Yes, but it looks like Thomas didn't agree to apply this patch into x86.
+> -int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm, struct kvm_clear_dirty_log *log)
+> +void kvm_arch_dirty_log_tlb_flush(struct kvm *kvm,
+> +				  struct kvm_memory_slot *memslot)
 
-https://lore.kernel.org/lkml/alpine.DEB.2.21.1907152042110.1767@nanos.tec.linutronix.de/
+If it's to flush TLB for a memslot, shall we remove the "dirty_log" in
+the name of the function, because it has nothing to do with dirty
+logging any more?  And...
 
-Regards
-Hoan
+>  {
+> -	struct kvm_memslots *slots;
+> -	struct kvm_memory_slot *memslot;
+> -	bool flush = false;
+> -	int r;
+> -
+> -	mutex_lock(&kvm->slots_lock);
+> -
+> -	r = kvm_clear_dirty_log_protect(kvm, log, &flush);
+> -
+> -	if (flush) {
+> -		slots = kvm_memslots(kvm);
+> -		memslot = id_to_memslot(slots, log->slot);
+> -
+> -		/* Let implementation handle TLB/GVA invalidation */
+> -		kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
+> -	}
+> -
+> -	mutex_unlock(&kvm->slots_lock);
+> -	return r;
+> +	/* Let implementation handle TLB/GVA invalidation */
+> +	kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
 
-> 
-> Will
-> 
+... This may not directly related to the current patch, but I'm
+confused on why MIPS cannot use kvm_flush_remote_tlbs() to flush TLBs.
+I know nothing about MIPS code, but IIUC here flush_shadow_memslot()
+is a heavier operation that will also invalidate the shadow pages.
+Seems to be an overkill here when we only changed write permission of
+the PTEs?  I tried to check the first occurance (2a31b9db15353) but I
+didn't find out any clue of it so far.
+
+But that matters to this patch because if MIPS can use
+kvm_flush_remote_tlbs(), then we probably don't need this
+arch-specific hook any more and we can directly call
+kvm_flush_remote_tlbs() after sync dirty log when flush==true.
+
+>  }
+>  
+>  long kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+> diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+> index 97ce6c4f7b48..0adaf4791a6d 100644
+> --- a/arch/powerpc/kvm/book3s.c
+> +++ b/arch/powerpc/kvm/book3s.c
+> @@ -799,6 +799,11 @@ int kvmppc_core_check_requests(struct kvm_vcpu *vcpu)
+>  	return vcpu->kvm->arch.kvm_ops->check_requests(vcpu);
+>  }
+>  
+> +void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
+
+Since at it, maybe we can start to use __weak attribute for new hooks
+especially when it's empty for most archs?
+
+E.g., define:
+
+void __weak kvm_arch_sync_dirty_log(...) {}
+
+In the common code, then only define it again in arch that has
+non-empty implementation of this method?
+
+-- 
+Peter Xu
+
