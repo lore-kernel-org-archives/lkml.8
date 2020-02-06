@@ -2,141 +2,149 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4DC35254
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E324C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061F020674
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0181620661
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="SZ9xZyWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgBFD0H (ORCPT
+        id S1727663AbgBFDhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:26:07 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10276 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727474AbgBFD0G (ORCPT
+        Wed, 5 Feb 2020 22:37:48 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46475 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgBFDhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:26:06 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0163EM4O118249;
-        Wed, 5 Feb 2020 22:25:36 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyphx1566-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 22:25:36 -0500
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0163LKY9016276;
-        Wed, 5 Feb 2020 22:25:35 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyphx155m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Feb 2020 22:25:35 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0163Blmv019116;
-        Thu, 6 Feb 2020 03:25:34 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02wdc.us.ibm.com with ESMTP id 2xykc9hw66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 03:25:34 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0163PXtR29163848
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Feb 2020 03:25:33 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EA70AE05F;
-        Thu,  6 Feb 2020 03:25:33 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 350F1AE05C;
-        Thu,  6 Feb 2020 03:25:24 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.163.250])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Feb 2020 03:25:23 +0000 (GMT)
-Message-ID: <760c238043196e0628c8c0eff48a8e938ef539ba.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 02/11] mm/gup: Use functions to track lockless pgtbl
- walks on gup_pgd_range
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Steven Price <steven.price@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Date:   Thu, 06 Feb 2020 00:25:18 -0300
-In-Reply-To: <20200206030900.147032-3-leonardo@linux.ibm.com>
-References: <20200206030900.147032-1-leonardo@linux.ibm.com>
-         <20200206030900.147032-3-leonardo@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-5TGq9qc6jmgO8SfflYEA"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Wed, 5 Feb 2020 22:37:47 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e25so3412892qtr.13;
+        Wed, 05 Feb 2020 19:37:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fy0LCVYfm45Yj1SMlTDHcT8rLY7rLsCrngabnvAls3c=;
+        b=SZ9xZyWygxE91HCl/DMHXWYWKuttICIdff5pdazkGTAd0r/VoPjFrl6y+CmQ1fnJ1m
+         wX05iZqW7i0jqGha6L3MvLlR/QSyJXQMsbVEdCTSE6XEBEaYxzoEueZfo03DCljXsVdQ
+         s73hhhVaBzDTHAAhiEWC9LCBaTsZWkbIKMV8s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fy0LCVYfm45Yj1SMlTDHcT8rLY7rLsCrngabnvAls3c=;
+        b=Z2Tl9ZUELayX5G/rV/IiFQz2qlpdlj91hH4mhcyT3zYAJ30ynUzyKif7qRW+/TubRt
+         RXOx0MZ2VlvgJujReE1sEUTgXeoSHQCM4YX4U5cN4Jm1HtmCiZtTwJU64UKAB46XHoBw
+         aSLvQlF1LwLeOjkdBJM+zJNTfkaRgWRrANYGRHmOnhIjmlx+j8TzHMGS1j4WYf5DmycZ
+         riREA/+hJqs0DKHGvd4o/aV/tpw0iL1fyNGbKS5LxFIDj/JIBMiUzQw+dodn9ErTmLlx
+         E+T4sjM06kOnKiJxXMk5phN76ztRLN0K6Qc7TwDTEfSyZ0kHZE+tTGR7AzCs6VvpIGeu
+         tOJw==
+X-Gm-Message-State: APjAAAVOD65XE8dZ26xC8Yu7P5tZmJ7IWiEdZQCbEhk9o/TID67svVAk
+        KaQNAFtqidV1qIiDMw1ZLZW3UGwXuUI0kQMnfPQ=
+X-Google-Smtp-Source: APXvYqyDLz6miWRvS0QybUMSgD70iGHqzh15onQ9joAuuH+LBPBcIFQNrfVFPF6ri7qTSNhowcHwwvdrBI6qQC4HORI=
+X-Received: by 2002:aed:3b3b:: with SMTP id p56mr920975qte.234.1580960266457;
+ Wed, 05 Feb 2020 19:37:46 -0800 (PST)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-05_06:2020-02-04,2020-02-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0 phishscore=0
- mlxlogscore=918 lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002060023
+References: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
+ <26635edf-2df3-df0f-5644-e016e1e20248@linux.intel.com>
+In-Reply-To: <26635edf-2df3-df0f-5644-e016e1e20248@linux.intel.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 6 Feb 2020 03:37:34 +0000
+Message-ID: <CACPK8XfsuyVXiLtra7mBNWTDucArPAZfOUqt96squmtBnqsGvg@mail.gmail.com>
+Subject: Re: TI PCIe xHCI and kexec
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 5 Feb 2020 at 09:35, Mathias Nyman
+<mathias.nyman@linux.intel.com> wrote:
+>
+> On 5.2.2020 2.55, Joel Stanley wrote:
+> > I'm supporting a system that uses Linux-as-a-bootloader to load a
+> > distro kernel via kexec, The systems have a TI TUSB73x0 PCIe
+> > controller which goes out to lunch after a kexec. This is the distro
+> > (post-kexec) kernel:
+> >
+> > [    0.235411] pci 0003:01:00.0: xHCI HW did not halt within 16000
+> > usec status = 0x0
+> > [    1.037298] xhci_hcd 0003:01:00.0: xHCI Host Controller
+> > [    1.037367] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
+> > bus number 1
+> > [    1.053481] xhci_hcd 0003:01:00.0: Host halt failed, -110
+> > [    1.053523] xhci_hcd 0003:01:00.0: can't setup: -110
+> > [    1.053565] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
+> > [    1.053629] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
+> > [    1.053703] xhci_hcd: probe of 0003:01:00.0 failed with error -110
+> >
+> > There were some fixes made a few years back to improve the situation,
+> > but we've still had to carry some form of the patch below in the
+> > bootloader kernel. I would like to rework it so it can be merged.
+> >
+> > diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> > index dbac0fa9748d..eaa94456dd9d 100644
+> > --- a/drivers/usb/host/xhci.c
+> > +++ b/drivers/usb/host/xhci.c
+> > @@ -789,6 +789,9 @@ void xhci_shutdown(struct usb_hcd *hcd)
+> >       xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+> >               "xhci_shutdown completed - status = %x",
+> >               readl(&xhci->op_regs->status));
+> > +
+> > +    /* TI XHCI controllers do not come back after kexec without this hack */
+> > +    pci_reset_function_locked(to_pci_dev(hcd->self.sysdev));
+> >   }
+> >   EXPORT_SYMBOL_GPL(xhci_shutdown);
+> >
+> > I would like some advice on how to implement it in a way that is
+> > acceptable. Would a quirk on the pci id in xhci_shutdown be ok?
+>
+> Yes, but as this is a pci specific workaround the quirk should go to
+> xhci-pci.c: xhci_pci_shutdown(), which was added in v5.5
+>
+> Is the rootcause known?
+> Is the only possible solution to reset the pci function?.
 
---=-5TGq9qc6jmgO8SfflYEA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I don't know the root cause. The people that helped debug it in the
+first place have moved on.
 
-On Thu, 2020-02-06 at 00:08 -0300, Leonardo Bras wrote:
->                 gup_pgd_range(addr, end, gup_flags, pages, &nr);
-> -               local_irq_enable();
-> +               end_lockless_pgtbl_walk(IRQS_ENABLED);
->                 ret =3D nr;
->         }
-> =20
+> Have you tried, or seen this issue on any other controller than this TUSB73x0?
 
-Just noticed IRQS_ENABLED is not available on other archs than ppc64.
-I will fix this for v7.
+We don't have any systems with a different USB controller.
 
---=-5TGq9qc6jmgO8SfflYEA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+In general, the other PCie devices in the system are well (enough)
+behaved to survive kexec. We don't have any other out of tree
+workarounds.
 
------BEGIN PGP SIGNATURE-----
+>
+> >
+> > 0003:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB
+> > 3.0 xHCI Host Controller (rev 02)
+> >
+> > The full debug log of the distro kernel booting is below.
+> >
+> > [    1.037833] xhci_hcd 0003:01:00.0: USBCMD 0x0:
+> > [    1.037835] xhci_hcd 0003:01:00.0:   HC is being stopped
+> > [    1.037837] xhci_hcd 0003:01:00.0:   HC has finished hard reset
+> > [    1.037839] xhci_hcd 0003:01:00.0:   Event Interrupts disabled
+> > [    1.037841] xhci_hcd 0003:01:00.0:   Host System Error Interrupts disabled
+> > [    1.037843] xhci_hcd 0003:01:00.0:   HC has finished light reset
+> > [    1.037846] xhci_hcd 0003:01:00.0: USBSTS 0x0:
+> > [    1.037847] xhci_hcd 0003:01:00.0:   Event ring is empty
+> > [    1.037849] xhci_hcd 0003:01:00.0:   No Host System Error
+> > [    1.037851] xhci_hcd 0003:01:00.0:   HC is running
+>
+> Hmm, all bits in both USBCMD and USBSTS are 0. This is a bit suspicious.
+> Normally at least USBCMD Run/Stop bit, and USBSTS HCHalted bit have
+> opposite values.
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl47hx4ACgkQlQYWtz9S
-ttTS9w/9E7lK8J1xIstn8wQNOKb6Mpalq1gAoAMSwEKVsxtJCgv5GQoVzfi83uzh
-s6Qq+5ydWu172eeRW66NmQaespclUattqesFf5qhvVnLGpwTbGSPlSF0IWzKr7s9
-ofzcAbyqaDh6+DTOestPd3ADSlUZ4HWxOKc5XSi5TyHX0RP9JK/gu26hdvr9oHDI
-ZU16OrdCAecYyE7/hKY0a+VGRsyZVab3VBWy/6EJdo9Z8bNc/aquHQQ+RkdaB3M/
-VtA1A0NUOBcbu+tFKG3Q2yzPQb9/5Ob7m5uG2Oa2f3huyk8FOXySioH4qUHqZAuB
-8bZIrD49y3YXZ9sFF4b4eqyDyeutnHAoMa/FBuMPmQW/diiFKhSIvLsiEz4gu1B9
-jn04+n0wrnV8wXxe3xUEQ6ooxhCY6UmNSIjlXOewvk/j2E37mZIdaPY5Bx6GlDBM
-MSXHfcN2LtpRH1FTqH8tZvwYf7JdkspVbbBipLrr8Ba8fGZ3fKcnfIIaOSRd1tvE
-uTHEgfICZKnzXxPM/tpI3n5kx7PbB6hPFDdtvjA1Vyq3tuA295qNF5fkEmTkvzmg
-swZfIo4OEGyw3Oh+jsK0PH646dK6jkD17Q7Fe81+BF7uYygxdxBptKUj/GJEnqfU
-3ZEFP0bpEMV17eoArkTN5eP4CNvd1VRWagVtnNLWS44WlNvdOxc=
-=i1Uf
------END PGP SIGNATURE-----
-
---=-5TGq9qc6jmgO8SfflYEA--
-
+Does this suggest the controller is not responding at all?
