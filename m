@@ -2,89 +2,261 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D42CC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 01:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D98BC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7521220838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 01:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE32B20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 02:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e6G11mRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgBFB7l (ORCPT
+        id S1727719AbgBFCAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 20:59:41 -0500
-Received: from mx.socionext.com ([202.248.49.38]:48087 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbgBFB7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 20:59:41 -0500
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 06 Feb 2020 10:59:40 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 38953603AB;
-        Thu,  6 Feb 2020 10:59:40 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 6 Feb 2020 11:00:49 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 9A1371A0006;
-        Thu,  6 Feb 2020 10:59:39 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net] net: ethernet: ave: Add capability of rgmii-id mode
-Date:   Thu,  6 Feb 2020 10:59:36 +0900
-Message-Id: <1580954376-27283-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Feb 2020 21:00:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48673 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727599AbgBFCAk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 21:00:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580954438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ec9TwbgS40f1HHJSTqCodk4lJ8ooTtccnjfLpWEgAHQ=;
+        b=e6G11mRk+badold6PIMx7UkxIs/NNa/J/oHqzVWhreWf+CHHwPyiGbl2svkX6cUoMDrNNA
+        l0y2kDQ7m7ze750iEwMGs/J7XzPn2axZyEG7A+TPfDgjlvtge+RsTxrW8QwnzOVYikX2z+
+        mhpW1oK5FPdvKLXzW8XuAUZ9oRvytEc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-k8WGbK7fNKqKsWRuEb337w-1; Wed, 05 Feb 2020 21:00:37 -0500
+X-MC-Unique: k8WGbK7fNKqKsWRuEb337w-1
+Received: by mail-qt1-f199.google.com with SMTP id n4so2789713qtv.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 18:00:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ec9TwbgS40f1HHJSTqCodk4lJ8ooTtccnjfLpWEgAHQ=;
+        b=XfgN8+KuvBRIhAf3xUMQiavJyn4n/Qju0v5Wd9U6KmCt1c8siE54OOLQiPFkzCozbo
+         TX3O+VOccMhWwPKQakzbKVfYPwQQf5CagebDV9iHNMBbOKxPv2CW4sXAhCvvdUjAiInn
+         Wq//MulYA6MMeNSn+wMaoQRXU0gph21CNzkai+v4p1BqAL6gNFOLY95BGP7anEJpETS5
+         11fRTzfEoHidgRqfTwJyk4+UhVWH9H027qUIXt+/qjow9Rk4wUdWjo5wpGHWTp5jtgki
+         MUwM4LjCQHRdoNc+RFNNaFcYv/Us7Yui8E7ERQ4w6deHnBDzdiv3q0MfrwYmqcfUy7qe
+         sMIg==
+X-Gm-Message-State: APjAAAXN4u82zoPJ3Dw4ZrWIpCT67nzFvQwupy+jgfg9MkZ8p/MJuGdj
+        gOobkyrXMp6MlF47gK0IJtB17fBz1eGcr1KZ3MbtJZRKTY7RcxPImR7rPnyPqsQ6R86Vdm5KEPA
+        +67ez9te3YM0L4cxTjtGB44mq
+X-Received: by 2002:a37:a289:: with SMTP id l131mr581958qke.234.1580954436019;
+        Wed, 05 Feb 2020 18:00:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwCnYHcTuHaXWdrFJXAi4fI4Sn+6tS69Z5gPJITmWbrn7xBR5si2+dj47c0ikTe1Yb4VnkJEQ==
+X-Received: by 2002:a37:a289:: with SMTP id l131mr581926qke.234.1580954435596;
+        Wed, 05 Feb 2020 18:00:35 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id k5sm706994qkk.117.2020.02.05.18.00.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 18:00:34 -0800 (PST)
+Date:   Wed, 5 Feb 2020 21:00:31 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 01/19] KVM: x86: Allocate new rmap and large page
+ tracking when moving memslot
+Message-ID: <20200206020031.GJ387680@xz-x1>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-2-sean.j.christopherson@intel.com>
+ <20200205214952.GD387680@xz-x1>
+ <20200205235533.GA7631@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200205235533.GA7631@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows you to specify the type of rgmii-id that will enable phy
-internal delay in ethernet phy-mode.
+On Wed, Feb 05, 2020 at 03:55:33PM -0800, Sean Christopherson wrote:
+> On Wed, Feb 05, 2020 at 04:49:52PM -0500, Peter Xu wrote:
+> > On Tue, Jan 21, 2020 at 02:31:39PM -0800, Sean Christopherson wrote:
+> > > Reallocate a rmap array and recalcuate large page compatibility when
+> > > moving an existing memslot to correctly handle the alignment properties
+> > > of the new memslot.  The number of rmap entries required at each level
+> > > is dependent on the alignment of the memslot's base gfn with respect to
+> > > that level, e.g. moving a large-page aligned memslot so that it becomes
+> > > unaligned will increase the number of rmap entries needed at the now
+> > > unaligned level.
+> > > 
+> > > Not updating the rmap array is the most obvious bug, as KVM accesses
+> > > garbage data beyond the end of the rmap.  KVM interprets the bad data as
+> > > pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
+> > > 
+> > >   general protection fault: 0000 [#1] SMP
+> > >   CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
+> > >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+> > >   RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
+> > >   Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
+> > >   RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
+> > >   RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
+> > >   RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
+> > >   RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
+> > >   R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
+> > >   R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
+> > >   FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+> > >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > >   CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
+> > >   Call Trace:
+> > >    kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
+> > >    __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
+> > >    kvm_set_memory_region+0x45/0x60 [kvm]
+> > >    kvm_vm_ioctl+0x30f/0x920 [kvm]
+> > >    do_vfs_ioctl+0xa1/0x620
+> > >    ksys_ioctl+0x66/0x70
+> > >    __x64_sys_ioctl+0x16/0x20
+> > >    do_syscall_64+0x4c/0x170
+> > >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > >   RIP: 0033:0x7f7ed9911f47
+> > >   Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
+> > >   RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> > >   RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
+> > >   RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
+> > >   RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
+> > >   R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
+> > >   R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
+> > >   Modules linked in: kvm_intel kvm irqbypass
+> > >   ---[ end trace 0c5f570b3358ca89 ]---
+> > > 
+> > > The disallow_lpage tracking is more subtle.  Failure to update results
+> > > in KVM creating large pages when it shouldn't, either due to stale data
+> > > or again due to indexing beyond the end of the metadata arrays, which
+> > > can lead to memory corruption and/or leaking data to guest/userspace.
+> > > 
+> > > Note, the arrays for the old memslot are freed by the unconditional call
+> > > to kvm_free_memslot() in __kvm_set_memory_region().
+> > 
+> > If __kvm_set_memory_region() failed, I think the old memslot will be
+> > kept and the new memslot will be freed instead?
+> 
+> This is referring to a successful MOVE operation to note that zeroing @arch
+> in kvm_arch_create_memslot() won't leak memory.
+> 
+> > > 
+> > > Fixes: 05da45583de9b ("KVM: MMU: large page support")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > ---
+> > >  arch/x86/kvm/x86.c | 11 +++++++++++
+> > >  1 file changed, 11 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > index 4c30ebe74e5d..1953c71c52f2 100644
+> > > --- a/arch/x86/kvm/x86.c
+> > > +++ b/arch/x86/kvm/x86.c
+> > > @@ -9793,6 +9793,13 @@ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
+> > >  {
+> > >  	int i;
+> > >  
+> > > +	/*
+> > > +	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
+> > > +	 * old arrays will be freed by __kvm_set_memory_region() if installing
+> > > +	 * the new memslot is successful.
+> > > +	 */
+> > > +	memset(&slot->arch, 0, sizeof(slot->arch));
+> > 
+> > I actually gave r-b on this patch but it was lost... And then when I
+> > read it again I start to confuse on why we need to set these to zeros.
+> > Even if they're not zeros, iiuc kvm_free_memslot() will compare each
+> > of the array pointer and it will only free the changed pointers, then
+> > it looks fine even without zeroing?
+> 
+> It's for the failure path, the out_free label, which blindy calls kvfree()
+> and relies on un-allocated pointers being NULL.  If @arch isn't zeroed, the
+> failure path will free metadata from the previous memslot.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/net/ethernet/socionext/sni_ave.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+IMHO it won't, because kvm_free_memslot() will only free metadata if
+the pointer changed.  So:
 
-diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
-index 3b4c7e6..7c574f2 100644
---- a/drivers/net/ethernet/socionext/sni_ave.c
-+++ b/drivers/net/ethernet/socionext/sni_ave.c
-@@ -1857,6 +1857,9 @@ static int ave_pro4_get_pinmode(struct ave_private *priv,
- 		break;
- 	case PHY_INTERFACE_MODE_MII:
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		priv->pinmode_val = 0;
- 		break;
- 	default:
-@@ -1901,6 +1904,9 @@ static int ave_ld20_get_pinmode(struct ave_private *priv,
- 		priv->pinmode_val = SG_ETPINMODE_RMII(0);
- 		break;
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		priv->pinmode_val = 0;
- 		break;
- 	default:
-@@ -1923,6 +1929,9 @@ static int ave_pxs3_get_pinmode(struct ave_private *priv,
- 		priv->pinmode_val = SG_ETPINMODE_RMII(arg);
- 		break;
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		priv->pinmode_val = 0;
- 		break;
- 	default:
+  - For succeeded kvcalloc(), the pointer will change in the new slot,
+    so kvm_free_memslot() will free it,
+
+  - For failed kvcalloc(), the pointer will be NULL, so
+    kvm_free_memslot() will skip it,
+
+  - For untouched pointer, it'll be the same as the old, so
+    kvm_free_memslot() will skip it as well.
+
+> 
+> > > +
+> > >  	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
+> > >  		struct kvm_lpage_info *linfo;
+> > >  		unsigned long ugfn;
+> > > @@ -9867,6 +9874,10 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+> > >  				const struct kvm_userspace_memory_region *mem,
+> > >  				enum kvm_mr_change change)
+> > >  {
+> > > +	if (change == KVM_MR_MOVE)
+> > > +		return kvm_arch_create_memslot(kvm, memslot,
+> > > +					       mem->memory_size >> PAGE_SHIFT);
+> > > +
+> > 
+> > Instead of calling kvm_arch_create_memslot() explicitly again here,
+> > can it be replaced by below?
+> > 
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 72b45f491692..85a7b02fd752 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -1144,7 +1144,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+> >                 new.dirty_bitmap = NULL;
+> >  
+> >         r = -ENOMEM;
+> > -       if (change == KVM_MR_CREATE) {
+> > +       if (change == KVM_MR_CREATE || change == KVM_MR_MOVE) {
+> >                 new.userspace_addr = mem->userspace_addr;
+> >  
+> >                 if (kvm_arch_create_memslot(kvm, &new, npages))
+> 
+> No, because other architectures don't need to re-allocate new metadata on
+> MOVE and rely on __kvm_set_memory_region() to copy @arch from old to new,
+> e.g. see kvmppc_core_create_memslot_hv().
+
+Yes it's only required in x86, but iiuc it also will still work for
+ppc?  Say, in that case ppc won't copy @arch from old to new, and
+kvmppc_core_free_memslot_hv() will free the old, however it should
+still work.
+
+> 
+> That being said, that's effectively what the x86 code looks like once
+> kvm_arch_create_memslot() gets merged into kvm_arch_prepare_memory_region().
+
+Right.  I don't have strong opinion on this, but if my above analysis
+is correct, it's still slightly cleaner, imho, to have this patch as a
+oneliner as I provided, then in the other patch move the whole
+CREATE|MOVE into prepare_memory_region().  The final code should be
+the same.
+
 -- 
-2.7.4
+Peter Xu
 
