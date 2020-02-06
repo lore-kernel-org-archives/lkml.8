@@ -4,94 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED743C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8581CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D8521741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1E7217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgBFIwN (ORCPT
+        id S1728152AbgBFIw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:52:13 -0500
-Received: from mga03.intel.com ([134.134.136.65]:9873 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgBFIwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:52:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 00:52:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,409,1574150400"; 
-   d="scan'208";a="264531173"
-Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Feb 2020 00:52:10 -0800
-From:   Wei Wang <wei.w.wang@intel.com>
-To:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     tysand@google.com, mst@redhat.com, david@redhat.com,
-        alexander.h.duyck@linux.intel.com, rientjes@google.com,
-        mhocko@kernel.org, namit@vmware.com,
-        penguin-kernel@I-love.SAKURA.ne.jp, wei.w.wang@intel.com
-Subject: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
-Date:   Thu,  6 Feb 2020 16:01:47 +0800
-Message-Id: <1580976107-16013-1-git-send-email-wei.w.wang@intel.com>
+        Thu, 6 Feb 2020 03:52:27 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:33807 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727778AbgBFIw1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 03:52:27 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Feb 2020 14:22:24 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Feb 2020 14:22:02 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 2DE7628E6; Thu,  6 Feb 2020 14:22:02 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v1] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Thu,  6 Feb 2020 14:21:54 +0530
+Message-Id: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases that users want to shrink balloon pages after the
-pagecache depleted. The conservative_shrinker lets the shrinker
-shrink balloon pages when all the pagecache has been reclaimed.
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 ---
- drivers/virtio/virtio_balloon.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 93f995f6cf36..b4c5bb13a867 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -42,6 +42,10 @@
- static struct vfsmount *balloon_mnt;
- #endif
+Changes in v1:
+	- Saving pll state before dsi host is powered off.
+	- Removed calling of save state in post_disable since everything
+	would be resetted and it would save only resetted values.
+
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 104115d..a987efe 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -506,6 +506,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
  
-+static bool conservative_shrinker = true;
-+module_param(conservative_shrinker, bool, 0644);
-+MODULE_PARM_DESC(conservative_shrinker, "conservatively shrink balloon pages");
+@@ -539,6 +540,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
+ 
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
 +
- enum virtio_balloon_vq {
- 	VIRTIO_BALLOON_VQ_INFLATE,
- 	VIRTIO_BALLOON_VQ_DEFLATE,
-@@ -796,6 +800,10 @@ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
- {
- 	unsigned long pages_freed = 0;
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index b0cfa67..f509ebd 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -724,10 +724,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
+ 	if (!phy || !phy->cfg->ops.disable)
+ 		return;
  
-+	/* Balloon pages only gets shrunk when the pagecache depleted */
-+	if (conservative_shrinker && global_node_page_state(NR_FILE_PAGES))
-+		return 0;
-+
- 	/*
- 	 * One invocation of leak_balloon can deflate at most
- 	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
-@@ -837,7 +845,11 @@ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
- 					struct virtio_balloon, shrinker);
- 	unsigned long count;
+-	/* Save PLL status if it is a clock source */
+-	if (phy->usecase != MSM_DSI_PHY_SLAVE)
+-		msm_dsi_pll_save_state(phy->pll);
+-
+ 	phy->cfg->ops.disable(phy);
  
--	count = vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
-+	if (conservative_shrinker && global_node_page_state(NR_FILE_PAGES))
-+		count = 0;
-+	else
-+		count = vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
-+
- 	count += vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
- 
- 	return count;
+ 	dsi_phy_regulator_disable(phy);
 -- 
-2.17.1
+2.7.4
 
