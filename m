@@ -2,604 +2,402 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4434BC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC0BC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1959A227BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB3C21927
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KeNmGPZI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r3S1auxs";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OLadZ5/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgBFUJm (ORCPT
+        id S1727900AbgBFUJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:09:42 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42638 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbgBFUJl (ORCPT
+        Thu, 6 Feb 2020 15:09:53 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:33220 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgBFUJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:09:41 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j132so5904104oih.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:09:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zrzSXrvuhgtO3QAVSZ2w2W9IIn8nvDc/72fucotgeKE=;
-        b=KeNmGPZI1kFsAtNmDvYxCnHIlf2vIkwq+pualC95z84B+fG2L+Q5p8lB8LoDHTn6DB
-         x6IzM1sWB5qm7GnZz6dnMIt6N3OAsn/g6ccdQdyiJC5RZ5ng4Wv056i4dCMA/bL00BQg
-         qhU4VN1KyxHImKRHrca88mY/WH4eejTX4tpeRpEomlV3f5HmOnVNsbH4S1LE563YHlkw
-         wMB6l/tv1hM5+tuxdOtYnciF0S5by7ybh9uU4e1FjRou/R28J33CKId6ne0zAmAj8N0O
-         sn2zkEsEvA2+wPtOJMVk/eMM3hGWWsmFWSS9h10xJTcX+4d3qMWcgM3v5naCh3vrh9Vm
-         fY1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zrzSXrvuhgtO3QAVSZ2w2W9IIn8nvDc/72fucotgeKE=;
-        b=JEAT3bvCdX+sz1150XzLHtiZ7GzHFTymFnACxvPI4/tJ8XPmsu3owfneYfZtnWZz3g
-         I/zcVIIGcGY7+Ifnp72wkxfo5mTA0pL9O1LJ1gmfsGgNtRR03eXIk5cHRA3wNs0tRFTA
-         wVXwtlQljKEpLe+Jm/cGlxM7XT3xEw5vxy+lUklvxAJsRxpm1ylVuFgrg+Bl2mZD3xBm
-         2nMFtTOeeDfDqj10Tuc2BCpdg5G53QLSBq7RqY41sEtXXATg77gvaJfCguygW2EVdOg6
-         II2YBRC93pEF2AXmUBudXKfz+tvpEtnwcTywFtmSMDkc7Dc4OOSinsD1iIODo8oOlSHs
-         AyZA==
-X-Gm-Message-State: APjAAAX8AUN8Mw8ZIio/khK/rlWQpjsnpxo88Qw4K6/tqToGfxXGUo6q
-        JE8vj33qlodZ3yNyC0hiy3ezZY1sfIaxERwAKBHN5EoSTQzQ3Q==
-X-Google-Smtp-Source: APXvYqwXr/ugQBzMPV0QvobKEHPrHhDZK4xRAC/SELOuYCBWD7CqvPvlVCi+qLf9lK4fCR2JMQ2j3R7chk2dbjbsJ/4=
-X-Received: by 2002:aca:af50:: with SMTP id y77mr8262272oie.8.1581019778563;
- Thu, 06 Feb 2020 12:09:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-5-almasrymina@google.com> <263e4326-2540-4bb6-cca9-e53c014eb3a6@oracle.com>
-In-Reply-To: <263e4326-2540-4bb6-cca9-e53c014eb3a6@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 6 Feb 2020 12:09:27 -0800
-Message-ID: <CAHS8izMighQFQCWH27gQESncgeVFDxBLR0crq9M8EBpT6u41jQ@mail.gmail.com>
-Subject: Re: [PATCH v11 5/9] hugetlb_cgroup: add accounting for shared mappings
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+        Thu, 6 Feb 2020 15:09:53 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016K9Pwb019773;
+        Thu, 6 Feb 2020 20:09:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2020-01-29;
+ bh=iYhC0styqFH6EDd2Zs/nwT3BwtPDoqe9kv8zu/3oL4Q=;
+ b=r3S1auxsIgwxljUl0tzGIiYs8bckoOkDKgyXfFqDxZhgEvwo9jHlq+MUOJOnXzV7JzNq
+ CdRWkviFcn2evmQwE9YrnEmst06VKwy0D5/kijfQ6boHX/oZG6+mcN2LfrFenA20DfHo
+ ih7G7lYI5Jh/FiNE0uhymw6+n7c4HtpMETs8JLfC/WNDSMhCc2HlnPy+4XgP0FkN1XAK
+ nhP7hSTa5EuNAOWXJ4iCTKayJ+vDZeJelYRU43mh28WKtAofH1/yScmUhnht9Y1YGOoY
+ qDx3zTqk6YUydeXIP6kQF5j8I4IWIJLmAMn1skPY7xzE76tbJwmTATCUpwzZdlHIgj5/ 7Q== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2019-08-05;
+ bh=iYhC0styqFH6EDd2Zs/nwT3BwtPDoqe9kv8zu/3oL4Q=;
+ b=OLadZ5/UJs7tPz8LMUBEFV6ZiheTHfkBXll3taOBYQk6O5RB6l20uybu+v5wpcR+vrg/
+ YvOTNpfYhTv8vwsEz+t8mn2S7qYLb2aqXBjWQ/+3nIYFjRlIRwSc+WZQmxI+Kz97FpV1
+ myeF7IOsC9+4soYHwDCOS3PMIgylEmCpsRSr3JS0GPliTU7+HCF4KLWllVhY1kuSRnIl
+ +qFZ58XgVcla0O9i7CD4rtzlSLkAVzKPryNXXZ2woAKqgViZKN3SveS27BL8aPEqGgVv
+ 7z8Z3duQm+ZOzxGfvcnO6Dg94VBTaPIelAKGRRseCTsCG+a6lL8pC6gaV9xG9wzH1EXm 6w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xykbpc3kx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 20:09:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016K9MVa047959;
+        Thu, 6 Feb 2020 20:09:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2y0mnkdcmx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 20:09:23 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016K9FQs016463;
+        Thu, 6 Feb 2020 20:09:15 GMT
+Received: from dhcp-10-65-184-45.vpn.oracle.com (/10.65.184.45)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 12:09:15 -0800
+Message-ID: <a52e573cac05282b58fa0584a531248f82e589f0.camel@oracle.com>
+Subject: Re: [PATCH] mm: always consider THP when adjusting min_free_kbytes
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Thu, 06 Feb 2020 13:09:14 -0700
+In-Reply-To: <2ba63021-d05c-a648-f280-6c751e01adf6@oracle.com>
+References: <20200204194156.61672-1-mike.kravetz@oracle.com>
+         <alpine.DEB.2.21.2002041218580.58724@chino.kir.corp.google.com>
+         <8cc18928-0b52-7c2e-fbc6-5952eb9b06ab@oracle.com>
+         <20200204215319.GO8731@bombadil.infradead.org>
+         <b6979214-3f0e-6c12-ed63-681b40c6e16c@oracle.com>
+         <2ba63021-d05c-a648-f280-6c751e01adf6@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 11:34 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 2/3/20 3:22 PM, Mina Almasry wrote:
-> > For shared mappings, the pointer to the hugetlb_cgroup to uncharge lives
-> > in the resv_map entries, in file_region->reservation_counter.
-> >
-> > After a call to region_chg, we charge the approprate hugetlb_cgroup, and if
-> > successful, we pass on the hugetlb_cgroup info to a follow up region_add call.
-> > When a file_region entry is added to the resv_map via region_add, we put the
-> > pointer to that cgroup in file_region->reservation_counter. If charging doesn't
-> > succeed, we report the error to the caller, so that the kernel fails the
-> > reservation.
-> >
-> > On region_del, which is when the hugetlb memory is unreserved, we also uncharge
->
-> Lines of commit message wrap.
->
+On Wed, 2020-02-05 at 17:36 -0800, Mike Kravetz wrote:
+> On 2/4/20 4:33 PM, Mike Kravetz wrote:
+> > Today, we never overwrite a user defined value that is larger than
+> > that calculated by the code.  However, we will owerwrite a user
+> > defined
+> > value if the code calculates a larger value.
+> 
+> If we overwrite a user defined value, we do not inform the user.
+> 
+> > I'm starting to think the best option is to NEVER overwrite a user
+> > defined
+> > value.
+> 
+> Below is an updated patch which never overwrites a user defined
+> value.
+> We would only potentially overwrite a user value on a memory
+> offline/online
+> or khugepaged start/stop operation.  Since no validation of user
+> defined
+> values is performed, it seems the desired behavior is to never
+> overwrite them?  
+> 
+> If user has specified a value and we calculate a value, a message
+> containing
+> both values is logged.
+> 
+> I am not aware of anyone complaining about current behavior.  While
+> working
+> a customer issue and playing with min_free_kbytes, I noticed the
+> behavior
+> and thought it does not do what one would expect.
+> 
+> From: Mike Kravetz <mike.kravetz@oracle.com>
+> Subject: [PATCH v2] mm: Don't overwrite user min_free_kbytes,
+> consider THP
+>  when adjusting
+> 
+> The value of min_free_kbytes is calculated in two routines:
+> 1) init_per_zone_wmark_min based on available memory
+> 2) set_recommended_min_free_kbytes may reserve extra space for
+>    THP allocations
+> 
+> In both of these routines, a user defined min_free_kbytes value will
+> be overwritten if the value calculated in the code is larger. No
+> message
+> is logged if the user value is overwritten.
+> 
+> Change code to never overwrite user defined value.  However, do log a
+> message (once per value) showing the value calculated in code.
+> 
+> At system initialization time, both init_per_zone_wmark_min and
+> set_recommended_min_free_kbytes are called to set the initial value
+> for min_free_kbytes.  When memory is offlined or onlined,
+> min_free_kbytes
+> is recalculated and adjusted based on the amount of memory.  However,
+> the adjustment for THP is not considered.  Here is an example from a
+> 2
+> node system with 8GB of memory.
+> 
+>  # cat /proc/sys/vm/min_free_kbytes
+>  90112
+>  # echo 0 > /sys/devices/system/node/node1/memory56/online
+>  # cat /proc/sys/vm/min_free_kbytes
+>  11243
+>  # echo 1 > /sys/devices/system/node/node1/memory56/online
+>  # cat /proc/sys/vm/min_free_kbytes
+>  11412
+> 
+> One would expect that min_free_kbytes would return to it's original
+> value after the offline/online operations.
+> 
+> Create a simple interface for THP/khugepaged based adjustment and
+> call this whenever min_free_kbytes is adjusted.
+> 
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  include/linux/khugepaged.h |  5 ++++
+>  mm/internal.h              |  2 ++
+>  mm/khugepaged.c            | 56 ++++++++++++++++++++++++++++++++--
+> ----
+>  mm/page_alloc.c            | 35 ++++++++++++++++--------
+>  4 files changed, 78 insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+> index bc45ea1efbf7..faa92923dbe5 100644
+> --- a/include/linux/khugepaged.h
+> +++ b/include/linux/khugepaged.h
+> @@ -15,6 +15,7 @@ extern int __khugepaged_enter(struct mm_struct
+> *mm);
+>  extern void __khugepaged_exit(struct mm_struct *mm);
+>  extern int khugepaged_enter_vma_merge(struct vm_area_struct *vma,
+>  				      unsigned long vm_flags);
+> +extern int khugepaged_adjust_min_free_kbytes(int mfk_value);
+>  #ifdef CONFIG_SHMEM
+>  extern void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned
+> long addr);
+>  #else
+> @@ -81,6 +82,10 @@ static inline int
+> khugepaged_enter_vma_merge(struct vm_area_struct *vma,
+>  {
+>  	return 0;
+>  }
+> +static inline int khugepaged_adjust_min_free_kbytes(int mfk_value)
+> +{
+> +	return 0;
+> +}
+>  static inline void collapse_pte_mapped_thp(struct mm_struct *mm,
+>  					   unsigned long addr)
+>  {
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 3cf20ab3ca01..57bbc157124e 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -164,6 +164,8 @@ extern void prep_compound_page(struct page *page,
+> unsigned int order);
+>  extern void post_alloc_hook(struct page *page, unsigned int order,
+>  					gfp_t gfp_flags);
+>  extern int user_min_free_kbytes;
+> +#define UNSET_USER_MFK_VALUE -1
+> +extern int calc_min_free_kbytes;
+>  
+>  extern void zone_pcp_update(struct zone *zone);
+>  extern void zone_pcp_reset(struct zone *zone);
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index b679908743cb..6af72cb7e337 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -2138,8 +2138,9 @@ static int khugepaged(void *none)
+>  	return 0;
+>  }
+>  
+> -static void set_recommended_min_free_kbytes(void)
+> +int __khugepaged_adjust_min_free_kbytes(int mfk_value)
+>  {
+> +	int ret = 0;
+>  	struct zone *zone;
+>  	int nr_zones = 0;
+>  	unsigned long recommended_min;
+> @@ -2172,19 +2173,40 @@ static void
+> set_recommended_min_free_kbytes(void)
+>  			      (unsigned long) nr_free_buffer_pages() /
+> 20);
+>  	recommended_min <<= (PAGE_SHIFT-10);
+>  
+> -	if (recommended_min > min_free_kbytes) {
+> -		if (user_min_free_kbytes >= 0)
+> -			pr_info("raising min_free_kbytes from %d to %lu
+> to help transparent hugepage allocations\n",
+> -				min_free_kbytes, recommended_min);
+> +	if (recommended_min > mfk_value)
+> +		ret = (int)recommended_min - mfk_value;
+> +
+> +	return ret;
+> +}
+>  
+> -		min_free_kbytes = recommended_min;
+> +static void set_recommended_min_free_kbytes(void)
+> +{
+> +	int av = __khugepaged_adjust_min_free_kbytes(min_free_kbytes);
+> +
+> +	if (av) {
+> +		if (user_min_free_kbytes != UNSET_USER_MFK_VALUE) {
+> +			/* Do not change user defined value. */
+> +			if ((min_free_kbytes + av) !=
+> calc_min_free_kbytes) {
+> +				/*
+> +				 * Save calculated value so we only
+> print
+> +				 * warning once per value.
+> +				 */
+> +				calc_min_free_kbytes = min_free_kbytes
+> + av;
+> +				pr_warn("min_free_kbytes is not updated
+> to %d because user defined value %d is preferred\n",
+> +					calc_min_free_kbytes,
+> +					user_min_free_kbytes);
+> +			}
+> +		} else {
+> +			min_free_kbytes += av;
+> +			setup_per_zone_wmarks();
+> +		}
+>  	}
+> -	setup_per_zone_wmarks();
+>  }
+>  
+> -int start_stop_khugepaged(void)
+> +static struct task_struct *khugepaged_thread __read_mostly;
+> +
+> +int __ref start_stop_khugepaged(void)
+>  {
+> -	static struct task_struct *khugepaged_thread __read_mostly;
+>  	static DEFINE_MUTEX(khugepaged_mutex);
+>  	int err = 0;
+>  
+> @@ -2207,8 +2229,24 @@ int start_stop_khugepaged(void)
+>  	} else if (khugepaged_thread) {
+>  		kthread_stop(khugepaged_thread);
+>  		khugepaged_thread = NULL;
+> +		init_per_zone_wmark_min();
+>  	}
+>  fail:
+>  	mutex_unlock(&khugepaged_mutex);
+>  	return err;
+>  }
+> +
+> +int khugepaged_adjust_min_free_kbytes(int mfk_value)
+> +{
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * This is a bit racy, and we could miss transitions.  However,
+> +	 * start/stop code above will make additional adjustments at
+> the
+> +	 * end of transitions.
+> +	 */
+> +	if (khugepaged_enabled() && khugepaged_thread)
+> +		ret = __khugepaged_adjust_min_free_kbytes(mfk_value);
+> +
+> +	return ret;
+> +}
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d047bf7d8fd4..73162a5bf296 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -68,6 +68,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/nmi.h>
+>  #include <linux/psi.h>
+> +#include <linux/khugepaged.h>
+>  
+>  #include <asm/sections.h>
+>  #include <asm/tlbflush.h>
+> @@ -314,7 +315,8 @@ compound_page_dtor * const compound_page_dtors[]
+> = {
+>  };
+>  
+>  int min_free_kbytes = 1024;
+> -int user_min_free_kbytes = -1;
+> +int user_min_free_kbytes = UNSET_USER_MFK_VALUE;
+> +int calc_min_free_kbytes = -1;
+>  #ifdef CONFIG_DISCONTIGMEM
+>  /*
+>   * DiscontigMem defines memory ranges as separate pg_data_t even if
+> the ranges
+> @@ -7819,17 +7821,28 @@ int __meminit init_per_zone_wmark_min(void)
+>  
+>  	lowmem_kbytes = nr_free_buffer_pages() * (PAGE_SIZE >> 10);
+>  	new_min_free_kbytes = int_sqrt(lowmem_kbytes * 16);
+> -
+> -	if (new_min_free_kbytes > user_min_free_kbytes) {
+> -		min_free_kbytes = new_min_free_kbytes;
+> -		if (min_free_kbytes < 128)
+> -			min_free_kbytes = 128;
+> -		if (min_free_kbytes > 65536)
+> -			min_free_kbytes = 65536;
+> -	} else {
+> -		pr_warn("min_free_kbytes is not updated to %d because
+> user defined value %d is preferred\n",
+> +	if (new_min_free_kbytes < 128)
+> +		new_min_free_kbytes = 128;
+> +	if (new_min_free_kbytes > 65536)
+> +		new_min_free_kbytes = 65536;
+> +	new_min_free_kbytes +=
+> +		khugepaged_adjust_min_free_kbytes(new_min_free_kbytes);
+> +
+> +	if (user_min_free_kbytes != UNSET_USER_MFK_VALUE) {
+> +		/* Do not change user defined value. */
+> +		if (new_min_free_kbytes != calc_min_free_kbytes) {
+> +			/*
+> +			 * Save calculated value so we only print
+> warning
+> +			 * once per value.
+> +			 */
+> +			calc_min_free_kbytes = new_min_free_kbytes;
+> +			pr_warn("min_free_kbytes is not updated to %d
+> because user defined value %d is preferred\n",
+>  				new_min_free_kbytes,
+> user_min_free_kbytes);
+> +		}
+> +		goto out;
+>  	}
+> +
+> +	min_free_kbytes = new_min_free_kbytes;
+>  	setup_per_zone_wmarks();
+>  	refresh_zone_stat_thresholds();
+>  	setup_per_zone_lowmem_reserve();
+> @@ -7838,7 +7851,7 @@ int __meminit init_per_zone_wmark_min(void)
+>  	setup_min_unmapped_ratio();
+>  	setup_min_slab_ratio();
+>  #endif
+> -
+> +out:
+>  	return 0;
+>  }
+>  core_initcall(init_per_zone_wmark_min)
 
-Will fix.
+This looks good to me.
 
-> > the file_region->reservation_counter.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >
-> > Changes in v11:
-> > - Created new function, hugetlb_cgroup_uncharge_file_region to clean up
-> > some #ifdefs.
-> > - Moved file_region definition to hugetlb.h.
-> > - Added copy_hugetlb_cgroup_uncharge_info function to clean up more
-> >  #ifdefs in the middle of hugetlb code.
-> >
-> > Changes in v10:
-> > - Deleted duplicated code snippet.
-> >
-> > Changes in V9:
-> > - Updated for hugetlb reservation repareting.
-> >
-> > ---
-> >  include/linux/hugetlb.h        |  36 ++++++++
-> >  include/linux/hugetlb_cgroup.h |  10 +++
-> >  mm/hugetlb.c                   | 147 +++++++++++++++++++++------------
-> >  mm/hugetlb_cgroup.c            |  15 ++++
-> >  4 files changed, 155 insertions(+), 53 deletions(-)
-> >
-> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> > index 5491932ea5758..395f5b1fad416 100644
-> > --- a/include/linux/hugetlb.h
-> > +++ b/include/linux/hugetlb.h
-> > @@ -57,6 +57,42 @@ struct resv_map {
-> >       struct cgroup_subsys_state *css;
-> >  #endif
-> >  };
-> > +
-> > +/*
-> > + * Region tracking -- allows tracking of reservations and instantiated pages
-> > + *                    across the pages in a mapping.
-> > + *
-> > + * The region data structures are embedded into a resv_map and protected
-> > + * by a resv_map's lock.  The set of regions within the resv_map represent
-> > + * reservations for huge pages, or huge pages that have already been
-> > + * instantiated within the map.  The from and to elements are huge page
-> > + * indicies into the associated mapping.  from indicates the starting index
-> > + * of the region.  to represents the first index past the end of  the region.
-> > + *
-> > + * For example, a file region structure with from == 0 and to == 4 represents
-> > + * four huge pages in a mapping.  It is important to note that the to element
-> > + * represents the first element past the end of the region. This is used in
-> > + * arithmetic as 4(to) - 0(from) = 4 huge pages in the region.
-> > + *
-> > + * Interval notation of the form [from, to) will be used to indicate that
-> > + * the endpoint from is inclusive and to is exclusive.
-> > + */
-> > +struct file_region {
-> > +     struct list_head link;
-> > +     long from;
-> > +     long to;
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +     /*
-> > +      * On shared mappings, each reserved region appears as a struct
-> > +      * file_region in resv_map. These fields hold the info needed to
-> > +      * uncharge each reservation.
-> > +      */
-> > +     struct page_counter *reservation_counter;
-> > +     unsigned long pages_per_hpage;
->
-> Can we get rid of pages_per_hpage here?  It seems redundant as it will be
-> the same for each file region.  The same field/information is in the resv_map
-> but only used for private mappings.  Perhaps, we should use it for both
-> shared and private?
->
+Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
 
-Will do.
-
-> > +     struct cgroup_subsys_state *css;
-> > +#endif
-> > +};
-> > +
-> >  extern struct resv_map *resv_map_alloc(void);
-> >  void resv_map_release(struct kref *ref);
-> >
-> > diff --git a/include/linux/hugetlb_cgroup.h b/include/linux/hugetlb_cgroup.h
-> > index 6a6c80df95ae3..c3fd417c268c5 100644
-> > --- a/include/linux/hugetlb_cgroup.h
-> > +++ b/include/linux/hugetlb_cgroup.h
-> > @@ -102,11 +102,21 @@ extern void hugetlb_cgroup_uncharge_counter(struct resv_map *resv,
-> >                                           unsigned long start,
-> >                                           unsigned long end);
-> >
-> > +extern void hugetlb_cgroup_uncharge_file_region(struct resv_map *resv,
-> > +                                             struct file_region *rg,
-> > +                                             unsigned long nr_pages);
-> > +
-> >  extern void hugetlb_cgroup_file_init(void) __init;
-> >  extern void hugetlb_cgroup_migrate(struct page *oldhpage,
-> >                                  struct page *newhpage);
-> >
-> >  #else
-> > +
-> > +static inline void hugetlb_cgroup_uncharge_file_region(struct resv_map *resv,
-> > +                                                    struct file_region *rg,
-> > +                                                    unsigned long nr_pages)
-> > +{
-> > +}
-> >  static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page,
-> >                                                             bool rsvd)
-> >  {
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index 986e9a9cc6fbe..33818ccaf7e89 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -220,31 +220,6 @@ static inline struct hugepage_subpool *subpool_vma(struct vm_area_struct *vma)
-> >       return subpool_inode(file_inode(vma->vm_file));
-> >  }
-> >
-> > -/*
-> > - * Region tracking -- allows tracking of reservations and instantiated pages
-> > - *                    across the pages in a mapping.
-> > - *
-> > - * The region data structures are embedded into a resv_map and protected
-> > - * by a resv_map's lock.  The set of regions within the resv_map represent
-> > - * reservations for huge pages, or huge pages that have already been
-> > - * instantiated within the map.  The from and to elements are huge page
-> > - * indicies into the associated mapping.  from indicates the starting index
-> > - * of the region.  to represents the first index past the end of  the region.
-> > - *
-> > - * For example, a file region structure with from == 0 and to == 4 represents
-> > - * four huge pages in a mapping.  It is important to note that the to element
-> > - * represents the first element past the end of the region. This is used in
-> > - * arithmetic as 4(to) - 0(from) = 4 huge pages in the region.
-> > - *
-> > - * Interval notation of the form [from, to) will be used to indicate that
-> > - * the endpoint from is inclusive and to is exclusive.
-> > - */
-> > -struct file_region {
-> > -     struct list_head link;
-> > -     long from;
-> > -     long to;
-> > -};
-> > -
-> >  /* Helper that removes a struct file_region from the resv_map cache and returns
-> >   * it for use.
-> >   */
-> > @@ -266,6 +241,37 @@ get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
-> >       return nrg;
-> >  }
-> >
-> > +static void copy_hugetlb_cgroup_uncharge_info(struct file_region *nrg,
-> > +                                           struct file_region *rg)
-> > +{
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +
-> > +     nrg->reservation_counter = rg->reservation_counter;
-> > +     nrg->pages_per_hpage = rg->pages_per_hpage;
-> > +     nrg->css = rg->css;
-> > +     css_get(rg->css);
-> > +#endif
-> > +}
-> > +
-> > +/* Helper that records hugetlb_cgroup uncharge info. */
-> > +static void record_hugetlb_cgroup_uncharge_info(struct hugetlb_cgroup *h_cg,
-> > +                                             struct file_region *nrg,
-> > +                                             struct hstate *h)
->
-> Not necessary, but I would make nrg first (or last) argument.  It seems
-> a bit odd that it is between two items that are most closely related.
->
-
-Makes sense, will do.
-
-> > +{
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +     if (h_cg) {
-> > +             nrg->reservation_counter =
-> > +                     &h_cg->rsvd_hugepage[hstate_index(h)];
-> > +             nrg->pages_per_hpage = pages_per_huge_page(h);
-> > +             nrg->css = &h_cg->css;
-> > +     } else {
-> > +             nrg->reservation_counter = NULL;
-> > +             nrg->pages_per_hpage = 0;
-> > +             nrg->css = NULL;
-> > +     }
-> > +#endif
-> > +}
-> > +
-> >  /* Must be called with resv->lock held. Calling this with count_only == true
-> >   * will count the number of pages to be added but will not modify the linked
-> >   * list. If regions_needed != NULL and count_only == true, then regions_needed
-> > @@ -273,7 +279,9 @@ get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
-> >   * add the regions for this range.
-> >   */
-> >  static long add_reservation_in_range(struct resv_map *resv, long f, long t,
-> > -                                  long *regions_needed, bool count_only)
-> > +                                  struct hugetlb_cgroup *h_cg,
-> > +                                  struct hstate *h, long *regions_needed,
-> > +                                  bool count_only)
->
-> It seems like count_only could be easily determined by value of other
-> arguments.  However, let's leave it as explicit just to make code easier
-> to understand.  Not necessary, but I wonder if something like:
-> #define COUNT_ONLY true
-> #define PERFORM_ADD false
-> for arguments to this routine would make the code easier to read/understand.
->
-
-I agree it's better for readability. If you're leaving it to my
-preference I'd rather not have the macros.
-
-> >  {
-> >       long add = 0;
-> >       struct list_head *head = &resv->regions;
-> > @@ -312,6 +320,8 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
-> >                       if (!count_only) {
-> >                               nrg = get_file_region_entry_from_cache(
-> >                                       resv, last_accounted_offset, rg->from);
-> > +                             record_hugetlb_cgroup_uncharge_info(h_cg, nrg,
-> > +                                                                 h);
-> >                               list_add(&nrg->link, rg->link.prev);
-> >                       } else if (regions_needed)
-> >                               *regions_needed += 1;
-> > @@ -328,11 +338,13 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
-> >               if (!count_only) {
-> >                       nrg = get_file_region_entry_from_cache(
-> >                               resv, last_accounted_offset, t);
-> > +                     record_hugetlb_cgroup_uncharge_info(h_cg, nrg, h);
-> >                       list_add(&nrg->link, rg->link.prev);
-> >               } else if (regions_needed)
-> >                       *regions_needed += 1;
-> >       }
-> >
-> > +     VM_BUG_ON(add < 0);
->
-> Curious why that was added.  The computation of 'add' did not change with
-> these changes.
->
-
-This belongs better in patch 4/9 'hugetlb: disable region_add
-file_region coalescing', where the add is actually modified. Having it
-here is a mistake spitting up the changes into patches. Would you
-rather I just remove it or move it to patch 4? More importantly, does
-moving it to patch 4 without any other changes trigger you to
-re-review of patch 4? I'm currently carrying over your Reviewed-By tag
-since no changes have been made to that patch. That was one of the
-harder patches to review and re-reviewing it is not worth the effort
-for this line I would say. This VM_BUG_ON is really only a sanity
-check for something going very wrong in the math.
-
-> >       return add;
-> >  }
-> >
-> > @@ -353,7 +365,8 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
-> >   * fail; region_chg will always allocate at least 1 entry and a region_add for
-> >   * 1 page will only require at most 1 entry.
-> >   */
-> > -static long region_add(struct resv_map *resv, long f, long t,
-> > +static long region_add(struct hstate *h, struct hugetlb_cgroup *h_cg,
-> > +                    struct resv_map *resv, long f, long t,
->
-> I would prefer keeping "struct resv_map *resv, long f, long t" as the first
-> arguments to this routine.  To me that makes most sense as that is the
-> primary purpose of the operation (to add regions to the reserve map to
-> cover the range f -> t).
->
-
-Will do.
-
-> >                      long in_regions_needed)
-> >  {
-> >       long add = 0, actual_regions_needed = 0, i = 0;
-> > @@ -366,7 +379,8 @@ static long region_add(struct resv_map *resv, long f, long t,
-> >  retry:
-> >
-> >       /* Count how many regions are actually needed to execute this add. */
-> > -     add_reservation_in_range(resv, f, t, &actual_regions_needed, true);
-> > +     add_reservation_in_range(resv, f, t, NULL, NULL, &actual_regions_needed,
-> > +                              true);
-> >
-> >       /*
-> >        * Check for sufficient descriptors in the cache to accommodate
-> > @@ -404,7 +418,7 @@ static long region_add(struct resv_map *resv, long f, long t,
-> >               goto retry;
-> >       }
-> >
-> > -     add = add_reservation_in_range(resv, f, t, NULL, false);
-> > +     add = add_reservation_in_range(resv, f, t, h_cg, h, NULL, false);
-> >
-> >       resv->adds_in_progress -= in_regions_needed;
-> >
-> > @@ -452,7 +466,8 @@ static long region_chg(struct resv_map *resv, long f, long t,
-> >       spin_lock(&resv->lock);
-> >
-> >       /* Count how many hugepages in this range are NOT respresented. */
-> > -     chg = add_reservation_in_range(resv, f, t, out_regions_needed, true);
-> > +     chg = add_reservation_in_range(resv, f, t, NULL, NULL,
-> > +                                    out_regions_needed, true);
-> >
-> >       if (*out_regions_needed == 0)
-> >               *out_regions_needed = 1;
-> > @@ -588,11 +603,17 @@ static long region_del(struct resv_map *resv, long f, long t)
-> >                       /* New entry for end of split region */
-> >                       nrg->from = t;
-> >                       nrg->to = rg->to;
-> > +
-> > +                     copy_hugetlb_cgroup_uncharge_info(nrg, rg);
-> > +
-> >                       INIT_LIST_HEAD(&nrg->link);
-> >
-> >                       /* Original entry is trimmed */
-> >                       rg->to = f;
-> >
-> > +                     hugetlb_cgroup_uncharge_file_region(
-> > +                             resv, rg, nrg->to - nrg->from);
-> > +
-> >                       list_add(&nrg->link, &rg->link);
-> >                       nrg = NULL;
-> >                       break;
-> > @@ -600,6 +621,8 @@ static long region_del(struct resv_map *resv, long f, long t)
-> >
-> >               if (f <= rg->from && t >= rg->to) { /* Remove entire region */
-> >                       del += rg->to - rg->from;
-> > +                     hugetlb_cgroup_uncharge_file_region(resv, rg,
-> > +                                                         rg->to - rg->from);
-> >                       list_del(&rg->link);
-> >                       kfree(rg);
-> >                       continue;
-> > @@ -608,14 +631,21 @@ static long region_del(struct resv_map *resv, long f, long t)
-> >               if (f <= rg->from) {    /* Trim beginning of region */
-> >                       del += t - rg->from;
-> >                       rg->from = t;
-> > +
-> > +                     hugetlb_cgroup_uncharge_file_region(resv, rg,
-> > +                                                         t - rg->from);
-> >               } else {                /* Trim end of region */
-> >                       del += rg->to - f;
-> >                       rg->to = f;
-> > +
-> > +                     hugetlb_cgroup_uncharge_file_region(resv, rg,
-> > +                                                         rg->to - f);
-> >               }
-> >       }
-> >
-> >       spin_unlock(&resv->lock);
-> >       kfree(nrg);
-> > +
-> >       return del;
-> >  }
-> >
-> > @@ -2017,7 +2047,7 @@ static long __vma_reservation_common(struct hstate *h,
-> >               VM_BUG_ON(dummy_out_regions_needed != 1);
-> >               break;
-> >       case VMA_COMMIT_RESV:
-> > -             ret = region_add(resv, idx, idx + 1, 1);
-> > +             ret = region_add(NULL, NULL, resv, idx, idx + 1, 1);
-> >               /* region_add calls of range 1 should never fail. */
-> >               VM_BUG_ON(ret < 0);
-> >               break;
-> > @@ -2027,7 +2057,7 @@ static long __vma_reservation_common(struct hstate *h,
-> >               break;
-> >       case VMA_ADD_RESV:
-> >               if (vma->vm_flags & VM_MAYSHARE) {
-> > -                     ret = region_add(resv, idx, idx + 1, 1);
-> > +                     ret = region_add(NULL, NULL, resv, idx, idx + 1, 1);
-> >                       /* region_add calls of range 1 should never fail. */
-> >                       VM_BUG_ON(ret < 0);
-> >               } else {
-> > @@ -4688,7 +4718,7 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >       struct hstate *h = hstate_inode(inode);
-> >       struct hugepage_subpool *spool = subpool_inode(inode);
-> >       struct resv_map *resv_map;
-> > -     struct hugetlb_cgroup *h_cg;
-> > +     struct hugetlb_cgroup *h_cg = NULL;
-> >       long gbl_reserve, regions_needed = 0;
-> >
-> >       /* This should never happen */
-> > @@ -4729,19 +4759,6 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >
-> >               chg = to - from;
-> >
-> > -             if (hugetlb_cgroup_charge_cgroup(hstate_index(h),
-> > -                                              chg * pages_per_huge_page(h),
-> > -                                              &h_cg, true)) {
-> > -                     kref_put(&resv_map->refs, resv_map_release);
-> > -                     return -ENOMEM;
-> > -             }
-> > -
-> > -             /*
-> > -              * Since this branch handles private mappings, we attach the
-> > -              * counter to uncharge for this reservation off resv_map.
-> > -              */
-> > -             resv_map_set_hugetlb_cgroup_uncharge_info(resv_map, h_cg, h);
-> > -
-> >               set_vma_resv_map(vma, resv_map);
-> >               set_vma_resv_flags(vma, HPAGE_RESV_OWNER);
-> >       }
-> > @@ -4751,6 +4768,21 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >               goto out_err;
-> >       }
-> >
-> > +     ret = hugetlb_cgroup_charge_cgroup(
-> > +             hstate_index(h), chg * pages_per_huge_page(h), &h_cg, true);
-> > +
-> > +     if (ret < 0) {
-> > +             ret = -ENOMEM;
-> > +             goto out_err;
-> > +     }
-> > +
-> > +     if (vma && !(vma->vm_flags & VM_MAYSHARE) && h_cg) {
-> > +             /* For private mappings, the hugetlb_cgroup uncharge info hangs
-> > +              * of the resv_map.
-> > +              */
-> > +             resv_map_set_hugetlb_cgroup_uncharge_info(resv_map, h_cg, h);
-> > +     }
-> > +
-> >       /*
-> >        * There must be enough pages in the subpool for the mapping. If
-> >        * the subpool has a minimum size, there may be some global
-> > @@ -4759,7 +4791,7 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >       gbl_reserve = hugepage_subpool_get_pages(spool, chg);
-> >       if (gbl_reserve < 0) {
-> >               ret = -ENOSPC;
-> > -             goto out_err;
-> > +             goto out_uncharge_cgroup;
-> >       }
-> >
-> >       /*
-> > @@ -4768,9 +4800,7 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >        */
-> >       ret = hugetlb_acct_memory(h, gbl_reserve);
-> >       if (ret < 0) {
-> > -             /* put back original number of pages, chg */
-> > -             (void)hugepage_subpool_put_pages(spool, chg);
-> > -             goto out_err;
-> > +             goto out_put_pages;
-> >       }
-> >
-> >       /*
-> > @@ -4785,7 +4815,7 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >        * else has to be done for private mappings here
-> >        */
-> >       if (!vma || vma->vm_flags & VM_MAYSHARE) {
-> > -             add = region_add(resv_map, from, to, regions_needed);
-> > +             add = region_add(h, h_cg, resv_map, from, to, regions_needed);
-> >
-> >               if (unlikely(add < 0)) {
-> >                       hugetlb_acct_memory(h, -gbl_reserve);
->
-> Don't we need to call hugetlb_cgroup_uncharge_cgroup() in the case as well?
-> Also, can you "goto out_put_pages" to avoid hugepage_subpool_put_pages() call?
->
-
-Yes seems that's the case. Just a 'goto out_put_pages;' right here seems right.
-
-> > @@ -4802,12 +4832,23 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >                        */
-> >                       long rsv_adjust;
-> >
-> > -                     rsv_adjust = hugepage_subpool_put_pages(spool,
-> > -                                                             chg - add);
-> > +                     hugetlb_cgroup_uncharge_cgroup(
-> > +                             hstate_index(h),
-> > +                             (chg - add) * pages_per_huge_page(h), h_cg,
-> > +                             true);
-> > +
-> > +                     rsv_adjust =
-> > +                             hugepage_subpool_put_pages(spool, chg - add);
-> >                       hugetlb_acct_memory(h, -rsv_adjust);
-> >               }
-> >       }
-> >       return 0;
-> > +out_put_pages:
-> > +     /* put back original number of pages, chg */
-> > +     (void)hugepage_subpool_put_pages(spool, chg);
-> > +out_uncharge_cgroup:
-> > +     hugetlb_cgroup_uncharge_cgroup(
-> > +             hstate_index(h), chg * pages_per_huge_page(h), h_cg, true);
-> >  out_err:
-> >       if (!vma || vma->vm_flags & VM_MAYSHARE)
-> >               /* Only call region_abort if the region_chg succeeded but the
-> > diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-> > index e079513c8de0d..916ee24cc50d3 100644
-> > --- a/mm/hugetlb_cgroup.c
-> > +++ b/mm/hugetlb_cgroup.c
-> > @@ -326,6 +326,21 @@ void hugetlb_cgroup_uncharge_counter(struct resv_map *resv, unsigned long start,
-> >       css_put(resv->css);
-> >  }
-> >
-> > +void hugetlb_cgroup_uncharge_file_region(struct resv_map *resv,
-> > +                                      struct file_region *rg,
-> > +                                      unsigned long nr_pages)
-> > +{
-> > +     if (hugetlb_cgroup_disabled() || !resv || !rg || !nr_pages)
-> > +             return;
-> > +
-> > +     if (rg->reservation_counter && rg->pages_per_hpage && nr_pages > 0 &&
-> > +         !resv->reservation_counter) {
-> > +             page_counter_uncharge(rg->reservation_counter,
-> > +                                   nr_pages * rg->pages_per_hpage);
-> > +             css_put(rg->css);
-> > +     }
-> > +}
-> > +
-> >  enum {
-> >       RES_USAGE,
-> >       RES_RSVD_USAGE,
-> > --
-> > 2.25.0.341.g760bfbb309-goog
->
-> --
-> Mike Kravetz
