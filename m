@@ -2,136 +2,107 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22ABC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0387C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A0C217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7169120661
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ek6SC1TA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="je7nbPRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgBFLzG (ORCPT
+        id S1727779AbgBFL4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:55:06 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41050 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbgBFLzF (ORCPT
+        Thu, 6 Feb 2020 06:56:41 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46763 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBFL4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:55:05 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 016Bt0hH091917;
-        Thu, 6 Feb 2020 05:55:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580990100;
-        bh=2Coh5p3qK7LHZQttiOinvCEs7fyz7VfDVezsyJy7rYQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ek6SC1TAl5DzeYgwPpr9VSihDWTPoxgPuhzqO81fOexKs5XkSwS+tx++DPywyPBO2
-         JlnyeUMWiZTJwhSAXkaAr075Skh4H9qAUeqI0lNCzF9jTBqhZaQFZTPVX6UKiHa6Vk
-         yxBu8UH35HsY3jWQJ1XVxzWSnkvcGx39JUMuCPeI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 016Bt0os083904;
-        Thu, 6 Feb 2020 05:55:00 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 6 Feb
- 2020 05:55:00 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 6 Feb 2020 05:55:00 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 016BswWh069423;
-        Thu, 6 Feb 2020 05:54:58 -0600
-Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-To:     Hans de Goede <hdegoede@redhat.com>, <axboe@kernel.dk>
-CC:     <vigneshr@ti.com>, <nsekhar@ti.com>, <linux-ide@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <50ad68d2-39e2-d2f0-1794-cf7b499cb1f0@ti.com>
-Date:   Thu, 6 Feb 2020 13:54:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 06:56:41 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g64so5175680otb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 03:56:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uMsAapITXkLzJOLckwG4XojxmW0d1pjkgV4d2lZV/fE=;
+        b=je7nbPRUzIurBISR1NYTtbJqnOaJQ4blgePkVkAxhJOR6ulsvPl17K4jqdMdXsqHZD
+         J+zSsq5WaLrrOawSLfzQmIhC4S8hICmpxOxLejMF+c4DojYJja4JBhGMcRsBBuqqP/g+
+         Onr9hXuFP7e5B+xORxzxCo3KFoIlBRUegbaUI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uMsAapITXkLzJOLckwG4XojxmW0d1pjkgV4d2lZV/fE=;
+        b=ZcoL8jzjVytoYGVVpOOU+yjGfwhVD3EJNhLNWn3vegx5GG/AnCYyvBk0nLbedXf4vo
+         yY7yRWEm9nUP36K9II7FqfCwebIWmlex2qIgAaGgOq+5mHOgU429SPplMopnSTiaevSd
+         wHvGKN3AnNSiAXzoSUgGuljLHGnCYuRy6j4aRgN2iBL9njlfpgKjNyIuRxzGs9Xa6q5B
+         Ab88FuueyHDPn2s2vogYfLR4l+0IAmiK76snCt/OIhqKIXaXx0PVjl8jzCU4RydNIhAX
+         AMroOcW8ew94HbKQmSeAFe65xkFNCgXc4Lu9YHfWYG3WiZT1PJmUU9IjAo/FJyB1syH0
+         2I7w==
+X-Gm-Message-State: APjAAAXydFHJ7Syykfktnwc2tgM/CfKhx5nnIdsKUMGVLxUMPIZ5x0NM
+        pKyylL2gKdsrcK6jutQj9P8HsA==
+X-Google-Smtp-Source: APXvYqzwToTMXn+aTOh/gblkFv/dlH3X35itT+RX5M+r5t5nmrsjGr3xv3LwBksLl8Co9w1+D/M2Ww==
+X-Received: by 2002:a9d:6f07:: with SMTP id n7mr29037601otq.112.1580990198850;
+        Thu, 06 Feb 2020 03:56:38 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a5sm1031776otl.45.2020.02.06.03.56.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 03:56:38 -0800 (PST)
+Date:   Thu, 6 Feb 2020 03:56:36 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [RFC PATCH 08/11] x86: Add support for finer grained KASLR
+Message-ID: <202002060353.A6A064A@keescook>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-9-kristen@linux.intel.com>
+ <CALCETrVnCAzj0atoE1hLjHgmWjWAKVdSLm-UMtukUwWgr7-N9Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVnCAzj0atoE1hLjHgmWjWAKVdSLm-UMtukUwWgr7-N9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans,
+On Wed, Feb 05, 2020 at 05:17:11PM -0800, Andy Lutomirski wrote:
+> On Wed, Feb 5, 2020 at 2:39 PM Kristen Carlson Accardi
+> <kristen@linux.intel.com> wrote:
+> >
+> > At boot time, find all the function sections that have separate .text
+> > sections, shuffle them, and then copy them to new locations. Adjust
+> > any relocations accordingly.
+> >
+> 
+> > +       sort(base, num_syms, sizeof(int), kallsyms_cmp, kallsyms_swp);
+> 
+> Hah, here's a huge bottleneck.  Unless you are severely
+> memory-constrained, never do a sort with an expensive swap function
+> like this.  Instead allocate an array of indices that starts out as
+> [0, 1, 2, ...].  Sort *that* where the swap function just swaps the
+> indices.  Then use the sorted list of indices to permute the actual
+> data.  The result is exactly one expensive swap per item instead of
+> one expensive swap per swap.
 
-On 06/02/2020 13:50, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/6/20 12:17 PM, Roger Quadros wrote:
->> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
->> Restrict it to 32-bit.
->>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   drivers/ata/ahci_platform.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->> index 3aab2e3d57f3..b925dc54cfa5 100644
->> --- a/drivers/ata/ahci_platform.c
->> +++ b/drivers/ata/ahci_platform.c
->> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
->>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
->>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
->> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
->> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
->> +
-> 
-> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
-> is e.g. also used on some exynos devices. So using that to key the
-> setting of the 32 bit flag seems wrong to me.
-
-You are right, Vignesh also pointed this out to me offline.
-
-snps,dwc-ahci does indeed support 64-bit addressing, so this patch is wrong.
-
-> 
-> IMHO it would be better to introduce a TI specific compatible
-> and use that to match on instead (and also adjust the dts files
-> accordingly).
-
-The TI platform's TRM does say it has only 36-bits of the controller wired
-in the device. If that was the case and DDR address never goes beyond
-36-bits, we don't understand why it fails in the first place.
-
-80000000-afcfffff : System RAM
-b0000000-feffffff : System RAM
-200000000-27fffffff : System RAM
-
-cheers,
--roger
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
->>       port = acpi_device_get_match_data(dev);
->>       if (!port)
->>           port = &ahci_port_info;
->>
-> 
+I think there are few places where memory-vs-speed need to be examined.
+I remain surprised about how much memory the entire series already uses
+(58MB in my local tests), but I suspect this is likely dominated by the
+two factors: a full copy of the decompressed kernel, and that the
+"allocator" in the image doesn't really implement free():
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/decompress/mm.h#n55
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Kees Cook
