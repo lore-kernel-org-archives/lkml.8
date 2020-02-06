@@ -2,209 +2,119 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5627CC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE28C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F966214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDEE21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="izaxrCPy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="be/QtGqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgBFRIH (ORCPT
+        id S1727919AbgBFRI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:08:07 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:34420 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727657AbgBFRIH (ORCPT
+        Thu, 6 Feb 2020 12:08:26 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53011 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727440AbgBFRI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:08:07 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581008886; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=IG8sscW63scxx0Id6zzYrwJOnoKRGNZHgeCJTEZRJWw=; b=izaxrCPyZx041PMvr5vB3w/5krTnWOqKxif4Dq8uW7U9G0FGmGaCHyiK71tnEt/mbMVH1a//
- r7fAHhQj9jy+uryaqI56/t9iLlZpDUIoetClpo/oWL4t/RWC9vqLcmi2R7OMPxOqrLXCuYZF
- bHAlyn4I3rQO9ZuhweQxb8I7Lqs=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3c47f3.7ff3de8f1298-smtp-out-n03;
- Thu, 06 Feb 2020 17:08:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3D14AC447A0; Thu,  6 Feb 2020 17:08:03 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 6 Feb 2020 12:08:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581008905;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pCec0r2HvCzdFyVP35CG/1REeLdCQxqtScAYbzgQ6dk=;
+        b=be/QtGqgPlpGG6il8UzqGS1FbSNrscE062WL+vGwpmOBWhK+cY25woakMwvJLRkIVRvtIB
+        Zh7sy8LbYYr/Fp/maq3ufEUNFfowGvcuzZE5Nfl+VgZCFBx0NE5RUzx7DlPUdJBWDUkkTl
+        mJJd5pu33Czf7zK3GbeWAFbDnfzS8uk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-gPMkKhLIPVa9_EpmbaHOBA-1; Thu, 06 Feb 2020 12:08:23 -0500
+X-MC-Unique: gPMkKhLIPVa9_EpmbaHOBA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 885B7C433CB;
-        Thu,  6 Feb 2020 17:08:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 885B7C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <073b09d4-51fe-f5fc-bbaf-1a168eac0881@codeaurora.org>
-Date:   Thu, 6 Feb 2020 10:08:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 958331857343;
+        Thu,  6 Feb 2020 17:08:21 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-124-223.rdu2.redhat.com [10.10.124.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 083C760BEC;
+        Thu,  6 Feb 2020 17:08:20 +0000 (UTC)
+Subject: Re: [PATCH v6 6/6] locking/lockdep: Reuse freed chain_hlocks entries
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20200206152408.24165-1-longman@redhat.com>
+ <20200206152408.24165-7-longman@redhat.com>
+ <20200206161640.GW14914@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <29fbb4c6-aa8f-f6ce-6115-232db5f2db52@redhat.com>
+Date:   Thu, 6 Feb 2020 12:08:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200206161640.GW14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/2020 6:49 AM, Manivannan Sadhasivam wrote:
-> This commit adds support for registering MHI controller drivers with
-> the MHI stack. MHI controller drivers manages the interaction with the
-> MHI client devices such as the external modems and WiFi chipsets. They
-> are also the MHI bus master in charge of managing the physical link
-> between the host and client device.
-> 
-> This is based on the patch submitted by Sujeev Dias:
-> https://lkml.org/lkml/2018/7/9/987
-> 
-> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> [jhugo: added static config for controllers and fixed several bugs]
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> [mani: removed DT dependency, splitted and cleaned up for upstream]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On 2/6/20 11:16 AM, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2020 at 10:24:08AM -0500, Waiman Long wrote:
+>> +static int alloc_chain_hlocks(int req)
+>> +{
+>> +	int bucket, curr, size;
+>> +
+>> +	/*
+>> +	 * We rely on the MSB to act as an escape bit to denote freelist
+>> +	 * pointers. Make sure this bit isn't set in 'normal' class_idx usage.
+>> +	 */
+>> +	BUILD_BUG_ON((MAX_LOCKDEP_KEYS-1) & CHAIN_BLK_FLAG);
+>> +
+>> +	init_data_structures_once();
+>> +
+>> +	if (nr_free_chain_hlocks < req)
+>> +		return -1;
+>> +
+>> +	/*
+>> +	 * We require a minimum of 2 (u16) entries to encode a freelist
+>> +	 * 'pointer'.
+>> +	 */
+>> +	req = max(req, 2);
+>> +	bucket = size_to_bucket(req);
+>> +	curr = chain_block_buckets[bucket];
+>> +
+>> +	if (bucket && (curr >= 0)) {
+>> +		del_chain_block(bucket, req, chain_block_next(curr));
+>> +		return curr;
+>> +	} else if (bucket) {
+>> +		/* Try bucket 0 */
+>> +		curr = chain_block_buckets[0];
+>> +	}
+> 	if (bucket) {
+> 		if (curr >= 0) {
+> 			del_chain_block(bucket, req, chain_block_next(curr));
+> 			return curr;
+> 		}
+> 		/* Try bucket 0 */
+> 		curr = chain_block_bucket[0];
+> 	}
+>
+> reads much easier IMO.
 
-> +/**
-> + * enum mhi_device_type - Device types
-> + * @MHI_DEVICE_XFER: Handles data transfer
-> + * @MHI_DEVICE_TIMESYNC: Use for timesync feature
-> + * @MHI_DEVICE_CONTROLLER: Control device
-> + */
-> +enum mhi_device_type {
-> +	MHI_DEVICE_XFER,
-> +	MHI_DEVICE_TIMESYNC,
-> +	MHI_DEVICE_CONTROLLER,
-> +};
+Yes, that is simpler. I can send out an updated patch if you want, or
+you can apply the change when you pull the patch.
 
-Time sync support was removed, no?  I don't see MHI_DEVICE_TIMESYNC used 
-anywhere in the code.
+Thanks,
+Longman
 
-> +/**
-> + * enum mhi_er_data_type - Event ring data types
-> + * @MHI_ER_DATA: Only client data over this ring
-> + * @MHI_ER_CTRL: MHI control data and client data
-> + * @MHI_ER_TSYNC: Time sync events
-> + */
-> +enum mhi_er_data_type {
-> +	MHI_ER_DATA,
-> +	MHI_ER_CTRL,
-> +	MHI_ER_TSYNC,
-> +};
-
-Time sync support was removed, no?  I don't see MHI_ER_TSYNC used 
-anywhere in the code.
-
-> +/**
-> + * struct mhi_controller - Master MHI controller structure
-> + * @dev: Driver model device node for the controller (required)
-> + * @mhi_dev: MHI device instance for the controller
-> + * @regs: Base address of MHI MMIO register space (required)
-> + * @iova_start: IOMMU starting address for data (required)
-> + * @iova_stop: IOMMU stop address for data (required)
-> + * @fw_image: Firmware image name for normal booting (required)
-> + * @edl_image: Firmware image name for emergency download mode (optional)
-> + * @sbl_size: SBL image size downloaded through BHIe (optional)
-> + * @seg_len: BHIe vector size (optional)
-> + * @mhi_chan: Points to the channel configuration table
-> + * @lpm_chans: List of channels that require LPM notifications
-> + * @irq: base irq # to request (required)
-> + * @max_chan: Maximum number of channels the controller supports
-> + * @total_ev_rings: Total # of event rings allocated
-> + * @hw_ev_rings: Number of hardware event rings
-> + * @sw_ev_rings: Number of software event rings
-> + * @nr_irqs_req: Number of IRQs required to operate (optional)
-> + * @nr_irqs: Number of IRQ allocated by bus master (required)
-> + * @mhi_event: MHI event ring configurations table
-> + * @mhi_cmd: MHI command ring configurations table
-> + * @mhi_ctxt: MHI device context, shared memory between host and device
-> + * @pm_mutex: Mutex for suspend/resume operation
-> + * @pm_lock: Lock for protecting MHI power management state
-> + * @timeout_ms: Timeout in ms for state transitions
-> + * @pm_state: MHI power management state
-> + * @db_access: DB access states
-> + * @ee: MHI device execution environment
-> + * @dev_wake: Device wakeup count
-> + * @pending_pkts: Pending packets for the controller
-> + * @transition_list: List of MHI state transitions
-> + * @transition_lock: Lock for protecting MHI state transition list
-> + * @wlock: Lock for protecting device wakeup
-> + * @st_worker: State transition worker
-> + * @fw_worker: Firmware download worker
-> + * @syserr_worker: System error worker
-> + * @state_event: State change event
-> + * @status_cb: CB function to notify power states of the device (required)
-> + * @link_status: CB function to query link status of the device (required)
-> + * @wake_get: CB function to assert device wake (optional)
-> + * @wake_put: CB function to de-assert device wake (optional)
-> + * @wake_toggle: CB function to assert and de-assert device wake (optional)
-> + * @runtime_get: CB function to controller runtime resume (required)
-> + * @runtimet_put: CB function to decrement pm usage (required)
-> + * @buffer_len: Bounce buffer length
-> + * @bounce_buf: Use of bounce buffer
-> + * @fbc_download: MHI host needs to do complete image transfer (optional)
-> + * @pre_init: MHI host needs to do pre-initialization before power up
-> + * @wake_set: Device wakeup set flag
-> + */
-
-I'm happy the optional/required is listed.  However if I look at this 
-from the perspective of someone writing a controller for the first time, 
-I'm not confident the required/optional annotations are clear enough. 
-Perhaps a quick sentance explaining that those annotations indicate 
-fields which must be populated prior to mhi_register_controller() ?
-
-> +
-> +/**
-> + * struct mhi_device - Structure representing a MHI device which binds
-> + *                     to channels
-> + * @id: Pointer to MHI device ID struct
-> + * @chan_name: Name of the channel to which the device binds
-> + * @mhi_cntrl: Controller the device belongs to
-> + * @ul_chan: UL channel for the device
-> + * @dl_chan: DL channel for the device
-> + * @dev: Driver model device node for the MHI device
-> + * @dev_type: MHI device type
-> + * @tiocm: Device current terminal settings
-> + * @dev_wake: Device wakeup counter
-> + */
-> +struct mhi_device {
-> +	const struct mhi_device_id *id;
-> +	const char *chan_name;
-> +	struct mhi_controller *mhi_cntrl;
-> +	struct mhi_chan *ul_chan;
-> +	struct mhi_chan *dl_chan;
-> +	struct device dev;
-> +	enum mhi_device_type dev_type;
-> +	u32 tiocm;
-
-This was for the old ioctl support, right?  I don't see it used anywhere.
-
-> +	u32 dev_wake;
-> +};
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
