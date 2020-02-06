@@ -2,102 +2,127 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D816AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E70C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D23214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9A321741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580985545;
+	bh=gtIwWtw5fbPPavML5kQUyoCRGV2WDAlOHO8LMQiUGG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FYn97xwU6LWO6DTTSj00M9ObmCxMezu/MLh31JKKDwtD4u5PKupgteyQitdEmqnxc
+	 g97vIm3zw74uiaxlf4kgepc/YgFhahFPFHbbxJewoCS8fB+7B9mvwjWjUa49c+JHYZ
+	 zSTvr41qBmz1S46C/eDqi2nCQX8iulAIoF1k8pGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgBFKio (ORCPT
+        id S1728519AbgBFKjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:38:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41282 "EHLO mx2.suse.de"
+        Thu, 6 Feb 2020 05:39:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgBFKim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:38:42 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 53E6BB159;
-        Thu,  6 Feb 2020 10:38:40 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>, stable@vger.kernel.org
-Subject: [PATCH v2] ceph: fix copy_file_range error path in short copies
-Date:   Thu,  6 Feb 2020 10:38:42 +0000
-Message-Id: <20200206103842.14936-1-lhenriques@suse.com>
-In-Reply-To: <20200205192414.GA27345@suse.com>
-References: <20200205192414.GA27345@suse.com>
+        id S1728035AbgBFKjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:39:04 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B697D20730;
+        Thu,  6 Feb 2020 10:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580985544;
+        bh=gtIwWtw5fbPPavML5kQUyoCRGV2WDAlOHO8LMQiUGG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EJF3o1zTd/N4TtE8/XCkOytSP31/QOn96mQWqN1WNfwe0csOLIhqBtuHWzXs3gubA
+         tiTMnmqwF9IGwzVNao1obmoHdhpoq86vlHgfv88G1kExMw68NW3PCJjwIauMr/X08D
+         xxc8XMjoncKl1o+K47yseG5Qp2Mwf9iF3BAJU/C0=
+Date:   Thu, 6 Feb 2020 10:38:59 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bhupesh.linux@gmail.com, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 2/2] perf/arm64: Allow per-task kernel breakpoints
+Message-ID: <20200206103858.GB17074@willie-the-truck>
+References: <1580768784-25868-1-git-send-email-bhsharma@redhat.com>
+ <1580768784-25868-3-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580768784-25868-3-git-send-email-bhsharma@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there's an error in the copying loop but some bytes have already been
-copied into the destination file, it is necessary to dirty the caps and
-eventually update the MDS with the file metadata (timestamps, size).  This
-patch fixes this error path.
+On Tue, Feb 04, 2020 at 03:56:24AM +0530, Bhupesh Sharma wrote:
+> commit 478fcb2cdb23 ("arm64: Debugging support") disallowed per-task
+> kernel breakpoints on arm64 since these would have potentially
+> complicated the stepping code.
+> 
+> However, we now have several use-cases (for e.g. perf) which require
+> per-task address execution h/w breakpoint to be exercised/set on arm64:
 
-Another issue this patch fixes is the destination file size being reported
-to the MDS.  If we're on the error path but the amount of bytes written
-has already changed the destination file size, the offset to use is
-dst_off and not endoff.
+To be honest, the perf interface to hw_breakpoint is an abomination and
+I think we should remove it entirely for arm64. It's flakey, complicated,
+adds code to context-switch and reduces the capabilities available to
+ptrace.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/file.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+> For e.g. we can set address execution h/w breakpoints, using the
+> format prescribed by 'perf-list' command:
+> mem:<addr>[/len][:access]                          [Hardware breakpoint]
+> 
+> Without this patch, currently 'perf stat -e' reports that per-task
+> address execution h/w breakpoints are 'not supported' on arm64. See
+> below:
+> 
+> $ TEST_FUNC="vfs_read"
+> $ ADDR=0x`cat /proc/kallsyms | grep -P "\\s$TEST_FUNC\$" | cut -f1 -d' '`
+> $ perf stat -e mem:$ADDR:x -x';' -- cat /proc/cpuinfo > /dev/null
+> 
+> <not supported>;;mem:0xffff00001031dd68:x;0;100.00;;
+> 
+> After this patch, this use-case can be supported:
+> 
+> $ TEST_FUNC="vfs_read"
+> $ ADDR=0x`cat /proc/kallsyms | grep -P "\\s$TEST_FUNC\$" | cut -f1 -d' '`
+> $ perf stat -e mem:$ADDR:x -x';' -- cat /proc/cpuinfo > /dev/null
+> 
+> 5;;mem:0xfffffe0010361d20:x;912200;100.00;;
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  arch/arm64/kernel/hw_breakpoint.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> index 0b727edf4104..c28f04e02845 100644
+> --- a/arch/arm64/kernel/hw_breakpoint.c
+> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> @@ -562,13 +562,6 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  	hw->address &= ~alignment_mask;
+>  	hw->ctrl.len <<= offset;
+>  
+> -	/*
+> -	 * Disallow per-task kernel breakpoints since these would
+> -	 * complicate the stepping code.
+> -	 */
+> -	if (hw->ctrl.privilege == AARCH64_BREAKPOINT_EL1 && bp->hw.target)
+> -		return -EINVAL;
+> -
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 11929d2bb594..f7f8cb6c243f 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -2104,9 +2104,16 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
- 		if (err) {
- 			dout("ceph_osdc_copy_from returned %d\n", err);
--			if (!ret)
-+			/*
-+			 * If we haven't done any copy yet, just exit with the
-+			 * error code; otherwise, return the number of bytes
-+			 * already copied, update metadata and dirty caps.
-+			 */
-+			if (!ret) {
- 				ret = err;
--			goto out_caps;
-+				goto out_caps;
-+			}
-+			goto update_dst_inode;
- 		}
- 		len -= object_size;
- 		src_off += object_size;
-@@ -2118,16 +2125,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 		/* We still need one final local copy */
- 		do_final_copy = true;
- 
-+update_dst_inode:
- 	file_update_time(dst_file);
- 	inode_inc_iversion_raw(dst_inode);
- 
--	if (endoff > size) {
-+	if (dst_off > size) {
- 		int caps_flags = 0;
- 
- 		/* Let the MDS know about dst file size change */
--		if (ceph_quota_is_max_bytes_approaching(dst_inode, endoff))
-+		if (ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
- 			caps_flags |= CHECK_CAPS_NODELAY;
--		if (ceph_inode_set_size(dst_inode, endoff))
-+		if (ceph_inode_set_size(dst_inode, dst_off))
- 			caps_flags |= CHECK_CAPS_AUTHONLY;
- 		if (caps_flags)
- 			ceph_check_caps(dst_ci, caps_flags, NULL);
+Sorry, but this is broken; the check is there for a reason, not just for
+fun!
+
+Look at how the step handler toggles the bp registers.
+
+Will
