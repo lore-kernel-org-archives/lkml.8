@@ -2,203 +2,616 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE11C33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF45AC33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338E820659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8E120659
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSYWbCvF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W+WXpn9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgBFRpx (ORCPT
+        id S1727754AbgBFRsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 12:45:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41553 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727479AbgBFRpx (ORCPT
+        Thu, 6 Feb 2020 12:48:38 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46238 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbgBFRsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 12:45:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581011152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4hsoXsRg+iOgMi2y4QFgOCLUXFqAzwDFmk/kVRs23KY=;
-        b=BSYWbCvFqDavEokGdNpYJ7np9PZmraZd6eKcwBLaVyV2zsUca25vEWJoFSh17pOJTwWx3h
-        c/wrZLw9C+Xm4y93OYXWPtrdyqEbGNhswgy31S8ItAjLCCQFQeU/nuqI9jHiv/qaNl/1ts
-        HnhJmIIgEdIUI6tARntzFbawugWqBIU=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-285-O7aBC9YwMxWs5LaowHTENw-1; Thu, 06 Feb 2020 12:45:43 -0500
-X-MC-Unique: O7aBC9YwMxWs5LaowHTENw-1
-Received: by mail-qt1-f197.google.com with SMTP id c10so4342528qtk.18
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 09:45:43 -0800 (PST)
+        Thu, 6 Feb 2020 12:48:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id k29so3462427pfp.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 09:48:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=nwpR41dlXPbuY8wR5aHkScJu7Rm/rlVJZzojPKTXVr4=;
+        b=W+WXpn9ZNUXy+7tRIF9cQvm6PmFO2sQpQu70UJHHA6gK4mlOuTA5eMLeWR8oydtl+z
+         V6L5FD4ikJcc7qwFxsr3dFw1P5iOPYXpltSa3Qlts+QwYwxiWmPNct+F5sK1m7B05FI3
+         AeUB2j1kEdI87yNOAa5UZNChnjRx9ci/Y0bzXrAMfaZTulEDW6ib62OWc1nkxIaVgfV3
+         OMSizYe6o4Y7GA5UdLrV/gy4W3o+eQzQpmu+clZ2jbPTw+Hg237oq44En14Lr0pQpcAU
+         ARCJoFpnlbbwxakaIXY2LBIHBahuOg7+Pl8fXDJVSicT9/oquKJhO8+DbktV3WldZLly
+         xezA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4hsoXsRg+iOgMi2y4QFgOCLUXFqAzwDFmk/kVRs23KY=;
-        b=DjT4LwAWOIbUSqqWZCpYcrxu1XLLZyzVaHU1pxmmhDaDxErjAOEI8fTlyMC8m7omKe
-         XUFj52lHYmd5fvJPejc79B7e1LI4VPHkIcL85jhl6DS4NQuBAnC/KbRAYcWL/dCQW9Uz
-         6F+7oXXbwp5beA8RErohRy5NpyZXMEbVMblecWgcscb8DSBjikKEWqcR8M9hi24Q+OLt
-         iKffRY+HOF2v91+W7ZXqDIebvfVr99dnM+QkfXWfMsJGoxJFOlgUZf9fcSvYLRJDwMXn
-         GLf2ppP5bVUM/vy4FupQ5jsW0iFDaCYPMn5EjmlWq6x46eAZDqFiMKyj2bryadJiDeoY
-         5vtA==
-X-Gm-Message-State: APjAAAXeKZSia7OhI36amSU0WbipwDyNxQVbc5XEBaK4G7GpMZHnYxHY
-        R5H714R4b7gvc1pJzbQRPBtmyp+mJkqk1Wenvb8uwAfTFuD3JAxWWtXSHRhZ23tkPpETZxDmM2e
-        mlqUN581LmN8LjqxSkiqmj46hpDU7qqiHfPvUrQMi
-X-Received: by 2002:ad4:46ce:: with SMTP id g14mr3412088qvw.67.1581011143240;
-        Thu, 06 Feb 2020 09:45:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwKRB7vkxQEkCWZs7vP69Tg0A3LNsGiv7qJZN7sCeRx4ict/EL2tpk34DTb+uKvvvrnh+M8sEwyc6lJPQuMAj8=
-X-Received: by 2002:ad4:46ce:: with SMTP id g14mr3412070qvw.67.1581011142921;
- Thu, 06 Feb 2020 09:45:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=nwpR41dlXPbuY8wR5aHkScJu7Rm/rlVJZzojPKTXVr4=;
+        b=lyWdoxhXgyIQEwFoJBAEsAgIVE8ySBKYKa9pxoUNnvlva/P3/wvjURMUq3PskYKMds
+         xmfrkNVMpJZw4v65BCB/pq9j4VpBz5F2yAeVQ4ZBgGC7j46gO/Ja4sSqBIu5905FhfzB
+         QdZOdyXdBkc8B/Omg8eXyE+X+SaptkRwfP/Jn7FAzI85B3DKVRLU7tK10sl5bqMUvLig
+         +4441swTaGBR0LxqtFcrjz6qnywYMo5QRszzW1uY0GL+I/X6mE+UBTmuiLtV/BYqef/B
+         xFfvk/hNroapdMpP11B77kp1Gufw8eCy+s49+QvGrMRqvdwGT1iuqfQnYI0MwSyZqv24
+         5SaQ==
+X-Gm-Message-State: APjAAAWfwot/FVBWUcQQSrfavT9hDywYjc9mmZyA71OSjhGqKpZHYfcU
+        PhWmvceg1XJPp663JzXX6v6l2LWEfLY=
+X-Google-Smtp-Source: APXvYqzrs4okYndDdsgY/TsIUS+n6/fxKaUVi9MklVh02Zv0ZfTJKtyDmGFHDZRS2rxMmPhPT2PYaw==
+X-Received: by 2002:a63:ba05:: with SMTP id k5mr4826396pgf.158.1581011317013;
+        Thu, 06 Feb 2020 09:48:37 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id w187sm42557pfw.62.2020.02.06.09.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 09:48:36 -0800 (PST)
+Date:   Thu, 6 Feb 2020 10:48:33 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     =?iso-8859-1?Q?Cl=E9ment?= Leger <cleger@kalray.eu>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
+Subject: Re: [PATCH v3 2/2] remoteproc: Add elf64 support in elf loader
+Message-ID: <20200206174833.GA14096@xps15>
+References: <20200129163013.GA16538@xps15>
+ <20200204174412.16814-1-cleger@kalray.eu>
+ <20200204174412.16814-3-cleger@kalray.eu>
+ <20200205224936.GB25901@xps15>
+ <1065812225.2604892.1580978273748.JavaMail.zimbra@kalray.eu>
+ <2083982862.2712681.1581001544395.JavaMail.zimbra@kalray.eu>
 MIME-Version: 1.0
-References: <20200126194513.6359-1-martyn@welchs.me.uk> <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com>
- <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk>
- <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
- <nycvar.YFH.7.76.2002031100500.31058@cbobk.fhfr.pm> <CAO-hwJ+k8fxULS1xC-28jHmhZLZVN5EGc=kY5sqNX1GCNKpt4A@mail.gmail.com>
- <nycvar.YFH.7.76.2002031218230.26888@cbobk.fhfr.pm> <CAO-hwJJk411hGTJ6uSdzAFCzf1WJehhifdN0r5kMG6aqL=dnpw@mail.gmail.com>
- <CAEc3jaDC5ddBPDy_Z96eZs-VZQ3051LVAb91-U_Oce9jj1wk8Q@mail.gmail.com>
-In-Reply-To: <CAEc3jaDC5ddBPDy_Z96eZs-VZQ3051LVAb91-U_Oce9jj1wk8Q@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 6 Feb 2020 18:45:31 +0100
-Message-ID: <CAO-hwJK8yGiRpTr9D86r1kB8pWdCT8A8No40t_YQdtiVm9z26Q@mail.gmail.com>
-Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
-To:     Roderick Colenbrander <thunderbird2k@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, Martyn Welch <martyn@welchs.me.uk>,
-        linux-input <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Conn O'Griofa" <connogriofa@gmail.com>,
-        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2083982862.2712681.1581001544395.JavaMail.zimbra@kalray.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+On Thu, Feb 06, 2020 at 04:05:44PM +0100, Clément Leger wrote:
+> Hi Mathieu,
+> 
+> ----- On 6 Feb, 2020, at 09:37, Clément Leger cleger@kalray.eu wrote:
+> 
+> > Hi Mathieu,
+> > 
+> > ----- On 5 Feb, 2020, at 23:49, Mathieu Poirier mathieu.poirier@linaro.org
+> > wrote:
+> > 
+> >> On Tue, Feb 04, 2020 at 06:44:12PM +0100, Clement Leger wrote:
+> >>> elf32 and elf64 mainly differ by their types. In order to avoid
+> >>> copy/pasting the whole loader code, generate static inline functions
+> >>> which will access values according to the elf class. It allows to keep a
+> >>> common loader basis.
+> >>> In order to accommodate both elf types sizes, the maximum size for a
+> >>> elf header member is chosen using the maximum value of both elf class.
+> >>> 
+> >>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> >>> Tested-by: Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+> >>> ---
+> >>>  Documentation/remoteproc.txt               |   2 +-
+> >>>  drivers/remoteproc/remoteproc_elf_loader.c | 147 ++++++++++++++++++-----------
+> >>>  drivers/remoteproc/remoteproc_elf_loader.h |  69 ++++++++++++++
+> >>>  drivers/remoteproc/remoteproc_internal.h   |   2 +-
+> >>>  drivers/remoteproc/st_remoteproc.c         |   2 +-
+> >>>  include/linux/remoteproc.h                 |   4 +-
+> >>>  6 files changed, 167 insertions(+), 59 deletions(-)
+> >>>  create mode 100644 drivers/remoteproc/remoteproc_elf_loader.h
+> >>> 
+> >>> diff --git a/Documentation/remoteproc.txt b/Documentation/remoteproc.txt
+> >>> index 03c3d2e568b0..2be1147256e0 100644
+> >>> --- a/Documentation/remoteproc.txt
+> >>> +++ b/Documentation/remoteproc.txt
+> >>> @@ -230,7 +230,7 @@ in the used rings.
+> >>>  Binary Firmware Structure
+> >>>  =========================
+> >>>  
+> >>> -At this point remoteproc only supports ELF32 firmware binaries. However,
+> >>> +At this point remoteproc supports ELF32 and ELF64 firmware binaries. However,
+> >>>  it is quite expected that other platforms/devices which we'd want to
+> >>>  support with this framework will be based on different binary formats.
+> >>>  
+> >>> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
+> >>> b/drivers/remoteproc/remoteproc_elf_loader.c
+> >>> index 606aae166eba..21fd2b2fe5ae 100644
+> >>> --- a/drivers/remoteproc/remoteproc_elf_loader.c
+> >>> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+> >>> @@ -23,6 +23,7 @@
+> >>>  #include <linux/elf.h>
+> >>>  
+> >>>  #include "remoteproc_internal.h"
+> >>> +#include "remoteproc_elf_loader.h"
+> >>>  
+> >>>  /**
+> >>>   * rproc_elf_sanity_check() - Sanity Check ELF firmware image
+> >>> @@ -35,8 +36,16 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct
+> >>> firmware *fw)
+> >>>  {
+> >>>  	const char *name = rproc->firmware;
+> >>>  	struct device *dev = &rproc->dev;
+> >>> +	/*
+> >>> +	 * Elf files are beginning with the same structure. Thus, to simplify
+> >>> +	 * header parsing, we can use the elf32_hdr one for both elf64 and
+> >>> +	 * elf32.
+> >>> +	 */
+> >>>  	struct elf32_hdr *ehdr;
+> >>> +	u32 elf_shdr_size;
+> >>> +	u64 phoff, shoff;
+> >>>  	char class;
+> >>> +	u16 phnum;
+> >>>  
+> >>>  	if (!fw) {
+> >>>  		dev_err(dev, "failed to load %s\n", name);
+> >>> @@ -50,13 +59,22 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct
+> >>> firmware *fw)
+> >>>  
+> >>>  	ehdr = (struct elf32_hdr *)fw->data;
+> >>>  
+> >>> -	/* We only support ELF32 at this point */
+> >>> +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG)) {
+> >>> +		dev_err(dev, "Image is corrupted (bad magic)\n");
+> >>> +		return -EINVAL;
+> >>> +	}
+> >>> +
+> >>>  	class = ehdr->e_ident[EI_CLASS];
+> >>> -	if (class != ELFCLASS32) {
+> >>> +	if (class != ELFCLASS32 && class != ELFCLASS64) {
+> >>>  		dev_err(dev, "Unsupported class: %d\n", class);
+> >>>  		return -EINVAL;
+> >>>  	}
+> >>>  
+> >>> +	if (class == ELFCLASS64 && fw->size < sizeof(struct elf64_hdr)) {
+> >>> +		dev_err(dev, "elf64 header is too small\n");
+> >>> +		return -EINVAL;
+> >>> +	}
+> >>> +
+> >>>  	/* We assume the firmware has the same endianness as the host */
+> >>>  # ifdef __LITTLE_ENDIAN
+> >>>  	if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB) {
+> >>> @@ -67,26 +85,29 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct
+> >>> firmware *fw)
+> >>>  		return -EINVAL;
+> >>>  	}
+> >>>  
+> >>> -	if (fw->size < ehdr->e_shoff + sizeof(struct elf32_shdr)) {
+> >>> -		dev_err(dev, "Image is too small\n");
+> >>> -		return -EINVAL;
+> >>> -	}
+> >>> +	phoff = elf_hdr_e_phoff(class, fw->data);
+> >>> +	shoff = elf_hdr_e_shoff(class, fw->data);
+> >>> +	phnum =  elf_hdr_e_phnum(class, fw->data);
+> >>> +	elf_shdr_size = elf_size_of_shdr(class);
+> >>>  
+> >>> -	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG)) {
+> >>> -		dev_err(dev, "Image is corrupted (bad magic)\n");
+> >>> +	if (fw->size < shoff + elf_shdr_size) {
+> >>> +		dev_err(dev, "Image is too small\n");
+> >>>  		return -EINVAL;
+> >>>  	}
+> >>>  
+> >>> -	if (ehdr->e_phnum == 0) {
+> >>> +	if (phnum == 0) {
+> >>>  		dev_err(dev, "No loadable segments\n");
+> >>>  		return -EINVAL;
+> >>>  	}
+> >>>  
+> >>> -	if (ehdr->e_phoff > fw->size) {
+> >>> +	if (phoff > fw->size) {
+> >>>  		dev_err(dev, "Firmware size is too small\n");
+> >>>  		return -EINVAL;
+> >>>  	}
+> >>>  
+> >>> +	dev_dbg(dev, "Firmware is an elf%d file\n",
+> >>> +		class == ELFCLASS32 ? 32 : 64);
+> >>> +
+> >>>  	return 0;
+> >>>  }
+> >>>  EXPORT_SYMBOL(rproc_elf_sanity_check);
+> >>> @@ -102,11 +123,9 @@ EXPORT_SYMBOL(rproc_elf_sanity_check);
+> >>>   * Note that the boot address is not a configurable property of all remote
+> >>>   * processors. Some will always boot at a specific hard-coded address.
+> >>>   */
+> >>> -u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+> >>> +u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+> >>>  {
+> >>> -	struct elf32_hdr *ehdr  = (struct elf32_hdr *)fw->data;
+> >>> -
+> >>> -	return ehdr->e_entry;
+> >>> +	return elf_hdr_e_entry(fw_elf_get_class(fw), fw->data);
+> >>>  }
+> >>>  EXPORT_SYMBOL(rproc_elf_get_boot_addr);
+> >>>  
+> >>> @@ -137,37 +156,41 @@ EXPORT_SYMBOL(rproc_elf_get_boot_addr);
+> >>>  int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
+> >>>  {
+> >>>  	struct device *dev = &rproc->dev;
+> >>> -	struct elf32_hdr *ehdr;
+> >>> -	struct elf32_phdr *phdr;
+> >>> +	const void *ehdr, *phdr;
+> >>>  	int i, ret = 0;
+> >>> +	u16 phnum;
+> >>>  	const u8 *elf_data = fw->data;
+> >>> +	u8 class = fw_elf_get_class(fw);
+> >>> +	u32 elf_phdr_size = elf_size_of_phdr(class);
+> >>>  
+> >>> -	ehdr = (struct elf32_hdr *)elf_data;
+> >>> -	phdr = (struct elf32_phdr *)(elf_data + ehdr->e_phoff);
+> >>> +	ehdr = elf_data;
+> >>> +	phnum = elf_hdr_e_phnum(class, ehdr);
+> >>> +	phdr = elf_data + elf_hdr_e_phoff(class, ehdr);
+> >>>  
+> >>>  	/* go through the available ELF segments */
+> >>> -	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
+> >>> -		u32 da = phdr->p_paddr;
+> >>> -		u32 memsz = phdr->p_memsz;
+> >>> -		u32 filesz = phdr->p_filesz;
+> >>> -		u32 offset = phdr->p_offset;
+> >>> +	for (i = 0; i < phnum; i++, phdr += elf_phdr_size) {
+> >>> +		u64 da = elf_phdr_p_paddr(class, phdr);
+> >>> +		u64 memsz = elf_phdr_p_memsz(class, phdr);
+> >>> +		u64 filesz = elf_phdr_p_filesz(class, phdr);
+> >>> +		u64 offset = elf_phdr_p_offset(class, phdr);
+> >>> +		u32 type = elf_phdr_p_type(class, phdr);
+> >>>  		void *ptr;
+> >>>  
+> >>> -		if (phdr->p_type != PT_LOAD)
+> >>> +		if (type != PT_LOAD)
+> >>>  			continue;
+> >>>  
+> >>> -		dev_dbg(dev, "phdr: type %d da 0x%x memsz 0x%x filesz 0x%x\n",
+> >>> -			phdr->p_type, da, memsz, filesz);
+> >>> +		dev_dbg(dev, "phdr: type %d da 0x%llx memsz 0x%llx filesz 0x%llx\n",
+> >>> +			type, da, memsz, filesz);
+> >>>  
+> >>>  		if (filesz > memsz) {
+> >>> -			dev_err(dev, "bad phdr filesz 0x%x memsz 0x%x\n",
+> >>> +			dev_err(dev, "bad phdr filesz 0x%llx memsz 0x%llx\n",
+> >>>  				filesz, memsz);
+> >>>  			ret = -EINVAL;
+> >>>  			break;
+> >>>  		}
+> >>>  
+> >>>  		if (offset + filesz > fw->size) {
+> >>> -			dev_err(dev, "truncated fw: need 0x%x avail 0x%zx\n",
+> >>> +			dev_err(dev, "truncated fw: need 0x%llx avail 0x%zx\n",
+> >>>  				offset + filesz, fw->size);
+> >>>  			ret = -EINVAL;
+> >>>  			break;
+> >>> @@ -176,14 +199,15 @@ int rproc_elf_load_segments(struct rproc *rproc, const
+> >>> struct firmware *fw)
+> >>>  		/* grab the kernel address for this device address */
+> >>>  		ptr = rproc_da_to_va(rproc, da, memsz);
+> >>>  		if (!ptr) {
+> >>> -			dev_err(dev, "bad phdr da 0x%x mem 0x%x\n", da, memsz);
+> >>> +			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
+> >>> +				memsz);
+> >>>  			ret = -EINVAL;
+> >>>  			break;
+> >>>  		}
+> >>>  
+> >>>  		/* put the segment where the remote processor expects it */
+> >>> -		if (phdr->p_filesz)
+> >>> -			memcpy(ptr, elf_data + phdr->p_offset, filesz);
+> >>> +		if (filesz)
+> >>> +			memcpy(ptr, elf_data + offset, filesz);
+> >>>  
+> >>>  		/*
+> >>>  		 * Zero out remaining memory for this segment.
+> >>> @@ -200,24 +224,35 @@ int rproc_elf_load_segments(struct rproc *rproc, const
+> >>> struct firmware *fw)
+> >>>  }
+> >>>  EXPORT_SYMBOL(rproc_elf_load_segments);
+> >>>  
+> >>> -static struct elf32_shdr *
+> >>> -find_table(struct device *dev, struct elf32_hdr *ehdr, size_t fw_size)
+> >>> +static const void *
+> >>> +find_table(struct device *dev, const struct firmware *fw)
+> >>>  {
+> >>> -	struct elf32_shdr *shdr;
+> >>> +	const void *shdr, *name_table_shdr;
+> >>>  	int i;
+> >>>  	const char *name_table;
+> >>>  	struct resource_table *table = NULL;
+> >>> -	const u8 *elf_data = (void *)ehdr;
+> >>> +	const u8 *elf_data = (void *)fw->data;
+> >>> +	u8 class = fw_elf_get_class(fw);
+> >>> +	size_t fw_size = fw->size;
+> >>> +	const void *ehdr = elf_data;
+> >>> +	u16 shnum = elf_hdr_e_shnum(class, ehdr);
+> >>> +	u32 elf_shdr_size = elf_size_of_shdr(class);
+> >>> +	u16 shstrndx = elf_hdr_e_shstrndx(class, ehdr);
+> >>>  
+> >>>  	/* look for the resource table and handle it */
+> >>> -	shdr = (struct elf32_shdr *)(elf_data + ehdr->e_shoff);
+> >>> -	name_table = elf_data + shdr[ehdr->e_shstrndx].sh_offset;
+> >>> -
+> >>> -	for (i = 0; i < ehdr->e_shnum; i++, shdr++) {
+> >>> -		u32 size = shdr->sh_size;
+> >>> -		u32 offset = shdr->sh_offset;
+> >>> -
+> >>> -		if (strcmp(name_table + shdr->sh_name, ".resource_table"))
+> >>> +	/* First, get the section header according to the elf class */
+> >>> +	shdr = elf_data + elf_hdr_e_shoff(class, ehdr);
+> >>> +	/* Compute name table section header entry in shdr array */
+> >>> +	name_table_shdr = shdr + (shstrndx * elf_shdr_size);
+> >>> +	/* Finally, compute the name table section address in elf */
+> >>> +	name_table = elf_data + elf_shdr_sh_offset(class, name_table_shdr);
+> >>> +
+> >>> +	for (i = 0; i < shnum; i++, shdr += elf_shdr_size) {
+> >>> +		u64 size = elf_shdr_sh_size(class, shdr);
+> >>> +		u64 offset = elf_shdr_sh_offset(class, shdr);
+> >>> +		u32 name = elf_shdr_sh_name(class, shdr);
+> >>> +
+> >>> +		if (strcmp(name_table + name, ".resource_table"))
+> >>>  			continue;
+> >>>  
+> >>>  		table = (struct resource_table *)(elf_data + offset);
+> >>> @@ -270,21 +305,21 @@ find_table(struct device *dev, struct elf32_hdr *ehdr,
+> >>> size_t fw_size)
+> >>>   */
+> >>>  int rproc_elf_load_rsc_table(struct rproc *rproc, const struct firmware *fw)
+> >>>  {
+> >>> -	struct elf32_hdr *ehdr;
+> >>> -	struct elf32_shdr *shdr;
+> >>> +	const void *shdr;
+> >>>  	struct device *dev = &rproc->dev;
+> >>>  	struct resource_table *table = NULL;
+> >>>  	const u8 *elf_data = fw->data;
+> >>>  	size_t tablesz;
+> >>> +	u8 class = fw_elf_get_class(fw);
+> >>> +	u64 sh_offset;
+> >>>  
+> >>> -	ehdr = (struct elf32_hdr *)elf_data;
+> >>> -
+> >>> -	shdr = find_table(dev, ehdr, fw->size);
+> >>> +	shdr = find_table(dev, fw);
+> >>>  	if (!shdr)
+> >>>  		return -EINVAL;
+> >>>  
+> >>> -	table = (struct resource_table *)(elf_data + shdr->sh_offset);
+> >>> -	tablesz = shdr->sh_size;
+> >>> +	sh_offset = elf_shdr_sh_offset(class, shdr);
+> >>> +	table = (struct resource_table *)(elf_data + sh_offset);
+> >>> +	tablesz = elf_shdr_sh_size(class, shdr);
+> >>>  
+> >>>  	/*
+> >>>  	 * Create a copy of the resource table. When a virtio device starts
+> >>> @@ -317,13 +352,17 @@ EXPORT_SYMBOL(rproc_elf_load_rsc_table);
+> >>>  struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+> >>>  						       const struct firmware *fw)
+> >>>  {
+> >>> -	struct elf32_hdr *ehdr = (struct elf32_hdr *)fw->data;
+> >>> -	struct elf32_shdr *shdr;
+> >>> +	const void *shdr;
+> >>> +	u64 sh_addr, sh_size;
+> >>> +	u8 class = fw_elf_get_class(fw);
+> >>>  
+> >>> -	shdr = find_table(&rproc->dev, ehdr, fw->size);
+> >>> +	shdr = find_table(&rproc->dev, fw);
+> >>>  	if (!shdr)
+> >>>  		return NULL;
+> >>>  
+> >>> -	return rproc_da_to_va(rproc, shdr->sh_addr, shdr->sh_size);
+> >>> +	sh_addr = elf_shdr_sh_addr(class, shdr);
+> >>> +	sh_size = elf_shdr_sh_size(class, shdr);
+> >>> +
+> >>> +	return rproc_da_to_va(rproc, sh_addr, sh_size);
+> >>>  }
+> >>>  EXPORT_SYMBOL(rproc_elf_find_loaded_rsc_table);
+> >>> diff --git a/drivers/remoteproc/remoteproc_elf_loader.h
+> >>> b/drivers/remoteproc/remoteproc_elf_loader.h
+> >>> new file mode 100644
+> >>> index 000000000000..fac3565734f9
+> >>> --- /dev/null
+> >>> +++ b/drivers/remoteproc/remoteproc_elf_loader.h
+> >>> @@ -0,0 +1,69 @@
+> >>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>> +/*
+> >>> + * Remote processor elf loader defines
+> >>> + *
+> >>> + * Copyright (C) 2019 Kalray, Inc.
+> >>> + */
+> >>> +
+> >>> +#ifndef REMOTEPROC_ELF_LOADER_H
+> >>> +#define REMOTEPROC_ELF_LOADER_H
+> >>> +
+> >>> +#include <linux/elf.h>
+> >>> +#include <linux/types.h>
+> >>> +
+> >>> +/**
+> >>> + * fw_elf_get_class - Get elf class
+> >>> + * @fw: the ELF firmware image
+> >>> + *
+> >>> + * Note that we use and elf32_hdr to access the class since the start of the
+> >>> + * struct is the same for both elf class
+> >>> + *
+> >>> + * Return: elf class of the firmware
+> >>> + */
+> >>> +static inline u8 fw_elf_get_class(const struct firmware *fw)
+> >>> +{
+> >>> +	struct elf32_hdr *ehdr = (struct elf32_hdr *)fw->data;
+> >>> +
+> >>> +	return ehdr->e_ident[EI_CLASS];
+> >>> +}
+> >>> +
+> >>> +#define ELF_GET_FIELD(__s, __field, __type) \
+> >>> +static inline __type elf_##__s##_##__field(u8 class, const void *arg) \
+> >>> +{ \
+> >>> +	if (class == ELFCLASS32) \
+> >>> +		return (__type) ((const struct elf32_##__s *) arg)->__field; \
+> >>> +	else \
+> >>> +		return (__type) ((const struct elf64_##__s *) arg)->__field; \
+> >>> +}
+> >>> +
+> >>> +ELF_GET_FIELD(hdr, e_entry, u64)
+> >>> +ELF_GET_FIELD(hdr, e_phnum, u16)
+> >>> +ELF_GET_FIELD(hdr, e_shnum, u16)
+> >>> +ELF_GET_FIELD(hdr, e_phoff, u64)
+> >>> +ELF_GET_FIELD(hdr, e_shoff, u64)
+> >>> +ELF_GET_FIELD(hdr, e_shstrndx, u16)
+> >>> +
+> >>> +ELF_GET_FIELD(phdr, p_paddr, u64)
+> >>> +ELF_GET_FIELD(phdr, p_filesz, u64)
+> >>> +ELF_GET_FIELD(phdr, p_memsz, u64)
+> >>> +ELF_GET_FIELD(phdr, p_type, u32)
+> >>> +ELF_GET_FIELD(phdr, p_offset, u64)
+> >>> +
+> >>> +ELF_GET_FIELD(shdr, sh_size, u64)
+> >>> +ELF_GET_FIELD(shdr, sh_offset, u64)
+> >>> +ELF_GET_FIELD(shdr, sh_name, u32)
+> >>> +ELF_GET_FIELD(shdr, sh_addr, u64)
+> >>> +
+> >>> +#define ELF_STRUCT_SIZE(__s) \
+> >>> +static inline unsigned long elf_size_of_##__s(u8 class) \
+> >>> +{ \
+> >>> +	if (class == ELFCLASS32)\
+> >>> +		return sizeof(struct elf32_##__s); \
+> >>> +	else \
+> >>> +		return sizeof(struct elf64_##__s); \
+> >>> +}
+> >>> +
+> >>> +ELF_STRUCT_SIZE(shdr)
+> >>> +ELF_STRUCT_SIZE(phdr)
+> >>> +
+> >>> +#endif /* REMOTEPROC_ELF_LOADER_H */
+> >>> diff --git a/drivers/remoteproc/remoteproc_internal.h
+> >>> b/drivers/remoteproc/remoteproc_internal.h
+> >>> index 004867061721..eeb26434220e 100644
+> >>> --- a/drivers/remoteproc/remoteproc_internal.h
+> >>> +++ b/drivers/remoteproc/remoteproc_internal.h
+> >>> @@ -55,7 +55,7 @@ phys_addr_t rproc_va_to_pa(void *cpu_addr);
+> >>>  int rproc_trigger_recovery(struct rproc *rproc);
+> >>>  
+> >>>  int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
+> >>> -u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
+> >>> +u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
+> >>>  int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
+> >>>  int rproc_elf_load_rsc_table(struct rproc *rproc, const struct firmware *fw);
+> >>>  struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+> >>> diff --git a/drivers/remoteproc/st_remoteproc.c
+> >>> b/drivers/remoteproc/st_remoteproc.c
+> >>> index ee13d23b43a9..a3268d95a50e 100644
+> >>> --- a/drivers/remoteproc/st_remoteproc.c
+> >>> +++ b/drivers/remoteproc/st_remoteproc.c
+> >>> @@ -190,7 +190,7 @@ static int st_rproc_start(struct rproc *rproc)
+> >>>  		}
+> >>>  	}
+> >>>  
+> >>> -	dev_info(&rproc->dev, "Started from 0x%x\n", rproc->bootaddr);
+> >>> +	dev_info(&rproc->dev, "Started from 0x%llx\n", rproc->bootaddr);
+> >>>  
+> >>>  	return 0;
+> >>>  
+> >>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> >>> index f84bd5fe0211..82cebca9344c 100644
+> >>> --- a/include/linux/remoteproc.h
+> >>> +++ b/include/linux/remoteproc.h
+> >>> @@ -382,7 +382,7 @@ struct rproc_ops {
+> >>>  				struct rproc *rproc, const struct firmware *fw);
+> >>>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
+> >>>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
+> >>> -	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+> >>> +	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+> >>>  };
+> >>>  
+> >>>  /**
+> >>> @@ -498,7 +498,7 @@ struct rproc {
+> >>>  	int num_traces;
+> >>>  	struct list_head carveouts;
+> >>>  	struct list_head mappings;
+> >>> -	u32 bootaddr;
+> >>> +	u64 bootaddr;
+> >> 
+> >> That will cause problems for rproc_coredump()[1] and fixing it properly
+> >> likely means that a 32 or 64 elf should be generated based on the type of image
+> >> that was loaded.  This is also true if ->p_vaddr and ->p_paddr (also in the same
+> >> function) are to be handled properly.
+> >> 
+> >> I'm interested in your opinion on this.
+> > 
+> > Indeed, you are right !
+> > 
+> > I'm "afraid" I will have to fix that !
+> > Most sane thing to do is to dump an elf with the input elf class.
+> > I will make a V4 with a patch for that.
+> > 
+> 
+> Actually, this does not seems directly related to elf loading.
+> The coredump mecanism dumps segment that have been registered
+> using rproc_coredump_add_*_segment and this is not done directly
+> by the elf loader.
 
-On Thu, Feb 6, 2020 at 4:31 PM Roderick Colenbrander
-<thunderbird2k@gmail.com> wrote:
->
-> On Thu, Feb 6, 2020 at 12:10 AM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Feb 3, 2020 at 12:23 PM Jiri Kosina <jikos@kernel.org> wrote:
-> > >
-> > > On Mon, 3 Feb 2020, Benjamin Tissoires wrote:
-> > >
-> > > > I am definitely not in favour of that :(
-> > > >
-> > > > The basic problem we have here is that some vendors are overriding your
-> > > > VID/PIDs, and this is nasty. And I do not see any reasons why you can't
-> > > > say: "well, we broke it, sorry, but we only support *our* devices, not
-> > > > third party ones".
-> > >
-> > > Well, it's not about "we broke it" in the first place, as far as I
-> > > can tell.
-> > >
-> > > Roderick's concern is that 3rd party devices with overriden VID/PID
-> > > malfunction for completely unrelated reason to (correctly working) changes
-> > > done in favor of stock Sony devices, but it'll be Sony receiving all the
-> > > reports/blame.
-> >
-> > After re-reading the code, I am not sure we can easily detect the
-> > clones. So at some point, I think we will break them, but there is not
-> > much we can do. I don't really have a solution for that :(
-> >
-> > >
-> > > > One thing that comes to my mind (probably not the best solution), is to
-> > > > taint the kernel if you are facing a non genuine product. We do that for
-> > > > nvidia, and basically, we can say: "well, supporting the nvidia blob is
-> > > > done on a best effort case, and see with them directly if you have an
-> > > > issue". Tainting the kernel is a little bit rough, but maybe adding an
-> > > > info message in the dmesg if you detect one of those can lead to a
-> > > > situation were we can count on you for supporting the official products,
-> > > > and you can get community support for the clones.
-> > >
-> > > Yeah; which I wouldn't like to do for upstream kernel, but Sony could
-> > > definitely do this for the products they ship.
-> > >
-> > > The same way distros are tainting their kernels when unsupported modules
-> > > (but otherwise perfectly fine wrt. GPL and everything else) are loaded
-> > > into distro-supported kernels.
-> > >
-> > > > One last thing. Roderick, I am not sure if I mentioned that or not, but
-> > > > I am heavily adding regression tests for HID in
-> > > > https://gitlab.freedesktop.org/libevdev/hid-tools/
-> > >
-> > > ... and words can't express how thankful I am for that :)
-> > >
-> >
-> > OK, I played with that idea earlier this week:
-> > https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/74
-> > I only have a Sixaxis controller, and I only implemented the USB part
-> > of it (AFAICT).
-> > Currently this ensures the button mapping is correct, and that the
-> > LEDs are working properly.
-> > We are still missing a few bits and pieces, but the initialization
-> > (requests made by the kernel to start the device and press on the PS
-> > button) is handled properly.
-> >
-> > If this is something Roderick would be interested in, we can then try
-> > to extend this initial work on Bluetooth controllers and the DualShock
-> > ones.
->
-> We can probably help out there (need to ask official permission). We
-> have similar tests in Android (still adding more). Just in case you
-> are not familiar this is their framework:
-> https://android.googlesource.com/platform/cts/+/master/tests/tests/hardware/src/android/hardware/input/cts/tests/
+Correct, but it is fair to assume rpoc_coredump_add_*_segment() is called for
+the image that will run on the MCU (otherwiser doing so would be pointless).
 
-thanks. That's a good pointer I wasn't aware of.
+> I'm not 100% sure but the coredump elf format is not tied to
+> any machine (EM_NONE) and as a special type (ET_CORE) so the elf
+> type is probably not relevant adn elf64 would be generic.
+ 
+That is true, we could generate an elf64 core dump for both 32 and 64 bit MCU
+image and be done with it.  But that is almost guaranteed to break some user
+space that isn't tailored to deal with an elf64.
 
->
-> It is a small Java class and then there is a json blob with the actual
-> test (forgot where the json is). It defines the report descriptors
-> etcetera.
+> If some coredump user could speak for that part, that would be
+> nice !
+> 
+> If needed, then we could add a rproc_coredump_set_format() function
+> to specify various parameters (machine, elf type, lsb/msb, etc).
+> 
 
-Found them at https://android.googlesource.com/platform/cts/+/master/tests/tests/hardware/res/raw
+For this specific patchset I don't think you need to cover cases where this much
+flexibility is needed (up to now it hasn't been a requiment).
 
-Of course, I had to find advantages to my own test suite (in case you
-need to explain to management):
-- I am running it upstream on any patch that comes in, so less chances
-to catch a failure after the fact
-- I am emulating the firmware more precisely IMO (it's a python class
-and you can overwrite the set_report, get_report and set_output
-report)
-- I am emulating both USB and Bluetooth (or whatever bus you want)
-- I am testing the LED classes
-- we can easily extend to test the rumbles and the battery reporting
-- I am not relying on preformatted reports, meaning that it's harder
-to cheat in the driver and we can extend the test cases more easily
-(what if we have a left d-pad + button 7 that runs into a problem in
-the driver?)
+Keeping track of the type of image being loaded in something like
+rproc::elfclass and use that information to generate the right elf core in
+rproc_coredump() is probably sufficient for the time being.
 
-Anyway, I just merged the PS3 controller I have. I'll try to see if I
-can get the DS4 working based on those json files.
-
-Cheers,
-Benjamin
-
->
-> Thanks,
-> Roderick
->
-> > Adding the clones ones based on the current kernel code is something
-> > doable, but I do not expect Sony to be involved in that process.
-> >
-> > That being said, before we merge this particular patch about Gasia
-> > controllers, now we need to implement a regression test first :)
-> >
-> > Cheers,
-> > Benjamin
-> >
->
-
+> Let me know what you think about it.
+> 
+> Clément
+> 
+> > Thanks,
+> > 
+> > Clément
+> > 
+> >> 
+> >> Thanks,
+> >> Mathieu
+> >> 
+> >> [1].
+> >> https://elixir.bootlin.com/linux/latest/source/drivers/remoteproc/remoteproc_core.c#L1600
+> >> 
+> >>>  	struct list_head rvdevs;
+> >>>  	struct list_head subdevs;
+> >>>  	struct idr notifyids;
+> >>> --
+> > >> 2.15.0.276.g89ea799
