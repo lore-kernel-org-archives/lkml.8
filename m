@@ -2,92 +2,111 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF65C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722B2C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CC121775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C53218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021969;
-	bh=jKEDO/f6GLMRK0hzGOQz0jPx359j89/rfsSqV9tJI8A=;
+	s=default; t=1581021973;
+	bh=vqnje4SrK7zmksL6qpw8d1YvwCA2XTOc+khujOgY4kM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CNf+vW6syxuGoptdHJn/ITRDA8PkKYYHfdxIDEIP26LU5UgzAxotKDmCF5OZJmm8S
-	 XOjTEKkWOGi7xyce0lWsAuHy6Bs6gyYqZZTev1OMQzodMgjfcHx089Ui7HtYP76zGj
-	 FO9ICQggDPRGSklhdgrWP845vNZZ3tNAee1kEBRg=
+	b=xUCpC2jXTbUd4rmzaR9lTL6vtNePo9Xa9eXNeVNLs0dtEsTcEzdRh2895I7JTk2wt
+	 0X9V5tBgdJ117GPkAli5B18f4sS957HRdU2NxWoalV2Zdm7I9JY6B3ozGwiNj1mPOk
+	 zhyHame74qSJjZH75q+37tZjtDYk1ew4Xow2L4KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgBFUqI (ORCPT
+        id S1728173AbgBFUqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:08 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34007 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbgBFUqD (ORCPT
+        Thu, 6 Feb 2020 15:46:12 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33799 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgBFUqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:46:03 -0500
-Received: by mail-pl1-f195.google.com with SMTP id j7so49508plt.1;
-        Thu, 06 Feb 2020 12:46:02 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:08 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so3356516pgi.1;
+        Thu, 06 Feb 2020 12:46:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bRRz/TTbJY0rJVFxdXphgTRilr7A8yPPTS0Uy1cOzYI=;
-        b=U3V79h9TSWs2+NjyAZ5bXwbSOquZUDtVZr0t/Q9NV+sdq2PD7URT47FtyKjI4bUnDs
-         MSpjr1+oN5QDeuOF7182pYXkzyBlJJeVUtCp5zUWcxetn3Qxr6SfxEJs5TWLtOgpRfCL
-         QJb2BP0qStLdf9fL9+MmyWCg1S2tKnVX6I+scfOMX5tC55yTqcPoZUMTQeEz6MfnxseU
-         ftB+wz9c61c9KKcK0VeTT62cB0aVbD9AdQIUyz7j0mJiIsw1QqyXzhVX3bqz22fLyADR
-         KZeusHlF1g7v46CKG6uCyn7QhvzyzgQIy+6eYhOgVq2/OksEgy3jHyOex2EQ2KzLlpig
-         HmYg==
-X-Gm-Message-State: APjAAAXQGeQCXZCHAkgtJJgjfS4a+CBDusAI4JYb9NYAzD2tIjyK47Ue
-        GNkWgbKEqv3WXY1QrguPSw==
-X-Google-Smtp-Source: APXvYqw3i21zG8VchiKpwOClmmNNxvpGfIuuGeynfglACClOjdMJZK6wsS2Vbxahnpkys1QVUyi9wQ==
-X-Received: by 2002:a17:902:8a83:: with SMTP id p3mr6197742plo.56.1581021962092;
-        Thu, 06 Feb 2020 12:46:02 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8CEel95Qe0K0FMLgiCiTMequMG6yZDFIWpQ5eQwLax4=;
+        b=qwuTV2bGE5go6Dr3hk/G9xxmRw/YSrJGgeLoMC/iiRzHARB7EdSUgLGnOZ8JhU2Gku
+         Bh17V0Pl0N7l4wP9FW+PsyLFWmV7DSZVxkzSkIwbfnttYiswqubQ6xFWP2MFn3bdcwCc
+         1ChkoSEDaCcK/Rlu+gx6tEHQqZYzKwrRHBgVvpDMB6xk1+KxMDFZ0dLGpcBO8rU0aGs4
+         9aNIYSMfTrAw1uvCfwoFomiQ/kS6xkmDLUkS9cYxoc7iJT9BgvxDzHrCS6qsbhhHDH+z
+         ei/BSlk2JI3D/oh5o4eY/fDwmHuZHXIMEOPADI4UGy1MzrDin1/JTYVGIZxK0q4WhHjA
+         WxlA==
+X-Gm-Message-State: APjAAAV6NYTIp93DnC93iPZ6EVCMy/KuYo/XmbTNRThDB6O/Y77d0O6z
+        EYbXdUEfM3mFuUV5LGna3shnuRpJ5Q==
+X-Google-Smtp-Source: APXvYqx1NnBAhQrChlAlk+joiqFOCP58iYcXSFU1wddrjPp0aH7Qq0MEkUwXPJE9lP0gLPlBBbd93w==
+X-Received: by 2002:a62:8246:: with SMTP id w67mr5850174pfd.107.1581021968038;
+        Thu, 06 Feb 2020 12:46:08 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id r7sm288783pfg.34.2020.02.06.12.46.00
+        by smtp.gmail.com with ESMTPSA id 133sm293844pfy.14.2020.02.06.12.46.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:01 -0800 (PST)
-Received: (nullmailer pid 20625 invoked by uid 1000);
-        Thu, 06 Feb 2020 17:35:36 -0000
-Date:   Thu, 6 Feb 2020 17:35:36 +0000
+        Thu, 06 Feb 2020 12:46:07 -0800 (PST)
+Received: (nullmailer pid 27633 invoked by uid 1000);
+        Thu, 06 Feb 2020 18:30:53 -0000
+Date:   Thu, 6 Feb 2020 18:30:53 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, biabeniamin@outlook.com,
-        knaack.h@gmx.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: iio: amplifiers: Add docs for
- HMC425A Step Attenuator
-Message-ID: <20200206173536.GA20564@bogus>
-References: <20200129142301.13918-1-beniamin.bia@analog.com>
- <20200129142301.13918-5-beniamin.bia@analog.com>
+To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+Cc:     linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: dts: imx7s: add snvs clock to pwrkey
+Message-ID: <20200206183053.GA27553@bogus>
+References: <20200130204516.4760-1-git@andred.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200129142301.13918-5-beniamin.bia@analog.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200130204516.4760-1-git@andred.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 16:23:00 +0200, Beniamin Bia wrote:
-> From: Michael Hennerich <michael.hennerich@analog.com>
+On Thu, 30 Jan 2020 20:45:14 +0000, =?UTF-8?q?Andr=C3=A9=20Draszik?= wrote:
+> On i.MX7, the SNVS requires a clock. This is similar to the clock
+> bound to the SNVS RTC node, but if the SNVS RTC driver isn't enabled,
+> then SNVS doesn't work, and as such the pwrkey driver doesn't
+> work (i.e. hangs the kernel, as the clock isn't enabled).
 > 
-> Document support for Analog Devices MC425A Step Attenuator.
+> Also see commit ec2a844ef7c1
+> ("ARM: dts: imx7s: add snvs rtc clock")
+> for a similar fix.
 > 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> Signed-off-by: André Draszik <git@andred.net>
+> Cc: Anson Huang <Anson.Huang@nxp.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: "Horia Geantă" <horia.geanta@nxp.com>
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
 > ---
->  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+>  .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++
+>  arch/arm/boot/dts/imx7s.dtsi                    |  2 ++
+>  2 files changed, 19 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
