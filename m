@@ -2,95 +2,74 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006ABC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CE0C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8F120838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8CB20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgBFOpO (ORCPT
+        id S1727499AbgBFOuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:45:14 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33310 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgBFOpM (ORCPT
+        Thu, 6 Feb 2020 09:50:32 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:60318 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgBFOub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:45:12 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b18so5708010otp.0;
-        Thu, 06 Feb 2020 06:45:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xYD6Qn+f8O19n6jnbN4GmWDjU8MnxsjL6RmYBktzX6A=;
-        b=XroesZcVBYWRUVanRb6CT3oiXt1PVz4u/55Iae1H7IBjCLRwgiY91Ha5bt1TCL6swk
-         Lm39dxXchE0eTzcFeNwQ4qNnFjVf8ecbP6km6URHIdVnRptG6LpSIjvlB/+N9DolgeJu
-         nwwcFFJRZgechdj9Xn03/vAQra2MRbrBpLInhMyA9usZHtH/fFBqU/7lrauh5s1T5eJf
-         qasb146HczZZUUiMOlBKfJIGps5bJtpEtkpNxOfjv9WZAemXyE+yRIrB8zY+0PxvFPvj
-         IZ52fjcbGwlSmC90pT5f1dM/Rhgm91bBqfGcvuLxh0YhiCQtRGJoUDBNrBNzAtLiZIzP
-         N4gA==
-X-Gm-Message-State: APjAAAWchglkdfrJG+wqaYWYfj1CR3h+Fc8U/Rv0qrcrFQgJITkm0Htb
-        w5bCIITQ431kIKr9gTM3j2Ff8xCnsxzVNwUX1U4=
-X-Google-Smtp-Source: APXvYqyBBc29/Ijg8aP7euisquvo66G+D60N9QvVlXsbMPCrQqHLz5pKWCMv7f1iVeOMhJHx9xjsFMRcmhcR3vTsNq8=
-X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr30533670oth.145.1581000311584;
- Thu, 06 Feb 2020 06:45:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20200202161914.9551-1-gilad@benyossef.com>
-In-Reply-To: <20200202161914.9551-1-gilad@benyossef.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Feb 2020 15:45:00 +0100
-Message-ID: <CAMuHMdVgxBx2x7=nTK0HtvufMNBGLruUD6Y1a0pSnX+CDsvCDA@mail.gmail.com>
-Subject: Re: [PATCH] crypto: ccree - dec auth tag size from cryptlen map
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        stable <stable@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Feb 2020 09:50:31 -0500
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 82EB414E226FC;
+        Thu,  6 Feb 2020 06:50:29 -0800 (PST)
+Date:   Thu, 06 Feb 2020 15:50:25 +0100 (CET)
+Message-Id: <20200206.155025.1955610977652855941.davem@davemloft.net>
+To:     zhengdejin5@gmail.com
+Cc:     vkoul@kernel.org, peppe.cavallaro@st.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, niklas.cassel@linaro.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: stmmac: fix a possible endless loop
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200206141811.24862-1-zhengdejin5@gmail.com>
+References: <20200206141811.24862-1-zhengdejin5@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 06 Feb 2020 06:50:31 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gilad,
+From: Dejin Zheng <zhengdejin5@gmail.com>
+Date: Thu,  6 Feb 2020 22:18:11 +0800
 
-On Sun, Feb 2, 2020 at 5:19 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> Remove the auth tag size from cryptlen before mapping the destination
-> in out-of-place AEAD decryption thus resolving a crash with
-> extended testmgr tests.
->
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: stable@vger.kernel.org # v4.19+
+> It forgot to reduce the value of the variable retry in a while loop
+> in the ethqos_configure() function. It may cause an endless loop and
+> without timeout.
+> 
+> Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
+> ---
+> 
+> Vinod Koul and David Miller, Thanks for your comments!
+> 
+> V2:
+> add an appropriate Fixes tag.
 
-Thanks, this fixes the crash seen on R-Car H3 ES2.0 with renesas_defconfig,
-CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n, and CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+Please do not put an empty line between Fixes and other tags.
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I have no idea why people often do this.
 
-Remaining issues reported during boot:
-  1. alg: skcipher: blocksize for xts-aes-ccree (1) doesn't match
-generic impl (16)
-  2. alg: aead: rfc4543-gcm-aes-ccree decryption unexpectedly
-succeeded on test vector "random: alen=16 plen=39 authsize=16 klen=20
-novrfy=1"; expected_error=-EBADMSG or -22, cfg="random: may_sleep
-use_digest src_divs=[4.47%@+3553, 30.80%@+4065, 12.0%@+11,
-6.22%@+2999, 46.51%@alignmask+3468]"
+Anyways, Fixes and other tags are all tags and thus belong together as
+an uninterrupted group of text.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thank you.
