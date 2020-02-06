@@ -2,157 +2,115 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D85FC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06BCC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E758E214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:14:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y2TgvbsP"
+	by mail.kernel.org (Postfix) with ESMTP id B4F4C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580987698;
+	bh=oKSH5/XEvKb7FCMlrXnlx2H529bmxqZ5nEC/5MnwBd0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EDit6uLWc7ba5z3I72F+vRFnrAyXf1+xhF4LKomdLHqX5Shkt7T8S36Ve50WBPtNn
+	 OKx+kXRUP9WqPO6BjVk0JcfMLTYD7PaNehL2dNlq8jGhqG6ZWTCsl6hiXzaGHtACiR
+	 bKEfsUwiv/xarxopTi3WFeMtSiQA5yA/W1J10xuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbgBFLOf (ORCPT
+        id S1727682AbgBFLO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:14:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28458 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727538AbgBFLOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:14:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580987672;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rHTZHgmASPSoMGwevhPMX79nOsZmoqk9zStUKfH69Ac=;
-        b=Y2TgvbsPBFmUPXt6f2i47f4SHTlLVvvMp2nU56hCXdyeiWV9fqa81UfpCZ2ssy0qH7/khP
-        XKjf/oCWO1/SXBI223sU03JWKSjFVoYOBX0jpo3UEOwS+wTZ//60wOcNEEB6S8AcR7Ys+r
-        6hA66I3ACan4Jk1eZfs1A1jxVba/yZc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-1MlG-dHJOhuoPlWtqAiYTw-1; Thu, 06 Feb 2020 06:14:31 -0500
-X-MC-Unique: 1MlG-dHJOhuoPlWtqAiYTw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 6 Feb 2020 06:14:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbgBFLO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:14:57 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C9141857341;
-        Thu,  6 Feb 2020 11:14:29 +0000 (UTC)
-Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4670910016DA;
-        Thu,  6 Feb 2020 11:14:22 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 12:14:19 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [RFC PATCH 1/7] vfio: Include optional device match in
- vfio_device_ops callbacks
-Message-ID: <20200206121419.69997326.cohuck@redhat.com>
-In-Reply-To: <158085754299.9445.4389176548645142886.stgit@gimli.home>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-        <158085754299.9445.4389176548645142886.stgit@gimli.home>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id B2A6321741;
+        Thu,  6 Feb 2020 11:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580987697;
+        bh=oKSH5/XEvKb7FCMlrXnlx2H529bmxqZ5nEC/5MnwBd0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x/2he1kJLxWTa/JU54kmcFXSYKkXmrlhU0cZVqrZm0iTXP9EgIp0M8/LBkHLsLeT/
+         5BEOJcom+EvSVkZdaHO4j7KjoRZ/b5rCTpaAFaMzvHPJjgR/MilEwcGsSizZrDrcey
+         EVIkVrLmRZQQ4S+lp0iacKGJGyFZf3MG1TsSnvQw=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] bootconfig: Remove unneeded CONFIG_LIBXBC
+Date:   Thu,  6 Feb 2020 20:14:53 +0900
+Message-Id: <158098769281.939.16293492056419481105.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CAMuHMdWx4FmrGaefwkEBMGqCmJUSYxtAfkmFc7HM++fab2U-cw@mail.gmail.com>
+References: <CAMuHMdWx4FmrGaefwkEBMGqCmJUSYxtAfkmFc7HM++fab2U-cw@mail.gmail.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Feb 2020 16:05:43 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
+Since there is no user except CONFIG_BOOT_CONFIG and no plan
+to use it from other functions, CONFIG_LIBXBC can be removed
+and we can use CONFIG_BOOT_CONFIG directly.
 
-> Allow bus drivers to provide their own callback to match a device to
-> the user provided string.
-> 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/vfio.c  |   19 +++++++++++++++----
->  include/linux/vfio.h |    3 +++
->  2 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index 388597930b64..dda1726adda8 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -875,11 +875,22 @@ EXPORT_SYMBOL_GPL(vfio_device_get_from_dev);
->  static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
->  						     char *buf)
->  {
-> -	struct vfio_device *it, *device = NULL;
-> +	struct vfio_device *it, *device = ERR_PTR(-ENODEV);
->  
->  	mutex_lock(&group->device_lock);
->  	list_for_each_entry(it, &group->device_list, group_next) {
-> -		if (!strcmp(dev_name(it->dev), buf)) {
-> +		int ret;
-> +
-> +		if (it->ops->match) {
-> +			ret = it->ops->match(it->device_data, buf);
-> +			if (ret < 0 && ret != -ENODEV) {
-> +				device = ERR_PTR(ret);
-> +				break;
-> +			}
-> +		} else
-> +			ret = strcmp(dev_name(it->dev), buf);
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ init/Kconfig |    1 -
+ lib/Kconfig  |    3 ---
+ lib/Makefile |    2 +-
+ 3 files changed, 1 insertion(+), 5 deletions(-)
 
-The asymmetric braces look a bit odd.
-
-> +
-> +		if (!ret) {
->  			device = it;
->  			vfio_device_get(device);
->  			break;
-> @@ -1441,8 +1452,8 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
->  		return -EPERM;
->  
->  	device = vfio_device_get_from_name(group, buf);
-> -	if (!device)
-> -		return -ENODEV;
-> +	if (IS_ERR(device))
-> +		return PTR_ERR(device);
->  
->  	ret = device->ops->open(device->device_data);
->  	if (ret) {
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index e42a711a2800..755e0f0e2900 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -26,6 +26,8 @@
->   *         operations documented below
->   * @mmap: Perform mmap(2) on a region of the device file descriptor
->   * @request: Request for the bus driver to release the device
-> + * @match: Optional device name match callback (return: 0 for match, -ENODEV
-> + *         (or >0) for no match and continue, other -errno: no match and stop)
-
-I'm wondering about these conventions.
-
-If you basically want a tri-state return (match, don't match/continue,
-don't match/stop), putting -ENODEV and >0 together feels odd. I would
-rather expect either
-- < 0 == don't match/stop, 0 == don't match/continue, > 0 == match, or
-- 0 == match, -ENODEV (or some other defined error) == don't
-  match/continue, all other values == don't match/abort?
-
->   */
->  struct vfio_device_ops {
->  	char	*name;
-> @@ -39,6 +41,7 @@ struct vfio_device_ops {
->  			 unsigned long arg);
->  	int	(*mmap)(void *device_data, struct vm_area_struct *vma);
->  	void	(*request)(void *device_data, unsigned int count);
-> +	int	(*match)(void *device_data, char *buf);
->  };
->  
->  extern struct iommu_group *vfio_iommu_group_get(struct device *dev);
-> 
+diff --git a/init/Kconfig b/init/Kconfig
+index 9506299a53e3..4a672c6629d0 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1218,7 +1218,6 @@ endif
+ config BOOT_CONFIG
+ 	bool "Boot config support"
+ 	depends on BLK_DEV_INITRD
+-	select LIBXBC
+ 	default y
+ 	help
+ 	  Extra boot config allows system admin to pass a config file as
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 10012b646009..6e790dc55c5b 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -566,9 +566,6 @@ config DIMLIB
+ config LIBFDT
+ 	bool
+ 
+-config LIBXBC
+-	bool
+-
+ config OID_REGISTRY
+ 	tristate
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 75a64d2552a2..74c1223828c1 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -228,7 +228,7 @@ $(foreach file, $(libfdt_files), \
+ 	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
+ lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+ 
+-lib-$(CONFIG_LIBXBC) += bootconfig.o
++lib-$(CONFIG_BOOT_CONFIG) += bootconfig.o
+ 
+ obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
+ obj-$(CONFIG_INTERVAL_TREE_TEST) += interval_tree_test.o
 
